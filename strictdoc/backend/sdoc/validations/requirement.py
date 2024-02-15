@@ -10,7 +10,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElementField,
 )
 from strictdoc.backend.sdoc.models.node import (
-    Requirement,
+    SDocNode,
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.type_system import (
@@ -29,7 +29,7 @@ def multi_choice_regex_match(value):
 
 
 def validate_requirement(
-    requirement: Requirement, document_grammar: DocumentGrammar
+    requirement: SDocNode, document_grammar: DocumentGrammar
 ):
     registered_fields: Set[str] = set(
         document_grammar.fields_order_by_type[requirement.requirement_type]
@@ -109,7 +109,7 @@ def validate_requirement(
 
 
 def validate_requirement_field(
-    requirement: Requirement,
+    requirement: SDocNode,
     document_grammar: DocumentGrammar,
     requirement_field: SDocNodeField,
     grammar_field: GrammarElementField,

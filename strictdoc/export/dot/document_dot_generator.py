@@ -7,7 +7,7 @@ from typing import List, Optional, Tuple, Union
 import graphviz
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.project_config import ProjectConfig
@@ -219,7 +219,7 @@ class DocumentDotGenerator:
 
         iterator = DocumentCachingIterator(document)
         for node in iterator.all_content():
-            if isinstance(node, Requirement):
+            if isinstance(node, SDocNode):
                 uuid: str = self.get_requirement_uuid(node)
                 this_document_flat_requirements.append(f'"value_{uuid}"')
 
@@ -274,7 +274,7 @@ class DocumentDotGenerator:
                     accumulated_section_siblings.append(
                         (get_uuid(subnode), get_uuid(upper_sibling_section))
                     )
-            elif isinstance(subnode, Requirement):
+            elif isinstance(subnode, SDocNode):
                 node_content += self._print_requirement_fields(
                     subnode, link_renderer, accumulated_links
                 )
@@ -292,11 +292,11 @@ class DocumentDotGenerator:
 
     def _print_requirement_fields(
         self,
-        requirement: Requirement,
+        requirement: SDocNode,
         link_renderer: LinkRenderer,
         accumulated_links: List[Tuple[str, str]],
     ):
-        def get_color_from_status(requirement_: Requirement):
+        def get_color_from_status(requirement_: SDocNode):
             if requirement_.reserved_status is None:
                 return "#87CEEB", "filled,rounded,dashed", "box", "\\l"
             if requirement_.reserved_status == "Draft":
@@ -344,8 +344,8 @@ class DocumentDotGenerator:
         return output
 
     @staticmethod
-    def get_requirement_uuid(requirement: Requirement) -> str:
-        assert isinstance(requirement, Requirement)
+    def get_requirement_uuid(requirement: SDocNode) -> str:
+        assert isinstance(requirement, SDocNode)
         return (
             requirement.reserved_uid
             if requirement.reserved_uid is not None

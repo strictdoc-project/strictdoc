@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from strictdoc import __version__
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
@@ -18,7 +18,7 @@ from strictdoc.helpers.git_client import GitClient
 @dataclass
 class DocumentStats:
     requirements_total: int = 0
-    requirements_no_uid: List[Requirement] = field(default_factory=list)
+    requirements_no_uid: List[SDocNode] = field(default_factory=list)
 
 
 @dataclass
@@ -82,8 +82,8 @@ class ProgressStatisticsGenerator:
                     if len(node.free_texts) == 0:
                         document_tree_stats.sections_without_free_text += 1
 
-                if isinstance(node, Requirement):
-                    requirement: Requirement = assert_cast(node, Requirement)
+                if isinstance(node, SDocNode):
+                    requirement: SDocNode = assert_cast(node, SDocNode)
                     document_tree_stats.total_requirements += 1
                     if requirement.reserved_uid is None:
                         document_tree_stats.requirements_no_uid += 1

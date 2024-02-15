@@ -12,7 +12,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.node import (
-    Requirement,
+    SDocNode,
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
@@ -397,9 +397,9 @@ class RequirementFormObject(ErrorObject):
     @staticmethod
     def create_from_requirement(
         *,
-        requirement: Requirement,
+        requirement: SDocNode,
     ) -> "RequirementFormObject":
-        assert isinstance(requirement, Requirement)
+        assert isinstance(requirement, SDocNode)
         document: Document = requirement.document
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
@@ -499,7 +499,7 @@ class RequirementFormObject(ErrorObject):
 
     @staticmethod
     def clone_from_requirement(
-        *, requirement: Requirement, clone_uid: str
+        *, requirement: SDocNode, clone_uid: str
     ) -> "RequirementFormObject":
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_requirement(
@@ -524,7 +524,7 @@ class RequirementFormObject(ErrorObject):
         return False
 
     def get_requirement_relations(
-        self, requirement: Requirement
+        self, requirement: SDocNode
     ) -> List[Reference]:
         references: List[Reference] = []
         reference_field: RequirementReferenceFormField
@@ -722,7 +722,7 @@ class RequirementFormObject(ErrorObject):
                     relation_target_uids_so_far.add(link_uid)
 
                     # Check if the target document supports a given relation.
-                    target_requirement: Requirement = (
+                    target_requirement: SDocNode = (
                         traceability_index.get_node_by_uid(link_uid)
                     )
                     target_grammar_element: GrammarElement = (

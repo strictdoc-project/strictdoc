@@ -3,7 +3,7 @@ from typing import List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -33,12 +33,12 @@ class CreateRequirementActionObject:
         # the requirement itself, all links it was linking to
         # (for deleted links) and all links it is linking to now
         # (including new links).
-        self.this_document_requirements_to_update: Set[Requirement] = set()
+        self.this_document_requirements_to_update: Set[SDocNode] = set()
 
 
 @dataclass
 class CreateRequirementResult:
-    this_document_requirements_to_update: Set[Requirement]
+    this_document_requirements_to_update: Set[SDocNode]
 
 
 class CreateRequirementTransform:

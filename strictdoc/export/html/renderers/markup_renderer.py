@@ -3,9 +3,7 @@ from typing import Optional, Type, Union
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-)
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -87,7 +85,7 @@ class MarkupRenderer:
         )
 
     def render_requirement_statement(self, requirement):
-        assert isinstance(requirement, Requirement)
+        assert isinstance(requirement, SDocNode)
 
         if requirement in self.cache:
             return self.cache[requirement]
@@ -97,7 +95,7 @@ class MarkupRenderer:
         return output
 
     def render_truncated_requirement_statement(self, requirement):
-        assert isinstance(requirement, Requirement), requirement
+        assert isinstance(requirement, SDocNode), requirement
         assert requirement.reserved_statement is not None
 
         statement_to_render = truncated_statement_with_no_rst(
@@ -113,7 +111,7 @@ class MarkupRenderer:
         return output
 
     def render_requirement_rationale(self, requirement):
-        assert isinstance(requirement, Requirement)
+        assert isinstance(requirement, SDocNode)
 
         if requirement in self.rationale_cache:
             return self.rationale_cache[requirement]

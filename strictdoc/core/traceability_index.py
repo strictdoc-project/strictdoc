@@ -5,7 +5,7 @@ from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Union
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
@@ -32,16 +32,16 @@ class SDocNodeConnections:
 
     def __init__(
         self,
-        requirement: Requirement,
+        requirement: SDocNode,
         document: Document,
-        parents: List[Tuple[Requirement, Optional[str]]],
-        children: List[Tuple[Requirement, Optional[str]]],
+        parents: List[Tuple[SDocNode, Optional[str]]],
+        children: List[Tuple[SDocNode, Optional[str]]],
     ):
-        assert isinstance(requirement, Requirement), requirement
-        self.requirement: Requirement = requirement
+        assert isinstance(requirement, SDocNode), requirement
+        self.requirement: SDocNode = requirement
         self.document: Document = document
-        self.parents: List[Tuple[Requirement, Optional[str]]] = parents
-        self.children: List[Tuple[Requirement, Optional[str]]] = children
+        self.parents: List[Tuple[SDocNode, Optional[str]]] = parents
+        self.children: List[Tuple[SDocNode, Optional[str]]] = children
 
     def contains_uid(self, uid: str, role: Optional[str]) -> bool:
         for parent_, role_ in self.parents:
@@ -127,8 +127,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             > 0
         )
 
-    def has_parent_requirements(self, requirement: Requirement):
-        assert isinstance(requirement, Requirement)
+    def has_parent_requirements(self, requirement: SDocNode):
+        assert isinstance(requirement, SDocNode)
         if not isinstance(requirement.reserved_uid, str):
             return False
 
@@ -142,8 +142,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         parent_requirements = requirement_connections.parents
         return len(parent_requirements) > 0
 
-    def has_children_requirements(self, requirement: Requirement):
-        assert isinstance(requirement, Requirement)
+    def has_children_requirements(self, requirement: SDocNode):
+        assert isinstance(requirement, SDocNode)
         if not isinstance(requirement.reserved_uid, str):
             return False
 
@@ -194,10 +194,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_document_iterator(self, document) -> DocumentCachingIterator:
         return self.document_iterators[document]
 
-    def get_parent_requirements(
-        self, requirement: Requirement
-    ) -> List[Requirement]:
-        assert isinstance(requirement, Requirement)
+    def get_parent_requirements(self, requirement: SDocNode) -> List[SDocNode]:
+        assert isinstance(requirement, SDocNode)
         if not isinstance(requirement.reserved_uid, str):
             return []
 
@@ -211,8 +209,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         parent_requirements = requirement_connections.parents
         return list(map(lambda pair_: pair_[0], parent_requirements))
 
-    def get_parent_relations_with_roles(self, requirement: Requirement):
-        assert isinstance(requirement, Requirement)
+    def get_parent_relations_with_roles(self, requirement: SDocNode):
+        assert isinstance(requirement, SDocNode)
         if (
             requirement.reserved_uid is None
             or len(requirement.reserved_uid) == 0
@@ -227,9 +225,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         yield from requirement_connections.parents
 
     def get_parent_relations_with_role(
-        self, requirement: Requirement, role: Optional[str]
+        self, requirement: SDocNode, role: Optional[str]
     ):
-        assert isinstance(requirement, Requirement)
+        assert isinstance(requirement, SDocNode)
         if (
             requirement.reserved_uid is None
             or len(requirement.reserved_uid) == 0
@@ -244,8 +242,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             if role_ == role:
                 yield parent_requirement_, role_
 
-    def get_child_relations_with_roles(self, requirement: Requirement):
-        assert isinstance(requirement, Requirement)
+    def get_child_relations_with_roles(self, requirement: SDocNode):
+        assert isinstance(requirement, SDocNode)
         if (
             requirement.reserved_uid is None
             or len(requirement.reserved_uid) == 0
@@ -259,9 +257,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         yield from requirement_connections.children
 
     def get_child_relations_with_role(
-        self, requirement: Requirement, role: Optional[str]
+        self, requirement: SDocNode, role: Optional[str]
     ):
-        assert isinstance(requirement, Requirement)
+        assert isinstance(requirement, SDocNode)
         if (
             requirement.reserved_uid is None
             or len(requirement.reserved_uid) == 0
@@ -277,9 +275,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 yield child_requirement_, role_
 
     def get_children_requirements(
-        self, requirement: Requirement
-    ) -> List[Requirement]:
-        assert isinstance(requirement, Requirement)
+        self, requirement: SDocNode
+    ) -> List[SDocNode]:
+        assert isinstance(requirement, SDocNode)
         if not isinstance(requirement.reserved_uid, str):
             return []
 
@@ -339,7 +337,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_node_by_uid_weak(
         self, uid: str
-    ) -> Union[Document, Section, Requirement, None]:
+    ) -> Union[Document, Section, SDocNode, None]:
         assert isinstance(uid, str), uid
         for document in self.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
@@ -350,7 +348,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 elif isinstance(node, Section):
                     if node.reserved_uid == uid:
                         return node
-                elif isinstance(node, Requirement):
+                elif isinstance(node, SDocNode):
                     if node.reserved_uid == uid:
                         return node
                 else:
@@ -490,8 +488,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def update_last_updated(self):
         self.index_last_updated = datetime.today()
 
-    def create_requirement(self, requirement: Requirement):
-        assert isinstance(requirement, Requirement)
+    def create_requirement(self, requirement: SDocNode):
+        assert isinstance(requirement, SDocNode)
 
         self.graph_database.create_link(
             link_type=GraphLinkType.MID_TO_NODE,
@@ -516,7 +514,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             )
 
     def update_requirement_uid(
-        self, requirement: Requirement, old_uid: Optional[str]
+        self, requirement: SDocNode, old_uid: Optional[str]
     ) -> None:
         if old_uid is None:
             if requirement.reserved_uid:
@@ -565,7 +563,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             )
 
     def update_requirement_parent_uid(
-        self, requirement: Requirement, parent_uid: str, role: Optional[str]
+        self, requirement: SDocNode, parent_uid: str, role: Optional[str]
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(parent_uid, str), parent_uid
@@ -621,7 +619,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             parent_requirement_document.ng_needs_generation = True
 
     def update_requirement_child_uid(
-        self, requirement: Requirement, child_uid: str, role: Optional[str]
+        self, requirement: SDocNode, child_uid: str, role: Optional[str]
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(child_uid, str), child_uid
@@ -715,7 +713,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         for node in self.document_iterators[document].all_content():
             if not node.is_requirement:
                 continue
-            requirement_node: Requirement = node
+            requirement_node: SDocNode = node
             assert requirement_node.reserved_uid is not None
             requirement_connections = self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
@@ -768,8 +766,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 rhs_node=section,
             )
 
-    def delete_requirement(self, requirement: Requirement) -> None:
-        assert isinstance(requirement, Requirement), Requirement
+    def delete_requirement(self, requirement: SDocNode) -> None:
+        assert isinstance(requirement, SDocNode), SDocNode
 
         self.graph_database.delete_link(
             link_type=GraphLinkType.MID_TO_NODE,
@@ -795,7 +793,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             )
 
     def remove_requirement_parent_uid(
-        self, requirement: Requirement, parent_uid: str, role: Optional[str]
+        self, requirement: SDocNode, parent_uid: str, role: Optional[str]
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(parent_uid, str), parent_uid
@@ -833,7 +831,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             parent_requirement_document.ng_needs_generation = True
 
     def remove_requirement_child_uid(
-        self, requirement: Requirement, child_uid: str, role: Optional[str]
+        self, requirement: SDocNode, child_uid: str, role: Optional[str]
     ) -> None:
         assert requirement.reserved_uid is not None
         assert isinstance(child_uid, str), child_uid
@@ -1024,7 +1022,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert len(uid) > 0, uid
 
         existing_node_with_uid: Union[
-            Document, Section, Requirement, None
+            Document, Section, SDocNode, None
         ] = self.get_node_by_uid_weak(uid)
 
         if existing_node_with_uid is None:

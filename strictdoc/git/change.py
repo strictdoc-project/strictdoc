@@ -3,7 +3,7 @@ from typing import Dict, List, Optional, Union
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.node import (
-    Requirement,
+    SDocNode,
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.section import Section
@@ -190,16 +190,16 @@ class RequirementChange:
         self,
         *,
         requirement_token: Optional[str],
-        lhs_requirement: Optional[Requirement],
-        rhs_requirement: Optional[Requirement],
+        lhs_requirement: Optional[SDocNode],
+        rhs_requirement: Optional[SDocNode],
         field_changes: List[RequirementFieldChange],
     ):
         assert requirement_token is None or len(requirement_token) > 0
         assert lhs_requirement is not None or rhs_requirement is not None
 
         self.requirement_token: Optional[str] = requirement_token
-        self.lhs_requirement: Optional[Requirement] = lhs_requirement
-        self.rhs_requirement: Optional[Requirement] = rhs_requirement
+        self.lhs_requirement: Optional[SDocNode] = lhs_requirement
+        self.rhs_requirement: Optional[SDocNode] = rhs_requirement
 
         self.field_changes: List[RequirementFieldChange] = field_changes
 

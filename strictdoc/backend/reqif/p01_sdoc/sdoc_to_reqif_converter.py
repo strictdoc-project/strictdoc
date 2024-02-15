@@ -35,9 +35,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
 )
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-)
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
@@ -469,7 +467,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
     @classmethod
     def _convert_requirement_to_spec_object(
         cls,
-        requirement: Requirement,
+        requirement: SDocNode,
         grammar: DocumentGrammar,
         context: P01_SDocToReqIFBuildContext,
         data_types: List,
@@ -480,7 +478,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
         grammar_element = grammar.elements_by_type[requirement.requirement_type]
 
         attributes: List[SpecObjectAttribute] = []
-        for field in requirement.fields:
+        for field in requirement.fields_as_parsed:
             if field.field_name == RequirementFieldName.REFS:
                 parent_references = []
                 for reference in field.field_value_references:

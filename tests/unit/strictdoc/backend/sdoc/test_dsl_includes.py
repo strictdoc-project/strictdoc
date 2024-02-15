@@ -3,7 +3,7 @@ import pytest
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
-    Requirement,
+    SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.reader import SDReader
@@ -74,7 +74,7 @@ def validate_document(document):
     assert isinstance(composite_requirement, CompositeRequirement)
 
     requirement = document.section_contents[1]
-    assert isinstance(requirement, Requirement)
+    assert isinstance(requirement, SDocNode)
     assert requirement.ng_document_reference.get_document() == document
     assert requirement.document == document
     assert requirement.ng_level == 1
@@ -86,7 +86,7 @@ def validate_document(document):
     assert len(section.free_texts) == 1
 
     sub_requirement = section.section_contents[0]
-    assert isinstance(sub_requirement, Requirement)
+    assert isinstance(sub_requirement, SDocNode)
     assert sub_requirement.ng_level == 2
 
     composite_requirement = section.section_contents[1]
@@ -94,7 +94,7 @@ def validate_document(document):
     assert composite_requirement.ng_level == 2
 
     sub_sub_requirement = composite_requirement.requirements[0]
-    assert isinstance(sub_sub_requirement, Requirement)
+    assert isinstance(sub_sub_requirement, SDocNode)
     assert sub_sub_requirement.ng_level == 3
 
 

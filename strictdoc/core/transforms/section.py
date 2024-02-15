@@ -10,7 +10,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
@@ -253,11 +253,11 @@ class CreateSectionCommand:
             parent = reference_node
             insert_to_idx = len(parent.section_contents)
         elif whereto == NodeCreationOrder.BEFORE:
-            assert isinstance(reference_node, (Requirement, Section))
+            assert isinstance(reference_node, (SDocNode, Section))
             parent = reference_node.parent
             insert_to_idx = parent.section_contents.index(reference_node)
         elif whereto == NodeCreationOrder.AFTER:
-            assert isinstance(reference_node, (Document, Requirement, Section))
+            assert isinstance(reference_node, (Document, SDocNode, Section))
             if isinstance(reference_node, Document):
                 parent = reference_node
                 insert_to_idx = 0

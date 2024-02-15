@@ -4,7 +4,7 @@ from textx import TextXSyntaxError
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
-    Requirement,
+    SDocNode,
 )
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
@@ -218,7 +218,7 @@ This is a statement 3
     assert isinstance(document, Document)
 
     assert isinstance(
-        document.section_contents[0].section_contents[0], Requirement
+        document.section_contents[0].section_contents[0], SDocNode
     )
     requirement_1 = document.section_contents[0].section_contents[0]
     assert (
@@ -258,7 +258,7 @@ RATIONALE: This is a Rationale
     assert input_sdoc == output
 
     assert isinstance(
-        document.section_contents[0].section_contents[0], Requirement
+        document.section_contents[0].section_contents[0], SDocNode
     )
     requirement_1 = document.section_contents[0].section_contents[0]
     assert requirement_1.rationale == "This is a Rationale"
@@ -294,7 +294,7 @@ This is a Rationale line 3
     assert input_sdoc == output
 
     assert isinstance(
-        document.section_contents[0].section_contents[0], Requirement
+        document.section_contents[0].section_contents[0], SDocNode
     )
     requirement_1 = document.section_contents[0].section_contents[0]
     assert requirement_1.rationale == (
@@ -419,7 +419,7 @@ body 1.1.1.1
         .section_contents[0]
         .requirements[0]
         .requirements[0],
-        Requirement,
+        SDocNode,
     )
     requirement_1_1_1 = (
         document.section_contents[0]
@@ -630,7 +630,7 @@ STATEMENT: ABC
     assert section.custom_level == "123"
 
     requirement = section.section_contents[0]
-    assert isinstance(requirement, Requirement)
+    assert isinstance(requirement, SDocNode)
     assert requirement.custom_level == "456"
 
     writer = SDWriter()
@@ -675,7 +675,7 @@ COMMENT: This requirement is very important
     assert isinstance(document, Document)
 
     assert isinstance(
-        document.section_contents[0].section_contents[0], Requirement
+        document.section_contents[0].section_contents[0], SDocNode
     )
     requirement_1 = document.section_contents[0].section_contents[0]
     assert requirement_1.reserved_tags[0] == "Tag 1"
@@ -790,7 +790,7 @@ STATEMENT: ABC
     assert section.custom_level == "123"
 
     requirement = section.section_contents[0]
-    assert isinstance(requirement, Requirement)
+    assert isinstance(requirement, SDocNode)
     assert requirement.custom_level == "456"
 
     writer = SDWriter()
@@ -881,7 +881,7 @@ TITLE: Test Doc
     document: Document = reader.read(input_sdoc)
     assert isinstance(document, Document)
 
-    requirement: Requirement = document.section_contents[0]
+    requirement: SDocNode = document.section_contents[0]
     assert requirement.reserved_uid is None
     assert requirement.reserved_title is None
     assert requirement.reserved_statement is None

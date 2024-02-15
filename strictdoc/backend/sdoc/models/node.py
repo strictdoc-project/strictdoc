@@ -88,7 +88,7 @@ class SDocNodeField:
 
 
 @auto_described
-class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, too-many-public-methods  # noqa: E501
+class SDocNode(SDocObject):
     def __init__(
         self,
         parent,
@@ -622,7 +622,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
 
 
 @auto_described
-class CompositeRequirement(Requirement):
+class CompositeRequirement(SDocNode):
     def __init__(self, parent, **fields):
         super().__init__(parent, **fields)
         self.ng_document_reference: Optional[DocumentReference] = None

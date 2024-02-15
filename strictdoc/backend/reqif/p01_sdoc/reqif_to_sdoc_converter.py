@@ -23,7 +23,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.free_text import FreeText
-from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
@@ -134,7 +134,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             elif P01_ReqIFToSDocConverter.is_spec_object_requirement(
                 spec_object
             ):
-                requirement: Requirement = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
+                requirement: SDocNode = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
                     spec_object=spec_object,
                     parent_section=current_section,
                     reqif_bundle=reqif_bundle,
@@ -328,7 +328,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         parent_section: Union[Section, Document],
         reqif_bundle: ReqIFBundle,
         level,
-    ) -> Requirement:
+    ) -> SDocNode:
         fields = []
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
@@ -415,7 +415,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     field_value_references=None,
                 )
             )
-        requirement = Requirement(
+        requirement = SDocNode(
             parent=parent_section,
             requirement_type="REQUIREMENT",
             mid=None,

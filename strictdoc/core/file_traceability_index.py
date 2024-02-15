@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Tuple
 
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
@@ -15,8 +15,8 @@ from strictdoc.helpers.exception import StrictDocException
 
 class FileTraceabilityIndex:
     def __init__(self):
-        # "file.py" -> List[Requirement]
-        self.map_paths_to_reqs: Dict[str, List[Requirement]] = {}
+        # "file.py" -> List[SDocNode]
+        self.map_paths_to_reqs: Dict[str, List[SDocNode]] = {}
 
         # "REQ-001" -> List[FileReference]
         self.map_reqs_uids_to_paths: Dict[str, List[FileReference]] = {}
@@ -29,8 +29,8 @@ class FileTraceabilityIndex:
         self.map_reqs_uids_to_line_range_file_refs: Dict[str, List[Any]] = {}
 
         # "file.py" -> (
-        #   general_requirements: [Requirement],  # noqa: ERA001
-        #   range_requirements: [Requirement]  # noqa: ERA001
+        #   general_requirements: [SDocNode],  # noqa: ERA001
+        #   range_requirements: [SDocNode]  # noqa: ERA001
         # )  # noqa: ERA001
         self.source_file_reqs_cache = {}
 
@@ -38,7 +38,7 @@ class FileTraceabilityIndex:
         return self.map_paths_to_reqs.get(source_file_rel_path) is not None
 
     def get_requirement_file_links(
-        self, requirement: Requirement
+        self, requirement: SDocNode
     ) -> List[Tuple[FileReference, Optional[List[RangeMarker]]]]:
         if requirement.reserved_uid not in self.map_reqs_uids_to_paths:
             return []
@@ -71,7 +71,7 @@ class FileTraceabilityIndex:
 
     def get_source_file_reqs(
         self, source_file_rel_path: str
-    ) -> Tuple[Optional[List[Requirement]], Optional[List[Requirement]]]:
+    ) -> Tuple[Optional[List[SDocNode]], Optional[List[SDocNode]]]:
         assert (
             source_file_rel_path
             in self.map_paths_to_source_file_traceability_info
@@ -184,7 +184,7 @@ class FileTraceabilityIndex:
 
         # assert 0, self.map_reqs_uids_to_line_range_file_refs
 
-    def create_requirement(self, requirement: Requirement) -> None:
+    def create_requirement(self, requirement: SDocNode) -> None:
         # A requirement can have multiple File references, and this function is
         # called for every File reference.
         if requirement.reserved_uid in self.map_reqs_uids_to_paths:

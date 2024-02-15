@@ -9,10 +9,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.type_system import GrammarElementFieldString
@@ -191,7 +188,7 @@ class ExcelToSDocConverter:
             value = row_values[i].strip()
             if value != "":
                 template_requirement.ordered_fields_lookup[name] = [
-                    RequirementField(
+                    SDocNodeField(
                         parent=None,
                         field_name=name,
                         field_value=None,
@@ -204,7 +201,7 @@ class ExcelToSDocConverter:
                 template_requirement, parent_uid, role=None
             )
 
-            requirement_field = RequirementField(
+            requirement_field = SDocNodeField(
                 parent=template_requirement,
                 field_name="REFS",
                 field_value=None,

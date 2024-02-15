@@ -3,10 +3,7 @@ from typing import List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -121,7 +118,7 @@ class CreateRequirementTransform:
         if len(relations) > 0:
             requirement.references = relations
             requirement.ordered_fields_lookup["REFS"] = [
-                RequirementField(
+                SDocNodeField(
                     parent=requirement,
                     field_name="REFS",
                     field_value=None,

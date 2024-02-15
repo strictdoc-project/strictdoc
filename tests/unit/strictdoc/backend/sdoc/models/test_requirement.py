@@ -1,7 +1,7 @@
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.node import RequirementField
+from strictdoc.backend.sdoc.models.node import SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.type_system import GrammarElementFieldString
 
@@ -90,7 +90,7 @@ def test_04_meta_multilines_not_nones():
 
     test_value = "a long\nmultiline value instead\nof the single line one"
     requirement.ordered_fields_lookup["META_TEST_FIELD"] = [
-        RequirementField(
+        SDocNodeField(
             parent=None,
             field_name="META_TEST_FIELD",
             field_value=None,

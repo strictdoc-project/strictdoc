@@ -25,11 +25,8 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import ParentReqReference
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
@@ -457,7 +454,7 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
 
                 enum_values = ", ".join(enum_values_resolved)
                 fields.append(
-                    RequirementField(
+                    SDocNodeField(
                         parent=None,
                         field_name=sdoc_field_name,
                         field_value=enum_values,
@@ -483,7 +480,7 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                 field_name,
             )
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=sdoc_field_name,
                     field_value=attribute_value,
@@ -517,7 +514,7 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     )
                 )
             if len(parent_refs) > 0:
-                requirement_field = RequirementField(
+                requirement_field = SDocNodeField(
                     parent=requirement,
                     field_name="REFS",
                     field_value=None,

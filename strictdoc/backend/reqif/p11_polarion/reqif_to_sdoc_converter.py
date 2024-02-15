@@ -25,10 +25,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.free_text import FreeText
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
@@ -385,7 +382,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     ].strip()
                 enum_values = ", ".join(enum_values_list)
                 fields.append(
-                    RequirementField(
+                    SDocNodeField(
                         parent=None,
                         field_name=field_name,
                         field_value=enum_values,
@@ -418,7 +415,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             if field_name in ReqIFRequirementReservedField.SET:
                 field_name = REQIF_MAP_TO_SDOC_FIELD_MAP[field_name]
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=field_name,
                     field_value=attribute_value,
@@ -456,7 +453,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     )
                 )
             if len(parent_refs) > 0:
-                requirement_field = RequirementField(
+                requirement_field = SDocNodeField(
                     parent=requirement,
                     field_name="REFS",
                     field_value=None,

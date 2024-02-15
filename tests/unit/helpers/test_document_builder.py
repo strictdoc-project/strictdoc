@@ -4,10 +4,7 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -76,7 +73,7 @@ class DocumentBuilder:
         requirement.references.append(reference)
         if "REFS" not in requirement.ordered_fields_lookup:
             requirement.ordered_fields_lookup["REFS"] = [
-                RequirementField(
+                SDocNodeField(
                     parent=requirement,
                     field_name="REFS",
                     field_value=None,
@@ -85,7 +82,7 @@ class DocumentBuilder:
                 )
             ]
         else:
-            requirement.ordered_fields_lookup["REFS"][0] = RequirementField(
+            requirement.ordered_fields_lookup["REFS"][0] = SDocNodeField(
                 parent=requirement,
                 field_name="REFS",
                 field_value=None,

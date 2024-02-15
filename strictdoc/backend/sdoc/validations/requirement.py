@@ -11,7 +11,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.node import (
     Requirement,
-    RequirementField,
+    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
@@ -49,11 +49,11 @@ def validate_requirement(
     grammar_fields_iterator: Iterator[GrammarElementField] = iter(
         grammar_element.fields
     )
-    requirement_field_iterator: Iterator[RequirementField] = iter(
+    requirement_field_iterator: Iterator[SDocNodeField] = iter(
         requirement.fields
     )
 
-    requirement_field: Optional[RequirementField] = next(
+    requirement_field: Optional[SDocNodeField] = next(
         requirement_field_iterator, None
     )
     grammar_field: Optional[GrammarElementField] = next(
@@ -111,7 +111,7 @@ def validate_requirement(
 def validate_requirement_field(
     requirement: Requirement,
     document_grammar: DocumentGrammar,
-    requirement_field: RequirementField,
+    requirement_field: SDocNodeField,
     grammar_field: GrammarElementField,
 ) -> bool:
     if grammar_field is None:

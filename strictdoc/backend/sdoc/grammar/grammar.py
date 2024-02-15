@@ -261,7 +261,7 @@ ReservedKeyword[noskipws]:
 Requirement[noskipws]:
   '[' !CompositeRequirementTagName requirement_type = RequirementType ']' '\n'
   ('MID: ' mid = SingleLineString '\n')?
-  fields *= RequirementField
+  fields *= SDocNodeField
 ;
 
 CompositeRequirementTagName[noskipws]:
@@ -272,7 +272,7 @@ RequirementType[noskipws]:
   !ReservedKeyword /[A-Z]+(_[A-Z]+)*/
 ;
 
-RequirementField[noskipws]:
+SDocNodeField[noskipws]:
   (
     (field_name = 'REFS' | field_name = 'RELATIONS') ':' '\n'
     (field_value_references += Reference)
@@ -291,7 +291,7 @@ CompositeRequirement[noskipws]:
 
   ('MID: ' mid = SingleLineString '\n')?
 
-  fields *= RequirementField
+  fields *= SDocNodeField
 
   requirements *= SpaceThenRequirement
 

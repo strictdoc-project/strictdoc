@@ -1,4 +1,4 @@
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.reader import SDReader
 
 
@@ -61,6 +61,6 @@ Yes
     document = reader.read(input_sdoc)
 
     requirement = document.section_contents[0]
-    assert isinstance(requirement, Requirement)
+    assert isinstance(requirement, SDocNode)
     for _, value in requirement.enumerate_meta_fields():
         assert value is not None

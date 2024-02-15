@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.type_system import GrammarElementField
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
@@ -17,7 +17,7 @@ from strictdoc.helpers.cast import assert_cast
 
 @dataclass
 class UpdateRequirementResult:
-    this_document_requirements_to_update: Set[Requirement]
+    this_document_requirements_to_update: Set[SDocNode]
 
 
 class UpdateGrammarCommand:
@@ -88,7 +88,7 @@ class UpdateGrammarCommand:
             if not node.is_requirement:
                 continue
 
-            requirement: Requirement = assert_cast(node, Requirement)
+            requirement: SDocNode = assert_cast(node, SDocNode)
             requirement_field_names = list(
                 requirement.ordered_fields_lookup.keys()
             )

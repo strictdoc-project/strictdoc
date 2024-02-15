@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.node import (
-    Requirement,
+    SDocNode,
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
@@ -28,7 +28,7 @@ from strictdoc.helpers.md5 import get_md5
 from strictdoc.helpers.mid import MID
 
 
-def calculate_similarity(lhs: Requirement, rhs: Requirement) -> float:
+def calculate_similarity(lhs: SDocNode, rhs: SDocNode) -> float:
     similar_fields = []
     for field_name_, field_values_ in lhs.ordered_fields_lookup.items():
         if field_name_ == "COMMENT":
@@ -71,7 +71,7 @@ class ProjectTreeDiffStats:
     map_statements_to_nodes: Dict[str, Any] = field(default_factory=dict)
     map_rel_paths_to_docs: Dict[str, Document] = field(default_factory=dict)
 
-    cache_requirement_to_requirement: Dict[Requirement, Requirement] = field(
+    cache_requirement_to_requirement: Dict[SDocNode, SDocNode] = field(
         default_factory=dict
     )
 
@@ -91,10 +91,10 @@ class ProjectTreeDiffStats:
         return document_md5 in self.document_md5_hashes
 
     def contains_requirement_field(
-        self, requirement: Requirement, field_name: str, field_value: str
+        self, requirement: SDocNode, field_name: str, field_value: str
     ):
         assert isinstance(field_value, str)
-        other_requirement: Optional[Requirement] = self.find_requirement(
+        other_requirement: Optional[SDocNode] = self.find_requirement(
             requirement
         )
         if other_requirement is None:
@@ -114,10 +114,10 @@ class ProjectTreeDiffStats:
         return False
 
     def get_identical_requirement_field(
-        self, requirement: Requirement, field_name: str, field_value: str
+        self, requirement: SDocNode, field_name: str, field_value: str
     ) -> Optional[SDocNodeField]:
         assert isinstance(field_value, str)
-        other_requirement: Optional[Requirement] = self.find_requirement(
+        other_requirement: Optional[SDocNode] = self.find_requirement(
             requirement
         )
         if other_requirement is None:
@@ -240,11 +240,11 @@ class ProjectTreeDiffStats:
 
     def contains_requirement_relations(
         self,
-        requirement: Requirement,
+        requirement: SDocNode,
         relation_uid: str,
         relation_role: Optional[str],
     ):
-        other_requirement: Optional[Requirement] = self.find_requirement(
+        other_requirement: Optional[SDocNode] = self.find_requirement(
             requirement
         )
         if other_requirement is None:
@@ -261,9 +261,7 @@ class ProjectTreeDiffStats:
                     return True
         return False
 
-    def find_requirement(
-        self, requirement: Requirement
-    ) -> Optional[Requirement]:
+    def find_requirement(self, requirement: SDocNode) -> Optional[SDocNode]:
         if requirement in self.cache_requirement_to_requirement:
             return self.cache_requirement_to_requirement[requirement]
 
@@ -281,7 +279,7 @@ class ProjectTreeDiffStats:
             requirement.reserved_uid is None
             or requirement.reserved_uid not in self.map_uid_to_nodes
         ):
-            candidate_requirements: Dict[Requirement, float] = {}
+            candidate_requirements: Dict[SDocNode, float] = {}
 
             if (
                 requirement.reserved_title is not None
@@ -312,13 +310,13 @@ class ProjectTreeDiffStats:
                 return candidate_requirement
             return None
 
-        other_requirement: Requirement = self.map_uid_to_nodes[
+        other_requirement: SDocNode = self.map_uid_to_nodes[
             requirement.reserved_uid
         ]
-        # FIXME: This is an interesting case when a Requirement can be promoted
+        # FIXME: This is an interesting case when a SDocNode can be promoted
         # or unpromoted to a Section with the same UID preserved. Ignore this
         # case for now.
-        if not isinstance(other_requirement, Requirement):
+        if not isinstance(other_requirement, SDocNode):
             return None
         return other_requirement
 
@@ -699,7 +697,7 @@ class ChangeStats:
                             ] = section_change
                         change_stats.add_change(section_change)
 
-                if isinstance(node, Requirement):
+                if isinstance(node, SDocNode):
                     """
                     Step: We check if a requirement was modified at all, or if
                     it has already been checked before. Skipping the requirement
@@ -710,7 +708,7 @@ class ChangeStats:
                     if node in change_stats.map_nodes_to_changes:
                         continue
 
-                    requirement: Requirement = assert_cast(node, Requirement)
+                    requirement: SDocNode = assert_cast(node, SDocNode)
                     requirement_md5 = self_stats.get_md5_by_node(requirement)
                     requirement_modified = (
                         not other_stats.contains_requirement_md5(
@@ -721,9 +719,9 @@ class ChangeStats:
                         continue
 
                     other_requirement_or_none: Optional[
-                        Requirement
+                        SDocNode
                     ] = assert_optional_cast(
-                        other_stats.find_requirement(requirement), Requirement
+                        other_stats.find_requirement(requirement), SDocNode
                     )
 
                     # If there is no other requirement to compare with,
@@ -755,7 +753,7 @@ class ChangeStats:
                     Step: Starting from here, we will be looking at the
                     difference between this and the other requirement.
                     """
-                    other_requirement: Requirement = other_requirement_or_none
+                    other_requirement: SDocNode = other_requirement_or_none
 
                     field_changes: List[RequirementFieldChange] = []
 
@@ -902,15 +900,15 @@ class ChangeStats:
     def create_field_change(
         *,
         other_stats: ProjectTreeDiffStats,
-        requirement: Requirement,
+        requirement: SDocNode,
         requirement_field: SDocNodeField,
-        other_requirement: Requirement,
+        other_requirement: SDocNode,
         requirement_field_name: str,
         requirement_field_value: str,
     ) -> Optional[RequirementFieldChange]:
-        assert isinstance(requirement, Requirement)
+        assert isinstance(requirement, SDocNode)
         assert isinstance(requirement_field, SDocNodeField)
-        assert isinstance(other_requirement, Requirement)
+        assert isinstance(other_requirement, SDocNode)
 
         other_requirement_field = other_stats.get_identical_requirement_field(
             requirement, requirement_field_name, requirement_field_value
@@ -956,11 +954,11 @@ class ChangeStats:
     @staticmethod
     def create_comment_field_changes(
         *,
-        requirement: Requirement,
-        other_requirement: Requirement,
+        requirement: SDocNode,
+        other_requirement: SDocNode,
     ) -> Optional[List[RequirementFieldChange]]:
-        assert isinstance(requirement, Requirement)
-        assert isinstance(other_requirement, Requirement)
+        assert isinstance(requirement, SDocNode)
+        assert isinstance(other_requirement, SDocNode)
 
         changes = []
 
@@ -1156,7 +1154,7 @@ class ProjectDiffAnalyzer:
                     hasher.update(free_text_text.encode("utf-8"))
                 map_nodes_to_hashers[node] = hasher
 
-            elif isinstance(node, Requirement):
+            elif isinstance(node, SDocNode):
                 if node.reserved_uid is not None:
                     document_tree_stats.map_uid_to_nodes[
                         node.reserved_uid
@@ -1235,7 +1233,7 @@ class ProjectDiffAnalyzer:
             for sub_node_ in node.section_contents:
                 if isinstance(sub_node_, Section):
                     map_nodes_to_hashers[node].update(recurse(sub_node_))
-                elif isinstance(sub_node_, Requirement):
+                elif isinstance(sub_node_, SDocNode):
                     node_md5 = (
                         map_nodes_to_hashers[sub_node_]
                         .hexdigest()
@@ -1260,7 +1258,7 @@ class ProjectDiffAnalyzer:
 
             if isinstance(node_, Section):
                 document_tree_stats.section_md5_hashes.add(node_md5)
-            elif isinstance(node_, Requirement):
+            elif isinstance(node_, SDocNode):
                 document_tree_stats.requirement_md5_hashes.add(node_md5)
             elif isinstance(node_, Document):
                 document_tree_stats.document_md5_hashes.add(node_md5)

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
@@ -31,12 +31,12 @@ class UpdateRequirementActionObject:
         # the requirement itself, all links it was linking to
         # (for deleted links) and all links it is linking to now
         # (including new links).
-        self.this_document_requirements_to_update: Set[Requirement] = set()
+        self.this_document_requirements_to_update: Set[SDocNode] = set()
 
 
 @dataclass
 class UpdateRequirementResult:
-    this_document_requirements_to_update: Set[Requirement]
+    this_document_requirements_to_update: Set[SDocNode]
 
 
 class UpdateRequirementTransform:
@@ -44,16 +44,16 @@ class UpdateRequirementTransform:
         self,
         *,
         form_object: RequirementFormObject,
-        requirement: Requirement,
+        requirement: SDocNode,
         traceability_index: TraceabilityIndex,
     ):
         self.form_object: RequirementFormObject = form_object
-        self.requirement: Requirement = requirement
+        self.requirement: SDocNode = requirement
         self.traceability_index: TraceabilityIndex = traceability_index
 
     def perform(self):
         form_object: RequirementFormObject = self.form_object
-        requirement: Requirement = self.requirement
+        requirement: SDocNode = self.requirement
         document: Document = requirement.document
         traceability_index: TraceabilityIndex = self.traceability_index
 

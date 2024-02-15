@@ -2461,7 +2461,7 @@ At present, StrictDoc lacks a documented public Python API. Nevertheless, users 
 
 One good example is the ``SDWriter`` class, which exercises the complete export of the Python data objects to the SDoc format. Since, the SDoc format is the primary data format of StrictDoc, the SDWriter is quite feature-rich in what it does and covers. The ``RSTWriter`` is less powerful because it does not reflect the full data model, but is probably worth a look as well.
 
-The ``strictdoc/backend/reqif`` folder contains exporter/importer routines for the ReqIF format. There, the core classes from the Python data model, e.g. Requirement, Section, Document, Grammar, etc. are created or read from and to the ReqIF format.
+The ``strictdoc/backend/reqif`` folder contains exporter/importer routines for the ReqIF format. There, the core classes from the Python data model, e.g. SDocNode, Section, Document, Grammar, etc. are created or read from and to the ReqIF format.
 
 The ``ManageAutoUIDCommand`` class features a good use of all APIs that one may need to read/update/write back a SDoc document tree:
 

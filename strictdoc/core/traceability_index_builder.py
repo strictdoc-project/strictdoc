@@ -8,7 +8,7 @@ from textx import TextXSyntaxError
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
@@ -199,12 +199,12 @@ class TraceabilityIndexBuilder:
                     GraphLinkType.MID_TO_NODE,
                     OneToOneDictionary(
                         MID,
-                        (Requirement, Section, Document, InlineLink, Anchor),
+                        (SDocNode, Section, Document, InlineLink, Anchor),
                     ),
                 ),
                 (
                     GraphLinkType.UID_TO_NODE,
-                    OneToOneDictionary(str, (Requirement, Section, Anchor)),
+                    OneToOneDictionary(str, (SDocNode, Section, Anchor)),
                 ),
                 (
                     GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
@@ -389,7 +389,7 @@ class TraceabilityIndexBuilder:
                         )
 
                 if node.is_requirement:
-                    requirement: Requirement = node
+                    requirement: SDocNode = node
                     if requirement.reserved_tags is not None:
                         for tag in requirement.reserved_tags:
                             document_tags.setdefault(tag, 0)
@@ -449,7 +449,7 @@ class TraceabilityIndexBuilder:
 
                 if not node.is_requirement:
                     continue
-                requirement: Requirement = node
+                requirement: SDocNode = node
                 if requirement.reserved_uid is None:
                     continue
 

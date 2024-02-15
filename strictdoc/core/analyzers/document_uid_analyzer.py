@@ -2,7 +2,7 @@ from collections import Counter
 from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.analyzers.document_stats import (
     DocumentStats,
@@ -66,9 +66,9 @@ class DocumentUIDAnalyzer:
                 else:
                     this_document_stats.sections_without_uid.append(node)
                 continue
-            if not isinstance(node, Requirement):
+            if not isinstance(node, SDocNode):
                 continue
-            requirement: Requirement = node
+            requirement: SDocNode = node
             requirement_parent_prefix: str = (
                 requirement.get_requirement_prefix()
             )

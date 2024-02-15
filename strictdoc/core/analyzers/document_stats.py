@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.helpers.string import create_safe_title_string
 
@@ -11,7 +11,7 @@ from strictdoc.helpers.string import create_safe_title_string
 @dataclass
 class SinglePrefixRequirements:
     requirements_uid_numbers: List[int] = field(default_factory=list)
-    requirements_no_uid: List[Requirement] = field(default_factory=list)
+    requirements_no_uid: List[SDocNode] = field(default_factory=list)
 
 
 @dataclass

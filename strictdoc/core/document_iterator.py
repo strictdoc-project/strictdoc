@@ -3,7 +3,7 @@ import collections
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
-    Requirement,
+    SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.core.level_counter import LevelCounter
@@ -28,7 +28,7 @@ class DocumentCachingIterator:
         #     return  # noqa: ERA001
 
         nodes_to_skip = (
-            (FreeText, Requirement)
+            (FreeText, SDocNode)
             if not self.document.config.is_requirement_in_toc()
             else FreeText
         )
@@ -36,7 +36,7 @@ class DocumentCachingIterator:
         for node in self.all_content():
             if isinstance(node, nodes_to_skip):
                 continue
-            if isinstance(node, Requirement) and node.reserved_title is None:
+            if isinstance(node, SDocNode) and node.reserved_title is None:
                 continue
             self.toc_nodes_cache.append(node)
             yield node
@@ -64,9 +64,7 @@ class DocumentCachingIterator:
             if not current.ng_whitelisted:
                 continue
 
-            if isinstance(
-                current, (Section, Requirement, CompositeRequirement)
-            ):
+            if isinstance(current, (Section, SDocNode, CompositeRequirement)):
                 assert current.ng_level, f"Node has no ng_level: {current}"
 
                 if current.ng_resolved_custom_level != "None":
@@ -115,9 +113,7 @@ class DocumentCachingIterator:
 
             current = task_list.popleft()
 
-            if isinstance(
-                current, (Section, Requirement, CompositeRequirement)
-            ):
+            if isinstance(current, (Section, SDocNode, CompositeRequirement)):
                 # We are not interested in the nodes without level in this
                 # iterator.
                 if current.ng_resolved_custom_level == "None":

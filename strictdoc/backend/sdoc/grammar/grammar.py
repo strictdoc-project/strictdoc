@@ -238,7 +238,7 @@ Section[noskipws]:
 ;
 
 SectionOrRequirement[noskipws]:
-  '\n' (Section | Requirement | CompositeRequirement | FragmentFromFile)
+  '\n' (Section | SDocNode | CompositeRequirement | FragmentFromFile)
 ;
 
 FragmentFromFile[noskipws]:
@@ -247,7 +247,7 @@ FragmentFromFile[noskipws]:
 ;
 
 SpaceThenRequirement[noskipws]:
-  '\n' (Requirement | CompositeRequirement)
+  '\n' (SDocNode | CompositeRequirement)
 ;
 
 SpaceThenFreeText[noskipws]:
@@ -258,7 +258,7 @@ ReservedKeyword[noskipws]:
   'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'FRAGMENT_FROM_FILE' | 'FREETEXT'
 ;
 
-Requirement[noskipws]:
+SDocNode[noskipws]:
   '[' !CompositeRequirementTagName requirement_type = RequirementType ']' '\n'
   ('MID: ' mid = SingleLineString '\n')?
   fields *= SDocNodeField

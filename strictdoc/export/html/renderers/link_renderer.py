@@ -3,7 +3,7 @@ from typing import Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.finders.source_files_finder import SourceFile
@@ -52,7 +52,7 @@ class LinkRenderer:
         unique_prefix = node.context.title_number_string
         if isinstance(node, Section):
             local_anchor = f"{unique_prefix}-{self._string_to_link(node.title)}"
-        elif isinstance(node, Requirement):
+        elif isinstance(node, SDocNode):
             if node.reserved_uid and len(node.reserved_uid) > 0:
                 local_anchor = (
                     f"{unique_prefix}-{self._string_to_link(node.reserved_uid)}"
@@ -94,7 +94,7 @@ class LinkRenderer:
                 "#_TOP"
             )
 
-        assert isinstance(node, (Requirement, Section, Anchor)), node
+        assert isinstance(node, (SDocNode, Section, Anchor)), node
         assert isinstance(document_type, DocumentType), document_type
         local_link = self.render_local_anchor(node)
         if (
@@ -130,7 +130,7 @@ class LinkRenderer:
         return requirement_link
 
     def render_requirement_link_from_source_file(self, node, source_file):
-        assert isinstance(node, Requirement)
+        assert isinstance(node, SDocNode)
         assert isinstance(source_file, SourceFile)
         local_link = self.render_local_anchor(node)
         link_cache_key = ("document", source_file.level)
@@ -149,7 +149,7 @@ class LinkRenderer:
 
     @staticmethod
     def render_source_file_link(
-        requirement: Requirement, file_reference: FileReference
+        requirement: SDocNode, file_reference: FileReference
     ):
         assert isinstance(file_reference, FileReference), file_reference
 
@@ -185,7 +185,7 @@ class LinkRenderer:
 
     @staticmethod
     def render_requirement_in_source_file_link(
-        requirement: Requirement,
+        requirement: SDocNode,
         source_link: FileReference,
         context_source_file: SourceFile,
     ):
@@ -232,7 +232,7 @@ class LinkRenderer:
 
     def render_requirement_in_source_file_range_link(
         self,
-        requirement: Requirement,
+        requirement: SDocNode,
         source_link: FileReference,
         context_source_file: SourceFile,
         source_range,

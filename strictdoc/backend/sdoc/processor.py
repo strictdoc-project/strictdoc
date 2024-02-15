@@ -12,7 +12,7 @@ from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
-    Requirement,
+    SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.validations.requirement import validate_requirement
@@ -49,7 +49,7 @@ class SDocParsingProcessor:
             "Section": self.process_section,
             "FragmentFromFile": self.process_include,
             "CompositeRequirement": self.process_composite_requirement,
-            "Requirement": self.process_requirement,
+            "SDocNode": self.process_requirement,
             "FreeText": self.process_free_text,
             "Fragment": self.process_fragment,
         }
@@ -166,7 +166,7 @@ class SDocParsingProcessor:
         ) and self.parse_context.document_config.auto_levels:
             composite_requirement.ng_resolved_custom_level = "None"
 
-    def process_requirement(self, requirement: Requirement):
+    def process_requirement(self, requirement: SDocNode):
         if requirement.ng_uses_old_refs_field:
             self.parse_context.uses_old_refs_field = True
         elif "REFS" in requirement.ordered_fields_lookup:

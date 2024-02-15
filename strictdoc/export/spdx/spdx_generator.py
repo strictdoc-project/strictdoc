@@ -39,7 +39,7 @@ from spdx_tools.spdx3.writer.console.spdx_document_writer import (
 from spdx_tools.spdx3.writer.json_ld.json_ld_writer import write_payload
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
     ParentReqReference,
@@ -62,7 +62,7 @@ def create_relationship_summary(
     return f"{lhs.summary} --|{relation}|--> {rhs.summary}"
 
 
-def get_spdx_ref(node: Union[Document, Requirement, FileReference]) -> str:
+def get_spdx_ref(node: Union[Document, SDocNode, FileReference]) -> str:
     if isinstance(node, FileReference):
         return re.sub(r"[/\\ ]", "_", node.get_native_path())
 
@@ -76,7 +76,7 @@ def get_spdx_ref(node: Union[Document, Requirement, FileReference]) -> str:
 
     if isinstance(node, Document):
         return "SDocDocument-" + identifier
-    if isinstance(node, Requirement):
+    if isinstance(node, SDocNode):
         return "SDocRequirement-" + identifier
     raise NotImplementedError
 
@@ -160,7 +160,7 @@ class SDocToSPDXConverter:
 
     @staticmethod
     def convert_requirement_to_snippet(
-        requirement: Requirement, document_bytes: bytes, spdx_file: File
+        requirement: SDocNode, document_bytes: bytes, spdx_file: File
     ) -> Snippet:
         snippet_sha256 = get_sha256(
             document_bytes[requirement.ng_byte_start : requirement.ng_byte_end]
@@ -365,7 +365,7 @@ class SPDXGenerator:
                     if node.reserved_uid is None:
                         continue
 
-                requirement: Requirement = assert_cast(node, Requirement)
+                requirement: SDocNode = assert_cast(node, SDocNode)
                 assert requirement.reserved_uid is not None
                 requirement_snippet: Snippet = (
                     lookup_uid_to_requirement_snippet[requirement.reserved_uid]

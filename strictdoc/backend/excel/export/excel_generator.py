@@ -7,7 +7,7 @@ from xlsxwriter.workbook import Workbook
 from xlsxwriter.worksheet import Worksheet
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
     FileReference,
@@ -223,7 +223,7 @@ class ExcelGenerator:
         row = 1
 
         for content_node in document_contents:
-            if isinstance(content_node, Requirement):
+            if isinstance(content_node, SDocNode):
                 if content_node.reserved_uid:
                     # only export the requirements with uid, allowing tracking
                     row += 1

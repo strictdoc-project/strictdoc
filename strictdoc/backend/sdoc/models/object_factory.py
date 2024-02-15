@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 
 
@@ -33,7 +33,7 @@ class SDocObjectFactory:
         rationale_multiline: Optional[str] = None,
         tags: Optional[str] = None,
         comments: Optional[List[str]] = None,
-    ) -> Requirement:
+    ) -> SDocNode:
         fields: List[SDocNodeField] = []
         if uid is not None:
             assert isinstance(uid, str) and len(uid) > 0
@@ -134,7 +134,7 @@ class SDocObjectFactory:
                         field_value_references=None,
                     )
                 )
-        requirement = Requirement(
+        requirement = SDocNode(
             parent=parent,
             requirement_type=requirement_type,
             mid=None,

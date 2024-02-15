@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
-from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
@@ -142,7 +142,7 @@ class QueryObject:
         if isinstance(expression, NodeHasChildRequirementsExpression):
             return self._evaluate_node_has_child_requirements(node)
         if isinstance(expression, NodeIsRequirementExpression):
-            return isinstance(node, Requirement)
+            return isinstance(node, SDocNode)
         if isinstance(expression, NodeIsSectionExpression):
             return isinstance(node, Section)
         if isinstance(expression, NodeIsRootExpression):
@@ -197,7 +197,7 @@ class QueryObject:
     ) -> Optional[str]:
         field_name = expression.field_name
         if node.is_requirement:
-            requirement: Requirement = assert_cast(node, Requirement)
+            requirement: SDocNode = assert_cast(node, SDocNode)
             element: GrammarElement = (
                 requirement.document.grammar.elements_by_type[
                     requirement.requirement_type
@@ -225,7 +225,7 @@ class QueryObject:
             raise NotImplementedError
 
     def _evaluate_node_has_parent_requirements(self, node):
-        if not isinstance(node, Requirement):
+        if not isinstance(node, SDocNode):
             raise TypeError(
                 f"node.has_parent_requirements can be only called on "
                 f"Requirement objects, got: {node.__class__.__name__}. To fix "
@@ -234,7 +234,7 @@ class QueryObject:
         return self.traceability_index.has_parent_requirements(node)
 
     def _evaluate_node_has_child_requirements(self, node):
-        if not isinstance(node, Requirement):
+        if not isinstance(node, SDocNode):
             raise TypeError(
                 f"node.has_child_requirements can be only called on "
                 f"Requirement objects, got: {node.__class__.__name__}. To fix "
@@ -245,8 +245,8 @@ class QueryObject:
     def _evaluate_node_contains(
         self, node, expression: NodeContainsExpression
     ) -> bool:
-        if isinstance(node, Requirement):
-            requirement = assert_cast(node, Requirement)
+        if isinstance(node, SDocNode):
+            requirement = assert_cast(node, SDocNode)
             requirement_field_: SDocNodeField
             for requirement_field_ in requirement.enumerate_fields():
                 if requirement_field_.field_value is not None:

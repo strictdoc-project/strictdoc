@@ -4,7 +4,7 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -56,7 +56,7 @@ class DocumentBuilder:
         role: Optional[str],
     ):
         assert relation_type in ("Parent", "Child")
-        requirement: Requirement = next(
+        requirement: SDocNode = next(
             r
             for r in self.requirements
             if r.reserved_uid == source_requirement_id

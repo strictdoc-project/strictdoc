@@ -30,7 +30,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import (
-    Requirement,
+    SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.writer import SDWriter
@@ -165,7 +165,7 @@ def create_main_router(
 
     @router.get("/actions/show_full_requirement", response_class=Response)
     def requirement__show_full(reference_mid: str):
-        requirement: Requirement = (
+        requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         )
         template = env().get_template(
@@ -753,9 +753,7 @@ def create_main_router(
         reference_node = export_action.traceability_index.get_node_by_mid(
             MID(reference_mid)
         )
-        reference_requirement: Requirement = assert_cast(
-            reference_node, Requirement
-        )
+        reference_requirement: SDocNode = assert_cast(reference_node, SDocNode)
         document = (
             reference_node
             if isinstance(reference_node, Document)
@@ -975,7 +973,7 @@ def create_main_router(
         response_class=Response,
     )
     def get_edit_requirement(requirement_id: str):
-        requirement: Requirement = (
+        requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(
                 MID(requirement_id)
             )
@@ -1031,7 +1029,7 @@ def create_main_router(
         reference_node = export_action.traceability_index.get_node_by_mid_weak(
             MID(reference_mid)
         )
-        if isinstance(reference_node, Requirement):
+        if isinstance(reference_node, SDocNode):
             next_uid: str = document_tree_stats.get_next_requirement_uid(
                 reference_node.get_requirement_prefix()
             )
@@ -1075,7 +1073,7 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         requirement_mid = request_dict["requirement_mid"]
-        requirement: Requirement = (
+        requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(
                 MID(requirement_mid)
             )
@@ -1248,7 +1246,7 @@ def create_main_router(
         assert (
             isinstance(requirement_mid, str) and len(requirement_mid) > 0
         ), f"{requirement_mid}"
-        requirement: Requirement = (
+        requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(
                 MID(requirement_mid)
             )
@@ -1413,7 +1411,7 @@ def create_main_router(
                 },
             )
 
-        requirement: Requirement = (
+        requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(
                 MID(requirement_mid)
             )
@@ -1508,7 +1506,7 @@ def create_main_router(
         # In that case, we make it add a node **after** the target requirement
         # node (not as its child because that's not possible).
         if whereto == NodeCreationOrder.CHILD and isinstance(
-            target_node, Requirement
+            target_node, SDocNode
         ):
             whereto = NodeCreationOrder.AFTER
 

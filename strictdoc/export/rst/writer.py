@@ -4,7 +4,7 @@ from typing import Optional
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import Requirement
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import FreeText, Section
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -46,7 +46,7 @@ class RSTWriter:
                 for free_text in content_node.free_texts:
                     output += self._print_free_text(free_text)
 
-            elif isinstance(content_node, Requirement):
+            elif isinstance(content_node, SDocNode):
                 output += self._print_requirement_fields(content_node)
 
         if output.endswith("\n\n"):
@@ -105,7 +105,7 @@ class RSTWriter:
         output += "\n\n"
         return output
 
-    def _print_requirement_fields(self, section_content: Requirement):
+    def _print_requirement_fields(self, section_content: SDocNode):
         requirement_template = RSTTemplates.jinja_environment.get_template(
             "requirement.jinja.rst"
         )

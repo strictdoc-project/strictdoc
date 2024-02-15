@@ -17,7 +17,7 @@ from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
-    Requirement,
+    SDocNode,
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
@@ -49,7 +49,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 SECTION_MODELS = [
     Section,
     FragmentFromFile,
-    Requirement,
+    SDocNode,
     SDocNodeField,
     CompositeRequirement,
     Reference,

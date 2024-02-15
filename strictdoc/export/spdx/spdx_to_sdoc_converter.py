@@ -9,7 +9,10 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
-from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
+from strictdoc.backend.sdoc.models.node import (
+    SDocNode,
+    SDocNodeField,
+)
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
@@ -50,12 +53,10 @@ class SPDXToSDocConverter:
         """
         Document
         """
-        document_requirement: Requirement = (
-            SPDXToSDocConverter._convert_document(
-                spdx_container.document,
-                sdoc_document=document,
-                sdoc_parent=document,
-            )
+        document_requirement: SDocNode = SPDXToSDocConverter._convert_document(
+            spdx_container.document,
+            sdoc_document=document,
+            sdoc_parent=document,
         )
         document_requirement.ng_level = document.ng_level + 1
         document.section_contents.append(document_requirement)
@@ -199,7 +200,7 @@ class SPDXToSDocConverter:
 
     @staticmethod
     def _convert_document(document: SpdxDocument, sdoc_document, sdoc_parent):
-        requirement = Requirement(
+        requirement = SDocNode(
             parent=sdoc_parent,
             requirement_type="SPDX_PACKAGE",
             mid=None,
@@ -229,8 +230,8 @@ class SPDXToSDocConverter:
         package: Package,
         sdoc_document: Document,
         sdoc_parent: Union[Section, Document],
-    ) -> Requirement:
-        requirement = Requirement(
+    ) -> SDocNode:
+        requirement = SDocNode(
             parent=sdoc_parent,
             requirement_type="SPDX_PACKAGE",
             mid=None,
@@ -269,9 +270,9 @@ class SPDXToSDocConverter:
         file: File,
         sdoc_document: Document,
         sdoc_parent: Union[Section, Document],
-    ) -> Requirement:
+    ) -> SDocNode:
         fields = []
-        requirement = Requirement(
+        requirement = SDocNode(
             parent=sdoc_parent,
             requirement_type="SPDX_FILE",
             mid=None,
@@ -329,9 +330,9 @@ class SPDXToSDocConverter:
         sdoc_document: Document,
         sdoc_parent: Union[Section, Document],
         spdx_container: SPDXSDocContainer,
-    ) -> Requirement:
+    ) -> SDocNode:
         fields = []
-        requirement = Requirement(
+        requirement = SDocNode(
             parent=sdoc_parent,
             requirement_type="SPDX_SNIPPET",
             mid=None,

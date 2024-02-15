@@ -7,7 +7,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import (
-    Requirement,
+    SDocNode,
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import Reference
@@ -46,7 +46,7 @@ class StrictDocSemanticError(Exception):
     def unregistered_field(
         *,
         field_name: str,
-        requirement: Requirement,
+        requirement: SDocNode,
         document_grammar: DocumentGrammar,
         line=None,
         col=None,
@@ -69,7 +69,7 @@ class StrictDocSemanticError(Exception):
 
     @staticmethod
     def missing_required_field(
-        requirement: Requirement,
+        requirement: SDocNode,
         grammar_field: GrammarElementField,
         document_grammar: DocumentGrammar,
         line=None,
@@ -96,7 +96,7 @@ class StrictDocSemanticError(Exception):
 
     @staticmethod
     def unexpected_field_outside_grammar(
-        requirement: Requirement,
+        requirement: SDocNode,
         requirement_field: SDocNodeField,
         document_grammar: DocumentGrammar,
         line=None,
@@ -123,7 +123,7 @@ class StrictDocSemanticError(Exception):
 
     @staticmethod
     def wrong_field_order(
-        requirement: Requirement,
+        requirement: SDocNode,
         document_grammar: DocumentGrammar,
         problematic_field: SDocNodeField,
         line=None,
@@ -152,7 +152,7 @@ class StrictDocSemanticError(Exception):
 
     @staticmethod
     def invalid_choice_field(
-        requirement: Requirement,
+        requirement: SDocNode,
         document_grammar: DocumentGrammar,
         requirement_field: SDocNodeField,
         line=None,
@@ -180,7 +180,7 @@ class StrictDocSemanticError(Exception):
 
     @staticmethod
     def invalid_multiple_choice_field(
-        requirement: Requirement,
+        requirement: SDocNode,
         document_grammar: DocumentGrammar,
         requirement_field: SDocNodeField,
         line=None,
@@ -246,7 +246,7 @@ class StrictDocSemanticError(Exception):
 
     @staticmethod
     def invalid_reference_type_item(
-        requirement: Requirement,
+        requirement: SDocNode,
         reference_item: Reference,
         line=None,
         col=None,

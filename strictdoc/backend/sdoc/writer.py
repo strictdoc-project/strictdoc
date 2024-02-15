@@ -12,7 +12,7 @@ from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
-    Requirement,
+    SDocNode,
 )
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
@@ -221,7 +221,7 @@ class SDWriter:
             if isinstance(content_node, Section):
                 output += self._print_section(content_node, document)
                 closing_tags.append((TAG.SECTION, content_node.ng_level))
-            elif isinstance(content_node, Requirement):
+            elif isinstance(content_node, SDocNode):
                 if isinstance(content_node, CompositeRequirement):
                     output += "[COMPOSITE_"
                     output += content_node.requirement_type
@@ -279,7 +279,7 @@ class SDWriter:
 
     @staticmethod
     def _print_requirement_fields(
-        section_content: Requirement, document: Document
+        section_content: SDocNode, document: Document
     ):
         output = ""
 
@@ -448,12 +448,12 @@ class SDWriter:
             output += "- "
         else:
             output += "  "
-        if file_entry.file_format:
+        if file_entry.g_file_format:
             output += "FORMAT: "
-            output += file_entry.file_format
+            output += file_entry.g_file_format
             output += "\n  "
         output += "VALUE: "
-        output += file_entry.file_path
+        output += file_entry.g_file_path
         output += "\n"
 
         return output
@@ -483,7 +483,7 @@ class SDWriter:
         return output
 
     @classmethod
-    def _print_requirement_refs(cls, requirement: Requirement, field):
+    def _print_requirement_refs(cls, requirement: SDocNode, field):
         output = ""
         if (
             requirement.ng_document_reference is not None

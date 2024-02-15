@@ -4,10 +4,7 @@ from typing import Dict, List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.type_system import GrammarElementField
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
@@ -99,7 +96,7 @@ class UpdateGrammarCommand:
             # Rewrite requirement fields because some fields could have been
             # renamed.
             new_ordered_fields_lookup: OrderedDict[
-                str, List[RequirementField]
+                str, List[SDocNodeField]
             ] = OrderedDict()
 
             for document_grammar_field_name in document_grammar_field_names:
@@ -115,7 +112,7 @@ class UpdateGrammarCommand:
                     continue
 
                 previous_fields: List[
-                    RequirementField
+                    SDocNodeField
                 ] = requirement.ordered_fields_lookup[previous_field_name]
                 for previous_field in previous_fields:
                     previous_field.field_name = document_grammar_field_name

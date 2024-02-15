@@ -2,10 +2,7 @@ from typing import List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 
 
@@ -37,11 +34,11 @@ class SDocObjectFactory:
         tags: Optional[str] = None,
         comments: Optional[List[str]] = None,
     ) -> Requirement:
-        fields: List[RequirementField] = []
+        fields: List[SDocNodeField] = []
         if uid is not None:
             assert isinstance(uid, str) and len(uid) > 0
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=RequirementFieldName.UID,
                     field_value=uid,
@@ -52,7 +49,7 @@ class SDocObjectFactory:
         if level:
             assert isinstance(level, str) and len(level) > 0
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=RequirementFieldName.LEVEL,
                     field_value=level,
@@ -62,7 +59,7 @@ class SDocObjectFactory:
             )
         if title is not None:
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=RequirementFieldName.TITLE,
                     field_value=title,
@@ -72,7 +69,7 @@ class SDocObjectFactory:
             )
         if statement:
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=RequirementFieldName.STATEMENT,
                     field_value=statement,
@@ -85,7 +82,7 @@ class SDocObjectFactory:
                 statement_multiline, str
             ), f"{statement_multiline}"
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=RequirementFieldName.STATEMENT,
                     field_value=None,
@@ -95,7 +92,7 @@ class SDocObjectFactory:
             )
         if rationale:
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=RequirementFieldName.RATIONALE,
                     field_value=rationale,
@@ -105,7 +102,7 @@ class SDocObjectFactory:
             )
         if rationale_multiline:
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=RequirementFieldName.RATIONALE,
                     field_value=None,
@@ -116,7 +113,7 @@ class SDocObjectFactory:
         if tags is not None:
             assert isinstance(tags, str), f"{tags}"
             fields.append(
-                RequirementField(
+                SDocNodeField(
                     parent=None,
                     field_name=RequirementFieldName.TAGS,
                     field_value=tags,
@@ -129,7 +126,7 @@ class SDocObjectFactory:
             for comment in comments:
                 assert isinstance(comment, str), f"{comment}"
                 fields.append(
-                    RequirementField(
+                    SDocNodeField(
                         parent=None,
                         field_name=RequirementFieldName.COMMENT,
                         field_value=None,

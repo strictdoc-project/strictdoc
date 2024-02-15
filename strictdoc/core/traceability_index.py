@@ -25,7 +25,7 @@ from strictdoc.helpers.sorting import alphanumeric_sort
 
 
 @auto_described
-class RequirementConnections:
+class SDocNodeConnections:
     """
     FIXME: Rename/refactor to NodeConnections (Requirements and Sections).
     """
@@ -181,7 +181,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             link_type=GraphLinkType.MID_TO_NODE, lhs_node=node_mid
         )
 
-    def get_node_connections(self, node_uid: str) -> RequirementConnections:
+    def get_node_connections(self, node_uid: str) -> SDocNodeConnections:
         assert isinstance(node_uid, str), node_uid
         return self.graph_database.get_link_value(
             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
@@ -507,7 +507,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             self.graph_database.create_link(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=requirement.reserved_uid,
-                rhs_node=RequirementConnections(
+                rhs_node=SDocNodeConnections(
                     requirement=requirement,
                     document=requirement.document,
                     parents=[],
@@ -528,7 +528,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 self.graph_database.create_link(
                     link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                     lhs_node=requirement.reserved_uid,
-                    rhs_node=RequirementConnections(
+                    rhs_node=SDocNodeConnections(
                         requirement=requirement,
                         document=requirement.document,
                         parents=[],
@@ -570,7 +570,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert requirement.reserved_uid is not None
         assert isinstance(parent_uid, str), parent_uid
         assert role is None or len(role) > 0, role
-        requirement_connections: RequirementConnections = (
+        requirement_connections: SDocNodeConnections = (
             self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=requirement.reserved_uid,
@@ -580,7 +580,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         # there is nothing to do.
         if requirement_connections.contains_uid(parent_uid, role):
             return
-        parent_requirement_connections: RequirementConnections = (
+        parent_requirement_connections: SDocNodeConnections = (
             self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=parent_uid,
@@ -626,7 +626,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert requirement.reserved_uid is not None
         assert isinstance(child_uid, str), child_uid
         assert role is None or len(role) > 0, role
-        requirement_connections: RequirementConnections = (
+        requirement_connections: SDocNodeConnections = (
             self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=requirement.reserved_uid,
@@ -636,7 +636,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         # there is nothing to do.
         if requirement_connections.contains_uid(child_uid, role):
             return
-        child_requirement_connections: RequirementConnections = (
+        child_requirement_connections: SDocNodeConnections = (
             self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=child_uid,
@@ -782,7 +782,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 lhs_node=requirement.reserved_uid,
                 rhs_node=requirement,
             )
-            requirement_connections: RequirementConnections = (
+            requirement_connections: SDocNodeConnections = (
                 self.graph_database.get_link_value(
                     link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                     lhs_node=requirement.reserved_uid,
@@ -800,13 +800,13 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert requirement.reserved_uid is not None
         assert isinstance(parent_uid, str), parent_uid
         assert role is None or len(role) > 0, role
-        requirement_connections: RequirementConnections = (
+        requirement_connections: SDocNodeConnections = (
             self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=requirement.reserved_uid,
             )
         )
-        parent_requirement_connections: RequirementConnections = (
+        parent_requirement_connections: SDocNodeConnections = (
             self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=parent_uid,
@@ -838,13 +838,13 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert requirement.reserved_uid is not None
         assert isinstance(child_uid, str), child_uid
         assert role is None or len(role) > 0, role
-        requirement_connections: RequirementConnections = (
+        requirement_connections: SDocNodeConnections = (
             self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=requirement.reserved_uid,
             )
         )
-        child_requirement_connections: RequirementConnections = (
+        child_requirement_connections: SDocNodeConnections = (
             self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=child_uid,

@@ -3,17 +3,14 @@ from dataclasses import dataclass
 from typing import List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 from strictdoc.core.traceability_index import (
     GraphLinkType,
-    RequirementConnections,
+    SDocNodeConnections,
     TraceabilityIndex,
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
@@ -90,7 +87,7 @@ class UpdateRequirementTransform:
 
         if len(references) > 0:
             requirement.ordered_fields_lookup[RequirementFieldName.REFS] = [
-                RequirementField(
+                SDocNodeField(
                     parent=requirement,
                     field_name=RequirementFieldName.REFS,
                     field_value=None,
@@ -204,7 +201,7 @@ class UpdateRequirementTransform:
             if reference_field.field_type not in ("Parent", "Child"):
                 continue
             ref_uid = reference_field.field_value
-            requirement_connections: RequirementConnections = (
+            requirement_connections: SDocNodeConnections = (
                 traceability_index.graph_database.get_link_value(
                     link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                     lhs_node=ref_uid,

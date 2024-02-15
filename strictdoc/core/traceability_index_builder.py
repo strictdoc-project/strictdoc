@@ -40,7 +40,7 @@ from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import (
     FileTraceabilityIndex,
     GraphLinkType,
-    RequirementConnections,
+    SDocNodeConnections,
     TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
@@ -208,7 +208,7 @@ class TraceabilityIndexBuilder:
                 ),
                 (
                     GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-                    OneToOneDictionary(str, RequirementConnections),
+                    OneToOneDictionary(str, SDocNodeConnections),
                 ),
                 (
                     GraphLinkType.NODE_TO_INCOMING_LINKS,
@@ -380,7 +380,7 @@ class TraceabilityIndexBuilder:
                         traceability_index.graph_database.create_link(
                             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                             lhs_node=node.reserved_uid,
-                            rhs_node=RequirementConnections(
+                            rhs_node=SDocNodeConnections(
                                 requirement=node,
                                 document=document,
                                 parents=[],
@@ -475,14 +475,14 @@ class TraceabilityIndexBuilder:
                                 f"parent requirement which doesn't exist: "
                                 f"{parent_reference.ref_uid}."
                             )
-                        parent_requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
+                        parent_requirement_connections: SDocNodeConnections = traceability_index.graph_database.get_link_value(
                             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                             lhs_node=parent_reference.ref_uid,
                         )
                         parent_requirement = (
                             parent_requirement_connections.requirement
                         )
-                        requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
+                        requirement_connections: SDocNodeConnections = traceability_index.graph_database.get_link_value(
                             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                             lhs_node=requirement.reserved_uid,
                         )
@@ -522,7 +522,7 @@ class TraceabilityIndexBuilder:
                                 f"child requirement that doesn't exist: "
                                 f"{child_reference.ref_uid}."
                             )
-                        child_requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
+                        child_requirement_connections: SDocNodeConnections = traceability_index.graph_database.get_link_value(
                             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                             lhs_node=child_reference.ref_uid,
                         )
@@ -530,7 +530,7 @@ class TraceabilityIndexBuilder:
                             child_requirement_connections.requirement
                         )
 
-                        requirement_connections: RequirementConnections = traceability_index.graph_database.get_link_value(
+                        requirement_connections: SDocNodeConnections = traceability_index.graph_database.get_link_value(
                             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                             lhs_node=requirement.reserved_uid,
                         )

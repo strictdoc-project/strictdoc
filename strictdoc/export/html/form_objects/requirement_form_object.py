@@ -13,7 +13,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.node import (
     Requirement,
-    RequirementField,
+    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -29,7 +29,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
-    RequirementConnections,
+    SDocNodeConnections,
     TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import (
@@ -115,7 +115,7 @@ class RequirementFormField:
     def create_existing_from_grammar_field(
         grammar_field: GrammarElementField,
         multiline: bool,
-        requirement_field: RequirementField,
+        requirement_field: SDocNodeField,
     ) -> "RequirementFormField":
         if grammar_field.gef_type == RequirementFieldType.STRING:
             field_value = (
@@ -679,7 +679,7 @@ class RequirementFormObject(ErrorObject):
                     "parent requirement relations. For now, manually delete the "
                     "relations, rename the UID, recreate the relations.",
                 )
-            requirement_connections: RequirementConnections = (
+            requirement_connections: SDocNodeConnections = (
                 traceability_index.get_node_connections(
                     self.exiting_requirement_uid
                 )

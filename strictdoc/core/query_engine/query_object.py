@@ -1,10 +1,7 @@
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
@@ -250,7 +247,7 @@ class QueryObject:
     ) -> bool:
         if isinstance(node, Requirement):
             requirement = assert_cast(node, Requirement)
-            requirement_field_: RequirementField
+            requirement_field_: SDocNodeField
             for requirement_field_ in requirement.enumerate_fields():
                 if requirement_field_.field_value is not None:
                     if expression.string in requirement_field_.field_value:

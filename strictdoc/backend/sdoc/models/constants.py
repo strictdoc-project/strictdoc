@@ -18,7 +18,7 @@ from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     Requirement,
-    RequirementField,
+    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
@@ -50,7 +50,7 @@ SECTION_MODELS = [
     Section,
     FragmentFromFile,
     Requirement,
-    RequirementField,
+    SDocNodeField,
     CompositeRequirement,
     Reference,
     ParentReqReference,

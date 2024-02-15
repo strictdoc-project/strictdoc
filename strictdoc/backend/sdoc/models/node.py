@@ -8,12 +8,12 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
+from strictdoc.backend.sdoc.models.object import SDocObject
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.object import SDocObject
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
@@ -26,13 +26,13 @@ from strictdoc.helpers.mid import MID
 
 
 @auto_described
-class RequirementContext:
+class SDocNodeContext:
     def __init__(self):
         self.title_number_string = None
 
 
 @auto_described
-class RequirementField:
+class SDocNodeField:
     def __init__(
         self,
         parent,
@@ -94,7 +94,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
         parent,
         requirement_type: str,
         mid: Optional[str],
-        fields: List[RequirementField],
+        fields: List[SDocNodeField],
         requirements=None,
     ):
         assert parent
@@ -106,7 +106,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
         references: List[Reference] = []
 
         ordered_fields_lookup: OrderedDict[
-            str, List[RequirementField]
+            str, List[SDocNodeField]
         ] = OrderedDict()
 
         has_meta: bool = False
@@ -141,7 +141,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
         if RequirementFieldName.REFS in ordered_fields_lookup:
-            refs_field: RequirementField = ordered_fields_lookup[
+            refs_field: SDocNodeField = ordered_fields_lookup[
                 RequirementFieldName.REFS
             ][0]
             if fields.index(refs_field) != (len(fields) - 1):
@@ -181,7 +181,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
         self.fields_as_parsed = fields
 
         self.ordered_fields_lookup: OrderedDict[
-            str, List[RequirementField]
+            str, List[SDocNodeField]
         ] = ordered_fields_lookup
         self.ng_level: Optional[int] = None
         self.ng_document_reference: Optional[DocumentReference] = None
@@ -189,7 +189,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
         self.ng_line_end: Optional[int] = None
         self.ng_byte_start: Optional[int] = None
         self.ng_byte_end: Optional[int] = None
-        self.context = RequirementContext()
+        self.context = SDocNodeContext()
 
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
         self.mid_permanent: bool = mid is not None
@@ -242,7 +242,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
         if RequirementFieldName.TAGS not in self.ordered_fields_lookup:
             self.ng_reserved_fields_cache[RequirementFieldName.TAGS] = None
             return None
-        field: RequirementField = self.ordered_fields_lookup[
+        field: SDocNodeField = self.ordered_fields_lookup[
             RequirementFieldName.TAGS
         ][0]
         if field.field_value is not None:
@@ -452,7 +452,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
         assert isinstance(field_title, str)
         if field_title not in self.ordered_fields_lookup:
             return None
-        field: RequirementField = self.ordered_fields_lookup[field_title][0]
+        field: SDocNodeField = self.ordered_fields_lookup[field_title][0]
         meta_field_value_or_none: Optional[str] = (
             field.field_value
             if field.field_value
@@ -493,7 +493,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
         if field_name not in self.ordered_fields_lookup:
             self.ng_reserved_fields_cache[field_name] = None
             return None
-        field: RequirementField = self.ordered_fields_lookup[field_name][0]
+        field: SDocNodeField = self.ordered_fields_lookup[field_name][0]
 
         if field.field_value is not None:
             field_value = field.field_value
@@ -569,7 +569,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
             if len(self.ordered_fields_lookup[field_name]) > form_field_index:
                 self.ordered_fields_lookup[field_name][
                     form_field_index
-                ] = RequirementField(
+                ] = SDocNodeField(
                     self,
                     field_name=field_name,
                     field_value=field_value,
@@ -579,7 +579,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
             else:
                 self.ordered_fields_lookup[field_name].insert(
                     form_field_index,
-                    RequirementField(
+                    SDocNodeField(
                         self,
                         field_name=field_name,
                         field_value=field_value,
@@ -596,7 +596,7 @@ class Requirement(SDocObject):  # pylint: disable=too-many-instance-attributes, 
                     field_title
                 ] = self.ordered_fields_lookup[field_title]
         new_ordered_fields_lookup[field_name] = [
-            RequirementField(
+            SDocNodeField(
                 self,
                 field_name=field_name,
                 field_value=field_value,

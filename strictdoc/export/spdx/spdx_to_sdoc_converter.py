@@ -9,10 +9,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
-from strictdoc.backend.sdoc.models.node import (
-    Requirement,
-    RequirementField,
-)
+from strictdoc.backend.sdoc.models.node import Requirement, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
@@ -154,7 +151,7 @@ class SPDXToSDocConverter:
                         )
                     )
                     from_element_sdoc.ordered_fields_lookup["REFS"] = [
-                        RequirementField(
+                        SDocNodeField(
                             parent=from_element_sdoc,
                             field_name="REFS",
                             field_value=None,
@@ -190,7 +187,7 @@ class SPDXToSDocConverter:
                         )
                     )
                     from_element_sdoc.ordered_fields_lookup["REFS"] = [
-                        RequirementField(
+                        SDocNodeField(
                             parent=from_element_sdoc,
                             field_name="REFS",
                             field_value=None,
@@ -315,7 +312,7 @@ class SPDXToSDocConverter:
             )
         ]
         requirement.ordered_fields_lookup["REFS"] = [
-            RequirementField(
+            SDocNodeField(
                 parent=requirement,
                 field_name="REFS",
                 field_value=None,
@@ -379,7 +376,7 @@ class SPDXToSDocConverter:
             )
         ]
         requirement.ordered_fields_lookup["REFS"] = [
-            RequirementField(
+            SDocNodeField(
                 parent=requirement,
                 field_name="REFS",
                 field_value=None,

@@ -8,7 +8,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import (
     Requirement,
-    RequirementField,
+    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import Reference
 
@@ -97,7 +97,7 @@ class StrictDocSemanticError(Exception):
     @staticmethod
     def unexpected_field_outside_grammar(
         requirement: Requirement,
-        requirement_field: RequirementField,
+        requirement_field: SDocNodeField,
         document_grammar: DocumentGrammar,
         line=None,
         col=None,
@@ -125,13 +125,13 @@ class StrictDocSemanticError(Exception):
     def wrong_field_order(
         requirement: Requirement,
         document_grammar: DocumentGrammar,
-        problematic_field: RequirementField,
+        problematic_field: SDocNodeField,
         line=None,
         col=None,
         filename=None,
     ):
         assert isinstance(
-            problematic_field, RequirementField
+            problematic_field, SDocNodeField
         ), f"{problematic_field}"
         requirement_dump = requirement.dump_fields_as_parsed()
         grammar_dump = document_grammar.dump_fields(
@@ -154,7 +154,7 @@ class StrictDocSemanticError(Exception):
     def invalid_choice_field(
         requirement: Requirement,
         document_grammar: DocumentGrammar,
-        requirement_field: RequirementField,
+        requirement_field: SDocNodeField,
         line=None,
         col=None,
         filename=None,
@@ -182,7 +182,7 @@ class StrictDocSemanticError(Exception):
     def invalid_multiple_choice_field(
         requirement: Requirement,
         document_grammar: DocumentGrammar,
-        requirement_field: RequirementField,
+        requirement_field: SDocNodeField,
         line=None,
         col=None,
         filename=None,
@@ -208,7 +208,7 @@ class StrictDocSemanticError(Exception):
 
     @staticmethod
     def not_comma_separated_choices(
-        requirement_field: RequirementField,
+        requirement_field: SDocNodeField,
         line=None,
         col=None,
         filename=None,
@@ -227,7 +227,7 @@ class StrictDocSemanticError(Exception):
 
     @staticmethod
     def not_comma_separated_tag_field(
-        requirement_field: RequirementField,
+        requirement_field: SDocNodeField,
         line=None,
         col=None,
         filename=None,

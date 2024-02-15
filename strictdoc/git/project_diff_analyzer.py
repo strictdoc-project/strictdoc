@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple, Union
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.node import (
     Requirement,
-    RequirementField,
+    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
@@ -115,7 +115,7 @@ class ProjectTreeDiffStats:
 
     def get_identical_requirement_field(
         self, requirement: Requirement, field_name: str, field_value: str
-    ) -> Optional[RequirementField]:
+    ) -> Optional[SDocNodeField]:
         assert isinstance(field_value, str)
         other_requirement: Optional[Requirement] = self.find_requirement(
             requirement
@@ -775,7 +775,7 @@ class ChangeStats:
                         other_requirement.enumerate_all_fields()
                     )
 
-                    field_checked_so_far: Set[RequirementField] = set()
+                    field_checked_so_far: Set[SDocNodeField] = set()
                     while True:
                         requirement_field_tripple = next(
                             requirement_fields_iter, None
@@ -903,13 +903,13 @@ class ChangeStats:
         *,
         other_stats: ProjectTreeDiffStats,
         requirement: Requirement,
-        requirement_field: RequirementField,
+        requirement_field: SDocNodeField,
         other_requirement: Requirement,
         requirement_field_name: str,
         requirement_field_value: str,
     ) -> Optional[RequirementFieldChange]:
         assert isinstance(requirement, Requirement)
-        assert isinstance(requirement_field, RequirementField)
+        assert isinstance(requirement_field, SDocNodeField)
         assert isinstance(other_requirement, Requirement)
 
         other_requirement_field = other_stats.get_identical_requirement_field(
@@ -994,9 +994,7 @@ class ChangeStats:
                 )
             return changes
 
-        similarities: List[
-            Tuple[float, RequirementField, RequirementField]
-        ] = []
+        similarities: List[Tuple[float, SDocNodeField, SDocNodeField]] = []
         for changed_field_ in list(changed_fields.keys()):
             comment_value = (
                 changed_field_.field_value
@@ -1169,7 +1167,7 @@ class ProjectDiffAnalyzer:
                     field_name_,
                     field_values_,
                 ) in node.ordered_fields_lookup.items():
-                    requirement_field: RequirementField = field_values_[0]
+                    requirement_field: SDocNodeField = field_values_[0]
                     if field_name_ == "TITLE":
                         this_title_requirements = (
                             document_tree_stats.map_titles_to_nodes.setdefault(

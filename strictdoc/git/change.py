@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Union
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.node import (
     Requirement,
-    RequirementField,
+    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.section import Section
 from strictdoc.helpers.auto_described import auto_described
@@ -159,8 +159,8 @@ class RequirementFieldChange:
         self,
         *,
         field_name: str,
-        lhs_field: Optional[RequirementField],
-        rhs_field: Optional[RequirementField],
+        lhs_field: Optional[SDocNodeField],
+        rhs_field: Optional[SDocNodeField],
         left_diff: Optional[str],
         right_diff: Optional[str],
     ):
@@ -171,8 +171,8 @@ class RequirementFieldChange:
         )
 
         self.field_name: str = field_name
-        self.lhs_field: Optional[RequirementField] = lhs_field
-        self.rhs_field: Optional[RequirementField] = rhs_field
+        self.lhs_field: Optional[SDocNodeField] = lhs_field
+        self.rhs_field: Optional[SDocNodeField] = rhs_field
         self.left_diff: Optional[str] = left_diff
         self.right_diff: Optional[str] = right_diff
 
@@ -203,16 +203,14 @@ class RequirementChange:
 
         self.field_changes: List[RequirementFieldChange] = field_changes
 
-        map_fields_to_changes: Dict[
-            RequirementField, RequirementFieldChange
-        ] = {}
+        map_fields_to_changes: Dict[SDocNodeField, RequirementFieldChange] = {}
         for field_change_ in field_changes:
             if field_change_.lhs_field is not None:
                 map_fields_to_changes[field_change_.lhs_field] = field_change_
             if field_change_.rhs_field is not None:
                 map_fields_to_changes[field_change_.rhs_field] = field_change_
         self.map_fields_to_changes: Dict[
-            RequirementField, RequirementFieldChange
+            SDocNodeField, RequirementFieldChange
         ] = map_fields_to_changes
 
         if requirement_token is not None:
@@ -232,9 +230,9 @@ class RequirementChange:
         )
 
     def get_field_change(
-        self, requirement_field: RequirementField
+        self, requirement_field: SDocNodeField
     ) -> Optional[RequirementFieldChange]:
-        assert isinstance(requirement_field, RequirementField)
+        assert isinstance(requirement_field, SDocNodeField)
         return self.map_fields_to_changes.get(requirement_field)
 
 

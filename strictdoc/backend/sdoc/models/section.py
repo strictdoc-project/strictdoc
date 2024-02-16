@@ -15,7 +15,7 @@ class SectionContext:
 
 
 @auto_described
-class Section(SDocObject):  # pylint: disable=too-many-instance-attributes
+class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         parent,
@@ -88,7 +88,7 @@ class Section(SDocObject):  # pylint: disable=too-many-instance-attributes
     def get_requirement_prefix(self) -> str:
         if self.requirement_prefix is not None:
             return self.requirement_prefix
-        parent: Union[Section, Document] = self.parent
+        parent: Union[SDocSection, Document] = self.parent
         return parent.get_requirement_prefix()
 
     def blacklist_if_needed(self):
@@ -100,5 +100,5 @@ class Section(SDocObject):  # pylint: disable=too-many-instance-attributes
 
         # If it turns out that all child nodes are blacklisted,
         # go up and blacklist the parent node if needed.
-        if isinstance(self.parent, Section) and self.parent.ng_whitelisted:
+        if isinstance(self.parent, SDocSection) and self.parent.ng_whitelisted:
             self.parent.blacklist_if_needed()

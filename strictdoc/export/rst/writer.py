@@ -5,7 +5,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import FreeText, Section
+from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.rst_templates import RSTTemplates
@@ -37,7 +37,7 @@ class RSTWriter:
             output += self._print_free_text(free_text)
 
         for content_node in document_iterator.all_content():
-            if isinstance(content_node, Section):
+            if isinstance(content_node, SDocSection):
                 output += self._print_rst_header(
                     content_node.title,
                     content_node.ng_level,

@@ -27,7 +27,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import ParentReqReference
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
@@ -145,7 +145,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                         0, current_section.ng_level - current_hierarchy.level
                     ):
                         assert not isinstance(current_section, Document)
-                        if isinstance(current_section, Section):
+                        if isinstance(current_section, SDocSection):
                             current_section = current_section.parent
                     current_section.section_contents.append(section)
                 else:
@@ -172,7 +172,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         # See SDOC_IMPL_1.
         if (
             len(document.section_contents) > 0
-            and isinstance(document.section_contents[0], Section)
+            and isinstance(document.section_contents[0], SDocSection)
             and document.section_contents[0].title == "Abstract"
         ):
             assert len(document.section_contents[0].free_texts)
@@ -298,7 +298,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     @staticmethod
     def _p11_create_section_from_spec_object(
         spec_object: ReqIFSpecObject, level, reqif_bundle: ReqIFBundle
-    ) -> Section:
+    ) -> SDocSection:
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
         )
@@ -337,7 +337,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         #                 Some value
         #               </THE-VALUE>
         section_title = section_title.strip().replace("\n", " ")
-        section = Section(
+        section = SDocSection(
             parent=None,
             mid=None,
             uid=None,
@@ -353,7 +353,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     @staticmethod
     def _p11_create_requirement_from_spec_object(
         spec_object: ReqIFSpecObject,
-        parent_section: Union[Section, Document],
+        parent_section: Union[SDocSection, Document],
         reqif_bundle: ReqIFBundle,
         level,
     ) -> SDocNode:

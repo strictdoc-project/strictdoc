@@ -18,7 +18,7 @@ from strictdoc.backend.sdoc.models.reference import (
     FileReference,
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     FileEntry,
     GrammarElementFieldString,
@@ -76,7 +76,7 @@ class SPDXToSDocConverter:
         Files.
         """
 
-        file_section = Section(
+        file_section = SDocSection(
             parent=document,
             mid=None,
             uid=None,
@@ -101,7 +101,7 @@ class SPDXToSDocConverter:
         Snippets.
         """
 
-        snippets_section = Section(
+        snippets_section = SDocSection(
             parent=document,
             mid=None,
             uid=None,
@@ -229,7 +229,7 @@ class SPDXToSDocConverter:
     def _convert_package(
         package: Package,
         sdoc_document: Document,
-        sdoc_parent: Union[Section, Document],
+        sdoc_parent: Union[SDocSection, Document],
     ) -> SDocNode:
         requirement = SDocNode(
             parent=sdoc_parent,
@@ -269,7 +269,7 @@ class SPDXToSDocConverter:
     def _convert_file(
         file: File,
         sdoc_document: Document,
-        sdoc_parent: Union[Section, Document],
+        sdoc_parent: Union[SDocSection, Document],
     ) -> SDocNode:
         fields = []
         requirement = SDocNode(
@@ -328,7 +328,7 @@ class SPDXToSDocConverter:
     def _convert_snippet(
         snippet: Snippet,
         sdoc_document: Document,
-        sdoc_parent: Union[Section, Document],
+        sdoc_parent: Union[SDocSection, Document],
         spdx_container: SPDXSDocContainer,
     ) -> SDocNode:
         fields = []

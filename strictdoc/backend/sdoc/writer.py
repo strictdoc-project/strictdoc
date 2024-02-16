@@ -21,7 +21,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import FreeText, Section
+from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     BibEntry,
     FileEntry,
@@ -218,7 +218,7 @@ class SDWriter:
             if not content_node.ng_whitelisted:
                 continue
 
-            if isinstance(content_node, Section):
+            if isinstance(content_node, SDocSection):
                 output += self._print_section(content_node, document)
                 closing_tags.append((TAG.SECTION, content_node.ng_level))
             elif isinstance(content_node, SDocNode):
@@ -243,8 +243,8 @@ class SDWriter:
 
         return output
 
-    def _print_section(self, section: Section, document: Document):
-        assert isinstance(section, Section)
+    def _print_section(self, section: SDocSection, document: Document):
+        assert isinstance(section, SDocSection)
         output = ""
         output += "[SECTION]"
         output += "\n"

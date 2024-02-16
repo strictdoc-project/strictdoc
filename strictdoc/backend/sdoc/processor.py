@@ -14,7 +14,7 @@ from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.validations.requirement import validate_requirement
 from strictdoc.helpers.exception import StrictDocException
 
@@ -46,7 +46,7 @@ class SDocParsingProcessor:
             "DocumentConfig": self.process_document_config,
             "DocumentGrammar": self.process_document_grammar,
             "DocumentView": self.process_document_view,
-            "Section": self.process_section,
+            "SDocSection": self.process_section,
             "FragmentFromFile": self.process_include,
             "CompositeRequirement": self.process_composite_requirement,
             "SDocNode": self.process_requirement,
@@ -69,7 +69,7 @@ class SDocParsingProcessor:
     def process_document_view(self, document_view: DocumentView):
         self.parse_context.document_view = document_view
 
-    def process_section(self, section: Section):
+    def process_section(self, section: SDocSection):
         section.ng_document_reference = self.parse_context.document_reference
 
         if self.parse_context.document_config.auto_levels:
@@ -139,7 +139,7 @@ class SDocParsingProcessor:
             self.parse_context.document_reference
         )
 
-        if isinstance(composite_requirement.parent, Section):
+        if isinstance(composite_requirement.parent, SDocSection):
             self._resolve_parents(composite_requirement)
         elif isinstance(composite_requirement.parent, CompositeRequirement):
             self._resolve_parents(composite_requirement)
@@ -205,7 +205,7 @@ class SDocParsingProcessor:
             self.parse_context.document_reference
         )
 
-        if isinstance(requirement.parent, Section):
+        if isinstance(requirement.parent, SDocSection):
             self._resolve_parents(requirement)
         elif isinstance(requirement.parent, CompositeRequirement):
             self._resolve_parents(requirement)
@@ -249,7 +249,7 @@ class SDocParsingProcessor:
         requirement.ng_byte_end = requirement._tx_position_end
 
     def process_free_text(self, free_text):
-        if isinstance(free_text.parent, Section):
+        if isinstance(free_text.parent, SDocSection):
             self._resolve_parents(free_text)
         elif isinstance(free_text.parent, CompositeRequirement):
             self._resolve_parents(free_text)
@@ -286,7 +286,7 @@ class SDocParsingProcessor:
         section_with_none_level = cursor.ng_resolved_custom_level == "None"
         for parent_idx, parent in enumerate(reversed(parents_to_resolve_level)):
             parent.ng_level = cursor_level + parent_idx + 1
-            if isinstance(parent, (Section, CompositeRequirement)):
+            if isinstance(parent, (SDocSection, CompositeRequirement)):
                 if section_with_none_level:
                     parent.ng_resolved_custom_level = "None"
                 elif parent.ng_resolved_custom_level == "None":

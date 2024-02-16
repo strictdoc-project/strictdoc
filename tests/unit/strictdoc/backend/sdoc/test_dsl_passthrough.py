@@ -9,7 +9,7 @@ from strictdoc.backend.sdoc.models.node import (
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     ReferenceType,
 )
@@ -626,7 +626,7 @@ STATEMENT: ABC
     assert document.config.requirement_in_toc == "True"
 
     section = document.section_contents[0]
-    assert isinstance(section, Section)
+    assert isinstance(section, SDocSection)
     assert section.custom_level == "123"
 
     requirement = section.section_contents[0]
@@ -786,7 +786,7 @@ STATEMENT: ABC
 
     document: Document = reader.read(input_sdoc)
     assert document.config.auto_levels is False
-    section: Section = document.section_contents[0]
+    section: SDocSection = document.section_contents[0]
     assert section.custom_level == "123"
 
     requirement = section.section_contents[0]

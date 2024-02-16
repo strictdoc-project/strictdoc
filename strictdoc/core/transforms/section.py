@@ -11,7 +11,7 @@ from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
@@ -36,12 +36,12 @@ class UpdateSectionCommand:
     def __init__(
         self,
         form_object: SectionFormObject,
-        section: Section,
+        section: SDocSection,
         traceability_index: TraceabilityIndex,
         config: ProjectConfig,
     ):
         self.form_object: SectionFormObject = form_object
-        self.section: Section = section
+        self.section: SDocSection = section
         self.traceability_index: TraceabilityIndex = traceability_index
         self.update_free_text_command = UpdateFreeTextCommand(
             node=section,
@@ -156,10 +156,10 @@ class CreateSectionCommand:
         self.traceability_index: TraceabilityIndex = traceability_index
         self.config: ProjectConfig = config
 
-        self._created_section: Optional[Section] = None
+        self._created_section: Optional[SDocSection] = None
 
-    def get_created_section(self) -> Section:
-        assert isinstance(self._created_section, Section)
+    def get_created_section(self) -> SDocSection:
+        assert isinstance(self._created_section, SDocSection)
         return self._created_section
 
     def perform(self):
@@ -174,7 +174,7 @@ class CreateSectionCommand:
         traceability_index = self.traceability_index
 
         reference_node: Union[
-            Document, Section
+            Document, SDocSection
         ] = traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
@@ -192,7 +192,7 @@ class CreateSectionCommand:
         ):
             existing_section = assert_cast(
                 traceability_index.get_node_by_uid(form_object.section_uid),
-                Section,
+                SDocSection,
             )
             errors["section_uid"].append(
                 f"The chosen UID must be unique. "
@@ -253,11 +253,11 @@ class CreateSectionCommand:
             parent = reference_node
             insert_to_idx = len(parent.section_contents)
         elif whereto == NodeCreationOrder.BEFORE:
-            assert isinstance(reference_node, (SDocNode, Section))
+            assert isinstance(reference_node, (SDocNode, SDocSection))
             parent = reference_node.parent
             insert_to_idx = parent.section_contents.index(reference_node)
         elif whereto == NodeCreationOrder.AFTER:
-            assert isinstance(reference_node, (Document, SDocNode, Section))
+            assert isinstance(reference_node, (Document, SDocNode, SDocSection))
             if isinstance(reference_node, Document):
                 parent = reference_node
                 insert_to_idx = 0
@@ -269,7 +269,7 @@ class CreateSectionCommand:
         else:
             raise NotImplementedError
 
-        section = Section(
+        section = SDocSection(
             parent=parent,
             mid=None,
             uid=None,

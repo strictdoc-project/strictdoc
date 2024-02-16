@@ -11,7 +11,7 @@ from strictdoc.backend.sdoc.models.node import (
 from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.git.change import (
@@ -136,8 +136,10 @@ class ProjectTreeDiffStats:
                 return field_
         return None
 
-    def get_diffed_free_text(self, node: Union[Section, Document], side: str):
-        assert isinstance(node, (Section, Document))
+    def get_diffed_free_text(
+        self, node: Union[SDocSection, Document], side: str
+    ):
+        assert isinstance(node, (SDocSection, Document))
         assert side in ("left", "right")
 
         if isinstance(node, Document):
@@ -184,8 +186,8 @@ class ProjectTreeDiffStats:
                     side,
                 )
 
-        if isinstance(node, Section):
-            section: Section = assert_cast(node, Section)
+        if isinstance(node, SDocSection):
+            section: SDocSection = assert_cast(node, SDocSection)
             section_free_text = section.free_texts[0]
             section_free_text_parts = (
                 section_free_text.get_parts_as_text_escaped()
@@ -193,11 +195,11 @@ class ProjectTreeDiffStats:
 
             if section.reserved_uid is not None:
                 other_section_or_none: Optional[
-                    Section
+                    SDocSection
                 ] = self.map_uid_to_nodes.get(section.reserved_uid)
                 if other_section_or_none is not None:
-                    other_section: Section = assert_cast(
-                        other_section_or_none, Section
+                    other_section: SDocSection = assert_cast(
+                        other_section_or_none, SDocSection
                     )
 
                     if len(other_section.free_texts) > 0:
@@ -549,7 +551,7 @@ class ChangeStats:
             Now iterate over all nodes and collect the diff information.
             """
             for node in document_iterator.all_content():
-                if isinstance(node, Section):
+                if isinstance(node, SDocSection):
                     if node in change_stats.map_nodes_to_changes:
                         continue
 
@@ -560,7 +562,7 @@ class ChangeStats:
                     if section_modified:
                         matched_mid: Optional[MID] = None
                         matched_uid: Optional[str] = None
-                        other_section_or_none: Optional[Section] = None
+                        other_section_or_none: Optional[SDocSection] = None
 
                         if (
                             node.mid_permanent
@@ -583,7 +585,7 @@ class ChangeStats:
                         # FIXME: This is when a Requirement becomes
                         # a Section with the same UID preserved.
                         if other_section_or_none is not None and not isinstance(
-                            other_section_or_none, Section
+                            other_section_or_none, SDocSection
                         ):
                             other_section_or_none = None
                             matched_uid = None
@@ -666,8 +668,8 @@ class ChangeStats:
                         if other_section_or_none is not None:
                             section_token = MID.create()
 
-                        lhs_section: Optional[Section] = None
-                        rhs_section: Optional[Section] = None
+                        lhs_section: Optional[SDocSection] = None
+                        rhs_section: Optional[SDocSection] = None
                         if side == "left":
                             lhs_section = node
                             rhs_section = other_section_or_none
@@ -1135,7 +1137,7 @@ class ProjectDiffAnalyzer:
             if node.mid_permanent:
                 document_tree_stats.map_mid_to_nodes[node.reserved_mid] = node
 
-            if isinstance(node, Section):
+            if isinstance(node, SDocSection):
                 if node.reserved_uid is not None:
                     document_tree_stats.map_uid_to_nodes[
                         node.reserved_uid
@@ -1229,9 +1231,9 @@ class ProjectDiffAnalyzer:
                 raise AssertionError
 
         def recurse(node):
-            assert isinstance(node, (Section, Document))
+            assert isinstance(node, (SDocSection, Document))
             for sub_node_ in node.section_contents:
-                if isinstance(sub_node_, Section):
+                if isinstance(sub_node_, SDocSection):
                     map_nodes_to_hashers[node].update(recurse(sub_node_))
                 elif isinstance(sub_node_, SDocNode):
                     node_md5 = (
@@ -1256,7 +1258,7 @@ class ProjectDiffAnalyzer:
             node_md5 = node_hasher_.hexdigest()
             document_tree_stats.map_nodes_to_hashes[node_] = node_md5
 
-            if isinstance(node_, Section):
+            if isinstance(node_, SDocSection):
                 document_tree_stats.section_md5_hashes.add(node_md5)
             elif isinstance(node_, SDocNode):
                 document_tree_stats.requirement_md5_hashes.add(node_md5)

@@ -4,7 +4,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import FreeText, Section
+from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
@@ -140,9 +140,9 @@ class MarkupRenderer:
             if isinstance(part, str):
                 parts_output += part
             elif isinstance(part, InlineLink):
-                node: Union[Section, Anchor] = assert_cast(
+                node: Union[SDocSection, Anchor] = assert_cast(
                     self.traceability_index.get_node_by_uid(part.link),
-                    (Section, Anchor),
+                    (SDocSection, Anchor),
                 )
                 href = self.link_renderer.render_node_link(
                     node, self.context_document, document_type

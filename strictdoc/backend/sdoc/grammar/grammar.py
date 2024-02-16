@@ -222,7 +222,7 @@ Fragment[noskipws]:
 """
 
 SECTION_GRAMMAR = rf"""
-Section[noskipws]:
+SDocSection[noskipws]:
   '[SECTION]'
   '\n'
   ('MID: ' mid = SingleLineString '\n')?
@@ -238,7 +238,7 @@ Section[noskipws]:
 ;
 
 SectionOrRequirement[noskipws]:
-  '\n' (Section | SDocNode | CompositeRequirement | FragmentFromFile)
+  '\n' (SDocSection | SDocNode | CompositeRequirement | FragmentFromFile)
 ;
 
 FragmentFromFile[noskipws]:

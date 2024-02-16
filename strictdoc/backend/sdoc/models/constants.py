@@ -27,7 +27,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import FreeText, Section
+from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     BibEntry,
     BibFileEntry,
@@ -47,7 +47,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 
 SECTION_MODELS = [
-    Section,
+    SDocSection,
     FragmentFromFile,
     SDocNode,
     SDocNodeField,

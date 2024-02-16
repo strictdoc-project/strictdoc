@@ -4,7 +4,7 @@ from typing import Dict
 
 from starlette.datastructures import FormData
 
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormField,
     RequirementFormFieldType,
@@ -80,7 +80,7 @@ class SectionFormObject(ErrorObject):
         )
 
     @staticmethod
-    def create_from_section(*, section: Section):
+    def create_from_section(*, section: SDocSection):
         uid_field_value = (
             section.reserved_uid if section.reserved_uid is not None else ""
         )

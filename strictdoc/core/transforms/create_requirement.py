@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
@@ -28,7 +28,7 @@ class CreateRequirementActionObject:
         self.reference_ids_to_remove: Set[
             Tuple[str, str, Optional[str]]
         ] = set()
-        self.removed_uid_parent_documents_to_update: Set[Document] = set()
+        self.removed_uid_parent_documents_to_update: Set[SDocDocument] = set()
         # All requirements that have to be updated. This set includes
         # the requirement itself, all links it was linking to
         # (for deleted links) and all links it is linking to now
@@ -63,11 +63,11 @@ class CreateRequirementTransform:
         whereto: str = self.whereto
         reference_mid: str = self.reference_mid
         traceability_index: TraceabilityIndex = self.traceability_index
-        document: Document = traceability_index.get_node_by_mid(
+        document: SDocDocument = traceability_index.get_node_by_mid(
             MID(form_object.document_mid)
         )
         reference_node: Union[
-            Document, SDocSection
+            SDocDocument, SDocSection
         ] = traceability_index.get_node_by_mid(MID(reference_mid))
 
         if whereto == NodeCreationOrder.CHILD:
@@ -77,7 +77,7 @@ class CreateRequirementTransform:
             parent = reference_node.parent
             insert_to_idx = parent.section_contents.index(reference_node)
         elif whereto == NodeCreationOrder.AFTER:
-            if isinstance(reference_node, Document):
+            if isinstance(reference_node, SDocDocument):
                 parent = reference_node
                 insert_to_idx = 0
             else:

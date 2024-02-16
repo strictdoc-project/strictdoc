@@ -4,7 +4,7 @@ from typing import Optional
 from jinja2 import Template
 
 from strictdoc import __version__
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
@@ -17,7 +17,7 @@ class DocumentHTML2PDFGenerator:
     @staticmethod
     def export(
         project_config: ProjectConfig,
-        document: Document,
+        document: SDocDocument,
         traceability_index,
         markup_renderer,
         link_renderer: LinkRenderer,

@@ -1,7 +1,7 @@
 from collections import Counter
 from typing import Dict, List
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.analyzers.document_stats import (
@@ -53,7 +53,7 @@ class DocumentUIDAnalyzer:
 
     @staticmethod
     def analyze_document(
-        document: Document,
+        document: SDocDocument,
     ) -> DocumentStats:
         this_document_stats = DocumentStats(document)
         document_iterator = DocumentCachingIterator(document)

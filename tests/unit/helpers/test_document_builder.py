@@ -1,7 +1,7 @@
 from typing import Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
@@ -14,7 +14,7 @@ from strictdoc.backend.sdoc.models.reference import (
 
 class DocumentBuilder:
     def __init__(self):
-        self.document: Document = self._create_empty_document()
+        self.document: SDocDocument = self._create_empty_document()
         self.requirements = []
 
     def add_requirement(self, uid):
@@ -94,7 +94,7 @@ class DocumentBuilder:
         return self.document
 
     @staticmethod
-    def _create_empty_document() -> Document:
+    def _create_empty_document() -> SDocDocument:
         config = DocumentConfig(
             parent=None,
             version="0.0.1",
@@ -111,7 +111,7 @@ class DocumentBuilder:
         )
         free_texts = []
         section_contents = []
-        document = Document(
+        document = SDocDocument(
             None,
             "Test Document",
             config,

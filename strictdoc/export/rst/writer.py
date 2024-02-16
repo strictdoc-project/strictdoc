@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
@@ -21,7 +21,7 @@ class RSTWriter:
     def __init__(self, index: TraceabilityIndex):
         self.index = index
 
-    def write(self, document: Document, single_document: bool) -> str:
+    def write(self, document: SDocDocument, single_document: bool) -> str:
         document_iterator = DocumentCachingIterator(document)
         output = ""
 

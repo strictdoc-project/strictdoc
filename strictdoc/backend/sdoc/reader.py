@@ -11,7 +11,7 @@ from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.include_reader import SDIncludeReader
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.fragment import Fragment
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
 from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
@@ -40,7 +40,7 @@ class SDReader:
         )
         meta_model.register_obj_processors(processor.get_default_processors())
 
-        document: Document = meta_model.model_from_str(
+        document: SDocDocument = meta_model.model_from_str(
             input_string, file_name=file_path
         )
         parse_context.document_reference.set_document(document)
@@ -81,7 +81,7 @@ class SDReader:
 
         return document
 
-    def read_from_file(self, file_path: str) -> Document:
+    def read_from_file(self, file_path: str) -> SDocDocument:
         """
         This function parses the provided .sdoc file and returns a Document
         object.
@@ -117,7 +117,7 @@ class SDReader:
         if os.path.isfile(path_to_cached_file):
             with open(path_to_cached_file, "rb") as cache_file:
                 sdoc_pickled = cache_file.read()
-            return assert_cast(pickle_load(sdoc_pickled), Document)
+            return assert_cast(pickle_load(sdoc_pickled), SDocDocument)
 
         path_to_cached_file_dir = os.path.dirname(path_to_cached_file)
         Path(path_to_cached_file_dir).mkdir(parents=True, exist_ok=True)

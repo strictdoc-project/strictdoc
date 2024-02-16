@@ -4,7 +4,7 @@ from textx import get_location, get_model
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DocumentView
@@ -37,12 +37,12 @@ class SDocParsingProcessor:
         self.parse_context: ParseContext = parse_context
         self.delegate = delegate
 
-    def process_document(self, document: Document):
+    def process_document(self, document: SDocDocument):
         document.grammar = self.parse_context.document_grammar
 
     def get_default_processors(self):
         return {
-            "Document": self.process_document,
+            "SDocDocument": self.process_document,
             "DocumentConfig": self.process_document_config,
             "DocumentGrammar": self.process_document_grammar,
             "DocumentView": self.process_document_view,
@@ -144,7 +144,7 @@ class SDocParsingProcessor:
         elif isinstance(composite_requirement.parent, CompositeRequirement):
             self._resolve_parents(composite_requirement)
             assert composite_requirement.parent.ng_level
-        elif isinstance(composite_requirement.parent, Document):
+        elif isinstance(composite_requirement.parent, SDocDocument):
             composite_requirement.ng_level = 1
         elif isinstance(composite_requirement.parent, Fragment):
             composite_requirement.ng_level = (
@@ -209,7 +209,7 @@ class SDocParsingProcessor:
             self._resolve_parents(requirement)
         elif isinstance(requirement.parent, CompositeRequirement):
             self._resolve_parents(requirement)
-        elif isinstance(requirement.parent, Document):
+        elif isinstance(requirement.parent, SDocDocument):
             requirement.ng_level = 1
         elif isinstance(requirement.parent, Fragment):
             requirement.ng_level = (
@@ -253,7 +253,7 @@ class SDocParsingProcessor:
             self._resolve_parents(free_text)
         elif isinstance(free_text.parent, CompositeRequirement):
             self._resolve_parents(free_text)
-        elif isinstance(free_text.parent, Document):
+        elif isinstance(free_text.parent, SDocDocument):
             free_text.ng_level = 1
         elif isinstance(free_text.parent, Fragment):
             free_text.ng_level = (
@@ -267,7 +267,7 @@ class SDocParsingProcessor:
 
     @staticmethod
     def is_top_level(node):
-        return isinstance(node, Document)
+        return isinstance(node, SDocDocument)
 
     # During parsing, it is often the case that the node's parents do not have
     # their levels resolved yet. We go up the parent chain and resolve all of

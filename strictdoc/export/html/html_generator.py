@@ -3,7 +3,7 @@ from functools import partial
 from pathlib import Path
 from typing import Optional, Tuple
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
@@ -212,7 +212,7 @@ class HTMLGenerator:
 
     def export_single_document(
         self,
-        document: Document,
+        document: SDocDocument,
         traceability_index,
         specific_documents: Optional[Tuple[DocumentType]] = None,
     ):

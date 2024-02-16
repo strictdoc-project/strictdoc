@@ -2,7 +2,7 @@ from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.type_system import GrammarElementField
@@ -25,16 +25,16 @@ class UpdateGrammarCommand:
         self,
         *,
         form_object: DocumentGrammarFormObject,
-        document: Document,
+        document: SDocDocument,
         traceability_index: TraceabilityIndex,
     ):
         self.form_object: DocumentGrammarFormObject = form_object
-        self.document: Document = document
+        self.document: SDocDocument = document
         self.traceability_index: TraceabilityIndex = traceability_index
 
     def perform(self) -> bool:
         form_object: DocumentGrammarFormObject = self.form_object
-        document: Document = self.document
+        document: SDocDocument = self.document
 
         grammar_fields: Dict[str, GrammarElementField] = {}
         for grammar_field in document.grammar.elements[0].fields:

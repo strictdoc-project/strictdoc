@@ -1,6 +1,6 @@
 import collections
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
@@ -11,7 +11,7 @@ from strictdoc.core.level_counter import LevelCounter
 
 class DocumentCachingIterator:
     def __init__(self, document):
-        assert isinstance(document, Document)
+        assert isinstance(document, SDocDocument)
 
         self.document = document
         self.nodes_cache = []

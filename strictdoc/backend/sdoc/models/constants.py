@@ -1,5 +1,5 @@
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_bibliography import (
     DocumentBibliography,
 )
@@ -67,7 +67,7 @@ SECTION_MODELS = [
 
 DOCUMENT_MODELS = [
     DocumentConfig,
-    Document,
+    SDocDocument,
     DocumentGrammar,
     DocumentView,
     DocumentBibliography,

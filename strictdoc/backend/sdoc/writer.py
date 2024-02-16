@@ -2,7 +2,7 @@ from enum import Enum
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_bibliography import (
     DocumentBibliography,
 )
@@ -46,7 +46,7 @@ class SDWriter:
     def __init__(self):
         pass
 
-    def write(self, document: Document):
+    def write(self, document: SDocDocument):
         document_iterator = DocumentCachingIterator(document)
         output = ""
 
@@ -243,7 +243,7 @@ class SDWriter:
 
         return output
 
-    def _print_section(self, section: SDocSection, document: Document):
+    def _print_section(self, section: SDocSection, document: SDocDocument):
         assert isinstance(section, SDocSection)
         output = ""
         output += "[SECTION]"
@@ -279,7 +279,7 @@ class SDWriter:
 
     @staticmethod
     def _print_requirement_fields(
-        section_content: SDocNode, document: Document
+        section_content: SDocNode, document: SDocDocument
     ):
         output = ""
 

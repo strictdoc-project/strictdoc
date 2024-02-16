@@ -2,7 +2,7 @@ from copy import copy
 from dataclasses import dataclass
 from typing import List, Optional, Set, Tuple
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     Reference,
@@ -26,7 +26,7 @@ class UpdateRequirementActionObject:
         self.reference_ids_to_remove: Set[
             Tuple[str, str, Optional[str]]
         ] = set()
-        self.removed_uid_parent_documents_to_update: Set[Document] = set()
+        self.removed_uid_parent_documents_to_update: Set[SDocDocument] = set()
         # All requirements that have to be updated. This set includes
         # the requirement itself, all links it was linking to
         # (for deleted links) and all links it is linking to now
@@ -54,7 +54,7 @@ class UpdateRequirementTransform:
     def perform(self):
         form_object: RequirementFormObject = self.form_object
         requirement: SDocNode = self.requirement
-        document: Document = requirement.document
+        document: SDocDocument = requirement.document
         traceability_index: TraceabilityIndex = self.traceability_index
 
         existing_uid: Optional[str] = requirement.reserved_uid

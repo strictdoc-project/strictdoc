@@ -6,7 +6,7 @@ from typing import List, Optional, Tuple, Union
 
 import graphviz
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
@@ -61,7 +61,7 @@ class DocumentDotGenerator:
         accumulated_links: List[Tuple[str, str]] = []
         accumulated_section_siblings = []
         document_flat_requirements = []
-        document: Document
+        document: SDocDocument
         for document_folder_idx, document_folder in enumerate(
             documents_by_folder.keys()
         ):
@@ -133,15 +133,15 @@ class DocumentDotGenerator:
         self,
         folder_name,
         folder_idx,
-        folder_documents: List[Document],
+        folder_documents: List[SDocDocument],
         accumulated_links: List[Tuple[str, str]],
         accumulated_section_siblings,
         document_flat_requirements,
     ):
         def get_bottom_most_section(
-            document: Document,
+            document: SDocDocument,
         ) -> Optional[SDocSection]:
-            current_node: Union[Document, SDocSection] = document
+            current_node: Union[SDocDocument, SDocSection] = document
             candidate_section: Optional[SDocSection] = None
             while len(current_node.section_contents) > 0:
                 for subnode in reversed(current_node.section_contents):
@@ -200,7 +200,7 @@ class DocumentDotGenerator:
 
     def _print_document(
         self,
-        document: Document,
+        document: SDocDocument,
         folder_idx,
         document_idx,
         link_renderer: LinkRenderer,
@@ -241,7 +241,7 @@ class DocumentDotGenerator:
 
     def _print_node(
         self,
-        node: Union[Document, SDocSection],
+        node: Union[SDocDocument, SDocSection],
         link_renderer: LinkRenderer,
         accumulated_links: List[Tuple[str, str]],
         accumulated_section_siblings,
@@ -250,7 +250,7 @@ class DocumentDotGenerator:
             return node_.reserved_mid
 
         def get_upper_sibling_section(node_: SDocSection):
-            parent: Union[Document, SDocSection] = node_.parent
+            parent: Union[SDocDocument, SDocSection] = node_.parent
             node_index = parent.section_contents.index(node_)
             if node_index > 0:
                 candidate_upper_sibling = parent.section_contents[

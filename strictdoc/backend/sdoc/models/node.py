@@ -3,7 +3,7 @@ from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
@@ -306,8 +306,10 @@ class SDocNode(SDocObject):
         return False
 
     @property
-    def document(self) -> Document:
-        document: Optional[Document] = self.ng_document_reference.get_document()
+    def document(self) -> SDocDocument:
+        document: Optional[
+            SDocDocument
+        ] = self.ng_document_reference.get_document()
         assert (
             document is not None
         ), "A valid requirement must always have a reference to the document."
@@ -470,8 +472,8 @@ class SDocNode(SDocObject):
         return field_human_title.get_field_human_name()
 
     def get_requirement_prefix(self) -> str:
-        parent: Union[SDocSection, Document] = assert_cast(
-            self.parent, (SDocSection, Document, CompositeRequirement)
+        parent: Union[SDocSection, SDocDocument] = assert_cast(
+            self.parent, (SDocSection, SDocDocument, CompositeRequirement)
         )
         return parent.get_requirement_prefix()
 
@@ -540,7 +542,7 @@ class SDocNode(SDocObject):
 
         # If a field value is being added or updated.
 
-        document: Document = self.document
+        document: SDocDocument = self.document
         grammar_or_none: Optional[DocumentGrammar] = document.grammar
         assert grammar_or_none is not None
         grammar: DocumentGrammar = grammar_or_none

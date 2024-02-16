@@ -2,7 +2,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from typing import Dict, List
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.string import create_safe_title_string
@@ -16,7 +16,7 @@ class SinglePrefixRequirements:
 
 @dataclass
 class DocumentStats:
-    document: Document
+    document: SDocDocument
     requirements_per_prefix: Dict[str, SinglePrefixRequirements] = field(
         default_factory=dict
     )

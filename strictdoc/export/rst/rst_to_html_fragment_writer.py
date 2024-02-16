@@ -11,7 +11,7 @@ from docutils.core import publish_parts
 from docutils.parsers.rst import directives, roles
 from docutils.utils import SystemMessage
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.export.rst.directives.raw_html_role import raw_html_role
 from strictdoc.export.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
@@ -24,7 +24,10 @@ class RstToHtmlFragmentWriter:
     roles.register_local_role("rawhtml", raw_html_role)
 
     def __init__(
-        self, *, path_to_output_dir: str, context_document: Optional[Document]
+        self,
+        *,
+        path_to_output_dir: str,
+        context_document: Optional[SDocDocument],
     ):
         path_to_output_dir_md5: str = hashlib.md5(
             path_to_output_dir.encode("utf-8")
@@ -56,7 +59,7 @@ class RstToHtmlFragmentWriter:
             )
         else:
             self.source_path: str = "<string>"
-        self.context_document: Optional[Document] = context_document
+        self.context_document: Optional[SDocDocument] = context_document
 
     def write(self, rst_fragment):
         assert isinstance(rst_fragment, str), rst_fragment

@@ -4,7 +4,7 @@ from spdx_tools.spdx3.model import RelationshipType, SpdxDocument
 from spdx_tools.spdx3.model.software import File, Package, Snippet
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
@@ -31,10 +31,10 @@ from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
 
 class SPDXToSDocConverter:
     @staticmethod
-    def convert(spdx_container: SPDXSDocContainer) -> Document:
+    def convert(spdx_container: SPDXSDocContainer) -> SDocDocument:
         map_spdxref_to_sdoc = {}
 
-        document = Document(
+        document = SDocDocument(
             mid=None,
             title=spdx_container.document.name,
             config=None,
@@ -228,8 +228,8 @@ class SPDXToSDocConverter:
     @staticmethod
     def _convert_package(
         package: Package,
-        sdoc_document: Document,
-        sdoc_parent: Union[SDocSection, Document],
+        sdoc_document: SDocDocument,
+        sdoc_parent: Union[SDocSection, SDocDocument],
     ) -> SDocNode:
         requirement = SDocNode(
             parent=sdoc_parent,
@@ -268,8 +268,8 @@ class SPDXToSDocConverter:
     @staticmethod
     def _convert_file(
         file: File,
-        sdoc_document: Document,
-        sdoc_parent: Union[SDocSection, Document],
+        sdoc_document: SDocDocument,
+        sdoc_parent: Union[SDocSection, SDocDocument],
     ) -> SDocNode:
         fields = []
         requirement = SDocNode(
@@ -327,8 +327,8 @@ class SPDXToSDocConverter:
     @staticmethod
     def _convert_snippet(
         snippet: Snippet,
-        sdoc_document: Document,
-        sdoc_parent: Union[SDocSection, Document],
+        sdoc_document: SDocDocument,
+        sdoc_parent: Union[SDocSection, SDocDocument],
         spdx_container: SPDXSDocContainer,
     ) -> SDocNode:
         fields = []

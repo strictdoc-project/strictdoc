@@ -6,7 +6,7 @@ from typing import Dict, Iterator, List, Optional, Union
 from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
@@ -107,7 +107,7 @@ class TraceabilityIndexBuilder:
         )
 
         # Incremental re-generation of documents
-        document: Document
+        document: SDocDocument
         for document in traceability_index.document_tree.document_list:
             # If a document file exists we want to check its modification path
             # in order to skip its generation in case it has not changed since
@@ -190,7 +190,9 @@ class TraceabilityIndexBuilder:
     ) -> TraceabilityIndex:
         # FIXME: Too many things going on below. Would be great to simplify this
         # workflow.
-        d_01_document_iterators: Dict[Document, DocumentCachingIterator] = {}
+        d_01_document_iterators: Dict[
+            SDocDocument, DocumentCachingIterator
+        ] = {}
         d_07_file_traceability_index = FileTraceabilityIndex()
 
         graph_database = GraphDatabase(
@@ -199,7 +201,13 @@ class TraceabilityIndexBuilder:
                     GraphLinkType.MID_TO_NODE,
                     OneToOneDictionary(
                         MID,
-                        (SDocNode, SDocSection, Document, InlineLink, Anchor),
+                        (
+                            SDocNode,
+                            SDocSection,
+                            SDocDocument,
+                            InlineLink,
+                            Anchor,
+                        ),
                     ),
                 ),
                 (
@@ -258,7 +266,7 @@ class TraceabilityIndexBuilder:
         # - Detect cycles
         # - Calculate depth of both parent and child relations.
 
-        document: Document
+        document: SDocDocument
         for document in document_tree.document_list:
             if graph_database.has_link(
                 link_type=GraphLinkType.MID_TO_NODE,

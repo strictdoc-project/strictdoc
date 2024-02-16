@@ -1,6 +1,6 @@
 import pytest
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
@@ -67,7 +67,7 @@ STATEMENT: Sub sub requirement
 
 
 def validate_document(document):
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
     assert len(document.free_texts) == 1
 
     composite_requirement = document.section_contents[2]

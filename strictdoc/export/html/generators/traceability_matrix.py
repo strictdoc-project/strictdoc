@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
 from strictdoc import __version__
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
@@ -34,7 +34,7 @@ class TraceabilityMatrixHTMLGenerator:
 
         discovered_relation_types = set()
 
-        document_: Document
+        document_: SDocDocument
         for document_ in traceability_index.document_tree.document_list:
             assert document_.grammar is not None
             document_grammar: DocumentGrammar = document_.grammar

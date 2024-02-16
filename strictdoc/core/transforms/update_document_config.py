@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Dict, List
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
@@ -20,12 +20,12 @@ class UpdateDocumentConfigTransform:
     def __init__(
         self,
         form_object: DocumentConfigFormObject,
-        document: Document,
+        document: SDocDocument,
         traceability_index: TraceabilityIndex,
         config: ProjectConfig,
     ):
         self.form_object: DocumentConfigFormObject = form_object
-        self.document: Document = document
+        self.document: SDocDocument = document
         self.traceability_index: TraceabilityIndex = traceability_index
         self.update_free_text_command = UpdateFreeTextCommand(
             node=document,
@@ -67,10 +67,10 @@ class UpdateDocumentConfigTransform:
     def validate(
         self,
         form_object: DocumentConfigFormObject,
-        document: Document,
+        document: SDocDocument,
     ):
         errors: Dict[str, List[str]] = defaultdict(list)
-        assert isinstance(document, Document)
+        assert isinstance(document, SDocDocument)
         if len(form_object.document_title) == 0:
             errors["TITLE"].append("Document title must not be empty.")
 

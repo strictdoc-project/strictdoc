@@ -1,4 +1,4 @@
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
@@ -35,9 +35,9 @@ VIEWS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
 
     writer = SDWriter()
     output = writer.write(document)

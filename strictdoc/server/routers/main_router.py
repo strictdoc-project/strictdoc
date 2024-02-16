@@ -23,7 +23,7 @@ from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
 from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
     P01_SDocToReqIFObjectConverter,
 )
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
@@ -262,11 +262,11 @@ def create_main_router(
 
         section_form_object = SectionFormObject.create_new()
         reference_node: Union[
-            Document, SDocSection
+            SDocDocument, SDocSection
         ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
-            if isinstance(reference_node, Document)
+            if isinstance(reference_node, SDocDocument)
             else reference_node.document
         )
 
@@ -335,11 +335,11 @@ def create_main_router(
         )
 
         reference_node: Union[
-            Document, SDocSection
+            SDocDocument, SDocSection
         ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
-            if isinstance(reference_node, Document)
+            if isinstance(reference_node, SDocDocument)
             else reference_node.document
         )
 
@@ -682,7 +682,7 @@ def create_main_router(
         )
         document = (
             reference_node
-            if isinstance(reference_node, Document)
+            if isinstance(reference_node, SDocDocument)
             else reference_node.document
         )
 
@@ -756,7 +756,7 @@ def create_main_router(
         reference_requirement: SDocNode = assert_cast(reference_node, SDocNode)
         document = (
             reference_node
-            if isinstance(reference_node, Document)
+            if isinstance(reference_node, SDocDocument)
             else reference_node.document
         )
         document_tree_stats: DocumentTreeStats = (
@@ -826,8 +826,8 @@ def create_main_router(
         reference_mid: str = request_dict["reference_mid"]
         whereto: str = request_dict["whereto"]
 
-        document: Document = export_action.traceability_index.get_node_by_mid(
-            MID(document_mid)
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
         form_object = RequirementFormObject.create_from_request(
             is_new=True,
@@ -1419,7 +1419,9 @@ def create_main_router(
 
         export_action.traceability_index.delete_requirement(requirement)
 
-        requirement_parent: Union[SDocSection, Document] = requirement.parent
+        requirement_parent: Union[
+            SDocSection, SDocDocument
+        ] = requirement.parent
         requirement_parent.section_contents.remove(requirement)
         requirement.parent = None
 
@@ -1711,7 +1713,7 @@ def create_main_router(
         input_doc_dir_rel_path = os.path.dirname(document_path)
 
         Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
-        document = Document(
+        document = SDocDocument(
             mid=None,
             title=document_title,
             config=None,
@@ -1767,8 +1769,8 @@ def create_main_router(
 
     @router.get("/actions/document/new_comment", response_class=Response)
     def document__add_comment(requirement_mid: str, document_mid: str):
-        document: Document = export_action.traceability_index.get_node_by_mid(
-            MID(document_mid)
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
@@ -1811,8 +1813,8 @@ def create_main_router(
 
     @router.get("/actions/document/new_relation", response_class=Response)
     def document__add_relation(requirement_mid: str, document_mid: str):
-        document: Document = export_action.traceability_index.get_node_by_mid(
-            MID(document_mid)
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
@@ -1859,8 +1861,8 @@ def create_main_router(
 
     @router.get("/actions/document/edit_config", response_class=Response)
     def document__edit_config(document_mid: str):
-        document: Document = export_action.traceability_index.get_node_by_mid(
-            MID(document_mid)
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
         form_object = DocumentConfigFormObject.create_from_document(
             document=document
@@ -1889,8 +1891,8 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
-        document: Document = export_action.traceability_index.get_node_by_mid(
-            MID(document_mid)
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
         form_object: DocumentConfigFormObject = (
             DocumentConfigFormObject.create_from_request(
@@ -1976,8 +1978,8 @@ def create_main_router(
 
     @router.get("/actions/document/cancel_edit_config", response_class=Response)
     def document__cancel_edit_config(document_mid: str):
-        document: Document = export_action.traceability_index.get_node_by_mid(
-            MID(document_mid)
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
@@ -2014,8 +2016,8 @@ def create_main_router(
 
     @router.get("/actions/document/edit_grammar", response_class=Response)
     def document__edit_grammar(document_mid: str):
-        document: Document = export_action.traceability_index.get_node_by_mid(
-            MID(document_mid)
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
         form_object = DocumentGrammarFormObject.create_from_document(
             document=document
@@ -2043,8 +2045,8 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
-        document: Document = export_action.traceability_index.get_node_by_mid(
-            MID(document_mid)
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
         form_object: DocumentGrammarFormObject = (
             DocumentGrammarFormObject.create_from_request(
@@ -2285,11 +2287,11 @@ def create_main_router(
         error_object = ErrorObject()
         assert isinstance(contents, str)
 
-        documents: Optional[List[Document]] = None
+        documents: Optional[List[SDocDocument]] = None
         try:
             reqif_bundle = ReqIFParser.parse_from_string(contents)
             converter: P01_ReqIFToSDocConverter = P01_ReqIFToSDocConverter()
-            documents: List[Document] = converter.convert_reqif_bundle(
+            documents: List[SDocDocument] = converter.convert_reqif_bundle(
                 reqif_bundle
             )
         except ReqIFXMLParsingError as exception:

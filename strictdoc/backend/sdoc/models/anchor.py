@@ -24,6 +24,6 @@ class Anchor:
 
     @property
     def document(self):
-        if self.parent.parent.__class__.__name__ == "Document":
+        if self.parent.parent.__class__.__name__ == "SDocDocument":
             return self.parent.parent
         return self.parent.parent.document

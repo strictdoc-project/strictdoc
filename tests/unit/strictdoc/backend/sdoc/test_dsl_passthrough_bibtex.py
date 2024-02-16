@@ -1,4 +1,4 @@
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.reference import BibReference
 from strictdoc.backend.sdoc.models.type_system import (
     BibEntryFormat,
@@ -49,7 +49,7 @@ ENTRIES:
     reader = SDReader()
     document = reader.read(sdoc_input)
 
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     document_bibliography = document.bibliography
     assert len(document_bibliography.bib_files) == 2
@@ -115,7 +115,7 @@ RELATIONS:
     reader = SDReader()
     document = reader.read(sdoc_input)
 
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     doc_bib = document.bibliography
     assert len(doc_bib.bib_files) == 2

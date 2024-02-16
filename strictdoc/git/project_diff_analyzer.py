@@ -3,7 +3,7 @@ import statistics
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
     SDocNodeField,
@@ -69,7 +69,7 @@ class ProjectTreeDiffStats:
     map_uid_to_nodes: Dict[str, Any] = field(default_factory=dict)
     map_titles_to_nodes: Dict[str, List] = field(default_factory=dict)
     map_statements_to_nodes: Dict[str, Any] = field(default_factory=dict)
-    map_rel_paths_to_docs: Dict[str, Document] = field(default_factory=dict)
+    map_rel_paths_to_docs: Dict[str, SDocDocument] = field(default_factory=dict)
 
     cache_requirement_to_requirement: Dict[SDocNode, SDocNode] = field(
         default_factory=dict
@@ -137,15 +137,15 @@ class ProjectTreeDiffStats:
         return None
 
     def get_diffed_free_text(
-        self, node: Union[SDocSection, Document], side: str
+        self, node: Union[SDocSection, SDocDocument], side: str
     ):
-        assert isinstance(node, (SDocSection, Document))
+        assert isinstance(node, (SDocSection, SDocDocument))
         assert side in ("left", "right")
 
-        if isinstance(node, Document):
-            document: Document = assert_cast(node, Document)
+        if isinstance(node, SDocDocument):
+            document: SDocDocument = assert_cast(node, SDocDocument)
 
-            other_document_or_none: Optional[Document] = None
+            other_document_or_none: Optional[SDocDocument] = None
 
             if (
                 document.mid_permanent
@@ -160,8 +160,8 @@ class ProjectTreeDiffStats:
                 )
             if other_document_or_none is None:
                 return None
-            other_document: Document = assert_cast(
-                other_document_or_none, Document
+            other_document: SDocDocument = assert_cast(
+                other_document_or_none, SDocDocument
             )
             if len(other_document.free_texts) == 0:
                 return None
@@ -440,7 +440,7 @@ class ChangeStats:
             root-level free text (abstract) has changed.
             """
             if document not in change_stats.map_nodes_to_changes:
-                other_document_or_none: Optional[Document] = None
+                other_document_or_none: Optional[SDocDocument] = None
 
                 # First, the MID-based match is tried. If no MID is available,
                 # try to find a document under the same path.
@@ -515,8 +515,8 @@ class ChangeStats:
                             )
                         )
                 if uid_modified or title_modified or free_text_modified:
-                    lhs_document: Optional[Document] = None
-                    rhs_document: Optional[Document] = None
+                    lhs_document: Optional[SDocDocument] = None
+                    rhs_document: Optional[SDocDocument] = None
                     if side == "left":
                         lhs_document = document
                         rhs_document = other_document_or_none
@@ -1104,7 +1104,7 @@ class ProjectDiffAnalyzer:
 
     @staticmethod
     def analyze_document(
-        document: Document,
+        document: SDocDocument,
         document_tree_stats: ProjectTreeDiffStats,
     ) -> None:
         document_iterator = DocumentCachingIterator(document)
@@ -1231,7 +1231,7 @@ class ProjectDiffAnalyzer:
                 raise AssertionError
 
         def recurse(node):
-            assert isinstance(node, (SDocSection, Document))
+            assert isinstance(node, (SDocSection, SDocDocument))
             for sub_node_ in node.section_contents:
                 if isinstance(sub_node_, SDocSection):
                     map_nodes_to_hashers[node].update(recurse(sub_node_))
@@ -1262,5 +1262,5 @@ class ProjectDiffAnalyzer:
                 document_tree_stats.section_md5_hashes.add(node_md5)
             elif isinstance(node_, SDocNode):
                 document_tree_stats.requirement_md5_hashes.add(node_md5)
-            elif isinstance(node_, Document):
+            elif isinstance(node_, SDocDocument):
                 document_tree_stats.document_md5_hashes.add(node_md5)

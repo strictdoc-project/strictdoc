@@ -9,7 +9,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
@@ -67,7 +67,7 @@ class CreateRequirementTransform:
             MID(form_object.document_mid)
         )
         reference_node: Union[
-            Document, Section
+            Document, SDocSection
         ] = traceability_index.get_node_by_mid(MID(reference_mid))
 
         if whereto == NodeCreationOrder.CHILD:

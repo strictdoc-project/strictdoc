@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
 
@@ -144,7 +144,7 @@ class QueryObject:
         if isinstance(expression, NodeIsRequirementExpression):
             return isinstance(node, SDocNode)
         if isinstance(expression, NodeIsSectionExpression):
-            return isinstance(node, Section)
+            return isinstance(node, SDocSection)
         if isinstance(expression, NodeIsRootExpression):
             return node.is_root
         if isinstance(expression, NotExpression):
@@ -215,7 +215,7 @@ class QueryObject:
                 return field_value
             return None
         elif node.is_section:
-            section: Section = assert_cast(node, Section)
+            section: SDocSection = assert_cast(node, SDocSection)
             if field_name == "UID":
                 return section.reserved_uid
             elif field_name == "TITLE":
@@ -259,15 +259,15 @@ class QueryObject:
                     ):
                         return True
             return False
-        if isinstance(node, Section):
-            section = assert_cast(node, Section)
+        if isinstance(node, SDocSection):
+            section = assert_cast(node, SDocSection)
             if expression.string in section.title:
                 return True
             return False
         raise NotImplementedError
 
     def _evaluate_node_contains_any_text(self, node):
-        if not isinstance(node, Section):
+        if not isinstance(node, SDocSection):
             raise TypeError(
                 f"node.contains_any_text can be only called on "
                 f"Section objects, got: {node.__class__.__name__}. To fix "

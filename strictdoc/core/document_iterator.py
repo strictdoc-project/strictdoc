@@ -5,7 +5,7 @@ from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
 )
-from strictdoc.backend.sdoc.models.section import FreeText, Section
+from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
 from strictdoc.core.level_counter import LevelCounter
 
 
@@ -64,7 +64,9 @@ class DocumentCachingIterator:
             if not current.ng_whitelisted:
                 continue
 
-            if isinstance(current, (Section, SDocNode, CompositeRequirement)):
+            if isinstance(
+                current, (SDocSection, SDocNode, CompositeRequirement)
+            ):
                 assert current.ng_level, f"Node has no ng_level: {current}"
 
                 if current.ng_resolved_custom_level != "None":
@@ -90,7 +92,7 @@ class DocumentCachingIterator:
             self.nodes_cache.append(current)
             yield current
 
-            if isinstance(current, Section):
+            if isinstance(current, SDocSection):
                 task_list.extendleft(reversed(current.section_contents))
 
             elif isinstance(current, CompositeRequirement):
@@ -98,7 +100,7 @@ class DocumentCachingIterator:
 
     @staticmethod
     def specific_node_with_normal_levels(node):
-        if isinstance(node, Section):
+        if isinstance(node, SDocSection):
             initial_content = node.section_contents
         elif isinstance(node, CompositeRequirement):
             initial_content = node.requirements
@@ -113,7 +115,9 @@ class DocumentCachingIterator:
 
             current = task_list.popleft()
 
-            if isinstance(current, (Section, SDocNode, CompositeRequirement)):
+            if isinstance(
+                current, (SDocSection, SDocNode, CompositeRequirement)
+            ):
                 # We are not interested in the nodes without level in this
                 # iterator.
                 if current.ng_resolved_custom_level == "None":
@@ -121,7 +125,7 @@ class DocumentCachingIterator:
 
             yield current
 
-            if isinstance(current, Section):
+            if isinstance(current, SDocSection):
                 task_list.extendleft(reversed(current.section_contents))
 
             elif isinstance(current, CompositeRequirement):

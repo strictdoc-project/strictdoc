@@ -6,7 +6,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
@@ -337,7 +337,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_node_by_uid_weak(
         self, uid: str
-    ) -> Union[Document, Section, SDocNode, None]:
+    ) -> Union[Document, SDocSection, SDocNode, None]:
         assert isinstance(uid, str), uid
         for document in self.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
@@ -345,7 +345,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 if isinstance(node, Document):
                     if node.config.uid == uid:
                         return node
-                elif isinstance(node, Section):
+                elif isinstance(node, SDocSection):
                     if node.reserved_uid == uid:
                         return node
                 elif isinstance(node, SDocNode):
@@ -357,17 +357,17 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_linkable_node_by_uid_weak(
         self, uid
-    ) -> Union[Section, Anchor, None]:
+    ) -> Union[SDocSection, Anchor, None]:
         return assert_optional_cast(
             self.graph_database.get_link_value_weak(
                 link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
             ),
-            (Section, Anchor),
+            (SDocSection, Anchor),
         )
 
     def get_node_with_duplicate_anchor(
         self, anchor_uid: str
-    ) -> Union[Document, Section]:
+    ) -> Union[Document, SDocSection]:
         for document in self.document_tree.document_list:
             if len(document.free_texts) > 0:
                 for part in document.free_texts[0].parts:
@@ -375,7 +375,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                         return document
             document_iterator = DocumentCachingIterator(document)
             for node in document_iterator.all_content():
-                if not isinstance(node, (Document, Section)):
+                if not isinstance(node, (Document, SDocSection)):
                     continue
                 if len(node.free_texts) > 0:
                     for part in node.free_texts[0].parts:
@@ -389,7 +389,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
     def get_section_incoming_links(
-        self, section: Section
+        self, section: SDocSection
     ) -> Optional[List[InlineLink]]:
         section_incoming_links = self.graph_database.get_link_values_weak(
             link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
@@ -444,8 +444,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             source_file_rel_path, traceability_info
         )
 
-    def create_section(self, section: Section) -> None:
-        assert isinstance(section, Section)
+    def create_section(self, section: SDocSection) -> None:
+        assert isinstance(section, SDocSection)
         if section.reserved_uid is not None:
             self.graph_database.create_link(
                 link_type=GraphLinkType.UID_TO_NODE,
@@ -465,12 +465,12 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if self.graph_database.has_link(
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=new_link.link
         ):
-            section_or_anchor: Union[Section, Anchor] = assert_cast(
+            section_or_anchor: Union[SDocSection, Anchor] = assert_cast(
                 self.graph_database.get_link_value(
                     link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=new_link.link,
                 ),
-                (Section, Anchor),
+                (SDocSection, Anchor),
             )
             self.graph_database.create_link(
                 link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
@@ -751,8 +751,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             rhs_node=document.reserved_mid,
         )
 
-    def delete_section(self, section: Section) -> None:
-        assert isinstance(section, Section), section
+    def delete_section(self, section: SDocSection) -> None:
+        assert isinstance(section, SDocSection), section
 
         self.graph_database.delete_link(
             link_type=GraphLinkType.MID_TO_NODE,
@@ -889,9 +889,12 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
     def validate_node_against_anchors(
-        self, *, node: Union[Document, Section, None], new_anchors: List[Anchor]
+        self,
+        *,
+        node: Union[Document, SDocSection, None],
+        new_anchors: List[Anchor],
     ):
-        assert node is None or isinstance(node, (Document, Section))
+        assert node is None or isinstance(node, (Document, SDocSection))
         assert isinstance(new_anchors, list)
 
         # Check that this node does not have duplicated anchors.
@@ -964,7 +967,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         for document in self.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             for node_ in document_iterator.all_content():
-                if not isinstance(node_, (Document, Section)):
+                if not isinstance(node_, (Document, SDocSection)):
                     continue
                 if len(node_.free_texts) > 0:
                     for part in node_.free_texts[0].parts:
@@ -991,7 +994,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                                 f"'{node_with_duplicate_anchor.title}'."
                             )
 
-    def validate_section_can_remove_uid(self, *, section: Section):
+    def validate_section_can_remove_uid(self, *, section: SDocSection):
         section_incoming_links: Optional[
             List[InlineLink]
         ] = self.get_section_incoming_links(section)
@@ -1022,7 +1025,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert len(uid) > 0, uid
 
         existing_node_with_uid: Union[
-            Document, Section, SDocNode, None
+            Document, SDocSection, SDocNode, None
         ] = self.get_node_by_uid_weak(uid)
 
         if existing_node_with_uid is None:

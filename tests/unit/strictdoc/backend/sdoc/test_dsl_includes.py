@@ -5,7 +5,7 @@ from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.reader import SDReader
 
 
@@ -80,7 +80,7 @@ def validate_document(document):
     assert requirement.ng_level == 1
 
     section = document.section_contents[0]
-    assert isinstance(section, Section)
+    assert isinstance(section, SDocSection)
     assert section.title == "Section 1"
     assert section.ng_level == 1
     assert len(section.free_texts) == 1

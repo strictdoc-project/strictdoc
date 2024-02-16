@@ -6,7 +6,7 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNode,
     SDocNodeField,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
 
@@ -89,8 +89,8 @@ class SectionChange:
         matched_mid: Optional[MID],
         matched_uid: Optional[str],
         section_token: Optional[str],
-        lhs_section: Optional[Section],
-        rhs_section: Optional[Section],
+        lhs_section: Optional[SDocSection],
+        rhs_section: Optional[SDocSection],
         uid_modified: bool,
         title_modified: bool,
         free_text_modified: bool,
@@ -117,13 +117,13 @@ class SectionChange:
             str
         ] = rhs_colored_free_text_diff
 
-        self.lhs_section: Optional[Section] = lhs_section
-        self.rhs_section: Optional[Section] = rhs_section
+        self.lhs_section: Optional[SDocSection] = lhs_section
+        self.rhs_section: Optional[SDocSection] = rhs_section
 
         if matched_mid is not None or matched_uid is not None:
             change_type = ChangeType.SECTION_MODIFIED
-            assert isinstance(lhs_section, Section), lhs_section
-            assert isinstance(rhs_section, Section), rhs_section
+            assert isinstance(lhs_section, SDocSection), lhs_section
+            assert isinstance(rhs_section, SDocSection), rhs_section
         elif lhs_section is not None:
             assert rhs_section is None, rhs_section
             change_type = ChangeType.SECTION_REMOVED

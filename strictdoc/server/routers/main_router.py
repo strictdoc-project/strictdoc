@@ -32,7 +32,7 @@ from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.cli_arg_parser import (
     ExportCommandConfig,
@@ -209,7 +209,7 @@ def create_main_router(
 
     @router.get("/actions/show_full_section", response_class=Response)
     def section__show_full(reference_mid: str):
-        section: Section = export_action.traceability_index.get_node_by_mid(
+        section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(reference_mid)
         )
         template = env().get_template(
@@ -262,7 +262,7 @@ def create_main_router(
 
         section_form_object = SectionFormObject.create_new()
         reference_node: Union[
-            Document, Section
+            Document, SDocSection
         ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
@@ -335,7 +335,7 @@ def create_main_router(
         )
 
         reference_node: Union[
-            Document, Section
+            Document, SDocSection
         ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
@@ -389,7 +389,7 @@ def create_main_router(
                 },
             )
 
-        section: Section = create_command.get_created_section()
+        section: SDocSection = create_command.get_created_section()
 
         # Saving new content to .SDoc file.
         document_content = SDWriter().write(section.document)
@@ -458,7 +458,7 @@ def create_main_router(
         "/actions/document/edit_section/{section_id}", response_class=Response
     )
     def get_edit_section(section_id: str):
-        section: Section = export_action.traceability_index.get_node_by_mid(
+        section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(section_id)
         )
         form_object = SectionFormObject.create_from_section(section=section)
@@ -497,7 +497,7 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         section_mid = request_dict["section_mid"]
-        section: Section = export_action.traceability_index.get_node_by_mid(
+        section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(section_mid)
         )
 
@@ -635,7 +635,7 @@ def create_main_router(
         "/actions/document/cancel_edit_section", response_class=Response
     )
     def cancel_edit_section(section_mid: str):
-        section: Section = export_action.traceability_index.get_node_by_mid(
+        section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(section_mid)
         )
         template = env().get_template(
@@ -1033,7 +1033,7 @@ def create_main_router(
             next_uid: str = document_tree_stats.get_next_requirement_uid(
                 reference_node.get_requirement_prefix()
             )
-        elif isinstance(reference_node, Section):
+        elif isinstance(reference_node, SDocSection):
             document_acronym = create_safe_acronym(
                 reference_node.document.title
             )
@@ -1313,9 +1313,9 @@ def create_main_router(
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
-        section: Section = assert_cast(
+        section: SDocSection = assert_cast(
             export_action.traceability_index.get_node_by_mid(MID(section_mid)),
-            Section,
+            SDocSection,
         )
         try:
             # FIXME: Perform all necessary validations.
@@ -1419,7 +1419,7 @@ def create_main_router(
 
         export_action.traceability_index.delete_requirement(requirement)
 
-        requirement_parent: Union[Section, Document] = requirement.parent
+        requirement_parent: Union[SDocSection, Document] = requirement.parent
         requirement_parent.section_contents.remove(requirement)
         requirement.parent = None
 

@@ -1,7 +1,7 @@
 from typing import Union
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
@@ -11,16 +11,16 @@ from strictdoc.helpers.cast import assert_cast
 class DeleteSectionCommand:
     def __init__(
         self,
-        section: Section,
+        section: SDocSection,
         traceability_index: TraceabilityIndex,
     ):
-        self.section: Section = section
+        self.section: SDocSection = section
         self.traceability_index: TraceabilityIndex = traceability_index
 
     def perform(self):
-        section: Section = self.section
-        section_parent: Union[Section, Document] = assert_cast(
-            section.parent, (Section, Document)
+        section: SDocSection = self.section
+        section_parent: Union[SDocSection, Document] = assert_cast(
+            section.parent, (SDocSection, Document)
         )
         section_parent.section_contents.remove(section)
 

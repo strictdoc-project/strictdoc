@@ -5,7 +5,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.helpers.string import create_safe_title_string
@@ -50,7 +50,7 @@ class LinkRenderer:
             return f"{self._string_to_link(node.value)}"
 
         unique_prefix = node.context.title_number_string
-        if isinstance(node, Section):
+        if isinstance(node, SDocSection):
             local_anchor = f"{unique_prefix}-{self._string_to_link(node.title)}"
         elif isinstance(node, SDocNode):
             if node.reserved_uid and len(node.reserved_uid) > 0:
@@ -94,7 +94,7 @@ class LinkRenderer:
                 "#_TOP"
             )
 
-        assert isinstance(node, (SDocNode, Section, Anchor)), node
+        assert isinstance(node, (SDocNode, SDocSection, Anchor)), node
         assert isinstance(document_type, DocumentType), document_type
         local_link = self.render_local_anchor(node)
         if (

@@ -13,7 +13,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityReader,
@@ -199,12 +199,12 @@ class TraceabilityIndexBuilder:
                     GraphLinkType.MID_TO_NODE,
                     OneToOneDictionary(
                         MID,
-                        (SDocNode, Section, Document, InlineLink, Anchor),
+                        (SDocNode, SDocSection, Document, InlineLink, Anchor),
                     ),
                 ),
                 (
                     GraphLinkType.UID_TO_NODE,
-                    OneToOneDictionary(str, (SDocNode, Section, Anchor)),
+                    OneToOneDictionary(str, (SDocNode, SDocSection, Anchor)),
                 ),
                 (
                     GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
@@ -646,7 +646,7 @@ class TraceabilityIndexBuilder:
                                 ]
                                 == node
                             ):
-                                if isinstance(node.parent, Section):
+                                if isinstance(node.parent, SDocSection):
                                     node.parent.blacklist_if_needed()
 
                         elif (

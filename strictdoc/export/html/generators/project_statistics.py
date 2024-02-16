@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
@@ -77,7 +77,7 @@ class ProgressStatisticsGenerator:
         for document in traceability_index.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             for node in document_iterator.all_content():
-                if isinstance(node, Section):
+                if isinstance(node, SDocSection):
                     document_tree_stats.total_sections += 1
                     if len(node.free_texts) == 0:
                         document_tree_stats.sections_without_free_text += 1

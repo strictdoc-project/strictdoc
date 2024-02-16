@@ -12,7 +12,7 @@ STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(STRICTDOC_ROOT_PATH)
 
 from strictdoc.backend.sdoc.models.document import Document
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.writer import SDWriter
 
 
@@ -50,7 +50,7 @@ class ConfluenceHTMLTableImport:
         )
         for section_idx, reqs in enumerate(reqs_array_array):
             section_name = headers[section_idx].text
-            section = Section(
+            section = SDocSection(
                 document, None,None, "1", section_name,
                 requirement_prefix=None,
                 free_texts=[],

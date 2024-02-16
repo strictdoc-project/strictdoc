@@ -36,7 +36,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
@@ -431,9 +431,9 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
 
     @classmethod
     def _convert_section_to_spec_object(
-        cls, section: Section, document_spec_object_type: str
+        cls, section: SDocSection, document_spec_object_type: str
     ) -> ReqIFSpecObject:
-        assert isinstance(section, Section)
+        assert isinstance(section, SDocSection)
         attributes = []
         title_attribute = SpecObjectAttribute(
             xml_node=None,

@@ -14,7 +14,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
     ReferenceType,
@@ -470,8 +470,8 @@ class SDocNode(SDocObject):
         return field_human_title.get_field_human_name()
 
     def get_requirement_prefix(self) -> str:
-        parent: Union[Section, Document] = assert_cast(
-            self.parent, (Section, Document, CompositeRequirement)
+        parent: Union[SDocSection, Document] = assert_cast(
+            self.parent, (SDocSection, Document, CompositeRequirement)
         )
         return parent.get_requirement_prefix()
 

@@ -8,7 +8,7 @@ import graphviz
 
 from strictdoc.backend.sdoc.models.document import Document
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import Section
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -138,12 +138,14 @@ class DocumentDotGenerator:
         accumulated_section_siblings,
         document_flat_requirements,
     ):
-        def get_bottom_most_section(document: Document) -> Optional[Section]:
-            current_node: Union[Document, Section] = document
-            candidate_section: Optional[Section] = None
+        def get_bottom_most_section(
+            document: Document,
+        ) -> Optional[SDocSection]:
+            current_node: Union[Document, SDocSection] = document
+            candidate_section: Optional[SDocSection] = None
             while len(current_node.section_contents) > 0:
                 for subnode in reversed(current_node.section_contents):
-                    if isinstance(subnode, Section):
+                    if isinstance(subnode, SDocSection):
                         candidate_section = subnode
                         current_node = subnode
                         break
@@ -182,7 +184,7 @@ class DocumentDotGenerator:
                     continue
 
                 lhs_node_id: str = document.section_contents[0].reserved_mid
-                if not isinstance(document.section_contents[0], Section):
+                if not isinstance(document.section_contents[0], SDocSection):
                     lhs_node_id = document.reserved_mid
 
                 rhs_node_id = prev_document_last_section.reserved_mid
@@ -239,7 +241,7 @@ class DocumentDotGenerator:
 
     def _print_node(
         self,
-        node: Union[Document, Section],
+        node: Union[Document, SDocSection],
         link_renderer: LinkRenderer,
         accumulated_links: List[Tuple[str, str]],
         accumulated_section_siblings,
@@ -247,20 +249,20 @@ class DocumentDotGenerator:
         def get_uuid(node_) -> str:
             return node_.reserved_mid
 
-        def get_upper_sibling_section(node_: Section):
-            parent: Union[Document, Section] = node_.parent
+        def get_upper_sibling_section(node_: SDocSection):
+            parent: Union[Document, SDocSection] = node_.parent
             node_index = parent.section_contents.index(node_)
             if node_index > 0:
                 candidate_upper_sibling = parent.section_contents[
                     node_index - 1
                 ]
-                if isinstance(candidate_upper_sibling, Section):
+                if isinstance(candidate_upper_sibling, SDocSection):
                     return candidate_upper_sibling
             return None
 
         node_content = ""
         for subnode in node.section_contents:
-            if isinstance(subnode, Section):
+            if isinstance(subnode, SDocSection):
                 node_content += self._print_node(
                     subnode,
                     link_renderer,
@@ -285,7 +287,7 @@ class DocumentDotGenerator:
             node_content=node_content,
             font_size=32 - node.ng_level * 4,
             context_title=f"{node.context.title_number_string} {node.title}"
-            if isinstance(node, Section)
+            if isinstance(node, SDocSection)
             else node.title,
         )
         return output

@@ -1,5 +1,5 @@
-  {%- if project_config.is_activated_requirements_to_source_traceability() -%}
-    {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+  {%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
+    {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
     {%- if requirement_file_links %}
       <sdoc-requirement-field-label>files:</sdoc-requirement-field-label>
       <sdoc-requirement-field data-field-label="files">
@@ -8,7 +8,7 @@
             {%- if opt_ranges -%}
               {%- for range in opt_ranges %}
                 <li>
-                  <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                  <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
                     {{ link.get_posix_path() }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
                     {# TODO optional relation role #}
                   </a>
@@ -16,7 +16,7 @@
               {%- endfor -%}
             {%- else -%}
               <li>
-                <a data-turbo="false" class="requirement__link-file" href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
+                <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
                   {{ link.get_posix_path() }}
                   {# TODO optional relation role #}
                 </a>

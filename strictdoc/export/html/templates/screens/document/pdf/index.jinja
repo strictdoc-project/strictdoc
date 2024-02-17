@@ -2,27 +2,27 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ link_renderer.render_static_url('tree.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('tree.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('viewtype_menu.js') }}"></script>
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('toc_highlighting.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('viewtype_menu.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
 
-  {%- if project_config.is_activated_mathjax() -%}
-  <script id="MathJax-script" async src="{{ link_renderer.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
+  {%- if view_object.project_config.is_activated_mathjax() -%}
+  <script id="MathJax-script" async src="{{ view_object.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- endif -%}
-  {%- if project_config.is_activated_rapidoc() -%}
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('rapidoc/rapidoc-min.js') }}"></script>
+  {%- if view_object.project_config.is_activated_rapidoc() -%}
+  <script type="text/javascript" src="{{ view_object.render_static_url('rapidoc/rapidoc-min.js') }}"></script>
   {%- endif -%}
-  {%- if project_config.is_activated_mermaid() -%}
-    <script src="{{ link_renderer.render_static_url('mermaid/mermaid.min.js') }}"></script>
+  {%- if view_object.project_config.is_activated_mermaid() -%}
+    <script src="{{ view_object.render_static_url('mermaid/mermaid.min.js') }}"></script>
     <script type="module">
       mermaid.initialize({ startOnLoad: true });
     </script>
   {%- endif -%}
-  {%- if project_config.is_activated_html2pdf() -%}
+  {%- if view_object.project_config.is_activated_html2pdf() -%}
   <script
   defer
     {# data-debug-mode='false' #}
@@ -34,12 +34,12 @@
     data-page-break-before-selectors='H2'
     data-no-break-selectors='sdoc-section-title sdoc-meta sdoc-requirement-title .pdf-toc-row'
     data-no-hanging-selectors='sdoc-section-title sdoc-meta sdoc-requirement-title sdoc-requirement-field-label strong:only-child'
-  src="{{ link_renderer.render_static_url('html2pdf/bundle.js') }}"></script>
+  src="{{ view_object.render_static_url('html2pdf/bundle.js') }}"></script>
   {%- endif -%}
 
   {{ super() }}
 {% endblock head_scripts %}
-{% block title %}{{ document.title }} - {{ document_type.get_page_title() }}{% endblock title %}
+{% block title %}{{ view_object.document.title }} - {{ view_object.get_page_title() }}{% endblock title %}
 {% block viewtype %}{{ "html2pdf" }}{% endblock viewtype %}
 
 {% block layout_nav %}

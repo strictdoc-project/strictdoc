@@ -1,4 +1,4 @@
-{%- if project_config.is_running_on_server -%}
+{%- if view_object.project_config.is_running_on_server -%}
 {#
   This turbo frame is important because it enables
   the child turbo links below.
@@ -13,7 +13,7 @@
       data-testid="tree-add-document-action"
     >{% include "_res/svg_ico16_add.jinja.html" %} Add document</a>
 
-    {%- if project_config.is_activated_reqif() -%}
+    {%- if view_object.project_config.is_activated_reqif() -%}
       <a
         class="action_button"
         href="/actions/project_index/import_reqif_document_form"
@@ -22,7 +22,7 @@
         data-testid="tree-import-reqif-action"
       >Import from ReqIF</a>
 
-      {%- if not document_tree_iterator.is_empty_tree() -%}
+      {%- if not view_object.is_empty_tree() -%}
         <a
           class="action_button"
           href="/reqif/export_tree"

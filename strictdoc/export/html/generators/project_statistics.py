@@ -1,55 +1,18 @@
-from dataclasses import dataclass, field
-from datetime import datetime
-from typing import List, Optional
-
-from strictdoc import __version__
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
-from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.generators.view_objects.project_statistics_view_object import (
+    ProjectStatisticsViewObject,
+)
+from strictdoc.export.html.generators.view_objects.project_tree_stats import (
+    DocumentTreeStats,
+)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.git_client import GitClient
-
-
-@dataclass
-class DocumentStats:
-    requirements_total: int = 0
-    requirements_no_uid: List[SDocNode] = field(default_factory=list)
-
-
-@dataclass
-class DocumentTreeStats:  # pylint: disable=too-many-instance-attributes
-    total_documents: int = 0
-    total_requirements: int = 0
-    total_sections: int = 0
-    total_tbd: int = 0
-    total_tbc: int = 0
-    git_commit_hash: Optional[str] = None
-
-    # Section
-    sections_without_free_text: int = 0
-
-    # UID
-    requirements_no_uid: int = 0
-    requirements_no_links: int = 0
-    requirements_root_no_links: int = 0
-    requirements_no_rationale: int = 0
-
-    # STATUS
-    requirements_status_none: int = 0
-    requirements_status_draft: int = 0
-    requirements_status_backlog: int = 0
-    requirements_status_active: int = 0
-    requirements_status_other: int = 0
-
-    # Document-level stats.
-    document_level_stats: List[DocumentStats] = field(
-        default_factory=DocumentStats
-    )
 
 
 class ProgressStatisticsGenerator:
@@ -60,15 +23,9 @@ class ProgressStatisticsGenerator:
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
     ):
-        output = ""
-
-        document_tree_iterator = DocumentTreeIterator(
-            traceability_index.document_tree
-        )
-
         git_client = GitClient.create()
 
-        document_tree_stats = DocumentTreeStats()
+        document_tree_stats: DocumentTreeStats = DocumentTreeStats()
         document_tree_stats.total_documents = len(
             traceability_index.document_tree.document_list
         )
@@ -151,19 +108,10 @@ class ProgressStatisticsGenerator:
                             ):
                                 document_tree_stats.total_tbc += 1
 
-        template = html_templates.jinja_environment().get_template(
-            "screens/project_statistics/index.jinja"
-        )
-
-        output += template.render(
+        view_object = ProjectStatisticsViewObject(
             document_tree_stats=document_tree_stats,
-            project_config=project_config,
             traceability_index=traceability_index,
+            project_config=project_config,
             link_renderer=link_renderer,
-            strictdoc_version=__version__,
-            document_tree=traceability_index.document_tree,
-            document_tree_iterator=document_tree_iterator,
-            date_now=datetime.today(),
         )
-
-        return output
+        return view_object.render_screen(html_templates.jinja_environment())

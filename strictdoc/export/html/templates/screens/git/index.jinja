@@ -3,30 +3,30 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ link_renderer.render_static_url('diff.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('diff.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
   {{ super() }}
 
-  {%- if project_config.is_running_on_server and not standalone -%}
+  {%- if view_object.project_config.is_running_on_server and not view_object.standalone -%}
   <script type="module">
-    import hotwiredTurbo from "{{ link_renderer.render_static_url_with_prefix('turbo.min.js') }}";
-    import { Application, Controller } from "{{ link_renderer.render_static_url_with_prefix('stimulus.min.js') }}";
+    import hotwiredTurbo from "{{ view_object.render_static_url_with_prefix('turbo.min.js') }}";
+    import { Application, Controller } from "{{ view_object.render_static_url_with_prefix('stimulus.min.js') }}";
     window.Stimulus = Application.start();
     window.Controller = Controller;
   </script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
   {%- endif -%}
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('diff.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('diff.js') }}"></script>
 {% endblock head_scripts %}
 
 {% block title %}
-  {{ project_config.project_title }} - {{ template_type }}
+  {{ view_object.project_config.project_title }} - {{ template_type }}
 {% endblock title %}
 
-{% assert tab in ("diff", "changelog") %}
-{% block viewtype %}{{ tab }}{% endblock viewtype %}
+{% assert view_object.tab in ("diff", "changelog") %}
+{% block viewtype %}{{ view_object.tab }}{% endblock viewtype %}
 
 {% block layout_nav %}
   {% include "_shared/nav.jinja.html" %}

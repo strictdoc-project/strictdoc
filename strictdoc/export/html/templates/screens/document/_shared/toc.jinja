@@ -7,11 +7,11 @@
       data-last_moved_node_id="{{ last_moved_node_id.get_string_value() }}"
       {% endif -%}
     >
-    {%- for section in document_iterator.table_of_contents() -%}
+    {%- for section in view_object.table_of_contents() -%}
       <li data-nodeid="{{ section.reserved_mid.get_string_value() }}">
         {%- if section.is_section -%}
         {# if section not requirement #}
-          {%- if not section.ng_has_requirements and document_type.is_deeptrace -%}
+          {%- if not section.ng_has_requirements and view_object.is_deeptrace() -%}
             <span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">
                 {{ section.context.title_number_string }}
@@ -27,8 +27,8 @@
           #}
           {%- else -%}
             <a
-              href="#{{ link_renderer.render_local_anchor(section) }}"
-              anchor="{{ link_renderer.render_local_anchor(section) }}"
+              href="#{{ view_object.render_local_anchor(section) }}"
+              anchor="{{ view_object.render_local_anchor(section) }}"
               data-turbo="false"
             >
               <span class="section-number">
@@ -39,8 +39,8 @@
         {%- else -%}
         {# if requirement #}
         <a
-          href="#{{ link_renderer.render_local_anchor(section) }}"
-          anchor="{{ link_renderer.render_local_anchor(section) }}"
+          href="#{{ view_object.render_local_anchor(section) }}"
+          anchor="{{ view_object.render_local_anchor(section) }}"
           data-turbo="false"
         >
           <span class="section-number">

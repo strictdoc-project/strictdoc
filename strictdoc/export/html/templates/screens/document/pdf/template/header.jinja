@@ -30,7 +30,7 @@ html2pdf-header {
 
   {#- add here header html: -#}
   <div class="html2pdf-header">
-    <div class="html2pdf-header-left">{{ project_config.project_title }}</div>
-    <div class="html2pdf-header-right">{{ document.title }}</div>
+    <div class="html2pdf-header-left">{{ view_object.project_config.project_title }}</div>
+    <div class="html2pdf-header-right">{{ view_object.document.title }}</div>
   </div>
 </template>

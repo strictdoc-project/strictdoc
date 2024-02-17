@@ -5,9 +5,9 @@
     {%- include "components/form/search.jinja" -%}
   </div>
 
-  {%- if search_results|length > 0 -%}
+  {%- if view_object.search_results|length > 0 -%}
     <div class="content">
-    {% for node in search_results %}
+    {% for node in view_object.search_results %}
       {% if node.is_requirement %}
         {% with requirement=node, document=node.document, node_controls=True %}
           {%- include "components/requirement/tiny_extends_card.jinja" -%}

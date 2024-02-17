@@ -42,9 +42,18 @@ class DocumentType:
     def is_document(self):
         return self.document_type == DocumentType.DOCUMENT
 
+    def is_table(self):
+        return self.document_type == DocumentType.TABLE
+
+    def is_trace(self):
+        return self.document_type == DocumentType.TRACE
+
     @property
     def is_deeptrace(self):
         return self.document_type == DocumentType.DEEPTRACE
+
+    def is_pdf(self):
+        return self.document_type == DocumentType.PDF
 
     def get_string(self) -> str:
         return self.document_type

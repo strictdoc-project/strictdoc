@@ -1,6 +1,6 @@
-{% if traceability_index.has_tags(document) %}
+{% if view_object.traceability_index.has_tags(view_object.document) %}
 <div class="tags">
-{%- for tag_name_, tag_count_ in traceability_index.get_counted_tags(document) %}
+{%- for tag_name_, tag_count_ in view_object.traceability_index.get_counted_tags(view_object.document) %}
   <span class="tag">
     {{ tag_name_ }}<span class="tag_badge">{{ tag_count_ }}</span>
   </span>

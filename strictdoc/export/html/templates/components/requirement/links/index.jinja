@@ -1,10 +1,10 @@
-  {%- if traceability_index.has_parent_requirements(requirement) %}
+  {%- if view_object.traceability_index.has_parent_requirements(requirement) %}
     <sdoc-requirement-field-label>parent relations:</sdoc-requirement-field-label>
     <sdoc-requirement-field data-field-label="parent relations">
       <ul class="requirement__link">
-        {%- for requirement, relation_role_ in traceability_index.get_parent_relations_with_roles(requirement) %}
+        {%- for requirement, relation_role_ in view_object.traceability_index.get_parent_relations_with_roles(requirement) %}
         <li>
-          <a data-turbo="false" class="requirement__link-parent" href="{{ link_renderer.render_node_link(requirement, document, document_type) }}">
+          <a data-turbo="false" class="requirement__link-parent" href="{{ view_object.render_node_link(requirement, view_object.document, view_object.document_type) }}">
             {%- if requirement.reserved_uid %}
             <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
             {%- endif %}
@@ -19,13 +19,13 @@
     </sdoc-requirement-field>
   {%- endif %}
 
-  {%- if traceability_index.has_children_requirements(requirement) %}
+  {%- if view_object.traceability_index.has_children_requirements(requirement) %}
     <sdoc-requirement-field-label>child relations:</sdoc-requirement-field-label>
     <sdoc-requirement-field data-field-label="child relations">
       <ul class="requirement__link">
-        {%- for requirement, relation_role_ in traceability_index.get_child_relations_with_roles(requirement) %}
+        {%- for requirement, relation_role_ in view_object.traceability_index.get_child_relations_with_roles(requirement) %}
         <li>
-          <a data-turbo="false" class="requirement__link-child" href="{{ link_renderer.render_node_link(requirement, document, document_type) }}">
+          <a data-turbo="false" class="requirement__link-child" href="{{ view_object.render_node_link(requirement, view_object.document, view_object.document_type) }}">
             {%- if requirement.reserved_uid %}
             <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
             {%- endif %}

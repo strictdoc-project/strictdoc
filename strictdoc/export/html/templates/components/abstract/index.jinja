@@ -1,15 +1,18 @@
+{% assert view_object is defined %}
+{% set document = view_object.document %}
+
 <a name="_TOP"></a>
 
 {%- if document.free_texts -%}
   {%- for free_text in document.free_texts %}
     <div class="free_text"
-         data-testid="{{ document_type.get_string() }}-abstract">
-      {%- with field_content = renderer.render_free_text(document_type, free_text) -%}
+         data-testid="{{ view_object.document_type.get_string() }}-abstract">
+      {%- with field_content = view_object.render_free_text(view_object.document_type, free_text) -%}
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </div>
   {%- endfor -%}
-{%- elif not document.section_contents and document_type.is_document -%}
+{%- elif not document.section_contents and view_object.document_type.is_document -%}
   <sdoc-main-placeholder data-testid="document-root-placeholder">
     The document is empty.
     <br/>Start adding text, sections, and requirements.

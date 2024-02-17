@@ -1,5 +1,5 @@
 <sdoc-anchor
-  id="{{ link_renderer.render_local_anchor(sdoc_entity) }}"
+  id="{{ view_object.render_local_anchor(sdoc_entity) }}"
   node-role="{{ sdoc_entity.get_type_string() }}"
   {% if sdoc_entity.reserved_uid is not none -%}
   data-uid="{{ sdoc_entity.reserved_uid }}"
@@ -7,13 +7,13 @@
 >
 {%- if sdoc_entity.is_section -%}
 {%- set section = sdoc_entity %}
-{%- set incoming_links = traceability_index.get_section_incoming_links(section) %}
+{%- set incoming_links = view_object.traceability_index.get_section_incoming_links(section) %}
 {%- if incoming_links is not none and incoming_links|length > 0 -%}
 <template>
   incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
   {%- for incoming_link in incoming_links -%}
   {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
-  {%- set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), document, document_type) -%}
+  {%- set incoming_link_href = view_object.render_node_link(incoming_link.parent_node(), view_object.document, view_object.document_type) -%}
   <a href="{{ incoming_link_href }}">
     {{ incoming_link_parent_node.get_title() }}
   </a>

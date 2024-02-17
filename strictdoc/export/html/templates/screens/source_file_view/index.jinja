@@ -4,16 +4,16 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ link_renderer.render_static_url('source.css') }}" />
-  <link rel="stylesheet" href="{{ link_renderer.render_static_url('requirement-tree.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('source.css') }}" />
+  <link rel="stylesheet" href="{{ view_object.render_static_url('requirement-tree.css') }}"/>
 {% endblock head_css %}
 {% block head_scripts %}
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('source-code-coverage.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('source-code-coverage.js') }}"></script>
   {{ super() }}
 {% endblock head_scripts %}
 
 {% block title %}
-  {{ source_file.in_doctree_source_file_rel_path_posix }} - {{ template_type }}
+  {{ view_object.source_file.in_doctree_source_file_rel_path_posix }} - {{ template_type }}
 {% endblock title %}
 
 {% block viewtype %}source-file{% endblock viewtype %}
@@ -22,7 +22,7 @@
   {{ super() }}
 
   <style>
-    {{ pygments_styles | safe }}
+    {{ view_object.pygments_styles | safe }}
   </style>
 {% endblock head %}
 

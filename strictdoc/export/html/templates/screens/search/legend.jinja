@@ -17,15 +17,15 @@
     </ul>
     <p>Examples:</p>
     <div class="sdoc-table_key_value">
-      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=node.is_requirement') }}"><code>node.is_requirement</code></a>
+      <a class="sdoc-table_key_value-key" href="{{ view_object.render_url('search?q=node.is_requirement') }}"><code>node.is_requirement</code></a>
       <div class="sdoc-table_key_value-value">Find all requirements.</div>
-      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=node.is_section') }}"><code>node.is_section</code></a>
+      <a class="sdoc-table_key_value-key" href="{{ view_object.render_url('search?q=node.is_section') }}"><code>node.is_section</code></a>
       <div class="sdoc-table_key_value-value">Find all sections.</div>
-      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=(node.is_requirement and "System" in node["TITLE"])') }}"><code>(node.is_requirement and "System" in node["TITLE"])</code></a>
+      <a class="sdoc-table_key_value-key" href="{{ view_object.render_url('search?q=(node.is_requirement and "System" in node["TITLE"])') }}"><code>(node.is_requirement and "System" in node["TITLE"])</code></a>
       <div class="sdoc-table_key_value-value">Find all requirements with a TITLE that equals to "System".</div>
-      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.is_root)') }}"><code>(node.is_requirement and node.is_root)</code></a>
+      <a class="sdoc-table_key_value-key" href="{{ view_object.render_url('search?q=(node.is_requirement and node.is_root)') }}"><code>(node.is_requirement and node.is_root)</code></a>
       <div class="sdoc-table_key_value-value">Find all root requirements.</div>
-      <a class="sdoc-table_key_value-key" href="{{ link_renderer.render_url('search?q=(node.is_requirement and node.has_parent_requirements)') }}"><code>(node.is_requirement and node.has_parent_requirements)</code></a>
+      <a class="sdoc-table_key_value-key" href="{{ view_object.render_url('search?q=(node.is_requirement and node.has_parent_requirements)') }}"><code>(node.is_requirement and node.has_parent_requirements)</code></a>
       <div class="sdoc-table_key_value-value">Find all requirements which have parent requirements.</div>
     </div>
     <p>See the User Guide's section "Query engine" for more details.</p>

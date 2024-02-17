@@ -1,5 +1,6 @@
 from typing import Dict, List, Optional, Set, Tuple, Union
 
+from jinja2 import Environment
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -15,6 +16,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementRelationParent,
     RequirementFieldName,
 )
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.form_data import parse_form_data
@@ -89,16 +91,24 @@ class DocumentGrammarFormObject(ErrorObject):
         document_mid: str,
         fields: List[GrammarFormField],
         relations: List[GrammarFormRelation],
+        project_config: ProjectConfig,
+        jinja_environment: Environment,
     ):
         assert isinstance(document_mid, str), document_mid
         super().__init__()
         self.document_mid = document_mid
         self.fields: List[GrammarFormField] = fields
         self.relations: List[GrammarFormRelation] = relations
+        self.project_config: ProjectConfig = project_config
+        self.jinja_environment: Environment = jinja_environment
 
     @staticmethod
     def create_from_request(
-        *, document_mid: str, request_form_data: FormData
+        *,
+        document_mid: str,
+        request_form_data: FormData,
+        project_config: ProjectConfig,
+        jinja_environment: Environment,
     ) -> "DocumentGrammarFormObject":
         form_object_fields: List[GrammarFormField] = []
         form_object_relations: List[GrammarFormRelation] = []
@@ -140,6 +150,8 @@ class DocumentGrammarFormObject(ErrorObject):
             document_mid=document_mid,
             fields=form_object_fields,
             relations=form_object_relations,
+            project_config=project_config,
+            jinja_environment=jinja_environment,
         )
         return form_object
 
@@ -147,6 +159,8 @@ class DocumentGrammarFormObject(ErrorObject):
     def create_from_document(
         *,
         document: SDocDocument,
+        project_config: ProjectConfig,
+        jinja_environment: Environment,
     ) -> "DocumentGrammarFormObject":
         assert isinstance(document, SDocDocument)
         assert isinstance(document.grammar, DocumentGrammar)
@@ -179,6 +193,8 @@ class DocumentGrammarFormObject(ErrorObject):
             document_mid=document.reserved_mid,
             fields=grammar_form_fields,
             relations=grammar_form_relations,
+            project_config=project_config,
+            jinja_environment=jinja_environment,
         )
 
     def validate(self) -> bool:
@@ -302,3 +318,25 @@ class DocumentGrammarFormObject(ErrorObject):
         grammar = DocumentGrammar(parent=None, elements=elements)
         grammar.is_default = False
         return grammar
+
+    def render(self):
+        template = self.jinja_environment.get_template(
+            "actions/"
+            "document/"
+            "edit_document_grammar/"
+            "stream_edit_document_grammar.jinja.html"
+        )
+        return template.render(
+            form_object=self,
+        )
+
+    def render_after_validation(self):
+        template = self.jinja_environment.get_template(
+            "actions/"
+            "document/"
+            "edit_document_grammar/"
+            "stream_edit_document_grammar.jinja.html"
+        )
+        return template.render(
+            form_object=self, project_config=self.project_config
+        )

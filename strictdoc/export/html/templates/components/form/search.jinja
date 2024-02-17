@@ -1,5 +1,5 @@
 <sdoc-form search
- {% if (error is none) and (search_results|length > 0) %}success{% endif %}
+ {% if (error is none) and (view_object.search_results|length > 0) %}success{% endif %}
 >
 
   <form
@@ -8,7 +8,7 @@
   >
       <input
         type="text"
-        value="{{ search_value }}"
+        value="{{ view_object.search_value }}"
         placeholder="Enter search query here"
         id="q"
         name="q"
@@ -16,16 +16,16 @@
       {% include "components/button/search.jinja" %}
   </form>
 
-{%- if search_value|length > 0 -%}
+{%- if view_object.search_value|length > 0 -%}
   {%- if error is none -%}
-    {%- if search_results|length == 0 -%}
+    {%- if view_object.search_results|length == 0 -%}
       <div class="sdoc-form-success">Nothing matching the query was found.</div>
-    {%- elif search_results|length > 0 -%}
-      <div class="sdoc-form-success">Found <b>{{ search_results|length }}</b> results.</div>
+    {%- elif view_object.search_results|length > 0 -%}
+      <div class="sdoc-form-success">Found <b>{{ view_object.search_results|length }}</b> results.</div>
     {%- endif -%}
   {%- else -%}
-      <div class="sdoc-form-error">{{ error }}</div>
+      <div class="sdoc-form-error">{{ view_object.error }}</div>
   {%- endif -%}
-  <a class="sdoc-form-reset" href="{{ link_renderer.render_url('search') }}">Clear query</a>
+  <a class="sdoc-form-reset" href="{{ view_object.render_url('search') }}">Clear query</a>
 {%- endif -%}
 </sdoc-form>

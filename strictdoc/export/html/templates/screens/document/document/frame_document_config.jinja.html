@@ -1,5 +1,5 @@
 {% extends "components/node/root.jinja" %}
-{%- set sdoc_entity = document -%}
+{%- set sdoc_entity = view_object.document -%}
 {% block sdoc_entity %}
 
   {% include "components/document_title/index.jinja" %}

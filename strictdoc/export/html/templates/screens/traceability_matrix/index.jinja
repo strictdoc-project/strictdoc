@@ -3,19 +3,19 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ link_renderer.render_static_url('requirement-tree.css') }}"/>
-  <link rel="stylesheet" href="{{ link_renderer.render_static_url('traceability_matrix.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('requirement-tree.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('traceability_matrix.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
   {{ super() }}
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('pan_with_space.js') }}"></script>
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('requirements-coverage.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('pan_with_space.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('requirements-coverage.js') }}"></script>
 {% endblock head_scripts %}
 
 {% block title %}
-  {{ project_config.project_title }} - {{ template_type }}
+  {{ view_object.project_config.project_title }} - {{ template_type }}
 {% endblock title %}
 
 {% block viewtype %}traceability-matrix{% endblock viewtype %}

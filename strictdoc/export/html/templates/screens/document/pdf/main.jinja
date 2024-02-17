@@ -1,4 +1,4 @@
-{% assert custom_html2pdf_template is defined %}
+{% assert view_object.custom_html2pdf_template is defined %}
 
 <div
   html2pdf-preloader
@@ -24,7 +24,7 @@
           data-forced-page-break-selector='.free_text'
         -#}
 
-        {%- for section_or_requirement in document_iterator.all_content() %}
+        {%- for section_or_requirement in view_object.document_content_iterator() %}
 
         {%- if section_or_requirement.is_requirement %}
           {%- set requirement = section_or_requirement %}
@@ -40,10 +40,10 @@
       </div>
 </div>
 
-{% if custom_html2pdf_template is none %}
+{% if view_object.custom_html2pdf_template is none %}
 {%- include "screens/document/pdf/template/frontpage.jinja" -%}
 {%- include "screens/document/pdf/template/header.jinja" -%}
 {%- include "screens/document/pdf/template/footer.jinja" -%}
 {% else %}
-  {{ custom_html2pdf_template.render() }}
+  {{ view_object.custom_html2pdf_template.render() }}
 {% endif %}

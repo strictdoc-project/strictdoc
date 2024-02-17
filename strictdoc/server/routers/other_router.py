@@ -10,6 +10,12 @@ from starlette.responses import HTMLResponse, Response
 from strictdoc import __version__
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.generators.view_objects.diff_screen_results_view_object import (
+    DiffScreenResultsViewObject,
+)
+from strictdoc.export.html.generators.view_objects.diff_screen_view_object import (
+    DiffScreenViewObject,
+)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.git.change_generator import ChangeContainer, ChangeGenerator
@@ -77,14 +83,6 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             # diff page.
             pass
 
-        template = html_templates.jinja_environment().get_template(
-            "screens/git/index.jinja"
-        )
-
-        link_renderer = LinkRenderer(
-            root_path="", static_path=project_config.dir_for_sdoc_assets
-        )
-
         left_revision_urlencoded = (
             urllib.parse.quote(left_revision)
             if left_revision is not None
@@ -96,13 +94,8 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             else ""
         )
 
-        output = template.render(
+        view_object = DiffScreenViewObject(
             project_config=project_config,
-            document_type=DocumentType.document(),
-            link_document_type=DocumentType.document(),
-            standalone=False,
-            strictdoc_version=__version__,
-            link_renderer=link_renderer,
             results=False,
             left_revision=left_revision,
             left_revision_urlencoded=left_revision_urlencoded,
@@ -111,6 +104,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             error_message=error_message,
             tab=tab,
         )
+        output = view_object.render_screen(html_templates.jinja_environment())
         status_code = 200 if error_message is None else 422
         return HTMLResponse(content=output, status_code=status_code)
 
@@ -130,6 +124,8 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
                 content="The tab= parameter must be either 'diff' or 'changelog'.",
                 status_code=HTTP_STATUS_PRECONDITION_FAILED,
             )
+        elif tab is None:
+            tab = "diff"
 
         left_revision_resolved = None
         right_revision_resolved = None
@@ -242,7 +238,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             rhs_project_config=project_config_copy_rhs,
         )
 
-        output = template.render(
+        view_object = DiffScreenResultsViewObject(
             project_config=project_config,
             change_container=change_container,
             document_tree_lhs=change_container.traceability_index_lhs.document_tree,
@@ -258,14 +254,10 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             change_stats=change_container.change_stats,
             traceability_index_lhs=change_container.traceability_index_lhs,
             traceability_index_rhs=change_container.traceability_index_rhs,
-            link_renderer=link_renderer,
-            document_type=DocumentType.document(),
-            link_document_type=DocumentType.document(),
-            standalone=False,
-            strictdoc_version=__version__,
-            results=True,
-            error_message=None,
+            tab=tab,
         )
+        output = template.render(view_object=view_object)
+
         return HTMLResponse(
             content=output,
             status_code=200,

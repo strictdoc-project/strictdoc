@@ -5,7 +5,7 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ link_renderer.render_static_url('tree.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('tree.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
@@ -13,7 +13,7 @@
 {% endblock head_scripts %}
 
 {% block title %}
-  {{ project_config.project_title }} - {{ template_type }}
+  {{ view_object.project_config.project_title }} - {{ template_type }}
 {% endblock title %}
 
 {% block viewtype %}project-statistics{% endblock viewtype %}

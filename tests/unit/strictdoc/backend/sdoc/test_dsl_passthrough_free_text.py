@@ -1,5 +1,5 @@
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
@@ -17,7 +17,7 @@ Hello world
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -37,7 +37,7 @@ TITLE: Test Doc
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -58,7 +58,7 @@ AAA  [/FREETEXT]
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -81,7 +81,7 @@ String 4
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -107,7 +107,7 @@ String 4
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
     assert len(document.free_texts[0].parts) == 3
     assert isinstance(document.free_texts[0].parts[1], Anchor)
     assert document.free_texts[0].parts[1].value == "REQ-001"
@@ -136,7 +136,7 @@ Test
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
     assert len(document.free_texts[0].parts) == 2
     assert isinstance(document.free_texts[0].parts[0], Anchor)
     assert document.free_texts[0].parts[0].value == "REQ-001"
@@ -164,7 +164,7 @@ String 2 String 3
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
     assert len(document.free_texts[0].parts) == 2
     assert isinstance(document.free_texts[0].parts[0], str)
     assert isinstance(document.free_texts[0].parts[1], Anchor)
@@ -193,7 +193,7 @@ String 5
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
     assert len(document.free_texts[0].parts) == 3
     assert isinstance(document.free_texts[0].parts[0], str)
     assert isinstance(document.free_texts[0].parts[1], Anchor)
@@ -220,7 +220,7 @@ String 4
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
     assert len(document.free_texts[0].parts) == 1
     assert isinstance(document.free_texts[0].parts[0], str)
 
@@ -244,8 +244,8 @@ String 2 String 3
 
     reader = SDReader()
 
-    document: Document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    document: SDocDocument = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
 
     assert len(document.free_texts[0].parts) == 2
     assert isinstance(document.free_texts[0].parts[0], str)
@@ -272,8 +272,8 @@ TEST
 
     reader = SDReader()
 
-    document: Document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    document: SDocDocument = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
 
     assert len(document.free_texts[0].parts) == 3
     assert isinstance(document.free_texts[0].parts[0], str)

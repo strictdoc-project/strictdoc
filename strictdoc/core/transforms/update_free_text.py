@@ -5,7 +5,7 @@ from textx import TextXSyntaxError
 from strictdoc.backend.sdoc.error_handling import get_textx_syntax_error_message
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -25,13 +25,13 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
 class UpdateFreeTextCommand:
     def __init__(
         self,
-        node: Union[Document, SDocSection],
+        node: Union[SDocDocument, SDocSection],
         traceability_index: TraceabilityIndex,
         config: ProjectConfig,
         subject_field_name: str,
         subject_field_content: str,
     ):
-        self.node: Union[Document, SDocSection] = node
+        self.node: Union[SDocDocument, SDocSection] = node
         self.traceability_index: TraceabilityIndex = traceability_index
         self.config: ProjectConfig = config
         self.subject_field_name: str = subject_field_name
@@ -40,8 +40,10 @@ class UpdateFreeTextCommand:
         self.validated_free_text_container: Optional[FreeTextContainer] = None
 
     def validate(self):
-        node: Union[Document, SDocSection] = self.node
-        context_document = node if isinstance(node, Document) else node.document
+        node: Union[SDocDocument, SDocSection] = self.node
+        context_document = (
+            node if isinstance(node, SDocDocument) else node.document
+        )
 
         traceability_index = self.traceability_index
         subject_field_content = self.subject_field_content
@@ -109,7 +111,7 @@ class UpdateFreeTextCommand:
         self.validated_free_text_container = free_text_container
 
     def perform(self):
-        node: Union[Document, SDocSection] = self.node
+        node: Union[SDocDocument, SDocSection] = self.node
 
         traceability_index = self.traceability_index
 

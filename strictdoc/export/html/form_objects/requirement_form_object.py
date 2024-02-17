@@ -6,7 +6,7 @@ from typing import Dict, List, Optional, Set
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
@@ -219,7 +219,7 @@ class RequirementFormObject(ErrorObject):
         is_new: bool,
         requirement_mid: str,
         request_form_data: FormData,
-        document: Document,
+        document: SDocDocument,
         exiting_requirement_uid: Optional[str],
     ) -> "RequirementFormObject":
         request_form_data_as_list = [
@@ -345,7 +345,7 @@ class RequirementFormObject(ErrorObject):
 
     @staticmethod
     def create_new(
-        *, document: Document, next_uid: str
+        *, document: SDocDocument, next_uid: str
     ) -> "RequirementFormObject":
         assert document.grammar is not None
 
@@ -400,7 +400,7 @@ class RequirementFormObject(ErrorObject):
         requirement: SDocNode,
     ) -> "RequirementFormObject":
         assert isinstance(requirement, SDocNode)
-        document: Document = requirement.document
+        document: SDocDocument = requirement.document
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
@@ -596,11 +596,11 @@ class RequirementFormObject(ErrorObject):
         self,
         *,
         traceability_index: TraceabilityIndex,
-        context_document: Document,
+        context_document: SDocDocument,
         config: ProjectConfig,
     ):
         assert isinstance(traceability_index, TraceabilityIndex)
-        assert isinstance(context_document, Document)
+        assert isinstance(context_document, SDocDocument)
 
         if self.is_new and self.mid_field is not None:
             existing_node_with_this_mid = (

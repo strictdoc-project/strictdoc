@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.writer import RSTWriter
 
@@ -16,7 +16,7 @@ class DocumentRSTGenerator:
     def export_tree(traceability_index: TraceabilityIndex, output_rst_root):
         Path(output_rst_root).mkdir(parents=True, exist_ok=True)
 
-        document: Document
+        document: SDocDocument
         for document in traceability_index.document_tree.document_list:
             document_content = DocumentRSTGenerator.export(
                 document, traceability_index

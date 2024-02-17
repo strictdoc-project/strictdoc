@@ -38,7 +38,7 @@ from spdx_tools.spdx3.writer.console.spdx_document_writer import (
 )
 from spdx_tools.spdx3.writer.json_ld.json_ld_writer import write_payload
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
@@ -62,7 +62,7 @@ def create_relationship_summary(
     return f"{lhs.summary} --|{relation}|--> {rhs.summary}"
 
 
-def get_spdx_ref(node: Union[Document, SDocNode, FileReference]) -> str:
+def get_spdx_ref(node: Union[SDocDocument, SDocNode, FileReference]) -> str:
     if isinstance(node, FileReference):
         return re.sub(r"[/\\ ]", "_", node.get_native_path())
 
@@ -74,7 +74,7 @@ def get_spdx_ref(node: Union[Document, SDocNode, FileReference]) -> str:
     else:
         identifier = re.sub(r"[ #-/\\]", "_", node.reserved_title)
 
-    if isinstance(node, Document):
+    if isinstance(node, SDocDocument):
         return "SDocDocument-" + identifier
     if isinstance(node, SDocNode):
         return "SDocRequirement-" + identifier
@@ -125,7 +125,7 @@ class SDocToSPDXConverter:
         )
 
     @staticmethod
-    def create_document_to_file(document: Document, document_bytes) -> File:
+    def create_document_to_file(document: SDocDocument, document_bytes) -> File:
         return File(
             spdx_id=f"SPDXRef-File-{get_spdx_ref(document)}",
             name=document.meta.document_filename,

@@ -7,7 +7,7 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import get_textx_syntax_error_message
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -174,11 +174,11 @@ class CreateSectionCommand:
         traceability_index = self.traceability_index
 
         reference_node: Union[
-            Document, SDocSection
+            SDocDocument, SDocSection
         ] = traceability_index.get_node_by_mid(MID(reference_mid))
         document = (
             reference_node
-            if isinstance(reference_node, Document)
+            if isinstance(reference_node, SDocDocument)
             else reference_node.document
         )
 
@@ -257,8 +257,10 @@ class CreateSectionCommand:
             parent = reference_node.parent
             insert_to_idx = parent.section_contents.index(reference_node)
         elif whereto == NodeCreationOrder.AFTER:
-            assert isinstance(reference_node, (Document, SDocNode, SDocSection))
-            if isinstance(reference_node, Document):
+            assert isinstance(
+                reference_node, (SDocDocument, SDocNode, SDocSection)
+            )
+            if isinstance(reference_node, SDocDocument):
                 parent = reference_node
                 insert_to_idx = 0
             else:

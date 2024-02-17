@@ -6,7 +6,7 @@ import xlsxwriter
 from xlsxwriter.workbook import Workbook
 from xlsxwriter.worksheet import Worksheet
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
@@ -44,7 +44,7 @@ class ExcelGenerator:
     ):
         Path(output_excel_root).mkdir(parents=True, exist_ok=True)
 
-        document: Document
+        document: SDocDocument
         for document in traceability_index.document_tree.document_list:
             document_out_file_name = (
                 f"{document.meta.document_filename_base}.xlsx"
@@ -59,7 +59,7 @@ class ExcelGenerator:
 
     @staticmethod
     def _export_single_document(
-        document: Document,
+        document: SDocDocument,
         traceability_index,
         document_out_file,
         project_config: ProjectConfig,

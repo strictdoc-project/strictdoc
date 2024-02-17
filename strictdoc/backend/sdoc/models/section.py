@@ -1,7 +1,7 @@
 from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.object import SDocObject
 from strictdoc.helpers.auto_described import auto_described
@@ -88,7 +88,7 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
     def get_requirement_prefix(self) -> str:
         if self.requirement_prefix is not None:
             return self.requirement_prefix
-        parent: Union[SDocSection, Document] = self.parent
+        parent: Union[SDocSection, SDocDocument] = self.parent
         return parent.get_requirement_prefix()
 
     def blacklist_if_needed(self):

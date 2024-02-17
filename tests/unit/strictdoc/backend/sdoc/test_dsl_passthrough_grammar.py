@@ -1,7 +1,7 @@
 import pytest
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
     FileReference,
@@ -47,7 +47,7 @@ ELEMENTS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -100,7 +100,7 @@ SINGLE_CHOICE_FIELD: A
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -153,7 +153,7 @@ MULTIPLE_CHOICE_FIELD: A, C
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -206,7 +206,7 @@ TAG_FIELD: A, C
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -267,7 +267,7 @@ Some text here...
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -372,7 +372,7 @@ REFS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     ll_requirement = document.section_contents[2]
     references = ll_requirement.references
@@ -454,7 +454,7 @@ REFS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     ll_requirement = document.section_contents[0]
     references = ll_requirement.references
@@ -526,7 +526,7 @@ REFS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     ll_requirement = document.section_contents[0]
     references = ll_requirement.references
@@ -673,7 +673,7 @@ REFS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     ll_requirement = document.section_contents[2]
     references = ll_requirement.references
@@ -761,7 +761,7 @@ REFS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     ll_requirement = document.section_contents[2]
     references = ll_requirement.references
@@ -926,7 +926,7 @@ REFS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     ll_requirement = document.section_contents[2]
     references = ll_requirement.references
@@ -1051,7 +1051,7 @@ REFS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     ll_requirement = document.section_contents[2]
     references = ll_requirement.references
@@ -1153,7 +1153,7 @@ STATEMENT: This is a statement.
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)

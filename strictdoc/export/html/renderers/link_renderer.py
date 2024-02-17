@@ -2,7 +2,7 @@ import html
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -75,7 +75,7 @@ class LinkRenderer:
     def render_node_link(
         self,
         node,
-        context_document: Optional[Document],
+        context_document: Optional[SDocDocument],
         document_type: DocumentType,
         force_full_path: bool = False,
         allow_local: bool = True,
@@ -86,7 +86,7 @@ class LinkRenderer:
         allow_local:     used on the DTR screen where we want to ensure that only
                          full paths are used when jumping to the DOC screen.
         """
-        if isinstance(node, Document):
+        if isinstance(node, SDocDocument):
             return (
                 f"{node.meta.get_root_path_prefix()}"
                 "/"
@@ -154,10 +154,10 @@ class LinkRenderer:
         assert isinstance(file_reference, FileReference), file_reference
 
         document_or_none: Optional[
-            Document
+            SDocDocument
         ] = requirement.ng_document_reference.get_document()
         assert document_or_none is not None
-        document: Document = document_or_none
+        document: SDocDocument = document_or_none
         path_prefix = document.meta.get_root_path_prefix()
         source_file_link = (
             f"{path_prefix}"

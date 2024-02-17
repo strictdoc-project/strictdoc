@@ -1,7 +1,7 @@
 import pytest
 from textx import TextXSyntaxError
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
@@ -32,7 +32,7 @@ TITLE: Test Doc
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -52,7 +52,7 @@ TITLE: Hello
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -75,7 +75,7 @@ COMMENT: Comment #3
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -96,7 +96,7 @@ TITLE: Hello
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -137,7 +137,7 @@ This is a statement 3
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -162,7 +162,7 @@ This is a statement 3
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -186,7 +186,7 @@ TITLE: Test Section
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -215,7 +215,7 @@ This is a statement 3
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     assert isinstance(
         document.section_contents[0].section_contents[0], SDocNode
@@ -250,7 +250,7 @@ RATIONALE: This is a Rationale
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -286,7 +286,7 @@ This is a Rationale line 3
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -336,7 +336,7 @@ This is a child body part 3
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -390,7 +390,7 @@ body 1.1.1.1
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -445,9 +445,9 @@ STATEMENT: 1
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     requirement = document.section_contents[0]
     assert requirement.reserved_statement == "1"
 
@@ -471,7 +471,7 @@ REFS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     requirement = document.section_contents[0]
     references = requirement.references
@@ -500,9 +500,9 @@ VERSION: 0.0.1
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.version == "0.0.1"
 
     writer = SDWriter()
@@ -523,9 +523,9 @@ UID: SDOC-01
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.uid == "SDOC-01"
 
     writer = SDWriter()
@@ -548,9 +548,9 @@ CLASSIFICATION: Restricted
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.classification == "Restricted"
 
     writer = SDWriter()
@@ -573,9 +573,9 @@ REQ_PREFIX: DOC-
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.requirement_prefix == "DOC-"
 
     writer = SDWriter()
@@ -612,9 +612,9 @@ STATEMENT: ABC
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.title == "Test Doc"
     assert document.config.version == "0.0.1"
     assert document.config.uid == "SDOC-01"
@@ -672,7 +672,7 @@ COMMENT: This requirement is very important
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     assert isinstance(
         document.section_contents[0].section_contents[0], SDocNode
@@ -700,9 +700,9 @@ VERSION: 0.0.1
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.version == "0.0.1"
     assert document.config.markup is None
 
@@ -726,9 +726,9 @@ OPTIONS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.version == "0.0.1"
 
     writer = SDWriter()
@@ -749,9 +749,9 @@ OPTIONS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.auto_levels is False
 
     writer = SDWriter()
@@ -782,9 +782,9 @@ STATEMENT: ABC
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.auto_levels is False
     section: SDocSection = document.section_contents[0]
     assert section.custom_level == "123"
@@ -811,9 +811,9 @@ OPTIONS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.requirement_style == "Table"
 
     writer = SDWriter()
@@ -834,9 +834,9 @@ OPTIONS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.requirement_in_toc == "True"
 
     writer = SDWriter()
@@ -857,9 +857,9 @@ OPTIONS:
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
-    document: Document = reader.read(input_sdoc)
+    document: SDocDocument = reader.read(input_sdoc)
     assert document.config.enable_mid is True
 
     writer = SDWriter()
@@ -878,8 +878,8 @@ TITLE: Test Doc
 
     reader = SDReader()
 
-    document: Document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    document: SDocDocument = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
 
     requirement: SDocNode = document.section_contents[0]
     assert requirement.reserved_uid is None
@@ -1118,7 +1118,7 @@ MY_FIELD: >>>
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     writer = SDWriter()
     output = writer.write(document)

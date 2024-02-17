@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Dict, List, Optional, Union
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
     SDocNodeField,
@@ -32,8 +32,8 @@ class DocumentChange:
         self,
         *,
         matched_uid: Optional[str],
-        lhs_document: Optional[Document],
-        rhs_document: Optional[Document],
+        lhs_document: Optional[SDocDocument],
+        rhs_document: Optional[SDocDocument],
         uid_modified: bool,
         title_modified: bool,
         free_text_modified: bool,
@@ -58,8 +58,8 @@ class DocumentChange:
             str
         ] = rhs_colored_free_text_diff
 
-        self.lhs_document: Optional[Document] = lhs_document
-        self.rhs_document: Optional[Document] = rhs_document
+        self.lhs_document: Optional[SDocDocument] = lhs_document
+        self.rhs_document: Optional[SDocDocument] = rhs_document
 
         self.change_type: ChangeType = ChangeType.DOCUMENT_MODIFIED
 

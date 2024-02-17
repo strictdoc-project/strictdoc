@@ -1,7 +1,7 @@
 from typing import Optional, Type, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
@@ -29,7 +29,7 @@ class MarkupRenderer:
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
         config: ProjectConfig,
-        context_document: Optional[Document],
+        context_document: Optional[SDocDocument],
     ) -> "MarkupRenderer":
         assert isinstance(html_templates, HTMLTemplates)
         html_fragment_writer: Union[
@@ -60,19 +60,19 @@ class MarkupRenderer:
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
-        context_document: Optional[Document],
+        context_document: Optional[SDocDocument],
     ):
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(link_renderer, LinkRenderer)
         assert context_document is None or isinstance(
-            context_document, Document
+            context_document, SDocDocument
         ), context_document
         assert isinstance(html_templates, HTMLTemplates)
 
         self.fragment_writer = fragment_writer
         self.traceability_index = traceability_index
         self.link_renderer: LinkRenderer = link_renderer
-        self.context_document: Optional[Document] = context_document
+        self.context_document: Optional[SDocDocument] = context_document
 
         # FIXME: Now that the underlying RST fragment caching is in place,
         # This caching could be removed. It is unlikely that it adds any serious

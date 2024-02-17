@@ -33,7 +33,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
     ReqIFChapterField,
     SDocRequirementReservedField,
 )
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -90,7 +90,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
         specifications: List[ReqIFSpecification] = []
         data_types: List = []
         data_types_lookup = {}
-        document: Document
+        document: SDocDocument
         for document in document_tree.document_list:
             document_spec_object_type = (
                 SDOC_SPEC_OBJECT_TYPE_SINGLETON + "_" + uuid.uuid4().hex
@@ -395,9 +395,9 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
 
     @classmethod
     def _convert_document_free_text_to_spec_object(
-        cls, document: Document, document_spec_object_type: str
+        cls, document: SDocDocument, document_spec_object_type: str
     ) -> ReqIFSpecObject:
-        assert isinstance(document, Document)
+        assert isinstance(document, SDocDocument)
         assert len(document.free_texts) > 0
         attributes = []
         # See SDOC_IMPL_1.

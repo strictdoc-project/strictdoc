@@ -1,4 +1,4 @@
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.reader import SDReader
 
 
@@ -13,7 +13,7 @@ TITLE: Test Doc
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     requirement = document.section_contents[0]
     assert requirement.ng_document_reference.get_document() == document
@@ -36,7 +36,7 @@ TITLE: Section 1
     reader = SDReader()
 
     document = reader.read(input_sdoc)
-    assert isinstance(document, Document)
+    assert isinstance(document, SDocDocument)
 
     section = document.section_contents[0]
     req = section.section_contents[0]

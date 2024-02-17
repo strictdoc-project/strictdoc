@@ -16,7 +16,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
     ReqIFChapterField,
     ReqIFRequirementReservedField,
 )
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
@@ -36,7 +36,7 @@ from strictdoc.helpers.string import unescape
 
 class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     @staticmethod
-    def convert_reqif_bundle(reqif_bundle: ReqIFBundle) -> List[Document]:
+    def convert_reqif_bundle(reqif_bundle: ReqIFBundle) -> List[SDocDocument]:
         # TODO: Should we rather show an error that there are no specifications?
         if (
             reqif_bundle.core_content is None
@@ -45,7 +45,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         ):
             return [P01_ReqIFToSDocConverter.create_document(title=None)]
 
-        documents: List[Document] = []
+        documents: List[SDocDocument] = []
         for (
             specification
         ) in reqif_bundle.core_content.req_if_content.specifications:
@@ -125,7 +125,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     for _ in range(
                         0, current_section.ng_level - current_hierarchy.level
                     ):
-                        assert not isinstance(current_section, Document)
+                        assert not isinstance(current_section, SDocDocument)
                         if isinstance(current_section, SDocSection):
                             current_section = current_section.parent
                     current_section.section_contents.append(section)
@@ -256,10 +256,10 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         return requirement_element
 
     @staticmethod
-    def create_document(title: Optional[str]) -> Document:
+    def create_document(title: Optional[str]) -> SDocDocument:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
-        document = Document(
+        document = SDocDocument(
             None, document_title, document_config, None, None, None, [], []
         )
         document.grammar = DocumentGrammar.create_default(document)
@@ -325,7 +325,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     @staticmethod
     def create_requirement_from_spec_object(
         spec_object: ReqIFSpecObject,
-        parent_section: Union[SDocSection, Document],
+        parent_section: Union[SDocSection, SDocDocument],
         reqif_bundle: ReqIFBundle,
         level,
     ) -> SDocNode:

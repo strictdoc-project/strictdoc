@@ -3,7 +3,7 @@ from typing import List, NamedTuple, Optional, Tuple
 
 import xlrd
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
@@ -41,7 +41,7 @@ def safe_name(dangerous_name):
 class ExcelToSDocConverter:
     @staticmethod
     # optional argument title is present for external scripts to assign a title
-    def convert(excel_file, title=None) -> Document:
+    def convert(excel_file, title=None) -> SDocDocument:
         excel_workbook = xlrd.open_workbook(filename=excel_file, on_demand=True)
         xlrd_sheet: xlrd.sheet.Sheet = excel_workbook.sheet_by_index(0)
 
@@ -114,10 +114,12 @@ class ExcelToSDocConverter:
         return document
 
     @staticmethod
-    def create_document(title: Optional[str], extra_header_pairs) -> Document:
+    def create_document(
+        title: Optional[str], extra_header_pairs
+    ) -> SDocDocument:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
-        document = Document(
+        document = SDocDocument(
             None, document_title, document_config, None, None, None, [], []
         )
 

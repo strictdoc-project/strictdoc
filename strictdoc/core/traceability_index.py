@@ -3,7 +3,7 @@ from enum import IntEnum
 from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -33,13 +33,13 @@ class SDocNodeConnections:
     def __init__(
         self,
         requirement: SDocNode,
-        document: Document,
+        document: SDocDocument,
         parents: List[Tuple[SDocNode, Optional[str]]],
         children: List[Tuple[SDocNode, Optional[str]]],
     ):
         assert isinstance(requirement, SDocNode), requirement
         self.requirement: SDocNode = requirement
-        self.document: Document = document
+        self.document: SDocDocument = document
         self.parents: List[Tuple[SDocNode, Optional[str]]] = parents
         self.children: List[Tuple[SDocNode, Optional[str]]] = children
 
@@ -79,12 +79,12 @@ class GraphLinkType(IntEnum):
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
     def __init__(
         self,
-        document_iterators: Dict[Document, DocumentCachingIterator],
+        document_iterators: Dict[SDocDocument, DocumentCachingIterator],
         file_traceability_index: FileTraceabilityIndex,
         graph_database: GraphDatabase,
     ):
         self._document_iterators: Dict[
-            Document, DocumentCachingIterator
+            SDocDocument, DocumentCachingIterator
         ] = document_iterators
         self._file_traceability_index = file_traceability_index
 
@@ -291,14 +291,14 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         children_requirements = requirement_connections.children
         return list(map(lambda pair_: pair_[0], children_requirements))
 
-    def has_tags(self, document: Document) -> bool:
+    def has_tags(self, document: SDocDocument) -> bool:
         return self.graph_database.has_link(
             link_type=GraphLinkType.DOCUMENT_TO_TAGS,
             lhs_node=document.reserved_mid,
         )
 
     def get_counted_tags(
-        self, document: Document
+        self, document: SDocDocument
     ) -> Generator[Tuple[str, int], None, None]:
         document_tags_or_none = self.graph_database.get_link_value(
             link_type=GraphLinkType.DOCUMENT_TO_TAGS,
@@ -337,12 +337,12 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_node_by_uid_weak(
         self, uid: str
-    ) -> Union[Document, SDocSection, SDocNode, None]:
+    ) -> Union[SDocDocument, SDocSection, SDocNode, None]:
         assert isinstance(uid, str), uid
         for document in self.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             for node in document_iterator.all_content():
-                if isinstance(node, Document):
+                if isinstance(node, SDocDocument):
                     if node.config.uid == uid:
                         return node
                 elif isinstance(node, SDocSection):
@@ -367,7 +367,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_node_with_duplicate_anchor(
         self, anchor_uid: str
-    ) -> Union[Document, SDocSection]:
+    ) -> Union[SDocDocument, SDocSection]:
         for document in self.document_tree.document_list:
             if len(document.free_texts) > 0:
                 for part in document.free_texts[0].parts:
@@ -375,7 +375,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                         return document
             document_iterator = DocumentCachingIterator(document)
             for node in document_iterator.all_content():
-                if not isinstance(node, (Document, SDocSection)):
+                if not isinstance(node, (SDocDocument, SDocSection)):
                     continue
                 if len(node.free_texts) > 0:
                     for part in node.free_texts[0].parts:
@@ -400,7 +400,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         # FIXME: Should the graph database return OrderedSet or a copied list()?
         return list(section_incoming_links)
 
-    def get_document_children(self, document) -> Set[Document]:
+    def get_document_children(self, document) -> Set[SDocDocument]:
         child_documents_mids = self.graph_database.get_link_values_weak(
             link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
             lhs_node=document.reserved_mid,
@@ -417,7 +417,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             )
         )
 
-    def get_document_parents(self, document) -> Set[Document]:
+    def get_document_parents(self, document) -> Set[SDocDocument]:
         parent_documents_mids = self.graph_database.get_link_values_weak(
             link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
             lhs_node=document.reserved_mid,
@@ -891,10 +891,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def validate_node_against_anchors(
         self,
         *,
-        node: Union[Document, SDocSection, None],
+        node: Union[SDocDocument, SDocSection, None],
         new_anchors: List[Anchor],
     ):
-        assert node is None or isinstance(node, (Document, SDocSection))
+        assert node is None or isinstance(node, (SDocDocument, SDocSection))
         assert isinstance(new_anchors, list)
 
         # Check that this node does not have duplicated anchors.
@@ -951,7 +951,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 )
                 node_type = (
                     "Document"
-                    if isinstance(node_with_duplicate_anchor, Document)
+                    if isinstance(node_with_duplicate_anchor, SDocDocument)
                     else "Section"
                 )
                 raise SingleValidationError(
@@ -963,11 +963,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         # Validation 2: Check that removed anchors do not have any incoming
         # links.
         to_be_removed_anchor_uids = existing_node_anchor_uids - new_anchor_uids
-        document: Document
+        document: SDocDocument
         for document in self.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             for node_ in document_iterator.all_content():
-                if not isinstance(node_, (Document, SDocSection)):
+                if not isinstance(node_, (SDocDocument, SDocSection)):
                     continue
                 if len(node_.free_texts) > 0:
                     for part in node_.free_texts[0].parts:
@@ -981,7 +981,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                             node_type = (
                                 "Document"
                                 if isinstance(
-                                    node_with_duplicate_anchor, Document
+                                    node_with_duplicate_anchor, SDocDocument
                                 )
                                 else "Section"
                             )
@@ -1025,7 +1025,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert len(uid) > 0, uid
 
         existing_node_with_uid: Union[
-            Document, SDocSection, SDocNode, None
+            SDocDocument, SDocSection, SDocNode, None
         ] = self.get_node_by_uid_weak(uid)
 
         if existing_node_with_uid is None:

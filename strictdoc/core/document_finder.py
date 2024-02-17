@@ -2,7 +2,7 @@ import os
 import sys
 from functools import partial
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
@@ -51,7 +51,7 @@ class DocumentFinder:
         ):
             reader = SDReader(path_to_output_root)
             document = reader.read_from_file(doc_full_path)
-            assert isinstance(document, Document)
+            assert isinstance(document, SDocDocument)
 
         drop_textx_meta(document)
         return doc_file, document
@@ -89,7 +89,7 @@ class DocumentFinder:
         for _, doc_file, file_tree_mount_folder in file_tree_list:
             input_doc_full_path = doc_file.get_full_path()
             document = map_docs_by_paths[input_doc_full_path]
-            assert isinstance(document, Document)
+            assert isinstance(document, SDocDocument)
 
             doc_relative_path_folder = os.path.dirname(doc_file.rel_path)
             output_document_dir_rel_path = (

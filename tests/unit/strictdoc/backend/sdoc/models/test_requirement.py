@@ -1,4 +1,4 @@
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNodeField
@@ -59,7 +59,7 @@ def test_02_mutating_with_a_field():
 
 def test_04_meta_multilines_not_nones():
     document_config = DocumentConfig.default_config(None)
-    document = Document(
+    document = SDocDocument(
         None, "Test Doc", document_config, None, None, None, [], []
     )
     grammar: DocumentGrammar = DocumentGrammar.create_default(document)

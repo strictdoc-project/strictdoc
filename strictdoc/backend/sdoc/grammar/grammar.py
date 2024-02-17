@@ -30,7 +30,7 @@ FreeTextContainer[noskipws]:
 """
 
 DOCUMENT_GRAMMAR = rf"""
-Document[noskipws]:
+SDocDocument[noskipws]:
   '[DOCUMENT]' '\n'
   ('MID: ' mid = SingleLineString '\n')?
   'TITLE: ' title = SingleLineString '\n'

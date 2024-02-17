@@ -13,7 +13,7 @@ from strictdoc.helpers.mid import MID
 
 
 @auto_described
-class Document:  # pylint: disable=too-many-instance-attributes
+class SDocDocument:  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         mid: Optional[str],

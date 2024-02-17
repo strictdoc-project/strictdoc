@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.string import sanitize_html_form_field
@@ -104,9 +104,9 @@ class DocumentConfigFormObject(ErrorObject):
     @staticmethod
     def create_from_document(
         *,
-        document: Document,
+        document: SDocDocument,
     ) -> "DocumentConfigFormObject":
-        assert isinstance(document, Document)
+        assert isinstance(document, SDocDocument)
 
         document_freetext = ""
         document_freetext_escaped = ""

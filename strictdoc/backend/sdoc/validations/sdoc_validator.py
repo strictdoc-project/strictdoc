@@ -3,7 +3,7 @@ from typing import Optional
 from textx import get_location
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 
@@ -18,12 +18,12 @@ class SDocValidator:
     """
 
     @staticmethod
-    def validate_document(document: Document):
+    def validate_document(document: SDocDocument):
         SDocValidator._validate_document_config(document)
         SDocValidator._validate_document_view(document)
 
     @staticmethod
-    def _validate_document_config(document: Document):
+    def _validate_document_config(document: SDocDocument):
         document_config: DocumentConfig = document.config
         if document_config.default_view is not None:
             if document.view is None:
@@ -42,7 +42,7 @@ class SDocValidator:
                     )
 
     @staticmethod
-    def _validate_document_view(document: Document):
+    def _validate_document_view(document: SDocDocument):
         document_view: Optional[DocumentView] = document.view
         if document_view is not None:
             for view in document_view.views:

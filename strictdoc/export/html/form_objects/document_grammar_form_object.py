@@ -2,7 +2,7 @@ from typing import Dict, List, Optional, Set, Tuple, Union
 
 from starlette.datastructures import FormData
 
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
@@ -146,9 +146,9 @@ class DocumentGrammarFormObject(ErrorObject):
     @staticmethod
     def create_from_document(
         *,
-        document: Document,
+        document: SDocDocument,
     ) -> "DocumentGrammarFormObject":
-        assert isinstance(document, Document)
+        assert isinstance(document, SDocDocument)
         assert isinstance(document.grammar, DocumentGrammar)
 
         grammar: DocumentGrammar = document.grammar

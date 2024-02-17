@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.document import Document
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 
@@ -9,7 +9,7 @@ from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 class SDocObjectFactory:
     @staticmethod
     def create_document(title: Optional[str]):
-        return Document(
+        return SDocDocument(
             mid=None,
             title=title if title else "NONAME",
             config=None,
@@ -141,7 +141,7 @@ class SDocObjectFactory:
             fields=fields,
         )
         requirement.ng_document_reference = DocumentReference()
-        if isinstance(parent, Document):
+        if isinstance(parent, SDocDocument):
             requirement.ng_document_reference.set_document(parent)
         else:
             requirement.ng_document_reference.set_document(parent.document)

@@ -8,19 +8,19 @@
 {% block head_scripts %}
   {{ super() }}
 
-  {%- if project_config.is_running_on_server and not standalone -%}
+  {%- if view_object.project_config.is_running_on_server and not view_object.standalone -%}
   <script type="module">
-    import hotwiredTurbo from "{{ link_renderer.render_static_url_with_prefix('turbo.min.js') }}";
-    import { Application, Controller } from "{{ link_renderer.render_static_url_with_prefix('stimulus.min.js') }}";
+    import hotwiredTurbo from "{{ view_object.render_static_url_with_prefix('turbo.min.js') }}";
+    import { Application, Controller } from "{{ view_object.render_static_url_with_prefix('stimulus.min.js') }}";
     window.Stimulus = Application.start();
     window.Controller = Controller;
   </script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
   {%- endif -%}
 {% endblock head_scripts %}
 
 {% block title %}
-  {{ project_config.project_title }} - {{ template_type }}
+  {{ view_object.project_config.project_title }} - {{ template_type }}
 {% endblock title %}
 
 {% block viewtype %}search{% endblock viewtype %}

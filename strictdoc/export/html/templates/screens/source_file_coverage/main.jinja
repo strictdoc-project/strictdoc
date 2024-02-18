@@ -1,7 +1,7 @@
 <div class="main">
   <div class="std-tree">
     <ul class="std-tree_ul_0">
-      {%- for folder_or_file in traceability_index.document_tree.source_tree.file_tree.iterate_directories(): -%}
+      {%- for folder_or_file in view_object.traceability_index.document_tree.source_tree.file_tree.iterate_directories(): -%}
       {%- set last_class_or_none = '' -%}
       {%- if loop.last or (loop.nextitem and loop.nextitem.level < folder_or_file.level) -%} {%- set
         last_class_or_none='last-in-level' -%} {%- endif -%} <li class="std-tree_level_{{ folder_or_file.level }}">
@@ -17,7 +17,7 @@
             <div class="std-tree_name">{{ folder_or_file.folder_name }}/</div>
           </div>
           {% else %}
-          {%- set source_file = traceability_index.document_tree.source_tree.get_source_for_file(folder_or_file) -%}
+          {%- set source_file = view_object.traceability_index.document_tree.source_tree.get_source_for_file(folder_or_file) -%}
           <div class="std-tree_file">
             <i class="std-tree_ico">
               <svg class="ico__file" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="16px"
@@ -28,7 +28,7 @@
             </i>
             <div class="std-tree_name">
               {%- if source_file.is_referenced -%}
-              <a href="{{ link_renderer.render_source_file_link_from_root_2(source_file) }}">{{
+              <a href="{{ view_object.link_renderer.render_source_file_link_from_root_2(source_file) }}">{{
                 folder_or_file.get_file_name() }}</a>
               {%- else -%}
               {{ folder_or_file.get_file_name() }}
@@ -38,10 +38,10 @@
           <div class="std-tree_aside">
             {%- if source_file.is_referenced -%}
             {%- set general_reqs, range_reqs =
-            traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
+            view_object.traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
             {%- if range_reqs -%}
             {%- set coverage_info =
-            traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix) -%}
+            view_object.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix) -%}
             <div class="value-bar">
               <span class="value-bar_bar" data-value={{ coverage_info.get_coverage() }}>
                 <span class="value-bar_filler" style="width:{{ coverage_info.get_coverage() }}%"></span>

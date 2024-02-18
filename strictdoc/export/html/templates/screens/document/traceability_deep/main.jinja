@@ -1,11 +1,11 @@
-{%- if document.has_any_requirements() -%}
+{%- if view_object.document.has_any_requirements() -%}
   <div
     class="main"
     js-pan_with_space="true"
   >
     {% include "_shared/tags.jinja.html" %}
     <div class="content">
-      {%- for section_or_requirement in document_iterator.all_content() %}
+      {%- for section_or_requirement in view_object.document_content_iterator() %}
         {%- if section_or_requirement.is_section and section_or_requirement.ng_has_requirements %}
           <section class="content_section">
             <div class="content_item" data-role="current">

@@ -1,16 +1,16 @@
 <turbo-frame id="diff_result">
-{% if results %}
+{% if view_object.results %}
   <div class="diff preloaded">
     {% include "screens/git/diff_controls.jinja" %}
 
     <div class="diff_column" left>
       <div class="diff_inner">
       {%- with
-        document_tree=document_tree_lhs,
-        document_tree_iterator=documents_iterator_lhs,
-        traceability_index=traceability_index_lhs,
-        self_stats=lhs_stats,
-        other_stats=rhs_stats,
+        document_tree=view_object.document_tree_lhs,
+        document_tree_iterator=view_object.documents_iterator_lhs,
+        traceability_index=view_object.traceability_index_lhs,
+        self_stats=view_object.lhs_stats,
+        other_stats=view_object.rhs_stats,
         tab="diff",
         side="left"
       -%}
@@ -21,11 +21,11 @@
     <div class="diff_column" right>
       <div class="diff_inner">
       {%- with
-        document_tree=document_tree_rhs,
-        document_tree_iterator=documents_iterator_rhs,
-        traceability_index=traceability_index_rhs,
-        self_stats=rhs_stats,
-        other_stats=lhs_stats,
+        document_tree=view_object.document_tree_rhs,
+        document_tree_iterator=view_object.documents_iterator_rhs,
+        traceability_index=view_object.traceability_index_rhs,
+        self_stats=view_object.rhs_stats,
+        other_stats=view_object.lhs_stats,
         tab="diff",
         side="right"
       -%}

@@ -1,4 +1,4 @@
-{% assert tab in ("diff", "changelog") %}
+{% assert view_object.tab in ("diff", "changelog") %}
 
 <div class="main">
 
@@ -7,16 +7,16 @@
     {% include "screens/git/nav_tabs.jinja" %}
   </div>
 
-  {% if project_config.is_running_on_server %}
-    {% if error_message is none and left_revision is not none and right_revision is not none and left_revision|length > 0 and right_revision|length > 0 %}
-      <turbo-frame id="diff_result" src="/diff_result?tab={{ tab }}&left_revision={{ left_revision_urlencoded }}&right_revision={{ right_revision_urlencoded }}">
+  {% if view_object.project_config.is_running_on_server %}
+    {% if view_object.error_message is none and view_object.left_revision is not none and view_object.right_revision is not none and view_object.left_revision|length > 0 and view_object.right_revision|length > 0 %}
+      <turbo-frame id="diff_result" src="/diff_result?tab={{ view_object.tab }}&left_revision={{ view_object.left_revision_urlencoded }}&right_revision={{ view_object.right_revision_urlencoded }}">
       {% include "screens/git/skeleton.jinja" %}
       </turbo-frame>
     {% else %}
       {% include "screens/git/legend.jinja" %}
     {% endif %}
   {% else %}
-    {% include "screens/git/frame_"~tab~"_result.jinja" %}
+    {% include "screens/git/frame_"~view_object.tab~"_result.jinja" %}
   {% endif %}
 
 </div>

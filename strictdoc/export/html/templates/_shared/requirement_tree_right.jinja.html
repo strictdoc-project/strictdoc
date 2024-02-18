@@ -1,16 +1,17 @@
 {# needs requirement_partial for node content #}
 {# needs document_type for requirement_partial #}
 
-{%- if traceability_index.has_children_requirements(requirement) %}
+{%- if view_object.traceability_index.has_children_requirements(requirement) %}
+
 <ul class="requirement-tree requirement-tree_right">
-{%- for requirement in traceability_index.get_children_requirements(requirement) -%}
+{%- for requirement in view_object.traceability_index.get_children_requirements(requirement) -%}
 
   <li class="requirement-tree_branch">
     <div class="requirement-tree_node">
       {% include requirement_partial %}
     </div>
 
-    {%- if document_type.is_deeptrace -%}
+    {%- if view_object.document_type.is_deeptrace -%}
     {% include "_shared/requirement_tree_right.jinja.html" %}
     {%- endif %}
 

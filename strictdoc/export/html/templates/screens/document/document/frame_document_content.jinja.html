@@ -5,7 +5,7 @@
       >
         {% include "screens/document/document/frame_document_config.jinja.html" %}
 
-        {%- for section_or_requirement in document_iterator.all_content() %}
+        {%- for section_or_requirement in view_object.document_content_iterator() %}
 
         {%- if section_or_requirement.is_requirement %}
           {%- set requirement = section_or_requirement %}

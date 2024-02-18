@@ -1,9 +1,9 @@
-{%- if requirement.rationale is not none and current_view.includes_field(requirement.requirement_type, "RATIONALE") -%}
+{%- if requirement.rationale is not none and view_object.current_view.includes_field(requirement.requirement_type, "RATIONALE") -%}
   <sdoc-requirement-field-label>{{ requirement.get_field_human_title("RATIONALE") }}:</sdoc-requirement-field-label>
   <sdoc-requirement-field
     data-field-label="rationale"
   >
-    {%- with field_content = renderer.render_requirement_rationale(requirement) %}
+    {%- with field_content = view_object.markup_renderer.render_requirement_rationale(requirement) %}
       {%- include "components/field/index.jinja" -%}
     {%- endwith -%}
   </sdoc-requirement-field>

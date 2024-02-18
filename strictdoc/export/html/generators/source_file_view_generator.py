@@ -14,7 +14,6 @@ from pygments.lexers.special import TextLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 from pygments.util import ClassNotFound
 
-from strictdoc import __version__
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     LineMarker,
@@ -26,7 +25,9 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.generators.view_objects.source_file_view_object import (
+    SourceFileViewObject,
+)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -41,13 +42,6 @@ class SourceFileViewHTMLGenerator:
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
     ):
-        output = ""
-
-        document_type = DocumentType.document()
-        template = html_templates.jinja_environment().get_template(
-            "screens/source_file_view/index.jinja"
-        )
-
         with open(source_file.full_path, encoding="utf-8") as opened_file:
             source_file_lines = opened_file.readlines()
 
@@ -78,20 +72,16 @@ class SourceFileViewHTMLGenerator:
             project_config,
             None,
         )
-        output += template.render(
+        view_object = SourceFileViewObject(
+            traceability_index=traceability_index,
             project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
             source_file=source_file,
-            source_file_lines=source_file_lines,
             pygments_styles=pygments_styles,
             pygmented_source_file_lines=pygmented_source_file_lines,
-            traceability_index=traceability_index,
-            link_renderer=link_renderer,
-            renderer=markup_renderer,
-            document_type=document_type,
-            strictdoc_version=__version__,
-            standalone=False,
         )
-        return output
+        return view_object.render_screen(html_templates.jinja_environment())
 
     @staticmethod
     def get_pygmented_source_lines(

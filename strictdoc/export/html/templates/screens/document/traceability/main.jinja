@@ -1,8 +1,8 @@
-{%- if document.has_any_nodes() -%}
+{%- if view_object.has_any_nodes() -%}
   <div class="main">
     {% include "_shared/tags.jinja.html" %}
       <div class="content">
-        {%- for section_or_requirement in document_iterator.all_content() %}
+        {%- for section_or_requirement in view_object.document_content_iterator() %}
           {%- if section_or_requirement.is_requirement %}
             <section class="content_section">
               <div class="content_item" data-role="parents">

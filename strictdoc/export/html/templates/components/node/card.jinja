@@ -15,7 +15,7 @@
     {% endblock sdoc_entity %}
 
     {# node_controls #}
-    {%- if project_config.is_running_on_server -%}
+    {%- if view_object.project_config.is_running_on_server -%}
       {%- if node_controls is defined -%}
       {% include "components/node/node_controls/card.jinja" %}
       {%- endif -%}

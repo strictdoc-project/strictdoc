@@ -3,12 +3,12 @@
     "Expected requirement, got: "~requirement
 -%}
 {%- assert
-    link_renderer.__class__.__name__ == "LinkRenderer",
-    "Expected link renderer, got: "~link_renderer
+    view_object.link_renderer.__class__.__name__ == "LinkRenderer",
+    "Expected link renderer, got: "~view_object.link_renderer
 -%}
 
 <div id="requirement:{{ requirement.reserved_uid }}" class="source-file__requirement" data-reqid="{{ requirement.reserved_uid }}">
-  <a href="{{ link_renderer.render_requirement_link_from_source_file(requirement, source_file) }}">
+  <a href="{{ view_object.link_renderer.render_requirement_link_from_source_file(requirement, view_object.source_file) }}">
     {%- if requirement.reserved_uid %}
     <div class="requirement__child-uid">{{ requirement.reserved_uid }}</div>
     {%- endif %}
@@ -18,13 +18,13 @@
   </a>
 </div>
 
- {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+ {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
  {%- if requirement_file_links %}
   <ul class="requirement-tree_downward">
   {%- for link, opt_ranges in requirement_file_links %}
     {%- assert link.__class__.__name__ == "FileReference", "Expected FileReference, got: "~link -%}
 
-    {%- set this_file_or_other = source_file.in_doctree_source_file_rel_path_posix == link.get_posix_path() -%}
+    {%- set this_file_or_other = view_object.source_file.in_doctree_source_file_rel_path_posix == link.get_posix_path() -%}
     {%- set traceability_file_type = "this_file" if this_file_or_other else "other_file" -%}
 
     {%- if opt_ranges -%}
@@ -36,7 +36,7 @@
             data-begin="{{ range.ng_range_line_begin }}"
             data-end="{{ range.ng_range_line_end }}"
             data-traceability-file-type="{{ traceability_file_type }}"
-            href="{{ link_renderer.render_requirement_in_source_file_range_link(requirement, link, source_file, range) }}"
+            href="{{ view_object.link_renderer.render_requirement_in_source_file_range_link(requirement, link, view_object.source_file, range) }}"
             title="lines {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} in file {{ link.get_posix_path() }}"
           >
             {% if range.is_range_marker() %}
@@ -62,7 +62,7 @@
 
       <li class="requirement-tree_downward_node">
           <div class="requirement-tree_downward_item">
-          <a href="{{ link_renderer.render_requirement_in_source_file_link(requirement, link, source_file) }}" >
+          <a href="{{ view_object.link_renderer.render_requirement_in_source_file_link(requirement, link, view_object.source_file) }}" >
           {{ link.get_posix_path() }}
           </a>
           </div>

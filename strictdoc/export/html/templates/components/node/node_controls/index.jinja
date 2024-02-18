@@ -18,7 +18,7 @@
 
   {# META #}
   <a
-    href="/actions/document/edit_config?document_mid={{ document.reserved_mid }}"
+    href="/actions/document/edit_config?document_mid={{ view_object.document.reserved_mid }}"
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
@@ -73,7 +73,7 @@
     + requirement
     + document ONLY 'not document.section_contents'
   #}
-  {%- if sdoc_entity.get_type_string() != 'document' or not document.section_contents -%}
+  {%- if sdoc_entity.get_type_string() != 'document' or not view_object.document.section_contents -%}
 
   {# ADD NODES: dropdown menu #}
   {# djlint:off H025 #}

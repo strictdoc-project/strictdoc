@@ -2,55 +2,55 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ link_renderer.render_static_url('tree.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('tree.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
-  {%- if not standalone -%}
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('viewtype_menu.js') }}"></script>
+  {%- if not view_object.standalone -%}
+  <script type="text/javascript" src="{{ view_object.render_static_url('viewtype_menu.js') }}"></script>
   {%- endif -%}
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('resizable_bar.js') }}"></script>
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('toc_highlighting.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
 
-  {%- if project_config.is_running_on_server and not standalone -%}
+  {%- if view_object.is_running_on_server and not view_object.standalone -%}
   <script type="module">
-    import hotwiredTurbo from "{{ link_renderer.render_static_url('turbo.min.js') }}";
-    import { Application, Controller } from "{{ link_renderer.render_static_url('stimulus.min.js') }}";
+    import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js') }}";
+    import { Application, Controller } from "{{ view_object.render_static_url('stimulus.min.js') }}";
     window.Stimulus = Application.start();
     window.Controller = Controller;
   </script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/anchor_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/collapsible_list_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/draggable_list_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/dropdown_menu_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/editable_field_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/deletable_field_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/movable_field_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/modal_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/scroll_into_view_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/tabs_controller.js') }}"></script>
-  <script type="module" src="{{ link_renderer.render_static_url('controllers/copy_to_clipboard_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/anchor_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/collapsible_list_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/draggable_list_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/dropdown_menu_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/editable_field_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/deletable_field_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/movable_field_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/scroll_into_view_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/tabs_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/copy_to_clipboard_controller.js') }}"></script>
   {%- endif -%}
 
-  {%- if project_config.is_activated_mathjax() -%}
-  <script id="MathJax-script" async src="{{ link_renderer.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
+  {%- if view_object.project_config.is_activated_mathjax() -%}
+  <script id="MathJax-script" async src="{{ view_object.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- endif -%}
-  {%- if project_config.is_activated_rapidoc() -%}
-  <script type="text/javascript" src="{{ link_renderer.render_static_url('rapidoc/rapidoc-min.js') }}"></script>
+  {%- if view_object.project_config.is_activated_rapidoc() -%}
+  <script type="text/javascript" src="{{ view_object.render_static_url('rapidoc/rapidoc-min.js') }}"></script>
   {%- endif -%}
-  {%- if project_config.is_activated_mermaid() -%}
-    <script src="{{ link_renderer.render_static_url('mermaid/mermaid.min.js') }}"></script>
+  {%- if view_object.project_config.is_activated_mermaid() -%}
+    <script src="{{ view_object.render_static_url('mermaid/mermaid.min.js') }}"></script>
     <script type="module">
       mermaid.initialize({ startOnLoad: true });
     </script>
   {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}
-{% block title %}{{ document.title }} - {{ document_type.get_page_title() }}{% endblock title %}
-{% block viewtype %}{{ "document" if not standalone else "standalone_document" }}{% endblock viewtype %}
+{% block title %}{{ view_object.document.title }} - {{ view_object.get_page_title() }}{% endblock title %}
+{% block viewtype %}{{ "document" if not view_object.standalone else "standalone_document" }}{% endblock viewtype %}
 
 {% block layout_nav %}
-  {%- if not standalone -%}
+  {%- if not view_object.standalone -%}
   {% include "_shared/nav.jinja.html" %}
   {%- endif -%}
 {% endblock layout_nav %}
@@ -63,7 +63,7 @@
   {% include "screens/document/_shared/resizable_bar_with_toc.jinja" %}
 {% endblock toc_content %}
 
-{%- if not standalone -%}
+{%- if not view_object.standalone -%}
   {%- set header_items = [
         "screens/document/_shared/frame_header_document_title.jinja",
         "screens/document/_shared/viewtype_menu.jinja"

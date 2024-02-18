@@ -1,11 +1,11 @@
-{%- if document.has_any_toc_nodes() -%}
+{%- if view_object.document.has_any_toc_nodes() -%}
 <div class="pdf-toc" data-testid="pdf-toc-list">
     <div class="pdf-toc-row">
     <span class="pdf-toc-cell"></span>
     <span class="pdf-toc-cell" style="text-align: center;font-weight: bold;">Table of contents</span>
     <span class="pdf-toc-cell"></span>
     </div>
-    {%- for item in document_iterator.table_of_contents() -%}
+    {%- for item in view_object.document_iterator.table_of_contents() -%}
 
       <div class="pdf-toc-row" data-nodeid="{{ item.reserved_mid }}">
 
@@ -13,13 +13,13 @@
             {{ item.context.title_number_string if item.context.title_number_string else "&nbsp;" * (item.ng_level * 2 - 1) }}
           </span>
           <span dotted class="pdf-toc-cell">
-            <a href="#{{ link_renderer.render_local_anchor(item) }}" data-turbo="false">
+            <a href="#{{ view_object.render_local_anchor(item) }}" data-turbo="false">
               {%- if item.reserved_title is not none -%}
                 {{ item.reserved_title }}
               {%- endif -%}
             </a>
           </span>
-          <span class="pdf-toc-cell"><html2pdf-toc-page-number data-id="{{ link_renderer.render_local_anchor(item) }}">{#- it will be overwritten by html2pdf -#}</html2pdf-toc-page-number></span>
+          <span class="pdf-toc-cell"><html2pdf-toc-page-number data-id="{{ view_object.render_local_anchor(item) }}">{#- it will be overwritten by html2pdf -#}</html2pdf-toc-page-number></span>
 
       </div>{# /.pdf-toc-row #}
 

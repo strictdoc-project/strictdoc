@@ -41,9 +41,7 @@ from strictdoc.cli.cli_arg_parser import (
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.analyzers.document_stats import DocumentTreeStats
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
-from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
-from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.query_engine.query_object import Query, QueryObject
 from strictdoc.core.query_engine.query_reader import QueryReader
@@ -85,6 +83,15 @@ from strictdoc.export.html.form_objects.section_form_object import (
 )
 from strictdoc.export.html.generators.document_pdf import (
     DocumentHTML2PDFGenerator,
+)
+from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
+    DocumentScreenViewObject,
+)
+from strictdoc.export.html.generators.view_objects.project_tree_view_object import (
+    ProjectTreeViewObject,
+)
+from strictdoc.export.html.generators.view_objects.search_screen_view_object import (
+    SearchScreenViewObject,
 )
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
@@ -186,18 +193,17 @@ def create_main_router(
             config=project_config,
             context_document=requirement.document,
         )
-        current_view: ViewElement = requirement.document.view.get_current_view(
-            project_config.view
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.document(),
+            document=requirement.document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
         )
         output = template.render(
-            renderer=markup_renderer,
-            requirement=requirement,
-            traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
-            document=requirement.document,
-            document_type=DocumentType.document(),
-            project_config=project_config,
-            current_view=current_view,
+            view_object=view_object, requirement=requirement
         )
         return HTMLResponse(
             content=output,
@@ -404,10 +410,6 @@ def create_main_router(
         # when they are opened next time.
         export_action.traceability_index.update_last_updated()
 
-        # Rendering back the Turbo template.
-        template = env().get_template(
-            "actions/document/create_section/stream_created_section.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -420,31 +422,29 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        iterator = export_action.traceability_index.get_document_iterator(
-            document
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.document(),
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
         )
-        current_view: ViewElement = document.view.get_current_view(
-            project_config.view
+
+        # Rendering back the Turbo template.
+        template = env().get_template(
+            "actions/document/create_section/stream_created_section.jinja.html"
         )
         output = template.render(
-            renderer=markup_renderer,
-            document=document,
-            document_iterator=iterator,
-            traceability_index=export_action.traceability_index,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
-            project_config=project_config,
-            standalone=False,
-            current_view=current_view,
+            view_object=view_object,
         )
 
         toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(
-            document_iterator=iterator,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
+            view_object=view_object,
         )
         return HTMLResponse(
             content=output,
@@ -587,27 +587,20 @@ def create_main_router(
             config=project_config,
             context_document=section.document,
         )
-        output = template.render(
-            renderer=markup_renderer,
-            link_renderer=link_renderer,
-            section=section,
-            document=section.document,
+        view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            project_config=project_config,
-            standalone=False,
+            document=section.document,
             traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
         )
-        iterator = export_action.traceability_index.get_document_iterator(
-            section.document
-        )
+        output = template.render(section=section, view_object=view_object)
         toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
-        output += toc_template.render(
-            document_iterator=iterator,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
-        )
+        output += toc_template.render(view_object=view_object)
         return HTMLResponse(
             content=output,
             headers={
@@ -653,16 +646,16 @@ def create_main_router(
             config=project_config,
             context_document=section.document,
         )
-        output = template.render(
-            renderer=markup_renderer,
-            link_renderer=link_renderer,
-            section=section,
-            document=section.document,
+        view_object: DocumentScreenViewObject = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            project_config=project_config,
-            standalone=False,
+            document=section.document,
             traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
         )
+        output = template.render(view_object=view_object, section=section)
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -914,13 +907,6 @@ def create_main_router(
             specific_documents=(DocumentType.DOCUMENT,),
         )
 
-        # Rendering back the Turbo template.
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "create_requirement/"
-            "stream_created_requirement.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -933,32 +919,18 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        iterator = export_action.traceability_index.get_document_iterator(
-            document
-        )
-        current_view: ViewElement = document.view.get_current_view(
-            project_config.view
-        )
-        output = template.render(
-            renderer=markup_renderer,
-            document=document,
-            document_iterator=iterator,
+
+        view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            link_renderer=link_renderer,
+            document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
             standalone=False,
-            current_view=current_view,
         )
 
-        toc_template = env().get_template(
-            "actions/document/_shared/stream_updated_toc.jinja.html"
-        )
-        output += toc_template.render(
-            document_iterator=iterator,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
-        )
+        output = view_object.render_updated_screen(env())
 
         return HTMLResponse(
             content=output,
@@ -1165,9 +1137,6 @@ def create_main_router(
             specific_documents=(DocumentType.DOCUMENT,),
         )
 
-        iterator: DocumentCachingIterator = (
-            export_action.traceability_index.get_document_iterator(document)
-        )
         link_renderer: LinkRenderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1180,8 +1149,14 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        current_view: ViewElement = document.view.get_current_view(
-            project_config.view
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.document(),
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
         )
 
         output = ""
@@ -1192,25 +1167,13 @@ def create_main_router(
             )
             output += template.render(
                 requirement=requirement,
-                renderer=markup_renderer,
-                document=document,
-                document_iterator=iterator,
-                document_type=DocumentType.document(),
-                link_renderer=link_renderer,
-                traceability_index=export_action.traceability_index,
-                project_config=project_config,
-                standalone=False,
-                current_view=current_view,
+                view_object=view_object,
             )
 
         toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
-        output += toc_template.render(
-            document_iterator=iterator,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
-        )
+        output += toc_template.render(view_object=view_object)
 
         return HTMLResponse(
             content=output,
@@ -1270,23 +1233,18 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        iterator = export_action.traceability_index.get_document_iterator(
-            document
-        )
-        current_view: ViewElement = document.view.get_current_view(
-            project_config.view
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.document(),
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
         )
         output = template.render(
             requirement=requirement,
-            renderer=markup_renderer,
-            document=document,
-            document_iterator=iterator,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
-            traceability_index=export_action.traceability_index,
-            project_config=project_config,
-            standalone=False,
-            current_view=current_view,
+            view_object=view_object,
         )
         return HTMLResponse(
             content=output,
@@ -1363,27 +1321,20 @@ def create_main_router(
             config=project_config,
             context_document=section.document,
         )
-        iterator = export_action.traceability_index.get_document_iterator(
-            section.document
-        )
-        output = template.render(
-            renderer=markup_renderer,
-            document=section.document,
-            document_iterator=iterator,
-            traceability_index=export_action.traceability_index,
+        view_object: DocumentScreenViewObject = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            link_renderer=link_renderer,
+            document=section.document,
+            traceability_index=export_action.traceability_index,
             project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
             standalone=False,
         )
+        output = template.render(view_object=view_object)
         toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
-        output += toc_template.render(
-            document_iterator=iterator,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
-        )
+        output += toc_template.render(view_object=view_object)
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1453,31 +1404,21 @@ def create_main_router(
             config=project_config,
             context_document=requirement.document,
         )
-        iterator = export_action.traceability_index.get_document_iterator(
-            requirement.document
-        )
-        output = template.render(
-            renderer=markup_renderer,
-            document=requirement.document,
-            document_iterator=iterator,
-            traceability_index=export_action.traceability_index,
+        view_object: DocumentScreenViewObject = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            link_renderer=link_renderer,
+            document=requirement.document,
+            traceability_index=export_action.traceability_index,
             project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
             standalone=False,
         )
+        output = template.render(view_object=view_object)
 
         toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
-        iterator = export_action.traceability_index.get_document_iterator(
-            requirement.document
-        )
-        output += toc_template.render(
-            document_iterator=iterator,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
-        )
+        output += toc_template.render(view_object=view_object)
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1581,24 +1522,22 @@ def create_main_router(
             config=project_config,
             context_document=moved_node.document,
         )
-        output = template.render(
-            renderer=markup_renderer,
-            link_renderer=link_renderer,
-            document=moved_node.document,
-            document_iterator=iterator,
+        view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            project_config=project_config,
+            document=moved_node.document,
             traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
             standalone=False,
         )
+        output = template.render(view_object=view_object)
         toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
 
         output += toc_template.render(
-            document_iterator=iterator,
-            document_type=DocumentType.document(),
-            link_renderer=link_renderer,
+            view_object=view_object,
             last_moved_node_id=moved_node.reserved_mid,
         )
         return HTMLResponse(
@@ -1749,16 +1688,13 @@ def create_main_router(
         template = env().get_template(
             "actions/project_index/stream_create_document.jinja.html"
         )
-        document_tree_iterator = DocumentTreeIterator(
-            export_action.traceability_index.document_tree
+
+        view_object = ProjectTreeViewObject(
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
         )
 
-        output = template.render(
-            project_config=project_config,
-            document_tree=export_action.traceability_index.document_tree,
-            document_tree_iterator=document_tree_iterator,
-            traceability_index=export_action.traceability_index,
-        )
+        output = template.render(view_object=view_object)
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1955,19 +1891,22 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.document(),
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
+        )
         template = env().get_template(
             "actions/"
             "document/"
             "edit_document_config/"
             "stream_save_document_config.jinja.html"
         )
-        html_output = template.render(
-            document=document,
-            renderer=markup_renderer,
-            document_type=DocumentType.document(),
-            standalone=False,
-            project_config=project_config,
-        )
+        html_output = template.render(view_object=view_object)
         return HTMLResponse(
             content=html_output,
             status_code=200,
@@ -1999,13 +1938,16 @@ def create_main_router(
             "edit_document_config/"
             "stream_cancel_edit_document_config.jinja.html"
         )
-        output = template.render(
-            document=document,
-            project_config=project_config,
-            renderer=markup_renderer,
+        view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
             standalone=False,
         )
+        output = template.render(view_object=view_object, document=document)
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -2019,21 +1961,15 @@ def create_main_router(
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
-        form_object = DocumentGrammarFormObject.create_from_document(
-            document=document
-        )
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "edit_document_grammar/"
-            "stream_edit_document_grammar.jinja.html"
-        )
-        output = template.render(
-            form_object=form_object,
-            document=document,
+        form_object: DocumentGrammarFormObject = (
+            DocumentGrammarFormObject.create_from_document(
+                document=document,
+                project_config=project_config,
+                jinja_environment=env(),
+            )
         )
         return HTMLResponse(
-            content=output,
+            content=form_object.render(),
             status_code=200,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
@@ -2052,21 +1988,13 @@ def create_main_router(
             DocumentGrammarFormObject.create_from_request(
                 document_mid=document_mid,
                 request_form_data=request_form_data,
+                project_config=project_config,
+                jinja_environment=env(),
             )
         )
         if not form_object.validate():
-            print(form_object.fields)  # noqa: T201
-            template = env().get_template(
-                "actions/"
-                "document/"
-                "edit_document_grammar/"
-                "stream_edit_document_grammar.jinja.html"
-            )
-            output = template.render(
-                form_object=form_object, project_config=project_config
-            )
             return HTMLResponse(
-                content=output,
+                content=form_object.render_after_validation(),
                 status_code=422,
                 headers={
                     "Content-Type": "text/vnd.turbo-stream.html",
@@ -2151,25 +2079,17 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        output = template.render(
-            document=document,
-            renderer=markup_renderer,
+        view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-        )
-        document_iterator = export_action.traceability_index.document_iterators[
-            document
-        ]
-        link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix(),
-            static_path=project_config.dir_for_sdoc_assets,
-        )
-        markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            document=document,
             traceability_index=export_action.traceability_index,
+            project_config=project_config,
             link_renderer=link_renderer,
-            html_templates=html_generator.html_templates,
-            config=project_config,
-            context_document=document,
+            markup_renderer=markup_renderer,
+            standalone=False,
+        )
+        output = template.render(
+            view_object=view_object,
         )
         template = env().get_template(
             "actions/"
@@ -2177,20 +2097,7 @@ def create_main_router(
             "_shared/"
             "stream_refresh_document.jinja.html"
         )
-        current_view: ViewElement = document.view.get_current_view(
-            project_config.view
-        )
-        output += template.render(
-            document=document,
-            renderer=markup_renderer,
-            link_renderer=link_renderer,
-            document_type=DocumentType.document(),
-            document_iterator=document_iterator,
-            traceability_index=export_action.traceability_index,
-            project_config=project_config,
-            standalone=False,
-            current_view=current_view,
-        )
+        output += template.render(view_object=view_object)
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -2212,6 +2119,8 @@ def create_main_router(
                 document_mid=document_mid,
                 fields=[],  # Not used in this limited partial template.
                 relations=[],  # Not used in this limited partial template.
+                project_config=project_config,
+                jinja_environment=env(),
             ),
             field=GrammarFormField(
                 field_mid=MID.create(),
@@ -2243,6 +2152,8 @@ def create_main_router(
                 document_mid=document_mid,
                 fields=[],  # Not used in this limited partial template.
                 relations=[],  # Not used in this limited partial template.
+                project_config=project_config,
+                jinja_environment=env(),
             ),
             relation=GrammarFormRelation(
                 relation_mid=MID.create(),
@@ -2356,16 +2267,11 @@ def create_main_router(
             "actions/project_index/import_reqif_document/"
             "stream_refresh_with_imported_reqif_document.jinja.html"
         )
-        document_tree_iterator = DocumentTreeIterator(
-            export_action.traceability_index.document_tree
-        )
-
-        output = template.render(
-            project_config=project_config,
-            document_tree=export_action.traceability_index.document_tree,
-            document_tree_iterator=document_tree_iterator,
+        view_object = ProjectTreeViewObject(
             traceability_index=export_action.traceability_index,
+            project_config=project_config,
         )
+        output = template.render(view_object=view_object)
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -2501,39 +2407,18 @@ def create_main_router(
             except (AttributeError, NameError, TypeError) as attribute_error_:
                 error = attribute_error_.args[0]
 
-        template = html_templates.jinja_environment().get_template(
-            "screens/search/index.jinja"
-        )
-
-        link_renderer = LinkRenderer(
-            root_path="", static_path=project_config.dir_for_sdoc_assets
-        )
-        markup_renderer = MarkupRenderer.create(
-            "RST",
-            export_action.traceability_index,
-            link_renderer,
-            html_templates,
-            project_config,
-            None,
-        )
-        document_tree_iterator = DocumentTreeIterator(
-            export_action.traceability_index.document_tree
-        )
         search_value = html.escape(q) if q is not None else ""
-        output = template.render(
-            project_config=project_config,
-            error=error,
+
+        view_object = SearchScreenViewObject(
             traceability_index=export_action.traceability_index,
-            documents_iterator=document_tree_iterator.iterator(),
-            link_renderer=link_renderer,
-            renderer=markup_renderer,
-            document_type=DocumentType.document(),
-            link_document_type=DocumentType.document(),
-            strictdoc_version=__version__,
-            standalone=False,
+            project_config=project_config,
+            templates=html_templates,
             search_results=search_results,
             search_value=search_value,
+            error=error,
         )
+        output = view_object.render_screen(html_templates.jinja_environment())
+
         return Response(
             content=output,
             status_code=200,

@@ -1,4 +1,4 @@
-{%- if document.has_any_nodes() -%}
+{%- if view_object.has_any_nodes() -%}
   <div class="main">
     {% include "_shared/tags.jinja.html" %}
       <div class="content">
@@ -13,7 +13,7 @@
             <tr>
               <th class="content-view-th">Type</th>
               <th class="content-view-th">Level</th>
-              {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+              {%- for meta_field_title in view_object.document.enumerate_meta_field_titles() -%}
                 <th class="content-view-th">{{ meta_field_title }}</th>
               {%- endfor -%}
               <th class="content-view-th">REFS</th>
@@ -21,12 +21,12 @@
               <th class="content-view-th">Statement</th>
               <th class="content-view-th">Rationale</th>
               <th class="content-view-th">Comment</th>
-              {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
+              {%- for meta_field_title in view_object.document.enumerate_custom_content_field_titles() -%}
                 <th class="content-view-th">{{ meta_field_title }}</th>
               {%- endfor -%}
             </tr>
           </thead>
-          {%- for section_or_requirement in document_iterator.all_content() %}
+          {%- for section_or_requirement in view_object.document_content_iterator() %}
             {%- if section_or_requirement.is_composite_requirement or section_or_requirement.is_requirement %}
               {%- set requirement = section_or_requirement %}
               <tr>
@@ -40,7 +40,7 @@
                 <td class="content-view-td content-view-td-meta">
                   {{ requirement.context.title_number_string }}
                 </td>
-                {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+                {%- for meta_field_title in view_object.document.enumerate_meta_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
                   <td class="content-view-td content-view-td-meta">
                     {%- if field_value -%}
@@ -49,13 +49,13 @@
                   </td>
                 {%- endfor -%}
                 <td class="content-view-td content-view-td-meta content-view-td-related">
-                  {%- if traceability_index.has_parent_requirements(requirement) %}
+                  {%- if view_object.traceability_index.has_parent_requirements(requirement) %}
                     Parents:
                     <ul class="requirement__link">
-                      {%- for requirement in traceability_index.get_parent_requirements(requirement) %}
+                      {%- for requirement in view_object.traceability_index.get_parent_requirements(requirement) %}
                         <li>
                           <a class="requirement__link-parent"
-                            href="{{ link_renderer.render_node_link(requirement, document, document_type) }}">
+                            href="{{ view_object.render_node_link(requirement, view_object.document, view_object.document_type) }}">
                             {%- if requirement.reserved_uid %}
                               <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
                             {%- endif %}
@@ -65,13 +65,13 @@
                       {%- endfor %}
                     </ul>
                   {%- endif %}
-                  {%- if traceability_index.has_children_requirements(requirement) %}
+                  {%- if view_object.traceability_index.has_children_requirements(requirement) %}
                     Children:
                     <ul class="requirement__link">
-                      {%- for requirement in traceability_index.get_children_requirements(requirement) %}
+                      {%- for requirement in view_object.traceability_index.get_children_requirements(requirement) %}
                         <li>
                           <a class="requirement__link-child"
-                            href="{{ link_renderer.render_node_link(requirement, document, document_type) }}">
+                            href="{{ view_object.render_node_link(requirement, view_object.document, view_object.document_type) }}">
                             {%- if requirement.reserved_uid %}
                               <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
                             {%- endif %}
@@ -94,8 +94,8 @@
                       {%- endfor %}
                     </ul>
                   {%- endif %}
-                  {%- if project_config.is_activated_requirements_to_source_traceability() -%}
-                    {%- set requirement_file_links = traceability_index.get_requirement_file_links(requirement) %}
+                  {%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
+                    {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
                     {%- if requirement_file_links %}
                       Source files:
                       <ul class="requirement__link">
@@ -104,7 +104,7 @@
                             {%- for range in opt_ranges %}
                               <li>
                                 <a class="requirement__link-file"
-                                    href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                                    href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
                                   {{ link.get_posix_path() }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
                                 </a>
                               </li>
@@ -112,7 +112,7 @@
                           {%- else -%}
                             <li>
                               <a class="requirement__link-file"
-                                  href="{{ link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
+                                  href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
                                 {{ link.get_posix_path() }}
                               </a>
                             </li>
@@ -132,22 +132,22 @@
                 </td>
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.reserved_statement -%}
-                    <sdoc-autogen>{{ renderer.render_requirement_statement(requirement) }}</sdoc-autogen>
+                    <sdoc-autogen>{{ view_object.markup_renderer.render_requirement_statement(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.rationale -%}
-                    <sdoc-autogen>{{ renderer.render_requirement_rationale(requirement) }}</sdoc-autogen>
+                    <sdoc-autogen>{{ view_object.markup_renderer.render_requirement_rationale(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.comments -%}
                     {%- for comment in requirement.comments -%}
-                    <sdoc-autogen>{{ renderer.render_comment(comment) }}</sdoc-autogen>
+                    <sdoc-autogen>{{ view_object.markup_renderer.render_comment(comment) }}</sdoc-autogen>
                     {%- endfor -%}
                   {%- endif -%}
                 </td>
-                {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
+                {%- for meta_field_title in view_object.document.enumerate_custom_content_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
                   <td class="content-view-td">
                     {%- if field_value %}
@@ -161,7 +161,7 @@
               <tr>
                 <td class="content-view-td content-view-td-type">Section</td>
                 <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
-                {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+                {%- for meta_field_title in view_object.document.enumerate_meta_field_titles() -%}
                   <td class="content-view-td content-view-td-meta"></td>
                 {%- endfor -%}
                 <td class="content-view-td content-view-td-meta">{# Children & Parents #}</td>
@@ -173,7 +173,7 @@
                     <div class="requirement__title">
                       {{ section.title }}
                     </div>
-                    {%- for meta_field_title in document.enumerate_custom_content_field_titles() -%}
+                    {%- for meta_field_title in view_object.document.enumerate_custom_content_field_titles() -%}
                       <td class="content-view-td">
                       </td>
                     {%- endfor -%}
@@ -189,7 +189,7 @@
                     <td class="content-view-td content-view-td-meta">
                       –
                     </td>
-                    {%- for meta_field_title in document.enumerate_meta_field_titles() -%}
+                    {%- for meta_field_title in view_object.document.enumerate_meta_field_titles() -%}
                       <td class="content-view-td content-view-td-meta">
                       </td>
                     {%- endfor -%}
@@ -197,7 +197,7 @@
                       {# Children & Parents #}
                     </td>
                     <td class="content-view-td" colspan="50">
-                      <sdoc-autogen>{{ renderer.render_free_text(document_type, free_text) }}</sdoc-autogen>
+                      <sdoc-autogen>{{ view_object.render_free_text(view_object.document_type, free_text) }}</sdoc-autogen>
                     </td>
                   </tr>
                 {%- endfor -%}

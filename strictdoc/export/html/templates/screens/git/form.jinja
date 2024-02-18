@@ -6,8 +6,8 @@
 
         <input
           type="text"
-          {% if left_revision is not none %}
-          value="{{ left_revision }}"
+          {% if view_object.left_revision is not none %}
+          value="{{ view_object.left_revision }}"
           {% else %}
           value=""
           {% endif %}
@@ -18,8 +18,8 @@
         {% include "components/button/diff.jinja" %}
         <input
           type="text"
-          {% if right_revision is not none %}
-          value="{{ right_revision }}"
+          {% if view_object.right_revision is not none %}
+          value="{{ view_object.right_revision }}"
           {% else %}
           value=""
           {% endif %}
@@ -29,14 +29,14 @@
         />
         <input
           type="hidden"
-          value="{{ tab }}"
+          value="{{ view_object.tab }}"
           name="tab"
         />
 
   </form>
 
-  {% if error_message is not none %}
-    <div class="sdoc-form-error">{{ error_message }}</div>
+  {% if view_object.error_message is not none %}
+    <div class="sdoc-form-error">{{ view_object.error_message }}</div>
   {% endif %}
 
 </sdoc-form>

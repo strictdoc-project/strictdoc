@@ -1,13 +1,13 @@
-{%- if project_config.is_running_on_server -%}
+{%- if view_object.project_config.is_running_on_server -%}
 {#
   This turbo frame is important because it enables
   the child turbo links below.
 #}
 <turbo-frame>
   <div class="actions_group">
-    {%- if not standalone -%}
+    {%- if not view_object.standalone -%}
     <a
-      href="/actions/document/edit_grammar?document_mid={{ document.reserved_mid }}"
+      href="/actions/document/edit_grammar?document_mid={{ view_object.document.reserved_mid }}"
       class="action_button"
       data-turbo="true"
       data-turbo-action="replace"
@@ -15,18 +15,18 @@
       data-testid="document-edit-grammar-action"
     >{% include "_res/svg_ico16_gear.jinja.html" %} Edit grammar</a>
 
-    {%- if project_config.is_activated_html2pdf() -%}
+    {%- if view_object.project_config.is_activated_html2pdf() -%}
     <a
       class="action_button"
-      href="/export_html2pdf/{{ document.reserved_mid }}"
+      href="/export_html2pdf/{{ view_object.document.reserved_mid }}"
       data-testid="document-export-html2pdf-action"
     >Export to PDF</a>
     {%- endif -%}
 
-    {%- if project_config.is_activated_reqif() -%}
+    {%- if view_object.project_config.is_activated_reqif() -%}
     <a
       class="action_button"
-      href="/reqif/export_document/{{ document.reserved_mid }}"
+      href="/reqif/export_document/{{ view_object.document.reserved_mid }}"
       data-testid="document-export-reqif-action"
     >Export to ReqIF</a>
     {%- endif -%}

@@ -6,7 +6,7 @@
       if section.ng_level < 6
       else 6  %}
   <h{{ h_level }}
-    id="{{ link_renderer.render_local_anchor(section) }}"
+    id="{{ view_object.render_local_anchor(section) }}"
   >
     {%- if section.context.title_number_string -%}
       {{ section.context.title_number_string }}.&nbsp;

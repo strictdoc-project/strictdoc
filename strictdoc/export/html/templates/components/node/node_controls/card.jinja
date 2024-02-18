@@ -14,7 +14,7 @@
 
 <sdoc-node-controls data-direction="row">
   <a
-    href="{{ link_renderer.render_node_link(sdoc_entity, document, link_document_type, allow_local=False) }}"
+    href="{{ view_object.link_renderer.render_node_link(sdoc_entity, view_object.document, view_object.link_document_type, allow_local=False) }}"
     class="action_button"
     title="Find it in the document view"
     data-testid="{{ sdoc_entity.get_type_string() }}-find-in-document"

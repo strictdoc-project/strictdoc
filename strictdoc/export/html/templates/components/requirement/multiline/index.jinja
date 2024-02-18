@@ -1,12 +1,12 @@
 {# multiline fields #}
 {# goes through all UNRESERVED fields #}
 {%- if requirement.has_meta %}
-  {% for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) if current_view.includes_field(requirement.requirement_type, meta_field[0]) %}
+  {% for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) if view_object.current_view.includes_field(requirement.requirement_type, meta_field[0]) %}
     <sdoc-requirement-field-label>{{ meta_field[0] }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field
       data-field-label="{{ meta_field[0] }}"
     >
-      {%- with field_content = renderer.render_meta_value(meta_field[1]) %}
+      {%- with field_content = view_object.markup_renderer.render_meta_value(meta_field[1]) %}
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </sdoc-requirement-field>

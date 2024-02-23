@@ -17,9 +17,15 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldName,
 )
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.export.html.form_objects.form_object import (
+    RowWithCustomFieldFormObject,
+    RowWithRelationFormObject,
+    RowWithReservedFieldFormObject,
+)
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.form_data import parse_form_data
+from strictdoc.helpers.mid import MID
 from strictdoc.server.error_object import ErrorObject
 from strictdoc.server.helpers.turbo import render_turbo_stream
 
@@ -85,7 +91,7 @@ class GrammarFormRelation:
 
 
 @auto_described
-class DocumentGrammarFormObject(ErrorObject):
+class GrammarElementFormObject(ErrorObject):
     def __init__(
         self,
         *,
@@ -110,7 +116,7 @@ class DocumentGrammarFormObject(ErrorObject):
         request_form_data: FormData,
         project_config: ProjectConfig,
         jinja_environment: Environment,
-    ) -> "DocumentGrammarFormObject":
+    ) -> "GrammarElementFormObject":
         form_object_fields: List[GrammarFormField] = []
         form_object_relations: List[GrammarFormRelation] = []
         request_form_data_as_list = [
@@ -147,7 +153,7 @@ class DocumentGrammarFormObject(ErrorObject):
             )
             form_object_relations.append(form_object_relation)
 
-        form_object = DocumentGrammarFormObject(
+        form_object = GrammarElementFormObject(
             document_mid=document_mid,
             fields=form_object_fields,
             relations=form_object_relations,
@@ -162,7 +168,7 @@ class DocumentGrammarFormObject(ErrorObject):
         document: SDocDocument,
         project_config: ProjectConfig,
         jinja_environment: Environment,
-    ) -> "DocumentGrammarFormObject":
+    ) -> "GrammarElementFormObject":
         assert isinstance(document, SDocDocument)
         assert isinstance(document.grammar, DocumentGrammar)
 
@@ -190,7 +196,7 @@ class DocumentGrammarFormObject(ErrorObject):
             )
             grammar_form_relations.append(grammar_form_relation)
 
-        return DocumentGrammarFormObject(
+        return GrammarElementFormObject(
             document_mid=document.reserved_mid,
             fields=grammar_form_fields,
             relations=grammar_form_relations,
@@ -336,4 +342,77 @@ class DocumentGrammarFormObject(ErrorObject):
         rendered_template = template.render(form_object=self)
         return render_turbo_stream(
             content=rendered_template, action="update", target="modal"
+        )
+
+    def render_row_with_reserved_field(
+        self, field: GrammarFormField, errors
+    ) -> str:
+        form_object = RowWithReservedFieldFormObject(
+            field=field, errors=errors, jinja_environment=self.jinja_environment
+        )
+        return form_object.render()
+
+    def render_row_with_custom_field(
+        self, field: GrammarFormField, errors
+    ) -> str:
+        assert isinstance(field, GrammarFormField)
+        assert isinstance(errors, list)
+        form_object = RowWithCustomFieldFormObject(
+            field=field, errors=errors, jinja_environment=self.jinja_environment
+        )
+        return form_object.render()
+
+    def render_row_with_relation(
+        self, relation: GrammarFormRelation, errors
+    ) -> str:
+        assert isinstance(relation, GrammarFormRelation)
+        assert isinstance(errors, list)
+        form_object = RowWithRelationFormObject(
+            relation=relation,
+            errors=errors,
+            jinja_environment=self.jinja_environment,
+        )
+        return form_object.render()
+
+    def render_row_with_new_field(self) -> str:
+        field: GrammarFormField = GrammarFormField(
+            field_mid=MID.create(),
+            field_name="",
+            field_required=False,
+            reserved=False,
+        )
+        form_object = RowWithCustomFieldFormObject(
+            field=field, errors=[], jinja_environment=self.jinja_environment
+        )
+        rendered_template: str = form_object.render()
+        return render_turbo_stream(
+            content=rendered_template,
+            action="append",
+            target="document__editable_grammar_fields",
+        )
+
+    def render_row_with_new_relation(self) -> str:
+        relation = GrammarFormRelation(
+            relation_mid=MID.create(),
+            relation_type="Parent",
+            relation_role="",
+        )
+        form_object = RowWithRelationFormObject(
+            relation=relation,
+            errors=[],
+            jinja_environment=self.jinja_environment,
+        )
+        rendered_template: str = form_object.render()
+        return render_turbo_stream(
+            content=rendered_template,
+            action="append",
+            target="document__editable_grammar_relations",
+        )
+
+    @staticmethod
+    def render_close_form() -> str:
+        return render_turbo_stream(
+            content="",
+            action="update",
+            target="modal",
         )

@@ -8,6 +8,9 @@
 {%- set row_context = comment_field_row_context -%}
 {%- set row_context.field_actions = { 'delete':true } -%}
 
+{# FIXME: Rewrite everything to just form_object. #}
+{%- set form_object = comment_field_row_context -%}
+
 {% block row_form_attributes %}
   data-controller="deletable_field"
   data-testid="requirement-form-comment-row"

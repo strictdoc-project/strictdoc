@@ -1,5 +1,5 @@
 def render_turbo_stream(content: str, action: str, target: str):
-    assert action in ("update",)
+    assert action in ("append", "update")
     turbo_stream = f"""
 <turbo-stream action="{action}" target="{target}">
   <template>

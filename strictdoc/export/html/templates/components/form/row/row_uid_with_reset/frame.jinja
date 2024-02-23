@@ -10,6 +10,9 @@
 
 {%- set row_context = text_field_row_context -%}
 
+{# FIXME: Rewrite everything to just form_object. #}
+{%- set form_object = text_field_row_context -%}
+
 {% block row_form_attributes %}
 {# Explicitly no attributes. #}
 {% endblock row_form_attributes %}

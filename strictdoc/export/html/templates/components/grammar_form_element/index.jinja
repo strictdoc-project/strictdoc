@@ -33,11 +33,11 @@ Edit document grammar
               {%- if field_.reserved -%}
                 {% set reserved_field_row_context.errors = form_object.get_errors(field_.field_name) %}
                 {% set reserved_field_row_context.field = field_ %}
-                {%- include "components/grammar_form/row_with_reserved_field.jinja" -%}
+                {%- include "components/grammar_form_element/row_with_reserved_field.jinja" -%}
               {%- else -%}
                 {% set custom_field_row_context.errors = form_object.get_errors(field_.field_name) %}
                 {% set custom_field_row_context.field = field_ %}
-                {%- include "components/grammar_form/row_with_custom_field.jinja" -%}
+                {%- include "components/grammar_form_element/row_with_custom_field.jinja" -%}
               {%- endif -%}
             {%- endif -%}
           {%- endfor -%}
@@ -80,7 +80,7 @@ Edit document grammar
           {%- for relation_ in form_object.relations -%}
             {% set relation_row_context.errors = form_object.get_errors(relation_.relation_mid) %}
             {% set relation_row_context.relation = relation_ %}
-            {%- include "components/grammar_form/row_with_relation.jinja" -%}
+            {%- include "components/grammar_form_element/row_with_relation.jinja" -%}
           {%- endfor -%}
         </div>
       </sdoc-form-grid>

@@ -322,7 +322,7 @@ class DocumentGrammarFormObject(ErrorObject):
 
     def render(self):
         template: Template = self.jinja_environment.get_template(
-            "components/grammar_form/index.jinja"
+            "components/grammar_form_element/index.jinja"
         )
         rendered_template = template.render(form_object=self)
         return render_turbo_stream(
@@ -331,7 +331,7 @@ class DocumentGrammarFormObject(ErrorObject):
 
     def render_after_validation(self):
         template: Template = self.jinja_environment.get_template(
-            "components/grammar_form/index.jinja"
+            "components/grammar_form_element/index.jinja"
         )
         rendered_template = template.render(form_object=self)
         return render_turbo_stream(

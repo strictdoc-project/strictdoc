@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional, Set, Tuple, Union
 
-from jinja2 import Environment
+from jinja2 import Environment, Template
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -21,6 +21,7 @@ from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.form_data import parse_form_data
 from strictdoc.server.error_object import ErrorObject
+from strictdoc.server.helpers.turbo import render_turbo_stream
 
 
 def is_reserved_field(field_name: str):
@@ -320,23 +321,19 @@ class DocumentGrammarFormObject(ErrorObject):
         return grammar
 
     def render(self):
-        template = self.jinja_environment.get_template(
-            "actions/"
-            "document/"
-            "edit_document_grammar/"
-            "stream_edit_document_grammar.jinja.html"
+        template: Template = self.jinja_environment.get_template(
+            "components/grammar_form/index.jinja"
         )
-        return template.render(
-            form_object=self,
+        rendered_template = template.render(form_object=self)
+        return render_turbo_stream(
+            content=rendered_template, action="update", target="modal"
         )
 
     def render_after_validation(self):
-        template = self.jinja_environment.get_template(
-            "actions/"
-            "document/"
-            "edit_document_grammar/"
-            "stream_edit_document_grammar.jinja.html"
+        template: Template = self.jinja_environment.get_template(
+            "components/grammar_form/index.jinja"
         )
-        return template.render(
-            form_object=self, project_config=self.project_config
+        rendered_template = template.render(form_object=self)
+        return render_turbo_stream(
+            content=rendered_template, action="update", target="modal"
         )

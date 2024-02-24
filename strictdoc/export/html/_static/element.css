@@ -276,7 +276,7 @@ sdoc-field-content {
 
 .copy_to_clipboard-cover {
   position: absolute;
-  z-index: 100;
+  z-index: 98;
   top: 0;
   bottom: 0;
   left: 0;
@@ -929,8 +929,14 @@ sdoc-menu menu {
   box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
   border-radius: var(--base-rhythm);
   font-weight: 500;
-  display: flex;
-  flex-direction: column;
+
+  /* display: flex;
+  flex-direction: column; */
+  display: grid;
+  grid-template-columns:  minmax(min-content, max-content)
+                          minmax(min-content, max-content)
+                          minmax(min-content, max-content)
+                          minmax(min-content, max-content);
   row-gap: calc(var(--base-rhythm)/2);
 }
 
@@ -939,7 +945,13 @@ sdoc-menu menu[aria-hidden="true"] {
 }
 
 sdoc-menu menu[aria-hidden="false"] {
-  display: flex;
+  display: grid;
+}
+
+sdoc-menu li:first-child {
+  /* "Add node" */
+  grid-column: 1 / -1;
+  border-bottom: var(--base-border);
 }
 
 sdoc-menu menu a {

@@ -48,7 +48,7 @@ sdoc-autogen table caption {
 }
 
 sdoc-autogen table th {
-  background-color: #eee;
+  background-color: var(--color-bg-main);
 }
 
 sdoc-autogen table th,

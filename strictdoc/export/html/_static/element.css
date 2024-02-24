@@ -276,7 +276,7 @@ sdoc-field-content {
 
 .copy_to_clipboard-cover {
   position: absolute;
-  z-index: 100;
+  z-index: 98;
   top: 0;
   bottom: 0;
   left: 0;

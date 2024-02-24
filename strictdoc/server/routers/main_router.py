@@ -1954,8 +1954,8 @@ def create_main_router(
             },
         )
 
-    @router.get("/actions/document/edit_grammar", response_class=Response)
-    def document__edit_grammar(document_mid: str):
+    @router.get("/actions/document/edit_grammar_element", response_class=Response)
+    def document__edit_grammar_element(document_mid: str):
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )

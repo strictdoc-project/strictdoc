@@ -10,7 +10,7 @@ from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
 from strictdoc.export.html.form_objects.document_grammar_form_object import (
-    DocumentGrammarFormObject,
+    GrammarElementFormObject,
 )
 from strictdoc.helpers.cast import assert_cast
 
@@ -24,16 +24,16 @@ class UpdateGrammarCommand:
     def __init__(
         self,
         *,
-        form_object: DocumentGrammarFormObject,
+        form_object: GrammarElementFormObject,
         document: SDocDocument,
         traceability_index: TraceabilityIndex,
     ):
-        self.form_object: DocumentGrammarFormObject = form_object
+        self.form_object: GrammarElementFormObject = form_object
         self.document: SDocDocument = document
         self.traceability_index: TraceabilityIndex = traceability_index
 
     def perform(self) -> bool:
-        form_object: DocumentGrammarFormObject = self.form_object
+        form_object: GrammarElementFormObject = self.form_object
         document: SDocDocument = self.document
 
         grammar_fields: Dict[str, GrammarElementField] = {}

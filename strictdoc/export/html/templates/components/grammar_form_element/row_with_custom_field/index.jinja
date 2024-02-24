@@ -1,12 +1,8 @@
 {%- extends "components/form/row/index.jinja" %}
 
-{% assert custom_field_row_context is defined, "row_with_custom_field: custom_field_row_context must be defined." %}
-
-{% assert custom_field_row_context.errors is defined, "row_with_custom_field: errors must be defined." %}
-{% assert custom_field_row_context.field is defined, "row_with_custom_field: field must be defined." %}
-
-{%- set row_context = custom_field_row_context -%}
-{%- set row_context.errors = custom_field_row_context.errors -%}
+{% assert form_object is defined, "form_object must be defined." %}
+{% assert form_object.errors is defined, "form_object: errors must be defined." %}
+{% assert form_object.field is defined, "form_object: field must be defined." %}
 
 {% block row_form_attributes %}
   data-controller="deletable_field movable_field"
@@ -15,34 +11,34 @@
 {% block row_left %}
   {%- set action_button_context = namespace() %}
   {%- set action_button_context.field_actions = {"move_down": true} %}
-  {%- set action_button_context.field_name = row_context.field.field_name %}
-  {%- set action_button_context.field_input_name = row_context.field.get_input_field_name() %}
-  {%- set action_button_context.mid = row_context.field.field_mid %}
+  {%- set action_button_context.field_name = form_object.field.field_name %}
+  {%- set action_button_context.field_input_name = form_object.field.get_input_field_name() %}
+  {%- set action_button_context.mid = form_object.field.field_mid %}
   {%- set action_button_context.testid_postfix = "custom-field" %}
   {%- include "components/form/field_action_button/index.jinja" -%}
 
   {%- set action_button_context = namespace() %}
   {%- set action_button_context.field_actions = {"move_up": true} %}
-  {%- set action_button_context.field_name = row_context.field.field_name %}
-  {%- set action_button_context.field_input_name = row_context.field.get_input_field_name() %}
-  {%- set action_button_context.mid = row_context.field.field_mid %}
+  {%- set action_button_context.field_name = form_object.field.field_name %}
+  {%- set action_button_context.field_input_name = form_object.field.get_input_field_name() %}
+  {%- set action_button_context.mid = form_object.field.field_mid %}
   {%- set action_button_context.testid_postfix = "custom-field" %}
   {%- include "components/form/field_action_button/index.jinja" -%}
 {% endblock row_left %}
 
 {% block row_content scoped %}
 
-  {%- set placeholder_name = custom_field_row_context.field.field_name|default('custom field name', true) %}
+  {%- set placeholder_name = form_object.field.field_name|default('custom field name', true) %}
 
   {%- with
     field_class_name = "monospace",
     field_editable = true,
-    field_input_name = custom_field_row_context.field.get_input_field_name(),
+    field_input_name = form_object.field.get_input_field_name(),
     field_label = "Custom field",
     field_placeholder = "Enter "~placeholder_name~" here...",
     field_type = "singleline",
-    field_value = custom_field_row_context.field.field_name,
-    mid = custom_field_row_context.field.field_mid,
+    field_value = form_object.field.field_name,
+    mid = form_object.field.field_mid,
     testid_postfix = "custom-field"
   %}
   {%- include "components/form/field/contenteditable/index.jinja" %}
@@ -55,7 +51,7 @@
   {%- set action_button_context = namespace() %}
   {%- set action_button_context.field_actions = {"delete": true} %}
   {%- set action_button_context.field_name = "custom field" %}
-  {%- set action_button_context.mid = row_context.field.field_mid %}
+  {%- set action_button_context.mid = form_object.field.field_mid %}
   {%- set action_button_context.testid_postfix = "custom-field" %}
   {%- include "components/form/field_action_button/index.jinja" -%}
 

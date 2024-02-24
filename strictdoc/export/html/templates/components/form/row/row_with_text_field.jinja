@@ -8,6 +8,8 @@
 {% assert text_field_row_context.field_type in ("singleline", "multiline"), "row_with_text: field_type must be singleline or multiline." %}
 
 {%- set row_context = text_field_row_context -%}
+{# FIXME: Rewrite everything to just form_object. #}
+{%- set form_object = text_field_row_context -%}
 
 {% block row_form_attributes %}
 {# Explicitly no attributes. #}

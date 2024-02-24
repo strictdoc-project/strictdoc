@@ -16,10 +16,6 @@ Edit document grammar
 
     {# Fields TAB #}
     <sdoc-tab-content id="Fields" active>
-
-      {% set reserved_field_row_context = namespace() %}
-      {% set custom_field_row_context = namespace() %}
-
       <sdoc-form-descr>
         <b>StrictDoc conventions:</b>
         <br/>
@@ -31,13 +27,9 @@ Edit document grammar
           {%- for field_ in form_object.fields -%}
             {%- if field_.field_name != "REFS" -%}
               {%- if field_.reserved -%}
-                {% set reserved_field_row_context.errors = form_object.get_errors(field_.field_name) %}
-                {% set reserved_field_row_context.field = field_ %}
-                {%- include "components/grammar_form/row_with_reserved_field.jinja" -%}
+                {{ form_object.render_row_with_reserved_field(field_, form_object.get_errors(field_.field_name)) }}
               {%- else -%}
-                {% set custom_field_row_context.errors = form_object.get_errors(field_.field_name) %}
-                {% set custom_field_row_context.field = field_ %}
-                {%- include "components/grammar_form/row_with_custom_field.jinja" -%}
+                {{ form_object.render_row_with_custom_field(field_, form_object.get_errors(field_.field_name)) }}
               {%- endif -%}
             {%- endif -%}
           {%- endfor -%}
@@ -75,12 +67,8 @@ Edit document grammar
             {%- endfor -%}
           {%- endif -%}
 
-          <!-- FIXME: @mettta -->
-          {% set relation_row_context = namespace() %}
           {%- for relation_ in form_object.relations -%}
-            {% set relation_row_context.errors = form_object.get_errors(relation_.relation_mid) %}
-            {% set relation_row_context.relation = relation_ %}
-            {%- include "components/grammar_form/row_with_relation.jinja" -%}
+            {{ form_object.render_row_with_relation(relation_, form_object.get_errors(relation_.relation_mid)) }}
           {%- endfor -%}
         </div>
       </sdoc-form-grid>

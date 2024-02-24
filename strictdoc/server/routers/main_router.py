@@ -68,9 +68,7 @@ from strictdoc.export.html.form_objects.document_config_form_object import (
     DocumentConfigFormObject,
 )
 from strictdoc.export.html.form_objects.document_grammar_form_object import (
-    DocumentGrammarFormObject,
-    GrammarFormField,
-    GrammarFormRelation,
+    GrammarElementFormObject,
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormField,
@@ -1961,8 +1959,8 @@ def create_main_router(
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
-        form_object: DocumentGrammarFormObject = (
-            DocumentGrammarFormObject.create_from_document(
+        form_object: GrammarElementFormObject = (
+            GrammarElementFormObject.create_from_document(
                 document=document,
                 project_config=project_config,
                 jinja_environment=env(),
@@ -1984,8 +1982,8 @@ def create_main_router(
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
-        form_object: DocumentGrammarFormObject = (
-            DocumentGrammarFormObject.create_from_request(
+        form_object: GrammarElementFormObject = (
+            GrammarElementFormObject.create_from_request(
                 document_mid=document_mid,
                 request_form_data=request_form_data,
                 project_config=project_config,
@@ -2011,29 +2009,7 @@ def create_main_router(
 
         # If the grammar has not changed, do nothing and save the edit form.
         if not grammar_changed:
-            link_renderer = LinkRenderer(
-                root_path=document.meta.get_root_path_prefix(),
-                static_path=project_config.dir_for_sdoc_assets,
-            )
-            markup_renderer = MarkupRenderer.create(
-                markup="RST",
-                traceability_index=export_action.traceability_index,
-                link_renderer=link_renderer,
-                html_templates=html_generator.html_templates,
-                config=project_config,
-                context_document=document,
-            )
-            template = env().get_template(
-                "actions/"
-                "document/"
-                "edit_document_grammar/"
-                "stream_save_document_grammar.jinja.html"
-            )
-            output = template.render(
-                document=document,
-                renderer=markup_renderer,
-                document_type=DocumentType.document(),
-            )
+            output = form_object.render_close_form()
             return HTMLResponse(
                 content=output,
                 status_code=200,
@@ -2061,12 +2037,6 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
         )
 
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "edit_document_grammar/"
-            "stream_save_document_grammar.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -2088,16 +2058,15 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(
-            view_object=view_object,
-        )
         template = env().get_template(
             "actions/"
             "document/"
             "_shared/"
             "stream_refresh_document.jinja.html"
         )
-        output += template.render(view_object=view_object)
+        output = form_object.render_close_form() + template.render(
+            view_object=view_object
+        )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -2108,29 +2077,15 @@ def create_main_router(
 
     @router.get("/actions/document/add_grammar_field", response_class=Response)
     def document__add_grammar_field(document_mid: str):
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "edit_document_grammar/"
-            "stream_add_grammar_field.jinja.html"
-        )
-        output = template.render(
-            form_object=DocumentGrammarFormObject(
-                document_mid=document_mid,
-                fields=[],  # Not used in this limited partial template.
-                relations=[],  # Not used in this limited partial template.
-                project_config=project_config,
-                jinja_environment=env(),
-            ),
-            field=GrammarFormField(
-                field_mid=MID.create(),
-                field_name="",
-                field_required=False,
-                reserved=False,
-            ),
+        form_object: GrammarElementFormObject = GrammarElementFormObject(
+            document_mid=document_mid,
+            fields=[],  # Not used in this limited partial template.
+            relations=[],  # Not used in this limited partial template.
+            project_config=project_config,
+            jinja_environment=env(),
         )
         return HTMLResponse(
-            content=output,
+            content=form_object.render_row_with_new_field(),
             status_code=200,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
@@ -2141,28 +2096,15 @@ def create_main_router(
         "/actions/document/add_grammar_relation", response_class=Response
     )
     def document__add_grammar_relation(document_mid: str):
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "edit_document_grammar/"
-            "stream_add_grammar_relation.jinja.html"
-        )
-        output = template.render(
-            form_object=DocumentGrammarFormObject(
-                document_mid=document_mid,
-                fields=[],  # Not used in this limited partial template.
-                relations=[],  # Not used in this limited partial template.
-                project_config=project_config,
-                jinja_environment=env(),
-            ),
-            relation=GrammarFormRelation(
-                relation_mid=MID.create(),
-                relation_type="Parent",
-                relation_role="",
-            ),
+        form_object = GrammarElementFormObject(
+            document_mid=document_mid,
+            fields=[],  # Not used in this limited partial template.
+            relations=[],  # Not used in this limited partial template.
+            project_config=project_config,
+            jinja_environment=env(),
         )
         return HTMLResponse(
-            content=output,
+            content=form_object.render_row_with_new_relation(),
             status_code=200,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",

@@ -98,8 +98,8 @@
         js-dropdown-menu-list
         aria-hidden="true"
       >
-
-        <li class="viewtype__menu_header">Add section</li>
+        <li class="viewtype__menu_header">Add node:</li>
+        <li class="viewtype__menu_header">Section:</li>
 
         {# Add first document Section, on CONFIG#}
         {%- if sdoc_entity.get_type_string() == 'document' -%}
@@ -108,9 +108,9 @@
             href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
             data-turbo-action="replace"
             data-turbo="true"
-            title="Add child Section"
+            title="Add first child Section"
             data-testid="node-add-section-first-action"
-          >+S➘ Add first Section</a>
+          >+S➘</a>
         </li>
         {%- endif -%}
 
@@ -127,7 +127,7 @@
             data-turbo="true"
             title="Add Section above"
             data-testid="node-add-section-above-action"
-          >+S⬆ Add Section above</a>
+          >+S⬆</a>
         </li>
         {%- endif -%}
 
@@ -145,7 +145,7 @@
             data-turbo="true"
             title="Add child Section"
             data-testid="node-add-section-child-action"
-          >+S➘ Add child Section</a>
+          >+S➘</a>
         </li>
         {%- endif -%}
 
@@ -162,11 +162,11 @@
             data-turbo="true"
             title="Add Section below"
             data-testid="node-add-section-below-action"
-          >+S⬇ Add Section below</a>
+          >+S⬇</a>
         </li>
         {%- endif -%}
 
-        <li class="viewtype__menu_header">Add requirement</li>
+        <li class="viewtype__menu_header">Requirement:</li>
 
         {# Add first document Section, on CONFIG#}
         {%- if sdoc_entity.get_type_string() == 'document' -%}
@@ -175,9 +175,9 @@
               href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
               data-turbo-action="replace"
               data-turbo="true"
-              title="Add child Requirement"
+              title="Add first child Requirement"
               data-testid="node-add-requirement-first-action"
-            >+R➘ Add first Requirement</a>
+            >+R➘</a>
         </li>
         {%- endif -%}
 
@@ -194,7 +194,7 @@
             data-turbo="true"
             title="Add Requirement above"
             data-testid="node-add-requirement-above-action"
-          >+R⬆ Add Requirement above</a>
+          >+R⬆</a>
         </li>
         {%- endif -%}
 
@@ -212,7 +212,7 @@
               data-turbo="true"
               title="Add child Requirement"
               data-testid="node-add-requirement-child-action"
-            >+R➘ Add child Requirement</a>
+            >+R➘</a>
         </li>
         {%- endif -%}
 
@@ -229,7 +229,7 @@
             data-turbo="true"
             title="Add Requirement below"
             data-testid="node-add-requirement-below-action"
-          >+R⬇ Add Requirement below</a>
+          >+R⬇</a>
         </li>
         {%- endif -%}
 

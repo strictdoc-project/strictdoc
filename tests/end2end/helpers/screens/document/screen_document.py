@@ -4,8 +4,8 @@ from selenium.common import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.screens.document.form_edit_grammar import (
-    Form_EditGrammar,
+from tests.end2end.helpers.screens.document.form_edit_grammar_elements import (
+    Form_EditGrammarElements,
 )
 from tests.end2end.helpers.screens.screen import Screen
 
@@ -46,7 +46,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
 
     # Open forms
 
-    def do_open_modal_form_edit_grammar(self) -> Form_EditGrammar:
+    def do_open_modal_form_edit_grammar(self) -> Form_EditGrammarElements:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
         self.test_case.click_xpath(
             '(//*[@data-testid="document-edit-grammar-action"])'
@@ -55,7 +55,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             "//sdoc-modal",
             by=By.XPATH,
         )
-        return Form_EditGrammar(self.test_case)
+        return Form_EditGrammarElements(self.test_case)
 
     def do_drag_first_toc_node_to_the_second(self) -> None:
         xpath_first_toc_node = '(//li[@draggable="true"])[1]'

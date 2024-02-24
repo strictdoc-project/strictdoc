@@ -9,10 +9,11 @@ Edit document grammar
     id="{{ form }}"  {# defined in the parent template #}
     method="POST"
     data-turbo="true"
-    action="/actions/document/save_grammar"
+    action="/actions/document/save_grammar_element"
     data-controller="tabs"
     >
     <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
+    <input type="hidden" id="element_mid" name="element_mid" value="{{ form_object.element_mid }}"/>
 
     {# Fields TAB #}
     <sdoc-tab-content id="Fields" active>

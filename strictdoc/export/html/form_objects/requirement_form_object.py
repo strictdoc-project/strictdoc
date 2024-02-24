@@ -187,6 +187,7 @@ class RequirementFormObject(ErrorObject):
         self,
         *,
         is_new: bool,
+        element_type: str,
         requirement_mid: Optional[str],
         document_mid: str,
         mid_field: Optional[RequirementFormField],
@@ -198,7 +199,9 @@ class RequirementFormObject(ErrorObject):
         relation_types: List[str],
     ):
         super().__init__()
+        assert isinstance(element_type, str), element_type
         self.is_new: bool = is_new
+        self.element_type: str = element_type
         self.requirement_mid: Optional[str] = requirement_mid
         self.document_mid: str = document_mid
         self.mid_field: Optional[RequirementFormField] = mid_field
@@ -233,6 +236,8 @@ class RequirementFormObject(ErrorObject):
         form_ref_fields: List[RequirementReferenceFormField] = []
 
         requirement_dict = request_form_dict["requirement"]
+
+        element_type = request_form_dict["element_type"]
 
         requirement_fields_dict = requirement_dict["fields"]
         for _, field_dict in requirement_fields_dict.items():
@@ -332,6 +337,7 @@ class RequirementFormObject(ErrorObject):
 
         form_object = RequirementFormObject(
             is_new=is_new,
+            element_type=element_type,
             requirement_mid=requirement_mid,
             document_mid=document.reserved_mid,
             mid_field=mid_field,
@@ -345,14 +351,14 @@ class RequirementFormObject(ErrorObject):
 
     @staticmethod
     def create_new(
-        *, document: SDocDocument, next_uid: str
+        *, document: SDocDocument, next_uid: str, element_type: str
     ) -> "RequirementFormObject":
         assert document.grammar is not None
 
         new_requirement_mid: MID = MID.create()
 
         grammar: DocumentGrammar = document.grammar
-        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+        element: GrammarElement = grammar.elements_by_type[element_type]
 
         mid_field: Optional[RequirementFormField] = None
         if document.config.enable_mid:
@@ -384,6 +390,7 @@ class RequirementFormObject(ErrorObject):
 
         return RequirementFormObject(
             is_new=True,
+            element_type=element_type,
             requirement_mid=new_requirement_mid,
             document_mid=document.reserved_mid,
             mid_field=mid_field,
@@ -403,7 +410,9 @@ class RequirementFormObject(ErrorObject):
         document: SDocDocument = requirement.document
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
-        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+        element: GrammarElement = grammar.elements_by_type[
+            requirement.requirement_type
+        ]
 
         mid_field: Optional[RequirementFormField] = None
         if document.config.enable_mid:
@@ -487,6 +496,7 @@ class RequirementFormObject(ErrorObject):
                         form_refs_fields.append(form_ref_field)
         return RequirementFormObject(
             is_new=False,
+            element_type=requirement.requirement_type,
             requirement_mid=requirement.reserved_mid,
             document_mid=document.reserved_mid,
             mid_field=mid_field,

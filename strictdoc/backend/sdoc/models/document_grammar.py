@@ -1,5 +1,5 @@
 import sys
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict
 from typing import Dict, List, Optional, Set, Union
 
 from strictdoc.backend.sdoc.models.type_system import (
@@ -16,6 +16,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.mid import MID
 
 
 def create_default_relations(
@@ -88,10 +89,46 @@ class GrammarElement:
             del fields_map["REFS"]
             self.fields.remove(refs_field)
 
+        self.mid: MID = MID.create()
+
+    @staticmethod
+    def create_default(tag: str):
+        return GrammarElement(
+            parent=None,
+            tag=tag,
+            fields=[
+                GrammarElementFieldString(
+                    parent=None,
+                    title="UID",
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title="TITLE",
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title="STATEMENT",
+                    human_title=None,
+                    required="False",
+                ),
+            ],
+            relations=[],
+        )
+
     def get_relation_types(self) -> List[str]:
         return list(
             map(lambda relation_: relation_.relation_type, self.relations)
         )
+
+    def get_field_titles(self) -> List[str]:
+        return list(map(lambda field_: field_.title, self.fields))
+
+    def get_tag_lower(self) -> str:
+        return self.tag.lower()
 
     def has_relation_type_role(
         self, relation_type: str, relation_role: Optional[str]
@@ -136,18 +173,19 @@ class DocumentGrammar:
         self.parent = parent
         self.elements: List[GrammarElement] = elements
 
+        # When elements are created by code, not by textX, it is convenient
+        # if their .parent is set here automatically.
+        for element_ in elements:
+            element_.parent = self
+
         registered_elements: Set[str] = set()
         elements_by_type: Dict[str, GrammarElement] = {}
-        fields_by_type: Dict[str, List[str]] = defaultdict(list)
         for element in elements:
             registered_elements.add(element.tag)
             elements_by_type[element.tag] = element
-            for element_field in element.fields:
-                fields_by_type[element.tag].append(element_field.title)
 
         self.registered_elements: Set[str] = registered_elements
         self.elements_by_type: Dict[str, GrammarElement] = elements_by_type
-        self.fields_order_by_type: Dict[str, List[str]] = fields_by_type
 
         self.is_default = False
 
@@ -228,6 +266,14 @@ class DocumentGrammar:
 
         return grammar
 
+    def get_element_by_mid(self, element_mid: str):
+        for element_ in self.elements:
+            if element_.mid == element_mid:
+                return element_
+        raise AssertionError(
+            f"Could not find a grammar element with MID: {element_mid}"
+        )
+
     def dump_fields(self, requirement_type) -> str:
         return ", ".join(
             list(
@@ -237,3 +283,11 @@ class DocumentGrammar:
                 )
             )
         )
+
+    def update_element(
+        self, existing_element: GrammarElement, updated_element: GrammarElement
+    ):
+        element_index = self.elements.index(existing_element)
+        self.elements[element_index] = updated_element
+        self.elements_by_type[updated_element.tag] = updated_element
+        self.is_default = False

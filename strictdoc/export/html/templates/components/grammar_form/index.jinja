@@ -1,0 +1,38 @@
+{% extends "components/modal/form.jinja" %}
+{% set form = "sdoc_modal_form" %}
+{% block modal__context %}form{% endblock modal__context %}
+{% block modal_form__header %}
+Edit document grammar
+{% endblock modal_form__header %}
+{% block modal_form__content %}
+  <form
+    id="{{ form }}"  {# defined in the parent template #}
+    method="POST"
+    data-turbo="true"
+    action="/actions/document/save_grammar"
+    data-controller="tabs"
+    >
+    <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
+
+    <sdoc-form-grid>
+      <div style="display: contents;" id="document__editable_grammar_elements">
+        {%- for field_ in form_object.fields -%}
+          {{ form_object.render_row_with_grammar_element(field_, form_object.get_errors(field_.field_mid)) }}
+        {%- endfor -%}
+      </div>
+    </sdoc-form-grid>
+
+    <sdoc-form-footer>
+      <a
+        class="action_button"
+        href="/actions/document/add_grammar_element?document_mid={{ form_object.document_mid }}"
+        data-turbo="true"
+        data-action-type="add_field"
+        data-testid="form-action-add-grammar-element"
+        {# TODO: https://github.com/strictdoc-project/strictdoc/issues/884 #}
+        onclick="setTimeout(()=> {this.scrollIntoView()}, 100)"
+      >{% include "_res/svg_ico16_add.jinja.html" %} Add grammar element</a>
+    </sdoc-form-footer>
+
+  </form>
+{% endblock modal_form__content %}

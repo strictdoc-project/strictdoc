@@ -59,7 +59,10 @@ class SDocParsingProcessor:
 
     def process_document_grammar(self, document_grammar: DocumentGrammar):
         for grammar_element in document_grammar.elements:
-            if "STATEMENT" not in grammar_element.fields_map:
+            if (
+                grammar_element.tag == "REQUIREMENT"
+                and "STATEMENT" not in grammar_element.fields_map
+            ):
                 raise StrictDocSemanticError.grammar_missing_reserved_statement(
                     grammar_element,
                     **get_location(document_grammar),

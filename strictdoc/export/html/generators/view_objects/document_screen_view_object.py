@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from jinja2 import Environment, Template
 
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
@@ -147,6 +148,9 @@ class DocumentScreenViewObject:
         return self.traceability_index.document_tree.get_document_by_path(
             full_path
         )
+
+    def get_grammar_elements(self) -> List[GrammarElement]:
+        return self.document.grammar.elements
 
     def table_of_contents(self):
         yield from self.document_iterator.table_of_contents()

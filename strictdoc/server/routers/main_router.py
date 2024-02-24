@@ -59,6 +59,9 @@ from strictdoc.core.transforms.update_document_config import (
     UpdateDocumentConfigTransform,
 )
 from strictdoc.core.transforms.update_grammar import UpdateGrammarCommand
+from strictdoc.core.transforms.update_grammar_element import (
+    UpdateGrammarElementCommand,
+)
 from strictdoc.core.transforms.update_requirement import (
     UpdateRequirementResult,
     UpdateRequirementTransform,
@@ -69,6 +72,9 @@ from strictdoc.export.html.form_objects.document_config_form_object import (
 )
 from strictdoc.export.html.form_objects.document_grammar_form_object import (
     GrammarElementFormObject,
+)
+from strictdoc.export.html.form_objects.grammar_form_object import (
+    GrammarFormObject,
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormField,
@@ -663,9 +669,13 @@ def create_main_router(
         )
 
     @router.get("/actions/document/new_requirement", response_class=Response)
-    def get_new_requirement(reference_mid: str, whereto: str):
+    def get_new_requirement(
+        reference_mid: str, whereto: str, element_type: str
+    ):
         assert isinstance(reference_mid, str), reference_mid
         assert isinstance(whereto, str), whereto
+        assert isinstance(element_type, str), element_type
+
         assert NodeCreationOrder.is_valid(whereto), whereto
 
         reference_node = export_action.traceability_index.get_node_by_mid(
@@ -686,7 +696,7 @@ def create_main_router(
             reference_node.get_requirement_prefix()
         )
         form_object = RequirementFormObject.create_new(
-            document=document, next_uid=next_uid
+            document=document, next_uid=next_uid, element_type=element_type
         )
 
         target_node_mid = reference_mid
@@ -1720,6 +1730,7 @@ def create_main_router(
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
                 is_new=False,
+                element_type="NOT_RELEVANT",
                 requirement_mid=requirement_mid,
                 document_mid=document.reserved_mid,
                 mid_field=None,
@@ -1768,6 +1779,7 @@ def create_main_router(
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
                 is_new=False,
+                element_type="NOT_RELEVANT",
                 requirement_mid=requirement_mid,
                 document_mid=document_mid,
                 mid_field=None,
@@ -1954,17 +1966,15 @@ def create_main_router(
             },
         )
 
-    @router.get("/actions/document/edit_grammar_element", response_class=Response)
-    def document__edit_grammar_element(document_mid: str):
+    @router.get("/actions/document/edit_grammar", response_class=Response)
+    def document__edit_grammar(document_mid: str):
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
-        form_object: GrammarElementFormObject = (
-            GrammarElementFormObject.create_from_document(
-                document=document,
-                project_config=project_config,
-                jinja_environment=env(),
-            )
+        form_object: GrammarFormObject = GrammarFormObject.create_from_document(
+            document=document,
+            project_config=project_config,
+            jinja_environment=env(),
         )
         return HTMLResponse(
             content=form_object.render(),
@@ -1976,6 +1986,148 @@ def create_main_router(
 
     @router.post("/actions/document/save_grammar", response_class=Response)
     async def document__save_grammar(request: Request):
+        request_form_data: FormData = await request.form()
+        request_dict: Dict[str, str] = dict(request_form_data)
+        document_mid: str = request_dict["document_mid"]
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
+        )
+        form_object: GrammarFormObject = GrammarFormObject.create_from_request(
+            document_mid=document_mid,
+            request_form_data=request_form_data,
+            project_config=project_config,
+            jinja_environment=env(),
+        )
+        if not form_object.validate():
+            return HTMLResponse(
+                content=form_object.render(),
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+        # Update the document with new grammar.
+        update_grammar_action = UpdateGrammarCommand(
+            form_object=form_object,
+            document=document,
+            traceability_index=export_action.traceability_index,
+        )
+        grammar_changed = update_grammar_action.perform()
+
+        # If the grammar has not changed, do nothing and save the edit form.
+        if not grammar_changed:
+            output = form_object.render_close_form()
+            return HTMLResponse(
+                content=output,
+                status_code=200,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        # Re-generate the document's SDOC.
+        document_content = SDWriter().write(document)
+        document_meta = document.meta
+        with open(
+            document_meta.input_doc_full_path, "w", encoding="utf8"
+        ) as output_file:
+            output_file.write(document_content)
+
+        # Re-generate the document.
+        html_generator.export_single_document(
+            document=document,
+            traceability_index=export_action.traceability_index,
+        )
+
+        # Re-generate the document tree.
+        html_generator.export_project_tree_screen(
+            traceability_index=export_action.traceability_index,
+        )
+
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.document(),
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
+        )
+        template = env().get_template(
+            "actions/"
+            "document/"
+            "_shared/"
+            "stream_refresh_document.jinja.html"
+        )
+        output = form_object.render_close_form() + template.render(
+            view_object=view_object
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get(
+        "/actions/document/add_grammar_element", response_class=Response
+    )
+    def document__add_grammar_element(document_mid: str):
+        form_object: GrammarFormObject = GrammarFormObject(
+            document_mid=document_mid,
+            fields=[],  # Not used in this limited partial template.
+            project_config=project_config,
+            jinja_environment=env(),
+        )
+        return HTMLResponse(
+            content=form_object.render_row_with_new_grammar_element(),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get(
+        "/actions/document/edit_grammar_element", response_class=Response
+    )
+    def document__edit_grammar_element(document_mid: str, element_mid: str):
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
+        )
+        form_object: GrammarElementFormObject = (
+            GrammarElementFormObject.create_from_document(
+                document=document,
+                element_mid=element_mid,
+                project_config=project_config,
+                jinja_environment=env(),
+            )
+        )
+
+        return HTMLResponse(
+            content=form_object.render(),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.post(
+        "/actions/document/save_grammar_element", response_class=Response
+    )
+    async def document__save_grammar_element(request: Request):
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
@@ -2000,7 +2152,7 @@ def create_main_router(
             )
 
         # Update the document with new grammar.
-        update_grammar_action = UpdateGrammarCommand(
+        update_grammar_action = UpdateGrammarElementCommand(
             form_object=form_object,
             document=document,
             traceability_index=export_action.traceability_index,
@@ -2079,6 +2231,7 @@ def create_main_router(
     def document__add_grammar_field(document_mid: str):
         form_object: GrammarElementFormObject = GrammarElementFormObject(
             document_mid=document_mid,
+            element_mid="NOT_RELEVANT",
             fields=[],  # Not used in this limited partial template.
             relations=[],  # Not used in this limited partial template.
             project_config=project_config,
@@ -2098,6 +2251,7 @@ def create_main_router(
     def document__add_grammar_relation(document_mid: str):
         form_object = GrammarElementFormObject(
             document_mid=document_mid,
+            element_mid="NOT_RELEVANT",
             fields=[],  # Not used in this limited partial template.
             relations=[],  # Not used in this limited partial template.
             project_config=project_config,

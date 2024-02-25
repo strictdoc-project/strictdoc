@@ -80,6 +80,7 @@
   <sdoc-menu
     js-dropdown-menu
     data-controller="dropdown_menu"
+    class="add_node"
   >
   {# djlint:on #}
     <sdoc-menu-handler
@@ -98,139 +99,169 @@
         js-dropdown-menu-list
         aria-hidden="true"
       >
-        <li class="viewtype__menu_header">Add node:</li>
-        <li class="viewtype__menu_header">Section:</li>
+        <header>Add node</header>
 
-        {# Add first document Section, on CONFIG#}
+        {# *** Document node *** #}
         {%- if sdoc_entity.get_type_string() == 'document' -%}
-        <li>
-          <a
-            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
-            data-turbo-action="replace"
-            data-turbo="true"
-            title="Add first child Section"
-            data-testid="node-add-section-first-action"
-          >{% include "_res/svg_ico16_add_child.jinja" %}</a>
-        </li>
+          {# Add first document Section & Requirement, on CONFIG #}
+
+          {# 0 • There should be a line for the node type: #}
+          <li class="viewtype__menu_header">Section:</li>
+
+          {# There should be 3 places for the buttons: #}
+          <li>{# 1 • Document -> add Section #}</li>
+          <li>{# 2 • Document -> add Section #}</li>
+          <li>{# 3 • Document -> add Section #}
+            <a
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add first child Section"
+              data-testid="node-add-section-first-action"
+            >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+          </li>
+
+          {# 0 • There should be a line for the node type: #}
+          <li class="viewtype__menu_header">Requirement:</li>
+
+          {# There should be 3 places for the buttons: #}
+          <li>{# 1 • Document -> add Requirement #}</li>
+          <li>{# 2 • Document -> add Requirement #}</li>
+          <li>{# 3 • Document -> add Requirement #}
+            <a
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
+                data-turbo-action="replace"
+                data-turbo="true"
+                title="Add first child Requirement"
+                data-testid="node-add-requirement-first-action"
+              >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+          </li>
+
+        {# // Document node #}
         {%- endif -%}
 
-        {# Add Section above:
-          + section
-          + requirement
-          - document
-        #}
-        {%- if sdoc_entity.get_type_string() != 'document' -%}
-        <li>
-          <a
-            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
-            data-turbo-action="replace"
-            data-turbo="true"
-            title="Add Section above"
-            data-testid="node-add-section-above-action"
-          >{% include "_res/svg_ico16_add_above.jinja" %}</a>
-        </li>
-        {%- endif -%}
+        {# *** Section node *** #}
+        {%- if sdoc_entity.get_type_string() == 'section' -%}
 
-        {# Add child Section:
-          + section,
-          - requirement
-          - document
-          ••• MADE ON <sdoc-menu>: 'if not document.section_contents'
-        #}
-        {%- if sdoc_entity.get_type_string() != 'requirement' and sdoc_entity.get_type_string() != 'document' -%}
-        <li>
-          <a
-            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child"
-            data-turbo-action="replace"
-            data-turbo="true"
-            title="Add child Section"
-            data-testid="node-add-section-child-action"
-          >{% include "_res/svg_ico16_add_child.jinja" %}</a>
-        </li>
-        {%- endif -%}
+          {# 0 • There should be a line for the node type: #}
+          <li class="viewtype__menu_header">Section:</li>
 
-        {# Add Section below:
-          + section
-          + requirement
-          - document
-        #}
-        {%- if sdoc_entity.get_type_string() != 'document' -%}
-        <li>
-          <a
-            href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
-            data-turbo-action="replace"
-            data-turbo="true"
-            title="Add Section below"
-            data-testid="node-add-section-below-action"
-          >{% include "_res/svg_ico16_add_below.jinja" %}</a>
-        </li>
-        {%- endif -%}
+          {# There should be 3 places for the buttons: #}
+          <li>{# 1 • Section -> add Section #}
+            <a
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add Section above"
+              data-testid="node-add-section-above-action"
+            >{% include "_res/svg_ico16_add_above.jinja" %}</a>
+          </li>
+          <li>{# 2 • Section -> add Section #}
+            <a
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add child Section"
+              data-testid="node-add-section-child-action"
+            >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+          </li>
+          <li>{# 3 • Section -> add Section #}
+            <a
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add Section below"
+              data-testid="node-add-section-below-action"
+            >{% include "_res/svg_ico16_add_below.jinja" %}</a>
+          </li>
 
-        <li class="viewtype__menu_header">Requirement:</li>
+          {# 0 • There should be a line for the node type: #}
+          <li class="viewtype__menu_header">Requirement:</li>
 
-        {# Add first document Section, on CONFIG#}
-        {%- if sdoc_entity.get_type_string() == 'document' -%}
-        <li>
-          <a
+          {# There should be 3 places for the buttons: #}
+          <li>{# 1 • Section -> add Requirement #}
+            <a
+              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add Requirement above"
+              data-testid="node-add-requirement-above-action"
+            >{% include "_res/svg_ico16_add_above.jinja" %}</a>
+          </li>
+          <li>{# 2 • Section -> add Requirement #}
+            <a
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child"
+                data-turbo-action="replace"
+                data-turbo="true"
+                title="Add child Requirement"
+                data-testid="node-add-requirement-child-action"
+              >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+          </li>
+          <li>{# 3 • Section -> add Requirement #}
+            <a
               href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
               data-turbo-action="replace"
               data-turbo="true"
-              title="Add first child Requirement"
-              data-testid="node-add-requirement-first-action"
-            >{% include "_res/svg_ico16_add_child.jinja" %}</a>
-        </li>
+              title="Add Requirement below"
+              data-testid="node-add-requirement-below-action"
+            >{% include "_res/svg_ico16_add_below.jinja" %}</a>
+          </li>
+
+        {# // Section node *** #}
         {%- endif -%}
 
-        {# Add Requirement above:
-          + section
-          + requirement
-          - document
-        #}
-        {%- if sdoc_entity.get_type_string() != 'document' -%}
-        <li>
-          <a
-            href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
-            data-turbo-action="replace"
-            data-turbo="true"
-            title="Add Requirement above"
-            data-testid="node-add-requirement-above-action"
-          >{% include "_res/svg_ico16_add_above.jinja" %}</a>
-        </li>
-        {%- endif -%}
+        {# *** Requirement node *** #}
+        {%- if sdoc_entity.get_type_string() == 'requirement' -%}
 
-        {# Add child Requirement:
-          + section,
-          - requirement
-          - document
-          ••• MADE ON <sdoc-menu>: 'if not document.section_contents'
-        #}
-        {%- if sdoc_entity.get_type_string() != 'requirement' and sdoc_entity.get_type_string() != 'document' -%}
-        <li>
-          <a
-              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child"
+          {# 0 • There should be a line for the node type: #}
+          <li class="viewtype__menu_header">Section:</li>
+
+          {# There should be 3 places for the buttons: #}
+          <li>{# 1 • Requirement -> add Section #}</li>
+          <li>{# 2 • Requirement -> add Section #}
+            <a
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
               data-turbo-action="replace"
               data-turbo="true"
-              title="Add child Requirement"
-              data-testid="node-add-requirement-child-action"
-            >{% include "_res/svg_ico16_add_child.jinja" %}</a>
-        </li>
-        {%- endif -%}
+              title="Add Section above"
+              data-testid="node-add-section-above-action"
+            >{% include "_res/svg_ico16_add_above.jinja" %}</a>
+          </li>
+          <li>{# 3 • Requirement -> add Section #}
+            <a
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add Section below"
+              data-testid="node-add-section-below-action"
+            >{% include "_res/svg_ico16_add_below.jinja" %}</a>
+          </li>
 
-        {# Add Requirement below:
-          + section
-          + requirement
-          - document
-        #}
-        {%- if sdoc_entity.get_type_string() != 'document' -%}
-        <li>
-          <a
-            href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
-            data-turbo-action="replace"
-            data-turbo="true"
-            title="Add Requirement below"
-            data-testid="node-add-requirement-below-action"
-          >{% include "_res/svg_ico16_add_below.jinja" %}</a>
-        </li>
+          {# 0 • There should be a line for the node type: #}
+          <li class="viewtype__menu_header">Requirement:</li>
+
+          {# There should be 3 places for the buttons: #}
+          <li>{# 1 • Requirement -> add Requirement #}</li>
+          <li>{# 2 • Requirement -> add Requirement #}
+            <a
+              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add Requirement above"
+              data-testid="node-add-requirement-above-action"
+            >{% include "_res/svg_ico16_add_above.jinja" %}</a>
+          </li>
+          <li>{# 3 • Requirement -> add Requirement #}
+            <a
+              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
+              data-turbo-action="replace"
+              data-turbo="true"
+              title="Add Requirement below"
+              data-testid="node-add-requirement-below-action"
+            >{% include "_res/svg_ico16_add_below.jinja" %}</a>
+          </li>
+
+        {# // Requirement node *** #}
         {%- endif -%}
 
       </menu>

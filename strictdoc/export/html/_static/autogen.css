@@ -48,7 +48,7 @@ sdoc-autogen table caption {
 }
 
 sdoc-autogen table th {
-  background-color: #eee;
+  background-color: var(--color-bg-main);
 }
 
 sdoc-autogen table th,
@@ -110,7 +110,7 @@ sdoc-autogen pre.code {
 /* ``some text`` is generated into: <tt class="docutils literal"> by docutils. */
 sdoc-autogen tt.literal {
   position: relative;
-  padding: 2px 6px;
+  padding: 0 4px;
   font-style: normal;
   font-family: var(--code-font-family);
   font-size: var(--code-font-size);

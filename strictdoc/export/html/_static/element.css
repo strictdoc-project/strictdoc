@@ -61,7 +61,7 @@ a[aria-disabled="true"] {
 
 code {
   position: relative;
-  padding: 2px 6px;
+  padding: 0 4px;
   font-style: normal;
   font-family: var(--code-font-family);
   font-size: var(--code-font-size);

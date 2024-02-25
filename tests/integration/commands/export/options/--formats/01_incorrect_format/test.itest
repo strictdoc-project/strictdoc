@@ -1,3 +1,3 @@
 RUN: %expect_exit 2 %strictdoc export --formats=foo %S | filecheck %s --dump-input=fail
 
-CHECK: {{.*}} export: error: argument --formats: invalid choice: 'foo' (choose from 'html', 'html2pdf', 'rst', 'excel', 'reqif-sdoc', 'reqifz-sdoc', 'spdx', 'dot')
+CHECK: {{.*}} export: error: argument --formats: invalid choice: 'foo' (choose from 'html', 'html2pdf', 'rst', 'json', 'excel', 'reqif-sdoc', 'reqifz-sdoc', 'spdx', 'dot')

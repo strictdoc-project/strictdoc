@@ -53,6 +53,13 @@ def sanitize_html_form_field(field: str, multiline: bool) -> str:
     return ""
 
 
+def is_uppercase_underscore_string(string: str) -> bool:
+    first_word = r"[A-Z][A-Z0-9]*"
+    other_word = r"[A-Z0-9]+"
+    pattern = re.compile(rf"^{first_word}(_{other_word})*$")
+    return pattern.match(string) is not None
+
+
 def is_safe_alphanumeric_string(string: str) -> bool:
     pattern = re.compile(r"^[\w.]+([/\\][\w.]+?)*$")
     return pattern.match(string) is not None

@@ -26,6 +26,7 @@ from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.form_data import parse_form_data
 from strictdoc.helpers.mid import MID
+from strictdoc.helpers.string import is_uppercase_underscore_string
 from strictdoc.server.error_object import ErrorObject
 from strictdoc.server.helpers.turbo import render_turbo_stream
 
@@ -96,6 +97,7 @@ class GrammarElementFormObject(ErrorObject):
         self,
         *,
         document_mid: str,
+        element_mid: str,
         fields: List[GrammarFormField],
         relations: List[GrammarFormRelation],
         project_config: ProjectConfig,
@@ -104,6 +106,7 @@ class GrammarElementFormObject(ErrorObject):
         assert isinstance(document_mid, str), document_mid
         super().__init__()
         self.document_mid = document_mid
+        self.element_mid: str = element_mid
         self.fields: List[GrammarFormField] = fields
         self.relations: List[GrammarFormRelation] = relations
         self.project_config: ProjectConfig = project_config
@@ -126,6 +129,8 @@ class GrammarElementFormObject(ErrorObject):
         request_form_dict: Dict = assert_cast(
             parse_form_data(request_form_data_as_list), dict
         )
+
+        element_mid = request_form_dict["element_mid"]
 
         # Grammar fields.
         document_grammar_fields = request_form_dict["document_grammar_field"]
@@ -155,6 +160,7 @@ class GrammarElementFormObject(ErrorObject):
 
         form_object = GrammarElementFormObject(
             document_mid=document_mid,
+            element_mid=element_mid,
             fields=form_object_fields,
             relations=form_object_relations,
             project_config=project_config,
@@ -166,6 +172,7 @@ class GrammarElementFormObject(ErrorObject):
     def create_from_document(
         *,
         document: SDocDocument,
+        element_mid: str,
         project_config: ProjectConfig,
         jinja_environment: Environment,
     ) -> "GrammarElementFormObject":
@@ -173,7 +180,8 @@ class GrammarElementFormObject(ErrorObject):
         assert isinstance(document.grammar, DocumentGrammar)
 
         grammar: DocumentGrammar = document.grammar
-        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+
+        element: GrammarElement = grammar.get_element_by_mid(element_mid)
 
         grammar_form_fields: List[GrammarFormField] = []
         for grammar_field in element.fields:
@@ -186,9 +194,6 @@ class GrammarElementFormObject(ErrorObject):
 
         grammar_form_relations: List[GrammarFormRelation] = []
         for grammar_relation in element.relations:
-            # FIXME: One day enable this.
-            if grammar_relation.relation_type == "File":
-                continue
             grammar_form_relation = GrammarFormRelation(
                 relation_mid=grammar_relation.mid,
                 relation_type=grammar_relation.relation_type,
@@ -198,6 +203,7 @@ class GrammarElementFormObject(ErrorObject):
 
         return GrammarElementFormObject(
             document_mid=document.reserved_mid,
+            element_mid=element_mid,
             fields=grammar_form_fields,
             relations=grammar_form_relations,
             project_config=project_config,
@@ -211,6 +217,16 @@ class GrammarElementFormObject(ErrorObject):
                 self.add_error(
                     field.field_name,
                     f"Grammar field {field.field_name} must not be empty.",
+                )
+                continue
+
+            if not is_uppercase_underscore_string(field.field_name):
+                self.add_error(
+                    field.field_name,
+                    (
+                        "Grammar field title shall consist of "
+                        "uppercase letters, digits and single underscores."
+                    ),
                 )
                 continue
 
@@ -271,7 +287,9 @@ class GrammarElementFormObject(ErrorObject):
 
         return len(self.errors) == 0
 
-    def convert_to_document_grammar(self) -> DocumentGrammar:
+    def convert_to_grammar_element(
+        self, existing_grammar: DocumentGrammar
+    ) -> GrammarElement:
         grammar_fields: List[GrammarElementField] = []
         for field in self.fields:
             grammar_field = GrammarElementFieldString(
@@ -315,16 +333,15 @@ class GrammarElementFormObject(ErrorObject):
                 )
             else:
                 raise NotImplementedError(relation)
+
+        existing_element = existing_grammar.get_element_by_mid(self.element_mid)
         requirement_element = GrammarElement(
             parent=None,
-            tag="REQUIREMENT",
+            tag=existing_element.tag,
             fields=grammar_fields,
             relations=relation_fields,
         )
-        elements: List[GrammarElement] = [requirement_element]
-        grammar = DocumentGrammar(parent=None, elements=elements)
-        grammar.is_default = False
-        return grammar
+        return requirement_element
 
     def render(self):
         template: Template = self.jinja_environment.get_template(

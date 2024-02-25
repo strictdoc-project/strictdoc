@@ -92,7 +92,11 @@ class CreateRequirementTransform:
         for document_ in traceability_index.document_tree.document_list:
             document_.ng_needs_generation = False
 
-        requirement = SDocObjectFactory.create_requirement(parent=parent)
+        # FIXME: It is better to have a general create_node method because
+        #        we are dealing with arbitrary nodes, not only Requirement.
+        requirement = SDocObjectFactory.create_requirement(
+            parent=parent, requirement_type=form_object.element_type
+        )
 
         # FIXME: Leave only one method based on set_field_value().
         for form_field_name, form_fields in form_object.fields.items():

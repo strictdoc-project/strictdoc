@@ -1,18 +1,18 @@
-from collections import OrderedDict
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Set
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.type_system import GrammarElementField
+from strictdoc.backend.sdoc.models.document_grammar import (
+    DocumentGrammar,
+    GrammarElement,
+)
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
-from strictdoc.export.html.form_objects.document_grammar_form_object import (
-    GrammarElementFormObject,
+from strictdoc.export.html.form_objects.grammar_form_object import (
+    GrammarFormObject,
 )
-from strictdoc.helpers.cast import assert_cast
 
 
 @dataclass
@@ -24,123 +24,42 @@ class UpdateGrammarCommand:
     def __init__(
         self,
         *,
-        form_object: GrammarElementFormObject,
+        form_object: GrammarFormObject,
         document: SDocDocument,
         traceability_index: TraceabilityIndex,
     ):
-        self.form_object: GrammarElementFormObject = form_object
+        self.form_object: GrammarFormObject = form_object
         self.document: SDocDocument = document
         self.traceability_index: TraceabilityIndex = traceability_index
 
     def perform(self) -> bool:
-        form_object: GrammarElementFormObject = self.form_object
+        form_object: GrammarFormObject = self.form_object
         document: SDocDocument = self.document
 
-        grammar_fields: Dict[str, GrammarElementField] = {}
-        for grammar_field in document.grammar.elements[0].fields:
-            grammar_fields[grammar_field.mid] = grammar_field
-
-        # Prepare fields that could have been renamed by the user has just saved the form.
-        renamed_fields_lookup = {}
-        for field in form_object.fields:
-            if field.field_mid not in grammar_fields:
-                continue
-            existing_field = grammar_fields[field.field_mid]
-            if field.field_name != existing_field.title:
-                renamed_fields_lookup[field.field_name] = existing_field.title
-
-        # Create new grammar.
-        document_grammar: DocumentGrammar = (
-            form_object.convert_to_document_grammar()
+        form_element_names = map(
+            lambda field_: field_.field_name, form_object.fields
         )
 
-        # Compare if anything was changed in the new grammar.
-        document_grammar_field_names = document_grammar.fields_order_by_type[
-            "REQUIREMENT"
-        ]
-        existing_document_grammar_field_names = (
-            document.grammar.fields_order_by_type["REQUIREMENT"]
-        )
-        grammar_changed = (
-            document_grammar_field_names
-            != existing_document_grammar_field_names
-        )
-        existing_requirement_element = document.grammar.elements_by_type[
-            "REQUIREMENT"
-        ]
-        new_requirement_element = document_grammar.elements_by_type[
-            "REQUIREMENT"
-        ]
-        grammar_changed = (
-            grammar_changed
-            or existing_requirement_element.relations
-            != new_requirement_element.relations
-        )
-        if not grammar_changed:
-            return False
+        map_existing_elements_by_name: Dict[str, GrammarElement] = {}
+        for grammar_element_ in document.grammar.elements:
+            map_existing_elements_by_name[
+                grammar_element_.tag
+            ] = grammar_element_
 
-        document_grammar.parent = document
-        document.grammar = document_grammar
-
-        document_iterator = self.traceability_index.document_iterators[document]
-
-        for node in document_iterator.all_content():
-            if not node.is_requirement:
-                continue
-
-            requirement: SDocNode = assert_cast(node, SDocNode)
-            requirement_field_names = list(
-                requirement.ordered_fields_lookup.keys()
-            )
-
-            # Rewrite requirement fields because some fields could have been
-            # renamed.
-            new_ordered_fields_lookup: OrderedDict[
-                str, List[SDocNodeField]
-            ] = OrderedDict()
-
-            for document_grammar_field_name in document_grammar_field_names:
-                # We need to find a previous field name in case the field was
-                # renamed.
-                previous_field_name = renamed_fields_lookup.get(
-                    document_grammar_field_name, document_grammar_field_name
+        updated_grammar_elements: List[GrammarElement] = []
+        for form_element_name_ in form_element_names:
+            if form_element_name_ in map_existing_elements_by_name:
+                updated_grammar_elements.append(
+                    map_existing_elements_by_name[form_element_name_]
+                )
+            else:
+                updated_grammar_elements.append(
+                    GrammarElement.create_default(form_element_name_)
                 )
 
-                # If the field does not exist in the grammar fields anymore,
-                # delete the requirement field.
-                if previous_field_name not in requirement_field_names:
-                    continue
-
-                previous_fields: List[
-                    SDocNodeField
-                ] = requirement.ordered_fields_lookup[previous_field_name]
-                for previous_field in previous_fields:
-                    previous_field.field_name = document_grammar_field_name
-
-                new_ordered_fields_lookup[
-                    document_grammar_field_name
-                ] = previous_fields
-
-            registered_relation_types: Set[Tuple[str, Optional[str]]] = set()
-            for relation in existing_requirement_element.relations:
-                registered_relation_types.add(
-                    (relation.relation_type, relation.relation_role)
-                )
-            if "REFS" in requirement.ordered_fields_lookup:
-                existing_refs_field = requirement.ordered_fields_lookup["REFS"][
-                    0
-                ]
-                new_relations = []
-                for (
-                    requirement_relation_
-                ) in existing_refs_field.field_value_references:
-                    if (
-                        requirement_relation_.ref_type,
-                        requirement_relation_.role,
-                    ) in registered_relation_types:
-                        new_relations.append(requirement_relation_)
-                new_ordered_fields_lookup["REFS"] = [existing_refs_field]
-            requirement.ordered_fields_lookup = new_ordered_fields_lookup
-            requirement.ng_reserved_fields_cache.clear()
+        new_grammar = DocumentGrammar(
+            parent=document, elements=updated_grammar_elements
+        )
+        document.grammar = new_grammar
 
         return True

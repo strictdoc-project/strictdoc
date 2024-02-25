@@ -121,6 +121,18 @@ class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
         )
         return Form_EditRequirement(self.test_case)
 
+    def do_node_add_element_first(
+        self, element_tag: str
+    ) -> Form_EditRequirement:
+        self.test_case.click(
+            selector=(
+                '//*[@data-testid="node-root"]'
+                f'//*[@data-testid="node-add-{element_tag.lower()}-first-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
     # From Node
     def do_node_add_requirement_above(self) -> Form_EditRequirement:
         self.test_case.click(
@@ -147,6 +159,42 @@ class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
             selector=(
                 f"{self.node_xpath}"
                 '//*[@data-testid="node-add-requirement-child-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
+    def do_node_add_element_child(
+        self, element_type: str
+    ) -> Form_EditRequirement:
+        self.test_case.click(
+            selector=(
+                f"{self.node_xpath}"
+                f'//*[@data-testid="node-add-{element_type.lower()}-child-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
+    def do_node_add_element_above(
+        self, element_type: str
+    ) -> Form_EditRequirement:
+        self.test_case.click(
+            selector=(
+                f"{self.node_xpath}"
+                f'//*[@data-testid="node-add-{element_type.lower()}-above-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
+    def do_node_add_element_below(
+        self, element_type: str
+    ) -> Form_EditRequirement:
+        self.test_case.click(
+            selector=(
+                f"{self.node_xpath}"
+                f'//*[@data-testid="node-add-{element_type.lower()}-below-action"]'
             ),
             by=By.XPATH,
         )

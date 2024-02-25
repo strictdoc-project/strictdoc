@@ -121,21 +121,23 @@
             >{% include "_res/svg_ico16_add_child.jinja" %}</a>
           </li>
 
-          {# 0 • There should be a line for the node type: #}
-          <li class="viewtype__menu_header">Requirement:</li>
+          {% for element_ in view_object.get_grammar_elements() %}
+            {# 0 • There should be a line for the node type: #}
+            <li class="viewtype__menu_header">{{ element_.tag }}:</li>
 
-          {# There should be 3 places for the buttons: #}
-          <li>{# 1 • Document -> add Requirement #}</li>
-          <li>{# 2 • Document -> add Requirement #}</li>
-          <li>{# 3 • Document -> add Requirement #}
-            <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
-                data-turbo-action="replace"
-                data-turbo="true"
-                title="Add first child Requirement"
-                data-testid="node-add-requirement-first-action"
-              >{% include "_res/svg_ico16_add_child.jinja" %}</a>
-          </li>
+            {# There should be 3 places for the buttons: #}
+            <li>{# 1 • Document -> add Requirement #}</li>
+            <li>{# 2 • Document -> add Requirement #}</li>
+            <li>{# 3 • Document -> add Requirement #}
+              <a
+                  href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}"
+                  data-turbo-action="replace"
+                  data-turbo="true"
+                  title="Add first child {{ element_.tag }}"
+                  data-testid="node-add-{{ element_.get_tag_lower() }}-first-action"
+                >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+            </li>
+          {%- endfor -%}
 
         {# // Document node #}
         {%- endif -%}
@@ -176,36 +178,38 @@
           </li>
 
           {# 0 • There should be a line for the node type: #}
-          <li class="viewtype__menu_header">Requirement:</li>
+          {% for element_ in view_object.get_grammar_elements() %}
+            <li class="viewtype__menu_header">{{ element_.tag }}:</li>
 
-          {# There should be 3 places for the buttons: #}
-          <li>{# 1 • Section -> add Requirement #}
-            <a
-              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add Requirement above"
-              data-testid="node-add-requirement-above-action"
-            >{% include "_res/svg_ico16_add_above.jinja" %}</a>
-          </li>
-          <li>{# 2 • Section -> add Requirement #}
-            <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child"
+            {# There should be 3 places for the buttons: #}
+            <li>{# 1 • Section -> add Requirement #}
+              <a
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}"
                 data-turbo-action="replace"
                 data-turbo="true"
-                title="Add child Requirement"
-                data-testid="node-add-requirement-child-action"
-              >{% include "_res/svg_ico16_add_child.jinja" %}</a>
-          </li>
-          <li>{# 3 • Section -> add Requirement #}
-            <a
-              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add Requirement below"
-              data-testid="node-add-requirement-below-action"
-            >{% include "_res/svg_ico16_add_below.jinja" %}</a>
-          </li>
+                title="Add Requirement above"
+                data-testid="node-add-{{ element_.get_tag_lower() }}-above-action"
+              >{% include "_res/svg_ico16_add_above.jinja" %}</a>
+            </li>
+            <li>{# 2 • Section -> add Requirement #}
+              <a
+                  href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}"
+                  data-turbo-action="replace"
+                  data-turbo="true"
+                  title="Add child Requirement"
+                  data-testid="node-add-{{ element_.get_tag_lower() }}-child-action"
+                >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+            </li>
+            <li>{# 3 • Section -> add Requirement #}
+              <a
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}"
+                data-turbo-action="replace"
+                data-turbo="true"
+                title="Add Requirement below"
+                data-testid="node-add-{{ element_.get_tag_lower() }}-below-action"
+              >{% include "_res/svg_ico16_add_below.jinja" %}</a>
+            </li>
+          {% endfor %}
 
         {# // Section node *** #}
         {%- endif -%}
@@ -238,28 +242,30 @@
           </li>
 
           {# 0 • There should be a line for the node type: #}
-          <li class="viewtype__menu_header">Requirement:</li>
+          {% for element_ in view_object.get_grammar_elements() %}
+            <li class="viewtype__menu_header">{{ element_.tag }}:</li>
 
-          {# There should be 3 places for the buttons: #}
-          <li>{# 1 • Requirement -> add Requirement #}</li>
-          <li>{# 2 • Requirement -> add Requirement #}
-            <a
-              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add Requirement above"
-              data-testid="node-add-requirement-above-action"
-            >{% include "_res/svg_ico16_add_above.jinja" %}</a>
-          </li>
-          <li>{# 3 • Requirement -> add Requirement #}
-            <a
-              href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add Requirement below"
-              data-testid="node-add-requirement-below-action"
-            >{% include "_res/svg_ico16_add_below.jinja" %}</a>
-          </li>
+            {# There should be 3 places for the buttons: #}
+            <li>{# 1 • Requirement -> add Requirement #}</li>
+            <li>{# 2 • Requirement -> add Requirement #}
+              <a
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}"
+                data-turbo-action="replace"
+                data-turbo="true"
+                title="Add Requirement above"
+                data-testid="node-add-{{ element_.get_tag_lower() }}-above-action"
+              >{% include "_res/svg_ico16_add_above.jinja" %}</a>
+            </li>
+            <li>{# 3 • Requirement -> add Requirement #}
+              <a
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}"
+                data-turbo-action="replace"
+                data-turbo="true"
+                title="Add Requirement below"
+                data-testid="node-add-{{ element_.get_tag_lower() }}-below-action"
+              >{% include "_res/svg_ico16_add_below.jinja" %}</a>
+            </li>
+          {%- endfor -%}
 
         {# // Requirement node *** #}
         {%- endif -%}

@@ -1,0 +1,35 @@
+{%- extends "components/form/row/index.jinja" %}
+
+{% assert form_object is defined, "form_object must be defined." %}
+{% assert form_object.errors is defined, "form_object: errors must be defined." %}
+{% assert form_object.field is defined, "form_object: field must be defined." %}
+
+{% block row_form_attributes %}
+  data-controller=""
+{% endblock row_form_attributes %}
+
+{% block row_left %}
+{# Explicitly nothing. #}
+{% endblock row_left %}
+
+{% block row_content scoped %}
+
+  {%- with
+    field_class_name = "monospace",
+    field_editable = true,
+    field_input_name = form_object.field.get_input_field_name(),
+    field_label = "Grammar element",
+    field_placeholder = "Enter a name for the new grammar element.",
+    field_type = "singleline",
+    field_value = form_object.field.field_name,
+    mid = form_object.field.field_mid,
+    testid_postfix = "grammar-element"
+  %}
+  {%- include "components/form/field/contenteditable/index.jinja" %}
+  {%- endwith -%}
+
+{% endblock row_content %}
+
+{% block row_right %}
+{# Explicitly nothing. #}
+{% endblock row_right %}

@@ -5,8 +5,8 @@ CHECK: Step 'Parse SDoc project tree' took: {{.*}} sec.
 
 RUN: %check_exists --file "%S/Output/dot/output.profile1.dot"
 RUN: %check_exists --file "%S/Output/dot/output.profile2.dot"
-RUN: %check_exists --file "%S/Output/dot/output.profile2.dot.pdf"
-RUN: %check_exists --file "%S/Output/dot/output.profile2.dot.pdf"
+RUN: %check_exists --file "%S/Output/dot/output.profile2.dot.svg"
+RUN: %check_exists --file "%S/Output/dot/output.profile2.dot.svg"
 
 RUN: %cat %S/Output/dot/output.profile1.dot | filecheck %s --dump-input=fail --check-prefix CHECK-DOT-P1
 CHECK-DOT-P1: label = "Hello world doc";

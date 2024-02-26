@@ -28,7 +28,7 @@ digraph {
   // SO: How can I direct dot to use a shorter edge path?
   // https://stackoverflow.com/q/24107451/598057
   // #}
-  splines=ortho;
+  // splines=ortho;
 
   // Ensure some space between documents.
   graph [ranksep=2];
@@ -42,9 +42,9 @@ digraph {
 {% endfilter %}
 
   {% for accumulated_link in accumulated_links -%}
-    "value_{{accumulated_link[0]}}"->"value_{{accumulated_link[1]}}" [
-      style="dashed" color="{{random_color()}}", penwidth = 2, constraint=false
-    ];
+    // "value_{{accumulated_link[0]}}"->"value_{{accumulated_link[1]}}" [
+    //   style="dashed" color="{{random_color()}}", penwidth = 2, constraint=false
+    // ];
   {%- endfor %}
 
   {% for accumulated_section_sibling in accumulated_section_siblings -%}

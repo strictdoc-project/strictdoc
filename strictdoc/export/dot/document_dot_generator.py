@@ -127,7 +127,7 @@ class DocumentDotGenerator:
         assert os.path.isfile(output_path)
         dot = graphviz.Source.from_file(output_path)
         # view=True makes the output PDF be opened in a default viewer program.
-        dot.render(output_path, view=False)
+        dot.render(output_path, format="svg", view=False)
 
     def _print_folder_documents(
         self,

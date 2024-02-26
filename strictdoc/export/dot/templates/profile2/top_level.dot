@@ -43,9 +43,9 @@ digraph {
 {% endfilter %}
 
   {% for accumulated_link in accumulated_links -%}
-    "value_{{accumulated_link[0]}}"->"value_{{accumulated_link[1]}}" [
-      style="dotted" color="#000000", penwidth = 2, constraint=false
-    ];
+    // "value_{{accumulated_link[0]}}"->"value_{{accumulated_link[1]}}" [
+    // style="dotted" color="#000000", penwidth = 2, constraint=false
+    // ];
   {%- endfor %}
 
   {% for single_document_flat_requirements in document_flat_requirements -%}

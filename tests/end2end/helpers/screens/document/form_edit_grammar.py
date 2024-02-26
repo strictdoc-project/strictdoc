@@ -73,6 +73,13 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
         super().do_fill_in_mid(mid, "form-field-custom-field", field_value)
 
+    def do_fill_in_grammar_field_human_title_mid(
+        self, mid: MID, field_value: str
+    ) -> None:
+        assert isinstance(mid, MID)
+        assert isinstance(field_value, str)
+        super().do_fill_in_mid(mid, "form-field-human-title", field_value)
+
     def do_select_grammar_relation_type(self, mid, relation_type):
         assert isinstance(mid, MID)
         assert isinstance(relation_type, str)

@@ -34,7 +34,11 @@ class GrammarElementFormField:
         self.document_mid: str = document_mid
 
     @staticmethod
-    def create(*, grammar_element: GrammarElement, document_mid: str):
+    def create(
+        *,
+        grammar_element: GrammarElement,
+        document_mid: str,
+    ):
         return GrammarElementFormField(
             field_mid=grammar_element.mid,
             field_name=grammar_element.tag,

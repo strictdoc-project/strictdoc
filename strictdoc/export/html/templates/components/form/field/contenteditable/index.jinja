@@ -12,7 +12,6 @@
 {%- assert testid_postfix is defined, "testid_postfix is defined" -%}
 
 <sdoc-form-field>
-
   <sdoc-contenteditable
     data-controller="editablefield"
     role="textbox"
@@ -31,20 +30,16 @@
     {%- endif -%}
     data-testid="form-field-{{ testid_postfix }}"
   >
-    {%- if true -%}
-      {{ field_value }}
-    {%- endif -%}
+    {{- field_value -}}
   </sdoc-contenteditable>
-
+  
   {%- if field_type == "singleline" -%}
     <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
   {%- endif -%}
 
   {%- if field_type == "multiline" -%}
     <textarea hidden name="{{ field_input_name }}">
-      {%- if true -%}
-      {{ field_value }}
-      {%- endif -%}
+      {{- field_value -}}
     </textarea>
   {%- endif -%}
 

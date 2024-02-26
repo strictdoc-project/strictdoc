@@ -13,19 +13,22 @@
 {% endblock row_left %}
 
 {% block row_content scoped %}
-
+  {%- set human_title = form_object.field.field_human_title if form_object.field.field_human_title else "" -%}
   {%- with
     field_class_name = "monospace",
     field_editable = false,
     field_input_name = form_object.field.get_input_field_name(),
+    field_input_human_title = form_object.field.get_input_field_human_title(),
     field_label = "Reserved field",
     field_placeholder = "NOT_RELEVANT",
     field_type = "singleline",
     field_value = form_object.field.field_name,
+    field_human_title = human_title,
     mid = form_object.field.field_mid,
-    testid_postfix = "reserved_field"
+    testid_postfix = "reserved_field",
+    testid_human_title_postfix = "human-title"
   %}
-  {%- include "components/form/field/contenteditable/index.jinja" %}
+  {%- include "components/form/field/contenteditable/field_with_human_title.jinja" %}
   {%- endwith -%}
 
 {% endblock row_content %}

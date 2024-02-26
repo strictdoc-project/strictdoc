@@ -10,10 +10,7 @@ from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import (
-    CompositeRequirement,
-    SDocNode,
-)
+from strictdoc.backend.sdoc.models.node import CompositeRequirement, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
     ChildReqReference,
@@ -369,6 +366,10 @@ class SDWriter:
         output += "  - TITLE: "
         output += grammar_field.title
         output += "\n"
+        if grammar_field.human_title is not None:
+            output += "    HUMAN_TITLE: "
+            output += grammar_field.human_title
+            output += "\n"
         output += "    TYPE: "
 
         if isinstance(grammar_field, GrammarElementFieldString):

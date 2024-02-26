@@ -1,0 +1,38 @@
+[DOCUMENT]
+MID: 3c39b5bdf690402682538b418558c738
+TITLE: Dummy Software Requirements Specification #2
+OPTIONS:
+  ENABLE_MID: True
+
+[REQUIREMENT]
+MID: 95e3198bbbdf44d691daa869efc79323
+UID: LREQ-1
+TITLE: Dummy low-level requirement #1
+STATEMENT: System ABC shall do 1.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1
+- TYPE: File
+  VALUE: file.py
+
+[REQUIREMENT]
+MID: 70c97ad5b2e543b7b9a1015265cd9445
+UID: LREQ-2
+TITLE: Dummy low-level requirement #2
+STATEMENT: System ABC shall do 2.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-2
+- TYPE: File
+  VALUE: file.py
+
+[REQUIREMENT]
+MID: 44720087baf5489cb88c32cd284585e2
+UID: LREQ-3
+TITLE: Dummy low-level requirement #3
+STATEMENT: System ABC shall do 3.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-3
+- TYPE: File
+  VALUE: file.py

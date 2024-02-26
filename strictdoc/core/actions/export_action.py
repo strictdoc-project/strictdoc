@@ -13,6 +13,7 @@ from strictdoc.export.dot.document_dot_generator import DocumentDotGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
+from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.export.spdx.spdx_generator import SPDXGenerator
 from strictdoc.helpers.timing import timing_decorator
@@ -139,4 +140,13 @@ class ExportAction:
             )
             DocumentDotGenerator("profile2").export_tree(
                 self.traceability_index, output_dot_root
+            )
+
+        if "json" in self.project_config.export_formats:
+            output_json_root = os.path.join(
+                self.project_config.export_output_dir, "json"
+            )
+            Path(output_json_root).mkdir(parents=True, exist_ok=True)
+            JSONGenerator().export_tree(
+                self.traceability_index, output_json_root
             )

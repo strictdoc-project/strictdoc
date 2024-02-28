@@ -1802,9 +1802,9 @@ The following command creates an HTML export:
 **Example:** This documentation is exported by StrictDoc to HTML:
 `StrictDoc HTML export <https://strictdoc-project.github.io>`_.
 
-**Note:** The options ``--formats=html`` and ``--output-dir output-html`` can be
-skipped because HTML export is a default export option and the default output
-folder is ``output``.
+The options ``--formats=html`` and ``--output-dir output-html`` can be skipped because HTML export is a default export option and the default output folder is ``output``.
+
+StrictDoc does not detect .sdoc files in the output folder. This is based on the assumption that StrictDoc should not read anything in the output folder, which is intended for transient output artifacts.
 [/FREETEXT]
 
 [SECTION]

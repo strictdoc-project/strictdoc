@@ -48,11 +48,13 @@ class GrammarFormField:
         self,
         field_mid: str,
         field_name: str,
+        field_human_title: Optional[str],
         field_required: bool,
         reserved: bool,
     ):
         self.field_mid: str = field_mid
         self.field_name: str = field_name
+        self.field_human_title: Optional[str] = field_human_title
         self.field_required: bool = field_required
         self.reserved: bool = reserved
 
@@ -62,12 +64,16 @@ class GrammarFormField:
         return GrammarFormField(
             field_mid=grammar_field.mid,
             field_name=grammar_field.title,
+            field_human_title=grammar_field.human_title,
             field_required=grammar_field.required,
             reserved=reserved,
         )
 
     def get_input_field_name(self):
         return f"document_grammar_field[{self.field_mid}][field_name]"
+
+    def get_input_field_human_title(self):
+        return f"document_grammar_field[{self.field_mid}][field_human_title]"
 
 
 @auto_described
@@ -136,9 +142,15 @@ class GrammarElementFormObject(ErrorObject):
         document_grammar_fields = request_form_dict["document_grammar_field"]
         for field_mid, field_dict in document_grammar_fields.items():
             field_name = field_dict["field_name"]
+            field_human_title = field_dict.get("field_human_title")
+            if field_human_title is not None:
+                field_human_title = field_human_title.strip()
+                if len(field_human_title) == 0:
+                    field_human_title = None
             form_object_field = GrammarFormField(
                 field_mid=field_mid,
                 field_name=field_name,
+                field_human_title=field_human_title,
                 field_required=False,
                 reserved=is_reserved_field(field_name),
             )
@@ -295,7 +307,7 @@ class GrammarElementFormObject(ErrorObject):
             grammar_field = GrammarElementFieldString(
                 parent=None,
                 title=field.field_name,
-                human_title=None,
+                human_title=field.field_human_title,
                 required="True" if field.field_required else "False",
             )
             grammar_fields.append(grammar_field)
@@ -395,6 +407,7 @@ class GrammarElementFormObject(ErrorObject):
         field: GrammarFormField = GrammarFormField(
             field_mid=MID.create(),
             field_name="",
+            field_human_title=None,
             field_required=False,
             reserved=False,
         )

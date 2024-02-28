@@ -11,10 +11,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
-from strictdoc.backend.sdoc.models.node import (
-    SDocNode,
-    SDocNodeField,
-)
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
@@ -32,9 +29,7 @@ from strictdoc.core.traceability_index import (
     SDocNodeConnections,
     TraceabilityIndex,
 )
-from strictdoc.core.tree_cycle_detector import (
-    SingleShotTreeCycleDetector,
-)
+from strictdoc.core.tree_cycle_detector import SingleShotTreeCycleDetector
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
@@ -65,9 +60,9 @@ class RequirementFormField:
         assert isinstance(field_escaped_value, str)
         self.field_mid: str = field_mid
         self.field_name: str = field_name
-        self.field_type = field_type
         self.field_unescaped_value: str = field_unescaped_value
         self.field_escaped_value: str = field_escaped_value
+        self.field_type = field_type
 
     def is_singleline(self):
         return self.field_type == RequirementFormFieldType.SINGLELINE
@@ -103,9 +98,11 @@ class RequirementFormField:
             return RequirementFormField(
                 field_mid=MID.create(),
                 field_name=grammar_field.title,
-                field_type=RequirementFormFieldType.MULTILINE
-                if multiline
-                else RequirementFormFieldType.SINGLELINE,
+                field_type=(
+                    RequirementFormFieldType.MULTILINE
+                    if multiline
+                    else RequirementFormFieldType.SINGLELINE
+                ),
                 field_unescaped_value=value_unescaped,
                 field_escaped_value=value_escaped,
             )
@@ -128,9 +125,11 @@ class RequirementFormField:
             return RequirementFormField(
                 field_mid=MID.create(),
                 field_name=grammar_field.title,
-                field_type=RequirementFormFieldType.MULTILINE
-                if multiline
-                else RequirementFormFieldType.SINGLELINE,
+                field_type=(
+                    RequirementFormFieldType.MULTILINE
+                    if multiline
+                    else RequirementFormFieldType.SINGLELINE
+                ),
                 field_unescaped_value=field_value,
                 field_escaped_value=escaped_field_value,
             )
@@ -238,7 +237,6 @@ class RequirementFormObject(ErrorObject):
         requirement_dict = request_form_dict["requirement"]
 
         element_type = request_form_dict["element_type"]
-
         requirement_fields_dict = requirement_dict["fields"]
         for _, field_dict in requirement_fields_dict.items():
             field_name = field_dict["name"]
@@ -262,11 +260,15 @@ class RequirementFormObject(ErrorObject):
             field_type = (
                 RequirementReferenceFormField.FieldType.PARENT
                 if relation_type == "Parent"
-                else RequirementReferenceFormField.FieldType.CHILD
-                if relation_type == "Child"
-                else RequirementReferenceFormField.FieldType.FILE
-                if relation_type == "File"
-                else ""
+                else (
+                    RequirementReferenceFormField.FieldType.CHILD
+                    if relation_type == "Child"
+                    else (
+                        RequirementReferenceFormField.FieldType.FILE
+                        if relation_type == "File"
+                        else ""
+                    )
+                )
             )
             assert field_type in (
                 RequirementReferenceFormField.FieldType.PARENT,

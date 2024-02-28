@@ -519,8 +519,10 @@ The following ``DOCUMENT`` fields are allowed:
      - Current version of the document
 
    * - ``CLASSIFICATION``
-     - Security classification of the document, e.g. Public, Internal,
-       Restricted, Confidential
+     - Security classification of the document, e.g. Public, Internal, Restricted, Confidential
+
+   * - ``REQ_PREFIX``
+     - Requirement prefix that should be used for automatic generation of UIDs. See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID].
 
    * - ``ROOT``
      - Defines whether a document is a root object in a traceability graph. A root document is assumed to not have any parent requirements. The project statistics calculation will skip all root document's requirements when calculating the metric ``Non-root-level requirements not connected to any parent requirement``.
@@ -1888,6 +1890,7 @@ is generated this way, see the Invoke task:
 TITLE: Manage project tree
 
 [SECTION]
+UID: SECTION-UG-Automatic-assignment-of-requirements-UID
 TITLE: Automatic assignment of requirements UID
 
 [FREETEXT]

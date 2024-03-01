@@ -132,9 +132,9 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
         self.autouuid_include_sections: bool = False
 
-        self.config_last_update: Optional[
-            datetime.datetime
-        ] = config_last_update
+        self.config_last_update: Optional[datetime.datetime] = (
+            config_last_update
+        )
         self.is_running_on_server: bool = False
         self.view: Optional[str] = None
 
@@ -462,10 +462,10 @@ class ProjectConfigLoader:
                     )
                     sys.exit(1)
 
-            traceability_matrix_relation_columns_config: Optional[
-                List
-            ] = project_content.get(
-                "traceability_matrix_relation_columns", None
+            traceability_matrix_relation_columns_config: Optional[List] = (
+                project_content.get(
+                    "traceability_matrix_relation_columns", None
+                )
             )
             if traceability_matrix_relation_columns_config is not None:
                 assert isinstance(

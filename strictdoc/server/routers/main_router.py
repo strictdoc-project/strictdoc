@@ -271,9 +271,9 @@ def create_main_router(
         ), reference_mid
 
         section_form_object = SectionFormObject.create_new()
-        reference_node: Union[
-            SDocDocument, SDocSection
-        ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
+        reference_node: Union[SDocDocument, SDocSection] = (
+            export_action.traceability_index.get_node_by_mid(MID(reference_mid))
+        )
         document = (
             reference_node
             if isinstance(reference_node, SDocDocument)
@@ -344,9 +344,9 @@ def create_main_router(
             request_form_data=request_form_data,
         )
 
-        reference_node: Union[
-            SDocDocument, SDocSection
-        ] = export_action.traceability_index.get_node_by_mid(MID(reference_mid))
+        reference_node: Union[SDocDocument, SDocSection] = (
+            export_action.traceability_index.get_node_by_mid(MID(reference_mid))
+        )
         document = (
             reference_node
             if isinstance(reference_node, SDocDocument)
@@ -1378,9 +1378,9 @@ def create_main_router(
 
         export_action.traceability_index.delete_requirement(requirement)
 
-        requirement_parent: Union[
-            SDocSection, SDocDocument
-        ] = requirement.parent
+        requirement_parent: Union[SDocSection, SDocDocument] = (
+            requirement.parent
+        )
         requirement_parent.section_contents.remove(requirement)
         requirement.parent = None
 

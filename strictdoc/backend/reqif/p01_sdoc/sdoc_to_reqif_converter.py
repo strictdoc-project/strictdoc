@@ -485,9 +485,9 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                     if reference.ref_type != ReferenceType.PARENT:
                         continue
                     parent_references.append(reference.ref_uid)
-                    context.map_uid_to_parent_uids[
-                        requirement.reserved_uid
-                    ] = parent_references
+                    context.map_uid_to_parent_uids[requirement.reserved_uid] = (
+                        parent_references
+                    )
                 continue
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
@@ -519,9 +519,9 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                 for data_type in data_types:
                     if data_type_ref == data_type.identifier:
                         for data_type_value in data_type.values:
-                            data_type_lookup[
-                                data_type_value.key
-                            ] = data_type_value.identifier
+                            data_type_lookup[data_type_value.key] = (
+                                data_type_value.identifier
+                            )
 
                 field_values_refs = []
                 for field_value in field_values:

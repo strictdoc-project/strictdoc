@@ -125,19 +125,19 @@ class JSONGenerator:
                     )
 
                 if requirement_style is not None:
-                    document_dict[JSONKey.OPTIONS][
-                        "REQUIREMENT_STYLE"
-                    ] = requirement_style
+                    document_dict[JSONKey.OPTIONS]["REQUIREMENT_STYLE"] = (
+                        requirement_style
+                    )
 
                 if requirement_in_toc is not None:
-                    document_dict[JSONKey.OPTIONS][
-                        "REQUIREMENT_IN_TOC"
-                    ] = requirement_in_toc
+                    document_dict[JSONKey.OPTIONS]["REQUIREMENT_IN_TOC"] = (
+                        requirement_in_toc
+                    )
 
                 if default_view is not None:
-                    document_dict[JSONKey.OPTIONS][
-                        "DEFAULT_VIEW"
-                    ] = default_view
+                    document_dict[JSONKey.OPTIONS]["DEFAULT_VIEW"] = (
+                        default_view
+                    )
 
         """
         Grammar.

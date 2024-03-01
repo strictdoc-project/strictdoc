@@ -1,6 +1,7 @@
 target-version = "py37"
 line-length = 80
 
+[lint]
 select = [
   "A",
   "ARG",
@@ -43,7 +44,6 @@ select = [
   "W",
   "YTT",
 ]
-
 
 ignore = [
     # TBD: Unnecessary `list` comprehension (rewrite using `list()`)
@@ -88,7 +88,8 @@ ignore = [
 # Avoid trying to fix flake8-bugbear (`B`) violations.
 unfixable = ["B"]
 
-[per-file-ignores]
 # B008 Do not perform function calls in argument defaults.
 # The call is performed only once at function definition time.
+
+[lint.per-file-ignores]
 "strictdoc/server/routers/main_router.py" = ["B008"]

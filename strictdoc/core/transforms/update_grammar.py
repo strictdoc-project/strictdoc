@@ -42,9 +42,9 @@ class UpdateGrammarCommand:
 
         map_existing_elements_by_name: Dict[str, GrammarElement] = {}
         for grammar_element_ in document.grammar.elements:
-            map_existing_elements_by_name[
-                grammar_element_.tag
-            ] = grammar_element_
+            map_existing_elements_by_name[grammar_element_.tag] = (
+                grammar_element_
+            )
 
         updated_grammar_elements: List[GrammarElement] = []
         for form_element_name_ in form_element_names:

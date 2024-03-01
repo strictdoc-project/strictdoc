@@ -194,9 +194,9 @@ class ProjectTreeDiffStats:
             )
 
             if section.reserved_uid is not None:
-                other_section_or_none: Optional[
-                    SDocSection
-                ] = self.map_uid_to_nodes.get(section.reserved_uid)
+                other_section_or_none: Optional[SDocSection] = (
+                    self.map_uid_to_nodes.get(section.reserved_uid)
+                )
                 if other_section_or_none is not None:
                     other_section: SDocSection = assert_cast(
                         other_section_or_none, SDocSection
@@ -298,17 +298,17 @@ class ProjectTreeDiffStats:
                         candidate_requirements[other_requirement_] = 0
 
             for candidate_requirement_ in candidate_requirements.keys():
-                candidate_requirements[
-                    candidate_requirement_
-                ] = calculate_similarity(requirement, candidate_requirement_)
+                candidate_requirements[candidate_requirement_] = (
+                    calculate_similarity(requirement, candidate_requirement_)
+                )
 
             if len(candidate_requirements) > 0:
                 candidate_requirement = max(
                     candidate_requirements, key=candidate_requirements.get
                 )
-                self.cache_requirement_to_requirement[
-                    requirement
-                ] = candidate_requirement
+                self.cache_requirement_to_requirement[requirement] = (
+                    candidate_requirement
+                )
                 return candidate_requirement
             return None
 
@@ -536,9 +536,9 @@ class ChangeStats:
                         lhs_colored_free_text_diff=lhs_colored_free_text_diff,
                         rhs_colored_free_text_diff=rhs_colored_free_text_diff,
                     )
-                    change_stats.map_nodes_to_changes[
-                        document
-                    ] = document_change
+                    change_stats.map_nodes_to_changes[document] = (
+                        document_change
+                    )
                     if other_document_or_none is not None:
                         change_stats.map_nodes_to_changes[
                             other_document_or_none
@@ -720,10 +720,10 @@ class ChangeStats:
                     if not requirement_modified:
                         continue
 
-                    other_requirement_or_none: Optional[
-                        SDocNode
-                    ] = assert_optional_cast(
-                        other_stats.find_requirement(requirement), SDocNode
+                    other_requirement_or_none: Optional[SDocNode] = (
+                        assert_optional_cast(
+                            other_stats.find_requirement(requirement), SDocNode
+                        )
                     )
 
                     # If there is no other requirement to compare with,
@@ -745,9 +745,9 @@ class ChangeStats:
                                 rhs_requirement=rhs_requirement,
                             )
                         )
-                        change_stats.map_nodes_to_changes[
-                            node
-                        ] = requirement_change
+                        change_stats.map_nodes_to_changes[node] = (
+                            requirement_change
+                        )
                         change_stats.add_change(requirement_change)
                         continue
 
@@ -1112,9 +1112,9 @@ class ProjectDiffAnalyzer:
         map_nodes_to_hashers: Dict[Any, Any] = {document: hashlib.md5()}
 
         if document.mid_permanent:
-            document_tree_stats.map_mid_to_nodes[
-                document.reserved_mid
-            ] = document
+            document_tree_stats.map_mid_to_nodes[document.reserved_mid] = (
+                document
+            )
 
         document_tree_stats.map_rel_paths_to_docs[
             document.meta.input_doc_rel_path
@@ -1139,9 +1139,9 @@ class ProjectDiffAnalyzer:
 
             if isinstance(node, SDocSection):
                 if node.reserved_uid is not None:
-                    document_tree_stats.map_uid_to_nodes[
-                        node.reserved_uid
-                    ] = node
+                    document_tree_stats.map_uid_to_nodes[node.reserved_uid] = (
+                        node
+                    )
                 hasher = hashlib.md5()
                 hasher.update(node.title.encode("utf-8"))
                 if len(node.free_texts) > 0:
@@ -1149,18 +1149,18 @@ class ProjectDiffAnalyzer:
                     free_text_text = node.free_texts[0].get_parts_as_text()
                     free_text_md5 = get_md5(free_text_text)
                     document_tree_stats.free_text_md5_hashes.add(free_text_md5)
-                    document_tree_stats.map_nodes_to_hashes[
-                        free_text
-                    ] = free_text_md5
+                    document_tree_stats.map_nodes_to_hashes[free_text] = (
+                        free_text_md5
+                    )
 
                     hasher.update(free_text_text.encode("utf-8"))
                 map_nodes_to_hashers[node] = hasher
 
             elif isinstance(node, SDocNode):
                 if node.reserved_uid is not None:
-                    document_tree_stats.map_uid_to_nodes[
-                        node.reserved_uid
-                    ] = node
+                    document_tree_stats.map_uid_to_nodes[node.reserved_uid] = (
+                        node
+                    )
 
                 hasher = hashlib.md5()
                 for (

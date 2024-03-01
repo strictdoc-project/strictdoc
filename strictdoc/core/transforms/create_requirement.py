@@ -22,12 +22,12 @@ from strictdoc.helpers.mid import MID
 
 class CreateRequirementActionObject:
     def __init__(self):
-        self.existing_references_uids: Set[
-            Tuple[str, str, Optional[str]]
-        ] = set()
-        self.reference_ids_to_remove: Set[
-            Tuple[str, str, Optional[str]]
-        ] = set()
+        self.existing_references_uids: Set[Tuple[str, str, Optional[str]]] = (
+            set()
+        )
+        self.reference_ids_to_remove: Set[Tuple[str, str, Optional[str]]] = (
+            set()
+        )
         self.removed_uid_parent_documents_to_update: Set[SDocDocument] = set()
         # All requirements that have to be updated. This set includes
         # the requirement itself, all links it was linking to
@@ -66,9 +66,9 @@ class CreateRequirementTransform:
         document: SDocDocument = traceability_index.get_node_by_mid(
             MID(form_object.document_mid)
         )
-        reference_node: Union[
-            SDocDocument, SDocSection
-        ] = traceability_index.get_node_by_mid(MID(reference_mid))
+        reference_node: Union[SDocDocument, SDocSection] = (
+            traceability_index.get_node_by_mid(MID(reference_mid))
+        )
 
         if whereto == NodeCreationOrder.CHILD:
             parent = reference_node

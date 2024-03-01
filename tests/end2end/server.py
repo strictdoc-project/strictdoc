@@ -5,6 +5,7 @@ https://stackoverflow.com/a/4896288/598057
 TODO: Consider switching from subprocess to asyncio for starting a server...
 https://stackoverflow.com/a/68564737/598057
 """
+
 import datetime
 import os
 import shutil
@@ -126,9 +127,9 @@ class SDocTestServer:  # pylint: disable=too-many-instance-attributes
         self.log_file_err = None
         self.stderr_queue = Queue()
         self.exit_stack = ExitStack()
-        self.server_stderr_capture_thread: Optional[
-            ServerStderrReadThread
-        ] = None
+        self.server_stderr_capture_thread: Optional[ServerStderrReadThread] = (
+            None
+        )
         self.test_stderr_log_thread: Optional[TestStderrLogThread] = None
 
     def __enter__(self):

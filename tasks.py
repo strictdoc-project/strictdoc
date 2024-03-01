@@ -458,7 +458,7 @@ def lint_ruff(context):
         context,
         ToxEnvironment.CHECK,
         """
-            ruff . --fix --cache-dir build/ruff
+            ruff check . --fix --cache-dir build/ruff
         """,
     )
 

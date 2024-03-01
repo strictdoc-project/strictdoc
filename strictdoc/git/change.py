@@ -51,12 +51,12 @@ class DocumentChange:
         self.free_text_modified: bool = free_text_modified
         self.lhs_colored_title_diff: Optional[str] = lhs_colored_title_diff
         self.rhs_colored_title_diff: Optional[str] = rhs_colored_title_diff
-        self.lhs_colored_free_text_diff: Optional[
-            str
-        ] = lhs_colored_free_text_diff
-        self.rhs_colored_free_text_diff: Optional[
-            str
-        ] = rhs_colored_free_text_diff
+        self.lhs_colored_free_text_diff: Optional[str] = (
+            lhs_colored_free_text_diff
+        )
+        self.rhs_colored_free_text_diff: Optional[str] = (
+            rhs_colored_free_text_diff
+        )
 
         self.lhs_document: Optional[SDocDocument] = lhs_document
         self.rhs_document: Optional[SDocDocument] = rhs_document
@@ -110,12 +110,12 @@ class SectionChange:
         self.free_text_modified: bool = free_text_modified
         self.lhs_colored_title_diff: Optional[str] = lhs_colored_title_diff
         self.rhs_colored_title_diff: Optional[str] = rhs_colored_title_diff
-        self.lhs_colored_free_text_diff: Optional[
-            str
-        ] = lhs_colored_free_text_diff
-        self.rhs_colored_free_text_diff: Optional[
-            str
-        ] = rhs_colored_free_text_diff
+        self.lhs_colored_free_text_diff: Optional[str] = (
+            lhs_colored_free_text_diff
+        )
+        self.rhs_colored_free_text_diff: Optional[str] = (
+            rhs_colored_free_text_diff
+        )
 
         self.lhs_section: Optional[SDocSection] = lhs_section
         self.rhs_section: Optional[SDocSection] = rhs_section

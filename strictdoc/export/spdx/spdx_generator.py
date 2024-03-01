@@ -258,9 +258,9 @@ class SPDXGenerator:
                     ),
                 )
             )
-            spdx_container.map_spdx_ref_to_objects[
-                spdx_file.spdx_id
-            ] = spdx_file
+            spdx_container.map_spdx_ref_to_objects[spdx_file.spdx_id] = (
+                spdx_file
+            )
 
             document_iterator: DocumentCachingIterator = (
                 traceability_index.get_document_iterator(document_)
@@ -283,9 +283,9 @@ class SPDXGenerator:
                             node, document_bytes, spdx_file
                         )
                     )
-                    lookup_uid_to_requirement_snippet[
-                        node.reserved_uid
-                    ] = spdx_snippet
+                    lookup_uid_to_requirement_snippet[node.reserved_uid] = (
+                        spdx_snippet
+                    )
                     spdx_container.snippets.append(spdx_snippet)
                     spdx_container.map_spdx_ref_to_objects[
                         spdx_snippet.spdx_id
@@ -328,9 +328,9 @@ class SPDXGenerator:
                                 file_relation_, file_bytes
                             )
                         )
-                        lookup_file_name_to_spdx_file[
-                            path_to_file
-                        ] = source_spdx_file
+                        lookup_file_name_to_spdx_file[path_to_file] = (
+                            source_spdx_file
+                        )
                         spdx_container.map_spdx_ref_to_objects[
                             source_spdx_file.spdx_id
                         ] = source_spdx_file

@@ -20,12 +20,12 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 
 class UpdateRequirementActionObject:
     def __init__(self):
-        self.existing_references_uids: Set[
-            Tuple[str, str, Optional[str]]
-        ] = set()
-        self.reference_ids_to_remove: Set[
-            Tuple[str, str, Optional[str]]
-        ] = set()
+        self.existing_references_uids: Set[Tuple[str, str, Optional[str]]] = (
+            set()
+        )
+        self.reference_ids_to_remove: Set[Tuple[str, str, Optional[str]]] = (
+            set()
+        )
         self.removed_uid_parent_documents_to_update: Set[SDocDocument] = set()
         # All requirements that have to be updated. This set includes
         # the requirement itself, all links it was linking to

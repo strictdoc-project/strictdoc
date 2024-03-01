@@ -180,10 +180,10 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             document.section_contents.pop(0)
 
         for used_spec_object_type_id in used_spec_object_types_ids:
-            spec_object_type_or_none: Optional[
-                ReqIFSpecObjectType
-            ] = reqif_bundle.get_spec_object_type_by_ref(
-                ref=used_spec_object_type_id,
+            spec_object_type_or_none: Optional[ReqIFSpecObjectType] = (
+                reqif_bundle.get_spec_object_type_by_ref(
+                    ref=used_spec_object_type_id,
+                )
             )
             assert (
                 spec_object_type_or_none is not None
@@ -302,9 +302,9 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
         )
-        attribute_map: Dict[
-            str, SpecAttributeDefinition
-        ] = spec_object_type.attribute_map
+        attribute_map: Dict[str, SpecAttributeDefinition] = (
+            spec_object_type.attribute_map
+        )
         assert attribute_map is not None
         for attribute in spec_object.attributes:
             field_name_or_none: Optional[str] = attribute_map[
@@ -361,9 +361,9 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
         )
-        attribute_map: Dict[
-            str, SpecAttributeDefinition
-        ] = spec_object_type.attribute_map
+        attribute_map: Dict[str, SpecAttributeDefinition] = (
+            spec_object_type.attribute_map
+        )
 
         foreign_key_id_or_none: Optional[str] = None
         for attribute in spec_object.attributes:

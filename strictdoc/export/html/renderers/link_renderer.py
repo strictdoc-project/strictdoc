@@ -153,9 +153,9 @@ class LinkRenderer:
     ):
         assert isinstance(file_reference, FileReference), file_reference
 
-        document_or_none: Optional[
-            SDocDocument
-        ] = requirement.ng_document_reference.get_document()
+        document_or_none: Optional[SDocDocument] = (
+            requirement.ng_document_reference.get_document()
+        )
         assert document_or_none is not None
         document: SDocDocument = document_or_none
         path_prefix = document.meta.get_root_path_prefix()

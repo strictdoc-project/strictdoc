@@ -78,9 +78,9 @@ class UpdateSectionCommand:
                     errors["section_uid"].append(validation_error_.args[0])
             else:
                 if section.reserved_uid != form_object.section_uid:
-                    section_incoming_links: Optional[
-                        List[InlineLink]
-                    ] = traceability_index.get_section_incoming_links(section)
+                    section_incoming_links: Optional[List[InlineLink]] = (
+                        traceability_index.get_section_incoming_links(section)
+                    )
                     if (
                         section_incoming_links is not None
                         and len(section_incoming_links) > 0
@@ -173,9 +173,9 @@ class CreateSectionCommand:
         reference_mid = self.reference_mid
         traceability_index = self.traceability_index
 
-        reference_node: Union[
-            SDocDocument, SDocSection
-        ] = traceability_index.get_node_by_mid(MID(reference_mid))
+        reference_node: Union[SDocDocument, SDocSection] = (
+            traceability_index.get_node_by_mid(MID(reference_mid))
+        )
         document = (
             reference_node
             if isinstance(reference_node, SDocDocument)

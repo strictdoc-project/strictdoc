@@ -208,9 +208,9 @@ class RequirementFormObject(ErrorObject):
         for field in fields:
             fields_dict[field.field_name].append(field)
         self.fields: Dict[str, List[RequirementFormField]] = fields_dict
-        self.reference_fields: List[
-            RequirementReferenceFormField
-        ] = reference_fields
+        self.reference_fields: List[RequirementReferenceFormField] = (
+            reference_fields
+        )
         self.exiting_requirement_uid: Optional[str] = exiting_requirement_uid
         self.grammar: DocumentGrammar = grammar
         self.relation_types: List[str] = relation_types

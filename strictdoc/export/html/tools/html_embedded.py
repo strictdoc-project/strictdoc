@@ -90,9 +90,9 @@ class HTMLEmbedder:
                 continue
             output_dir = os.path.dirname(path)
             asset_path = os.path.join(output_dir, embeddable_tag.get_path())
-            tag.attrs[
-                embeddable_tag.get_attr()
-            ] = HTMLEmbedder._read_file_as_base64(asset_path)
+            tag.attrs[embeddable_tag.get_attr()] = (
+                HTMLEmbedder._read_file_as_base64(asset_path)
+            )
 
         output = str(soup)
         return output

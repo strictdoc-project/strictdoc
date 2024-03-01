@@ -76,9 +76,9 @@ class SDocNodeField:
 
         self.field_value: Optional[str] = field_value
 
-        self.field_value_references: Optional[
-            List[Reference]
-        ] = field_value_references
+        self.field_value_references: Optional[List[Reference]] = (
+            field_value_references
+        )
 
     def get_value(self):
         value = (
@@ -105,9 +105,9 @@ class SDocNode(SDocObject):
 
         references: List[Reference] = []
 
-        ordered_fields_lookup: OrderedDict[
-            str, List[SDocNodeField]
-        ] = OrderedDict()
+        ordered_fields_lookup: OrderedDict[str, List[SDocNodeField]] = (
+            OrderedDict()
+        )
 
         has_meta: bool = False
         uses_old_refs_field: bool = False
@@ -180,9 +180,9 @@ class SDocNode(SDocObject):
         # during TextX parsing and processing.
         self.fields_as_parsed = fields
 
-        self.ordered_fields_lookup: OrderedDict[
-            str, List[SDocNodeField]
-        ] = ordered_fields_lookup
+        self.ordered_fields_lookup: OrderedDict[str, List[SDocNodeField]] = (
+            ordered_fields_lookup
+        )
         self.ng_level: Optional[int] = None
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_line_start: Optional[int] = None
@@ -307,9 +307,9 @@ class SDocNode(SDocObject):
 
     @property
     def document(self) -> SDocDocument:
-        document: Optional[
-            SDocDocument
-        ] = self.ng_document_reference.get_document()
+        document: Optional[SDocDocument] = (
+            self.ng_document_reference.get_document()
+        )
         assert (
             document is not None
         ), "A valid requirement must always have a reference to the document."
@@ -569,14 +569,14 @@ class SDocNode(SDocObject):
 
         if field_name in self.ordered_fields_lookup:
             if len(self.ordered_fields_lookup[field_name]) > form_field_index:
-                self.ordered_fields_lookup[field_name][
-                    form_field_index
-                ] = SDocNodeField(
-                    self,
-                    field_name=field_name,
-                    field_value=field_value,
-                    field_value_multiline=field_value_multiline,
-                    field_value_references=field_value_references,
+                self.ordered_fields_lookup[field_name][form_field_index] = (
+                    SDocNodeField(
+                        self,
+                        field_name=field_name,
+                        field_value=field_value,
+                        field_value_multiline=field_value_multiline,
+                        field_value_references=field_value_references,
+                    )
                 )
             else:
                 self.ordered_fields_lookup[field_name].insert(
@@ -594,9 +594,9 @@ class SDocNode(SDocObject):
         new_ordered_fields_lookup = OrderedDict()
         for field_title in grammar_field_titles[:field_index]:
             if field_title in self.ordered_fields_lookup:
-                new_ordered_fields_lookup[
-                    field_title
-                ] = self.ordered_fields_lookup[field_title]
+                new_ordered_fields_lookup[field_title] = (
+                    self.ordered_fields_lookup[field_title]
+                )
         new_ordered_fields_lookup[field_name] = [
             SDocNodeField(
                 self,
@@ -609,9 +609,9 @@ class SDocNode(SDocObject):
         after_field_index = field_index + 1
         for field_title in grammar_field_titles[after_field_index:]:
             if field_title in self.ordered_fields_lookup:
-                new_ordered_fields_lookup[
-                    field_title
-                ] = self.ordered_fields_lookup[field_title]
+                new_ordered_fields_lookup[field_title] = (
+                    self.ordered_fields_lookup[field_title]
+                )
         self.ordered_fields_lookup = new_ordered_fields_lookup
         self._update_has_meta()
 

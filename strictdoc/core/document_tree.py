@@ -14,9 +14,9 @@ class DocumentTree:
         self.file_tree = file_tree
         self.document_list: List[SDocDocument] = document_list
         self.map_docs_by_paths = map_docs_by_paths
-        self.map_docs_by_rel_paths: Dict[
-            str, SDocDocument
-        ] = map_docs_by_rel_paths
+        self.map_docs_by_rel_paths: Dict[str, SDocDocument] = (
+            map_docs_by_rel_paths
+        )
         self.source_tree = None  # attached later.
 
     def __repr__(self):

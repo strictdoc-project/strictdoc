@@ -676,11 +676,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def update_with_anchor(self, anchor: Anchor):
         # By this time, we know that the validations have passed just before.
-        existing_anchor: Optional[
-            Anchor
-        ] = self.graph_database.get_link_value_weak(
-            link_type=GraphLinkType.UID_TO_NODE,
-            lhs_node=anchor.value,
+        existing_anchor: Optional[Anchor] = (
+            self.graph_database.get_link_value_weak(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=anchor.value,
+            )
         )
         if existing_anchor is not None:
             self.graph_database.delete_link(
@@ -995,9 +995,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                             )
 
     def validate_section_can_remove_uid(self, *, section: SDocSection):
-        section_incoming_links: Optional[
-            List[InlineLink]
-        ] = self.get_section_incoming_links(section)
+        section_incoming_links: Optional[List[InlineLink]] = (
+            self.get_section_incoming_links(section)
+        )
         if section_incoming_links is None or len(section_incoming_links) == 0:
             return
 

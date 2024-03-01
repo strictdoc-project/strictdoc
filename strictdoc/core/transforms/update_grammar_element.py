@@ -102,9 +102,9 @@ class UpdateGrammarElementCommand:
 
             # Rewrite requirement fields because some fields could have been
             # renamed.
-            new_ordered_fields_lookup: OrderedDict[
-                str, List[SDocNodeField]
-            ] = OrderedDict()
+            new_ordered_fields_lookup: OrderedDict[str, List[SDocNodeField]] = (
+                OrderedDict()
+            )
 
             for document_grammar_field_name in document_grammar_field_names:
                 # We need to find a previous field name in case the field was
@@ -118,15 +118,15 @@ class UpdateGrammarElementCommand:
                 if previous_field_name not in requirement_field_names:
                     continue
 
-                previous_fields: List[
-                    SDocNodeField
-                ] = requirement.ordered_fields_lookup[previous_field_name]
+                previous_fields: List[SDocNodeField] = (
+                    requirement.ordered_fields_lookup[previous_field_name]
+                )
                 for previous_field in previous_fields:
                     previous_field.field_name = document_grammar_field_name
 
-                new_ordered_fields_lookup[
-                    document_grammar_field_name
-                ] = previous_fields
+                new_ordered_fields_lookup[document_grammar_field_name] = (
+                    previous_fields
+                )
 
             registered_relation_types: Set[Tuple[str, Optional[str]]] = set()
             for relation in existing_requirement_element.relations:

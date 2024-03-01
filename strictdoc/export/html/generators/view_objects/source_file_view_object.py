@@ -32,9 +32,9 @@ class SourceFileViewObject:
         self.markup_renderer: MarkupRenderer = markup_renderer
         self.source_file: SourceFile = source_file
         self.pygments_styles: str = pygments_styles
-        self.pygmented_source_file_lines: List[
-            str
-        ] = pygmented_source_file_lines
+        self.pygmented_source_file_lines: List[str] = (
+            pygmented_source_file_lines
+        )
 
         self.standalone: bool = False
         self.document_tree_iterator: DocumentTreeIterator = (

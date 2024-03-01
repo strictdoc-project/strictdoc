@@ -97,6 +97,18 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_field_contains(
+        self,
+        field_name: str,
+        field_value: str,
+    ) -> None:
+        self.test_case.assert_element(
+            f"{self.node_xpath}"
+            f"//sdoc-requirement-field[@data-field-label='{field_name}']"
+            f"//*[contains(text(), '{field_value}')]",
+            by=By.XPATH,
+        )
+
     def assert_requirement_uid_contains(
         self,
         uid: str,

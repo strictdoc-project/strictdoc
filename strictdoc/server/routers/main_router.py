@@ -826,18 +826,18 @@ def create_main_router(
         document_mid: str = request_dict["document_mid"]
         reference_mid: str = request_dict["reference_mid"]
         whereto: str = request_dict["whereto"]
-
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
-        form_object = RequirementFormObject.create_from_request(
-            is_new=True,
-            requirement_mid=requirement_mid,
-            request_form_data=request_form_data,
-            document=document,
-            exiting_requirement_uid=None,
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_request(
+                is_new=True,
+                requirement_mid=requirement_mid,
+                request_form_data=request_form_data,
+                document=document,
+                exiting_requirement_uid=None,
+            )
         )
-
         form_object.validate(
             traceability_index=export_action.traceability_index,
             context_document=document,
@@ -1712,7 +1712,9 @@ def create_main_router(
         )
 
     @router.get("/actions/document/new_comment", response_class=Response)
-    def document__add_comment(requirement_mid: str, document_mid: str):
+    def document__add_comment(
+        requirement_mid: str, document_mid: str, element_type: str
+    ):
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1730,7 +1732,7 @@ def create_main_router(
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
                 is_new=False,
-                element_type="NOT_RELEVANT",
+                element_type=element_type,
                 requirement_mid=requirement_mid,
                 document_mid=document.reserved_mid,
                 mid_field=None,
@@ -1757,7 +1759,9 @@ def create_main_router(
         )
 
     @router.get("/actions/document/new_relation", response_class=Response)
-    def document__add_relation(requirement_mid: str, document_mid: str):
+    def document__add_relation(
+        requirement_mid: str, document_mid: str, element_type: str
+    ):
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1779,7 +1783,7 @@ def create_main_router(
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
                 is_new=False,
-                element_type="NOT_RELEVANT",
+                element_type=element_type,
                 requirement_mid=requirement_mid,
                 document_mid=document_mid,
                 mid_field=None,

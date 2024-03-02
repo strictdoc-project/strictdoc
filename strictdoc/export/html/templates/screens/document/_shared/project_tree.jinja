@@ -15,11 +15,9 @@
           <a
             href="{{ view_object.document.meta.get_root_path_prefix() }}/{{ document_.meta.get_html_doc_link() }}"
             class="tree_item"
-            {#
-              TODO: detect the current document
-              1) add [active]
-              2) and add data-testid="tree-document-item"
-            #}
+            {% if view_object.document == document_ %}
+            active="true"
+            {% endif %}
             data-folder="{{ folder_or_file.mount_folder() }}"
             data-testid="tree-document-link"
           >

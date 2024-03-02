@@ -142,7 +142,10 @@ class QueryObject:
         if isinstance(expression, NodeHasChildRequirementsExpression):
             return self._evaluate_node_has_child_requirements(node)
         if isinstance(expression, NodeIsRequirementExpression):
-            return isinstance(node, SDocNode)
+            return (
+                isinstance(node, SDocNode)
+                and node.requirement_type == "REQUIREMENT"
+            )
         if isinstance(expression, NodeIsSectionExpression):
             return isinstance(node, SDocSection)
         if isinstance(expression, NodeIsRootExpression):

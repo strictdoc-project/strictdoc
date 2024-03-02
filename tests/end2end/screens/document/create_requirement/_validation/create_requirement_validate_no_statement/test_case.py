@@ -41,7 +41,7 @@ class Test(E2ECase):
             # Nothing is entered into the STATEMENT field.
 
             form_edit_requirement.do_form_submit_and_catch_error(
-                "Requirement statement must not be empty."
+                "Node statement must not be empty."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

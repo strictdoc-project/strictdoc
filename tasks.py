@@ -837,7 +837,7 @@ def dot(context):
             python strictdoc/cli/main.py
                 export
                     --formats dot
-                    drafts/requirements
+                    .
         """,
     )
 

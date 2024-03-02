@@ -27,7 +27,7 @@ subgraph "cluster_legend" {
     width=7.0 height=1.0 fontsize=16 fontname="Arial"
     penwidth=1
     color=black
-    fillcolor="gray"
+    fillcolor="lightgray"
     style="filled"
     shape="diamond"
     pos="100,100"

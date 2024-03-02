@@ -37,7 +37,7 @@ class Test(E2ECase):
             form_edit_requirement.do_fill_in_field_title("Modified title")
             form_edit_requirement.do_clear_field("STATEMENT")
             form_edit_requirement.do_form_submit_and_catch_error(
-                "Requirement statement must not be empty."
+                "Node statement must not be empty."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

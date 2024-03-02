@@ -51,7 +51,7 @@ class Test(E2ECase):
 
             form_edit_requirement.do_form_submit_and_catch_error(
                 "The chosen UID must be unique. "
-                "Another requirement with this UID already exists: 'REQ-001'."
+                "Another node with this UID already exists: 'REQ-001'."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

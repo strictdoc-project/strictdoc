@@ -640,7 +640,7 @@ class RequirementFormObject(ErrorObject):
                     "UID",
                     (
                         "The chosen UID must be unique. "
-                        "Another requirement with this UID already exists: "
+                        "Another node with this UID already exists: "
                         f"'{requirement_uid}'."
                     ),
                 )
@@ -651,7 +651,7 @@ class RequirementFormObject(ErrorObject):
         if requirement_statement is None or len(requirement_statement) == 0:
             self.add_error(
                 "STATEMENT",
-                "Requirement statement must not be empty.",
+                "Node statement must not be empty.",
             )
         else:
             (

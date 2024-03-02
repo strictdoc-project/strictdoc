@@ -308,7 +308,7 @@ class RequirementFormObject(ErrorObject):
 
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
-        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
+        element: GrammarElement = grammar.elements_by_type[element_type]
         form_fields: List[RequirementFormField] = []
 
         fields_names = list(element.fields_map.keys())
@@ -590,7 +590,7 @@ class RequirementFormObject(ErrorObject):
     def enumerate_relation_roles(
         self, relation_field: RequirementReferenceFormField
     ):
-        requirement_element = self.grammar.elements_by_type["REQUIREMENT"]
+        requirement_element = self.grammar.elements_by_type[self.element_type]
         for relation_ in requirement_element.relations:
             is_current = (
                 relation_field.field_type == relation_.relation_type
@@ -739,7 +739,7 @@ class RequirementFormObject(ErrorObject):
                     )
                     target_grammar_element: GrammarElement = (
                         target_requirement.document.grammar.elements_by_type[
-                            "REQUIREMENT"
+                            self.element_type
                         ]
                     )
                     field_role_or_none = (

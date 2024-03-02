@@ -302,7 +302,7 @@ class DocumentDotGenerator:
             if requirement_.reserved_status is None:
                 return "#87CEEB", "filled,rounded,dashed", "box", "\\l"
             if requirement_.reserved_status == "Draft":
-                return "gray", "filled", "diamond", ""
+                return "lightgray", "filled", "diamond", ""
             if requirement_.reserved_status == "Backlog":
                 return "lightgray", "filled,rounded,dashed", "box", "\\l"
             if requirement_.reserved_status == "Progress":

@@ -17,6 +17,15 @@
 
 {% block row_content scoped %}
   <sdoc-form-field-group data-field-label="Relation:">
+
+  {%- if form_object.errors|length > 0 -%}
+    {%- for error_ in form_object.errors -%}
+    <sdoc-form-error>
+      {{ error_ }}
+    </sdoc-form-error>
+    {%- endfor -%}
+  {%- endif -%}
+
   {% if
     form_object.relation.relation_type == "Parent"
     or
@@ -51,6 +60,7 @@
     {%- with
       field_class_name = "monospace",
       field_editable = true,
+      field_required = false,
       field_input_name = form_object.relation.relation_role_input_name(),
       field_label = "Relation role:",
       field_placeholder = "Enter relation role here...",

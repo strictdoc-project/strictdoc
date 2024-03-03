@@ -11,8 +11,13 @@
 {%- assert mid is defined, "mid is defined" -%}
 {%- assert testid_postfix is defined, "testid_postfix is defined" -%}
 
+{% if field_required is not defined -%}
+{% set field_required=false -%}
+{%- endif -%}
+
 <sdoc-form-field>
   <sdoc-contenteditable
+    {% if field_required %}required{% endif %}
     data-controller="editablefield"
     role="textbox"
     data-field-type="{{ field_type }}"
@@ -24,7 +29,7 @@
     id="{{ field_input_name }}"
     mid="{{ mid }}"
     placeholder="{{ field_placeholder }}"
-    data-field-label="{{ field_label }}"
+    data-field-label="{{ field_label }}{% if field_required %} *{% endif %}"
     {%- if field_class_name is not none -%}
       class="{{ field_class_name }}"
     {%- endif -%}
@@ -32,13 +37,13 @@
   >
     {{- field_value -}}
   </sdoc-contenteditable>
-  
+
   {%- if field_type == "singleline" -%}
-    <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+    <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %}/>
   {%- endif -%}
 
   {%- if field_type == "multiline" -%}
-    <textarea hidden name="{{ field_input_name }}">
+    <textarea hidden name="{{ field_input_name }}" {% if field_required %}required{% endif %}>
       {{- field_value -}}
     </textarea>
   {%- endif -%}

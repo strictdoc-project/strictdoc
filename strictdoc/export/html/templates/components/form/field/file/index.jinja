@@ -24,11 +24,12 @@
       {%- endfor -%}
     {%- endif -%}
 
-    <sdoc-form-field>
+    <sdoc-form-field {% if field_required %}required{% endif %}>
         <label for="{{ field_input_name }}">
-          {{ field_label|default('Choose a file', true) }}
+          {{ field_label|default('Choose a file', true) }}{% if field_required %} *{% endif %}
         </label>
         <input
+          {% if field_required %}required{% endif %}
           type="file"
           name="{{ field_input_name }}"
           id="{{ field_input_name }}"

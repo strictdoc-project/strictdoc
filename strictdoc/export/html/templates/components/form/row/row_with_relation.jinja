@@ -25,6 +25,15 @@
 {% block row_content scoped %}
 
 <sdoc-form-field-group data-field-label="">
+
+  {%- if form_object.errors|length > 0 -%}
+    {%- for error_ in form_object.errors -%}
+    <sdoc-form-error>
+      {{ error_ }}
+    </sdoc-form-error>
+    {%- endfor -%}
+  {%- endif -%}
+
   {# FIXME: #}
   {% if relation_row_context.field.field_type == "File" %}
     <div style="color: orange; margin-top: calc(var(--base-rhythm) * (-3)); font-size: 0.75em;">

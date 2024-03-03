@@ -191,21 +191,6 @@ sdoc-form-row-aside [data-action-type="move_down"] {
   color: var(--color-blue);
 }
 
-sdoc-form-error {
-  display: block;
-  color: var(--color-danger);
-  font-size: 12px;
-  /*
-    set 'order' to be displayed after any other items,
-    in the context of <sdoc-form-row-main> using flex:
-  */
-  order: 11;
-}
-
-sdoc-form-error + sdoc-form-error {
-  margin-top: var(--base-rhythm);
-}
-
 sdoc-form-row [data-action-type="add_field"]:only-child {
   /*
     It is expected to be a button (.action_button)
@@ -281,6 +266,10 @@ sdoc-form-field-group {
   flex-direction: row;
   flex-wrap: wrap;
 
+  padding: var(--base-rhythm);
+  border: var(--base-border);
+  border-radius: var(--base-rhythm);
+
   gap: calc(var(--base-rhythm)*3); /* label (2) + 1 */
   padding-top: calc(var(--base-rhythm)*3); /* related to column gap */
   padding-bottom: calc(var(--base-rhythm)*1);
@@ -297,8 +286,10 @@ sdoc-form-field-group::before {
   font-weight: 500;
   color: var(--color-placeholder);
   text-transform: uppercase;
-  top: calc(var(--base-rhythm)*(-2.25));
-  left: 0;
+  top: calc(var(--base-rhythm)*(-1.25));
+  right: var(--base-rhythm);
+  padding: 0 var(--base-rhythm);
+  background: var(--color-bg-contrast);
   transition: color .2s ease;
 }
 
@@ -352,11 +343,6 @@ sdoc-contenteditable::before {
 sdoc-form-field:focus-within label,
 sdoc-contenteditable:focus::before {
   color: var(--color-fg-accent);
-}
-
-sdoc-form-error + sdoc-form-field label,
-sdoc-form-error + sdoc-form-field sdoc-contenteditable::before {
-  color: var(--color-danger);
 }
 
 /* sdoc-form-field select */
@@ -594,6 +580,32 @@ sdoc-form[search] form {
 
 sdoc-form[search][success] {
   border-bottom: 1px solid var(--color-border);
+}
+
+sdoc-form-error {
+  display: block;
+  color: var(--color-danger);
+  font-size: 12px;
+  /*
+    set 'order' to be displayed after any other items,
+    in the context of <sdoc-form-row-main> using flex:
+  */
+  order: 11;
+}
+
+sdoc-form-error + sdoc-form-error {
+  margin-top: var(--base-rhythm);
+}
+
+sdoc-form-error + sdoc-form-field-group {
+  border-color: var(--color-danger);
+}
+
+sdoc-form-error + sdoc-form-field-group > label,
+sdoc-form-error + sdoc-form-field-group::before,
+sdoc-form-error + sdoc-form-field > label,
+sdoc-form-error + sdoc-form-field sdoc-contenteditable::before {
+  color: var(--color-danger);
 }
 
 .sdoc-form-error,

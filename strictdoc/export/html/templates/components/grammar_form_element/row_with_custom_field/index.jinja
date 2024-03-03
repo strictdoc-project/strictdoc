@@ -27,26 +27,57 @@
 {% endblock row_left %}
 
 {% block row_content scoped %}
+<sdoc-form-field-group data-field-label="Custom field">
+
+  {%- if form_object.errors|length > 0 -%}
+    {%- for error_ in form_object.errors -%}
+    <sdoc-form-error>
+      {{ error_ }}
+    </sdoc-form-error>
+    {%- endfor -%}
+  {%- endif -%}
+
+    {# {%- set errors_ = form_object.get_errors(form_object.field.field_name) %} #}
+    {%- if form_object.errors|length > 0 -%}
+      {%- for error in form_object.errors -%}
+      <sdoc-form-error>
+        {{ error }}
+      </sdoc-form-error>
+      {%- endfor -%}
+    {%- endif -%}
 
   {%- set placeholder_name = form_object.field.field_name|default('custom field name', true) %}
-  {%- set human_title = form_object.field.field_human_title if form_object.field.field_human_title else "" -%}
+  {# field_placeholder = "Enter "~placeholder_name~" here...", #}
   {%- with
     field_class_name = "monospace",
     field_editable = true,
+    field_required = form_object.field.field_required,
     field_input_name = form_object.field.get_input_field_name(),
-    field_input_human_title = form_object.field.get_input_field_human_title(),
-    field_label = "Custom field",
-    field_placeholder = "Enter "~placeholder_name~" here...",
+    field_label = "Field name",
+    field_placeholder = "Enter field name here...",
     field_type = "singleline",
     field_value = form_object.field.field_name,
-    field_human_title = human_title,
     mid = form_object.field.field_mid,
-    testid_postfix = "custom-field",
-    testid_human_title_postfix = "human-title"
+    testid_postfix = "reserved_field_name"
   %}
-  {%- include "components/form/field/contenteditable/field_with_human_title.jinja" %}
+    {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}
-
+  {%- set human_title_value = form_object.field.field_human_title if form_object.field.field_human_title else "" -%}
+  {%- with
+    field_class_name = "monospace",
+    field_editable = true,
+    field_required = false,
+    field_input_name = form_object.field.get_input_field_human_title(),
+    field_label = "Field human name",
+    field_placeholder = "Enter human readable field name here...",
+    field_type = "singleline",
+    field_value = human_title_value,
+    mid = form_object.field.field_mid,
+    testid_postfix = "reserved_field_human_title"
+  %}
+    {%- include "components/form/field/contenteditable/index.jinja" %}
+  {%- endwith -%}
+</sdoc-form-field-group>
 {% endblock row_content %}
 
 {% block row_right %}

@@ -2,7 +2,15 @@
 {% set form = "sdoc_modal_form" %}
 {% block modal__context %}form{% endblock modal__context %}
 {% block modal_form__header %}
-Edit document grammar
+<turbo-frame>
+  <a
+    href="/actions/document/edit_grammar?document_mid={{ form_object.document_mid }}"
+    data-testid="back-link-grammar-element"
+    class="sdoc-modal-header-back-button"
+    data-turbo="true"
+    data-turbo-action="replace"
+  >←</a>Edit grammar element: {{ form_object.element_name }}
+</turbo-frame>
 {% endblock modal_form__header %}
 {% block modal_form__content %}
   <form

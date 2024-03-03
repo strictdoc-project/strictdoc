@@ -18,6 +18,11 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def do_click_back_to_element_list(self) -> None:
+        self.test_case.click_xpath(
+            "//a[@data-testid='back-link-grammar-element']"
+        )
+
     def get_existing_mid_by_field_name(self, field_name: str) -> MID:
         xpath = f"//*[@data-testid='form-field-custom-field' and text() = '{field_name}']"
         element = self.test_case.find_element(xpath)

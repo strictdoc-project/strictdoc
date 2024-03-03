@@ -104,6 +104,7 @@ class GrammarElementFormObject(ErrorObject):
         *,
         document_mid: str,
         element_mid: str,
+        element_name: str,
         fields: List[GrammarFormField],
         relations: List[GrammarFormRelation],
         project_config: ProjectConfig,
@@ -113,6 +114,7 @@ class GrammarElementFormObject(ErrorObject):
         super().__init__()
         self.document_mid = document_mid
         self.element_mid: str = element_mid
+        self.element_name: str = element_name
         self.fields: List[GrammarFormField] = fields
         self.relations: List[GrammarFormRelation] = relations
         self.project_config: ProjectConfig = project_config
@@ -121,7 +123,7 @@ class GrammarElementFormObject(ErrorObject):
     @staticmethod
     def create_from_request(
         *,
-        document_mid: str,
+        document: SDocDocument,
         request_form_data: FormData,
         project_config: ProjectConfig,
         jinja_environment: Environment,
@@ -170,9 +172,14 @@ class GrammarElementFormObject(ErrorObject):
             )
             form_object_relations.append(form_object_relation)
 
+        element: GrammarElement = document.grammar.get_element_by_mid(
+            element_mid
+        )
+
         form_object = GrammarElementFormObject(
-            document_mid=document_mid,
+            document_mid=document.reserved_mid,
             element_mid=element_mid,
+            element_name=element.tag,
             fields=form_object_fields,
             relations=form_object_relations,
             project_config=project_config,
@@ -216,6 +223,7 @@ class GrammarElementFormObject(ErrorObject):
         return GrammarElementFormObject(
             document_mid=document.reserved_mid,
             element_mid=element_mid,
+            element_name=element.tag,
             fields=grammar_form_fields,
             relations=grammar_form_relations,
             project_config=project_config,

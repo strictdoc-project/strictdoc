@@ -159,6 +159,12 @@ a.action_button:hover {
   color: var(--color-submit);
 }
 
+[data-action-type="action"],
+[data-action-type="confirm_delete"] {
+  color: var(--color-action) !important;
+  border-color: var(--color-action) !important;
+}
+
 [data-action-type="delete"],
 [data-action-type="confirm_delete"] {
   color: var(--color-danger) !important;
@@ -254,6 +260,74 @@ sdoc-node-controls .action_button {
   border-radius: 20% !important;
 
   vertical-align: top;
+}
+
+/* field_action */
+/* TODO: optimize code with .action_icon & .action_button */
+
+.field_action {  /* button */
+  font-size:var(--font-size-xsm);
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  backface-visibility: hidden;
+  user-select: none;
+  cursor: pointer;
+  appearance: none;
+  border: none;
+  border-color: transparent;
+  background-color: rgba(0,0,0,0);
+  background: rgba(0,0,0,0);
+  box-shadow: none;
+  background-clip: padding-box;
+
+  color: var(--color-action);
+  transition: 0.2s;
+  padding: calc(var(--base-rhythm)*.5);
+  z-index: 2;
+}
+
+.field_action:hover,
+a.field_action:hover {
+  color: var(--color-hover);
+  z-index: 6;
+}
+
+.field_action::before {
+  content: '';
+  position: absolute;
+  /* The element is expected to be placed in a context
+     that defines the top and bottom boundaries.
+
+     The width of the element must be enough
+     to cover the entire available context,
+     and will be cut off by the parent element via overflow.
+  */
+  /* top: 0; */
+  top: calc(var(--base-rhythm)*(-3));
+  bottom: 0;
+  left: -100vw;
+  right: -100vw;
+  z-index: 0;
+  pointer-events: none;
+  /* Determines the shade of the color through the opacity of the element.
+     The color is passed from the parent.
+  */
+  transition: background-color 0.3s;
+  background-color: transparent;
+  opacity: .1; /* Defines the color shade. */
+}
+
+.field_action:hover::before {
+  background: currentcolor;
 }
 
 /* ***

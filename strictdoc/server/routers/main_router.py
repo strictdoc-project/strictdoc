@@ -2140,7 +2140,7 @@ def create_main_router(
         )
         form_object: GrammarElementFormObject = (
             GrammarElementFormObject.create_from_request(
-                document_mid=document_mid,
+                document=document,
                 request_form_data=request_form_data,
                 project_config=project_config,
                 jinja_environment=env(),
@@ -2236,6 +2236,7 @@ def create_main_router(
         form_object: GrammarElementFormObject = GrammarElementFormObject(
             document_mid=document_mid,
             element_mid="NOT_RELEVANT",
+            element_name="NOT_RELEVANT",
             fields=[],  # Not used in this limited partial template.
             relations=[],  # Not used in this limited partial template.
             project_config=project_config,
@@ -2256,6 +2257,7 @@ def create_main_router(
         form_object = GrammarElementFormObject(
             document_mid=document_mid,
             element_mid="NOT_RELEVANT",
+            element_name="NOT_RELEVANT",
             fields=[],  # Not used in this limited partial template.
             relations=[],  # Not used in this limited partial template.
             project_config=project_config,

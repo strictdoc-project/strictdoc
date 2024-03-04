@@ -1,9 +1,6 @@
-from collections import OrderedDict
-
-
 class ErrorObject:
     def __init__(self):
-        self.errors = OrderedDict()
+        self.errors = {}
 
     def any_errors(self):
         return len(self.errors)

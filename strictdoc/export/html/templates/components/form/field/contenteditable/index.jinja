@@ -16,6 +16,13 @@
 {%- endif -%}
 
 <sdoc-form-field>
+  {%- if errors is defined and errors|length > 0 -%}
+    {%- for error_ in errors -%}
+    <sdoc-form-error>
+      {{ error_ }}
+    </sdoc-form-error>
+    {%- endfor -%}
+  {%- endif -%}
   <sdoc-contenteditable
     {% if field_required %}required{% endif %}
     data-controller="editablefield"

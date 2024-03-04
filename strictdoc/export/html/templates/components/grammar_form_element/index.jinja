@@ -36,9 +36,9 @@
           {%- for field_ in form_object.fields -%}
             {%- if field_.field_name != "REFS" -%}
               {%- if field_.reserved -%}
-                {{ form_object.render_row_with_reserved_field(field_, form_object.get_errors(field_.field_name)) }}
+                {{ form_object.render_row_with_reserved_field(field_) }}
               {%- else -%}
-                {{ form_object.render_row_with_custom_field(field_, form_object.get_errors(field_.field_name)) }}
+                {{ form_object.render_row_with_custom_field(field_) }}
               {%- endif -%}
             {%- endif -%}
           {%- endfor -%}
@@ -70,14 +70,14 @@
           {%- set errors_ = form_object.get_errors("Relations_Row") %}
           {%- if errors_|length > 0 -%}
             {%- for error_ in errors_ -%}
-            <sdoc-form-error>
+            <sdoc-form-error>(before ROW in grammar-form-element ("Relations_Row"))<br>
               {{ error_ }}
             </sdoc-form-error>
             {%- endfor -%}
           {%- endif -%}
 
           {%- for relation_ in form_object.relations -%}
-            {{ form_object.render_row_with_relation(relation_, form_object.get_errors(relation_.relation_mid)) }}
+            {{ form_object.render_row_with_relation(relation_) }}
           {%- endfor -%}
         </div>
       </sdoc-form-grid>

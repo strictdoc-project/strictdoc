@@ -24,7 +24,7 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
         )
 
     def get_existing_mid_by_field_name(self, field_name: str) -> MID:
-        xpath = f"//*[@data-testid='form-field-custom-field' and text() = '{field_name}']"
+        xpath = f"//*[@data-testid='form-field-reserved_field_name' and text() = '{field_name}']"
         element = self.test_case.find_element(xpath)
         element_mid = element.get_attribute("mid")
         return MID(element_mid)
@@ -39,7 +39,9 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
         return MID(element_mid)
 
     def do_add_grammar_field(self) -> MID:
-        any_grammar_field_xpath = "//*[@data-testid='form-field-custom-field']"
+        any_grammar_field_xpath = (
+            "//*[@data-testid='form-field-reserved_field_name']"
+        )
         grammar_fields_number = len(
             self.test_case.find_elements(any_grammar_field_xpath, by=By.XPATH)
         )
@@ -76,14 +78,18 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
     def do_fill_in_grammar_field_mid(self, mid: MID, field_value: str) -> None:
         assert isinstance(mid, MID)
         assert isinstance(field_value, str)
-        super().do_fill_in_mid(mid, "form-field-custom-field", field_value)
+        super().do_fill_in_mid(
+            mid, "form-field-reserved_field_name", field_value
+        )
 
     def do_fill_in_grammar_field_human_title_mid(
         self, mid: MID, field_value: str
     ) -> None:
         assert isinstance(mid, MID)
         assert isinstance(field_value, str)
-        super().do_fill_in_mid(mid, "form-field-human-title", field_value)
+        super().do_fill_in_mid(
+            mid, "form-field-reserved_field_human_title", field_value
+        )
 
     def do_select_grammar_relation_type(self, mid, relation_type):
         assert isinstance(mid, MID)

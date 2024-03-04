@@ -18,13 +18,13 @@
 {% block row_content scoped %}
   <sdoc-form-field-group data-field-label="Relation:">
 
-  {%- if form_object.errors|length > 0 -%}
-    {%- for error_ in form_object.errors -%}
-    <sdoc-form-error>
-      {{ error_ }}
-    </sdoc-form-error>
-    {%- endfor -%}
-  {%- endif -%}
+{#  {%- if form_object.errors|length > 0 -%}#}
+{#    {%- for error_, error_msg_ in form_object.errors.items() -%}#}
+{#    <sdoc-form-error>(ROW // in GROUP)<br>#}
+{#      {{ error_ }} {{ error_msg_ }}#}
+{#    </sdoc-form-error>#}
+{#    {%- endfor -%}#}
+{#  {%- endif -%}#}
 
   {% if
     form_object.relation.relation_type == "Parent"
@@ -33,6 +33,15 @@
     or
     form_object.relation.relation_type == "File"
   -%}
+    {% set relation_type_errors = form_object.get_errors(form_object.relation.relation_type_input_name()) -%}
+    {%- if relation_type_errors|length > 0 -%}
+      {%- for error_ in relation_type_errors -%}
+      <sdoc-form-error>
+        {{ error_ }}
+      </sdoc-form-error>
+      {%- endfor -%}
+    {%- endif -%}
+
     <sdoc-form-field field-type="select">
       <label for="relation_type_{{ form_object.relation.relation_mid }}">Relation type</label>
         <select
@@ -67,7 +76,8 @@
       field_type = "singleline",
       field_value = form_object.relation.relation_role,
       mid = form_object.relation.relation_mid,
-      testid_postfix = "relation-role"
+      testid_postfix = "relation-role",
+      errors=form_object.get_errors(form_object.relation.relation_role_input_name())
     %}
       {%- include "components/form/field/contenteditable/index.jinja" %}
     {%- endwith -%}

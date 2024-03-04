@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any, Dict, List
 
 from jinja2 import Environment, Template
 
@@ -7,7 +7,7 @@ from jinja2 import Environment, Template
 @dataclass
 class RowWithReservedFieldFormObject:
     field: Any
-    errors: List[str]
+    errors: Dict[str, List]
     jinja_environment: Environment
 
     def __post_init__(self):
@@ -22,11 +22,14 @@ class RowWithReservedFieldFormObject:
         rendered_template = template.render(form_object=self)
         return rendered_template
 
+    def get_errors(self, field_name) -> List:
+        return self.errors.get(field_name, [])
+
 
 @dataclass
 class RowWithCustomFieldFormObject:
     field: Any
-    errors: List[str]
+    errors: Dict[str, List]
     jinja_environment: Environment
 
     def __post_init__(self):
@@ -42,11 +45,14 @@ class RowWithCustomFieldFormObject:
         rendered_template = template.render(form_object=self)
         return rendered_template
 
+    def get_errors(self, field_name) -> List:
+        return self.errors.get(field_name, [])
+
 
 @dataclass
 class RowWithRelationFormObject:
     relation: Any
-    errors: List[str]
+    errors: Dict[str, List]
     jinja_environment: Environment
 
     def __post_init__(self):
@@ -61,3 +67,6 @@ class RowWithRelationFormObject:
         )
         rendered_template = template.render(form_object=self)
         return rendered_template
+
+    def get_errors(self, field_name) -> List:
+        return self.errors.get(field_name, [])

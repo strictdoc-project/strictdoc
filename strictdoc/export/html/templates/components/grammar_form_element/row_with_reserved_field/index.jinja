@@ -15,15 +15,6 @@
 {% block row_content scoped %}
 <sdoc-form-field-group data-field-label="Reserved field">
 
-    {# {%- set errors_ = form_object.get_errors(form_object.field.field_name) %} #}
-  {%- if form_object.errors|length > 0 -%}
-    {%- for error_ in form_object.errors -%}
-    <sdoc-form-error>
-      {{ error_ }}
-    </sdoc-form-error>
-    {%- endfor -%}
-  {%- endif -%}
-
   {%- with
     field_class_name = "monospace",
     field_editable = false,
@@ -34,7 +25,8 @@
     field_type = "singleline",
     field_value = form_object.field.field_name,
     mid = form_object.field.field_mid,
-    testid_postfix = "reserved_field_name"
+    testid_postfix = "reserved_field_name",
+    errors=form_object.get_errors(form_object.field.get_input_field_name())
   %}
     {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}
@@ -49,7 +41,8 @@
     field_type = "singleline",
     field_value = human_title_value,
     mid = form_object.field.field_mid,
-    testid_postfix = "reserved_field_human_title"
+    testid_postfix = "reserved_field_human_title",
+    errors=form_object.get_errors(form_object.field.get_input_field_human_title())
   %}
     {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}

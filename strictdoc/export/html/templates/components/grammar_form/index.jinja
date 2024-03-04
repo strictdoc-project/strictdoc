@@ -17,7 +17,7 @@ Edit document grammar
     <sdoc-form-grid>
       <div style="display: contents;" id="document__editable_grammar_elements">
         {%- for field_ in form_object.fields -%}
-          {{ form_object.render_row_with_grammar_element(field_, form_object.get_errors(field_.field_mid)) }}
+          {{ form_object.render_row_with_grammar_element(field_) }}
         {%- endfor -%}
       </div>
     </sdoc-form-grid>

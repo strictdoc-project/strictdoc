@@ -838,7 +838,7 @@ svg:hover .svg_icon_not_hover_visible {
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: var(--font-size-sm);
-  font-weight: 900;
+  font-weight: 700;
 
   flex-shrink: 0.1;
 }
@@ -848,7 +848,7 @@ svg:hover .svg_icon_not_hover_visible {
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-weight: 400;
   min-width: calc(var(--base-rhythm)*2.5);
 
   flex-shrink: 100;

@@ -1257,7 +1257,7 @@ a.tree_item:hover {
 }
 
 /* TOC parented */
-/* behavior depends on collapsible_list_controller.js */
+/* behavior depends on collapsible_list.js */
 .toc [data-collapsible_list__branch="closed"] ~ a[parented]::after {
   background-color: var(--color-highlight);
 }

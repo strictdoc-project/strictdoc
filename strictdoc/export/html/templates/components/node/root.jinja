@@ -20,6 +20,13 @@
     data-testid="node-root"
   >
 
+    {#
+      copy_to_clipboard must be defined befor sdoc_entity block,
+      and define them in node components that have editing options:
+      node & root
+    #}
+    {%- set copy_to_clipboard = True -%}
+
     {# sdoc_entity #}
     {% block sdoc_entity %}
     {% endblock sdoc_entity %}

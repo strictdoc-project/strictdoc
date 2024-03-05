@@ -10,6 +10,7 @@
   <script type="text/javascript" src="{{ view_object.render_static_url('viewtype_menu.js') }}"></script>
   {%- endif -%}
   <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('collapsible_list.js') }}"></script>
   <script type="text/javascript" src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
 
   {%- if view_object.is_running_on_server and not view_object.standalone -%}
@@ -20,7 +21,6 @@
     window.Controller = Controller;
   </script>
   <script type="module" src="{{ view_object.render_static_url('controllers/anchor_controller.js') }}"></script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/collapsible_list_controller.js') }}"></script>
   <script type="module" src="{{ view_object.render_static_url('controllers/draggable_list_controller.js') }}"></script>
   <script type="module" src="{{ view_object.render_static_url('controllers/dropdown_menu_controller.js') }}"></script>
   <script type="module" src="{{ view_object.render_static_url('controllers/editable_field_controller.js') }}"></script>

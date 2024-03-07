@@ -24,7 +24,12 @@
 
 {% block row_content scoped %}
 
-<sdoc-form-field-group data-field-label="">
+<sdoc-form-field-group
+  data-field-label="Node relation"
+  {% if form_object.errors|length -%}
+    errors="true"
+  {%- endif -%}
+>
 
   {%- if form_object.errors|length > 0 -%}
     {%- for error_ in form_object.errors -%}

@@ -16,15 +16,14 @@
 {% endblock row_left %}
 
 {% block row_content scoped %}
-  <sdoc-form-field-group data-field-label="Relation:">
 
-{#  {%- if form_object.errors|length > 0 -%}#}
-{#    {%- for error_, error_msg_ in form_object.errors.items() -%}#}
-{#    <sdoc-form-error>(ROW // in GROUP)<br>#}
-{#      {{ error_ }} {{ error_msg_ }}#}
-{#    </sdoc-form-error>#}
-{#    {%- endfor -%}#}
-{#  {%- endif -%}#}
+  {% set relation_type_errors = form_object.get_errors(form_object.relation.relation_type_input_name()) -%}
+  <sdoc-form-field-group
+    data-field-label="Relation"
+    {% if relation_type_errors|length -%}
+      errors="true"
+    {%- endif -%}
+  >
 
   {% if
     form_object.relation.relation_type == "Parent"
@@ -33,7 +32,7 @@
     or
     form_object.relation.relation_type == "File"
   -%}
-    {% set relation_type_errors = form_object.get_errors(form_object.relation.relation_type_input_name()) -%}
+
     {%- if relation_type_errors|length > 0 -%}
       {%- for error_ in relation_type_errors -%}
       <sdoc-form-error>

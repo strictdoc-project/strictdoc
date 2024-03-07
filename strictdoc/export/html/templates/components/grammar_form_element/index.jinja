@@ -70,7 +70,7 @@
           {%- set errors_ = form_object.get_errors("Relations_Row") %}
           {%- if errors_|length > 0 -%}
             {%- for error_ in errors_ -%}
-            <sdoc-form-error>(before ROW in grammar-form-element ("Relations_Row"))<br>
+            <sdoc-form-error>
               {{ error_ }}
             </sdoc-form-error>
             {%- endfor -%}

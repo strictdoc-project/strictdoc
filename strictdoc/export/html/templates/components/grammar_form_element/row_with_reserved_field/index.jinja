@@ -13,7 +13,15 @@
 {% endblock row_left %}
 
 {% block row_content scoped %}
-<sdoc-form-field-group data-field-label="Reserved field">
+
+{%- set _name_errors = form_object.get_errors(form_object.field.get_input_field_name()) %}
+{%- set _human_name_errors = form_object.get_errors(form_object.field.get_input_field_human_title()) %}
+<sdoc-form-field-group
+  data-field-label="Reserved field"
+  {% if _name_errors|length or _human_name_errors|length -%}
+    errors="true"
+  {%- endif -%}
+>
 
   {%- with
     field_class_name = "monospace",
@@ -26,7 +34,7 @@
     field_value = form_object.field.field_name,
     mid = form_object.field.field_mid,
     testid_postfix = "reserved_field_name",
-    errors=form_object.get_errors(form_object.field.get_input_field_name())
+    errors = _name_errors
   %}
     {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}
@@ -42,7 +50,7 @@
     field_value = human_title_value,
     mid = form_object.field.field_mid,
     testid_postfix = "reserved_field_human_title",
-    errors=form_object.get_errors(form_object.field.get_input_field_human_title())
+    errors = _human_name_errors
   %}
     {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}

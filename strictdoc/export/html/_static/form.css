@@ -145,6 +145,11 @@ sdoc-form-footer {
 }
 
 sdoc-form-field {
+  /*
+    Flex can not be used, it is necessary exactly "display: block" because of
+    the effect on the display of the contenteditable element contained inside.
+    Extra spaces are formed there and it breaks the Selenium end2end tests.
+  */
   display: block;
   position: relative;
   padding-top: 0;
@@ -591,6 +596,13 @@ sdoc-form-error {
     in the context of <sdoc-form-row-main> using flex:
   */
   order: 11;
+  /*
+    FOR:
+    components/grammar_form_element/index.jinja
+    "Relations_Row"
+    id="document__editable_grammar_relations"
+  */
+  grid-column: 2 / -1;
 }
 
 sdoc-form-error + sdoc-form-error {
@@ -601,10 +613,11 @@ sdoc-form-error + sdoc-form-field-group {
   border-color: var(--color-danger);
 }
 
-sdoc-form-error + sdoc-form-field-group > label,
-sdoc-form-error + sdoc-form-field-group::before,
-sdoc-form-error + sdoc-form-field > label,
-sdoc-form-error + sdoc-form-field sdoc-contenteditable::before {
+
+sdoc-form-field-group[errors]::before, /* Grammar -> label for group of fields */
+sdoc-contenteditable[errors]::before, /* inside contenteditable errors block does not affected */
+sdoc-form-error + sdoc-form-field > label, /* Grammar -> relation field ; File filed */
+sdoc-form-error + sdoc-form-field > sdoc-contenteditable::before {
   color: var(--color-danger);
 }
 

@@ -14,16 +14,20 @@
 
 {% block row_content scoped %}
 
+  <input type="hidden" id="{{ form_object.field.get_input_field_is_new() }}" name="{{ form_object.field.get_input_field_is_new() }}" value="{{ form_object.field.get_is_new_as_string() }}"/>
+
   {%- with
     field_class_name = "monospace",
     field_editable = true,
+    field_required = false,
     field_input_name = form_object.field.get_input_field_name(),
     field_label = "Grammar element",
     field_placeholder = "Enter a name for the new grammar element.",
     field_type = "singleline",
     field_value = form_object.field.field_name,
     mid = form_object.field.field_mid,
-    testid_postfix = "grammar-element"
+    testid_postfix = "grammar-element",
+    errors=form_object.get_errors(form_object.field.get_input_field_name())
   %}
   {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}

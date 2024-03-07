@@ -23,6 +23,10 @@
 
 #}
 
+{% if field_required is not defined -%}
+{% set field_required=false -%}
+{%- endif -%}
+
 <sdoc-form-row
   {% if data_controller is defined -%}
     data-controller="{{ data_controller }}"
@@ -68,6 +72,7 @@
     <sdoc-form-field>
       <sdoc-contenteditable
         data-controller="editablefield"
+        {% if field_required %}required{% endif %}
         role="textbox"
         data-field-type="{{ field_type }}"
         {%- if field_editable is defined and not field_editable -%}
@@ -77,7 +82,7 @@
         {%- endif -%}
         id="{{ field_input_name }}"
         placeholder="Enter {{ field_name|default('FIELD_NAME', true) }} here..."
-        data-field-label="{{ field_label if field_label is defined else field_name }}"
+        data-field-label="{{ field_label if field_label is defined else field_name }}{% if field_required %} *{% endif %}"
         {%- if field_type == "singleline" and singleline_suffix is defined -%}
           data-field-suffix="{{ singleline_suffix }}"
         {%- endif -%}
@@ -92,15 +97,15 @@
       </sdoc-contenteditable>
 
       {%- if field_type == "parent" -%}
-        <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+        <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %}/>
       {%- endif -%}
 
       {%- if field_type == "singleline" -%}
-        <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+        <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %}/>
       {%- endif -%}
 
       {%- if field_type == "multiline" -%}
-        <textarea hidden name="{{ field_input_name }}">
+        <textarea hidden name="{{ field_input_name }}" {% if field_required %}required{% endif %}>
           {%- if true -%}
           {{ field_value }}
           {%- endif -%}

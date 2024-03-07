@@ -164,7 +164,7 @@ class GrammarElementFormObject(ErrorObject):
         )
         for field_mid, field_dict in document_grammar_relations.items():
             field_type = field_dict["type"]
-            field_role = field_dict["role"]
+            field_role = field_dict["role"].strip()
             form_object_relation = GrammarFormRelation(
                 relation_mid=field_mid,
                 relation_type=field_type,
@@ -235,14 +235,14 @@ class GrammarElementFormObject(ErrorObject):
         for field in self.fields:
             if len(field.field_name) == 0:
                 self.add_error(
-                    field.field_name,
+                    field.get_input_field_name(),
                     f"Grammar field {field.field_name} must not be empty.",
                 )
                 continue
 
             if not is_uppercase_underscore_string(field.field_name):
                 self.add_error(
-                    field.field_name,
+                    field.get_input_field_name(),
                     (
                         "Grammar field title shall consist of "
                         "uppercase letters, digits and single underscores."
@@ -252,7 +252,7 @@ class GrammarElementFormObject(ErrorObject):
 
             if field.field_name in fields_so_far:
                 self.add_error(
-                    field.field_name,
+                    field.get_input_field_name(),
                     f"Grammar field {field.field_name} is not unique.",
                 )
             else:
@@ -278,7 +278,7 @@ class GrammarElementFormObject(ErrorObject):
                 ):
                     if relation.relation_type in general_relations_so_far:
                         self.add_error(
-                            relation.relation_mid,
+                            relation.relation_type_input_name(),
                             (
                                 f"A duplicated general relation: {relation.relation_type}. "
                                 "A relation is general when it does not have a role that specializes the relation. "
@@ -293,7 +293,7 @@ class GrammarElementFormObject(ErrorObject):
                         relation.relation_role,
                     ) in role_relations_so_far:
                         self.add_error(
-                            relation.relation_mid,
+                            relation.relation_type_input_name(),
                             (
                                 f"A duplicated relation and role: "
                                 f"{relation.relation_type} ({relation.relation_role}). "
@@ -381,32 +381,28 @@ class GrammarElementFormObject(ErrorObject):
             content=rendered_template, action="update", target="modal"
         )
 
-    def render_row_with_reserved_field(
-        self, field: GrammarFormField, errors
-    ) -> str:
+    def render_row_with_reserved_field(self, field: GrammarFormField) -> str:
         form_object = RowWithReservedFieldFormObject(
-            field=field, errors=errors, jinja_environment=self.jinja_environment
+            field=field,
+            errors=self.errors,
+            jinja_environment=self.jinja_environment,
         )
         return form_object.render()
 
-    def render_row_with_custom_field(
-        self, field: GrammarFormField, errors
-    ) -> str:
+    def render_row_with_custom_field(self, field: GrammarFormField) -> str:
         assert isinstance(field, GrammarFormField)
-        assert isinstance(errors, list)
         form_object = RowWithCustomFieldFormObject(
-            field=field, errors=errors, jinja_environment=self.jinja_environment
+            field=field,
+            errors=self.errors,
+            jinja_environment=self.jinja_environment,
         )
         return form_object.render()
 
-    def render_row_with_relation(
-        self, relation: GrammarFormRelation, errors
-    ) -> str:
+    def render_row_with_relation(self, relation: GrammarFormRelation) -> str:
         assert isinstance(relation, GrammarFormRelation)
-        assert isinstance(errors, list)
         form_object = RowWithRelationFormObject(
             relation=relation,
-            errors=errors,
+            errors=self.errors,
             jinja_environment=self.jinja_environment,
         )
         return form_object.render()
@@ -420,7 +416,9 @@ class GrammarElementFormObject(ErrorObject):
             reserved=False,
         )
         form_object = RowWithCustomFieldFormObject(
-            field=field, errors=[], jinja_environment=self.jinja_environment
+            field=field,
+            errors=self.errors,
+            jinja_environment=self.jinja_environment,
         )
         rendered_template: str = form_object.render()
         return render_turbo_stream(
@@ -437,7 +435,7 @@ class GrammarElementFormObject(ErrorObject):
         )
         form_object = RowWithRelationFormObject(
             relation=relation,
-            errors=[],
+            errors=self.errors,
             jinja_environment=self.jinja_environment,
         )
         rendered_template: str = form_object.render()

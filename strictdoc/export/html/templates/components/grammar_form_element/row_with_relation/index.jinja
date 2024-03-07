@@ -16,7 +16,15 @@
 {% endblock row_left %}
 
 {% block row_content scoped %}
-  <sdoc-form-field-group data-field-label="Relation:">
+
+  {% set relation_type_errors = form_object.get_errors(form_object.relation.relation_type_input_name()) -%}
+  <sdoc-form-field-group
+    data-field-label="Relation"
+    {% if relation_type_errors|length -%}
+      errors="true"
+    {%- endif -%}
+  >
+
   {% if
     form_object.relation.relation_type == "Parent"
     or
@@ -24,6 +32,15 @@
     or
     form_object.relation.relation_type == "File"
   -%}
+
+    {%- if relation_type_errors|length > 0 -%}
+      {%- for error_ in relation_type_errors -%}
+      <sdoc-form-error>
+        {{ error_ }}
+      </sdoc-form-error>
+      {%- endfor -%}
+    {%- endif -%}
+
     <sdoc-form-field field-type="select">
       <label for="relation_type_{{ form_object.relation.relation_mid }}">Relation type</label>
         <select
@@ -51,13 +68,15 @@
     {%- with
       field_class_name = "monospace",
       field_editable = true,
+      field_required = false,
       field_input_name = form_object.relation.relation_role_input_name(),
       field_label = "Relation role:",
       field_placeholder = "Enter relation role here...",
       field_type = "singleline",
       field_value = form_object.relation.relation_role,
       mid = form_object.relation.relation_mid,
-      testid_postfix = "relation-role"
+      testid_postfix = "relation-role",
+      errors=form_object.get_errors(form_object.relation.relation_role_input_name())
     %}
       {%- include "components/form/field/contenteditable/index.jinja" %}
     {%- endwith -%}

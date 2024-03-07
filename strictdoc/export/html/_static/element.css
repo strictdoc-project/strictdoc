@@ -311,9 +311,8 @@ a.field_action:hover {
      to cover the entire available context,
      and will be cut off by the parent element via overflow.
   */
-  /* top: 0; */
-  top: calc(var(--base-rhythm)*(-3));
-  bottom: 0;
+  top: calc(var(--base-rhythm)*(-3)); /* -2 */
+  bottom: calc(var(--base-rhythm)*(-1)); /* -2 */
   left: -100vw;
   right: -100vw;
   z-index: 0;

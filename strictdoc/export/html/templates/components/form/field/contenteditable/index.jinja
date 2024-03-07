@@ -11,8 +11,28 @@
 {%- assert mid is defined, "mid is defined" -%}
 {%- assert testid_postfix is defined, "testid_postfix is defined" -%}
 
+{% if field_required is not defined -%}
+{% set field_required=false -%}
+{%- endif -%}
+
+{#
+  CSS note:
+  Flex order in <sdoc-form-field> should not be used to ensure that the output
+  of an error block affects the contenteditable physically following it.
+  So the <sdoc-form-error> block should be inside the <sdoc-form-field>,
+  which must necessarily have "display:block", but after the contenteditable.
+  Otherwise, unnecessary spaces are produced in the content,
+  and it breaks Selenium's end2end tests.
+#}
+
 <sdoc-form-field>
   <sdoc-contenteditable
+    {% if errors is defined and errors|length -%}
+      errors="true"
+    {%- endif %}
+    {% if field_required -%}
+      required="true"
+    {%- endif %}
     data-controller="editablefield"
     role="textbox"
     data-field-type="{{ field_type }}"
@@ -24,7 +44,7 @@
     id="{{ field_input_name }}"
     mid="{{ mid }}"
     placeholder="{{ field_placeholder }}"
-    data-field-label="{{ field_label }}"
+    data-field-label="{{ field_label }}{%- if field_required -%}&nbsp;*{%- endif -%}"
     {%- if field_class_name is not none -%}
       class="{{ field_class_name }}"
     {%- endif -%}
@@ -32,15 +52,23 @@
   >
     {{- field_value -}}
   </sdoc-contenteditable>
-  
+
   {%- if field_type == "singleline" -%}
-    <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}"/>
+    <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %}/>
   {%- endif -%}
 
   {%- if field_type == "multiline" -%}
-    <textarea hidden name="{{ field_input_name }}">
+    <textarea hidden name="{{ field_input_name }}" {% if field_required %}required{% endif %}>
       {{- field_value -}}
     </textarea>
+  {%- endif -%}
+
+  {%- if errors is defined and errors|length > 0 -%}
+    {%- for error_ in errors -%}
+    <sdoc-form-error>
+      {{ error_ }}
+    </sdoc-form-error>
+    {%- endfor -%}
   {%- endif -%}
 
 </sdoc-form-field>

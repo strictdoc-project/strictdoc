@@ -9,6 +9,10 @@
 
 #}
 
+{% if field_required is not defined -%}
+{% set field_required=false -%}
+{%- endif -%}
+
 <sdoc-form-row
   {% if data_controller is defined -%}
       data-controller="{{ data_controller }}"
@@ -24,11 +28,12 @@
       {%- endfor -%}
     {%- endif -%}
 
-    <sdoc-form-field>
+    <sdoc-form-field {% if field_required %}required{% endif %}>
         <label for="{{ field_input_name }}">
-          {{ field_label|default('Choose a file', true) }}
+          {{ field_label|default('Choose a file', true) }}{% if field_required %} *{% endif %}
         </label>
         <input
+          {% if field_required %}required{% endif %}
           type="file"
           name="{{ field_input_name }}"
           id="{{ field_input_name }}"

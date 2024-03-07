@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, List
+from typing import Any, Dict, List
 
 from jinja2 import Environment, Template
 
@@ -7,7 +7,7 @@ from jinja2 import Environment, Template
 @dataclass
 class RowWithGrammarElementFormObject:
     field: Any
-    errors: List[str]
+    errors: Dict[str, List]
     jinja_environment: Environment
 
     def __post_init__(self):
@@ -17,15 +17,18 @@ class RowWithGrammarElementFormObject:
         ), self.jinja_environment
 
     def render(self):
-        template: Template = self.jinja_environment.get_template(
-            "components/grammar_form/row_with_grammar_element/index.jinja"
-        )
-        rendered_template = template.render(form_object=self)
-        return rendered_template
+        if self.field.is_new:
+            template: Template = self.jinja_environment.get_template(
+                "components/grammar_form/row_with_new_grammar_element/index.jinja"
+            )
+            rendered_template = template.render(form_object=self)
+            return rendered_template
+        else:
+            template: Template = self.jinja_environment.get_template(
+                "components/grammar_form/row_with_grammar_element/index.jinja"
+            )
+            rendered_template = template.render(form_object=self)
+            return rendered_template
 
-    def render_new(self):
-        template: Template = self.jinja_environment.get_template(
-            "components/grammar_form/row_with_new_grammar_element/index.jinja"
-        )
-        rendered_template = template.render(form_object=self)
-        return rendered_template
+    def get_errors(self, field_name) -> List:
+        return self.errors.get(field_name, [])

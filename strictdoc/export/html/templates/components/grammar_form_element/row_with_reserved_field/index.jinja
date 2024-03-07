@@ -13,24 +13,48 @@
 {% endblock row_left %}
 
 {% block row_content scoped %}
-  {%- set human_title = form_object.field.field_human_title if form_object.field.field_human_title else "" -%}
+
+{%- set _name_errors = form_object.get_errors(form_object.field.get_input_field_name()) %}
+{%- set _human_name_errors = form_object.get_errors(form_object.field.get_input_field_human_title()) %}
+<sdoc-form-field-group
+  data-field-label="Reserved field"
+  {% if _name_errors|length or _human_name_errors|length -%}
+    errors="true"
+  {%- endif -%}
+>
+
   {%- with
     field_class_name = "monospace",
     field_editable = false,
+    field_required = form_object.field.field_required,
     field_input_name = form_object.field.get_input_field_name(),
-    field_input_human_title = form_object.field.get_input_field_human_title(),
-    field_label = "Reserved field",
-    field_placeholder = "NOT_RELEVANT",
+    field_label = "Field name",
+    field_placeholder = "Enter field name here...",
     field_type = "singleline",
     field_value = form_object.field.field_name,
-    field_human_title = human_title,
     mid = form_object.field.field_mid,
-    testid_postfix = "reserved_field",
-    testid_human_title_postfix = "human-title"
+    testid_postfix = "reserved_field_name",
+    errors = _name_errors
   %}
-  {%- include "components/form/field/contenteditable/field_with_human_title.jinja" %}
+    {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}
-
+  {%- set human_title_value = form_object.field.field_human_title if form_object.field.field_human_title else "" -%}
+  {%- with
+    field_class_name = "monospace",
+    field_editable = true,
+    field_required = false,
+    field_input_name = form_object.field.get_input_field_human_title(),
+    field_label = "Field human name",
+    field_placeholder = "Enter human readable field name here...",
+    field_type = "singleline",
+    field_value = human_title_value,
+    mid = form_object.field.field_mid,
+    testid_postfix = "reserved_field_human_title",
+    errors = _human_name_errors
+  %}
+    {%- include "components/form/field/contenteditable/index.jinja" %}
+  {%- endwith -%}
+</sdoc-form-field-group>
 {% endblock row_content %}
 
 {% block row_right %}

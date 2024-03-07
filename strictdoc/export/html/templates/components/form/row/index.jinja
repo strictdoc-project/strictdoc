@@ -1,6 +1,3 @@
-{%- assert form_object is defined -%}
-{%- assert form_object.errors is defined -%}
-
 <sdoc-form-row
   {% block row_form_attributes %}
     {% assert 0, "Must not reach here!" %}
@@ -13,13 +10,6 @@
   </sdoc-form-row-aside>
 
   <sdoc-form-row-main>
-    {%- if form_object.errors|length > 0 -%}
-      {%- for error_ in form_object.errors -%}
-      <sdoc-form-error>
-        {{ error_ }}
-      </sdoc-form-error>
-      {%- endfor -%}
-    {%- endif -%}
 
     {% block row_content %}
       {% assert 0, "Must not reach here!" %}

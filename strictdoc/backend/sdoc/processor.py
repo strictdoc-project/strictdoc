@@ -1,5 +1,5 @@
 import os.path
-from typing import Optional
+from typing import List, Optional
 
 from textx import get_location, get_model
 
@@ -38,14 +38,17 @@ class ParseContext:
         self.uses_old_refs_field: bool = False
         self.at_least_one_relations_field: bool = False
 
+        # FIXME: Plain list of all fragments found in the document.
+        self.fragments_from_files: List = []
+
 
 class SDocParsingProcessor:
-    def __init__(self, parse_context: ParseContext, delegate):
+    def __init__(self, parse_context: ParseContext):
         self.parse_context: ParseContext = parse_context
-        self.delegate = delegate
 
     def process_document(self, document: SDocDocument):
         document.grammar = self.parse_context.document_grammar
+        self.parse_context.document = document
 
     def get_default_processors(self):
         return {
@@ -54,7 +57,7 @@ class SDocParsingProcessor:
             "DocumentGrammar": self.process_document_grammar,
             "DocumentView": self.process_document_view,
             "SDocSection": self.process_section,
-            "FragmentFromFile": self.process_include,
+            "FragmentFromFile": self.process_fragment_from_file,
             "CompositeRequirement": self.process_composite_requirement,
             "SDocNode": self.process_requirement,
             "FreeText": self.process_free_text,
@@ -105,25 +108,15 @@ class SDocParsingProcessor:
         self._resolve_parents(section)
         assert section.ng_level > 0
 
-    def process_include(self, include: FragmentFromFile):
-        self._resolve_parents(include)
-        self.parse_context.current_include_parent = include.parent
+    def process_fragment_from_file(self, fragment_from_file: FragmentFromFile):
+        assert isinstance(
+            fragment_from_file, FragmentFromFile
+        ), fragment_from_file
 
-        assert self.delegate is not None
-        fragment = self.delegate(include, self.parse_context)
+        self._resolve_parents(fragment_from_file)
+        self.parse_context.current_include_parent = fragment_from_file.parent
 
-        parent_section_contents = include.parent.section_contents
-        index = parent_section_contents.index(include)
-        before = parent_section_contents[:index]
-        index = (
-            index + 1
-        )  # black and flake8 fight to put a space before ':' otherwise
-        after = parent_section_contents[index:]
-
-        include.parent.section_contents = []
-        include.parent.section_contents.extend(before)
-        include.parent.section_contents.extend(fragment.section_contents)
-        include.parent.section_contents.extend(after)
+        self.parse_context.fragments_from_files.append(fragment_from_file)
 
     def process_composite_requirement(
         self, composite_requirement: CompositeRequirement

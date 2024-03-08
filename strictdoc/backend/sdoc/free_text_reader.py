@@ -17,7 +17,7 @@ class SDFreeTextReader:
             use_regexp_group=True,
         )
 
-        parse_context = ParseContext()
+        parse_context = ParseContext(file_path)
 
         document = meta_model.model_from_str(input_string, file_name=file_path)
         parse_context.document_reference.set_document(document)

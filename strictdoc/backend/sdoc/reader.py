@@ -34,7 +34,7 @@ class SDReader:
             use_regexp_group=True,
         )
 
-        parse_context = ParseContext()
+        parse_context = ParseContext(path_to_sdoc_file=file_path)
         processor = SDocParsingProcessor(
             parse_context=parse_context, delegate=SDReader.parse_include
         )
@@ -152,10 +152,15 @@ class SDReader:
             sys.exit(1)
 
     @staticmethod
-    def parse_include(include, parse_context):
+    def parse_include(include, parse_context: ParseContext):
+        path_to_fragment = (
+            os.path.join(parse_context.path_to_sdoc_dir, include.file)
+            if parse_context.path_to_sdoc_dir is not None
+            else include.file
+        )
         reader = SDIncludeReader()
         fragment = reader.read_from_file(
-            file_path=include.file, context=parse_context
+            file_path=path_to_fragment, context=parse_context
         )
         assert isinstance(fragment, Fragment)
         return fragment

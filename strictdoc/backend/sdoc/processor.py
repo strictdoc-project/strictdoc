@@ -1,3 +1,4 @@
+import os.path
 from typing import Optional
 
 from textx import get_location, get_model
@@ -20,7 +21,13 @@ from strictdoc.helpers.exception import StrictDocException
 
 
 class ParseContext:
-    def __init__(self):
+    def __init__(self, path_to_sdoc_file: Optional[str]):
+        self.path_to_sdoc_file: Optional[str] = path_to_sdoc_file
+        self.path_to_sdoc_dir: Optional[str] = None
+        if path_to_sdoc_file is not None:
+            assert os.path.isfile(path_to_sdoc_file), path_to_sdoc_file
+            self.path_to_sdoc_dir = os.path.dirname(path_to_sdoc_file)
+
         self.document_reference: DocumentReference = DocumentReference()
         self.document_config: Optional[DocumentConfig] = None
         self.document_grammar: DocumentGrammar = DocumentGrammar.create_default(

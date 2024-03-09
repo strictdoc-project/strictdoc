@@ -310,7 +310,9 @@ class TraceabilityIndexBuilder:
             document_iterator = DocumentCachingIterator(document)
             d_01_document_iterators[document] = document_iterator
 
-            for node in document_iterator.all_content():
+            for node in document_iterator.all_content(
+                document, print_fragments=True
+            ):
                 if graph_database.has_link(
                     link_type=GraphLinkType.MID_TO_NODE,
                     lhs_node=node.reserved_mid,
@@ -429,7 +431,9 @@ class TraceabilityIndexBuilder:
 
             document_iterator = d_01_document_iterators[document]
 
-            for node in document_iterator.all_content():
+            for node in document_iterator.all_content(
+                document, print_fragments=True
+            ):
                 if node.is_section:
                     for free_text in node.free_texts:
                         for part in free_text.parts:
@@ -574,7 +578,9 @@ class TraceabilityIndexBuilder:
         for document in document_tree.document_list:
             document_iterator = d_01_document_iterators[document]
 
-            for node in document_iterator.all_content():
+            for node in document_iterator.all_content(
+                document, print_fragments=True
+            ):
                 if not node.is_requirement:
                     continue
                 requirement = node

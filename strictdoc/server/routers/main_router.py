@@ -563,12 +563,7 @@ def create_main_router(
             )
 
         # Saving new content to .SDoc file.
-        document_content = SDWriter().write(section.document)
-        document_meta = section.document.meta
-        with open(
-            document_meta.input_doc_full_path, "w", encoding="utf8"
-        ) as output_file:
-            output_file.write(document_content)
+        SDWriter().write_to_file(section.document)
 
         # Update the index because other documents might reference this
         # document's sections. These documents will be regenerated on demand,

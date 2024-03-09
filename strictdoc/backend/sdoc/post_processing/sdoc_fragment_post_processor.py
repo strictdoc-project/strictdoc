@@ -10,6 +10,7 @@ from strictdoc.backend.sdoc.processor import ParseContext
 class SDocFragmentPostProcessor:
     @staticmethod
     def process_document(_: SDocDocument, parse_context: ParseContext):
+        fragment_from_file_: FragmentFromFile
         for fragment_from_file_ in parse_context.fragments_from_files:
             assert isinstance(
                 fragment_from_file_, FragmentFromFile
@@ -17,23 +18,7 @@ class SDocFragmentPostProcessor:
             fragment: Fragment = SDocFragmentPostProcessor.parse_fragment(
                 fragment_from_file_, parse_context
             )
-
-            parent_section_contents = (
-                fragment_from_file_.parent.section_contents
-            )
-            index = parent_section_contents.index(fragment_from_file_)
-            before = parent_section_contents[:index]
-            index = (
-                index + 1
-            )  # black and flake8 fight to put a space before ':' otherwise
-            after = parent_section_contents[index:]
-
-            fragment_from_file_.parent.section_contents = []
-            fragment_from_file_.parent.section_contents.extend(before)
-            fragment_from_file_.parent.section_contents.extend(
-                fragment.section_contents
-            )
-            fragment_from_file_.parent.section_contents.extend(after)
+            fragment_from_file_.resolved_fragment = fragment
 
     @staticmethod
     def parse_fragment(

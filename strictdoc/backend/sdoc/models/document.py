@@ -6,6 +6,7 @@ from strictdoc.backend.sdoc.models.document_bibliography import (
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DocumentView
+from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
@@ -77,6 +78,10 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
         task_list = list(self.section_contents)
         while len(task_list) > 0:
             section_or_requirement = task_list.pop(0)
+            if isinstance(section_or_requirement, FragmentFromFile):
+                if section_or_requirement.has_any_requirements():
+                    return True
+                continue
             if section_or_requirement.is_requirement:
                 return True
             assert section_or_requirement.is_section, section_or_requirement

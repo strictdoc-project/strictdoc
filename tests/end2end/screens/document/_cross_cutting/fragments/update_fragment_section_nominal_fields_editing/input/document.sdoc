@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[FRAGMENT_FROM_FILE]
+FILE: fragment.sfra

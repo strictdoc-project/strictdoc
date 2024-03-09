@@ -1,0 +1,14 @@
+[FRAGMENT]
+
+[SECTION]
+TITLE: Section 1.2.3
+
+[COMPOSITE_REQUIREMENT]
+TITLE: Composite requirement 4.5.6
+
+[REQUIREMENT]
+TITLE: Requirement 7.8.9
+
+[/COMPOSITE_REQUIREMENT]
+
+[/SECTION]

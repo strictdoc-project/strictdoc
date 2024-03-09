@@ -1,0 +1,9 @@
+[FRAGMENT]
+
+[SECTION]
+TITLE: Section 1.2.3
+
+[FRAGMENT_FROM_FILE]
+FILE: input.ssec_nested
+
+[/SECTION]

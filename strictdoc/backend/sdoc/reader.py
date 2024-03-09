@@ -1,23 +1,23 @@
-import hashlib
 import os.path
 import sys
-import tempfile
 import traceback
 from pathlib import Path
+from typing import Tuple
 
 from textx import metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
-from strictdoc.backend.sdoc.include_reader import SDIncludeReader
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.fragment import Fragment
+from strictdoc.backend.sdoc.pickle_cache import PickleCache
+from strictdoc.backend.sdoc.post_processing.sdoc_fragment_post_processor import (
+    SDocFragmentPostProcessor,
+)
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
 from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
-from strictdoc.helpers.md5 import get_file_md5
 from strictdoc.helpers.pickle import pickle_dump, pickle_load
 from strictdoc.helpers.textx import drop_textx_meta
 
@@ -35,9 +35,7 @@ class SDReader:
         )
 
         parse_context = ParseContext(path_to_sdoc_file=file_path)
-        processor = SDocParsingProcessor(
-            parse_context=parse_context, delegate=SDReader.parse_include
-        )
+        processor = SDocParsingProcessor(parse_context=parse_context)
         meta_model.register_obj_processors(processor.get_default_processors())
 
         document: SDocDocument = meta_model.model_from_str(
@@ -69,17 +67,18 @@ class SDReader:
         return document, parse_context
 
     @staticmethod
-    def read(input_string, file_path=None):
-        document, _ = SDReader._read(input_string, file_path)
+    def read(input_string, file_path=None) -> SDocDocument:
+        document, _ = SDReader.read_with_parse_context(input_string, file_path)
+        return document
+
+    @staticmethod
+    def read_with_parse_context(
+        input_string, file_path=None
+    ) -> Tuple[SDocDocument, ParseContext]:
+        document, parse_context = SDReader._read(input_string, file_path)
         SDocValidator.validate_document(document)
 
-        # HACK:
-        # ProcessPoolExecutor doesn't work because of non-picklable parts
-        # of textx. The offending fields are stripped down because they
-        # are not used anyway.
-        drop_textx_meta(document)
-
-        return document
+        return document, parse_context
 
     def read_from_file(self, file_path: str) -> SDocDocument:
         """
@@ -87,32 +86,8 @@ class SDReader:
         object.
         """
 
-        path_to_tmp_dir = tempfile.gettempdir()
-
-        full_path_to_file = (
-            file_path
-            if os.path.abspath(file_path)
-            else os.path.abspath(file_path)
-        )
-
-        file_md5 = get_file_md5(file_path)
-
-        # File name contains an MD5 hash of its full path to ensure the
-        # uniqueness of the cached items. Additionally, the unique file name
-        # contains a full path to the output root to prevent collisions
-        # between StrictDoc invocations running against the same set of SDoc
-        # files in parallel.
-        unique_identifier = self.path_to_output_root + full_path_to_file
-        unique_identifier_md5 = hashlib.md5(
-            unique_identifier.encode("utf-8")
-        ).hexdigest()
-        file_name = os.path.basename(full_path_to_file)
-        file_name += "_" + unique_identifier_md5 + "_" + file_md5
-
-        path_to_cached_file = os.path.join(
-            path_to_tmp_dir,
-            "strictdoc_cache",
-            file_name,
+        path_to_cached_file = PickleCache.get_cached_file_path(
+            file_path, self.path_to_output_root
         )
         if os.path.isfile(path_to_cached_file):
             with open(path_to_cached_file, "rb") as cache_file:
@@ -126,7 +101,17 @@ class SDReader:
             sdoc_content = file.read()
 
         try:
-            sdoc = self.read(sdoc_content, file_path=file_path)
+            sdoc, parse_context = self.read_with_parse_context(
+                sdoc_content, file_path=file_path
+            )
+
+            SDocFragmentPostProcessor.process_document(sdoc, parse_context)
+
+            # HACK:
+            # ProcessPoolExecutor doesn't work because of non-picklable parts
+            # of textx. The offending fields are stripped down because they
+            # are not used anyway.
+            drop_textx_meta(sdoc)
 
             sdoc_pickled = pickle_dump(sdoc)
             with open(path_to_cached_file, "wb") as cache_file:
@@ -150,17 +135,3 @@ class SDReader:
             # TODO: when --debug is provided
             traceback.print_exc()
             sys.exit(1)
-
-    @staticmethod
-    def parse_include(include, parse_context: ParseContext):
-        path_to_fragment = (
-            os.path.join(parse_context.path_to_sdoc_dir, include.file)
-            if parse_context.path_to_sdoc_dir is not None
-            else include.file
-        )
-        reader = SDIncludeReader()
-        fragment = reader.read_from_file(
-            file_path=path_to_fragment, context=parse_context
-        )
-        assert isinstance(fragment, Fragment)
-        return fragment

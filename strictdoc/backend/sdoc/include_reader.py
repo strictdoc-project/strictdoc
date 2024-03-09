@@ -20,9 +20,7 @@ class SDIncludeReader:
         )
         assert isinstance(parse_context, ParseContext)
 
-        processor = SDocParsingProcessor(
-            parse_context=parse_context, delegate=None
-        )
+        processor = SDocParsingProcessor(parse_context=parse_context)
         meta_model.register_obj_processors(processor.get_default_processors())
 
         section = meta_model.model_from_str(input_string, file_name=file_path)

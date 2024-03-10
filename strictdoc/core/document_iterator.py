@@ -1,6 +1,7 @@
 import collections
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
@@ -14,12 +15,6 @@ class DocumentCachingIterator:
         assert isinstance(document, SDocDocument)
 
         self.document = document
-        self.nodes_cache = []
-        self.toc_nodes_cache = []
-
-    def invalidate_cache(self):
-        self.nodes_cache.clear()
-        self.toc_nodes_cache.clear()
 
     def table_of_contents(self):
         # TODO: Should bring the cache back or remove?
@@ -33,30 +28,37 @@ class DocumentCachingIterator:
             else FreeText
         )
 
-        for node in self.all_content():
+        for node in self.all_content(self.document):
             if isinstance(node, nodes_to_skip):
                 continue
             if isinstance(node, SDocNode) and node.reserved_title is None:
                 continue
-            self.toc_nodes_cache.append(node)
             yield node
 
-    def all_content(self):
-        # TODO: Should bring the cache back or remove?
-        # if len(self.nodes_cache) > 0:  # noqa: ERA001
-        #     yield from self.nodes_cache  # noqa: ERA001
-        #     return  # noqa: ERA001
+    def all_content(self, root_node=None, print_fragments=True):
+        if root_node is None:
+            root_node = self.document
 
-        document = self.document
         level_counter = LevelCounter()
 
-        task_list = collections.deque(document.section_contents)
+        task_list = collections.deque(root_node.section_contents)
 
         while True:
             if not task_list:
                 break
 
             current = task_list.popleft()
+
+            if isinstance(current, FragmentFromFile):
+                assert current.resolved_fragment is not None
+
+                if not print_fragments:
+                    yield current
+                else:
+                    task_list.extendleft(
+                        reversed(current.resolved_fragment.section_contents)
+                    )
+                continue
 
             # If node is not whitelisted, we ignore it. Also, note that due to
             # this early return, all child nodes of this node are ignored
@@ -71,7 +73,8 @@ class DocumentCachingIterator:
 
                 if current.ng_resolved_custom_level != "None":
                     level_counter.adjust(current.ng_level)
-                    # TODO: Remove the need to do branching here.
+
+                    # FIXME: Remove the need to do branching here.
                     current.context.title_number_string = (
                         current.ng_resolved_custom_level
                         if current.ng_resolved_custom_level
@@ -89,7 +92,6 @@ class DocumentCachingIterator:
                     # https://github.com/strictdoc-project/strictdoc/issues/639
                     current.context.title_number_string = ""
 
-            self.nodes_cache.append(current)
             yield current
 
             if isinstance(current, SDocSection):

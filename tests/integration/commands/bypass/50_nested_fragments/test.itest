@@ -1,0 +1,4 @@
+RUN: %expect_exit 0 %strictdoc passthrough %S/input.sdoc --output-dir=%S/Output/
+RUN: %diff %S/input.sdoc %S/Output/input.sdoc
+RUN: %diff %S/nested.sfra %S/Output/nested.sfra
+RUN: %diff %S/sub_nested.sfra %S/Output/sub_nested.sfra

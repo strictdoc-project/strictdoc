@@ -1,5 +1,7 @@
+import os.path
 from enum import Enum
-from typing import List, Optional
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -9,6 +11,8 @@ from strictdoc.backend.sdoc.models.document_bibliography import (
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
+from strictdoc.backend.sdoc.models.fragment import Fragment
+from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import CompositeRequirement, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
@@ -30,6 +34,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldType,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.cast import assert_cast
 
 
@@ -43,7 +48,37 @@ class SDWriter:
     def __init__(self):
         pass
 
+    def write_to_file(self, document: SDocDocument):
+        document_content, fragments_dict = self.write_with_fragments(document)
+
+        document_meta: DocumentMeta = assert_cast(document.meta, DocumentMeta)
+
+        with open(
+            document_meta.input_doc_full_path, "w", encoding="utf8"
+        ) as output_file:
+            output_file.write(document_content)
+
+        path_to_output_file_dir = os.path.dirname(
+            document_meta.input_doc_full_path
+        )
+        Path(path_to_output_file_dir).mkdir(parents=True, exist_ok=True)
+
+        for fragment_path_, fragment_content_ in fragments_dict.items():
+            path_to_output_fragment = os.path.join(
+                path_to_output_file_dir, fragment_path_
+            )
+            with open(path_to_output_fragment, "w", encoding="utf8") as file_:
+                file_.write(fragment_content_)
+
     def write(self, document: SDocDocument):
+        document_output, _ = self.write_with_fragments(document)
+        return document_output
+
+    def write_with_fragments(
+        self, document: SDocDocument
+    ) -> Tuple[str, Dict[str, str]]:
+        fragments_dict: Dict[str, str] = {}
+
         document_iterator = DocumentCachingIterator(document)
         output = ""
 
@@ -201,8 +236,50 @@ class SDWriter:
         for free_text in document.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)
+
+        output += self._print_body(
+            document, document, document_iterator, fragments_dict
+        )
+
+        return output, fragments_dict
+
+    def _print_body(
+        self,
+        root_node: [SDocDocument, Fragment],
+        document: SDocDocument,
+        document_iterator: DocumentCachingIterator,
+        fragments_dict,
+    ):
+        assert isinstance(root_node, (SDocDocument, Fragment)), root_node
+        assert isinstance(
+            document_iterator, DocumentCachingIterator
+        ), document_iterator
+
+        output = ""
+
         closing_tags = []
-        for content_node in document_iterator.all_content():
+        for content_node in document_iterator.all_content(
+            root_node, print_fragments=False
+        ):
+            if isinstance(content_node, FragmentFromFile):
+                fragment_from_file: FragmentFromFile = assert_cast(
+                    content_node, FragmentFromFile
+                )
+                output += "\n"
+                output += self._print_fragment_from_file(fragment_from_file)
+
+                assert fragment_from_file.resolved_fragment is not None
+                fragment_content = self._print_fragment(
+                    fragment_from_file.resolved_fragment,
+                    document,
+                    document_iterator,
+                    fragments_dict,
+                )
+
+                fragments_dict[fragment_from_file.file] = fragment_content
+
+                continue
+
             while (
                 len(closing_tags) > 0
                 and content_node.ng_level <= closing_tags[-1][1]
@@ -215,7 +292,7 @@ class SDWriter:
             if not content_node.ng_whitelisted:
                 continue
 
-            if isinstance(content_node, SDocSection):
+            elif isinstance(content_node, SDocSection):
                 output += self._print_section(content_node, document)
                 closing_tags.append((TAG.SECTION, content_node.ng_level))
             elif isinstance(content_node, SDocNode):
@@ -237,6 +314,33 @@ class SDWriter:
 
         for closing_tag, _ in reversed(closing_tags):
             output += self._print_closing_tag(closing_tag)
+
+        return output
+
+    def _print_fragment(
+        self,
+        fragment: Fragment,
+        document: SDocDocument,
+        document_iterator: DocumentCachingIterator,
+        fragments_dict,
+    ):
+        output = "[FRAGMENT]\n"
+
+        output += self._print_body(
+            fragment, document, document_iterator, fragments_dict
+        )
+
+        return output
+
+    def _print_fragment_from_file(self, fragment_from_file: FragmentFromFile):
+        assert isinstance(fragment_from_file, FragmentFromFile)
+        output = ""
+        output += "[FRAGMENT_FROM_FILE]"
+        output += "\n"
+
+        output += "FILE: "
+        output += fragment_from_file.file
+        output += "\n"
 
         return output
 

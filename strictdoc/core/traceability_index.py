@@ -710,7 +710,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     ):
         assert document != other_document
 
-        for node in self.document_iterators[document].all_content():
+        for node in self.document_iterators[document].all_content(document):
             if not node.is_requirement:
                 continue
             requirement_node: SDocNode = node

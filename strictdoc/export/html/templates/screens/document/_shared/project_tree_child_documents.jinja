@@ -1,0 +1,22 @@
+{% if document.included_documents|length > 0 %}
+<ul>
+{% for child_document_ in document.included_documents %}
+  <li>
+    <a
+      href="{{ child_document_.meta.get_root_path_prefix() }}/{{ child_document_.meta.get_html_doc_link() }}"
+    >
+      {% include "_res/svg_ico16_document.jinja.html" %}
+      <div
+        class="document_title"
+        title="{{ child_document_.title }}"
+        data-file_name="{{ child_document_.meta.document_filename }}"
+      >{{ child_document_.title }}</div>
+    </a>
+
+    {% with document=child_document_ %}
+    {% include "screens/document/_shared/project_tree_child_documents.jinja" %}
+    {% endwith %}
+  </li>
+{% endfor %}
+</ul>
+{% endif %}

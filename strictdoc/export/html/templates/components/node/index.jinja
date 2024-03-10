@@ -28,6 +28,7 @@
       {%- endif %}
     {%- endif %}
     node-role="{{ sdoc_entity.get_type_string() }}"
+    data-included-document="{{ sdoc_entity.document_is_included() }}"
     data-testid="node-{{ sdoc_entity.get_type_string() }}"
   >
 

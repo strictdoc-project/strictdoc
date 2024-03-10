@@ -156,4 +156,7 @@ class DocumentScreenViewObject:
         yield from self.document_iterator.table_of_contents()
 
     def document_content_iterator(self):
-        yield from self.document_iterator.all_content()
+        yield from self.document_iterator.all_content(
+            print_fragments=True,
+            print_fragments_from_files=False,
+        )

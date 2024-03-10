@@ -237,9 +237,7 @@ class SDWriter:
             output += "\n"
             output += self._print_free_text(free_text)
 
-        output += self._print_body(
-            document, document, document_iterator, fragments_dict
-        )
+        output += self._print_body(document, document, document_iterator)
 
         return output, fragments_dict
 
@@ -248,7 +246,6 @@ class SDWriter:
         root_node: [SDocDocument, Fragment],
         document: SDocDocument,
         document_iterator: DocumentCachingIterator,
-        fragments_dict,
     ):
         assert isinstance(root_node, (SDocDocument, Fragment)), root_node
         assert isinstance(
@@ -259,7 +256,7 @@ class SDWriter:
 
         closing_tags = []
         for content_node in document_iterator.all_content(
-            root_node, print_fragments=False
+            print_fragments=False, print_fragments_from_files=True
         ):
             if isinstance(content_node, FragmentFromFile):
                 fragment_from_file: FragmentFromFile = assert_cast(
@@ -267,16 +264,6 @@ class SDWriter:
                 )
                 output += "\n"
                 output += self._print_fragment_from_file(fragment_from_file)
-
-                assert fragment_from_file.resolved_fragment is not None
-                fragment_content = self._print_fragment(
-                    fragment_from_file.resolved_fragment,
-                    document,
-                    document_iterator,
-                    fragments_dict,
-                )
-
-                fragments_dict[fragment_from_file.file] = fragment_content
 
                 continue
 
@@ -317,25 +304,10 @@ class SDWriter:
 
         return output
 
-    def _print_fragment(
-        self,
-        fragment: Fragment,
-        document: SDocDocument,
-        document_iterator: DocumentCachingIterator,
-        fragments_dict,
-    ):
-        output = "[FRAGMENT]\n"
-
-        output += self._print_body(
-            fragment, document, document_iterator, fragments_dict
-        )
-
-        return output
-
     def _print_fragment_from_file(self, fragment_from_file: FragmentFromFile):
         assert isinstance(fragment_from_file, FragmentFromFile)
         output = ""
-        output += "[FRAGMENT_FROM_FILE]"
+        output += "[DOCUMENT_FROM_FILE]"
         output += "\n"
 
         output += "FILE: "

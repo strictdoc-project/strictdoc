@@ -185,6 +185,7 @@ class SDocNode(SDocObject):
         )
         self.ng_level: Optional[int] = None
         self.ng_document_reference: Optional[DocumentReference] = None
+        self.ng_including_document_reference: Optional[DocumentReference] = None
         self.ng_line_start: Optional[int] = None
         self.ng_line_end: Optional[int] = None
         self.ng_byte_start: Optional[int] = None
@@ -314,6 +315,28 @@ class SDocNode(SDocObject):
             document is not None
         ), "A valid requirement must always have a reference to the document."
         return document
+
+    def get_document(self):
+        return self.ng_document_reference.get_document()
+
+    @property
+    def parent_or_including_document(self) -> SDocDocument:
+        including_document_or_none = (
+            self.ng_including_document_reference.get_document()
+        )
+        if including_document_or_none is not None:
+            return including_document_or_none
+
+        document: Optional[SDocDocument] = (
+            self.ng_document_reference.get_document()
+        )
+        assert (
+            document is not None
+        ), "A valid requirement must always have a reference to the document."
+        return document
+
+    def document_is_included(self):
+        return self.ng_including_document_reference.get_document() is not None
 
     def get_requirement_style_mode(self):
         return (
@@ -637,6 +660,9 @@ class CompositeRequirement(SDocNode):
     @property
     def document(self):
         return self.ng_document_reference.get_document()
+
+    def document_is_included(self):
+        return self.ng_including_document_reference.get_document() is not None
 
     def get_requirement_prefix(self) -> str:
         return self.parent.get_requirement_prefix()

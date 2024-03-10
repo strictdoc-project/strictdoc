@@ -15,7 +15,7 @@ class SectionContext:
 
 
 @auto_described
-class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
+class SDocSection:  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         parent,
@@ -50,6 +50,7 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
         self.ng_level: Optional[int] = None
         self.ng_has_requirements = False
         self.ng_document_reference: Optional[DocumentReference] = None
+        self.ng_including_document_reference: Optional[DocumentReference] = None
         self.context = SectionContext()
 
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
@@ -68,6 +69,28 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
     @property
     def document(self):
         return self.ng_document_reference.get_document()
+
+    def get_document(self):
+        return self.ng_document_reference.get_document()
+
+    @property
+    def parent_or_including_document(self) -> SDocDocument:
+        including_document_or_none = (
+            self.ng_including_document_reference.get_document()
+        )
+        if including_document_or_none is not None:
+            return including_document_or_none
+
+        document: Optional[SDocDocument] = (
+            self.ng_document_reference.get_document()
+        )
+        assert (
+            document is not None
+        ), "A valid requirement must always have a reference to the document."
+        return document
+
+    def document_is_included(self):
+        return self.ng_including_document_reference.get_document() is not None
 
     @property
     def is_requirement(self):

@@ -29,6 +29,7 @@ class ParseContext:
             self.path_to_sdoc_dir = os.path.dirname(path_to_sdoc_file)
 
         self.document_reference: DocumentReference = DocumentReference()
+        self.context_document_reference: DocumentReference = DocumentReference()
         self.document_config: Optional[DocumentConfig] = None
         self.document_grammar: DocumentGrammar = DocumentGrammar.create_default(
             None
@@ -84,6 +85,9 @@ class SDocParsingProcessor:
 
     def process_section(self, section: SDocSection):
         section.ng_document_reference = self.parse_context.document_reference
+        section.ng_including_document_reference = (
+            self.parse_context.context_document_reference
+        )
 
         if self.parse_context.document_config.auto_levels:
             if (
@@ -113,9 +117,12 @@ class SDocParsingProcessor:
             fragment_from_file, FragmentFromFile
         ), fragment_from_file
 
+        fragment_from_file.ng_document_reference = (
+            self.parse_context.document_reference
+        )
+
         self._resolve_parents(fragment_from_file)
         self.parse_context.current_include_parent = fragment_from_file.parent
-
         self.parse_context.fragments_from_files.append(fragment_from_file)
 
     def process_composite_requirement(
@@ -206,6 +213,9 @@ class SDocParsingProcessor:
 
         requirement.ng_document_reference = (
             self.parse_context.document_reference
+        )
+        requirement.ng_including_document_reference = (
+            self.parse_context.context_document_reference
         )
 
         if isinstance(requirement.parent, SDocSection):

@@ -1,4 +1,5 @@
 import collections
+from typing import List, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
@@ -17,47 +18,58 @@ class DocumentCachingIterator:
         self.document = document
 
     def table_of_contents(self):
-        # TODO: Should bring the cache back or remove?
-        # if len(self.toc_nodes_cache) > 0:  # noqa: ERA001
-        #     yield from self.toc_nodes_cache  # noqa: ERA001
-        #     return  # noqa: ERA001
-
         nodes_to_skip = (
             (FreeText, SDocNode)
             if not self.document.config.is_requirement_in_toc()
             else FreeText
         )
 
-        for node in self.all_content(self.document):
+        for node in self.all_content(
+            print_fragments=True,
+            print_fragments_from_files=False,
+        ):
             if isinstance(node, nodes_to_skip):
                 continue
             if isinstance(node, SDocNode) and node.reserved_title is None:
                 continue
             yield node
 
-    def all_content(self, root_node=None, print_fragments=True):
-        if root_node is None:
-            root_node = self.document
+    def all_content(
+        self,
+        print_fragments: bool = False,
+        print_fragments_from_files: bool = False,
+    ):
+        root_node = self.document
 
         level_counter = LevelCounter()
 
-        task_list = collections.deque(root_node.section_contents)
+        root_contents: List[Tuple] = []
+
+        for node_ in root_node.section_contents:
+            root_contents.append((node_, 1))
+
+        task_list = collections.deque(root_contents)
 
         while True:
             if not task_list:
                 break
 
-            current = task_list.popleft()
+            current, current_level = task_list.popleft()
+            # FIXME
+            current.ng_level = current_level
 
             if isinstance(current, FragmentFromFile):
-                assert current.resolved_fragment is not None
-
                 if not print_fragments:
-                    yield current
+                    if print_fragments_from_files:
+                        yield current
                 else:
-                    task_list.extendleft(
-                        reversed(current.resolved_fragment.section_contents)
+                    assert current.resolved_fragment is not None
+                    section_contents = map(
+                        lambda node_: (node_, current_level),
+                        reversed(current.section_contents),
                     )
+
+                    task_list.extendleft(section_contents)
                 continue
 
             # If node is not whitelisted, we ignore it. Also, note that due to
@@ -72,7 +84,7 @@ class DocumentCachingIterator:
                 assert current.ng_level, f"Node has no ng_level: {current}"
 
                 if current.ng_resolved_custom_level != "None":
-                    level_counter.adjust(current.ng_level)
+                    level_counter.adjust(current_level)
 
                     # FIXME: Remove the need to do branching here.
                     current.context.title_number_string = (
@@ -95,10 +107,18 @@ class DocumentCachingIterator:
             yield current
 
             if isinstance(current, SDocSection):
-                task_list.extendleft(reversed(current.section_contents))
+                section_contents = map(
+                    lambda node_: (node_, current_level + 1),
+                    reversed(current.section_contents),
+                )
+                task_list.extendleft(section_contents)
 
             elif isinstance(current, CompositeRequirement):
-                task_list.extendleft(reversed(current.requirements))
+                section_contents = map(
+                    lambda node_: (node_, current_level + 1),
+                    reversed(current.requirements),
+                )
+                task_list.extendleft(section_contents)
 
     @staticmethod
     def specific_node_with_normal_levels(node):

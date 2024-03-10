@@ -33,7 +33,9 @@ class ProgressStatisticsGenerator:
 
         for document in traceability_index.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
-            for node in document_iterator.all_content():
+            for node in document_iterator.all_content(
+                print_fragments=False, print_fragments_from_files=False
+            ):
                 if isinstance(node, SDocSection):
                     document_tree_stats.total_sections += 1
                     if len(node.free_texts) == 0:

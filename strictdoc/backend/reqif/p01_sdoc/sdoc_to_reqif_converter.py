@@ -238,7 +238,10 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                     level=document.ng_level + 1,
                 )
                 current_hierarchy.add_child(hierarchy)
-            for node in document_iterator.all_content():
+            # FIXME: ReqIF must export complete documents including fragments.
+            for node in document_iterator.all_content(
+                print_fragments=False, print_fragments_from_files=False
+            ):
                 if node.is_composite_requirement:
                     raise NotImplementedError(
                         "Exporting composite requirements is not "

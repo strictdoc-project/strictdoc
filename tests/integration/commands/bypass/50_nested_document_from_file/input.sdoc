@@ -2,4 +2,4 @@
 TITLE: Hello world doc
 
 [DOCUMENT_FROM_FILE]
-FILE: included.sdoc
+FILE: nested/input2.sdoc

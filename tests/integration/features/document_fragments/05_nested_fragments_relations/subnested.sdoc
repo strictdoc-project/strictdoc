@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Hello world doc 3
+
+[REQUIREMENT]
+UID: REQ-3
+TITLE: Requirement title #3
+STATEMENT: Shall do #3.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-2

@@ -98,12 +98,14 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         )
         elements: List[GrammarElement] = []
         document.section_contents = []
-        current_section = document
+        section_stack = [document]
         used_spec_object_types_ids: Set[str] = set()
 
         for current_hierarchy in reqif_bundle.iterate_specification_hierarchy(
             specification
         ):
+            current_section = section_stack[-1]
+
             spec_object = reqif_bundle.get_spec_object_by_ref(
                 current_hierarchy.spec_object
             )
@@ -121,25 +123,38 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                 )
                 if current_hierarchy.level > current_section.ng_level:
                     current_section.section_contents.append(section)
+                    section_stack.append(section)
                 elif current_hierarchy.level < current_section.ng_level:
                     for _ in range(
-                        0, current_section.ng_level - current_hierarchy.level
+                        0,
+                        (current_section.ng_level - current_hierarchy.level)
+                        + 1,
                     ):
-                        assert not isinstance(current_section, SDocDocument)
-                        if isinstance(current_section, SDocSection):
-                            current_section = current_section.parent
+                        assert len(section_stack) > 0
+                        section_stack.pop()
+                        current_section = section_stack[-1]
                     current_section.section_contents.append(section)
+                    section_stack.append(section)
                 else:
-                    raise NotImplementedError
+                    section_stack.pop()
+                    current_section = section_stack[-1]
+                    current_section.section_contents.append(section)
+                    section_stack.append(section)
             elif P01_ReqIFToSDocConverter.is_spec_object_requirement(
                 spec_object
             ):
                 requirement: SDocNode = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
                     spec_object=spec_object,
-                    parent_section=current_section,
+                    parent_section=section_stack[-1],
                     reqif_bundle=reqif_bundle,
                     level=current_hierarchy.level,
                 )
+                for _ in range(
+                    0, (current_section.ng_level - current_hierarchy.level) + 1
+                ):
+                    assert len(section_stack) > 0
+                    section_stack.pop()
+                    current_section = section_stack[-1]
                 current_section.section_contents.append(requirement)
             else:
                 raise NotImplementedError(spec_object) from None

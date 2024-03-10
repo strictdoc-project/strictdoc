@@ -10,6 +10,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
 )
+from strictdoc.core.document_meta import DocumentMeta
 
 
 class DocumentBuilder:
@@ -122,4 +123,15 @@ class DocumentBuilder:
             section_contents,
         )
         document.grammar = DocumentGrammar.create_default(document)
+        document.meta = DocumentMeta(
+            level=0,
+            file_tree_mount_folder="",
+            document_filename="input.sdoc",
+            document_filename_base="input",
+            input_doc_full_path="/tmp/input.sdoc",
+            input_doc_rel_path="input.sdoc",
+            input_doc_dir_rel_path="",
+            output_document_dir_full_path="FOO",
+            output_document_dir_rel_path="BAR",
+        )
         return document

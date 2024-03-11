@@ -6,7 +6,7 @@ This document maintains a record of all changes to StrictDoc since November 2023
 [/FREETEXT]
 
 [SECTION]
-TITLE: Unreleased work
+TITLE: 0.0.49 (2024-03-11)
 
 [FREETEXT]
 The web interface code has been extended to allow editing arbitrary nodes. Previously, only editing the REQUIREMENT type was possible. From now on, it is possible to use the web interface to create custom grammar elements and nodes of corresponding grammar element types.

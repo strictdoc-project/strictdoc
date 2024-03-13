@@ -97,6 +97,8 @@ dependencies = [
     # HTML2PDF dependencies
     "selenium",
     "webdriver-manager",
+    # requests is used by StrictDoc's custom HTML2PDF_HTTPClient.
+    "requests",
 ]
 # @sdoc[/SDOC-SRS-89]
 

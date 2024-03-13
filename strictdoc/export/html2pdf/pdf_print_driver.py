@@ -1,3 +1,4 @@
+import sys
 from subprocess import CompletedProcess, TimeoutExpired, run
 
 from strictdoc import environment
@@ -14,7 +15,10 @@ class PDFPrintDriver:
             try:
                 _: CompletedProcess = run(
                     [
-                        "python",
+                        # Using sys.executable instead of "python" is important because
+                        # venv subprocess call to python resolves to wrong interpreter,
+                        # https://github.com/python/cpython/issues/86207
+                        sys.executable,
                         environment.get_path_to_html2pdf(),
                         paths_to_print,
                     ],

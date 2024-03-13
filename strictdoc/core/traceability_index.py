@@ -99,8 +99,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         return self._document_iterators
 
     def is_small_project(self):
-        # FIXME
-        return True
         """
         This method helps to decide if StrictDoc will precompile Jinja templates
         to Python files or not. Precompilation may take half a second time, so

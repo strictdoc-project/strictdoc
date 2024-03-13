@@ -290,7 +290,9 @@ class CreateSectionCommand:
         section.node_id = MID(form_object.section_mid)
         section.ng_document_reference = DocumentReference()
         section.ng_document_reference.set_document(document)
-        section.ng_including_document_reference = document.ng_including_document_reference
+        section.ng_including_document_reference = (
+            document.ng_including_document_reference
+        )
 
         assert parent.ng_level is not None, parent
         section.ng_level = parent.ng_level + 1

@@ -151,7 +151,9 @@ class SDocParsingProcessor:
         composite_requirement.ng_document_reference = (
             self.parse_context.document_reference
         )
-
+        composite_requirement.ng_including_document_reference = (
+            self.parse_context.context_document_reference
+        )
         if isinstance(composite_requirement.parent, SDocSection):
             self._resolve_parents(composite_requirement)
         elif isinstance(composite_requirement.parent, CompositeRequirement):

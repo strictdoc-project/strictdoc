@@ -651,6 +651,7 @@ class CompositeRequirement(SDocNode):
     def __init__(self, parent, **fields):
         super().__init__(parent, **fields)
         self.ng_document_reference: Optional[DocumentReference] = None
+        self.ng_including_document_reference: Optional[DocumentReference] = None
         self.ng_has_requirements = False
 
     @property

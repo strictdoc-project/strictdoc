@@ -34,6 +34,7 @@
               <span class="section-number">
                 {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
               </span>{{- section.title -}}
+              {# TODO #fragment #}
               {# {{ section.document_is_included() }} {{ section.parent_or_including_document.reserved_title }}/{{ section.get_document().reserved_title }} #}
             </a>
           {%- endif -%}
@@ -49,6 +50,7 @@
           </span>
           {%- if section.reserved_title is not none -%}
             {{- section.reserved_title -}}
+            {# TODO #fragment #}
             {# {{ section.document_is_included() }} {{ section.parent_or_including_document.reserved_title }}/{{ section.get_document().reserved_title }} #}
           {%- endif -%}
         </a>

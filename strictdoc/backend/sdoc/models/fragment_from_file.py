@@ -47,6 +47,7 @@ class FragmentFromFile:
                 self,
                 mid=None,
                 uid=None,
+                is_fragment=True,
                 custom_level=None,
                 title=self.resolved_fragment.title,
                 requirement_prefix=self.resolved_fragment.get_requirement_prefix(),

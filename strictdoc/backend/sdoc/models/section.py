@@ -26,6 +26,7 @@ class SDocSection:  # pylint: disable=too-many-instance-attributes
         requirement_prefix: Optional[str],
         free_texts: List[FreeText],
         section_contents: List[SDocObject],
+        is_fragment=False,
     ):
         self.parent = parent
 
@@ -35,6 +36,8 @@ class SDocSection:  # pylint: disable=too-many-instance-attributes
             meaningful_uid = uid
         self.uid: Optional[str] = meaningful_uid
         self.reserved_uid: Optional[str] = meaningful_uid
+
+        self.is_fragment = is_fragment
 
         self.title = title
         self.reserved_title = title

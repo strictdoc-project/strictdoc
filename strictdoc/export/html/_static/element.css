@@ -1123,6 +1123,28 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   padding-right: calc(var(--base-rhythm) * 2);
 }
 
+.tree_fragments {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  /* gap: calc(var(--base-rhythm) * 0.5); */
+  /* margin-top: calc(var(--base-rhythm) * 0.5); */
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: calc(var(--base-rhythm) * 2);
+  padding-right: 0;
+  /* ul */
+  list-style: none;
+  width: 100%;
+}
+
+.tree_fragments li {
+  list-style: none;
+  width: 100%;
+  /* padding-bottom: calc(var(--base-rhythm) * 0.5); */
+}
+
 a.tree_item,
 .tree_item {
   display: flex;

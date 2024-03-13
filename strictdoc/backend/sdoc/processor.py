@@ -50,6 +50,9 @@ class SDocParsingProcessor:
     def process_document(self, document: SDocDocument):
         document.grammar = self.parse_context.document_grammar
         self.parse_context.document = document
+        document.ng_including_document_reference = (
+            self.parse_context.context_document_reference
+        )
 
     def get_default_processors(self):
         return {

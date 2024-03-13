@@ -626,9 +626,10 @@ class TraceabilityIndexBuilder:
                     fragment_from_file_.file
                 ]
                 fragment_from_file_.resolved_fragment = resolved_document
-                resolved_document.section_contents[
-                    0
-                ].ng_including_document_reference.set_document(document_)
+
+                resolved_document.ng_including_document_reference.set_document(
+                    document_
+                )
                 resolved_document.document_is_included = True
                 document_.included_documents.append(resolved_document)
 

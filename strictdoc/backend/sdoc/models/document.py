@@ -57,6 +57,8 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
         self.document_is_included: bool = False
         self.included_documents: List["SDocDocument"] = []
 
+        self.ng_including_document_reference: Optional = None
+
     @property
     def reserved_uid(self) -> Optional[str]:
         return self.config.uid

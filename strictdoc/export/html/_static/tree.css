@@ -91,6 +91,11 @@
     justify-content: space-between;
   }
 
+  .std-tree_row[included-document] > * {
+    padding-left: calc(2 * var(--base-rhythm));
+    border-left: double #000;
+  }
+
   .std-tree_folder {
     font-weight: bold;
     display: flex;

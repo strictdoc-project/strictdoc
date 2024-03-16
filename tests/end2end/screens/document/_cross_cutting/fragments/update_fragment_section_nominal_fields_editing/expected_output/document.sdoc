@@ -5,5 +5,5 @@ TITLE: Document 1
 Hello world!
 [/FREETEXT]
 
-[FRAGMENT_FROM_FILE]
-FILE: fragment.sfra
+[DOCUMENT_FROM_FILE]
+FILE: fragment.sdoc

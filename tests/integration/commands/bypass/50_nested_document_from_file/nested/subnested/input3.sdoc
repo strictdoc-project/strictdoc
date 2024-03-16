@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Hello world doc 3
+
+[SECTION]
+TITLE: Section 1
+
+[REQUIREMENT]
+TITLE: Req-1
+
+[REQUIREMENT]
+TITLE: Req-2
+
+[/SECTION]

@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Hello world doc 2
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Requirement title #2
+STATEMENT: Shall do #2.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1
+
+[DOCUMENT_FROM_FILE]
+FILE: subnested.sdoc

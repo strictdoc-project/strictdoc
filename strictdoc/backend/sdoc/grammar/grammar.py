@@ -242,7 +242,7 @@ SectionOrRequirement[noskipws]:
 ;
 
 FragmentFromFile[noskipws]:
-  '[FRAGMENT_FROM_FILE]' '\n'
+  '[DOCUMENT_FROM_FILE]' '\n'
   'FILE: ' file = /.+$/ '\n'
 ;
 

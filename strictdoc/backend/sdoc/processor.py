@@ -29,6 +29,7 @@ class ParseContext:
             self.path_to_sdoc_dir = os.path.dirname(path_to_sdoc_file)
 
         self.document_reference: DocumentReference = DocumentReference()
+        self.context_document_reference: DocumentReference = DocumentReference()
         self.document_config: Optional[DocumentConfig] = None
         self.document_grammar: DocumentGrammar = DocumentGrammar.create_default(
             None
@@ -49,6 +50,9 @@ class SDocParsingProcessor:
     def process_document(self, document: SDocDocument):
         document.grammar = self.parse_context.document_grammar
         self.parse_context.document = document
+        document.ng_including_document_reference = (
+            self.parse_context.context_document_reference
+        )
 
     def get_default_processors(self):
         return {
@@ -84,6 +88,9 @@ class SDocParsingProcessor:
 
     def process_section(self, section: SDocSection):
         section.ng_document_reference = self.parse_context.document_reference
+        section.ng_including_document_reference = (
+            self.parse_context.context_document_reference
+        )
 
         if self.parse_context.document_config.auto_levels:
             if (
@@ -113,9 +120,32 @@ class SDocParsingProcessor:
             fragment_from_file, FragmentFromFile
         ), fragment_from_file
 
+        # Windows paths are backslashes, so using abspath in addition.
+        resolved_path_to_fragment_file = os.path.abspath(
+            os.path.join(
+                self.parse_context.path_to_sdoc_dir, fragment_from_file.file
+            )
+        )
+        if not os.path.isfile(resolved_path_to_fragment_file):
+            raise StrictDocException(
+                "[DOCUMENT_FROM_FILE]: Path to a document file does not exist: "
+                f"{fragment_from_file.file}."
+            )
+        if not resolved_path_to_fragment_file.endswith(".sdoc"):
+            raise StrictDocException(
+                '[DOCUMENT_FROM_FILE]: A document file name must have ".sdoc" extension: '
+                f"{fragment_from_file.file}."
+            )
+
+        fragment_from_file.ng_document_reference = (
+            self.parse_context.document_reference
+        )
+        fragment_from_file.resolved_full_path_to_document_file = (
+            resolved_path_to_fragment_file
+        )
+
         self._resolve_parents(fragment_from_file)
         self.parse_context.current_include_parent = fragment_from_file.parent
-
         self.parse_context.fragments_from_files.append(fragment_from_file)
 
     def process_composite_requirement(
@@ -141,7 +171,9 @@ class SDocParsingProcessor:
         composite_requirement.ng_document_reference = (
             self.parse_context.document_reference
         )
-
+        composite_requirement.ng_including_document_reference = (
+            self.parse_context.context_document_reference
+        )
         if isinstance(composite_requirement.parent, SDocSection):
             self._resolve_parents(composite_requirement)
         elif isinstance(composite_requirement.parent, CompositeRequirement):
@@ -206,6 +238,9 @@ class SDocParsingProcessor:
 
         requirement.ng_document_reference = (
             self.parse_context.document_reference
+        )
+        requirement.ng_including_document_reference = (
+            self.parse_context.context_document_reference
         )
 
         if isinstance(requirement.parent, SDocSection):

@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Fragment
+
+[REQUIREMENT]
+TITLE: Modified title
+STATEMENT: >>>
+Modified statement.
+<<<

@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement title #1
+STATEMENT: Shall do #1.
+
+[DOCUMENT_FROM_FILE]
+FILE: nested.sdoc

@@ -26,6 +26,7 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
         requirement_prefix: Optional[str],
         free_texts: List[FreeText],
         section_contents: List[SDocObject],
+        root_section=False,
     ):
         self.parent = parent
 
@@ -50,6 +51,7 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
         self.ng_level: Optional[int] = None
         self.ng_has_requirements = False
         self.ng_document_reference: Optional[DocumentReference] = None
+        self.ng_including_document_reference: Optional[DocumentReference] = None
         self.context = SectionContext()
 
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
@@ -57,6 +59,9 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
 
         # This is always true, unless the node is filtered out with --filter-requirements.
         self.ng_whitelisted = True
+        # A root section is an artificial section where a root of an included
+        # document is mounted to when the document is included to another document.
+        self.root_section = root_section
 
     @staticmethod
     def get_type_string() -> str:
@@ -68,6 +73,31 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
     @property
     def document(self):
         return self.ng_document_reference.get_document()
+
+    def get_document(self):
+        return self.ng_document_reference.get_document()
+
+    def get_included_document(self):
+        return self.ng_including_document_reference.get_document()
+
+    @property
+    def parent_or_including_document(self) -> SDocDocument:
+        including_document_or_none = (
+            self.ng_including_document_reference.get_document()
+        )
+        if including_document_or_none is not None:
+            return including_document_or_none
+
+        document: Optional[SDocDocument] = (
+            self.ng_document_reference.get_document()
+        )
+        assert (
+            document is not None
+        ), "A valid requirement must always have a reference to the document."
+        return document
+
+    def document_is_included(self):
+        return self.ng_including_document_reference.get_document() is not None
 
     @property
     def is_requirement(self):

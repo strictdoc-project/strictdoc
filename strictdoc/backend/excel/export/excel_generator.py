@@ -79,13 +79,17 @@ class ExcelGenerator:
             columns = ExcelGenerator._init_columns_width(fields)
 
             req_uid_rows = ExcelGenerator._lookup_refs(
-                traceability_index.get_document_iterator(document).all_content()
+                traceability_index.get_document_iterator(document).all_content(
+                    print_fragments=False, print_fragments_from_files=False
+                )
             )
 
             if len(req_uid_rows):
                 for node in traceability_index.get_document_iterator(
                     document
-                ).all_content():
+                ).all_content(
+                    print_fragments=False, print_fragments_from_files=False
+                ):
                     if not node.is_requirement or not node.reserved_uid:
                         # only export the requirements with uid
                         continue

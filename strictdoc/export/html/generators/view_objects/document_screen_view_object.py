@@ -56,6 +56,9 @@ class DocumentScreenViewObject:
             with open(project_config.html2pdf_template) as f_:
                 self.custom_html2pdf_template = Template(f_.read())
 
+    def has_included_document(self):
+        return len(self.document.included_documents) > 0
+
     def render_screen(self, jinja_environment: Environment):
         if self.document_type.is_document:
             template = jinja_environment.get_template(
@@ -156,4 +159,7 @@ class DocumentScreenViewObject:
         yield from self.document_iterator.table_of_contents()
 
     def document_content_iterator(self):
-        yield from self.document_iterator.all_content()
+        yield from self.document_iterator.all_content(
+            print_fragments=True,
+            print_fragments_from_files=False,
+        )

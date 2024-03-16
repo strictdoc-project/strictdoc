@@ -1,0 +1,10 @@
+RUN: %strictdoc export . --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --dir %S/Output/html/20_asset_export_single_sdoc_double_includes_rel_path/_assets
+RUN: %check_exists --file %S/Output/html/20_asset_export_single_sdoc_double_includes_rel_path/_assets/sandbox1.svg
+
+RUN: %check_exists --file %S/Output/html/20_asset_export_single_sdoc_double_includes_rel_path/input.html
+
+RUN: %cat %S/Output/html/20_asset_export_single_sdoc_double_includes_rel_path/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <object class="image" data="_assets/sandbox1.svg" type="image/svg+xml">

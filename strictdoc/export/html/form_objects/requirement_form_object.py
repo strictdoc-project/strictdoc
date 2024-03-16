@@ -182,6 +182,13 @@ class RequirementReferenceFormField:
 
 @auto_described
 class RequirementFormObject(ErrorObject):
+    """
+    context_document_mid: The MID of the document where the requirement is edited.
+                          Normally, this is the requirement's own document but can
+                          also be the parent document if requirement's own document
+                          is included to it.
+    """
+
     def __init__(
         self,
         *,
@@ -189,6 +196,7 @@ class RequirementFormObject(ErrorObject):
         element_type: str,
         requirement_mid: Optional[str],
         document_mid: str,
+        context_document_mid: str,
         mid_field: Optional[RequirementFormField],
         fields: List[RequirementFormField],
         reference_fields: List[RequirementReferenceFormField],
@@ -203,6 +211,7 @@ class RequirementFormObject(ErrorObject):
         self.element_type: str = element_type
         self.requirement_mid: Optional[str] = requirement_mid
         self.document_mid: str = document_mid
+        self.context_document_mid: str = context_document_mid
         self.mid_field: Optional[RequirementFormField] = mid_field
         fields_dict: dict = defaultdict(list)
         for field in fields:
@@ -234,6 +243,7 @@ class RequirementFormObject(ErrorObject):
         requirement_fields = defaultdict(list)
         form_ref_fields: List[RequirementReferenceFormField] = []
 
+        context_document_mid = request_form_dict["context_document_mid"]
         requirement_dict = request_form_dict["requirement"]
 
         element_type = request_form_dict["element_type"]
@@ -342,6 +352,7 @@ class RequirementFormObject(ErrorObject):
             element_type=element_type,
             requirement_mid=requirement_mid,
             document_mid=document.reserved_mid,
+            context_document_mid=context_document_mid,
             mid_field=mid_field,
             fields=form_fields,
             reference_fields=form_ref_fields,
@@ -353,7 +364,11 @@ class RequirementFormObject(ErrorObject):
 
     @staticmethod
     def create_new(
-        *, document: SDocDocument, next_uid: str, element_type: str
+        *,
+        document: SDocDocument,
+        context_document_mid: str,
+        next_uid: str,
+        element_type: str,
     ) -> "RequirementFormObject":
         assert document.grammar is not None
 
@@ -395,6 +410,7 @@ class RequirementFormObject(ErrorObject):
             element_type=element_type,
             requirement_mid=new_requirement_mid,
             document_mid=document.reserved_mid,
+            context_document_mid=context_document_mid,
             mid_field=mid_field,
             fields=form_fields,
             reference_fields=[],
@@ -407,6 +423,7 @@ class RequirementFormObject(ErrorObject):
     def create_from_requirement(
         *,
         requirement: SDocNode,
+        context_document_mid: str,
     ) -> "RequirementFormObject":
         assert isinstance(requirement, SDocNode)
         document: SDocDocument = requirement.document
@@ -501,6 +518,7 @@ class RequirementFormObject(ErrorObject):
             element_type=requirement.requirement_type,
             requirement_mid=requirement.reserved_mid,
             document_mid=document.reserved_mid,
+            context_document_mid=context_document_mid,
             mid_field=mid_field,
             fields=form_fields,
             reference_fields=form_refs_fields,
@@ -511,11 +529,12 @@ class RequirementFormObject(ErrorObject):
 
     @staticmethod
     def clone_from_requirement(
-        *, requirement: SDocNode, clone_uid: str
+        *, requirement: SDocNode, context_document_mid: str, clone_uid: str
     ) -> "RequirementFormObject":
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_requirement(
-                requirement=requirement
+                requirement=requirement,
+                context_document_mid=context_document_mid,
             )
         )
         for field_name, fields_ in form_object.fields.items():

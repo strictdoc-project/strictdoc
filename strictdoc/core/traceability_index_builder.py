@@ -1,12 +1,13 @@
 import glob
 import os
 import sys
-from typing import Dict, Iterator, List, Optional, Union
+from typing import Dict, Iterator, List, Optional, Set, Union
 
 from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
@@ -311,7 +312,8 @@ class TraceabilityIndexBuilder:
             d_01_document_iterators[document] = document_iterator
 
             for node in document_iterator.all_content(
-                document, print_fragments=True
+                print_fragments=False,
+                print_fragments_from_files=False,
             ):
                 if graph_database.has_link(
                     link_type=GraphLinkType.MID_TO_NODE,
@@ -432,7 +434,8 @@ class TraceabilityIndexBuilder:
             document_iterator = d_01_document_iterators[document]
 
             for node in document_iterator.all_content(
-                document, print_fragments=True
+                print_fragments=False,
+                print_fragments_from_files=False,
             ):
                 if node.is_section:
                     for free_text in node.free_texts:
@@ -579,7 +582,8 @@ class TraceabilityIndexBuilder:
             document_iterator = d_01_document_iterators[document]
 
             for node in document_iterator.all_content(
-                document, print_fragments=True
+                print_fragments=False,
+                print_fragments_from_files=False,
             ):
                 if not node.is_requirement:
                     continue
@@ -604,6 +608,46 @@ class TraceabilityIndexBuilder:
                     ).get_child_uids(),
                 )
                 # @sdoc[/SDOC-SRS-30]
+
+        map_documents_by_input_rel_path: Dict[str, SDocDocument] = {}
+        for document_ in document_tree.document_list:
+            map_documents_by_input_rel_path[
+                document_.meta.input_doc_full_path
+            ] = document_
+
+        unique_document_from_file_occurences: Set[str] = set()
+        for document_ in document_tree.document_list:
+            fragment_from_file_: FragmentFromFile
+            for fragment_from_file_ in document_.fragments_from_files:
+                assert isinstance(
+                    fragment_from_file_, FragmentFromFile
+                ), fragment_from_file_
+                if (
+                    fragment_from_file_.resolved_full_path_to_document_file
+                    in unique_document_from_file_occurences
+                ):
+                    raise StrictDocException(
+                        "[DOCUMENT_FROM_FILE]: "
+                        "A multiple inclusion of a document is detected. "
+                        "A document can be only included once: "
+                        f"{fragment_from_file_.file}."
+                    )
+                unique_document_from_file_occurences.add(
+                    fragment_from_file_.resolved_full_path_to_document_file
+                )
+
+                resolved_document = map_documents_by_input_rel_path[
+                    fragment_from_file_.resolved_full_path_to_document_file
+                ]
+                fragment_from_file_.configure_with_resolved_document(
+                    resolved_document
+                )
+
+                resolved_document.ng_including_document_reference.set_document(
+                    document_
+                )
+                resolved_document.document_is_included = True
+                document_.included_documents.append(resolved_document)
 
         return traceability_index
 

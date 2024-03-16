@@ -113,6 +113,10 @@ class CreateRequirementTransform:
 
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(document)
+        requirement.ng_including_document_reference = (
+            document.ng_including_document_reference
+        )
+
         requirement.ng_level = parent.ng_level + 1
         parent.section_contents.insert(insert_to_idx, requirement)
 
@@ -143,3 +147,5 @@ class CreateRequirementTransform:
             else:
                 # FIXME
                 pass
+
+        traceability_index.update_last_updated()

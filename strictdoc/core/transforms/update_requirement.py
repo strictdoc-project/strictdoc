@@ -213,6 +213,8 @@ class UpdateRequirementTransform:
                     requirement_connections.requirement
                 )
 
+        traceability_index.update_last_updated()
+
         return UpdateRequirementResult(
             this_document_requirements_to_update=action_object.this_document_requirements_to_update
         )

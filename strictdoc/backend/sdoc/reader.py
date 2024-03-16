@@ -11,9 +11,6 @@ from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
-from strictdoc.backend.sdoc.post_processing.sdoc_fragment_post_processor import (
-    SDocFragmentPostProcessor,
-)
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
 from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.helpers.cast import assert_cast
@@ -105,7 +102,7 @@ class SDReader:
                 sdoc_content, file_path=file_path
             )
 
-            SDocFragmentPostProcessor.process_document(sdoc, parse_context)
+            sdoc.fragments_from_files = parse_context.fragments_from_files
 
             # HACK:
             # ProcessPoolExecutor doesn't work because of non-picklable parts

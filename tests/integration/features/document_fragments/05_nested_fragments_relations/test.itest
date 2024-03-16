@@ -1,0 +1,10 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/05_nested_fragments_relations/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML:data-level="1"
+CHECK-HTML:data-level="2"
+CHECK-HTML:data-level="2.1"
+CHECK-HTML:data-level="2.2"
+CHECK-HTML:data-level="2.2.1"

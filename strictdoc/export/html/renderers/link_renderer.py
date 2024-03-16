@@ -120,7 +120,7 @@ class LinkRenderer:
                 return document_type_cache[node]
         else:
             self.req_link_cache[link_cache_key] = {}
-        document_link = node.document.meta.get_html_link(
+        document_link = node.parent_or_including_document.meta.get_html_link(
             document_type,
             level,
             force_full_path=force_full_path,

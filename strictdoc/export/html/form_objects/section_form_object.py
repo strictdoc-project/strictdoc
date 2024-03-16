@@ -26,11 +26,13 @@ class SectionFormObject(ErrorObject):
         section_uid_field: RequirementFormField,
         section_title_field: RequirementFormField,
         section_statement_field: RequirementFormField,
+        context_document_mid: str,
     ):
         assert isinstance(section_mid, str)
         assert isinstance(section_uid_field, RequirementFormField)
         assert isinstance(section_title_field, RequirementFormField)
         assert isinstance(section_statement_field, RequirementFormField)
+        assert isinstance(context_document_mid, str)
 
         super().__init__()
         self.section_mid: str = section_mid
@@ -39,6 +41,7 @@ class SectionFormObject(ErrorObject):
         self.section_statement_field: RequirementFormField = (
             section_statement_field
         )
+        self.context_document_mid = context_document_mid
 
     @property
     def section_uid(self):
@@ -53,7 +56,7 @@ class SectionFormObject(ErrorObject):
         return self.section_statement_field.field_unescaped_value
 
     @staticmethod
-    def create_new():
+    def create_new(context_document_mid: str):
         return SectionFormObject(
             section_mid=MID.create(),
             section_uid_field=RequirementFormField(
@@ -77,10 +80,11 @@ class SectionFormObject(ErrorObject):
                 field_unescaped_value="",
                 field_escaped_value="",
             ),
+            context_document_mid=context_document_mid,
         )
 
     @staticmethod
-    def create_from_section(*, section: SDocSection):
+    def create_from_section(*, section: SDocSection, context_document_mid: str):
         uid_field_value = (
             section.reserved_uid if section.reserved_uid is not None else ""
         )
@@ -118,6 +122,7 @@ class SectionFormObject(ErrorObject):
                 field_unescaped_value=statement_field_value,
                 field_escaped_value=statement_escaped_field_value,
             ),
+            context_document_mid=context_document_mid,
         )
 
     @staticmethod
@@ -133,6 +138,7 @@ class SectionFormObject(ErrorObject):
         request_form_dict: Dict = assert_cast(
             parse_form_data(request_form_data_as_list), dict
         )
+        context_document_mid = request_form_dict["context_document_mid"]
         requirement_dict = request_form_dict["requirement"]
         requirement_fields_dict = requirement_dict["fields"]
 
@@ -182,5 +188,6 @@ class SectionFormObject(ErrorObject):
             section_uid_field=section_uid_field,
             section_title_field=section_title_field,
             section_statement_field=section_statement_field,
+            context_document_mid=context_document_mid,
         )
         return form_object

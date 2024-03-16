@@ -15,6 +15,10 @@ class FreeText:
         self.ng_level = None
 
     @property
+    def parent_or_including_document(self):
+        return self.parent.parent_or_including_document
+
+    @property
     def is_requirement(self):
         return False
 

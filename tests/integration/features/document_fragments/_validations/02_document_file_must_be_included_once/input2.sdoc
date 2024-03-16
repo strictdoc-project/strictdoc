@@ -1,0 +1,5 @@
+[DOCUMENT]
+TITLE: Hello world doc 2
+
+[DOCUMENT_FROM_FILE]
+FILE: nested.sdoc

@@ -63,7 +63,7 @@ class DocumentCachingIterator:
                     if print_fragments_from_files:
                         yield current
                 else:
-                    assert current.resolved_fragment is not None
+                    assert current.resolved_document is not None
                     section_contents = map(
                         lambda node_: (node_, current_level),
                         reversed(current.section_contents),

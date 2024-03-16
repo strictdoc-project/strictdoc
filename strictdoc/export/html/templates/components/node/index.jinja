@@ -14,7 +14,7 @@
 
 {% set node_type = sdoc_entity.get_type_string() %}
 {% set is_not_standalone = view_object.project_config.is_running_on_server and not view_object.standalone %}
-{% set is_fragment = (sdoc_entity.is_fragment is defined and sdoc_entity.is_fragment == true) %}
+{% set is_root_section = (sdoc_entity.root_section is defined and sdoc_entity.root_section == true) %}
 {% set is_included = sdoc_entity.document_is_included() %}
 
 <turbo-frame
@@ -32,8 +32,8 @@
     {%- endif %}
     node-role="{{ node_type }}"
     data-included-document="{{ is_included }}"
-    {%- if is_fragment %}
-      data-included-root-section="{{ is_fragment }}"
+    {%- if is_root_section %}
+      data-included-root-section="{{ is_root_section }}"
     {%- endif %}
     data-testid="node-{{ node_type }}"
   >
@@ -43,7 +43,7 @@
     {# {% if is_included %}
       <div style="color:green">My home doc is <b>"{{ sdoc_entity.document.title }}"</b>.</div>
       <div style="color:blue">My including doc is <b>"{{ sdoc_entity.parent_or_including_document.title }}"</b>.</div>
-      {% if is_fragment %}
+      {% if root_section %}
       <div style="color:red">I am a fragment!</div>
       {% endif %}
     {% else %}
@@ -67,7 +67,7 @@
     {% endblock sdoc_entity %}
 
     {# node_controls #}
-    {%- if is_not_standalone and not is_fragment -%}
+    {%- if is_not_standalone and not is_root_section -%}
     {% include "components/node/node_controls/index.jinja" %}
     {%- endif -%}
 

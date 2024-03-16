@@ -625,7 +625,9 @@ class TraceabilityIndexBuilder:
                 resolved_document = map_documents_by_input_rel_path[
                     fragment_from_file_.file
                 ]
-                fragment_from_file_.resolved_fragment = resolved_document
+                fragment_from_file_.configure_with_resolved_document(
+                    resolved_document
+                )
 
                 resolved_document.ng_including_document_reference.set_document(
                     document_

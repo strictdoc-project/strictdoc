@@ -20,7 +20,8 @@ class FragmentFromFile:
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_included_document_reference: Optional[DocumentReference] = None
 
-        self.resolved_fragment: Optional = None
+        self.resolved_document: Optional = None
+        self.top_section: Optional = None
 
     @property
     def document(self):
@@ -41,26 +42,26 @@ class FragmentFromFile:
 
     @property
     def section_contents(self) -> List:
-        assert self.resolved_fragment is not None, self.resolved_fragment
-        if True:
-            wrapping_section = SDocSection(
-                self,
-                mid=None,
-                uid=None,
-                is_fragment=True,
-                custom_level=None,
-                title=self.resolved_fragment.title,
-                requirement_prefix=self.resolved_fragment.get_requirement_prefix(),
-                free_texts=self.resolved_fragment.free_texts,
-                section_contents=self.resolved_fragment.section_contents,
-            )
-            wrapping_section.ng_level = self.ng_level
-            assert self.ng_included_document_reference is None
-            assert self.ng_document_reference is not None
-            wrapping_section.ng_document_reference = self.ng_document_reference
-            wrapping_section.ng_including_document_reference = (
-                self.ng_document_reference
-            )
+        return [self.top_section]
 
-            return [wrapping_section]
-        return self.resolved_fragment.section_contents
+    def configure_with_resolved_document(self, document):
+        assert document is not None
+        self.resolved_document = document
+
+        top_section = SDocSection(
+            self,
+            mid=None,
+            uid=None,
+            custom_level=None,
+            title=self.resolved_document.title,
+            requirement_prefix=self.resolved_document.get_requirement_prefix(),
+            free_texts=self.resolved_document.free_texts,
+            section_contents=self.resolved_document.section_contents,
+            root_section=True,
+        )
+        top_section.ng_level = self.ng_level
+        assert self.ng_included_document_reference is None
+        assert self.ng_document_reference is not None
+        top_section.ng_document_reference = self.ng_document_reference
+        top_section.ng_including_document_reference = self.ng_document_reference
+        self.top_section = top_section

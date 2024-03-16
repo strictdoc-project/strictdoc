@@ -56,6 +56,9 @@ class DocumentScreenViewObject:
             with open(project_config.html2pdf_template) as f_:
                 self.custom_html2pdf_template = Template(f_.read())
 
+    def has_included_document(self):
+        return len(self.document.included_documents) > 0
+
     def render_screen(self, jinja_environment: Environment):
         if self.document_type.is_document:
             template = jinja_environment.get_template(

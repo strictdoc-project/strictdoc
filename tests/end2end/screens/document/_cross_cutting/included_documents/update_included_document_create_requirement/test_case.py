@@ -1,10 +1,10 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.node.add_node_menu import AddNode_Menu
+from tests.end2end.helpers.components.node.requirement import Requirement
+from tests.end2end.helpers.components.node.section import Section
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
-)
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
 )
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -33,21 +33,29 @@ class Test(E2ECase):
 
             screen_document.assert_text("Hello world!")
 
-            requirement = screen_document.get_requirement(1)
+            section: Section = screen_document.get_section(node_order=2)
 
+            section_menu: AddNode_Menu = section.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
-                requirement.do_open_form_edit_requirement()
+                section_menu.do_node_add_requirement_child()
             )
-            form_edit_requirement.do_fill_in_field_title("Modified title")
+
+            form_edit_requirement.do_fill_in_field_title("Requirement title")
             form_edit_requirement.do_fill_in_field_statement(
-                "Modified statement."
+                "Requirement statement."
             )
             form_edit_requirement.do_form_submit()
 
-            requirement.assert_requirement_title("Modified title")
+            requirement: Requirement = screen_document.get_requirement()
+
+            requirement.assert_requirement_title("Requirement title")
             requirement.assert_requirement_statement_contains(
-                "Modified statement."
+                "Requirement statement."
             )
-            screen_document.assert_toc_contains("Modified title")
+            screen_document.assert_toc_contains("Requirement title")
+
+            screen_document.get_root_node().assert_document_title_contains(
+                "Document 1"
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

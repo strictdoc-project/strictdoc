@@ -25,3 +25,5 @@ class DeleteSectionCommand:
         section_parent.section_contents.remove(section)
 
         section.parent = None
+
+        self.traceability_index.update_last_updated()

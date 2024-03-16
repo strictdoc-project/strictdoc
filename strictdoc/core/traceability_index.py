@@ -488,6 +488,12 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             raise NotImplementedError
 
     def update_last_updated(self):
+        """
+        This is a rather broad way of signalling that all documents of the index
+        need to be re-generated when they are opened next time. Several UI
+        actions use this method to ensure a complete re-generation of all
+        documents.
+        """
         self.index_last_updated = datetime.today()
 
     def create_requirement(self, requirement: SDocNode):

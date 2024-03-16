@@ -34,7 +34,7 @@
   #}
 {%- if sdoc_entity.get_type_string() != 'document' -%}
   <a
-    href="/actions/document/edit_{{ sdoc_entity.get_type_string() }}/{{ sdoc_entity.reserved_mid }}"
+    href="/actions/document/edit_{{ sdoc_entity.get_type_string() }}?node_id={{sdoc_entity.reserved_mid}}&context_document_mid={{ view_object.document.reserved_mid }}"
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
@@ -42,7 +42,7 @@
     data-testid="node-edit-action"
   >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
   <a
-    href="/actions/document/delete_{{ sdoc_entity.get_type_string() }}/{{ sdoc_entity.reserved_mid }}"
+    href="/actions/document/delete_{{ sdoc_entity.get_type_string() }}?node_id={{ sdoc_entity.reserved_mid }}&context_document_mid={{ view_object.document.reserved_mid }}"
     class="action_button"
     data-turbo-method="delete"
     data-turbo="true"
@@ -58,7 +58,7 @@
   #}
 {%- if sdoc_entity.get_type_string() == 'requirement' -%}
   <a
-    href="/actions/document/clone_requirement?reference_mid={{ sdoc_entity.reserved_mid }}"
+    href="/actions/document/clone_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&context_document_mid={{view_object.document.reserved_mid}}"
     class="action_button"
     {# data-turbo-action="replace" #}
     {# data-turbo-method="delete" #}
@@ -113,7 +113,7 @@
           <li>{# 2 • Document -> add Section #}</li>
           <li>{# 3 • Document -> add Section #}
             <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
               title="Add first child Section"
@@ -130,7 +130,7 @@
             <li>{# 2 • Document -> add Requirement #}</li>
             <li>{# 3 • Document -> add Requirement #}
               <a
-                  href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}"
+                  href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{ view_object.document.reserved_mid }}"
                   data-turbo-action="replace"
                   data-turbo="true"
                   title="Add first child {{ element_.tag }}"
@@ -151,7 +151,7 @@
           {# There should be 3 places for the buttons: #}
           <li>{# 1 • Section -> add Section #}
             <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
               title="Add Section above"
@@ -160,7 +160,7 @@
           </li>
           <li>{# 2 • Section -> add Section #}
             <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child"
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
               title="Add child Section"
@@ -169,7 +169,7 @@
           </li>
           <li>{# 3 • Section -> add Section #}
             <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
               title="Add Section below"
@@ -184,7 +184,7 @@
             {# There should be 3 places for the buttons: #}
             <li>{# 1 • Section -> add Requirement #}
               <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}"
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
                 title="Add Requirement above"
@@ -193,7 +193,7 @@
             </li>
             <li>{# 2 • Section -> add Requirement #}
               <a
-                  href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}"
+                  href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                   data-turbo-action="replace"
                   data-turbo="true"
                   title="Add child Requirement"
@@ -202,7 +202,7 @@
             </li>
             <li>{# 3 • Section -> add Requirement #}
               <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}"
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
                 title="Add Requirement below"
@@ -224,7 +224,7 @@
           <li>{# 1 • Requirement -> add Section #}</li>
           <li>{# 2 • Requirement -> add Section #}
             <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before"
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
               title="Add Section above"
@@ -233,7 +233,7 @@
           </li>
           <li>{# 3 • Requirement -> add Section #}
             <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after"
+              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
               title="Add Section below"
@@ -249,7 +249,7 @@
             <li>{# 1 • Requirement -> add Requirement #}</li>
             <li>{# 2 • Requirement -> add Requirement #}
               <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}"
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
                 title="Add Requirement above"
@@ -258,7 +258,7 @@
             </li>
             <li>{# 3 • Requirement -> add Requirement #}
               <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}"
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
                 title="Add Requirement below"

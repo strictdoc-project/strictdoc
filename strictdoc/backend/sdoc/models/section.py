@@ -15,7 +15,7 @@ class SectionContext:
 
 
 @auto_described
-class SDocSection:  # pylint: disable=too-many-instance-attributes
+class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         parent,
@@ -76,6 +76,9 @@ class SDocSection:  # pylint: disable=too-many-instance-attributes
 
     def get_document(self):
         return self.ng_document_reference.get_document()
+
+    def get_included_document(self):
+        return self.ng_including_document_reference.get_document()
 
     @property
     def parent_or_including_document(self) -> SDocDocument:

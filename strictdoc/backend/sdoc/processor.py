@@ -120,8 +120,28 @@ class SDocParsingProcessor:
             fragment_from_file, FragmentFromFile
         ), fragment_from_file
 
+        # Windows paths are backslashes, so using abspath in addition.
+        resolved_path_to_fragment_file = os.path.abspath(
+            os.path.join(
+                self.parse_context.path_to_sdoc_dir, fragment_from_file.file
+            )
+        )
+        if not os.path.isfile(resolved_path_to_fragment_file):
+            raise StrictDocException(
+                "[DOCUMENT_FROM_FILE]: Path to a document file does not exist: "
+                f"{fragment_from_file.file}."
+            )
+        if not resolved_path_to_fragment_file.endswith(".sdoc"):
+            raise StrictDocException(
+                '[DOCUMENT_FROM_FILE]: A document file name must have ".sdoc" extension: '
+                f"{fragment_from_file.file}."
+            )
+
         fragment_from_file.ng_document_reference = (
             self.parse_context.document_reference
+        )
+        fragment_from_file.resolved_full_path_to_document_file = (
+            resolved_path_to_fragment_file
         )
 
         self._resolve_parents(fragment_from_file)

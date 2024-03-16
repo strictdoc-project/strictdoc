@@ -1,7 +1,7 @@
 import glob
 import os
 import sys
-from typing import Dict, Iterator, List, Optional, Union
+from typing import Dict, Iterator, List, Optional, Set, Union
 
 from textx import TextXSyntaxError
 
@@ -612,18 +612,32 @@ class TraceabilityIndexBuilder:
         map_documents_by_input_rel_path: Dict[str, SDocDocument] = {}
         for document_ in document_tree.document_list:
             map_documents_by_input_rel_path[
-                document_.meta.input_doc_rel_path
+                document_.meta.input_doc_full_path
             ] = document_
 
+        unique_document_from_file_occurences: Set[str] = set()
         for document_ in document_tree.document_list:
             fragment_from_file_: FragmentFromFile
             for fragment_from_file_ in document_.fragments_from_files:
                 assert isinstance(
                     fragment_from_file_, FragmentFromFile
                 ), fragment_from_file_
+                if (
+                    fragment_from_file_.resolved_full_path_to_document_file
+                    in unique_document_from_file_occurences
+                ):
+                    raise StrictDocException(
+                        "[DOCUMENT_FROM_FILE]: "
+                        "A multiple inclusion of a document is detected. "
+                        "A document can be only included once: "
+                        f"{fragment_from_file_.file}."
+                    )
+                unique_document_from_file_occurences.add(
+                    fragment_from_file_.resolved_full_path_to_document_file
+                )
 
                 resolved_document = map_documents_by_input_rel_path[
-                    fragment_from_file_.file
+                    fragment_from_file_.resolved_full_path_to_document_file
                 ]
                 fragment_from_file_.configure_with_resolved_document(
                     resolved_document

@@ -147,3 +147,5 @@ class CreateRequirementTransform:
             else:
                 # FIXME
                 pass
+
+        traceability_index.update_last_updated()

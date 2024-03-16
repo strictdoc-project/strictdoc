@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Fragment
+
+[SECTION]
+TITLE: First section
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<
+
+[/SECTION]

@@ -19,6 +19,7 @@
   {%- endif -%}
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{ form_object.requirement_mid }}" />
   <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}" />
+  <input type="hidden" id="context_document_mid" name="context_document_mid" value="{{ form_object.context_document_mid }}" />
   <input type="hidden" id="element_type" name="element_type" value="{{ form_object.element_type }}" />
 
 {# Fields #}
@@ -83,7 +84,7 @@
   <sdoc-form-row>
     <a
       class="action_button"
-      href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&element_type={{ form_object.element_type }}"
+      href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}"
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"
@@ -117,7 +118,7 @@
   <sdoc-form-row>
     <a
       class="action_button"
-      href="/actions/document/new_comment?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&element_type={{ form_object.element_type }}"
+      href="/actions/document/new_comment?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}"
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"

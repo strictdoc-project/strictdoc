@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Fragment
+
+[SECTION]
+TITLE: First section
+
+[FREETEXT]
+This is a free text of this section.
+[/FREETEXT]
+
+[/SECTION]

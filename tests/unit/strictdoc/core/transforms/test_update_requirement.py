@@ -41,7 +41,10 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
     assert requirement2_parents == []
 
     form_object: RequirementFormObject = (
-        RequirementFormObject.create_from_requirement(requirement=requirement2)
+        RequirementFormObject.create_from_requirement(
+            requirement=requirement2,
+            context_document_mid=document_1.reserved_mid,
+        )
     )
     form_object.reference_fields.append(
         RequirementReferenceFormField(
@@ -102,7 +105,10 @@ def test_02_single_document_add_second_parent_relation_with_role():
     assert requirement2_parents == [(requirement1, "Refines")]
 
     form_object: RequirementFormObject = (
-        RequirementFormObject.create_from_requirement(requirement=requirement2)
+        RequirementFormObject.create_from_requirement(
+            requirement=requirement2,
+            context_document_mid=document_1.reserved_mid,
+        )
     )
     update_command = UpdateRequirementTransform(
         form_object=form_object,
@@ -171,7 +177,10 @@ def test_20_single_document_add_second_child_relation_with_role():
     assert requirement2_children == [(requirement1, "IsRefinedBy")]
 
     form_object: RequirementFormObject = (
-        RequirementFormObject.create_from_requirement(requirement=requirement2)
+        RequirementFormObject.create_from_requirement(
+            requirement=requirement2,
+            context_document_mid=document_1.reserved_mid,
+        )
     )
     form_object.reference_fields.append(
         RequirementReferenceFormField(
@@ -244,7 +253,10 @@ def test_25_single_document_remove_child_relation():
     assert requirement2_children == [(requirement1, "IsRefinedBy")]
 
     form_object: RequirementFormObject = (
-        RequirementFormObject.create_from_requirement(requirement=requirement2)
+        RequirementFormObject.create_from_requirement(
+            requirement=requirement2,
+            context_document_mid=document_1.reserved_mid,
+        )
     )
 
     # Form object has no relations.
@@ -312,7 +324,10 @@ def test_26_two_documents_remove_child_relation():
     assert requirement2_children == [(requirement1, "IsRefinedBy")]
 
     form_object: RequirementFormObject = (
-        RequirementFormObject.create_from_requirement(requirement=requirement2)
+        RequirementFormObject.create_from_requirement(
+            requirement=requirement2,
+            context_document_mid=document_2.reserved_mid,
+        )
     )
 
     # Form object has no relations.

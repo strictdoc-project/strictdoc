@@ -262,7 +262,9 @@ def create_main_router(
         )
 
     @router.get("/actions/document/new_section", response_class=Response)
-    def get_new_section(reference_mid: str, whereto: str):
+    def get_new_section(
+        reference_mid: str, whereto: str, context_document_mid: str
+    ):
         assert isinstance(whereto, str), whereto
         assert NodeCreationOrder.is_valid(whereto), whereto
 
@@ -270,7 +272,9 @@ def create_main_router(
             isinstance(reference_mid, str) and len(reference_mid) > 0
         ), reference_mid
 
-        section_form_object = SectionFormObject.create_new()
+        section_form_object = SectionFormObject.create_new(
+            context_document_mid=context_document_mid
+        )
         reference_node: Union[SDocDocument, SDocSection] = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         )
@@ -330,6 +334,7 @@ def create_main_router(
         request_dict: Dict[str, str] = dict(request_form_data)
         section_mid: str = request_dict["section_mid"]
         reference_mid: str = request_dict["reference_mid"]
+        context_document_mid: str = request_dict["context_document_mid"]
         whereto: str = request_dict["whereto"]
 
         reference_node = export_action.traceability_index.get_node_by_mid(
@@ -421,9 +426,12 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
+        context_document = export_action.traceability_index.get_node_by_mid(
+            MID(context_document_mid)
+        )
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            document=document,
+            document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             link_renderer=link_renderer,
@@ -453,14 +461,14 @@ def create_main_router(
             },
         )
 
-    @router.get(
-        "/actions/document/edit_section/{section_id}", response_class=Response
-    )
-    def get_edit_section(section_id: str):
+    @router.get("/actions/document/edit_section", response_class=Response)
+    def get_edit_section(node_id: str, context_document_mid: str):
         section: SDocSection = export_action.traceability_index.get_node_by_mid(
-            MID(section_id)
+            MID(node_id)
         )
-        form_object = SectionFormObject.create_from_section(section=section)
+        form_object = SectionFormObject.create_from_section(
+            section=section, context_document_mid=context_document_mid
+        )
         template = env().get_template(
             "actions/document/edit_section/stream_edit_section.jinja.html"
         )
@@ -496,6 +504,7 @@ def create_main_router(
         request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         section_mid = request_dict["section_mid"]
+        context_document_mid = request_dict["context_document_mid"]
         section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(section_mid)
         )
@@ -565,6 +574,12 @@ def create_main_router(
         # when they are opened next time.
         export_action.traceability_index.update_last_updated()
 
+        context_document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(context_document_mid)
+            )
+        )
+
         # Rendering back the Turbo template.
         template = env().get_template(
             "actions/document/edit_section/stream_updated_section.jinja.html"
@@ -583,7 +598,7 @@ def create_main_router(
         )
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            document=section.document,
+            document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             link_renderer=link_renderer,
@@ -660,11 +675,15 @@ def create_main_router(
 
     @router.get("/actions/document/new_requirement", response_class=Response)
     def get_new_requirement(
-        reference_mid: str, whereto: str, element_type: str
+        reference_mid: str,
+        whereto: str,
+        element_type: str,
+        context_document_mid: str,
     ):
         assert isinstance(reference_mid, str), reference_mid
         assert isinstance(whereto, str), whereto
         assert isinstance(element_type, str), element_type
+        assert isinstance(context_document_mid, str), context_document_mid
 
         assert NodeCreationOrder.is_valid(whereto), whereto
 
@@ -686,7 +705,10 @@ def create_main_router(
             reference_node.get_requirement_prefix()
         )
         form_object = RequirementFormObject.create_new(
-            document=document, next_uid=next_uid, element_type=element_type
+            document=document,
+            context_document_mid=context_document_mid,
+            next_uid=next_uid,
+            element_type=element_type,
         )
 
         target_node_mid = reference_mid
@@ -738,7 +760,7 @@ def create_main_router(
         )
 
     @router.get("/actions/document/clone_requirement", response_class=Response)
-    def get_clone_requirement(reference_mid: str):
+    def get_clone_requirement(reference_mid: str, context_document_mid: str):
         assert isinstance(reference_mid, str), reference_mid
 
         reference_node = export_action.traceability_index.get_node_by_mid(
@@ -760,7 +782,9 @@ def create_main_router(
         )
         form_object: RequirementFormObject = (
             RequirementFormObject.clone_from_requirement(
-                requirement=reference_requirement, clone_uid=next_uid
+                requirement=reference_requirement,
+                context_document_mid=context_document_mid,
+                clone_uid=next_uid,
             )
         )
 
@@ -814,11 +838,18 @@ def create_main_router(
         request_dict: Dict[str, str] = dict(request_form_data)
         requirement_mid: str = request_dict["requirement_mid"]
         document_mid: str = request_dict["document_mid"]
+        context_document_mid: str = request_dict["context_document_mid"]
         reference_mid: str = request_dict["reference_mid"]
         whereto: str = request_dict["whereto"]
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
+        context_document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(context_document_mid)
+            )
+        )
+
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_request(
                 is_new=True,
@@ -882,11 +913,6 @@ def create_main_router(
         )
         transform.perform()
 
-        # Update the index because other documents might reference this
-        # document's sections. These documents will be regenerated on demand,
-        # when they are opened next time.
-        export_action.traceability_index.update_last_updated()
-
         # Saving new content to .SDoc files.
         SDWriter().write_to_file(document)
 
@@ -914,7 +940,7 @@ def create_main_router(
 
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            document=document,
+            document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             link_renderer=link_renderer,
@@ -932,19 +958,15 @@ def create_main_router(
             },
         )
 
-    @router.get(
-        "/actions/document/edit_requirement/{requirement_id}",
-        response_class=Response,
-    )
-    def get_edit_requirement(requirement_id: str):
+    @router.get("/actions/document/edit_requirement", response_class=Response)
+    def get_edit_requirement(node_id: str, context_document_mid: str):
         requirement: SDocNode = (
-            export_action.traceability_index.get_node_by_mid(
-                MID(requirement_id)
-            )
+            export_action.traceability_index.get_node_by_mid(MID(node_id))
         )
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_requirement(
-                requirement=requirement
+                requirement=requirement,
+                context_document_mid=context_document_mid,
             )
         )
         document = requirement.document
@@ -1106,11 +1128,6 @@ def create_main_router(
         )
         result: UpdateRequirementResult = update_command.perform()
 
-        # Update the index because other documents might reference this
-        # document's sections. These documents will be regenerated on demand,
-        # when they are opened next time.
-        export_action.traceability_index.update_last_updated()
-
         # Saving new content to .SDoc files.
         SDWriter().write_to_file(document)
 
@@ -1240,16 +1257,24 @@ def create_main_router(
         )
 
     @router.delete(
-        "/actions/document/delete_section/{section_mid}",
+        "/actions/document/delete_section",
         response_class=Response,
     )
-    def delete_section(section_mid: str, confirmed: bool = False):
+    def delete_section(
+        node_id: str, context_document_mid: str, confirmed: bool = False
+    ):
+        assert (
+            isinstance(context_document_mid, str)
+            and len(context_document_mid) > 0
+        ), context_document_mid
         if not confirmed:
             template = env().get_template(
                 "actions/document/delete_section/"
                 "stream_confirm_delete_section.jinja"
             )
-            output = template.render(section_mid=section_mid)
+            output = template.render(
+                section_mid=node_id, context_document_mid=context_document_mid
+            )
             return HTMLResponse(
                 content=output,
                 status_code=200,
@@ -1258,7 +1283,7 @@ def create_main_router(
                 },
             )
         section: SDocSection = assert_cast(
-            export_action.traceability_index.get_node_by_mid(MID(section_mid)),
+            export_action.traceability_index.get_node_by_mid(MID(node_id)),
             SDocSection,
         )
         try:
@@ -1280,11 +1305,15 @@ def create_main_router(
                 },
             )
 
+        context_document: SDocDocument = assert_cast(
+            export_action.traceability_index.get_node_by_mid(
+                MID(context_document_mid)
+            ),
+            SDocDocument,
+        )
+
         # Saving new content to .SDoc file.
         SDWriter().write_to_file(section.document)
-
-        # Re-exporting HTML files.
-        export_action.export()
 
         # Rendering back the Turbo template.
         template = env().get_template(
@@ -1304,7 +1333,7 @@ def create_main_router(
         )
         view_object: DocumentScreenViewObject = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            document=section.document,
+            document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             link_renderer=link_renderer,
@@ -1325,16 +1354,21 @@ def create_main_router(
         )
 
     @router.delete(
-        "/actions/document/delete_requirement/{requirement_mid}",
+        "/actions/document/delete_requirement",
         response_class=Response,
     )
-    def delete_requirement(requirement_mid: str, confirmed: bool = False):
+    def delete_requirement(
+        node_id: str, context_document_mid: str, confirmed: bool = False
+    ):
         if not confirmed:
             template = env().get_template(
                 "actions/document/delete_requirement/"
                 "stream_confirm_delete_requirement.jinja"
             )
-            output = template.render(requirement_mid=requirement_mid)
+            output = template.render(
+                requirement_mid=node_id,
+                context_document_mid=context_document_mid,
+            )
             return HTMLResponse(
                 content=output,
                 status_code=200,
@@ -1344,9 +1378,7 @@ def create_main_router(
             )
 
         requirement: SDocNode = (
-            export_action.traceability_index.get_node_by_mid(
-                MID(requirement_mid)
-            )
+            export_action.traceability_index.get_node_by_mid(MID(node_id))
         )
 
         export_action.traceability_index.delete_requirement(requirement)
@@ -1357,11 +1389,16 @@ def create_main_router(
         requirement_parent.section_contents.remove(requirement)
         requirement.parent = None
 
+        export_action.traceability_index.update_last_updated()
+
         # Saving new content to .SDoc file.
         SDWriter().write_to_file(requirement.document)
 
-        # Re-exporting HTML files.
-        export_action.export()
+        context_document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(context_document_mid)
+            )
+        )
 
         # Rendering back the Turbo template.
         template = env().get_template(
@@ -1382,7 +1419,7 @@ def create_main_router(
         )
         view_object: DocumentScreenViewObject = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            document=requirement.document,
+            document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             link_renderer=link_renderer,
@@ -1671,7 +1708,10 @@ def create_main_router(
 
     @router.get("/actions/document/new_comment", response_class=Response)
     def document__add_comment(
-        requirement_mid: str, document_mid: str, element_type: str
+        requirement_mid: str,
+        document_mid: str,
+        context_document_mid: str,
+        element_type: str,
     ):
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
@@ -1693,6 +1733,7 @@ def create_main_router(
                 element_type=element_type,
                 requirement_mid=requirement_mid,
                 document_mid=document.reserved_mid,
+                context_document_mid=context_document_mid,
                 mid_field=None,
                 fields=[],
                 reference_fields=[],
@@ -1718,7 +1759,10 @@ def create_main_router(
 
     @router.get("/actions/document/new_relation", response_class=Response)
     def document__add_relation(
-        requirement_mid: str, document_mid: str, element_type: str
+        requirement_mid: str,
+        document_mid: str,
+        context_document_mid: str,
+        element_type: str,
     ):
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
@@ -1744,6 +1788,7 @@ def create_main_router(
                 element_type=element_type,
                 requirement_mid=requirement_mid,
                 document_mid=document_mid,
+                context_document_mid=context_document_mid,
                 mid_field=None,
                 fields=[],
                 reference_fields=[],

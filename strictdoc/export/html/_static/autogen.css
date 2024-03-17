@@ -14,16 +14,10 @@ sdoc-autogen {
   --autogen-v-rhythm: calc(var(--base-rhythm, 8px) * 2);
 }
 
-/* automatically added by RST */
-
-div.document {
-  /* alarm style for detecting unwrapped blocks */
-  border: 1px dashed red;
-}
-
-sdoc-autogen div.document {
-  display: contents;
-  border: none;
+sdoc-autogen a,
+sdoc-autogen a:link,
+sdoc-autogen a:visited {
+  text-decoration: underline;
 }
 
 /* Table */
@@ -66,7 +60,7 @@ sdoc-autogen table td {
 /* Typography */
 
 sdoc-autogen p {
-  margin: var(--autogen-v-rhythm, 16px) 0;
+  margin: var(--autogen-v-rhythm) 0;
 }
 
 /* blockquote */
@@ -75,7 +69,7 @@ sdoc-autogen blockquote {
   color: #666;
   padding: .25em 0 0.25em 1rem;
   border-left: 4px solid #ccc;
-  margin: var(--autogen-v-rhythm, 16px) 0;
+  margin: var(--autogen-v-rhythm) 0;
 }
 
 /* pre.code */
@@ -129,7 +123,7 @@ sdoc-autogen tt.literal {
 sdoc-autogen ul,
 sdoc-autogen ol {
   padding-left: 1.6em;
-  margin: var(--autogen-v-rhythm, 16px) 0;
+  margin: var(--autogen-v-rhythm) 0;
 }
 
 /* list in table */
@@ -148,6 +142,22 @@ sdoc-autogen object {
   background: var(--color-bg-contrast);
 }
 
+/*
+  **************************
+  automatically added by RST
+  **************************
+*/
+
+div.document {
+  /* alarm style for detecting unwrapped blocks */
+  border: 1px dashed red;
+}
+
+sdoc-autogen div.document {
+  display: contents;
+  border: none;
+}
+
 /* block margins */
 
 sdoc-autogen .document > *:first-child, /* RST */
@@ -160,3 +170,87 @@ sdoc-autogen > *:last-child {
   margin-bottom: 0 !important;
 }
 
+/* admonition by RST */
+/* "attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning" */
+
+sdoc-autogen .admonition {
+  display: block;
+  overflow: hidden;
+  padding: 0 var(--autogen-v-rhythm);
+  border: var(--requirement-border-width, 1px) solid;
+  border-radius: var(--requirement-border-radius);
+  margin: var(--autogen-v-rhythm) 0;
+  color: var(--color-fg-main);
+}
+
+sdoc-autogen .admonition .admonition-title {
+  margin: 0;
+  padding-top: calc(0.5 * var(--base-rhythm));
+  padding-bottom: calc(0.5 * var(--base-rhythm));
+  color: currentColor;
+  font-weight: 600;
+  position: relative;
+}
+
+sdoc-autogen .admonition .admonition-title::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: calc(-1 * var(--autogen-v-rhythm));
+  right: calc(-1 * var(--autogen-v-rhythm));
+  /* background:repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, .25),
+    rgba(255, 255, 255, .25) 10px,
+    rgba(255, 255, 255, .0) 10px,
+    rgba(255, 255, 255, .0) 20px
+  ); */
+  background-color: currentColor;
+  opacity: 0.1;
+}
+
+sdoc-autogen .admonition > *:not(.admonition-title) {
+  color: var(--color-fg-main);
+}
+
+sdoc-autogen .admonition.attention {
+  color: Crimson;
+}
+
+sdoc-autogen .admonition.caution {
+  color: Crimson;
+}
+
+sdoc-autogen .admonition.important {
+  color: OrangeRed;
+}
+
+sdoc-autogen .admonition.danger {
+  color: red;
+}
+
+sdoc-autogen .admonition.error {
+  color: Red;
+}
+
+sdoc-autogen .admonition.warning {
+  color: DarkOrange;
+}
+
+sdoc-autogen .admonition.warning .admonition-title::before {
+  /* content: '⚠️'; */
+  margin-right: var(--base-rhythm);
+}
+
+sdoc-autogen .admonition.note {
+  /* color: CornflowerBlue; */
+  color: SteelBlue;
+}
+
+sdoc-autogen .admonition.hint {
+  color: DarkSlateBlue;
+}
+
+sdoc-autogen .admonition.tip {
+  color: MediumSlateBlue;
+}

@@ -92,6 +92,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self.document_tree: Optional[DocumentTree] = None
         self.asset_dirs = None
         self.index_last_updated = datetime.today()
+        self.contains_included_documents = False
         self.strictdoc_last_update = None
 
     @property

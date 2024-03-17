@@ -31,6 +31,9 @@ class ProjectTreeViewObject:
         self.standalone: bool = False
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
+        self.contains_included_documents = (
+            traceability_index.contains_included_documents
+        )
 
     def render_screen(self, jinja_environment: Environment):
         template = jinja_environment.get_template(

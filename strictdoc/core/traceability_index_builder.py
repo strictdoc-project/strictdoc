@@ -620,6 +620,8 @@ class TraceabilityIndexBuilder:
         for document_ in document_tree.document_list:
             document_from_file_: FragmentFromFile
             for document_from_file_ in document_.fragments_from_files:
+                traceability_index.contains_included_documents = True
+
                 assert isinstance(
                     document_from_file_, FragmentFromFile
                 ), document_from_file_

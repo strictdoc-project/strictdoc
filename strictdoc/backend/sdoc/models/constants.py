@@ -4,6 +4,7 @@ from strictdoc.backend.sdoc.models.document_bibliography import (
     DocumentBibliography,
 )
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
@@ -12,8 +13,6 @@ from strictdoc.backend.sdoc.models.document_view import (
     DocumentView,
     ViewElement,
 )
-from strictdoc.backend.sdoc.models.fragment import Fragment
-from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
@@ -87,8 +86,3 @@ DOCUMENT_MODELS = [
     ViewElementHiddenTag,
 ]
 DOCUMENT_MODELS.extend(SECTION_MODELS)
-
-INCLUDE_MODELS = [
-    Fragment,
-]
-INCLUDE_MODELS.extend(SECTION_MODELS)

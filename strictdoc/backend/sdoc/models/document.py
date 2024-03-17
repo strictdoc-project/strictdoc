@@ -84,7 +84,7 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
         return False
 
     def has_any_requirements(self) -> bool:
-        from strictdoc.backend.sdoc.models.fragment_from_file import (
+        from strictdoc.backend.sdoc.models.document_from_file import (
             FragmentFromFile,
         )
 

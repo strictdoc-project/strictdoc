@@ -9,10 +9,9 @@ from strictdoc.backend.sdoc.models.document_bibliography import (
     DocumentBibliography,
 )
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
-from strictdoc.backend.sdoc.models.fragment import Fragment
-from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import CompositeRequirement, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
@@ -243,11 +242,11 @@ class SDWriter:
 
     def _print_body(
         self,
-        root_node: [SDocDocument, Fragment],
+        root_node: SDocDocument,
         document: SDocDocument,
         document_iterator: DocumentCachingIterator,
     ):
-        assert isinstance(root_node, (SDocDocument, Fragment)), root_node
+        assert isinstance(root_node, SDocDocument), root_node
         assert isinstance(
             document_iterator, DocumentCachingIterator
         ), document_iterator
@@ -259,11 +258,11 @@ class SDWriter:
             print_fragments=False, print_fragments_from_files=True
         ):
             if isinstance(content_node, FragmentFromFile):
-                fragment_from_file: FragmentFromFile = assert_cast(
+                document_from_file: FragmentFromFile = assert_cast(
                     content_node, FragmentFromFile
                 )
                 output += "\n"
-                output += self._print_fragment_from_file(fragment_from_file)
+                output += self._print_document_from_file(document_from_file)
 
                 continue
 
@@ -304,14 +303,14 @@ class SDWriter:
 
         return output
 
-    def _print_fragment_from_file(self, fragment_from_file: FragmentFromFile):
-        assert isinstance(fragment_from_file, FragmentFromFile)
+    def _print_document_from_file(self, document_from_file: FragmentFromFile):
+        assert isinstance(document_from_file, FragmentFromFile)
         output = ""
         output += "[DOCUMENT_FROM_FILE]"
         output += "\n"
 
         output += "FILE: "
-        output += fragment_from_file.file
+        output += document_from_file.file
         output += "\n"
 
         return output

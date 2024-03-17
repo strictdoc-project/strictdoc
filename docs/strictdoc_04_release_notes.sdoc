@@ -6,6 +6,27 @@ This document maintains a record of all changes to StrictDoc since November 2023
 [/FREETEXT]
 
 [SECTION]
+TITLE: Unreleased work
+
+[FREETEXT]
+**Breaking Change:** The "Fragments" feature has been replaced by the "Composable documents" feature:
+
+- The command ``[FRAGMENT_FROM_FILE]`` has been renamed to ``[DOCUMENT_FROM_FILE]``.
+- Rather than importing section-like fragments, standard SDoc documents can now be included within other SDoc documents.
+- The web interface has been updated to support viewing and editing documents both as standalone items and when they are included in other documents.
+- Not everything related to the composable documents has been implemented. For example, the ability to drag and drop TOC (Table of Contents) nodes in documents that include other documents. Currently, moving the TOC in documents that include other documents is disabled.
+- Further work for the editable web interface can be found here: https://github.com/strictdoc-project/strictdoc/issues/1698.
+
+----
+
+**Other changes:**
+
+- The functionality of the HTML2PDF script on Windows has been corrected for scenarios where StrictDoc is operated within a virtual environment. Special thanks to @Timotheous for highlighting this issue.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: 0.0.49 (2024-03-11)
 
 [FREETEXT]

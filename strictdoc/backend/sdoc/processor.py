@@ -7,10 +7,9 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DocumentView
-from strictdoc.backend.sdoc.models.fragment import Fragment
-from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
@@ -35,7 +34,6 @@ class ParseContext:
             None
         )
         self.document_view: Optional[DocumentView] = None
-        self.current_include_parent = None
         self.uses_old_refs_field: bool = False
         self.at_least_one_relations_field: bool = False
 
@@ -61,11 +59,10 @@ class SDocParsingProcessor:
             "DocumentGrammar": self.process_document_grammar,
             "DocumentView": self.process_document_view,
             "SDocSection": self.process_section,
-            "FragmentFromFile": self.process_fragment_from_file,
+            "FragmentFromFile": self.process_document_from_file,
             "CompositeRequirement": self.process_composite_requirement,
             "SDocNode": self.process_requirement,
             "FreeText": self.process_free_text,
-            "Fragment": self.process_fragment,
         }
 
     def process_document_config(self, document_config: DocumentConfig):
@@ -115,38 +112,38 @@ class SDocParsingProcessor:
         self._resolve_parents(section)
         assert section.ng_level > 0
 
-    def process_fragment_from_file(self, fragment_from_file: FragmentFromFile):
+    def process_document_from_file(self, document_from_file: FragmentFromFile):
         assert isinstance(
-            fragment_from_file, FragmentFromFile
-        ), fragment_from_file
+            document_from_file, FragmentFromFile
+        ), document_from_file
 
         # Windows paths are backslashes, so using abspath in addition.
         resolved_path_to_fragment_file = os.path.abspath(
             os.path.join(
-                self.parse_context.path_to_sdoc_dir, fragment_from_file.file
+                self.parse_context.path_to_sdoc_dir, document_from_file.file
             )
         )
         if not os.path.isfile(resolved_path_to_fragment_file):
             raise StrictDocException(
                 "[DOCUMENT_FROM_FILE]: Path to a document file does not exist: "
-                f"{fragment_from_file.file}."
+                f"{document_from_file.file}."
             )
         if not resolved_path_to_fragment_file.endswith(".sdoc"):
             raise StrictDocException(
                 '[DOCUMENT_FROM_FILE]: A document file name must have ".sdoc" extension: '
-                f"{fragment_from_file.file}."
+                f"{document_from_file.file}."
             )
 
-        fragment_from_file.ng_document_reference = (
+        document_from_file.ng_document_reference = (
             self.parse_context.document_reference
         )
-        fragment_from_file.resolved_full_path_to_document_file = (
+        document_from_file.resolved_full_path_to_document_file = (
             resolved_path_to_fragment_file
         )
 
-        self._resolve_parents(fragment_from_file)
-        self.parse_context.current_include_parent = fragment_from_file.parent
-        self.parse_context.fragments_from_files.append(fragment_from_file)
+        self._resolve_parents(document_from_file)
+        self.parse_context.current_include_parent = document_from_file.parent
+        self.parse_context.fragments_from_files.append(document_from_file)
 
     def process_composite_requirement(
         self, composite_requirement: CompositeRequirement
@@ -181,10 +178,6 @@ class SDocParsingProcessor:
             assert composite_requirement.parent.ng_level
         elif isinstance(composite_requirement.parent, SDocDocument):
             composite_requirement.ng_level = 1
-        elif isinstance(composite_requirement.parent, Fragment):
-            composite_requirement.ng_level = (
-                self.parse_context.current_include_parent.ng_level + 1
-            )
         else:
             raise NotImplementedError
 
@@ -249,10 +242,6 @@ class SDocParsingProcessor:
             self._resolve_parents(requirement)
         elif isinstance(requirement.parent, SDocDocument):
             requirement.ng_level = 1
-        elif isinstance(requirement.parent, Fragment):
-            requirement.ng_level = (
-                self.parse_context.current_include_parent.ng_level + 1
-            )
         else:
             raise NotImplementedError
 
@@ -261,8 +250,6 @@ class SDocParsingProcessor:
         cursor = requirement.parent
         while not self.is_top_level(cursor) and not cursor.ng_has_requirements:
             cursor.ng_has_requirements = True
-            if isinstance(cursor, Fragment):
-                break
             cursor = cursor.parent
 
         if (
@@ -293,15 +280,8 @@ class SDocParsingProcessor:
             self._resolve_parents(free_text)
         elif isinstance(free_text.parent, SDocDocument):
             free_text.ng_level = 1
-        elif isinstance(free_text.parent, Fragment):
-            free_text.ng_level = (
-                self.parse_context.current_include_parent.ng_level + 1
-            )
         else:
             raise NotImplementedError
-
-    def process_fragment(self, fragment: Fragment):
-        pass
 
     @staticmethod
     def is_top_level(node):
@@ -314,9 +294,6 @@ class SDocParsingProcessor:
         parents_to_resolve_level = []
         cursor = node
         while cursor.ng_level is None:
-            if isinstance(cursor.parent, Fragment):
-                cursor.parent = self.parse_context.current_include_parent
-                continue
             parents_to_resolve_level.append(cursor)
             cursor = cursor.parent
         cursor_level = cursor.ng_level

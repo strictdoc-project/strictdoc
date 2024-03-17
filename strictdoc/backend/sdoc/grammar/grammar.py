@@ -255,7 +255,7 @@ SpaceThenFreeText[noskipws]:
 ;
 
 ReservedKeyword[noskipws]:
-  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'FRAGMENT_FROM_FILE' | 'FREETEXT'
+  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'DOCUMENT_FROM_FILE' | 'FREETEXT'
 ;
 
 SDocNode[noskipws]:

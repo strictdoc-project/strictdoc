@@ -1110,9 +1110,94 @@ are set to ``LEVEL: None`` by StrictDoc automatically.
 [/SECTION]
 
 [SECTION]
+TITLE: Composing documents from other documents
+
+[FREETEXT]
+StrictDoc ``.sdoc`` files can be built-up from including other documents.
+
+The ``[DOCUMENT_FROM_FILE]`` element can be used anywhere body elements can be
+used ( e.g. ``[SECTION]``, ``[REQUIREMENT``, ``[COMPOSITE_REQUIREMENT]`` etc.) and will
+evaluate by inserting its contents from the file referenced by its ``FILE:`` property
+where it was used in the parent document. The files included must be proper SDoc
+documents and have a usual ``.sdoc`` extension.
+
+Here is an example pair of files similar to examples above. First the
+``.sdoc`` file has a ``[DOCUMENT_FROM_FILE]`` that references the latter file.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [FREETEXT]
+    ...
+    [/FREETEXT]
+
+    [DOCUMENT_FROM_FILE]
+    FILE: include.sdoc
+
+    [REQUIREMENT]
+
+Then the referenced file, ``include.ssec``:
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: Section ABC
+
+    [REQUIREMENT]
+
+    [SECTION]
+    TITLE: Sub section
+    [/SECTION]
+
+    [COMPOSITE_REQUIREMENT]
+
+    [REQUIREMENT]
+
+    [/COMPOSITE_REQUIREMENT]
+
+Which will resolve to the following document after inclusion:
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [FREETEXT]
+    ...
+    [/FREETEXT]
+
+    [SECTION]
+    TITLE: Section ABC
+
+    [REQUIREMENT]
+
+    [SECTION]
+    TITLE: Sub section
+    [/SECTION]
+
+    [COMPOSITE_REQUIREMENT]
+
+    [REQUIREMENT]
+
+    [/COMPOSITE_REQUIREMENT]
+
+    [/SECTION]
+
+    [REQUIREMENT]
+
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
 TITLE: Composite requirement
 
 [FREETEXT]
+.. warning::
+    The composite requirements feature shows promise, but it has not yet attracted significant demand from both the core developers of StrictDoc and its users. While the use of composite requirements via the command line is implemented and supported, the web interface does not currently offer this support. Experience has shown that composite requirements can often be represented as a combination of sections and standard requirements. If there is a compelling use case for full support of composite requirements, please reach out to the developers.
+
 A ``[COMPOSITE_REQUIREMENT]`` is a requirement that combines requirement
 properties of a ``[REQUIREMENT]`` element and grouping features of a ``[SECTION]``
 element. This element can be useful in lower-level specifications documents
@@ -1144,83 +1229,6 @@ Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
 **Note:** Composite requirements should not be used in every document. Most
 often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]``
 elements should do the job.
-[/FREETEXT]
-
-[/SECTION]
-
-[SECTION]
-TITLE: Include files
-
-[FREETEXT]
-StrictDoc ``.sdoc`` files can be built-up from including other fragment documents.
-
-The ``[FRAGMENT_FROM_FILE]`` element can be used anywhere body elements can be
-used ( e.g. ``[SECTION]``, ``[REQUIREMENT``, ``[COMPOSITE_REQUIREMENT]`` etc.) and will
-evaluate by inserting its contents from the file referenced by its ``FILE:`` property
-where it was used in the parent document. The files included must start with a ``[FRAGMENT]``
-directive and cannot contain ``[FREETEXT]`` elements but are otherwise identical to
-``*.sdoc`` files. They can have any filename except a ``.sdoc`` extension.
-
-Here is an example pair of files similar to examples above. First the
-``.sdoc`` file has a ``[FRAGMENT_FROM_FILE]`` that references the latter file.
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-
-    [FREETEXT]
-    ...
-    [/FREETEXT]
-
-    [FRAGMENT_FROM_FILE]
-    FILE: include.ssec
-
-    [REQUIREMENT]
-
-Then the referenced file, ``include.ssec``:
-
-.. code-block:: text
-
-    [FRAGMENT]
-
-    [REQUIREMENT]
-
-    [SECTION]
-    TITLE: Sub section
-    [/SECTION]
-
-    [COMPOSITE_REQUIREMENT]
-
-    [REQUIREMENT]
-
-    [/COMPOSITE_REQUIREMENT]
-
-Which will resolve to the following document after inclusion:
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-
-    [FREETEXT]
-    ...
-    [/FREETEXT]
-
-    [REQUIREMENT]
-
-    [SECTION]
-    TITLE: Sub section
-    [/SECTION]
-
-    [COMPOSITE_REQUIREMENT]
-
-    [REQUIREMENT]
-
-    [/COMPOSITE_REQUIREMENT]
-
-    [REQUIREMENT]
-
 [/FREETEXT]
 
 [/SECTION]
@@ -1973,10 +1981,10 @@ The source file:
 
 .. code-block:: py
 
-    # [REQ-002]
+    # @sdoc[REQ-002]
     def hello_world():
         print("hello world")
-    # [/REQ-002]
+    # @sdoc[/REQ-002]
 
 To activate the traceability to source files, configure the project config with a dedicated feature:
 

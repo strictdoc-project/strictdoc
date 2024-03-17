@@ -7,7 +7,7 @@ from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
+from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
@@ -615,31 +615,32 @@ class TraceabilityIndexBuilder:
                 document_.meta.input_doc_full_path
             ] = document_
 
+        # @sdoc[SDOC-SRS-109]
         unique_document_from_file_occurences: Set[str] = set()
         for document_ in document_tree.document_list:
-            fragment_from_file_: FragmentFromFile
-            for fragment_from_file_ in document_.fragments_from_files:
+            document_from_file_: FragmentFromFile
+            for document_from_file_ in document_.fragments_from_files:
                 assert isinstance(
-                    fragment_from_file_, FragmentFromFile
-                ), fragment_from_file_
+                    document_from_file_, FragmentFromFile
+                ), document_from_file_
                 if (
-                    fragment_from_file_.resolved_full_path_to_document_file
+                    document_from_file_.resolved_full_path_to_document_file
                     in unique_document_from_file_occurences
                 ):
                     raise StrictDocException(
                         "[DOCUMENT_FROM_FILE]: "
                         "A multiple inclusion of a document is detected. "
                         "A document can be only included once: "
-                        f"{fragment_from_file_.file}."
+                        f"{document_from_file_.file}."
                     )
                 unique_document_from_file_occurences.add(
-                    fragment_from_file_.resolved_full_path_to_document_file
+                    document_from_file_.resolved_full_path_to_document_file
                 )
 
                 resolved_document = map_documents_by_input_rel_path[
-                    fragment_from_file_.resolved_full_path_to_document_file
+                    document_from_file_.resolved_full_path_to_document_file
                 ]
-                fragment_from_file_.configure_with_resolved_document(
+                document_from_file_.configure_with_resolved_document(
                     resolved_document
                 )
 
@@ -648,6 +649,7 @@ class TraceabilityIndexBuilder:
                 )
                 resolved_document.document_is_included = True
                 document_.included_documents.append(resolved_document)
+        # @sdoc[/SDOC-SRS-109]
 
         return traceability_index
 

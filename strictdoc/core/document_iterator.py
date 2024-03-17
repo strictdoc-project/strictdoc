@@ -2,7 +2,7 @@ import collections
 from typing import List, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.fragment_from_file import FragmentFromFile
+from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,

@@ -229,7 +229,16 @@ The Requirements Tool shall allow management of documents with nested sections/c
 [REQUIREMENT]
 MID: 5236f36f278140539e347bacea921118
 UID: SDOC-SSS-52
+STATUS: Active
 TITLE: Assembling documents from fragments
+STATEMENT: >>>
+The Requirements Tool shall allow composing documents from other documents or fragments.
+
+NOTE: If a Requirements Tool implements stores documents in a file system, the composition can be arranged at a file level when a parent document file includes the child fragment files and produces a composite document.
+<<<
+RATIONALE: >>>
+Composable documents allow assembling documents from multiple smaller documents which can be standalone documents or document fragments. This feature is particularly useful for managing extensive documents that can be more effectively organized and handled when divided into smaller document sections.
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: ZEP-1

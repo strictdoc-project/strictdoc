@@ -122,16 +122,12 @@ RELATIONS:
 MID: 983653fc26214f46977dc792d65ae65f
 UID: SDOC-SRS-109
 STATUS: Active
-TITLE: Fragment model
+TITLE: Composeable document
 STATEMENT: >>>
-StrictDoc's data model shall support a "Fragment" that is capable of containing:
-
-- Sections
-- Requirements
-- Texts.
+StrictDoc's data model shall allow composing a Document from other Documents.
 <<<
 RATIONALE: >>>
-Fragments allow assembling documents from multiple fragments.
+The logic behind the parent requirement remains fully relevant. Additionally, an alternative approach could involve using a dedicated entity, like "Fragment", to allow a Document to be composed of includable sections or document fragments. Managing composition at the Document level eliminates the need in additional entities like "Fragment", streamlining both the conceptual understanding and the practical implementation of composability.
 <<<
 COMMENT: >>>
 The corresponding UI capability for Fragments CRUD is TBD.
@@ -142,7 +138,11 @@ RELATIONS:
 - TYPE: Parent
   VALUE: DO178-4
 - TYPE: File
-  VALUE: strictdoc/backend/sdoc/models/fragment.py
+  VALUE: strictdoc/backend/sdoc/models/document_from_file.py
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/models/document.py
+- TYPE: File
+  VALUE: strictdoc/core/traceability_index_builder.py
 
 [REQUIREMENT]
 MID: fad4cf5dcf4d40518c7c9826fd6bd18a

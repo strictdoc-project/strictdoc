@@ -245,12 +245,12 @@ class ProjectTree {
   _addControl() {
     const switcher = new Switch(
       {
-        labelText: 'Show included fragments',
+        labelText: '<b>Show fragments</b> included in other documents in the Project tree:',
         size: 0.5,
         stroke: 0.175,
         position: 'absolute',
-        topPosition: '20px',
-        rightPosition: '20px',
+        topPosition: '16px',
+        leftPosition: 0,
         // checked: false,
         checked: this.getCurrentFragmentVisibilityBool(),
         callback: (checked) => this.toggleFragmentsVisibility(checked),

@@ -187,7 +187,18 @@ class ProjectTree {
   }
 
   _getFragments() {
-    return [...this.mutatingFrame.querySelectorAll(FRAGMENT_SELECTOR)];
+    const fragments = [...this.mutatingFrame.querySelectorAll(FRAGMENT_SELECTOR)];
+    // this._prepareFragmentsFoldersAndNeighbors(fragments);
+    return fragments;
+  }
+
+  _prepareFragmentsFoldersAndNeighbors(fragments) {
+    // ul > li > .std-tree_row
+    // .std-tree_row === fragment
+    const folders = new Set();
+    this.fragments.forEach(element => {
+      element.style.display = display;
+    })
   }
 
   _updateFragmentsVisibility(bool) {

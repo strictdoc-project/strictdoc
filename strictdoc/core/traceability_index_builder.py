@@ -58,6 +58,7 @@ class TraceabilityIndexBuilder:
         *,
         project_config: ProjectConfig,
         parallelizer,
+        skip_source_files=False,
     ) -> TraceabilityIndex:
         # TODO: It would be great to hide this code behind --development flag.
         # There is no need for this to be activated in the Pip-released builds.
@@ -153,7 +154,7 @@ class TraceabilityIndexBuilder:
                     finished.add(document_)
 
         # File traceability
-        if project_config.is_feature_activated(
+        if not skip_source_files and project_config.is_feature_activated(
             ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
         ):
             source_tree: SourceTree = SourceFilesFinder.find_source_files(

@@ -62,6 +62,9 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
     def document_is_included(self):
         return self.ng_including_document_reference.get_document() is not None
 
+    def get_included_document(self):
+        return self.ng_including_document_reference.get_document()
+
     @property
     def reserved_uid(self) -> Optional[str]:
         return self.config.uid

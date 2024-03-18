@@ -139,9 +139,16 @@ class Switch {
 }
 
 class ProjectTree {
-  constructor(mutatingFrame) {
+  constructor({
+    mutatingFrame,
+    controlTarget
+  }) {
     this.mutatingFrame = mutatingFrame;
+    this.controlTarget = controlTarget;
     this.fragments = [];
+
+    this.controlElement;
+    this.controlElementDisplayInitial;
 
     this.state = {
       fragmentVisibility: {
@@ -159,17 +166,23 @@ class ProjectTree {
 
   init() {
     console.log('First time call.');
+
+    console.assert(this.mutatingFrame, `mutatingFrame not found on the page`);
     this._addMutationObserver();
+
     this._initStateAndStorage();
     this.__testStorage();
+
+    console.assert(this.controlTarget, `controlTarget not found on the page`);
+    this._addControl();
 
     this.fragments = this._getFragments();
     console.log(this.fragments);
     this._updateFragmentsVisibility(this.getCurrentFragmentVisibilityBool());
-
   }
 
   getCurrentFragmentVisibilityBool() {
+    console.log('getCurrentFragmentVisibilityBool', this.state.fragmentVisibility.current)
     return (this.state.fragmentVisibility.current === 'show') ? true : false;
   }
 
@@ -178,6 +191,13 @@ class ProjectTree {
   }
 
   _updateFragmentsVisibility(bool) {
+    if (this.fragments.length) {
+      console.log(this.fragments.length);
+      this.controlElement.style.display = this.controlElementDisplayInitial;
+    } else {
+      this.controlElement.style.display = 'none';
+    }
+
     const display = bool ? '' : 'none';
     this.fragments.forEach(element => {
       element.style.display = display;
@@ -222,6 +242,29 @@ class ProjectTree {
     return storage;
   }
 
+  _addControl() {
+    const switcher = new Switch(
+      {
+        labelText: 'Show included fragments',
+        size: 0.5,
+        stroke: 0.175,
+        position: 'absolute',
+        topPosition: '20px',
+        rightPosition: '20px',
+        // checked: false,
+        checked: this.getCurrentFragmentVisibilityBool(),
+        callback: (checked) => this.toggleFragmentsVisibility(checked),
+      }
+    );
+
+    const controlElement = switcher.create();
+    this.controlTarget.append(controlElement);
+
+    this.controlElement = controlElement;
+    this.controlElementDisplayInitial = controlElement.style.display;
+    return controlElement
+  }
+
   _addMutationObserver() {
     console.log('Mutation observer added for', this.mutatingFrame);
 
@@ -248,30 +291,22 @@ class ProjectTree {
 
 window.addEventListener("DOMContentLoaded", function(){
 
-  const mutatingFrame = document.querySelector(FRAME_SELECTOR);
-  if (!mutatingFrame) {
-    console.error(`${FRAME_SELECTOR} not found on the page`);
+  const controlTarget = document.querySelector(SWITCH_SELECTOR);
+  if (!controlTarget) {
+    console.error(`Selector "${SWITCH_SELECTOR}" not found on the page`);
     return;
   }
-  const projectTree = new ProjectTree(mutatingFrame);
+  const mutatingFrame = document.querySelector(FRAME_SELECTOR);
+  if (!mutatingFrame) {
+    console.error(`Selector "${FRAME_SELECTOR}" not found on the page`);
+    return;
+  }
+
+  const projectTree = new ProjectTree({
+    mutatingFrame,
+    controlTarget
+  });
 
   projectTree.init();
-
-  const switcher = new Switch(
-    {
-      labelText: 'Show included fragments',
-      size: 0.5,
-      stroke: 0.175,
-      position: 'absolute',
-      topPosition: '20px',
-      rightPosition: '20px',
-      // checked: false,
-      checked: projectTree.getCurrentFragmentVisibilityBool(),
-      callback: (checked) => projectTree.toggleFragmentsVisibility(checked),
-    }
-  );
-
-  const switcherContainer = document.querySelector(SWITCH_SELECTOR);
-  switcherContainer.append(switcher.create());
 
 },false);

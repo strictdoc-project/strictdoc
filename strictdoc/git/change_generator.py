@@ -46,6 +46,8 @@ class ChangeGenerator:
             TraceabilityIndexBuilder.create(
                 project_config=lhs_project_config,
                 parallelizer=parallelizer,
+                # We don't want to deal with source files for Diff.
+                skip_source_files=True,
             )
         )
 
@@ -53,6 +55,8 @@ class ChangeGenerator:
             TraceabilityIndexBuilder.create(
                 project_config=rhs_project_config,
                 parallelizer=parallelizer,
+                # We don't want to deal with source files for Diff.
+                skip_source_files=True,
             )
         )
 

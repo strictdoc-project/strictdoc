@@ -237,11 +237,10 @@ The ``server`` command accepts a number of options. To explore the options, run:
 Security considerations
 -----------------------
 
-**TL;DR** StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
+.. warning::
+    **TL;DR:** StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
 
-Using StrictDoc's command-line and web interfaces should be more secure if the web server is not deployed on a public network.
-
-----
+    Using StrictDoc's command-line and web interfaces should be more secure if the web server is not deployed on a public network.
 
 Due to current constraints (refer to :ref:`Limitations of web user interface <SDOC_UG_LIMIT_WEB>`), StrictDoc requires running a server through a command line interface in one window or OS process, and separately committing changes to documents using Git in another window or OS process. Deploying StrictDoc as a shared web server is impractical, as it still requires manual commits to SDoc files via the server's command line using Git. The future development plan for StrictDoc aims to enable its use as a standalone server application, which includes resolving the following security-related issues.
 
@@ -437,8 +436,10 @@ The following ``DOCUMENT`` fields are allowed:
      - Current version of the document
 
    * - ``CLASSIFICATION``
-     - Security classification of the document, e.g. Public, Internal,
-       Restricted, Confidential
+     - Security classification of the document, e.g. Public, Internal, Restricted, Confidential
+
+   * - ``REQ_PREFIX``
+     - Requirement prefix that should be used for automatic generation of UIDs. See :ref:`Automatic assignment of requirements UID <SECTION-UG-Automatic-assignment-of-requirements-UID>`.
 
    * - ``ROOT``
      - Defines whether a document is a root object in a traceability graph. A root document is assumed to not have any parent requirements. The project statistics calculation will skip all root document's requirements when calculating the metric ``Non-root-level requirements not connected to any parent requirement``.
@@ -944,8 +945,92 @@ The behavior of the ``LEVEL: None`` option is recursive. If a parent section
 has its ``LEVEL`` set to ``None``, all its subsections' and requirements' levels
 are set to ``LEVEL: None`` by StrictDoc automatically.
 
+Composing documents from other documents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+    The includable documents is an early feature with only 50%+ of the implementation complete. See `Epic: UI: Editable fragments <https://github.com/strictdoc-project/strictdoc/issues/1698>`_.
+
+StrictDoc ``.sdoc`` files can be built-up from including other documents.
+
+The ``[DOCUMENT_FROM_FILE]`` element can be used anywhere body elements can be
+used ( e.g. ``[SECTION]``, ``[REQUIREMENT``, ``[COMPOSITE_REQUIREMENT]`` etc.) and will
+evaluate by inserting its contents from the file referenced by its ``FILE:`` property
+where it was used in the parent document. The files included must be proper SDoc
+documents and have a usual ``.sdoc`` extension.
+
+Here is an example pair of files similar to examples above. First the
+``.sdoc`` file has a ``[DOCUMENT_FROM_FILE]`` that references the latter file.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [FREETEXT]
+    ...
+    [/FREETEXT]
+
+    [DOCUMENT_FROM_FILE]
+    FILE: include.sdoc
+
+    [REQUIREMENT]
+
+Then the referenced file, ``include.ssec``:
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: Section ABC
+
+    [REQUIREMENT]
+
+    [SECTION]
+    TITLE: Sub section
+    [/SECTION]
+
+    [COMPOSITE_REQUIREMENT]
+
+    [REQUIREMENT]
+
+    [/COMPOSITE_REQUIREMENT]
+
+Which will resolve to the following document after inclusion:
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [FREETEXT]
+    ...
+    [/FREETEXT]
+
+    [SECTION]
+    TITLE: Section ABC
+
+    [REQUIREMENT]
+
+    [SECTION]
+    TITLE: Sub section
+    [/SECTION]
+
+    [COMPOSITE_REQUIREMENT]
+
+    [REQUIREMENT]
+
+    [/COMPOSITE_REQUIREMENT]
+
+    [/SECTION]
+
+    [REQUIREMENT]
+
+
 Composite requirement
 ~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+    The composite requirements feature shows promise, but it has not yet attracted significant demand from both the core developers of StrictDoc and its users. While the use of composite requirements via the command line is implemented and supported, the web interface does not currently offer this support. Experience has shown that composite requirements can often be represented as a combination of sections and standard requirements. If there is a compelling use case for full support of composite requirements, please reach out to the developers.
 
 A ``[COMPOSITE_REQUIREMENT]`` is a requirement that combines requirement
 properties of a ``[REQUIREMENT]`` element and grouping features of a ``[SECTION]``
@@ -978,79 +1063,6 @@ Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
 **Note:** Composite requirements should not be used in every document. Most
 often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]``
 elements should do the job.
-
-Include files
-~~~~~~~~~~~~~
-
-StrictDoc ``.sdoc`` files can be built-up from including other fragment documents.
-
-The ``[FRAGMENT_FROM_FILE]`` element can be used anywhere body elements can be
-used ( e.g. ``[SECTION]``, ``[REQUIREMENT``, ``[COMPOSITE_REQUIREMENT]`` etc.) and will
-evaluate by inserting its contents from the file referenced by its ``FILE:`` property
-where it was used in the parent document. The files included must start with a ``[FRAGMENT]``
-directive and cannot contain ``[FREETEXT]`` elements but are otherwise identical to
-``*.sdoc`` files. They can have any filename except a ``.sdoc`` extension.
-
-Here is an example pair of files similar to examples above. First the
-``.sdoc`` file has a ``[FRAGMENT_FROM_FILE]`` that references the latter file.
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-
-    [FREETEXT]
-    ...
-    [/FREETEXT]
-
-    [FRAGMENT_FROM_FILE]
-    FILE: include.ssec
-
-    [REQUIREMENT]
-
-Then the referenced file, ``include.ssec``:
-
-.. code-block:: text
-
-    [FRAGMENT]
-
-    [REQUIREMENT]
-
-    [SECTION]
-    TITLE: Sub section
-    [/SECTION]
-
-    [COMPOSITE_REQUIREMENT]
-
-    [REQUIREMENT]
-
-    [/COMPOSITE_REQUIREMENT]
-
-Which will resolve to the following document after inclusion:
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-
-    [FREETEXT]
-    ...
-    [/FREETEXT]
-
-    [REQUIREMENT]
-
-    [SECTION]
-    TITLE: Sub section
-    [/SECTION]
-
-    [COMPOSITE_REQUIREMENT]
-
-    [REQUIREMENT]
-
-    [/COMPOSITE_REQUIREMENT]
-
-    [REQUIREMENT]
-
 
 .. _SECTION-UG-Machine-identifiers-MID:
 
@@ -1561,9 +1573,9 @@ The following command creates an HTML export:
 **Example:** This documentation is exported by StrictDoc to HTML:
 `StrictDoc HTML export <https://strictdoc-project.github.io>`_.
 
-**Note:** The options ``--formats=html`` and ``--output-dir output-html`` can be
-skipped because HTML export is a default export option and the default output
-folder is ``output``.
+The options ``--formats=html`` and ``--output-dir output-html`` can be skipped because HTML export is a default export option and the default output folder is ``output``.
+
+StrictDoc does not detect .sdoc files in the output folder. This is based on the assumption that StrictDoc should not read anything in the output folder, which is intended for transient output artifacts.
 
 Standalone HTML pages (experimental)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1630,6 +1642,8 @@ is generated this way, see the Invoke task:
 
 Manage project tree
 ===================
+
+.. _SECTION-UG-Automatic-assignment-of-requirements-UID:
 
 Automatic assignment of requirements UID
 ----------------------------------------
@@ -1708,10 +1722,10 @@ The source file:
 
 .. code-block:: py
 
-    # [REQ-002]
+    # @sdoc[REQ-002]
     def hello_world():
         print("hello world")
-    # [/REQ-002]
+    # @sdoc[/REQ-002]
 
 To activate the traceability to source files, configure the project config with a dedicated feature:
 
@@ -1854,7 +1868,21 @@ The command does the following:
 1. The SDoc file is parsed to an SDoc in-memory model.
 
 2. The SDoc in-memory model is converted to an Excel XLSX file using
-   the ``XlsWriter`` library
+   the ``XlsWriter`` library.
+
+For exporting only selected fields:
+
+.. code-block:: text
+
+    strictdoc export --formats=excel --fields=UID,STATUS --output-dir=Output input.sdoc
+
+For exporting a folder with multiple SDoc files, specify a path to a folder or ``.`` for a current directory:
+
+.. code-block:: text
+
+    strictdoc export --formats=excel .
+
+If the ``output-dir`` option is not provided, the ``output/`` folder is the default value.
 
 Options
 =======
@@ -2143,12 +2171,24 @@ To activate the project statistics screen, add/edit the ``strictdoc.toml`` confi
 
 This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.
 
-HTML2PDF printable document generator
--------------------------------------
+HTML2PDF document generator
+---------------------------
 
-The HTML2PDF screen displays a browser-printable version of a document. Printing from a browser results in a well-formatted PDF document or a well-formatted document printed on paper. The best printing experience is achieved with the Chrome browser which in contrast to Firefox and Safari, preserves the internal hyperlinks in the output PDF.
+StrictDoc offers an experimental feature for converting HTML documents into PDF files. This feature aims to deliver a good PDF printing experience without the necessity of installing more sophisticated printing systems like LaTeX.
 
-To activate the HTML2PDF screen, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
+There are three methods of PDF printing available:
+
+1. Through the command-line interface with the ``strictdoc export --formats=html2pdf ...`` command.
+
+2. Within the web interface by clicking the 'Export to PDF' button.
+
+3. Also in the web interface, by navigating to a 'PDF' view of a document and using the browser's built-in Print function.
+
+The first two methods require the Chrome browser to be installed on the user's computer.
+
+The third method, the PDF screen, presents a version of the document that is optimized for browser printing. This approach allows for the creation of neatly formatted PDF documents or directly printed documents. Although this method is compatible with any browser, Chrome is recommended for the best printing results. Unlike Firefox and Safari, Chrome maintains the document's internal hyperlinks in the printed PDF.
+
+To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
 
 .. code::
 
@@ -2159,7 +2199,7 @@ To activate the HTML2PDF screen, add/edit the ``strictdoc.toml`` config file in 
       "HTML2PDF"
     ]
 
-This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to our HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked on. One feature that is still missing is the ability to generate user-specific front pages with custom meta information.
+This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to how the SDoc HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked out. One feature which is still missing is the ability to generate user-specific front pages with custom meta information.
 
 Mermaid diagramming and charting tool
 -------------------------------------

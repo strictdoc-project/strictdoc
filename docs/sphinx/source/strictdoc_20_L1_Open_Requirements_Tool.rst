@@ -176,7 +176,7 @@ The Requirements Tool shall provide the CRUD operations for document management:
 - Update document
 - Delete document.
 
-**Rationale:**
+**RATIONALE:**
 
 The CRUD operations are essential operations of document management. They are at the core of a documentation management tool.
 
@@ -236,6 +236,16 @@ Assembling documents from fragments
 
     * - **UID:**
       - SDOC-SSS-52
+    * - **STATUS:**
+      - Active
+
+The Requirements Tool shall allow composing documents from other documents or fragments.
+
+NOTE: If a Requirements Tool implements stores documents in a file system, the composition can be arranged at a file level when a parent document file includes the child fragment files and produces a composite document.
+
+**RATIONALE:**
+
+Composable documents allow assembling documents from multiple smaller documents which can be standalone documents or document fragments. This feature is particularly useful for managing extensive documents that can be more effectively organized and handled when divided into smaller document sections.
 
 **Parents:**
 
@@ -350,7 +360,7 @@ The Requirements Tool shall enable the main requirements management operations:
 - Update / edit a requirement
 - Delete a requirement.
 
-**Rationale:**
+**RATIONALE:**
 
 The CRUD operations are at the core of the requirements management.
 
@@ -383,11 +393,11 @@ The Requirements Tool shall support at least the following requirement field set
 - COMMENT
 - RELATIONS (connections with other requirements).
 
-**Rationale:**
+**RATIONALE:**
 
 The selection of the minimal set is based on what is common in the industries (e.g., automotive, space, etc).
 
-**Comment:**
+**COMMENT:**
 
 The other fields common to each industry can be customized with custom fields handled by other requirements.
 
@@ -419,7 +429,7 @@ The requirements tool shall support configuring a requirement item with an arbit
 
 NOTE: Examples of typical fields include: UID, Title, Statement, Rationale, Comment. Other fields that are used very often are: Status, Tags, Criticality level, Priority, etc.
 
-**Rationale:**
+**RATIONALE:**
 
 The tool shall not constrain a user in which fields they are able to use for their projects.
 
@@ -449,7 +459,7 @@ Structuring requirements in documents
 
 The Requirements Tool shall support structuring requirements in documents.
 
-**Rationale:**
+**RATIONALE:**
 
 The industry works with requirements documents. The documents have sections/chapters and requirements.
 
@@ -518,7 +528,7 @@ Auto-provision of Requirement UIDs
 
 The Requirements Tool shall provide controls for automatic generation of requirements UIDs.
 
-**Rationale:**
+**RATIONALE:**
 
 When a document is large, it becomes harder to manage the assignment of the new requirements identifiers by manually exploring which requirement UID has not been assigned yet. The provision of automatically generated UIDs is a convenience feature that improves the user experience significantly.
 
@@ -571,7 +581,7 @@ The Requirements Tool shall support the link roles.
 
 Example of roles for a child-to-parent link: "verifies", "implements", "satisfies", etc.
 
-**Rationale:**
+**RATIONALE:**
 
 Different industries maintain custom conventions for naming the relations between requirements and other nodes such as tests or other artefacts.
 
@@ -804,7 +814,7 @@ The Requirements Tool shall provide an Excel-like user interface for viewing and
 
 NOTE: This interface does not have to be the only or a default interface.
 
-**Rationale:**
+**RATIONALE:**
 
 As recognized by the parent requirement, some requirements-based workflows are naturally easier when the requirements content is presented in a form of a table, as opposed to a document with a nested chapter structure.
 
@@ -828,7 +838,7 @@ As recognized by the parent requirement, some requirements-based workflows are n
 
 The Requirements Tool shall provide a "1000-feet view" kind of requirements visualization.
 
-**Rationale:**
+**RATIONALE:**
 
 Compared to the other visualizations, such a visualization helps to "see the forest for the trees". Seeing requirements and their sections all at once helps to visualize groups of requirements and better understand the relationships between them.
 
@@ -980,7 +990,7 @@ NOTE: Factors to consider:
 - The availability of a programmatic access to the functions of a tool.
 - The interoperability of the tool with other tools.
 
-**Rationale:**
+**RATIONALE:**
 
 A tool that can be used by a large number of people simplifies its adoption and allows more users to work with documentation and requirements.
 
@@ -1034,7 +1044,7 @@ Support projects with a large number of users
 
 The Requirements Tool shall be capable of supporting a large number of users.
 
-**Rationale:**
+**RATIONALE:**
 
 Many documentation and requirements projects involve large groups of people. The requirements tool should not become a bottleneck when a number of users grows.
 
@@ -1080,7 +1090,7 @@ Server-based deployments (IT-friendly setup)
 
 The Requirements Tool shall be deployable to the network of computers, e.g., provide a server instance.
 
-**Comment:**
+**COMMENT:**
 
 Scaling from smaller setups (e.g., Raspberry PI in an office network) to
 larger in-house and cloud-base installations.
@@ -1105,7 +1115,7 @@ Requirements database
 
 The Requirements Tool shall store documentation and requirements data in a database.
 
-**Rationale:**
+**RATIONALE:**
 
 A database allows:
 
@@ -1134,7 +1144,7 @@ Programming access via API (Web)
 
 The Requirements Tool shall provide a Web API interface.
 
-**Rationale:**
+**RATIONALE:**
 
 Besides a direct access to the tool's source code, accessing an API deployed to a server provides additional capabilities for getting and manipulating requirements/documentation content.
 
@@ -1164,7 +1174,7 @@ NOTE: An SDK provides access to the API of the Requirements Tool. Examples of fu
 - Implement custom visualization functions.
 - Implement integration with other tools.
 
-**Rationale:**
+**RATIONALE:**
 
 A SDK allows a software engineer to extend the Requirements Tool capabilities.
 
@@ -1188,7 +1198,7 @@ Programmatic access to requirements data
 
 The Requirements Tool shall provide programmatic access to requirements data.
 
-**Rationale:**
+**RATIONALE:**
 
 When the requirements data is accessible by a user directly, it is possible to exchange the data or implement additional scripting procedures.
 
@@ -1218,7 +1228,7 @@ Static HTML export
 
 The Requirements Tool shall support generation of documentation to static HTML.
 
-**Rationale:**
+**RATIONALE:**
 
 A static HTML export capability enables:
 
@@ -1306,7 +1316,7 @@ Version control (Git)
 
 The Requirements Tool shall support the software version control systems (e.g., Git).
 
-**Rationale:**
+**RATIONALE:**
 
 - Git allows precise tracking of the changes to the documentation.
 - Requirements/documentation content can be release-tagged.
@@ -1365,11 +1375,11 @@ NOTE: Examples of the most popular programming languages:
 - Python
 - JavaScript
 
-**Rationale:**
+**RATIONALE:**
 
 Choosing a less popular programming language can limit the long-term maintainability of the tool.
 
-**Comment:**
+**COMMENT:**
 
 Examples of less popular programming languages, with all due respect to their powerful features: Haskell, F#, Ada, etc.
 
@@ -1557,7 +1567,7 @@ ReqIF export/import
 
 The Requirements Tool shall support exporting/importing requirements content from/to ReqIF format.
 
-**Rationale:**
+**RATIONALE:**
 
 ReqIF is a standard for exchanging requirements. There is currently no other standard of a higher maturity.
 
@@ -1613,6 +1623,7 @@ The Requirements Tool shall support exporting/importing requirements content fro
 **Children:**
 
 - ``[SDOC-SRS-74]`` :ref:`SDOC-SRS-74`
+- ``[SDOC-SRS-134]`` :ref:`SDOC-SRS-134`
 
 .. _SECTION-RTS-Requirements-collaboration:
 
@@ -1676,7 +1687,7 @@ Requirements engineering
 
 The Requirements Tool's development process shall include the Requirements Tool's own requirements engineering.
 
-**Rationale:**
+**RATIONALE:**
 
 A requirements tool is not a trivial project. A clear set of requirements for the developed tool helps to structure the development and communicate the functions of the tool to the developers and the users of the tool.
 
@@ -1700,7 +1711,7 @@ Self-hosted requirements
 
 The Requirements Tool's requirements shall be developed and stored using the Requirements Tool itself.
 
-**Rationale:**
+**RATIONALE:**
 
 While not strictly necessary, developing the requirements for the tool using the tool itself aids developers in test-driving its functionality during the requirement development phase. Moreover, having the tool host its own requirements provides a tangible and dynamic illustration of how the tool can be employed for crafting requirements documentation.
 
@@ -1730,7 +1741,7 @@ A testability of the tool
 The highest possible coverage of the tool's code by test
 Usage of modern testing methods to ensure adequate coverage of the tool's functions (e.g., command-line interface, web interface, smallest units of code, etc.).
 
-**Rationale:**
+**RATIONALE:**
 
 The presence of tests, the adequate selection of test methods and a high test coverage are preconditions for a high quality of the requirements tool.
 
@@ -1757,7 +1768,7 @@ Tool qualification
 
 The Requirements Tool's development process shall ensure that the tool can be qualified for the use in critical product developments as required by the rigorous technical standards (e.g., EN IEC 61508).
 
-**Rationale:**
+**RATIONALE:**
 
 Many project developments require a qualification of the tools used during the development. A requirements tool is one of the critical tools that affect the project development. If a requirement tool is developed to the higher standards of quality, it simplifies the argument of bringing the tool forward and using it in a particular project.
 
@@ -1840,7 +1851,7 @@ The Requirements Tool shall be licensed under a permissive license, ensuring no/
 
 NOTE: Example of a permissive license: MIT, Apache 2.
 
-**Rationale:**
+**RATIONALE:**
 
 This requirement captures the essence of an open and free requirements management tool.
 

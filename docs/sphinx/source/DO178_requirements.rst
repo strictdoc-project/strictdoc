@@ -28,7 +28,7 @@ Document concept
 
 StrictDoc shall store requirements in document files.
 
-**Rationale:**
+**RATIONALE:**
 
 A concept of a "document file with requirements" helps to structure requirements like they are normally structured in the documents.
 
@@ -56,11 +56,11 @@ Strict specified grammar
 
 StrictDoc shall feature a specified document grammar.
 
-**Rationale:**
+**RATIONALE:**
 
 The grammar helps to standardize a document structure.
 
-**Comment:**
+**COMMENT:**
 
 N: StrictDoc is nice.
 
@@ -86,11 +86,11 @@ StrictDoc shall provide autocompletion feature for requirement UID identifiers.
 
 Note: Most immediate use case: adding/editing parent requirements.
 
-**Comment:**
+**COMMENT:**
 
 N: When adding parent links, StrictDoc GUI shall present a selection list of UID, with a completion filter, then compute the sha1 of the selected parent req.
 
-**Comment:**
+**COMMENT:**
 
 N: Upon req editing, a completion list of already existing reqs (+ "derived" item) would be definitely nice in Webgui !
 and would be the ultimate argument to NOT text edit.
@@ -117,7 +117,7 @@ Multiple git repositories document assembly
 
 StrictDoc shall support generating requirement trees from multiple Git repositories.
 
-**Comment:**
+**COMMENT:**
 
 N: StrictDoc is compliant.
 
@@ -143,7 +143,7 @@ Document fragments in separate files
 
 StrictDoc shall support assembly of documents from multiple files.
 
-**Comment:**
+**COMMENT:**
 
 S: StrictDoc supports document fragments. A document fragment corresponds to a section that can be kept in a separate file. A document stored in another file can import the fragment and have it included in the main document.
 
@@ -169,7 +169,7 @@ PDF and HTML publishing
 
 StrictDoc shall support publication of documents to HTML and PDF formats.
 
-**Comment:**
+**COMMENT:**
 
 N: Sphinx is nice for release.
 
@@ -197,11 +197,11 @@ Graphical user interface (GUI)
 
 StrictDoc shall support a graphical user interface.
 
-**Comment:**
+**COMMENT:**
 
 N: A Web GUI in StrictDoc is nice in daily work, especially for non developer people.
 
-**Comment:**
+**COMMENT:**
 
 N: GUI for editing is NTH but it shall scale well to thousands of requirements. And it could also contribute to traceability feature.
 
@@ -225,7 +225,7 @@ Configuration: 'Host' parameter
 
 StrictDoc shall provide an option to configure a host where a server is deployed.
 
-**Comment:**
+**COMMENT:**
 
 N: Binding to any local address (localhost) with an option would enable to edit from a smartphone bound to a Raspberry server, for instance.
 
@@ -251,11 +251,11 @@ No use of proprietary technology
 
 StrictDoc shall not use any proprietary tools.
 
-**Rationale:**
+**RATIONALE:**
 
 Use of proprietary tools complicates the workflows and the interoperability between companies and teams.
 
-**Comment:**
+**COMMENT:**
 
 S: StrictDoc is written using Python and supports the ReqIF format out of the box. All StrictDoc's dependencies are open-source software components.
 
@@ -279,7 +279,7 @@ Source file coverage
 
 StrictDoc shall support generation of source code coverage information.
 
-**Comment:**
+**COMMENT:**
 
 S: Source file coverage is StrictDoc's experimental feature. With a more detailed specification, we can turn it to a more advanced and clear presentation of the needed aspects.
 
@@ -308,7 +308,7 @@ WYSIWYG editing
 
 StrictDoc's GUI shall support a WYSIWYG text editing.
 
-**Comment:**
+**COMMENT:**
 
 Simplifies editing of formatted text.
 
@@ -334,7 +334,7 @@ StrictDoc shall allow calculating Diff between two document trees.
 
 Note: The primary use case is calculating a diff between two Git revisions.
 
-**Comment:**
+**COMMENT:**
 
 N: Highlight a req diff with its previous version (Git).
 
@@ -360,11 +360,11 @@ Traceability matrices
 
 StrictDoc shall support generation of forward and backward traceability matrices.
 
-**Comment:**
+**COMMENT:**
 
 N: Trace matrix publishing (both ways : is covered by ... and covers ...) published in HTML/PDF.
 
-**Comment:**
+**COMMENT:**
 
 S: This feature, especially a very basic initial one, is very easy to implement, and it is already on the nearest roadmap, see https://github.com/strictdoc-project/strictdoc/issues/964#issuecomment-1497900436>. We only need to agree on if we are on the same page about how the produced matrices look like.
 
@@ -390,15 +390,15 @@ Impact analysis
 
 StrictDoc shall support generation of Impact Analysis information.
 
-**Comment:**
+**COMMENT:**
 
 N: Impact analysis – upon modification of a requirement: report the recursive list of impacted items.
 
-**Comment:**
+**COMMENT:**
 
 S: This feature is doable and a basic variant can be derived from the existing code that generates the Deep Traceability screen. A more advanced one includes a document-to-document Diff between version control revisions, including "tell me what changed between the latest commit and my changes". Based on this information, a full impact analysis package can be generated. This is less trivial to implement and requires prioritization.
 
-**Comment:**
+**COMMENT:**
 
 N: For impact analysis we were thinking about some design which help to satisfy these feature: upon modification of a requirement which owns some parent links, a SHA1 of each parent requirement statement is computed and set in the edited requirement.
 => this could be captured by the GUI, and there also could exist a CLI command to perform this tagging.
@@ -406,7 +406,7 @@ N: For impact analysis we were thinking about some design which help to satisfy 
 For overall analysis, a CLI command could parse the tree and compute the SHA1 and tel which requirement are to be updated because one of there ancestor were modified.
 This is almost the same feature called review status in doorstop.
 
-**Comment:**
+**COMMENT:**
 
 N: When adding parent links, the GUI could present a selection list of UID, with a completion filter, then compute the SHA1 of the selected parent req.
 Then highlight uncovered requirement, and requirements impacted by parent change.
@@ -435,7 +435,7 @@ StrictDoc shall support generation of uncovered requirement report.
 
 Note: An uncovered requirement is one that has no children.
 
-**Comment:**
+**COMMENT:**
 
 S: This is easy to implement but would be nice to have it specified in terms of how exactly it should look like. The requirements coverage screen was one experimental attempt to visualize and highlight the uncovered requirements but we didn't stabilize the feature in terms of the visual clarity.
 
@@ -463,11 +463,11 @@ Project-level grammar
 
 StrictDoc shall support creation of a project-level grammar.
 
-**Rationale:**
+**RATIONALE:**
 
 A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
 
-**Comment:**
+**COMMENT:**
 
 S: This feature is easy to implement. The easiest implementation path is to include a config parameter, such as ``project_grammar`` in the already-existing ``strictdoc.toml`` file. At startup, StrictDoc recognizes the parameter and reads the grammar from a separate file. The project grammar becomes a single source of truth for all documents in the project tree but the option to override a grammar for a given document is still preserved.
 
@@ -496,15 +496,15 @@ StrictDoc shall support interoperability with Sphinx:
 1) StrictDoc shall read RST fragments with Sphinx directives without errors.
 2) StrictDoc shall render Sphinx plugins natively.
 
-**Comment:**
+**COMMENT:**
 
 N: Support various fragments (images, csv, doxygen, uml, math expr...) => Sphinx extensions nice.
 
-**Comment:**
+**COMMENT:**
 
 S: It should be possible to achieve the goal 1 by implementing a complete or limited behavior of each Sphinx plugin feature like I already suggested `here <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1505108384>`_. For each needed plugin, we can implement a simulative directive using Docutils, and I expected that for many plugins we can achieve a good compatible behavior. The goal 2 needs a special R&D activity where it has to be decided what would be the interface between StrictDoc and Sphinx.
 
-**Comment:**
+**COMMENT:**
 
 N: ``image.*`` is MTH to enable both HTML and pdf.
 breathe is required for the Software Design Description document which defines software architecture, low level requirements and code component interfaces. But it could be Split in 2 separate documents. LLR in .sdoc and code component interface with sphinx/breathe. So I consider it as NTH.
@@ -532,7 +532,7 @@ Multi-user editing of documents
 
 StrictDoc shall allow multi-user editing of documents.
 
-**Comment:**
+**COMMENT:**
 
 N: .sdoc file lock?
 
@@ -556,7 +556,7 @@ Support for Derived requirements
 
 StrictDoc shall provide first-class support for Derived requirements.
 
-**Comment:**
+**COMMENT:**
 
 N: I would mention another important feature related to DO178. The requirement which have not parent are "derived" and shall be assessed by safety.
 

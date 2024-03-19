@@ -18,7 +18,7 @@ Data model
 
 StrictDoc shall be based on a data model.
 
-**Comment:**
+**COMMENT:**
 
 Verification: data model diagram TBD.
 
@@ -85,7 +85,7 @@ By default, the Requirement shall support the following fields:
 - RATIONALE
 - COMMENT.
 
-**Rationale:**
+**RATIONALE:**
 
 These fields are the most typical fields found in requirement documents.
 
@@ -149,7 +149,7 @@ Section model
 
 StrictDoc's data model shall support a "Section" that nests other Sections, Requirements, Texts.
 
-**Rationale:**
+**RATIONALE:**
 
 "Section" corresponds to a chapter or a section in a document and helps to organize a document by grouping text nodes, requirements and other sections.
 
@@ -159,8 +159,8 @@ StrictDoc's data model shall support a "Section" that nests other Sections, Requ
 
 .. _SDOC-SRS-109:
 
-Fragment model
---------------
+Composeable document
+--------------------
 
 .. list-table::
     :align: left
@@ -171,17 +171,13 @@ Fragment model
     * - **STATUS:**
       - Active
 
-StrictDoc's data model shall support a "Fragment" that is capable of containing:
+StrictDoc's data model shall allow composing a Document from other Documents.
 
-- Sections
-- Requirements
-- Texts.
+**RATIONALE:**
 
-**Rationale:**
+The logic behind the parent requirement remains fully relevant. Additionally, an alternative approach could involve using a dedicated entity, like "Fragment", to allow a Document to be composed of includable sections or document fragments. Managing composition at the Document level eliminates the need in additional entities like "Fragment", streamlining both the conceptual understanding and the practical implementation of composability.
 
-Fragments allow assembling documents from multiple fragments.
-
-**Comment:**
+**COMMENT:**
 
 The corresponding UI capability for Fragments CRUD is TBD.
 
@@ -206,7 +202,7 @@ Requirement relations
 
 The StrictDoc data model shall support connecting requirements using Parent and Child relations.
 
-**Rationale:**
+**RATIONALE:**
 
 Support of both Parent and Child relations allows to build typical requirements relations such as child-to-parent and less common relations when one document can have parent links to a parent document and child links to a child document (e.g., the so-called "compliance" or "tailoring matrix" documents may use this structure).
 
@@ -254,7 +250,7 @@ SDoc markup language
 
 StrictDoc shall implement its own text markup language called S-Doc (strict-doc).
 
-**Rationale:**
+**RATIONALE:**
 
 The most commonly used Markdown format lacks the ability to store requirements metadata. While the RST syntax does allow for customization with directives to implement metadata extensions, its visual appearance contradicts other requirements of StrictDoc, such as the type-safety of the grammar and visual readability. Therefore, a markup language tailored specifically to the needs of the requirements tool provides direct control over the capabilities implemented in both the markup and the user interface.
 
@@ -316,7 +312,7 @@ One document per one SDoc file
 
 StrictDoc's SDoc file shall represent content of a single document.
 
-**Comment:**
+**COMMENT:**
 
 A "Document" corresponds to a "Document" of the SDoc data model.
 
@@ -391,7 +387,7 @@ Custom grammar / fields
 
 The SDoc markup shall support custom grammars.
 
-**Rationale:**
+**RATIONALE:**
 
 A custom grammar allows a user to define their own configuration of requirement fields.
 
@@ -413,11 +409,11 @@ UID identifier format
 
 The SDoc markup shall only accept UID identifiers that consist of alphanumeric characters separated by "_" and "-" characters.
 
-**Rationale:**
+**RATIONALE:**
 
 A standardized UID format supports the parent requirement of unique identification of requirements. It is easier to visually identify UIDs that look similar and common to a given industry.
 
-**Comment:**
+**COMMENT:**
 
 This requirement may need a revision to accommodate for more UID formats.
 
@@ -481,7 +477,7 @@ No indentation
 
 SDoc text markup blocks shall all start from column 1, i.e., the nesting of the blocks is not allowed.
 
-**Rationale:**
+**RATIONALE:**
 
 Nesting large text blocks of free text and requirements compromises readability.
 
@@ -584,7 +580,7 @@ Link document nodes
 
 The Traceability Index shall recognize and maintain the relations between all documents of a project tree.
 
-**Rationale:**
+**RATIONALE:**
 
 The relations between all documents are a summary of all relations between these documents' requirements. This information is useful for:
 
@@ -614,11 +610,11 @@ The StrictDoc's graph database shall maintain the requirement relations and thei
 - For a Parent relation, the database shall calculate the reverse Child relation.
 - For a Child relation, the database shall calculate the reverse Parent relation.
 
-**Rationale:**
+**RATIONALE:**
 
 The calculation of the reverse relations allows the user interface code to get and display both requirement's parent and child relations.
 
-**Comment:**
+**COMMENT:**
 
 Example: If a child requirement REQ-002 has a parent requirement REQ-001, the graph database first reads the link ``REQ-002 -Parent> REQ-001``, then it creates a corresponding ``REQ-001 -Child> REQ-002`` on the go. Both relations can be queried as follows, in pseudocode:
 
@@ -651,7 +647,7 @@ Finding documents recursively
 
 StrictDoc shall discover SDoc documents recursively based on a specified input path.
 
-**Rationale:**
+**RATIONALE:**
 
 Recursive search allows working with documents located in multiple folders, potentially spanning over several Git repositories.
 
@@ -749,7 +745,7 @@ Preserve generated file names
 
 For all export operations, StrictDoc shall maintain the original filenames of the documents when producing output files.
 
-**Rationale:**
+**RATIONALE:**
 
 Name preservation helps to visually identify which input file an output file corresponds to.
 
@@ -901,7 +897,7 @@ Move requirement / section nodes within document
 
 StrictDoc's Document screen shall provide a capability to move the nodes within a document.
 
-**Rationale:**
+**RATIONALE:**
 
 Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
 
@@ -925,7 +921,7 @@ Edit Document grammar
 
 StrictDoc's screen shall allow editing a document's grammar.
 
-**Rationale:**
+**RATIONALE:**
 
 Editing document grammar allows a user to customize the requirements fields.
 
@@ -1096,7 +1092,7 @@ StrictDoc shall provide a Project Statistics screen that displays the following 
 - Requirements status breakdown
 - Total number of TBD/TBC found in documents.
 
-**Rationale:**
+**RATIONALE:**
 
 TBD
 
@@ -1220,7 +1216,7 @@ StrictDoc's source file marker syntax shall support single-line markers.
 
 NOTE: A single-line marker points to a single line in a source file.
 
-**Rationale:**
+**RATIONALE:**
 
 The advantage of a single-line marker compared to a range marker is that a single-line marker is not intrusive and does not clutter source code. Such a single-marker can be kept in a comment to a function (e.g., Doxygen), not in the function body.
 
@@ -1267,7 +1263,7 @@ Generate source file traceability
 
 StrictDoc shall generate single file traceability information.
 
-**Rationale:**
+**RATIONALE:**
 
 With this capability in place, it is possible to focus on a single implementation file's links to requirements which helps in the code reviews and inspections.
 
@@ -1299,7 +1295,7 @@ Export to RST
 
 StrictDoc shall allow exporting SDoc content to the RST format.
 
-**Rationale:**
+**RATIONALE:**
 
 Exporting SDoc content to RST enables:
 
@@ -1327,11 +1323,11 @@ Docutils
 
 StrictDoc shall generate RST markup to HTML using Docutils.
 
-**Rationale:**
+**RATIONALE:**
 
 Docutils is the most mature RST-to-HTML converter.
 
-**Comment:**
+**COMMENT:**
 
 TBD: Move this to design decisions.
 
@@ -1381,7 +1377,7 @@ Standalone ReqIF layer
 
 StrictDoc shall maintain the core ReqIF implementation as a separate software component.
 
-**Rationale:**
+**RATIONALE:**
 
 ReqIF is a well-defined standard which exists independently of StrictDoc's development. It is reasonable to maintain the ReqIF codebase as a separate software component to allow independent development and easier maintainability.
 
@@ -1406,7 +1402,27 @@ Export to Excel
     * - **UID:**
       - SDOC-SRS-74
 
-StrictDoc shall allow exporting SDoc content to Excel.
+StrictDoc shall allow exporting SDoc documents to Excel, one Excel file per document.
+
+**Parents:**
+
+- ``[SDOC-SSS-60]`` :ref:`SDOC-SSS-60`
+
+.. _SDOC-SRS-134:
+
+Selected fields export
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SRS-134
+    * - **STATUS:**
+      - Active
+
+StrictDoc Excel export shall allow exporting SDoc documents to Excel with only selected fields.
 
 **Parents:**
 
@@ -1433,7 +1449,7 @@ Export to Graphviz/Dot
 
 StrictDoc shall support exporting requirements information to PDF format using Graphviz.
 
-**Rationale:**
+**RATIONALE:**
 
 Graphviz is one of the most capable tools for visualizing graph information, which makes it a perfect tool for visualizing requirements graphs create in StrictDoc.
 
@@ -1546,7 +1562,7 @@ Web server
 
 StrictDoc shall provide a web server.
 
-**Rationale:**
+**RATIONALE:**
 
 A web server is a precondition for StrictDoc's web interface. A web server can be available to a single user on their local machine or it can be deployed to a network and be made accessible by several computers.
 
@@ -1662,7 +1678,7 @@ Process-based parallelization
 
 StrictDoc shall support process-based parallelization for time-critical tasks.
 
-**Rationale:**
+**RATIONALE:**
 
 Process-based parallelization can provide a good speed-up when several large documents have to be generated.
 
@@ -1727,7 +1743,7 @@ Caching of RST fragments
 
 StrictDoc shall cache the RST fragments rendered to HTML.
 
-**Rationale:**
+**RATIONALE:**
 
 Conversion of RST markup to HTML is a time consuming process. Caching the rendered HTML of each fragment helps to save time when rendering the HTML content.
 
@@ -1750,7 +1766,7 @@ On-demand loading of HTML pages
 
 StrictDoc's web interface shall generate the HTML content only when it is directly requested by a user.
 
-**Rationale:**
+**RATIONALE:**
 
 Generating a whole documentation tree for a user project can be time consuming. The on-demand loading ensures the "do less work" approach when it comes to rendering the HTML pages.
 
@@ -1773,7 +1789,7 @@ Precompiled Jinja templates
 
 StrictDoc shall support a precompilation of HTML templates.
 
-**Rationale:**
+**RATIONALE:**
 
 The StrictDoc-exported HTML content visible to a user is assembled from numerous small HTML fragments. Precompiling the HTML templates from which the content gets rendered improves the performance of the HTML rendering.
 
@@ -1804,7 +1820,7 @@ Priority handling of critical issues in StrictDoc
 
 All critical issues reported in relation to StrictDoc shall be addressed with utmost priority.
 
-**Rationale:**
+**RATIONALE:**
 
 Prioritizing major issues ensures StrictDoc remains stable and reliable, preventing serious problems that could compromise its performance and integrity.
 
@@ -1885,7 +1901,7 @@ Python language
 
 StrictDoc shall be written in Python.
 
-**Rationale:**
+**RATIONALE:**
 
 Python has an excellent package ecosystem. It is a widely used language. It is most often the next language for C/C++ programming community when it comes to the tools development and scripting tasks.
 
@@ -1979,7 +1995,7 @@ Use of open source components
 
 StrictDoc shall be built using only open source software components.
 
-**Rationale:**
+**RATIONALE:**
 
 No commercial/proprietary dependency chain ensures that StrictDoc remain free and open for everyone.
 
@@ -2026,7 +2042,7 @@ No use of NPM
 
 StrictDoc shall avoid extending its infrastructure with anything based on NPM-ecosystem.
 
-**Rationale:**
+**RATIONALE:**
 
 StrictDoc already deals with the Python/Pip/Pypi ecosystem. The amount of necessary maintenance is already quite high. NPM is known for splitting its projects into very small parts, which increases the complexity of maintaining all dependencies.
 
@@ -2050,7 +2066,7 @@ No use of JavaScript replacement languages (e.g., Typescript)
 
 StrictDoc shall avoid using JavaScript-based programming languages.
 
-**Rationale:**
+**RATIONALE:**
 
 The development team does not have specific experience with any of the JS alternatives. Staying with a general subset of JavaScript is a safer choice.
 
@@ -2074,11 +2090,11 @@ Monolithic application with no microservices
 
 StrictDoc shall avoid using microservices and microservice-based architectures.
 
-**Rationale:**
+**RATIONALE:**
 
 The project is too small to scale to a multi-service architecture.
 
-**Comment:**
+**COMMENT:**
 
 This requirement could be re-considered only if a significant technical pressure
 would require the use of microservices.
@@ -2103,11 +2119,11 @@ No reliance on containerization
 
 StrictDoc shall avoid using containers and containerization technologies.
 
-**Rationale:**
+**RATIONALE:**
 
 Containers are significant extra layer of complexity. They are hard to debug.
 
-**Comment:**
+**COMMENT:**
 
 This constraint does not block a StrictDoc user from wrapping StrictDoc into their containers.
 
@@ -2294,7 +2310,7 @@ Every update to the StrictDoc codebase shall be complemented with a correspondin
 
 NOTE: This requirement implies that no modifications to StrictDoc's functionality can be merged unless accompanied by at least one test.
 
-**Rationale:**
+**RATIONALE:**
 
 This requirement ensures that every new feature or a chance in the codebase is covered/stressed by at least one test, according to the change type.
 

@@ -293,11 +293,10 @@ The ``server`` command accepts a number of options. To explore the options, run:
 TITLE: Security considerations
 
 [FREETEXT]
-**TL;DR** StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
+.. warning::
+    **TL;DR:** StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
 
-Using StrictDoc's command-line and web interfaces should be more secure if the web server is not deployed on a public network.
-
-----
+    Using StrictDoc's command-line and web interfaces should be more secure if the web server is not deployed on a public network.
 
 Due to current constraints (refer to [LINK: SDOC_UG_LIMIT_WEB]), StrictDoc requires running a server through a command line interface in one window or OS process, and separately committing changes to documents using Git in another window or OS process. Deploying StrictDoc as a shared web server is impractical, as it still requires manual commits to SDoc files via the server's command line using Git. The future development plan for StrictDoc aims to enable its use as a standalone server application, which includes resolving the following security-related issues.
 
@@ -1113,6 +1112,9 @@ are set to ``LEVEL: None`` by StrictDoc automatically.
 TITLE: Composing documents from other documents
 
 [FREETEXT]
+.. note::
+    The includable documents is an early feature with only 50%+ of the implementation complete. See `Epic: UI: Editable fragments <https://github.com/strictdoc-project/strictdoc/issues/1698>`_.
+
 StrictDoc ``.sdoc`` files can be built-up from including other documents.
 
 The ``[DOCUMENT_FROM_FILE]`` element can be used anywhere body elements can be
@@ -1195,7 +1197,7 @@ Which will resolve to the following document after inclusion:
 TITLE: Composite requirement
 
 [FREETEXT]
-.. warning::
+.. note::
     The composite requirements feature shows promise, but it has not yet attracted significant demand from both the core developers of StrictDoc and its users. While the use of composite requirements via the command line is implemented and supported, the web interface does not currently offer this support. Experience has shown that composite requirements can often be represented as a combination of sections and standard requirements. If there is a compelling use case for full support of composite requirements, please reach out to the developers.
 
 A ``[COMPOSITE_REQUIREMENT]`` is a requirement that combines requirement

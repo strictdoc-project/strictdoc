@@ -75,13 +75,6 @@ code {
   box-decoration-break: clone;
 }
 
-/* .document from tool */
-.document a,
-.document a:link,
-.document a:visited {
-  text-decoration: underline;
-}
-
 /* action_button */
 
 .actions_group {

@@ -1,0 +1,266 @@
+[DOCUMENT]
+TITLE: rST examples
+
+[SECTION]
+TITLE: Admonition
+
+[FREETEXT]
+"attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning"
+
+.. admonition:: And, by the way...
+
+   You can make up your own admonition too.
+
+   Second line
+
+Second line without indent
+
+.. admonition:: And, by the way...
+
+   You can make up your own admonition too.
+   Second line
+
+.. note:: This is a note admonition.
+   This is the second line of the first paragraph.
+
+   - The note contains all indented body elements
+     following.
+   - It includes this bullet list.
+
+.. DANGER::
+   Beware killer rabbits!
+
+.. danger::
+   The composite requirements feature shows promise
+
+.. error::
+   The composite requirements feature shows promise
+
+.. attention::
+   The composite requirements feature shows promise
+
+.. caution::
+   The composite requirements feature shows promise
+
+.. important::
+   The composite requirements feature shows promise
+
+.. warning::
+   The composite requirements feature shows promise
+
+.. note:: This is a note admonition.
+   This is the second line of the first paragraph.
+
+.. hint::
+   The composite requirements feature shows promise
+
+.. tip::
+   The composite requirements feature shows promise
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Test Stas
+
+[FREETEXT]
+.. warning::
+
+   :name: Test title
+
+   The composite requirements feature shows promise
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Code and Math
+
+[FREETEXT]
+For example, the content of the following directive
+
+.. code:: python
+   :number-lines:
+
+   def my_function():
+       "just a test"
+       print(8/2)
+
+is parsed and marked up as Python source code.
+
+The "math" directive inserts blocks with mathematical content (display formulas, equations) into the document. The input format is LaTeX math syntax with support for Unicode symbols, for example:
+
+.. math::
+
+  α_t(i) = P(O_1, O_2, … O_t, q_t = S_i λ)
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Table
+
+[FREETEXT]
+.. table:: Truth table for "not"
+   :widths: auto
+   :align: right
+
+   =====  =====
+     A    not A
+   =====  =====
+   False  True
+   True   False
+   =====  =====
+
+The "csv-table" directive is used to create a table from CSV (comma-separated values) [7] data. The data may be internal (an integral part of the document) or external (a separate file).
+
+.. csv-table:: Frozen Delights!
+   :header: "Treat", "Quantity", "Description"
+   :widths: 15, 10, 30
+
+   "Albatross", 2.99, "On a stick!"
+   "Crunchy Frog", 1.49, "If we took the bones out,
+   it wouldn't be crunchy, now would it?"
+   "Gannet Ripple", 1.99, "On a stick!"
+
+
+
+The "list-table" directive is used to create a table from data in a uniform two-level bullet list. "Uniform" means that each sublist (second-level list) must contain the same number of list items.
+
+Example:
+
+.. list-table:: Frozen Delights!
+   :widths: 15 10 30
+   :header-rows: 1
+
+   * - Treat
+     - Quantity
+     - Description
+   * - Albatross
+     - 2.99
+     - On a stick!
+   * - Crunchy Frog
+     - 1.49
+     - If we took the bones out, it wouldn't be
+       crunchy, now would it?
+   * - Gannet Ripple
+     - 1.99
+     - On a stick!
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Block quote
+
+[FREETEXT]
+Interpreted as the body of the block quote.
+
+.. epigraph::
+
+   No matter where you go, there you are.
+
+   -- Buckaroo Banzai (epigraph)
+
+.. highlights::
+
+   No matter where you go, there you are.
+
+   -- Buckaroo Banzai (highlights)
+
+.. pull-quote::
+
+   No matter where you go, there you are.
+
+   -- Buckaroo Banzai (pull-quote)
+
+"To Ma Own Beloved Lassie: A Poem on her 17th Birthday", by
+Ewan McTeagle (for Lassie O'Shea):
+
+    .. line-block::
+
+        (line-block)
+        Lend us a couple of bob till Thursday.
+        I'm absolutely skint.
+        But I'm expecting a postal order and I can pay you back
+            as soon as it comes.
+        Love, Ewan.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Blocks
+
+[FREETEXT]
+.. topic:: Topic Title
+
+    Subsequent indented lines comprise
+    the body of the topic, and are
+    interpreted as body elements.
+
+.. sidebar:: Optional Sidebar Title
+   :subtitle: Optional Sidebar Subtitle
+
+   Subsequent indented lines comprise
+   the body of the sidebar, and are
+   interpreted as body elements.
+
+The "compound" directive is used to create a compound paragraph, which is a single logical paragraph containing multiple physical body elements such as simple paragraphs, literal blocks, tables, lists, etc., instead of directly containing text and inline elements. For example:
+
+.. compound::
+
+   The 'rm' command is very dangerous.  If you are logged
+   in as root and enter ::
+
+       cd /
+       rm -rf *
+
+   you will erase the entire contents of your file system.
+
+The "compound" directive is not a generic block-level container like HTML's <div> element. Do not use it only to group a sequence of elements, or you may get unexpected results.
+
+If you need a generic block-level container, please use the container directive, described below.
+
+Compound paragraphs are typically rendered as multiple distinct text blocks, with the possibility of variations to emphasize their logical unity:
+
+- If paragraphs are rendered with a first-line indent, only the first physical paragraph of a compound paragraph should have that indent -- second and further physical paragraphs should omit the indents;
+
+- vertical spacing between physical elements may be reduced;
+
+- and so on.
+
+
+The "container" directive surrounds its contents (arbitrary body elements) with a generic block-level "container" element. Combined with the optional classes attribute argument(s), this is an extension mechanism for users & applications. For example:
+
+.. container:: custom
+
+   This paragraph might be rendered in a custom way.
+[/FREETEXT]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Page parts
+
+[FREETEXT]
+.. contents:: Table of Contents
+
+Title 1
+=======
+Paragraph 1.
+
+Title 2
+-------
+Paragraph 2.
+
+Title 3
+=======
+Paragraph 3.
+
+Title 4
+-------
+Paragraph 4.
+[/FREETEXT]
+
+[/SECTION]

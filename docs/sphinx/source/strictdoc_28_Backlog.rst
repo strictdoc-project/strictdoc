@@ -32,7 +32,7 @@ Real-time editing out of scope
 
 StrictDoc shall not implement the real-time editing capability to its web interface.
 
-**Rationale:**
+**RATIONALE:**
 
 The real-time editing feature is hard to achieve with a small part-time involvement from the development team. This requirement can only be reconsidered, if StrictDoc would experience a significant increase in the development power.
 
@@ -109,7 +109,7 @@ Traceability navigator
 
 StrictDoc shall provide a traceability navigator screen.
 
-**Rationale:**
+**RATIONALE:**
 
 Provide an interactive 1000-ft view of a requirements project.
 
@@ -154,11 +154,11 @@ Integration with Capella
 
 The Requirements Tool shall provide integration with Capella MBSE tool.
 
-**Rationale:**
+**RATIONALE:**
 
 Eclipse Capella is a capable open-source tool for Model-Based Systems Engineering, https://www.eclipse.org/capella/. It should be beneficial for the requirements tool to interface with the Capella engineering community.
 
-**Comment:**
+**COMMENT:**
 
 At the very least, the integration can happen through the ReqIF interface that Capella is known to support.
 
@@ -194,7 +194,7 @@ Formalized statements
 
 The Requirements Tool shall provide capabilities for hardening requirements content with formal semantics.
 
-**Comment:**
+**COMMENT:**
 
 The directions to explore:
 
@@ -376,7 +376,7 @@ Web API
 
 StrictDoc shall provide a web API.
 
-**Rationale:**
+**RATIONALE:**
 
 A web API allows integration with tools and workflows external to StrictDoc itself.
 
@@ -487,11 +487,11 @@ Project-level grammar
 
 StrictDoc shall support creation of a project-level grammar.
 
-**Rationale:**
+**RATIONALE:**
 
 A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
 
-**Comment:**
+**COMMENT:**
 
 The implementation is easy model-wise but the user interface details need to be elaborated.
 
@@ -515,7 +515,7 @@ WYSIWYG editing
 
 StrictDoc shall provide WYSIWYG kind of editing for all multiline text input fields.
 
-**Rationale:**
+**RATIONALE:**
 
 WYSIWYG improves the user experience, especially for non-programmer users.
 
@@ -556,7 +556,7 @@ Move requirement / section nodes between documents
 
 StrictDoc's Document screen shall provide a capability to move the nodes between documents.
 
-**Rationale:**
+**RATIONALE:**
 
 Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
 
@@ -580,7 +580,7 @@ Auto-completion for requirements UIDs
 
 StrictDoc's Document screen shall provide controls for automatic completion of requirements UIDs.
 
-**Comment:**
+**COMMENT:**
 
 The automatic completion can be especially useful when a user has to fill in a parent relation UID.
 
@@ -671,7 +671,7 @@ StrictDoc shall provide the Impact Analysis screen.
 
 NOTE: The Impact Analysis screen helps to get information about the impact that a given change to a requirement has on the other requirements in the project tree.
 
-**Rationale:**
+**RATIONALE:**
 
 The impact analysis is one of the core functions of a requirements management tool. Analyzing the impact that a requirement has on other requirements and an overall project's technical definition helps to perform effective change management.
 

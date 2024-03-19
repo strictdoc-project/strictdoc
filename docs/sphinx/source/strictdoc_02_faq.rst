@@ -19,6 +19,10 @@ The project exists since mid-2019.
 Resources about StrictDoc
 =========================
 
+Talks:
+
+- `Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project <https://mirrors.dotsrc.org/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_. This presentation introduces the SPDX Safety Profile and details its application within the context of the Zephyr Project. There is also a presentation of the Zephyr project's methodology for capturing requirements using StrictDoc and a discussion of the upcoming plans for the integration of SPDX into StrictDoc.
+
 Blog posts:
 
 - `Requirement Traceability with All Substance and No Fuss

@@ -17,7 +17,7 @@ Multiple files / include mechanism
 
 Requirements or groups of requirements shall be distributable over several files and still form a full specification (document) via some kind of include mechanism.
 
-**Rationale:**
+**RATIONALE:**
 
 In a future constellation the requirements shall be written resp. update with the code in the same PR. Smallish requirements files per topic / component next to the code in the same repo allow a better workflow than one huge requirements file somewhere.
 
@@ -41,7 +41,7 @@ Clear separation of requirements (machine-readable)
 
 Requirements objects shall be clearly separated from each other, also when organized in the same file.
 
-**Rationale:**
+**RATIONALE:**
 
 For exporting or machine processing, a clear separation of requirements objects is a prerequisite.
 
@@ -65,7 +65,7 @@ Custom fields
 
 Requiremements objects shall be configurable to create several types with a number of custom fields.
 
-**Rationale:**
+**RATIONALE:**
 
 Requirements on software level may need to hold different information than on the architecture/interface and on the component level.
 By having typed requirements objects, linkages between requirements objects can be verified and filtered (start_object_type – link_role_type --> end_object_type)".
@@ -90,7 +90,7 @@ Links
 
 Linking shall in general be supported between any requirement object of any object type in a 1:n manner.
 
-**Rationale:**
+**RATIONALE:**
 
 A SAIS requirement will link to a SRS requirement via «refines» link. A SITS test case will link to the same SAIS requirement.
 
@@ -114,7 +114,7 @@ Multiple link roles
 
 Links shall be configurable to create multiple link roles.
 
-**Rationale:**
+**RATIONALE:**
 
 Link roles and requirements object types allow to verify, that the traceability is consistent.
 
@@ -138,7 +138,7 @@ ReqIF export
 
 Requirements specification shall be exportable to ReqIF.
 
-**Rationale:**
+**RATIONALE:**
 
 Will/may be used to as exchange format to generate a requirements and traceability documentation.
 
@@ -162,7 +162,7 @@ CSV
 
 Requirements specification shall be exportable to CSV.
 
-**Rationale:**
+**RATIONALE:**
 
 Will/may be used to as exchange format to generate a requirements and traceability documentation.
 
@@ -192,7 +192,7 @@ Options could be:
 - Manually assigned: collision checking required
 - Centralized: when not affected by branching".
 
-**Rationale:**
+**RATIONALE:**
 
 Centralized object ID management might collide with a branching, PR, merging process approach commonly used in the rest of the project.
 
@@ -222,7 +222,7 @@ The description field shall allow for formatting such as:
 - UML diagrams
 - etc.
 
-**Rationale:**
+**RATIONALE:**
 
 In some cases a plain text requirement is not sufficiently clear and requires formatting or even UML diagrams.
 
@@ -253,7 +253,7 @@ A requirements object shall at least comprise the following fields (or similar):
 - Outbound links
 - Inbound links (optional?)
 
-**Rationale:**
+**RATIONALE:**
 
 TBD
 
@@ -277,7 +277,7 @@ Requirements to source code traceability
 
 Linking from requirements objects to code or from code to requirements objects via ID shall be supported.
 
-**Rationale:**
+**RATIONALE:**
 
 For safety development and certification linking to code is required.
 
@@ -301,7 +301,7 @@ Non-intrusive links in source code
 
 Linking from code to requirements objects via ID shall be least code intrusive.
 
-**Rationale:**
+**RATIONALE:**
 
 Code with lots of meta information in it via comment tags, makes the code less readable. Links should best be hidden in existing comment structures e.g. function headers and not be extra tags.
 
@@ -325,7 +325,7 @@ Structuring requirements in documents
 
 Requirements objects shall be structurable in a document like manner (with requirements ordering, and organized in chapters).
 
-**Rationale:**
+**RATIONALE:**
 
 A collection of unorganized requirements as a specifications are hard to read and understand. They should be organizable in topic chapters or similar.
 
@@ -349,7 +349,7 @@ Status field
 
 Each requirements object type shall have a configurable status workflow.
 
-**Rationale:**
+**RATIONALE:**
 
 Requirements may be in different statuses such as Draft, InReview, Approved. Dependent on the used process is rather reflected in the development work (branch=draft, PR under Review=InReview, PR merged to main=Approved.
 
@@ -373,7 +373,7 @@ Tool Qualifiability
 
 The Requirement Tool shall be qualifiable for use in safety-related and/or security-related development. At the very least, the Requirement Tool shall come with its own set of requirements, which shall be amenable to validation in compliance with the relevant standards.
 
-**Rationale:**
+**RATIONALE:**
 
 Certification of Zephyr-based products.
 

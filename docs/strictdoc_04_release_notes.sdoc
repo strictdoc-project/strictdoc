@@ -6,7 +6,7 @@ This document maintains a record of all changes to StrictDoc since November 2023
 [/FREETEXT]
 
 [SECTION]
-TITLE: Unreleased work
+TITLE: 0.0.50 (2024-03-19)
 
 [FREETEXT]
 **Breaking Change:** The "Fragments" feature has been replaced by the "Composable documents" feature:

@@ -1,0 +1,23 @@
+{% assert folder is defined %}
+
+<div style="padding: 10px; border: 1px solid gray;">
+  <p>
+  {{ folder.folder_name }}/
+  </p>
+
+  <div>
+    {% for folder_ in folder.subfolder_trees %}
+      {% if folder_.has_sdoc_content %}
+        {% with folder = folder_ %}
+          {% include "screens/project_index/project_tree_folder.jinja" %}
+        {% endwith %}
+      {% endif %}
+    {% endfor %}
+
+    {% for file_ in folder.files %}
+      {% with file = file_ %}
+        {% include "screens/project_index/project_tree_file.jinja" %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+</div>

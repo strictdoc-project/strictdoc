@@ -3,8 +3,8 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
-Unreleased work
-===============
+0.0.50 (2024-03-19)
+===================
 
 **Breaking Change:** The "Fragments" feature has been replaced by the "Composable documents" feature:
 

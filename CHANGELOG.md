@@ -2,22 +2,122 @@
 
 ## [Unreleased](https://github.com/strictdoc-project/strictdoc/tree/HEAD)
 
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.48...HEAD)
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.51...HEAD)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.51 [\#1717](https://github.com/strictdoc-project/strictdoc/pull/1717) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.51](https://github.com/strictdoc-project/strictdoc/tree/0.0.51) (2024-03-20)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.50...0.0.51)
 
 **Fixed bugs:**
 
+- UI: Search screen: fix the case when finding requirements/sections [\#1716](https://github.com/strictdoc-project/strictdoc/pull/1716) ([stanislaw](https://github.com/stanislaw))
+
+**Merged pull requests:**
+
+- export/html: Update project tree markup [\#1715](https://github.com/strictdoc-project/strictdoc/pull/1715) ([mettta](https://github.com/mettta))
+
+## [0.0.50](https://github.com/strictdoc-project/strictdoc/tree/0.0.50) (2024-03-19)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.49...0.0.50)
+
+**Fixed bugs:**
+
+- UI: Project tree: Visual artefact when the fragments are not displayed [\#1709](https://github.com/strictdoc-project/strictdoc/issues/1709)
+- No module named 'requests' when running "export --html2pdf" [\#1701](https://github.com/strictdoc-project/strictdoc/issues/1701)
+- UI: Diff screen: do not build source file traceability when doing history [\#1708](https://github.com/strictdoc-project/strictdoc/pull/1708) ([stanislaw](https://github.com/stanislaw))
+
+**Closed issues:**
+
+- Implement CSS styles for RST warning and info boxes in HTML [\#1706](https://github.com/strictdoc-project/strictdoc/issues/1706)
+- Update strictdoc.tmLanguage [\#1589](https://github.com/strictdoc-project/strictdoc/issues/1589)
+
+**Merged pull requests:**
+
+- docs: regenerate Read the Docs [\#1714](https://github.com/strictdoc-project/strictdoc/pull/1714) ([stanislaw](https://github.com/stanislaw))
+-  Bump version to 0.0.50  [\#1713](https://github.com/strictdoc-project/strictdoc/pull/1713) ([stanislaw](https://github.com/stanislaw))
+- Styles: add CSS for RST admonition markup [\#1712](https://github.com/strictdoc-project/strictdoc/pull/1712) ([mettta](https://github.com/mettta))
+- export/html: project\_index: Show fragments by default, disable switcher, add info about including file [\#1711](https://github.com/strictdoc-project/strictdoc/pull/1711) ([mettta](https://github.com/mettta))
+- docs: FAQ: resources: FOSDEM 2024 [\#1710](https://github.com/strictdoc-project/strictdoc/pull/1710) ([stanislaw](https://github.com/stanislaw))
+- export/html: show the "included documents" only when there are included docs [\#1705](https://github.com/strictdoc-project/strictdoc/pull/1705) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: remove last occurrences of Fragment, document the change [\#1704](https://github.com/strictdoc-project/strictdoc/pull/1704) ([stanislaw](https://github.com/stanislaw))
+- Migration from Fragments to includable Documents [\#1703](https://github.com/strictdoc-project/strictdoc/pull/1703) ([stanislaw](https://github.com/stanislaw))
+- html2pdf: fix the issue of running within virtual environments [\#1702](https://github.com/strictdoc-project/strictdoc/pull/1702) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.49 [\#1700](https://github.com/strictdoc-project/strictdoc/pull/1700) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.49](https://github.com/strictdoc-project/strictdoc/tree/0.0.49) (2024-03-11)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.48...0.0.49)
+
+**Fixed bugs:**
+
+- auto-uid strips RELATIONS if the REQUIREMENT has no UID/MID [\#1630](https://github.com/strictdoc-project/strictdoc/issues/1630)
+- BUG: the "Copy to clipboard" button is missing after node editing [\#1588](https://github.com/strictdoc-project/strictdoc/issues/1588)
+- Adjust the grammar rules and validation rules of the forms. [\#947](https://github.com/strictdoc-project/strictdoc/issues/947)
 - models: requirement: preserve REFS when setting a field [\#1631](https://github.com/strictdoc-project/strictdoc/pull/1631) ([stanislaw](https://github.com/stanislaw))
 
 **Closed issues:**
 
+- UI: Edit grammar element: implement the component for human title [\#1674](https://github.com/strictdoc-project/strictdoc/issues/1674)
+- Documentation: List of `DOCUMENT` grammar elements does not specify where `REQ_PREFIX` belongs [\#1670](https://github.com/strictdoc-project/strictdoc/issues/1670)
+- Extend/change the 'edit' menu on each node. [\#1661](https://github.com/strictdoc-project/strictdoc/issues/1661)
+- Missing validation on "Edit Grammar" form in the frontend [\#1659](https://github.com/strictdoc-project/strictdoc/issues/1659)
 - Excel export: export multiple documents with relations between them, document the common commands [\#1639](https://github.com/strictdoc-project/strictdoc/issues/1639)
 - HTML2PDF: Make the webdriver\_manager to avoid downloading newer versions if a cached one already exists [\#1636](https://github.com/strictdoc-project/strictdoc/issues/1636)
-- auto-uid strips RELATIONS if the REQUIREMENT has no UID/MID [\#1630](https://github.com/strictdoc-project/strictdoc/issues/1630)
 - auto-uid throws AttributeError when I have a COMPOSITE\_REQUIREMENT [\#1623](https://github.com/strictdoc-project/strictdoc/issues/1623)
 - StrictDoc does not recognize source files with arbitrary extensions [\#1621](https://github.com/strictdoc-project/strictdoc/issues/1621)
+- Will not process sdoc files in --output-dir [\#1620](https://github.com/strictdoc-project/strictdoc/issues/1620)
+- HTML pages: bundle all fonts inside StrictDoc's bundle to avoid hitting Internet all the time [\#1601](https://github.com/strictdoc-project/strictdoc/issues/1601)
+- UI: Editing arbitrary Nodes, not only Requirement [\#1537](https://github.com/strictdoc-project/strictdoc/issues/1537)
+- Path resolution for fragments: must read fragments relative to the sdoc input path [\#1261](https://github.com/strictdoc-project/strictdoc/issues/1261)
+- Project tree: highlight the current document [\#1127](https://github.com/strictdoc-project/strictdoc/issues/1127)
+- Activate collapsible TOC JS code for static HTML export [\#1097](https://github.com/strictdoc-project/strictdoc/issues/1097)
 
 **Merged pull requests:**
 
+- backend/sdoc: writing fragments back to files [\#1699](https://github.com/strictdoc-project/strictdoc/pull/1699) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: writing fragments back to files [\#1697](https://github.com/strictdoc-project/strictdoc/pull/1697) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: rework the parsing algorithm for fragments [\#1696](https://github.com/strictdoc-project/strictdoc/pull/1696) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: resolve relative paths to full paths when importing fragments [\#1695](https://github.com/strictdoc-project/strictdoc/pull/1695) ([stanislaw](https://github.com/stanislaw))
+- docs: update Roadmap [\#1693](https://github.com/strictdoc-project/strictdoc/pull/1693) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.49a7 [\#1690](https://github.com/strictdoc-project/strictdoc/pull/1690) ([stanislaw](https://github.com/stanislaw))
+-  export/html: update form error styles for fields and field groups \(driven by HUMAN\_TITLE\) [\#1689](https://github.com/strictdoc-project/strictdoc/pull/1689) ([stanislaw](https://github.com/stanislaw))
+- export/html: make collapsible\_list.js based on MutationObserver [\#1686](https://github.com/strictdoc-project/strictdoc/pull/1686) ([mettta](https://github.com/mettta))
+- export/html: define the copy\_to\_clipboard in expandable node components [\#1685](https://github.com/strictdoc-project/strictdoc/pull/1685) ([mettta](https://github.com/mettta))
+- export/html: Use self-hosting fonts [\#1684](https://github.com/strictdoc-project/strictdoc/pull/1684) ([mettta](https://github.com/mettta))
+- Bump version to 0.0.49a6 [\#1682](https://github.com/strictdoc-project/strictdoc/pull/1682) ([stanislaw](https://github.com/stanislaw))
+- export/html: improve the edit grammar form [\#1681](https://github.com/strictdoc-project/strictdoc/pull/1681) ([mettta](https://github.com/mettta))
+- export/html: highlight current document [\#1680](https://github.com/strictdoc-project/strictdoc/pull/1680) ([stanislaw](https://github.com/stanislaw))
+- export/dot: minor improvements to the layout [\#1679](https://github.com/strictdoc-project/strictdoc/pull/1679) ([stanislaw](https://github.com/stanislaw))
+-  server: several validation messages: requirement -\> node  [\#1678](https://github.com/strictdoc-project/strictdoc/pull/1678) ([stanislaw](https://github.com/stanislaw))
+- Code climate: update to new Ruff settings [\#1676](https://github.com/strictdoc-project/strictdoc/pull/1676) ([stanislaw](https://github.com/stanislaw))
+- server: requirement\_form\_object: adapt to custom elements in the last places [\#1675](https://github.com/strictdoc-project/strictdoc/pull/1675) ([stanislaw](https://github.com/stanislaw))
+- docs: add a note about not detecting .sdoc files in the output/ folder [\#1673](https://github.com/strictdoc-project/strictdoc/pull/1673) ([stanislaw](https://github.com/stanislaw))
+- docs: SDoc grammar DOCUMENT fields: add REQ\_PREFIX [\#1672](https://github.com/strictdoc-project/strictdoc/pull/1672) ([stanislaw](https://github.com/stanislaw))
+- screens/diff: improve the legend with "HEAD vs HEAD+" [\#1671](https://github.com/strictdoc-project/strictdoc/pull/1671) ([stanislaw](https://github.com/stanislaw))
+- feat: Make the document grammar editable with respect to human titles [\#1669](https://github.com/strictdoc-project/strictdoc/pull/1669) ([dahbar](https://github.com/dahbar))
+- export/dot: disable requirement links [\#1668](https://github.com/strictdoc-project/strictdoc/pull/1668) ([stanislaw](https://github.com/stanislaw))
+- export/json: basic JSON export [\#1667](https://github.com/strictdoc-project/strictdoc/pull/1667) ([stanislaw](https://github.com/stanislaw))
+-  server: creating grammar elements and arbitrary nodes  [\#1666](https://github.com/strictdoc-project/strictdoc/pull/1666) ([stanislaw](https://github.com/stanislaw))
+- export/html: Preparing the menu structure for adding new node types [\#1665](https://github.com/strictdoc-project/strictdoc/pull/1665) ([mettta](https://github.com/mettta))
+- Some style enhancements [\#1664](https://github.com/strictdoc-project/strictdoc/pull/1664) ([mettta](https://github.com/mettta))
+- export/html: node\_controls: Updating the layout and icons for the "Add node" menu [\#1663](https://github.com/strictdoc-project/strictdoc/pull/1663) ([mettta](https://github.com/mettta))
+- Refactoring: DocumentGrammarFormObject -\> GrammarElementFormObject, move more logic from Jinja to Python [\#1662](https://github.com/strictdoc-project/strictdoc/pull/1662) ([stanislaw](https://github.com/stanislaw))
+- html2pdf: update bundle.js: Paragraph: split nested inline elements [\#1660](https://github.com/strictdoc-project/strictdoc/pull/1660) ([mettta](https://github.com/mettta))
+- export/html: introduce view\_objects to encapsulate Jinja templates data [\#1657](https://github.com/strictdoc-project/strictdoc/pull/1657) ([stanislaw](https://github.com/stanislaw))
+- html2pdf: update bundle.js: Add options to manually invoke or automatically run the script [\#1656](https://github.com/strictdoc-project/strictdoc/pull/1656) ([mettta](https://github.com/mettta))
+- Refactoring: Document -\> SDocDocument [\#1655](https://github.com/strictdoc-project/strictdoc/pull/1655) ([stanislaw](https://github.com/stanislaw))
+- Refactoring: Section -\> SDocSection [\#1654](https://github.com/strictdoc-project/strictdoc/pull/1654) ([stanislaw](https://github.com/stanislaw))
+- Refactoring: Requirement -\> SDocNode [\#1653](https://github.com/strictdoc-project/strictdoc/pull/1653) ([stanislaw](https://github.com/stanislaw))
+- Refactoring: rename three helper classes from Requirement\* -\> Node\* [\#1652](https://github.com/strictdoc-project/strictdoc/pull/1652) ([stanislaw](https://github.com/stanislaw))
+- Refactoring: requirement.py -\> node.py [\#1651](https://github.com/strictdoc-project/strictdoc/pull/1651) ([stanislaw](https://github.com/stanislaw))
+- Refactoring: Node -\> SDocObject [\#1650](https://github.com/strictdoc-project/strictdoc/pull/1650) ([stanislaw](https://github.com/stanislaw))
+- html2pdf: update bundle.js: Fix 'block overruns the page bottom' [\#1649](https://github.com/strictdoc-project/strictdoc/pull/1649) ([mettta](https://github.com/mettta))
+- html2pdf: update bundle.js: Add \<object\> preprocessing [\#1648](https://github.com/strictdoc-project/strictdoc/pull/1648) ([mettta](https://github.com/mettta))
+- Regenerate CHANGELOG [\#1647](https://github.com/strictdoc-project/strictdoc/pull/1647) ([stanislaw](https://github.com/stanislaw))
 -  tests/end2end: test opening a hyperlink to an CSV asset  [\#1646](https://github.com/strictdoc-project/strictdoc/pull/1646) ([stanislaw](https://github.com/stanislaw))
 - server: main\_router: treat everything "not .html" as assets [\#1645](https://github.com/strictdoc-project/strictdoc/pull/1645) ([stanislaw](https://github.com/stanislaw))
 - export/excel: link Excel export requirement to source files [\#1644](https://github.com/strictdoc-project/strictdoc/pull/1644) ([stanislaw](https://github.com/stanislaw))

@@ -25,7 +25,7 @@ class Switch {
   }) {
     this.colorOn = colorOn || 'rgb(242, 100, 42)';
     this.colorOff = colorOff || 'rgb(200, 200, 200)';
-    this.labelText = labelText || '';
+    this.labelInitialText = labelText || '';
     this.checked = (checked === false) ? false : true;
 
     this.componentClass = componentClass || 'std-switch-scc';
@@ -39,6 +39,7 @@ class Switch {
     this.bottomPosition = bottomPosition || 'unset',
     this.position = position || 'static',
 
+    this.controlLabelTextSpan = document.createElement('span');
     this.callback = callback;
   }
 
@@ -53,16 +54,19 @@ class Switch {
     input.checked = this.checked;
     const slider = document.createElement('span');
     slider.classList.add(`${this.componentClass}__slider`);
-    const text = document.createElement('span');
-    text.innerHTML = this.labelText;
 
+    label.append(input, slider, this.controlLabelTextSpan);
+    block.append(label);
+
+    this.insertStyle();
+    this.updateLabelText(this.labelInitialText);
     input.addEventListener('change', () => this.callback(input.checked));
 
-    label.append(input, slider, text);
-    block.append(label);
-    this.insertStyle();
-
     return block;
+  }
+
+  updateLabelText(text) {
+    this.controlLabelTextSpan.innerHTML = text;
   }
 
   insertStyle() {
@@ -147,6 +151,7 @@ class ProjectTree {
     this.controlTarget = controlTarget;
     this.fragments = [];
 
+    this.control;
     this.controlElement;
     this.controlElementDisplayInitial;
 
@@ -174,16 +179,20 @@ class ProjectTree {
     this.__testStorage();
 
     console.assert(this.controlTarget, `controlTarget not found on the page`);
-    this._addControl();
+    this.control = this._addControl();
 
-    this.fragments = this._getFragments();
-    console.log(this.fragments);
-    this._updateFragmentsVisibility(this.getCurrentFragmentVisibilityBool());
+    this.updateFragmentsAndControl();
   }
 
   getCurrentFragmentVisibilityBool() {
     console.log('getCurrentFragmentVisibilityBool', this.state.fragmentVisibility.current)
     return (this.state.fragmentVisibility.current === 'show') ? true : false;
+  }
+
+  updateFragmentsAndControl() {
+    this.fragments = this._getFragments();
+    this._updateControl(this.fragments.length);
+    this._updateFragmentsVisibility(this.getCurrentFragmentVisibilityBool());
   }
 
   _getFragments() {
@@ -202,17 +211,21 @@ class ProjectTree {
   }
 
   _updateFragmentsVisibility(bool) {
-    if (this.fragments.length) {
-      console.log(this.fragments.length);
-      this.controlElement.style.display = this.controlElementDisplayInitial;
-    } else {
-      this.controlElement.style.display = 'none';
-    }
-
     const display = bool ? '' : 'none';
     this.fragments.forEach(element => {
       element.style.display = display;
     })
+  }
+
+  _updateControl(num) {
+    this.control.updateLabelText(`<b>Show ${num} fragment${num > 1 ? 's' : ''}</b> included in&nbsp;other documents in the Project document tree.`)
+
+    if (num) {
+      console.log('this.fragments.length', num);
+      this.controlElement.style.display = this.controlElementDisplayInitial;
+    } else {
+      this.controlElement.style.display = 'none';
+    }
   }
 
   toggleFragmentsVisibility(checked) {
@@ -254,26 +267,26 @@ class ProjectTree {
   }
 
   _addControl() {
-    const switcher = new Switch(
+    const control = new Switch(
       {
-        labelText: '<b>Show fragments</b> included in other documents in the Project tree:',
+        labelText: `<b>Show fragments</b>`, // * This text will be updated later.
         size: 0.5,
         stroke: 0.175,
-        position: 'absolute',
-        topPosition: '16px',
-        leftPosition: 0,
+        // position: 'absolute',
+        // topPosition: '16px',
+        // leftPosition: 0,
         // checked: false,
         checked: this.getCurrentFragmentVisibilityBool(),
         callback: (checked) => this.toggleFragmentsVisibility(checked),
       }
     );
 
-    const controlElement = switcher.create();
+    const controlElement = control.create();
     this.controlTarget.append(controlElement);
 
     this.controlElement = controlElement;
     this.controlElementDisplayInitial = controlElement.style.display;
-    return controlElement
+    return control
   }
 
   _addMutationObserver() {
@@ -286,8 +299,7 @@ class ProjectTree {
           // the array of tracked elements should be updated
           // and their visibility should be set according
           // to the current settings available in the State.
-          this.fragments = this._getFragments();
-          this._updateFragmentsVisibility(this.getCurrentFragmentVisibilityBool());
+          this.updateFragmentsAndControl();
         }
       }
     }).observe(

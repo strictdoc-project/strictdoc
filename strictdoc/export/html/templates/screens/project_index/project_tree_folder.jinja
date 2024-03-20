@@ -1,11 +1,14 @@
 {% assert folder is defined %}
 
-<div style="padding: 10px; border: 1px solid gray;">
-  <p>
-  {{ folder.folder_name }}/
-  </p>
+<details open class="project_tree-folder">
+  <summary>
+    <div class="project_tree-folder-title">
+      {%- include "_res/svg_ico16_folder.jinja" -%}
+      {{ folder.folder_name }}/
+    </div>
+  </summary>
 
-  <div>
+  <div class="project_tree-folder-content">
     {% for folder_ in folder.subfolder_trees %}
       {% if folder_.has_sdoc_content %}
         {% with folder = folder_ %}
@@ -20,4 +23,4 @@
       {% endwith %}
     {% endfor %}
   </div>
-</div>
+</details>

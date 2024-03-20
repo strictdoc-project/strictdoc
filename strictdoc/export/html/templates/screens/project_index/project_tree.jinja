@@ -1,22 +1,21 @@
+{%- if not view_object.is_empty_tree() -%}
+  <div class="project_tree">
+    {% for root_tree_ in view_object.document_tree_iterator.document_tree.file_tree %}
 
-  {%- if not view_object.is_empty_tree() -%}
-    <div class="std-tree">
-      {% for root_tree_ in view_object.document_tree_iterator.document_tree.file_tree %}
-        <div>
-        {% if root_tree_.root_folder_or_file.is_folder() %}
-          {% if root_tree_.root_folder_or_file.has_sdoc_content %}
-            {% with folder = root_tree_.root_folder_or_file %}
-              {% include "screens/project_index/project_tree_folder.jinja" %}
-            {% endwith %}
-          {% endif %}
-        {% else %}
-          {% with file = root_tree_.root_folder_or_file %}
-            {% include "screens/project_index/project_tree_file.jinja" %}
+      {% if root_tree_.root_folder_or_file.is_folder() %}
+        {% if root_tree_.root_folder_or_file.has_sdoc_content %}
+          {% with folder = root_tree_.root_folder_or_file %}
+            {% include "screens/project_index/project_tree_folder.jinja" %}
           {% endwith %}
         {% endif %}
-        </div>
-      {% endfor %}
-    </div>
-  {%- else -%}
-    <span data-testid="document-tree-empty-text">The document tree has no documents yet.</span>
-  {%- endif -%}
+      {% else %}
+        {% with file = root_tree_.root_folder_or_file %}
+          {% include "screens/project_index/project_tree_file.jinja" %}
+        {% endwith %}
+      {% endif %}
+
+    {% endfor %}
+  </div>
+{%- else -%}
+  <span data-testid="document-tree-empty-text">The document tree has no documents yet.</span>
+{%- endif -%}

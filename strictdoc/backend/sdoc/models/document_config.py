@@ -74,6 +74,9 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         self.default_view: Optional[str] = default_view
         self.ng_auto_levels_specified = auto_levels is not None
 
+        self.ng_line_start: int = 0
+        self.ng_col_start: int = 0
+
     def get_requirement_style_mode(self):
         if (
             self.requirement_style is None

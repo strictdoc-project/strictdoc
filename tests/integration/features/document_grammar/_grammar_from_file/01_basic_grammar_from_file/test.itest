@@ -1,0 +1,11 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published: Test document
+
+RUN: %cat %S/Output/html/01_basic_grammar_from_file/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML:UID
+CHECK-HTML:ABC-123
+CHECK-HTML:ASIL
+CHECK-HTML:A
+CHECK-HTML:STATUS
+CHECK-HTML:Draft

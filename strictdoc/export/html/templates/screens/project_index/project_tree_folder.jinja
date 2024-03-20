@@ -19,9 +19,11 @@
     {% endfor %}
 
     {% for file_ in folder.files %}
-      {% with file = file_ %}
-        {% include "screens/project_index/project_tree_file.jinja" %}
-      {% endwith %}
+      {% if file_.has_extension(".sdoc") %}
+        {% with file = file_ %}
+          {% include "screens/project_index/project_tree_file.jinja" %}
+        {% endwith %}
+      {% endif %}
     {% endfor %}
   </div>
 </details>

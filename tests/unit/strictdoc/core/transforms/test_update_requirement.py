@@ -28,6 +28,7 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -92,6 +93,7 @@ def test_02_single_document_add_second_parent_relation_with_role():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -161,6 +163,7 @@ def test_20_single_document_add_second_child_relation_with_role():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -237,6 +240,7 @@ def test_25_single_document_remove_child_relation():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -307,6 +311,7 @@ def test_26_two_documents_remove_child_relation():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)

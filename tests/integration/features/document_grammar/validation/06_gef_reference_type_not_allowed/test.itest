@@ -2,6 +2,5 @@ RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --d
 
 CHECK: error: could not parse file: {{.*}}input.sdoc.
 CHECK: Semantic error: Requirement relation type/role is not registered: File.
-CHECK: Location: {{.*}}input.sdoc:23:1
+CHECK: Location: {{.*}}input.sdoc:21:1
 CHECK: Hint: Problematic requirement: ID-002.
-CHECK: error: Parallelizer: One of the child processes has exited prematurely.

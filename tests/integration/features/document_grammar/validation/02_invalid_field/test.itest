@@ -4,4 +4,3 @@ CHECK: error: could not parse file: {{.*}}input.sdoc.
 CHECK: Semantic error: Invalid requirement field: UNREGISTERED
 CHECK: Location: {{.*}}input.sdoc:15:1
 CHECK: Hint: Compare with the document grammar: [UID, STATEMENT] for type: REQUIREMENT.
-CHECK: error: Parallelizer: One of the child processes has exited prematurely.

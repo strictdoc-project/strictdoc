@@ -1,11 +1,16 @@
 from textx import TextXSyntaxError
 
+from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
     GrammarElementField,
 )
-from strictdoc.backend.sdoc.models.document_view import ViewElement
+from strictdoc.backend.sdoc.models.document_view import (
+    DocumentView,
+    ViewElement,
+)
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
     SDocNodeField,
@@ -30,16 +35,14 @@ class StrictDocSemanticError(Exception):
         self.file_path = filename
 
     @staticmethod
-    def unknown_requirement_type(
-        requirement_type, line=None, col=None, filename=None
-    ):
+    def unknown_requirement_type(node: SDocNode, path_to_sdoc_file: str):
         return StrictDocSemanticError(
-            title=f"Invalid requirement type: {requirement_type}.",
+            title=f"Invalid requirement type: {node.requirement_type}.",
             hint=None,
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
@@ -48,9 +51,7 @@ class StrictDocSemanticError(Exception):
         field_name: str,
         requirement: SDocNode,
         document_grammar: DocumentGrammar,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file: str,
     ):
         grammar_dump = document_grammar.dump_fields(
             requirement.requirement_type
@@ -62,102 +63,88 @@ class StrictDocSemanticError(Exception):
                 f"for type: {requirement.requirement_type}."
             ),
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=requirement.ng_line_start,
+            col=requirement.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def missing_required_field(
-        requirement: SDocNode,
+        node: SDocNode,
         grammar_field: GrammarElementField,
         document_grammar: DocumentGrammar,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file: str,
     ):
-        grammar_fields = document_grammar.dump_fields(
-            requirement.requirement_type
-        )
+        grammar_fields = document_grammar.dump_fields(node.requirement_type)
         return StrictDocSemanticError(
             title=(
                 f"Requirement is missing a field that is required by "
                 f"grammar: {grammar_field.title}."
             ),
             hint=(
-                f"Requirement fields: [{requirement.dump_fields_as_parsed()}], "
+                f"Requirement fields: [{node.dump_fields_as_parsed()}], "
                 f"grammar fields: [{grammar_fields}]."
             ),
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def unexpected_field_outside_grammar(
-        requirement: SDocNode,
+        node: SDocNode,
         requirement_field: SDocNodeField,
         document_grammar: DocumentGrammar,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file: str,
     ):
-        grammar_fields = document_grammar.dump_fields(
-            requirement.requirement_type
-        )
+        grammar_fields = document_grammar.dump_fields(node.requirement_type)
         return StrictDocSemanticError(
             title=(
                 f"Unexpected field outside grammar: "
                 f"{requirement_field.field_name}"
             ),
             hint=(
-                f"Requirement fields: [{requirement.dump_fields_as_parsed()}], "
+                f"Requirement fields: [{node.dump_fields_as_parsed()}], "
                 f"grammar fields: [{grammar_fields}]."
             ),
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def wrong_field_order(
-        requirement: SDocNode,
+        node: SDocNode,
         document_grammar: DocumentGrammar,
         problematic_field: SDocNodeField,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file: str,
     ):
         assert isinstance(
             problematic_field, SDocNodeField
         ), f"{problematic_field}"
-        requirement_dump = requirement.dump_fields_as_parsed()
-        grammar_dump = document_grammar.dump_fields(
-            requirement.requirement_type
-        )
+        requirement_dump = node.dump_fields_as_parsed()
+        grammar_dump = document_grammar.dump_fields(node.requirement_type)
         return StrictDocSemanticError(
             title=f"Wrong field order for requirement: [{requirement_dump}].",
             hint=(
                 f"Problematic field: {problematic_field.field_name}. "
                 f"Compare with the document grammar: [{grammar_dump}] "
-                f"for type: {requirement.requirement_type}."
+                f"for type: {node.requirement_type}."
             ),
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def invalid_choice_field(
-        requirement: SDocNode,
+        node: SDocNode,
         document_grammar: DocumentGrammar,
         requirement_field: SDocNodeField,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file: str,
     ):
         return StrictDocSemanticError(
             title=(
@@ -168,24 +155,22 @@ class StrictDocSemanticError(Exception):
                 f"Problematic field: {requirement_field.field_name}. "
                 f"Compare with the document grammar: "
                 f"["
-                f"{document_grammar.dump_fields(requirement.requirement_type)}"
+                f"{document_grammar.dump_fields(node.requirement_type)}"
                 f"] "
-                f"for type: {requirement.requirement_type}."
+                f"for type: {node.requirement_type}."
             ),
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def invalid_multiple_choice_field(
-        requirement: SDocNode,
+        node: SDocNode,
         document_grammar: DocumentGrammar,
         requirement_field: SDocNodeField,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file: str,
     ):
         return StrictDocSemanticError(
             title=(
@@ -196,22 +181,21 @@ class StrictDocSemanticError(Exception):
                 f"Problematic field: {requirement_field.field_name}. "
                 f"Compare with the document grammar: "
                 f"["
-                f"{document_grammar.dump_fields(requirement.requirement_type)}"
+                f"{document_grammar.dump_fields(node.requirement_type)}"
                 f"] "
-                f"for type: {requirement.requirement_type}."
+                f"for type: {node.requirement_type}."
             ),
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def not_comma_separated_choices(
+        node: SDocNode,
         requirement_field: SDocNodeField,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file,
     ):
         return StrictDocSemanticError(
             title=(
@@ -220,17 +204,16 @@ class StrictDocSemanticError(Exception):
             ),
             hint="MultipleChoice field requires ', '-separated values.",
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def not_comma_separated_tag_field(
+        node: SDocNode,
         requirement_field: SDocNodeField,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file: str,
     ):
         return StrictDocSemanticError(
             title=(
@@ -239,18 +222,16 @@ class StrictDocSemanticError(Exception):
             ),
             hint="Tag field requires ', '-separated values.",
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def invalid_reference_type_item(
-        requirement: SDocNode,
+        node: SDocNode,
         reference_item: Reference,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file: str,
     ):
         role_and_type = (
             f"{reference_item.ref_type} / {reference_item.role}"
@@ -262,19 +243,19 @@ class StrictDocSemanticError(Exception):
                 f"Requirement relation type/role is not registered: "
                 f"{role_and_type}."
             ),
-            hint=(f"Problematic requirement: {requirement.reserved_uid}."),
+            hint=f"Problematic requirement: {node.reserved_uid}.",
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def grammar_missing_reserved_statement(
         grammar_element: GrammarElement,
-        line=None,
-        col=None,
-        filename=None,
+        path_to_sdoc_file: str,
+        line: int,
+        column: int,
     ):
         return StrictDocSemanticError(
             title=(
@@ -288,17 +269,16 @@ class StrictDocSemanticError(Exception):
             ),
             example=None,
             line=line,
-            col=col,
-            filename=filename,
+            col=column,
+            filename=path_to_sdoc_file,
         )
 
     @staticmethod
     def view_references_nonexisting_grammar_element(
+        document: SDocDocument,
+        document_view: DocumentView,
         view_element: ViewElement,
         object_type: str,
-        line=None,
-        col=None,
-        filename=None,
     ):
         return StrictDocSemanticError(
             title=(
@@ -310,19 +290,18 @@ class StrictDocSemanticError(Exception):
                 "object in the grammar or the default REQUIREMENT object."
             ),
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=document_view.ng_line_start,
+            col=document_view.ng_col_start,
+            filename=document.meta.input_doc_full_path,
         )
 
     @staticmethod
     def view_references_nonexisting_field(
+        document: SDocDocument,
+        document_view: DocumentView,
         view_element: ViewElement,
         object_type: str,
         field_name: str,
-        line=None,
-        col=None,
-        filename=None,
     ):
         return StrictDocSemanticError(
             title=(
@@ -334,15 +313,19 @@ class StrictDocSemanticError(Exception):
                 "field in the grammar for the given grammar element."
             ),
             example=None,
-            line=line,
-            col=col,
-            filename=filename,
+            line=document_view.ng_line_start,
+            col=document_view.ng_col_start,
+            filename=document.meta.input_doc_full_path,
         )
 
     @staticmethod
     def default_view_doesnt_exist(
-        default_view: str, line=None, col=None, filename=None
+        document: SDocDocument,
+        document_config: DocumentConfig,
+        default_view: str,
     ):
+        filename = document.meta.input_doc_full_path
+
         return StrictDocSemanticError(
             title=(
                 f"Default view '{default_view}' does not exist in the document."
@@ -352,8 +335,8 @@ class StrictDocSemanticError(Exception):
                 "VIEWS configuration."
             ),
             example=None,
-            line=line,
-            col=col,
+            line=document_config.ng_line_start,
+            col=document_config.ng_col_start,
             filename=filename,
         )
 

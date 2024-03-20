@@ -1,8 +1,10 @@
 from strictdoc.backend.sdoc.grammar.grammar import (
-    FREE_TEXT_GRAMMAR,
-    STRICTDOC_GRAMMAR,
-    STRICTINC_GRAMMAR,
+    DOCUMENT_GRAMMAR,
+    FREE_TEXT_PARSER_GRAMMAR,
+    SECTION_GRAMMAR,
+    TEXT_TYPES_GRAMMAR,
 )
+from strictdoc.backend.sdoc.grammar.grammar_grammar import GRAMMAR_GRAMMAR
 from strictdoc.backend.sdoc.grammar.type_system import (
     STRICTDOC_BASIC_TYPE_SYSTEM,
 )
@@ -17,22 +19,37 @@ class SDocGrammarBuilder:
     @staticmethod
     def create_grammar():
         grammar = SDocGrammarBuilder._prep_grammar(
-            STRICTDOC_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
+            DOCUMENT_GRAMMAR
+            + GRAMMAR_GRAMMAR
+            + SECTION_GRAMMAR
+            + FREE_TEXT_PARSER_GRAMMAR
+            + TEXT_TYPES_GRAMMAR
+            + STRICTDOC_BASIC_TYPE_SYSTEM
         )
         return grammar
 
     @staticmethod
     def create_free_text_grammar():
-        return SDocGrammarBuilder._prep_grammar(FREE_TEXT_GRAMMAR)
+        return SDocGrammarBuilder._prep_grammar(
+            FREE_TEXT_PARSER_GRAMMAR + TEXT_TYPES_GRAMMAR
+        )
 
     @staticmethod
-    def create_fragment_grammar():
+    def create_grammar_grammar():
         grammar = SDocGrammarBuilder._prep_grammar(
-            STRICTINC_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
+            GRAMMAR_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
         )
         return grammar
 
     @staticmethod
     def create_raw_grammar():
-        grammar = STRICTDOC_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
+        grammar = (
+            DOCUMENT_GRAMMAR
+            + GRAMMAR_GRAMMAR
+            + SECTION_GRAMMAR
+            + FREE_TEXT_PARSER_GRAMMAR
+            + TEXT_TYPES_GRAMMAR
+            + STRICTDOC_BASIC_TYPE_SYSTEM
+        )
+
         return grammar

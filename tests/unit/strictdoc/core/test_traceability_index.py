@@ -18,6 +18,7 @@ def test_valid_01_one_document_with_1req():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
         document_tree
@@ -69,6 +70,7 @@ def test_valid_02_one_document_with_1req():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
         document_tree
@@ -108,6 +110,7 @@ def test__adding_parent_link__01__two_requirements_in_one_document():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -146,6 +149,7 @@ def test__adding_parent_link__02__two_requirements_in_two_documents():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -199,6 +203,7 @@ def test__adding_parent_link__04__two_requirements_remove_parent_link():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -230,6 +235,7 @@ def test_get_node_by_mid():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)

@@ -188,6 +188,8 @@ class SDocNode(SDocObject):
         self.ng_including_document_reference: Optional[DocumentReference] = None
         self.ng_line_start: Optional[int] = None
         self.ng_line_end: Optional[int] = None
+        self.ng_col_start: Optional[int] = None
+        self.ng_col_end: Optional[int] = None
         self.ng_byte_start: Optional[int] = None
         self.ng_byte_end: Optional[int] = None
         self.context = SDocNodeContext()

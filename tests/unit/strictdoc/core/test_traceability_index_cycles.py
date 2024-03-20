@@ -33,6 +33,7 @@ def test_invalid_01_2_reqs_cycled():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError):
         _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -79,6 +80,7 @@ def test_invalid_02_4_reqs_cycled():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError):
         _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -118,6 +120,7 @@ def test_invalid_03_3_reqs_cycled():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError):
         _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -171,6 +174,7 @@ def test_invalid_04_5_reqs_cycled():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError) as exc_info:
         _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -245,6 +249,7 @@ def test_invalid_05_4_reqs_good_then_3_cycled():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError):
         _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
@@ -264,6 +269,7 @@ def test__adding_parent_link__03__two_requirements_disallow_cycle():
         document_list=document_list,
         map_docs_by_paths=map_docs_by_paths,
         map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(document_tree)

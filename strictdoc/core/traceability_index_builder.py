@@ -5,9 +5,11 @@ from typing import Dict, Iterator, List, Optional, Set, Union
 
 from textx import TextXSyntaxError
 
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
@@ -16,6 +18,7 @@ from strictdoc.backend.sdoc.models.reference import (
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import ReferenceType
+from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityReader,
 )
@@ -270,6 +273,30 @@ class TraceabilityIndexBuilder:
 
         document: SDocDocument
         for document in document_tree.document_list:
+            try:
+                SDocValidator.validate_document(document)
+            except StrictDocSemanticError as exc:
+                print(exc.to_print_message())  # noqa: T201
+                sys.exit(1)
+
+            """
+            First, resolve all grammars that are imported from grammar files.
+            """
+            if document.grammar.import_from_file is not None:
+                document_grammar: Optional[DocumentGrammar] = (
+                    document_tree.get_grammar_by_filename(
+                        document.grammar.import_from_file
+                    )
+                )
+                if document_grammar is None:
+                    raise StrictDocException(
+                        "TraceabilityIndex: "
+                        f'the document "{document.reserved_title}" '
+                        "imports a grammar from a file that does not exist: "
+                        f'"{document.grammar.import_from_file}".'
+                    )
+                document.grammar.update_with_elements(document_grammar.elements)
+
             if graph_database.has_link(
                 link_type=GraphLinkType.MID_TO_NODE,
                 lhs_node=document.reserved_mid,
@@ -316,6 +343,17 @@ class TraceabilityIndexBuilder:
                 print_fragments=False,
                 print_fragments_from_files=False,
             ):
+                if isinstance(node, SDocNode):
+                    try:
+                        SDocValidator.validate_node(
+                            node,
+                            document_grammar=document.grammar,
+                            path_to_sdoc_file=document.meta.input_doc_full_path,
+                        )
+                    except StrictDocSemanticError as exc:
+                        print(exc.to_print_message())  # noqa: T201
+                        sys.exit(1)
+
                 if graph_database.has_link(
                     link_type=GraphLinkType.MID_TO_NODE,
                     lhs_node=node.reserved_mid,

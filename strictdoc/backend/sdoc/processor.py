@@ -1,21 +1,23 @@
 import os.path
 from typing import List, Optional
 
-from textx import get_location, get_model
+from textx import get_model
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
-from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.document_grammar import (
+    DocumentGrammar,
+    GrammarElement,
+)
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.validations.requirement import validate_requirement
 from strictdoc.helpers.exception import StrictDocException
 
 
@@ -57,6 +59,7 @@ class SDocParsingProcessor:
             "SDocDocument": self.process_document,
             "DocumentConfig": self.process_document_config,
             "DocumentGrammar": self.process_document_grammar,
+            "GrammarElement": self.process_document_grammar_element,
             "DocumentView": self.process_document_view,
             "SDocSection": self.process_section,
             "FragmentFromFile": self.process_document_from_file,
@@ -66,22 +69,43 @@ class SDocParsingProcessor:
         }
 
     def process_document_config(self, document_config: DocumentConfig):
+        the_model = get_model(document_config)
+        line_start, col_start = the_model._tx_parser.pos_to_linecol(
+            document_config._tx_position
+        )
+        document_config.ng_line_start = line_start
+        document_config.ng_col_start = col_start
         self.parse_context.document_config = document_config
 
     def process_document_grammar(self, document_grammar: DocumentGrammar):
-        for grammar_element in document_grammar.elements:
-            if (
-                grammar_element.tag == "REQUIREMENT"
-                and "STATEMENT" not in grammar_element.fields_map
-            ):
-                raise StrictDocSemanticError.grammar_missing_reserved_statement(
-                    grammar_element,
-                    **get_location(document_grammar),
-                )
         self.parse_context.document_grammar = document_grammar
+
+    def process_document_grammar_element(self, grammar_element: GrammarElement):
+        the_model = get_model(grammar_element)
+        line_start, col_start = the_model._tx_parser.pos_to_linecol(
+            grammar_element._tx_position
+        )
+
+        if (
+            grammar_element.tag == "REQUIREMENT"
+            and "STATEMENT" not in grammar_element.fields_map
+        ):
+            raise StrictDocSemanticError.grammar_missing_reserved_statement(
+                grammar_element,
+                self.parse_context.path_to_sdoc_file,
+                line_start,
+                col_start,
+            )
 
     def process_document_view(self, document_view: DocumentView):
         self.parse_context.document_view = document_view
+
+        the_model = get_model(document_view)
+        line_start, col_start = the_model._tx_parser.pos_to_linecol(
+            document_view._tx_position
+        )
+        document_view.ng_line_start = line_start
+        document_view.ng_col_start = col_start
 
     def process_section(self, section: SDocSection):
         section.ng_document_reference = self.parse_context.document_reference
@@ -200,18 +224,6 @@ class SDocParsingProcessor:
         elif "REFS" in requirement.ordered_fields_lookup:
             self.parse_context.at_least_one_relations_field = True
 
-        document_grammar = self.parse_context.document_grammar
-        if (
-            requirement.requirement_type
-            not in document_grammar.registered_elements
-        ):
-            raise StrictDocSemanticError.unknown_requirement_type(
-                requirement_type=requirement.requirement_type,
-                **get_location(requirement),
-            )
-
-        validate_requirement(requirement, document_grammar)
-
         if self.parse_context.document_config.auto_levels:
             if requirement.ng_resolved_custom_level:
                 raise StrictDocException(
@@ -262,14 +274,16 @@ class SDocParsingProcessor:
         Saving the source location information in the requirement object.
         """
         the_model = get_model(requirement)
-        line_start, _ = the_model._tx_parser.pos_to_linecol(
+        line_start, col_start = the_model._tx_parser.pos_to_linecol(
             requirement._tx_position
         )
-        line_end, _ = the_model._tx_parser.pos_to_linecol(
+        line_end, col_end = the_model._tx_parser.pos_to_linecol(
             requirement._tx_position_end
         )
         requirement.ng_line_start = line_start
         requirement.ng_line_end = line_end
+        requirement.ng_col_start = col_start
+        requirement.ng_col_end = col_end
         requirement.ng_byte_start = requirement._tx_position
         requirement.ng_byte_end = requirement._tx_position_end
 

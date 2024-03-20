@@ -4,4 +4,3 @@ CHECK:error: could not parse file: {{.*}}input.sdoc.
 CHECK:Semantic error: Wrong field order for requirement: [ONE, TWO, ONE]
 CHECK:Location: {{.*}}input.sdoc:18:1
 CHECK:Hint: Problematic field: ONE. Compare with the document grammar: [ONE, TWO, STATEMENT] for type: REQUIREMENT.
-CHECK:error: Parallelizer: One of the child processes has exited prematurely.

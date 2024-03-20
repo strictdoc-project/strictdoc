@@ -3,10 +3,17 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+0.0.51 (2024-03-20)
+===================
+
+This is a bugfix release with only one change.
+
+A regression was introduced during recent internal refactoring, resulting in malfunctions on the Search screen when opening search links like "Find all requirements" or "Find all sections." This release fixes the introduced regression.
+
 0.0.50 (2024-03-19)
 ===================
 
-**Breaking Change:** The "Fragments" feature has been replaced by the "Composable documents" feature:
+**Breaking change:** The "Fragments" feature has been replaced by the "Composable documents" feature:
 
 - The command ``[FRAGMENT_FROM_FILE]`` has been renamed to ``[DOCUMENT_FROM_FILE]``.
 - Rather than importing section-like fragments, standard SDoc documents can now be included within other SDoc documents.

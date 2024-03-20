@@ -1,0 +1,28 @@
+{% assert folder is defined %}
+
+<details
+  class="project_tree-folder"
+  open=""> {# TODO: fix tests and clear "open" attribute #}
+  <summary>
+    <div class="project_tree-folder-title">
+      {%- include "_res/svg_ico16_folder.jinja" -%}
+      {{ folder.folder_name }}/
+    </div>
+  </summary>
+
+  <div class="project_tree-folder-content">
+    {% for folder_ in folder.subfolder_trees %}
+      {% if folder_.has_sdoc_content %}
+        {% with folder = folder_ %}
+          {% include "screens/project_index/project_tree_folder.jinja" %}
+        {% endwith %}
+      {% endif %}
+    {% endfor %}
+
+    {% for file_ in folder.files %}
+      {% with file = file_ %}
+        {% include "screens/project_index/project_tree_file.jinja" %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+</details>

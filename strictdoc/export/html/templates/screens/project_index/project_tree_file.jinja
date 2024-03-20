@@ -1,0 +1,33 @@
+{%- set document = view_object.traceability_index.document_tree.get_document_by_path(file.get_full_path()) %}
+{%- set is_included = document.document_is_included %}
+
+<a
+  class="project_tree-file"
+  data-turbo="false"
+  href="{{ document.meta.get_html_doc_link() }}"
+  {% if is_included -%}included-document="is-hidden-by-default"{%- endif %}
+  data-testid="tree-file-link"
+>
+
+  <div class="project_tree-file-icon">
+    {%- if is_included -%}
+      {%- include "_res/svg_ico16_fragment_draft.jinja" -%}
+    {%- else -%}
+      {%- include "_res/svg_ico16_document.jinja.html" -%}
+    {%- endif -%}
+  </div>
+
+  <div class="project_tree-file-details">
+    <div class="project_tree-file-title">
+      {{ document.title }}
+    </div>
+    <div class="project_tree-file-name">
+      {{ file.get_file_name() }}
+    </div>
+    {%- if is_included -%}
+      <div class="project_tree-file-name">
+        <b>included by</b> {{ document.get_included_document().meta.input_doc_rel_path }}
+      </div>
+    {%- endif -%}
+  </div>
+</a>

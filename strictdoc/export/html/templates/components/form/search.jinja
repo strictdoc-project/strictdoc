@@ -1,5 +1,7 @@
+{% assert view_object.error is defined %}
+
 <sdoc-form search
- {% if (error is none) and (view_object.search_results|length > 0) %}success{% endif %}
+ {% if (view_object.error is none) and (view_object.search_results|length > 0) %}success{% endif %}
 >
 
   <form
@@ -17,7 +19,7 @@
   </form>
 
 {%- if view_object.search_value|length > 0 -%}
-  {%- if error is none -%}
+  {%- if view_object.error is none -%}
     {%- if view_object.search_results|length == 0 -%}
       <div class="sdoc-form-success">Nothing matching the query was found.</div>
     {%- elif view_object.search_results|length > 0 -%}

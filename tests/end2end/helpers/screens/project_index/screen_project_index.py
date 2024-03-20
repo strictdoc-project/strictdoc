@@ -16,6 +16,7 @@ from tests.end2end.helpers.screens.project_statistics.project_statistics import 
 from tests.end2end.helpers.screens.requirements_coverage.screen_requirements_coverage import (  # noqa: E501
     Screen_RequirementsCoverage,
 )
+from tests.end2end.helpers.screens.search.search import Screen_Search
 from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import (  # noqa: E501
     Screen_SourceCoverage,
 )
@@ -76,6 +77,12 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_link_to_search_screen_present(self) -> None:
+        self.test_case.assert_element(
+            '//a[@data-testid="project-tree-link-search"]',
+            by=By.XPATH,
+        )
+
     def do_click_on_first_document(self) -> Screen_Document:
         self.test_case.click_xpath('//*[@data-testid="tree-file-link"]')
         return Screen_Document(self.test_case)
@@ -101,6 +108,14 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             '//a[@data-testid="project-tree-link-source-coverage"]',
         )
         return Screen_SourceCoverage(self.test_case)
+
+    def do_click_on_search_screen_link(
+        self,
+    ) -> Screen_Search:
+        self.test_case.click_xpath(
+            '//a[@data-testid="project-tree-link-search"]',
+        )
+        return Screen_Search(self.test_case)
 
     def do_click_on_the_document(self, doc_order: int = 1) -> Screen_Document:
         self.test_case.click_xpath(

@@ -1,12 +1,16 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 from jinja2 import Environment
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -51,6 +55,10 @@ class SearchScreenViewObject:
         )
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
+        self.current_view = DocumentView.create_default(None).views[0]
+        self.document_type: DocumentType = DocumentType.document()
+        self.link_document_type: DocumentType = DocumentType.document()
+        self.document: Optional[SDocDocument] = None
 
     def render_screen(self, jinja_environment: Environment):
         template = jinja_environment.get_template("screens/search/index.jinja")

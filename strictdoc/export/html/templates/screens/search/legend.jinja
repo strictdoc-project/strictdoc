@@ -17,9 +17,21 @@
     </ul>
     <p>Examples:</p>
     <div class="sdoc-table_key_value">
-      <a class="sdoc-table_key_value-key" href="{{ view_object.render_url('search?q=node.is_requirement') }}"><code>node.is_requirement</code></a>
+      <a
+        class="sdoc-table_key_value-key"
+        data-testid="node.is_requirement"
+        href="{{ view_object.render_url('search?q=node.is_requirement') }}"
+      >
+        <code>node.is_requirement</code>
+      </a>
       <div class="sdoc-table_key_value-value">Find all requirements.</div>
-      <a class="sdoc-table_key_value-key" href="{{ view_object.render_url('search?q=node.is_section') }}"><code>node.is_section</code></a>
+      <a
+        class="sdoc-table_key_value-key"
+        data-testid="node.is_section"
+        href="{{ view_object.render_url('search?q=node.is_section') }}"
+      >
+        <code>node.is_section</code>
+      </a>
       <div class="sdoc-table_key_value-value">Find all sections.</div>
       <a class="sdoc-table_key_value-key" href="{{ view_object.render_url('search?q=(node.is_requirement and "System" in node["TITLE"])') }}"><code>(node.is_requirement and "System" in node["TITLE"])</code></a>
       <div class="sdoc-table_key_value-value">Find all requirements with a TITLE that equals to "System".</div>

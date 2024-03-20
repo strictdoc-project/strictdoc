@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Test document
+
+[SECTION]
+TITLE: Section title
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: Requirement statement.
+
+[/SECTION]

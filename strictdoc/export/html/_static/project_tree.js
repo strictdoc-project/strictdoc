@@ -1,5 +1,5 @@
 const FRAME_SELECTOR = '#frame_project_tree';
-const SWITCH_SELECTOR = 'main > .main';
+const SWITCH_SELECTOR = '#project_tree_controls';
 const FRAGMENT_ATTR = 'included-document';
 const FRAGMENT_SELECTOR = `.project_tree-file[${FRAGMENT_ATTR}]`;
 
@@ -83,8 +83,10 @@ class Switch {
     }
     .${this.componentClass}__label {
       display: inline-flex;
-      line-height: ${this.size}${this.units};
-      align-items: center;
+      column-gap: 8px;
+      line-height: ${this.size * 1.6}${this.units};
+      line-height: 1.25;
+      align-items: flex-start;
       justify-content: flex-start;
       user-select: none;
       cursor: pointer;
@@ -104,6 +106,7 @@ class Switch {
       transition: .4s;
       display: inline-block;
       width: ${this.size * 2 + this.stroke * 2}${this.units};
+      min-width: ${this.size * 2 + this.stroke * 2}${this.units};
       height: ${this.size + this.stroke * 2}${this.units};
       margin-right: ${this.size * 0.5}${this.units};
       border-radius: ${this.size * 0.5 + this.stroke}${this.units};

@@ -15,7 +15,7 @@
        deactivate the "included documents" switch with a more
        fine-grained approach.
   #}
-  {# <script type="module" src="{{ view_object.render_static_url('project_tree.js') }}"></script> #}
+  <script type="module" src="{{ view_object.render_static_url('project_tree.js') }}"></script>
 {%- if view_object.project_config.is_running_on_server and not view_object.standalone -%}
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url_with_prefix('turbo.min.js') }}";

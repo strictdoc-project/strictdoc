@@ -1,7 +1,7 @@
 const FRAME_SELECTOR = '#frame_project_tree';
 const SWITCH_SELECTOR = 'main > .main';
 const FRAGMENT_ATTR = 'included-document';
-const FRAGMENT_SELECTOR = `.std-tree_row[${FRAGMENT_ATTR}]`;
+const FRAGMENT_SELECTOR = `.project_tree-file[${FRAGMENT_ATTR}]`;
 
 // This class Switch was taken
 // from strictdoc/export/html/_static/source-code-coverage.js

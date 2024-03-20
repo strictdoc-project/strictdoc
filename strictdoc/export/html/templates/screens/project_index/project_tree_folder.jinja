@@ -1,6 +1,8 @@
 {% assert folder is defined %}
 
-<details open class="project_tree-folder">
+<details
+  class="project_tree-folder"
+  open=""> {# TODO: fix tests and clear "open" attribute #}
   <summary>
     <div class="project_tree-folder-title">
       {%- include "_res/svg_ico16_folder.jinja" -%}

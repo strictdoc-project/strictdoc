@@ -281,7 +281,7 @@ function dragLeave() {}
 function dragDrop(event) {
   event.preventDefault();
   event.stopImmediatePropagation();
-  fetchDroppedItemData(dragState.item, dragState.reference, dragState.option);
+  dragState.option && fetchDroppedItemData(dragState.item, dragState.reference, dragState.option);
 }
 
 function mouseOver(event) {

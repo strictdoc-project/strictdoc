@@ -168,6 +168,7 @@ def create_main_router(
 
     @router.get("/")
     def get_root(request: Request):
+        raise AssertionError
         return get_incoming_request(request, "index.html")
 
     @router.get("/ping")

@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Nested fragment
+
+[SECTION]
+TITLE: Section title
+
+[FREETEXT]
+This is a free text of this section.
+[/FREETEXT]
+
+[/SECTION]

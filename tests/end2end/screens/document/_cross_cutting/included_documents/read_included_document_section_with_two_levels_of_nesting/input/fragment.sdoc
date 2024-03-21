@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Fragment
+
+[SECTION]
+TITLE: First section
+
+[DOCUMENT_FROM_FILE]
+FILE: nested_fragment.sdoc
+
+[/SECTION]

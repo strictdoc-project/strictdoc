@@ -4,6 +4,8 @@ import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.responses import HTMLResponse, PlainTextResponse
 
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
@@ -23,6 +25,9 @@ def create_app(
         "http://localhost:8081",
         "http://localhost:3000",
     ]
+
+    async def custom_http_exception_handler(request: Request, exc: Exception):
+        return HTMLResponse(content=exc.__class__.__name__, status_code=500)
 
     # Uncomment this to enable performance measurements.
     @app.middleware("http")
@@ -49,6 +54,8 @@ def create_app(
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    app.add_exception_handler(500, custom_http_exception_handler)
 
     app.include_router(create_other_router(project_config=project_config))
     app.include_router(

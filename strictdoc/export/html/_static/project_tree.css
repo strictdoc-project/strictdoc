@@ -36,27 +36,6 @@
   cursor: pointer;
 }
 
-.project_tree-folder > summary::after {
-  /* content: '➕'; */
-  content: '⊕';
-  color: var(--color-fg-accent);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 20px;
-  font-size: 24px;
-  line-height: 1;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
-.project_tree-folder[open] > summary:after {
-  color: var(--color-fg-secondary);
-  /* content: "➖"; */
-  content: "⊖";
-}
-
 .project_tree-folder-title {
   font-weight: bold;
   display: flex;
@@ -89,6 +68,24 @@
 .project_tree-folder summary:hover > .project_tree-folder-title,
 .project_tree-folder summary:hover::after {
   color: var(--color-fg-accent);
+}
+
+/* .icon_collapse_expand is class inside SVG */
+.project_tree-folder-title .icon_collapse_expand {
+  margin-left: auto;
+}
+/* .collapsed and .expanded are classes inside SVG .icon_collapse */
+.project_tree-folder > summary .icon_collapse_expand .collapsed {
+  display: initial;
+}
+.project_tree-folder > summary .icon_collapse_expand .expanded {
+  display: none;
+}
+.project_tree-folder[open] > summary .icon_collapse_expand .expanded {
+  display: initial;
+}
+.project_tree-folder[open] > summary .icon_collapse_expand .collapsed {
+  display: none;
 }
 
 .project_tree-folder-content {

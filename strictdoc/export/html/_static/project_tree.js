@@ -171,11 +171,11 @@ class ProjectTree {
 
   __testStorage() {
     const testStorage = this._getSessionStorageItem();
-    console.log(testStorage);
+    // console.log(testStorage);
   }
 
   init() {
-    console.log('First time call.');
+    // console.log('First time call.');
 
     console.assert(this.mutatingFrame, `mutatingFrame not found on the page`);
     this._addMutationObserver();
@@ -190,7 +190,7 @@ class ProjectTree {
   }
 
   getCurrentFragmentVisibilityBool() {
-    console.log('getCurrentFragmentVisibilityBool', this.state.fragmentVisibility.current)
+    // console.log('getCurrentFragmentVisibilityBool', this.state.fragmentVisibility.current)
     return (this.state.fragmentVisibility.current === 'show') ? true : false;
   }
 
@@ -203,7 +203,7 @@ class ProjectTree {
   _getFragments() {
     let fragments = [...this.mutatingFrame.querySelectorAll(FRAGMENT_SELECTOR)];
     const folders = this._prepareFragmentsFolders(fragments);
-    console.log(folders);
+    // console.log(folders);
     return fragments.concat(folders);
   }
 
@@ -235,7 +235,7 @@ class ProjectTree {
     this.control.updateLabelText(`<b>Show ${num} fragment${num > 1 ? 's' : ''}</b> included in&nbsp;other documents in the Project document tree.`)
 
     if (num) {
-      console.log('this.fragments.length', num);
+      // console.log('this.fragments.length', num);
       this.controlElement.style.display = this.controlElementDisplayInitial;
     } else {
       this.controlElement.style.display = 'none';
@@ -304,7 +304,7 @@ class ProjectTree {
   }
 
   _addMutationObserver() {
-    console.log('Mutation observer added for', this.mutatingFrame);
+    // console.log('Mutation observer added for', this.mutatingFrame);
 
     new MutationObserver((mutationsList, observer) => {
       for (let mutation of mutationsList) {

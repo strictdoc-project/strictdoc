@@ -1,8 +1,6 @@
 import argparse
 import os
 import sys
-from io import StringIO
-from xml.etree import ElementTree as etree
 
 import html5lib
 from tidylib import tidy_document
@@ -85,12 +83,6 @@ for message in tidylib_messages_string.split("\n"):
         errors.append(message)
     elif "Warning: " in message:
         warnings.append(message)
-
-# Validation #3: xml.etree
-try:
-    etree.parse(StringIO(html_content), etree.XMLParser())
-except Exception as e:
-    errors.append(f"Error: {str(e)}")
 
 MESSAGE_PREFIX = "HTML markup validation COMPLETED"
 

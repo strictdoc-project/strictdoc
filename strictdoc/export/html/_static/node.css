@@ -7,6 +7,21 @@ sdoc-node {
   position: relative;
 }
 
+sdoc-node[show-node-type-name]::after {
+  /* content: '[' attr(show-node-type-name) ']'; */
+  content: attr(show-node-type-name);
+  position: absolute;
+  top: calc(3.5 * var(--base-rhythm));
+  right: calc(5 * var(--base-rhythm));
+  background-color: var(--color-bg-contrast);
+  font-size: var(--font-size-xxsm);
+  font-family: var(--code-font-family);
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--requirement-label-color);
+}
+
 /* sdoc-node */
 
 sdoc-node {

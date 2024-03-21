@@ -67,6 +67,9 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
     def get_type_string() -> str:
         return "section"
 
+    def get_node_type_string(self) -> Optional[str]:
+        return None
+
     def get_title(self):
         return self.title
 

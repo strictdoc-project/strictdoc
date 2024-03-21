@@ -158,7 +158,6 @@ class ProjectTree {
 
     this.control;
     this.controlElement;
-    this.controlElementDisplayInitial;
 
     this.state = {
       fragmentVisibility: {
@@ -169,11 +168,6 @@ class ProjectTree {
     };
   }
 
-  __testStorage() {
-    const testStorage = this._getSessionStorageItem();
-    // console.log(testStorage);
-  }
-
   init() {
     // console.log('First time call.');
 
@@ -181,16 +175,15 @@ class ProjectTree {
     this._addMutationObserver();
 
     this._initStateAndStorage();
-    this.__testStorage();
 
     console.assert(this.controlTarget, `controlTarget not found on the page`);
-    this.control = this._addControl();
+    this._createControl();
+    this._addControl();
 
     this.updateFragmentsAndControl();
   }
 
   getCurrentFragmentVisibilityBool() {
-    // console.log('getCurrentFragmentVisibilityBool', this.state.fragmentVisibility.current)
     return (this.state.fragmentVisibility.current === 'show') ? true : false;
   }
 
@@ -203,7 +196,6 @@ class ProjectTree {
   _getFragments() {
     let fragments = [...this.mutatingFrame.querySelectorAll(FRAGMENT_SELECTOR)];
     const folders = this._prepareFragmentsFolders(fragments);
-    // console.log(folders);
     return fragments.concat(folders);
   }
 
@@ -235,10 +227,9 @@ class ProjectTree {
     this.control.updateLabelText(`<b>Show ${num} fragment${num > 1 ? 's' : ''}</b> included in&nbsp;other documents in the Project document tree.`)
 
     if (num) {
-      // console.log('this.fragments.length', num);
-      this.controlElement.style.display = this.controlElementDisplayInitial;
+      this._addControl();
     } else {
-      this.controlElement.style.display = 'none';
+      this._removeControl();
     }
   }
 
@@ -248,11 +239,9 @@ class ProjectTree {
     if (checked) {
       this._updateCurrentState('show', 'fragmentVisibility');
       this._setSessionStorageItem('show', 'fragmentVisibility');
-      this.__testStorage();
     } else {
       this._updateCurrentState('hide', 'fragmentVisibility');
       this._setSessionStorageItem('hide', 'fragmentVisibility');
-      this.__testStorage();
     }
   }
 
@@ -280,8 +269,8 @@ class ProjectTree {
     return storage;
   }
 
-  _addControl() {
-    const control = new Switch(
+  _createControl() {
+    this.control = new Switch(
       {
         labelText: `<b>Show fragments</b>`, // * This text will be updated later.
         size: 0.5,
@@ -294,13 +283,15 @@ class ProjectTree {
         callback: (checked) => this.toggleFragmentsVisibility(checked),
       }
     );
+    this.controlElement = this.control.create();
+  }
 
-    const controlElement = control.create();
-    this.controlTarget.append(controlElement);
+  _addControl() {
+    this.controlTarget.append(this.controlElement);
+  }
 
-    this.controlElement = controlElement;
-    this.controlElementDisplayInitial = controlElement.style.display;
-    return control
+  _removeControl() {
+    this.controlElement.remove();
   }
 
   _addMutationObserver() {

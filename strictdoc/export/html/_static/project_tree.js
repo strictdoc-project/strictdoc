@@ -2,6 +2,8 @@ const FRAME_SELECTOR = '#frame_project_tree';
 const SWITCH_SELECTOR = '#project_tree_controls';
 const FRAGMENT_ATTR = 'included-document';
 const FRAGMENT_SELECTOR = `.project_tree-file[${FRAGMENT_ATTR}]`;
+const FILE_SELECTOR = `.project_tree-file`;
+const FOLDER_SELECTOR = `.project_tree-folder`;
 
 // This class Switch was taken
 // from strictdoc/export/html/_static/source-code-coverage.js
@@ -199,18 +201,27 @@ class ProjectTree {
   }
 
   _getFragments() {
-    const fragments = [...this.mutatingFrame.querySelectorAll(FRAGMENT_SELECTOR)];
-    // this._prepareFragmentsFoldersAndNeighbors(fragments);
-    return fragments;
+    let fragments = [...this.mutatingFrame.querySelectorAll(FRAGMENT_SELECTOR)];
+    const folders = this._prepareFragmentsFolders(fragments);
+    console.log(folders);
+    return fragments.concat(folders);
   }
 
-  _prepareFragmentsFoldersAndNeighbors(fragments) {
-    // ul > li > .std-tree_row
-    // .std-tree_row === fragment
-    const folders = new Set();
-    this.fragments.forEach(element => {
-      element.style.display = display;
-    })
+  _prepareFragmentsFolders(fragments) {
+    // Temporary solution.
+    // It is possible to optimize the search to reduce the number of runs.
+
+    const result = [];
+    // .project_tree-folder > .project_tree-folder-content > .project_tree-file === fragment
+    const folders = [...this.mutatingFrame.querySelectorAll(FOLDER_SELECTOR)];
+    folders.forEach(folder => {
+      const frag = folder.querySelectorAll(FRAGMENT_SELECTOR);
+      const file = folder.querySelectorAll(FILE_SELECTOR);
+      if (frag.length === file.length) {
+        result.push(folder);
+      }
+    });
+    return result
   }
 
   _updateFragmentsVisibility(bool) {

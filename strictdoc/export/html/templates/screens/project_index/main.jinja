@@ -7,12 +7,20 @@
       <div class="dashboard-block" id="project_tree_controls">{# must to be empty #}</div>
       <div class="dashboard-block">
         {# {{ view_object.project_config.project_title }} #}
-        {# ⛭ #}
+        {# ⛭ ⚙️ #}
         <div class="dashboard-block-title">
-          ⚙️&nbsp;&nbsp;Project tree configuartion
+          Project tree configuartion
         </div>
 
-        <b>Document paths:</b>
+        {% if view_object.project_config.export_input_paths|length %}
+          <b>Input paths:</b>
+          {% for path_ in view_object.project_config.export_input_paths %}
+          <code style="word-wrap: break-word;">{{ path_ }}</code><br/>
+          {% endfor %}
+        {% endif %}
+
+        {% if view_object.project_config.include_doc_paths|length or view_object.project_config.exclude_doc_paths|length %}
+          <p>Document paths:</p>
           <ul>
             {% for path_ in view_object.project_config.include_doc_paths %}
             <li style="list-style-type: '✔️    '">{{ path_ }}</li>
@@ -20,13 +28,18 @@
             {% for path_ in view_object.project_config.exclude_doc_paths %}
             <li style="list-style-type: '⛔    '">{{ path_ }}</li>
             {% endfor %}
-
           </ul>
+        {% endif %}
 
-        <b>Source path:</b>
-        <div>
-          <code style="word-wrap: break-word;">{{ view_object.project_config.source_root_path }}</code>
-        </div>
+        {% if view_object.project_config.source_root_path %}
+          <b>Source root path:</b>
+          <div>
+            <code style="word-wrap: break-word;">{{ view_object.project_config.source_root_path }}</code>
+          </div>
+        {% endif %}
+
+        {% if view_object.project_config.include_source_paths|length or view_object.project_config.exclude_source_paths|length %}
+          <p>Source paths:</p>
           <ul>
             {% for path_ in view_object.project_config.include_source_paths %}
             <li style="list-style-type: '✔️    '">{{ path_ }}</li>
@@ -35,6 +48,7 @@
             <li style="list-style-type: '⛔    '">{{ path_ }}</li>
             {% endfor %}
           </ul>
+        {% endif %}
 
       </div>
     </div>

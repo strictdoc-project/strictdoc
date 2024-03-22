@@ -976,7 +976,7 @@ Here is an example pair of files similar to examples above. First the
 
     [REQUIREMENT]
 
-Then the referenced file, ``include.ssec``:
+Then the referenced file, ``include.sdoc``:
 
 .. code-block:: text
 
@@ -1024,7 +1024,6 @@ Which will resolve to the following document after inclusion:
     [/SECTION]
 
     [REQUIREMENT]
-
 
 Composite requirement
 ~~~~~~~~~~~~~~~~~~~~~
@@ -1707,15 +1706,15 @@ The requirement declaration contains a reference of the type ``File``:
 .. code-block:: text
 
     [REQUIREMENT]
-    UID: REQ-001
+    UID: REQ-002
     RELATIONS:
     - TYPE: File
       VALUE: file.py
-    TITLE: Whole file reference
+    TITLE: Range file reference
     STATEMENT: This requirement references the file.py file.
     COMMENT: >>>
     If the file.py contains a source range that is connected back to this
-    requirement (REQ-001), the link becomes a link to the source range.
+    requirement (REQ-002), the link becomes a link to the source range.
     <<<
 
 The source file:

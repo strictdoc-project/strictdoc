@@ -1140,7 +1140,7 @@ Here is an example pair of files similar to examples above. First the
 
     [REQUIREMENT]
 
-Then the referenced file, ``include.ssec``:
+Then the referenced file, ``include.sdoc``:
 
 .. code-block:: text
 
@@ -1188,7 +1188,6 @@ Which will resolve to the following document after inclusion:
     [/SECTION]
 
     [REQUIREMENT]
-
 [/FREETEXT]
 
 [/SECTION]

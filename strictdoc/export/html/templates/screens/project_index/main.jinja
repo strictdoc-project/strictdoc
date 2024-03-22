@@ -1,3 +1,56 @@
 <div class="main">
-  {% include "screens/project_index/frame_project_tree.jinja.html" %}
+  <div class="dashboard">
+    <div class="dashboard-main">
+      {% include "screens/project_index/frame_project_tree.jinja.html" %}
+    </div>
+    <div class="dashboard-aside">
+      <div class="dashboard-block" id="project_tree_controls">{# must to be empty #}</div>
+      <div class="dashboard-block">
+        {# {{ view_object.project_config.project_title }} #}
+        {# ⛭ ⚙️ #}
+        <div class="dashboard-block-title">
+          Project tree configuration
+        </div>
+
+        {% if view_object.project_config.export_input_paths|length %}
+          <b>Input paths:</b>
+          {% for path_ in view_object.project_config.export_input_paths %}
+          <code style="word-wrap: break-word;">{{ path_ }}</code><br/>
+          {% endfor %}
+        {% endif %}
+
+        {% if view_object.project_config.include_doc_paths|length or view_object.project_config.exclude_doc_paths|length %}
+          <p>Document paths:</p>
+          <ul>
+            {% for path_ in view_object.project_config.include_doc_paths %}
+            <li style="list-style-type: '✔️    '">{{ path_ }}</li>
+            {% endfor %}
+            {% for path_ in view_object.project_config.exclude_doc_paths %}
+            <li style="list-style-type: '⛔    '">{{ path_ }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if view_object.project_config.source_root_path %}
+          <b>Source root path:</b>
+          <div>
+            <code style="word-wrap: break-word;">{{ view_object.project_config.source_root_path }}</code>
+          </div>
+        {% endif %}
+
+        {% if view_object.project_config.include_source_paths|length or view_object.project_config.exclude_source_paths|length %}
+          <p>Source paths:</p>
+          <ul>
+            {% for path_ in view_object.project_config.include_source_paths %}
+            <li style="list-style-type: '✔️    '">{{ path_ }}</li>
+            {% endfor %}
+            {% for path_ in view_object.project_config.exclude_source_paths %}
+            <li style="list-style-type: '⛔    '">{{ path_ }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
 </div>

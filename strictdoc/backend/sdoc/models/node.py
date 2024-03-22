@@ -215,6 +215,9 @@ class SDocNode(SDocObject):
     def get_type_string() -> str:
         return "requirement"
 
+    def get_node_type_string(self) -> Optional[str]:
+        return self.requirement_type
+
     def get_title(self):
         return self.reserved_title
 

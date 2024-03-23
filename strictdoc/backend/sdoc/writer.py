@@ -124,6 +124,7 @@ class SDWriter:
             enable_mid = document_config.enable_mid
             markup = document_config.markup
             auto_levels_specified = document_config.ng_auto_levels_specified
+            layout = document_config.layout
             requirement_style = document_config.requirement_style
             requirement_in_toc = document_config.requirement_in_toc
             default_view = document_config.default_view
@@ -132,6 +133,7 @@ class SDWriter:
                 enable_mid is not None
                 or markup is not None
                 or auto_levels_specified
+                or layout is not None
                 or requirement_style is not None
                 or requirement_in_toc is not None
                 or default_view is not None
@@ -152,6 +154,11 @@ class SDWriter:
                 if auto_levels_specified:
                     output += "  AUTO_LEVELS: "
                     output += "On" if document_config.auto_levels else "Off"
+                    output += "\n"
+
+                if layout is not None:
+                    output += "  LAYOUT: "
+                    output += layout
                     output += "\n"
 
                 if requirement_style is not None:

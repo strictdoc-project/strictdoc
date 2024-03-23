@@ -106,6 +106,7 @@ class DocumentBuilder:
             enable_mid=None,
             markup=None,
             auto_levels=None,
+            layout=None,
             requirement_style=None,
             requirement_in_toc=None,
             default_view=None,

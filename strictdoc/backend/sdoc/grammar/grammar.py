@@ -159,6 +159,7 @@ DocumentConfig[noskipws]:
     ('  ENABLE_MID: ' (enable_mid = BooleanChoice) '\n')?
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?
     ('  AUTO_LEVELS: ' (auto_levels = AutoLevelsChoice) '\n')?
+    ('  LAYOUT: ' (layout = LayoutChoice) '\n')?
     ('  REQUIREMENT_STYLE: ' (requirement_style = RequirementStyleChoice) '\n')?
     ('  REQUIREMENT_IN_TOC: '
         (requirement_in_toc = RequirementHasTitleChoice) '\n'
@@ -210,6 +211,10 @@ RequirementHasTitleChoice[noskipws]:
 
 AutoLevelsChoice[noskipws]:
   'On' | 'Off'
+;
+
+LayoutChoice[noskipws]:
+  'Default' | 'Website'
 ;
 """
 

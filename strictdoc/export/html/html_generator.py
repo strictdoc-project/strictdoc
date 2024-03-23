@@ -216,7 +216,9 @@ class HTMLGenerator:
         traceability_index,
         specific_documents: Optional[Tuple[DocumentType]] = None,
     ):
-        if specific_documents is None:
+        if document.config.layout == "Website":
+            specific_documents = (DocumentType.DOCUMENT,)
+        elif specific_documents is None:
             specific_documents = DocumentType.all()
 
         assert document.meta is not None

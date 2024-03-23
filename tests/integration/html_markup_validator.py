@@ -37,7 +37,7 @@ _, tidylib_messages_string = tidy_document(
     options={
         "new-blocklevel-tags": (
             # HTML 5
-            "main, aside, header, footer, section, article, nav, menu, "
+            "main, aside, header, footer, section, article, nav, menu, details, summary, "
             # Turbo.js
             "turbo-frame, "
             # SVG

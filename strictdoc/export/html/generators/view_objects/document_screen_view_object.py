@@ -61,9 +61,14 @@ class DocumentScreenViewObject:
 
     def render_screen(self, jinja_environment: Environment):
         if self.document_type.is_document:
-            template = jinja_environment.get_template(
-                "screens/document/document/index.jinja"
-            )
+            if self.document.config.layout == "Website":
+                template = jinja_environment.get_template(
+                    "website/document/index.jinja"
+                )
+            else:
+                template = jinja_environment.get_template(
+                    "screens/document/document/index.jinja"
+                )
         elif self.document_type.is_table():
             template = jinja_environment.get_template(
                 "screens/document/table/index.jinja"

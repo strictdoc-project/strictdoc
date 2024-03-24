@@ -10,7 +10,7 @@
             data-testid="tree-folder-item"
           >{% include "_res/svg__separator.jinja.html" %}{{ folder_or_file.rel_path }}</div>
         {% endif %}
-      {% else %}
+      {% elif folder_or_file.has_extension(".sdoc") %}
         {%- set document_ = view_object.get_document_by_path(folder_or_file.get_full_path()) %}
         {% if not document_.document_is_included %}
         <a

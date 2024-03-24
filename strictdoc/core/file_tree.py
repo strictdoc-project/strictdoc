@@ -1,7 +1,7 @@
 import collections
 import functools
 import os
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from strictdoc.helpers.path_filter import PathFilter
 from strictdoc.helpers.sorting import alphanumeric_sort
@@ -39,6 +39,9 @@ class File(FileOrFolderEntry):
 
     def is_folder(self):
         return False
+
+    def has_extension(self, extension: str):
+        return self.full_path.endswith(extension)
 
     def get_full_path(self):
         return self.full_path
@@ -97,7 +100,7 @@ class Folder(FileOrFolderEntry):  # pylint: disable=too-many-instance-attributes
 
 class FileTree:
     def __init__(self, *, root_folder_or_file):
-        self.root_folder_or_file = root_folder_or_file
+        self.root_folder_or_file: Union[Folder, File] = root_folder_or_file
 
     @staticmethod
     def create_single_file_tree(root_path):

@@ -5,40 +5,38 @@ from textx import metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
-from strictdoc.backend.sdoc.models.constants import INCLUDE_MODELS
-from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
+from strictdoc.backend.sdoc.models.constants import GRAMMAR_MODELS
 from strictdoc.helpers.textx import drop_textx_meta
 
 
-class SDIncludeReader:
+class SDocGrammarReader:
+    def __init__(self, path_to_output_root):
+        self.path_to_output_root = path_to_output_root
+
     @staticmethod
-    def read(input_string, parse_context: ParseContext, file_path=None):
+    def read(input_string, file_path=None):
         meta_model = metamodel_from_str(
-            SDocGrammarBuilder.create_fragment_grammar(),
-            classes=INCLUDE_MODELS,
+            SDocGrammarBuilder.create_grammar_grammar(),
+            classes=GRAMMAR_MODELS,
             use_regexp_group=True,
         )
-        assert isinstance(parse_context, ParseContext)
 
-        processor = SDocParsingProcessor(parse_context=parse_context)
-        meta_model.register_obj_processors(processor.get_default_processors())
-
-        section = meta_model.model_from_str(input_string, file_name=file_path)
+        grammar = meta_model.model_from_str(input_string, file_name=file_path)
 
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts
         # of textx. The offending fields are stripped down because they
         # are not used anyway.
-        drop_textx_meta(section)
+        drop_textx_meta(grammar)
 
-        return section
+        return grammar
 
-    def read_from_file(self, file_path, context: ParseContext):
+    def read_from_file(self, file_path):
         with open(file_path, encoding="utf8") as file:
-            ssec_content = file.read()
+            grammar_content = file.read()
 
         try:
-            ssec = self.read(ssec_content, context, file_path=file_path)
+            ssec = self.read(grammar_content, file_path=file_path)
             return ssec
         except NotImplementedError:
             traceback.print_exc()

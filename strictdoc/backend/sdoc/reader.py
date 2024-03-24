@@ -12,7 +12,6 @@ from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
-from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.pickle import pickle_dump, pickle_load
@@ -73,8 +72,6 @@ class SDReader:
         input_string, file_path=None
     ) -> Tuple[SDocDocument, ParseContext]:
         document, parse_context = SDReader._read(input_string, file_path)
-        SDocValidator.validate_document(document)
-
         return document, parse_context
 
     def read_from_file(self, file_path: str) -> SDocDocument:

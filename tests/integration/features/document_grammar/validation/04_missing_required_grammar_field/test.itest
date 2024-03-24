@@ -4,4 +4,3 @@ CHECK:error: could not parse file: {{.*}}input.sdoc.
 CHECK:Semantic error: Requirement is missing a field that is required by grammar: TWO.
 CHECK:Location: {{.*}}input.sdoc:18:1
 CHECK:Hint: Requirement fields: [ONE], grammar fields: [ONE, TWO, STATEMENT].
-CHECK:error: Parallelizer: One of the child processes has exited prematurely.

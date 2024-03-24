@@ -1,8 +1,11 @@
 import os
 import sys
 from functools import partial
+from typing import Dict, List, Tuple, Union
 
+from strictdoc.backend.sdoc.grammar_reader import SDocGrammarReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
@@ -10,6 +13,7 @@ from strictdoc.core.file_tree import (
     File,
     FileFinder,
     FileTree,
+    Folder,
     PathFinder,
 )
 from strictdoc.core.project_config import ProjectConfig
@@ -43,31 +47,39 @@ class DocumentFinder:
 
     @staticmethod
     def _process_worker_parse_document(document_triple, path_to_output_root):
-        _, doc_file, _ = document_triple
+        _, doc_file, file_tree_mount_folder = document_triple
         doc_full_path = doc_file.get_full_path()
 
         with measure_performance(
             f"Reading SDOC: {os.path.basename(doc_full_path)}"
         ):
-            reader = SDReader(path_to_output_root)
-            document = reader.read_from_file(doc_full_path)
-            assert isinstance(document, SDocDocument)
+            if doc_full_path.endswith(".sdoc"):
+                reader = SDReader(path_to_output_root)
+                document = reader.read_from_file(doc_full_path)
+                assert isinstance(document, SDocDocument)
+            elif doc_full_path.endswith(".sgra"):
+                reader = SDocGrammarReader(path_to_output_root)
+                document = reader.read_from_file(doc_full_path)
+                assert isinstance(document, DocumentGrammar)
 
         drop_textx_meta(document)
-        return doc_file, document
+        return doc_file, file_tree_mount_folder, document
 
     @staticmethod
     def _build_document_tree(
-        file_trees, project_config: ProjectConfig, parallelizer
+        file_trees: List[FileTree], project_config: ProjectConfig, parallelizer
     ):
         assert isinstance(file_trees, list)
 
         output_root_html = project_config.export_output_html_root
         assert output_root_html is not None
 
-        document_list, map_docs_by_paths, map_docs_by_rel_paths = [], {}, {}
+        document_list: List[SDocDocument] = []
+        map_docs_by_paths = {}
+        map_docs_by_rel_paths = {}
+        map_grammars_by_filenames = {}
 
-        file_tree_list = []
+        file_tree_list: List[Tuple[Union[Folder, File], File, str]] = []
         for file_tree in file_trees:
             file_tree_list.extend(list(file_tree.iterate()))
 
@@ -80,16 +92,17 @@ class DocumentFinder:
             file_tree_list, process_document_binding
         )
 
-        for doc_file, document in found_documents:
+        doc_file: File
+        for doc_file, file_tree_mount_folder, document in found_documents:
+            if isinstance(document, DocumentGrammar):
+                map_grammars_by_filenames[doc_file.file_name] = document
+                continue
+
             input_doc_full_path = doc_file.get_full_path()
             map_docs_by_paths[input_doc_full_path] = document
             document_list.append(document)
 
-        doc_file: File
-        for _, doc_file, file_tree_mount_folder in file_tree_list:
             input_doc_full_path = doc_file.get_full_path()
-            document = map_docs_by_paths[input_doc_full_path]
-            assert isinstance(document, SDocDocument)
 
             doc_relative_path_folder = os.path.dirname(doc_file.rel_path)
             output_document_dir_rel_path = (
@@ -130,16 +143,22 @@ class DocumentFinder:
             map_docs_by_rel_paths[output_document_rel_path] = document
 
         return DocumentTree(
-            file_trees, document_list, map_docs_by_paths, map_docs_by_rel_paths
+            file_trees,
+            document_list,
+            map_docs_by_paths,
+            map_docs_by_rel_paths,
+            map_grammars_by_filenames=map_grammars_by_filenames,
         )
 
     @staticmethod
-    def _build_file_tree(project_config: ProjectConfig):
+    def _build_file_tree(
+        project_config: ProjectConfig,
+    ) -> Tuple[List[FileTree], List[Dict]]:
         assert isinstance(project_config.export_input_paths, list)
         assert len(project_config.export_input_paths) > 0
 
-        asset_dirs = []
-        root_trees = []
+        root_trees: List[FileTree] = []
+        asset_dirs: List[Dict] = []
 
         for path_to_doc_root_raw in project_config.export_input_paths:
             if os.path.isfile(path_to_doc_root_raw):
@@ -190,7 +209,7 @@ class DocumentFinder:
             file_tree_structure = FileFinder.find_files_with_extensions(
                 root_path=path_to_doc_root,
                 ignored_dirs=[project_config.export_output_dir],
-                extensions=[".sdoc"],
+                extensions=[".sdoc", ".sgra"],
                 include_paths=project_config.include_doc_paths,
                 exclude_paths=project_config.exclude_doc_paths,
             )

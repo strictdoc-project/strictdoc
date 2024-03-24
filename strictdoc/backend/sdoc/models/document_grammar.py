@@ -169,23 +169,25 @@ class GrammarElement:
 
 
 class DocumentGrammar:
-    def __init__(self, parent, elements: List[GrammarElement]):
+    def __init__(
+        self,
+        parent=None,
+        elements: List[GrammarElement] = None,
+        import_from_file: Optional[str] = None,
+    ):
         self.parent = parent
         self.elements: List[GrammarElement] = elements
 
-        # When elements are created by code, not by textX, it is convenient
-        # if their .parent is set here automatically.
-        for element_ in elements:
-            element_.parent = self
+        self.registered_elements: Set[str] = set()
+        self.elements_by_type: Dict[str, GrammarElement] = {}
 
-        registered_elements: Set[str] = set()
-        elements_by_type: Dict[str, GrammarElement] = {}
-        for element in elements:
-            registered_elements.add(element.tag)
-            elements_by_type[element.tag] = element
+        self.update_with_elements(elements)
 
-        self.registered_elements: Set[str] = registered_elements
-        self.elements_by_type: Dict[str, GrammarElement] = elements_by_type
+        # textX passes an empty string instead of None when import_from_file is
+        # not provided in input.
+        if import_from_file is not None and len(import_from_file) == 0:
+            import_from_file = None
+        self.import_from_file: Optional[str] = import_from_file
 
         self.is_default = False
 
@@ -261,7 +263,9 @@ class DocumentGrammar:
         )
 
         elements: List[GrammarElement] = [requirement_element]
-        grammar = DocumentGrammar(parent=parent, elements=elements)
+        grammar = DocumentGrammar(
+            parent=parent, elements=elements, import_from_file=None
+        )
         grammar.is_default = True
 
         return grammar
@@ -291,3 +295,19 @@ class DocumentGrammar:
         self.elements[element_index] = updated_element
         self.elements_by_type[updated_element.tag] = updated_element
         self.is_default = False
+
+    def update_with_elements(self, elements: List[GrammarElement]):
+        # When elements are created by code, not by textX, it is convenient
+        # if their .parent is set here automatically.
+        for element_ in elements:
+            element_.parent = self
+
+        registered_elements: Set[str] = set()
+        elements_by_type: Dict[str, GrammarElement] = {}
+        for element in elements:
+            registered_elements.add(element.tag)
+            elements_by_type[element.tag] = element
+
+        self.elements = elements
+        self.registered_elements: Set[str] = registered_elements
+        self.elements_by_type: Dict[str, GrammarElement] = elements_by_type

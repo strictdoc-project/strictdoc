@@ -42,111 +42,12 @@ SDocDocument[noskipws]:
   section_contents *= SectionOrRequirement
 ;
 
-ReservedKeyword[noskipws]:
-  'DOCUMENT' | 'GRAMMAR' | 'BIBLIOGRAPHY'
-;
-
 DocumentBibliography[noskipws]:
   '[BIBLIOGRAPHY]' '\n'
   ( 'BIBFILES:' '\n'
     bib_files *= BibFileEntry )?
   ( 'ENTRIES:' '\n'
     bib_entries += BibEntry )?
-;
-
-DocumentGrammar[noskipws]:
-  '[GRAMMAR]' '\n'
-  'ELEMENTS:' '\n'
-  elements += GrammarElement
-;
-
-GrammarElement[noskipws]:
-  '- TAG: ' tag = RequirementType '\n'
-  '  FIELDS:' '\n'
-  fields += GrammarElementField
-  (
-    '  RELATIONS:' '\n'
-    relations += GrammarElementRelation
-  )?
-;
-
-GrammarElementRelation[noskipws]:
-  (GrammarElementRelationParent | GrammarElementRelationChild | GrammarElementRelationFile | GrammarElementRelationBibtex)
-;
-
-GrammarElementRelationParent[noskipws]:
-  '  - TYPE: ' relation_type='Parent' '\n'
-  ('    ROLE: ' relation_role=/.+/ '\n')?
-;
-
-GrammarElementRelationChild[noskipws]:
-  '  - TYPE: ' relation_type='Child' '\n'
-  ('    ROLE: ' relation_role=/.+/ '\n')?
-;
-
-GrammarElementRelationFile[noskipws]:
-  '  - TYPE: ' relation_type='File' '\n'
-;
-
-GrammarElementRelationBibtex[noskipws]:
-  '  - TYPE: ' relation_type='BibTex' '\n'
-;
-
-GrammarElementField[noskipws]:
-  GrammarElementFieldString |
-  GrammarElementFieldSingleChoice |
-  GrammarElementFieldMultipleChoice |
-  GrammarElementFieldTag |
-  GrammarElementFieldReference
-;
-
-GrammarElementFieldString[noskipws]:
-  '  - TITLE: ' title=FieldName '\n'
-  ('    HUMAN_TITLE: ' human_title=SingleLineString '\n')?
-  '    TYPE: String' '\n'
-  '    REQUIRED: ' (required = BooleanChoice) '\n'
-;
-
-GrammarElementFieldSingleChoice[noskipws]:
-  '  - TITLE: ' title=FieldName '\n'
-  ('    HUMAN_TITLE: ' human_title=SingleLineString '\n')?
-  '    TYPE: SingleChoice'
-    '(' ((options = ChoiceOption) (options *= ChoiceOptionXs)) ')' '\n'
-  '    REQUIRED: ' (required = BooleanChoice) '\n'
-;
-
-GrammarElementFieldMultipleChoice[noskipws]:
-  '  - TITLE: ' title=FieldName '\n'
-  ('    HUMAN_TITLE: ' human_title=SingleLineString '\n')?
-  '    TYPE: MultipleChoice'
-    '(' ((options = ChoiceOption) (options *= ChoiceOptionXs)) ')' '\n'
-  '    REQUIRED: ' (required = BooleanChoice) '\n'
-;
-
-GrammarElementFieldTag[noskipws]:
-  '  - TITLE: ' title=FieldName '\n'
-  ('    HUMAN_TITLE: ' human_title=SingleLineString '\n')?
-  '    TYPE: Tag' '\n'
-  '    REQUIRED: ' (required = BooleanChoice) '\n'
-;
-
-GrammarElementFieldReference[noskipws]:
-  '  - TITLE: ' title=FieldName '\n'
-  '    TYPE: Reference'
-    '(' ((types = ReferenceType) (types *= ReferenceTypeXs)) ')' '\n'
-  '    REQUIRED: ' (required = BooleanChoice) '\n'
-;
-
-ReferenceType[noskipws]:
-  ('ParentReqReference' | 'ChildReqReference' | 'FileReference' | 'BibReference')
-;
-
-ReferenceTypeXs[noskipws]:
-  /, /- ReferenceType
-;
-
-BooleanChoice[noskipws]:
-  ('True' | 'False')
 ;
 
 DocumentConfig[noskipws]:
@@ -218,14 +119,6 @@ LayoutChoice[noskipws]:
 ;
 """
 
-FRAGMENT_GRAMMAR = r"""
-Fragment[noskipws]:
-  '[FRAGMENT]' '\n'
-  section_contents *= SectionOrRequirement
-;
-
-"""
-
 SECTION_GRAMMAR = rf"""
 SDocSection[noskipws]:
   '[SECTION]'
@@ -273,10 +166,6 @@ CompositeRequirementTagName[noskipws]:
   'COMPOSITE_'
 ;
 
-RequirementType[noskipws]:
-  !ReservedKeyword /[A-Z]+(_[A-Z]+)*/
-;
-
 SDocNodeField[noskipws]:
   (
     (field_name = 'REFS' | field_name = 'RELATIONS') ':' '\n'
@@ -304,14 +193,6 @@ CompositeRequirement[noskipws]:
   '[/COMPOSITE_REQUIREMENT]' '\n'
 ;
 
-ChoiceOption[noskipws]:
-  /[\w\/-]+( *[\w\/-]+)*/
-;
-
-ChoiceOptionXs[noskipws]:
-  /, /- ChoiceOption
-;
-
 RequirementStatus[noskipws]:
   'Draft' | 'Active' | 'Deleted';
 
@@ -321,7 +202,3 @@ FreeText[noskipws]:
   /\[\/FREETEXT\]\n/
 ;
 """
-
-STRICTINC_GRAMMAR = FRAGMENT_GRAMMAR + SECTION_GRAMMAR + TEXT_TYPES_GRAMMAR
-STRICTDOC_GRAMMAR = DOCUMENT_GRAMMAR + SECTION_GRAMMAR + TEXT_TYPES_GRAMMAR
-FREE_TEXT_GRAMMAR = FREE_TEXT_PARSER_GRAMMAR + TEXT_TYPES_GRAMMAR

@@ -1,6 +1,3 @@
-import pytest
-
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.reference import (
     BibReference,
@@ -553,49 +550,6 @@ REFS:
     assert expected_sdoc == output
 
 
-def test_163_grammar_refs_file_only():
-    input_sdoc = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(FileReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-- TYPE: File
-  VALUE: /tmp/sample1.cpp
-""".lstrip()
-
-    reader = SDReader()
-    with pytest.raises(Exception) as exc_info:
-        _ = reader.read(input_sdoc)
-
-    assert exc_info.type is StrictDocSemanticError
-    exception: StrictDocSemanticError = exc_info.value
-    assert exception.title == (
-        "Requirement relation type/role is not registered: Parent."
-    )
-    assert exception.hint == "Problematic requirement: ID-002."
-
-
 def test_164_grammar_refs_parent():
     input_sdoc = """
 [DOCUMENT]
@@ -781,48 +735,6 @@ REFS:
     output = writer.write(document)
 
     assert expected_sdoc == output
-
-
-def test_166_grammar_refs_validate_not_registered_file_relation():
-    input_sdoc = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-- TYPE: File
-  VALUE: /tmp/sample1.cpp
-""".lstrip()
-
-    reader = SDReader()
-    with pytest.raises(Exception) as exc_info:
-        _ = reader.read(input_sdoc)
-
-    assert exc_info.type is StrictDocSemanticError
-    exception: StrictDocSemanticError = exc_info.value
-    assert exception.title == (
-        "Requirement relation type/role is not registered: File."
-    )
 
 
 def test_167_grammar_refs_bib():
@@ -1082,49 +994,6 @@ REFS:
     output = writer.write(document)
 
     assert expected_sdoc == output
-
-
-def test_169_grammar_refs_validate_not_registered_parent_relation():
-    input_sdoc = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: UID
-    TYPE: String
-    REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(BibReference)
-    REQUIRED: False
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-001
-
-[LOW_LEVEL_REQUIREMENT]
-UID: ID-002
-REFS:
-- TYPE: Parent
-  VALUE: ID-001
-- TYPE: BibTex
-  FORMAT: BibTex
-  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
-""".lstrip()  # noqa: E501
-
-    reader = SDReader()
-    with pytest.raises(Exception) as exc_info:
-        _ = reader.read(input_sdoc)
-
-    assert exc_info.type is StrictDocSemanticError
-    exception: StrictDocSemanticError = exc_info.value
-    assert exception.title == (
-        "Requirement relation type/role is not registered: Parent."
-    )
 
 
 def test_170_grammar_refs():

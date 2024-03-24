@@ -51,6 +51,8 @@ class DocumentView:
     def __init__(self, parent, views: List[ViewElement]):
         self.parent = parent
         self.views: List[ViewElement] = views
+        self.ng_line_start: int = 0
+        self.ng_col_start: int = 0
 
     @staticmethod
     def create_default(parent) -> "DocumentView":

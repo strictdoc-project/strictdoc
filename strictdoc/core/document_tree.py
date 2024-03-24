@@ -1,11 +1,17 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 
 
 class DocumentTree:
     def __init__(
-        self, file_tree, document_list, map_docs_by_paths, map_docs_by_rel_paths
+        self,
+        file_tree,
+        document_list,
+        map_docs_by_paths,
+        map_docs_by_rel_paths,
+        map_grammars_by_filenames: Dict[str, DocumentGrammar],
     ):
         assert isinstance(file_tree, list)
         assert isinstance(document_list, list)
@@ -17,6 +23,10 @@ class DocumentTree:
         self.map_docs_by_rel_paths: Dict[str, SDocDocument] = (
             map_docs_by_rel_paths
         )
+        self.map_grammars_by_filenames: Dict[str, DocumentGrammar] = (
+            map_grammars_by_filenames
+        )
+
         self.source_tree = None  # attached later.
 
     def __repr__(self):
@@ -35,6 +45,11 @@ class DocumentTree:
     def get_document_by_rel_path(self, doc_rel_path):
         document = self.map_docs_by_rel_paths[doc_rel_path]
         return document
+
+    def get_grammar_by_filename(
+        self, filename: str
+    ) -> Optional[DocumentGrammar]:
+        return self.map_grammars_by_filenames.get(filename)
 
     def attach_source_tree(self, source_tree):
         self.source_tree = source_tree

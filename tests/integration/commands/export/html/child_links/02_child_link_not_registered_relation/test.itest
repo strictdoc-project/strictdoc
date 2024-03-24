@@ -1,5 +1,4 @@
 RUN: %expect_exit 1 %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK
 CHECK: Semantic error: Requirement relation type/role is not registered: Child.
-CHECK: Location: {{.*}}sample.sdoc:6:1
+CHECK: Location: {{.*}}sample.sdoc:4:1
 CHECK: Hint: Problematic requirement: REQ-1.
-CHECK: error: Parallelizer: One of the child processes has exited prematurely.

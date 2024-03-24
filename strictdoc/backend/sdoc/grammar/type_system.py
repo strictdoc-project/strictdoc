@@ -2,6 +2,18 @@ NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
 NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
 
 STRICTDOC_BASIC_TYPE_SYSTEM = rf"""
+BooleanChoice[noskipws]:
+  ('True' | 'False')
+;
+
+ChoiceOption[noskipws]:
+  /[\w\/-]+( *[\w\/-]+)*/
+;
+
+ChoiceOptionXs[noskipws]:
+  /, /- ChoiceOption
+;
+
 FieldName[noskipws]:
   /[A-Z]+[A-Z_]*/
 ;
@@ -13,11 +25,18 @@ SingleLineString:
   /{NEGATIVE_MULTILINE_STRING_START}\S.*$/
 ;
 
-
 MultiLineString[noskipws]:
   />>>\n/-
   /(?ms){NEGATIVE_MULTILINE_STRING_END} *{NEGATIVE_MULTILINE_STRING_END}\S({NEGATIVE_MULTILINE_STRING_END}.)+/
   /^<<</-
+;
+
+RequirementType[noskipws]:
+  !ReservedKeyword /[A-Z]+(_[A-Z]+)*/
+;
+
+ReservedKeyword[noskipws]:
+  'DOCUMENT' | 'GRAMMAR' | 'BIBLIOGRAPHY'
 ;
 
 Reference[noskipws]:
@@ -73,5 +92,4 @@ BibEntry[noskipws]:
 BibEntryFormat[noskipws]:
   'String' | 'BibTex' | 'Citation'
 ;
-
 """

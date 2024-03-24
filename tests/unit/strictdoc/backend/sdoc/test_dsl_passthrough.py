@@ -998,7 +998,7 @@ COMMENT: >>>
     )
 
 
-def test_edge_case_20_empty_section_title():
+def test_edge_case_19_empty_section_title():
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -1015,10 +1015,29 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert (
-        "Expected 'MID: ' or 'UID: ' or 'LEVEL: ' or 'TITLE: '"
-        == exc_info.value.args[0].decode("utf-8")
-    )
+    assert "Expected ' '" == exc_info.value.args[0].decode("utf-8")
+
+
+def test_edge_case_20_empty_section_title():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[SECTION]
+TITLE: 
+
+[/SECTION]
+""".lstrip()  # noqa: W291
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(input_sdoc)
+
+    assert exc_info.type is TextXSyntaxError
+    assert "Expected SingleLineString or '>>>\\n'" == exc_info.value.args[
+        0
+    ].decode("utf-8")
 
 
 def test_edge_case_21_section_title_with_empty_space():

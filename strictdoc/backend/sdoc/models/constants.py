@@ -64,12 +64,8 @@ SECTION_MODELS = [
     BibEntry,
 ]
 
-DOCUMENT_MODELS = [
-    DocumentConfig,
-    SDocDocument,
+GRAMMAR_MODELS = [
     DocumentGrammar,
-    DocumentView,
-    DocumentBibliography,
     GrammarElement,
     GrammarElementFieldString,
     GrammarElementFieldSingleChoice,
@@ -80,9 +76,17 @@ DOCUMENT_MODELS = [
     GrammarElementRelationParent,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
+]
+
+DOCUMENT_MODELS = [
+    DocumentConfig,
+    SDocDocument,
+    DocumentView,
+    DocumentBibliography,
     ViewElement,
     ViewElementField,
     ViewElementTags,
     ViewElementHiddenTag,
 ]
+DOCUMENT_MODELS.extend(GRAMMAR_MODELS)
 DOCUMENT_MODELS.extend(SECTION_MODELS)

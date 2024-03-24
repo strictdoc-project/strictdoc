@@ -48,6 +48,7 @@ strictdoc-project.github.io/
 
 ### StrictDoc's developer test ###
 __*.sdoc
+__*.sgra
 
 ### webdriver_manager: cache with downloaded Chrome Driver binaries ###
 strictdoc/export/html2pdf/.wdm

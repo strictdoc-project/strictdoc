@@ -393,6 +393,7 @@ class TraceabilityIndexBuilder:
                                 )
 
                 if node.reserved_uid is not None:
+                    # @sdoc[SDOC-SRS-29]
                     if traceability_index.graph_database.has_link(
                         link_type=GraphLinkType.UID_TO_NODE,
                         lhs_node=node.reserved_uid,
@@ -420,6 +421,7 @@ class TraceabilityIndexBuilder:
                                 f'and "{document.title}".'
                             )
                         sys.exit(1)
+                        # @sdoc[/SDOC-SRS-29]
 
                     traceability_index.graph_database.create_link(
                         link_type=GraphLinkType.UID_TO_NODE,

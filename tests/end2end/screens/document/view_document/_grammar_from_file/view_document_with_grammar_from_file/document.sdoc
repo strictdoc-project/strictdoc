@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[REQUIREMENT]
+MID: abcdef123456
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<

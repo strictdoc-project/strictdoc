@@ -307,24 +307,6 @@ RELATIONS:
   VALUE: SDOC-SSS-57
 
 [REQUIREMENT]
-MID: 10d23bfbf4504c2e8c995ae89c500be4
-UID: SDOC-SRS-122
-STATUS: Backlog
-TITLE: Project-level grammar
-STATEMENT: >>>
-StrictDoc shall support creation of a project-level grammar.
-<<<
-RATIONALE: >>>
-A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
-<<<
-COMMENT: >>>
-The implementation is easy model-wise but the user interface details need to be elaborated.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: DO178-9
-
-[REQUIREMENT]
 MID: b74a7a3209d247f6b357513b0cce5000
 UID: SDOC-SRS-121
 STATUS: Backlog

@@ -181,14 +181,13 @@
 
 sdoc-main-placeholder {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   color: var(--color-placeholder);
   font-weight: 700;
   font-family: var(--code-font-family);
-}
-
-main > sdoc-main-placeholder {
+  width: 100%;
   height: 100%;
 }
 
@@ -196,6 +195,7 @@ main > sdoc-main-placeholder {
   width: 100%;
   padding: var(--base-gap);
   font-weight: 500;
+  margin-bottom: auto; /* To align the element at the top of the container that uses 'display:flex' */
 }
 
 /* .page-tips > *, */

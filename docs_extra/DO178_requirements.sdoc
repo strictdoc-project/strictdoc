@@ -197,6 +197,22 @@ COMMENT: >>>
 S: Source file coverage is StrictDoc's experimental feature. With a more detailed specification, we can turn it to a more advanced and clear presentation of the needed aspects.
 <<<
 
+[REQUIREMENT]
+MID: 8bd26640450f448c8228464223c21373
+UID: DO178-9
+COMPLIANCE: C
+STATUS: Active
+TITLE: Project-level grammar
+STATEMENT: >>>
+StrictDoc shall support creation of a project-level grammar.
+<<<
+RATIONALE: >>>
+A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
+<<<
+COMMENT: >>>
+S: This feature is easy to implement. The easiest implementation path is to include a config parameter, such as ``project_grammar`` in the already-existing ``strictdoc.toml`` file. At startup, StrictDoc recognizes the parameter and reads the grammar from a separate file. The project grammar becomes a single source of truth for all documents in the project tree but the option to override a grammar for a given document is still preserved.
+<<<
+
 [/SECTION]
 
 [SECTION]
@@ -286,22 +302,6 @@ Note: An uncovered requirement is one that has no children.
 <<<
 COMMENT: >>>
 S: This is easy to implement but would be nice to have it specified in terms of how exactly it should look like. The requirements coverage screen was one experimental attempt to visualize and highlight the uncovered requirements but we didn't stabilize the feature in terms of the visual clarity.
-<<<
-
-[REQUIREMENT]
-MID: 8bd26640450f448c8228464223c21373
-UID: DO178-9
-COMPLIANCE: C
-STATUS: Backlog
-TITLE: Project-level grammar
-STATEMENT: >>>
-StrictDoc shall support creation of a project-level grammar.
-<<<
-RATIONALE: >>>
-A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
-<<<
-COMMENT: >>>
-S: This feature is easy to implement. The easiest implementation path is to include a config parameter, such as ``project_grammar`` in the already-existing ``strictdoc.toml`` file. At startup, StrictDoc recognizes the parameter and reads the grammar from a separate file. The project grammar becomes a single source of truth for all documents in the project tree but the option to override a grammar for a given document is still preserved.
 <<<
 
 [REQUIREMENT]

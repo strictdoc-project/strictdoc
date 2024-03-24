@@ -21,6 +21,12 @@ class Form_EditGrammarElements(Form):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_file_grammars_are_not_supported(self) -> None:
+        self.test_case.assert_element(
+            '//*[@data-testid="grammar-from-file-editing-blocker-placeholder"]',
+            by=By.XPATH,
+        )
+
     def get_grammar_element(self, node_order: int = 1) -> MID:
         assert node_order >= 1, node_order
 

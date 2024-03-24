@@ -4,7 +4,9 @@
 {% block modal_form__header %}
 Edit document grammar
 {% endblock modal_form__header %}
+
 {% block modal_form__content %}
+{% if form_object.imported_grammar_file is none %}
   <form
     id="{{ form }}"  {# defined in the parent template #}
     method="POST"
@@ -35,4 +37,15 @@ Edit document grammar
     </sdoc-form-footer>
 
   </form>
+{% else %}
+
+  <sdoc-main-placeholder data-testid="grammar-from-file-editing-blocker-placeholder">
+    This document uses a grammar which is imported from a separate grammar file:
+    <code>{{ form_object.imported_grammar_file }}</code>.
+    <br />
+    Editing imported grammar files is not implemented yet.
+  </sdoc-main-placeholder>
+
+{% endif %}
 {% endblock modal_form__content %}
+

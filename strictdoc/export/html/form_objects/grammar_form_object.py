@@ -1,4 +1,4 @@
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Optional
 
 from jinja2 import Environment, Template
 from starlette.datastructures import FormData
@@ -68,6 +68,7 @@ class GrammarFormObject(ErrorObject):
         fields: List[GrammarElementFormField],
         project_config: ProjectConfig,
         jinja_environment: Environment,
+        imported_grammar_file: Optional[str],
     ):
         assert isinstance(document_mid, str), document_mid
         super().__init__()
@@ -75,6 +76,7 @@ class GrammarFormObject(ErrorObject):
         self.fields: List[GrammarElementFormField] = fields
         self.project_config: ProjectConfig = project_config
         self.jinja_environment: Environment = jinja_environment
+        self.imported_grammar_file: Optional[str] = imported_grammar_file
 
     @staticmethod
     def create_from_request(
@@ -113,6 +115,7 @@ class GrammarFormObject(ErrorObject):
             fields=form_object_fields,
             project_config=project_config,
             jinja_environment=jinja_environment,
+            imported_grammar_file=None,
         )
         return form_object
 
@@ -143,6 +146,7 @@ class GrammarFormObject(ErrorObject):
             fields=grammar_element_form_fields,
             project_config=project_config,
             jinja_environment=jinja_environment,
+            imported_grammar_file=grammar.import_from_file,
         )
 
     def validate(self) -> bool:

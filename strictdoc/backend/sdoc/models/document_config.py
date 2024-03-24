@@ -14,7 +14,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             classification=None,
             requirement_prefix=None,
             root=None,
-            enable_mid=False,
+            enable_mid=None,
             markup=None,
             auto_levels=None,
             layout=None,
@@ -63,9 +63,12 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         self.markup = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
 
-        self.layout: Optional[str] = (
-            "Default" if layout != "Website" else "Website"
-        )
+        if layout is not None:
+            if len(layout) > 0:
+                assert layout in ("Default", "Website")
+            else:
+                layout = None
+        self.layout: Optional[str] = layout
 
         # Possible requirement styles:
         # Simple, Table, Rows

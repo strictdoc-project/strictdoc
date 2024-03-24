@@ -119,6 +119,24 @@ RELATIONS:
   VALUE: strictdoc/backend/sdoc/models/section.py
 
 [REQUIREMENT]
+MID: 899d2f68749b4be1a3124fe4d01de1aa
+UID: SDOC-SRS-135
+STATUS: Active
+TITLE: Free text
+STATEMENT: >>>
+StrictDoc's data model shall support a "Free Text" model, representing non-normative documentation content.
+<<<
+RATIONALE: >>>
+Documentation comprises normative components, such as uniquely identifiable elements like requirements or design items, and non-normative components, including introductory text, overview chapters, and other content. The non-normative parts help provide a general understanding for the reader but do not contribute to traceability information. StrictDoc's free text is designed to store this type of non-normative information in SDoc documents.
+<<<
+RELATIONS:
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: strictdoc/backend/sdoc/models/free_text.py
+- TYPE: Parent
+  VALUE: SDOC-SSS-3
+
+[REQUIREMENT]
 MID: 983653fc26214f46977dc792d65ae65f
 UID: SDOC-SRS-109
 STATUS: Active
@@ -197,6 +215,8 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/backend/sdoc/grammar/grammar.py
 - TYPE: File
+  VALUE: strictdoc/backend/sdoc/grammar/grammar_builder.py
+- TYPE: File
   VALUE: strictdoc/backend/sdoc/reader.py
 - TYPE: File
   VALUE: strictdoc/backend/sdoc/writer.py
@@ -222,9 +242,13 @@ RELATIONS:
 [REQUIREMENT]
 MID: 9df34a7ab79842d99ee68303f334d4eb
 UID: SDOC-SRS-104
+STATUS: Active
 TITLE: SDoc file extension
 STATEMENT: >>>
 The SDoc markup content shall be stored in files with .sdoc extension.
+<<<
+RATIONALE: >>>
+Given that the name of the model is S-Doc (strict-doc), it is reasonable to make the document files have the ``.sdoc`` extension. This helps to identify the document files.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -296,6 +320,27 @@ A custom grammar allows a user to define their own configuration of requirement 
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-62
+
+[REQUIREMENT]
+MID: 10d23bfbf4504c2e8c995ae89c500be4
+UID: SDOC-SRS-122
+STATUS: Active
+TITLE: Importable grammars
+STATEMENT: >>>
+StrictDoc shall support an inclusion of a grammar stored in a separate file.
+<<<
+RATIONALE: >>>
+A single grammar defined for several documents helps to standardize the structure of all documents in a documentation tree and removes the effort needed to create identical grammars all the time.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-9
+- TYPE: Parent
+  VALUE: SDOC-SSS-52
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/grammar_reader.py
+- TYPE: File
+  VALUE: strictdoc/backend/sdoc/grammar/grammar_grammar.py
 
 [REQUIREMENT]
 MID: 5405c74a9eba4e9193007f01ea98bc85
@@ -398,6 +443,8 @@ For each requirement node, the Traceability Index shall ensure its uniqueness th
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-89
+- TYPE: File
+  VALUE: strictdoc/core/traceability_index_builder.py
 
 [REQUIREMENT]
 MID: 8330d61fd5b1438fa90f127f88903a0d

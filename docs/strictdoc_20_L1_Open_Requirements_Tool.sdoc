@@ -1047,13 +1047,14 @@ RELATIONS:
 [REQUIREMENT]
 MID: 1a39a758930040029db320d8466806c1
 UID: SDOC-SSS-77
+STATUS: Active
 TITLE: Test coverage
 STATEMENT: >>>
 The Requirements Tool's development process shall ensure:
 
-A testability of the tool
-The highest possible coverage of the tool's code by test
-Usage of modern testing methods to ensure adequate coverage of the tool's functions (e.g., command-line interface, web interface, smallest units of code, etc.).
+- A testability of the tool.
+- The highest possible coverage of the tool's code by test.
+- Usage of modern testing methods to ensure adequate coverage of the tool's functions (e.g., command-line interface, web interface, smallest units of code, etc.).
 <<<
 RATIONALE: >>>
 The presence of tests, the adequate selection of test methods and a high test coverage are preconditions for a high quality of the requirements tool.

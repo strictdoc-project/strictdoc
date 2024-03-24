@@ -2088,6 +2088,7 @@ def create_main_router(
             fields=[],  # Not used in this limited partial template.
             project_config=project_config,
             jinja_environment=env(),
+            imported_grammar_file=None,
         )
         return HTMLResponse(
             content=form_object.render_row_with_new_grammar_element(),

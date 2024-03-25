@@ -287,6 +287,36 @@ S: Source file coverage is StrictDoc's experimental feature. With a more detaile
 
 - ``[SDOC-SRS-35]`` :ref:`SDOC-SRS-35`
 
+.. _DO178-9:
+
+Project-level grammar
+---------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - DO178-9
+    * - **COMPLIANCE:**
+      - C
+    * - **STATUS:**
+      - Active
+
+StrictDoc shall support creation of a project-level grammar.
+
+**RATIONALE:**
+
+A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
+
+**COMMENT:**
+
+S: This feature is easy to implement. The easiest implementation path is to include a config parameter, such as ``project_grammar`` in the already-existing ``strictdoc.toml`` file. At startup, StrictDoc recognizes the parameter and reads the grammar from a separate file. The project grammar becomes a single source of truth for all documents in the project tree but the option to override a grammar for a given document is still preserved.
+
+**Children:**
+
+- ``[SDOC-SRS-122]`` :ref:`SDOC-SRS-122`
+
 .. _SECTION-DR-Needs-discussion:
 
 Needs discussion
@@ -444,36 +474,6 @@ S: This is easy to implement but would be nice to have it specified in terms of 
 - ``[SDOC-SRS-66]`` :ref:`SDOC-SRS-66`
 - ``[SDOC-SRS-97]`` :ref:`SDOC-SRS-97`
 - ``[SDOC-SRS-112]`` :ref:`SDOC-SRS-112`
-
-.. _DO178-9:
-
-Project-level grammar
----------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - DO178-9
-    * - **COMPLIANCE:**
-      - C
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall support creation of a project-level grammar.
-
-**RATIONALE:**
-
-A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
-
-**COMMENT:**
-
-S: This feature is easy to implement. The easiest implementation path is to include a config parameter, such as ``project_grammar`` in the already-existing ``strictdoc.toml`` file. At startup, StrictDoc recognizes the parameter and reads the grammar from a separate file. The project grammar becomes a single source of truth for all documents in the project tree but the option to override a grammar for a given document is still preserved.
-
-**Children:**
-
-- ``[SDOC-SRS-122]`` :ref:`SDOC-SRS-122`
 
 .. _DO178-16:
 

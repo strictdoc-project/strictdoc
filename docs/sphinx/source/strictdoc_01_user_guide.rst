@@ -16,7 +16,7 @@ Summary of StrictDoc features:
 - StrictDoc reads ``*.sdoc`` files and builds an in-memory representation of a
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
-  into a number of formats including HTML, RST, ReqIF, PDF, Excel.
+  into a number of formats including HTML, RST, ReqIF, PDF, JSON, Excel.
 - StrictDoc has a web-based user interface which allows viewing and editing the documents and requirements. The changes are written back to .sdoc files.
 - The focus of the tool is modeling requirements and specifications documents.
   Such documents consist of multiple statements like "system X shall do Y"
@@ -1400,6 +1400,48 @@ Another example can be adapting the requirements of the Off-the-Shelf (OTS) proj
 
 Both examples above involve activity called Tailoring when an intermediate document (Compliance Matrix) serves as an interface between two layers of documents.
 
+Importing grammar from grammar file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A document grammar can be described in a separate file with an extension ``.sgra`` and imported to a document. This feature may be useful when multiple documents need to share the same grammar.
+
+Example:
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: Document 1
+
+    [GRAMMAR]
+    IMPORT_FROM_FILE: grammar.sgra
+
+    [REQUIREMENT]
+    TITLE: Requirement title
+    STATEMENT: >>>
+    Requirement statement.
+    <<<
+
+A grammar file has an extension ``grammar.sgra`` and contains a usual grammar declaration which starts with a ``[GRAMMAR]`` tag.
+
+.. code-block::
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: REQUIREMENT
+      FIELDS:
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+
+When a ``[GRAMMAR]`` is declared with an ``IMPORT_FROM_FILE`` line, the grammar from the grammar file becomes the document grammar as if it was declared directly in the document.
+
+.. note::
+
+    Editing of the grammars defined in ``.sgra`` files can be only done with a text editor, it is not implemented yet in the editable web interface.
+
 .. _SDOC_UG_LINKS_AND_ANCHORS:
 
 Links
@@ -1576,8 +1618,8 @@ The options ``--formats=html`` and ``--output-dir output-html`` can be skipped b
 
 StrictDoc does not detect .sdoc files in the output folder. This is based on the assumption that StrictDoc should not read anything in the output folder, which is intended for transient output artifacts.
 
-Standalone HTML pages (experimental)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Standalone HTML pages
+~~~~~~~~~~~~~~~~~~~~~
 
 The following command creates a normal HTML export with all pages having their
 assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc.toml`` file, specify:
@@ -1638,6 +1680,17 @@ The created RST files can be copied to a project created using Sphinx, see
 <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
 is generated this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
+
+JSON
+----
+
+The following command creates a JSON export:
+
+.. code-block::
+
+    strictdoc export YourDoc.sdoc --formats=json --output-dir output/
+
+The structure of the exported JSON mostly mirrors the structure of the underlying SDoc objects that represent the project tree, documents, sections, requirements, and other nodes.
 
 Manage project tree
 ===================
@@ -2276,13 +2329,14 @@ The following essential features are still missing and will be worked on in the 
 
 - Editing of documents with non-string grammar fields is not supported yet.
   Example: The ``SingleChoice`` type will not work in the \*.sdoc files.
-- Adding images to the multiline fields like requirement's STATEMENT and section's FREETEXT.
+- Adding images to the multiline fields like requirement's ``STATEMENT`` and section's ``FREETEXT``.
 - Adding/editing sections with ``LEVEL: None``.
 - Deleting a document.
 - Deleting a section recursively with a correct cleanup of all traceability information.
-- Numerous validation aspects and edge cases of content editing.
 - A separate screen for editing project settings.
 - Editing File-based relations.
+- Moving the TOC nodes of a document when it has one or more included documents.
+- Editing ``.sgra`` grammar files.
 
 Concurrent use of web user interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

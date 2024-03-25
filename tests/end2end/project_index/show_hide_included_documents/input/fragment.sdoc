@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Fragment
+
+[SECTION]
+UID: Section-UID-Before
+TITLE: First section
+
+[FREETEXT]
+This is a free text of this section.
+[/FREETEXT]
+
+[/SECTION]

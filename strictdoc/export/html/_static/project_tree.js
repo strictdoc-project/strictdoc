@@ -24,12 +24,14 @@ class Switch {
     leftPosition,
     rightPosition,
     bottomPosition,
+    dataTestID,
   }) {
     this.colorOn = colorOn || 'rgb(242, 100, 42)';
     this.colorOff = colorOff || 'rgb(200, 200, 200)';
     this.labelInitialText = labelText || '';
     this.checked = (checked === false) ? false : true;
 
+    this.dataTestID = dataTestID || 'std-switch';
     this.componentClass = componentClass || 'std-switch-scc';
     this.size = size || 0.75;
     this.stroke = stroke || 0.25;
@@ -63,6 +65,8 @@ class Switch {
     this.insertStyle();
     this.updateLabelText(this.labelInitialText);
     input.addEventListener('change', () => this.callback(input.checked));
+
+    label.setAttribute('data-testid', this.dataTestID);
 
     return block;
   }
@@ -273,6 +277,7 @@ class ProjectTree {
     this.control = new Switch(
       {
         labelText: `<b>Show fragments</b>`, // * This text will be updated later.
+        dataTestID: 'show-hide-fragments-toggler',
         size: 0.5,
         stroke: 0.175,
         // position: 'absolute',

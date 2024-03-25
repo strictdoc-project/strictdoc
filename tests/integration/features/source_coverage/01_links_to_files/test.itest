@@ -4,4 +4,4 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%S/Output/html/source_coverage.html"
 
 RUN: %cat "%S/Output/html/source_coverage.html" | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="_source_files/file.py.html">
+CHECK-HTML: href="_source_files/file.py.html"

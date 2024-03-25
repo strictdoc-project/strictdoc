@@ -52,6 +52,14 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_document_is_hidden(self, document_title: str) -> None:
+        # fragment is hidden
+        self.test_case.assert_element_not_visible(
+            "//*[@data-testid='tree-file-link']"
+            f"//*[contains(., '{document_title}')]",
+            by=By.XPATH,
+        )
+
     def assert_empty_tree(self) -> None:
         self.test_case.assert_element(
             "//*[@data-testid='document-tree-empty-text']"
@@ -147,3 +155,18 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
         self.test_case.click_xpath(
             '//*[@data-testid="tree-export-reqif-action"]'
         )
+
+    # project_tree_controls
+    # Show/Hide fragments
+
+    def assert_project_tree_controls_present(self) -> None:
+        self.test_case.assert_element(
+            '//*[@id="project_tree_controls"]',
+            by=By.XPATH,
+        )
+
+    def do_click_on_fragment_switcher(self) -> None:
+        self.test_case.click_xpath(
+            '//*[@data-testid="show-hide-fragments-toggler"]'
+        )
+        return Screen_Document(self.test_case)

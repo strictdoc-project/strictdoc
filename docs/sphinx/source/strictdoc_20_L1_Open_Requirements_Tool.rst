@@ -182,6 +182,7 @@ The CRUD operations are essential operations of document management. They are at
 
 **Children:**
 
+- ``[SDOC-SRS-135]`` :ref:`SDOC-SRS-135`
 - ``[SDOC-SRS-107]`` :ref:`SDOC-SRS-107`
 - ``[SDOC-SRS-108]`` :ref:`SDOC-SRS-108`
 - ``[SDOC-SRS-54]`` :ref:`SDOC-SRS-54`
@@ -254,6 +255,7 @@ Composable documents allow assembling documents from multiple smaller documents 
 **Children:**
 
 - ``[SDOC-SRS-109]`` :ref:`SDOC-SRS-109`
+- ``[SDOC-SRS-122]`` :ref:`SDOC-SRS-122`
 
 .. _SDOC-SSS-53:
 
@@ -1734,12 +1736,14 @@ Test coverage
 
     * - **UID:**
       - SDOC-SSS-77
+    * - **STATUS:**
+      - Active
 
 The Requirements Tool's development process shall ensure:
 
-A testability of the tool
-The highest possible coverage of the tool's code by test
-Usage of modern testing methods to ensure adequate coverage of the tool's functions (e.g., command-line interface, web interface, smallest units of code, etc.).
+- A testability of the tool.
+- The highest possible coverage of the tool's code by test.
+- Usage of modern testing methods to ensure adequate coverage of the tool's functions (e.g., command-line interface, web interface, smallest units of code, etc.).
 
 **RATIONALE:**
 

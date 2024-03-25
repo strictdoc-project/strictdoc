@@ -471,34 +471,6 @@ The SDoc model shall provide validation of requirements according to the EARS sy
 
 - ``[SDOC-SSS-57]`` :ref:`SDOC-SSS-57`
 
-.. _SDOC-SRS-122:
-
-Project-level grammar
----------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-122
-    * - **STATUS:**
-      - Backlog
-
-StrictDoc shall support creation of a project-level grammar.
-
-**RATIONALE:**
-
-A single grammar defined for a project (same grammar for several documents) helps to standardize the structure of all documents in a documentation tree and reduces the effort needed to create identical grammars all the time.
-
-**COMMENT:**
-
-The implementation is easy model-wise but the user interface details need to be elaborated.
-
-**Parents:**
-
-- ``[DO178-9]`` :ref:`DO178-9`
-
 .. _SDOC-SRS-121:
 
 WYSIWYG editing

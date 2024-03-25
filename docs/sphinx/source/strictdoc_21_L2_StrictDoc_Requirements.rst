@@ -157,6 +157,30 @@ StrictDoc's data model shall support a "Section" that nests other Sections, Requ
 
 - ``[SDOC-SSS-51]`` :ref:`SDOC-SSS-51`
 
+.. _SDOC-SRS-135:
+
+Free text
+---------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SRS-135
+    * - **STATUS:**
+      - Active
+
+StrictDoc's data model shall support a "Free Text" model, representing non-normative documentation content.
+
+**RATIONALE:**
+
+Documentation comprises normative components, such as uniquely identifiable elements like requirements or design items, and non-normative components, including introductory text, overview chapters, and other content. The non-normative parts help provide a general understanding for the reader but do not contribute to traceability information. StrictDoc's free text is designed to store this type of non-normative information in SDoc documents.
+
+**Parents:**
+
+- ``[SDOC-SSS-3]`` :ref:`SDOC-SSS-3`
+
 .. _SDOC-SRS-109:
 
 Composeable document
@@ -291,8 +315,14 @@ SDoc file extension
 
     * - **UID:**
       - SDOC-SRS-104
+    * - **STATUS:**
+      - Active
 
 The SDoc markup content shall be stored in files with .sdoc extension.
+
+**RATIONALE:**
+
+Given that the name of the model is S-Doc (strict-doc), it is reasonable to make the document files have the ``.sdoc`` extension. This helps to identify the document files.
 
 **Parents:**
 
@@ -394,6 +424,31 @@ A custom grammar allows a user to define their own configuration of requirement 
 **Parents:**
 
 - ``[SDOC-SSS-62]`` :ref:`SDOC-SSS-62`
+
+.. _SDOC-SRS-122:
+
+Importable grammars
+-------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SRS-122
+    * - **STATUS:**
+      - Active
+
+StrictDoc shall support an inclusion of a grammar stored in a separate file.
+
+**RATIONALE:**
+
+A single grammar defined for several documents helps to standardize the structure of all documents in a documentation tree and removes the effort needed to create identical grammars all the time.
+
+**Parents:**
+
+- ``[DO178-9]`` :ref:`DO178-9`
+- ``[SDOC-SSS-52]`` :ref:`SDOC-SSS-52`
 
 .. _SDOC-SRS-22:
 

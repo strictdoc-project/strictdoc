@@ -3,8 +3,8 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
-Unreleased work
-===============
+0.0.52 (2024-03-25)
+===================
 
 The **Grammar from File** feature has been implemented. Now it is possible to declare a usual StrictDoc ``[GRAMMAR]`` in a dedicated file with an ``.sgra`` extension. When a grammar is declared in a separate file, it is possible to share this grammar between several documents. Editing of the grammars defined in ``.sgra`` files can be only done with a text editor, it is not implemented yet in the editable web interface.
 

@@ -16,7 +16,9 @@ window.addEventListener("DOMContentLoaded", function(){
       }
       const open = details.hasAttribute("open");
 
-      summaries.forEach(summary => {
+      const innerSummaries = details.querySelectorAll('summary');
+
+      innerSummaries.forEach(summary => {
         const details = summary.parentElement;
         if (open) {
           details.removeAttribute("open")

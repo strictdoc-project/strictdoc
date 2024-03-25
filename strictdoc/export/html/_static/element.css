@@ -715,14 +715,14 @@ sdoc-anchor[visible]:hover .anchor_back_links_number {
 /* coverage */
 
 .value-bar {
-  display: inline-flex;
+  display: flex;
   height: 1rem;
 }
 
 .value-bar_bar {
-  width: 13rem;
+  width: 6rem;
   border-radius: .5rem;
-  background-color: white;
+
   /* box-shadow: inset 0px 2px 2px 0px #ccc; */
   border: 1px solid rgba(0,0,0,0.1);
   position: relative;
@@ -730,10 +730,13 @@ sdoc-anchor[visible]:hover .anchor_back_links_number {
 
   height: 0.75rem;
   margin-top: 0.25rem;
+
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .value-bar_bar[data-value] {
   border: 1px solid rgb(80, 240, 40);
+  background-color: rgba(255, 255, 255, 1);
 }
 
 .value-bar_filler {
@@ -748,6 +751,7 @@ sdoc-anchor[visible]:hover .anchor_back_links_number {
   width: 2.5rem;
   text-align: right;
   font-size: 0.75em;
+  font-weight: 600;
 }
 
 ol.arabic {

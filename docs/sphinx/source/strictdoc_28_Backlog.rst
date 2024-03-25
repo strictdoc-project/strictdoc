@@ -9,12 +9,11 @@ While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://git
 
 .. _SECTION-SB-Open-source-requirements-tool-challenges:
 
-Open-source requirements tool challenges
-========================================
+StrictDoc challenges
+====================
 
-- Very limited development time
-- Not enough time to develop certain capabilities
-- Not possible to scale to multi-user environment quickly.
+- Limited development time.
+- Not easy to develop certain capabilities and scale to a multi-user environment quickly.
 
 .. _SDOC-SRS-13:
 
@@ -249,6 +248,12 @@ Focused mode: Edit a single section / requirement
       - SDOC-BACKLOG-1
     * - **STATUS:**
       - Backlog
+
+StrictDoc shall allow focused editing of single sections and requirements on a dedicated screen.
+
+**COMMENT:**
+
+This is partially implemented with the composable documents feature. An included document can be edited as a standalone document.
 
 .. _SDOC-BACKLOG-2:
 

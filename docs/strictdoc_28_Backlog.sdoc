@@ -16,12 +16,11 @@ While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://git
 [SECTION]
 MID: d1e697dea73144c48a4b88d0d784a517
 UID: SECTION-SB-Open-source-requirements-tool-challenges
-TITLE: Open-source requirements tool challenges
+TITLE: StrictDoc challenges
 
 [FREETEXT]
-- Very limited development time
-- Not enough time to develop certain capabilities
-- Not possible to scale to multi-user environment quickly.
+- Limited development time.
+- Not easy to develop certain capabilities and scale to a multi-user environment quickly.
 [/FREETEXT]
 
 [REQUIREMENT]
@@ -174,6 +173,12 @@ MID: 5a0304abcd8a44dab5d032dce6625a5d
 UID: SDOC-BACKLOG-1
 STATUS: Backlog
 TITLE: Focused mode: Edit a single section / requirement
+STATEMENT: >>>
+StrictDoc shall allow focused editing of single sections and requirements on a dedicated screen.
+<<<
+COMMENT: >>>
+This is partially implemented with the composable documents feature. An included document can be edited as a standalone document.
+<<<
 
 [REQUIREMENT]
 MID: 162a3da4d9d74c15b5078c9859657ce3

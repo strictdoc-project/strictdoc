@@ -80,6 +80,14 @@ class Folder(FileOrFolderEntry):  # pylint: disable=too-many-instance-attributes
     def is_folder(self):
         return True
 
+    def has_content(self) -> bool:
+        if len(self.files) > 0:
+            return True
+        for subfolder_ in self.subfolder_trees:
+            if subfolder_.has_content():
+                return True
+        return False
+
     def get_full_path(self):
         return self.root_path
 

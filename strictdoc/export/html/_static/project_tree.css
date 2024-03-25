@@ -31,9 +31,16 @@
   background: transparent;
 }
 
+.project_tree-folder.source {
+  padding-right: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
 .project_tree-folder summary {
   position: relative;
   cursor: pointer;
+  user-select: none;
 }
 
 .project_tree-folder-title {
@@ -100,21 +107,25 @@
 /* file */
 
 .project_tree-file {
-  order: 1;
-  flex-grow: 1;
   display: flex;
   column-gap: var(--base-rhythm);
   padding: calc(0.5 * var(--base-rhythm));
   border-radius: calc(0.5 * var(--base-rhythm));
   transition: background .3s;
+  border: 1px solid rgba(255,255,255,0);
 }
 
-.project_tree-file:hover {
+.project_tree-file:not([href]):hover  {
+  border: 1px solid rgba(255,255,255,0.75);
+  background: rgba(0,0,0,0.01);
+}
+
+.project_tree-file[href]:hover {
   background: rgba(255,255,255,0.5);
 }
 
-.project_tree-file:hover .project_tree-file-icon,
-.project_tree-file:hover .project_tree-file-title {
+.project_tree-file[href]:hover .project_tree-file-icon,
+.project_tree-file[href]:hover .project_tree-file-title {
   color: var(--color-fg-accent);
 }
 
@@ -130,8 +141,17 @@
   font-size: 1em;
   font-weight: 500;
   line-height: 1.2;
-  color: var(--color-fg-main);
   transition: color .2s;
+}
+
+.project_tree-file-icon,
+.project_tree-file-title {
+  color: var(--color-fg-secondary);
+}
+
+.project_tree-file[href] .project_tree-file-icon,
+.project_tree-file[href] .project_tree-file-title {
+  color: var(--color-fg-main);
 }
 
 .project_tree-file-name {
@@ -139,6 +159,10 @@
   line-height: 1.2;
   color: var(--color-fg-secondary);
   margin-top: 0.25rem;
+}
+
+.project_tree-file-aside {
+  margin-left: auto;
 }
 
 /* dashboard */

@@ -1,0 +1,55 @@
+{%- set source_file = view_object.traceability_index.document_tree.source_tree.get_source_for_file(file) -%}
+
+  <a
+    class="project_tree-file"
+    {% if source_file.is_referenced -%}
+      href="{{ view_object.link_renderer.render_source_file_link_from_root_2(source_file) }}"
+    {%- endif -%}
+  >
+    <div class="project_tree-file-icon">
+      {%- include "_res/svg_ico16_file.jinja" -%}
+    </div>
+    <div class="project_tree-file-details">
+      <div class="project_tree-file-title">
+        {{ file.get_file_name() }}
+      </div>
+    </div>
+
+    <div class="project_tree-file-aside">
+      {%- if source_file.is_referenced -%}
+      {%- set general_reqs, range_reqs =
+      view_object.traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
+      {%- if range_reqs -%}
+      {%- set coverage_info =
+      view_object.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix) -%}
+      <div class="value-bar">
+        <span class="value-bar_bar" data-value={{ coverage_info.get_coverage() }}>
+          <span class="value-bar_filler" style="width:{{ coverage_info.get_coverage() }}%"></span>
+        </span>
+        <span class="value-bar_text">{{ coverage_info.get_coverage() }}%</span>
+      </div>
+      {%- elif general_reqs -%}
+      <div class="value-bar">
+        <span class="value-bar_bar" data-value>
+          <span class="value-bar_filler"></span>
+        </span>
+        <span class="value-bar_text"></span>
+      </div>
+      {%- else -%}
+      <div class="value-bar">
+        <span class="value-bar_bar">
+          <span class="value-bar_filler"></span>
+        </span>
+        <span class="value-bar_text"></span>
+      </div>
+      {%- endif -%}
+      {%- else -%}
+      <div class="value-bar">
+        <span class="value-bar_bar">
+          <span class="value-bar_filler"></span>
+        </span>
+        <span class="value-bar_text"></span>
+      </div>
+      {%- endif -%}
+    </div>
+  </a>

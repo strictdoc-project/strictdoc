@@ -1,0 +1,27 @@
+{% assert folder is defined %}
+
+<details open class="project_tree-folder source">
+  <summary>
+    <div class="project_tree-folder-title">
+      {%- include "_res/svg_ico16_folder.jinja" -%}
+      {{ folder.folder_name }}/
+      {%- include "_res/svg_ico16_folder_collapse.jinja" -%}
+    </div>
+  </summary>
+
+  <div class="project_tree-folder-content">
+    {% for folder_ in folder.subfolder_trees %}
+      {% if folder_.has_content() %}
+      {% with folder = folder_ %}
+        {% include "screens/source_file_coverage/folder.jinja" %}
+      {% endwith %}
+      {% endif %}
+    {% endfor %}
+
+    {% for file_ in folder.files %}
+      {% with file = file_ %}
+        {% include "screens/source_file_coverage/file.jinja" %}
+      {% endwith %}
+    {% endfor %}
+  </div>
+</details>

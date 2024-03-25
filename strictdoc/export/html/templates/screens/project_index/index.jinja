@@ -8,6 +8,8 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
+  <script type="text/javascript" src="{{ view_object.render_static_url('collapsible_tree.js') }}"></script>
+
   {# FIXME by @mettta:
        Right now, project_tree.js only contains a switch for
        showing/hiding included documents, so disabling the whole

@@ -1,5 +1,5 @@
 {%- if not view_object.is_empty_tree() -%}
-  <div class="project_tree">
+  <div class="project_tree" js-collapsible_tree>
     {% for root_tree_ in view_object.document_tree_iterator.document_tree.file_tree %}
 
       {% if root_tree_.root_folder_or_file.is_folder() %}

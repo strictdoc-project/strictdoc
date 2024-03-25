@@ -2,7 +2,7 @@
   {% set root_tree_ = view_object.traceability_index.document_tree.source_tree.file_tree %}
 
   {% if root_tree_.root_folder_or_file.has_content() %}
-    <div class="project_tree">
+    <div class="project_tree" js-collapsible_tree>
 
       {% if root_tree_.root_folder_or_file.is_folder() %}
         {% if root_tree_.root_folder_or_file.has_content() %}

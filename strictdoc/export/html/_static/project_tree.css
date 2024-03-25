@@ -40,6 +40,7 @@
 .project_tree-folder summary {
   position: relative;
   cursor: pointer;
+  user-select: none;
 }
 
 .project_tree-folder-title {

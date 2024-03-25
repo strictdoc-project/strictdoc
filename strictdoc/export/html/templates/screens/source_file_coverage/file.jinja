@@ -2,7 +2,7 @@
 
   <a
     class="project_tree-file"
-    {%- if source_file.is_referenced -%}
+    {% if source_file.is_referenced -%}
       href="{{ view_object.link_renderer.render_source_file_link_from_root_2(source_file) }}"
     {%- endif -%}
   >

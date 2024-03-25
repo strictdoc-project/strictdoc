@@ -6,6 +6,11 @@
   <link rel="stylesheet" href="{{ view_object.render_static_url('project_tree.css') }}"/>
 {% endblock head_css %}
 
+{% block head_scripts %}
+  {{ super() }}
+  <script type="text/javascript" src="{{ view_object.render_static_url('collapsible_tree.js') }}"></script>
+{% endblock head_scripts %}
+
 {% block title %}
   {{ view_object.project_config.project_title }} - {{ template_type }}
 {% endblock title %}

@@ -19,6 +19,7 @@ class FragmentFromFile:
         self.ng_has_requirements = False
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_included_document_reference: Optional[DocumentReference] = None
+        self.ng_resolved_custom_level = None
         self.resolved_full_path_to_document_file = None
         self.resolved_document: Optional = None
         self.top_section: Optional = None

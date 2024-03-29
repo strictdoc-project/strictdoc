@@ -1,11 +1,12 @@
 import json
 import os.path
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -21,7 +22,6 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldReference,
     RequirementFieldType,
 )
-from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
 
@@ -62,7 +62,6 @@ class JSONGenerator:
 
     @classmethod
     def _write_document(cls, document: SDocDocument) -> Dict:
-        document_iterator = DocumentCachingIterator(document)
         document_dict: Dict["str", Any] = {
             "TITLE": document.title,
             "REQ_PREFIX": None,
@@ -186,32 +185,79 @@ class JSONGenerator:
         for free_text in document.free_texts:
             document_dict["FREETEXT"] = cls._write_free_text_content(free_text)
 
-        for content_node in document_iterator.all_content():
-            if not content_node.ng_whitelisted:
-                continue
-
-            if isinstance(content_node, SDocSection):
-                section_dict = cls._write_section(content_node, document)
-                document_dict[JSONKey.NODES].append(section_dict)
-
-            elif isinstance(content_node, SDocNode):
-                if isinstance(content_node, CompositeRequirement):
-                    continue
-
-                node_dict = cls._write_requirement(
-                    node=content_node, document=document
-                )
-                document_dict[JSONKey.NODES].append(node_dict)
+        node_dict = JSONGenerator._write_node(document, document, ())
+        document_dict[JSONKey.NODES] = node_dict[JSONKey.NODES]
 
         return document_dict
 
     @classmethod
+    def _write_node(cls, node, document, level_stack: Optional[Tuple]) -> Dict:
+        def get_level_string_(node_) -> str:
+            return (
+                ""
+                if node_.ng_resolved_custom_level == "None"
+                else (
+                    node_.ng_resolved_custom_level
+                    if node_.ng_resolved_custom_level is not None
+                    else ".".join(map(str, level_stack))
+                )
+            )
+
+        node_dict = {JSONKey.NODES: []}
+
+        if isinstance(node, SDocSection):
+            section_dict = cls._write_section(
+                node, document, get_level_string_(node)
+            )
+
+            current_number = 0
+            for subnode_ in node.section_contents:
+                if subnode_.ng_resolved_custom_level is None:
+                    current_number += 1
+
+                subnode_dict = cls._write_node(
+                    subnode_, document, level_stack + (current_number,)
+                )
+                section_dict[JSONKey.NODES].append(subnode_dict)
+
+            node_dict[JSONKey.NODES].append(section_dict)
+
+        elif isinstance(node, SDocNode):
+            if isinstance(node, CompositeRequirement):
+                return {}
+
+            subnode_dict = cls._write_requirement(
+                node=node,
+                document=document,
+                level_string=get_level_string_(node),
+            )
+            node_dict[JSONKey.NODES].append(subnode_dict)
+
+        elif isinstance(node, SDocDocument):
+            current_number = 0
+            for subnode_ in node.section_contents:
+                if subnode_.ng_resolved_custom_level is None:
+                    current_number += 1
+                subnode_dict = cls._write_node(
+                    subnode_, document, level_stack + (current_number,)
+                )
+                node_dict[JSONKey.NODES].append(subnode_dict)
+
+        elif isinstance(node, FragmentFromFile):
+            subnode_dict = cls._write_node(
+                node.top_section, document, level_stack
+            )
+            node_dict[JSONKey.NODES].extend(subnode_dict[JSONKey.NODES])
+
+        return node_dict
+
+    @classmethod
     def _write_section(
-        cls, section: SDocSection, document: SDocDocument
+        cls, section: SDocSection, document: SDocDocument, level_string: str
     ) -> Dict:
         assert isinstance(section, SDocSection)
         node_dict: Dict[str, Any] = {
-            "_TOC": section.context.title_number_string,
+            "_TOC": level_string,
             "TYPE": "SECTION",
             "TITLE": str(section.title),
             JSONKey.NODES: [],
@@ -232,29 +278,14 @@ class JSONGenerator:
         for free_text in section.free_texts:
             node_dict["FREETEXT"] = cls._write_free_text_content(free_text)
 
-        for node_ in section.section_contents:
-            if not node_.ng_whitelisted:
-                continue
-
-            if isinstance(node_, SDocSection):
-                section_dict = cls._write_section(node_, document)
-                node_dict[JSONKey.NODES].append(section_dict)
-
-            elif isinstance(node_, SDocNode):
-                if isinstance(node_, CompositeRequirement):
-                    continue
-
-                sub_node_dict = cls._write_requirement(
-                    node=node_, document=document
-                )
-                node_dict[JSONKey.NODES].append(sub_node_dict)
-
         return node_dict
 
     @classmethod
-    def _write_requirement(cls, node: SDocNode, document: SDocDocument) -> Dict:
+    def _write_requirement(
+        cls, node: SDocNode, document: SDocDocument, level_string: str
+    ) -> Dict:
         node_dict = {
-            "_TOC": node.context.title_number_string,
+            "_TOC": level_string,
             "TYPE": node.requirement_type,
         }
 

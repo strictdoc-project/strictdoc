@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Dummy Software Requirements Specification #2
+
+[REQUIREMENT]
+UID: LREQ-1
+TITLE: Dummy low-level requirement #1
+STATEMENT: System ABC shall do 1.
+
+[REQUIREMENT]
+UID: LREQ-2
+TITLE: Dummy low-level requirement #2
+STATEMENT: System ABC shall do 2.
+
+[DOCUMENT_FROM_FILE]
+FILE: input_included.sdoc

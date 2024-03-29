@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Dummy Software Requirements Specification #2 FRAGMENT
+
+[REQUIREMENT]
+UID: LREQ-3
+TITLE: Dummy low-level requirement #3
+STATEMENT: System ABC shall do 3.

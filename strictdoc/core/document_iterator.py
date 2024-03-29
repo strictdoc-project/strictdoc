@@ -1,5 +1,5 @@
 import collections
-from typing import List, Tuple
+from typing import Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
@@ -8,7 +8,6 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
-from strictdoc.core.level_counter import LevelCounter
 
 
 class DocumentCachingIterator:
@@ -41,84 +40,117 @@ class DocumentCachingIterator:
     ):
         root_node = self.document
 
-        level_counter = LevelCounter()
+        yield from self._all_content(
+            root_node,
+            print_fragments=print_fragments,
+            print_fragments_from_files=print_fragments_from_files,
+        )
 
-        root_contents: List[Tuple] = []
+    def _all_content(
+        self,
+        node,
+        print_fragments: bool = False,
+        print_fragments_from_files: bool = False,
+        level_stack: Tuple = (),
+    ):
+        def get_level_string_(node_) -> str:
+            return (
+                ""
+                if node_.ng_resolved_custom_level == "None"
+                else (
+                    node_.ng_resolved_custom_level
+                    if node_.ng_resolved_custom_level is not None
+                    else ".".join(map(str, level_stack))
+                )
+            )
 
-        for node_ in root_node.section_contents:
-            root_contents.append((node_, 1))
-
-        task_list = collections.deque(root_contents)
-
-        while True:
-            if not task_list:
-                break
-
-            current, current_level = task_list.popleft()
-            # FIXME
-            current.ng_level = current_level
-
-            if isinstance(current, FragmentFromFile):
-                if not print_fragments:
-                    if print_fragments_from_files:
-                        yield current
-                else:
-                    assert current.resolved_document is not None
-                    section_contents = map(
-                        lambda node_: (node_, current_level),
-                        reversed(current.section_contents),
-                    )
-
-                    task_list.extendleft(section_contents)
-                continue
-
+        if isinstance(node, SDocSection):
             # If node is not whitelisted, we ignore it. Also, note that due to
             # this early return, all child nodes of this node are ignored
             # as well because they are not added to the iteration queue.
-            if not current.ng_whitelisted:
-                continue
+            if not node.ng_whitelisted:
+                return
 
-            if isinstance(
-                current, (SDocSection, SDocNode, CompositeRequirement)
-            ):
-                assert current.ng_level, f"Node has no ng_level: {current}"
+            # FIXME: This will be changed.
+            node.context.title_number_string = get_level_string_(node)
 
-                if current.ng_resolved_custom_level != "None":
-                    level_counter.adjust(current_level)
+            yield node
 
-                    # FIXME: Remove the need to do branching here.
-                    current.context.title_number_string = (
-                        current.ng_resolved_custom_level
-                        if current.ng_resolved_custom_level
-                        else level_counter.get_string()
-                    )
-                else:
-                    # The idea is to include a section header without affecting
-                    # the level of the nested elements (i.e. requirements), but
-                    # keeping the section title in a dedicated row in DOC, TBL
-                    # and TR/DTR views.
-                    # Such an option can be very useful when dealing with source
-                    # requirements documents with inconsistent sectioning (such
-                    # as some technical standards/normative), that need to be
-                    # included in a custom project.
-                    # https://github.com/strictdoc-project/strictdoc/issues/639
-                    current.context.title_number_string = ""
+            current_number = 0
+            for subnode_ in node.section_contents:
+                if subnode_.ng_resolved_custom_level is None:
+                    current_number += 1
 
-            yield current
-
-            if isinstance(current, SDocSection):
-                section_contents = map(
-                    lambda node_: (node_, current_level + 1),
-                    reversed(current.section_contents),
+                yield from self._all_content(
+                    subnode_,
+                    print_fragments=print_fragments,
+                    print_fragments_from_files=print_fragments_from_files,
+                    level_stack=level_stack + (current_number,),
                 )
-                task_list.extendleft(section_contents)
 
-            elif isinstance(current, CompositeRequirement):
-                section_contents = map(
-                    lambda node_: (node_, current_level + 1),
-                    reversed(current.requirements),
+        elif isinstance(node, CompositeRequirement):
+            # If node is not whitelisted, we ignore it. Also, note that due to
+            # this early return, all child nodes of this node are ignored
+            # as well because they are not added to the iteration queue.
+            if not node.ng_whitelisted:
+                return
+
+            # FIXME: This will be changed.
+            node.context.title_number_string = get_level_string_(node)
+
+            yield node
+
+            current_number = 0
+            for subnode_ in node.requirements:
+                if subnode_.ng_resolved_custom_level is None:
+                    current_number += 1
+
+                yield from self._all_content(
+                    subnode_,
+                    print_fragments=print_fragments,
+                    print_fragments_from_files=print_fragments_from_files,
+                    level_stack=level_stack + (current_number,),
                 )
-                task_list.extendleft(section_contents)
+
+        elif isinstance(node, SDocNode):
+            # If node is not whitelisted, we ignore it. Also, note that due to
+            # this early return, all child nodes of this node are ignored
+            # as well because they are not added to the iteration queue.
+            if not node.ng_whitelisted:
+                return
+
+            # FIXME: This will be changed.
+            node.context.title_number_string = get_level_string_(node)
+
+            yield node
+
+        elif isinstance(node, SDocDocument):
+            current_number = 0
+            for subnode_ in node.section_contents:
+                if subnode_.ng_resolved_custom_level is None:
+                    current_number += 1
+                yield from self._all_content(
+                    subnode_,
+                    print_fragments=print_fragments,
+                    print_fragments_from_files=print_fragments_from_files,
+                    level_stack=level_stack + (current_number,),
+                )
+
+        elif isinstance(node, FragmentFromFile):
+            if not print_fragments:
+                if print_fragments_from_files:
+                    yield node
+                return
+
+            yield from self._all_content(
+                node.top_section,
+                print_fragments=print_fragments,
+                print_fragments_from_files=print_fragments_from_files,
+                level_stack=level_stack,
+            )
+
+        else:
+            raise NotImplementedError
 
     @staticmethod
     def specific_node_with_normal_levels(node):

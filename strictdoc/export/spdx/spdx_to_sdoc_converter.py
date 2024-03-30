@@ -40,7 +40,6 @@ class SPDXToSDocConverter:
             config=None,
             view=None,
             grammar=None,
-            bibliography=None,
             free_texts=[],
             section_contents=[],
         )

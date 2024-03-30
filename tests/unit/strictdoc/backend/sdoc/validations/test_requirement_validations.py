@@ -139,7 +139,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: True
   - TITLE: REFS
-    TYPE: Reference(BibReference)
+    TYPE: Reference(ChildReqReference)
     REQUIRED: False
   - TITLE: STATEMENT
     TYPE: String
@@ -153,9 +153,6 @@ UID: ID-002
 REFS:
 - TYPE: Parent
   VALUE: ID-001
-- TYPE: BibTex
-  FORMAT: BibTex
-  VALUE: @book{hawking1989brief, title={A Brief History of Time: From the Big Bang to Black Holes}, author={Hawking, Stephen}, isbn={9780553176988}, year={1989}, publisher={Bantam Books} }
 """.lstrip()  # noqa: E501
 
     reader = SDReader()

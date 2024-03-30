@@ -120,7 +120,13 @@ class ExcelToSDocConverter:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
         document = SDocDocument(
-            None, document_title, document_config, None, None, None, [], []
+            mid=None,
+            title=document_title,
+            config=document_config,
+            view=None,
+            grammar=None,
+            free_texts=[],
+            section_contents=[],
         )
 
         fields = list(

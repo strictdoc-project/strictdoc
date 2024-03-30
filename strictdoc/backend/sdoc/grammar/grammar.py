@@ -37,17 +37,8 @@ SDocDocument[noskipws]:
   (config = DocumentConfig)?
   (view = DocumentView)?
   ('\n' grammar = DocumentGrammar)?
-  ('\n' bibliography = DocumentBibliography)?
   free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
-;
-
-DocumentBibliography[noskipws]:
-  '[BIBLIOGRAPHY]' '\n'
-  ( 'BIBFILES:' '\n'
-    bib_files *= BibFileEntry )?
-  ( 'ENTRIES:' '\n'
-    bib_entries += BibEntry )?
 ;
 
 DocumentConfig[noskipws]:

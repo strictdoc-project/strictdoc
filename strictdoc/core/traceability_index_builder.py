@@ -609,9 +609,6 @@ class TraceabilityIndexBuilder:
                                 lhs_node=document.reserved_mid,
                                 rhs_node=child_requirement.document.reserved_mid,
                             )
-                    elif reference.ref_type == ReferenceType.BIB_REF:
-                        # Explicitly nothing.
-                        pass
                     else:
                         raise AssertionError(reference.ref_type)
 

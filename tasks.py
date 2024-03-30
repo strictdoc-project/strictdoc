@@ -699,15 +699,6 @@ def release(context, test_pypi=False, username=None, password=None):
 def release_pyinstaller(context):
     path_to_pyi_dist = "/tmp/strictdoc"
 
-    # The --additional-hooks-dir is a workaround against the following error
-    # that is produced by pybibtex:
-    # """
-    # pkg_resources.DistributionNotFound: The 'six' distribution was not found
-    # and is required by the application.
-    # """
-    # Solution found here:
-    # https://stackoverflow.com/a/64473931/598057
-    #
     # The --hidden-import strictdoc.server.app flag is needed because without
     # it, the following is produced:
     # ERROR: Error loading ASGI app. Could not import
@@ -798,7 +789,6 @@ def nuitka(context):
             --static-libpython=no
             --standalone
             --include-module=textx
-            --include-module=pybtex.database.input.bibtex
             --include-module=strictdoc.server.app
             --include-module=docutils
             --include-module=docutils.readers.standalone

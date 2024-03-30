@@ -78,15 +78,6 @@ dependencies = [
     # SPDX
     "spdx-tools",
 
-    # Bibtex
-    "pybtex >= 0.23.0, == 0.*",
-    # Bibtex fails with:
-    # ModuleNotFoundError: No module named 'pkg_resources'
-    # because pkg_resources has been deprecated.
-    # Installing setuptools fixes the issue for now, see
-    # https://bitbucket.org/pybtex-devs/pybtex/issues/169
-    "setuptools",
-
     # Web server dependencies
     "fastapi >= 0.83.0",
     # FastAPI: To receive uploaded files and/or form data, first install python-multipart.

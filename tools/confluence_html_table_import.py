@@ -44,7 +44,6 @@ class ConfluenceHTMLTableImport:
             config=None,
             grammar=None,
             view=None,
-            bibliography=None,
             free_texts=[],
             section_contents=[],
         )

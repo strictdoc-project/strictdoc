@@ -81,19 +81,6 @@
                       {%- endfor %}
                     </ul>
                   {%- endif %}
-                  {%- if requirement.has_requirement_references("BibRef") %}
-                    External:
-                    <ul class="requirement__link">
-                      {%- for bib_ref in requirement.get_requirement_references("BibRef") %}
-                        <li>
-                          <span class="requirement__link-external">
-                            {{ bib_ref.bib_entry.ref_cite if bib_ref.bib_entry.ref_cite else "" }}
-                            {%- if bib_ref.bib_entry.ref_detail -%}: {{ bib_ref.bib_entry.ref_detail }}{%- endif %}
-                          </span>
-                        </li>
-                      {%- endfor %}
-                    </ul>
-                  {%- endif %}
                   {%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
                     {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
                     {%- if requirement_file_links %}

@@ -60,7 +60,13 @@ def test_02_mutating_with_a_field():
 def test_04_meta_multilines_not_nones():
     document_config = DocumentConfig.default_config(None)
     document = SDocDocument(
-        None, "Test Doc", document_config, None, None, None, [], []
+        mid=None,
+        title="Test Doc",
+        config=document_config,
+        view=None,
+        grammar=None,
+        free_texts=[],
+        section_contents=[],
     )
     grammar: DocumentGrammar = DocumentGrammar.create_default(document)
 

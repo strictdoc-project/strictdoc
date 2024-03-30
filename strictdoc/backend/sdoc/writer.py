@@ -5,9 +5,6 @@ from typing import Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.document_bibliography import (
-    DocumentBibliography,
-)
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -15,7 +12,6 @@ from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import CompositeRequirement, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
-    BibReference,
     ChildReqReference,
     FileReference,
     ParentReqReference,
@@ -23,7 +19,6 @@ from strictdoc.backend.sdoc.models.reference import (
 )
 from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
-    BibEntry,
     FileEntry,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldReference,
@@ -236,8 +231,6 @@ class SDWriter:
                         output += (
                             f"    ROLE: {element_relation.relation_role}\n"
                         )
-
-        output += SDWriter._print_bibliography(document.bibliography)
 
         for free_text in document.free_texts:
             output += "\n"
@@ -483,48 +476,6 @@ class SDWriter:
         return output
 
     @staticmethod
-    def _print_bibliography(doc_bibliography: DocumentBibliography) -> str:
-        output = ""
-        if doc_bibliography:
-            assert isinstance(doc_bibliography, DocumentBibliography)
-            output = "\n[BIBLIOGRAPHY]\n"
-            if doc_bibliography.bib_files:
-                output += "BIBFILES:\n"
-                for file_entry in doc_bibliography.bib_files:
-                    output += "- "
-                    if file_entry.g_file_format:
-                        output += "FORMAT: "
-                        output += file_entry.g_file_format
-                        output += "\n  "
-                    output += "VALUE: "
-                    output += file_entry.g_file_path
-                    output += "\n"
-            if doc_bibliography.bib_entries:
-                output += "ENTRIES:\n"
-                bib_entry: BibEntry
-                for bib_entry in doc_bibliography.bib_entries:
-                    output += SDWriter._print_bib_entry(True, bib_entry)
-
-        return output
-
-    @staticmethod
-    def _print_bib_entry(row_separator, bib_entry: BibEntry) -> str:
-        output = ""
-        if row_separator:
-            output += "- "
-        else:
-            output += "  "
-        if bib_entry.bib_format:
-            output += "FORMAT: "
-            output += bib_entry.bib_format
-            output += "\n  "
-        output += "VALUE: "
-        output += bib_entry.bib_value
-        output += "\n"
-
-        return output
-
-    @staticmethod
     def _print_file_entry(row_separator, file_entry: FileEntry) -> str:
         output = ""
         if row_separator:
@@ -583,15 +534,7 @@ class SDWriter:
             output += reference.ref_type
             output += "\n"
 
-            if isinstance(reference, BibReference):
-                ref: BibReference = reference
-                output += "  FORMAT: "
-                output += ref.bib_entry.bib_format
-                output += "\n"
-                output += "  VALUE: "
-                output += ref.bib_entry.bib_value
-                output += "\n"
-            elif isinstance(reference, FileReference):
+            if isinstance(reference, FileReference):
                 ref: FileReference = reference
                 file_format = ref.get_file_format()
                 if file_format:

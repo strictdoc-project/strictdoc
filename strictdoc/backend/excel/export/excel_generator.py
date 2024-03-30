@@ -9,7 +9,6 @@ from xlsxwriter.worksheet import Worksheet
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
-    BibReference,
     FileReference,
     ParentReqReference,
 )
@@ -162,13 +161,6 @@ class ExcelGenerator:
                                             ref.ref_type
                                             + ": "
                                             + ref.get_posix_path()
-                                            + "\n"
-                                        )
-                                    elif isinstance(ref, BibReference):
-                                        value += (
-                                            ref.ref_type
-                                            + ": "
-                                            + ref.bib_entry.bib_value
                                             + "\n"
                                         )
                             else:

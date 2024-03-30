@@ -7,7 +7,6 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldReference,
     GrammarElementFieldString,
-    GrammarElementRelationBibtex,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
@@ -26,7 +25,6 @@ def create_default_relations(
         GrammarElementRelationParent,
         GrammarElementRelationChild,
         GrammarElementRelationFile,
-        GrammarElementRelationBibtex,
     ]
 ]:
     return [
@@ -59,7 +57,6 @@ class GrammarElement:
                 GrammarElementRelationParent,
                 GrammarElementRelationChild,
                 GrammarElementRelationFile,
-                GrammarElementRelationBibtex,
             ]
         ] = (
             relations

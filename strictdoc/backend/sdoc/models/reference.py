@@ -1,7 +1,6 @@
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.type_system import (
-    BibEntry,
     FileEntry,
     ReferenceType,
 )
@@ -60,13 +59,4 @@ class ChildReqReference(Reference):
         self.role: Optional[str] = (
             role if role is not None and len(role) > 0 else None
         )
-        self.mid = MID.create()
-
-
-@auto_described
-class BibReference(Reference):
-    def __init__(self, parent, bib_format: Optional[str], bib_value: str):
-        super().__init__(ReferenceType.BIB_REF, parent)
-        self.bib_entry = BibEntry(self, bib_format, bib_value)
-        # TODO Add bib_entry into Parent-Root Document.Bibliography
         self.mid = MID.create()

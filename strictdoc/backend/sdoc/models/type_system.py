@@ -1,7 +1,5 @@
 from typing import List, Optional, Tuple, Union
 
-from pybtex.database import Entry
-
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
 
@@ -40,7 +38,6 @@ class GrammarReferenceType:
     PARENT_REQ_REFERENCE = "ParentReqReference"
     CHILD_REQ_REFERENCE = "ChildReqReference"
     FILE_REFERENCE = "FileReference"
-    BIB_REFERENCE = "BibReference"
 
 
 @auto_described
@@ -82,89 +79,19 @@ class FileEntry:
 
 
 class FileEntryFormat:
-    BIBTEX = "BibTex"
     SOURCECODE = "Sourcecode"
     PYTHON = "Python"
-
-
-@auto_described
-class BibFileEntry(FileEntry):
-    def __init__(self, parent, file_path: str):
-        super().__init__(
-            parent, FileEntryFormat.BIBTEX, file_path, g_line_range=None
-        )
-
-
-class BibEntryFormat:
-    STRING = "String"
-    BIBTEX = "BibTex"
-    CITATION = "Citation"
-
-
-@auto_described
-class BibEntry:
-    def __init__(self, parent, bib_format: Optional[str], bib_value: str):
-        self.parent = parent
-        self.bib_format = bib_format or BibEntryFormat.STRING
-        self.bib_value = bib_value
-        self.ref_cite = None
-        self.ref_detail = None
-        self.bibtex_entry = None
-
-        if self.bib_format == BibEntryFormat.STRING:
-            # <CitationKey>, <Entry details>
-            # Note: A STRING entry is converted in a BibTex @misc entry type
-            # where the details are put in the Entries "note" field.
-            # An empty details field is treated as a Citation!
-            cite, detail = (
-                bib_value.split(",", 1) if "," in bib_value else (bib_value, "")
-            )
-            self.ref_cite = cite.strip()
-            self.ref_detail = (
-                detail.strip()
-                if (isinstance(detail, str) and len(detail) > 0)
-                else None
-            )
-            if self.ref_detail:
-                self.bibtex_entry = Entry(
-                    "misc", fields={"note": self.ref_detail}
-                )
-                self.bibtex_entry.key = self.ref_cite
-            # TODO In case of a Citation, Verify/Reference the cited BibEntry
-
-        elif self.bib_format == BibEntryFormat.BIBTEX:
-            # @<BibTex entry type>{<CitationKey>, <BibTex key-value pairs>}
-            self.bibtex_entry = Entry.from_string(bib_value, "bibtex")
-            self.ref_cite = self.bibtex_entry.key
-
-        elif self.bib_format == BibEntryFormat.CITATION:
-            # <CitationKey>[, <Reference details>]
-            # Ref.Details may include additional info about the subsection,
-            # paragraph, page(s), etc. to be referenced, not already included
-            # in the cited BibTex entry
-            cite, detail = (
-                bib_value.split(",", 1) if "," in bib_value else (bib_value, "")
-            )
-            self.ref_cite = cite.strip()
-            self.ref_detail = (
-                detail.strip()
-                if (isinstance(detail, str) and len(detail) > 0)
-                else None
-            )
-            # TODO Verify/Reference the cited BibEntry
 
 
 class ReferenceType:
     PARENT = "Parent"
     CHILD = "Child"
     FILE = "File"
-    BIB_REF = "BibTex"
 
     GRAMMAR_REFERENCE_TYPE_MAP = {
         PARENT: GrammarReferenceType.PARENT_REQ_REFERENCE,
         CHILD: GrammarReferenceType.CHILD_REQ_REFERENCE,
         FILE: GrammarReferenceType.FILE_REFERENCE,
-        BIB_REF: GrammarReferenceType.BIB_REFERENCE,
     }
 
 
@@ -303,16 +230,6 @@ class GrammarElementRelationFile:
 
 
 @auto_described
-class GrammarElementRelationBibtex:
-    def __init__(self, parent, relation_type: str):
-        assert relation_type == "BibTex"
-        self.parent = parent
-        self.relation_type = relation_type
-        self.relation_role: Optional[str] = None
-        self.mid: MID = MID.create()
-
-
-@auto_described
 class GrammarElementFieldReference(GrammarElementField):
     def __init__(self, parent, title: str, types: List[str], required: str):
         super().__init__()
@@ -329,7 +246,6 @@ class GrammarElementFieldReference(GrammarElementField):
             GrammarElementRelationParent,
             GrammarElementRelationChild,
             GrammarElementRelationFile,
-            GrammarElementRelationBibtex,
         ]
     ]:
         relation_types: List[
@@ -337,7 +253,6 @@ class GrammarElementFieldReference(GrammarElementField):
                 GrammarElementRelationParent,
                 GrammarElementRelationChild,
                 GrammarElementRelationFile,
-                GrammarElementRelationBibtex,
             ]
         ] = []
 
@@ -359,11 +274,6 @@ class GrammarElementFieldReference(GrammarElementField):
             if ref_type == "FileReference":
                 relation_types.append(
                     GrammarElementRelationFile(self.parent, "File")
-                )
-                continue
-            if ref_type == "BibReference":
-                relation_types.append(
-                    GrammarElementRelationBibtex(self.parent, "BibTex")
                 )
                 continue
             raise NotImplementedError(ref_type)

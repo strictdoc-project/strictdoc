@@ -9,7 +9,7 @@ from strictdoc.backend.sdoc.models.document_bibliography import (
     DocumentBibliography,
 )
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
-from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
+from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -264,9 +264,9 @@ class SDWriter:
         for content_node in document_iterator.all_content(
             print_fragments=False, print_fragments_from_files=True
         ):
-            if isinstance(content_node, FragmentFromFile):
-                document_from_file: FragmentFromFile = assert_cast(
-                    content_node, FragmentFromFile
+            if isinstance(content_node, DocumentFromFile):
+                document_from_file: DocumentFromFile = assert_cast(
+                    content_node, DocumentFromFile
                 )
                 output += "\n"
                 output += self._print_document_from_file(document_from_file)
@@ -310,8 +310,8 @@ class SDWriter:
 
         return output
 
-    def _print_document_from_file(self, document_from_file: FragmentFromFile):
-        assert isinstance(document_from_file, FragmentFromFile)
+    def _print_document_from_file(self, document_from_file: DocumentFromFile):
+        assert isinstance(document_from_file, DocumentFromFile)
         output = ""
         output += "[DOCUMENT_FROM_FILE]"
         output += "\n"

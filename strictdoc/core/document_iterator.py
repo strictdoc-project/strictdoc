@@ -1,7 +1,7 @@
 from typing import Optional, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
+from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.node import (
     CompositeRequirement,
     SDocNode,
@@ -148,7 +148,7 @@ class DocumentCachingIterator:
                     or subnode_.ng_resolved_custom_level is not None,
                 )
 
-        elif isinstance(node, FragmentFromFile):
+        elif isinstance(node, DocumentFromFile):
             if not print_fragments:
                 if print_fragments_from_files:
                     yield node

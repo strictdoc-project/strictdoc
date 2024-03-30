@@ -8,7 +8,7 @@ from textx import TextXSyntaxError
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
+from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -659,12 +659,12 @@ class TraceabilityIndexBuilder:
         # @sdoc[SDOC-SRS-109]
         unique_document_from_file_occurences: Set[str] = set()
         for document_ in document_tree.document_list:
-            document_from_file_: FragmentFromFile
+            document_from_file_: DocumentFromFile
             for document_from_file_ in document_.fragments_from_files:
                 traceability_index.contains_included_documents = True
 
                 assert isinstance(
-                    document_from_file_, FragmentFromFile
+                    document_from_file_, DocumentFromFile
                 ), document_from_file_
                 if (
                     document_from_file_.resolved_full_path_to_document_file

@@ -7,7 +7,7 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
-from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
+from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
@@ -62,7 +62,7 @@ class SDocParsingProcessor:
             "GrammarElement": self.process_document_grammar_element,
             "DocumentView": self.process_document_view,
             "SDocSection": self.process_section,
-            "FragmentFromFile": self.process_document_from_file,
+            "DocumentFromFile": self.process_document_from_file,
             "CompositeRequirement": self.process_composite_requirement,
             "SDocNode": self.process_requirement,
             "FreeText": self.process_free_text,
@@ -133,9 +133,9 @@ class SDocParsingProcessor:
                     f"Section: {section}"
                 )
 
-    def process_document_from_file(self, document_from_file: FragmentFromFile):
+    def process_document_from_file(self, document_from_file: DocumentFromFile):
         assert isinstance(
-            document_from_file, FragmentFromFile
+            document_from_file, DocumentFromFile
         ), document_from_file
 
         # Windows paths are backslashes, so using abspath in addition.

@@ -6,7 +6,7 @@ from strictdoc.helpers.auto_described import auto_described
 
 
 @auto_described
-class FragmentFromFile:
+class DocumentFromFile:
     def __init__(
         self,
         parent,
@@ -31,7 +31,7 @@ class FragmentFromFile:
         task_list = list(self.section_contents)
         while len(task_list) > 0:
             section_or_requirement = task_list.pop(0)
-            if isinstance(section_or_requirement, FragmentFromFile):
+            if isinstance(section_or_requirement, DocumentFromFile):
                 if section_or_requirement.has_any_requirements():
                     return True
             if section_or_requirement.is_requirement:

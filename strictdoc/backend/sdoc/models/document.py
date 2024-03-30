@@ -88,13 +88,13 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
 
     def has_any_requirements(self) -> bool:
         from strictdoc.backend.sdoc.models.document_from_file import (
-            FragmentFromFile,
+            DocumentFromFile,
         )
 
         task_list = list(self.section_contents)
         while len(task_list) > 0:
             section_or_requirement = task_list.pop(0)
-            if isinstance(section_or_requirement, FragmentFromFile):
+            if isinstance(section_or_requirement, DocumentFromFile):
                 if section_or_requirement.has_any_requirements():
                     return True
                 continue

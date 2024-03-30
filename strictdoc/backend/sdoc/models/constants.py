@@ -4,7 +4,7 @@ from strictdoc.backend.sdoc.models.document_bibliography import (
     DocumentBibliography,
 )
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
-from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
+from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
@@ -47,7 +47,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 
 SECTION_MODELS = [
     SDocSection,
-    FragmentFromFile,
+    DocumentFromFile,
     SDocNode,
     SDocNodeField,
     CompositeRequirement,

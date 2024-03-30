@@ -1,8 +1,5 @@
 from typing import List, Optional
 
-from strictdoc.backend.sdoc.models.document_bibliography import (
-    DocumentBibliography,
-)
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DocumentView
@@ -21,7 +18,6 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
         config: Optional[DocumentConfig],
         view: Optional[DocumentView],
         grammar: Optional[DocumentGrammar],
-        bibliography: Optional[DocumentBibliography],
         free_texts,
         section_contents,
     ):
@@ -38,7 +34,6 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
             view if view is not None else DocumentView.create_default(self)
         )
         self.grammar: Optional[DocumentGrammar] = grammar
-        self.bibliography: Optional[DocumentBibliography] = bibliography
         self.free_texts: List[FreeText] = free_texts
         self.section_contents = section_contents
 

@@ -113,14 +113,13 @@ class DocumentBuilder:
         free_texts = []
         section_contents = []
         document = SDocDocument(
-            None,
-            "Test Document",
-            config,
-            None,
-            None,
-            None,
-            free_texts,
-            section_contents,
+            mid=None,
+            title="Test Document",
+            config=config,
+            view=None,
+            grammar=None,
+            free_texts=free_texts,
+            section_contents=section_contents,
         )
         document.grammar = DocumentGrammar.create_default(document)
         document.meta = DocumentMeta(

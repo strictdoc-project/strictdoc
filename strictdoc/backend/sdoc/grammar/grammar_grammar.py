@@ -24,7 +24,7 @@ GrammarElement[noskipws]:
 ;
 
 GrammarElementRelation[noskipws]:
-  (GrammarElementRelationParent | GrammarElementRelationChild | GrammarElementRelationFile | GrammarElementRelationBibtex)
+  (GrammarElementRelationParent | GrammarElementRelationChild | GrammarElementRelationFile)
 ;
 
 GrammarElementRelationParent[noskipws]:
@@ -39,10 +39,6 @@ GrammarElementRelationChild[noskipws]:
 
 GrammarElementRelationFile[noskipws]:
   '  - TYPE: ' relation_type='File' '\n'
-;
-
-GrammarElementRelationBibtex[noskipws]:
-  '  - TYPE: ' relation_type='BibTex' '\n'
 ;
 
 GrammarElementField[noskipws]:
@@ -91,7 +87,7 @@ GrammarElementFieldReference[noskipws]:
 ;
 
 ReferenceType[noskipws]:
-  ('ParentReqReference' | 'ChildReqReference' | 'FileReference' | 'BibReference')
+  ('ParentReqReference' | 'ChildReqReference' | 'FileReference')
 ;
 
 ReferenceTypeXs[noskipws]:

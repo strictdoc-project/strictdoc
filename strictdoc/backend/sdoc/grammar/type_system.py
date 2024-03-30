@@ -36,12 +36,12 @@ RequirementType[noskipws]:
 ;
 
 ReservedKeyword[noskipws]:
-  'DOCUMENT' | 'GRAMMAR' | 'BIBLIOGRAPHY'
+  'DOCUMENT' | 'GRAMMAR'
 ;
 
 Reference[noskipws]:
   // FileReference is an early, experimental feature. Do not use yet.
-  ParentReqReference | ChildReqReference | FileReference | BibReference
+  ParentReqReference | ChildReqReference | FileReference
 ;
 
 ParentReqReference[noskipws]:
@@ -63,11 +63,6 @@ FileReference[noskipws]:
   g_file_entry = FileEntry
 ;
 
-BibFileEntry[noskipws]:
-  '- FORMAT: BibTex\n'
-  '  VALUE: ' file_path = /.*$/ '\n'
-;
-
 FileEntry[noskipws]:
   ('  FORMAT: ' g_file_format = FileEntryFormat '\n')?
    '  VALUE: ' g_file_path = /.*$/ '\n'
@@ -75,21 +70,7 @@ FileEntry[noskipws]:
 ;
 
 FileEntryFormat[noskipws]:
-  'BibTex' | 'Sourcecode' | 'Python' | /[A-Z]+[A-Z_]*/
+  'Sourcecode' | 'Python' | /[A-Z]+[A-Z_]*/
 ;
 
-BibReference[noskipws]:
-  '- TYPE: BibTex' '\n'
- ('  FORMAT: ' bib_format = BibEntryFormat '\n')?
-  '  VALUE: ' bib_value = /.*$/ '\n'
-;
-
-BibEntry[noskipws]:
- ('- FORMAT: ' bib_format = BibEntryFormat '\n')?
-  '  VALUE: ' bib_value = /.*$/ '\n'
-;
-
-BibEntryFormat[noskipws]:
-  'String' | 'BibTex' | 'Citation'
-;
 """

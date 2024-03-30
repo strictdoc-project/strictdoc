@@ -9,7 +9,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: True
   - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference, BibReference)
+    TYPE: Reference(ParentReqReference, FileReference)
     REQUIRED: False
   - TITLE: TITLE
     TYPE: String
@@ -78,15 +78,6 @@ REFS:
   VALUE: REQ-002
 - TYPE: File
   VALUE: src/samplefile.cpp
-- TYPE: BibTex
-  FORMAT: String
-  VALUE: BSI-TR-02102-2, "Cryptographic Mechanisms: Recommandations and Key Lengths: Use of Transport Layer Security (TLS)", Version 2022-1, Section 3.5, https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidelines/TG02102/BSI-TR-02102-2.pdf
-- TYPE: BibTex
-  FORMAT: BibTex
-  VALUE: @techreport{BSI-TR-02102-1:2022:DE, title = {Kryptographische Verfahren: Empfehlungen und Schlüssellängen}, institution = {Bundesamt für Sicherheit in der Informationstechnik}, series = {Kryptographische Verfahren: Empfehlungen und Schlüssellängen}, edition = {2022-1}, year = "2022", month = "2", number = "BSI TR-02102-1", address = "Bonn, DE", type = "Technische Richtlinie", url = "https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR02102/BSI-TR-02102.pdf" }
-- TYPE: BibTex
-  FORMAT: Citation
-  VALUE: RFC-5280, Section 2.3.4
 TITLE: Title #4
 STATEMENT: Statement #4
 PRIORITY: LOW

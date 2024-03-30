@@ -34,7 +34,7 @@
     </script>
   {%- endif -%}
   {# only for deep-trace: #}
-  <script type="text/javascript" src="{{ view_object.render_static_url('pan_with_space.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('zoomable.js') }}"></script>
   {{ super() }}
 {% endblock head_scripts %}
 {% block title %}{{ view_object.document.title }} - {{ view_object.get_page_title() }}{% endblock title %}

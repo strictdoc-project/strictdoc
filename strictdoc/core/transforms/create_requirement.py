@@ -117,7 +117,6 @@ class CreateRequirementTransform:
             document.ng_including_document_reference
         )
 
-        requirement.ng_level = parent.ng_level + 1
         parent.section_contents.insert(insert_to_idx, requirement)
 
         traceability_index.create_requirement(requirement=requirement)

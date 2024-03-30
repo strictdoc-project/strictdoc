@@ -347,7 +347,6 @@ This is a child body part 3
         document.section_contents[0].section_contents[0], CompositeRequirement
     )
     requirement_1 = document.section_contents[0].section_contents[0]
-    assert requirement_1.ng_level == 2
     assert (
         requirement_1.comments[0]
         == "This is a body part 1\nThis is a body part 2\nThis is a body part 3"
@@ -401,7 +400,6 @@ body 1.1.1.1
         document.section_contents[0].section_contents[0], CompositeRequirement
     )
     requirement_1_1 = document.section_contents[0].section_contents[0]
-    assert requirement_1_1.ng_level == 2
     assert requirement_1_1.comments[0] == "body composite 1.1"
 
     assert isinstance(
@@ -411,7 +409,6 @@ body 1.1.1.1
     requirement_1_1_1 = (
         document.section_contents[0].section_contents[0].requirements[0]
     )
-    assert requirement_1_1_1.ng_level == 3
     assert requirement_1_1_1.comments[0] == "body composite 1.1.1"
 
     assert isinstance(
@@ -427,7 +424,6 @@ body 1.1.1.1
         .requirements[0]
         .requirements[0]
     )
-    assert requirement_1_1_1.ng_level == 4
     assert requirement_1_1_1.comments[0] == "body 1.1.1.1"
 
 

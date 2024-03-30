@@ -294,8 +294,6 @@ class CreateSectionCommand:
             document.ng_including_document_reference
         )
 
-        assert parent.ng_level is not None, parent
-        section.ng_level = parent.ng_level + 1
         parent.section_contents.insert(insert_to_idx, section)
 
         traceability_index.create_section(section)

@@ -133,9 +133,6 @@ class SDocParsingProcessor:
                     f"Section: {section}"
                 )
 
-        self._resolve_parents(section)
-        assert section.ng_level > 0
-
     def process_document_from_file(self, document_from_file: FragmentFromFile):
         assert isinstance(
             document_from_file, FragmentFromFile
@@ -165,7 +162,6 @@ class SDocParsingProcessor:
             resolved_path_to_fragment_file
         )
 
-        self._resolve_parents(document_from_file)
         self.parse_context.current_include_parent = document_from_file.parent
         self.parse_context.fragments_from_files.append(document_from_file)
 
@@ -195,20 +191,12 @@ class SDocParsingProcessor:
         composite_requirement.ng_including_document_reference = (
             self.parse_context.context_document_reference
         )
-        if isinstance(composite_requirement.parent, SDocSection):
-            self._resolve_parents(composite_requirement)
-        elif isinstance(composite_requirement.parent, CompositeRequirement):
-            self._resolve_parents(composite_requirement)
-            assert composite_requirement.parent.ng_level
-        elif isinstance(composite_requirement.parent, SDocDocument):
-            composite_requirement.ng_level = 1
-        else:
-            raise NotImplementedError
 
-        # TODO: there is now walking up the parents 2 times
-        # (ng_levels and here).
         cursor = composite_requirement.parent
-        while not self.is_top_level(cursor) and not cursor.ng_has_requirements:
+        while (
+            not isinstance(cursor, SDocDocument)
+            and not cursor.ng_has_requirements
+        ):
             cursor.ng_has_requirements = True
             cursor = cursor.parent
 
@@ -248,19 +236,11 @@ class SDocParsingProcessor:
             self.parse_context.context_document_reference
         )
 
-        if isinstance(requirement.parent, SDocSection):
-            self._resolve_parents(requirement)
-        elif isinstance(requirement.parent, CompositeRequirement):
-            self._resolve_parents(requirement)
-        elif isinstance(requirement.parent, SDocDocument):
-            requirement.ng_level = 1
-        else:
-            raise NotImplementedError
-
-        # TODO: there is now walking up the parents 2 times (ng_levels
-        # and here).
         cursor = requirement.parent
-        while not self.is_top_level(cursor) and not cursor.ng_has_requirements:
+        while (
+            not isinstance(cursor, SDocDocument)
+            and not cursor.ng_has_requirements
+        ):
             cursor.ng_has_requirements = True
             cursor = cursor.parent
 
@@ -288,38 +268,4 @@ class SDocParsingProcessor:
         requirement.ng_byte_end = requirement._tx_position_end
 
     def process_free_text(self, free_text):
-        if isinstance(free_text.parent, SDocSection):
-            self._resolve_parents(free_text)
-        elif isinstance(free_text.parent, CompositeRequirement):
-            self._resolve_parents(free_text)
-        elif isinstance(free_text.parent, SDocDocument):
-            free_text.ng_level = 1
-        else:
-            raise NotImplementedError
-
-    @staticmethod
-    def is_top_level(node):
-        return isinstance(node, SDocDocument)
-
-    # During parsing, it is often the case that the node's parents do not have
-    # their levels resolved yet. We go up the parent chain and resolve all of
-    # the parents manually.
-    def _resolve_parents(self, node):
-        parents_to_resolve_level = []
-        cursor = node
-        while cursor.ng_level is None:
-            parents_to_resolve_level.append(cursor)
-            cursor = cursor.parent
-        cursor_level = cursor.ng_level
-
-        section_with_none_level = cursor.ng_resolved_custom_level == "None"
-        for parent_idx, parent in enumerate(reversed(parents_to_resolve_level)):
-            parent.ng_level = cursor_level + parent_idx + 1
-            if isinstance(parent, (SDocSection, CompositeRequirement)):
-                if section_with_none_level:
-                    parent.ng_resolved_custom_level = "None"
-                elif parent.ng_resolved_custom_level == "None":
-                    section_with_none_level = True
-        node.ng_level = node.parent.ng_level + 1
-        if section_with_none_level:
-            node.ng_resolved_custom_level = "None"
+        pass

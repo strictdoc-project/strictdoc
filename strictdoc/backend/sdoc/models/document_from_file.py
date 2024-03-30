@@ -15,7 +15,6 @@ class FragmentFromFile:
         self.parent = parent
         self.file = file
 
-        self.ng_level = None
         self.ng_has_requirements = False
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_included_document_reference: Optional[DocumentReference] = None
@@ -60,7 +59,6 @@ class FragmentFromFile:
             section_contents=self.resolved_document.section_contents,
             root_section=True,
         )
-        top_section.ng_level = self.ng_level
         assert self.ng_included_document_reference is None
         assert self.ng_document_reference is not None
         top_section.ng_document_reference = self.ng_document_reference

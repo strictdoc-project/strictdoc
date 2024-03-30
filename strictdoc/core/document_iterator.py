@@ -1,5 +1,4 @@
-import collections
-from typing import Tuple
+from typing import Optional, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
@@ -44,6 +43,8 @@ class DocumentCachingIterator:
             root_node,
             print_fragments=print_fragments,
             print_fragments_from_files=print_fragments_from_files,
+            level_stack=(),
+            custom_level=not root_node.config.auto_levels,
         )
 
     def _all_content(
@@ -51,18 +52,20 @@ class DocumentCachingIterator:
         node,
         print_fragments: bool = False,
         print_fragments_from_files: bool = False,
-        level_stack: Tuple = (),
+        level_stack: Optional[Tuple] = (),
+        custom_level: bool = False,
     ):
         def get_level_string_(node_) -> str:
-            return (
-                ""
-                if node_.ng_resolved_custom_level == "None"
-                else (
-                    node_.ng_resolved_custom_level
-                    if node_.ng_resolved_custom_level is not None
-                    else ".".join(map(str, level_stack))
-                )
-            )
+            if node_.ng_resolved_custom_level == "None":
+                return ""
+
+            if node_.ng_resolved_custom_level is not None:
+                return node_.ng_resolved_custom_level
+
+            if custom_level:
+                return ""
+
+            return ".".join(map(str, level_stack))
 
         if isinstance(node, SDocSection):
             # If node is not whitelisted, we ignore it. Also, note that due to
@@ -73,6 +76,7 @@ class DocumentCachingIterator:
 
             # FIXME: This will be changed.
             node.context.title_number_string = get_level_string_(node)
+            node.ng_level = len(level_stack)
 
             yield node
 
@@ -86,6 +90,8 @@ class DocumentCachingIterator:
                     print_fragments=print_fragments,
                     print_fragments_from_files=print_fragments_from_files,
                     level_stack=level_stack + (current_number,),
+                    custom_level=custom_level
+                    or subnode_.ng_resolved_custom_level is not None,
                 )
 
         elif isinstance(node, CompositeRequirement):
@@ -97,6 +103,7 @@ class DocumentCachingIterator:
 
             # FIXME: This will be changed.
             node.context.title_number_string = get_level_string_(node)
+            node.ng_level = len(level_stack)
 
             yield node
 
@@ -110,6 +117,8 @@ class DocumentCachingIterator:
                     print_fragments=print_fragments,
                     print_fragments_from_files=print_fragments_from_files,
                     level_stack=level_stack + (current_number,),
+                    custom_level=custom_level
+                    or subnode_.ng_resolved_custom_level is not None,
                 )
 
         elif isinstance(node, SDocNode):
@@ -121,6 +130,7 @@ class DocumentCachingIterator:
 
             # FIXME: This will be changed.
             node.context.title_number_string = get_level_string_(node)
+            node.ng_level = len(level_stack)
 
             yield node
 
@@ -134,6 +144,8 @@ class DocumentCachingIterator:
                     print_fragments=print_fragments,
                     print_fragments_from_files=print_fragments_from_files,
                     level_stack=level_stack + (current_number,),
+                    custom_level=custom_level
+                    or subnode_.ng_resolved_custom_level is not None,
                 )
 
         elif isinstance(node, FragmentFromFile):
@@ -151,36 +163,3 @@ class DocumentCachingIterator:
 
         else:
             raise NotImplementedError
-
-    @staticmethod
-    def specific_node_with_normal_levels(node):
-        if isinstance(node, SDocSection):
-            initial_content = node.section_contents
-        elif isinstance(node, CompositeRequirement):
-            initial_content = node.requirements
-        else:
-            return
-
-        task_list = collections.deque(initial_content)
-
-        while True:
-            if not task_list:
-                break
-
-            current = task_list.popleft()
-
-            if isinstance(
-                current, (SDocSection, SDocNode, CompositeRequirement)
-            ):
-                # We are not interested in the nodes without level in this
-                # iterator.
-                if current.ng_resolved_custom_level == "None":
-                    continue
-
-            yield current
-
-            if isinstance(current, SDocSection):
-                task_list.extendleft(reversed(current.section_contents))
-
-            elif isinstance(current, CompositeRequirement):
-                task_list.extendleft(reversed(current.requirements))

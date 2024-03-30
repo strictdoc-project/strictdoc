@@ -58,7 +58,6 @@ class SPDXToSDocConverter:
             sdoc_document=document,
             sdoc_parent=document,
         )
-        document_requirement.ng_level = document.ng_level + 1
         document.section_contents.append(document_requirement)
 
         """
@@ -69,7 +68,6 @@ class SPDXToSDocConverter:
             sdoc_document=document,
             sdoc_parent=document,
         )
-        package_requirement.ng_level = document.ng_level + 1
         document.section_contents.append(package_requirement)
 
         """
@@ -86,7 +84,6 @@ class SPDXToSDocConverter:
             free_texts=[],
             section_contents=[],
         )
-        file_section.ng_level = document.ng_level + 1
         document.section_contents.append(file_section)
 
         for file_ in spdx_container.files:
@@ -111,7 +108,6 @@ class SPDXToSDocConverter:
             free_texts=[],
             section_contents=[],
         )
-        snippets_section.ng_level = document.ng_level + 1
         document.section_contents.append(snippets_section)
 
         for snippet_ in spdx_container.snippets:
@@ -222,7 +218,6 @@ class SPDXToSDocConverter:
         requirement.set_field_value(
             field_name="STATEMENT", form_field_index=0, value=document.summary
         )
-        requirement.ng_level = sdoc_parent.ng_level + 1
         return requirement
 
     @staticmethod
@@ -262,7 +257,6 @@ class SPDXToSDocConverter:
             requirement.set_field_value(
                 field_name="SUMMARY", form_field_index=0, value=package.summary
             )
-        requirement.ng_level = sdoc_parent.ng_level + 1
         return requirement
 
     @staticmethod
@@ -299,7 +293,6 @@ class SPDXToSDocConverter:
         requirement.set_field_value(
             field_name="TITLE", form_field_index=0, value=file.name
         )
-        requirement.ng_level = sdoc_parent.ng_level + 1
 
         requirement.references = [
             FileReference(
@@ -386,7 +379,6 @@ class SPDXToSDocConverter:
             )
         ]
 
-        requirement.ng_level = sdoc_parent.ng_level + 1
         return requirement
 
     @staticmethod

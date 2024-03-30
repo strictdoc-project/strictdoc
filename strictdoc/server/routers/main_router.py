@@ -70,7 +70,7 @@ from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_config_form_object import (
     DocumentConfigFormObject,
 )
-from strictdoc.export.html.form_objects.document_grammar_form_object import (
+from strictdoc.export.html.form_objects.grammar_element_form_object import (
     GrammarElementFormObject,
 )
 from strictdoc.export.html.form_objects.grammar_form_object import (

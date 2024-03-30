@@ -11,7 +11,7 @@ from strictdoc.backend.sdoc.models.type_system import GrammarElementField
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
-from strictdoc.export.html.form_objects.document_grammar_form_object import (
+from strictdoc.export.html.form_objects.grammar_element_form_object import (
     GrammarElementFormObject,
 )
 from strictdoc.helpers.cast import assert_cast

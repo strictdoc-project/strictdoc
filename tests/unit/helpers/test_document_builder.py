@@ -41,7 +41,6 @@ class DocumentBuilder:
             comments=comments,
             tags=tags,
         )
-        requirement.ng_level = 1
         self.requirements.append(requirement)
         self.document.section_contents.append(requirement)
         requirement.ng_document_reference = DocumentReference()

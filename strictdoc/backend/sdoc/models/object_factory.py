@@ -196,5 +196,4 @@ class SDocObjectFactory:
             comments=None,
         )
 
-        requirement.ng_level = level
         return requirement

@@ -136,10 +136,10 @@ SDocSection[noskipws]:
 ;
 
 SectionOrRequirement[noskipws]:
-  '\n' (SDocSection | SDocNode | CompositeRequirement | FragmentFromFile)
+  '\n' (SDocSection | SDocNode | CompositeRequirement | DocumentFromFile)
 ;
 
-FragmentFromFile[noskipws]:
+DocumentFromFile[noskipws]:
   '[DOCUMENT_FROM_FILE]' '\n'
   'FILE: ' file = /.+$/ '\n'
 ;

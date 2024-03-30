@@ -78,7 +78,6 @@ class ConfluenceHTMLTableImport:
                     tags=None,
                     comments=[comment] if len(comment) else None,
                 )
-                sreq.ng_level = 2
                 section.section_contents.append(sreq)
 
         return document

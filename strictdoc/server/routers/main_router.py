@@ -1497,15 +1497,6 @@ def create_main_router(
         else:
             raise NotImplementedError
 
-        # Now we have to update all ng_levels for the moved node because they
-        # now depend on the level of the new parent node (target node).
-        iterator = export_action.traceability_index.get_document_iterator(
-            moved_node.document
-        )
-        moved_node.ng_level = moved_node.parent.ng_level + 1
-        for node in iterator.specific_node_with_normal_levels(moved_node):
-            node.ng_level = node.parent.ng_level + 1
-
         # Saving new content to .SDoc file.
         SDWriter().write_to_file(moved_node.document)
 

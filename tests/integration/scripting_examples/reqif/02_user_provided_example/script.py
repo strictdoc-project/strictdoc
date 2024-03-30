@@ -246,7 +246,6 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     spec_object=spec_object,
                     parent_section=current_section,
                     reqif_bundle=reqif_bundle,
-                    level=current_hierarchy.level,
                 )
                 current_section.section_contents.append(requirement)
             elif AUREON_ReqIFToSDocConverter.is_spec_object_definition(
@@ -368,7 +367,7 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
 
     @staticmethod
     def create_section_from_spec_object(
-        spec_object: ReqIFSpecObject, level, reqif_bundle: ReqIFBundle
+        spec_object: ReqIFSpecObject, _, reqif_bundle: ReqIFBundle
     ) -> SDocSection:
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
@@ -381,7 +380,6 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         else:
             raise NotImplementedError
 
-        section_title = None
         for attribute in spec_object.attributes:
             spec_object_type_ref = attribute.definition_ref
             if spec_object_type_ref == primary_text_attribute.identifier:
@@ -407,7 +405,6 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             free_texts=[],
             section_contents=[],
         )
-        section.ng_level = level
         return section
 
     @staticmethod
@@ -415,7 +412,6 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         spec_object: ReqIFSpecObject,
         parent_section: Union[SDocSection, SDocDocument],
         reqif_bundle: ReqIFBundle,
-        level,
     ) -> SDocNode:
         fields = []
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
@@ -491,7 +487,6 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         requirement = SDocNode(
             parent=parent_section, requirement_type="REQUIREMENT", mid=None, fields=fields
         )
-        requirement.ng_level = level
 
         if foreign_key_id_or_none is not None:
             spec_object_parents = reqif_bundle.get_spec_object_parents(

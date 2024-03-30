@@ -219,6 +219,5 @@ class ExcelToSDocConverter:
             mid=None,
             fields=list(template_requirement.enumerate_fields()),
         )
-        requirement.ng_level = 1
 
         return requirement

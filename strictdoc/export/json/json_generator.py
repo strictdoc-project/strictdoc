@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
-from strictdoc.backend.sdoc.models.document_from_file import FragmentFromFile
+from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -243,7 +243,7 @@ class JSONGenerator:
                 )
                 node_dict[JSONKey.NODES].append(subnode_dict)
 
-        elif isinstance(node, FragmentFromFile):
+        elif isinstance(node, DocumentFromFile):
             subnode_dict = cls._write_node(
                 node.top_section, document, level_stack
             )

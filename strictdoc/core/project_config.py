@@ -115,6 +115,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.export_output_dir: str = "output"
         self.export_output_html_root: Optional[str] = None
         self.export_formats: Optional[List[str]] = None
+        self.export_included_documents: bool = False
         self.filter_requirements: Optional[str] = None
         self.filter_sections: Optional[str] = None
 
@@ -173,6 +174,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.export_output_dir = export_config.output_dir
         self.export_output_html_root = export_config.output_html_root
         self.export_formats = export_config.formats
+        self.export_included_documents = export_config.included_documents
         self.filter_requirements = export_config.filter_requirements
         self.filter_sections = export_config.filter_sections
         self.excel_export_fields = export_config.fields

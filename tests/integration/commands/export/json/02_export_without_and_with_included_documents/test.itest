@@ -1,0 +1,37 @@
+RUN: %strictdoc export %S --formats=json --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Step 'Export SDoc' took
+
+RUN: cat %S/Output/json/index.json | filecheck %s --check-prefix=CHECK-JSON
+
+CHECK-JSON: "_TOC": "3",
+CHECK-JSON: "TYPE": "SECTION",
+CHECK-JSON: "TITLE": "Dummy Software Requirements Specification #2 FRAGMENT",
+CHECK-JSON: "_TOC": "3.1",
+CHECK-JSON: "TYPE": "REQUIREMENT",
+CHECK-JSON: "UID": "LREQ-3",
+CHECK-JSON: "TITLE": "Dummy low-level requirement #3"
+CHECK-JSON: "STATEMENT": "System ABC shall do 3."
+
+CHECK-JSON-NOT: "_TOC": "1",
+CHECK-JSON-NOT: "TYPE": "REQUIREMENT",
+CHECK-JSON-NOT: "UID": "LREQ-3",
+CHECK-JSON-NOT: "TITLE": "Dummy low-level requirement #3",
+CHECK-JSON-NOT: "STATEMENT": "System ABC shall do 3."
+
+RUN: %strictdoc export %S --formats=json --included-documents --output-dir Output | filecheck %s --dump-input=fail
+RUN: cat %S/Output/json/index.json | filecheck %s --check-prefix=CHECK-JSON-INCLUDED
+
+CHECK-JSON-INCLUDED: "_TOC": "3",
+CHECK-JSON-INCLUDED: "TYPE": "SECTION",
+CHECK-JSON-INCLUDED: "TITLE": "Dummy Software Requirements Specification #2 FRAGMENT",
+CHECK-JSON-INCLUDED: "_TOC": "3.1",
+CHECK-JSON-INCLUDED: "TYPE": "REQUIREMENT",
+CHECK-JSON-INCLUDED: "UID": "LREQ-3",
+CHECK-JSON-INCLUDED: "TITLE": "Dummy low-level requirement #3"
+CHECK-JSON-INCLUDED: "STATEMENT": "System ABC shall do 3."
+
+CHECK-JSON-INCLUDED: "_TOC": "1",
+CHECK-JSON-INCLUDED: "TYPE": "REQUIREMENT",
+CHECK-JSON-INCLUDED: "UID": "LREQ-3",
+CHECK-JSON-INCLUDED: "TITLE": "Dummy low-level requirement #3",
+CHECK-JSON-INCLUDED: "STATEMENT": "System ABC shall do 3."

@@ -148,5 +148,5 @@ class ExportAction:
             )
             Path(output_json_root).mkdir(parents=True, exist_ok=True)
             JSONGenerator().export_tree(
-                self.traceability_index, output_json_root
+                self.traceability_index, self.project_config, output_json_root
             )

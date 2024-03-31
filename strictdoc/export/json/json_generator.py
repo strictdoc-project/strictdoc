@@ -22,6 +22,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldReference,
     RequirementFieldType,
 )
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
 
@@ -41,7 +42,10 @@ class JSONKey:
 
 class JSONGenerator:
     def export_tree(
-        self, traceability_index: TraceabilityIndex, output_json_root: str
+        self,
+        traceability_index: TraceabilityIndex,
+        project_config: ProjectConfig,
+        output_json_root: str,
     ):
         project_tree_dict = {
             "_COMMENT": (
@@ -51,6 +55,10 @@ class JSONGenerator:
             "DOCUMENTS": [],
         }
         for document_ in traceability_index.document_tree.document_list:
+            if not project_config.export_included_documents:
+                if document_.document_is_included():
+                    continue
+
             document_json_dict = self._write_document(document_)
 
             project_tree_dict["DOCUMENTS"].append(document_json_dict)

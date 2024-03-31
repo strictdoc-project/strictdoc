@@ -173,6 +173,14 @@ class CommandParserBuilder:
             help="Enables Mathjax support (only HTML export).",
         )
         command_parser_export.add_argument(
+            "--included-documents",
+            action="store_true",
+            help=(
+                "By default the included documents are not exported. "
+                "This option exports both including and included documents."
+            ),
+        )
+        command_parser_export.add_argument(
             "--reqif-profile",
             type=_check_reqif_profile,
             default=ReqIFProfile.P01_SDOC,

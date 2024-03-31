@@ -212,6 +212,7 @@ The CRUD operations are essential operations of document management. They are at
 [REQUIREMENT]
 MID: 9841bc9a56d740dd9e7988e52339618c
 UID: SDOC-SSS-91
+STATUS: Active
 TITLE: Browsing documentation tree
 STATEMENT: >>>
 The Requirements Tool shall provide browsing of the documentation tree.
@@ -264,6 +265,7 @@ The Requirements Tool shall provide capabilities for document versioning.
 [REQUIREMENT]
 MID: b8d7b22fd8a6478a9a21ecaa60cf0028
 UID: SDOC-SSS-63
+STATUS: Active
 TITLE: Text formatting capabilities
 STATEMENT: >>>
 The Requirements Tool shall provide "rich text" formatting capabilities which includes but not limited to:
@@ -409,7 +411,14 @@ RELATIONS:
 [REQUIREMENT]
 MID: 1ce495a5194044d4a7a3dd030f766c9f
 UID: SDOC-SSS-7
+STATUS: Active
 TITLE: Link requirements together
+STATEMENT: >>>
+The Requirements Tool shall allow bi-directional linking of requirements nodes together using Parent or Child relations.
+<<<
+RATIONALE: >>>
+The requirement ensures a classic capability of a requirement tool: linking requirements together enables bi-directional traceability which helps in understanding how the requirements are related to each other.
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: ZEP-4
@@ -443,9 +452,17 @@ The Requirements Tool shall support the Reverse Parent relationship.
 [REQUIREMENT]
 MID: 3348caaed8d44be0928cc6f3c7414094
 UID: SDOC-SSS-89
+STATUS: Active
 TITLE: Unique identification of requirements
 STATEMENT: >>>
 The Requirements Tool shall provide means for unique identification of every requirement.
+<<<
+RATIONALE: >>>
+The requirement ensures a classic capability of a requirement tool:
+
+1) The unique identifiers help the users in identifying the requirements, both when reading a requirements document and when discussing requirements.
+
+2) The unique identifiers are used for linking requirements together. The requirements tool stores the identifiers in a global database and can resolve the links, following the unique identifiers they point to.
 <<<
 
 [REQUIREMENT]
@@ -481,6 +498,7 @@ TITLE: Tool configurability
 [REQUIREMENT]
 MID: 4550038552894ef69b85b281cff60c60
 UID: SDOC-SSS-92
+STATUS: Active
 TITLE: Project-level configuration
 STATEMENT: >>>
 The Requirements Tool shall provide a solution for configuring the project-level options.
@@ -490,10 +508,14 @@ NOTE: Examples of project-level options:
 - Project title.
 - Global settings for the Requirements Tool itself.
 <<<
+RATIONALE: >>>
+The requirement ensures the configurability of the tool for a specific project.
+<<<
 
 [REQUIREMENT]
 MID: 4550b38552894ef69b85b281cff60360
 UID: SDOC-SSS-93
+STATUS: Active
 TITLE: Document-level configuration
 STATEMENT: >>>
 The Requirements Tool shall provide a solution for configuring the document-level options.
@@ -503,6 +525,9 @@ NOTE: Examples of document-level options:
 - Document title
 - Requirement prefix.
 - Other options local to the content and the presentation of a given document.
+<<<
+RATIONALE: >>>
+Sometimes, the project-level configuration can be not fine-grained enough. The requirement ensures that the requirements tool allows a configuration on a document level.
 <<<
 
 [/SECTION]
@@ -532,6 +557,27 @@ STATUS: Active
 TITLE: Support large project trees
 STATEMENT: >>>
 The Requirements Tool shall be able to handle documentation packages of at least 100 documents without significant performance degradation.
+<<<
+
+[/SECTION]
+
+[SECTION]
+MID: d1a483f3e321414b83bb4a39b1283293
+TITLE: Data integrity
+
+[REQUIREMENT]
+MID: d1323d222a0040b2b6122c59b3c00f06
+UID: SDOC-SSS-94
+STATUS: Active
+TITLE: Data integrity of documentation/requirements
+STATEMENT: >>>
+The Requirements Tool shall ensure the integrity of stored documentation and requirements data throughout its lifecycle.
+<<<
+RATIONALE: >>>
+The requirement ensures that the tool and the tool's development includes measures for reducing the risk of any data corruption.
+<<<
+COMMENT: >>>
+This includes safeguarding against data corruption, loss, and ensuring the reliability of links within the documentation.
 <<<
 
 [/SECTION]
@@ -592,7 +638,16 @@ The Requirements Tool shall allow generating a Compliance Matrix document.
 [REQUIREMENT]
 MID: 74ffae6279bc4e4095c03d6a247c3599
 UID: SDOC-SSS-29
+STATUS: Active
 TITLE: Requirements coverage
+STATEMENT: >>>
+The Requirements Tool shall provide means for getting information about the requirements coverage of a given project.
+
+NOTE: The requirements coverage can be presented in a tabular form or visualized with a set of graphs.
+<<<
+RATIONALE: >>>
+The requirements coverage information helps to assess whether all requirements are linked to each other, whether all requirements are connected to implementation, test or other artifacts. Additionally, the requirements coverage information can provide metrics for measuring a project's progress, e.g., "50% of requirements have been traced to the source code". The requirement ensures that the requirements tool provides this feature.
+<<<
 
 [REQUIREMENT]
 MID: e0e6d1f883764719919238e4974dccef
@@ -618,6 +673,7 @@ Document-level KPIs: the same but per document.
 [REQUIREMENT]
 MID: ed4bd232bed84eda977263fa03e75b80
 UID: SDOC-SSS-74
+STATUS: Active
 TITLE: Change management
 STATEMENT: >>>
 The Requirements Tool shall provide capabilities for change management:
@@ -860,6 +916,7 @@ Examples of less popular programming languages, with all due respect to their po
 [REQUIREMENT]
 MID: 0556a0b2773d4ee0b44b22773455a600
 UID: SDOC-SSS-90
+STATUS: Active
 TITLE: Long-term maintainability of a tool
 STATEMENT: >>>
 The Requirements Tool shall be designed for long-term maintenance.
@@ -937,10 +994,18 @@ UID: SDOC-SSS-72
 STATUS: Active
 TITLE: Traceability between requirements and source code
 STATEMENT: >>>
-The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code.
+The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code with only minimal changes needed in the source code.
 
-NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster.
+NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster, etc.
 <<<
+RATIONALE: >>>
+This requirement connects the worlds of requirements and source code which ensures that the traceability between requirements-implementation and requirements-tests can be achieved in an explicit way. Without a direct support of tracing requirements to source code by a requirements tool, the users have to find workarounds that are less efficient.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-11
+- TYPE: Parent
+  VALUE: ZEP-12
 
 [/SECTION]
 

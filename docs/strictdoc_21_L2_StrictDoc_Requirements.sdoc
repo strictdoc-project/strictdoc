@@ -12,9 +12,17 @@ TITLE: SDoc data model
 [REQUIREMENT]
 MID: e8d5b55055254144b96d1ffeb587ec72
 UID: SDOC-SRS-18
+STATUS: Active
 TITLE: Data model
 STATEMENT: >>>
 StrictDoc shall be based on a data model.
+<<<
+RATIONALE: >>>
+Designing StrictDoc with a goal of having a consistent data model ensures that the tool:
+
+1) can support a rich set of use cases,
+2) model the existing documentation templates used by the industries,
+3) interface well with other formats for storing documentation and requirements, e.g., ReqIF and SPDX.
 <<<
 COMMENT: >>>
 Verification: data model diagram TBD.
@@ -28,12 +36,14 @@ RELATIONS:
 [REQUIREMENT]
 MID: 3b31cad22529476db01aca41caf39750
 UID: SDOC-SRS-26
+STATUS: Active
 TITLE: Requirement model
 STATEMENT: >>>
-StrictDoc's data model shall support a "Requirement" model.
+StrictDoc's data model shall support modeling requirements.
 <<<
 RELATIONS:
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/sdoc/models/node.py
 - TYPE: Parent
   VALUE: SDOC-SSS-4
@@ -41,6 +51,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 8e2ffffd33af4a969d5bb7ca40cb49a4
 UID: SDOC-SRS-100
+STATUS: Active
 TITLE: Requirement model fields
 STATEMENT: >>>
 StrictDoc's "Requirement" model shall support configurable fields system.
@@ -52,6 +63,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 2d4020ba06d74571aef7aafe8604215b
 UID: SDOC-SRS-132
+STATUS: Active
 TITLE: Requirement model default fields
 STATEMENT: >>>
 By default, the Requirement shall support the following fields:
@@ -71,14 +83,16 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-61
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/sdoc/models/document_grammar.py
 
 [REQUIREMENT]
 MID: f94419a390f2403daa3c4cd0e96f6cb6
 UID: SDOC-SRS-98
+STATUS: Active
 TITLE: Document model
 STATEMENT: >>>
-StrictDoc's data model shall support a "Document" model.
+StrictDoc's data model shall support modeling documents.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -87,6 +101,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 435f856197d743c1b9b1dcbe91a22863
 UID: SDOC-SRS-110
+STATUS: Active
 TITLE: Document metadata
 STATEMENT: >>>
 StrictDoc's data model shall support a Document metadata model including at least:
@@ -105,9 +120,10 @@ RELATIONS:
 [REQUIREMENT]
 MID: 63821c507d584cf985f05904710b9779
 UID: SDOC-SRS-99
+STATUS: Active
 TITLE: Section model
 STATEMENT: >>>
-StrictDoc's data model shall support a "Section" that nests other Sections, Requirements, Texts.
+StrictDoc's data model shall support a concept of a "Section" which nests other Sections, Requirements, Texts.
 <<<
 RATIONALE: >>>
 "Section" corresponds to a chapter or a section in a document and helps to organize a document by grouping text nodes, requirements and other sections.
@@ -116,6 +132,7 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-51
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/sdoc/models/section.py
 
 [REQUIREMENT]
@@ -182,6 +199,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 9930894b08c44f5eba996c0a255e9e3f
 UID: SDOC-SRS-101
+STATUS: Active
 TITLE: Requirement relation roles
 STATEMENT: >>>
 Each SDoc relation shall be optionally configurable with a relation role.
@@ -224,6 +242,45 @@ RELATIONS:
   VALUE: strictdoc/backend/sdoc/processor.py
 
 [REQUIREMENT]
+MID: 1f147feed60245378de2e099facd196d
+UID: SDOC-SRS-136
+STATUS: Active
+TITLE: Identical SDoc content by import/export roundtrip
+STATEMENT: >>>
+StrictDoc shall ensure that identical SDoc content is produced every time StrictDoc reads an SDoc file and then writes it to another SDoc file.
+<<<
+RATIONALE: >>>
+A consistent import/export roundtrip implementation and testing reduces the risk of the SDoc bi-directional import/export corruption.
+<<<
+RELATIONS:
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: strictdoc/core/actions/passthrough_action.py
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: strictdoc/core/actions/passthrough_action.py
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough.py
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_document_views.py
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_free_text.py
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_grammar.py
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_relations.py
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_relations_migrate_from_refs.py
+- TYPE: Parent
+  VALUE: SDOC-SSS-94
+
+[REQUIREMENT]
 MID: f48a57c0cd764951a667127ce92fdb12
 UID: SDOC-SRS-127
 STATUS: Active
@@ -238,6 +295,8 @@ RELATIONS:
   VALUE: SDOC-SSS-33
 - TYPE: Parent
   VALUE: SDOC-SSS-84
+- TYPE: Parent
+  VALUE: SDOC-SSS-94
 
 [REQUIREMENT]
 MID: 9df34a7ab79842d99ee68303f334d4eb
@@ -257,6 +316,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 8dd6dd3979484dadbe71ac91aab50608
 UID: SDOC-SRS-105
+STATUS: Active
 TITLE: One document per one SDoc file
 STATEMENT: >>>
 StrictDoc's SDoc file shall represent content of a single document.
@@ -285,6 +345,8 @@ RELATIONS:
   VALUE: SDOC-SSS-55
 - TYPE: Parent
   VALUE: SDOC-SSS-54
+- TYPE: Parent
+  VALUE: SDOC-SSS-94
 
 [REQUIREMENT]
 MID: b97418ceccff438cb0457ed4bdf1be47
@@ -345,12 +407,13 @@ RELATIONS:
 [REQUIREMENT]
 MID: 5405c74a9eba4e9193007f01ea98bc85
 UID: SDOC-SRS-22
+STATUS: Active
 TITLE: UID identifier format
 STATEMENT: >>>
-The SDoc markup shall only accept UID identifiers that consist of alphanumeric characters separated by "_" and "-" characters.
+The SDoc markup shall only accept UID identifiers that consist of alphanumeric characters separated by a limited set of ("_", "-", ".") characters (TBD).
 <<<
 RATIONALE: >>>
-A standardized UID format supports the parent requirement of unique identification of requirements. It is easier to visually identify UIDs that look similar and common to a given industry.
+A standardized UID format supports easier unique identification of requirements. It is easier to visually identify UIDs that look similar and common to a given industry.
 <<<
 COMMENT: >>>
 This requirement may need a revision to accommodate for more UID formats.
@@ -403,6 +466,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 98628e1db3ca4f52b7632674b69dd657
 UID: SDOC-SRS-25
+STATUS: Active
 TITLE: Type-safe fields
 STATEMENT: >>>
 SDoc markup shall provide "type safety" for all fields.
@@ -413,7 +477,10 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-55
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/sdoc/grammar/type_system.py
+- TYPE: Parent
+  VALUE: SDOC-SSS-94
 
 [/SECTION]
 
@@ -425,6 +492,7 @@ TITLE: Graph database
 [REQUIREMENT]
 MID: 2c8d7940a23c443f81a7eb373340894e
 UID: SDOC-SRS-28
+STATUS: Active
 TITLE: Traceability index
 STATEMENT: >>>
 StrictDoc shall maintain a complete Traceability Index of all documentation- and requirements-related information available in a project tree.
@@ -436,15 +504,22 @@ RELATIONS:
 [REQUIREMENT]
 MID: 272b8933276d4cd48a78fcfa11899573
 UID: SDOC-SRS-29
+STATUS: Active
 TITLE: Uniqueness UID in tree
 STATEMENT: >>>
 For each requirement node, the Traceability Index shall ensure its uniqueness throughout the node's lifecycle.
+<<<
+RATIONALE: >>>
+The requirement ensures that the Traceability Index takes of care of validating the uniqueness of all nodes in a document/requirements graph.
 <<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-89
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/core/traceability_index_builder.py
+- TYPE: Parent
+  VALUE: SDOC-SSS-94
 
 [REQUIREMENT]
 MID: 8330d61fd5b1438fa90f127f88903a0d
@@ -458,13 +533,18 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-47
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/core/traceability_index_builder.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/core/tree_cycle_detector.py
+- TYPE: Parent
+  VALUE: SDOC-SSS-94
 
 [REQUIREMENT]
 MID: 07a1e7bef11d4fcca86cd31ee5245d8d
 UID: SDOC-SRS-32
+STATUS: Active
 TITLE: Link document nodes
 STATEMENT: >>>
 The Traceability Index shall recognize and maintain the relations between all documents of a project tree.
@@ -486,6 +566,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 2dad5f293bc442eaa98859c4b5eac0d5
 UID: SDOC-SRS-102
+STATUS: Active
 TITLE: Automatic resolution of reverse relations
 STATEMENT: >>>
 The StrictDoc's graph database shall maintain the requirement relations and their reverse relations as follows:
@@ -628,12 +709,17 @@ TITLE: Screen: Project tree
 [REQUIREMENT]
 MID: 100fa410f4b443e69c48738899cfb5bd
 UID: SDOC-SRS-53
+STATUS: Active
 TITLE: View project tree
 STATEMENT: >>>
 StrictDoc's "Project tree" screen shall provide browsing of a documentation project tree.
 <<<
+RATIONALE: >>>
+This screen is the main tool for visualizing the project tree structure.
+<<<
 RELATIONS:
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/export/html/generators/document_tree.py
 - TYPE: Parent
   VALUE: SDOC-SSS-91
@@ -810,6 +896,7 @@ TITLE: Screen: Traceability (TR)
 [REQUIREMENT]
 MID: 35d4c1dd30814c2a80918a90081a88b7
 UID: SDOC-SRS-65
+STATUS: Active
 TITLE: View TR screen
 STATEMENT: >>>
 StrictDoc shall provide a single document-level traceability screen.
@@ -944,8 +1031,6 @@ StrictDoc shall support bi-directional linking requirements with source files.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
-- TYPE: Parent
-  VALUE: ZEP-11
 
 [REQUIREMENT]
 MID: b9144222a7f3454da2989f494cd9647c
@@ -982,7 +1067,7 @@ The advantage of a single-line marker compared to a range marker is that a singl
 <<<
 RELATIONS:
 - TYPE: Parent
-  VALUE: ZEP-12
+  VALUE: SDOC-SSS-72
 
 [REQUIREMENT]
 MID: 3aeb1eea0dba4041a9161a1a8d291999
@@ -1034,6 +1119,7 @@ TITLE: RST
 [REQUIREMENT]
 MID: 2aa615b9cf264e7aad826f4ff466e514
 UID: SDOC-SRS-70
+STATUS: Active
 TITLE: Export to RST
 STATEMENT: >>>
 StrictDoc shall allow exporting SDoc content to the RST format.
@@ -1050,12 +1136,16 @@ RELATIONS:
 - TYPE: Parent
   VALUE: DO178-16
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/export/rst/document_rst_generator.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/export/rst/writer.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/export/rst/rst_templates.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/export/rst/templates/requirement.jinja.rst
 
 [REQUIREMENT]
@@ -1130,16 +1220,19 @@ TITLE: Excel and CSV
 [REQUIREMENT]
 MID: f7b587f66dda402dbd58768e2740742f
 UID: SDOC-SRS-74
+STATUS: Active
 TITLE: Export to Excel
 STATEMENT: >>>
-StrictDoc shall allow exporting SDoc documents to Excel, one Excel file per document.
+StrictDoc shall allow exporting SDoc documents to Excel, one Excel sheet per document.
 <<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-60
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/excel/export/excel_generator.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: tests/integration/backend/excel/export/20_excel_export_multiple_docs/test.itest
 
 [REQUIREMENT]
@@ -1196,6 +1289,7 @@ TITLE: General CLI requirements
 [REQUIREMENT]
 MID: 598647eed3a446fe93e2c54b197f830e
 UID: SDOC-SRS-103
+STATUS: Active
 TITLE: Command-line interface
 STATEMENT: >>>
 StrictDoc shall provide a command-line interface.
@@ -1204,10 +1298,13 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-32
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/cli/main.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/cli/command_parser_builder.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/cli/cli_arg_parser.py
 
 [/SECTION]
@@ -1321,6 +1418,7 @@ TITLE: Configurability
 [REQUIREMENT]
 MID: da446e6d3c6d4b13badd4a47bdbcc5a3
 UID: SDOC-SRS-37
+STATUS: Active
 TITLE: strictdoc.toml file
 STATEMENT: >>>
 StrictDoc shall support a configuration of project-level options through a TOML file named ``strictdoc.toml``.
@@ -1335,6 +1433,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: a6e70c0619204a26b135d1e5fca45dd7
 UID: SDOC-SRS-39
+STATUS: Active
 TITLE: Feature toggles
 STATEMENT: >>>
 StrictDoc shall allow a user to select a subset of StrictDoc's available features by listing them in the ``strictdoc.toml`` file.
@@ -1346,6 +1445,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: a8a17295d3e24601891c7d19d5ca67d9
 UID: SDOC-SRS-119
+STATUS: Active
 TITLE: 'Host' parameter
 STATEMENT: >>>
 StrictDoc shall support configuring a host/port on which the StrictDoc web server is run.
@@ -1397,6 +1497,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 6fec2f8c0baa4ddba95bee05ad03a785
 UID: SDOC-SRS-2
+STATUS: Active
 TITLE: Incremental generation of documents
 STATEMENT: >>>
 StrictDoc shall support incremental generation of documents.
@@ -1412,6 +1513,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 5f2df631605543d18d57e09bc3791003
 UID: SDOC-SRS-3
+STATUS: Active
 TITLE: Caching of RST fragments
 STATEMENT: >>>
 StrictDoc shall cache the RST fragments rendered to HTML.
@@ -1428,6 +1530,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: d0c4828ed8434613aae844481bbef1ca
 UID: SDOC-SRS-4
+STATUS: Active
 TITLE: On-demand loading of HTML pages
 STATEMENT: >>>
 StrictDoc's web interface shall generate the HTML content only when it is directly requested by a user.
@@ -1444,6 +1547,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 4e014d3291ce460c993a0ff334eff4a7
 UID: SDOC-SRS-5
+STATUS: Active
 TITLE: Precompiled Jinja templates
 STATEMENT: >>>
 StrictDoc shall support a precompilation of HTML templates.
@@ -1457,6 +1561,7 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-14
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/export/html/html_templates.py
 
 [/SECTION]
@@ -1473,6 +1578,7 @@ TITLE: General process
 [REQUIREMENT]
 MID: 27319e3866b8423099774d8770950acd
 UID: SDOC-SRS-133
+STATUS: Active
 TITLE: Priority handling of critical issues in StrictDoc
 STATEMENT: >>>
 All critical issues reported in relation to StrictDoc shall be addressed with utmost priority.
@@ -1708,6 +1814,7 @@ TITLE: Coding constraints
 [REQUIREMENT]
 MID: 61d96cd1d03e40c48187ee67ac0b65f6
 UID: SDOC-SRS-40
+STATUS: Active
 TITLE: Use of asserts
 STATEMENT: >>>
 StrictDoc's development shall ensure a use of assertions throughout the project codebase.
@@ -1721,6 +1828,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 72b5b0c925cf4ef49749b7e466675df1
 UID: SDOC-SRS-41
+STATUS: Active
 TITLE: Use of type annotations in Python code
 STATEMENT: >>>
 StrictDoc's development shall ensure a use of type annotations throughout the project's Python codebase.
@@ -1739,9 +1847,10 @@ TITLE: Linting
 [REQUIREMENT]
 MID: 6c0163c56ade49faa353ec06cbd676cd
 UID: SDOC-SRS-42
+STATUS: Active
 TITLE: Compliance with Python community practices (PEP8 etc)
 STATEMENT: >>>
-StrictDoc's development shall ensure that the project's codebase is compliant with the modern Python community's practices.
+StrictDoc's development shall ensure that the project's codebase is compliant with the Python community's modern practices.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1792,6 +1901,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 70ef3986cfc4437bbb10288d3b55958c
 UID: SDOC-SRS-45
+STATUS: Active
 TITLE: CLI interface black-box integration testing
 STATEMENT: >>>
 StrictDoc's development shall provide complete black-box integration testing of its command-line interface.

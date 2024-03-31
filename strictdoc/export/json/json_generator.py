@@ -10,7 +10,7 @@ from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import CompositeRequirement, SDocNode
+from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
@@ -231,7 +231,7 @@ class JSONGenerator:
             node_dict[JSONKey.NODES].append(section_dict)
 
         elif isinstance(node, SDocNode):
-            if isinstance(node, CompositeRequirement):
+            if isinstance(node, SDocCompositeNode):
                 return {}
 
             subnode_dict = cls._write_requirement(

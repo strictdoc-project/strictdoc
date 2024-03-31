@@ -10,7 +10,7 @@ from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import CompositeRequirement, SDocNode
+from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
@@ -282,7 +282,7 @@ class SDWriter:
                 output += self._print_section(content_node, document)
                 closing_tags.append((TAG.SECTION, content_node.ng_level))
             elif isinstance(content_node, SDocNode):
-                if isinstance(content_node, CompositeRequirement):
+                if isinstance(content_node, SDocCompositeNode):
                     output += "[COMPOSITE_"
                     output += content_node.requirement_type
                     output += "]\n"

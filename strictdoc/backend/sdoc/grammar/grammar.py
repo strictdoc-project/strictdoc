@@ -127,7 +127,7 @@ SDocSection[noskipws]:
 ;
 
 SectionOrRequirement[noskipws]:
-  '\n' (SDocSection | SDocNode | CompositeRequirement | DocumentFromFile)
+  '\n' (SDocSection | SDocNode | SDocCompositeNode | DocumentFromFile)
 ;
 
 DocumentFromFile[noskipws]:
@@ -136,7 +136,7 @@ DocumentFromFile[noskipws]:
 ;
 
 SpaceThenRequirement[noskipws]:
-  '\n' (SDocNode | CompositeRequirement)
+  '\n' (SDocNode | SDocCompositeNode)
 ;
 
 SpaceThenFreeText[noskipws]:
@@ -148,12 +148,12 @@ ReservedKeyword[noskipws]:
 ;
 
 SDocNode[noskipws]:
-  '[' !CompositeRequirementTagName requirement_type = RequirementType ']' '\n'
+  '[' !SDocCompositeNodeTagName requirement_type = RequirementType ']' '\n'
   ('MID: ' mid = SingleLineString '\n')?
   fields *= SDocNodeField
 ;
 
-CompositeRequirementTagName[noskipws]:
+SDocCompositeNodeTagName[noskipws]:
   'COMPOSITE_'
 ;
 
@@ -171,7 +171,7 @@ SDocNodeField[noskipws]:
   )
 ;
 
-CompositeRequirement[noskipws]:
+SDocCompositeNode[noskipws]:
   '[COMPOSITE_' requirement_type = RequirementType ']' '\n'
 
   ('MID: ' mid = SingleLineString '\n')?

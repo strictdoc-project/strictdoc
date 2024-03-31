@@ -56,6 +56,7 @@ _, tidylib_messages_string = tidy_document(
             "sdoc-section, "
             "sdoc-section-title, sdoc-section-text, "
             "sdoc-main-placeholder, "
+            "sdoc-main-legend, "
             "sdoc-meta, sdoc-meta-label, sdoc-meta-field, "
             "sdoc-form, sdoc-form-grid, "
             "sdoc-form-header, sdoc-form-descr, sdoc-form-footer, "

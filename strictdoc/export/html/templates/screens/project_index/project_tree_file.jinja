@@ -1,5 +1,5 @@
 {%- set document = view_object.traceability_index.document_tree.get_document_by_path(file.get_full_path()) %}
-{%- set is_included = document.document_is_included %}
+{%- set is_included = document.document_is_included() %}
 
 <a
   class="project_tree-file"

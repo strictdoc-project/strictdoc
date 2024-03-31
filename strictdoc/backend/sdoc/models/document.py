@@ -49,7 +49,6 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
 
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
         self.mid_permanent: bool = mid is not None
-        self.document_is_included: bool = False
         self.included_documents: List["SDocDocument"] = []
 
         self.ng_including_document_reference: Optional = None

@@ -12,7 +12,7 @@
         {% endif %}
       {% elif folder_or_file.has_extension(".sdoc") %}
         {%- set document_ = view_object.get_document_by_path(folder_or_file.get_full_path()) %}
-        {% if not document_.document_is_included %}
+        {% if not document_.document_is_included() %}
         <a
           href="{{ view_object.document.meta.get_root_path_prefix() }}/{{ document_.meta.get_html_doc_link() }}"
           class="tree_item"

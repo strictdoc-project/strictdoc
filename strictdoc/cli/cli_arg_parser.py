@@ -122,8 +122,9 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         project_title: Optional[str],
         formats,
         fields,
-        no_parallelization,
-        enable_mathjax,
+        no_parallelization: bool,
+        enable_mathjax: bool,
+        included_documents: bool,
         filter_requirements: Optional[str],
         filter_sections: Optional[str],
         reqif_profile: Optional[str],
@@ -137,8 +138,9 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.project_title: Optional[str] = project_title
         self.formats = formats
         self.fields = fields
-        self.no_parallelization = no_parallelization
-        self.enable_mathjax = enable_mathjax
+        self.no_parallelization: bool = no_parallelization
+        self.enable_mathjax: bool = enable_mathjax
+        self.included_documents: bool = included_documents
         self.filter_requirements: Optional[str] = filter_requirements
         self.filter_sections: Optional[str] = filter_sections
         self.reqif_profile: Optional[str] = reqif_profile
@@ -265,6 +267,7 @@ class SDocArgsParser:
             self.args.fields,
             self.args.no_parallelization,
             self.args.enable_mathjax,
+            self.args.included_documents,
             self.args.filter_requirements,
             self.args.filter_sections,
             self.args.reqif_profile,

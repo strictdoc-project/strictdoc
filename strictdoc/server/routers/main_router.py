@@ -134,6 +134,7 @@ def create_main_router(
         fields=None,
         no_parallelization=False,
         enable_mathjax=False,
+        included_documents=True,
         filter_requirements=None,
         filter_sections=None,
         reqif_profile=project_config.reqif_profile,

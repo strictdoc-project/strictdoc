@@ -944,8 +944,6 @@ StrictDoc shall support bi-directional linking requirements with source files.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
-- TYPE: Parent
-  VALUE: ZEP-11
 
 [REQUIREMENT]
 MID: b9144222a7f3454da2989f494cd9647c
@@ -982,7 +980,7 @@ The advantage of a single-line marker compared to a range marker is that a singl
 <<<
 RELATIONS:
 - TYPE: Parent
-  VALUE: ZEP-12
+  VALUE: SDOC-SSS-72
 
 [REQUIREMENT]
 MID: 3aeb1eea0dba4041a9161a1a8d291999

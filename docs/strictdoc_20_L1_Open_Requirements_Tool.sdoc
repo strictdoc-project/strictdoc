@@ -937,10 +937,18 @@ UID: SDOC-SSS-72
 STATUS: Active
 TITLE: Traceability between requirements and source code
 STATEMENT: >>>
-The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code.
+The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code with only minimal changes needed in the source code.
 
-NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster.
+NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster, etc.
 <<<
+RATIONALE: >>>
+This requirement connects the worlds of requirements and source code which ensures that the traceability between requirements-implementation and requirements-tests can be achieved in an explicit way. Without a direct support of tracing requirements to source code by a requirements tool, the users have to find workarounds that are less efficient.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-11
+- TYPE: Parent
+  VALUE: ZEP-12
 
 [/SECTION]
 

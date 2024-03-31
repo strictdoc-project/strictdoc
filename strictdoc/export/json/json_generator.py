@@ -211,8 +211,6 @@ class JSONGenerator:
                 )
             )
 
-        node_dict = {JSONKey.NODES: []}
-
         if isinstance(node, SDocSection):
             section_dict = cls._write_section(
                 node, document, get_level_string_(node)
@@ -228,7 +226,7 @@ class JSONGenerator:
                 )
                 section_dict[JSONKey.NODES].append(subnode_dict)
 
-            node_dict[JSONKey.NODES].append(section_dict)
+            return section_dict
 
         elif isinstance(node, SDocNode):
             if isinstance(node, CompositeRequirement):
@@ -239,9 +237,11 @@ class JSONGenerator:
                 document=document,
                 level_string=get_level_string_(node),
             )
-            node_dict[JSONKey.NODES].append(subnode_dict)
+            return subnode_dict
 
         elif isinstance(node, SDocDocument):
+            node_dict = {JSONKey.NODES: []}
+
             current_number = 0
             for subnode_ in node.section_contents:
                 if subnode_.ng_resolved_custom_level is None:
@@ -251,13 +251,16 @@ class JSONGenerator:
                 )
                 node_dict[JSONKey.NODES].append(subnode_dict)
 
+            return node_dict
+
         elif isinstance(node, DocumentFromFile):
             subnode_dict = cls._write_node(
                 node.top_section, document, level_stack
             )
-            node_dict[JSONKey.NODES].extend(subnode_dict[JSONKey.NODES])
+            return subnode_dict
 
-        return node_dict
+        else:
+            raise NotImplementedError
 
     @classmethod
     def _write_section(

@@ -191,20 +191,13 @@ sdoc-main-placeholder {
   height: 100%;
 }
 
-.page-tips {
-  width: 100%;
+sdoc-main-legend {
+  display: block;
+  color: var(--color-placeholder);
+  font-weight: 700;
+  font-family: var(--code-font-family);
+  max-width: 1024px;
   padding: var(--base-gap);
   font-weight: 500;
   margin-bottom: auto; /* To align the element at the top of the container that uses 'display:flex' */
-}
-
-/* .page-tips > *, */
-.page-tips > p,
-.page-tips > ul {
-  max-width: 900px;
-}
-
-.page-tips > .sdoc-table_key_value {
-  width: auto;
-  max-width: 1024px;
 }

@@ -504,7 +504,7 @@ class SDocNode(SDocObject):
 
     def get_requirement_prefix(self) -> str:
         parent: Union[SDocSection, SDocDocument] = assert_cast(
-            self.parent, (SDocSection, SDocDocument, CompositeRequirement)
+            self.parent, (SDocSection, SDocDocument, SDocCompositeNode)
         )
         return parent.get_requirement_prefix()
 
@@ -655,7 +655,7 @@ class SDocNode(SDocObject):
 
 
 @auto_described
-class CompositeRequirement(SDocNode):
+class SDocCompositeNode(SDocNode):
     def __init__(self, parent, **fields):
         super().__init__(parent, **fields)
         self.ng_document_reference: Optional[DocumentReference] = None

@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.node import (
-    CompositeRequirement,
+    SDocCompositeNode,
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
@@ -94,7 +94,7 @@ class DocumentCachingIterator:
                     or subnode_.ng_resolved_custom_level is not None,
                 )
 
-        elif isinstance(node, CompositeRequirement):
+        elif isinstance(node, SDocCompositeNode):
             # If node is not whitelisted, we ignore it. Also, note that due to
             # this early return, all child nodes of this node are ignored
             # as well because they are not added to the iteration queue.

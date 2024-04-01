@@ -14,7 +14,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.node import (
-    CompositeRequirement,
+    SDocCompositeNode,
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -63,7 +63,7 @@ class SDocParsingProcessor:
             "DocumentView": self.process_document_view,
             "SDocSection": self.process_section,
             "DocumentFromFile": self.process_document_from_file,
-            "CompositeRequirement": self.process_composite_requirement,
+            "SDocCompositeNode": self.process_composite_requirement,
             "SDocNode": self.process_requirement,
             "FreeText": self.process_free_text,
         }
@@ -166,7 +166,7 @@ class SDocParsingProcessor:
         self.parse_context.fragments_from_files.append(document_from_file)
 
     def process_composite_requirement(
-        self, composite_requirement: CompositeRequirement
+        self, composite_requirement: SDocCompositeNode
     ):
         if self.parse_context.document_config.auto_levels:
             if composite_requirement.ng_resolved_custom_level:

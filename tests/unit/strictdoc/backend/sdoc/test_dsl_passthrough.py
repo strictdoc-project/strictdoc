@@ -3,7 +3,7 @@ from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import (
-    CompositeRequirement,
+    SDocCompositeNode,
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.reference import (
@@ -344,7 +344,7 @@ This is a child body part 3
     assert input_sdoc == output
 
     assert isinstance(
-        document.section_contents[0].section_contents[0], CompositeRequirement
+        document.section_contents[0].section_contents[0], SDocCompositeNode
     )
     requirement_1 = document.section_contents[0].section_contents[0]
     assert (
@@ -397,14 +397,14 @@ body 1.1.1.1
     assert input_sdoc == output
 
     assert isinstance(
-        document.section_contents[0].section_contents[0], CompositeRequirement
+        document.section_contents[0].section_contents[0], SDocCompositeNode
     )
     requirement_1_1 = document.section_contents[0].section_contents[0]
     assert requirement_1_1.comments[0] == "body composite 1.1"
 
     assert isinstance(
         document.section_contents[0].section_contents[0].requirements[0],
-        CompositeRequirement,
+        SDocCompositeNode,
     )
     requirement_1_1_1 = (
         document.section_contents[0].section_contents[0].requirements[0]

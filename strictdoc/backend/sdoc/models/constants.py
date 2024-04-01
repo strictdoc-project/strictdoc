@@ -12,7 +12,7 @@ from strictdoc.backend.sdoc.models.document_view import (
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
-    CompositeRequirement,
+    SDocCompositeNode,
     SDocNode,
     SDocNodeField,
 )
@@ -43,7 +43,7 @@ SECTION_MODELS = [
     DocumentFromFile,
     SDocNode,
     SDocNodeField,
-    CompositeRequirement,
+    SDocCompositeNode,
     Reference,
     ParentReqReference,
     ChildReqReference,

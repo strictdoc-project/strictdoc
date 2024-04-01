@@ -1,5 +1,3 @@
-from selenium.webdriver.common.by import By
-
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import (

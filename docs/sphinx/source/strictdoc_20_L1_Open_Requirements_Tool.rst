@@ -199,6 +199,8 @@ Browsing documentation tree
 
     * - **UID:**
       - SDOC-SSS-91
+    * - **STATUS:**
+      - Active
 
 The Requirements Tool shall provide browsing of the documentation tree.
 
@@ -309,6 +311,8 @@ Text formatting capabilities
 
     * - **UID:**
       - SDOC-SSS-63
+    * - **STATUS:**
+      - Active
 
 The Requirements Tool shall provide "rich text" formatting capabilities which includes but not limited to:
 
@@ -555,6 +559,14 @@ Link requirements together
 
     * - **UID:**
       - SDOC-SSS-7
+    * - **STATUS:**
+      - Active
+
+The Requirements Tool shall allow bi-directional linking of requirements nodes together using Parent or Child relations.
+
+**RATIONALE:**
+
+The requirement ensures a classic capability of a requirement tool: linking requirements together enables bi-directional traceability which helps in understanding how the requirements are related to each other.
 
 **Parents:**
 
@@ -626,8 +638,18 @@ Unique identification of requirements
 
     * - **UID:**
       - SDOC-SSS-89
+    * - **STATUS:**
+      - Active
 
 The Requirements Tool shall provide means for unique identification of every requirement.
+
+**RATIONALE:**
+
+The requirement ensures a classic capability of a requirement tool:
+
+1) The unique identifiers help the users in identifying the requirements, both when reading a requirements document and when discussing requirements.
+
+2) The unique identifiers are used for linking requirements together. The requirements tool stores the identifiers in a global database and can resolve the links, following the unique identifiers they point to.
 
 **Children:**
 
@@ -695,6 +717,8 @@ Project-level configuration
 
     * - **UID:**
       - SDOC-SSS-92
+    * - **STATUS:**
+      - Active
 
 The Requirements Tool shall provide a solution for configuring the project-level options.
 
@@ -702,6 +726,10 @@ NOTE: Examples of project-level options:
 
 - Project title.
 - Global settings for the Requirements Tool itself.
+
+**RATIONALE:**
+
+The requirement ensures the configurability of the tool for a specific project.
 
 **Children:**
 
@@ -719,6 +747,8 @@ Document-level configuration
 
     * - **UID:**
       - SDOC-SSS-93
+    * - **STATUS:**
+      - Active
 
 The Requirements Tool shall provide a solution for configuring the document-level options.
 
@@ -727,6 +757,10 @@ NOTE: Examples of document-level options:
 - Document title
 - Requirement prefix.
 - Other options local to the content and the presentation of a given document.
+
+**RATIONALE:**
+
+Sometimes, the project-level configuration can be not fine-grained enough. The requirement ensures that the requirements tool allows a configuration on a document level.
 
 **Children:**
 
@@ -790,6 +824,42 @@ The Requirements Tool shall be able to handle documentation packages of at least
 - ``[SDOC-SRS-3]`` :ref:`SDOC-SRS-3`
 - ``[SDOC-SRS-4]`` :ref:`SDOC-SRS-4`
 - ``[SDOC-SRS-5]`` :ref:`SDOC-SRS-5`
+
+Data integrity
+==============
+
+.. _SDOC-SSS-94:
+
+Data integrity of documentation/requirements
+--------------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SSS-94
+    * - **STATUS:**
+      - Active
+
+The Requirements Tool shall ensure the integrity of stored documentation and requirements data throughout its lifecycle.
+
+**RATIONALE:**
+
+The requirement ensures that the tool and the tool's development includes measures for reducing the risk of any data corruption.
+
+**COMMENT:**
+
+This includes safeguarding against data corruption, loss, and ensuring the reliability of links within the documentation.
+
+**Children:**
+
+- ``[SDOC-SRS-136]`` :ref:`SDOC-SRS-136`
+- ``[SDOC-SRS-127]`` :ref:`SDOC-SRS-127`
+- ``[SDOC-SRS-19]`` :ref:`SDOC-SRS-19`
+- ``[SDOC-SRS-25]`` :ref:`SDOC-SRS-25`
+- ``[SDOC-SRS-29]`` :ref:`SDOC-SRS-29`
+- ``[SDOC-SRS-30]`` :ref:`SDOC-SRS-30`
 
 .. _SECTION-SSSS-Existing-workflows:
 
@@ -902,6 +972,16 @@ Requirements coverage
 
     * - **UID:**
       - SDOC-SSS-29
+    * - **STATUS:**
+      - Active
+
+The Requirements Tool shall provide means for getting information about the requirements coverage of a given project.
+
+NOTE: The requirements coverage can be presented in a tabular form or visualized with a set of graphs.
+
+**RATIONALE:**
+
+The requirements coverage information helps to assess whether all requirements are linked to each other, whether all requirements are connected to implementation, test or other artifacts. Additionally, the requirements coverage information can provide metrics for measuring a project's progress, e.g., "50% of requirements have been traced to the source code". The requirement ensures that the requirements tool provides this feature.
 
 **Children:**
 
@@ -950,6 +1030,8 @@ Change management
 
     * - **UID:**
       - SDOC-SSS-74
+    * - **STATUS:**
+      - Active
 
 The Requirements Tool shall provide capabilities for change management:
 
@@ -1400,6 +1482,8 @@ Long-term maintainability of a tool
 
     * - **UID:**
       - SDOC-SSS-90
+    * - **STATUS:**
+      - Active
 
 The Requirements Tool shall be designed for long-term maintenance.
 
@@ -1533,14 +1617,24 @@ Traceability between requirements and source code
     * - **STATUS:**
       - Active
 
-The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code.
+The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code with only minimal changes needed in the source code.
 
-NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster.
+NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster, etc.
+
+**RATIONALE:**
+
+This requirement connects the worlds of requirements and source code which ensures that the traceability between requirements-implementation and requirements-tests can be achieved in an explicit way. Without a direct support of tracing requirements to source code by a requirements tool, the users have to find workarounds that are less efficient.
+
+**Parents:**
+
+- ``[ZEP-11]`` :ref:`ZEP-11`
+- ``[ZEP-12]`` :ref:`ZEP-12`
 
 **Children:**
 
 - ``[SDOC-SRS-33]`` :ref:`SDOC-SRS-33`
 - ``[SDOC-SRS-34]`` :ref:`SDOC-SRS-34`
+- ``[SDOC-SRS-124]`` :ref:`SDOC-SRS-124`
 - ``[SDOC-SRS-35]`` :ref:`SDOC-SRS-35`
 - ``[SDOC-SRS-36]`` :ref:`SDOC-SRS-36`
 

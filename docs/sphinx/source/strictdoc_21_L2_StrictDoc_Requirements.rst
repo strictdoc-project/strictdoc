@@ -15,8 +15,18 @@ Data model
 
     * - **UID:**
       - SDOC-SRS-18
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall be based on a data model.
+
+**RATIONALE:**
+
+Designing StrictDoc with a goal of having a consistent data model ensures that the tool:
+
+1) can support a rich set of use cases,
+2) model the existing documentation templates used by the industries,
+3) interface well with other formats for storing documentation and requirements, e.g., ReqIF and SPDX.
 
 **COMMENT:**
 
@@ -38,8 +48,10 @@ Requirement model
 
     * - **UID:**
       - SDOC-SRS-26
+    * - **STATUS:**
+      - Active
 
-StrictDoc's data model shall support a "Requirement" model.
+StrictDoc's data model shall support modeling requirements.
 
 **Parents:**
 
@@ -56,6 +68,8 @@ Requirement model fields
 
     * - **UID:**
       - SDOC-SRS-100
+    * - **STATUS:**
+      - Active
 
 StrictDoc's "Requirement" model shall support configurable fields system.
 
@@ -74,6 +88,8 @@ Requirement model default fields
 
     * - **UID:**
       - SDOC-SRS-132
+    * - **STATUS:**
+      - Active
 
 By default, the Requirement shall support the following fields:
 
@@ -104,8 +120,10 @@ Document model
 
     * - **UID:**
       - SDOC-SRS-98
+    * - **STATUS:**
+      - Active
 
-StrictDoc's data model shall support a "Document" model.
+StrictDoc's data model shall support modeling documents.
 
 **Parents:**
 
@@ -122,6 +140,8 @@ Document metadata
 
     * - **UID:**
       - SDOC-SRS-110
+    * - **STATUS:**
+      - Active
 
 StrictDoc's data model shall support a Document metadata model including at least:
 
@@ -146,8 +166,10 @@ Section model
 
     * - **UID:**
       - SDOC-SRS-99
+    * - **STATUS:**
+      - Active
 
-StrictDoc's data model shall support a "Section" that nests other Sections, Requirements, Texts.
+StrictDoc's data model shall support a concept of a "Section" which nests other Sections, Requirements, Texts.
 
 **RATIONALE:**
 
@@ -246,6 +268,8 @@ Requirement relation roles
 
     * - **UID:**
       - SDOC-SRS-101
+    * - **STATUS:**
+      - Active
 
 Each SDoc relation shall be optionally configurable with a relation role.
 
@@ -282,6 +306,30 @@ The most commonly used Markdown format lacks the ability to store requirements m
 
 - ``[SDOC-SSS-88]`` :ref:`SDOC-SSS-88`
 
+.. _SDOC-SRS-136:
+
+Identical SDoc content by import/export roundtrip
+-------------------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **UID:**
+      - SDOC-SRS-136
+    * - **STATUS:**
+      - Active
+
+StrictDoc shall ensure that identical SDoc content is produced every time StrictDoc reads an SDoc file and then writes it to another SDoc file.
+
+**RATIONALE:**
+
+A consistent import/export roundtrip implementation and testing reduces the risk of the SDoc bi-directional import/export corruption.
+
+**Parents:**
+
+- ``[SDOC-SSS-94]`` :ref:`SDOC-SSS-94`
+
 .. _SDOC-SRS-127:
 
 SDoc and Git storage
@@ -303,6 +351,7 @@ StrictDoc shall assume and implement capabilities for storage of SDoc files usin
 - ``[SDOC-SSS-87]`` :ref:`SDOC-SSS-87`
 - ``[SDOC-SSS-33]`` :ref:`SDOC-SSS-33`
 - ``[SDOC-SSS-84]`` :ref:`SDOC-SSS-84`
+- ``[SDOC-SSS-94]`` :ref:`SDOC-SSS-94`
 
 .. _SDOC-SRS-104:
 
@@ -339,6 +388,8 @@ One document per one SDoc file
 
     * - **UID:**
       - SDOC-SRS-105
+    * - **STATUS:**
+      - Active
 
 StrictDoc's SDoc file shall represent content of a single document.
 
@@ -372,6 +423,7 @@ StrictDoc's markup language shall be based on a well-defined grammar.
 - ``[DO178-2]`` :ref:`DO178-2`
 - ``[SDOC-SSS-55]`` :ref:`SDOC-SSS-55`
 - ``[SDOC-SSS-54]`` :ref:`SDOC-SSS-54`
+- ``[SDOC-SSS-94]`` :ref:`SDOC-SSS-94`
 
 .. _SDOC-SRS-93:
 
@@ -461,12 +513,14 @@ UID identifier format
 
     * - **UID:**
       - SDOC-SRS-22
+    * - **STATUS:**
+      - Active
 
-The SDoc markup shall only accept UID identifiers that consist of alphanumeric characters separated by "_" and "-" characters.
+The SDoc markup shall only accept UID identifiers that consist of alphanumeric characters separated by a limited set of ("_", "-", ".") characters (TBD).
 
 **RATIONALE:**
 
-A standardized UID format supports the parent requirement of unique identification of requirements. It is easier to visually identify UIDs that look similar and common to a given industry.
+A standardized UID format supports easier unique identification of requirements. It is easier to visually identify UIDs that look similar and common to a given industry.
 
 **COMMENT:**
 
@@ -551,6 +605,8 @@ Type-safe fields
 
     * - **UID:**
       - SDOC-SRS-25
+    * - **STATUS:**
+      - Active
 
 SDoc markup shall provide "type safety" for all fields.
 
@@ -559,6 +615,7 @@ NOTE: "Type safety" means that each field has a type and a corresponding set of 
 **Parents:**
 
 - ``[SDOC-SSS-55]`` :ref:`SDOC-SSS-55`
+- ``[SDOC-SSS-94]`` :ref:`SDOC-SSS-94`
 
 .. _SECTION-SRS-Graph-database:
 
@@ -576,6 +633,8 @@ Traceability index
 
     * - **UID:**
       - SDOC-SRS-28
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall maintain a complete Traceability Index of all documentation- and requirements-related information available in a project tree.
 
@@ -594,12 +653,19 @@ Uniqueness UID in tree
 
     * - **UID:**
       - SDOC-SRS-29
+    * - **STATUS:**
+      - Active
 
 For each requirement node, the Traceability Index shall ensure its uniqueness throughout the node's lifecycle.
+
+**RATIONALE:**
+
+The requirement ensures that the Traceability Index takes of care of validating the uniqueness of all nodes in a document/requirements graph.
 
 **Parents:**
 
 - ``[SDOC-SSS-89]`` :ref:`SDOC-SSS-89`
+- ``[SDOC-SSS-94]`` :ref:`SDOC-SSS-94`
 
 .. _SDOC-SRS-30:
 
@@ -620,6 +686,7 @@ The Traceability Index shall detect cycles between requirements.
 **Parents:**
 
 - ``[SDOC-SSS-47]`` :ref:`SDOC-SSS-47`
+- ``[SDOC-SSS-94]`` :ref:`SDOC-SSS-94`
 
 .. _SDOC-SRS-32:
 
@@ -632,6 +699,8 @@ Link document nodes
 
     * - **UID:**
       - SDOC-SRS-32
+    * - **STATUS:**
+      - Active
 
 The Traceability Index shall recognize and maintain the relations between all documents of a project tree.
 
@@ -659,6 +728,8 @@ Automatic resolution of reverse relations
 
     * - **UID:**
       - SDOC-SRS-102
+    * - **STATUS:**
+      - Active
 
 The StrictDoc's graph database shall maintain the requirement relations and their reverse relations as follows:
 
@@ -824,8 +895,14 @@ View project tree
 
     * - **UID:**
       - SDOC-SRS-53
+    * - **STATUS:**
+      - Active
 
 StrictDoc's "Project tree" screen shall provide browsing of a documentation project tree.
+
+**RATIONALE:**
+
+This screen is the main tool for visualizing the project tree structure.
 
 **Parents:**
 
@@ -1086,6 +1163,8 @@ View TR screen
 
     * - **UID:**
       - SDOC-SRS-65
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall provide a single document-level traceability screen.
 
@@ -1231,7 +1310,6 @@ StrictDoc shall support bi-directional linking requirements with source files.
 **Parents:**
 
 - ``[SDOC-SSS-72]`` :ref:`SDOC-SSS-72`
-- ``[ZEP-11]`` :ref:`ZEP-11`
 
 .. _SDOC-SRS-34:
 
@@ -1277,7 +1355,7 @@ The advantage of a single-line marker compared to a range marker is that a singl
 
 **Parents:**
 
-- ``[ZEP-12]`` :ref:`ZEP-12`
+- ``[SDOC-SSS-72]`` :ref:`SDOC-SSS-72`
 
 .. _SDOC-SRS-35:
 
@@ -1347,6 +1425,8 @@ Export to RST
 
     * - **UID:**
       - SDOC-SRS-70
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall allow exporting SDoc content to the RST format.
 
@@ -1456,8 +1536,10 @@ Export to Excel
 
     * - **UID:**
       - SDOC-SRS-74
+    * - **STATUS:**
+      - Active
 
-StrictDoc shall allow exporting SDoc documents to Excel, one Excel file per document.
+StrictDoc shall allow exporting SDoc documents to Excel, one Excel sheet per document.
 
 **Parents:**
 
@@ -1531,6 +1613,8 @@ Command-line interface
 
     * - **UID:**
       - SDOC-SRS-103
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall provide a command-line interface.
 
@@ -1669,6 +1753,8 @@ strictdoc.toml file
 
     * - **UID:**
       - SDOC-SRS-37
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall support a configuration of project-level options through a TOML file named ``strictdoc.toml``.
 
@@ -1687,6 +1773,8 @@ Feature toggles
 
     * - **UID:**
       - SDOC-SRS-39
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall allow a user to select a subset of StrictDoc's available features by listing them in the ``strictdoc.toml`` file.
 
@@ -1705,6 +1793,8 @@ StrictDoc shall allow a user to select a subset of StrictDoc's available feature
 
     * - **UID:**
       - SDOC-SRS-119
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall support configuring a host/port on which the StrictDoc web server is run.
 
@@ -1774,6 +1864,8 @@ Incremental generation of documents
 
     * - **UID:**
       - SDOC-SRS-2
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall support incremental generation of documents.
 
@@ -1795,6 +1887,8 @@ Caching of RST fragments
 
     * - **UID:**
       - SDOC-SRS-3
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall cache the RST fragments rendered to HTML.
 
@@ -1818,6 +1912,8 @@ On-demand loading of HTML pages
 
     * - **UID:**
       - SDOC-SRS-4
+    * - **STATUS:**
+      - Active
 
 StrictDoc's web interface shall generate the HTML content only when it is directly requested by a user.
 
@@ -1841,6 +1937,8 @@ Precompiled Jinja templates
 
     * - **UID:**
       - SDOC-SRS-5
+    * - **STATUS:**
+      - Active
 
 StrictDoc shall support a precompilation of HTML templates.
 
@@ -1872,6 +1970,8 @@ Priority handling of critical issues in StrictDoc
 
     * - **UID:**
       - SDOC-SRS-133
+    * - **STATUS:**
+      - Active
 
 All critical issues reported in relation to StrictDoc shall be addressed with utmost priority.
 
@@ -2202,6 +2302,8 @@ Use of asserts
 
     * - **UID:**
       - SDOC-SRS-40
+    * - **STATUS:**
+      - Active
 
 StrictDoc's development shall ensure a use of assertions throughout the project codebase.
 
@@ -2222,6 +2324,8 @@ Use of type annotations in Python code
 
     * - **UID:**
       - SDOC-SRS-41
+    * - **STATUS:**
+      - Active
 
 StrictDoc's development shall ensure a use of type annotations throughout the project's Python codebase.
 
@@ -2245,8 +2349,10 @@ Compliance with Python community practices (PEP8 etc)
 
     * - **UID:**
       - SDOC-SRS-42
+    * - **STATUS:**
+      - Active
 
-StrictDoc's development shall ensure that the project's codebase is compliant with the modern Python community's practices.
+StrictDoc's development shall ensure that the project's codebase is compliant with the Python community's modern practices.
 
 **Parents:**
 
@@ -2314,6 +2420,8 @@ CLI interface black-box integration testing
 
     * - **UID:**
       - SDOC-SRS-45
+    * - **STATUS:**
+      - Active
 
 StrictDoc's development shall provide complete black-box integration testing of its command-line interface.
 

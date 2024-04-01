@@ -283,7 +283,7 @@ For safety development and certification linking to code is required.
 
 **Children:**
 
-- ``[SDOC-SRS-33]`` :ref:`SDOC-SRS-33`
+- ``[SDOC-SSS-72]`` :ref:`SDOC-SSS-72`
 
 .. _ZEP-12:
 
@@ -307,7 +307,7 @@ Code with lots of meta information in it via comment tags, makes the code less r
 
 **Children:**
 
-- ``[SDOC-SRS-124]`` :ref:`SDOC-SRS-124`
+- ``[SDOC-SSS-72]`` :ref:`SDOC-SSS-72`
 
 .. _ZEP-13:
 

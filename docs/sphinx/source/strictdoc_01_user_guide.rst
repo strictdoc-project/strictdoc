@@ -238,7 +238,7 @@ Security considerations
 -----------------------
 
 .. warning::
-    **TL;DR:** StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
+    **TL;DR**: StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
 
     Using StrictDoc's command-line and web interfaces should be more secure if the web server is not deployed on a public network.
 
@@ -945,13 +945,15 @@ The behavior of the ``LEVEL: None`` option is recursive. If a parent section
 has its ``LEVEL`` set to ``None``, all its subsections' and requirements' levels
 are set to ``LEVEL: None`` by StrictDoc automatically.
 
+.. _UG_COMPOSABLE_DOCUMENTS:
+
 Composing documents from other documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. note::
-    The includable documents is an early feature with only 50%+ of the implementation complete. See `Epic: UI: Editable fragments <https://github.com/strictdoc-project/strictdoc/issues/1698>`_.
+    The composable documents is an early feature with only 50%+ of the implementation complete. See `Epic: UI: Composable documents <https://github.com/strictdoc-project/strictdoc/issues/1698>`_.
 
-StrictDoc ``.sdoc`` files can be built-up from including other documents.
+StrictDoc ``.sdoc`` files can be built-up from including other documents where a document can be included to no more than one including document.
 
 The ``[DOCUMENT_FROM_FILE]`` element can be used anywhere body elements can be
 used ( e.g. ``[SECTION]``, ``[REQUIREMENT``, ``[COMPOSITE_REQUIREMENT]`` etc.) and will
@@ -1024,6 +1026,12 @@ Which will resolve to the following document after inclusion:
     [/SECTION]
 
     [REQUIREMENT]
+
+.. note::
+
+    The Composable Documents feature belongs to the list of features that may be less portable when it comes to interfacing with other tools. See :ref:`Portability considerations <UG_PORTABILITY_CONSIDERATIONS>`.
+
+.. _UG_COMPOSITE_REQUIREMENT:
 
 Composite requirement
 ~~~~~~~~~~~~~~~~~~~~~
@@ -1692,6 +1700,8 @@ The following command creates a JSON export:
 
 The structure of the exported JSON mostly mirrors the structure of the underlying SDoc objects that represent the project tree, documents, sections, requirements, and other nodes.
 
+When the exported documents are included to other documents using the :ref:`Composing documents from other documents <UG_COMPOSABLE_DOCUMENTS>` feature, the JSON export does not include the included documents but only the including documents with the included content. This can be changed by adding the ``--included-documents`` option.
+
 Manage project tree
 ===================
 
@@ -2191,6 +2201,27 @@ The ``ManageAutoUIDCommand`` class features a good use of all APIs that one may 
 - And finally the final sequence writes the mutated traceability graph back to files using ``SDWriter``.
 
 For any custom Python API request, for example, a need to do a more advanced data analysis on SDoc data, open a GitHub issue and your specific issue will be handled.
+
+.. _UG_PORTABILITY_CONSIDERATIONS:
+
+Portability considerations
+==========================
+
+.. note::
+
+    **TL;DR**: The following topic of portability becomes relevant if documentation created with StrictDoc has to be exported to another tool and especially if the other tool has to export the content back to StrictDoc. Writing custom export/import generators may be needed to enable a full interoperability when the less portable features are used.
+
+The portability of documentation, particularly when it involves requirements, shares similarities to the portability of programming languages. StrictDoc has several features that are useful but they can also limit the interoperability of the documentation/requirements when the content is exchanged with other tools.
+
+The following is a list of features that are considered less portable when it comes to interfacing with other tools through the existing export/import interfaces:
+
+- :ref:`Composing documents from other documents <UG_COMPOSABLE_DOCUMENTS>`. Composing documents from other documents is a useful feature but it may not be directly supported by other tools. When exporting to JSON or ReqIF, StrictDoc by default does not export included documents but only the including documents.
+- :ref:`Composite requirement <UG_COMPOSITE_REQUIREMENT>`. A Composite Requirement is a useful concept which is partially supported by StrictDoc but it may be supported less by other tools.
+- :ref:`Section without a level <SECTION_WITHOUT_A_LEVEL>`. Table of contents hierarchy where some nodes do not have TOC levels (or have custom TOC levels) can cause problems when exporting/importing documentation content if an interfacing tool does not support custom TOC nodes.
+
+.. note::
+
+    It is easier to extend StrictDoc to produce a format supported by a given tool than it is to make the other tool export a 100%-identical content back to StrictDoc. If there is a need to interface with a tool X and something is missing in StrictDoc, please reach out to the developers (see :ref:`Contact the developers <SDOC_UG_CONTACT>`).
 
 .. _SDOC_UG_EXPERIMENTAL_FEATURES:
 

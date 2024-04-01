@@ -3,6 +3,13 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+0.0.53 (2024-04-01)
+===================
+
+The JSON export algorithm was extended to support composable documents. By default, the included documents are exported only as part of their including documents. To export both the including documents and included documents' standalone SDoc content, the option ``--included-documents`` option has to be specified with the ``export`` command.
+
+All code related to pybtex/BibTeX bibliographies has been removed from the StrictDoc project tree. This work was left unfinished for a long time and became unused legacy code over time. See the PR: `Remove all BibTeX bibliography-related code and pybtex dependency <https://github.com/strictdoc-project/strictdoc/pull/1744>`_ for more explanation.
+
 0.0.52 (2024-03-25)
 ===================
 

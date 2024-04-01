@@ -1956,6 +1956,8 @@ The following command creates a JSON export:
     strictdoc export YourDoc.sdoc --formats=json --output-dir output/
 
 The structure of the exported JSON mostly mirrors the structure of the underlying SDoc objects that represent the project tree, documents, sections, requirements, and other nodes.
+
+When the exported documents are included to other documents using the [LINK: UG_COMPOSABLE_DOCUMENTS] feature, the JSON export does not include the included documents but only the including documents with the included content. This can be changed by adding the ``--included-documents`` option.
 [/FREETEXT]
 
 [/SECTION]

@@ -1120,18 +1120,11 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   padding-right: calc(var(--base-rhythm) * 2);
 }
 
-.tree_fragments {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  /* gap: calc(var(--base-rhythm) * 0.5); */
-  /* margin-top: calc(var(--base-rhythm) * 0.5); */
+.tree_fragments { /* ul */
   margin-top: 0;
   margin-bottom: 0;
   padding-left: calc(var(--base-rhythm) * 2);
   padding-right: 0;
-  /* ul */
   list-style: none;
   width: 100%;
 }
@@ -1139,7 +1132,51 @@ sdoc-menu-handler[aria-expanded="true"] svg {
 .tree_fragments li {
   list-style: none;
   width: 100%;
-  /* padding-bottom: calc(var(--base-rhythm) * 0.5); */
+}
+
+.tree_fragments,
+.tree_fragments li {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--base-rhythm);
+}
+
+.tree_folder {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  column-gap: var(--base-rhythm);
+  min-width: 0;
+  line-height: 1.5;
+  width: 99%;
+  padding-top: 8px;
+  margin-top: 8px;
+  opacity: 0.6;
+  position: relative;
+  border-top: var(--base-border);
+}
+
+.tree_folder:first-child {
+  border-top: none;
+}
+
+.tree_folder_path {
+  font-size: var(--font-size-xsm);
+  font-weight: 400;
+}
+
+.tree_folder_path::before {
+  position: absolute;
+  /* content: ''; */
+  top: 0;
+  bottom: 0;
+  left: -20px;
+  right: -20px;
+  z-index: -1;
+  border-top: var(--base-border);
+  background-color: var(--color-bg-secondary);
 }
 
 a.tree_item,

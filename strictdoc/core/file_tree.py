@@ -270,11 +270,38 @@ class FileFinder:
 
 class PathFinder:
     @staticmethod
-    def find_directories(root_path, directory):
+    def find_directories(
+        root_path, directory, include_paths: List[str], exclude_paths: List[str]
+    ):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
+
+        path_filter_includes = PathFilter(
+            include_paths, positive_or_negative=True
+        )
+        path_filter_excludes = PathFilter(
+            exclude_paths, positive_or_negative=False
+        )
+
         directories = []
+        # Declare str type to make os.path.relpath type checking happy.
+        current_root_path: str
         for current_root_path, dirs, _ in os.walk(root_path, topdown=True):
+            current_root_relative_path: str = os.path.relpath(
+                current_root_path, start=root_path
+            )
+            current_root_relative_path = (
+                current_root_relative_path
+                if current_root_relative_path != "."
+                else ""
+            )
+
+            if path_filter_excludes.match(current_root_relative_path):
+                continue
+
+            if not path_filter_includes.match(current_root_relative_path):
+                continue
+
             dirs[:] = [
                 d
                 for d in dirs
@@ -285,6 +312,8 @@ class PathFinder:
                 and d != "Output"
                 and d != "tests"
             ]
+
             if os.path.basename(current_root_path) == directory:
                 directories.append(current_root_path)
+
         return directories

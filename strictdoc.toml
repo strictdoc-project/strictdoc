@@ -28,7 +28,8 @@ include_doc_paths = [
 ]
 
 exclude_doc_paths = [
-  "tests/**"
+  "docs/sphinx/**",
+  "tests/**",
 ]
 
 include_source_paths = [

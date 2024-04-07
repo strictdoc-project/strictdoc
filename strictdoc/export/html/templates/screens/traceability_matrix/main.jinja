@@ -22,7 +22,7 @@
     </thead>
 
     <tbody>
-    {%- for document in view_object.traceability_index.document_tree.document_list -%}
+    {%- for document in view_object.iterate_documents() -%}
       <tr class="traceability_matrix__anchor" id="{{ loop.index }}">
         <td class="traceability_matrix__document" colspan="100">
           <div class="traceability_matrix__document_line">
@@ -37,7 +37,7 @@
 
       {%- set document_iterator = view_object.traceability_index.get_document_iterator(document) -%}
 
-      {%- for section_or_requirement in document_iterator.all_content() %}
+      {%- for section_or_requirement in document_iterator.all_content(print_fragments=True, print_fragments_from_files=False) %}
         {%- if section_or_requirement.is_requirement %}
           <tr>
             <td>

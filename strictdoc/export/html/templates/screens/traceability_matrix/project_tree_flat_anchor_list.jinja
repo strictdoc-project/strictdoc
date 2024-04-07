@@ -1,5 +1,5 @@
 <div class="tree">
-  {%- for document in view_object.traceability_index.document_tree.document_list -%}
+  {%- for document in view_object.iterate_documents() -%}
     <a
       href="#{{ loop.index }}"
       class="tree_item"

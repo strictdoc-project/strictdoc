@@ -12,7 +12,7 @@ class PickleCache:
 
         full_path_to_file = (
             file_path
-            if os.path.abspath(file_path)
+            if os.path.isabs(file_path)
             else os.path.abspath(file_path)
         )
 

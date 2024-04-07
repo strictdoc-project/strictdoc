@@ -1,8 +1,5 @@
 [project]
 
 features = [
-  "TRACEABILITY_MATRIX_SCREEN",
   "REQUIREMENT_TO_SOURCE_TRACEABILITY",
 ]
-
-source_root_path = ".."

@@ -1,10 +1,12 @@
 # This test ensures that the traceability works without issues for the following
 # setup:
-# docs/ folder contains an .sdoc document.
-# src/ folder contains source files.
+# The project is in another folder compared to the current folder where
+# strictdoc is run from.
+# - docs/ folder contains an .sdoc document.
+# - src/ folder contains source files.
 # the .sdoc document references files in the src/ folder.
 
-RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S/project --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: TEST DOCUMENT
 
 RUN: %check_exists --file "%S/Output/html/_source_files/src/file1.py.html"

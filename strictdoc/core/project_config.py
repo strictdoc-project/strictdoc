@@ -80,7 +80,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         server_port: int,
         include_doc_paths: List[str],
         exclude_doc_paths: List[str],
-        source_root_path: str,
+        source_root_path: Optional[str],
         include_source_paths: List[str],
         exclude_source_paths: List[str],
         html2pdf_template: Optional[str],
@@ -91,9 +91,9 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         config_last_update: Optional[datetime.datetime],
     ):
         assert isinstance(environment, SDocRuntimeEnvironment)
-        assert isinstance(source_root_path, str), source_root_path
-        assert os.path.isdir(source_root_path), source_root_path
-        assert os.path.isabs(source_root_path), source_root_path
+        if source_root_path is not None:
+            assert os.path.isdir(source_root_path), source_root_path
+            assert os.path.isabs(source_root_path), source_root_path
 
         self.environment: SDocRuntimeEnvironment = environment
 
@@ -151,7 +151,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             server_port=ProjectConfig.DEFAULT_SERVER_PORT,
             include_doc_paths=[],
             exclude_doc_paths=[],
-            source_root_path=os.getcwd(),
+            source_root_path=None,
             include_source_paths=[],
             exclude_source_paths=[],
             html2pdf_template=None,
@@ -179,6 +179,12 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.filter_sections = export_config.filter_sections
         self.excel_export_fields = export_config.fields
         self.view = export_config.view
+        if self.source_root_path is None:
+            source_root_path = export_config.input_paths[0]
+            if not os.path.abspath(source_root_path):
+                source_root_path = os.path.abspath(source_root_path)
+            source_root_path = source_root_path.rstrip("/")
+            self.source_root_path = source_root_path
 
         if (
             export_config.enable_mathjax
@@ -339,7 +345,9 @@ class ProjectConfigLoader:
         path_to_config: Optional[str],
     ) -> ProjectConfig:
         if path_to_config is not None:
-            assert os.path.isfile(path_to_config)
+            assert os.path.isfile(path_to_config), path_to_config
+            if not os.path.abspath(path_to_config):
+                path_to_config = os.path.abspath(path_to_config)
 
         project_title = ProjectConfig.DEFAULT_PROJECT_TITLE
         dir_for_sdoc_assets = ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS
@@ -348,7 +356,7 @@ class ProjectConfigLoader:
         server_port = ProjectConfig.DEFAULT_SERVER_PORT
         include_doc_paths = []
         exclude_doc_paths = []
-        source_root_path = os.getcwd()
+        source_root_path = None
         include_source_paths = []
         exclude_source_paths = []
         html2pdf_template: Optional[str] = None
@@ -410,15 +418,25 @@ class ProjectConfigLoader:
             source_root_path = project_content.get(
                 "source_root_path", source_root_path
             )
-            if not os.path.isdir(source_root_path):
-                print(  # noqa: T201
-                    f"error: strictdoc.toml: 'source_root_path': "
-                    f"Provided path does not exist: "
-                    f"{source_root_path}."
-                )
-                sys.exit(1)
-            if not os.path.isabs(source_root_path):
-                source_root_path = os.path.abspath(source_root_path)
+            if source_root_path is not None:
+                original_source_root_path = source_root_path
+                if (
+                    not os.path.isabs(source_root_path)
+                    and path_to_config is not None
+                ):
+                    source_root_path = os.path.join(
+                        os.path.dirname(path_to_config), source_root_path
+                    )
+                    source_root_path = os.path.abspath(source_root_path)
+                if not os.path.isdir(source_root_path):
+                    print(  # noqa: T201
+                        f"error: strictdoc.toml: 'source_root_path': "
+                        f"Provided path does not exist: "
+                        f"{original_source_root_path}."
+                    )
+                    sys.exit(1)
+                if not os.path.isabs(source_root_path):
+                    source_root_path = os.path.abspath(source_root_path)
             include_source_paths = project_content.get(
                 "include_source_paths", include_source_paths
             )

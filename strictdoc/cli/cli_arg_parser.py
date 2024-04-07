@@ -162,10 +162,14 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         return path_to_config
 
     def validate(self):
-        for input_path_ in self.input_paths:
+        for idx_, input_path_ in enumerate(self.input_paths.copy()):
             if not os.path.exists(input_path_):
                 raise CLIValidationError(
                     f"Provided input path does not exist: {input_path_}"
+                )
+            if not os.path.isabs(input_path_):
+                self.input_paths[idx_] = os.path.abspath(input_path_).rstrip(
+                    "/"
                 )
         if self._config_path is not None:
             if not os.path.exists(self._config_path):

@@ -164,7 +164,8 @@ class FileFinder:
         exclude_paths: List[str],
     ):
         assert os.path.isdir(root_path)
-        assert os.path.isabs(root_path)
+        assert os.path.isabs(root_path), root_path
+        assert not root_path.endswith("/"), root_path
 
         extensions_tuple = tuple(extensions) if extensions is not None else ()
 
@@ -247,7 +248,10 @@ class FileFinder:
             current_parent_path = os.path.dirname(current_root_path)
 
             # top-down search assumes we have seen the parent before.
-            assert current_parent_path in folder_map
+            assert current_parent_path in folder_map, (
+                current_parent_path,
+                folder_map,
+            )
 
             current_parent_folder: Folder = folder_map[current_parent_path]
             current_tree.set_parent_folder(current_parent_folder)

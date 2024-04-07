@@ -133,7 +133,11 @@ class SourceFilesFinder:
         found_source_files: List[SourceFile] = []
 
         # TODO: Unify this on the FileTree class level.
-        doctree_root_abs_path = project_config.source_root_path
+        doctree_root_abs_path = (
+            project_config.source_root_path
+            if project_config.source_root_path is not None
+            else os.getcwd()
+        )
         doctree_root_abs_path = (
             os.path.dirname(doctree_root_abs_path)
             if os.path.isfile(doctree_root_abs_path)

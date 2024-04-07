@@ -31,7 +31,7 @@
           </ul>
         {% endif %}
 
-        {% if view_object.project_config.source_root_path %}
+        {% if view_object.project_config.source_root_path is not none %}
           <b>Source root path:</b>
           <div>
             <code style="word-wrap: break-word;">{{ view_object.project_config.source_root_path }}</code>

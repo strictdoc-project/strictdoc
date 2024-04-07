@@ -1,4 +1,4 @@
-RUN: %strictdoc export %S/input --output-dir Output | filecheck %s
+RUN: %strictdoc export %S/input --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%S/Output/html/traceability_matrix.html"

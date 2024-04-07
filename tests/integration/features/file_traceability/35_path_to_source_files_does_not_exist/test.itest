@@ -1,2 +1,2 @@
-RUN: %expect_exit 1 %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
 CHECK: error: strictdoc.toml: 'source_root_path': Provided path does not exist: DOES_NOT_EXIST/.

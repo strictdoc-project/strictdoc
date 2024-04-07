@@ -28,8 +28,5 @@ class Test(E2ECase):
             )
             screen_source_coverage.assert_on_screen()
 
-            # FIXME: When the source files root path becomes configurable,
-            # implement more specific assertions.
-            screen_source_coverage.assert_contains_text(
-                "excel_to_sdoc_converter.py"
-            )
+            screen_source_coverage.assert_contains_text("strictdoc.toml")
+            screen_source_coverage.assert_contains_text("test_case.py")

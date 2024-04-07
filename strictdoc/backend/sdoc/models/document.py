@@ -53,7 +53,7 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
 
         self.ng_including_document_reference: Optional = None
 
-    def document_is_included(self):
+    def document_is_included(self) -> bool:
         return self.ng_including_document_reference.get_document() is not None
 
     def get_included_document(self):

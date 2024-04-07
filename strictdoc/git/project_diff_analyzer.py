@@ -436,6 +436,13 @@ class ChangeStats:
 
         for document in index.document_tree.document_list:
             """
+            The included documents are ignored. All their information should
+            be contained in the including documents at this point.
+            """
+            if document.document_is_included():
+                continue
+
+            """
             First, take care of the document node itself. Check if the document
             root-level free text (abstract) has changed.
             """
@@ -551,7 +558,7 @@ class ChangeStats:
             Now iterate over all nodes and collect the diff information.
             """
             for node in document_iterator.all_content(
-                print_fragments=False, print_fragments_from_files=False
+                print_fragments=True, print_fragments_from_files=False
             ):
                 if isinstance(node, SDocSection):
                     if node in change_stats.map_nodes_to_changes:
@@ -1100,6 +1107,8 @@ class ProjectDiffAnalyzer:
         document_tree_stats: ProjectTreeDiffStats = ProjectTreeDiffStats()
 
         for document in traceability_index.document_tree.document_list:
+            if document.document_is_included():
+                continue
             ProjectDiffAnalyzer.analyze_document(document, document_tree_stats)
 
         return document_tree_stats
@@ -1136,7 +1145,7 @@ class ProjectDiffAnalyzer:
             document_tree_stats.map_nodes_to_hashes[free_text] = free_text_md5
 
         for node in document_iterator.all_content(
-            print_fragments=False, print_fragments_from_files=False
+            print_fragments=True, print_fragments_from_files=False
         ):
             if node.mid_permanent:
                 document_tree_stats.map_mid_to_nodes[node.reserved_mid] = node
@@ -1246,6 +1255,8 @@ class ProjectDiffAnalyzer:
                         .encode("utf-8")
                     )
                     map_nodes_to_hashers[node].update(node_md5)
+                else:
+                    raise NotImplementedError(sub_node_)
             return map_nodes_to_hashers[node].hexdigest().encode("utf-8")
 
         # Keeping this code in case we will need to include child node hashes
@@ -1255,7 +1266,7 @@ class ProjectDiffAnalyzer:
         # recurse(document)  # noqa: ERA001
 
         for node_ in document_iterator.all_content(
-            print_fragments=False, print_fragments_from_files=False
+            print_fragments=True, print_fragments_from_files=False
         ):
             node_md5 = map_nodes_to_hashers[node_].hexdigest().encode("utf-8")
             map_nodes_to_hashers[document].update(node_md5)
@@ -1270,3 +1281,5 @@ class ProjectDiffAnalyzer:
                 document_tree_stats.requirement_md5_hashes.add(node_md5)
             elif isinstance(node_, SDocDocument):
                 document_tree_stats.document_md5_hashes.add(node_md5)
+            else:
+                raise NotImplementedError(node_)

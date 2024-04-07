@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Fragment
+
+[FREETEXT]
+This is a fragment free text.
+[/FREETEXT]
+
+[REQUIREMENT]
+TITLE: Hello
+STATEMENT: System ABC shall do XYZ.

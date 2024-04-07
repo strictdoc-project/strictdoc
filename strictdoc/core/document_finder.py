@@ -192,8 +192,12 @@ class DocumentFinder:
 
             # Finding assets.
             tree_asset_dirs = PathFinder.find_directories(
-                path_to_doc_root, "_assets"
+                path_to_doc_root,
+                "_assets",
+                include_paths=project_config.include_doc_paths,
+                exclude_paths=project_config.exclude_doc_paths,
             )
+
             for asset_dir in tree_asset_dirs:
                 asset_dirs.append(
                     {

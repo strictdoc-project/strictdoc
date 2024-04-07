@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[FREETEXT]
+This is a free text.
+[/FREETEXT]
+
+[REQUIREMENT]
+TITLE: Hello
+STATEMENT: System ABC shall do XYZ.

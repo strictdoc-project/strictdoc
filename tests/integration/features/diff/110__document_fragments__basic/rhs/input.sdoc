@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[FREETEXT]
+This is a free text.
+[/FREETEXT]
+
+[DOCUMENT_FROM_FILE]
+FILE: fragment.sdoc

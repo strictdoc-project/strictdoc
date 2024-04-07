@@ -12,7 +12,7 @@
         {% endif %}
       {% else %}
         {%- set document = document_tree.get_document_by_path(folder_or_file.get_full_path()) %}
-
+        {% if not document.document_is_included() %}
         {% set document_md5 = self_stats.get_md5_by_node(document) %}
         {% set document_modified = not other_stats.contains_document_md5(document_md5) %}
 
@@ -33,7 +33,7 @@
             {% include "screens/git/fields/document_fields.jinja" %}
 
             {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
-            {%- for section_or_requirement in document_iterator.all_content() %}
+            {%- for section_or_requirement in document_iterator.all_content(print_fragments=True, print_fragments_from_files=False) %}
               {%- if section_or_requirement.is_requirement %}
                 {%- set requirement = section_or_requirement %}
                 {% include "screens/git/node/requirement.jinja" %}
@@ -44,7 +44,7 @@
               {%- endif %}
             {%- endfor -%}
         </details>
-
+        {% endif %}
       {% endif %}
     {%- endfor -%}
   </div>

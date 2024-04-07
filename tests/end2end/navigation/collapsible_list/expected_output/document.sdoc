@@ -19,6 +19,15 @@ TITLE: Nested section 1 title
 This is a free text of this nested section 1.
 [/FREETEXT]
 
+[SECTION]
+TITLE: Nested section 11 title
+
+[FREETEXT]
+This is a free text of this nested section 11.
+[/FREETEXT]
+
+[/SECTION]
+
 [/SECTION]
 
 [/SECTION]

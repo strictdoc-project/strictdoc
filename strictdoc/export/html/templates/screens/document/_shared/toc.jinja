@@ -2,6 +2,7 @@
       data-testid="toc-list"
       js-collapsible_list="list"
       class="toc"
+      id="toc"
       data-controller="draggable_list"
       {%- if last_moved_node_id is defined %}
       data-last_moved_node_id="{{ last_moved_node_id.get_string_value() }}"

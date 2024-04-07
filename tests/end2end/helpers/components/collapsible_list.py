@@ -23,7 +23,7 @@ class CollapsibleList:
 
     def assert_collapsible_handler(self) -> None:
         self.test_case.assert_element(
-            "//*[@data-collapsible_list__branch]",
+            "//*[@data-handler]",
             by=By.XPATH,
         )
 
@@ -31,13 +31,13 @@ class CollapsibleList:
 
     def assert_all_is_expanded(self) -> None:
         self.test_case.assert_element_not_visible(
-            '//*[@data-collapsible_list__branch="closed"]',
+            '//*[@data-handler="collapsed"]',
             by=By.XPATH,
         )
 
     def assert_all_is_collapsed(self) -> None:
         self.test_case.assert_element_not_visible(
-            '//*[@data-collapsible_list__branch="open"]',
+            '//*[@data-handler="expanded"]',
             by=By.XPATH,
         )
 
@@ -45,15 +45,13 @@ class CollapsibleList:
 
     def assert_is_expanded(self, string: str) -> None:
         self.test_case.assert_element(
-            f'//a[contains(., "{string}")]/..'
-            '/*[@data-collapsible_list__branch="open"]',
+            f'//a[contains(., "{string}")]/../*[@data-handler="expanded"]',
             by=By.XPATH,
         )
 
     def assert_is_collapsed(self, string: str) -> None:
         self.test_case.assert_element(
-            f'//a[contains(., "{string}")]/..'
-            '/*[@data-collapsible_list__branch="closed"]',
+            f'//a[contains(., "{string}")]/../*[@data-handler="collapsed"]',
             by=By.XPATH,
         )
 
@@ -75,20 +73,17 @@ class CollapsibleList:
 
     def do_toggle_collapsible(self, string: str) -> None:
         self.test_case.click_xpath(
-            f'//a[contains(., "{string}")]/..'
-            "/*[@data-collapsible_list__branch]",
+            f'//a[contains(., "{string}")]/../*[@data-handler]',
         )
 
     def do_bulk_collapse(self, string: str) -> None:
         self.test_case.double_click(
-            f'//a[contains(., "{string}")]/..'
-            '/*[@data-collapsible_list__branch="open"]',
+            f'//a[contains(., "{string}")]/../*[@data-handler="expanded"]',
             by=By.XPATH,
         )
 
     def do_bulk_expand(self, string: str) -> None:
         self.test_case.double_click(
-            f'//a[contains(., "{string}")]/..'
-            '/*[@data-collapsible_list__branch="closed"]',
+            f'//a[contains(., "{string}")]/../*[@data-handler="collapsed"]',
             by=By.XPATH,
         )

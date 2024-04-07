@@ -68,11 +68,16 @@ class Test_UC114_T01_UI_collapsible_list(E2ECase):
             # test bulk operation
 
             collapsible_list.do_bulk_collapse("Section 1 title")
-            collapsible_list.assert_all_is_collapsed()
             collapsible_list.assert_visible_not("Nested section 1 title")
-            collapsible_list.assert_visible_not("Nested section 2 title")
+            collapsible_list.assert_visible_not("Nested section 11 title")
+            collapsible_list.do_toggle_collapsible("Section 1 title")
+            collapsible_list.assert_visible_not("Nested section 11 title")
 
+            collapsible_list.do_toggle_collapsible("Section 1 title")
+            collapsible_list.assert_visible_not("Nested section 1 title")
             collapsible_list.do_bulk_expand("Section 1 title")
+            collapsible_list.assert_visible("Nested section 11 title")
+
             collapsible_list.assert_all_is_expanded()
             collapsible_list.assert_visible("Nested section 1 title")
             collapsible_list.assert_visible("Nested section 2 title")
@@ -84,6 +89,7 @@ class Test_UC114_T01_UI_collapsible_list(E2ECase):
             collapsible_list.assert_all_is_expanded()
 
             collapsible_list.do_bulk_collapse("Section 1 title")
+            collapsible_list.do_bulk_collapse("Section 2 title")
             collapsible_list.assert_all_is_collapsed()
             self.refresh()
             collapsible_list.assert_all_is_collapsed()

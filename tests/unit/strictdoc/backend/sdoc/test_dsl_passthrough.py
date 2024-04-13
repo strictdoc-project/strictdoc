@@ -18,7 +18,7 @@ from strictdoc.backend.sdoc.writer import SDWriter
 
 
 def test_001_minimal_doc():
-    input_sdoc = """
+    input_sdoc = """\
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -27,7 +27,7 @@ TITLE: Test Doc
 [REQUIREMENT]
 
 [REQUIREMENT]
-""".lstrip()
+"""
 
     reader = SDReader()
 
@@ -105,7 +105,7 @@ TITLE: Hello
 
 
 def test_010_multiple_sections():
-    input_sdoc = """
+    input_sdoc = """\
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -132,7 +132,7 @@ This is a statement 3
 <<<
 
 [/SECTION]
-""".lstrip()
+"""
 
     reader = SDReader()
 
@@ -141,7 +141,6 @@ This is a statement 3
 
     writer = SDWriter()
     output = writer.write(document)
-
     assert input_sdoc == output
 
 
@@ -340,7 +339,6 @@ This is a child body part 3
 
     writer = SDWriter()
     output = writer.write(document)
-
     assert input_sdoc == output
 
     assert isinstance(

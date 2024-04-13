@@ -71,7 +71,7 @@
     {% endblock sdoc_entity %}
 
     {# node_controls #}
-    {%- if is_not_standalone and not is_root_section -%}
+    {%- if is_not_standalone -%}
     {% include "components/node/node_controls/index.jinja" %}
     {%- endif -%}
 

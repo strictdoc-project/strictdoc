@@ -74,12 +74,26 @@ class CreateRequirementTransform:
             parent = reference_node
             insert_to_idx = len(parent.section_contents)
         elif whereto == NodeCreationOrder.BEFORE:
-            parent = reference_node.parent
-            insert_to_idx = parent.section_contents.index(reference_node)
+            # Be aware of an edge case besides all normal cases:
+            # A reference node can be a root node of an included document.
+            if not isinstance(reference_node, SDocDocument):
+                parent = reference_node.parent
+                insert_to_idx = parent.section_contents.index(reference_node)
+            else:
+                parent = reference_node.ng_including_document_from_file.parent
+                insert_to_idx = parent.section_contents.index(
+                    reference_node.ng_including_document_from_file
+                )
         elif whereto == NodeCreationOrder.AFTER:
             if isinstance(reference_node, SDocDocument):
-                parent = reference_node
-                insert_to_idx = 0
+                assert reference_node.document_is_included()
+                parent = reference_node.ng_including_document_from_file.parent
+                insert_to_idx = (
+                    parent.section_contents.index(
+                        reference_node.ng_including_document_from_file
+                    )
+                    + 1
+                )
             else:
                 parent = reference_node.parent
                 insert_to_idx = (

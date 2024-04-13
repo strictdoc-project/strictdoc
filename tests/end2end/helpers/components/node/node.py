@@ -4,6 +4,9 @@ from seleniumbase import BaseCase
 from tests.end2end.helpers.components.confirm import Confirm
 from tests.end2end.helpers.components.node.add_node_menu import AddNode_Menu
 from tests.end2end.helpers.constants import NBSP
+from tests.end2end.helpers.screens.document.form_edit_included_document import (
+    Form_EditIncludedDocument,
+)
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -158,6 +161,10 @@ class Node:  # pylint: disable=invalid-name
     def do_open_form_edit_section(self) -> Form_EditSection:
         self._do_node_edit()
         return Form_EditSection(self.test_case)
+
+    def do_open_form_edit_included_document(self) -> Form_EditIncludedDocument:
+        self._do_node_edit()
+        return Form_EditIncludedDocument(self.test_case)
 
     # title string pattern
 

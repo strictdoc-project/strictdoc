@@ -50,7 +50,7 @@ class LinkRenderer:
             return f"{self._string_to_link(node.value)}"
 
         unique_prefix = node.context.title_number_string
-        if isinstance(node, SDocSection):
+        if isinstance(node, (SDocSection, SDocDocument)):
             local_anchor = f"{unique_prefix}-{self._string_to_link(node.title)}"
         elif isinstance(node, SDocNode):
             if node.reserved_uid and len(node.reserved_uid) > 0:

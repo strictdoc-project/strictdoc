@@ -38,6 +38,7 @@ class SDReader:
             input_string, file_name=file_path
         )
         parse_context.document_reference.set_document(document)
+        document.ng_has_requirements = parse_context.document_has_requirements
         document.ng_uses_old_refs_field = parse_context.uses_old_refs_field
         document.ng_at_least_one_relations_field = (
             parse_context.at_least_one_relations_field

@@ -560,7 +560,7 @@ class ChangeStats:
             for node in document_iterator.all_content(
                 print_fragments=True, print_fragments_from_files=False
             ):
-                if isinstance(node, SDocSection):
+                if isinstance(node, (SDocSection, SDocDocument)):
                     if node in change_stats.map_nodes_to_changes:
                         continue
 
@@ -1150,7 +1150,7 @@ class ProjectDiffAnalyzer:
             if node.mid_permanent:
                 document_tree_stats.map_mid_to_nodes[node.reserved_mid] = node
 
-            if isinstance(node, SDocSection):
+            if isinstance(node, (SDocSection, SDocDocument)):
                 if node.reserved_uid is not None:
                     document_tree_stats.map_uid_to_nodes[node.reserved_uid] = (
                         node
@@ -1241,7 +1241,7 @@ class ProjectDiffAnalyzer:
 
                 map_nodes_to_hashers[node] = hasher
             else:
-                raise AssertionError
+                raise AssertionError(node)
 
         def recurse(node):
             assert isinstance(node, (SDocSection, SDocDocument))

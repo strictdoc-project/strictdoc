@@ -684,10 +684,6 @@ class TraceabilityIndexBuilder:
                     resolved_document
                 )
 
-                resolved_document.ng_including_document_reference.set_document(
-                    document_
-                )
-                document_.included_documents.append(resolved_document)
         # @sdoc[/SDOC-SRS-109]
 
         return traceability_index

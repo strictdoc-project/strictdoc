@@ -328,7 +328,7 @@ class SDWriter:
 
         output += "FILE: "
         output += document_from_file.file
-        output += "\n"
+        output += "\n\n"
 
         return output
 

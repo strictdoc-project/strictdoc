@@ -133,7 +133,7 @@ class MarkupRenderer:
         assert self.context_document is not None
 
         if (document_type, free_text) in self.cache:
-            return self.cache[free_text]
+            return self.cache[(document_type, free_text)]
 
         parts_output = ""
         for part in free_text.parts:

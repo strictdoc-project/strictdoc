@@ -211,7 +211,7 @@ class JSONGenerator:
                 )
             )
 
-        if isinstance(node, SDocSection):
+        if isinstance(node, (SDocSection, SDocDocument)):
             section_dict = cls._write_section(
                 node, document, get_level_string_(node)
             )
@@ -255,7 +255,7 @@ class JSONGenerator:
 
         elif isinstance(node, DocumentFromFile):
             subnode_dict = cls._write_node(
-                node.top_section, document, level_stack
+                node.resolved_document, document, level_stack
             )
             return subnode_dict
 
@@ -266,7 +266,7 @@ class JSONGenerator:
     def _write_section(
         cls, section: SDocSection, document: SDocDocument, level_string: str
     ) -> Dict:
-        assert isinstance(section, SDocSection)
+        assert isinstance(section, (SDocSection, SDocDocument))
         node_dict: Dict[str, Any] = {
             "_TOC": level_string,
             "TYPE": "SECTION",
@@ -280,7 +280,10 @@ class JSONGenerator:
         if section.uid:
             node_dict["UID"] = section.uid
 
-        if section.custom_level:
+        if (
+            isinstance(section, SDocSection)
+            and section.custom_level is not None
+        ):
             node_dict["LEVEL"] = section.custom_level
 
         if section.requirement_prefix is not None:

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from jinja2 import Environment, Template
 
@@ -14,6 +14,7 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.server.helpers.turbo import render_turbo_stream
 
 
 @dataclass
@@ -114,6 +115,29 @@ class DocumentScreenViewObject:
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
         output += toc_template.render(view_object=self)
+
+        return output
+
+    def render_updated_node_and_toc(
+        self, node: Union[SDocDocument], jinja_environment: Environment
+    ) -> str:
+        template = jinja_environment.get_template(
+            "components/section/index_extends_node.jinja"
+        )
+        output = render_turbo_stream(
+            content=template.render(view_object=self, section=node),
+            action="replace",
+            target=f"article-{node.reserved_mid}",
+        )
+
+        toc_template = jinja_environment.get_template(
+            "screens/document/_shared/toc.jinja"
+        )
+        output += render_turbo_stream(
+            content=toc_template.render(view_object=self),
+            action="update",
+            target="frame-toc",
+        )
 
         return output
 

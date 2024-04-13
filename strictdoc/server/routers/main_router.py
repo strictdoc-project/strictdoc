@@ -62,6 +62,9 @@ from strictdoc.core.transforms.update_grammar import UpdateGrammarCommand
 from strictdoc.core.transforms.update_grammar_element import (
     UpdateGrammarElementCommand,
 )
+from strictdoc.core.transforms.update_included_document import (
+    UpdateIncludedDocumentTransform,
+)
 from strictdoc.core.transforms.update_requirement import (
     UpdateRequirementResult,
     UpdateRequirementTransform,
@@ -75,6 +78,9 @@ from strictdoc.export.html.form_objects.grammar_element_form_object import (
 )
 from strictdoc.export.html.form_objects.grammar_form_object import (
     GrammarFormObject,
+)
+from strictdoc.export.html.form_objects.included_document_form_object import (
+    IncludedDocumentFormObject,
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormField,
@@ -338,10 +344,6 @@ def create_main_router(
         context_document_mid: str = request_dict["context_document_mid"]
         whereto: str = request_dict["whereto"]
 
-        reference_node = export_action.traceability_index.get_node_by_mid(
-            MID(reference_mid)
-        )
-
         assert isinstance(whereto, str), whereto
         assert NodeCreationOrder.is_valid(whereto), whereto
 
@@ -350,13 +352,8 @@ def create_main_router(
             request_form_data=request_form_data,
         )
 
-        reference_node: Union[SDocDocument, SDocSection] = (
-            export_action.traceability_index.get_node_by_mid(MID(reference_mid))
-        )
-        document = (
-            reference_node
-            if isinstance(reference_node, SDocDocument)
-            else reference_node.document
+        context_document = export_action.traceability_index.get_node_by_mid(
+            MID(context_document_mid)
         )
 
         try:
@@ -376,7 +373,7 @@ def create_main_router(
                 "actions/document/create_section/stream_new_section.jinja.html"
             )
             link_renderer = LinkRenderer(
-                root_path=document.meta.get_root_path_prefix(),
+                root_path=context_document.meta.get_root_path_prefix(),
                 static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
@@ -385,7 +382,7 @@ def create_main_router(
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
                 config=project_config,
-                context_document=document,
+                context_document=context_document,
             )
             output = template.render(
                 renderer=markup_renderer,
@@ -416,7 +413,7 @@ def create_main_router(
         export_action.traceability_index.update_last_updated()
 
         link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix(),
+            root_path=context_document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
@@ -425,10 +422,7 @@ def create_main_router(
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
             config=project_config,
-            context_document=document,
-        )
-        context_document = export_action.traceability_index.get_node_by_mid(
-            MID(context_document_mid)
+            context_document=context_document,
         )
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
@@ -688,14 +682,24 @@ def create_main_router(
 
         assert NodeCreationOrder.is_valid(whereto), whereto
 
+        context_document = export_action.traceability_index.get_node_by_mid(
+            MID(context_document_mid)
+        )
+
         reference_node = export_action.traceability_index.get_node_by_mid(
             MID(reference_mid)
         )
-        document = (
-            reference_node
-            if isinstance(reference_node, SDocDocument)
-            else reference_node.document
-        )
+
+        # Which document becomes the new requirement's parent is based on
+        # whether the reference node is a root node of an included document or not.
+        document: SDocDocument
+        if isinstance(reference_node, SDocDocument):
+            if whereto == "child":
+                document = reference_node
+            else:
+                document = context_document
+        else:
+            document = reference_node.document
 
         document_tree_stats: DocumentTreeStats = (
             DocumentUIDAnalyzer.analyze_document_tree(
@@ -916,6 +920,8 @@ def create_main_router(
 
         # Saving new content to .SDoc files.
         SDWriter().write_to_file(document)
+        if document != context_document:
+            SDWriter().write_to_file(context_document)
 
         # Exporting the updated document to HTML. Note that this happens after
         # the traceability index last update marker has been updated. This way
@@ -1830,6 +1836,28 @@ def create_main_router(
             },
         )
 
+    @router.get(
+        "/actions/document/edit_included_document", response_class=Response
+    )
+    def document__edit_included_document(
+        document_mid: str, context_document_mid: str
+    ):
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
+        )
+        form_object = IncludedDocumentFormObject.create_from_document(
+            document=document,
+            context_document_mid=context_document_mid,
+            jinja_environment=env(),
+        )
+        return HTMLResponse(
+            content=form_object.render_edit_form(),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.post("/actions/document/save_config", response_class=Response)
     async def document__save_edit_config(request: Request):
         request_form_data: FormData = await request.form()
@@ -1918,6 +1946,86 @@ def create_main_router(
             },
         )
 
+    @router.post(
+        "/actions/document/save_included_document", response_class=Response
+    )
+    async def document__save_included_document(request: Request):
+        request_form_data: FormData = await request.form()
+        request_dict: Dict[str, str] = dict(request_form_data)
+        document_mid: str = request_dict["document_mid"]
+        context_document_mid: str = request_dict["context_document_mid"]
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
+        )
+        context_document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(context_document_mid)
+            )
+        )
+        form_object: IncludedDocumentFormObject = (
+            IncludedDocumentFormObject.create_from_request(
+                request_form_data=request_form_data, jinja_environment=env()
+            )
+        )
+        try:
+            update_command = UpdateIncludedDocumentTransform(
+                form_object=form_object,
+                document=document,
+                traceability_index=export_action.traceability_index,
+                config=project_config,
+            )
+            update_command.perform()
+        except MultipleValidationError as validation_error:
+            for error_key, errors in validation_error.errors.items():
+                for error in errors:
+                    form_object.add_error(error_key, error)
+            return HTMLResponse(
+                content=form_object.render_edit_form(),
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        # Re-generate the document's SDOC.
+        SDWriter().write_to_file(document)
+
+        # Update the index because other documents might be referenced by this
+        # document's free text. These documents will be regenerated on demand,
+        # when they are opened next time.
+        export_action.traceability_index.update_last_updated()
+
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.document(),
+            document=context_document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
+        )
+        return HTMLResponse(
+            content=view_object.render_updated_node_and_toc(
+                node=document, jinja_environment=env()
+            ),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @router.get("/actions/document/cancel_edit_config", response_class=Response)
     def document__cancel_edit_config(document_mid: str):
         document: SDocDocument = (
@@ -1951,6 +2059,49 @@ def create_main_router(
             standalone=False,
         )
         output = template.render(view_object=view_object, document=document)
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get(
+        "/actions/document/cancel_edit_included_document",
+        response_class=Response,
+    )
+    def document__cancel_edit_included_document(document_mid: str):
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
+        )
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup="RST",
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        template = env().get_template(
+            "actions/document/edit_section/stream_updated_section.jinja.html"
+        )
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.document(),
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            standalone=False,
+        )
+        output = template.render(
+            view_object=view_object, document=document, section=document
+        )
         return HTMLResponse(
             content=output,
             status_code=200,

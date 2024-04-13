@@ -1,0 +1,44 @@
+<turbo-frame id="article-{{ form_object.document_mid }}">
+<sdoc-form>
+
+  <form
+    method="POST"
+    data-turbo="true"
+    action="/actions/document/save_included_document"
+  >
+    <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
+    <input type="hidden" id="context_document_mid" name="context_document_mid" value="{{ form_object.context_document_mid }}"/>
+
+    <sdoc-form-grid>
+      {%- with
+        field_type="singleline",
+        field_name="TITLE",
+        field_input_name="document[TITLE]",
+        field_value=form_object.document_title,
+        errors=form_object.get_errors("TITLE")
+      -%}
+        {% include "components/form/field/text/index.jinja" %}
+      {%- endwith -%}
+
+      {%- with
+        field_type="multiline",
+        field_name="FREETEXT",
+        field_input_name="document[FREETEXT]",
+        field_value=form_object.document_freetext_escaped,
+        errors=form_object.get_errors("FREETEXT")
+      -%}
+        {% include "components/form/field/text/index.jinja" %}
+      {%- endwith -%}
+    </sdoc-form-grid>
+
+    <sdoc-form-footer>
+      {% include "components/button/submit.jinja" %}
+      {%- with cancel_href="/actions/document/cancel_edit_included_document?document_mid="~form_object.document_mid -%}
+        {% include "components/button/cancel.jinja" %}
+      {%- endwith -%}
+    </sdoc-form-footer>
+
+  </form>
+
+</sdoc-form>
+</turbo-frame>

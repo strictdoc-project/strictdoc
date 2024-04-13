@@ -201,36 +201,48 @@ class SDWriter:
         document_grammar: DocumentGrammar = document.grammar
         if not document_grammar.is_default:
             output += "\n[GRAMMAR]\n"
-            output += "ELEMENTS:\n"
-            for element in document_grammar.elements:
-                output += "- TAG: "
-                output += element.tag
-                output += "\n  FIELDS:\n"
-                refs_field: Optional[GrammarElementFieldReference] = None
-                for grammar_field in element.fields:
-                    if grammar_field.title == "REFS":
-                        refs_field = assert_cast(
-                            grammar_field, GrammarElementFieldReference
+            if document_grammar.import_from_file is not None:
+                output += (
+                    f"IMPORT_FROM_FILE: {document_grammar.import_from_file}\n"
+                )
+            else:
+                output += "ELEMENTS:\n"
+                for element in document_grammar.elements:
+                    output += "- TAG: "
+                    output += element.tag
+                    output += "\n  FIELDS:\n"
+                    refs_field: Optional[GrammarElementFieldReference] = None
+                    for grammar_field in element.fields:
+                        if grammar_field.title == "REFS":
+                            refs_field = assert_cast(
+                                grammar_field, GrammarElementFieldReference
+                            )
+                            continue
+                        output += SDWriter._print_grammar_field_type(
+                            grammar_field
                         )
-                        continue
-                    output += SDWriter._print_grammar_field_type(grammar_field)
 
-                relations: List = element.relations
-                assert len(relations) > 0, relations
+                    relations: List = element.relations
+                    assert len(relations) > 0, relations
 
-                # For backward compatibility, we print RELATIONS from REFS
-                # grammar field if it exists.
-                if not document_grammar.is_default and refs_field is not None:
-                    relations = refs_field.convert_to_relations()
-                output += "  RELATIONS:\n"
+                    # For backward compatibility, we print RELATIONS from REFS
+                    # grammar field if it exists.
+                    if (
+                        not document_grammar.is_default
+                        and refs_field is not None
+                    ):
+                        relations = refs_field.convert_to_relations()
+                    output += "  RELATIONS:\n"
 
-                assert len(relations) > 0, relations
-                for element_relation in relations:
-                    output += f"  - TYPE: {element_relation.relation_type}\n"
-                    if element_relation.relation_role is not None:
+                    assert len(relations) > 0, relations
+                    for element_relation in relations:
                         output += (
-                            f"    ROLE: {element_relation.relation_role}\n"
+                            f"  - TYPE: {element_relation.relation_type}\n"
                         )
+                        if element_relation.relation_role is not None:
+                            output += (
+                                f"    ROLE: {element_relation.relation_role}\n"
+                            )
 
         for free_text in document.free_texts:
             output += "\n"

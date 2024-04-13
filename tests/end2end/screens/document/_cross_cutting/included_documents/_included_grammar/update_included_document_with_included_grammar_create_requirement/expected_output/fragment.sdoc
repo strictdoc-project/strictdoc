@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Fragment
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[SECTION]
+TITLE: First section
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<
+
+[/SECTION]

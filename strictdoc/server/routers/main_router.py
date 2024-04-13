@@ -2402,7 +2402,7 @@ def create_main_router(
             server_config.output_path, "html", "_temp.pdf"
         )
         pdf_print_driver = PDFPrintDriver()
-        with open(path_to_output_html, mode="w") as temp_file_:
+        with open(path_to_output_html, mode="w", encoding="utf8") as temp_file_:
             temp_file_.write(document_content)
 
             try:

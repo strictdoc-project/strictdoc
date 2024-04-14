@@ -176,11 +176,21 @@ class CreateSectionCommand:
         reference_node: Union[SDocDocument, SDocSection] = (
             traceability_index.get_node_by_mid(MID(reference_mid))
         )
-        document = (
-            reference_node
-            if isinstance(reference_node, SDocDocument)
-            else reference_node.document
-        )
+
+        document = None
+        if isinstance(reference_node, SDocDocument):
+            if not reference_node.document_is_included():
+                document = reference_node
+            else:
+                # Edge case: a reference node is a root one from included document.
+                # Only when a child node is added, the document is set to the included document.
+                # Otherwise, to the including document.
+                if whereto == "child":
+                    document = reference_node
+                else:
+                    document = reference_node.get_included_document()
+        else:
+            document = reference_node.document
 
         if len(form_object.section_title) == 0:
             errors["section_title"].append("Section title must not be empty.")
@@ -253,16 +263,32 @@ class CreateSectionCommand:
             parent = reference_node
             insert_to_idx = len(parent.section_contents)
         elif whereto == NodeCreationOrder.BEFORE:
-            assert isinstance(reference_node, (SDocNode, SDocSection))
-            parent = reference_node.parent
-            insert_to_idx = parent.section_contents.index(reference_node)
+            assert isinstance(
+                reference_node, (SDocDocument, SDocNode, SDocSection)
+            ), reference_node
+            # Be aware of an edge case besides all normal cases:
+            # A reference node can be a root node of an included document.
+            if not isinstance(reference_node, SDocDocument):
+                parent = reference_node.parent
+                insert_to_idx = parent.section_contents.index(reference_node)
+            else:
+                parent = reference_node.ng_including_document_from_file.parent
+                insert_to_idx = parent.section_contents.index(
+                    reference_node.ng_including_document_from_file
+                )
         elif whereto == NodeCreationOrder.AFTER:
             assert isinstance(
                 reference_node, (SDocDocument, SDocNode, SDocSection)
             )
             if isinstance(reference_node, SDocDocument):
-                parent = reference_node
-                insert_to_idx = 0
+                assert reference_node.document_is_included()
+                parent = reference_node.ng_including_document_from_file.parent
+                insert_to_idx = (
+                    parent.section_contents.index(
+                        reference_node.ng_including_document_from_file
+                    )
+                    + 1
+                )
             else:
                 parent = reference_node.parent
                 insert_to_idx = (

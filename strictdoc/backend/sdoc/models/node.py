@@ -224,6 +224,10 @@ class SDocNode(SDocObject):
         return self.reserved_title
 
     @property
+    def is_root_included_document(self):
+        return False
+
+    @property
     def is_root(self) -> bool:
         return self.document.config.root is True
 

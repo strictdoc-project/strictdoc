@@ -70,6 +70,10 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
     def get_node_type_string(self) -> Optional[str]:
         return None
 
+    @property
+    def is_root_included_document(self):
+        return False
+
     def get_title(self):
         return self.title
 

@@ -150,6 +150,18 @@ class DocumentCachingIterator:
             yield node
 
         elif isinstance(node, SDocDocument):
+            if (
+                print_fragments
+                and node.document_is_included()
+                and self.document != node
+            ):
+                node.context.title_number_string = ".".join(
+                    map(str, level_stack)
+                )
+                node.ng_level = len(level_stack)
+
+                yield node
+
             current_number = 0
             for subnode_ in node.section_contents:
                 if subnode_.ng_resolved_custom_level is None:
@@ -170,7 +182,7 @@ class DocumentCachingIterator:
                 return
 
             yield from self._all_content(
-                node.top_section,
+                node.resolved_document,
                 print_fragments=print_fragments,
                 print_fragments_from_files=print_fragments_from_files,
                 level_stack=level_stack,

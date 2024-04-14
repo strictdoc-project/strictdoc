@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section Foobar
+
+[/SECTION]
+
+[DOCUMENT_FROM_FILE]
+FILE: fragment.sdoc

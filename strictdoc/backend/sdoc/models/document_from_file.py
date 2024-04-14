@@ -1,7 +1,6 @@
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.auto_described import auto_described
 
 
@@ -22,7 +21,6 @@ class DocumentFromFile:
         self.ng_whitelisted = True
         self.resolved_full_path_to_document_file = None
         self.resolved_document: Optional = None
-        self.top_section: Optional = None
 
     @property
     def document(self):
@@ -43,25 +41,23 @@ class DocumentFromFile:
 
     @property
     def section_contents(self) -> List:
-        return [self.top_section]
+        return [self.resolved_document]
 
-    def configure_with_resolved_document(self, document):
-        assert document is not None
-        self.resolved_document = document
-
-        top_section = SDocSection(
-            self,
-            mid=None,
-            uid=None,
-            custom_level=None,
-            title=self.resolved_document.title,
-            requirement_prefix=self.resolved_document.get_requirement_prefix(),
-            free_texts=self.resolved_document.free_texts,
-            section_contents=self.resolved_document.section_contents,
-            root_section=True,
-        )
+    def configure_with_resolved_document(self, resolved_document):
         assert self.ng_included_document_reference is None
         assert self.ng_document_reference is not None
-        top_section.ng_document_reference = self.ng_document_reference
-        top_section.ng_including_document_reference = self.ng_document_reference
-        self.top_section = top_section
+
+        assert resolved_document is not None
+        self.resolved_document = resolved_document
+
+        including_document = self.parent
+        assert (
+            including_document.__class__.__name__ == "SDocDocument"
+        ), including_document
+
+        resolved_document.ng_including_document_from_file = self
+
+        resolved_document.ng_including_document_reference.set_document(
+            including_document
+        )
+        including_document.included_documents.append(resolved_document)

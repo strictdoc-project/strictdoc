@@ -11,7 +11,7 @@
           {%- set requirement = section_or_requirement %}
           {% include "components/requirement/index_extends_node.jinja" %}
 
-        {%- elif section_or_requirement.is_section %}
+        {%- elif section_or_requirement.is_section or section_or_requirement.is_document %}
           {%- set section = section_or_requirement %}
           {% include "components/section/index_extends_node.jinja" %}
         {%- endif %}

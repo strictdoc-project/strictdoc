@@ -47,6 +47,21 @@ class DocumentCachingIterator:
             custom_level=not root_node.config.auto_levels,
         )
 
+    def all_content_from_node(
+        self,
+        node,
+        print_fragments: bool = False,
+        print_fragments_from_files: bool = False,
+    ):
+        document = node if isinstance(node, SDocDocument) else node.document
+        yield from self._all_content(
+            node,
+            print_fragments=print_fragments,
+            print_fragments_from_files=print_fragments_from_files,
+            level_stack=(),
+            custom_level=not document.config.auto_levels,
+        )
+
     def _all_content(
         self,
         node,

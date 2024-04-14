@@ -1,7 +1,7 @@
 import os.path
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -248,72 +248,77 @@ class SDWriter:
             output += "\n"
             output += self._print_free_text(free_text)
 
-        output += self._print_body(document, document, document_iterator)
+        output += "\n"
+
+        output += self._print_node(document, document, document_iterator)
+
+        output = output.rstrip()
+        output += "\n"
 
         return output, fragments_dict
 
-    def _print_body(
+    def _print_node(
         self,
-        root_node: SDocDocument,
+        root_node: Union[SDocDocument, SDocSection, SDocNode, DocumentFromFile],
         document: SDocDocument,
         document_iterator: DocumentCachingIterator,
     ):
-        assert isinstance(root_node, SDocDocument), root_node
         assert isinstance(
             document_iterator, DocumentCachingIterator
         ), document_iterator
 
-        output = ""
+        if isinstance(root_node, SDocDocument):
+            output = ""
 
-        closing_tags = []
-        for content_node in document_iterator.all_content(
-            print_fragments=False, print_fragments_from_files=True
-        ):
-            if isinstance(content_node, DocumentFromFile):
-                document_from_file: DocumentFromFile = assert_cast(
-                    content_node, DocumentFromFile
+            for node_ in root_node.section_contents:
+                if not node_.ng_whitelisted:
+                    continue
+                output += self._print_node(
+                    node_, document, document_iterator=document_iterator
                 )
-                output += "\n"
-                output += self._print_document_from_file(document_from_file)
+            return output
 
-                continue
+        if isinstance(root_node, DocumentFromFile):
+            document_from_file: DocumentFromFile = assert_cast(
+                root_node, DocumentFromFile
+            )
+            return self._print_document_from_file(document_from_file)
 
-            while (
-                len(closing_tags) > 0
-                and content_node.ng_level <= closing_tags[-1][1]
-            ):
-                closing_tag, _ = closing_tags.pop()
-                output += self._print_closing_tag(closing_tag)
+        if isinstance(root_node, SDocSection):
+            return self._print_section(root_node, document, document_iterator)
 
+        elif isinstance(root_node, SDocNode):
+            output = ""
+            if isinstance(root_node, SDocCompositeNode):
+                output += "[COMPOSITE_"
+                output += root_node.requirement_type
+                output += "]\n"
+            else:
+                output += "["
+                output += root_node.requirement_type
+                output += "]\n"
+
+            output += self._print_requirement_fields(
+                section_content=root_node, document=document
+            )
             output += "\n"
 
-            if not content_node.ng_whitelisted:
-                continue
-
-            elif isinstance(content_node, SDocSection):
-                output += self._print_section(content_node, document)
-                closing_tags.append((TAG.SECTION, content_node.ng_level))
-            elif isinstance(content_node, SDocNode):
-                if isinstance(content_node, SDocCompositeNode):
-                    output += "[COMPOSITE_"
-                    output += content_node.requirement_type
-                    output += "]\n"
-                    closing_tags.append(
-                        (TAG.COMPOSITE_REQUIREMENT, content_node.ng_level)
+            if isinstance(root_node, SDocCompositeNode):
+                for node_ in root_node.requirements:
+                    if not node_.ng_whitelisted:
+                        continue
+                    output += self._print_node(
+                        node_, document, document_iterator=document_iterator
                     )
-                else:
-                    output += "["
-                    output += content_node.requirement_type
-                    output += "]\n"
 
-                output += self._print_requirement_fields(
-                    section_content=content_node, document=document
-                )
+                output += "[/COMPOSITE_"
+                output += root_node.requirement_type
+                output += "]\n"
+                output += "\n"
 
-        for closing_tag, _ in reversed(closing_tags):
-            output += self._print_closing_tag(closing_tag)
+            return output
 
-        return output
+        raise AssertionError("Must not reach here")
 
     def _print_document_from_file(self, document_from_file: DocumentFromFile):
         assert isinstance(document_from_file, DocumentFromFile)
@@ -327,7 +332,12 @@ class SDWriter:
 
         return output
 
-    def _print_section(self, section: SDocSection, document: SDocDocument):
+    def _print_section(
+        self,
+        section: SDocSection,
+        document: SDocDocument,
+        iterator: DocumentCachingIterator,
+    ):
         assert isinstance(section, SDocSection)
         output = ""
         output += "[SECTION]"
@@ -359,6 +369,16 @@ class SDWriter:
         for free_text in section.free_texts:
             output += "\n"
             output += self._print_free_text(free_text)
+        output += "\n"
+
+        for node_ in section.section_contents:
+            output += self._print_node(
+                node_, document, document_iterator=iterator
+            )
+
+        output += "[/SECTION]"
+        output += "\n\n"
+
         return output
 
     @staticmethod

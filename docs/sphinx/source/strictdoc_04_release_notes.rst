@@ -3,6 +3,18 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+Unreleased work
+===============
+
+1) Two improvements were made to the Composable Documents feature, when included document's root node is edited in including document:
+
+- If a document is included to another document, now it is possible to edit a title and a free text of the included document.
+- It is now possible to add nodes below, above, and inside a root node of an included document. Previously, the UI controls for adding any nodes from the root node were disabled.
+
+2) HTML2PDF feature was updated to support printing UTF8-based documents on Windows.
+
+3) The feature that allows moving TOC (Table of Contents) nodes using drag-and-drop has been enhanced. Now, each TOC element maintains its open or closed state independently of its parent section. Previously, there was some dependency between child and parent TOC nodes, which made quick editing of the TOC more challenging.
+
 0.0.53 (2024-04-01)
 ===================
 

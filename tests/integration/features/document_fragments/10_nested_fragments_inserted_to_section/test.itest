@@ -1,0 +1,14 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/10_nested_fragments_inserted_to_section/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML:data-level="1"
+CHECK-HTML:1.&nbsp;Section that nests a fragment
+CHECK-HTML:data-level="1.1"
+CHECK-HTML:1.1.&nbsp;Hello world doc 2
+CHECK-HTML:data-level="1.1.1"
+CHECK-HTML:data-level="1.1.1.1"
+CHECK-HTML:data-level="1.1.1.1.1"
+CHECK-HTML:data-level="1.1.1.1.1.1"
+CHECK-HTML:1.1.1.1.1.1.&nbsp;Requirement 7.8.9

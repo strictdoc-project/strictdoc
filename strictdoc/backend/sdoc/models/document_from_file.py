@@ -50,14 +50,18 @@ class DocumentFromFile:
         assert resolved_document is not None
         self.resolved_document = resolved_document
 
-        including_document = self.parent
-        assert (
-            including_document.__class__.__name__ == "SDocDocument"
-        ), including_document
+        including_document_or_section = self.parent
+
+        if including_document_or_section.__class__.__name__ == "SDocDocument":
+            including_document = including_document_or_section
+        elif including_document_or_section.__class__.__name__ == "SDocSection":
+            including_document = including_document_or_section.document
+        else:
+            raise AssertionError(including_document_or_section)
 
         resolved_document.ng_including_document_from_file = self
-
         resolved_document.ng_including_document_reference.set_document(
             including_document
         )
+
         including_document.included_documents.append(resolved_document)

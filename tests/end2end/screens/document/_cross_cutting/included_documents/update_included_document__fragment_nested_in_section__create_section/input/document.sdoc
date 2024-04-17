@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section that nests a document fragment.
+
+[DOCUMENT_FROM_FILE]
+FILE: fragment.sdoc
+
+[/SECTION]

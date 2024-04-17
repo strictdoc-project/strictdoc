@@ -6,7 +6,7 @@ This document maintains a record of all changes to StrictDoc since November 2023
 [/FREETEXT]
 
 [SECTION]
-TITLE: Unreleased work
+TITLE: 0.0.54 (2024-04-17)
 
 [FREETEXT]
 1) Two improvements were made to the Composable Documents feature, when included document's root node is edited in including document:

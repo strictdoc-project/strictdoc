@@ -3,8 +3,8 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
-Unreleased work
-===============
+0.0.54 (2024-04-17)
+===================
 
 1) Two improvements were made to the Composable Documents feature, when included document's root node is edited in including document:
 

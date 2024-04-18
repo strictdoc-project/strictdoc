@@ -1512,10 +1512,6 @@ def create_main_router(
         # when they are opened next time.
         export_action.traceability_index.update_last_updated()
 
-        # Rendering back the Turbo template.
-        template = env().get_template(
-            "actions/document/move_node/stream_update_document_content.jinja"
-        )
         link_renderer = LinkRenderer(
             root_path=moved_node.document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1537,17 +1533,10 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(view_object=view_object)
-        toc_template = env().get_template(
-            "actions/document/_shared/stream_updated_toc.jinja.html"
-        )
-
-        output += toc_template.render(
-            view_object=view_object,
-            last_moved_node_id=moved_node.reserved_mid,
-        )
         return HTMLResponse(
-            content=output,
+            content=view_object.render_update_document_content_with_moved_node(
+                env(), moved_node
+            ),
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
             },

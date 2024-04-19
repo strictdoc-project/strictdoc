@@ -141,6 +141,30 @@ class DocumentScreenViewObject:
 
         return output
 
+    def render_update_document_content_with_moved_node(
+        self, jinja_environment: Environment, moved_node
+    ) -> str:
+        template = jinja_environment.get_template(
+            "screens/document/document/frame_document_content.jinja.html"
+        )
+        output = render_turbo_stream(
+            content=template.render(view_object=self),
+            action="replace",
+            target="frame_document_content",
+        )
+        toc_template = jinja_environment.get_template(
+            "actions/document/_shared/stream_updated_toc.jinja.html"
+        )
+        output += render_turbo_stream(
+            toc_template.render(
+                view_object=self,
+                last_moved_node_id=moved_node.reserved_mid,
+            ),
+            action="update",
+            target="frame-toc",
+        )
+        return output
+
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()
 

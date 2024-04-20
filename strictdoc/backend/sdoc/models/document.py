@@ -94,6 +94,11 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
     def get_included_document(self):
         return self.ng_including_document_reference.get_document()
 
+    def iterate_included_documents_depth_first(self):
+        for included_document_ in self.included_documents:
+            yield included_document_
+            yield from included_document_.iterate_included_documents_depth_first()
+
     @property
     def reserved_uid(self) -> Optional[str]:
         return self.config.uid
@@ -107,6 +112,8 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
 
     def has_any_toc_nodes(self) -> bool:
         for node_ in self.section_contents:
+            if node_.__class__.__name__ == "DocumentFromFile":
+                return True
             if node_.is_section:
                 if node_.ng_resolved_custom_level != "None":
                     return True

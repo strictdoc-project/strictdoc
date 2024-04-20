@@ -1,9 +1,10 @@
 import os
 from functools import partial
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.core.asset_manager import AssetDir
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
@@ -42,6 +43,7 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
 from strictdoc.helpers.file_system import sync_dir
+from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.timing import measure_performance
 
 
@@ -63,8 +65,10 @@ class HTMLGenerator:
         )
 
         # Export assets.
-        self.export_assets(
+        HTMLGenerator.export_assets(
             traceability_index=traceability_index,
+            project_config=self.project_config,
+            export_output_html_root=self.project_config.export_output_html_root,
         )
 
         # Export all documents in parallel.
@@ -111,28 +115,34 @@ class HTMLGenerator:
             f"{self.project_config.export_output_html_root}"
         )
 
-    def export_assets(self, *, traceability_index: TraceabilityIndex):
+    @staticmethod
+    def export_assets(
+        *,
+        traceability_index: TraceabilityIndex,
+        project_config: ProjectConfig,
+        export_output_html_root,
+    ):
         # Export StrictDoc's own assets.
         output_html_static_files = os.path.join(
-            self.project_config.export_output_html_root,
-            self.project_config.dir_for_sdoc_assets,
+            export_output_html_root,
+            project_config.dir_for_sdoc_assets,
         )
         sync_dir(
-            self.project_config.get_static_files_path(),
+            project_config.get_static_files_path(),
             output_html_static_files,
             message="Copying StrictDoc's assets",
         )
 
         # Export MathJax
-        if self.project_config.is_feature_activated(ProjectFeature.MATHJAX):
+        if project_config.is_feature_activated(ProjectFeature.MATHJAX):
             output_html_mathjax = os.path.join(
-                self.project_config.export_output_html_root,
-                self.project_config.dir_for_sdoc_assets,
+                export_output_html_root,
+                project_config.dir_for_sdoc_assets,
                 "mathjax",
             )
             Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
             mathjax_src = os.path.join(
-                self.project_config.get_extra_static_files_path(), "mathjax"
+                project_config.get_extra_static_files_path(), "mathjax"
             )
             sync_dir(
                 mathjax_src,
@@ -141,15 +151,15 @@ class HTMLGenerator:
             )
 
         # Export Mermaid
-        if self.project_config.is_feature_activated(ProjectFeature.MERMAID):
+        if project_config.is_feature_activated(ProjectFeature.MERMAID):
             output_html_mathjax = os.path.join(
-                self.project_config.export_output_html_root,
-                self.project_config.dir_for_sdoc_assets,
+                export_output_html_root,
+                project_config.dir_for_sdoc_assets,
                 "mermaid",
             )
             Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
             mermaid_src = os.path.join(
-                self.project_config.get_extra_static_files_path(), "mermaid"
+                project_config.get_extra_static_files_path(), "mermaid"
             )
             sync_dir(
                 mermaid_src,
@@ -158,15 +168,15 @@ class HTMLGenerator:
             )
 
         # Export Rapidoc
-        if self.project_config.is_feature_activated(ProjectFeature.RAPIDOC):
+        if project_config.is_feature_activated(ProjectFeature.RAPIDOC):
             output_html_rapidoc = os.path.join(
-                self.project_config.export_output_html_root,
-                self.project_config.dir_for_sdoc_assets,
+                export_output_html_root,
+                project_config.dir_for_sdoc_assets,
                 "rapidoc",
             )
             Path(output_html_rapidoc).mkdir(parents=True, exist_ok=True)
             rapidoc_src = os.path.join(
-                self.project_config.get_extra_static_files_path(), "rapidoc"
+                project_config.get_extra_static_files_path(), "rapidoc"
             )
             sync_dir(
                 rapidoc_src,
@@ -175,18 +185,47 @@ class HTMLGenerator:
             )
 
         # Export project's assets.
-        for asset_dir in traceability_index.asset_dirs:
-            source_path = asset_dir["full_path"]
-            output_relative_path = asset_dir["relative_path"]
+
+        redundant_assets: Dict[str, List[SDocRelativePath]] = {}
+        for document_ in traceability_index.document_tree.document_list:
+            for (
+                included_document_
+            ) in document_.iterate_included_documents_depth_first():
+                redundant_assets.setdefault(
+                    document_.meta.input_doc_assets_dir_rel_path.relative_path_posix,
+                    [],
+                )
+                redundant_assets[
+                    document_.meta.input_doc_assets_dir_rel_path.relative_path_posix
+                ].append(included_document_.meta.input_doc_assets_dir_rel_path)
+
+        asset_dir_: AssetDir
+        for asset_dir_ in traceability_index.asset_manager.iterate():
+            source_path = asset_dir_.full_path
+            output_relative_path = asset_dir_.relative_path
             destination_path = os.path.join(
-                self.project_config.export_output_html_root,
-                output_relative_path,
+                export_output_html_root,
+                output_relative_path.relative_path,
             )
             sync_dir(
                 source_path,
                 destination_path,
-                message=f'Copying project assets "{output_relative_path}"',
+                message=f'Copying project assets "{output_relative_path.relative_path}"',
             )
+            redundant_asset_paths = redundant_assets.get(
+                output_relative_path.relative_path_posix
+            )
+            if redundant_asset_paths is not None:
+                for redundant_asset_ in redundant_asset_paths:
+                    destination_path = os.path.join(
+                        export_output_html_root,
+                        redundant_asset_.relative_path,
+                    )
+                    sync_dir(
+                        source_path,
+                        destination_path,
+                        message=f'Copying project assets "{output_relative_path.relative_path}"',
+                    )
 
     def export_single_document_with_performance(
         self,

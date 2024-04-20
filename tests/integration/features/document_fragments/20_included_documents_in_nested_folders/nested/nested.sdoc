@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Hello world doc 2
+OPTIONS:
+  AUTO_LEVELS: On
+
+[FREETEXT]
+.. image:: _assets/file.svg
+   :alt: Test image
+   :class: image
+   :width: 100%
+[/FREETEXT]
+
+[DOCUMENT_FROM_FILE]
+FILE: subnested/subnested.sdoc

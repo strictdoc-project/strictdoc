@@ -4,6 +4,7 @@ import os
 from typing import Dict, List, Optional, Union
 
 from strictdoc.helpers.path_filter import PathFilter
+from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -22,14 +23,15 @@ class FileOrFolderEntry:
 
 
 class File(FileOrFolderEntry):
-    def __init__(self, level, full_path, rel_path: str):
+    def __init__(self, level, full_path, rel_path: SDocRelativePath):
         assert os.path.isfile(full_path)
         assert os.path.isabs(full_path)
-        assert isinstance(rel_path, str)
+        assert isinstance(rel_path, SDocRelativePath)
+
         self.level = level
         self.full_path = full_path
         self.root_path = full_path
-        self.rel_path = rel_path
+        self.rel_path: SDocRelativePath = rel_path
         self.file_name = os.path.basename(self.full_path)
         self.files = [self]
         self.subfolder_trees = []
@@ -112,7 +114,7 @@ class FileTree:
 
     @staticmethod
     def create_single_file_tree(root_path):
-        single_file = File(0, root_path, "")
+        single_file = File(0, root_path, SDocRelativePath(""))
         return FileTree(root_folder_or_file=single_file)
 
     def iterate(self):
@@ -227,7 +229,7 @@ class FileFinder:
                         File(
                             current_tree.level + 1,
                             full_file_path,
-                            rel_file_path,
+                            SDocRelativePath(rel_file_path),
                         )
                     )
 
@@ -276,7 +278,7 @@ class PathFinder:
     @staticmethod
     def find_directories(
         root_path, directory, include_paths: List[str], exclude_paths: List[str]
-    ):
+    ) -> List[str]:
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
 

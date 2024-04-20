@@ -7,11 +7,11 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.generators.document_pdf import (
     DocumentHTML2PDFGenerator,
 )
+from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html2pdf.pdf_print_driver import PDFPrintDriver
-from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.timing import measure_performance
 
 
@@ -26,28 +26,11 @@ class HTML2PDFGenerator:
         path_to_output_pdf_html_dir = os.path.join(output_html2pdf_root, "html")
         path_to_output_pdf_pdf_dir = os.path.join(output_html2pdf_root, "pdf")
 
-        # Export StrictDoc's own assets.
-        sync_dir(
-            project_config.get_static_files_path(),
-            os.path.join(
-                path_to_output_pdf_html_dir, project_config.dir_for_sdoc_assets
-            ),
-            message="Copying StrictDoc's assets for HTML2PDF",
+        HTMLGenerator.export_assets(
+            traceability_index=traceability_index,
+            project_config=project_config,
+            export_output_html_root=path_to_output_pdf_html_dir,
         )
-
-        # Export project assets.
-        for asset_dir in traceability_index.asset_dirs:
-            source_path = asset_dir["full_path"]
-            output_relative_path = asset_dir["relative_path"]
-            destination_path = os.path.join(
-                path_to_output_pdf_html_dir,
-                output_relative_path,
-            )
-            sync_dir(
-                source_path,
-                destination_path,
-                message=f'Copying project assets "{output_relative_path}"',
-            )
 
         paths_to_print: List[Tuple[str, str]] = []
 
@@ -80,7 +63,7 @@ class HTML2PDFGenerator:
 
             path_to_output_html_doc_dir = os.path.join(
                 path_to_output_pdf_html_dir,
-                document_.meta.output_document_dir_rel_path,
+                document_.meta.output_document_dir_rel_path.relative_path,
             )
             Path(path_to_output_html_doc_dir).mkdir(parents=True, exist_ok=True)
             Path(path_to_output_pdf_pdf_dir).mkdir(parents=True, exist_ok=True)
@@ -95,7 +78,7 @@ class HTML2PDFGenerator:
 
             path_to_output_pdf_dir = os.path.join(
                 path_to_output_pdf_pdf_dir,
-                document_.meta.input_doc_dir_rel_path,
+                document_.meta.input_doc_dir_rel_path.relative_path,
             )
             Path(path_to_output_pdf_dir).mkdir(parents=True, exist_ok=True)
 

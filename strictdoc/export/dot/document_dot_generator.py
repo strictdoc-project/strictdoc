@@ -2,7 +2,7 @@ import os
 import random
 from collections import defaultdict
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import graphviz
 
@@ -50,12 +50,12 @@ class DocumentDotGenerator:
 
         project_tree_content = ""
 
-        documents_by_folder = defaultdict(list)
+        documents_by_folder: Dict[str, List[SDocDocument]] = defaultdict(list)
         for document in traceability_index.document_tree.document_list:
             if not document.has_any_requirements():
                 continue
             documents_by_folder[
-                document.meta.output_document_dir_rel_path
+                document.meta.output_document_dir_rel_path.relative_path
             ].append(document)
 
         accumulated_links: List[Tuple[str, str]] = []

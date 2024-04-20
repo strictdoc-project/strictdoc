@@ -1,3 +1,3 @@
 RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 
-CHECK: error: [DOCUMENT_FROM_FILE]: A multiple inclusion of a document is detected. A document can be only included once: nested.sdoc.
+CHECK: error: [DOCUMENT_FROM_FILE]: A multiple inclusion of a document is detected. A document that contains requirements or other nodes can be only included once: nested.sdoc.

@@ -122,7 +122,8 @@ class DiffCommand:
         html_generator = HTMLGenerator(
             project_config=project_config, html_templates=html_templates
         )
-        # FIXME: Traceability argument is not really important here.
         html_generator.export_assets(
-            traceability_index=change_container.traceability_index_lhs
+            traceability_index=change_container.traceability_index_lhs,
+            project_config=project_config,
+            export_output_html_root=project_config.export_output_html_root,
         )

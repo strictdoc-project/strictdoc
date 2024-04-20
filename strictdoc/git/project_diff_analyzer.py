@@ -156,7 +156,7 @@ class ProjectTreeDiffStats:
                 ]
             else:
                 other_document_or_none = self.map_rel_paths_to_docs.get(
-                    document.meta.input_doc_rel_path
+                    document.meta.input_doc_rel_path.relative_path
                 )
             if other_document_or_none is None:
                 return None
@@ -447,7 +447,7 @@ class ChangeStats:
             root-level free text (abstract) has changed.
             """
             if document not in change_stats.map_nodes_to_changes:
-                other_document_or_none: Optional[SDocDocument] = None
+                other_document_or_none: Optional[SDocDocument]
 
                 # First, the MID-based match is tried. If no MID is available,
                 # try to find a document under the same path.
@@ -461,7 +461,7 @@ class ChangeStats:
                 else:
                     other_document_or_none = (
                         other_stats.map_rel_paths_to_docs.get(
-                            document.meta.input_doc_rel_path
+                            document.meta.input_doc_rel_path.relative_path
                         )
                     )
 
@@ -522,8 +522,8 @@ class ChangeStats:
                             )
                         )
                 if uid_modified or title_modified or free_text_modified:
-                    lhs_document: Optional[SDocDocument] = None
-                    rhs_document: Optional[SDocDocument] = None
+                    lhs_document: Optional[SDocDocument]
+                    rhs_document: Optional[SDocDocument]
                     if side == "left":
                         lhs_document = document
                         rhs_document = other_document_or_none
@@ -677,8 +677,8 @@ class ChangeStats:
                         if other_section_or_none is not None:
                             section_token = MID.create()
 
-                        lhs_section: Optional[SDocSection] = None
-                        rhs_section: Optional[SDocSection] = None
+                        lhs_section: Optional[SDocSection]
+                        rhs_section: Optional[SDocSection]
                         if side == "left":
                             lhs_section = node
                             rhs_section = other_section_or_none
@@ -1128,7 +1128,7 @@ class ProjectDiffAnalyzer:
             )
 
         document_tree_stats.map_rel_paths_to_docs[
-            document.meta.input_doc_rel_path
+            document.meta.input_doc_rel_path.relative_path
         ] = document
 
         map_nodes_to_hashers[document].update(document.title.encode("utf-8"))

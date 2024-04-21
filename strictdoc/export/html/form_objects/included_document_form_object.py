@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg"
 import html
 import re
 from collections import defaultdict

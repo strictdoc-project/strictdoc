@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.document import SDocDocument

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 import pickle
 from typing import Any
 

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return,no-redef,no-untyped-call"
+# mypy: disable-error-code="no-any-return,no-redef,no-untyped-call,no-untyped-def,var-annotated,operator,union-attr"
 import os
 import random
 from collections import defaultdict

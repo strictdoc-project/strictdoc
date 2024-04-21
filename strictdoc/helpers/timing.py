@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 import contextlib
 from functools import wraps
 from time import time

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined,no-untyped-call"
+# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,var-annotated"
 from typing import Optional, Type, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor

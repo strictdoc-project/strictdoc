@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 class DocumentTreeError(Exception):
     def __init__(self, problem_uid, cycled_uids):
         super().__init__()

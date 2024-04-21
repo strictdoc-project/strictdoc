@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def,type-arg"
 from typing import Any, Dict, Optional, Tuple, Type, Union
 
 from strictdoc.core.graph.abstract_bucket import AbstractBucket

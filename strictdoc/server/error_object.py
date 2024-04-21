@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 class ErrorObject:
     def __init__(self):
         self.errors = {}

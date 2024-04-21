@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from typing import Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call"
+# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def,union-attr"
 import sys
 from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Tuple, Union

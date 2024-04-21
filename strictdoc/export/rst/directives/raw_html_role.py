@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 # ruff: noqa: ARG001
 # pylint: disable-all
 from docutils import nodes

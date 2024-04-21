@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef"
+# mypy: disable-error-code="no-redef,no-untyped-def,union-attr,type-arg"
 from dataclasses import dataclass
 from typing import Any, Dict, List
 

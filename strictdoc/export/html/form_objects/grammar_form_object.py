@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-any-return,no-untyped-call"
+# mypy: disable-error-code="arg-type,no-any-return,no-untyped-call,no-untyped-def,type-arg"
 from typing import Dict, List, Optional, Set
 
 from jinja2 import Environment, Template

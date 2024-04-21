@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,var-annotated"
 import multiprocessing
 import sys
 from queue import Empty

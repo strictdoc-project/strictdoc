@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return"
+# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def"
 from typing import Any, Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.node import SDocNode

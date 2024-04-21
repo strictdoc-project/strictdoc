@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
 from collections import defaultdict
 from typing import Dict, List
 

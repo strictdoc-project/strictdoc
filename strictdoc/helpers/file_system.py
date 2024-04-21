@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 import hashlib
 import os
 import platform

@@ -1,5 +1,5 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,type-arg"
-from typing import List, Optional
+# mypy: disable-error-code="no-untyped-def,union-attr,type-arg"
+from typing import Generator, List, Optional
 
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -12,8 +12,8 @@ from strictdoc.helpers.mid import MID
 
 @auto_described
 class SDocDocumentContext:
-    def __init__(self):
-        self.title_number_string = None
+    def __init__(self) -> None:
+        self.title_number_string: Optional[str] = None
 
 
 @auto_described
@@ -58,7 +58,7 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
         self.mid_permanent: bool = mid is not None
         self.included_documents: List["SDocDocument"] = []
-        self.context = SDocDocumentContext()
+        self.context: SDocDocumentContext = SDocDocumentContext()
 
         self.ng_including_document_reference: Optional = None  # type: ignore[valid-type]
         self.ng_including_document_from_file: Optional = None  # type: ignore[valid-type]
@@ -95,7 +95,9 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
     def get_included_document(self):
         return self.ng_including_document_reference.get_document()
 
-    def iterate_included_documents_depth_first(self):
+    def iterate_included_documents_depth_first(
+        self,
+    ) -> Generator["SDocDocument", None, None]:
         for included_document_ in self.included_documents:
             yield included_document_
             yield from included_document_.iterate_included_documents_depth_first()

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import re
 from typing import Iterator, Optional, Set
 

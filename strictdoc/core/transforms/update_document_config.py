@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 from collections import defaultdict
 from typing import Dict, List
 

@@ -467,7 +467,7 @@ def lint_ruff(context):
 @task
 def lint_mypy(context):
     # FIXME
-    if sys.version_info > (3, 7):
+    if sys.version_info >= (3, 8):
         return
 
     run_invoke_with_tox(
@@ -476,7 +476,6 @@ def lint_mypy(context):
         """
             mypy strictdoc/
                 --show-error-codes
-                --disable-error-code=arg-type
                 --disable-error-code=attr-defined
                 --disable-error-code=import
                 --disable-error-code=misc

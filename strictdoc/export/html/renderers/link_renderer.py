@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import html
 from typing import Optional
 

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 from enum import Enum
 from typing import Optional
 

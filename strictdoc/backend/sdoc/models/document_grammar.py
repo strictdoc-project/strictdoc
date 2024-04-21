@@ -168,9 +168,9 @@ class GrammarElement:
 class DocumentGrammar:
     def __init__(
         self,
-        parent=None,
-        elements: List[GrammarElement] = None,
+        elements: List[GrammarElement],
         import_from_file: Optional[str] = None,
+        parent=None,
     ):
         self.parent = parent
         self.elements: List[GrammarElement] = elements

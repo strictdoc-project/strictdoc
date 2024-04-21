@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import datetime
 import uuid
 from enum import Enum

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import hashlib
 import statistics
 from dataclasses import dataclass, field
@@ -556,6 +557,10 @@ class ChangeStats:
 
             """
             Now iterate over all nodes and collect the diff information.
+
+            Note that document nodes appear when a document is included to
+            another document. We treat a document node as as a section node
+            because they both have FREETEXT.
             """
             for node in document_iterator.all_content(
                 print_fragments=True, print_fragments_from_files=False
@@ -677,8 +682,8 @@ class ChangeStats:
                         if other_section_or_none is not None:
                             section_token = MID.create()
 
-                        lhs_section: Optional[SDocSection]
-                        rhs_section: Optional[SDocSection]
+                        lhs_section: Optional[Union[SDocSection, SDocDocument]]
+                        rhs_section: Optional[Union[SDocSection, SDocDocument]]
                         if side == "left":
                             lhs_section = node
                             rhs_section = other_section_or_none

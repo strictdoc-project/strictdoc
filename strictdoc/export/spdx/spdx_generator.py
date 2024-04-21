@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import os.path
 import re
 from datetime import datetime

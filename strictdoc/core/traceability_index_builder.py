@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import glob
 import os
 import sys
@@ -664,9 +665,15 @@ class TraceabilityIndexBuilder:
                     document_from_file_, DocumentFromFile
                 ), document_from_file_
 
-                resolved_document = map_documents_by_input_rel_path[
+                assert (
                     document_from_file_.resolved_full_path_to_document_file
-                ]
+                    is not None
+                )
+                resolved_document: SDocDocument = (
+                    map_documents_by_input_rel_path[
+                        document_from_file_.resolved_full_path_to_document_file
+                    ]
+                )
 
                 if (
                     document_from_file_.resolved_full_path_to_document_file

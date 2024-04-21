@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import os
 from functools import partial
 from pathlib import Path
@@ -253,7 +254,7 @@ class HTMLGenerator:
         self,
         document: SDocDocument,
         traceability_index,
-        specific_documents: Optional[Tuple[DocumentType]] = None,
+        specific_documents: Optional[Tuple[str]] = None,
     ):
         if document.config.layout == "Website":
             specific_documents = (DocumentType.DOCUMENT,)

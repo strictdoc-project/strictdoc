@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call"
 import os
 from functools import partial
 from pathlib import Path

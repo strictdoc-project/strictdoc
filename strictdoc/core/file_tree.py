@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-any-return,no-untyped-call"
 import collections
 import functools
 import os

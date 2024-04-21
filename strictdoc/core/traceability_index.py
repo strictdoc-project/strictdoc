@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call"
 from datetime import datetime
 from enum import IntEnum
 from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Union

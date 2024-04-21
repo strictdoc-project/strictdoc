@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 import re
 from typing import List, Tuple, Union
 

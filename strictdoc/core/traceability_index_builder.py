@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="arg-type,attr-defined,no-redef,no-untyped-call"
 import glob
 import os
 import sys

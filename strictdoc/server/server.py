@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 import os
 import tempfile
 from contextlib import ExitStack

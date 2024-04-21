@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-redef,no-untyped-call"
 from typing import List, Optional, Tuple, Union
 
 from strictdoc.helpers.auto_described import auto_described

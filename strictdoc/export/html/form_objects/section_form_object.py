@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="arg-type,no-untyped-call"
 import html
 from collections import defaultdict
 from typing import Dict

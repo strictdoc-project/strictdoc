@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="arg-type,no-untyped-call"
 import os
 from enum import Enum
 from pathlib import Path

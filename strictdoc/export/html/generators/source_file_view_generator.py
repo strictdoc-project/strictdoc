@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 import html
 from typing import List
 

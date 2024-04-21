@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="arg-type,no-untyped-call"
 import os
 import sys
 from pathlib import Path

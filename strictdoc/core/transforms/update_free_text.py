@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 from typing import List, Optional, Union
 
 from textx import TextXSyntaxError

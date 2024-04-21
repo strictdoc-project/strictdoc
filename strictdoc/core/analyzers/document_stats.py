@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Dict, List

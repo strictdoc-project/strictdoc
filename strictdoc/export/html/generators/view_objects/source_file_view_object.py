@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-any-return,no-untyped-call"
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List

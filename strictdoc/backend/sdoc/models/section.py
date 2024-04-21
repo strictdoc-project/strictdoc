@@ -1,3 +1,4 @@
+# mypy: disable-error-code="attr-defined,no-untyped-call"
 from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference

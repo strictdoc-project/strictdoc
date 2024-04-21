@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 from jinja2 import Environment
 
 from strictdoc import __version__

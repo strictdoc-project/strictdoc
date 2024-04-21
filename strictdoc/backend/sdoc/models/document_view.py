@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.type_system import (

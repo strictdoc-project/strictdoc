@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="arg-type,no-untyped-call"
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference

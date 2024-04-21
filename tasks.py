@@ -470,18 +470,17 @@ def lint_mypy(context):
     if sys.version_info >= (3, 8):
         return
 
+    # These checks do not seem to be useful:
+    # - import
+    # - misc
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
         """
             mypy strictdoc/
                 --show-error-codes
-                --disable-error-code=attr-defined
                 --disable-error-code=import
                 --disable-error-code=misc
-                --disable-error-code=no-any-return
-                --disable-error-code=no-redef
-                --disable-error-code=no-untyped-call
                 --disable-error-code=no-untyped-def
                 --disable-error-code=operator
                 --disable-error-code=type-arg

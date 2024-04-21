@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-redef"
 from dataclasses import dataclass
 from typing import Any, Dict, List
 

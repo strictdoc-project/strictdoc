@@ -1,3 +1,4 @@
+# mypy: disable-error-code="attr-defined,no-untyped-call"
 import datetime
 import glob
 import hashlib

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.document_type import DocumentType

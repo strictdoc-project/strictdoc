@@ -1,3 +1,4 @@
+# mypy: disable-error-code="attr-defined,no-untyped-call"
 from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.document import SDocDocument

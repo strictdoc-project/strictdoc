@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-redef,no-untyped-call"
 import sys
 import traceback
 from functools import partial

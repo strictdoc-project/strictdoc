@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 # Custom argparse type representing a bounded int
 # https://stackoverflow.com/a/61411431/598057
 import argparse

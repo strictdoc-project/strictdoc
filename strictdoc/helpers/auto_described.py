@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 # This function could be a separate package but keeping it within the project
 # for simplicity.
 __version__ = "0.0.1"

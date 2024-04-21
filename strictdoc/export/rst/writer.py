@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call"
 from enum import Enum
 from typing import Optional
 

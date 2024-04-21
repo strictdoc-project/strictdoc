@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 import sys
 from subprocess import CompletedProcess, TimeoutExpired, run
 

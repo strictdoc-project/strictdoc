@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-redef"
+# mypy: disable-error-code="arg-type,no-redef,no-untyped-call"
 import os.path
 import re
 from datetime import datetime

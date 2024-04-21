@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 from textx import metamodel_from_str
 
 from strictdoc.core.query_engine.grammar import QUERY_GRAMMAR

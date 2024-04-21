@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-redef"
+# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-redef,no-untyped-call"
 import copy
 import html
 import os

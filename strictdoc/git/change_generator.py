@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex

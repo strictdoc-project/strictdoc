@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-call"
 from collections import deque
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-redef"
+# mypy: disable-error-code="arg-type,no-redef,no-untyped-call"
 from typing import Dict, List, Optional, Set, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration

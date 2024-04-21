@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def"
+# mypy: disable-error-code="no-untyped-def,type-arg"
 import html
 from typing import List
 

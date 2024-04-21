@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def,var-annotated"
 import collections
 import functools
 import os

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,union-attr"
 from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference

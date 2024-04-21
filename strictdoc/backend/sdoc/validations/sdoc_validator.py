@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-redef,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-redef,no-untyped-call,no-untyped-def,union-attr"
 import re
 from typing import Iterator, Optional, Set
 

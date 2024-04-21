@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,type-arg"
 from dataclasses import dataclass
 from typing import List, Optional, Set, Tuple, Union
 

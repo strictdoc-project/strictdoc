@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def"
+# mypy: disable-error-code="no-untyped-def,type-arg"
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference

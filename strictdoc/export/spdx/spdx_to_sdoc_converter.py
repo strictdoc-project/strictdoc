@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,var-annotated,union-attr"
 from typing import Union
 
 from spdx_tools.spdx3.model import RelationshipType, SpdxDocument

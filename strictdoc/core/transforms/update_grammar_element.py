@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="arg-type,union-attr"
 from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple

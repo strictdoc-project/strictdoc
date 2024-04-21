@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 import os
 import sys
 from pathlib import Path

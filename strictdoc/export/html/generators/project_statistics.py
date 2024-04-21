@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator

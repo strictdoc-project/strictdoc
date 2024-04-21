@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def"
+# mypy: disable-error-code="no-untyped-def,type-arg"
 from copy import copy
 from typing import Any, Dict, Optional
 

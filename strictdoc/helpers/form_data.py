@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg,union-attr,var-annotated"
 import re
 from typing import List, Tuple, Union
 

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,var-annotated"
 import html
 from typing import Optional
 

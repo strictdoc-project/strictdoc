@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg,union-attr"
 import datetime
 import uuid
 from enum import Enum

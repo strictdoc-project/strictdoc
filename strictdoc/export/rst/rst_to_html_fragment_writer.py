@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,union-attr"
 import hashlib
 import io
 import os

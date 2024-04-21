@@ -153,7 +153,7 @@ UID: ID-002
 REFS:
 - TYPE: Parent
   VALUE: ID-001
-""".lstrip()  # noqa: E501
+""".lstrip()
 
     reader = SDReader()
     document = reader.read(input_sdoc)

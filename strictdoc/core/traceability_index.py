@@ -77,7 +77,7 @@ class GraphLinkType(IntEnum):
     DOCUMENT_TO_TAGS = 7
 
 
-class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes  # noqa: E501
+class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes
     def __init__(
         self,
         document_iterators: Dict[SDocDocument, DocumentCachingIterator],

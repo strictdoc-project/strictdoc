@@ -309,7 +309,7 @@ REFS:
   VALUE: /tmp/sample1.cpp
 - TYPE: File
   VALUE: /tmp/sample2.cpp
-""".lstrip()  # noqa: E501
+""".lstrip()
 
     expected_sdoc = """
 [DOCUMENT]
@@ -349,7 +349,7 @@ REFS:
   VALUE: /tmp/sample1.cpp
 - TYPE: File
   VALUE: /tmp/sample2.cpp
-""".lstrip()  # noqa: E501
+""".lstrip()
 
     reader = SDReader()
 

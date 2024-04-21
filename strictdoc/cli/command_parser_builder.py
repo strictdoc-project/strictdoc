@@ -68,7 +68,7 @@ class SDocArgumentParser(argparse.ArgumentParser):
         print("")  # noqa: T201
         print("Further help:")  # noqa: T201
         print(  # noqa: T201
-            "'strictdoc -h/--help' provides a general overview of available commands."  # noqa: E501
+            "'strictdoc -h/--help' provides a general overview of available commands."
         )
         print(  # noqa: T201
             "'strictdoc <command> -h/--help' provides command-specific help."

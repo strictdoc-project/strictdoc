@@ -9,7 +9,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_ProjectOptions_HTMLAssetsStrictDocDir_01_OptionSpecified_ProjectIndex(  # noqa: E501
+class Test_ProjectOptions_HTMLAssetsStrictDocDir_01_OptionSpecified_ProjectIndex(
     E2ECase
 ):
     def test(self):

@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 
-class Confirm:  # pylint: disable=invalid-name  # noqa: E501
+class Confirm:  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case

@@ -13,7 +13,7 @@ class Test(E2ECase):
     def test(self):
         custom_server_stderr_expectations = [
             "INFO:     Application startup complete.",
-            "INFO:     Uvicorn running on http://localhost:5123 (Press CTRL+C to quit)",  # noqa: E501
+            "INFO:     Uvicorn running on http://localhost:5123 (Press CTRL+C to quit)",
         ]
 
         with SDocTestServer(

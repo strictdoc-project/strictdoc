@@ -4,7 +4,7 @@ from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
-from tests.end2end.helpers.screens.requirements_coverage.screen_requirements_coverage import (  # noqa: E501
+from tests.end2end.helpers.screens.requirements_coverage.screen_requirements_coverage import (
     Screen_RequirementsCoverage,
 )
 from tests.end2end.server import SDocTestServer
@@ -12,7 +12,7 @@ from tests.end2end.server import SDocTestServer
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
-class Test_ProjectOptions_HTMLAssetsStrictDocDir_03_OptionSpecified_RequirementsCoverage(  # noqa: E501
+class Test_ProjectOptions_HTMLAssetsStrictDocDir_03_OptionSpecified_RequirementsCoverage(
     E2ECase
 ):
     def test(self):

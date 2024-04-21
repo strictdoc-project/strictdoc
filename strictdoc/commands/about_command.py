@@ -9,7 +9,7 @@ class AboutCommand:
         print("= StrictDoc =")  # noqa: T201
         print("=============")  # noqa: T201
         print(  # noqa: T201
-            "Purpose: Software for writing technical requirements specifications."  # noqa: E501
+            "Purpose: Software for writing technical requirements specifications."
         )
         print(f"Version: {strictdoc.__version__}")  # noqa: T201
         print(  # noqa: T201

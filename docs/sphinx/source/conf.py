@@ -24,7 +24,7 @@ try:
         raise FileNotFoundError
     # Cannot assert this because readthedocs clones strictdoc to folders like:
     # "stable", "latest", etc.
-    # assert os.path.basename(strictdoc_root_path) == "strictdoc"  # noqa: E501, ERA001
+    # assert os.path.basename(strictdoc_root_path) == "strictdoc"  # noqa: ERA001
     sys.path.append(strictdoc_root_path)
     import strictdoc
 except Exception as exception:

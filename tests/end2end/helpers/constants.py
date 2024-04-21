@@ -26,4 +26,4 @@ RST_STRING_THAT_NEEDS_HTML_ESCAPING = """
 `Link does not get corrupted <https://github.com/strictdoc-project/sphinx-latex-reqspec-template>`_
 
 `Link does not get corrupted <https://github.com/strictdoc-project/sphinx-latex-reqspec-template>`_
-""".strip()  # noqa: E501
+""".strip()

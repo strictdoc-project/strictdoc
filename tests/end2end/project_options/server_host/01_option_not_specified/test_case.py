@@ -16,7 +16,7 @@ class Test(E2ECase):
         # only case where we have to customize ports.
         custom_server_stderr_expectations = [
             "INFO:     Application startup complete.",
-            "INFO:     Uvicorn running on http://127.0.0.1:5112 (Press CTRL+C to quit)",  # noqa: E501
+            "INFO:     Uvicorn running on http://127.0.0.1:5112 (Press CTRL+C to quit)",
         ]
 
         with SDocTestServer(

@@ -9,7 +9,7 @@ from tests.end2end.helpers.screens.document.form_edit_section import (
 )
 
 
-class AddNode_Menu:  # pylint: disable=invalid-name  # noqa: E501
+class AddNode_Menu:  # pylint: disable=invalid-name
     """Drop-down list of links to add nodes."""
 
     def __init__(self, test_case: BaseCase, node_xpath: str) -> None:

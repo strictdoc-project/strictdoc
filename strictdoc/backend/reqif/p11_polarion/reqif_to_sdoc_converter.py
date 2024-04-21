@@ -56,7 +56,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         ) in reqif_bundle.core_content.req_if_content.specifications:
             # fmt: off
             document = (
-                P11_ReqIFToSDocConverter._p11_create_document_from_specification(  # noqa: E501
+                P11_ReqIFToSDocConverter._p11_create_document_from_specification(
                     specification=specification,
                     reqif_bundle=reqif_bundle,
                 )
@@ -132,7 +132,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             ):
                 # fmt: off
                 section = (
-                    P11_ReqIFToSDocConverter._p11_create_section_from_spec_object(  # noqa: E501
+                    P11_ReqIFToSDocConverter._p11_create_section_from_spec_object(
                         spec_object,
                         current_hierarchy.level,
                         reqif_bundle=reqif_bundle,

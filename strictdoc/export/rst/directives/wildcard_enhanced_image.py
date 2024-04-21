@@ -23,7 +23,7 @@ class WildcardEnhancedImage(Image):
         # User request:
         # https://github.com/strictdoc-project/strictdoc/issues/1106
         # The Sphinx directive is documented here:
-        # https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#images  # noqa: E501
+        # https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#images
         #
         # Sphinx/Docutils files with relevant implementation:
         # - docutils/docutils/parsers/rst/directives/images.py

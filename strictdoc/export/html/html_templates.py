@@ -24,7 +24,7 @@ from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import measure_performance
 
 
-# https://stackoverflow.com/questions/21778252/how-to-raise-an-exception-in-a-jinja2-macro  # noqa: E501
+# https://stackoverflow.com/questions/21778252/how-to-raise-an-exception-in-a-jinja2-macro
 class AssertExtension(Extension):
     # This is our keyword(s):
     tags = {"assert"}

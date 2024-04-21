@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import html
 from collections import defaultdict
 from enum import Enum

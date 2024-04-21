@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 from typing import Dict, List, Optional, Tuple
 
 from jinja2 import Environment

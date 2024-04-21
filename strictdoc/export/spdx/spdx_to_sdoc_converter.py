@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 from typing import Union
 
 from spdx_tools.spdx3.model import RelationshipType, SpdxDocument
@@ -608,5 +609,5 @@ class SPDXToSDocConverter:
         """
         Create Grammar.
         """
-        grammar = DocumentGrammar(None, elements=elements)
+        grammar = DocumentGrammar(elements=elements)
         return grammar

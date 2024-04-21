@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 from typing import Optional, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument

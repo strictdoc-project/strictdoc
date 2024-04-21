@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 from collections import OrderedDict
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import os
 import sys
 from pathlib import Path

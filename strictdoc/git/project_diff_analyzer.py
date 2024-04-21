@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import hashlib
 import statistics
 from dataclasses import dataclass, field

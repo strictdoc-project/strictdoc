@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import os
 from pathlib import Path
 from typing import Dict, List

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 from dataclasses import dataclass, field
 from typing import List, Optional
 

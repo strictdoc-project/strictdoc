@@ -1,3 +1,4 @@
+# mypy: disable-error-code="arg-type"
 import json
 import os.path
 from enum import Enum

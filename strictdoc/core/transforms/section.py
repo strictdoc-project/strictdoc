@@ -1,3 +1,4 @@
+# mypy: disable-error-code="attr-defined"
 from collections import defaultdict
 from typing import Dict, List, Optional, Union
 

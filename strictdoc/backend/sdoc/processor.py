@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="arg-type,attr-defined"
 import os.path
 from typing import List, Optional
 

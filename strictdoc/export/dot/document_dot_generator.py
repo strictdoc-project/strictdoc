@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-any-return"
 import os
 import random
 from collections import defaultdict

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-any-return"
 class DocumentType:
     DOCUMENT = "document"
     TABLE = "table"

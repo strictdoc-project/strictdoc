@@ -1,3 +1,4 @@
+# mypy: disable-error-code="attr-defined"
 import os
 import sys
 

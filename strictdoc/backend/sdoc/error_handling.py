@@ -1,3 +1,4 @@
+# mypy: disable-error-code="attr-defined"
 from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.document import SDocDocument

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-any-return"
 from typing import Any, Dict, Hashable, List, Optional, Tuple
 
 from strictdoc.core.graph.abstract_bucket import AbstractBucket

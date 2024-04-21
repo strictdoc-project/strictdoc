@@ -476,10 +476,8 @@ def lint_mypy(context):
         """
             mypy strictdoc/
                 --show-error-codes
-                --disable-error-code=attr-defined
                 --disable-error-code=import
                 --disable-error-code=misc
-                --disable-error-code=no-any-return
                 --disable-error-code=no-redef
                 --disable-error-code=no-untyped-call
                 --disable-error-code=no-untyped-def

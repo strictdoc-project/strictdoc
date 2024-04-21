@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-any-return"
 from dataclasses import dataclass
 
 from jinja2 import Environment

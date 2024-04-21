@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-any-return"
 import collections
 import functools
 import os

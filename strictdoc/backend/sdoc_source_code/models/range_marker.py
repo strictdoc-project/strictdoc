@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 from typing import List
 
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req

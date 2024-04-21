@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from textx import metamodel_from_str
 
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder

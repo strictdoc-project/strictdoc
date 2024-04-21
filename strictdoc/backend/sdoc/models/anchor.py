@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 from typing import Optional
 
 from strictdoc.helpers.auto_described import auto_described

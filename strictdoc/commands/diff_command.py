@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 import os
 from copy import deepcopy
 from datetime import datetime

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined"
+# mypy: disable-error-code="attr-defined,no-untyped-def"
 import os
 import sys
 

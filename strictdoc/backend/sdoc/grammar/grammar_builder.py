@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from strictdoc.backend.sdoc.grammar.grammar import (
     DOCUMENT_GRAMMAR,
     FREE_TEXT_PARSER_GRAMMAR,

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 import collections
 
 from strictdoc.core.document_tree import DocumentTree

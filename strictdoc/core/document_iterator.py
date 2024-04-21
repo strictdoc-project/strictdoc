@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call"
+# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call,no-untyped-def"
 from typing import Optional, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument

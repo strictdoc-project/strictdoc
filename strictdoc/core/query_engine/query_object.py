@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call"
+# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
 from typing import List, Optional
 
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement

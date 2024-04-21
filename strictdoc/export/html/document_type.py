@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call"
+# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
 class DocumentType:
     DOCUMENT = "document"
     TABLE = "table"

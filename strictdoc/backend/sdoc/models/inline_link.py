@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
 

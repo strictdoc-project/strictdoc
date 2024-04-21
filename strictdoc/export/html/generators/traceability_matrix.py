@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type"
+# mypy: disable-error-code="arg-type,no-untyped-def"
 from typing import Dict, Optional
 
 from strictdoc.backend.sdoc.models.document import SDocDocument

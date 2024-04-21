@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined,no-untyped-call"
+# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def"
 from collections import defaultdict
 from typing import Dict, List, Optional, Union
 

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.generators.view_objects.project_tree_view_object import (

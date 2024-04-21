@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 import os
 from pathlib import Path
 from typing import List, Tuple

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 from typing import List, Union
 
 from strictdoc.backend.sdoc_source_code.models.range_marker import (

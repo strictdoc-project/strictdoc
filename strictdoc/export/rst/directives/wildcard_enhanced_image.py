@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 import os
 
 from docutils.parsers.rst.directives.images import Image

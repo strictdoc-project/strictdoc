@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call"
+# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def"
 import sys
 from collections import OrderedDict
 from typing import Dict, List, Optional, Set, Union

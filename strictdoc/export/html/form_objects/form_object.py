@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 from dataclasses import dataclass
 from typing import Any, Dict, List
 

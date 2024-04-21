@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 class NodeCreationOrder:
     BEFORE = "before"
     CHILD = "child"

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined,no-untyped-call"
+# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def"
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from strictdoc import environment

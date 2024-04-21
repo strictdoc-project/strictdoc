@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef"
+# mypy: disable-error-code="no-redef,no-untyped-def"
 from typing import List
 
 from reqif.parser import ReqIFParser, ReqIFZParser

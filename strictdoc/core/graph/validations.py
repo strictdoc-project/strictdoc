@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from typing import Any
 
 from strictdoc.backend.sdoc.models.anchor import Anchor

@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-untyped-def"
 def render_turbo_stream(content: str, action: str, target: str):
     assert action in ("append", "replace", "update")
 

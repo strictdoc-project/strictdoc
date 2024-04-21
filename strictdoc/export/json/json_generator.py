@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return"
+# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def"
 import json
 import os.path
 from enum import Enum

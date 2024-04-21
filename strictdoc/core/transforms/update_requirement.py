@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from copy import copy
 from dataclasses import dataclass
 from typing import List, Optional, Set, Tuple

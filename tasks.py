@@ -481,7 +481,6 @@ def lint_mypy(context):
                 --show-error-codes
                 --disable-error-code=import
                 --disable-error-code=misc
-                --disable-error-code=no-untyped-def
                 --disable-error-code=operator
                 --disable-error-code=type-arg
                 --disable-error-code=var-annotated

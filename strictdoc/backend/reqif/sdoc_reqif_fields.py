@@ -38,16 +38,16 @@ SDOC_TO_REQIF_FIELD_MAP = {
     SDocRequirementReservedField.UID: ReqIFRequirementReservedField.UID,
     SDocRequirementReservedField.TITLE: ReqIFRequirementReservedField.NAME,
     SDocRequirementReservedField.STATEMENT: ReqIFRequirementReservedField.TEXT,
-    SDocRequirementReservedField.COMMENT: ReqIFRequirementReservedField.COMMENT_NOTES,  # noqa: E501
-    SDocRequirementReservedField.CREATED_BY: ReqIFRequirementReservedField.CREATED_BY,  # noqa: E501
+    SDocRequirementReservedField.COMMENT: ReqIFRequirementReservedField.COMMENT_NOTES,
+    SDocRequirementReservedField.CREATED_BY: ReqIFRequirementReservedField.CREATED_BY,
 }
 
 REQIF_MAP_TO_SDOC_FIELD_MAP = {
     ReqIFRequirementReservedField.UID: SDocRequirementReservedField.UID,
     ReqIFRequirementReservedField.NAME: SDocRequirementReservedField.TITLE,
     ReqIFRequirementReservedField.TEXT: SDocRequirementReservedField.STATEMENT,
-    ReqIFRequirementReservedField.COMMENT_NOTES: SDocRequirementReservedField.COMMENT,  # noqa: E501
-    ReqIFRequirementReservedField.CREATED_BY: SDocRequirementReservedField.CREATED_BY,  # noqa: E501
+    ReqIFRequirementReservedField.COMMENT_NOTES: SDocRequirementReservedField.COMMENT,
+    ReqIFRequirementReservedField.CREATED_BY: SDocRequirementReservedField.CREATED_BY,
 }
 
 DEFAULT_SDOC_GRAMMAR_FIELDS = [

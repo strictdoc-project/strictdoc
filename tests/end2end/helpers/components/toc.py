@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 
-class TOC:  # pylint: disable=invalid-name  # noqa: E501
+class TOC:  # pylint: disable=invalid-name
     """Table of contents"""
 
     def __init__(self, test_case: BaseCase) -> None:

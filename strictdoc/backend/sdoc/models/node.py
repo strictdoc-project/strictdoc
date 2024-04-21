@@ -352,9 +352,7 @@ class SDocNode(SDocObject):
         return self.ng_including_document_reference.get_document() is not None
 
     def get_requirement_style_mode(self):
-        return (
-            self.ng_document_reference.get_document().config.get_requirement_style_mode()  # noqa: E501
-        )
+        return self.ng_document_reference.get_document().config.get_requirement_style_mode()
 
     def has_requirement_references(self, ref_type):
         if not self.references or len(self.references) == 0:

@@ -4,7 +4,7 @@ from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
-from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import (  # noqa: E501
+from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import (
     Screen_SourceCoverage,
 )
 from tests.end2end.server import SDocTestServer

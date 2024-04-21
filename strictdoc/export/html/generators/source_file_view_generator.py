@@ -51,7 +51,7 @@ class SourceFileViewHTMLGenerator:
 
         if len(source_file_lines) > 0:
             coverage_info: SourceFileTraceabilityInfo = (
-                traceability_index.get_coverage_info(  # noqa: E501
+                traceability_index.get_coverage_info(
                     source_file.in_doctree_source_file_rel_path_posix
                 )
             )

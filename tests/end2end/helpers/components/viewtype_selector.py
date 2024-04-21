@@ -1,14 +1,14 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.screens.deep_traceability.screen_deep_traceability import (  # noqa: E501
+from tests.end2end.helpers.screens.deep_traceability.screen_deep_traceability import (
     Screen_Deep_Traceability,
 )
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
 )
 from tests.end2end.helpers.screens.pdf.screen_pdf import Screen_PDFDocument
-from tests.end2end.helpers.screens.standalone_document.screen_standalone_document import (  # noqa: E501
+from tests.end2end.helpers.screens.standalone_document.screen_standalone_document import (
     Screen_StandaloneDocument,
 )
 from tests.end2end.helpers.screens.table.screen_table import (
@@ -19,7 +19,7 @@ from tests.end2end.helpers.screens.traceability.screen_traceability import (
 )
 
 
-class ViewType_Selector:  # pylint: disable=invalid-name  # noqa: E501
+class ViewType_Selector:  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case

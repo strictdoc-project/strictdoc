@@ -210,7 +210,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             if (
                 ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
                 not in self.project_features
-            ):  # noqa: E501
+            ):
                 self.project_features.append(
                     ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
                 )

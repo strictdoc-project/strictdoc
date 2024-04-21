@@ -467,7 +467,7 @@ def lint_ruff(context):
 @task
 def lint_mypy(context):
     # FIXME
-    if sys.version_info > (3, 7):
+    if sys.version_info >= (3, 8):
         return
 
     run_invoke_with_tox(

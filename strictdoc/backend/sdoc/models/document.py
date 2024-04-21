@@ -59,8 +59,8 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
         self.included_documents: List["SDocDocument"] = []
         self.context = SDocDocumentContext()
 
-        self.ng_including_document_reference: Optional = None
-        self.ng_including_document_from_file: Optional = None
+        self.ng_including_document_reference: Optional = None  # type: ignore[valid-type]
+        self.ng_including_document_from_file: Optional = None  # type: ignore[valid-type]
 
     @property
     def uid(self) -> Optional[str]:

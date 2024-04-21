@@ -105,7 +105,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.server_port: int = server_port
         self.include_doc_paths: List[str] = include_doc_paths
         self.exclude_doc_paths: List[str] = exclude_doc_paths
-        self.source_root_path: str = source_root_path
+        self.source_root_path: Optional[str] = source_root_path
         self.include_source_paths: List[str] = include_source_paths
         self.exclude_source_paths: List[str] = exclude_source_paths
 

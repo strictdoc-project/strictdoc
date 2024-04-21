@@ -58,14 +58,15 @@ class DocumentFinder:
             f"Reading SDOC: {os.path.basename(doc_full_path)}"
         ):
             if doc_full_path.endswith(".sdoc"):
-                reader = SDReader(path_to_output_root)
-                document = reader.read_from_file(doc_full_path)
+                sdoc_reader: SDReader = SDReader(path_to_output_root)
+                document = sdoc_reader.read_from_file(doc_full_path)
                 assert isinstance(document, SDocDocument)
             elif doc_full_path.endswith(".sgra"):
-                reader = SDocGrammarReader(path_to_output_root)
-                document = reader.read_from_file(doc_full_path)
+                sgra_reader = SDocGrammarReader(path_to_output_root)
+                document = sgra_reader.read_from_file(doc_full_path)
                 assert isinstance(document, DocumentGrammar)
-
+            else:
+                raise NotImplementedError
         drop_textx_meta(document)
         return doc_file, file_tree_mount_folder, document
 

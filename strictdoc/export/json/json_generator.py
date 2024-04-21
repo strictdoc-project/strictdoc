@@ -298,7 +298,7 @@ class JSONGenerator:
     def _write_requirement(
         cls, node: SDocNode, document: SDocDocument, level_string: str
     ) -> Dict:
-        node_dict = {
+        node_dict: Dict[str, Any] = {
             "_TOC": level_string,
             "TYPE": node.requirement_type,
         }

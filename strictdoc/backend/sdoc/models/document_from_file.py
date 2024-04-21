@@ -20,7 +20,7 @@ class DocumentFromFile:
         self.ng_resolved_custom_level = None
         self.ng_whitelisted = True
         self.resolved_full_path_to_document_file = None
-        self.resolved_document: Optional = None
+        self.resolved_document: Optional = None  # type: ignore[valid-type]
 
     @property
     def document(self):

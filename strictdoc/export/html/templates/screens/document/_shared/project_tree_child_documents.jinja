@@ -8,7 +8,7 @@
       active="true"
       {% endif %}
       data-testid="tree-document-fragment-link"
-      href="{{ child_document_.meta.get_root_path_prefix() }}/{{ child_document_.meta.get_html_doc_link() }}"
+      href="{{ view_object.document.meta.get_root_path_prefix() }}/{{ child_document_.meta.get_html_doc_link() }}"
     >
       {# TODO #fragment #}
       {%- include "_res/svg_ico16_fragment_draft.jinja" -%}

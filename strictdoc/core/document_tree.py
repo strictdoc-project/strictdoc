@@ -42,7 +42,8 @@ class DocumentTree:
         document = self.map_docs_by_paths[doc_full_path]
         return document
 
-    def get_document_by_rel_path(self, doc_rel_path):
+    def get_document_by_rel_path(self, doc_rel_path: str):
+        assert isinstance(doc_rel_path, str), doc_rel_path
         document = self.map_docs_by_rel_paths[doc_rel_path]
         return document
 

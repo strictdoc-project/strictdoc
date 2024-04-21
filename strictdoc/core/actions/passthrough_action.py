@@ -38,8 +38,8 @@ class PassthroughAction:
         for document in traceability_index.document_tree.document_list:
             output, fragments_dict = writer.write_with_fragments(document)
 
-            path_to_output_file_dir = os.path.join(
-                output_dir, document.meta.input_doc_dir_rel_path
+            path_to_output_file_dir: str = os.path.join(
+                output_dir, document.meta.input_doc_dir_rel_path.relative_path
             )
             Path(path_to_output_file_dir).mkdir(parents=True, exist_ok=True)
             path_to_output_file = os.path.join(

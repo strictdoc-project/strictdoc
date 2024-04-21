@@ -89,7 +89,7 @@ class TraceabilityIndexBuilder:
         ):
             strictdoc_last_update = project_config.config_last_update
 
-        document_tree, asset_dirs = DocumentFinder.find_sdoc_content(
+        document_tree, asset_manager = DocumentFinder.find_sdoc_content(
             project_config=project_config, parallelizer=parallelizer
         )
 
@@ -104,7 +104,7 @@ class TraceabilityIndexBuilder:
             TraceabilityIndexBuilder.create_from_document_tree(document_tree)
         )
         traceability_index.document_tree = document_tree
-        traceability_index.asset_dirs = asset_dirs
+        traceability_index.asset_manager = asset_manager
         traceability_index.strictdoc_last_update = strictdoc_last_update
 
         TraceabilityIndexBuilder._filter_nodes(
@@ -663,23 +663,26 @@ class TraceabilityIndexBuilder:
                 assert isinstance(
                     document_from_file_, DocumentFromFile
                 ), document_from_file_
+
+                resolved_document = map_documents_by_input_rel_path[
+                    document_from_file_.resolved_full_path_to_document_file
+                ]
+
                 if (
                     document_from_file_.resolved_full_path_to_document_file
                     in unique_document_from_file_occurences
-                ):
+                ) and resolved_document.has_any_requirements():
                     raise StrictDocException(
                         "[DOCUMENT_FROM_FILE]: "
                         "A multiple inclusion of a document is detected. "
-                        "A document can be only included once: "
+                        "A document that contains requirements or other nodes "
+                        "can be only included once: "
                         f"{document_from_file_.file}."
                     )
                 unique_document_from_file_occurences.add(
                     document_from_file_.resolved_full_path_to_document_file
                 )
 
-                resolved_document = map_documents_by_input_rel_path[
-                    document_from_file_.resolved_full_path_to_document_file
-                ]
                 document_from_file_.configure_with_resolved_document(
                     resolved_document
                 )

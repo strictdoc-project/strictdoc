@@ -114,6 +114,7 @@ from strictdoc.helpers.file_system import get_etag
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.path_filter import PathFilter
+from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.string import (
     create_safe_acronym,
     is_safe_alphanumeric_string,
@@ -166,6 +167,8 @@ def create_main_router(
     html_generator = HTMLGenerator(project_config, html_templates)
     html_generator.export_assets(
         traceability_index=export_action.traceability_index,
+        project_config=project_config,
+        export_output_html_root=project_config.export_output_html_root,
     )
 
     def env() -> Environment:
@@ -1641,10 +1644,24 @@ def create_main_router(
 
         assert isinstance(project_config.export_input_paths, list)
         full_input_path = os.path.abspath(project_config.export_input_paths[0])
+        file_tree_mount_folder = os.path.basename(
+            os.path.dirname(full_input_path)
+        )
         doc_full_path = os.path.join(full_input_path, document_path)
         doc_full_path_dir = os.path.dirname(doc_full_path)
         document_file_name = os.path.basename(doc_full_path)
         input_doc_dir_rel_path = os.path.dirname(document_path)
+        input_doc_assets_dir_rel_path = (
+            "/".join(
+                (
+                    file_tree_mount_folder,
+                    input_doc_dir_rel_path,
+                    "_assets",
+                )
+            )
+            if len(input_doc_dir_rel_path) > 0
+            else "/".join((file_tree_mount_folder, "_assets"))
+        )
 
         Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
         document = SDocDocument(
@@ -1663,10 +1680,13 @@ def create_main_router(
             document_filename=document_file_name,
             document_filename_base=None,
             input_doc_full_path=doc_full_path,
-            input_doc_rel_path=document_path,
-            input_doc_dir_rel_path=input_doc_dir_rel_path,
+            input_doc_rel_path=SDocRelativePath(document_path),
+            input_doc_dir_rel_path=SDocRelativePath(input_doc_dir_rel_path),
+            input_doc_assets_dir_rel_path=SDocRelativePath(
+                input_doc_assets_dir_rel_path
+            ),
             output_document_dir_full_path=None,
-            output_document_dir_rel_path=None,
+            output_document_dir_rel_path=SDocRelativePath("FIXME"),
         )
 
         SDWriter().write_to_file(document)
@@ -2462,6 +2482,14 @@ def create_main_router(
             doc_full_path_dir = os.path.dirname(doc_full_path)
             Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
 
+            file_tree_mount_folder = os.path.basename(
+                os.path.dirname(full_input_path)
+            )
+
+            input_doc_assets_dir_rel_path = "/".join(
+                (file_tree_mount_folder, "_assets")
+            )
+
             # FIXME: Fill in the meta information correctly.
             document.meta = DocumentMeta(
                 level=0,
@@ -2469,10 +2497,13 @@ def create_main_router(
                 document_filename=document_path,
                 document_filename_base=None,
                 input_doc_full_path=doc_full_path,
-                input_doc_rel_path=document_path,
-                input_doc_dir_rel_path=os.path.dirname(document_path),
+                input_doc_rel_path=SDocRelativePath(document_path),
+                input_doc_dir_rel_path=SDocRelativePath(""),
+                input_doc_assets_dir_rel_path=SDocRelativePath(
+                    input_doc_assets_dir_rel_path
+                ),
                 output_document_dir_full_path=None,
-                output_document_dir_rel_path=None,
+                output_document_dir_rel_path=SDocRelativePath("FIXME"),
             )
 
             SDWriter().write_to_file(document)
@@ -2653,8 +2684,13 @@ def create_main_router(
             return get_asset(request, full_path)
 
     def get_document(request: Request, url_to_document: str):
+        document_relative_path: SDocRelativePath = SDocRelativePath.from_url(
+            url_to_document
+        )
         full_path_to_document = os.path.join(
-            server_config.output_path, "html", url_to_document
+            server_config.output_path,
+            "html",
+            document_relative_path.relative_path,
         )
         must_generate_document = False
 
@@ -2688,17 +2724,20 @@ def create_main_router(
                     return Response(status_code=304)
 
         else:
-            if url_to_document.startswith("_source_files"):
+            if document_relative_path.relative_path.startswith("_source_files"):
                 # FIXME: We could be more specific here and only generate the
                 # requested file.
                 html_generator.export_source_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
-            elif url_to_document == "index.html":
+            elif document_relative_path.relative_path == "index.html":
                 html_generator.export_project_tree_screen(
                     traceability_index=export_action.traceability_index,
                 )
-            elif url_to_document == "traceability_matrix.html":
+            elif (
+                document_relative_path.relative_path
+                == "traceability_matrix.html"
+            ):
                 if not project_config.is_activated_requirements_coverage():
                     return Response(
                         content="The Requirements Coverage feature is not activated in the project config.",
@@ -2707,7 +2746,7 @@ def create_main_router(
                 html_generator.export_requirements_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
-            elif url_to_document == "source_coverage.html":
+            elif document_relative_path.relative_path == "source_coverage.html":
                 if not project_config.is_activated_requirements_to_source_traceability():
                     return Response(
                         content="The Requirements to Source Files feature is not activated in the project config.",
@@ -2716,7 +2755,10 @@ def create_main_router(
                 html_generator.export_source_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
-            elif url_to_document == "project_statistics.html":
+            elif (
+                document_relative_path.relative_path
+                == "project_statistics.html"
+            ):
                 if not project_config.is_activated_project_statistics():
                     return Response(
                         content="The Project Statistics feature is not activated in the project config.",
@@ -2726,40 +2768,60 @@ def create_main_router(
                     traceability_index=export_action.traceability_index,
                 )
             else:
-                if url_to_document.endswith("-TABLE.html"):
-                    base_document_url = url_to_document.replace("-TABLE", "")
+                if document_relative_path.relative_path.endswith("-TABLE.html"):
+                    base_document_url = (
+                        document_relative_path.relative_path.replace(
+                            "-TABLE", ""
+                        )
+                    )
                     document_type_to_generate = DocumentType.TABLE
-                elif url_to_document.endswith("-DEEP-TRACE.html"):
-                    base_document_url = url_to_document.replace(
-                        "-DEEP-TRACE", ""
+                elif document_relative_path.relative_path.endswith(
+                    "-DEEP-TRACE.html"
+                ):
+                    base_document_url = (
+                        document_relative_path.relative_path.replace(
+                            "-DEEP-TRACE", ""
+                        )
                     )
                     document_type_to_generate = DocumentType.DEEPTRACE
-                elif url_to_document.endswith("-TRACE.html"):
-                    base_document_url = url_to_document.replace("-TRACE", "")
+                elif document_relative_path.relative_path.endswith(
+                    "-TRACE.html"
+                ):
+                    base_document_url = (
+                        document_relative_path.relative_path.replace(
+                            "-TRACE", ""
+                        )
+                    )
                     document_type_to_generate = DocumentType.TRACE
-                elif url_to_document.endswith("-PDF.html"):
+                elif document_relative_path.relative_path.endswith("-PDF.html"):
                     if not project_config.is_activated_html2pdf():
                         return Response(
                             content="The HTML2PDF feature is not activated in the project config.",
                             status_code=HTTP_STATUS_PRECONDITION_FAILED,
                         )
-                    base_document_url = url_to_document.replace("-PDF", "")
+                    base_document_url = (
+                        document_relative_path.relative_path.replace("-PDF", "")
+                    )
                     document_type_to_generate = DocumentType.PDF
-                elif url_to_document.endswith(".standalone.html"):
+                elif document_relative_path.relative_path.endswith(
+                    ".standalone.html"
+                ):
                     if not project_config.is_activated_standalone_document():
                         return Response(
                             content="The Standalone Document feature is not activated in the project config.",
                             status_code=HTTP_STATUS_PRECONDITION_FAILED,
                         )
-                    base_document_url = url_to_document.replace(
-                        ".standalone", ""
+                    base_document_url = (
+                        document_relative_path.relative_path.replace(
+                            ".standalone", ""
+                        )
                     )
                     document_type_to_generate = DocumentType.DOCUMENT
                 else:
                     # Either this is a normal document, or the path is broken.
-                    base_document_url = url_to_document
+                    base_document_url = document_relative_path.relative_path
                     document_type_to_generate = DocumentType.DOCUMENT
-                document = export_action.traceability_index.document_tree.map_docs_by_rel_paths.get(  # noqa: E501
+                document = export_action.traceability_index.document_tree.map_docs_by_rel_paths.get(
                     base_document_url
                 )
                 if document is None:

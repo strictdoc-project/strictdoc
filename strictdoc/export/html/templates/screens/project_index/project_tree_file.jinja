@@ -26,7 +26,7 @@
     </div>
     {%- if is_included -%}
       <div class="project_tree-file-name">
-        <b>included by</b> {{ document.get_included_document().meta.input_doc_rel_path }}
+        <b>included by</b> {{ document.get_included_document().meta.input_doc_rel_path.relative_path_posix }}
       </div>
     {%- endif -%}
   </div>

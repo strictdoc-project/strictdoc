@@ -11,6 +11,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
 )
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.helpers.paths import SDocRelativePath
 
 
 class DocumentBuilder:
@@ -128,9 +129,10 @@ class DocumentBuilder:
             document_filename="input.sdoc",
             document_filename_base="input",
             input_doc_full_path="/tmp/input.sdoc",
-            input_doc_rel_path="input.sdoc",
-            input_doc_dir_rel_path="",
+            input_doc_rel_path=SDocRelativePath("input.sdoc"),
+            input_doc_dir_rel_path=SDocRelativePath(""),
+            input_doc_assets_dir_rel_path=SDocRelativePath("_assets"),
             output_document_dir_full_path="FOO",
-            output_document_dir_rel_path="BAR",
+            output_document_dir_rel_path=SDocRelativePath("BAR"),
         )
         return document

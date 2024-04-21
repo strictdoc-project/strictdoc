@@ -9,6 +9,7 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
+from strictdoc.core.file_tree import Folder
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
@@ -177,6 +178,16 @@ class DocumentScreenViewObject:
     def iterator_files_first(self):
         yield from self.document_tree_iterator.iterator_files_first()
 
+    def folder_contains_including_documents(self, folder: Folder):
+        assert isinstance(folder, Folder), folder
+        for file_ in folder.files:
+            if not file_.has_extension(".sdoc"):
+                continue
+            document_ = self.get_document_by_path(file_.get_full_path())
+            if not document_.document_is_included():
+                return True
+        return False
+
     def render_url(self, url: str):
         return self.link_renderer.render_url(url)
 
@@ -200,7 +211,7 @@ class DocumentScreenViewObject:
     def date_today(self):
         return datetime.today().strftime("%Y-%m-%d")
 
-    def get_document_by_path(self, full_path: str):
+    def get_document_by_path(self, full_path: str) -> SDocDocument:
         return self.traceability_index.document_tree.get_document_by_path(
             full_path
         )

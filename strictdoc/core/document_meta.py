@@ -1,5 +1,6 @@
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.paths import SDocRelativePath
 
 
 @auto_described
@@ -11,10 +12,11 @@ class DocumentMeta:
         document_filename: str,
         document_filename_base,
         input_doc_full_path,
-        input_doc_rel_path: str,
-        input_doc_dir_rel_path,
+        input_doc_rel_path: SDocRelativePath,
+        input_doc_dir_rel_path: SDocRelativePath,
+        input_doc_assets_dir_rel_path: SDocRelativePath,
         output_document_dir_full_path,
-        output_document_dir_rel_path,
+        output_document_dir_rel_path: SDocRelativePath,
     ):
         """
         Example explaining meta data stored by this class:
@@ -27,19 +29,38 @@ class DocumentMeta:
             input_doc_full_path = "/tmp/doc_project/child.sdoc",
             input_doc_rel_path = "child.sdoc",
             input_doc_dir_rel_path = "",
+            input_doc_assets_dir_rel_path = "doc_project/_assets",
             output_document_dir_full_path = "/tmp/doc_project/output/html/doc_project",
             output_document_dir_rel_path = "doc_project"
         )
         """
+        assert isinstance(
+            input_doc_rel_path, SDocRelativePath
+        ), input_doc_rel_path
+        assert isinstance(
+            input_doc_dir_rel_path, SDocRelativePath
+        ), input_doc_dir_rel_path
+        assert isinstance(
+            input_doc_assets_dir_rel_path, SDocRelativePath
+        ), input_doc_assets_dir_rel_path
+        assert isinstance(
+            output_document_dir_rel_path, SDocRelativePath
+        ), output_document_dir_rel_path
+
         self.level = level
         self.file_tree_mount_folder = file_tree_mount_folder
         self.document_filename: str = document_filename
         self.document_filename_base = document_filename_base
         self.input_doc_full_path = input_doc_full_path
-        self.input_doc_rel_path: str = input_doc_rel_path
-        self.input_doc_dir_rel_path = input_doc_dir_rel_path
+        self.input_doc_rel_path: SDocRelativePath = input_doc_rel_path
+        self.input_doc_dir_rel_path: SDocRelativePath = input_doc_dir_rel_path
+        self.input_doc_assets_dir_rel_path: SDocRelativePath = (
+            input_doc_assets_dir_rel_path
+        )
         self.output_document_dir_full_path = output_document_dir_full_path
-        self.output_document_dir_rel_path = output_document_dir_rel_path
+        self.output_document_dir_rel_path: SDocRelativePath = (
+            output_document_dir_rel_path
+        )
 
     # Paths
     def get_html_doc_path(self):
@@ -87,42 +108,42 @@ class DocumentMeta:
     # Links
     def get_html_doc_link(self):
         return (
-            f"{self.output_document_dir_rel_path}"
+            f"{self.output_document_dir_rel_path.relative_path_posix}"
             f"/"
             f"{self.document_filename_base}.html"
         )
 
     def get_html_table_link(self):
         return (
-            f"{self.output_document_dir_rel_path}"
+            f"{self.output_document_dir_rel_path.relative_path_posix}"
             f"/"
             f"{self.document_filename_base}-TABLE.html"
         )
 
     def get_html_traceability_link(self):
         return (
-            f"{self.output_document_dir_rel_path}"
+            f"{self.output_document_dir_rel_path.relative_path_posix}"
             f"/"
             f"{self.document_filename_base}-TRACE.html"
         )
 
     def get_html_deep_traceability_link(self):
         return (
-            f"{self.output_document_dir_rel_path}"
+            f"{self.output_document_dir_rel_path.relative_path_posix}"
             f"/"
             f"{self.document_filename_base}-DEEP-TRACE.html"
         )
 
     def get_html_pdf_link(self):
         return (
-            f"{self.output_document_dir_rel_path}"
+            f"{self.output_document_dir_rel_path.relative_path_posix}"
             f"/"
             f"{self.document_filename_base}-PDF.html"
         )
 
     def get_html_standalone_document_link(self):
         return (
-            f"{self.output_document_dir_rel_path}"
+            f"{self.output_document_dir_rel_path.relative_path_posix}"
             f"/"
             f"{self.document_filename_base}.standalone.html"
         )

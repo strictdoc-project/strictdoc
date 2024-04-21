@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-redef"
 import hashlib
 import io
 import os

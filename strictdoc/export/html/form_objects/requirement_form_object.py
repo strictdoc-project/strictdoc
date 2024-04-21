@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined"
+# mypy: disable-error-code="arg-type,attr-defined,no-redef"
 import html
 from collections import defaultdict
 from enum import Enum

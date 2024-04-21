@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-redef"
 import sys
 import traceback
 from functools import partial

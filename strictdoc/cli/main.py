@@ -1,5 +1,5 @@
 # pylint: disable=wrong-import-position
-# mypy: disable-error-code="arg-type,attr-defined"
+# mypy: disable-error-code="arg-type,attr-defined,no-redef"
 # flake8: noqa: E402
 
 # Needed to ensure that multiprocessing.freeze_support() is called

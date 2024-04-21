@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-redef"
 import os
 
 import bs4

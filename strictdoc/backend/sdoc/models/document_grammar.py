@@ -1,3 +1,4 @@
+# mypy: disable-error-code="no-redef"
 import sys
 from collections import OrderedDict
 from typing import Dict, List, Optional, Set, Union

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return"
+# mypy: disable-error-code="no-any-return,no-redef"
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional, Union

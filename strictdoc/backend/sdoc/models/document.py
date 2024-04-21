@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="union-attr,type-arg"
 from typing import Generator, List, Optional
 
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -17,7 +17,7 @@ class SDocDocumentContext:
 
 
 @auto_described
-class SDocDocument:  # pylint: disable=too-many-instance-attributes
+class SDocDocument:
     def __init__(
         self,
         mid: Optional[str],
@@ -25,9 +25,9 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
         config: Optional[DocumentConfig],
         view: Optional[DocumentView],
         grammar: Optional[DocumentGrammar],
-        free_texts,
-        section_contents,
-    ):
+        free_texts: List[FreeText],
+        section_contents: List,
+    ) -> None:
         assert isinstance(free_texts, list)
 
         self.title: str = title
@@ -42,7 +42,7 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
         )
         self.grammar: Optional[DocumentGrammar] = grammar
         self.free_texts: List[FreeText] = free_texts
-        self.section_contents = section_contents
+        self.section_contents: List = section_contents
 
         # FIXME: Plain list of all fragments found in the document.
         self.fragments_from_files: List = []
@@ -68,19 +68,19 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
         return self.config.uid
 
     @property
-    def is_section(self):
+    def is_section(self) -> bool:
         return True
 
     @property
-    def is_root_included_document(self):
+    def is_root_included_document(self) -> bool:
         return self.document_is_included()
 
     @property
-    def is_requirement(self):
+    def is_requirement(self) -> bool:
         return False
 
     @property
-    def is_composite_requirement(self):
+    def is_composite_requirement(self) -> bool:
         return False
 
     def get_node_type_string(self) -> Optional[str]:
@@ -92,8 +92,10 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
     def document_is_included(self) -> bool:
         return self.ng_including_document_reference.get_document() is not None
 
-    def get_included_document(self):
-        return self.ng_including_document_reference.get_document()
+    def get_included_document(self) -> Optional["SDocDocument"]:
+        # FIXME: Fix no-any-return when the circular references between
+        #        SDocDocument and DocumentReference are fixed.
+        return self.ng_including_document_reference.get_document()  # type: ignore[no-any-return]
 
     def iterate_included_documents_depth_first(
         self,
@@ -106,7 +108,7 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
     def reserved_uid(self) -> Optional[str]:
         return self.config.uid
 
-    def assign_meta(self, meta):
+    def assign_meta(self, meta: DocumentMeta) -> None:
         assert isinstance(meta, DocumentMeta)
         self.meta = meta
 
@@ -143,11 +145,11 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
             task_list.extend(section_or_requirement.section_contents)
         return False
 
-    def get_title(self):
+    def get_title(self) -> str:
         return self.title
 
     @property
-    def ng_resolved_custom_level(self):
+    def ng_resolved_custom_level(self) -> Optional[str]:
         return None
 
     @property
@@ -157,17 +159,19 @@ class SDocDocument:  # pylint: disable=too-many-instance-attributes
     def get_requirement_prefix(self) -> str:
         return self.config.get_requirement_prefix()
 
-    def enumerate_meta_field_titles(self):
-        # TODO: currently only enumerating a single element ([0])
+    def enumerate_meta_field_titles(self) -> Generator[str, None, None]:
+        # FIXME: currently only enumerating a single element ([0])
         yield from self.grammar.elements[0].enumerate_meta_field_titles()
 
-    def enumerate_custom_content_field_titles(self):
-        # TODO: currently only enumerating a single element ([0])
+    def enumerate_custom_content_field_titles(
+        self,
+    ) -> Generator[str, None, None]:
+        # FIXME: currently only enumerating a single element ([0])
         yield from self.grammar.elements[
             0
         ].enumerate_custom_content_field_titles()
 
-    def set_freetext(self, freetext: Optional[FreeText]):
+    def set_freetext(self, freetext: Optional[FreeText]) -> None:
         if freetext is None:
             self.free_texts = []
             return

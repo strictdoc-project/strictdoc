@@ -27,7 +27,6 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
         requirement_prefix: Optional[str],
         free_texts: List[FreeText],
         section_contents: List[SDocObject],
-        root_section=False,
     ):
         self.parent = parent
 
@@ -60,9 +59,6 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
 
         # This is always true, unless the node is filtered out with --filter-requirements.
         self.ng_whitelisted = True
-        # A root section is an artificial section where a root of an included
-        # document is mounted to when the document is included to another document.
-        self.root_section = root_section
 
     @staticmethod
     def get_type_string() -> str:

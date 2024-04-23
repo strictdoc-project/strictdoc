@@ -1,5 +1,5 @@
 # mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,operator"
-from typing import Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Set, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
 from reqif.models.reqif_spec_object import ReqIFSpecObject
@@ -89,6 +89,38 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         return field_name
 
     @staticmethod
+    def _iterate(
+        specification: ReqIFSpecification,
+        reqif_bundle: ReqIFBundle,
+        section_stack: List[Any],
+        get_level_lambda,
+    ):
+        for current_hierarchy in reqif_bundle.iterate_specification_hierarchy(
+            specification
+        ):
+            current_section = section_stack[-1]
+            section_level = get_level_lambda(current_section)
+
+            spec_object = reqif_bundle.get_spec_object_by_ref(
+                current_hierarchy.spec_object
+            )
+
+            if current_hierarchy.level <= section_level:
+                for _ in range(
+                    0,
+                    (section_level - current_hierarchy.level) + 1,
+                ):
+                    assert len(section_stack) > 0
+                    section_stack.pop()
+
+            is_section = P01_ReqIFToSDocConverter.is_spec_object_section(
+                spec_object,
+                reqif_bundle=reqif_bundle,
+            )
+
+            yield current_hierarchy, section_stack, spec_object, is_section
+
+    @staticmethod
     def _create_document_from_reqif_specification(
         *,
         specification: ReqIFSpecification,
@@ -99,66 +131,43 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         )
         elements: List[GrammarElement] = []
         document.section_contents = []
-        section_stack = [document]
+        section_stack: List[Union[SDocDocument, SDocSection]] = [document]
         used_spec_object_types_ids: Set[str] = set()
 
-        for current_hierarchy in reqif_bundle.iterate_specification_hierarchy(
-            specification
+        for (
+            current_hierarchy_,
+            section_stack_,
+            spec_object_,
+            is_section_,
+        ) in P01_ReqIFToSDocConverter._iterate(
+            specification,
+            reqif_bundle,
+            section_stack,
+            lambda s: s.ng_level,
         ):
-            current_section = section_stack[-1]
+            used_spec_object_types_ids.add(spec_object_.spec_object_type)
 
-            spec_object = reqif_bundle.get_spec_object_by_ref(
-                current_hierarchy.spec_object
-            )
-            used_spec_object_types_ids.add(spec_object.spec_object_type)
-            if P01_ReqIFToSDocConverter.is_spec_object_section(
-                spec_object,
-                reqif_bundle=reqif_bundle,
-            ):
+            current_section: Union[SDocDocument, SDocSection] = section_stack_[
+                -1
+            ]
+            if is_section_:
                 section = (
                     P01_ReqIFToSDocConverter.create_section_from_spec_object(
-                        spec_object,
-                        current_hierarchy.level,
+                        spec_object_,
+                        current_hierarchy_.level,
                         reqif_bundle=reqif_bundle,
                     )
                 )
-                if current_hierarchy.level > current_section.ng_level:
-                    current_section.section_contents.append(section)
-                    section_stack.append(section)
-                elif current_hierarchy.level < current_section.ng_level:
-                    for _ in range(
-                        0,
-                        (current_section.ng_level - current_hierarchy.level)
-                        + 1,
-                    ):
-                        assert len(section_stack) > 0
-                        section_stack.pop()
-                        current_section = section_stack[-1]
-                    current_section.section_contents.append(section)
-                    section_stack.append(section)
-                else:
-                    section_stack.pop()
-                    current_section = section_stack[-1]
-                    current_section.section_contents.append(section)
-                    section_stack.append(section)
-            elif P01_ReqIFToSDocConverter.is_spec_object_requirement(
-                spec_object
-            ):
+                current_section.section_contents.append(section)
+                section_stack.append(section)
+            else:
                 requirement: SDocNode = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
-                    spec_object=spec_object,
+                    spec_object=spec_object_,
                     parent_section=section_stack[-1],
                     reqif_bundle=reqif_bundle,
-                    level=current_hierarchy.level,
+                    level=current_hierarchy_.level,
                 )
-                for _ in range(
-                    0, (current_section.ng_level - current_hierarchy.level) + 1
-                ):
-                    assert len(section_stack) > 0
-                    section_stack.pop()
-                    current_section = section_stack[-1]
                 current_section.section_contents.append(requirement)
-            else:
-                raise NotImplementedError(spec_object) from None
 
         # See SDOC_IMPL_1.
         if (

@@ -92,18 +92,17 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     def _iterate(
         specification: ReqIFSpecification,
         reqif_bundle: ReqIFBundle,
-        section_stack: List[Any],
+        root_node: Any,
         get_level_lambda,
+        node_lambda,
     ):
+        section_stack: List[Union[SDocDocument, SDocSection]] = [root_node]
+
         for current_hierarchy in reqif_bundle.iterate_specification_hierarchy(
             specification
         ):
             current_section = section_stack[-1]
             section_level = get_level_lambda(current_section)
-
-            spec_object = reqif_bundle.get_spec_object_by_ref(
-                current_hierarchy.spec_object
-            )
 
             if current_hierarchy.level <= section_level:
                 for _ in range(
@@ -113,12 +112,12 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     assert len(section_stack) > 0
                     section_stack.pop()
 
-            is_section = P01_ReqIFToSDocConverter.is_spec_object_section(
-                spec_object,
-                reqif_bundle=reqif_bundle,
+            current_section = section_stack[-1]
+            converted_node, converted_node_is_section = node_lambda(
+                current_hierarchy, current_section
             )
-
-            yield current_hierarchy, section_stack, spec_object, is_section
+            if converted_node_is_section:
+                section_stack.append(converted_node)
 
     @staticmethod
     def _create_document_from_reqif_specification(
@@ -131,43 +130,49 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         )
         elements: List[GrammarElement] = []
         document.section_contents = []
-        section_stack: List[Union[SDocDocument, SDocSection]] = [document]
         used_spec_object_types_ids: Set[str] = set()
 
-        for (
+        def node_converter_lambda(
             current_hierarchy_,
-            section_stack_,
-            spec_object_,
-            is_section_,
-        ) in P01_ReqIFToSDocConverter._iterate(
-            specification,
-            reqif_bundle,
-            section_stack,
-            lambda s: s.ng_level,
+            current_section_,
         ):
-            used_spec_object_types_ids.add(spec_object_.spec_object_type)
+            spec_object = reqif_bundle.get_spec_object_by_ref(
+                current_hierarchy_.spec_object
+            )
+            used_spec_object_types_ids.add(spec_object.spec_object_type)
 
-            current_section: Union[SDocDocument, SDocSection] = section_stack_[
-                -1
-            ]
-            if is_section_:
-                section = (
+            is_section = P01_ReqIFToSDocConverter.is_spec_object_section(
+                spec_object,
+                reqif_bundle=reqif_bundle,
+            )
+
+            converted_node: Union[SDocSection, SDocNode]
+            if is_section:
+                converted_node = (
                     P01_ReqIFToSDocConverter.create_section_from_spec_object(
-                        spec_object_,
+                        spec_object,
                         current_hierarchy_.level,
                         reqif_bundle=reqif_bundle,
                     )
                 )
-                current_section.section_contents.append(section)
-                section_stack.append(section)
             else:
-                requirement: SDocNode = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
-                    spec_object=spec_object_,
-                    parent_section=section_stack[-1],
+                converted_node = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
+                    spec_object=spec_object,
+                    parent_section=current_section_,
                     reqif_bundle=reqif_bundle,
                     level=current_hierarchy_.level,
                 )
-                current_section.section_contents.append(requirement)
+            current_section_.section_contents.append(converted_node)
+
+            return converted_node, is_section
+
+        P01_ReqIFToSDocConverter._iterate(
+            specification,
+            reqif_bundle,
+            document,
+            lambda s: s.ng_level,
+            node_converter_lambda,
+        )
 
         # See SDOC_IMPL_1.
         if (

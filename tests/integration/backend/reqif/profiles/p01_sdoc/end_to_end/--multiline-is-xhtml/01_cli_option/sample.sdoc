@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Document with a requirement with a multiline statement.
+
+[FREETEXT]
+Document free text.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section
+
+[FREETEXT]
+Section free text.
+[/FREETEXT]
+
+[REQUIREMENT]
+STATEMENT: >>>
+Statement line #1
+
+Statement line #2
+
+Statement line #3
+<<<
+RATIONALE: >>>
+This field is single-line but it is exported to ReqIF as XHTML and imported back as multiline.
+<<<
+
+[/SECTION]

@@ -425,6 +425,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             attribute_multiline_value = None
             if (
                 "\n" in attribute_value
+                or attribute.attribute_type == SpecObjectAttributeType.XHTML
                 or field_name == ReqIFRequirementReservedField.TEXT
                 or field_name == ReqIFRequirementReservedField.COMMENT_NOTES
             ):

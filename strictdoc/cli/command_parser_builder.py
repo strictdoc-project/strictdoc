@@ -189,6 +189,16 @@ class CommandParserBuilder:
             help="Export formats",
         )
         command_parser_export.add_argument(
+            "--reqif-multiline-is-xhtml",
+            default=False,
+            action="store_true",
+            help=(
+                "Controls whether StrictDoc multiline fields are exported as XHTML "
+                "when the option is provided. "
+                "By default StrictDoc exports multiline fields with a STRING type."
+            ),
+        )
+        command_parser_export.add_argument(
             "--experimental-enable-file-traceability",
             action="store_true",
             help=(

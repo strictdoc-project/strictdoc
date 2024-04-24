@@ -129,6 +129,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         filter_requirements: Optional[str],
         filter_sections: Optional[str],
         reqif_profile: Optional[str],
+        reqif_multiline_is_xhtml: bool,
         experimental_enable_file_traceability,
         view: Optional[str],
     ):
@@ -145,6 +146,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.filter_requirements: Optional[str] = filter_requirements
         self.filter_sections: Optional[str] = filter_sections
         self.reqif_profile: Optional[str] = reqif_profile
+        self.reqif_multiline_is_xhtml: bool = reqif_multiline_is_xhtml
         self.experimental_enable_file_traceability = (
             experimental_enable_file_traceability
         )
@@ -276,6 +278,7 @@ class SDocArgsParser:
             self.args.filter_requirements,
             self.args.filter_sections,
             self.args.reqif_profile,
+            self.args.reqif_multiline_is_xhtml,
             self.args.experimental_enable_file_traceability,
             self.args.view,
         )

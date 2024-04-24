@@ -8,6 +8,7 @@ from reqif.models.reqif_core_content import ReqIFCoreContent
 from reqif.models.reqif_data_type import (
     ReqIFDataTypeDefinitionEnumeration,
     ReqIFDataTypeDefinitionString,
+    ReqIFDataTypeDefinitionXHTML,
     ReqIFEnumValue,
 )
 from reqif.models.reqif_namespace_info import ReqIFNamespaceInfo
@@ -50,6 +51,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import escape
 
 
@@ -73,8 +75,7 @@ class P01_SDocToReqIFBuildContext:  # pylint: disable=invalid-name
 class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
     @classmethod
     def convert_document_tree(
-        cls,
-        document_tree: DocumentTree,
+        cls, document_tree: DocumentTree, multiline_is_xhtml: bool
     ):
         creation_time = datetime.datetime.now(
             datetime.datetime.now().astimezone().tzinfo
@@ -97,22 +98,50 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                 SDOC_SPEC_OBJECT_TYPE_SINGLETON + "_" + uuid.uuid4().hex
             )
             for element in document.grammar.elements:
-                for field in element.fields:
+                fields_names = element.get_field_titles()
+                statement_field_idx = fields_names.index("STATEMENT")
+                for field_idx_, field in enumerate(element.fields):
+                    multiline = field_idx_ >= statement_field_idx
+
                     if isinstance(field, GrammarElementFieldString):
-                        if (
-                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                            in data_types_lookup
-                        ):
-                            continue
-                        data_type = ReqIFDataTypeDefinitionString.create(
-                            identifier=(
+                        data_type: ReqIFDataTypeDefinitionString
+                        if multiline:
+                            if (
+                                StrictDocReqIFTypes.MULTI_LINE_STRING.value
+                                in data_types_lookup
+                            ):
+                                continue
+                            if multiline_is_xhtml:
+                                data_type = ReqIFDataTypeDefinitionXHTML(
+                                    identifier=(
+                                        StrictDocReqIFTypes.MULTI_LINE_STRING.value
+                                    ),
+                                    is_self_closed=True,
+                                )
+                            else:
+                                data_type = ReqIFDataTypeDefinitionString.create(
+                                    identifier=(
+                                        StrictDocReqIFTypes.MULTI_LINE_STRING.value
+                                    ),
+                                )
+                            data_types_lookup[
+                                StrictDocReqIFTypes.MULTI_LINE_STRING.value
+                            ] = data_type.identifier
+                        else:
+                            if (
                                 StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                            ),
-                        )
+                                in data_types_lookup
+                            ):
+                                continue
+                            data_type = ReqIFDataTypeDefinitionString.create(
+                                identifier=(
+                                    StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                                ),
+                            )
+                            data_types_lookup[
+                                StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                            ] = data_type.identifier
                         data_types.append(data_type)
-                        data_types_lookup[
-                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                        ] = data_type.identifier
                     elif isinstance(field, GrammarElementFieldSingleChoice):
                         values = []
                         values_map = {}
@@ -184,6 +213,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                 grammar=document.grammar,
                 data_types_lookup=data_types_lookup,
                 document_spec_object_type=document_spec_object_type,
+                multiline_is_xhtml=multiline_is_xhtml,
             )
             spec_types.extend(document_spec_types)
 
@@ -222,7 +252,8 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                     P01_SDocToReqIFObjectConverter
                     ._convert_document_free_text_to_spec_object(
                         document,
-                        document_spec_object_type=document_spec_object_type
+                        document_spec_object_type=document_spec_object_type,
+                        multiline_is_xhtml=multiline_is_xhtml
                     )
                 )
                 # fmt: on
@@ -256,6 +287,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                         ._convert_section_to_spec_object(
                             node,
                             document_spec_object_type,
+                            multiline_is_xhtml=multiline_is_xhtml
                         )
                     )
                     # fmt: on
@@ -295,6 +327,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                         document_spec_object_type=document_spec_object_type,
                         data_types=data_types,
                         data_types_lookup=data_types_lookup,
+                        multiline_is_xhtml=multiline_is_xhtml,
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
@@ -399,7 +432,10 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
 
     @classmethod
     def _convert_document_free_text_to_spec_object(
-        cls, document: SDocDocument, document_spec_object_type: str
+        cls,
+        document: SDocDocument,
+        document_spec_object_type: str,
+        multiline_is_xhtml: bool,
     ) -> ReqIFSpecObject:
         assert isinstance(document, SDocDocument)
         assert len(document.free_texts) > 0
@@ -412,12 +448,18 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
             value="Abstract",
         )
         attributes.append(title_attribute)
-        free_text_value = escape(
+        free_text_value = (
             SDWriter.print_free_text_content(document.free_texts[0])
-        )
+        ).rstrip()
+        if multiline_is_xhtml:
+            attribute_type = SpecObjectAttributeType.XHTML
+        else:
+            attribute_type = SpecObjectAttributeType.STRING
+            free_text_value = escape(free_text_value)
+
         free_text_attribute = SpecObjectAttribute(
             xml_node=None,
-            attribute_type=SpecObjectAttributeType.STRING,
+            attribute_type=attribute_type,
             definition_ref=ReqIFChapterField.TEXT,
             value=free_text_value,
         )
@@ -435,7 +477,10 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
 
     @classmethod
     def _convert_section_to_spec_object(
-        cls, section: SDocSection, document_spec_object_type: str
+        cls,
+        section: SDocSection,
+        document_spec_object_type: str,
+        multiline_is_xhtml: bool,
     ) -> ReqIFSpecObject:
         assert isinstance(section, SDocSection)
         attributes = []
@@ -447,12 +492,18 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
         )
         attributes.append(title_attribute)
         if len(section.free_texts) > 0:
-            free_text_value = escape(
+            free_text_value = (
                 SDWriter.print_free_text_content(section.free_texts[0])
-            )
+            ).rstrip()
+            if multiline_is_xhtml:
+                attribute_type = SpecObjectAttributeType.XHTML
+            else:
+                attribute_type = SpecObjectAttributeType.STRING
+                free_text_value = escape(free_text_value)
+
             free_text_attribute = SpecObjectAttribute(
                 xml_node=None,
-                attribute_type=SpecObjectAttributeType.STRING,
+                attribute_type=attribute_type,
                 definition_ref=ReqIFChapterField.TEXT,
                 value=free_text_value,
             )
@@ -477,6 +528,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
         data_types: List,
         data_types_lookup: Dict[str, str],
         document_spec_object_type: str,
+        multiline_is_xhtml: bool,
     ) -> ReqIFSpecObject:
         requirement_identifier = generate_unique_identifier("REQUIREMENT")
         grammar_element = grammar.elements_by_type[requirement.requirement_type]
@@ -528,8 +580,8 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                             )
 
                 field_values_refs = []
-                for field_value in field_values:
-                    field_values_refs.append(data_type_lookup[field_value])
+                for field_value_ in field_values:
+                    field_values_refs.append(data_type_lookup[field_value_])
 
                 attribute = SpecObjectAttribute(
                     xml_node=None,
@@ -538,17 +590,31 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                     value=field_values_refs,
                 )
             elif isinstance(grammar_field, GrammarElementFieldString):
-                field_value = escape(
+                is_multiline_field = field.field_value_multiline is not None
+
+                field_value: str = (
                     field.field_value_multiline
                     if field.field_value_multiline is not None
-                    else field.field_value
+                    else assert_cast(field.field_value, str)
                 )
+
+                attribute_type: str
+                if multiline_is_xhtml:
+                    attribute_type = (
+                        SpecObjectAttributeType.XHTML
+                        if is_multiline_field
+                        else SpecObjectAttributeType.STRING
+                    )
+                else:
+                    field_value = escape(field_value)
+                    attribute_type = SpecObjectAttributeType.STRING
+
                 field_name = field.field_name
                 if field_name in SDocRequirementReservedField.SET:
                     field_name = SDOC_TO_REQIF_FIELD_MAP[field_name]
                 attribute = SpecObjectAttribute(
                     xml_node=None,
-                    attribute_type=SpecObjectAttributeType.STRING,
+                    attribute_type=attribute_type,
                     definition_ref=field_name,
                     value=field_value,
                 )
@@ -570,6 +636,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
         grammar: DocumentGrammar,
         data_types_lookup,
         document_spec_object_type: str,
+        multiline_is_xhtml: bool,
     ):
         spec_object_types: List = []
 
@@ -578,22 +645,42 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
         ), "Only one grammar element is currently supported."
 
         for element in grammar.elements:
+            fields_names = element.get_field_titles()
+            statement_field_idx = fields_names.index("STATEMENT")
+
             attribute_definitions = []
 
             field: GrammarElementField
-            for field in element.fields:
+            for field_idx_, field in enumerate(element.fields):
+                multiline = field_idx_ >= statement_field_idx
+
                 if isinstance(field, GrammarElementFieldString):
                     field_title = field.title
                     if field_title in SDocRequirementReservedField.SET:
                         field_title = SDOC_TO_REQIF_FIELD_MAP[field_title]
-                    attribute = SpecAttributeDefinition.create(
-                        attribute_type=SpecObjectAttributeType.STRING,
-                        identifier=field_title,
-                        datatype_definition=(
-                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                        ),
-                        long_name=field_title,
-                    )
+                    if multiline:
+                        attribute_type = (
+                            SpecObjectAttributeType.XHTML
+                            if multiline_is_xhtml
+                            else SpecObjectAttributeType.STRING
+                        )
+                        attribute = SpecAttributeDefinition.create(
+                            attribute_type=attribute_type,
+                            identifier=field_title,
+                            datatype_definition=(
+                                StrictDocReqIFTypes.MULTI_LINE_STRING.value
+                            ),
+                            long_name=field_title,
+                        )
+                    else:
+                        attribute = SpecAttributeDefinition.create(
+                            attribute_type=SpecObjectAttributeType.STRING,
+                            identifier=field_title,
+                            datatype_definition=(
+                                StrictDocReqIFTypes.SINGLE_LINE_STRING.value
+                            ),
+                            long_name=field_title,
+                        )
                 elif isinstance(field, GrammarElementFieldSingleChoice):
                     attribute = SpecAttributeDefinition.create(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,

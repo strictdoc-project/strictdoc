@@ -146,6 +146,7 @@ def create_main_router(
         filter_requirements=None,
         filter_sections=None,
         reqif_profile=project_config.reqif_profile,
+        reqif_multiline_is_xhtml=False,
         experimental_enable_file_traceability=False,
         view=None,
     )
@@ -2606,7 +2607,8 @@ def create_main_router(
     @router.get("/reqif/export_tree", response_class=Response)
     def get_reqif_export_tree():
         reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
-            document_tree=export_action.traceability_index.document_tree
+            document_tree=export_action.traceability_index.document_tree,
+            multiline_is_xhtml=False,
         )
         reqif_content: str = ReqIFUnparser.unparse(reqif_bundle)
         return Response(

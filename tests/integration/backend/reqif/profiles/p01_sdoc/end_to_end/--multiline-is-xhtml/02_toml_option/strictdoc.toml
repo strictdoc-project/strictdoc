@@ -1,0 +1,4 @@
+[project]
+
+[reqif]
+multiline_is_xhtml = true

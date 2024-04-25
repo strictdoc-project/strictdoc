@@ -14,7 +14,7 @@ on:
 jobs:
   tests_end2end_macos:
     name: E2E - macOS
-    runs-on: macOS-latest
+    runs-on: macos-13
 
     strategy:
       matrix:
@@ -26,10 +26,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up Python 3.7
+    - name: Set up Python 3.8
       uses: actions/setup-python@v1
       with:
-        python-version: 3.7
+        python-version: 3.8
 
     - name: Upgrade pip
       run: |

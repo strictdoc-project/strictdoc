@@ -112,7 +112,7 @@ def get_inches_from_millimeters(mm: float) -> float:
 
 def send_devtools(driver, cmd, params):
     resource = (
-        "/session/%s/chromium/send_command_and_get_result" % driver.session_id
+        f"/session/{driver.session_id}/chromium/send_command_and_get_result"
     )
     url = driver.command_executor._url + resource
     body = json.dumps({"cmd": cmd, "params": params})

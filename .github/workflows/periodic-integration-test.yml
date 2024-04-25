@@ -62,7 +62,7 @@ jobs:
 
   periodic_integration_test_macos:
     name: PIT – macOS
-    runs-on: macOS-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
 

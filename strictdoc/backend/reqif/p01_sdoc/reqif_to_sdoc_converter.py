@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,operator"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,operator"
 from typing import Any, Dict, List, Optional, Set, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
@@ -25,10 +25,14 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.reference import ParentReqReference
+from strictdoc.backend.sdoc.models.reference import (
+    ParentReqReference,
+    Reference,
+)
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
+    GrammarElementFieldReference,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
 )
@@ -216,7 +220,14 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         spec_object_type: ReqIFSpecObjectType,
         reqif_bundle: ReqIFBundle,
     ):
-        fields = []
+        fields: List[
+            Union[
+                GrammarElementFieldString,
+                GrammarElementFieldMultipleChoice,
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldReference,
+            ]
+        ] = []
         for attribute in spec_object_type.attribute_definitions:
             field_name = (
                 P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
@@ -460,7 +471,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             spec_object_parents = reqif_bundle.get_spec_object_parents(
                 spec_object.identifier
             )
-            parent_refs = []
+            parent_refs: List[Reference] = []
             for spec_object_parent in spec_object_parents:
                 parent_spec_object_parent = (
                     reqif_bundle.lookup.get_spec_object_by_ref(

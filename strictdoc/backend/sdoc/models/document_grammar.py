@@ -6,7 +6,9 @@ from typing import Dict, List, Optional, Set, Union
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
     GrammarElementField,
+    GrammarElementFieldMultipleChoice,
     GrammarElementFieldReference,
+    GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
@@ -47,12 +49,26 @@ class GrammarElement:
         self,
         parent,
         tag: str,
-        fields: List[GrammarElementField],
+        fields: List[
+            Union[
+                GrammarElementFieldString,
+                GrammarElementFieldMultipleChoice,
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldReference,
+            ]
+        ],
         relations: List,
     ):
         self.parent = parent
         self.tag: str = tag
-        self.fields: List[GrammarElementField] = fields
+        self.fields: List[
+            Union[
+                GrammarElementFieldString,
+                GrammarElementFieldMultipleChoice,
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldReference,
+            ]
+        ] = fields
         self.relations: List[
             Union[
                 GrammarElementRelationParent,
@@ -192,7 +208,14 @@ class DocumentGrammar:
     @staticmethod
     def create_default(parent):
         # @sdoc[SDOC-SRS-132]
-        fields = [
+        fields: List[
+            Union[
+                GrammarElementFieldString,
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldMultipleChoice,
+                GrammarElementFieldReference,
+            ]
+        ] = [
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.UID,

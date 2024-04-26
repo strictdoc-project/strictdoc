@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,operator"
+# mypy: disable-error-code="no-untyped-def,union-attr,operator"
 from typing import Any, Dict, List, Optional, Set, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
@@ -205,6 +205,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     reqif_bundle=reqif_bundle,
                 )
                 elements.append(grammar_element)
+        grammar: DocumentGrammar
         if len(elements) > 0:
             grammar = DocumentGrammar(parent=document, elements=elements)
             grammar.is_default = False

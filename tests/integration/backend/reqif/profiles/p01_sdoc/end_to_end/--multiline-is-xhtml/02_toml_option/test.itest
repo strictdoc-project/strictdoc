@@ -1,0 +1,14 @@
+RUN: %strictdoc export --formats=reqif-sdoc %S/sample.sdoc
+RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/sample.sdoc
+RUN: %diff %S/sample.sdoc %S/output/sample.sdoc
+
+RUN: %cat %S/output/reqif/output.reqif | filecheck %s --check-prefix CHECK-EXPORTED-REQIF
+CHECK-EXPORTED-REQIF:<DATATYPE-DEFINITION-STRING IDENTIFIER="SDOC_DATATYPE_SINGLE_LINE_STRING"/>
+CHECK-EXPORTED-REQIF:<DATATYPE-DEFINITION-XHTML IDENTIFIER="SDOC_DATATYPE_MULTI_LINE_STRING"/>
+CHECK-EXPORTED-REQIF:            <ATTRIBUTE-VALUE-XHTML>
+CHECK-EXPORTED-REQIF:              <DEFINITION>
+CHECK-EXPORTED-REQIF:                <ATTRIBUTE-DEFINITION-XHTML-REF>ReqIF.Text</ATTRIBUTE-DEFINITION-XHTML-REF>
+CHECK-EXPORTED-REQIF:              </DEFINITION>
+CHECK-EXPORTED-REQIF:              <THE-VALUE>Statement line #1
+CHECK-EXPORTED-REQIF:                Statement line #2
+CHECK-EXPORTED-REQIF:                Statement line #3</THE-VALUE>

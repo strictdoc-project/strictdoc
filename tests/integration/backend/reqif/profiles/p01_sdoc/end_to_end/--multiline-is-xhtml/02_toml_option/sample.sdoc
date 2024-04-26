@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Document with a requirement with a multiline statement.
+
+[REQUIREMENT]
+STATEMENT: >>>
+Statement line #1
+
+Statement line #2
+
+Statement line #3
+<<<

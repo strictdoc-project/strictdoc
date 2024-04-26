@@ -25,7 +25,8 @@ class ReqIFExport:
 
         if project_config.reqif_profile == ReqIFProfile.P01_SDOC:
             reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
-                document_tree=traceability_index.document_tree
+                document_tree=traceability_index.document_tree,
+                multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,
             )
         else:
             raise NotImplementedError(

@@ -89,6 +89,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             List[Tuple[str, Optional[str]]]
         ],
         reqif_profile: str,
+        reqif_multiline_is_xhtml: bool,
         config_last_update: Optional[datetime.datetime],
     ):
         assert isinstance(environment, SDocRuntimeEnvironment)
@@ -131,6 +132,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             List[Tuple[str, Optional[str]]]
         ] = traceability_matrix_relation_columns
         self.reqif_profile: str = reqif_profile
+        self.reqif_multiline_is_xhtml: bool = reqif_multiline_is_xhtml
 
         self.autouuid_include_sections: bool = False
 
@@ -158,6 +160,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             html2pdf_template=None,
             traceability_matrix_relation_columns=None,
             reqif_profile=ReqIFProfile.P01_SDOC,
+            reqif_multiline_is_xhtml=False,
             config_last_update=None,
         )
 
@@ -217,6 +220,12 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
         if export_config.reqif_profile is not None:
             self.reqif_profile = export_config.reqif_profile
+
+        # If the TOML file sets this to True, ignore what is in CLI.
+        if not self.reqif_multiline_is_xhtml:
+            self.reqif_multiline_is_xhtml = (
+                export_config.reqif_multiline_is_xhtml
+            )
 
     def integrate_passthrough_config(self, config: PassthroughCommandConfig):
         self.passthrough_input_path = config.input_file
@@ -363,6 +372,7 @@ class ProjectConfigLoader:
         html2pdf_template: Optional[str] = None
         traceability_matrix_relation_columns: Optional[List[Tuple]] = None
         reqif_profile = ReqIFProfile.P01_SDOC
+        reqif_multiline_is_xhtml = False
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -511,6 +521,14 @@ class ProjectConfigLoader:
                 isinstance(server_port, int) and 1024 < server_port < 65000
             ), server_port
 
+        if "reqif" in config_dict:
+            # FIXME: Introduce at least a basic validation.
+            reqif_content = config_dict["reqif"]
+            reqif_multiline_is_xhtml = reqif_content.get(
+                "multiline_is_xhtml", False
+            )
+            assert isinstance(reqif_multiline_is_xhtml, bool), reqif_content
+
         return ProjectConfig(
             environment=environment,
             project_title=project_title,
@@ -526,5 +544,6 @@ class ProjectConfigLoader:
             html2pdf_template=html2pdf_template,
             traceability_matrix_relation_columns=traceability_matrix_relation_columns,
             reqif_profile=reqif_profile,
+            reqif_multiline_is_xhtml=reqif_multiline_is_xhtml,
             config_last_update=config_last_update,
         )

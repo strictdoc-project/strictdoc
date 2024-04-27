@@ -93,37 +93,6 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         return field_name
 
     @staticmethod
-    def _iterate(
-        specification: ReqIFSpecification,
-        reqif_bundle: ReqIFBundle,
-        root_node: Any,
-        get_level_lambda,
-        node_lambda,
-    ):
-        section_stack: List[Union[SDocDocument, SDocSection]] = [root_node]
-
-        for current_hierarchy in reqif_bundle.iterate_specification_hierarchy(
-            specification
-        ):
-            current_section = section_stack[-1]
-            section_level = get_level_lambda(current_section)
-
-            if current_hierarchy.level <= section_level:
-                for _ in range(
-                    0,
-                    (section_level - current_hierarchy.level) + 1,
-                ):
-                    assert len(section_stack) > 0
-                    section_stack.pop()
-
-            current_section = section_stack[-1]
-            converted_node, converted_node_is_section = node_lambda(
-                current_hierarchy, current_section
-            )
-            if converted_node_is_section:
-                section_stack.append(converted_node)
-
-    @staticmethod
     def _create_document_from_reqif_specification(
         *,
         specification: ReqIFSpecification,
@@ -170,9 +139,8 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
 
             return converted_node, is_section
 
-        P01_ReqIFToSDocConverter._iterate(
+        reqif_bundle.iterate_specification_hierarchy_for_conversion(
             specification,
-            reqif_bundle,
             document,
             lambda s: s.ng_level,
             node_converter_lambda,

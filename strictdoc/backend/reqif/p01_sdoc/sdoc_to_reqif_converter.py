@@ -81,9 +81,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
             datetime.datetime.now().astimezone().tzinfo
         ).isoformat()
 
-        # TODO
         namespace = "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd"
-        configuration = "https://github.com/strictdoc-project/strictdoc"
 
         context: P01_SDocToReqIFBuildContext = P01_SDocToReqIFBuildContext()
         spec_types: List = []
@@ -396,14 +394,13 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
             doctype_is_present=True,
             encoding="UTF-8",
             namespace=namespace,
-            configuration=configuration,
+            configuration=None,
             namespace_id=None,
-            namespace_xhtml=None,
+            namespace_xhtml="http://www.w3.org/1999/xhtml",
             schema_namespace=None,
             schema_location=None,
             language=None,
         )
-
         req_reqif_header = ReqIFReqIFHeader(
             identifier=generate_unique_identifier("REQ-IF-HEADER"),
             creation_time=creation_time,

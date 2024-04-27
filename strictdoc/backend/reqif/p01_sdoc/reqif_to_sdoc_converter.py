@@ -1,5 +1,5 @@
 # mypy: disable-error-code="no-untyped-def,union-attr,operator"
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Dict, List, Optional, Set, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
 from reqif.models.reqif_spec_object import ReqIFSpecObject

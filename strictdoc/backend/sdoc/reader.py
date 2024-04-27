@@ -88,7 +88,19 @@ class SDReader:
         if os.path.isfile(path_to_cached_file):
             with open(path_to_cached_file, "rb") as cache_file:
                 sdoc_pickled = cache_file.read()
-            return assert_cast(pickle_load(sdoc_pickled), SDocDocument)
+            if sdoc_pickled:
+                try:
+                    unpickled_content = pickle_load(sdoc_pickled)
+                    if unpickled_content is not None:
+                        return assert_cast(unpickled_content, SDocDocument)
+                except Exception as exception_:
+                    raise AssertionError(
+                        "MUST NOT REACH HERE: "
+                        f"Error when unpickling a cache file: {path_to_cached_file}. "
+                        "To fix the issue, simply remove the cache file. "
+                        "Please report this exception to StrictDoc developers: "
+                        f"https://github.com/strictdoc-project/strictdoc/issues/new"
+                    ) from exception_
 
         path_to_cached_file_dir = os.path.dirname(path_to_cached_file)
         Path(path_to_cached_file_dir).mkdir(parents=True, exist_ok=True)

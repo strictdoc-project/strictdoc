@@ -13,12 +13,13 @@ from strictdoc.backend.reqif.p11_polarion.reqif_to_sdoc_converter import (
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.cli.cli_arg_parser import ImportReqIFCommandConfig
+from strictdoc.core.project_config import ProjectConfig
 
 
 class ReqIFImport:
     @staticmethod
     def import_from_file(
-        import_config: ImportReqIFCommandConfig,
+        import_config: ImportReqIFCommandConfig, project_config: ProjectConfig
     ) -> List[SDocDocument]:
         converter = ReqIFImport.select_reqif_profile(import_config)
 
@@ -28,14 +29,18 @@ class ReqIFImport:
             )
             assert len(reqifz_bundle.reqif_bundles) > 0
             documents: List[SDocDocument] = converter.convert_reqif_bundle(
-                next(iter(reqifz_bundle.reqif_bundles.values()))
+                next(iter(reqifz_bundle.reqif_bundles.values())),
+                enable_mid=import_config.reqif_enable_mid
+                or project_config.reqif_enable_mid,
             )
         else:
             reqif_bundle: ReqIFBundle = ReqIFParser.parse(
                 import_config.input_path
             )
             documents: List[SDocDocument] = converter.convert_reqif_bundle(
-                reqif_bundle
+                reqif_bundle,
+                enable_mid=import_config.reqif_enable_mid
+                or project_config.reqif_enable_mid,
             )
         return documents
 

@@ -147,6 +147,7 @@ def create_main_router(
         filter_sections=None,
         reqif_profile=project_config.reqif_profile,
         reqif_multiline_is_xhtml=False,
+        reqif_enable_mid=False,
         experimental_enable_file_traceability=False,
         view=None,
     )
@@ -2447,7 +2448,7 @@ def create_main_router(
             reqif_bundle = ReqIFParser.parse_from_string(contents)
             converter: P01_ReqIFToSDocConverter = P01_ReqIFToSDocConverter()
             documents: List[SDocDocument] = converter.convert_reqif_bundle(
-                reqif_bundle
+                reqif_bundle, enable_mid=project_config.reqif_enable_mid
             )
         except ReqIFXMLParsingError as exception:
             error_object.add_error(
@@ -2608,7 +2609,8 @@ def create_main_router(
     def get_reqif_export_tree():
         reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
             document_tree=export_action.traceability_index.document_tree,
-            multiline_is_xhtml=False,
+            multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,
+            enable_mid=project_config.reqif_enable_mid,
         )
         reqif_content: str = ReqIFUnparser.unparse(reqif_bundle)
         return Response(

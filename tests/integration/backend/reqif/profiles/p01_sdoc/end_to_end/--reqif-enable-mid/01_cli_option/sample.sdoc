@@ -1,0 +1,24 @@
+[DOCUMENT]
+MID: f6fbcc4e59c94005baa41fc7c8fd3b43
+TITLE: Document with a requirement with two comments.
+OPTIONS:
+  ENABLE_MID: True
+
+[SECTION]
+MID: eece0e6eeb9f4dacbe1026a0ec818b4b
+TITLE: Section #1
+
+[REQUIREMENT]
+MID: 028355047b9b4cb7b0cc6831000aaecc
+UID: REQ-001
+TITLE: Requirement #1
+
+[REQUIREMENT]
+MID: d861021d413a4ed2851309e66ad67ec7
+UID: REQ-002
+TITLE: Requirement #2
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-001
+
+[/SECTION]

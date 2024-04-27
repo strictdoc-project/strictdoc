@@ -110,18 +110,30 @@ def _main(parallelizer):
         )
 
     elif parser.is_import_command_reqif:
+        project_config: ProjectConfig = (
+            ProjectConfigLoader.load_from_path_or_get_default(
+                path_to_config=os.getcwd(),
+                environment=environment,
+            )
+        )
         import_config: ImportReqIFCommandConfig = (
             parser.get_import_config_reqif(environment.path_to_strictdoc)
         )
         import_action = ImportAction()
-        import_action.do_import(import_config)
+        import_action.do_import(import_config, project_config)
 
     elif parser.is_import_command_excel:
+        project_config: ProjectConfig = (
+            ProjectConfigLoader.load_from_path_or_get_default(
+                path_to_config=os.getcwd(),
+                environment=environment,
+            )
+        )
         import_config: ImportExcelCommandConfig = (
             parser.get_import_config_excel(environment.path_to_strictdoc)
         )
         import_action = ImportAction()
-        import_action.do_import(import_config)
+        import_action.do_import(import_config, project_config)
 
     elif parser.is_manage_autouid_command:
         config: ManageAutoUIDCommandConfig = parser.get_manage_autouid_config()

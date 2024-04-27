@@ -10,6 +10,7 @@ from strictdoc.cli.cli_arg_parser import (
     ImportExcelCommandConfig,
     ImportReqIFCommandConfig,
 )
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.timing import timing_decorator
 
 
@@ -20,9 +21,12 @@ class ImportAction:
         import_config: Union[
             ImportReqIFCommandConfig, ImportExcelCommandConfig
         ],
+        project_config: ProjectConfig,
     ) -> None:
         if isinstance(import_config, ImportReqIFCommandConfig):
-            document = ReqIFImport.import_from_file(import_config)[0]
+            document = ReqIFImport.import_from_file(
+                import_config, project_config
+            )[0]
         elif isinstance(import_config, ImportExcelCommandConfig):
             document = ExcelImport.import_from_file(import_config)
         else:

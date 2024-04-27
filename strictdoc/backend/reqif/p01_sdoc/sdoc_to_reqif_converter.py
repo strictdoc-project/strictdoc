@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg,union-attr"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg,union-attr"
 import datetime
 import uuid
 from enum import Enum
@@ -81,9 +81,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
             datetime.datetime.now().astimezone().tzinfo
         ).isoformat()
 
-        # TODO
         namespace = "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd"
-        configuration = "https://github.com/strictdoc-project/strictdoc"
 
         context: P01_SDocToReqIFBuildContext = P01_SDocToReqIFBuildContext()
         spec_types: List = []
@@ -210,7 +208,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                         raise NotImplementedError(field) from None
 
             document_spec_types = cls._convert_document_grammar_to_spec_types(
-                grammar=document.grammar,
+                grammar=assert_cast(document.grammar, DocumentGrammar),
                 data_types_lookup=data_types_lookup,
                 document_spec_object_type=document_spec_object_type,
                 multiline_is_xhtml=multiline_is_xhtml,
@@ -322,7 +320,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                 elif node.is_requirement:
                     spec_object = cls._convert_requirement_to_spec_object(
                         requirement=node,
-                        grammar=document.grammar,
+                        grammar=assert_cast(document.grammar, DocumentGrammar),
                         context=context,
                         document_spec_object_type=document_spec_object_type,
                         data_types=data_types,
@@ -396,14 +394,13 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
             doctype_is_present=True,
             encoding="UTF-8",
             namespace=namespace,
-            configuration=configuration,
+            configuration=None,
             namespace_id=None,
-            namespace_xhtml=None,
+            namespace_xhtml="http://www.w3.org/1999/xhtml",
             schema_namespace=None,
             schema_location=None,
             language=None,
         )
-
         req_reqif_header = ReqIFReqIFHeader(
             identifier=generate_unique_identifier("REQ-IF-HEADER"),
             creation_time=creation_time,

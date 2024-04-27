@@ -188,7 +188,7 @@ class DocumentGrammar:
         elements: List[GrammarElement],
         import_from_file: Optional[str] = None,
         parent=None,
-    ):
+    ) -> None:
         self.parent = parent
         self.elements: List[GrammarElement] = elements
 
@@ -206,7 +206,7 @@ class DocumentGrammar:
         self.is_default = False
 
     @staticmethod
-    def create_default(parent):
+    def create_default(parent) -> "DocumentGrammar":
         # @sdoc[SDOC-SRS-132]
         fields: List[
             Union[

@@ -1,14 +1,47 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import hashlib
 import os
 import tempfile
+from pathlib import Path
+from typing import Any
 
 from strictdoc.helpers.md5 import get_file_md5
+from strictdoc.helpers.pickle import pickle_dump, pickle_load
 
 
 class PickleCache:
     @staticmethod
-    def get_cached_file_path(file_path: str, path_to_output_root: str):
+    def read_from_cache(file_path: str, path_to_root: str) -> Any:
+        path_to_cached_file: str = PickleCache.get_cached_file_path(
+            file_path, path_to_root
+        )
+        if os.path.isfile(path_to_cached_file):
+            with open(path_to_cached_file, "rb") as cache_file:
+                unpickled_content = cache_file.read()
+            try:
+                return pickle_load(unpickled_content)
+            except Exception as exception_:
+                raise AssertionError(
+                    "MUST NOT REACH HERE: "
+                    f"Error when unpickling a cache file: {path_to_cached_file}. "
+                    "To fix the issue, simply remove the cache file or the whole cache folder. "
+                    "Please report this exception to StrictDoc developers: "
+                    f"https://github.com/strictdoc-project/strictdoc/issues/new"
+                ) from exception_
+        return None
+
+    @staticmethod
+    def save_to_cache(content: Any, file_path: str, path_to_root: str) -> None:
+        path_to_cached_file: str = PickleCache.get_cached_file_path(
+            file_path, path_to_root
+        )
+        path_to_cached_file_dir: str = os.path.dirname(path_to_cached_file)
+        Path(path_to_cached_file_dir).mkdir(parents=True, exist_ok=True)
+        pickled_content: Any = pickle_dump(content)
+        with open(path_to_cached_file, "wb") as cache_file:
+            cache_file.write(pickled_content)
+
+    @staticmethod
+    def get_cached_file_path(file_path: str, path_to_output_root: str) -> str:
         path_to_tmp_dir = tempfile.gettempdir()
 
         full_path_to_file = (
@@ -17,7 +50,7 @@ class PickleCache:
             else os.path.abspath(file_path)
         )
 
-        file_md5 = get_file_md5(file_path)
+        file_md5: str = get_file_md5(file_path)
 
         # File name contains an MD5 hash of its full path to ensure the
         # uniqueness of the cached items. Additionally, the unique file name

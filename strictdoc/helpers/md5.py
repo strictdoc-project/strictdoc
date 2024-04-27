@@ -6,7 +6,7 @@ def get_md5(obj: str):
     return hashlib.md5(obj.encode("utf-8")).hexdigest()
 
 
-def get_file_md5(path, buf_size=65536):
+def get_file_md5(path: str, buf_size: int = 65536) -> str:
     m = hashlib.md5()
     with open(path, "rb") as f:
         b = f.read(buf_size)

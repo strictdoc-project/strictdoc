@@ -1,8 +1,6 @@
 # mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
-import os.path
 import sys
 import traceback
-from pathlib import Path
 from typing import Tuple
 
 from textx import metamodel_from_str
@@ -15,7 +13,6 @@ from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
-from strictdoc.helpers.pickle import pickle_dump, pickle_load
 from strictdoc.helpers.textx import drop_textx_meta
 
 
@@ -82,28 +79,11 @@ class SDReader:
         object.
         """
 
-        path_to_cached_file = PickleCache.get_cached_file_path(
+        unpickled_content = PickleCache.read_from_cache(
             file_path, self.path_to_output_root
         )
-        if os.path.isfile(path_to_cached_file):
-            with open(path_to_cached_file, "rb") as cache_file:
-                sdoc_pickled = cache_file.read()
-            if sdoc_pickled:
-                try:
-                    unpickled_content = pickle_load(sdoc_pickled)
-                    if unpickled_content is not None:
-                        return assert_cast(unpickled_content, SDocDocument)
-                except Exception as exception_:
-                    raise AssertionError(
-                        "MUST NOT REACH HERE: "
-                        f"Error when unpickling a cache file: {path_to_cached_file}. "
-                        "To fix the issue, simply remove the cache file. "
-                        "Please report this exception to StrictDoc developers: "
-                        f"https://github.com/strictdoc-project/strictdoc/issues/new"
-                    ) from exception_
-
-        path_to_cached_file_dir = os.path.dirname(path_to_cached_file)
-        Path(path_to_cached_file_dir).mkdir(parents=True, exist_ok=True)
+        if unpickled_content:
+            return assert_cast(unpickled_content, SDocDocument)
 
         with open(file_path, encoding="utf8") as file:
             sdoc_content = file.read()
@@ -121,9 +101,7 @@ class SDReader:
             # are not used anyway.
             drop_textx_meta(sdoc)
 
-            sdoc_pickled = pickle_dump(sdoc)
-            with open(path_to_cached_file, "wb") as cache_file:
-                cache_file.write(sdoc_pickled)
+            PickleCache.save_to_cache(sdoc, file_path, self.path_to_output_root)
 
             return sdoc
         except StrictDocException as exception:

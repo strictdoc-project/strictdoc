@@ -7,6 +7,9 @@ from textx import metamodel_from_str
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import GRAMMAR_MODELS
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.pickle_cache import PickleCache
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.textx import drop_textx_meta
 
 
@@ -33,12 +36,22 @@ class SDocGrammarReader:
         return grammar
 
     def read_from_file(self, file_path):
+        unpickled_content = PickleCache.read_from_cache(
+            file_path, self.path_to_output_root
+        )
+        if unpickled_content:
+            return assert_cast(unpickled_content, DocumentGrammar)
+
         with open(file_path, encoding="utf8") as file:
             grammar_content = file.read()
 
         try:
-            ssec = self.read(grammar_content, file_path=file_path)
-            return ssec
+            grammar = self.read(grammar_content, file_path=file_path)
+            PickleCache.save_to_cache(
+                grammar, file_path, self.path_to_output_root
+            )
+
+            return grammar
         except NotImplementedError:
             traceback.print_exc()
             sys.exit(1)

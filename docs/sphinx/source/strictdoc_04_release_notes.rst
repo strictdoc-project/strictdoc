@@ -3,6 +3,15 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+0.0.55 (2024-04-28)
+===================
+
+The ReqIF export/import feature was extended to support three new command-line options for an improved export/import interfacing with Polarion. See :ref:`ReqIF options <SECTION-UG-ReqIF-options>` for more details.
+
+The Composable Documents feature was extended to support copying assets to the HTML output folder in a redundant way in the case when an included document is stored in a different directory than the parent including document. See https://github.com/strictdoc-project/strictdoc/issues/1777 for the problem definition. Thanks to @Briceus from StrictDoc's Discord channel for reporting this issue.
+
+StrictDoc's caching feature was extended to work around pickling errors when an outdated item is found in a cache. Such issues happen due to the (rare) refactorings in StrictDoc's data model. In this specific case, the previous ``FragmentFromFile`` Python class was renamed to ``DocumentFromFile`` and that caused problems when unpickling outdated cached content on a user machine. Thanks to @nashif for reporting this.
+
 0.0.54 (2024-04-17)
 ===================
 

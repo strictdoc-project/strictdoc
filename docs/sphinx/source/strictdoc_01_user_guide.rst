@@ -1864,6 +1864,19 @@ The command does the following:
 3. The ReqIF in-memory model is unparsed a to ReqIF XML file using ``reqif``
    library.
 
+.. _SECTION-UG-ReqIF-options:
+
+ReqIF options
+-------------
+
+The following options are available for ReqIF export/import commands.
+
+``--reqif-multiline-is-xhtml`` This option makes StrictDoc to export all multiline fields as XHTML attributes, not as STRING (the default behavior). This is useful for interfacing with tools, such as Polarion, which assume XHTML as the primary format for writing multiline text.
+
+``--reqif-import-markup={RST,HTML,Text}`` This option makes StrictDoc import ReqIF to SDoc documents, setting their ``MARKUP`` option to the markup value provided. The default value is RST which is the default markup of StrictDoc. When working with other ReqIF tools, very often this option can be set to HTML. It is likely that with this option, the previous option ``--reqif-multiline-is-xhtml`` should be enabled as well.
+
+``--reqif-enable-mid`` This option requires the machine identifiers option to be enabled (see :ref:`Machine identifiers (MID) <SECTION-UG-Machine-identifiers-MID>`) and allows all nodes machine identifiers (MID) exported as ReqIF IDENTIFIERs. This option can be useful when the MID/IDENTIFIER stability of document, section, and requirement nodes is critical when doing iterative export/import roundtrips.
+
 .. _SECTION-REQIF-DETAILS:
 
 ReqIF implementation details

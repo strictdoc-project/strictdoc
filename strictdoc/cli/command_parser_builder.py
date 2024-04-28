@@ -199,6 +199,15 @@ class CommandParserBuilder:
             ),
         )
         command_parser_export.add_argument(
+            "--reqif-enable-mid",
+            default=False,
+            action="store_true",
+            help=(
+                "Controls whether StrictDoc's MID field will be mapped to ReqIF "
+                "SPEC-OBJECT's IDENTIFIER and vice versa when exporting/importing."
+            ),
+        )
+        command_parser_export.add_argument(
             "--experimental-enable-file-traceability",
             action="store_true",
             help=(
@@ -263,6 +272,15 @@ class CommandParserBuilder:
             "output_path",
             type=str,
             help="Path to the output SDoc file.",
+        )
+        command_parser_import_reqif.add_argument(
+            "--reqif-enable-mid",
+            default=False,
+            action="store_true",
+            help=(
+                "Controls whether StrictDoc's MID field will be mapped to ReqIF "
+                "SPEC-OBJECT's IDENTIFIER and vice versa when exporting/importing."
+            ),
         )
 
         # Command: Import -> Excel

@@ -27,6 +27,7 @@ class ReqIFExport:
             reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
                 document_tree=traceability_index.document_tree,
                 multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,
+                enable_mid=project_config.reqif_enable_mid,
             )
         else:
             raise NotImplementedError(

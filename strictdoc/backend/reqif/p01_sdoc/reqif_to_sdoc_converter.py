@@ -22,6 +22,7 @@ from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
+    create_default_relations,
 )
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
@@ -39,16 +40,24 @@ from strictdoc.backend.sdoc.models.type_system import (
 from strictdoc.helpers.string import unescape
 
 
-class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
+class P01_ReqIFToSDocBuildContext:
+    def __init__(self, *, enable_mid: bool):
+        self.enable_mid: bool = enable_mid
+
+
+class P01_ReqIFToSDocConverter:
     @staticmethod
-    def convert_reqif_bundle(reqif_bundle: ReqIFBundle) -> List[SDocDocument]:
-        # TODO: Should we rather show an error that there are no specifications?
+    def convert_reqif_bundle(
+        reqif_bundle: ReqIFBundle, enable_mid: bool
+    ) -> List[SDocDocument]:
+        context = P01_ReqIFToSDocBuildContext(enable_mid=enable_mid)
+
         if (
             reqif_bundle.core_content is None
             or reqif_bundle.core_content.req_if_content is None
             or len(reqif_bundle.core_content.req_if_content.specifications) == 0
         ):
-            return [P01_ReqIFToSDocConverter.create_document(title=None)]
+            return []
 
         documents: List[SDocDocument] = []
         for (
@@ -57,6 +66,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             document = P01_ReqIFToSDocConverter._create_document_from_reqif_specification(
                 specification=specification,
                 reqif_bundle=reqif_bundle,
+                context=context,
             )
             documents.append(document)
         return documents
@@ -97,9 +107,10 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         *,
         specification: ReqIFSpecification,
         reqif_bundle: ReqIFBundle,
+        context: P01_ReqIFToSDocBuildContext,
     ):
         document = P01_ReqIFToSDocConverter.create_document(
-            title=specification.long_name
+            specification=specification, context=context
         )
         elements: List[GrammarElement] = []
         document.section_contents = []
@@ -123,14 +134,16 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             if is_section:
                 converted_node = (
                     P01_ReqIFToSDocConverter.create_section_from_spec_object(
-                        spec_object,
-                        current_hierarchy_.level,
+                        spec_object=spec_object,
+                        context=context,
+                        level=current_hierarchy_.level,
                         reqif_bundle=reqif_bundle,
                     )
                 )
             else:
                 converted_node = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
                     spec_object=spec_object,
+                    context=context,
                     parent_section=current_section_,
                     reqif_bundle=reqif_bundle,
                     level=current_hierarchy_.level,
@@ -263,15 +276,31 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         requirement_element = GrammarElement(
             parent=None, tag="REQUIREMENT", fields=fields, relations=[]
         )
+        requirement_element.relations = create_default_relations(
+            requirement_element
+        )
         return requirement_element
 
     @staticmethod
-    def create_document(title: Optional[str]) -> SDocDocument:
+    def create_document(
+        *,
+        specification: ReqIFSpecification,
+        context: P01_ReqIFToSDocBuildContext,
+    ) -> SDocDocument:
         document_config = DocumentConfig.default_config(None)
-        document_title = title if title else "<No title>"
+        document_config.enable_mid = (
+            context.enable_mid if context.enable_mid else None
+        )
+        document_title = (
+            specification.long_name
+            if specification.long_name is not None
+            else "<No title>"
+        )
         document = SDocDocument(
             None, document_title, document_config, None, None, [], []
         )
+        if context.enable_mid:
+            document.reserved_mid = specification.identifier
         document.grammar = DocumentGrammar.create_default(document)
         # FIXME: One day this will go away.
         document.ng_at_least_one_relations_field = False
@@ -279,7 +308,11 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
 
     @staticmethod
     def create_section_from_spec_object(
-        spec_object: ReqIFSpecObject, level, reqif_bundle: ReqIFBundle
+        *,
+        spec_object: ReqIFSpecObject,
+        context: P01_ReqIFToSDocBuildContext,
+        level: int,
+        reqif_bundle: ReqIFBundle,
     ) -> SDocSection:
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
@@ -319,9 +352,12 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
         #                 Some value
         #               </THE-VALUE>
         section_title = section_title.strip().replace("\n", " ")
+
+        section_mid = spec_object.identifier if context.enable_mid else None
+
         section = SDocSection(
             parent=None,
-            mid=None,
+            mid=section_mid,
             uid=None,
             custom_level=None,
             title=section_title,
@@ -335,6 +371,7 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     @staticmethod
     def create_requirement_from_spec_object(
         spec_object: ReqIFSpecObject,
+        context: P01_ReqIFToSDocBuildContext,
         parent_section: Union[SDocSection, SDocDocument],
         reqif_bundle: ReqIFBundle,
         level,
@@ -426,15 +463,17 @@ class P01_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     field_value_references=None,
                 )
             )
+
+        requirement_mid = spec_object.identifier if context.enable_mid else None
         requirement = SDocNode(
             parent=parent_section,
             requirement_type="REQUIREMENT",
-            mid=None,
+            mid=requirement_mid,
             fields=fields,
         )
         requirement.ng_level = level
         # FIXME: One day this will go away.
-        requirement.ng_uses_old_refs_field = True
+        requirement.ng_uses_old_refs_field = False
 
         if foreign_key_id_or_none is not None:
             spec_object_parents = reqif_bundle.get_spec_object_parents(

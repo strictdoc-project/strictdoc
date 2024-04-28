@@ -66,16 +66,21 @@ def generate_unique_identifier(element_type: str) -> str:
     return f"{element_type}-{uuid.uuid4()}"
 
 
-class P01_SDocToReqIFBuildContext:  # pylint: disable=invalid-name
-    def __init__(self):
-        self.map_uid_to_spec_objects = {}
-        self.map_uid_to_parent_uids = {}
+class P01_SDocToReqIFBuildContext:
+    def __init__(self, *, multiline_is_xhtml: bool, enable_mid: bool):
+        self.multiline_is_xhtml: bool = multiline_is_xhtml
+        self.enable_mid: bool = enable_mid
+        self.map_uid_to_spec_objects: Dict[str, ReqIFSpecObject] = {}
+        self.map_uid_to_parent_uids: Dict[str, List[str]] = {}
 
 
-class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
+class P01_SDocToReqIFObjectConverter:
     @classmethod
     def convert_document_tree(
-        cls, document_tree: DocumentTree, multiline_is_xhtml: bool
+        cls,
+        document_tree: DocumentTree,
+        multiline_is_xhtml: bool,
+        enable_mid: bool,
     ):
         creation_time = datetime.datetime.now(
             datetime.datetime.now().astimezone().tzinfo
@@ -83,7 +88,10 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
 
         namespace = "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd"
 
-        context: P01_SDocToReqIFBuildContext = P01_SDocToReqIFBuildContext()
+        context: P01_SDocToReqIFBuildContext = P01_SDocToReqIFBuildContext(
+            multiline_is_xhtml=multiline_is_xhtml, enable_mid=enable_mid
+        )
+
         spec_types: List = []
         spec_objects: List[ReqIFSpecObject] = []
         spec_relations: List[ReqIFSpecRelation] = []
@@ -283,9 +291,9 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                     spec_object = (
                         P01_SDocToReqIFObjectConverter
                         ._convert_section_to_spec_object(
-                            node,
-                            document_spec_object_type,
-                            multiline_is_xhtml=multiline_is_xhtml
+                            section=node,
+                            context=context,
+                            document_spec_object_type=document_spec_object_type,
                         )
                     )
                     # fmt: on
@@ -325,7 +333,6 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                         document_spec_object_type=document_spec_object_type,
                         data_types=data_types,
                         data_types_lookup=data_types_lookup,
-                        multiline_is_xhtml=multiline_is_xhtml,
                     )
                     spec_objects.append(spec_object)
                     hierarchy = ReqIFSpecHierarchy(
@@ -347,10 +354,18 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                         current_hierarchy = parents[current_hierarchy]
                     parents[hierarchy] = current_hierarchy
                     current_hierarchy.add_child(hierarchy)
+
+            specification_identifier: str
+            if context.enable_mid and document.reserved_mid is not None:
+                specification_identifier = document.reserved_mid
+            else:
+                specification_identifier = generate_unique_identifier(
+                    "SPECIFICATION"
+                )
             specification = ReqIFSpecification(
                 xml_node=None,
                 description=None,
-                identifier=generate_unique_identifier("SPECIFICATION"),
+                identifier=specification_identifier,
                 last_change=None,
                 long_name=document.title,
                 values=None,
@@ -475,9 +490,10 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
     @classmethod
     def _convert_section_to_spec_object(
         cls,
+        *,
         section: SDocSection,
+        context: P01_SDocToReqIFBuildContext,
         document_spec_object_type: str,
-        multiline_is_xhtml: bool,
     ) -> ReqIFSpecObject:
         assert isinstance(section, SDocSection)
         attributes = []
@@ -492,7 +508,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
             free_text_value = (
                 SDWriter.print_free_text_content(section.free_texts[0])
             ).rstrip()
-            if multiline_is_xhtml:
+            if context.multiline_is_xhtml:
                 attribute_type = SpecObjectAttributeType.XHTML
             else:
                 attribute_type = SpecObjectAttributeType.STRING
@@ -505,10 +521,22 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                 value=free_text_value,
             )
             attributes.append(free_text_attribute)
+
+        """
+        If MIDs is enabled and this section has an MID, use it for
+        SPEC-OBJECT IDENTIFIER.
+        """
+        enable_mid = context.enable_mid and section.document.config.enable_mid
+        section_identifier: str
+        if enable_mid and section.reserved_mid is not None:
+            section_identifier = section.reserved_mid
+        else:
+            section_identifier = generate_unique_identifier("SECTION")
+
         spec_object = ReqIFSpecObject(
             xml_node=None,
             description=None,
-            identifier=generate_unique_identifier("SECTION"),
+            identifier=section_identifier,
             last_change=None,
             long_name=None,
             spec_object_type=document_spec_object_type,
@@ -525,19 +553,28 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
         data_types: List,
         data_types_lookup: Dict[str, str],
         document_spec_object_type: str,
-        multiline_is_xhtml: bool,
     ) -> ReqIFSpecObject:
-        requirement_identifier = generate_unique_identifier("REQUIREMENT")
+        enable_mid = (
+            context.enable_mid and requirement.document.config.enable_mid
+        )
+
+        requirement_identifier: str
+        if enable_mid and requirement.reserved_mid is not None:
+            requirement_identifier = requirement.reserved_mid
+        else:
+            requirement_identifier = generate_unique_identifier("REQUIREMENT")
+
         grammar_element = grammar.elements_by_type[requirement.requirement_type]
 
         attributes: List[SpecObjectAttribute] = []
         for field in requirement.fields_as_parsed:
             if field.field_name == RequirementFieldName.REFS:
-                parent_references = []
+                parent_references: List[str] = []
                 for reference in field.field_value_references:
                     if reference.ref_type != ReferenceType.PARENT:
                         continue
                     parent_references.append(reference.ref_uid)
+                    assert requirement.reserved_uid is not None
                     context.map_uid_to_parent_uids[requirement.reserved_uid] = (
                         parent_references
                     )
@@ -596,7 +633,7 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
                 )
 
                 attribute_type: str
-                if multiline_is_xhtml:
+                if context.multiline_is_xhtml:
                     attribute_type = (
                         SpecObjectAttributeType.XHTML
                         if is_multiline_field
@@ -624,7 +661,10 @@ class P01_SDocToReqIFObjectConverter:  # pylint: disable=invalid-name
             spec_object_type=document_spec_object_type,
             attributes=attributes,
         )
-        context.map_uid_to_spec_objects[requirement.reserved_uid] = spec_object
+        if requirement.reserved_uid is not None:
+            context.map_uid_to_spec_objects[requirement.reserved_uid] = (
+                spec_object
+            )
         return spec_object
 
     @classmethod

@@ -11,10 +11,17 @@ class CLIValidationError(Exception):
 
 
 class ImportReqIFCommandConfig:
-    def __init__(self, input_path: str, output_path: str, profile):
+    def __init__(
+        self,
+        input_path: str,
+        output_path: str,
+        profile: str,
+        reqif_enable_mid: bool,
+    ):
         self.input_path: str = input_path
         self.output_path: str = output_path
         self.profile: Optional[str] = profile
+        self.reqif_enable_mid: bool = reqif_enable_mid
 
 
 class ManageAutoUIDCommandConfig:
@@ -130,6 +137,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         filter_sections: Optional[str],
         reqif_profile: Optional[str],
         reqif_multiline_is_xhtml: bool,
+        reqif_enable_mid: bool,
         experimental_enable_file_traceability,
         view: Optional[str],
     ):
@@ -147,6 +155,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.filter_sections: Optional[str] = filter_sections
         self.reqif_profile: Optional[str] = reqif_profile
         self.reqif_multiline_is_xhtml: bool = reqif_multiline_is_xhtml
+        self.reqif_enable_mid: bool = reqif_enable_mid
         self.experimental_enable_file_traceability = (
             experimental_enable_file_traceability
         )
@@ -279,13 +288,17 @@ class SDocArgsParser:
             self.args.filter_sections,
             self.args.reqif_profile,
             self.args.reqif_multiline_is_xhtml,
+            self.args.reqif_enable_mid,
             self.args.experimental_enable_file_traceability,
             self.args.view,
         )
 
     def get_import_config_reqif(self, _) -> ImportReqIFCommandConfig:
         return ImportReqIFCommandConfig(
-            self.args.input_path, self.args.output_path, self.args.profile
+            self.args.input_path,
+            self.args.output_path,
+            self.args.profile,
+            self.args.reqif_enable_mid,
         )
 
     def get_manage_autouid_config(self) -> ManageAutoUIDCommandConfig:

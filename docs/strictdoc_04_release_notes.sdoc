@@ -6,7 +6,7 @@ This document maintains a record of all changes to StrictDoc since November 2023
 [/FREETEXT]
 
 [SECTION]
-TITLE: Unreleased work
+TITLE: 0.0.55 (2024-04-28)
 
 [FREETEXT]
 The ReqIF export/import feature was extended to support three new command-line options for an improved export/import interfacing with Polarion. See [LINK: SECTION-UG-ReqIF-options] for more details.

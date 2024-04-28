@@ -42,6 +42,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
     def convert_reqif_bundle(
         reqif_bundle: ReqIFBundle,
         enable_mid: bool,  # noqa: ARG004
+        import_markup: bool,  # noqa: ARG004
     ) -> List[SDocDocument]:
         # TODO: Should we rather show an error that there are no specifications?
         if (

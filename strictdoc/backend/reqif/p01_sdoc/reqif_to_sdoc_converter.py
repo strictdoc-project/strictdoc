@@ -41,16 +41,21 @@ from strictdoc.helpers.string import unescape
 
 
 class P01_ReqIFToSDocBuildContext:
-    def __init__(self, *, enable_mid: bool):
+    def __init__(self, *, enable_mid: bool, import_markup: Optional[str]):
         self.enable_mid: bool = enable_mid
+        self.import_markup: Optional[str] = import_markup
 
 
 class P01_ReqIFToSDocConverter:
     @staticmethod
     def convert_reqif_bundle(
-        reqif_bundle: ReqIFBundle, enable_mid: bool
+        reqif_bundle: ReqIFBundle,
+        enable_mid: bool,
+        import_markup: str,
     ) -> List[SDocDocument]:
-        context = P01_ReqIFToSDocBuildContext(enable_mid=enable_mid)
+        context = P01_ReqIFToSDocBuildContext(
+            enable_mid=enable_mid, import_markup=import_markup
+        )
 
         if (
             reqif_bundle.core_content is None
@@ -301,6 +306,9 @@ class P01_ReqIFToSDocConverter:
         )
         if context.enable_mid:
             document.reserved_mid = specification.identifier
+        if context.import_markup is not None:
+            document_config.markup = context.import_markup
+
         document.grammar = DocumentGrammar.create_default(document)
         # FIXME: One day this will go away.
         document.ng_at_least_one_relations_field = False

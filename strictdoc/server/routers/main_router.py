@@ -2448,7 +2448,9 @@ def create_main_router(
             reqif_bundle = ReqIFParser.parse_from_string(contents)
             converter: P01_ReqIFToSDocConverter = P01_ReqIFToSDocConverter()
             documents: List[SDocDocument] = converter.convert_reqif_bundle(
-                reqif_bundle, enable_mid=project_config.reqif_enable_mid
+                reqif_bundle,
+                enable_mid=project_config.reqif_enable_mid,
+                import_markup=project_config.reqif_import_markup,
             )
         except ReqIFXMLParsingError as exception:
             error_object.add_error(

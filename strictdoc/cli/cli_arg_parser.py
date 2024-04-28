@@ -17,11 +17,13 @@ class ImportReqIFCommandConfig:
         output_path: str,
         profile: str,
         reqif_enable_mid: bool,
+        reqif_import_markup: Optional[str],
     ):
         self.input_path: str = input_path
         self.output_path: str = output_path
         self.profile: Optional[str] = profile
         self.reqif_enable_mid: bool = reqif_enable_mid
+        self.reqif_import_markup: Optional[str] = reqif_import_markup
 
 
 class ManageAutoUIDCommandConfig:
@@ -299,6 +301,7 @@ class SDocArgsParser:
             self.args.output_path,
             self.args.profile,
             self.args.reqif_enable_mid,
+            self.args.reqif_import_markup,
         )
 
     def get_manage_autouid_config(self) -> ManageAutoUIDCommandConfig:

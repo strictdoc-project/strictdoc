@@ -4,6 +4,7 @@ import sys
 
 from strictdoc import __version__
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.cli.argument_int_range import IntRange
 
 EXPORT_FORMATS = [
@@ -46,6 +47,16 @@ def _check_reqif_profile(profile):
         message = f"invalid choice: '{profile}' (choose from {valid_profiles})"
         raise argparse.ArgumentTypeError(message)
     return profile
+
+
+def _check_reqif_import_markup(markup):
+    if markup is None:
+        return None
+    if markup not in SDocMarkup.ALL:
+        valid_text_markups_string = ", ".join(SDocMarkup.ALL)
+        message = f"invalid choice: '{markup}' (choose from {valid_text_markups_string})"
+        raise argparse.ArgumentTypeError(message)
+    return markup
 
 
 def _parse_fields(fields):
@@ -280,6 +291,17 @@ class CommandParserBuilder:
             help=(
                 "Controls whether StrictDoc's MID field will be mapped to ReqIF "
                 "SPEC-OBJECT's IDENTIFIER and vice versa when exporting/importing."
+            ),
+        )
+        command_parser_import_reqif.add_argument(
+            "--reqif-import-markup",
+            default=None,
+            type=_check_reqif_import_markup,
+            help=(
+                "Controls which MARKUP option the imported SDoc documents will have. "
+                "This value is RST as what StrictDoc has by default but very often "
+                "the requirements tools use the (X)HTML markup for multiline fields in "
+                "which case HTML is the best option."
             ),
         )
 

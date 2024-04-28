@@ -32,6 +32,9 @@ class ReqIFImport:
                 next(iter(reqifz_bundle.reqif_bundles.values())),
                 enable_mid=import_config.reqif_enable_mid
                 or project_config.reqif_enable_mid,
+                import_markup=import_config.reqif_import_markup
+                if import_config.reqif_import_markup is not None
+                else project_config.reqif_import_markup,
             )
         else:
             reqif_bundle: ReqIFBundle = ReqIFParser.parse(
@@ -41,6 +44,9 @@ class ReqIFImport:
                 reqif_bundle,
                 enable_mid=import_config.reqif_enable_mid
                 or project_config.reqif_enable_mid,
+                import_markup=import_config.reqif_import_markup
+                if import_config.reqif_import_markup is not None
+                else project_config.reqif_import_markup,
             )
         return documents
 

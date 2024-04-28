@@ -10,6 +10,7 @@ import toml
 
 from strictdoc import SDocRuntimeEnvironment
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.cli.cli_arg_parser import (
     ExportCommandConfig,
     PassthroughCommandConfig,
@@ -91,6 +92,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         reqif_profile: str,
         reqif_multiline_is_xhtml: bool,
         reqif_enable_mid: bool,
+        reqif_import_markup: Optional[str],
         config_last_update: Optional[datetime.datetime],
     ):
         assert isinstance(environment, SDocRuntimeEnvironment)
@@ -135,6 +137,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.reqif_profile: str = reqif_profile
         self.reqif_multiline_is_xhtml: bool = reqif_multiline_is_xhtml
         self.reqif_enable_mid: bool = reqif_enable_mid
+        self.reqif_import_markup: Optional[str] = reqif_import_markup
 
         self.autouuid_include_sections: bool = False
 
@@ -164,6 +167,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             reqif_profile=ReqIFProfile.P01_SDOC,
             reqif_multiline_is_xhtml=False,
             reqif_enable_mid=False,
+            reqif_import_markup=None,
             config_last_update=None,
         )
 
@@ -379,6 +383,7 @@ class ProjectConfigLoader:
         reqif_profile = ReqIFProfile.P01_SDOC
         reqif_multiline_is_xhtml = False
         reqif_enable_mid = False
+        reqif_import_markup: Optional[str] = None
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -535,8 +540,16 @@ class ProjectConfigLoader:
             )
             assert isinstance(reqif_multiline_is_xhtml, bool), reqif_content
 
+            # FIXME
             reqif_enable_mid = reqif_content.get("enable_mid", False)
             assert isinstance(reqif_enable_mid, bool), reqif_content
+
+            # FIXME
+            reqif_import_markup = reqif_content.get("import_markup", None)
+            if reqif_import_markup is not None:
+                assert (
+                    reqif_import_markup in SDocMarkup.ALL
+                ), reqif_import_markup
 
         return ProjectConfig(
             environment=environment,
@@ -555,5 +568,6 @@ class ProjectConfigLoader:
             reqif_profile=reqif_profile,
             reqif_multiline_is_xhtml=reqif_multiline_is_xhtml,
             reqif_enable_mid=reqif_enable_mid,
+            reqif_import_markup=reqif_import_markup,
             config_last_update=config_last_update,
         )

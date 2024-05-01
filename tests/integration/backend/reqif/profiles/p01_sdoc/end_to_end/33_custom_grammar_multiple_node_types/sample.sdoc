@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Document with a requirement after a nested requirement (level drop).
+TITLE: Test document
 
 [GRAMMAR]
 ELEMENTS:
@@ -8,22 +8,30 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
-  - TITLE: LEVEL
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: ASIL
     TYPE: String
     REQUIRED: False
   - TITLE: STATUS
     TYPE: String
     REQUIRED: False
-  - TITLE: TAGS
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+- TAG: ASSUMPTION
+  FIELDS:
+  - TITLE: UID
     TYPE: String
     REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
   - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-  - TITLE: RATIONALE
     TYPE: String
     REQUIRED: False
   - TITLE: COMMENT
@@ -33,24 +41,33 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
-[SECTION]
-TITLE: Section #1
+[FREETEXT]
+Document free text.
+[/FREETEXT]
 
 [SECTION]
-TITLE: Section #1.1
+TITLE: Section 1
+
+[FREETEXT]
+Section 1 free text.
+[/FREETEXT]
 
 [REQUIREMENT]
-UID: REQ-1.1.1
+UID: REQ-1
 STATEMENT: >>>
-The mapping function shall map requirement_ID to UID.
+Requirement 1 statement.
+<<<
+ASIL: A
+STATUS: Draft
+COMMENT: >>>
+Test comment.
 <<<
 
-[/SECTION]
-
-[REQUIREMENT]
-UID: REQ-1.2.1
+[ASSUMPTION]
+UID: ASSUMPTION-1
+TITLE: Assumption 1 Title
 STATEMENT: >>>
-The mapping function shall map requirement_ID to UID.
+Assumption 1 statement.
 <<<
 
 [/SECTION]

@@ -28,6 +28,7 @@ from reqif.object_lookup import ReqIFObjectLookup
 from reqif.reqif_bundle import ReqIFBundle
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
+    SDOC_SPEC_OBJECT_TYPE_SINGLETON,
     SDOC_SPEC_RELATION_PARENT_TYPE_SINGLETON,
     SDOC_SPECIFICATION_TYPE_SINGLETON,
     SDOC_TO_REQIF_FIELD_MAP,
@@ -65,18 +66,15 @@ def generate_unique_identifier(element_type: str) -> str:
     return f"{element_type}-{uuid.uuid4()}"
 
 
-class P01_SDocToReqIFBuildContext:
+class P02_SDocToReqIFBuildContext:
     def __init__(self, *, multiline_is_xhtml: bool, enable_mid: bool):
         self.multiline_is_xhtml: bool = multiline_is_xhtml
         self.enable_mid: bool = enable_mid
         self.map_uid_to_spec_objects: Dict[str, ReqIFSpecObject] = {}
         self.map_uid_to_parent_uids: Dict[str, List[str]] = {}
-        self.map_grammar_node_tags_to_spec_object_type: Dict[
-            str, ReqIFSpecObjectType
-        ] = {}
 
 
-class P01_SDocToReqIFObjectConverter:
+class P02_SDocToReqIFObjectConverter:
     @classmethod
     def convert_document_tree(
         cls,
@@ -90,7 +88,7 @@ class P01_SDocToReqIFObjectConverter:
 
         namespace = "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd"
 
-        context: P01_SDocToReqIFBuildContext = P01_SDocToReqIFBuildContext(
+        context: P02_SDocToReqIFBuildContext = P02_SDocToReqIFBuildContext(
             multiline_is_xhtml=multiline_is_xhtml, enable_mid=enable_mid
         )
 
@@ -102,6 +100,9 @@ class P01_SDocToReqIFObjectConverter:
         data_types_lookup = {}
         document: SDocDocument
         for document in document_tree.document_list:
+            document_spec_object_type = (
+                SDOC_SPEC_OBJECT_TYPE_SINGLETON + "_" + uuid.uuid4().hex
+            )
             for element in document.grammar.elements:
                 fields_names = element.get_field_titles()
                 statement_field_idx = fields_names.index("STATEMENT")
@@ -217,7 +218,8 @@ class P01_SDocToReqIFObjectConverter:
             document_spec_types = cls._convert_document_grammar_to_spec_types(
                 grammar=assert_cast(document.grammar, DocumentGrammar),
                 data_types_lookup=data_types_lookup,
-                context=context,
+                document_spec_object_type=document_spec_object_type,
+                multiline_is_xhtml=multiline_is_xhtml,
             )
             spec_types.extend(document_spec_types)
 
@@ -253,10 +255,11 @@ class P01_SDocToReqIFObjectConverter:
             if len(document.free_texts) > 0:
                 # fmt: off
                 document_free_text_spec_object = (
-                    P01_SDocToReqIFObjectConverter
+                    P02_SDocToReqIFObjectConverter
                     ._convert_document_free_text_to_spec_object(
                         document,
-                        context=context,
+                        document_spec_object_type=document_spec_object_type,
+                        multiline_is_xhtml=multiline_is_xhtml
                     )
                 )
                 # fmt: on
@@ -286,10 +289,11 @@ class P01_SDocToReqIFObjectConverter:
                 if node.is_section:
                     # fmt: off
                     spec_object = (
-                        P01_SDocToReqIFObjectConverter
+                        P02_SDocToReqIFObjectConverter
                         ._convert_section_to_spec_object(
                             section=node,
                             context=context,
+                            document_spec_object_type=document_spec_object_type,
                         )
                     )
                     # fmt: on
@@ -326,6 +330,7 @@ class P01_SDocToReqIFObjectConverter:
                         requirement=node,
                         grammar=assert_cast(document.grammar, DocumentGrammar),
                         context=context,
+                        document_spec_object_type=document_spec_object_type,
                         data_types=data_types,
                         data_types_lookup=data_types_lookup,
                     )
@@ -441,15 +446,23 @@ class P01_SDocToReqIFObjectConverter:
     def _convert_document_free_text_to_spec_object(
         cls,
         document: SDocDocument,
-        context: P01_SDocToReqIFBuildContext,
+        document_spec_object_type: str,
+        multiline_is_xhtml: bool,
     ) -> ReqIFSpecObject:
         assert isinstance(document, SDocDocument)
         assert len(document.free_texts) > 0
         attributes = []
+        title_attribute = SpecObjectAttribute(
+            xml_node=None,
+            attribute_type=SpecObjectAttributeType.STRING,
+            definition_ref=ReqIFChapterField.CHAPTER_NAME,
+            value="Abstract",
+        )
+        attributes.append(title_attribute)
         free_text_value = (
             SDWriter.print_free_text_content(document.free_texts[0])
         ).rstrip()
-        if context.multiline_is_xhtml:
+        if multiline_is_xhtml:
             attribute_type = SpecObjectAttributeType.XHTML
         else:
             attribute_type = SpecObjectAttributeType.STRING
@@ -468,9 +481,7 @@ class P01_SDocToReqIFObjectConverter:
             identifier=generate_unique_identifier("DOCUMENT_FREETEXT"),
             last_change=None,
             long_name=None,
-            spec_object_type=context.map_grammar_node_tags_to_spec_object_type[
-                "FREETEXT"
-            ].identifier,
+            spec_object_type=document_spec_object_type,
             attributes=attributes,
         )
         return spec_object
@@ -480,7 +491,8 @@ class P01_SDocToReqIFObjectConverter:
         cls,
         *,
         section: SDocSection,
-        context: P01_SDocToReqIFBuildContext,
+        context: P02_SDocToReqIFBuildContext,
+        document_spec_object_type: str,
     ) -> ReqIFSpecObject:
         assert isinstance(section, SDocSection)
         attributes = []
@@ -520,16 +532,13 @@ class P01_SDocToReqIFObjectConverter:
         else:
             section_identifier = generate_unique_identifier("SECTION")
 
-        spec_object_type: ReqIFSpecObjectType = (
-            context.map_grammar_node_tags_to_spec_object_type["SECTION"]
-        )
         spec_object = ReqIFSpecObject(
             xml_node=None,
             description=None,
             identifier=section_identifier,
             last_change=None,
             long_name=None,
-            spec_object_type=spec_object_type.identifier,
+            spec_object_type=document_spec_object_type,
             attributes=attributes,
         )
         return spec_object
@@ -539,9 +548,10 @@ class P01_SDocToReqIFObjectConverter:
         cls,
         requirement: SDocNode,
         grammar: DocumentGrammar,
-        context: P01_SDocToReqIFBuildContext,
+        context: P02_SDocToReqIFBuildContext,
         data_types: List,
         data_types_lookup: Dict[str, str],
+        document_spec_object_type: str,
     ) -> ReqIFSpecObject:
         enable_mid = (
             context.enable_mid and requirement.document.config.enable_mid
@@ -645,14 +655,9 @@ class P01_SDocToReqIFObjectConverter:
                 raise NotImplementedError(grammar_field) from None
             attributes.append(attribute)
 
-        spec_object_type: ReqIFSpecObjectType = (
-            context.map_grammar_node_tags_to_spec_object_type[
-                requirement.requirement_type
-            ]
-        )
         spec_object = ReqIFSpecObject.create(
             identifier=requirement_identifier,
-            spec_object_type=spec_object_type.identifier,
+            spec_object_type=document_spec_object_type,
             attributes=attributes,
         )
         if requirement.reserved_uid is not None:
@@ -666,9 +671,14 @@ class P01_SDocToReqIFObjectConverter:
         cls,
         grammar: DocumentGrammar,
         data_types_lookup,
-        context: P01_SDocToReqIFBuildContext,
+        document_spec_object_type: str,
+        multiline_is_xhtml: bool,
     ):
         spec_object_types: List = []
+
+        assert (
+            len(grammar.elements) == 1
+        ), "Only one grammar element is currently supported."
 
         for element in grammar.elements:
             fields_names = element.get_field_titles()
@@ -687,7 +697,7 @@ class P01_SDocToReqIFObjectConverter:
                     if multiline:
                         attribute_type = (
                             SpecObjectAttributeType.XHTML
-                            if context.multiline_is_xhtml
+                            if multiline_is_xhtml
                             else SpecObjectAttributeType.STRING
                         )
                         attribute = SpecAttributeDefinition.create(
@@ -754,72 +764,11 @@ class P01_SDocToReqIFObjectConverter:
             )
             attribute_definitions.append(chapter_name_attribute)
 
-            spec_object_type_identifier = element.tag + "_" + uuid.uuid4().hex
             spec_object_type = ReqIFSpecObjectType.create(
-                identifier=spec_object_type_identifier,
+                identifier=document_spec_object_type,
                 long_name=element.tag,
                 attribute_definitions=attribute_definitions,
             )
             spec_object_types.append(spec_object_type)
-            context.map_grammar_node_tags_to_spec_object_type[element.tag] = (
-                spec_object_type
-            )
-
-        section_spec_type = (
-            P01_SDocToReqIFObjectConverter._create_section_spec_object_type()
-        )
-        context.map_grammar_node_tags_to_spec_object_type["SECTION"] = (
-            section_spec_type
-        )
-        spec_object_types.append(section_spec_type)
-        free_text_spec_type = (
-            P01_SDocToReqIFObjectConverter._create_free_text_spec_object_type()
-        )
-        context.map_grammar_node_tags_to_spec_object_type["FREETEXT"] = (
-            free_text_spec_type
-        )
-        spec_object_types.append(free_text_spec_type)
 
         return spec_object_types
-
-    @classmethod
-    def _create_section_spec_object_type(
-        cls,
-    ):
-        attribute_definitions = []
-        chapter_name_attribute = SpecAttributeDefinition.create(
-            attribute_type=SpecObjectAttributeType.STRING,
-            identifier="ReqIF.ChapterName",
-            datatype_definition=(StrictDocReqIFTypes.SINGLE_LINE_STRING.value),
-            long_name="ReqIF.ChapterName",
-        )
-        attribute_definitions.append(chapter_name_attribute)
-
-        spec_object_type_identifier = "SECTION_" + uuid.uuid4().hex
-        spec_object_type = ReqIFSpecObjectType.create(
-            identifier=spec_object_type_identifier,
-            long_name="SECTION",
-            attribute_definitions=attribute_definitions,
-        )
-        return spec_object_type
-
-    @classmethod
-    def _create_free_text_spec_object_type(
-        cls,
-    ):
-        attribute_definitions = []
-        chapter_name_attribute = SpecAttributeDefinition.create(
-            attribute_type=SpecObjectAttributeType.STRING,
-            identifier=ReqIFChapterField.TEXT,
-            datatype_definition=(StrictDocReqIFTypes.MULTI_LINE_STRING.value),
-            long_name=ReqIFChapterField.TEXT,
-        )
-        attribute_definitions.append(chapter_name_attribute)
-
-        spec_object_type_identifier = "FREE_TEXT_" + uuid.uuid4().hex
-        spec_object_type = ReqIFSpecObjectType.create(
-            identifier=spec_object_type_identifier,
-            long_name="FREETEXT",
-            attribute_definitions=attribute_definitions,
-        )
-        return spec_object_type

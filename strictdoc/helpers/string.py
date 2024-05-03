@@ -79,3 +79,7 @@ def extract_numeric_uid_prefix_part(string: str) -> Optional[str]:
     if regex_match is not None:
         return regex_match.group(1)
     return None
+
+
+def create_safe_requirement_tag_string(string) -> str:
+    return re.sub(r"[^A-Za-z0-9]+", "_", string).rstrip("_").upper()

@@ -1,5 +1,5 @@
 # mypy: disable-error-code="no-untyped-def,union-attr,operator"
-from typing import Dict, List, Optional, Set, Union
+from typing import Dict, List, Optional, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
 from reqif.models.reqif_spec_object import ReqIFSpecObject
@@ -12,7 +12,6 @@ from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.reqif_bundle import ReqIFBundle
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
-    DEFAULT_SDOC_GRAMMAR_FIELDS,
     REQIF_MAP_TO_SDOC_FIELD_MAP,
     ReqIFChapterField,
     ReqIFRequirementReservedField,
@@ -37,13 +36,20 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
 )
-from strictdoc.helpers.string import unescape
+from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.string import (
+    create_safe_requirement_tag_string,
+    unescape,
+)
 
 
 class P01_ReqIFToSDocBuildContext:
     def __init__(self, *, enable_mid: bool, import_markup: Optional[str]):
         self.enable_mid: bool = enable_mid
         self.import_markup: Optional[str] = import_markup
+        self.map_spec_object_type_identifier_to_grammar_node_tags: Dict[
+            str, str
+        ] = {}
 
 
 class P01_ReqIFToSDocConverter:
@@ -87,19 +93,16 @@ class P01_ReqIFToSDocConverter:
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
             spec_object.spec_object_type
         )
-        attribute_map: Dict[str, SpecAttributeDefinition] = (
-            spec_object_type.attribute_map
+        return spec_object_type.long_name == "SECTION"
+
+    @staticmethod
+    def is_spec_object_free_text(
+        spec_object: ReqIFSpecObject, reqif_bundle: ReqIFBundle
+    ):
+        spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
+            spec_object.spec_object_type
         )
-        for attribute in spec_object.attributes:
-            long_name_or_none: Optional[str] = attribute_map[
-                attribute.definition_ref
-            ].long_name
-            if long_name_or_none is None:
-                raise NotImplementedError(attribute_map)
-            field_name: str = long_name_or_none
-            if field_name == ReqIFChapterField.CHAPTER_NAME:
-                return True
-        return False
+        return spec_object_type.long_name == "FREETEXT"
 
     @staticmethod
     def convert_requirement_field_from_reqif(field_name: str) -> str:
@@ -117,9 +120,28 @@ class P01_ReqIFToSDocConverter:
         document = P01_ReqIFToSDocConverter.create_document(
             specification=specification, context=context
         )
-        elements: List[GrammarElement] = []
         document.section_contents = []
-        used_spec_object_types_ids: Set[str] = set()
+
+        elements: List[GrammarElement] = []
+
+        for (
+            spec_object_type_
+        ) in reqif_bundle.core_content.req_if_content.spec_types:
+            if not isinstance(spec_object_type_, ReqIFSpecObjectType):
+                continue
+
+            spec_object_type: ReqIFSpecObjectType = assert_cast(
+                spec_object_type_, ReqIFSpecObjectType
+            )
+            if spec_object_type.long_name not in ("FREETEXT", "SECTION"):
+                grammar_element = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
+                    spec_object_type=spec_object_type,
+                    reqif_bundle=reqif_bundle,
+                )
+                elements.append(grammar_element)
+                context.map_spec_object_type_identifier_to_grammar_node_tags[
+                    spec_object_type.identifier
+                ] = grammar_element.tag
 
         def node_converter_lambda(
             current_hierarchy_,
@@ -128,14 +150,13 @@ class P01_ReqIFToSDocConverter:
             spec_object = reqif_bundle.get_spec_object_by_ref(
                 current_hierarchy_.spec_object
             )
-            used_spec_object_types_ids.add(spec_object.spec_object_type)
 
             is_section = P01_ReqIFToSDocConverter.is_spec_object_section(
                 spec_object,
                 reqif_bundle=reqif_bundle,
             )
 
-            converted_node: Union[SDocSection, SDocNode]
+            converted_node: Union[SDocSection, SDocNode, FreeText]
             if is_section:
                 converted_node = (
                     P01_ReqIFToSDocConverter.create_section_from_spec_object(
@@ -145,6 +166,18 @@ class P01_ReqIFToSDocConverter:
                         reqif_bundle=reqif_bundle,
                     )
                 )
+            elif P01_ReqIFToSDocConverter.is_spec_object_free_text(
+                spec_object,
+                reqif_bundle=reqif_bundle,
+            ):
+                converted_node = (
+                    P01_ReqIFToSDocConverter.create_free_text_from_spec_object(
+                        spec_object=spec_object,
+                    )
+                )
+                if len(current_section_.free_texts) == 0:
+                    current_section_.free_texts.append(converted_node)
+                return converted_node, False
             else:
                 converted_node = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
                     spec_object=spec_object,
@@ -164,33 +197,6 @@ class P01_ReqIFToSDocConverter:
             node_converter_lambda,
         )
 
-        # See SDOC_IMPL_1.
-        if (
-            len(document.section_contents) > 0
-            and isinstance(document.section_contents[0], SDocSection)
-            and document.section_contents[0].title == "Abstract"
-        ):
-            assert len(document.section_contents[0].free_texts)
-            document.free_texts = document.section_contents[0].free_texts
-            document.section_contents.pop(0)
-
-        for used_spec_object_type_id in used_spec_object_types_ids:
-            spec_object_type_or_none: Optional[ReqIFSpecObjectType] = (
-                reqif_bundle.get_spec_object_type_by_ref(
-                    ref=used_spec_object_type_id,
-                )
-            )
-            assert (
-                spec_object_type_or_none is not None
-            ), "Expect the spec object type to be present."
-            spec_object_type: ReqIFSpecObjectType = spec_object_type_or_none
-            attributes = list(spec_object_type.attribute_map.keys())
-            if attributes != DEFAULT_SDOC_GRAMMAR_FIELDS:
-                grammar_element = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
-                    spec_object_type=spec_object_type,
-                    reqif_bundle=reqif_bundle,
-                )
-                elements.append(grammar_element)
         grammar: DocumentGrammar
         if len(elements) > 0:
             grammar = DocumentGrammar(parent=document, elements=elements)
@@ -278,8 +284,12 @@ class P01_ReqIFToSDocConverter:
                 pass
             else:
                 raise NotImplementedError(attribute) from None
+
         requirement_element = GrammarElement(
-            parent=None, tag="REQUIREMENT", fields=fields, relations=[]
+            parent=None,
+            tag=create_safe_requirement_tag_string(spec_object_type.long_name),
+            fields=fields,
+            relations=[],
         )
         requirement_element.relations = create_default_relations(
             requirement_element
@@ -340,7 +350,7 @@ class P01_ReqIFToSDocConverter:
                 section_title = attribute.value
                 break
         else:
-            raise NotImplementedError(attribute_map)
+            raise NotImplementedError(spec_object, attribute_map)
 
         free_texts = []
         if ReqIFChapterField.TEXT in spec_object.attribute_map:
@@ -473,9 +483,16 @@ class P01_ReqIFToSDocConverter:
             )
 
         requirement_mid = spec_object.identifier if context.enable_mid else None
+
+        grammar_element_tag = (
+            context.map_spec_object_type_identifier_to_grammar_node_tags[
+                spec_object_type.identifier
+            ]
+        )
+
         requirement = SDocNode(
             parent=parent_section,
-            requirement_type="REQUIREMENT",
+            requirement_type=grammar_element_tag,
             mid=requirement_mid,
             fields=fields,
         )
@@ -515,3 +532,15 @@ class P01_ReqIFToSDocConverter:
                 fields.append(requirement_field)
                 requirement.ordered_fields_lookup["REFS"] = [requirement_field]
         return requirement
+
+    @staticmethod
+    def create_free_text_from_spec_object(
+        spec_object: ReqIFSpecObject,
+    ) -> FreeText:
+        free_text = unescape(
+            spec_object.attribute_map[ReqIFChapterField.TEXT].value
+        )
+        return FreeText(
+            parent=None,
+            parts=[free_text],
+        )

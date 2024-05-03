@@ -669,6 +669,19 @@ class TraceabilityIndexBuilder:
                     document_from_file_.resolved_full_path_to_document_file
                     is not None
                 )
+
+                if (
+                    document_from_file_.resolved_full_path_to_document_file
+                    not in map_documents_by_input_rel_path
+                ):
+                    raise StrictDocException(
+                        "A document includes contains a link to another document "
+                        "which is not resolved in the current documentation tree: "
+                        f"'{document_from_file_.file}'. This can happen if a single "
+                        f"document path is provided as input to a StrictDoc command. "
+                        f"Try providing a path to a folder where all documents "
+                        f"are stored."
+                    )
                 resolved_document: SDocDocument = (
                     map_documents_by_input_rel_path[
                         document_from_file_.resolved_full_path_to_document_file

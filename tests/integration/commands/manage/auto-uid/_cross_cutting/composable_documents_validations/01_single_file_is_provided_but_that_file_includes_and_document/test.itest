@@ -1,0 +1,2 @@
+RUN: %expect_exit 1 %strictdoc manage auto-uid %S/input.sdoc | filecheck %s --dump-input=fail
+CHECK: error: A document includes contains a link to another document which is not resolved in the current documentation tree: 'nested.sdoc'. This can happen if a single document path is provided as input to a StrictDoc command. Try providing a path to a folder where all documents are stored.

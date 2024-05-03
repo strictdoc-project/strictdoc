@@ -1,0 +1,6 @@
+RUN: cp %S/*.sdoc %S/*.sgra %S/Output/
+RUN: %strictdoc manage auto-uid %S/Output | filecheck %s --dump-input=fail
+CHECK: Step 'Build traceability graph' took
+
+RUN: %cat %S/Output/input.sdoc | filecheck %s --dump-input=fail --check-prefix CHECK-SDOC
+CHECK-SDOC: UID: REQ-1

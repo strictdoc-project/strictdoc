@@ -1,0 +1,15 @@
+RUN: cp %S/*.sdoc %S/Output/
+RUN: %strictdoc manage auto-uid %S/Output/ | filecheck %s --dump-input=fail
+CHECK: Step 'Build traceability graph' took:
+
+RUN: %cat %S/Output/input.sdoc | filecheck %s --check-prefix CHECK-DOC
+CHECK-DOC: UID: REQ-1
+CHECK-DOC: UID: REQ-2
+
+RUN: %cat %S/Output/nested.sdoc | filecheck %s --check-prefix CHECK-NESTED-DOC
+CHECK-NESTED-DOC: UID: REQ-3
+CHECK-NESTED-DOC: UID: REQ-4
+
+RUN: %cat %S/Output/subnested.sdoc | filecheck %s --check-prefix CHECK-SUBNESTED-DOC
+CHECK-SUBNESTED-DOC: UID: REQ-5
+CHECK-SUBNESTED-DOC: UID: REQ-6

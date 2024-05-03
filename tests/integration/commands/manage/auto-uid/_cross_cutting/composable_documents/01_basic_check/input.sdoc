@@ -1,0 +1,20 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  AUTO_LEVELS: On
+
+[DOCUMENT_FROM_FILE]
+FILE: nested.sdoc
+
+[SECTION]
+TITLE: Doc Section
+
+[COMPOSITE_REQUIREMENT]
+TITLE: Doc Section Composite requirement
+
+[REQUIREMENT]
+TITLE: Doc Section Requirement
+
+[/COMPOSITE_REQUIREMENT]
+
+[/SECTION]

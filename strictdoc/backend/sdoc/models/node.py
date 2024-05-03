@@ -589,9 +589,17 @@ class SDocNode(SDocObject):
         #        separate field in SDoc REQUIREMENT's grammar.
         grammar_field_titles.append("REFS")
         field_index = grammar_field_titles.index(field_name)
-        title_field_index = grammar_field_titles.index(
-            RequirementFieldName.TITLE
-        )
+
+        try:
+            title_field_index = grammar_field_titles.index(
+                RequirementFieldName.TITLE
+            )
+        except ValueError:
+            # It is a rare edge case when a grammar is without a TITLE but if it
+            # happens, use STATEMENT as a fallback.
+            title_field_index = grammar_field_titles.index(
+                RequirementFieldName.STATEMENT
+            )
 
         field_value = None
         field_value_multiline = None

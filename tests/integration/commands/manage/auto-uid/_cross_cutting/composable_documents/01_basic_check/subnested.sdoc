@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Hello world doc 3
+OPTIONS:
+  AUTO_LEVELS: On
+
+[SECTION]
+TITLE: Subnested Doc Section
+
+[COMPOSITE_REQUIREMENT]
+TITLE: Subnested Doc Section Composite requirement
+
+[REQUIREMENT]
+TITLE: Subnested Doc Section Requirement
+
+[/COMPOSITE_REQUIREMENT]
+
+[/SECTION]

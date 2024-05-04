@@ -20,7 +20,7 @@ class DocumentType:
         )
 
     @staticmethod
-    def document():
+    def document() -> "DocumentType":
         return DocumentType(DocumentType.DOCUMENT)
 
     @staticmethod

@@ -98,6 +98,9 @@ from strictdoc.export.html.generators.document_pdf import (
 from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
     DocumentScreenViewObject,
 )
+from strictdoc.export.html.generators.view_objects.nestor_view_object import (
+    NestorViewObject,
+)
 from strictdoc.export.html.generators.view_objects.project_tree_view_object import (
     ProjectTreeViewObject,
 )
@@ -109,6 +112,7 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html2pdf.pdf_print_driver import PDFPrintDriver
+from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import get_etag
@@ -2673,6 +2677,29 @@ def create_main_router(
             search_results=search_results,
             search_value=search_value,
             error=error,
+        )
+        output = view_object.render_screen(html_templates.jinja_environment())
+
+        return Response(
+            content=output,
+            status_code=200,
+        )
+
+    @router.get("/nestor", response_class=Response)
+    def get_nestor():
+        output_json_root = os.path.join(
+            project_config.export_output_dir, "html"
+        )
+        Path(output_json_root).mkdir(parents=True, exist_ok=True)
+        JSONGenerator().export_tree(
+            export_action.traceability_index, project_config, output_json_root
+        )
+        path_to_json = os.path.join("index.json")
+        view_object = NestorViewObject(
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            templates=html_templates,
+            path_to_json=path_to_json,
         )
         output = view_object.render_screen(html_templates.jinja_environment())
 

@@ -185,6 +185,23 @@ class HTMLGenerator:
                 message="Copying Rapidoc assets",
             )
 
+        # Export NESTOR
+        if project_config.is_feature_activated(ProjectFeature.NESTOR):
+            output_html_nestor = os.path.join(
+                export_output_html_root,
+                project_config.dir_for_sdoc_assets,
+                "nestor",
+            )
+            Path(output_html_nestor).mkdir(parents=True, exist_ok=True)
+            mathjax_src = os.path.join(
+                project_config.get_extra_static_files_path(), "nestor"
+            )
+            sync_dir(
+                mathjax_src,
+                output_html_nestor,
+                message="Copying Nestor assets",
+            )
+
         # Export project's assets.
 
         redundant_assets: Dict[str, List[SDocRelativePath]] = {}

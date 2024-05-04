@@ -6,9 +6,9 @@ from strictdoc.core.file_tree import File, Folder
 
 
 class DocumentTreeIterator:
-    def __init__(self, document_tree):
+    def __init__(self, document_tree) -> None:
         assert isinstance(document_tree, DocumentTree)
-        self.document_tree = document_tree
+        self.document_tree: DocumentTree = document_tree
 
     def is_empty_tree(self):
         return len(self.document_tree.document_list) == 0

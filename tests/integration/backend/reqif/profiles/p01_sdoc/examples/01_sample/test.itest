@@ -1,6 +1,6 @@
 RUN: %mkdir %S/output
-RUN: %strictdoc import reqif sdoc %S/sample.reqif %S/output/output.sdoc
-RUN: %cat %S/output/output.sdoc | filecheck %s
+RUN: %strictdoc import reqif sdoc %S/sample.reqif %S/output/
+RUN: %cat %S/output/sample.sdoc | filecheck %s
 
 CHECK: [REQUIREMENT_TYPE]
 CHECK: UID: Anonymized-194ac1eb-d718-b59b-5d2a-c2b0ac0381ef
@@ -11,6 +11,6 @@ CHECK: COMMENT: >>>
 CHECK: Anonymized-6e95e816-6fc9-0fe1-8b1f-66340311da94
 CHECK: <<<
 
-RUN: %strictdoc export --formats=reqif-sdoc %S/output/output.sdoc
-RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/output_step2.sdoc
-RUN: %diff %S/output/output.sdoc %S/output/output_step2.sdoc
+RUN: %strictdoc export --formats=reqif-sdoc %S/output/sample.sdoc
+RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output2/
+RUN: %diff %S/output/sample.sdoc %S/output2/sample.sdoc

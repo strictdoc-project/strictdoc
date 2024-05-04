@@ -36,7 +36,6 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
 )
-from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import (
     create_safe_requirement_tag_string,
     unescape,
@@ -48,7 +47,7 @@ class P01_ReqIFToSDocBuildContext:
         self.enable_mid: bool = enable_mid
         self.import_markup: Optional[str] = import_markup
         self.map_spec_object_type_identifier_to_grammar_node_tags: Dict[
-            str, str
+            str, GrammarElement
         ] = {}
 
 
@@ -122,26 +121,26 @@ class P01_ReqIFToSDocConverter:
         )
         document.section_contents = []
 
-        elements: List[GrammarElement] = []
-
         for (
             spec_object_type_
         ) in reqif_bundle.core_content.req_if_content.spec_types:
             if not isinstance(spec_object_type_, ReqIFSpecObjectType):
                 continue
 
-            spec_object_type: ReqIFSpecObjectType = assert_cast(
-                spec_object_type_, ReqIFSpecObjectType
+            grammar_element: GrammarElement = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
+                spec_object_type=spec_object_type_,
+                reqif_bundle=reqif_bundle,
             )
-            if spec_object_type.long_name not in ("FREETEXT", "SECTION"):
-                grammar_element = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
-                    spec_object_type=spec_object_type,
-                    reqif_bundle=reqif_bundle,
-                )
-                elements.append(grammar_element)
-                context.map_spec_object_type_identifier_to_grammar_node_tags[
-                    spec_object_type.identifier
-                ] = grammar_element.tag
+            context.map_spec_object_type_identifier_to_grammar_node_tags[
+                spec_object_type_.identifier
+            ] = grammar_element
+
+        # This lookup object is used to first collect the spec object type identifiers
+        # that are actually used by this document. This is needed to ensure that a
+        # StrictDoc document is not created with irrelevant grammar elements that
+        # actually belong to other Specifications in this ReqIF bundle.
+        # Using Dict as an ordered set.
+        spec_object_type_identifiers_used_by_this_document: Dict[str, None] = {}
 
         def node_converter_lambda(
             current_hierarchy_,
@@ -150,6 +149,9 @@ class P01_ReqIFToSDocConverter:
             spec_object = reqif_bundle.get_spec_object_by_ref(
                 current_hierarchy_.spec_object
             )
+            spec_object_type_identifiers_used_by_this_document[
+                spec_object.spec_object_type
+            ] = None
 
             is_section = P01_ReqIFToSDocConverter.is_spec_object_section(
                 spec_object,
@@ -197,6 +199,23 @@ class P01_ReqIFToSDocConverter:
             node_converter_lambda,
         )
 
+        elements: List[GrammarElement] = []
+        for (
+            spec_object_type_identifier_
+        ) in spec_object_type_identifiers_used_by_this_document.keys():
+            spec_object_type: ReqIFSpecObjectType = (
+                reqif_bundle.lookup.get_spec_type_by_ref(
+                    spec_object_type_identifier_
+                )
+            )
+            if spec_object_type.long_name in ("SECTION", "FREETEXT"):
+                continue
+            grammar_element = (
+                context.map_spec_object_type_identifier_to_grammar_node_tags[
+                    spec_object_type_identifier_
+                ]
+            )
+            elements.append(grammar_element)
         grammar: DocumentGrammar
         if len(elements) > 0:
             grammar = DocumentGrammar(parent=document, elements=elements)
@@ -484,7 +503,7 @@ class P01_ReqIFToSDocConverter:
 
         requirement_mid = spec_object.identifier if context.enable_mid else None
 
-        grammar_element_tag = (
+        grammar_element: GrammarElement = (
             context.map_spec_object_type_identifier_to_grammar_node_tags[
                 spec_object_type.identifier
             ]
@@ -492,7 +511,7 @@ class P01_ReqIFToSDocConverter:
 
         requirement = SDocNode(
             parent=parent_section,
-            requirement_type=grammar_element_tag,
+            requirement_type=grammar_element.tag,
             mid=requirement_mid,
             fields=fields,
         )

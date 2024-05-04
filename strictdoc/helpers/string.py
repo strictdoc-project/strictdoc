@@ -83,3 +83,7 @@ def extract_numeric_uid_prefix_part(string: str) -> Optional[str]:
 
 def create_safe_requirement_tag_string(string) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", string).rstrip("_").upper()
+
+
+def create_safe_document_file_name(string) -> str:
+    return re.sub(r"[^A-Za-z0-9]+", "_", string).rstrip("_")

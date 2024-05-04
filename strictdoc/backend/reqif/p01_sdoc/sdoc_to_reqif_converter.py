@@ -1,6 +1,7 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg,union-attr"
 import datetime
 import uuid
+from collections import defaultdict
 from enum import Enum
 from typing import Dict, List
 
@@ -72,8 +73,8 @@ class P01_SDocToReqIFBuildContext:
         self.map_uid_to_spec_objects: Dict[str, ReqIFSpecObject] = {}
         self.map_uid_to_parent_uids: Dict[str, List[str]] = {}
         self.map_grammar_node_tags_to_spec_object_type: Dict[
-            str, ReqIFSpecObjectType
-        ] = {}
+            SDocDocument, Dict[str, ReqIFSpecObjectType]
+        ] = defaultdict(dict)
 
 
 class P01_SDocToReqIFObjectConverter:
@@ -100,6 +101,18 @@ class P01_SDocToReqIFObjectConverter:
         specifications: List[ReqIFSpecification] = []
         data_types: List = []
         data_types_lookup = {}
+
+        specification_type = ReqIFSpecificationType(
+            identifier=SDOC_SPECIFICATION_TYPE_SINGLETON,
+            description=None,
+            last_change=creation_time,
+            long_name=SDOC_SPECIFICATION_TYPE_SINGLETON,
+            spec_attributes=None,
+            spec_attribute_map={},
+            is_self_closed=True,
+        )
+        spec_types.append(specification_type)
+
         document: SDocDocument
         for document in document_tree.document_list:
             for element in document.grammar.elements:
@@ -221,16 +234,6 @@ class P01_SDocToReqIFObjectConverter:
             )
             spec_types.extend(document_spec_types)
 
-            specification_type = ReqIFSpecificationType(
-                identifier=SDOC_SPECIFICATION_TYPE_SINGLETON,
-                description=None,
-                last_change=creation_time,
-                long_name=SDOC_SPECIFICATION_TYPE_SINGLETON,
-                spec_attributes=None,
-                spec_attribute_map={},
-                is_self_closed=True,
-            )
-            spec_types.append(specification_type)
             document_iterator = DocumentCachingIterator(document)
 
             parents: Dict[ReqIFSpecHierarchy, ReqIFSpecHierarchy] = {}
@@ -469,8 +472,8 @@ class P01_SDocToReqIFObjectConverter:
             last_change=None,
             long_name=None,
             spec_object_type=context.map_grammar_node_tags_to_spec_object_type[
-                "FREETEXT"
-            ].identifier,
+                document
+            ]["FREETEXT"].identifier,
             attributes=attributes,
         )
         return spec_object
@@ -521,7 +524,9 @@ class P01_SDocToReqIFObjectConverter:
             section_identifier = generate_unique_identifier("SECTION")
 
         spec_object_type: ReqIFSpecObjectType = (
-            context.map_grammar_node_tags_to_spec_object_type["SECTION"]
+            context.map_grammar_node_tags_to_spec_object_type[section.document][
+                "SECTION"
+            ]
         )
         spec_object = ReqIFSpecObject(
             xml_node=None,
@@ -647,8 +652,8 @@ class P01_SDocToReqIFObjectConverter:
 
         spec_object_type: ReqIFSpecObjectType = (
             context.map_grammar_node_tags_to_spec_object_type[
-                requirement.requirement_type
-            ]
+                requirement.document
+            ][requirement.requirement_type]
         )
         spec_object = ReqIFSpecObject.create(
             identifier=requirement_identifier,
@@ -761,23 +766,24 @@ class P01_SDocToReqIFObjectConverter:
                 attribute_definitions=attribute_definitions,
             )
             spec_object_types.append(spec_object_type)
-            context.map_grammar_node_tags_to_spec_object_type[element.tag] = (
-                spec_object_type
-            )
+            context.map_grammar_node_tags_to_spec_object_type[grammar.parent][
+                element.tag
+            ] = spec_object_type
 
+        assert grammar.parent is not None
         section_spec_type = (
             P01_SDocToReqIFObjectConverter._create_section_spec_object_type()
         )
-        context.map_grammar_node_tags_to_spec_object_type["SECTION"] = (
-            section_spec_type
-        )
+        context.map_grammar_node_tags_to_spec_object_type[grammar.parent][
+            "SECTION"
+        ] = section_spec_type
         spec_object_types.append(section_spec_type)
         free_text_spec_type = (
             P01_SDocToReqIFObjectConverter._create_free_text_spec_object_type()
         )
-        context.map_grammar_node_tags_to_spec_object_type["FREETEXT"] = (
-            free_text_spec_type
-        )
+        context.map_grammar_node_tags_to_spec_object_type[grammar.parent][
+            "FREETEXT"
+        ] = free_text_spec_type
         spec_object_types.append(free_text_spec_type)
 
         return spec_object_types

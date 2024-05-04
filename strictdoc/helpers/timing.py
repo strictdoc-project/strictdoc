@@ -2,11 +2,14 @@
 import contextlib
 from functools import wraps
 from time import time
+from typing import Any, Callable, TypeVar
 
 from strictdoc.helpers.math import round_up
 
+TimingDecoratorT = TypeVar("TimingDecoratorT", bound=Callable[..., Any])
 
-def timing_decorator(name):
+
+def timing_decorator(name) -> Callable[[TimingDecoratorT], TimingDecoratorT]:
     def timing_internal(func):
         @wraps(func)
         def wrap(*args, **kw):

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-def,union-attr"
 import os
 import sys
 from functools import partial
@@ -58,18 +58,20 @@ class DocumentFinder:
         with measure_performance(
             f"Reading SDOC: {os.path.basename(doc_full_path)}"
         ):
+            document_or_grammar: Union[SDocDocument, DocumentGrammar]
             if doc_full_path.endswith(".sdoc"):
                 sdoc_reader: SDReader = SDReader(path_to_output_root)
-                document = sdoc_reader.read_from_file(doc_full_path)
-                assert isinstance(document, SDocDocument)
+                document_or_grammar = sdoc_reader.read_from_file(doc_full_path)
+                assert isinstance(document_or_grammar, SDocDocument)
             elif doc_full_path.endswith(".sgra"):
                 sgra_reader = SDocGrammarReader(path_to_output_root)
-                document = sgra_reader.read_from_file(doc_full_path)
-                assert isinstance(document, DocumentGrammar)
+                document_or_grammar = sgra_reader.read_from_file(doc_full_path)
+                assert isinstance(document_or_grammar, DocumentGrammar)
             else:
                 raise NotImplementedError
-        drop_textx_meta(document)
-        return doc_file, file_tree_mount_folder, document
+        drop_textx_meta(document_or_grammar)
+
+        return doc_file, file_tree_mount_folder, document_or_grammar
 
     @staticmethod
     def _build_document_tree(
@@ -108,11 +110,9 @@ class DocumentFinder:
                 map_grammars_by_filenames[doc_file.file_name] = document
                 continue
 
-            input_doc_full_path = doc_file.get_full_path()
+            input_doc_full_path: str = doc_file.get_full_path()
             map_docs_by_paths[input_doc_full_path] = document
             document_list.append(document)
-
-            input_doc_full_path = doc_file.get_full_path()
 
             doc_relative_path_folder: SDocRelativePath = SDocRelativePath(
                 os.path.dirname(doc_file.rel_path.relative_path)

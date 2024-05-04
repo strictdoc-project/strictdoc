@@ -1,5 +1,7 @@
-# mypy: disable-error-code="no-untyped-def"
-def drop_textx_meta(textx_object):
+from typing import Any
+
+
+def drop_textx_meta(textx_object: Any) -> None:
     textx_object._tx_parser = None  # pylint: disable=protected-access
     textx_object._tx_attrs = None  # pylint: disable=protected-access
     textx_object._tx_metamodel = None  # pylint: disable=protected-access

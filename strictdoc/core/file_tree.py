@@ -2,7 +2,7 @@
 import collections
 import functools
 import os
-from typing import Dict, List, Optional, Union
+from typing import Dict, Iterator, List, Optional, Tuple, Union
 
 from strictdoc.helpers.path_filter import PathFilter
 from strictdoc.helpers.paths import SDocRelativePath
@@ -46,7 +46,7 @@ class File(FileOrFolderEntry):
     def has_extension(self, extension: str):
         return self.full_path.endswith(extension)
 
-    def get_full_path(self):
+    def get_full_path(self) -> str:
         return self.full_path
 
     def get_level(self) -> int:
@@ -114,11 +114,11 @@ class FileTree:
         self.root_folder_or_file: Union[Folder, File] = root_folder_or_file
 
     @staticmethod
-    def create_single_file_tree(root_path):
+    def create_single_file_tree(root_path) -> "FileTree":
         single_file = File(0, root_path, SDocRelativePath(""))
         return FileTree(root_folder_or_file=single_file)
 
-    def iterate(self):
+    def iterate(self) -> Iterator[Tuple[Union[Folder, File], File, str]]:
         file_tree_mount_folder = self.root_folder_or_file.mount_folder()
 
         task_list = [self.root_folder_or_file]

@@ -51,6 +51,7 @@ class ProjectFeature(str, Enum):
 
     MERMAID = "MERMAID"
     RAPIDOC = "RAPIDOC"
+    NESTOR = "NESTOR"
 
     ALL_FEATURES = "ALL_FEATURES"
 

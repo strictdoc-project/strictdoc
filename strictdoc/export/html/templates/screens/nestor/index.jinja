@@ -1,0 +1,45 @@
+{% set template_type = "Project index" %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ view_object.render_static_url('project_tree.css') }}"/>
+{% endblock head_css %}
+
+{% block head_scripts %}
+  <script type="text/javascript" src="{{ view_object.render_static_url('nestor/bundle.umd.js') }}"></script>
+  <script>
+    var graphNestor = new GraphNestor();
+    graphNestor.render('{{ view_object.path_to_json }}');
+  </script>
+{% endblock head_scripts %}
+
+{% block title %}
+  {{ view_object.project_config.project_title }} - {{ template_type }}
+{% endblock title %}
+
+{% block viewtype %}NESTOR • ALPHA{% endblock viewtype %}
+
+{% block layout_nav %}
+  {# {% include "_shared/nav.jinja.html" %} #}
+{% endblock layout_nav %}
+
+{% block toc_content %}
+{% endblock toc_content %}
+
+{% block header_content %}
+<div class="header">
+Nestor alpha
+</div>
+  {# {%- with
+      header__pagetype=template_type,
+      header__last="screens/project_index/actions.jinja"
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%} #}
+{% endblock header_content %}
+
+{% block main_content %}
+  <div id="app" style="display:contents"></div>
+{% endblock main_content %}

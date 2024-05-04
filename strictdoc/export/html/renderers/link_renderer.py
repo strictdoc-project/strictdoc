@@ -33,9 +33,8 @@ class LinkRenderer:
             return url
         return self.root_path + "/" + url
 
-    def render_static_url(self, url):
-        static_url = self.static_path + "/" + url
-        return static_url
+    def render_static_url(self, url: str) -> str:
+        return self.static_path + "/" + url
 
     # This rarely used helper adds slashes to the import statements within
     # <script type="module">, for example project_index/index.jinja.

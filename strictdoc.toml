@@ -20,6 +20,7 @@ features = [
   "REQUIREMENT_TO_SOURCE_TRACEABILITY",
   "HTML2PDF",
   "DIFF",
+  "NESTOR",
 ]
 
 include_doc_paths = [

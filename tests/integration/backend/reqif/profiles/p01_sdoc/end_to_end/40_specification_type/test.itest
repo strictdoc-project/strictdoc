@@ -1,10 +1,10 @@
 RUN: %strictdoc export --formats=reqif-sdoc %S/sample.sdoc
 RUN: %cat %S/output/reqif/output.reqif | filecheck %s
-RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/sample.sdoc
+RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/
 RUN: %diff %S/sample.sdoc %S/output/sample.sdoc
 
 CHECK:        <SPECIFICATION-TYPE IDENTIFIER="SDOC_SPECIFICATION_TYPE_SINGLETON" LAST-CHANGE="{{.*}}" LONG-NAME="SDOC_SPECIFICATION_TYPE_SINGLETON"/>
-CHECK:        <SPECIFICATION IDENTIFIER="SPECIFICATION-{{.*}}" LONG-NAME="Document one requirement">
+CHECK:        <SPECIFICATION IDENTIFIER="SPECIFICATION-{{.*}}" LONG-NAME="sample">
 CHECK:          <TYPE>
 CHECK:            <SPECIFICATION-TYPE-REF>SDOC_SPECIFICATION_TYPE_SINGLETON</SPECIFICATION-TYPE-REF>
 CHECK:          </TYPE>

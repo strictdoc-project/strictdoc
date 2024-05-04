@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: sample
+TITLE: Sample 2
 
 [GRAMMAR]
 ELEMENTS:
@@ -33,10 +33,18 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
+[SECTION]
+TITLE: Section #1
+
+[SECTION]
+TITLE: Section #1.1
+
 [REQUIREMENT]
-COMMENT: >>>
-This is a comment #1.
+UID: LLREQ-1
+STATEMENT: >>>
+Statement LLREQ-1.
 <<<
-COMMENT: >>>
-This is a comment #2.
-<<<
+
+[/SECTION]
+
+[/SECTION]

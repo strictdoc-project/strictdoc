@@ -1,5 +1,5 @@
 RUN: %strictdoc export --formats=reqif-sdoc --reqif-multiline-is-xhtml %S/sample.sdoc
-RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/sample.sdoc
+RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/
 RUN: %diff %S/sample.sdoc %S/output/sample.sdoc
 
 RUN: %cat %S/output/reqif/output.reqif | filecheck %s --check-prefix CHECK-EXPORTED-REQIF

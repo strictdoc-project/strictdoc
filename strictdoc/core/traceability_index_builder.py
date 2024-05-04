@@ -298,6 +298,11 @@ class TraceabilityIndexBuilder:
                     )
                 document.grammar.update_with_elements(document_grammar.elements)
 
+            # This is important because due to the difference between the
+            # normal grammar vs imported grammar, the parent may not be set at
+            # this point.
+            document.grammar.parent = document
+
             if graph_database.has_link(
                 link_type=GraphLinkType.MID_TO_NODE,
                 lhs_node=document.reserved_mid,

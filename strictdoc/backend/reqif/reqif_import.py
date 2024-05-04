@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-redef,no-untyped-def"
+import os.path
 from typing import List
 
 from reqif.parser import ReqIFParser, ReqIFZParser
@@ -25,6 +26,10 @@ class ReqIFImport:
         import_config: ImportReqIFCommandConfig, project_config: ProjectConfig
     ) -> List[SDocDocument]:
         converter = ReqIFImport.select_reqif_profile(import_config)
+
+        assert os.path.isfile(
+            import_config.input_path
+        ), import_config.input_path
 
         if import_config.input_path.endswith(".reqifz"):
             reqifz_bundle: ReqIFZBundle = ReqIFZParser.parse(

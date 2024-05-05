@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,var-annotated"
+# mypy: disable-error-code="no-untyped-def,union-attr,var-annotated"
 import multiprocessing
 import sys
 from abc import ABC, abstractmethod
@@ -8,7 +8,7 @@ from typing import Any, Iterable
 
 class Parallelizer(ABC):
     @staticmethod
-    def create(parallelize):
+    def create(parallelize) -> "Parallelizer":
         if parallelize:
             return MultiprocessingParallelizer()
         return NullParallelizer()
@@ -23,8 +23,8 @@ class Parallelizer(ABC):
         raise NotImplementedError
 
 
-class MultiprocessingParallelizer:
-    def __init__(self):
+class MultiprocessingParallelizer(Parallelizer):
+    def __init__(self) -> None:
         # @sdoc[SDOC_IMPL_2]
         try:
             self.input_queue = multiprocessing.Queue()
@@ -50,7 +50,7 @@ class MultiprocessingParallelizer:
     def __del__(self):
         self.shutdown()
 
-    def shutdown(self):
+    def shutdown(self) -> None:
         # @sdoc[SDOC_IMPL_2]
         # macOS edge case: If the __init__ fails to initialize itself, we may
         # end up having no self.processes attribute at all.
@@ -103,7 +103,7 @@ class MultiprocessingParallelizer:
             output_queue.put((content_idx, result))
 
 
-class NullParallelizer:
+class NullParallelizer(Parallelizer):
     def run_parallel(self, contents, processing_func) -> Iterable[Any]:
         results = []
         for content in contents:

@@ -1,14 +1,14 @@
-# mypy: disable-error-code="no-untyped-def,union-attr,var-annotated"
+# mypy: disable-error-code="no-untyped-def,union-attr"
 import multiprocessing
 import sys
 from abc import ABC, abstractmethod
 from queue import Empty
-from typing import Any, Iterable
+from typing import Any, Iterable, Tuple, Callable
 
 
 class Parallelizer(ABC):
     @staticmethod
-    def create(parallelize) -> "Parallelizer":
+    def create(parallelize: bool) -> "Parallelizer":
         if parallelize:
             return MultiprocessingParallelizer()
         return NullParallelizer()
@@ -27,8 +27,12 @@ class MultiprocessingParallelizer(Parallelizer):
     def __init__(self) -> None:
         # @sdoc[SDOC_IMPL_2]
         try:
-            self.input_queue = multiprocessing.Queue()
-            self.output_queue = multiprocessing.Queue()
+            self.input_queue: multiprocessing.Queue[
+                Tuple[int, Any, Callable[[Any], Any]]
+            ] = multiprocessing.Queue()
+            self.output_queue: multiprocessing.Queue[
+                Tuple[int, Any, Callable[[Any], Any]]
+            ] = multiprocessing.Queue()
 
             self.processes = [
                 multiprocessing.Process(

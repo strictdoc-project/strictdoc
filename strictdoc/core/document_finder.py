@@ -30,7 +30,6 @@ class DocumentFinder:
     def find_sdoc_content(
         project_config: ProjectConfig, parallelizer: Parallelizer
     ) -> Tuple[DocumentTree, AssetManager]:
-
         assert project_config.export_input_paths is not None
         for paths_to_files_or_doc in project_config.export_input_paths:
             if not os.path.exists(paths_to_files_or_doc):

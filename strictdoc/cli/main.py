@@ -41,7 +41,7 @@ from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.server.server import run_strictdoc_server
 
 
-def _main(parallelizer):
+def _main(parallelizer: Parallelizer):
     parser = create_sdoc_args_parser()
 
     if parser.is_passthrough_command:

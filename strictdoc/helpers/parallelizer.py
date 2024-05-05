@@ -1,10 +1,29 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,var-annotated"
 import multiprocessing
 import sys
+from abc import ABC, abstractmethod
 from queue import Empty
+from typing import Any, Iterable
 
 
-class Parallelizer:
+class Parallelizer(ABC):
+    @staticmethod
+    def create(parallelize):
+        if parallelize:
+            return MultiprocessingParallelizer()
+        return NullParallelizer()
+
+    @property
+    @abstractmethod
+    def parallelization_enabled(self) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def run_parallel(self, contents, processing_func) -> Iterable[Any]:
+        raise NotImplementedError
+
+
+class MultiprocessingParallelizer:
     def __init__(self):
         # @sdoc[SDOC_IMPL_2]
         try:
@@ -13,7 +32,7 @@ class Parallelizer:
 
             self.processes = [
                 multiprocessing.Process(
-                    target=Parallelizer._run,
+                    target=MultiprocessingParallelizer._run,
                     args=(self.input_queue, self.output_queue),
                 )
                 for _ in range(0, multiprocessing.cpu_count())
@@ -43,16 +62,10 @@ class Parallelizer:
                 process.terminate()
 
     @property
-    def parallelization_enabled(self):
+    def parallelization_enabled(self) -> bool:
         return True
 
-    @staticmethod
-    def create(parallelize):
-        if parallelize:
-            return Parallelizer()
-        return NullParallelizer()
-
-    def run_parallel(self, contents, processing_func):
+    def run_parallel(self, contents, processing_func) -> Iterable[Any]:
         size = 0
         for content_idx, content in enumerate(contents):
             self.input_queue.put((content_idx, content, processing_func))
@@ -91,16 +104,15 @@ class Parallelizer:
 
 
 class NullParallelizer:
-    @staticmethod
-    def run_parallel(contents, processing_func):
+    def run_parallel(self, contents, processing_func) -> Iterable[Any]:
         results = []
         for content in contents:
             results.append(processing_func(content))
         return results
 
-    def shutdown(self):
+    def shutdown(self) -> None:
         pass
 
     @property
-    def parallelization_enabled(self):
+    def parallelization_enabled(self) -> bool:
         return False

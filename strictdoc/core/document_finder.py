@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def,union-attr"
+# mypy: disable-error-code="union-attr"
 import os
 import sys
 from functools import partial
@@ -19,6 +19,7 @@ from strictdoc.core.file_tree import (
     PathFinder,
 )
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.textx import drop_textx_meta
 from strictdoc.helpers.timing import measure_performance, timing_decorator
@@ -28,7 +29,7 @@ class DocumentFinder:
     @staticmethod
     @timing_decorator("Find and read SDoc files")
     def find_sdoc_content(
-        project_config: ProjectConfig, parallelizer
+        project_config: ProjectConfig, parallelizer: Parallelizer
     ) -> Tuple[DocumentTree, AssetManager]:
         for paths_to_files_or_doc in project_config.export_input_paths:
             if not os.path.exists(paths_to_files_or_doc):
@@ -51,7 +52,10 @@ class DocumentFinder:
         return document_tree, asset_manager
 
     @staticmethod
-    def _process_worker_parse_document(document_triple, path_to_output_root):
+    def _process_worker_parse_document(
+        document_triple: Tuple[Union[Folder, File], File, str],
+        path_to_output_root: str,
+    ) -> Tuple[File, str, Union[SDocDocument, DocumentGrammar]]:
         _, doc_file, file_tree_mount_folder = document_triple
         doc_full_path = doc_file.get_full_path()
 
@@ -75,8 +79,10 @@ class DocumentFinder:
 
     @staticmethod
     def _build_document_tree(
-        file_trees: List[FileTree], project_config: ProjectConfig, parallelizer
-    ):
+        file_trees: List[FileTree],
+        project_config: ProjectConfig,
+        parallelizer: Parallelizer,
+    ) -> DocumentTree:
         assert isinstance(file_trees, list)
 
         output_root_html = project_config.export_output_html_root

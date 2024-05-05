@@ -11,6 +11,7 @@ from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
@@ -91,7 +92,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
         self.graph_database: GraphDatabase = graph_database
         self.document_tree: Optional[DocumentTree] = None
-        self.asset_manager = None
+        self.asset_manager: Optional[AssetManager] = None
         self.index_last_updated = datetime.today()
         self.contains_included_documents = False
         self.strictdoc_last_update = None

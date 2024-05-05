@@ -1,6 +1,7 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import sys
 import traceback
+from typing import Optional
 
 from textx import metamodel_from_str
 
@@ -9,23 +10,25 @@ from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import GRAMMAR_MODELS
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
-from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.cast import assert_optional_cast
 from strictdoc.helpers.textx import drop_textx_meta
 
 
 class SDocGrammarReader:
-    def __init__(self, path_to_output_root):
+    def __init__(self, path_to_output_root) -> None:
         self.path_to_output_root = path_to_output_root
 
     @staticmethod
-    def read(input_string, file_path=None):
+    def read(input_string, file_path=None) -> DocumentGrammar:
         meta_model = metamodel_from_str(
             SDocGrammarBuilder.create_grammar_grammar(),
             classes=GRAMMAR_MODELS,
             use_regexp_group=True,
         )
 
-        grammar = meta_model.model_from_str(input_string, file_name=file_path)
+        grammar: DocumentGrammar = meta_model.model_from_str(
+            input_string, file_name=file_path
+        )
 
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts
@@ -35,18 +38,21 @@ class SDocGrammarReader:
 
         return grammar
 
-    def read_from_file(self, file_path):
-        unpickled_content = PickleCache.read_from_cache(
-            file_path, self.path_to_output_root
+    def read_from_file(self, file_path) -> DocumentGrammar:
+        unpickled_content: Optional[DocumentGrammar] = assert_optional_cast(
+            PickleCache.read_from_cache(file_path, self.path_to_output_root),
+            DocumentGrammar,
         )
-        if unpickled_content:
-            return assert_cast(unpickled_content, DocumentGrammar)
+        if unpickled_content is not None:
+            return unpickled_content
 
         with open(file_path, encoding="utf8") as file:
             grammar_content = file.read()
 
         try:
-            grammar = self.read(grammar_content, file_path=file_path)
+            grammar: DocumentGrammar = self.read(
+                grammar_content, file_path=file_path
+            )
             PickleCache.save_to_cache(
                 grammar, file_path, self.path_to_output_root
             )

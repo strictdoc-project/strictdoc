@@ -3,7 +3,7 @@ import multiprocessing
 import sys
 from abc import ABC, abstractmethod
 from queue import Empty
-from typing import Any, Iterable, Tuple, Callable
+from typing import Any, Callable, Iterable, Tuple
 
 
 class Parallelizer(ABC):

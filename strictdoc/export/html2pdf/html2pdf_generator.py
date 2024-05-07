@@ -74,7 +74,9 @@ class HTML2PDFGenerator:
                 document_.meta.document_filename_base + ".html",
             )
 
-            with open(path_to_output_html_doc, "w+") as output_html_doc_file_:
+            with open(
+                path_to_output_html_doc, "w", encoding="utf8"
+            ) as output_html_doc_file_:
                 output_html_doc_file_.write(document_content)
 
             path_to_output_pdf_dir = os.path.join(

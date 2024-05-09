@@ -32,7 +32,7 @@ class ExportAction:
         self.traceability_index: Optional[TraceabilityIndex] = None
 
     @timing_decorator("Parse SDoc project tree")
-    def build_index(self):
+    def build_index(self) -> None:
         try:
             traceability_index: TraceabilityIndex = (
                 TraceabilityIndexBuilder.create(
@@ -46,7 +46,7 @@ class ExportAction:
         self.traceability_index = traceability_index
 
     @timing_decorator("Export SDoc")
-    def export(self):
+    def export(self) -> None:
         assert (
             self.traceability_index is not None
         ), "The index must be built at this point."

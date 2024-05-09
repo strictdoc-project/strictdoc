@@ -1,5 +1,4 @@
 # pylint: disable=wrong-import-position
-# mypy: disable-error-code="arg-type,attr-defined,no-redef,no-untyped-call,no-untyped-def"
 # flake8: noqa: E402
 
 # Needed to ensure that multiprocessing.freeze_support() is called
@@ -41,46 +40,45 @@ from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.server.server import run_strictdoc_server
 
 
-def _main(parallelizer: Parallelizer):
+def _main(parallelizer: Parallelizer) -> None:
     parser = create_sdoc_args_parser()
 
+    project_config: ProjectConfig
     if parser.is_passthrough_command:
-        config: PassthroughCommandConfig = parser.get_passthrough_config()
-        input_file = config.input_file
+        passthrough_config: PassthroughCommandConfig = (
+            parser.get_passthrough_config()
+        )
+        input_file = passthrough_config.input_file
         if not os.path.exists(input_file):
             sys.stdout.flush()
             message = "error: passthrough command's input path is neither a folder or a file."
             print(f"{message}: {input_file}")  # noqa: T201
             sys.exit(1)
 
-        project_config: ProjectConfig = (
-            ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config=os.getcwd(),
-                environment=environment,
-            )
+        project_config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=os.getcwd(),
+            environment=environment,
         )
-        project_config.integrate_passthrough_config(config)
+        project_config.integrate_passthrough_config(passthrough_config)
 
         passthrough_action = PassthroughAction()
         passthrough_action.passthrough(project_config)
 
     elif parser.is_export_command:
-        config: ExportCommandConfig = parser.get_export_config()
+        export_config: ExportCommandConfig = parser.get_export_config()
         try:
-            config.validate()
+            export_config.validate()
         except CLIValidationError as exception_:
             print(f"error: {exception_.args[0]}")  # noqa: T201
             sys.exit(1)
-        project_config: ProjectConfig = (
-            ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config=config.get_path_to_config(),
-                environment=environment,
-            )
+        project_config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=export_config.get_path_to_config(),
+            environment=environment,
         )
-        project_config.integrate_export_config(config)
+        project_config.integrate_export_config(export_config)
 
         parallelization_value = (
-            "Disabled" if config.no_parallelization else "Enabled"
+            "Disabled" if export_config.no_parallelization else "Enabled"
         )
         print(  # noqa: T201
             f"Parallelization: {parallelization_value}", flush=True
@@ -99,67 +97,63 @@ def _main(parallelizer: Parallelizer):
         except CLIValidationError as exception_:
             print(f"error: {exception_.args[0]}")  # noqa: T201
             sys.exit(1)
-        project_config: ProjectConfig = (
-            ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config=server_config.get_path_to_config(),
-                environment=environment,
-            )
+        project_config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=server_config.get_path_to_config(),
+            environment=environment,
         )
         run_strictdoc_server(
             server_config=server_config, project_config=project_config
         )
 
     elif parser.is_import_command_reqif:
-        project_config: ProjectConfig = (
-            ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config=os.getcwd(),
-                environment=environment,
-            )
+        project_config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=os.getcwd(),
+            environment=environment,
         )
-        import_config: ImportReqIFCommandConfig = (
+        import_reqif_config: ImportReqIFCommandConfig = (
             parser.get_import_config_reqif(environment.path_to_strictdoc)
         )
         import_action = ImportAction()
-        import_action.do_import(import_config, project_config)
+        import_action.do_import(import_reqif_config, project_config)
 
     elif parser.is_import_command_excel:
-        project_config: ProjectConfig = (
-            ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config=os.getcwd(),
-                environment=environment,
-            )
+        project_config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=os.getcwd(),
+            environment=environment,
         )
-        import_config: ImportExcelCommandConfig = (
+        import_excel_config: ImportExcelCommandConfig = (
             parser.get_import_config_excel(environment.path_to_strictdoc)
         )
         import_action = ImportAction()
-        import_action.do_import(import_config, project_config)
+        import_action.do_import(import_excel_config, project_config)
 
     elif parser.is_manage_autouid_command:
-        config: ManageAutoUIDCommandConfig = parser.get_manage_autouid_config()
+        manage_config: ManageAutoUIDCommandConfig = (
+            parser.get_manage_autouid_config()
+        )
         try:
-            config.validate()
+            manage_config.validate()
         except CLIValidationError as exception_:
             print(f"error: {exception_.args[0]}")  # noqa: T201
             sys.exit(1)
-        project_config: ProjectConfig = (
-            ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config=config.get_path_to_config(),
-                environment=environment,
-            )
+        project_config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=manage_config.get_path_to_config(),
+            environment=environment,
         )
         # FIXME: This must be improved.
-        project_config.export_input_paths = [config.input_path]
+        project_config.export_input_paths = [manage_config.input_path]
         # FIXME: This must be improved.
-        project_config.autouuid_include_sections = config.include_sections
+        project_config.autouuid_include_sections = (
+            manage_config.include_sections
+        )
 
         ManageAutoUIDCommand.execute(
             project_config=project_config, parallelizer=parallelizer
         )
 
     elif parser.is_dump_grammar_command:
-        config: DumpGrammarCommandConfig = parser.get_dump_grammar_config()
-        DumpGrammarCommand.execute(config)
+        dump_config: DumpGrammarCommandConfig = parser.get_dump_grammar_config()
+        DumpGrammarCommand.execute(dump_config)
 
     elif parser.is_version_command:
         VersionCommand.execute()
@@ -169,11 +163,9 @@ def _main(parallelizer: Parallelizer):
 
     elif parser.is_diff_command:
         diff_config: DiffCommandConfig = parser.get_diff_config()
-        project_config: ProjectConfig = (
-            ProjectConfigLoader.load_from_path_or_get_default(
-                path_to_config=os.getcwd(),
-                environment=environment,
-            )
+        project_config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=os.getcwd(),
+            environment=environment,
         )
         DiffCommand.execute(
             project_config=project_config, diff_config=diff_config
@@ -183,7 +175,7 @@ def _main(parallelizer: Parallelizer):
         raise NotImplementedError
 
 
-def main():
+def main() -> None:
     # Ensure that multiprocessing.freeze_support() is called in a frozen
     # application
     # https://github.com/pyinstaller/pyinstaller/issues/7438

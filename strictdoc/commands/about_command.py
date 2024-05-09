@@ -1,10 +1,9 @@
-# mypy: disable-error-code="no-untyped-def"
 import strictdoc
 
 
 class AboutCommand:
     @staticmethod
-    def execute():
+    def execute() -> None:
         print("=============")  # noqa: T201
         print("= StrictDoc =")  # noqa: T201
         print("=============")  # noqa: T201

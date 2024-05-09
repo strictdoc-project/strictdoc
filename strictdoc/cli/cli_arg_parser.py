@@ -38,8 +38,8 @@ class ManageAutoUIDCommandConfig:
         self._config_path: Optional[str] = config_path
         self.include_sections: bool = include_sections
 
-    def get_path_to_config(self) -> Optional[str]:
-        path_to_input_dir = self.input_path
+    def get_path_to_config(self) -> str:
+        path_to_input_dir: str = self.input_path
         if os.path.isfile(path_to_input_dir):
             path_to_input_dir = os.path.dirname(path_to_input_dir)
         path_to_config = (
@@ -49,7 +49,7 @@ class ManageAutoUIDCommandConfig:
         )
         return path_to_config
 
-    def validate(self):
+    def validate(self) -> None:
         if self._config_path is not None and not os.path.exists(
             self._config_path
         ):
@@ -97,17 +97,17 @@ class ServerCommandConfig:
         self.reload: bool = reload
         self.port: Optional[int] = port
 
-    def get_full_input_path(self):
+    def get_full_input_path(self) -> str:
         return os.path.abspath(self._input_path)
 
-    def get_path_to_config(self):
+    def get_path_to_config(self) -> str:
         return (
             self._config_path
             if self._config_path is not None
             else self._input_path
         )
 
-    def validate(self):
+    def validate(self) -> None:
         if not os.path.exists(self._input_path):
             raise CLIValidationError(
                 f"Provided input path does not exist: {self._input_path}"
@@ -164,8 +164,9 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.view: Optional[str] = view
         self.output_html_root: str = os.path.join(output_dir, "html")
 
-    def get_path_to_config(self) -> Optional[str]:
-        path_to_input_dir = self.input_paths[0]
+    def get_path_to_config(self) -> str:
+        # FIXME: The control flow can be improved.
+        path_to_input_dir: str = self.input_paths[0]
         if os.path.isfile(path_to_input_dir):
             path_to_input_dir = os.path.dirname(path_to_input_dir)
         path_to_config = (
@@ -175,7 +176,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         )
         return path_to_config
 
-    def validate(self):
+    def validate(self) -> None:
         for idx_, input_path_ in enumerate(self.input_paths.copy()):
             if not os.path.exists(input_path_):
                 raise CLIValidationError(

@@ -22,6 +22,10 @@ class Parallelizer(ABC):
     def run_parallel(self, contents, processing_func) -> Iterable[Any]:
         raise NotImplementedError
 
+    @abstractmethod
+    def shutdown(self) -> None:
+        raise NotImplementedError
+
 
 class MultiprocessingParallelizer(Parallelizer):
     def __init__(self) -> None:

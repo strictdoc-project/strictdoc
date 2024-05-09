@@ -1,9 +1,10 @@
-# mypy: disable-error-code="no-untyped-def,union-attr"
 import multiprocessing
 import sys
 from abc import ABC, abstractmethod
 from queue import Empty
 from typing import Any, Callable, Iterable, Tuple
+
+MultiprocessingLambdaType = Callable[[Any], Any]
 
 
 class Parallelizer(ABC):
@@ -19,7 +20,11 @@ class Parallelizer(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def run_parallel(self, contents, processing_func) -> Iterable[Any]:
+    def run_parallel(
+        self,
+        contents: Iterable[Any],
+        processing_func: MultiprocessingLambdaType,
+    ) -> Iterable[Any]:
         raise NotImplementedError
 
     @abstractmethod
@@ -32,11 +37,11 @@ class MultiprocessingParallelizer(Parallelizer):
         # @sdoc[SDOC_IMPL_2]
         try:
             self.input_queue: multiprocessing.Queue[
-                Tuple[int, Any, Callable[[Any], Any]]
+                Tuple[int, Any, MultiprocessingLambdaType]
             ] = multiprocessing.Queue()
-            self.output_queue: multiprocessing.Queue[
-                Tuple[int, Any, Callable[[Any], Any]]
-            ] = multiprocessing.Queue()
+            self.output_queue: multiprocessing.Queue[Tuple[int, Any]] = (
+                multiprocessing.Queue()
+            )
 
             self.processes = [
                 multiprocessing.Process(
@@ -55,7 +60,7 @@ class MultiprocessingParallelizer(Parallelizer):
             ) from None
         # @sdoc[/SDOC_IMPL_2]
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.shutdown()
 
     def shutdown(self) -> None:
@@ -73,7 +78,11 @@ class MultiprocessingParallelizer(Parallelizer):
     def parallelization_enabled(self) -> bool:
         return True
 
-    def run_parallel(self, contents, processing_func) -> Iterable[Any]:
+    def run_parallel(
+        self,
+        contents: Iterable[Any],
+        processing_func: MultiprocessingLambdaType,
+    ) -> Iterable[Any]:
         size = 0
         for content_idx, content in enumerate(contents):
             self.input_queue.put((content_idx, content, processing_func))
@@ -102,7 +111,10 @@ class MultiprocessingParallelizer(Parallelizer):
     #         return executor.map(processing_func, contents)  # noqa: ERA001
 
     @staticmethod
-    def _run(input_queue, output_queue):
+    def _run(
+        input_queue: "multiprocessing.Queue[Tuple[int, Any, MultiprocessingLambdaType]]",
+        output_queue: "multiprocessing.Queue[Tuple[int, Any]]",
+    ) -> None:
         while True:
             content_idx, content, processing_func = input_queue.get(block=True)
             result = processing_func(content)
@@ -112,7 +124,11 @@ class MultiprocessingParallelizer(Parallelizer):
 
 
 class NullParallelizer(Parallelizer):
-    def run_parallel(self, contents, processing_func) -> Iterable[Any]:
+    def run_parallel(
+        self,
+        contents: Iterable[Any],
+        processing_func: MultiprocessingLambdaType,
+    ) -> Iterable[Any]:
         results = []
         for content in contents:
             results.append(processing_func(content))

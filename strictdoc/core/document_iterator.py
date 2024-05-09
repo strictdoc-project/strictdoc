@@ -124,18 +124,19 @@ class DocumentCachingIterator:
             yield node
 
             current_number = 0
-            for subnode_ in node.requirements:
-                if subnode_.ng_resolved_custom_level is None:
-                    current_number += 1
+            if node.requirements is not None:
+                for subnode_ in node.requirements:
+                    if subnode_.ng_resolved_custom_level is None:
+                        current_number += 1
 
-                yield from self._all_content(
-                    subnode_,
-                    print_fragments=print_fragments,
-                    print_fragments_from_files=print_fragments_from_files,
-                    level_stack=level_stack + (current_number,),
-                    custom_level=custom_level
-                    or subnode_.ng_resolved_custom_level is not None,
-                )
+                    yield from self._all_content(
+                        subnode_,
+                        print_fragments=print_fragments,
+                        print_fragments_from_files=print_fragments_from_files,
+                        level_stack=level_stack + (current_number,),
+                        custom_level=custom_level
+                        or subnode_.ng_resolved_custom_level is not None,
+                    )
 
         elif isinstance(node, SDocNode):
             # If node is not whitelisted, we ignore it. Also, note that due to

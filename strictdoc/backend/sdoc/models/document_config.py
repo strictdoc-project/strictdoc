@@ -81,7 +81,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         self.ng_line_start: int = 0
         self.ng_col_start: int = 0
 
-    def get_requirement_style_mode(self):
+    def get_requirement_style_mode(self) -> str:
         if (
             self.requirement_style is None
             or self.requirement_style == "Inline"

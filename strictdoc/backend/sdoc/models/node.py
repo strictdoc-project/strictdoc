@@ -1,7 +1,7 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 import sys
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -101,7 +101,9 @@ class SDocNode(SDocObject):
         assert parent
         assert isinstance(requirement_type, str)
 
-        self.parent = parent
+        self.parent: Union[
+            "SDocDocument", "SDocSection", "SDocCompositeNode"
+        ] = parent
         self.requirement_type: str = requirement_type
 
         references: List[Reference] = []
@@ -211,9 +213,6 @@ class SDocNode(SDocObject):
         # This is always true, unless the node is filtered out with --filter-requirements.
         self.ng_whitelisted = True
 
-        # Cache for accessing the reserved fields values.
-        self.ng_reserved_fields_cache: Dict[str, Any] = {}
-
     @staticmethod
     def get_type_string() -> str:
         return "requirement"
@@ -248,10 +247,7 @@ class SDocNode(SDocObject):
 
     @property
     def reserved_tags(self) -> Optional[List[str]]:
-        if RequirementFieldName.TAGS in self.ng_reserved_fields_cache:
-            return self.ng_reserved_fields_cache[RequirementFieldName.TAGS]
         if RequirementFieldName.TAGS not in self.ordered_fields_lookup:
-            self.ng_reserved_fields_cache[RequirementFieldName.TAGS] = None
             return None
         field: SDocNodeField = self.ordered_fields_lookup[
             RequirementFieldName.TAGS
@@ -264,7 +260,6 @@ class SDocNode(SDocObject):
                 f"must be a single-line field."
             )
         tags = field_value.split(", ")
-        self.ng_reserved_fields_cache[RequirementFieldName.TAGS] = tags
         return tags
 
     @property
@@ -287,10 +282,7 @@ class SDocNode(SDocObject):
 
     @property
     def comments(self) -> List[str]:
-        if RequirementFieldName.COMMENT in self.ng_reserved_fields_cache:
-            return self.ng_reserved_fields_cache[RequirementFieldName.COMMENT]
         if RequirementFieldName.COMMENT not in self.ordered_fields_lookup:
-            self.ng_reserved_fields_cache[RequirementFieldName.COMMENT] = []
             return []
         comments = []
         for field in self.ordered_fields_lookup[RequirementFieldName.COMMENT]:
@@ -300,7 +292,6 @@ class SDocNode(SDocObject):
                 comments.append(field.field_value)
             else:
                 raise NotImplementedError
-        self.ng_reserved_fields_cache[RequirementFieldName.COMMENT] = comments
         return comments
 
     # Other properties
@@ -524,10 +515,7 @@ class SDocNode(SDocObject):
     def _get_cached_field(
         self, field_name: str, singleline_only: bool
     ) -> Optional[str]:
-        if field_name in self.ng_reserved_fields_cache:
-            return self.ng_reserved_fields_cache[field_name]
         if field_name not in self.ordered_fields_lookup:
-            self.ng_reserved_fields_cache[field_name] = None
             return None
         field: SDocNodeField = self.ordered_fields_lookup[field_name][0]
 
@@ -542,7 +530,6 @@ class SDocNode(SDocObject):
                 field_value = field.field_value_multiline
             else:
                 raise NotImplementedError(self)
-        self.ng_reserved_fields_cache[field_name] = field_value
         return field_value
 
     # Below all mutating methods.
@@ -558,9 +545,6 @@ class SDocNode(SDocObject):
         requirement before will be put at the right index.
         """
         assert isinstance(field_name, str)
-
-        if field_name in self.ng_reserved_fields_cache:
-            del self.ng_reserved_fields_cache[field_name]
 
         # If a field value is being removed, there is not much to do.
         if value is None or len(value) == 0:

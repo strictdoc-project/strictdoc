@@ -1,4 +1,3 @@
-# mypy: disable-error-code="attr-defined"
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -11,6 +10,7 @@ from strictdoc.backend.sdoc.models.document_view import (
     DocumentView,
     ViewElement,
 )
+from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
@@ -23,7 +23,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     FileEntry,
     GrammarElementFieldMultipleChoice,

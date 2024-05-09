@@ -149,6 +149,5 @@ class UpdateGrammarElementCommand:
                         new_relations.append(requirement_relation_)
                 new_ordered_fields_lookup["REFS"] = [existing_refs_field]
             requirement.ordered_fields_lookup = new_ordered_fields_lookup
-            requirement.ng_reserved_fields_cache.clear()
 
         return True

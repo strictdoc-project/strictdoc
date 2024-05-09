@@ -31,6 +31,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import (
+    SDocCompositeNode,
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -1400,11 +1401,10 @@ def create_main_router(
 
         export_action.traceability_index.delete_requirement(requirement)
 
-        requirement_parent: Union[SDocSection, SDocDocument] = (
-            requirement.parent
-        )
+        requirement_parent: Union[
+            SDocSection, SDocDocument, SDocCompositeNode
+        ] = requirement.parent
         requirement_parent.section_contents.remove(requirement)
-        requirement.parent = None
 
         export_action.traceability_index.update_last_updated()
 

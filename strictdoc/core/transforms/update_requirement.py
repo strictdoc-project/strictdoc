@@ -63,7 +63,6 @@ class UpdateRequirementTransform:
         # Clearing all existing fields because they will be recreated from
         # scratch from the form data.
         requirement.ordered_fields_lookup.clear()
-        requirement.ng_reserved_fields_cache.clear()
 
         for form_field_name, form_fields in form_object.fields.items():
             for form_field_index, form_field in enumerate(form_fields):

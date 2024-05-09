@@ -1,7 +1,7 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="union-attr"
 import sys
 from collections import OrderedDict
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union, Generator, Any
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -28,20 +28,20 @@ from strictdoc.helpers.mid import MID
 
 @auto_described
 class SDocNodeContext:
-    def __init__(self):
-        self.title_number_string = None
+    def __init__(self) -> None:
+        self.title_number_string: Optional[str] = None
 
 
 @auto_described
 class SDocNodeField:
     def __init__(
         self,
-        parent,
+        parent: Optional["SDocNode"],
         field_name: str,
         field_value: Optional[str],
         field_value_multiline: Optional[str],
         field_value_references: Optional[List[Reference]],
-    ):
+    ) -> None:
         # FIXME: This should be strict_assert at some point.
         assert (
             (field_value is not None and len(field_value) > 0)
@@ -81,10 +81,11 @@ class SDocNodeField:
             field_value_references
         )
 
-    def get_value(self):
+    def get_value(self) -> str:
         value = (
             self.field_value if self.field_value else self.field_value_multiline
         )
+        assert value is not None
         return value
 
 
@@ -92,12 +93,12 @@ class SDocNodeField:
 class SDocNode(SDocObject):
     def __init__(
         self,
-        parent,
+        parent: Union[SDocDocument, SDocSection, "SDocCompositeNode"],
         requirement_type: str,
         mid: Optional[str],
         fields: List[SDocNodeField],
-        requirements=None,
-    ):
+        requirements: Optional[List["SDocNode"]] = None,
+    ) -> None:
         assert parent
         assert isinstance(requirement_type, str)
 
@@ -171,7 +172,7 @@ class SDocNode(SDocObject):
         assert isinstance(references, List)
         self.references: List[Reference] = references
 
-        self.requirements = requirements
+        self.requirements: Optional[List["SDocNode"]] = requirements
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
@@ -195,7 +196,7 @@ class SDocNode(SDocObject):
         self.ng_col_end: Optional[int] = None
         self.ng_byte_start: Optional[int] = None
         self.ng_byte_end: Optional[int] = None
-        self.context = SDocNodeContext()
+        self.context: SDocNodeContext = SDocNodeContext()
 
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
         self.mid_permanent: bool = mid is not None
@@ -220,11 +221,11 @@ class SDocNode(SDocObject):
     def get_node_type_string(self) -> Optional[str]:
         return self.requirement_type
 
-    def get_title(self):
+    def get_title(self) -> Optional[str]:
         return self.reserved_title
 
     @property
-    def is_root_included_document(self):
+    def is_root_included_document(self) -> bool:
         return False
 
     @property
@@ -296,15 +297,15 @@ class SDocNode(SDocObject):
 
     # Other properties
     @property
-    def is_requirement(self):
+    def is_requirement(self) -> bool:
         return True
 
     @property
-    def is_section(self):
+    def is_section(self) -> bool:
         return False
 
     @property
-    def is_composite_requirement(self):
+    def is_composite_requirement(self) -> bool:
         return False
 
     @property
@@ -317,10 +318,10 @@ class SDocNode(SDocObject):
         ), "A valid requirement must always have a reference to the document."
         return document
 
-    def get_document(self):
+    def get_document(self) -> Optional[SDocDocument]:
         return self.ng_document_reference.get_document()
 
-    def get_included_document(self):
+    def get_included_document(self) -> Optional[SDocDocument]:
         return self.ng_including_document_reference.get_document()
 
     @property
@@ -339,13 +340,14 @@ class SDocNode(SDocObject):
         ), "A valid requirement must always have a reference to the document."
         return document
 
-    def document_is_included(self):
+    def document_is_included(self) -> bool:
         return self.ng_including_document_reference.get_document() is not None
 
-    def get_requirement_style_mode(self):
+    def get_requirement_style_mode(self) -> str:
+        assert self.ng_document_reference.get_document() is not None
         return self.ng_document_reference.get_document().config.get_requirement_style_mode()
 
-    def has_requirement_references(self, ref_type):
+    def has_requirement_references(self, ref_type: str) -> bool:
         if not self.references or len(self.references) == 0:
             return False
         for reference in self.references:
@@ -353,7 +355,7 @@ class SDocNode(SDocObject):
                 return True
         return False
 
-    def get_requirement_references(self, ref_type) -> List[Reference]:
+    def get_requirement_references(self, ref_type: str) -> List[Reference]:
         if not self.references or len(self.references) == 0:
             return []
         references: List[Reference] = []
@@ -424,12 +426,14 @@ class SDocNode(SDocObject):
             references.append((child_reference.ref_uid, child_reference.role))
         return references
 
-    def enumerate_fields(self):
+    def enumerate_fields(self) -> Generator[SDocNodeField, None, None]:
         requirement_fields = self.ordered_fields_lookup.values()
         for requirement_field_list in requirement_fields:
             yield from requirement_field_list
 
-    def enumerate_all_fields(self):
+    def enumerate_all_fields(
+        self,
+    ) -> Generator[Tuple[SDocNodeField, str, str], None, None]:
         for field in self.enumerate_fields():
             if field.field_name == "REFS":
                 continue
@@ -441,8 +445,8 @@ class SDocNode(SDocObject):
             yield field, field.field_name, meta_field_value
 
     def enumerate_meta_fields(
-        self, skip_single_lines=False, skip_multi_lines=False
-    ):
+        self, skip_single_lines: bool = False, skip_multi_lines: bool = False
+    ) -> Generator[Tuple[str, str], None, None]:
         element: GrammarElement = self.document.grammar.elements_by_type[
             self.requirement_type
         ]
@@ -502,7 +506,7 @@ class SDocNode(SDocObject):
         )
         return parent.get_requirement_prefix()
 
-    def dump_fields_as_parsed(self):
+    def dump_fields_as_parsed(self) -> str:
         return ", ".join(
             list(
                 map(
@@ -536,7 +540,7 @@ class SDocNode(SDocObject):
 
     def set_field_value(
         self, *, field_name: str, form_field_index: int, value: Optional[str]
-    ):
+    ) -> None:
         """
         The purpose of this purpose is to provide a single-method API for
         updating any field of a requirement. A requirement might use only some
@@ -641,7 +645,7 @@ class SDocNode(SDocObject):
         self.ordered_fields_lookup = new_ordered_fields_lookup
         self._update_has_meta()
 
-    def _update_has_meta(self):
+    def _update_has_meta(self) -> None:
         has_meta: bool = False
         for field in self.enumerate_fields():
             if field.field_name not in RESERVED_NON_META_FIELDS:
@@ -651,21 +655,27 @@ class SDocNode(SDocObject):
 
 @auto_described
 class SDocCompositeNode(SDocNode):
-    def __init__(self, parent, **fields):
+    def __init__(
+        self,
+        parent: Union[SDocDocument, SDocSection, "SDocCompositeNode"],
+        **fields: Any,
+    ) -> None:
         super().__init__(parent, **fields)
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_including_document_reference: Optional[DocumentReference] = None
         self.ng_has_requirements = False
 
     @property
-    def is_composite_requirement(self):
+    def is_composite_requirement(self) -> bool:
         return True
 
     @property
-    def document(self):
-        return self.ng_document_reference.get_document()
+    def document(self) -> SDocDocument:
+        document = self.ng_document_reference.get_document()
+        assert document is not None
+        return document
 
-    def document_is_included(self):
+    def document_is_included(self) -> bool:
         return self.ng_including_document_reference.get_document() is not None
 
     def get_requirement_prefix(self) -> str:

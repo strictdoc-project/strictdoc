@@ -11,9 +11,9 @@ from strictdoc.helpers.mid import MID
 
 @auto_described
 class Reference:
-    def __init__(self, ref_type, parent):
+    def __init__(self, ref_type: str, parent):
         self.parent = parent
-        self.ref_type = ref_type
+        self.ref_type: str = ref_type
         self.role: Optional[str] = None
 
 

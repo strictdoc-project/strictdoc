@@ -98,7 +98,11 @@ class ExcelGenerator:
                         field_uc = field.upper()
 
                         # Special treatment for ParentReqReference and Comments
-                        if field_uc in ("REFS:PARENT", "PARENT", "PARENTS"):
+                        if field_uc in (
+                            "RELATIONS:PARENT",
+                            "PARENT",
+                            "PARENTS",
+                        ):
                             parent_refs = node.get_requirement_references(
                                 ReferenceType.PARENT
                             )
@@ -129,47 +133,50 @@ class ExcelGenerator:
                             # Using a transition marker to separate multiple
                             # comments
                             if node.comments:
-                                value = ""
+                                comment_row_value: str = ""
                                 for comment in node.comments:
-                                    if len(value) > 0:
-                                        value += "\n----------\n"
-                                    value += comment
-                                worksheet.write(row, idx, value)
+                                    if len(comment_row_value) > 0:
+                                        comment_row_value += "\n----------\n"
+                                    comment_row_value += comment
+                                worksheet.write(row, idx, comment_row_value)
                                 if (
-                                    value
-                                    and len(value)
+                                    comment_row_value
+                                    and len(comment_row_value)
                                     > columns[field][MAX_WIDTH_KEY]
                                 ):
-                                    columns[field][MAX_WIDTH_KEY] = len(value)
-                        elif field_uc in node.ordered_fields_lookup.keys():
-                            req_field = node.ordered_fields_lookup[field_uc][0]
-                            value = ""
-                            if req_field.field_value_references:
+                                    columns[field][MAX_WIDTH_KEY] = len(
+                                        comment_row_value
+                                    )
+                        elif field_uc == "RELATIONS":
+                            if len(node.relations) > 0:
+                                relations_components = []
                                 # Using a transition marker to separate
                                 # multiple references
-                                for ref in req_field.field_value_references:
-                                    if len(value) > 0:
-                                        value += "----------\n"
+                                for ref in node.relations:
                                     if isinstance(ref, ParentReqReference):
-                                        value += (
-                                            ref.ref_type
-                                            + ": "
-                                            + ref.ref_uid
-                                            + "\n"
+                                        relations_components.append(
+                                            ref.ref_type + ": " + ref.ref_uid
                                         )
                                     elif isinstance(ref, FileReference):
-                                        value += (
+                                        relations_components.append(
                                             ref.ref_type
                                             + ": "
                                             + ref.get_posix_path()
-                                            + "\n"
                                         )
-                            else:
-                                value = req_field.get_value()
+                                relations_row_value: str = (
+                                    "\n----------\n".join(relations_components)
+                                )
+                                worksheet.write(row, idx, relations_row_value)
+                                value_len = len(relations_row_value)
+                                if value_len > columns[field][MAX_WIDTH_KEY]:
+                                    columns[field][MAX_WIDTH_KEY] = value_len
+                        elif field_uc in node.ordered_fields_lookup.keys():
+                            req_field = node.ordered_fields_lookup[field_uc][0]
+                            value: str = req_field.get_value()
                             worksheet.write(row, idx, value)
-                            vallength = len(value)
-                            if vallength > columns[field][MAX_WIDTH_KEY]:
-                                columns[field][MAX_WIDTH_KEY] = vallength
+                            value_len = len(value)
+                            if value_len > columns[field][MAX_WIDTH_KEY]:
+                                columns[field][MAX_WIDTH_KEY] = value_len
                         elif hasattr(node, "special_fields"):
                             if len(node.special_fields):
                                 for special_field in node.special_fields:

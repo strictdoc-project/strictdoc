@@ -3,12 +3,12 @@ TITLE: TEST DOCUMENT
 
 [REQUIREMENT]
 UID: REQ-01
-REFS:
-- TYPE: File
-  VALUE: src/file1.py
-- TYPE: File
-  VALUE: src/file2.py
 TITLE: Test_REQ
 STATEMENT: >>>
 This requirement shall link to source files.
 <<<
+RELATIONS:
+- TYPE: File
+  VALUE: src/file1.py
+- TYPE: File
+  VALUE: src/file2.py

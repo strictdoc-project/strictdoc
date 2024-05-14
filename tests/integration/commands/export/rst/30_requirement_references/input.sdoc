@@ -13,9 +13,6 @@ Requirement 1 comment.
 
 [REQUIREMENT]
 UID: REQ2
-REFS:
-- TYPE: Parent
-  VALUE: REQ1
 TITLE: Requirement 2
 STATEMENT: >>>
 System shall do #2.
@@ -23,14 +20,12 @@ System shall do #2.
 COMMENT: >>>
 Requirement 2 comment.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ1
 
 [REQUIREMENT]
 UID: REQ3
-REFS:
-- TYPE: Parent
-  VALUE: REQ1
-- TYPE: Parent
-  VALUE: REQ2
 TITLE: Requirement 3
 STATEMENT: >>>
 System shall do #3.
@@ -38,3 +33,8 @@ System shall do #3.
 COMMENT: >>>
 Requirement 3 comment.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ1
+- TYPE: Parent
+  VALUE: REQ2

@@ -1,7 +1,6 @@
 # mypy: disable-error-code="union-attr"
-import sys
 from collections import OrderedDict
-from typing import List, Optional, Tuple, Union, Generator, Any
+from typing import Any, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -40,19 +39,10 @@ class SDocNodeField:
         field_name: str,
         field_value: Optional[str],
         field_value_multiline: Optional[str],
-        field_value_references: Optional[List[Reference]],
     ) -> None:
         # FIXME: This should be strict_assert at some point.
-        assert (
-            (field_value is not None and len(field_value) > 0)
-            or (
-                field_value_multiline is not None
-                and len(field_value_multiline) > 0
-            )
-            or (
-                field_value_references is not None
-                and len(field_value_references) > 0
-            )
+        assert (field_value is not None and len(field_value) > 0) or (
+            field_value_multiline is not None and len(field_value_multiline) > 0
         ), "A requirement field must have at least one value."
         self.parent = parent
         self.field_name = field_name
@@ -77,10 +67,6 @@ class SDocNodeField:
 
         self.field_value: Optional[str] = field_value
 
-        self.field_value_references: Optional[List[Reference]] = (
-            field_value_references
-        )
-
     def get_value(self) -> str:
         value = (
             self.field_value if self.field_value else self.field_value_multiline
@@ -97,88 +83,36 @@ class SDocNode(SDocObject):
         requirement_type: str,
         mid: Optional[str],
         fields: List[SDocNodeField],
+        relations: List[Reference],
         requirements: Optional[List["SDocNode"]] = None,
     ) -> None:
         assert parent
         assert isinstance(requirement_type, str)
+        assert isinstance(relations, list), relations
 
         self.parent: Union[
             "SDocDocument", "SDocSection", "SDocCompositeNode"
         ] = parent
-        self.requirement_type: str = requirement_type
 
-        references: List[Reference] = []
+        self.requirement_type: str = requirement_type
 
         ordered_fields_lookup: OrderedDict[str, List[SDocNodeField]] = (
             OrderedDict()
         )
 
         has_meta: bool = False
-        uses_old_refs_field: bool = False
         for field in fields:
             if field.field_name not in RESERVED_NON_META_FIELDS:
                 has_meta = True
-
-            if field.field_name == "REFS":
-                uses_old_refs_field = True
-            elif field.field_name == "RELATIONS":
-                field.field_name = "REFS"
-                ordered_fields_lookup.setdefault("REFS", []).append(field)
-                uses_old_refs_field = False
-                continue
-
-            if field.field_name in ("REFS", "RELATIONS"):
-                if (
-                    field.field_value_references is None
-                    or len(field.field_value_references) == 0
-                ):
-                    print(  # noqa: T201
-                        "error: REFS requirement field can only be of "
-                        "Reference type. Furthermore: 1) The REFS field is "
-                        "deprecated and must be renamed to RELATIONS. "
-                        "2) The requirement RELATIONS field shall "
-                        "be the last field, after all other fields. "
-                        'See the section "Relations" in the user guide for '
-                        "more details."
-                    )
-                    sys.exit(1)
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        if RequirementFieldName.REFS in ordered_fields_lookup:
-            refs_field: SDocNodeField = ordered_fields_lookup[
-                RequirementFieldName.REFS
-            ][0]
-            if fields.index(refs_field) != (len(fields) - 1):
-                print(  # noqa: T201
-                    "warning: RELATIONS (previously REFS) requirement field "
-                    "should be the last field, after all other fields. "
-                    'See the section "Relations" in the user guide for '
-                    "more details. "
-                    "Correct requirement example:\n"
-                    "[REQUIREMENT]\n"
-                    "UID: REQ-2\n"
-                    "STATEMENT: When Z, the system X shall do Y.\n"
-                    "RELATIONS:\n"
-                    "- TYPE: Parent\n"
-                    "  VALUE: REQ-1"
-                )
-
-            references_opt: Optional[List[Reference]] = ordered_fields_lookup[
-                RequirementFieldName.REFS
-            ][0].field_value_references
-            assert references_opt is not None
-            references = references_opt
-
-        assert isinstance(references, List)
-        self.references: List[Reference] = references
-
         self.requirements: Optional[List["SDocNode"]] = requirements
+
+        self.relations: List[Reference] = relations
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
         self.has_meta: bool = has_meta
-
-        self.ng_uses_old_refs_field: bool = uses_old_refs_field
 
         # This property is only used for validating fields against grammar
         # during TextX parsing and processing.
@@ -348,18 +282,18 @@ class SDocNode(SDocObject):
         return self.ng_document_reference.get_document().config.get_requirement_style_mode()
 
     def has_requirement_references(self, ref_type: str) -> bool:
-        if not self.references or len(self.references) == 0:
+        if len(self.relations) == 0:
             return False
-        for reference in self.references:
+        for reference in self.relations:
             if reference.ref_type == ref_type:
                 return True
         return False
 
     def get_requirement_references(self, ref_type: str) -> List[Reference]:
-        if not self.references or len(self.references) == 0:
+        if len(self.relations) == 0:
             return []
         references: List[Reference] = []
-        for reference in self.references:
+        for reference in self.relations:
             if reference.ref_type != ref_type:
                 continue
             references.append(reference)
@@ -368,10 +302,10 @@ class SDocNode(SDocObject):
     def get_requirement_reference_uids(
         self,
     ) -> List[Tuple[str, str, Optional[str]]]:
-        if not self.references or len(self.references) == 0:
+        if len(self.relations) == 0:
             return []
         references: List[Tuple[str, str, Optional[str]]] = []
-        for reference in self.references:
+        for reference in self.relations:
             if reference.ref_type == ReferenceType.PARENT:
                 parent_reference: ParentReqReference = assert_cast(
                     reference, ParentReqReference
@@ -399,10 +333,10 @@ class SDocNode(SDocObject):
     def get_parent_requirement_reference_uids(
         self,
     ) -> List[Tuple[str, Optional[str]]]:
-        if not self.references or len(self.references) == 0:
+        if not self.relations or len(self.relations) == 0:
             return []
         references: List[Tuple[str, Optional[str]]] = []
-        for reference in self.references:
+        for reference in self.relations:
             if reference.ref_type != ReferenceType.PARENT:
                 continue
             parent_reference: ParentReqReference = assert_cast(
@@ -414,10 +348,10 @@ class SDocNode(SDocObject):
     def get_child_requirement_reference_uids(
         self,
     ) -> List[Tuple[str, Optional[str]]]:
-        if not self.references or len(self.references) == 0:
+        if not self.relations or len(self.relations) == 0:
             return []
         references: List[Tuple[str, Optional[str]]] = []
-        for reference in self.references:
+        for reference in self.relations:
             if reference.ref_type != ReferenceType.CHILD:
                 continue
             child_reference: ChildReqReference = assert_cast(
@@ -591,7 +525,6 @@ class SDocNode(SDocObject):
 
         field_value = None
         field_value_multiline = None
-        field_value_references = None
         if field_index <= title_field_index:
             field_value = value
         else:
@@ -605,7 +538,6 @@ class SDocNode(SDocObject):
                         field_name=field_name,
                         field_value=field_value,
                         field_value_multiline=field_value_multiline,
-                        field_value_references=field_value_references,
                     )
                 )
             else:
@@ -616,7 +548,6 @@ class SDocNode(SDocObject):
                         field_name=field_name,
                         field_value=field_value,
                         field_value_multiline=field_value_multiline,
-                        field_value_references=field_value_references,
                     ),
                 )
             return
@@ -633,7 +564,6 @@ class SDocNode(SDocObject):
                 field_name=field_name,
                 field_value=field_value,
                 field_value_multiline=field_value_multiline,
-                field_value_references=field_value_references,
             )
         ]
         after_field_index = field_index + 1

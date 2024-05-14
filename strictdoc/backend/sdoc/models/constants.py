@@ -27,7 +27,6 @@ from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     FileEntry,
     GrammarElementFieldMultipleChoice,
-    GrammarElementFieldReference,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementFieldTag,
@@ -62,7 +61,6 @@ GRAMMAR_MODELS = [
     GrammarElementFieldSingleChoice,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldTag,
-    GrammarElementFieldReference,
     GrammarElementRelationParent,
     GrammarElementRelationChild,
     GrammarElementRelationFile,

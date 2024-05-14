@@ -37,8 +37,6 @@ class ParseContext:
             None
         )
         self.document_view: Optional[DocumentView] = None
-        self.uses_old_refs_field: bool = False
-        self.at_least_one_relations_field: bool = False
         self.document_has_requirements = False
 
         # FIXME: Plain list of all fragments found in the document.
@@ -212,11 +210,6 @@ class SDocParsingProcessor:
 
     def process_requirement(self, requirement: SDocNode):
         self.parse_context.document_has_requirements = True
-
-        if requirement.ng_uses_old_refs_field:
-            self.parse_context.uses_old_refs_field = True
-        elif "REFS" in requirement.ordered_fields_lookup:
-            self.parse_context.at_least_one_relations_field = True
 
         if self.parse_context.document_config.auto_levels:
             if requirement.ng_resolved_custom_level:

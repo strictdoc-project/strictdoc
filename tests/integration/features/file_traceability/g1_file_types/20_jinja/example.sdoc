@@ -3,24 +3,24 @@ TITLE: Example: Traceability between requirements and source files
 
 [REQUIREMENT]
 UID: REQ-001
-REFS:
-- TYPE: File
-  VALUE: file.jinja2
 TITLE: Whole file reference
 STATEMENT: This requirement references the whole file.
+RELATIONS:
+- TYPE: File
+  VALUE: file.jinja2
 
 [REQUIREMENT]
 UID: REQ-002
-REFS:
-- TYPE: File
-  VALUE: file.jinja2
 TITLE: Source range reference
 STATEMENT: This requirement references a range in the file.
+RELATIONS:
+- TYPE: File
+  VALUE: file.jinja2
 
 [REQUIREMENT]
 UID: REQ-003
-REFS:
-- TYPE: File
-  VALUE: file.jinja2
 TITLE: Source range reference
 STATEMENT: This requirement references a range in the file.
+RELATIONS:
+- TYPE: File
+  VALUE: file.jinja2

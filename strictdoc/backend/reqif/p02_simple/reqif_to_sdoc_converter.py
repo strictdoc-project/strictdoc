@@ -32,7 +32,6 @@ from strictdoc.backend.sdoc.models.reference import (
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
-    GrammarElementFieldReference,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
 )
@@ -199,7 +198,6 @@ class P02_ReqIFToSDocConverter:
                 GrammarElementFieldString,
                 GrammarElementFieldMultipleChoice,
                 GrammarElementFieldSingleChoice,
-                GrammarElementFieldReference,
             ]
         ] = []
         for attribute in spec_object_type.attribute_definitions:
@@ -297,8 +295,6 @@ class P02_ReqIFToSDocConverter:
             document_config.markup = context.import_markup
 
         document.grammar = DocumentGrammar.create_default(document)
-        # FIXME: One day this will go away.
-        document.ng_at_least_one_relations_field = False
         return document
 
     @staticmethod
@@ -426,7 +422,6 @@ class P02_ReqIFToSDocConverter:
                         field_name=sdoc_field_name,
                         field_value=enum_values,
                         field_value_multiline=None,
-                        field_value_references=None,
                     )
                 )
                 continue
@@ -455,7 +450,6 @@ class P02_ReqIFToSDocConverter:
                     field_name=sdoc_field_name,
                     field_value=attribute_value,
                     field_value_multiline=attribute_multiline_value,
-                    field_value_references=None,
                 )
             )
 
@@ -465,10 +459,9 @@ class P02_ReqIFToSDocConverter:
             requirement_type="REQUIREMENT",
             mid=requirement_mid,
             fields=fields,
+            relations=[],
         )
         requirement.ng_level = level
-        # FIXME: One day this will go away.
-        requirement.ng_uses_old_refs_field = False
 
         if foreign_key_id_or_none is not None:
             spec_object_parents = reqif_bundle.get_spec_object_parents(
@@ -492,13 +485,5 @@ class P02_ReqIFToSDocConverter:
                     )
                 )
             if len(parent_refs) > 0:
-                requirement_field = SDocNodeField(
-                    parent=requirement,
-                    field_name="REFS",
-                    field_value=None,
-                    field_value_multiline=None,
-                    field_value_references=parent_refs,
-                )
-                fields.append(requirement_field)
-                requirement.ordered_fields_lookup["REFS"] = [requirement_field]
+                requirement.relations = parent_refs
         return requirement

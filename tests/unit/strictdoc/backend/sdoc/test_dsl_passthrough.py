@@ -457,7 +457,7 @@ def test_060_file_ref():
 TITLE: Test Doc
 
 [REQUIREMENT]
-REFS:
+RELATIONS:
 - TYPE: File
   VALUE: /tmp/sample.cpp
 """.lstrip()
@@ -467,11 +467,11 @@ REFS:
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    requirement = document.section_contents[0]
-    references = requirement.references
-    assert len(references) == 1
+    requirement: SDocNode = document.section_contents[0]
+    relations = requirement.relations
+    assert len(relations) == 1
 
-    reference: FileReference = references[0]
+    reference: FileReference = relations[0]
     assert isinstance(reference, FileReference)
     assert reference.ref_type == ReferenceType.FILE
     assert reference.g_file_entry.g_file_path == "/tmp/sample.cpp"
@@ -646,7 +646,7 @@ TITLE: Test Section
 TAGS: Tag 1, Tag 2, Tag 3
 STATEMENT: System shall do X
 COMMENT: This requirement is very important
-REFS:
+RELATIONS:
 - TYPE: File
   VALUE: /usr/local/bin/hexe
 - TYPE: File
@@ -1092,9 +1092,8 @@ ELEMENTS:
   - TITLE: MY_FIELD
     TYPE: String
     REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference)
-    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
 
 [REQUIREMENT]
 MY_FIELD: >>>

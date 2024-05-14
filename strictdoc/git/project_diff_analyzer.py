@@ -252,7 +252,7 @@ class ProjectTreeDiffStats:
         )
         if other_requirement is None:
             return False
-        for reference_ in other_requirement.references:
+        for reference_ in other_requirement.relations:
             if isinstance(reference_, ParentReqReference):
                 parent_reference: ParentReqReference = assert_cast(
                     reference_, ParentReqReference
@@ -269,7 +269,7 @@ class ProjectTreeDiffStats:
             return self.cache_requirement_to_requirement[requirement]
 
         requirement_parent_uids = set()
-        for parent_ in requirement.references:
+        for parent_ in requirement.relations:
             if isinstance(parent_, ParentReqReference):
                 requirement_parent_uids.add(parent_.ref_uid)
 
@@ -1238,7 +1238,7 @@ class ProjectDiffAnalyzer:
                         else:
                             raise AssertionError("Must not reach here.")
 
-                for reference_ in node.references:
+                for reference_ in node.relations:
                     if isinstance(reference_, ParentReqReference):
                         hasher.update(reference_.ref_uid.encode("utf-8"))
                         if reference_.role is not None:

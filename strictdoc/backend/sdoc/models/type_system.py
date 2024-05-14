@@ -1,5 +1,5 @@
 # mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def"
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
@@ -10,7 +10,6 @@ class RequirementFieldName:
     LEVEL = "LEVEL"
     STATUS = "STATUS"
     TAGS = "TAGS"
-    REFS = "REFS"
     TITLE = "TITLE"
     STATEMENT = "STATEMENT"
     RATIONALE = "RATIONALE"
@@ -18,7 +17,6 @@ class RequirementFieldName:
 
 
 RESERVED_NON_META_FIELDS = [
-    RequirementFieldName.REFS,
     RequirementFieldName.TITLE,
     RequirementFieldName.STATEMENT,
     RequirementFieldName.COMMENT,
@@ -228,57 +226,6 @@ class GrammarElementRelationFile:
         self.relation_type = relation_type
         self.relation_role: Optional[str] = None
         self.mid: MID = MID.create()
-
-
-@auto_described
-class GrammarElementFieldReference(GrammarElementField):
-    def __init__(self, parent, title: str, types: List[str], required: str):
-        super().__init__()
-        self.parent = parent
-        self.gef_type = RequirementFieldType.REFERENCE
-        self.title: str = title
-        self.types: List[str] = types
-        self.required: bool = required == "True"
-
-    def convert_to_relations(
-        self,
-    ) -> List[
-        Union[
-            GrammarElementRelationParent,
-            GrammarElementRelationChild,
-            GrammarElementRelationFile,
-        ]
-    ]:
-        relation_types: List[
-            Union[
-                GrammarElementRelationParent,
-                GrammarElementRelationChild,
-                GrammarElementRelationFile,
-            ]
-        ] = []
-
-        for ref_type in self.types:
-            if ref_type == "ParentReqReference":
-                relation_types.append(
-                    GrammarElementRelationParent(
-                        self.parent, "Parent", relation_role=None
-                    )
-                )
-                continue
-            if ref_type == "ChildReqReference":
-                relation_types.append(
-                    GrammarElementRelationChild(
-                        self.parent, "Child", relation_role=None
-                    )
-                )
-                continue
-            if ref_type == "FileReference":
-                relation_types.append(
-                    GrammarElementRelationFile(self.parent, "File")
-                )
-                continue
-            raise NotImplementedError(ref_type)
-        return relation_types
 
 
 @auto_described

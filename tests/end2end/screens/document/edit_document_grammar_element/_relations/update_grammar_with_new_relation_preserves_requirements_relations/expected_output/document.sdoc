@@ -33,7 +33,7 @@ ELEMENTS:
 UID: SDOC-FMT-GRAMMAR
 TITLE: Grammar
 STATEMENT: The SDoc format shall be based on a fixed grammar.
-REFS:
+RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-HIGH-REQS-MANAGEMENT
 - TYPE: File

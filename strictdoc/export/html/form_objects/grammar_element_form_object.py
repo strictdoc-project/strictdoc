@@ -35,7 +35,6 @@ from strictdoc.server.helpers.turbo import render_turbo_stream
 def is_reserved_field(field_name: str):
     return field_name in (
         RequirementFieldName.UID,
-        RequirementFieldName.REFS,
         RequirementFieldName.TITLE,
         RequirementFieldName.STATEMENT,
         RequirementFieldName.RATIONALE,

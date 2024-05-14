@@ -20,12 +20,10 @@ from strictdoc.backend.sdoc.models.reference import (
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldReference,
     RequirementFieldType,
 )
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.helpers.cast import assert_cast
 
 
 class TAG(Enum):
@@ -160,14 +158,7 @@ class JSONGenerator:
                 "RELATIONS": [],
             }
 
-            refs_field: Optional[GrammarElementFieldReference] = None
             for grammar_field in element_.fields:
-                if grammar_field.title == "REFS":
-                    refs_field = assert_cast(
-                        grammar_field, GrammarElementFieldReference
-                    )
-                    continue
-
                 element_dict["FIELDS"].append(
                     cls._write_grammar_field_type(grammar_field)
                 )
@@ -175,12 +166,6 @@ class JSONGenerator:
             relations: List = element_.relations
             assert len(relations) > 0, relations
 
-            # For backward compatibility, we print RELATIONS from REFS
-            # grammar field if it exists.
-            if not document_grammar.is_default and refs_field is not None:
-                relations = refs_field.convert_to_relations()
-
-            assert len(relations) > 0, relations
             for element_relation_ in relations:
                 relation_dict = {
                     "TYPE": element_relation_.relation_type,
@@ -309,7 +294,6 @@ class JSONGenerator:
 
         element = document.grammar.elements_by_type[node.requirement_type]
 
-        refs_already_printed = False
         for element_field in element.fields:
             field_name = element_field.title
             if field_name not in node.ordered_fields_lookup:
@@ -318,21 +302,13 @@ class JSONGenerator:
             for field in fields:
                 if field.field_value_multiline is not None:
                     node_dict[field_name] = field.field_value_multiline
-                elif field.field_value_references:
-                    node_dict["RELATIONS"] = cls._write_requirement_relations(
-                        field
-                    )
-                    refs_already_printed = True
                 elif field.field_value is not None:
                     node_dict[field_name] = field.field_value
                 else:
                     raise NotImplementedError
 
-        if not refs_already_printed and "REFS" in node.ordered_fields_lookup:
-            requirement_refs_fields = node.ordered_fields_lookup["REFS"]
-            node_dict["RELATIONS"] = cls._write_requirement_relations(
-                requirement_refs_fields[0]
-            )
+        if len(node.relations) > 0:
+            node_dict["RELATIONS"] = cls._write_requirement_relations(node)
 
         return node_dict
 
@@ -371,11 +347,11 @@ class JSONGenerator:
         return output
 
     @staticmethod
-    def _write_requirement_relations(field) -> List:
+    def _write_requirement_relations(node: SDocNode) -> List:
         relations_list = []
 
         reference: Reference
-        for reference in field.field_value_references:
+        for reference in node.relations:
             relation_dict = {
                 "TYPE": reference.ref_type,
             }

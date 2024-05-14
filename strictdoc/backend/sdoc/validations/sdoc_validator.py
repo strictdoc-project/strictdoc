@@ -135,16 +135,7 @@ class SDocValidator:
             grammar_fields_iterator, None
         )
 
-        refs_requirement_field = None
         while True:
-            if (
-                requirement_field is not None
-                and requirement_field.field_name == "REFS"
-            ):
-                refs_requirement_field = requirement_field
-                requirement_field = next(requirement_field_iterator, None)
-            if grammar_field is not None and grammar_field.title == "REFS":
-                grammar_field = next(grammar_fields_iterator, None)
             try:
                 valid_or_not_required_field = (
                     SDocValidator.validate_requirement_field(
@@ -161,7 +152,15 @@ class SDocValidator:
                 # COMMENT can appear multiple times.
                 if requirement_field.field_name == RequirementFieldName.COMMENT:
                     requirement_field = next(requirement_field_iterator, None)
-                    break
+                    if (
+                        requirement_field is not None
+                        and requirement_field.field_name
+                        == RequirementFieldName.COMMENT
+                    ):
+                        continue
+                    else:
+                        grammar_field = next(grammar_fields_iterator, None)
+                        continue
                 grammar_field = next(grammar_fields_iterator, None)
                 requirement_field = next(requirement_field_iterator, None)
             else:
@@ -169,22 +168,16 @@ class SDocValidator:
                 grammar_field = next(grammar_fields_iterator, None)
 
         # REFS validation.
-
-        if refs_requirement_field is not None:
-            requirement_field_value_references = (
-                refs_requirement_field.field_value_references
-            )
-
-            for reference in requirement_field_value_references:
-                if not grammar_element.has_relation_type_role(
-                    relation_type=reference.ref_type,
-                    relation_role=reference.role,
-                ):
-                    raise StrictDocSemanticError.invalid_reference_type_item(
-                        node=requirement,
-                        reference_item=reference,
-                        path_to_sdoc_file=path_to_sdoc_file,
-                    )
+        for reference in requirement.relations:
+            if not grammar_element.has_relation_type_role(
+                relation_type=reference.ref_type,
+                relation_role=reference.role,
+            ):
+                raise StrictDocSemanticError.invalid_reference_type_item(
+                    node=requirement,
+                    reference_item=reference,
+                    path_to_sdoc_file=path_to_sdoc_file,
+                )
 
     @staticmethod
     def validate_requirement_field(

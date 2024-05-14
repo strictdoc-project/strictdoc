@@ -517,7 +517,7 @@ class TraceabilityIndexBuilder:
 
                 # Now it is possible to resolve parents first checking if they
                 # indeed exist.
-                for reference in requirement.references:
+                for reference in requirement.relations:
                     if reference.ref_type == ReferenceType.FILE:
                         d_07_file_traceability_index.create_requirement(
                             requirement

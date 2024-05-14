@@ -38,7 +38,6 @@ def safe_name(dangerous_name):
     return dangerous_name
 
 
-# pylint: disable=too-many-instance-attributes
 class ExcelToSDocConverter:
     @staticmethod
     # optional argument title is present for external scripts to assign a title
@@ -202,29 +201,19 @@ class ExcelToSDocConverter:
                         field_name=name,
                         field_value=None,
                         field_value_multiline=value,
-                        field_value_references=None,
                     )
                 ]
         if parent_uid is not None:
             reference = ParentReqReference(
                 template_requirement, parent_uid, role=None
             )
-
-            requirement_field = SDocNodeField(
-                parent=template_requirement,
-                field_name="REFS",
-                field_value=None,
-                field_value_multiline=None,
-                field_value_references=[reference],
-            )
-            template_requirement.ordered_fields_lookup["REFS"] = [
-                requirement_field
-            ]
+            template_requirement.relations = [reference]
         requirement = SDocNode(
             parent=template_requirement.parent,
             requirement_type=template_requirement.requirement_type,
             mid=None,
             fields=list(template_requirement.enumerate_fields()),
+            relations=template_requirement.relations,
         )
 
         return requirement

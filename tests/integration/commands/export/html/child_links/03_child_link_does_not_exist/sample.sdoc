@@ -16,7 +16,7 @@ ELEMENTS:
 
 [REQUIREMENT]
 UID: REQ-1
-REFS:
+STATEMENT: Sample statement.
+RELATIONS:
 - TYPE: Child
   VALUE: REQ-CHILD-1
-STATEMENT: Sample statement.

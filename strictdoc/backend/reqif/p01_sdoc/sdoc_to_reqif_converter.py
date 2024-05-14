@@ -38,15 +38,14 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
-    GrammarElementFieldReference,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     ReferenceType,
-    RequirementFieldName,
 )
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
@@ -206,24 +205,6 @@ class P01_SDocToReqIFObjectConverter:
                         )
                         data_types.append(data_type)
                         data_types_lookup[field.title] = data_type.identifier
-                    elif isinstance(field, GrammarElementFieldReference):
-                        # TODO: implement correct reqIF Encoding for
-                        #  GrammarElementFieldReference. Treat as
-                        #  GrammarElementFieldString for now.
-                        if (
-                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                            in data_types_lookup
-                        ):
-                            continue
-                        data_type = ReqIFDataTypeDefinitionString.create(
-                            identifier=(
-                                StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                            ),
-                        )
-                        data_types.append(data_type)
-                        data_types_lookup[
-                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                        ] = data_type.identifier
                     else:
                         raise NotImplementedError(field) from None
 
@@ -562,17 +543,6 @@ class P01_SDocToReqIFObjectConverter:
 
         attributes: List[SpecObjectAttribute] = []
         for field in requirement.fields_as_parsed:
-            if field.field_name == RequirementFieldName.REFS:
-                parent_references: List[str] = []
-                for reference in field.field_value_references:
-                    if reference.ref_type != ReferenceType.PARENT:
-                        continue
-                    parent_references.append(reference.ref_uid)
-                    assert requirement.reserved_uid is not None
-                    context.map_uid_to_parent_uids[requirement.reserved_uid] = (
-                        parent_references
-                    )
-                continue
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
                 data_type_ref = data_types_lookup[field.field_name]
@@ -649,6 +619,20 @@ class P01_SDocToReqIFObjectConverter:
             else:
                 raise NotImplementedError(grammar_field) from None
             attributes.append(attribute)
+
+        if requirement.reserved_uid is not None:
+            parent_references: List[str] = []
+            for reference in requirement.relations:
+                if reference.ref_type != ReferenceType.PARENT:
+                    continue
+                parent_reference: ParentReqReference = assert_cast(
+                    reference, ParentReqReference
+                )
+                parent_references.append(parent_reference.ref_uid)
+
+            context.map_uid_to_parent_uids[requirement.reserved_uid] = (
+                parent_references
+            )
 
         spec_object_type: ReqIFSpecObjectType = (
             context.map_grammar_node_tags_to_spec_object_type[
@@ -728,22 +712,6 @@ class P01_SDocToReqIFObjectConverter:
                         long_name=field.title,
                         multi_valued=True,
                     )
-                elif isinstance(field, GrammarElementFieldReference):
-                    # TODO: implement correct reqIF Encoding for
-                    #  GrammarElementFieldReference. Treat as
-                    #  GrammarElementFieldString for now.
-                    field_title = field.title
-                    if field_title in SDocRequirementReservedField.SET:
-                        field_title = SDOC_TO_REQIF_FIELD_MAP[field_title]
-                    attribute = SpecAttributeDefinition.create(
-                        attribute_type=SpecObjectAttributeType.STRING,
-                        identifier=field_title,
-                        datatype_definition=(
-                            StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                        ),
-                        long_name=field_title,
-                    )
-
                 else:
                     raise NotImplementedError(field) from None
                 attribute_definitions.append(attribute)

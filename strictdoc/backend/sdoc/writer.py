@@ -2,7 +2,7 @@
 import os.path
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -22,7 +22,6 @@ from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     FileEntry,
     GrammarElementFieldMultipleChoice,
-    GrammarElementFieldReference,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementFieldTag,
@@ -212,13 +211,7 @@ class SDWriter:
                     output += "- TAG: "
                     output += element.tag
                     output += "\n  FIELDS:\n"
-                    refs_field: Optional[GrammarElementFieldReference] = None
                     for grammar_field in element.fields:
-                        if grammar_field.title == "REFS":
-                            refs_field = assert_cast(
-                                grammar_field, GrammarElementFieldReference
-                            )
-                            continue
                         output += SDWriter._print_grammar_field_type(
                             grammar_field
                         )
@@ -226,16 +219,8 @@ class SDWriter:
                     relations: List = element.relations
                     assert len(relations) > 0, relations
 
-                    # For backward compatibility, we print RELATIONS from REFS
-                    # grammar field if it exists.
-                    if (
-                        not document_grammar.is_default
-                        and refs_field is not None
-                    ):
-                        relations = refs_field.convert_to_relations()
                     output += "  RELATIONS:\n"
 
-                    assert len(relations) > 0, relations
                     for element_relation in relations:
                         output += (
                             f"  - TYPE: {element_relation.relation_type}\n"
@@ -397,7 +382,6 @@ class SDWriter:
             section_content.requirement_type
         ]
 
-        refs_already_printed = False
         for element_field in element.fields:
             field_name = element_field.title
             if field_name not in section_content.ordered_fields_lookup:
@@ -413,11 +397,6 @@ class SDWriter:
                         output += "\n"
                     output += "<<<"
                     output += "\n"
-                elif field.field_value_references:
-                    output += SDWriter._print_requirement_refs(
-                        section_content, field
-                    )
-                    refs_already_printed = True
                 elif field.field_value is not None:
                     if len(field.field_value) > 0:
                         output += f"{field_name}: "
@@ -429,16 +408,7 @@ class SDWriter:
                     output += f"{field_name}: "
                     output += "\n"
 
-        if (
-            not refs_already_printed
-            and "REFS" in section_content.ordered_fields_lookup
-        ):
-            requirement_refs_fields = section_content.ordered_fields_lookup[
-                "REFS"
-            ]
-            output += SDWriter._print_requirement_refs(
-                section_content, requirement_refs_fields[0]
-            )
+        output += SDWriter._print_requirement_relations(section_content)
 
         return output
 
@@ -494,11 +464,6 @@ class SDWriter:
             output += ")"
         elif isinstance(grammar_field, GrammarElementFieldTag):
             output += RequirementFieldType.TAG
-        elif isinstance(grammar_field, GrammarElementFieldReference):
-            output += RequirementFieldType.REFERENCE
-            output += "("
-            output += ", ".join(grammar_field.types)
-            output += ")"
         else:
             raise NotImplementedError from None
 
@@ -550,19 +515,16 @@ class SDWriter:
         return output
 
     @classmethod
-    def _print_requirement_refs(cls, requirement: SDocNode, field):
-        output = ""
-        if (
-            requirement.ng_document_reference is not None
-            and requirement.document.ng_at_least_one_relations_field
-        ) or not requirement.ng_uses_old_refs_field:
-            output += "RELATIONS:"
-        else:
-            output += "REFS:"
-        output += "\n"
+    def _print_requirement_relations(cls, requirement: SDocNode):
+        assert isinstance(requirement, SDocNode)
+
+        if len(requirement.relations) == 0:
+            return ""
+
+        output = "RELATIONS:\n"
 
         reference: Reference
-        for reference in field.field_value_references:
+        for reference in requirement.relations:
             output += "- TYPE: "
             output += reference.ref_type
             output += "\n"

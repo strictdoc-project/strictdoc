@@ -8,9 +8,6 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: True
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference)
-    REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: True
@@ -33,19 +30,21 @@ PRIORITY: HIGH
 
 [REQUIREMENT]
 UID: REQ-002
-REFS:
-- TYPE: Parent
-  VALUE: REQ-001
 TITLE: Title #2
 STATEMENT: Statement #2
 OWNER: Owner #2
 PRIORITY: MEDIUM
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-001
 
 [REQUIREMENT]
 UID: REQ-003
-REFS:
-- TYPE: Parent
-  VALUE: REQ-002
 TITLE: Title #3
 STATEMENT: Statement #3
 PRIORITY: LOW
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-001
+- TYPE: Parent
+  VALUE: REQ-002

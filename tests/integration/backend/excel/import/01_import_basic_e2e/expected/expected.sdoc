@@ -95,6 +95,6 @@ setup the DUT in jig A-1 and confimr the statement is true under all conditions
 CRITICALITY: >>>
 high
 <<<
-REFS:
+RELATIONS:
 - TYPE: Parent
   VALUE: A-1

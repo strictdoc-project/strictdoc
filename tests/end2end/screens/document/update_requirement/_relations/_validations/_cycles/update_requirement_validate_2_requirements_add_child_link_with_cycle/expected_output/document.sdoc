@@ -34,6 +34,6 @@ TITLE: Requirement title #2
 STATEMENT: >>>
 Requirement statement #2.
 <<<
-REFS:
+RELATIONS:
 - TYPE: Child
   VALUE: REQ-001

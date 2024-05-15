@@ -3,7 +3,7 @@ TITLE: Doc 2
 
 [REQUIREMENT]
 UID: REQ-002
-REFS:
+STATEMENT: Hello world
+RELATIONS:
 - TYPE: Parent
   VALUE: REQ-001
-STATEMENT: Hello world

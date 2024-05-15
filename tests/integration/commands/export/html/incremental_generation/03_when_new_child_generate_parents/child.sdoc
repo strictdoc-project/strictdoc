@@ -3,8 +3,8 @@ TITLE: Child doc
 
 [REQUIREMENT]
 UID: REQ-CHILD
-REFS:
-- TYPE: Parent
-  VALUE: REQ-PARENT
 TITLE: Child Req
 STATEMENT: Child Req Statement
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-PARENT

@@ -44,7 +44,7 @@ TITLE: Requirement title #3
 STATEMENT: >>>
 Requirement statement #3.
 <<<
-REFS:
+RELATIONS:
 - TYPE: Parent
   VALUE: REQ-001
   ROLE: Refines

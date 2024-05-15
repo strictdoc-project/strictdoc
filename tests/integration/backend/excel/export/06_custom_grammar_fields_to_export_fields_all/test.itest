@@ -1,5 +1,5 @@
 ; Export all available fields
-RUN: %strictdoc export --formats=excel --fields="UID","REFS","TITLE","STATEMENT","OWNER","PRIORITY" --output-dir=Output "%S/input.sdoc"
+RUN: %strictdoc export --formats=excel --fields="UID","RELATIONS","TITLE","STATEMENT","OWNER","PRIORITY" --output-dir=Output "%S/input.sdoc"
 
 RUN: %check_exists --file "%S/Output/excel/input.xlsx"
 

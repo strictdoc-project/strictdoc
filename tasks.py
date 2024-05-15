@@ -309,6 +309,7 @@ def test_integration(
     focus=None,
     debug=False,
     no_parallelization=False,
+    fail_first=False,
     strictdoc=None,
     html2pdf=False,
     environment=ToxEnvironment.CHECK,
@@ -324,6 +325,7 @@ def test_integration(
 
     debug_opts = "-vv --show-all" if debug else ""
     focus_or_none = f"--filter {focus}" if focus else ""
+    fail_first_argument = "--max-failures 1" if fail_first else ""
 
     # HTML2PDF tests are running Chrome Driver which does not seem to be
     # parallelizable, or at least not in the way StrictDoc uses it.
@@ -348,6 +350,7 @@ def test_integration(
         -v
         {debug_opts}
         {focus_or_none}
+        {fail_first_argument}
         {parallelize_opts}
         {test_folder}
     """

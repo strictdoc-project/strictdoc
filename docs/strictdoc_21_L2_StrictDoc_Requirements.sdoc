@@ -274,9 +274,6 @@ RELATIONS:
 - TYPE: File
   FORMAT: Sourcecode
   VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_relations.py
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_relations_migrate_from_refs.py
 - TYPE: Parent
   VALUE: SDOC-SSS-94
 

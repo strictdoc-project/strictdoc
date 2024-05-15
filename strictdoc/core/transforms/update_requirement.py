@@ -4,11 +4,10 @@ from dataclasses import dataclass
 from typing import List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
-from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 from strictdoc.core.traceability_index import (
     GraphLinkType,
     SDocNodeConnections,
@@ -84,22 +83,10 @@ class UpdateRequirementTransform:
         references: List[Reference] = form_object.get_requirement_relations(
             requirement
         )
-
         if len(references) > 0:
-            requirement.ordered_fields_lookup[RequirementFieldName.REFS] = [
-                SDocNodeField(
-                    parent=requirement,
-                    field_name=RequirementFieldName.REFS,
-                    field_value=None,
-                    field_value_multiline=None,
-                    field_value_references=references,
-                )
-            ]
-            requirement.references = references
+            requirement.relations = references
         else:
-            if RequirementFieldName.REFS in requirement.ordered_fields_lookup:
-                del requirement.ordered_fields_lookup[RequirementFieldName.REFS]
-            requirement.references = []
+            requirement.relations = []
 
         for document_ in traceability_index.document_tree.document_list:
             document_.ng_needs_generation = False

@@ -372,7 +372,7 @@ class SPDXGenerator:
                     lookup_uid_to_requirement_snippet[requirement.reserved_uid]
                 )
 
-                for reference_ in requirement.references:
+                for reference_ in requirement.relations:
                     if isinstance(reference_, ParentReqReference):
                         parent_requirement_snippet: Snippet = (
                             lookup_uid_to_requirement_snippet[

@@ -43,7 +43,6 @@ class SDocObjectFactory:
                     field_name=RequirementFieldName.UID,
                     field_value=uid,
                     field_value_multiline=None,
-                    field_value_references=None,
                 )
             )
         if level:
@@ -54,7 +53,6 @@ class SDocObjectFactory:
                     field_name=RequirementFieldName.LEVEL,
                     field_value=level,
                     field_value_multiline=None,
-                    field_value_references=None,
                 )
             )
         if title is not None:
@@ -64,7 +62,6 @@ class SDocObjectFactory:
                     field_name=RequirementFieldName.TITLE,
                     field_value=title,
                     field_value_multiline=None,
-                    field_value_references=None,
                 )
             )
         if statement:
@@ -74,7 +71,6 @@ class SDocObjectFactory:
                     field_name=RequirementFieldName.STATEMENT,
                     field_value=statement,
                     field_value_multiline=None,
-                    field_value_references=None,
                 )
             )
         if statement_multiline is not None:
@@ -87,7 +83,6 @@ class SDocObjectFactory:
                     field_name=RequirementFieldName.STATEMENT,
                     field_value=None,
                     field_value_multiline=statement_multiline,
-                    field_value_references=None,
                 )
             )
         if rationale:
@@ -97,7 +92,6 @@ class SDocObjectFactory:
                     field_name=RequirementFieldName.RATIONALE,
                     field_value=rationale,
                     field_value_multiline=None,
-                    field_value_references=None,
                 )
             )
         if rationale_multiline:
@@ -107,7 +101,6 @@ class SDocObjectFactory:
                     field_name=RequirementFieldName.RATIONALE,
                     field_value=None,
                     field_value_multiline=rationale_multiline,
-                    field_value_references=None,
                 )
             )
         if tags is not None:
@@ -118,7 +111,6 @@ class SDocObjectFactory:
                     field_name=RequirementFieldName.TAGS,
                     field_value=tags,
                     field_value_multiline=None,
-                    field_value_references=None,
                 )
             )
         if comments is not None:
@@ -131,7 +123,6 @@ class SDocObjectFactory:
                         field_name=RequirementFieldName.COMMENT,
                         field_value=None,
                         field_value_multiline=comment,
-                        field_value_references=None,
                     )
                 )
         requirement = SDocNode(
@@ -139,6 +130,7 @@ class SDocObjectFactory:
             requirement_type=requirement_type,
             mid=None,
             fields=fields,
+            relations=[],
         )
         requirement.ng_document_reference = DocumentReference()
         if isinstance(parent, SDocDocument):

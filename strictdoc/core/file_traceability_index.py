@@ -192,7 +192,7 @@ class FileTraceabilityIndex:
             return
 
         ref: Reference
-        for ref in requirement.references:
+        for ref in requirement.relations:
             if isinstance(ref, FileReference):
                 file_reference: FileReference = ref
                 requirements = self.map_paths_to_reqs.setdefault(

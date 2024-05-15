@@ -1396,7 +1396,7 @@ In some very special cases, it may be desired to also use the Child relations. F
     STATEMENT: >>>
     This is a compliance statement regarding the Standard X's STANDARD-001 requirement...
     <<<
-    REFS:
+    RELATIONS:
     - TYPE: Parent
       VALUE: STANDARD-001
     - TYPE: Child

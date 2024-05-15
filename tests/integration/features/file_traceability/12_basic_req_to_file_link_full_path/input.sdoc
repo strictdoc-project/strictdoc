@@ -5,8 +5,8 @@ OPTIONS:
 
 [REQUIREMENT]
 UID: REQ-001
-REFS:
-- TYPE: File
-  VALUE: file.py
 TITLE: Requirement Title
 STATEMENT: Requirement Statement
+RELATIONS:
+- TYPE: File
+  VALUE: file.py

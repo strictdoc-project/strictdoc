@@ -22,7 +22,7 @@ ELEMENTS:
 STATEMENT: >>>
 This is a statement.
 <<<
-REFS:
+RELATIONS:
 - TYPE: Parent
   VALUE: ID-001
 """.lstrip()
@@ -58,7 +58,7 @@ ELEMENTS:
 STATEMENT: >>>
 This is a statement.
 <<<
-REFS:
+RELATIONS:
 - TYPE: Parent
   VALUE: ID-001
   ROLE: Refines

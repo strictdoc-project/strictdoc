@@ -27,7 +27,10 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.reference import ParentReqReference
+from strictdoc.backend.sdoc.models.reference import (
+    ParentReqReference,
+    Reference,
+)
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
@@ -389,7 +392,6 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                         field_name=field_name,
                         field_value=enum_values,
                         field_value_multiline=None,
-                        field_value_references=None,
                     )
                 )
                 continue
@@ -422,7 +424,6 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     field_name=field_name,
                     field_value=attribute_value,
                     field_value_multiline=attribute_multiline_value,
-                    field_value_references=None,
                 )
             )
         requirement = SDocNode(
@@ -430,6 +431,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             requirement_type="REQUIREMENT",
             mid=None,
             fields=fields,
+            relations=[],
         )
         requirement.ng_level = level
 
@@ -437,7 +439,7 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             spec_object_parents = reqif_bundle.get_spec_object_parents(
                 spec_object.identifier
             )
-            parent_refs = []
+            parent_refs: List[Reference] = []
             for spec_object_parent in spec_object_parents:
                 parent_spec_object_parent = (
                     reqif_bundle.lookup.get_spec_object_by_ref(
@@ -455,13 +457,5 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     )
                 )
             if len(parent_refs) > 0:
-                requirement_field = SDocNodeField(
-                    parent=requirement,
-                    field_name="REFS",
-                    field_value=None,
-                    field_value_multiline=None,
-                    field_value_references=parent_refs,
-                )
-                fields.append(requirement_field)
-                requirement.ordered_fields_lookup["REFS"] = [requirement_field]
+                requirement.relations = parent_refs
         return requirement

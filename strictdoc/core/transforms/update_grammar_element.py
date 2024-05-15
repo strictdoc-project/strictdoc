@@ -134,20 +134,15 @@ class UpdateGrammarElementCommand:
                 registered_relation_types.add(
                     (relation.relation_type, relation.relation_role)
                 )
-            if "REFS" in requirement.ordered_fields_lookup:
-                existing_refs_field = requirement.ordered_fields_lookup["REFS"][
-                    0
-                ]
+            if len(requirement.relations) > 0:
                 new_relations = []
-                for (
-                    requirement_relation_
-                ) in existing_refs_field.field_value_references:
+                for requirement_relation_ in requirement.relations:
                     if (
                         requirement_relation_.ref_type,
                         requirement_relation_.role,
                     ) in registered_relation_types:
                         new_relations.append(requirement_relation_)
-                new_ordered_fields_lookup["REFS"] = [existing_refs_field]
+                requirement.relations = new_relations
             requirement.ordered_fields_lookup = new_ordered_fields_lookup
 
         return True

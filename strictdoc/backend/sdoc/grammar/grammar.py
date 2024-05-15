@@ -151,6 +151,10 @@ SDocNode[noskipws]:
   '[' !SDocCompositeNodeTagName requirement_type = RequirementType ']' '\n'
   ('MID: ' mid = SingleLineString '\n')?
   fields *= SDocNodeField
+  (
+    'RELATIONS:' '\n'
+    (relations += Reference)
+  )?
 ;
 
 SDocCompositeNodeTagName[noskipws]:
@@ -158,10 +162,6 @@ SDocCompositeNodeTagName[noskipws]:
 ;
 
 SDocNodeField[noskipws]:
-  (
-    (field_name = 'REFS' | field_name = 'RELATIONS') ':' '\n'
-    (field_value_references += Reference)
-  ) |
   (
     field_name = FieldName ':'
     (
@@ -177,6 +177,10 @@ SDocCompositeNode[noskipws]:
   ('MID: ' mid = SingleLineString '\n')?
 
   fields *= SDocNodeField
+  (
+    'RELATIONS:' '\n'
+    (relations += Reference)
+  )?
 
   requirements *= SpaceThenRequirement
 

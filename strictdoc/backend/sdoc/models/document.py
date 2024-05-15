@@ -49,8 +49,6 @@ class SDocDocument:
 
         self.ng_level: int = 0
         self.ng_needs_generation = False
-        self.ng_uses_old_refs_field: bool = False
-        self.ng_at_least_one_relations_field: bool = False
         self.ng_has_requirements = False
 
         self.meta: Optional[DocumentMeta] = None

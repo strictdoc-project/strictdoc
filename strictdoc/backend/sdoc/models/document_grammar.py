@@ -1,5 +1,4 @@
 # mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,union-attr,type-arg"
-import sys
 from collections import OrderedDict
 from typing import Dict, List, Optional, Set, Union
 
@@ -7,17 +6,14 @@ from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
-    GrammarElementFieldReference,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
-    GrammarReferenceType,
     RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
-from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 
 
@@ -54,7 +50,6 @@ class GrammarElement:
                 GrammarElementFieldString,
                 GrammarElementFieldMultipleChoice,
                 GrammarElementFieldSingleChoice,
-                GrammarElementFieldReference,
             ]
         ],
         relations: List,
@@ -66,7 +61,6 @@ class GrammarElement:
                 GrammarElementFieldString,
                 GrammarElementFieldMultipleChoice,
                 GrammarElementFieldSingleChoice,
-                GrammarElementFieldReference,
             ]
         ] = fields
         self.relations: List[
@@ -84,25 +78,6 @@ class GrammarElement:
         for field in fields:
             fields_map[field.title] = field
         self.fields_map: Dict[str, GrammarElementField] = fields_map
-
-        if "REFS" in fields_map:
-            field = fields_map["REFS"]
-            if not isinstance(field, GrammarElementFieldReference):
-                print(  # noqa: T201
-                    "error: REFS grammar field can only be of Reference type. "
-                    "Furthermore, the REFS field is deprecated in favor of "
-                    'the new RELATIONS field. See the section "Custom grammars" '
-                    "in the user guide."
-                )
-                sys.exit(1)
-
-            refs_field: GrammarElementFieldReference = assert_cast(
-                fields_map["REFS"], GrammarElementFieldReference
-            )
-            self.relations = refs_field.convert_to_relations()
-            del fields_map["REFS"]
-            self.fields.remove(refs_field)
-
         self.mid: MID = MID.create()
 
     @staticmethod
@@ -213,7 +188,6 @@ class DocumentGrammar:
                 GrammarElementFieldString,
                 GrammarElementFieldSingleChoice,
                 GrammarElementFieldMultipleChoice,
-                GrammarElementFieldReference,
             ]
         ] = [
             GrammarElementFieldString(
@@ -262,15 +236,6 @@ class DocumentGrammar:
                 parent=None,
                 title=RequirementFieldName.COMMENT,
                 human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldReference(
-                parent=None,
-                title=RequirementFieldName.REFS,
-                types=[
-                    GrammarReferenceType.PARENT_REQ_REFERENCE,
-                    GrammarReferenceType.FILE_REFERENCE,
-                ],
                 required="False",
             ),
         ]

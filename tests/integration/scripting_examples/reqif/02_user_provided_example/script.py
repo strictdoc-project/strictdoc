@@ -455,7 +455,6 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                         field_name=sdoc_field_name,
                         field_value=enum_values,
                         field_value_multiline=None,
-                        field_value_references=None,
                     )
                 )
                 continue
@@ -481,11 +480,10 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     field_name=sdoc_field_name,
                     field_value=attribute_value,
                     field_value_multiline=attribute_multiline_value,
-                    field_value_references=None,
                 )
             )
         requirement = SDocNode(
-            parent=parent_section, requirement_type="REQUIREMENT", mid=None, fields=fields
+            parent=parent_section, requirement_type="REQUIREMENT", mid=None, fields=fields, relations=[]
         )
 
         if foreign_key_id_or_none is not None:
@@ -517,7 +515,7 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     field_value_references=parent_refs,
                 )
                 fields.append(requirement_field)
-                requirement.ordered_fields_lookup["REFS"] = [requirement_field]
+                requirement.relations = parent_refs
         return requirement
 
 

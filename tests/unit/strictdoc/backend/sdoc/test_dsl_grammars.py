@@ -23,9 +23,6 @@ ELEMENTS:
   - TITLE: TAGS
     TYPE: String
     REQUIRED: False
-  - TITLE: REFS
-    TYPE: Reference(ParentReqReference, FileReference)
-    REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False

@@ -7,18 +7,18 @@ TITLE: Hello world doc
 
 [REQUIREMENT]
 UID: REQ-001
-REFS:
+RELATIONS:
 - TYPE: File
   VALUE: src1/test1.py
 
 [REQUIREMENT]
 UID: REQ-002
-REFS:
+RELATIONS:
 - TYPE: File
   VALUE: src2/test2.py
 
 [REQUIREMENT]
 UID: REQ-003
-REFS:
+RELATIONS:
 - TYPE: File
   VALUE: src3/test3.py

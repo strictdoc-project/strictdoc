@@ -1,5 +1,6 @@
 NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
 NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
+NEGATIVE_RELATIONS = "(?!^RELATIONS)"
 
 STRICTDOC_BASIC_TYPE_SYSTEM = rf"""
 BooleanChoice[noskipws]:
@@ -15,7 +16,7 @@ ChoiceOptionXs[noskipws]:
 ;
 
 FieldName[noskipws]:
-  /[A-Z]+[A-Z_]*/
+  /{NEGATIVE_RELATIONS}[A-Z]+[A-Z_]*/
 ;
 
 // According to the Strict Grammar Rule #3, both SingleLineString and

@@ -101,7 +101,6 @@ def test_04_meta_multilines_not_nones():
             field_name="META_TEST_FIELD",
             field_value=None,
             field_value_multiline=test_value,
-            field_value_references=None,
         )
     ]
     meta_fields = list(requirement.enumerate_meta_fields())

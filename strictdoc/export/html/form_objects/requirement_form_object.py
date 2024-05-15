@@ -449,10 +449,6 @@ class RequirementFormObject(ErrorObject):
         title_field_idx = fields_names.index("TITLE")
 
         for field_idx, field_name in enumerate(fields_names):
-            # First handle REFS fields in a special way.
-            if field_name == "REFS":
-                continue
-
             # Handle all other fields in a general way.
             field = element.fields_map[field_name]
 
@@ -477,43 +473,34 @@ class RequirementFormObject(ErrorObject):
                 )
                 form_fields.append(form_field)
 
-        if "REFS" in requirement.ordered_fields_lookup:
-            for requirement_field in requirement.ordered_fields_lookup["REFS"]:
-                reference_value: Reference
-                for reference_value in requirement_field.field_value_references:
-                    if isinstance(reference_value, ParentReqReference):
-                        parent_reference: ParentReqReference = reference_value
-                        form_ref_field = RequirementReferenceFormField(
-                            field_mid=parent_reference.mid,
-                            field_type=(
-                                RequirementReferenceFormField.FieldType.PARENT
-                            ),
-                            field_value=parent_reference.ref_uid,
-                            field_role=parent_reference.role,
-                        )
-                        form_refs_fields.append(form_ref_field)
-                    elif isinstance(reference_value, ChildReqReference):
-                        child_reference: ChildReqReference = reference_value
-                        form_ref_field = RequirementReferenceFormField(
-                            field_mid=child_reference.mid,
-                            field_type=(
-                                RequirementReferenceFormField.FieldType.CHILD
-                            ),
-                            field_value=child_reference.ref_uid,
-                            field_role=child_reference.role,
-                        )
-                        form_refs_fields.append(form_ref_field)
-                    elif isinstance(reference_value, FileReference):
-                        child_reference: FileReference = reference_value
-                        form_ref_field = RequirementReferenceFormField(
-                            field_mid=child_reference.mid,
-                            field_type=(
-                                RequirementReferenceFormField.FieldType.FILE
-                            ),
-                            field_value=child_reference.get_posix_path(),
-                            field_role=child_reference.role,
-                        )
-                        form_refs_fields.append(form_ref_field)
+        for reference_value in requirement.relations:
+            if isinstance(reference_value, ParentReqReference):
+                parent_reference: ParentReqReference = reference_value
+                form_ref_field = RequirementReferenceFormField(
+                    field_mid=parent_reference.mid,
+                    field_type=(RequirementReferenceFormField.FieldType.PARENT),
+                    field_value=parent_reference.ref_uid,
+                    field_role=parent_reference.role,
+                )
+                form_refs_fields.append(form_ref_field)
+            elif isinstance(reference_value, ChildReqReference):
+                child_reference: ChildReqReference = reference_value
+                form_ref_field = RequirementReferenceFormField(
+                    field_mid=child_reference.mid,
+                    field_type=(RequirementReferenceFormField.FieldType.CHILD),
+                    field_value=child_reference.ref_uid,
+                    field_role=child_reference.role,
+                )
+                form_refs_fields.append(form_ref_field)
+            elif isinstance(reference_value, FileReference):
+                child_reference: FileReference = reference_value
+                form_ref_field = RequirementReferenceFormField(
+                    field_mid=child_reference.mid,
+                    field_type=(RequirementReferenceFormField.FieldType.FILE),
+                    field_value=child_reference.get_posix_path(),
+                    field_role=child_reference.role,
+                )
+                form_refs_fields.append(form_ref_field)
         return RequirementFormObject(
             is_new=False,
             element_type=requirement.requirement_type,

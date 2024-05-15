@@ -12,7 +12,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
-    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -140,22 +139,13 @@ class SPDXToSDocConverter:
                         to_element_sdoc.reserved_uid is not None
                     ), to_element_sdoc
 
-                    from_element_sdoc.references.append(
+                    from_element_sdoc.relations.append(
                         ChildReqReference(
                             parent=from_element_sdoc,
                             ref_uid=to_element_sdoc.reserved_uid,
                             role="CONTAINS",
                         )
                     )
-                    from_element_sdoc.ordered_fields_lookup["REFS"] = [
-                        SDocNodeField(
-                            parent=from_element_sdoc,
-                            field_name="REFS",
-                            field_value=None,
-                            field_value_multiline=None,
-                            field_value_references=from_element_sdoc.references,
-                        )
-                    ]
                 if (
                     relationship_.relationship_type
                     == RelationshipType.REQUIREMENT_FOR
@@ -176,22 +166,13 @@ class SPDXToSDocConverter:
                         to_element_sdoc.reserved_uid is not None
                     ), to_element_sdoc
 
-                    from_element_sdoc.references.append(
+                    from_element_sdoc.relations.append(
                         ParentReqReference(
                             parent=from_element_sdoc,
                             ref_uid=to_element_sdoc.reserved_uid,
                             role="REQUIREMENT_FOR",
                         )
                     )
-                    from_element_sdoc.ordered_fields_lookup["REFS"] = [
-                        SDocNodeField(
-                            parent=from_element_sdoc,
-                            field_name="REFS",
-                            field_value=None,
-                            field_value_multiline=None,
-                            field_value_references=from_element_sdoc.references,
-                        )
-                    ]
         return document
 
     @staticmethod
@@ -201,6 +182,7 @@ class SPDXToSDocConverter:
             requirement_type="SPDX_PACKAGE",
             mid=None,
             fields=[],
+            relations=[],
             requirements=None,
         )
         requirement.ng_document_reference = DocumentReference()
@@ -231,6 +213,7 @@ class SPDXToSDocConverter:
             requirement_type="SPDX_PACKAGE",
             mid=None,
             fields=[],
+            relations=[],
             requirements=None,
         )
         requirement.ng_document_reference = DocumentReference()
@@ -271,6 +254,7 @@ class SPDXToSDocConverter:
             requirement_type="SPDX_FILE",
             mid=None,
             fields=fields,
+            relations=[],
             requirements=None,
         )
         requirement.ng_document_reference = DocumentReference()
@@ -294,7 +278,7 @@ class SPDXToSDocConverter:
             field_name="TITLE", form_field_index=0, value=file.name
         )
 
-        requirement.references = [
+        requirement.relations = [
             FileReference(
                 parent=requirement,
                 g_file_entry=FileEntry(
@@ -303,15 +287,6 @@ class SPDXToSDocConverter:
                     g_file_path=file.name,
                     g_line_range=None,
                 ),
-            )
-        ]
-        requirement.ordered_fields_lookup["REFS"] = [
-            SDocNodeField(
-                parent=requirement,
-                field_name="REFS",
-                field_value=None,
-                field_value_multiline=None,
-                field_value_references=requirement.references,
             )
         ]
 
@@ -330,6 +305,7 @@ class SPDXToSDocConverter:
             requirement_type="SPDX_SNIPPET",
             mid=None,
             fields=fields,
+            relations=[],
             requirements=None,
         )
         requirement.ng_document_reference = DocumentReference()
@@ -358,7 +334,7 @@ class SPDXToSDocConverter:
         ]
         spdx_file = spdx_container.map_spdx_ref_to_objects[spdx_file_id]
 
-        requirement.references = [
+        requirement.relations = [
             FileReference(
                 parent=requirement,
                 g_file_entry=FileEntry(
@@ -367,15 +343,6 @@ class SPDXToSDocConverter:
                     g_file_path=spdx_file.name,
                     g_line_range=f"{snippet.line_range.begin}, {snippet.line_range.end - 1}",
                 ),
-            )
-        ]
-        requirement.ordered_fields_lookup["REFS"] = [
-            SDocNodeField(
-                parent=requirement,
-                field_name="REFS",
-                field_value=None,
-                field_value_multiline=None,
-                field_value_references=requirement.references,
             )
         ]
 

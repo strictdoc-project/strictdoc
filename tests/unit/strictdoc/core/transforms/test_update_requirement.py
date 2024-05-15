@@ -1,3 +1,7 @@
+from strictdoc.backend.sdoc.models.type_system import (
+    GrammarElementRelationChild,
+    GrammarElementRelationParent,
+)
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
@@ -16,7 +20,7 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
     document_builder = DocumentBuilder()
     requirement1 = document_builder.add_requirement("REQ-001")
     requirement2 = document_builder.add_requirement("REQ-002")
-    assert len(requirement2.references) == 0
+    assert len(requirement2.relations) == 0
 
     document_1 = document_builder.build()
 
@@ -62,7 +66,7 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
     )
     update_command.perform()
 
-    assert len(requirement2.references) == 1
+    assert len(requirement2.relations) == 1
     requirement2_parents = list(
         traceability_index.get_parent_relations_with_roles(requirement2)
     )
@@ -81,10 +85,14 @@ def test_02_single_document_add_second_parent_relation_with_role():
         target_requirement_id="REQ-001",
         role="Refines",
     )
-    assert len(requirement2.references) == 1
+    assert len(requirement2.relations) == 1
 
     document_1 = document_builder.build()
-
+    document_1.grammar.elements[0].relations.append(
+        GrammarElementRelationParent(
+            document_1.grammar.elements[0], "Parent", "Refines"
+        )
+    )
     file_tree = []
     document_list = [document_1]
     map_docs_by_paths = {}
@@ -118,7 +126,7 @@ def test_02_single_document_add_second_parent_relation_with_role():
         traceability_index=traceability_index,
     )
     update_command.perform()
-    assert len(requirement2.references) == 1
+    assert len(requirement2.relations) == 1
 
     form_object.reference_fields.append(
         RequirementReferenceFormField(
@@ -130,7 +138,7 @@ def test_02_single_document_add_second_parent_relation_with_role():
     )
     update_command.perform()
 
-    assert len(requirement2.references) == 2
+    assert len(requirement2.relations) == 2
     requirement2_parents = list(
         traceability_index.get_parent_relations_with_roles(requirement2)
     )
@@ -151,9 +159,14 @@ def test_20_single_document_add_second_child_relation_with_role():
         role="IsRefinedBy",
     )
 
-    assert len(requirement2.references) == 1
+    assert len(requirement2.relations) == 1
 
     document_1 = document_builder.build()
+    document_1.grammar.elements[0].relations.append(
+        GrammarElementRelationChild(
+            document_1.grammar.elements[0], "Child", "IsRefinedBy"
+        )
+    )
 
     file_tree = []
     document_list = [document_1]
@@ -228,9 +241,14 @@ def test_25_single_document_remove_child_relation():
         role="IsRefinedBy",
     )
 
-    assert len(requirement2.references) == 1
+    assert len(requirement2.relations) == 1
 
     document_1 = document_builder.build()
+    document_1.grammar.elements[0].relations.append(
+        GrammarElementRelationChild(
+            document_1.grammar.elements[0], "Child", "IsRefinedBy"
+        )
+    )
 
     file_tree = []
     document_list = [document_1]
@@ -299,8 +317,13 @@ def test_26_two_documents_remove_child_relation():
         target_requirement_id="REQ-001",
         role="IsRefinedBy",
     )
-    assert len(requirement2.references) == 1
+    assert len(requirement2.relations) == 1
     document_2 = document_builder.build()
+    document_2.grammar.elements[0].relations.append(
+        GrammarElementRelationChild(
+            document_2.grammar.elements[0], "Child", "IsRefinedBy"
+        )
+    )
     assert requirement1.document != requirement2.document
 
     file_tree = []

@@ -91,24 +91,11 @@ class ProgressStatisticsGenerator:
                             document_tree_stats.requirements_status_other += 1
 
                     for requirement_field_ in requirement.enumerate_fields():
-                        if requirement_field_.field_value is not None:
-                            if "TBD" in requirement_field_.field_value:
+                        field_value = requirement_field_.get_value()
+                        if field_value is not None:
+                            if "TBD" in field_value:
                                 document_tree_stats.total_tbd += 1
-                            if "TBC" in requirement_field_.field_value:
-                                document_tree_stats.total_tbc += 1
-
-                        elif (
-                            requirement_field_.field_value_multiline is not None
-                        ):
-                            if (
-                                "TBD"
-                                in requirement_field_.field_value_multiline
-                            ):
-                                document_tree_stats.total_tbd += 1
-                            if (
-                                "TBC"
-                                in requirement_field_.field_value_multiline
-                            ):
+                            if "TBC" in field_value:
                                 document_tree_stats.total_tbc += 1
 
         view_object = ProjectStatisticsViewObject(

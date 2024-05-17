@@ -223,7 +223,7 @@ class SDocValidator:
                 )
             return False
         if isinstance(grammar_field, GrammarElementFieldSingleChoice):
-            if requirement_field.field_value not in grammar_field.options:
+            if requirement_field.get_value() not in grammar_field.options:
                 raise StrictDocSemanticError.invalid_choice_field(
                     node=requirement,
                     document_grammar=document_grammar,
@@ -232,7 +232,7 @@ class SDocValidator:
                 )
 
         elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
-            requirement_field_value = requirement_field.field_value
+            requirement_field_value = requirement_field.get_value()
 
             if not multi_choice_regex_match(requirement_field_value):
                 raise StrictDocSemanticError.not_comma_separated_choices(
@@ -254,7 +254,7 @@ class SDocValidator:
                     )
 
         elif isinstance(grammar_field, GrammarElementFieldTag):
-            requirement_field_value = requirement_field.field_value
+            requirement_field_value = requirement_field.get_value()
 
             if not multi_choice_regex_match(requirement_field_value):
                 raise StrictDocSemanticError.not_comma_separated_tag_field(

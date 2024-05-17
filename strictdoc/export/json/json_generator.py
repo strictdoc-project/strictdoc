@@ -300,12 +300,7 @@ class JSONGenerator:
                 continue
             fields = node.ordered_fields_lookup[field_name]
             for field in fields:
-                if field.field_value_multiline is not None:
-                    node_dict[field_name] = field.field_value_multiline
-                elif field.field_value is not None:
-                    node_dict[field_name] = field.field_value
-                else:
-                    raise NotImplementedError
+                node_dict[field_name] = field.get_value()
 
         if len(node.relations) > 0:
             node_dict["RELATIONS"] = cls._write_requirement_relations(node)

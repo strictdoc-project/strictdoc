@@ -388,24 +388,22 @@ class SDWriter:
                 continue
             fields = section_content.ordered_fields_lookup[field_name]
             for field in fields:
-                if field.field_value_multiline is not None:
+                field_value = field.get_value()
+                if field.is_multiline():
                     output += f"{field_name}: >>>"
                     output += "\n"
-                    if len(field.field_value_multiline) > 0:
-                        if field.field_value_multiline != "\n":
-                            output += field.field_value_multiline
+                    if len(field_value) > 0:
+                        if field_value != "\n":
+                            output += field_value
                         output += "\n"
                     output += "<<<"
                     output += "\n"
-                elif field.field_value is not None:
-                    if len(field.field_value) > 0:
+                else:
+                    if len(field_value) > 0:
                         output += f"{field_name}: "
-                        output += field.field_value
+                        output += field_value
                     else:
                         output += f"{field_name}:"
-                    output += "\n"
-                else:
-                    output += f"{field_name}: "
                     output += "\n"
 
         output += SDWriter._print_requirement_relations(section_content)

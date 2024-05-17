@@ -253,15 +253,8 @@ class QueryObject:
             requirement = assert_cast(node, SDocNode)
             requirement_field_: SDocNodeField
             for requirement_field_ in requirement.enumerate_fields():
-                if requirement_field_.field_value is not None:
-                    if expression.string in requirement_field_.field_value:
-                        return True
-                elif requirement_field_.field_value_multiline is not None:
-                    if (
-                        expression.string
-                        in requirement_field_.field_value_multiline
-                    ):
-                        return True
+                if expression.string in requirement_field_.get_value():
+                    return True
             return False
         if isinstance(node, SDocSection):
             section = assert_cast(node, SDocSection)

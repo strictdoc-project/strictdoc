@@ -43,16 +43,8 @@ def calculate_similarity(lhs: SDocNode, rhs: SDocNode) -> float:
 
         rhs_field_values = rhs.ordered_fields_lookup[field_name_]
 
-        lhs_field_value = (
-            field_values_[0].field_value
-            if field_values_[0].field_value is not None
-            else field_values_[0].field_value_multiline
-        )
-        rhs_field_value = (
-            rhs_field_values[0].field_value
-            if rhs_field_values[0].field_value is not None
-            else rhs_field_values[0].field_value_multiline
-        )
+        lhs_field_value = field_values_[0].get_value()
+        rhs_field_value = rhs_field_values[0].get_value()
 
         similar_fields.append(similar(lhs_field_value, rhs_field_value))
 
@@ -108,9 +100,7 @@ class ProjectTreeDiffStats:
             field_name
         ]
         for field_ in other_requirement_fields:
-            if field_.field_value == field_value:
-                return True
-            if field_.field_value_multiline == field_value:
+            if field_.get_value() == field_value:
                 return True
         return False
 
@@ -131,9 +121,7 @@ class ProjectTreeDiffStats:
             field_name
         ]
         for field_ in other_requirement_fields:
-            if field_.field_value == field_value:
-                return field_
-            if field_.field_value_multiline == field_value:
+            if field_.get_value() == field_value:
                 return field_
         return None
 
@@ -946,12 +934,7 @@ class ChangeStats:
         )
 
         if other_requirement_field is not None:
-            other_requirement_field_value = (
-                other_requirement_field.field_value
-                if other_requirement_field.field_value is not None
-                else other_requirement_field.field_value_multiline
-            )
-            assert other_requirement_field_value is not None
+            other_requirement_field_value = other_requirement_field.get_value()
             left_diff = get_colored_diff_string(
                 requirement_field_value, other_requirement_field_value, "left"
             )
@@ -1010,18 +993,10 @@ class ChangeStats:
 
         similarities: List[Tuple[float, SDocNodeField, SDocNodeField]] = []
         for changed_field_ in list(changed_fields.keys()):
-            comment_value = (
-                changed_field_.field_value
-                if changed_field_.field_value is not None
-                else changed_field_.field_value_multiline
-            )
+            comment_value = changed_field_.get_value()
             assert comment_value is not None
             for changed_other_field_ in list(changed_other_fields.keys()):
-                comment_other_value = (
-                    changed_other_field_.field_value
-                    if changed_other_field_.field_value is not None
-                    else changed_other_field_.field_value_multiline
-                )
+                comment_other_value = changed_other_field_.get_value()
                 assert comment_other_value is not None
 
                 similarity = similar(comment_value, comment_other_value)
@@ -1044,17 +1019,8 @@ class ChangeStats:
                 continue
 
             # This is the best change.
-            comment_value = (
-                changed_field_.field_value
-                if changed_field_.field_value is not None
-                else changed_field_.field_value_multiline
-            )
-            assert comment_value is not None
-            comment_other_value = (
-                changed_other_field_.field_value
-                if changed_other_field_.field_value is not None
-                else changed_other_field_.field_value_multiline
-            )
+            comment_value = changed_field_.get_value()
+            comment_other_value = changed_other_field_.get_value()
             assert comment_other_value is not None
 
             left_diff = get_colored_diff_string(
@@ -1186,37 +1152,20 @@ class ProjectDiffAnalyzer:
                     field_values_,
                 ) in node.ordered_fields_lookup.items():
                     requirement_field: SDocNodeField = field_values_[0]
+                    requirement_field_value = requirement_field.get_value()
                     if field_name_ == "TITLE":
                         this_title_requirements = (
                             document_tree_stats.map_titles_to_nodes.setdefault(
-                                requirement_field.field_value, []
+                                requirement_field_value, []
                             )
                         )
                         this_title_requirements.append(node)
                     elif field_name_ == "STATEMENT":
-                        statement_value: str = assert_cast(
-                            requirement_field.field_value
-                            if requirement_field.field_value is not None
-                            else requirement_field.field_value_multiline,
-                            str,
-                        )
                         document_tree_stats.map_statements_to_nodes[
-                            statement_value
+                            requirement_field_value
                         ] = node
 
-                    if requirement_field.field_value is not None:
-                        hasher.update(
-                            requirement_field.field_value.encode("utf-8")
-                        )
-                    elif requirement_field.field_value_multiline is not None:
-                        hasher.update(
-                            requirement_field.field_value_multiline.encode(
-                                "utf-8"
-                            )
-                        )
-                    else:
-                        # WIP
-                        continue
+                    hasher.update(requirement_field_value.encode("utf-8"))
 
                     # If this field appears once, there is nothing else to do.
                     if len(field_values_) == 1:
@@ -1225,18 +1174,9 @@ class ProjectDiffAnalyzer:
                     # At this point, we are dealing with COMMENT because it is
                     # the only field that can appear several times.
                     for comment_field_ in field_values_[1:]:
-                        if comment_field_.field_value is not None:
-                            hasher.update(
-                                comment_field_.field_value.encode("utf-8")
-                            )
-                        elif comment_field_.field_value_multiline is not None:
-                            hasher.update(
-                                comment_field_.field_value_multiline.encode(
-                                    "utf-8"
-                                )
-                            )
-                        else:
-                            raise AssertionError("Must not reach here.")
+                        hasher.update(
+                            comment_field_.get_value().encode("utf-8")
+                        )
 
                 for reference_ in node.relations:
                     if isinstance(reference_, ParentReqReference):

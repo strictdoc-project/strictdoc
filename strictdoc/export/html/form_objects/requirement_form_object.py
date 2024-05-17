@@ -116,12 +116,7 @@ class RequirementFormField:
         requirement_field: SDocNodeField,
     ) -> "RequirementFormField":
         if grammar_field.gef_type == RequirementFieldType.STRING:
-            field_value = (
-                requirement_field.field_value_multiline
-                if requirement_field.field_value_multiline is not None
-                else requirement_field.field_value
-            )
-            assert isinstance(field_value, str)
+            field_value = requirement_field.get_value()
             escaped_field_value = html.escape(field_value)
             return RequirementFormField(
                 field_mid=MID.create(),

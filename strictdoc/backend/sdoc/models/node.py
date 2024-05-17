@@ -40,10 +40,6 @@ class SDocNodeField:
         field_value: Optional[str],
         field_value_multiline: Optional[str],
     ) -> None:
-        # FIXME: This should be strict_assert at some point.
-        assert (field_value is not None and len(field_value) > 0) or (
-            field_value_multiline is not None and len(field_value_multiline) > 0
-        ), "A requirement field must have at least one value."
         self.parent = parent
         self.field_name = field_name
 
@@ -63,16 +59,24 @@ class SDocNodeField:
             else:
                 field_value_multiline = rstripped_field_value_multiline
 
-        self.field_value_multiline: Optional[str] = field_value_multiline
+        self._field_value_multiline: Optional[str] = field_value_multiline
+        self._field_value: Optional[str] = field_value
 
-        self.field_value: Optional[str] = field_value
+        self.resolved_field_value: str
+        if self._field_value is not None:
+            self._resolved_field_value = self._field_value
+        elif self._field_value_multiline is not None:
+            self._resolved_field_value = self._field_value_multiline
+        else:
+            raise AssertionError(
+                "A requirement field must have at least one value."
+            )
+
+    def is_multiline(self) -> bool:
+        return self._field_value_multiline is not None
 
     def get_value(self) -> str:
-        value = (
-            self.field_value if self.field_value else self.field_value_multiline
-        )
-        assert value is not None
-        return value
+        return self._resolved_field_value
 
 
 @auto_described
@@ -141,7 +145,7 @@ class SDocNode(SDocObject):
         if RequirementFieldName.LEVEL in ordered_fields_lookup:
             level = ordered_fields_lookup[RequirementFieldName.LEVEL][
                 0
-            ].field_value
+            ].get_value()
             self.ng_resolved_custom_level = level
             self.custom_level = level
 
@@ -187,14 +191,10 @@ class SDocNode(SDocObject):
         field: SDocNodeField = self.ordered_fields_lookup[
             RequirementFieldName.TAGS
         ][0]
-        if field.field_value is not None:
-            field_value = field.field_value
-        else:
-            raise NotImplementedError(
-                f"Field {RequirementFieldName.TAGS} "
-                f"must be a single-line field."
-            )
-        tags = field_value.split(", ")
+        assert (
+            not field.is_multiline()
+        ), f"Field {RequirementFieldName.TAGS} must be a single-line field."
+        tags = field.get_value().split(", ")
         return tags
 
     @property
@@ -221,12 +221,7 @@ class SDocNode(SDocObject):
             return []
         comments = []
         for field in self.ordered_fields_lookup[RequirementFieldName.COMMENT]:
-            if field.field_value_multiline is not None:
-                comments.append(field.field_value_multiline)
-            elif field.field_value is not None:
-                comments.append(field.field_value)
-            else:
-                raise NotImplementedError
+            comments.append(field.get_value())
         return comments
 
     # Other properties
@@ -371,11 +366,7 @@ class SDocNode(SDocObject):
         for field in self.enumerate_fields():
             if field.field_name == "REFS":
                 continue
-            meta_field_value = (
-                field.field_value
-                if field.field_value
-                else field.field_value_multiline
-            )
+            meta_field_value = field.get_value()
             yield field, field.field_name, meta_field_value
 
     def enumerate_meta_fields(
@@ -391,11 +382,7 @@ class SDocNode(SDocObject):
         for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
-            meta_field_value = (
-                field.field_value
-                if field.field_value
-                else field.field_value_multiline
-            )
+            meta_field_value = field.get_value()
             field_index = grammar_field_titles.index(field.field_name)
 
             # A field is considered singleline if it goes before the STATEMENT
@@ -418,14 +405,7 @@ class SDocNode(SDocObject):
         if field_title not in self.ordered_fields_lookup:
             return None
         field: SDocNodeField = self.ordered_fields_lookup[field_title][0]
-        meta_field_value_or_none: Optional[str] = (
-            field.field_value
-            if field.field_value
-            else field.field_value_multiline
-        )
-        assert meta_field_value_or_none
-        meta_field_value = meta_field_value_or_none
-        return meta_field_value
+        return field.get_value()
 
     def get_field_human_title(self, field_name: str) -> str:
         element: GrammarElement = self.document.grammar.elements_by_type[
@@ -457,18 +437,12 @@ class SDocNode(SDocObject):
             return None
         field: SDocNodeField = self.ordered_fields_lookup[field_name][0]
 
-        if field.field_value is not None:
-            field_value = field.field_value
-        else:
-            if singleline_only:
-                raise NotImplementedError(
-                    f"Field {field_name} must be a single-line field."
-                )
-            if field.field_value_multiline is not None:
-                field_value = field.field_value_multiline
-            else:
-                raise NotImplementedError(self)
-        return field_value
+        if singleline_only and field.is_multiline():
+            raise NotImplementedError(
+                f"Field {field_name} must be a single-line field."
+            )
+
+        return field.get_value()
 
     # Below all mutating methods.
 

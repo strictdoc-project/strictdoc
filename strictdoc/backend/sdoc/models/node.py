@@ -205,8 +205,11 @@ class SDocNode(SDocObject):
 
     @property
     def reserved_statement(self) -> Optional[str]:
+        element: GrammarElement = self.document.grammar.elements_by_type[
+            self.requirement_type
+        ]
         return self._get_cached_field(
-            RequirementFieldName.STATEMENT, singleline_only=False
+            element.content_field[0], singleline_only=False
         )
 
     @property
@@ -275,6 +278,12 @@ class SDocNode(SDocObject):
     def get_requirement_style_mode(self) -> str:
         assert self.ng_document_reference.get_document() is not None
         return self.ng_document_reference.get_document().config.get_requirement_style_mode()
+
+    def get_content_field_name(self) -> str:
+        element: GrammarElement = self.document.grammar.elements_by_type[
+            self.requirement_type
+        ]
+        return element.content_field[0]
 
     def has_requirement_references(self, ref_type: str) -> bool:
         if len(self.relations) == 0:
@@ -374,9 +383,7 @@ class SDocNode(SDocObject):
             self.requirement_type
         ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
-        statement_field_index = grammar_field_titles.index(
-            RequirementFieldName.STATEMENT
-        )
+        statement_field_index: int = element.content_field[1]
         for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
@@ -410,6 +417,13 @@ class SDocNode(SDocObject):
             self.requirement_type
         ]
         field_human_title = element.fields_map[field_name]
+        return field_human_title.get_field_human_name()
+
+    def get_field_human_title_for_statement(self) -> str:
+        element: GrammarElement = self.document.grammar.elements_by_type[
+            self.requirement_type
+        ]
+        field_human_title = element.fields_map[element.content_field[0]]
         return field_human_title.get_field_human_name()
 
     def get_requirement_prefix(self) -> str:
@@ -479,25 +493,11 @@ class SDocNode(SDocObject):
             self.requirement_type
         ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
-        # FIXME: This will go away very soon when the RELATIONS become a
-        #        separate field in SDoc REQUIREMENT's grammar.
-        grammar_field_titles.append("REFS")
         field_index = grammar_field_titles.index(field_name)
-
-        try:
-            title_field_index = grammar_field_titles.index(
-                RequirementFieldName.TITLE
-            )
-        except ValueError:
-            # It is a rare edge case when a grammar is without a TITLE but if it
-            # happens, use STATEMENT as a fallback.
-            title_field_index = grammar_field_titles.index(
-                RequirementFieldName.STATEMENT
-            )
 
         field_value = None
         field_value_multiline = None
-        if field_index <= title_field_index:
+        if field_index < element.content_field[1]:
             field_value = value
         else:
             field_value_multiline = value

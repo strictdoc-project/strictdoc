@@ -1,5 +1,5 @@
 import html
-from typing import List, Any, Optional
+from typing import Any, List, Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.inline_link import InlineLink

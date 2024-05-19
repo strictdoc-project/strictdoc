@@ -1,4 +1,4 @@
-{%- if requirement.reserved_statement and view_object.current_view.includes_field(requirement.requirement_type, "STATEMENT") -%}
+{%- if requirement.reserved_statement and view_object.current_view.includes_field(requirement.requirement_type, requirement.get_content_field_name()) -%}
   {%- if truncated_statement is true -%}
     {# truncated in DTR tiny card #}
     <sdoc-requirement-field data-field-label="statement">
@@ -6,7 +6,7 @@
     </sdoc-requirement-field>
   {%- else -%}
     {# default with label #}
-    <sdoc-requirement-field-label>{{ requirement.get_field_human_title("STATEMENT") }}:</sdoc-requirement-field-label>
+    <sdoc-requirement-field-label>{{ requirement.get_field_human_title_for_statement() }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field
       data-field-label="statement"
     >

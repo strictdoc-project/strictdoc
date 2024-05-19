@@ -1,6 +1,6 @@
 # mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,union-attr,type-arg"
 from collections import OrderedDict
-from typing import Dict, List, Optional, Set, Union
+from typing import Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
@@ -75,9 +75,27 @@ class GrammarElement:
             else create_default_relations(self)
         )
         fields_map: OrderedDict = OrderedDict()
-        for field in fields:
-            fields_map[field.title] = field
+
+        statement_field: Optional[Tuple[str, int]] = None
+        description_field: Optional[Tuple[str, int]] = None
+        content_field: Optional[Tuple[str, int]] = None
+        for field_idx_, field_ in enumerate(fields):
+            fields_map[field_.title] = field_
+            if field_.title == RequirementFieldName.STATEMENT:
+                statement_field = (RequirementFieldName.STATEMENT, field_idx_)
+            elif field_.title == "DESCRIPTION":
+                description_field = (
+                    RequirementFieldName.DESCRIPTION,
+                    field_idx_,
+                )
+            elif field_.title == "CONTENT":
+                content_field = (RequirementFieldName.CONTENT, field_idx_)
+            else:
+                pass
         self.fields_map: Dict[str, GrammarElementField] = fields_map
+        self.content_field: Tuple[str, int] = (
+            statement_field or description_field or content_field or ("", -1)
+        )
         self.mid: MID = MID.create()
 
     @staticmethod

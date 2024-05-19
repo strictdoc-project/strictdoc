@@ -11,7 +11,13 @@ class RequirementFieldName:
     STATUS = "STATUS"
     TAGS = "TAGS"
     TITLE = "TITLE"
+
+    # {STATEMENT, DESCRIPTION, CONTENT} are aliases.
+    # It is assumed that either field is provided for each node.
     STATEMENT = "STATEMENT"
+    DESCRIPTION = "DESCRIPTION"
+    CONTENT = "CONTENT"
+
     RATIONALE = "RATIONALE"
     COMMENT = "COMMENT"
 
@@ -19,6 +25,8 @@ class RequirementFieldName:
 RESERVED_NON_META_FIELDS = [
     RequirementFieldName.TITLE,
     RequirementFieldName.STATEMENT,
+    RequirementFieldName.DESCRIPTION,
+    RequirementFieldName.CONTENT,
     RequirementFieldName.COMMENT,
     RequirementFieldName.RATIONALE,
     RequirementFieldName.LEVEL,

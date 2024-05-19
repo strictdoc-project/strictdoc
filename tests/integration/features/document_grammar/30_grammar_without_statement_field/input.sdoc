@@ -1,0 +1,29 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: THREAT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: DESCRIPTION
+    TYPE: String
+    REQUIRED: True
+  - TITLE: SEVERITY
+    TYPE: SingleChoice(Low, Medium, High)
+    REQUIRED: True
+  - TITLE: SCORE
+    TYPE: String
+    REQUIRED: False
+
+[THREAT]
+UID: ABC-123
+TITLE: Title
+DESCRIPTION: Description.
+SEVERITY: Low
+SCORE: Score.

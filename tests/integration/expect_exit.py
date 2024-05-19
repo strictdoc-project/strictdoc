@@ -52,7 +52,7 @@ unexpected_exit_code = process.returncode != expected_exit_code
 if unexpected_exit_code:
     print(  # noqa: T201
         "error: expect_exit: expected exit code: "
-        "f{expected_exit_code}, actual: {process.returncode}."
+        f"{expected_exit_code}, actual: {process.returncode}."
     )
 
 unexpected_content = expect_no_content and len(stdout) > 0

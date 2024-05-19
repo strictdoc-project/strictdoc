@@ -1,6 +1,5 @@
-# mypy: disable-error-code="no-untyped-def,type-arg"
 import html
-from typing import List
+from typing import List, Any, Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -9,22 +8,22 @@ from strictdoc.helpers.auto_described import auto_described
 
 @auto_described
 class FreeText:
-    def __init__(self, parent, parts: List):
+    def __init__(self, parent: Any, parts: List[Any]) -> None:
         assert isinstance(parts, list)
         self.parent = parent
         self.parts = parts
         self.ng_level = None
 
     @property
-    def parent_or_including_document(self):
+    def parent_or_including_document(self) -> Optional[Any]:
         return self.parent.parent_or_including_document
 
     @property
-    def is_requirement(self):
+    def is_requirement(self) -> bool:
         return False
 
     @property
-    def is_section(self):
+    def is_section(self) -> bool:
         return False
 
     def get_parts_as_text(self) -> str:
@@ -55,5 +54,5 @@ class FreeText:
 
 
 class FreeTextContainer(FreeText):
-    def __init__(self, parts):
+    def __init__(self, parts: List[Any]) -> None:
         super().__init__(None, parts)

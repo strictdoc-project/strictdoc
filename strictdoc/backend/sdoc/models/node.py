@@ -364,8 +364,6 @@ class SDocNode(SDocObject):
         self,
     ) -> Generator[Tuple[SDocNodeField, str, str], None, None]:
         for field in self.enumerate_fields():
-            if field.field_name == "REFS":
-                continue
             meta_field_value = field.get_value()
             yield field, field.field_name, meta_field_value
 

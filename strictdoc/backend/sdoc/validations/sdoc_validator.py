@@ -110,7 +110,7 @@ class SDocValidator:
         registered_fields: Set[str] = set(grammar_element.get_field_titles())
 
         for field_name in requirement.ordered_fields_lookup:
-            if field_name not in registered_fields and field_name != "REFS":
+            if field_name not in registered_fields:
                 raise StrictDocSemanticError.unregistered_field(
                     field_name=field_name,
                     requirement=requirement,

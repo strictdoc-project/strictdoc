@@ -34,12 +34,10 @@
       <sdoc-form-grid>
         <div style="display: contents;" id="document__editable_grammar_fields">
           {%- for field_ in form_object.fields -%}
-            {%- if field_.field_name != "REFS" -%}
-              {%- if field_.reserved -%}
-                {{ form_object.render_row_with_reserved_field(field_) }}
-              {%- else -%}
-                {{ form_object.render_row_with_custom_field(field_) }}
-              {%- endif -%}
+            {%- if field_.reserved -%}
+              {{ form_object.render_row_with_reserved_field(field_) }}
+            {%- else -%}
+              {{ form_object.render_row_with_custom_field(field_) }}
             {%- endif -%}
           {%- endfor -%}
         </div>

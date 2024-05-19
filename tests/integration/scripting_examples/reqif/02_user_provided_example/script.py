@@ -507,14 +507,6 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     )
                 )
             if len(parent_refs) > 0:
-                requirement_field = SDocNodeField(
-                    parent=requirement,
-                    field_name="REFS",
-                    field_value=None,
-                    field_value_multiline=None,
-                    field_value_references=parent_refs,
-                )
-                fields.append(requirement_field)
                 requirement.relations = parent_refs
         return requirement
 

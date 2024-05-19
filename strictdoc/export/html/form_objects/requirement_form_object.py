@@ -321,9 +321,6 @@ class RequirementFormObject(ErrorObject):
         title_field_idx = fields_names.index("TITLE")
 
         for field_idx, field_name in enumerate(fields_names):
-            if field_name == "REFS":
-                continue
-
             multiline = field_idx > title_field_idx
             field = element.fields_map[field_name]
 

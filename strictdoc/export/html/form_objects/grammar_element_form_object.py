@@ -204,8 +204,6 @@ class GrammarElementFormObject(ErrorObject):
 
         grammar_form_fields: List[GrammarFormField] = []
         for grammar_field in element.fields:
-            if grammar_field.title == "REFS":
-                continue
             grammar_form_field = GrammarFormField.create_from_grammar_field(
                 grammar_field=grammar_field
             )

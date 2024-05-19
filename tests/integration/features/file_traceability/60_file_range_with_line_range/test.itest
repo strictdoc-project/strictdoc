@@ -1,7 +1,7 @@
 NOTE: The first link is created from a forward marker, the second from a backward markers.
       Ensure that both links are identical from the UI perspective.
 
-RUN: %strictdoc export . --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export . --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"

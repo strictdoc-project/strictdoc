@@ -2,7 +2,7 @@
 # Requirement-to-File links edge case: Pygments ignore the first empty line in a file
 # https://github.com/strictdoc-project/strictdoc/issues/877.
 
-RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"

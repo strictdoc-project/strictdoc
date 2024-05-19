@@ -153,7 +153,6 @@ def create_main_router(
         reqif_profile=project_config.reqif_profile,
         reqif_multiline_is_xhtml=False,
         reqif_enable_mid=False,
-        experimental_enable_file_traceability=False,
         view=None,
     )
     project_config.integrate_export_config(_export_config)

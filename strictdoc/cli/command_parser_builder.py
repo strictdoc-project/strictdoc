@@ -219,14 +219,6 @@ class CommandParserBuilder:
             ),
         )
         command_parser_export.add_argument(
-            "--experimental-enable-file-traceability",
-            action="store_true",
-            help=(
-                "Experimental feature: "
-                "enables traceability between requirements and files."
-            ),
-        )
-        command_parser_export.add_argument(
             "--filter-requirements",
             type=str,
             help="Filter which requirements will be exported.",

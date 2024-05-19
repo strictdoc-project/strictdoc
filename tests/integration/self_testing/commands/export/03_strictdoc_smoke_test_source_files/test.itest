@@ -1,6 +1,6 @@
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
-RUN: cd %strictdoc_root && %strictdoc export "%strictdoc_root/" --output-dir="%S/Output" --experimental-enable-file-traceability
+RUN: cd %strictdoc_root && %strictdoc export "%strictdoc_root/" --output-dir="%S/Output"
 
 RUN: %check_exists --file "%S/Output/html/index.html"
 RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html

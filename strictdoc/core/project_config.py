@@ -204,28 +204,6 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         ):
             self.project_features.append(ProjectFeature.MATHJAX)
 
-        if export_config.experimental_enable_file_traceability:
-            deprecation_message = (
-                "warning: "
-                "'--experimental-enable-file-traceability' command-line "
-                "option will be deprecated. Instead, activate the option in "
-                "the strictdoc.toml config file as follows:\n"
-                "```\n"
-                "[project]\n\n"
-                "features = [\n"
-                '  "REQUIREMENT_TO_SOURCE_TRACEABILITY"\n'
-                "]\n"
-                "```"
-            )
-            print(deprecation_message)  # noqa: T201
-            if (
-                ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
-                not in self.project_features
-            ):
-                self.project_features.append(
-                    ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
-                )
-
         if export_config.reqif_profile is not None:
             self.reqif_profile = export_config.reqif_profile
 

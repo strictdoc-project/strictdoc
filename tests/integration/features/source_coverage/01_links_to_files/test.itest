@@ -1,4 +1,4 @@
-RUN: %strictdoc export %S --experimental-enable-file-traceability --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%S/Output/html/source_coverage.html"

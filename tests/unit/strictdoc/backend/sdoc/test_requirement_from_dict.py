@@ -1,3 +1,4 @@
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 
@@ -10,6 +11,7 @@ def test_010_full_dict():
         RequirementFieldName.RATIONALE: "REQ RATIONALE",
     }
     document = SDocObjectFactory.create_document(title="NONAME")
+    document.grammar = DocumentGrammar.create_default(document)
     requirement = SDocObjectFactory.create_requirement_from_dict(
         requirement_dict, document, 1
     )
@@ -34,6 +36,7 @@ def test_010_full_dict():
 def test_020_empty_dict():
     requirement_dict = {}
     document = SDocObjectFactory.create_document(title=None)
+    document.grammar = DocumentGrammar.create_default(document)
     requirement = SDocObjectFactory.create_requirement_from_dict(
         requirement_dict, document, 1
     )

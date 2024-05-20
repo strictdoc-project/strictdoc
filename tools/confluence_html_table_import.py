@@ -6,6 +6,7 @@ import bs4
 from bs4 import BeautifulSoup
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 
 STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..")
@@ -47,6 +48,7 @@ class ConfluenceHTMLTableImport:
             free_texts=[],
             section_contents=[],
         )
+        document.grammar = DocumentGrammar.create_default(document)
         for section_idx, reqs in enumerate(reqs_array_array):
             section_name = headers[section_idx].text
             section = SDocSection(

@@ -19,6 +19,10 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
+from strictdoc.backend.sdoc.models.type_system import (
+    GrammarElementField,
+    RequirementFieldName,
+)
 from strictdoc.helpers.exception import StrictDocException
 
 
@@ -29,13 +33,10 @@ class ParseContext:
         if path_to_sdoc_file is not None:
             assert os.path.isfile(path_to_sdoc_file), path_to_sdoc_file
             self.path_to_sdoc_dir = os.path.dirname(path_to_sdoc_file)
-
+        self.document_grammar: Optional[DocumentGrammar] = None
         self.document_reference: DocumentReference = DocumentReference()
         self.context_document_reference: DocumentReference = DocumentReference()
         self.document_config: Optional[DocumentConfig] = None
-        self.document_grammar: DocumentGrammar = DocumentGrammar.create_default(
-            None
-        )
         self.document_view: Optional[DocumentView] = None
         self.document_has_requirements = False
 
@@ -48,7 +49,10 @@ class SDocParsingProcessor:
         self.parse_context: ParseContext = parse_context
 
     def process_document(self, document: SDocDocument):
-        document.grammar = self.parse_context.document_grammar
+        document.grammar = (
+            self.parse_context.document_grammar
+            or DocumentGrammar.create_default(document)
+        )
         self.parse_context.document = document
         document.ng_including_document_reference = (
             self.parse_context.context_document_reference
@@ -86,12 +90,26 @@ class SDocParsingProcessor:
             grammar_element._tx_position
         )
 
-        if (
-            grammar_element.tag == "REQUIREMENT"
-            and "STATEMENT" not in grammar_element.fields_map
-        ):
+        if grammar_element.content_field[0] not in grammar_element.fields_map:
             raise StrictDocSemanticError.grammar_missing_reserved_statement(
                 grammar_element,
+                self.parse_context.path_to_sdoc_file,
+                line_start,
+                col_start,
+            )
+        content_field: GrammarElementField = grammar_element.fields_map[
+            grammar_element.content_field[0]
+        ]
+        # FIXME: Enable for STATEMENT as well. For now, don't want to break
+        #        backward compatibility.
+        if (
+            content_field.title
+            in (RequirementFieldName.DESCRIPTION, RequirementFieldName.CONTENT)
+            and not content_field.required
+        ):
+            raise StrictDocSemanticError.grammar_reserved_statement_must_be_required(
+                grammar_element,
+                content_field.title,
                 self.parse_context.path_to_sdoc_file,
                 line_start,
                 col_start,

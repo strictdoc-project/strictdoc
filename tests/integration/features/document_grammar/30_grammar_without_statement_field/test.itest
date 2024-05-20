@@ -1,0 +1,10 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published: Test document
+
+RUN: %cat %S/Output/html/30_grammar_without_statement_field/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: ABC-123
+CHECK-HTML: Title
+CHECK-HTML: Description.
+CHECK-HTML: Low
+CHECK-HTML: Score.

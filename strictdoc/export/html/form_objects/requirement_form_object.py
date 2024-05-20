@@ -644,13 +644,15 @@ class RequirementFormObject(ErrorObject):
                     ),
                 )
 
-        requirement_statement = self.fields["STATEMENT"][
+        requirement_element = self.grammar.elements_by_type[self.element_type]
+        statement_field_name = requirement_element.content_field[0]
+        requirement_statement = self.fields[statement_field_name][
             0
         ].field_unescaped_value
         if requirement_statement is None or len(requirement_statement) == 0:
             self.add_error(
-                "STATEMENT",
-                "Node statement must not be empty.",
+                statement_field_name,
+                f"Node {statement_field_name.lower()} must not be empty.",
             )
         else:
             (
@@ -661,7 +663,7 @@ class RequirementFormObject(ErrorObject):
                 context_document=context_document,
             ).write_with_validation(requirement_statement)
             if parsed_html is None:
-                self.add_error("STATEMENT", rst_error)
+                self.add_error(statement_field_name, rst_error)
 
         requirement_uid: Optional[str] = (
             self.fields["UID"][0].field_unescaped_value

@@ -261,12 +261,36 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Grammar element '{grammar_element.tag}' is missing a reserved"
-                " STATEMENT field declaration."
+                " content field declaration, one of {STATEMENT, DESCRIPTION, CONTENT}."
             ),
             hint=(
-                "STATEMENT plays a key role in StrictDoc's HTML user interface "
+                "A content field plays a key role in StrictDoc's HTML user interface "
                 "as well as in the other export formats. It is a reserved field"
-                " that any grammar must provide."
+                " that any grammar element must have."
+            ),
+            example=None,
+            line=line,
+            col=column,
+            filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
+    def grammar_reserved_statement_must_be_required(
+        grammar_element: GrammarElement,
+        field_title: str,
+        path_to_sdoc_file: str,
+        line: int,
+        column: int,
+    ):
+        return StrictDocSemanticError(
+            title=(
+                f"Grammar element '{grammar_element.tag}'s {field_title} field "
+                f"must be declared as 'REQUIRED: True'."
+            ),
+            hint=(
+                "A content field plays a key role in StrictDoc's HTML user interface "
+                "as well as in the other export formats. It is a reserved field"
+                " that any grammar element must have with 'REQUIRED: True'."
             ),
             example=None,
             line=line,

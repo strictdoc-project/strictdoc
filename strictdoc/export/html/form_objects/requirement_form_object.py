@@ -23,6 +23,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     FileEntry,
     FileEntryFormat,
     GrammarElementField,
+    GrammarElementFieldSingleChoice,
     RequirementFieldType,
 )
 from strictdoc.core.project_config import ProjectConfig
@@ -95,7 +96,10 @@ class RequirementFormField:
             multiline,
             value_escaped,
         )
-        if grammar_field.gef_type == RequirementFieldType.STRING:
+        if grammar_field.gef_type in (
+            RequirementFieldType.STRING,
+            RequirementFieldType.SINGLE_CHOICE,
+        ):
             return RequirementFormField(
                 field_mid=MID.create(),
                 field_name=grammar_field.title,
@@ -115,7 +119,10 @@ class RequirementFormField:
         multiline: bool,
         requirement_field: SDocNodeField,
     ) -> "RequirementFormField":
-        if grammar_field.gef_type == RequirementFieldType.STRING:
+        if grammar_field.gef_type in (
+            RequirementFieldType.STRING,
+            RequirementFieldType.SINGLE_CHOICE,
+        ):
             field_value = requirement_field.get_value()
             escaped_field_value = html.escape(field_value)
             return RequirementFormField(
@@ -681,6 +688,28 @@ class RequirementFormObject(ErrorObject):
                                 f"enter TBD (to be done) or TBC (to be confirmed)."
                             ),
                         )
+            if (
+                grammar_element_field_.gef_type
+                == RequirementFieldType.SINGLE_CHOICE
+            ):
+                single_choice_grammar_element_field: GrammarElementFieldSingleChoice = assert_cast(
+                    grammar_element_field_, GrammarElementFieldSingleChoice
+                )
+                field_value = self.fields[grammar_element_field_.title][
+                    0
+                ].field_unescaped_value
+                if (
+                    field_value
+                    not in single_choice_grammar_element_field.options
+                ):
+                    self.add_error(
+                        grammar_element_field_.title,
+                        (
+                            f"Node's {grammar_element_field_.title} must be a value one of "
+                            f"{', '.join(single_choice_grammar_element_field.options)}."
+                        ),
+                    )
+
         requirement_uid: Optional[str] = (
             self.fields["UID"][0].field_unescaped_value
             if "UID" in self.fields

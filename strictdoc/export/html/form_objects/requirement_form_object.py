@@ -665,6 +665,22 @@ class RequirementFormObject(ErrorObject):
             if parsed_html is None:
                 self.add_error(statement_field_name, rst_error)
 
+        for grammar_element_field_ in requirement_element.fields:
+            # STATEMENT/DESCRIPTION/CONTENT field has already been validated. Skip.
+            if grammar_element_field_.title == statement_field_name:
+                continue
+            if grammar_element_field_.required:
+                for form_field_ in self.fields[grammar_element_field_.title]:
+                    field_value = form_field_.field_unescaped_value
+                    if field_value is None or len(field_value) == 0:
+                        self.add_error(
+                            grammar_element_field_.title,
+                            (
+                                f"Node's {grammar_element_field_.title} must not be empty. "
+                                f"If there is no appropriate value for this field yet, "
+                                f"enter TBD (to be done) or TBC (to be confirmed)."
+                            ),
+                        )
         requirement_uid: Optional[str] = (
             self.fields["UID"][0].field_unescaped_value
             if "UID" in self.fields

@@ -86,3 +86,9 @@ ReferenceTypeXs[noskipws]:
   /, /- ReferenceType
 ;
 """
+
+GRAMMAR_WRAPPER = """
+DocumentGrammarWrapper[noskipws]:
+    grammar = DocumentGrammar
+;
+"""

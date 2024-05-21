@@ -5,7 +5,6 @@ from typing import List, Optional
 from textx import get_model
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
@@ -19,11 +18,9 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementField,
-    RequirementFieldName,
-)
+from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.textx import preserve_source_location_data
 
 
 class ParseContext:
@@ -85,35 +82,11 @@ class SDocParsingProcessor:
         self.parse_context.document_grammar = document_grammar
 
     def process_document_grammar_element(self, grammar_element: GrammarElement):
-        the_model = get_model(grammar_element)
-        line_start, col_start = the_model._tx_parser.pos_to_linecol(
-            grammar_element._tx_position
-        )
+        preserve_source_location_data(grammar_element)
 
-        if grammar_element.content_field[0] not in grammar_element.fields_map:
-            raise StrictDocSemanticError.grammar_missing_reserved_statement(
-                grammar_element,
-                self.parse_context.path_to_sdoc_file,
-                line_start,
-                col_start,
-            )
-        content_field: GrammarElementField = grammar_element.fields_map[
-            grammar_element.content_field[0]
-        ]
-        # FIXME: Enable for STATEMENT as well. For now, don't want to break
-        #        backward compatibility.
-        if (
-            content_field.title
-            in (RequirementFieldName.DESCRIPTION, RequirementFieldName.CONTENT)
-            and not content_field.required
-        ):
-            raise StrictDocSemanticError.grammar_reserved_statement_must_be_required(
-                grammar_element,
-                content_field.title,
-                self.parse_context.path_to_sdoc_file,
-                line_start,
-                col_start,
-            )
+        SDocValidator.validate_grammar_element(
+            self.parse_context.path_to_sdoc_file, grammar_element
+        )
 
     def process_document_view(self, document_view: DocumentView):
         self.parse_context.document_view = document_view
@@ -267,22 +240,7 @@ class SDocParsingProcessor:
         ) and self.parse_context.document_config.auto_levels:
             requirement.ng_resolved_custom_level = "None"
 
-        """
-        Saving the source location information in the requirement object.
-        """
-        the_model = get_model(requirement)
-        line_start, col_start = the_model._tx_parser.pos_to_linecol(
-            requirement._tx_position
-        )
-        line_end, col_end = the_model._tx_parser.pos_to_linecol(
-            requirement._tx_position_end
-        )
-        requirement.ng_line_start = line_start
-        requirement.ng_line_end = line_end
-        requirement.ng_col_start = col_start
-        requirement.ng_col_end = col_end
-        requirement.ng_byte_start = requirement._tx_position
-        requirement.ng_byte_end = requirement._tx_position_end
+        preserve_source_location_data(requirement)
 
     def process_free_text(self, free_text):
         pass

@@ -576,5 +576,5 @@ class SPDXToSDocConverter:
         """
         Create Grammar.
         """
-        grammar = DocumentGrammar(elements=elements)
+        grammar = DocumentGrammar(parent=None, elements=elements)
         return grammar

@@ -271,6 +271,17 @@ class TraceabilityIndexBuilder:
         # - Re-assign children declarations
         # - Detect cycles
         # - Calculate depth of both parent and child relations.
+        for (
+            path_to_grammar_,
+            grammar_from_file_,
+        ) in document_tree.map_grammars_by_filenames.items():
+            try:
+                SDocValidator.validate_grammar_from_file(
+                    path_to_grammar_, grammar_from_file_
+                )
+            except StrictDocSemanticError as exc:
+                print(exc.to_print_message())  # noqa: T201
+                sys.exit(1)
 
         document: SDocDocument
         for document in document_tree.document_list:

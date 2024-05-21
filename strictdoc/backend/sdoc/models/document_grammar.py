@@ -97,6 +97,8 @@ class GrammarElement:
             statement_field or description_field or content_field or ("", -1)
         )
         self.mid: MID = MID.create()
+        self.ng_line_start: Optional[int] = None
+        self.ng_col_start: Optional[int] = None
 
     @staticmethod
     def create_default(tag: str):
@@ -178,9 +180,9 @@ class GrammarElement:
 class DocumentGrammar:
     def __init__(
         self,
+        parent,
         elements: List[GrammarElement],
         import_from_file: Optional[str] = None,
-        parent=None,
     ) -> None:
         self.parent = parent
         self.elements: List[GrammarElement] = elements
@@ -315,3 +317,9 @@ class DocumentGrammar:
         self.elements = elements
         self.registered_elements: Set[str] = registered_elements
         self.elements_by_type: Dict[str, GrammarElement] = elements_by_type
+
+
+class DocumentGrammarWrapper:
+    def __init__(self, grammar: DocumentGrammar):
+        assert isinstance(grammar, DocumentGrammar), grammar
+        self.grammar: DocumentGrammar = grammar

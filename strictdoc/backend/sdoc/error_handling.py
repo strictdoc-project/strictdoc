@@ -365,7 +365,7 @@ class StrictDocSemanticError(Exception):
             filename=filename,
         )
 
-    def to_print_message(self):
+    def to_print_message(self) -> str:
         message = ""
         message += f"error: could not parse file: {self.file_path}.\n"
         message += f"Semantic error: {self.title}\n"

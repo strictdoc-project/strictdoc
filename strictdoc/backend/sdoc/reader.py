@@ -17,22 +17,24 @@ from strictdoc.helpers.textx import drop_textx_meta
 
 
 class SDReader:
+    meta_model = metamodel_from_str(
+        SDocGrammarBuilder.create_grammar(),
+        classes=DOCUMENT_MODELS,
+        use_regexp_group=True,
+    )
+
     def __init__(self, path_to_output_root: str = "NOT_RELEVANT"):
         self.path_to_output_root = path_to_output_root
 
     @staticmethod
     def _read(input_string, file_path=None):
-        meta_model = metamodel_from_str(
-            SDocGrammarBuilder.create_grammar(),
-            classes=DOCUMENT_MODELS,
-            use_regexp_group=True,
-        )
-
         parse_context = ParseContext(path_to_sdoc_file=file_path)
         processor = SDocParsingProcessor(parse_context=parse_context)
-        meta_model.register_obj_processors(processor.get_default_processors())
+        SDReader.meta_model.register_obj_processors(
+            processor.get_default_processors()
+        )
 
-        document: SDocDocument = meta_model.model_from_str(
+        document: SDocDocument = SDReader.meta_model.model_from_str(
             input_string, file_name=file_path
         )
         parse_context.document_reference.set_document(document)

@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import sys
 import traceback
 from typing import Optional
@@ -21,25 +20,29 @@ from strictdoc.helpers.textx import (
 
 
 class SDocGrammarReader:
-    def __init__(self, path_to_output_root) -> None:
-        self.path_to_output_root = path_to_output_root
+    meta_model = metamodel_from_str(
+        SDocGrammarBuilder.create_grammar_grammar(),
+        classes=GRAMMAR_MODELS + [DocumentGrammarWrapper],
+        use_regexp_group=True,
+    )
+
+    def __init__(self, path_to_output_root: str) -> None:
+        self.path_to_output_root: str = path_to_output_root
 
     @staticmethod
-    def read(input_string, file_path=None) -> DocumentGrammar:
-        meta_model = metamodel_from_str(
-            SDocGrammarBuilder.create_grammar_grammar(),
-            classes=GRAMMAR_MODELS + [DocumentGrammarWrapper],
-            use_regexp_group=True,
-        )
-
-        meta_model.register_obj_processors(
+    def read(
+        input_string: str, file_path: Optional[str] = None
+    ) -> DocumentGrammar:
+        SDocGrammarReader.meta_model.register_obj_processors(
             {
                 "GrammarElement": preserve_source_location_data,
             }
         )
 
-        grammar_wrapper: DocumentGrammarWrapper = meta_model.model_from_str(
-            input_string, file_name=file_path
+        grammar_wrapper: DocumentGrammarWrapper = (
+            SDocGrammarReader.meta_model.model_from_str(
+                input_string, file_name=file_path
+            )
         )
         grammar: DocumentGrammar = grammar_wrapper.grammar
         grammar.parent = None
@@ -52,7 +55,7 @@ class SDocGrammarReader:
 
         return grammar
 
-    def read_from_file(self, file_path) -> DocumentGrammar:
+    def read_from_file(self, file_path: str) -> DocumentGrammar:
         unpickled_content: Optional[DocumentGrammar] = assert_optional_cast(
             PickleCache.read_from_cache(file_path, self.path_to_output_root),
             DocumentGrammar,

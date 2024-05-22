@@ -5,7 +5,10 @@ from strictdoc.backend.sdoc.grammar.grammar import (
     SECTION_GRAMMAR,
     TEXT_TYPES_GRAMMAR,
 )
-from strictdoc.backend.sdoc.grammar.grammar_grammar import GRAMMAR_GRAMMAR
+from strictdoc.backend.sdoc.grammar.grammar_grammar import (
+    GRAMMAR_GRAMMAR,
+    GRAMMAR_WRAPPER,
+)
 from strictdoc.backend.sdoc.grammar.type_system import (
     STRICTDOC_BASIC_TYPE_SYSTEM,
 )
@@ -38,7 +41,7 @@ class SDocGrammarBuilder:
     @staticmethod
     def create_grammar_grammar():
         grammar = SDocGrammarBuilder._prep_grammar(
-            GRAMMAR_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
+            GRAMMAR_WRAPPER + GRAMMAR_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
         )
         return grammar
 

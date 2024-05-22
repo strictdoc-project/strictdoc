@@ -1,0 +1,5 @@
+RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+
+CHECK: Semantic error: Grammar element 'REQUIREMENT's DESCRIPTION field must be declared as 'REQUIRED: True'.
+CHECK: Location: grammar.sgra:3:1
+CHECK: Hint: A content field plays a key role in StrictDoc's HTML user interface as well as in the other export formats. It is a reserved field that any grammar element must have with 'REQUIRED: True'.

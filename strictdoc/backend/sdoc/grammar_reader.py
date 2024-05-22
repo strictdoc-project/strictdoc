@@ -8,10 +8,16 @@ from textx import metamodel_from_str
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import GRAMMAR_MODELS
-from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.document_grammar import (
+    DocumentGrammar,
+    DocumentGrammarWrapper,
+)
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.helpers.cast import assert_optional_cast
-from strictdoc.helpers.textx import drop_textx_meta
+from strictdoc.helpers.textx import (
+    drop_textx_meta,
+    preserve_source_location_data,
+)
 
 
 class SDocGrammarReader:
@@ -22,13 +28,21 @@ class SDocGrammarReader:
     def read(input_string, file_path=None) -> DocumentGrammar:
         meta_model = metamodel_from_str(
             SDocGrammarBuilder.create_grammar_grammar(),
-            classes=GRAMMAR_MODELS,
+            classes=GRAMMAR_MODELS + [DocumentGrammarWrapper],
             use_regexp_group=True,
         )
 
-        grammar: DocumentGrammar = meta_model.model_from_str(
+        meta_model.register_obj_processors(
+            {
+                "GrammarElement": preserve_source_location_data,
+            }
+        )
+
+        grammar_wrapper: DocumentGrammarWrapper = meta_model.model_from_str(
             input_string, file_name=file_path
         )
+        grammar: DocumentGrammar = grammar_wrapper.grammar
+        grammar.parent = None
 
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts

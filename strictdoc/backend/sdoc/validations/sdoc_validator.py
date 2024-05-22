@@ -43,6 +43,44 @@ class SDocValidator:
         SDocValidator._validate_document_view(document)
 
     @staticmethod
+    def validate_grammar_from_file(
+        path_to_grammar: str, grammar_from_file: DocumentGrammar
+    ):
+        for grammar_element_ in grammar_from_file.elements:
+            SDocValidator.validate_grammar_element(
+                path_to_grammar, grammar_element_
+            )
+
+    @staticmethod
+    def validate_grammar_element(
+        path_to_grammar, grammar_element: GrammarElement
+    ):
+        if grammar_element.content_field[0] not in grammar_element.fields_map:
+            raise StrictDocSemanticError.grammar_missing_reserved_statement(
+                grammar_element,
+                path_to_grammar,
+                grammar_element.ng_line_start,
+                grammar_element.ng_col_start,
+            )
+        content_field: GrammarElementField = grammar_element.fields_map[
+            grammar_element.content_field[0]
+        ]
+        # FIXME: Enable for STATEMENT as well. For now, don't want to break
+        #        backward compatibility.
+        if (
+            content_field.title
+            in (RequirementFieldName.DESCRIPTION, RequirementFieldName.CONTENT)
+            and not content_field.required
+        ):
+            raise StrictDocSemanticError.grammar_reserved_statement_must_be_required(
+                grammar_element,
+                content_field.title,
+                path_to_grammar,
+                grammar_element.ng_line_start,
+                grammar_element.ng_col_start,
+            )
+
+    @staticmethod
     def _validate_document_config(document: SDocDocument):
         document_config: DocumentConfig = document.config
         if document_config.default_view is not None:

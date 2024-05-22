@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[REQUIREMENT]
+UID: ABC-123

@@ -39,7 +39,10 @@ class SDocGrammarBuilder:
     @staticmethod
     def create_grammar_grammar() -> str:
         grammar = SDocGrammarBuilder._prep_grammar(
-            GRAMMAR_WRAPPER + GRAMMAR_GRAMMAR + STRICTDOC_BASIC_TYPE_SYSTEM
+            GRAMMAR_WRAPPER
+            + GRAMMAR_GRAMMAR
+            + STRICTDOC_BASIC_TYPE_SYSTEM
+            + TEXT_TYPES_GRAMMAR
         )
         return grammar
 

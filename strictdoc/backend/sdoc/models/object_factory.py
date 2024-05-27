@@ -38,39 +38,39 @@ class SDocObjectFactory:
         if uid is not None:
             assert isinstance(uid, str) and len(uid) > 0
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=RequirementFieldName.UID,
                     field_value=uid,
-                    field_value_multiline=None,
+                    multiline=False,
                 )
             )
         if level:
             assert isinstance(level, str) and len(level) > 0
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=RequirementFieldName.LEVEL,
                     field_value=level,
-                    field_value_multiline=None,
+                    multiline=False,
                 )
             )
         if title is not None:
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=RequirementFieldName.TITLE,
                     field_value=title,
-                    field_value_multiline=None,
+                    multiline=False,
                 )
             )
         if statement:
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=RequirementFieldName.STATEMENT,
                     field_value=statement,
-                    field_value_multiline=None,
+                    multiline=False,
                 )
             )
         if statement_multiline is not None:
@@ -78,39 +78,39 @@ class SDocObjectFactory:
                 statement_multiline, str
             ), f"{statement_multiline}"
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=RequirementFieldName.STATEMENT,
-                    field_value=None,
-                    field_value_multiline=statement_multiline,
+                    field_value=statement_multiline,
+                    multiline=True,
                 )
             )
         if rationale:
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=RequirementFieldName.RATIONALE,
                     field_value=rationale,
-                    field_value_multiline=None,
+                    multiline=False,
                 )
             )
         if rationale_multiline:
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=RequirementFieldName.RATIONALE,
-                    field_value=None,
-                    field_value_multiline=rationale_multiline,
+                    field_value=rationale_multiline,
+                    multiline=True,
                 )
             )
         if tags is not None:
             assert isinstance(tags, str), f"{tags}"
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=RequirementFieldName.TAGS,
                     field_value=tags,
-                    field_value_multiline=None,
+                    multiline=False,
                 )
             )
         if comments is not None:
@@ -118,11 +118,11 @@ class SDocObjectFactory:
             for comment in comments:
                 assert isinstance(comment, str), f"{comment}"
                 fields.append(
-                    SDocNodeField(
+                    SDocNodeField.create_from_string(
                         parent=None,
                         field_name=RequirementFieldName.COMMENT,
-                        field_value=None,
-                        field_value_multiline=comment,
+                        field_value=comment,
+                        multiline=True,
                     )
                 )
         requirement = SDocNode(

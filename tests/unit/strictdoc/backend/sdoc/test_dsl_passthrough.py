@@ -222,7 +222,7 @@ This is a statement 3
     requirement_1 = document.section_contents[0].section_contents[0]
     assert (
         requirement_1.reserved_statement
-        == "This is a statement 1\nThis is a statement 2\nThis is a statement 3"
+        == "This is a statement 1\nThis is a statement 2\nThis is a statement 3\n"
     )
 
     writer = SDWriter()
@@ -299,7 +299,7 @@ This is a Rationale line 3
     assert requirement_1.rationale == (
         "This is a Rationale line 1\n"
         "This is a Rationale line 2\n"
-        "This is a Rationale line 3"
+        "This is a Rationale line 3\n"
     )
 
 
@@ -347,7 +347,7 @@ This is a child body part 3
     requirement_1 = document.section_contents[0].section_contents[0]
     assert (
         requirement_1.comments[0]
-        == "This is a body part 1\nThis is a body part 2\nThis is a body part 3"
+        == "This is a body part 1\nThis is a body part 2\nThis is a body part 3\n"
     )
 
 
@@ -398,7 +398,7 @@ body 1.1.1.1
         document.section_contents[0].section_contents[0], SDocCompositeNode
     )
     requirement_1_1 = document.section_contents[0].section_contents[0]
-    assert requirement_1_1.comments[0] == "body composite 1.1"
+    assert requirement_1_1.comments[0] == "body composite 1.1\n"
 
     assert isinstance(
         document.section_contents[0].section_contents[0].requirements[0],
@@ -407,7 +407,7 @@ body 1.1.1.1
     requirement_1_1_1 = (
         document.section_contents[0].section_contents[0].requirements[0]
     )
-    assert requirement_1_1_1.comments[0] == "body composite 1.1.1"
+    assert requirement_1_1_1.comments[0] == "body composite 1.1.1\n"
 
     assert isinstance(
         document.section_contents[0]
@@ -422,7 +422,7 @@ body 1.1.1.1
         .requirements[0]
         .requirements[0]
     )
-    assert requirement_1_1_1.comments[0] == "body 1.1.1.1"
+    assert requirement_1_1_1.comments[0] == "body 1.1.1.1\n"
 
 
 # This test is needed to make sure that the grammar details related
@@ -922,9 +922,10 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected SingleLineString or '>>>\\n'" in exc_info.value.args[
-        0
-    ].decode("utf-8")
+    assert (
+        "Expected '^\\[ANCHOR: ' or '[LINK: ' or '(?!>>>\\n)\\S.*' or '>>>\\n'"
+        in exc_info.value.args[0].decode("utf-8")
+    )
 
 
 def test_edge_case_04_uid_present_but_empty_with_two_space_characters():
@@ -943,9 +944,10 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected SingleLineString or '>>>\\n'" in exc_info.value.args[
-        0
-    ].decode("utf-8")
+    assert (
+        "Expected '^\\[ANCHOR: ' or '[LINK: ' or '(?!>>>\\n)\\S.*' or '>>>\\n'"
+        in exc_info.value.args[0].decode("utf-8")
+    )
 
 
 def test_edge_case_10_empty_multiline_field():
@@ -965,7 +967,10 @@ COMMENT: >>>
 
     assert exc_info.type is TextXSyntaxError
     assert (
-        "Expected '(?ms)(?!^<<<) *(?!^<<<)\\S((?!^<<<).)+'"
+        "Expected '^\\[ANCHOR: ' or '[LINK: ' or "
+        "'(?ms)(?!^<<<)(?!^\\[\\/FREETEXT\\]\\n)(?!\\[LINK: "
+        "([A-Za-z0-9]+[A-Za-z0-9_\\-]*))(?!^\\[ANCHOR: "
+        "([A-Za-z0-9]+[A-Za-z0-9_\\-]*)).'"
         in exc_info.value.args[0].decode("utf-8")
     )
 
@@ -987,9 +992,8 @@ COMMENT: >>>
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert (
-        "Expected '(?ms)(?!^<<<) *(?!^<<<)\\S((?!^<<<).)+'"
-        in exc_info.value.args[0].decode("utf-8")
+    assert "Node statement cannot be empty." == exc_info.value.args[0].decode(
+        "utf-8"
     )
 
 
@@ -1010,7 +1014,10 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected ' '" == exc_info.value.args[0].decode("utf-8")
+    assert (
+        "Expected 'MID: ' or 'UID: ' or 'LEVEL: ' or 'TITLE: '"
+        == exc_info.value.args[0].decode("utf-8")
+    )
 
 
 def test_edge_case_20_empty_section_title():
@@ -1030,9 +1037,7 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected SingleLineString or '>>>\\n'" == exc_info.value.args[
-        0
-    ].decode("utf-8")
+    assert "Expected SingleLineString" == exc_info.value.args[0].decode("utf-8")
 
 
 def test_edge_case_21_section_title_with_empty_space():

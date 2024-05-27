@@ -20,21 +20,21 @@
 {% endif %}
 
 {%- if requirement.reserved_statement is not none -%}
-{{requirement.reserved_statement.strip()}}
+{{ requirement.reserved_statement.rstrip() }}
 
 {% endif -%}
 
 {%- if requirement.rationale -%}
 **{{ requirement.get_field_human_title("RATIONALE") }}:**
 
-{{ requirement.rationale }}
+{{ requirement.rationale.rstrip() }}
 
 {% endif -%}
 
 {%- for comment in requirement.comments -%}
 **{{ requirement.get_field_human_title("COMMENT") }}:**
 
-{{comment}}
+{{ comment.rstrip() }}
 
 {% endfor -%}
 
@@ -42,7 +42,7 @@
 {%- for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) -%}
 **{{meta_field[0]}}:**
 
-{{ meta_field[1] }}
+{{ meta_field[1].rstrip() }}
 
 {% endfor -%}
 {%- endif %}

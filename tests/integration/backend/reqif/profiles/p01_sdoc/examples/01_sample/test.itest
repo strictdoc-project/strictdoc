@@ -5,7 +5,7 @@ RUN: %cat %S/output/sample.sdoc | filecheck %s
 CHECK: [REQUIREMENT_TYPE]
 CHECK: UID: Anonymized-194ac1eb-d718-b59b-5d2a-c2b0ac0381ef
 CHECK: STATEMENT: >>>
-CHECK: <xhtml:div>...Anonymized...</xhtml:div>
+CHECK: <div>...Anonymized...</div>
 CHECK: <<<
 CHECK: COMMENT: >>>
 CHECK: Anonymized-6e95e816-6fc9-0fe1-8b1f-66340311da94

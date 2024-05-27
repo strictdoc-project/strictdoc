@@ -1,8 +1,4 @@
-NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
-NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
-NEGATIVE_RELATIONS = "(?!^RELATIONS)"
-
-STRICTDOC_BASIC_TYPE_SYSTEM = rf"""
+STRICTDOC_BASIC_TYPE_SYSTEM = r"""
 BooleanChoice[noskipws]:
   ('True' | 'False')
 ;
@@ -13,23 +9,6 @@ ChoiceOption[noskipws]:
 
 ChoiceOptionXs[noskipws]:
   /, /- ChoiceOption
-;
-
-FieldName[noskipws]:
-  /{NEGATIVE_RELATIONS}[A-Z]+[A-Z_]*/
-;
-
-// According to the Strict Grammar Rule #3, both SingleLineString and
-// MultiLineString can never be empty strings.
-// Both must eventualy start with a non-space character.
-SingleLineString:
-  /{NEGATIVE_MULTILINE_STRING_START}\S.*$/
-;
-
-MultiLineString[noskipws]:
-  />>>\n/-
-  /(?ms){NEGATIVE_MULTILINE_STRING_END} *{NEGATIVE_MULTILINE_STRING_END}\S({NEGATIVE_MULTILINE_STRING_END}.)+/
-  /^<<</-
 ;
 
 RequirementType[noskipws]:

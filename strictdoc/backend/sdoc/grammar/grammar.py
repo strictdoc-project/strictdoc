@@ -1,4 +1,8 @@
 REGEX_UID = r"([A-Za-z0-9]+[A-Za-z0-9_\-]*)"
+
+NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
+NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
+NEGATIVE_RELATIONS = "(?!^RELATIONS)"
 NEGATIVE_FREETEXT_END = "(?!^\\[\\/FREETEXT\\]\n)"
 NEGATIVE_INLINE_LINK_START = rf"(?!\[LINK: {REGEX_UID})"
 NEGATIVE_ANCHOR_START = rf"(?!^\[ANCHOR: {REGEX_UID})"
@@ -8,8 +12,12 @@ TextPart[noskipws]:
   (Anchor | InlineLink | NormalString)
 ;
 
+SingleLineTextPart[noskipws]:
+  (Anchor | InlineLink | /{NEGATIVE_MULTILINE_STRING_START}\S.*/)
+;
+
 NormalString[noskipws]:
-  (/(?ms){NEGATIVE_FREETEXT_END}{NEGATIVE_INLINE_LINK_START}{NEGATIVE_ANCHOR_START}./)+
+  (/(?ms){NEGATIVE_MULTILINE_STRING_END}{NEGATIVE_FREETEXT_END}{NEGATIVE_INLINE_LINK_START}{NEGATIVE_ANCHOR_START}./)+
 ;
 
 InlineLink[noskipws]:
@@ -20,6 +28,23 @@ Anchor[noskipws]:
   /^\[ANCHOR: /
   value = /{REGEX_UID}/ (', ' title = /\w+[\s\w+]*/)?
   /\](\Z|\n)/
+;
+
+// According to the Strict Grammar Rule #3, both SingleLineString and
+// MultiLineString can never be empty strings.
+// Both must eventualy start with a non-space character.
+SingleLineString:
+  /{NEGATIVE_MULTILINE_STRING_START}\S.*$/
+;
+
+MultiLineString[noskipws]:
+  />>>\n/-
+    parts*=TextPart
+  /^<<</-
+;
+
+FieldName[noskipws]:
+  /{NEGATIVE_RELATIONS}[A-Z]+[A-Z_]*/
 ;
 """
 
@@ -148,7 +173,7 @@ ReservedKeyword[noskipws]:
 ;
 
 SDocNode[noskipws]:
-  '[' !SDocCompositeNodeTagName requirement_type = RequirementType ']' '\n'
+  '[' !'SECTION' !SDocCompositeNodeTagName requirement_type = RequirementType ']' '\n'
   ('MID: ' mid = SingleLineString '\n')?
   fields *= SDocNodeField
   (
@@ -165,8 +190,17 @@ SDocNodeField[noskipws]:
   (
     field_name = FieldName ':'
     (
-      ((' ' field_value = SingleLineString) '\n') |
-      (' ' (field_value_multiline = MultiLineString) '\n')
+        (' ' parts+=SingleLineTextPart '\n')
+        |
+        (
+          ' '
+          (
+            multiline__ = />>>\n/
+            parts+=TextPart
+            /^<<</
+          )
+          '\n'
+        )
     )
   )
 ;

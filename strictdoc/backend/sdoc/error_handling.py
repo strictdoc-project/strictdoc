@@ -150,7 +150,7 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Requirement field has an invalid SingleChoice value: "
-                f"{requirement_field.field_value}."
+                f"{requirement_field.get_value()}."
             ),
             hint=(
                 f"Problematic field: {requirement_field.field_name}. "
@@ -176,7 +176,7 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Requirement field has an invalid MultipleChoice value: "
-                f"{requirement_field.field_value}."
+                f"{requirement_field.get_value()}."
             ),
             hint=(
                 f"Problematic field: {requirement_field.field_name}. "
@@ -201,7 +201,7 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Requirement field of type MultipleChoice is invalid: "
-                f"{requirement_field.field_value}."
+                f"{requirement_field.get_value()}."
             ),
             hint="MultipleChoice field requires ', '-separated values.",
             example=None,
@@ -219,7 +219,7 @@ class StrictDocSemanticError(Exception):
         return StrictDocSemanticError(
             title=(
                 f"Requirement field of type Tag is invalid: "
-                f"{requirement_field.field_value}."
+                f"{requirement_field.get_value()}."
             ),
             hint="Tag field requires ', '-separated values.",
             example=None,

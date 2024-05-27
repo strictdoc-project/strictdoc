@@ -590,7 +590,7 @@ class P01_SDocToReqIFObjectConverter:
             elif isinstance(grammar_field, GrammarElementFieldString):
                 is_multiline_field = field.is_multiline()
 
-                field_value: str = field.get_value()
+                field_value: str = field.get_value().rstrip()
 
                 attribute_type: str
                 if context.multiline_is_xhtml:

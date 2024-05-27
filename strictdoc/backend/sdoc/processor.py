@@ -2,7 +2,7 @@
 import os.path
 from typing import List, Optional
 
-from textx import get_model
+from textx import TextXSyntaxError, get_model
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -16,6 +16,7 @@ from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
     SDocNode,
+    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
@@ -28,7 +29,6 @@ class ParseContext:
         self.path_to_sdoc_file: Optional[str] = path_to_sdoc_file
         self.path_to_sdoc_dir: Optional[str] = None
         if path_to_sdoc_file is not None:
-            assert os.path.isfile(path_to_sdoc_file), path_to_sdoc_file
             self.path_to_sdoc_dir = os.path.dirname(path_to_sdoc_file)
         self.document_grammar: Optional[DocumentGrammar] = None
         self.document_reference: DocumentReference = DocumentReference()
@@ -66,6 +66,7 @@ class SDocParsingProcessor:
             "DocumentFromFile": self.process_document_from_file,
             "SDocCompositeNode": self.process_composite_requirement,
             "SDocNode": self.process_requirement,
+            "SDocNodeField": self.process_node_field,
             "FreeText": self.process_free_text,
         }
 
@@ -241,6 +242,23 @@ class SDocParsingProcessor:
             requirement.ng_resolved_custom_level = "None"
 
         preserve_source_location_data(requirement)
+
+    def process_node_field(self, node_field: SDocNodeField):
+        node_field_parts = node_field.parts
+        if (
+            isinstance(node_field_parts[0], str)
+            and node_field_parts[0].strip() == ""
+        ):
+            the_model = get_model(node_field)
+            line_start, col_start = the_model._tx_parser.pos_to_linecol(
+                node_field._tx_position
+            )
+            raise TextXSyntaxError(
+                "Node statement cannot be empty.",
+                line=line_start,
+                col=col_start,
+                filename=self.parse_context.path_to_sdoc_file,
+            )
 
     def process_free_text(self, free_text):
         pass

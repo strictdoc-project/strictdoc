@@ -23,6 +23,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
+from strictdoc.helpers.string import ensure_newline
 
 
 @auto_described
@@ -37,46 +38,40 @@ class SDocNodeField:
         self,
         parent: Optional["SDocNode"],
         field_name: str,
-        field_value: Optional[str],
-        field_value_multiline: Optional[str],
+        parts: List[Any],
+        multiline__: Optional[str],
     ) -> None:
-        self.parent = parent
+        self.parent: Optional["SDocNode"] = parent
         self.field_name = field_name
+        self.parts: List[Any] = parts
+        self.multiline: bool = multiline__ is not None and len(multiline__) > 0
 
-        if field_value_multiline is not None:
-            rstripped_field_value_multiline = field_value_multiline.rstrip()
+        self.resolved_field_value: str = "".join(parts)
 
-            # Edge case: empty multiline field should have one newline symbol.
-            # Example:
-            # COMMENT: >>>
-            #
-            # <<<
-            if (
-                len(rstripped_field_value_multiline) == 0
-                and len(field_value_multiline) != 0
-            ):
-                field_value_multiline = "\n"
-            else:
-                field_value_multiline = rstripped_field_value_multiline
+    @staticmethod
+    def create_from_string(
+        parent: Optional["SDocNode"],
+        field_name: str,
+        field_value: str,
+        multiline: bool,
+    ) -> "SDocNodeField":
+        assert isinstance(field_name, str) and len(field_name) > 0, field_name
+        assert (
+            isinstance(field_value, str) and len(field_value) > 0
+        ), field_value
 
-        self._field_value_multiline: Optional[str] = field_value_multiline
-        self._field_value: Optional[str] = field_value
-
-        self.resolved_field_value: str
-        if self._field_value is not None:
-            self._resolved_field_value = self._field_value
-        elif self._field_value_multiline is not None:
-            self._resolved_field_value = self._field_value_multiline
-        else:
-            raise AssertionError(
-                "A requirement field must have at least one value."
-            )
+        return SDocNodeField(
+            parent=parent,
+            field_name=field_name,
+            parts=[field_value],
+            multiline__="multiline" if multiline else None,
+        )
 
     def is_multiline(self) -> bool:
-        return self._field_value_multiline is not None
+        return self.multiline
 
     def get_value(self) -> str:
-        return self._resolved_field_value
+        return self.resolved_field_value
 
 
 @auto_described
@@ -483,7 +478,6 @@ class SDocNode(SDocObject):
             return
 
         # If a field value is being added or updated.
-
         document: SDocDocument = self.document
         grammar_or_none: Optional[DocumentGrammar] = document.grammar
         assert grammar_or_none is not None
@@ -495,31 +489,28 @@ class SDocNode(SDocObject):
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
         field_index = grammar_field_titles.index(field_name)
 
-        field_value = None
-        field_value_multiline = None
-        if field_index < element.content_field[1]:
-            field_value = value
-        else:
-            field_value_multiline = value
+        multiline = field_index >= element.content_field[1]
+        if multiline:
+            value = ensure_newline(value)
 
         if field_name in self.ordered_fields_lookup:
             if len(self.ordered_fields_lookup[field_name]) > form_field_index:
                 self.ordered_fields_lookup[field_name][form_field_index] = (
-                    SDocNodeField(
+                    SDocNodeField.create_from_string(
                         self,
                         field_name=field_name,
-                        field_value=field_value,
-                        field_value_multiline=field_value_multiline,
+                        field_value=value,
+                        multiline=multiline,
                     )
                 )
             else:
                 self.ordered_fields_lookup[field_name].insert(
                     form_field_index,
-                    SDocNodeField(
+                    SDocNodeField.create_from_string(
                         self,
                         field_name=field_name,
-                        field_value=field_value,
-                        field_value_multiline=field_value_multiline,
+                        field_value=value,
+                        multiline=multiline,
                     ),
                 )
             return
@@ -531,11 +522,11 @@ class SDocNode(SDocObject):
                     self.ordered_fields_lookup[field_title]
                 )
         new_ordered_fields_lookup[field_name] = [
-            SDocNodeField(
+            SDocNodeField.create_from_string(
                 self,
                 field_name=field_name,
-                field_value=field_value,
-                field_value_multiline=field_value_multiline,
+                field_value=value,
+                multiline=multiline,
             )
         ]
         after_field_index = field_index + 1

@@ -96,11 +96,11 @@ def test_04_meta_multilines_not_nones():
 
     test_value = "a long\nmultiline value instead\nof the single line one"
     requirement.ordered_fields_lookup["META_TEST_FIELD"] = [
-        SDocNodeField(
+        SDocNodeField.create_from_string(
             parent=None,
             field_name="META_TEST_FIELD",
-            field_value=None,
-            field_value_multiline=test_value,
+            field_value=test_value,
+            multiline=True,
         )
     ]
     meta_fields = list(requirement.enumerate_meta_fields())

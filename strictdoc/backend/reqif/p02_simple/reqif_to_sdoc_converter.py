@@ -35,7 +35,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
 )
-from strictdoc.helpers.string import unescape
+from strictdoc.helpers.string import ensure_newline, unescape
 
 
 class P02_ReqIFToSDocBuildContext:
@@ -417,39 +417,41 @@ class P02_ReqIFToSDocConverter:
 
                 enum_values = ", ".join(enum_values_resolved)
                 fields.append(
-                    SDocNodeField(
+                    SDocNodeField.create_from_string(
                         parent=None,
                         field_name=sdoc_field_name,
                         field_value=enum_values,
-                        field_value_multiline=None,
+                        multiline=False,
                     )
                 )
                 continue
             assert isinstance(attribute.value, str)
             if long_name_or_none == "ReqIF.ForeignID":
                 foreign_key_id_or_none = attribute.definition_ref
-            attribute_value: Optional[str] = unescape(attribute.value)
-            attribute_multiline_value = None
+            attribute_value: str = unescape(attribute.value)
+            multiline: bool = False
             if (
                 "\n" in attribute_value
                 or attribute.attribute_type == SpecObjectAttributeType.XHTML
                 or field_name == ReqIFRequirementReservedField.TEXT
                 or field_name == ReqIFRequirementReservedField.COMMENT_NOTES
             ):
-                attribute_multiline_value = attribute_value.lstrip()
-                attribute_value = None
+                attribute_value = attribute_value.lstrip()
+                multiline = True
 
             sdoc_field_name = (
                 P02_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
                     field_name,
                 )
             )
+            if multiline:
+                attribute_value = ensure_newline(attribute_value)
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=sdoc_field_name,
                     field_value=attribute_value,
-                    field_value_multiline=attribute_multiline_value,
+                    multiline=multiline,
                 )
             )
 

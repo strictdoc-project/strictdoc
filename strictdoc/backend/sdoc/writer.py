@@ -395,7 +395,6 @@ class SDWriter:
                     if len(field_value) > 0:
                         if field_value != "\n":
                             output += field_value
-                        output += "\n"
                     output += "<<<"
                     output += "\n"
                 else:

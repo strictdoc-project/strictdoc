@@ -14,6 +14,7 @@ from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.models.type_system import GrammarElementFieldString
+from strictdoc.helpers.string import ensure_newline
 
 
 class RequirementColumns(NamedTuple):
@@ -172,7 +173,7 @@ class ExcelToSDocConverter:
             if comment in ("", "-"):
                 comments = None
             else:
-                comments = [comment]
+                comments = [ensure_newline(comment)]
         parent_uid = None
         if columns.parent_column is not None:
             parent_uid = row_values[columns.parent_column].strip()
@@ -186,7 +187,7 @@ class ExcelToSDocConverter:
             uid=uid,
             level=None,
             statement=None,
-            statement_multiline=statement,
+            statement_multiline=ensure_newline(statement),
             rationale=None,
             rationale_multiline=None,
             tags=None,
@@ -196,11 +197,11 @@ class ExcelToSDocConverter:
             value = row_values[i].strip()
             if value != "":
                 template_requirement.ordered_fields_lookup[name] = [
-                    SDocNodeField(
+                    SDocNodeField.create_from_string(
                         parent=None,
                         field_name=name,
-                        field_value=None,
-                        field_value_multiline=value,
+                        field_value=ensure_newline(value),
+                        multiline=True,
                     )
                 ]
         if parent_uid is not None:

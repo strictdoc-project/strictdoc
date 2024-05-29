@@ -87,3 +87,9 @@ def create_safe_requirement_tag_string(string) -> str:
 
 def create_safe_document_file_name(string) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", string).rstrip("_")
+
+
+def ensure_newline(text: str) -> str:
+    if not text.endswith("\n"):
+        text += "\n"
+    return text

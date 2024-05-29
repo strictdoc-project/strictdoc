@@ -37,7 +37,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
 )
-from strictdoc.helpers.string import unescape
+from strictdoc.helpers.string import ensure_newline, unescape
 
 
 class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
@@ -387,43 +387,43 @@ class P11_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                     ].strip()
                 enum_values = ", ".join(enum_values_list)
                 fields.append(
-                    SDocNodeField(
+                    SDocNodeField.create_from_string(
                         parent=None,
                         field_name=field_name,
                         field_value=enum_values,
-                        field_value_multiline=None,
+                        multiline=False,
                     )
                 )
                 continue
             assert isinstance(attribute.value, str)
             if long_name_or_none == "ReqIF.ForeignID":
                 foreign_key_id_or_none = attribute.definition_ref
-            attribute_value: Optional[str] = unescape(attribute.value)
-            attribute_multiline_value = None
+            attribute_value: str = unescape(attribute.value)
+            multiline: bool = False
             if (
                 "\n" in attribute_value
                 or field_name == ReqIFRequirementReservedField.TEXT
                 or field_name == ReqIFRequirementReservedField.COMMENT_NOTES
             ):
                 if attribute.attribute_type == SpecObjectAttributeType.XHTML:
-                    attribute_multiline_value = attribute.value_stripped_xhtml
+                    attribute_value = attribute.value_stripped_xhtml
                     # Another strip() is hidden in .value_stripped_xhtml
                     # but doing this anyway to highlight the intention.
-                    attribute_multiline_value = (
-                        attribute_multiline_value.strip()
-                    )
+                    attribute_value = attribute_value.strip()
                 else:
-                    attribute_multiline_value = attribute_value.strip()
-                attribute_value = None
+                    attribute_value = attribute_value.strip()
+                multiline = True
 
             if field_name in ReqIFRequirementReservedField.SET:
                 field_name = REQIF_MAP_TO_SDOC_FIELD_MAP[field_name]
+            if multiline:
+                attribute_value = ensure_newline(attribute_value)
             fields.append(
-                SDocNodeField(
+                SDocNodeField.create_from_string(
                     parent=None,
                     field_name=field_name,
                     field_value=attribute_value,
-                    field_value_multiline=attribute_multiline_value,
+                    multiline=multiline,
                 )
             )
         requirement = SDocNode(

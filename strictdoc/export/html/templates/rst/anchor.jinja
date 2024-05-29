@@ -1,7 +1,7 @@
 .. raw:: html
 
     <sdoc-anchor id="{{ anchor.value }}" data-uid="{{ anchor.value }}" data-anchor="{{ anchor.value }}" style="top:unset">
-    {%- set incoming_links = traceability_index.get_section_incoming_links(anchor) -%}
+    {%- set incoming_links = traceability_index.get_incoming_links(anchor) -%}
     {%- if incoming_links is not none and incoming_links|length > 0 -%}
     <template>
       incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:

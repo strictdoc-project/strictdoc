@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Modified free text!
+
+[LINK: REQ-1]
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement title #1
+STATEMENT: >>>
+Foo.
+<<<

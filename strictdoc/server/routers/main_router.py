@@ -70,6 +70,7 @@ from strictdoc.core.transforms.update_included_document import (
 from strictdoc.core.transforms.update_requirement import (
     UpdateRequirementResult,
     UpdateRequirementTransform,
+    DeleteRequirementCommand,
 )
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_config_form_object import (
@@ -1398,14 +1399,21 @@ def create_main_router(
             export_action.traceability_index.get_node_by_mid(MID(node_id))
         )
 
-        export_action.traceability_index.delete_requirement(requirement)
-
-        requirement_parent: Union[
-            SDocSection, SDocDocument, SDocCompositeNode
-        ] = requirement.parent
-        requirement_parent.section_contents.remove(requirement)
-
-        export_action.traceability_index.update_last_updated()
+        try:
+            delete_command = DeleteRequirementCommand(
+                requirement=requirement,
+                traceability_index=export_action.traceability_index,
+            )
+            delete_command.perform()
+        except MultipleValidationError:
+            output = ""
+            return HTMLResponse(
+                content=output,
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
 
         # Saving new content to .SDoc file.
         SDWriter().write_to_file(requirement.document)

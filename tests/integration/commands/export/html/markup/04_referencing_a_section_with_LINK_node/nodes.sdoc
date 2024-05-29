@@ -1,0 +1,25 @@
+[DOCUMENT]
+TITLE: Doc with a requirement
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: CUSTOM
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: DESCRIPTION
+    TYPE: String
+    REQUIRED: True
+
+[CUSTOM]
+UID: CUSTOM-1
+TITLE: Foo Bar
+DESCRIPTION: If a title field is defined it shall have precedence as link name.
+
+[CUSTOM]
+UID: CUSTOM-2
+DESCRIPTION: UID shall be used as link name if title is not defined.

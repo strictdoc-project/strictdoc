@@ -126,7 +126,7 @@ class RSTWriter:
             if isinstance(part, str):
                 output += part
             elif isinstance(part, InlineLink):
-                anchor_or_none = self.index.get_linkable_node_by_uid_weak(
+                node_or_none = self.index.get_linkable_node_by_uid_weak(
                     part.link
                 )
 
@@ -134,13 +134,8 @@ class RSTWriter:
                 # referenced, but you must give the link an explicit title,
                 # using this syntax: :ref:`Link title <label-name>`.
                 # https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
-                if anchor_or_none is not None:
-                    anchor_text = (
-                        anchor_or_none.title
-                        if anchor_or_none.title is not None
-                        else anchor_or_none.value
-                    )
-                    output += f":ref:`{anchor_text} <{part.link}>`"
+                if node_or_none is not None:
+                    output += f":ref:`{node_or_none.title} <{part.link}>`"
                 else:
                     output += f":ref:`{part.link}`"
             elif isinstance(part, Anchor):

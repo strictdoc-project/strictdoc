@@ -33,6 +33,17 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
+[FREETEXT]
+Document free text.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section
+
+[FREETEXT]
+Section free text.
+[/FREETEXT]
+
 [REQUIREMENT]
 STATEMENT: >>>
 Statement line #1
@@ -41,3 +52,5 @@ Statement line #2
 
 Statement line #3
 <<<
+
+[/SECTION]

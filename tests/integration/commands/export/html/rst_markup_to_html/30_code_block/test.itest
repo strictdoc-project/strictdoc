@@ -1,0 +1,7 @@
+RUN: %strictdoc export %S --formats=html --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Document with an code block
+
+RUN: %cat %S/Output/html/30_code_block/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+CHECK-HTML-FILE: Lorem Ipsum.
+CHECK-HTML-FILE: <span class="keyword">struct</span>
+CHECK-HTML-FILE: Lorem ipsum.

@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Document with an code block
+
+[REQUIREMENT]
+STATEMENT: >>>
+Lorem Ipsum.
+
+.. code-block:: c
+
+    struct S {
+        T1 S1;
+        T2 *S2;
+        T3 S3[];
+    }
+
+Lorem ipsum.
+<<<

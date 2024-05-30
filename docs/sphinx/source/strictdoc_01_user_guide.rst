@@ -1877,6 +1877,17 @@ The following options are available for ReqIF export/import commands.
 
 ``--reqif-enable-mid`` This option requires the machine identifiers option to be enabled (see :ref:`Machine identifiers (MID) <SECTION-UG-Machine-identifiers-MID>`) and allows all nodes machine identifiers (MID) exported as ReqIF IDENTIFIERs. This option can be useful when the MID/IDENTIFIER stability of document, section, and requirement nodes is critical when doing iterative export/import roundtrips.
 
+All options can be also specified in a project's TOML file as follows:
+
+.. code-block::
+
+    [project]
+
+    [reqif]
+    multiline_is_xhtml = true
+    import_markup = "HTML"
+    enable_mid = true
+
 .. _SECTION-REQIF-DETAILS:
 
 ReqIF implementation details
@@ -2393,13 +2404,6 @@ Known issues
 ============
 
 This section documents some known issues and non-obvious implementation details.
-
-.. _SDOC_IMPL_1:
-
-Exporting document free text to ReqIF and vice versa
-----------------------------------------------------
-
-ReqIF format does not seem to provide a dedicated convention for a text node to be distinguished from a requirement or a section. StrictDoc implements a workaround: the document's free text is converted to a section with a ``ChapterName`` field that equals "Abstract". And the other way round: when a ReqIF-to-SDoc converter encounters the first section of a document to be "Abstract", it is converted to a free text.
 
 .. _SDOC_IMPL_2:
 

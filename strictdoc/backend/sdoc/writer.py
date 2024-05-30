@@ -217,18 +217,15 @@ class SDWriter:
                         )
 
                     relations: List = element.relations
-                    assert len(relations) > 0, relations
+                    if len(relations) > 0:
+                        output += "  RELATIONS:\n"
 
-                    output += "  RELATIONS:\n"
-
-                    for element_relation in relations:
-                        output += (
-                            f"  - TYPE: {element_relation.relation_type}\n"
-                        )
-                        if element_relation.relation_role is not None:
+                        for element_relation in relations:
                             output += (
-                                f"    ROLE: {element_relation.relation_role}\n"
+                                f"  - TYPE: {element_relation.relation_type}\n"
                             )
+                            if element_relation.relation_role is not None:
+                                output += f"    ROLE: {element_relation.relation_role}\n"
 
         for free_text in document.free_texts:
             output += "\n"

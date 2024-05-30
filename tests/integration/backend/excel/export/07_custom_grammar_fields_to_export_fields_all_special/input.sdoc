@@ -23,6 +23,9 @@ ELEMENTS:
   - TITLE: PRIORITY
     TYPE: SingleChoice(LOW, MEDIUM, HIGH)
     REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 
 [REQUIREMENT]
 UID: REQ-001

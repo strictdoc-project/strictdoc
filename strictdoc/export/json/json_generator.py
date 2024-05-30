@@ -164,15 +164,14 @@ class JSONGenerator:
                 )
 
             relations: List = element_.relations
-            assert len(relations) > 0, relations
-
-            for element_relation_ in relations:
-                relation_dict = {
-                    "TYPE": element_relation_.relation_type,
-                }
-                if element_relation_.relation_role is not None:
-                    relation_dict["ROLE"] = element_relation_.relation_role
-                element_dict["RELATIONS"].append(relation_dict)
+            if len(relations) > 0:
+                for element_relation_ in relations:
+                    relation_dict = {
+                        "TYPE": element_relation_.relation_type,
+                    }
+                    if element_relation_.relation_role is not None:
+                        relation_dict["ROLE"] = element_relation_.relation_role
+                    element_dict["RELATIONS"].append(relation_dict)
 
             document_dict[JSONKey.GRAMMAR]["ELEMENTS"].append(element_dict)
 

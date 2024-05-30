@@ -28,9 +28,6 @@ ELEMENTS:
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 """.lstrip()
     reader = SDReader()
 
@@ -77,9 +74,6 @@ ELEMENTS:
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 
 [LOW_LEVEL_REQUIREMENT]
 SINGLE_CHOICE_FIELD: A
@@ -130,9 +124,6 @@ ELEMENTS:
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 
 [LOW_LEVEL_REQUIREMENT]
 MULTIPLE_CHOICE_FIELD: A, C
@@ -183,9 +174,6 @@ ELEMENTS:
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 
 [LOW_LEVEL_REQUIREMENT]
 TAG_FIELD: A, C
@@ -240,9 +228,6 @@ ELEMENTS:
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 
 [REQUIREMENT]
 MY_FIELD: >>>

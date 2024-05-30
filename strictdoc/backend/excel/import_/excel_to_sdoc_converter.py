@@ -130,8 +130,11 @@ class ExcelToSDocConverter:
             section_contents=[],
         )
 
+        # FIXME: This is becoming very limiting. It must work against a complete grammar.
         fields = list(
-            DocumentGrammar.create_default(document).elements[0].fields
+            DocumentGrammar.create_default(document)
+            .elements_by_type["REQUIREMENT"]
+            .fields
         )
 
         for _, name in extra_header_pairs:

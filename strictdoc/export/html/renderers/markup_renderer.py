@@ -1,11 +1,12 @@
 # mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,var-annotated"
+from collections.abc import Iterable
 from typing import Optional, Type, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.section import FreeText
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
@@ -18,7 +19,6 @@ from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
-from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.rst import truncated_statement_with_no_rst
 
 
@@ -85,17 +85,22 @@ class MarkupRenderer:
             "rst/anchor.jinja"
         )
 
-    def render_requirement_statement(self, requirement):
+    def render_requirement_statement(
+        self, document_type: DocumentType, requirement: SDocNode
+    ):
         assert isinstance(requirement, SDocNode)
 
         if requirement in self.cache:
             return self.cache[requirement]
-        output = self.fragment_writer.write(requirement.reserved_statement)
-        self.cache[requirement] = output
+
+        parts_output = self.render_parts(
+            document_type, requirement.reserved_statement_parts
+        )
+        output = self.fragment_writer.write(parts_output)
 
         return output
 
-    def render_truncated_requirement_statement(self, requirement):
+    def render_truncated_requirement_statement(self, requirement: SDocNode):
         assert isinstance(requirement, SDocNode), requirement
         assert requirement.reserved_statement is not None
 
@@ -111,33 +116,59 @@ class MarkupRenderer:
 
         return output
 
-    def render_requirement_rationale(self, requirement):
+    def render_requirement_rationale(self, requirement: SDocNode):
         assert isinstance(requirement, SDocNode)
 
         if requirement in self.rationale_cache:
             return self.rationale_cache[requirement]
         output = self.fragment_writer.write(requirement.rationale)
         self.rationale_cache[requirement] = output
+
         return output
 
-    def render_comment(self, comment):
-        assert isinstance(comment, str)
+    def render_comment(
+        self, document_type: DocumentType, comment: SDocNodeField
+    ):
+        assert isinstance(comment, SDocNodeField)
 
         if comment in self.cache:
             return self.cache[comment]
-        output = self.fragment_writer.write(comment)
+
+        parts_output = self.render_parts(document_type, comment.parts)
+        output = self.fragment_writer.write(parts_output)
         self.cache[comment] = output
+
         return output
 
-    def render_free_text(self, document_type, free_text):
+    def render_free_text(
+        self, document_type: DocumentType, free_text: FreeText
+    ):
         assert isinstance(free_text, FreeText)
         assert self.context_document is not None
 
         if (document_type, free_text) in self.cache:
             return self.cache[(document_type, free_text)]
 
+        parts_output = self.render_parts(document_type, free_text.parts)
+        output = self.fragment_writer.write(parts_output)
+        self.cache[(document_type, free_text)] = output
+
+        return output
+
+    def render_meta_value(
+        self, document_type: DocumentType, meta_field: SDocNodeField
+    ):
+        assert isinstance(meta_field, SDocNodeField)
+
+        # FIXME: Introduce and improve caching.
+        parts_output = self.render_parts(document_type, meta_field.parts)
+        output = self.fragment_writer.write(parts_output)
+
+        return output
+
+    def render_parts(self, document_type: DocumentType, parts: Iterable) -> str:
         parts_output = ""
-        for part in free_text.parts:
+        for part in parts:
             if isinstance(part, str):
                 parts_output += part
             elif isinstance(part, InlineLink):
@@ -157,16 +188,4 @@ class MarkupRenderer:
                     link_renderer=self.link_renderer,
                     document_type=DocumentType.document(),
                 )
-
-        output = self.fragment_writer.write(parts_output)
-        self.cache[(document_type, free_text)] = output
-
-        return output
-
-    def render_meta_value(self, meta_field_value):
-        assert isinstance(meta_field_value, str)
-
-        # FIXME: Introduce and improve caching.
-        output = self.fragment_writer.write(meta_field_value)
-
-        return output
+        return parts_output

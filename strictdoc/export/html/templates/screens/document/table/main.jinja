@@ -119,7 +119,7 @@
                 </td>
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.reserved_statement -%}
-                    <sdoc-autogen>{{ view_object.markup_renderer.render_requirement_statement(requirement) }}</sdoc-autogen>
+                    <sdoc-autogen>{{ view_object.markup_renderer.render_requirement_statement(view_object.document_type, requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
                 <td class="content-view-td content-view-td-content">
@@ -129,8 +129,8 @@
                 </td>
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.comments -%}
-                    {%- for comment in requirement.comments -%}
-                    <sdoc-autogen>{{ view_object.markup_renderer.render_comment(comment) }}</sdoc-autogen>
+                    {%- for comment in requirement.get_comment_fields() -%}
+                    <sdoc-autogen>{{ view_object.markup_renderer.render_comment(view_object.document_type, comment) }}</sdoc-autogen>
                     {%- endfor -%}
                   {%- endif -%}
                 </td>

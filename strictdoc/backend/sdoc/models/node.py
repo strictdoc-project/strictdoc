@@ -45,8 +45,12 @@ class SDocNodeField:
         self.field_name = field_name
         self.parts: List[Any] = parts
         self.multiline: bool = multiline__ is not None and len(multiline__) > 0
-
-        self.resolved_field_value: str = "".join(parts)
+        self.resolved_field_value: str = "".join(
+            map(
+                lambda part: part.value if not isinstance(part, str) else part,
+                parts,
+            )
+        )
 
     @staticmethod
     def create_from_string(
@@ -208,6 +212,13 @@ class SDocNode(SDocObject):
         )
 
     @property
+    def reserved_statement_parts(self) -> List:
+        element: GrammarElement = self.document.grammar.elements_by_type[
+            self.requirement_type
+        ]
+        return self.ordered_fields_lookup[element.content_field[0]][0].parts
+
+    @property
     def rationale(self) -> Optional[str]:
         return self._get_cached_field(
             RequirementFieldName.RATIONALE, singleline_only=False
@@ -215,12 +226,7 @@ class SDocNode(SDocObject):
 
     @property
     def comments(self) -> List[str]:
-        if RequirementFieldName.COMMENT not in self.ordered_fields_lookup:
-            return []
-        comments = []
-        for field in self.ordered_fields_lookup[RequirementFieldName.COMMENT]:
-            comments.append(field.get_value())
-        return comments
+        return [comment.get_value() for comment in self.get_comment_fields()]
 
     # Other properties
     @property
@@ -359,6 +365,10 @@ class SDocNode(SDocObject):
             references.append((child_reference.ref_uid, child_reference.role))
         return references
 
+    def get_comment_fields(self) -> Generator[SDocNodeField, None, None]:
+        if RequirementFieldName.COMMENT in self.ordered_fields_lookup:
+            yield from self.ordered_fields_lookup[RequirementFieldName.COMMENT]
+
     def enumerate_fields(self) -> Generator[SDocNodeField, None, None]:
         requirement_fields = self.ordered_fields_lookup.values()
         for requirement_field_list in requirement_fields:
@@ -371,9 +381,9 @@ class SDocNode(SDocObject):
             meta_field_value = field.get_value()
             yield field, field.field_name, meta_field_value
 
-    def enumerate_meta_fields(
+    def enumerate_meta_field_nodes(
         self, skip_single_lines: bool = False, skip_multi_lines: bool = False
-    ) -> Generator[Tuple[str, str], None, None]:
+    ) -> Generator[Tuple[str, SDocNodeField], None, None]:
         element: GrammarElement = self.document.grammar.elements_by_type[
             self.requirement_type
         ]
@@ -382,7 +392,7 @@ class SDocNode(SDocObject):
         for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
-            meta_field_value = field.get_value()
+            meta_field = field
             field_index = grammar_field_titles.index(field.field_name)
 
             # A field is considered singleline if it goes before the STATEMENT
@@ -398,7 +408,17 @@ class SDocNode(SDocObject):
                 continue
 
             field_human_title = element.fields_map[field.field_name]
-            yield field_human_title.get_field_human_name(), meta_field_value
+            yield field_human_title.get_field_human_name(), meta_field
+
+    def enumerate_meta_fields(
+        self, skip_single_lines: bool = False, skip_multi_lines: bool = False
+    ) -> Generator[Tuple[str, str], None, None]:
+        yield from map(
+            lambda e: (e[0], e[1].get_value()),
+            self.enumerate_meta_field_nodes(
+                skip_single_lines, skip_multi_lines
+            ),
+        )
 
     def get_meta_field_value_by_title(self, field_title: str) -> Optional[str]:
         assert isinstance(field_title, str)

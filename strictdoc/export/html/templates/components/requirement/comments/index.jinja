@@ -1,12 +1,12 @@
 {# comments #}
 
 {%- if requirement.comments and view_object.current_view.includes_field(requirement.requirement_type, "COMMENT") %}
-  {%- for comment in requirement.comments %}
+  {%- for comment in requirement.get_comment_fields() %}
     <sdoc-requirement-field-label>{{ requirement.get_field_human_title("COMMENT") }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field
       data-field-label="comment"
     >
-      {%- with field_content = view_object.markup_renderer.render_comment(comment) -%}
+      {%- with field_content = view_object.markup_renderer.render_comment(view_object.document_type, comment) -%}
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </sdoc-requirement-field>

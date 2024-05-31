@@ -76,8 +76,9 @@ def test_04_meta_multilines_not_nones():
         human_title=None,
         required="False",
     )
-    grammar.elements[0].fields.append(meta_test_field)
-    grammar.elements[0].fields_map["META_TEST_FIELD"] = meta_test_field
+    requirement_grammar_element = grammar.elements_by_type["REQUIREMENT"]
+    requirement_grammar_element.fields.append(meta_test_field)
+    requirement_grammar_element.fields_map["META_TEST_FIELD"] = meta_test_field
     document.grammar = grammar
 
     requirement = SDocObjectFactory.create_requirement(

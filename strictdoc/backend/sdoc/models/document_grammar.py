@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,type-arg"
 from collections import OrderedDict
 from typing import Dict, List, Optional, Set, Tuple, Union
 
@@ -69,11 +69,7 @@ class GrammarElement:
                 GrammarElementRelationChild,
                 GrammarElementRelationFile,
             ]
-        ] = (
-            relations
-            if relations is not None and len(relations) > 0
-            else create_default_relations(self)
-        )
+        ] = relations if relations is not None and len(relations) > 0 else []
         fields_map: OrderedDict = OrderedDict()
 
         statement_field: Optional[Tuple[str, int]] = None
@@ -202,7 +198,6 @@ class DocumentGrammar:
 
     @staticmethod
     def create_default(parent) -> "DocumentGrammar":
-        # @sdoc[SDOC-SRS-132]
         fields: List[
             Union[
                 GrammarElementFieldString,
@@ -210,6 +205,25 @@ class DocumentGrammar:
                 GrammarElementFieldMultipleChoice,
             ]
         ] = [
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.UID,
+                human_title=None,
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.STATEMENT,
+                human_title=None,
+                required="True",
+            ),
+        ]
+        text_element = GrammarElement(
+            parent=None, tag="TEXT", fields=fields, relations=[]
+        )
+
+        # @sdoc[SDOC-SRS-132]
+        fields = [
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.UID,
@@ -268,11 +282,13 @@ class DocumentGrammar:
             requirement_element
         )
 
-        elements: List[GrammarElement] = [requirement_element]
+        elements: List[GrammarElement] = [text_element, requirement_element]
         grammar = DocumentGrammar(
             parent=parent, elements=elements, import_from_file=None
         )
         grammar.is_default = True
+        text_element.parent = grammar
+        requirement_element.parent = grammar
 
         return grammar
 
@@ -315,8 +331,8 @@ class DocumentGrammar:
             elements_by_type[element.tag] = element
 
         self.elements = elements
-        self.registered_elements: Set[str] = registered_elements
-        self.elements_by_type: Dict[str, GrammarElement] = elements_by_type
+        self.registered_elements = registered_elements
+        self.elements_by_type = elements_by_type
 
 
 class DocumentGrammarWrapper:

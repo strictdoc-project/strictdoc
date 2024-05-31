@@ -88,9 +88,12 @@ def test_02_single_document_add_second_parent_relation_with_role():
     assert len(requirement2.relations) == 1
 
     document_1 = document_builder.build()
-    document_1.grammar.elements[0].relations.append(
+    requirement_grammar_element = document_1.grammar.elements_by_type[
+        "REQUIREMENT"
+    ]
+    requirement_grammar_element.relations.append(
         GrammarElementRelationParent(
-            document_1.grammar.elements[0], "Parent", "Refines"
+            requirement_grammar_element, "Parent", "Refines"
         )
     )
     file_tree = []
@@ -162,12 +165,14 @@ def test_20_single_document_add_second_child_relation_with_role():
     assert len(requirement2.relations) == 1
 
     document_1 = document_builder.build()
-    document_1.grammar.elements[0].relations.append(
+    requirement_grammar_element = document_1.grammar.elements_by_type[
+        "REQUIREMENT"
+    ]
+    requirement_grammar_element.relations.append(
         GrammarElementRelationChild(
-            document_1.grammar.elements[0], "Child", "IsRefinedBy"
+            requirement_grammar_element, "Child", "IsRefinedBy"
         )
     )
-
     file_tree = []
     document_list = [document_1]
     map_docs_by_paths = {}
@@ -244,9 +249,12 @@ def test_25_single_document_remove_child_relation():
     assert len(requirement2.relations) == 1
 
     document_1 = document_builder.build()
-    document_1.grammar.elements[0].relations.append(
+    requirement_grammar_element = document_1.grammar.elements_by_type[
+        "REQUIREMENT"
+    ]
+    requirement_grammar_element.relations.append(
         GrammarElementRelationChild(
-            document_1.grammar.elements[0], "Child", "IsRefinedBy"
+            requirement_grammar_element, "Child", "IsRefinedBy"
         )
     )
 
@@ -319,9 +327,13 @@ def test_26_two_documents_remove_child_relation():
     )
     assert len(requirement2.relations) == 1
     document_2 = document_builder.build()
-    document_2.grammar.elements[0].relations.append(
+
+    document_2_requirement_grammar_element = (
+        document_2.grammar.elements_by_type["REQUIREMENT"]
+    )
+    document_2_requirement_grammar_element.relations.append(
         GrammarElementRelationChild(
-            document_2.grammar.elements[0], "Child", "IsRefinedBy"
+            document_2_requirement_grammar_element, "Child", "IsRefinedBy"
         )
     )
     assert requirement1.document != requirement2.document

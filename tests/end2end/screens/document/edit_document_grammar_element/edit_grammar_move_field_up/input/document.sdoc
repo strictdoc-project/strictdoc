@@ -32,6 +32,9 @@ ELEMENTS:
   - TITLE: CUSTOM_FIELD
     TYPE: String
     REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 
 [FREETEXT]
 Hello world!

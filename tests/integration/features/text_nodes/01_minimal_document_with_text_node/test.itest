@@ -1,0 +1,9 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc
+
+RUN: %cat %S/Output/html/01_minimal_document_with_text_node/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
+CHECK-CONTENT: Text statement.

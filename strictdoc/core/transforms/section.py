@@ -80,7 +80,7 @@ class UpdateSectionCommand:
             else:
                 if section.reserved_uid != form_object.section_uid:
                     section_incoming_links: Optional[List[InlineLink]] = (
-                        traceability_index.get_section_incoming_links(section)
+                        traceability_index.get_incoming_links(section)
                     )
                     if (
                         section_incoming_links is not None

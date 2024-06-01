@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+UID: CHAPTER_1
+TITLE: Chapter 1
+
+[FREETEXT]
+[LINK: CUSTOM-1]
+
+[LINK: CUSTOM-2]
+[/FREETEXT]
+
+[/SECTION]

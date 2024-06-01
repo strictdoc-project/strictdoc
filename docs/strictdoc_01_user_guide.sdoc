@@ -1654,14 +1654,16 @@ UID: SDOC_UG_LINKS_AND_ANCHORS
 TITLE: Links
 
 [FREETEXT]
-StrictDoc supports creating inline links to document sections and anchors.
+StrictDoc supports creating inline links to document sections, anchors, requirements and custom grammar elements.
 [/FREETEXT]
 
 [SECTION]
-TITLE: Section links
+TITLE: Links
 
 [FREETEXT]
-When a section has an UID, it is possible to reference this section from any other section's text using a ``[LINK: <Section UID>]`` tag.
+Elements that have an UID can be referenced from section text using a ``[LINK: <UID>]`` tag.
+To reference a section that has an UID, use ``[LINK: <Section UID>]`` tag.
+Likewise, a requirement can be referenced with ``[LINK: <Requirement UID>]``.
 
 Example:
 

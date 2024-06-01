@@ -1,0 +1,23 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+UID: CHAPTER_1
+TITLE: Chapter 1
+
+[FREETEXT]
+See [LINK: REQ-1] for more details.
+
+See [LINK: REQ-2] for more details.
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: The foo must bar.
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Foo Bar
+STATEMENT: The foo must bar.
+
+[/SECTION]

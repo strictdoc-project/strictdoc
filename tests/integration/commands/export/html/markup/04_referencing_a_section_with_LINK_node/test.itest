@@ -1,0 +1,14 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/04_referencing_a_section_with_LINK_node/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+CHECK-HTML-DOC: <a href="../04_referencing_a_section_with_LINK_node/nodes.html#1-CUSTOM-1">{{.*}}Foo Bar</a></p>
+CHECK-HTML-DOC: <a href="../04_referencing_a_section_with_LINK_node/nodes.html#-CUSTOM-2">{{.*}}CUSTOM-2</a></p>
+
+RUN: %cat %S/Output/html/04_referencing_a_section_with_LINK_node/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-TABLE
+CHECK-HTML-TABLE: <a href="../04_referencing_a_section_with_LINK_node/nodes-TABLE.html#1-CUSTOM-1">{{.*}}Foo Bar</a></p>
+CHECK-HTML-TABLE: <a href="../04_referencing_a_section_with_LINK_node/nodes-TABLE.html#-CUSTOM-2">{{.*}}CUSTOM-2</a></p>
+
+RUN: %cat %S/Output/html/04_referencing_a_section_with_LINK_node/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-TRACE
+CHECK-HTML-TRACE: <a href="../04_referencing_a_section_with_LINK_node/nodes-TRACE.html#1-CUSTOM-1">{{.*}}Foo Bar</a></p>
+CHECK-HTML-TRACE: <a href="../04_referencing_a_section_with_LINK_node/nodes-TRACE.html#-CUSTOM-2">{{.*}}CUSTOM-2</a></p>

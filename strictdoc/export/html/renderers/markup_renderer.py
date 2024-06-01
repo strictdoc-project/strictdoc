@@ -141,15 +141,14 @@ class MarkupRenderer:
             if isinstance(part, str):
                 parts_output += part
             elif isinstance(part, InlineLink):
-                node: Union[SDocSection, Anchor] = assert_cast(
-                    self.traceability_index.get_node_by_uid(part.link),
-                    (SDocSection, Anchor),
+                linkable_node = (
+                    self.traceability_index.get_linkable_node_by_uid(part.link)
                 )
                 href = self.link_renderer.render_node_link(
-                    node, self.context_document, document_type
+                    linkable_node.node, self.context_document, document_type
                 )
                 parts_output += self.fragment_writer.write_anchor_link(
-                    node.title, href
+                    linkable_node.title, href
                 )
             elif isinstance(part, Anchor):
                 parts_output += self.template_anchor.render(

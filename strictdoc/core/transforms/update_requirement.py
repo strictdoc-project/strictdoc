@@ -1,13 +1,15 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass
-from typing import List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocCompositeNode
 from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.traceability_index import (
     GraphLinkType,
     SDocNodeConnections,
@@ -15,6 +17,10 @@ from strictdoc.core.traceability_index import (
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
+)
+from strictdoc.core.transforms.validation_error import (
+    MultipleValidationError,
+    SingleValidationError,
 )
 
 
@@ -205,3 +211,35 @@ class UpdateRequirementTransform:
         return UpdateRequirementResult(
             this_document_requirements_to_update=action_object.this_document_requirements_to_update
         )
+
+
+class DeleteRequirementCommand:
+    def __init__(
+        self,
+        requirement: SDocNode,
+        traceability_index: TraceabilityIndex,
+    ):
+        self.requirement: SDocNode = requirement
+        self.traceability_index: TraceabilityIndex = traceability_index
+
+    def perform(self):
+        errors: Dict[str, List[str]] = defaultdict(list)
+        validation_error = MultipleValidationError(
+            "Section form has not passed validation.", errors
+        )
+
+        try:
+            self.traceability_index.validate_node_can_remove_uid(
+                node=self.requirement
+            )
+        except SingleValidationError as validation_error_:
+            errors["section_uid"].append(validation_error_.args[0])
+        else:
+            self.traceability_index.delete_requirement(self.requirement)
+            requirement_parent: Union[
+                SDocSection, SDocDocument, SDocCompositeNode
+            ] = self.requirement.parent
+            requirement_parent.section_contents.remove(self.requirement)
+            self.traceability_index.update_last_updated()
+        if len(errors) > 0:
+            raise validation_error

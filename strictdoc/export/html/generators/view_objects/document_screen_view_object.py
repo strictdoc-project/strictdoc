@@ -9,6 +9,7 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.document_view import ViewElement
+from strictdoc.backend.sdoc.models.node import SDocNodeField
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_tree import Folder
 from strictdoc.core.project_config import ProjectConfig
@@ -205,6 +206,27 @@ class DocumentScreenViewObject:
 
     def render_free_text(self, document_type, free_text):
         return self.markup_renderer.render_free_text(document_type, free_text)
+
+    def render_node_statement(self, node):
+        return self.markup_renderer.render_node_statement(
+            self.document_type, node
+        )
+
+    def render_truncated_node_statement(self, node):
+        return self.markup_renderer.render_truncated_node_statement(
+            self.document_type, node
+        )
+
+    def render_node_rationale(self, node):
+        return self.markup_renderer.render_node_rationale(
+            self.document_type, node
+        )
+
+    def render_node_field(self, node_field: SDocNodeField):
+        assert isinstance(node_field, SDocNodeField), node_field
+        return self.markup_renderer.render_node_field(
+            self.document_type, node_field
+        )
 
     def get_page_title(self):
         return self.document_type.get_page_title()

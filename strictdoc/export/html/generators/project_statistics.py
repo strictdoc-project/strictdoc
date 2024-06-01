@@ -91,7 +91,7 @@ class ProgressStatisticsGenerator:
                             document_tree_stats.requirements_status_other += 1
 
                     for requirement_field_ in requirement.enumerate_fields():
-                        field_value = requirement_field_.get_value()
+                        field_value = requirement_field_.get_text_value()
                         if field_value is not None:
                             if "TBD" in field_value:
                                 document_tree_stats.total_tbd += 1

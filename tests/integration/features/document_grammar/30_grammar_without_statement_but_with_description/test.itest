@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 CHECK: Published: Test document
 
-RUN: %cat %S/Output/html/30_grammar_without_statement_field/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML: ABC-123
 CHECK-HTML: Title

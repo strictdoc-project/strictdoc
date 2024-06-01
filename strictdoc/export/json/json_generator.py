@@ -299,7 +299,7 @@ class JSONGenerator:
                 continue
             fields = node.ordered_fields_lookup[field_name]
             for field in fields:
-                node_dict[field_name] = field.get_value()
+                node_dict[field_name] = field.get_text_value()
 
         if len(node.relations) > 0:
             node_dict["RELATIONS"] = cls._write_requirement_relations(node)

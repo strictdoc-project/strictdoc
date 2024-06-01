@@ -1,8 +1,8 @@
-{%- if requirement.reserved_statement and view_object.current_view.includes_field(requirement.requirement_type, requirement.get_content_field_name()) -%}
+{%- if requirement.has_reserved_statement() and view_object.current_view.includes_field(requirement.requirement_type, requirement.get_content_field_name()) -%}
   {%- if truncated_statement is true -%}
     {# truncated in DTR tiny card #}
     <sdoc-requirement-field data-field-label="statement">
-      <sdoc-autogen>{{ view_object.markup_renderer.render_truncated_requirement_statement(requirement) }}</sdoc-autogen>
+      <sdoc-autogen>{{ view_object.render_truncated_node_statement(requirement) }}</sdoc-autogen>
     </sdoc-requirement-field>
   {%- else -%}
     {# default with label #}
@@ -10,7 +10,7 @@
     <sdoc-requirement-field
       data-field-label="statement"
     >
-      {%- with field_content = view_object.markup_renderer.render_requirement_statement(requirement) %}
+      {%- with field_content = view_object.render_node_statement(requirement) %}
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </sdoc-requirement-field>

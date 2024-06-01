@@ -43,8 +43,8 @@ def calculate_similarity(lhs: SDocNode, rhs: SDocNode) -> float:
 
         rhs_field_values = rhs.ordered_fields_lookup[field_name_]
 
-        lhs_field_value = field_values_[0].get_value()
-        rhs_field_value = rhs_field_values[0].get_value()
+        lhs_field_value = field_values_[0].get_text_value()
+        rhs_field_value = rhs_field_values[0].get_text_value()
 
         similar_fields.append(similar(lhs_field_value, rhs_field_value))
 
@@ -100,7 +100,7 @@ class ProjectTreeDiffStats:
             field_name
         ]
         for field_ in other_requirement_fields:
-            if field_.get_value() == field_value:
+            if field_.get_text_value() == field_value:
                 return True
         return False
 
@@ -121,7 +121,7 @@ class ProjectTreeDiffStats:
             field_name
         ]
         for field_ in other_requirement_fields:
-            if field_.get_value() == field_value:
+            if field_.get_text_value() == field_value:
                 return field_
         return None
 
@@ -934,7 +934,9 @@ class ChangeStats:
         )
 
         if other_requirement_field is not None:
-            other_requirement_field_value = other_requirement_field.get_value()
+            other_requirement_field_value = (
+                other_requirement_field.get_text_value()
+            )
             left_diff = get_colored_diff_string(
                 requirement_field_value, other_requirement_field_value, "left"
             )
@@ -993,10 +995,10 @@ class ChangeStats:
 
         similarities: List[Tuple[float, SDocNodeField, SDocNodeField]] = []
         for changed_field_ in list(changed_fields.keys()):
-            comment_value = changed_field_.get_value()
+            comment_value = changed_field_.get_text_value()
             assert comment_value is not None
             for changed_other_field_ in list(changed_other_fields.keys()):
-                comment_other_value = changed_other_field_.get_value()
+                comment_other_value = changed_other_field_.get_text_value()
                 assert comment_other_value is not None
 
                 similarity = similar(comment_value, comment_other_value)
@@ -1019,8 +1021,8 @@ class ChangeStats:
                 continue
 
             # This is the best change.
-            comment_value = changed_field_.get_value()
-            comment_other_value = changed_other_field_.get_value()
+            comment_value = changed_field_.get_text_value()
+            comment_other_value = changed_other_field_.get_text_value()
             assert comment_other_value is not None
 
             left_diff = get_colored_diff_string(
@@ -1152,7 +1154,7 @@ class ProjectDiffAnalyzer:
                     field_values_,
                 ) in node.ordered_fields_lookup.items():
                     requirement_field: SDocNodeField = field_values_[0]
-                    requirement_field_value = requirement_field.get_value()
+                    requirement_field_value = requirement_field.get_text_value()
                     if field_name_ == "TITLE":
                         this_title_requirements = (
                             document_tree_stats.map_titles_to_nodes.setdefault(
@@ -1175,7 +1177,7 @@ class ProjectDiffAnalyzer:
                     # the only field that can appear several times.
                     for comment_field_ in field_values_[1:]:
                         hasher.update(
-                            comment_field_.get_value().encode("utf-8")
+                            comment_field_.get_text_value().encode("utf-8")
                         )
 
                 for reference_ in node.relations:

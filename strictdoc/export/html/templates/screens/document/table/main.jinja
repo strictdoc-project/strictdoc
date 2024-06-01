@@ -118,21 +118,19 @@
                   {%- endif -%}
                 </td>
                 <td class="content-view-td content-view-td-content">
-                  {%- if requirement.reserved_statement -%}
-                    <sdoc-autogen>{{ view_object.markup_renderer.render_requirement_statement(requirement) }}</sdoc-autogen>
+                  {%- if requirement.has_reserved_statement() -%}
+                    <sdoc-autogen>{{ view_object.render_node_statement(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.rationale -%}
-                    <sdoc-autogen>{{ view_object.markup_renderer.render_requirement_rationale(requirement) }}</sdoc-autogen>
+                    <sdoc-autogen>{{ view_object.render_node_rationale(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
                 <td class="content-view-td content-view-td-content">
-                  {%- if requirement.comments -%}
-                    {%- for comment in requirement.comments -%}
-                    <sdoc-autogen>{{ view_object.markup_renderer.render_comment(comment) }}</sdoc-autogen>
-                    {%- endfor -%}
-                  {%- endif -%}
+                  {%- for comment_field_ in requirement.get_comment_fields() -%}
+                  <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
+                  {%- endfor -%}
                 </td>
                 {%- for meta_field_title in view_object.document.enumerate_custom_content_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}

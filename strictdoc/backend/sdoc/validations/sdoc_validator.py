@@ -260,8 +260,11 @@ class SDocValidator:
                     path_to_sdoc_file=path_to_sdoc_file,
                 )
             return False
+
+        requirement_field_text_value = requirement_field.get_text_value()
+
         if isinstance(grammar_field, GrammarElementFieldSingleChoice):
-            if requirement_field.get_value() not in grammar_field.options:
+            if requirement_field_text_value not in grammar_field.options:
                 raise StrictDocSemanticError.invalid_choice_field(
                     node=requirement,
                     document_grammar=document_grammar,
@@ -270,17 +273,15 @@ class SDocValidator:
                 )
 
         elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
-            requirement_field_value = requirement_field.get_value()
-
-            if not multi_choice_regex_match(requirement_field_value):
+            if not multi_choice_regex_match(requirement_field_text_value):
                 raise StrictDocSemanticError.not_comma_separated_choices(
                     node=requirement,
                     requirement_field=requirement_field,
                     path_to_sdoc_file=path_to_sdoc_file,
                 )
 
-            requirement_field_value_components = requirement_field_value.split(
-                ", "
+            requirement_field_value_components = (
+                requirement_field_text_value.split(", ")
             )
             for component in requirement_field_value_components:
                 if component not in grammar_field.options:
@@ -292,9 +293,7 @@ class SDocValidator:
                     )
 
         elif isinstance(grammar_field, GrammarElementFieldTag):
-            requirement_field_value = requirement_field.get_value()
-
-            if not multi_choice_regex_match(requirement_field_value):
+            if not multi_choice_regex_match(requirement_field_text_value):
                 raise StrictDocSemanticError.not_comma_separated_tag_field(
                     node=requirement,
                     requirement_field=requirement_field,

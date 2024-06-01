@@ -59,5 +59,6 @@ Yes
 
     requirement = document.section_contents[0]
     assert isinstance(requirement, SDocNode)
+    # FIXME: More robust test.
     for _, value in requirement.enumerate_meta_fields():
-        assert value is not None
+        assert value.get_text_value() is not None

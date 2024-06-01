@@ -1,13 +1,16 @@
 # mypy: disable-error-code="union-attr"
+import html
 from collections import OrderedDict
 from typing import Any, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.object import SDocObject
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -46,8 +49,6 @@ class SDocNodeField:
         self.parts: List[Any] = parts
         self.multiline: bool = multiline__ is not None and len(multiline__) > 0
 
-        self.resolved_field_value: str = "".join(parts)
-
     @staticmethod
     def create_from_string(
         parent: Optional["SDocNode"],
@@ -70,8 +71,30 @@ class SDocNodeField:
     def is_multiline(self) -> bool:
         return self.multiline
 
-    def get_value(self) -> str:
-        return self.resolved_field_value
+    def get_text_value(self) -> str:
+        text = ""
+        for part in self.parts:
+            if isinstance(part, str):
+                text += part
+            elif isinstance(part, InlineLink):
+                text += "[LINK: "
+                text += part.link
+                text += "]"
+            elif isinstance(part, Anchor):
+                text += "[ANCHOR: "
+                text += part.value
+                if part.has_title:
+                    text += ", "
+                    text += part.title
+                text += "]"
+                text += "\n"
+                text += "\n"
+            else:
+                raise NotImplementedError(part)
+        return text
+
+    def get_text_value_escaped(self) -> str:
+        return html.escape(self.get_text_value())
 
 
 @auto_described
@@ -140,7 +163,7 @@ class SDocNode(SDocObject):
         if RequirementFieldName.LEVEL in ordered_fields_lookup:
             level = ordered_fields_lookup[RequirementFieldName.LEVEL][
                 0
-            ].get_value()
+            ].get_text_value()
             self.ng_resolved_custom_level = level
             self.custom_level = level
 
@@ -189,7 +212,7 @@ class SDocNode(SDocObject):
         assert (
             not field.is_multiline()
         ), f"Field {RequirementFieldName.TAGS} must be a single-line field."
-        tags = field.get_value().split(", ")
+        tags = field.get_text_value().split(", ")
         return tags
 
     @property
@@ -197,6 +220,12 @@ class SDocNode(SDocObject):
         return self._get_cached_field(
             RequirementFieldName.TITLE, singleline_only=True
         )
+
+    def has_reserved_statement(self) -> bool:
+        element: GrammarElement = self.document.grammar.elements_by_type[
+            self.requirement_type
+        ]
+        return element.content_field[0] in self.ordered_fields_lookup
 
     @property
     def reserved_statement(self) -> Optional[str]:
@@ -212,15 +241,6 @@ class SDocNode(SDocObject):
         return self._get_cached_field(
             RequirementFieldName.RATIONALE, singleline_only=False
         )
-
-    @property
-    def comments(self) -> List[str]:
-        if RequirementFieldName.COMMENT not in self.ordered_fields_lookup:
-            return []
-        comments = []
-        for field in self.ordered_fields_lookup[RequirementFieldName.COMMENT]:
-            comments.append(field.get_value())
-        return comments
 
     # Other properties
     @property
@@ -279,6 +299,20 @@ class SDocNode(SDocObject):
             self.requirement_type
         ]
         return element.content_field[0]
+
+    def get_content_field(self) -> SDocNodeField:
+        element: GrammarElement = self.document.grammar.elements_by_type[
+            self.requirement_type
+        ]
+        return self.ordered_fields_lookup[element.content_field[0]][0]
+
+    def get_field_by_name(self, field_name: str) -> SDocNodeField:
+        return self.ordered_fields_lookup[field_name][0]
+
+    def get_comment_fields(self) -> List[SDocNodeField]:
+        if RequirementFieldName.COMMENT not in self.ordered_fields_lookup:
+            return []
+        return self.ordered_fields_lookup[RequirementFieldName.COMMENT]
 
     def has_requirement_references(self, ref_type: str) -> bool:
         if len(self.relations) == 0:
@@ -368,12 +402,12 @@ class SDocNode(SDocObject):
         self,
     ) -> Generator[Tuple[SDocNodeField, str, str], None, None]:
         for field in self.enumerate_fields():
-            meta_field_value = field.get_value()
+            meta_field_value = field.get_text_value()
             yield field, field.field_name, meta_field_value
 
     def enumerate_meta_fields(
         self, skip_single_lines: bool = False, skip_multi_lines: bool = False
-    ) -> Generator[Tuple[str, str], None, None]:
+    ) -> Generator[Tuple[str, SDocNodeField], None, None]:
         element: GrammarElement = self.document.grammar.elements_by_type[
             self.requirement_type
         ]
@@ -382,7 +416,6 @@ class SDocNode(SDocObject):
         for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
-            meta_field_value = field.get_value()
             field_index = grammar_field_titles.index(field.field_name)
 
             # A field is considered singleline if it goes before the STATEMENT
@@ -398,14 +431,14 @@ class SDocNode(SDocObject):
                 continue
 
             field_human_title = element.fields_map[field.field_name]
-            yield field_human_title.get_field_human_name(), meta_field_value
+            yield field_human_title.get_field_human_name(), field
 
     def get_meta_field_value_by_title(self, field_title: str) -> Optional[str]:
         assert isinstance(field_title, str)
         if field_title not in self.ordered_fields_lookup:
             return None
         field: SDocNodeField = self.ordered_fields_lookup[field_title][0]
-        return field.get_value()
+        return field.get_text_value()
 
     def get_field_human_title(self, field_name: str) -> str:
         element: GrammarElement = self.document.grammar.elements_by_type[
@@ -449,7 +482,7 @@ class SDocNode(SDocObject):
                 f"Field {field_name} must be a single-line field."
             )
 
-        return field.get_value()
+        return field.get_text_value()
 
     # Below all mutating methods.
 

@@ -3,7 +3,7 @@
   <sdoc-requirement-field
     data-field-label="rationale"
   >
-    {%- with field_content = view_object.markup_renderer.render_requirement_rationale(requirement) %}
+    {%- with field_content = view_object.render_node_rationale(requirement) %}
       {%- include "components/field/index.jinja" -%}
     {%- endwith -%}
   </sdoc-requirement-field>

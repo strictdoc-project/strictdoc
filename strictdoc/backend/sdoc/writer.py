@@ -385,7 +385,7 @@ class SDWriter:
                 continue
             fields = section_content.ordered_fields_lookup[field_name]
             for field in fields:
-                field_value = field.get_value()
+                field_value = field.get_text_value()
                 if field.is_multiline():
                     output += f"{field_name}: >>>"
                     output += "\n"

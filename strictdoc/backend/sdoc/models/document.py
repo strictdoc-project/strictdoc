@@ -143,7 +143,7 @@ class SDocDocument:
             task_list.extend(section_or_requirement.section_contents)
         return False
 
-    def get_title(self) -> str:
+    def get_display_title(self) -> str:
         return self.title
 
     @property

@@ -523,6 +523,28 @@ class TraceabilityIndexBuilder:
                 if not node.is_requirement:
                     continue
                 requirement: SDocNode = node
+
+                for node_field_ in node.enumerate_fields():
+                    for part in node_field_.parts:
+                        if isinstance(part, InlineLink):
+                            # FIXME: Ensure that the section UIDs are written to UID_TO_NODE,
+                            # remove the second check of UID_TO_REQUIREMENT_CONNECTIONS.
+                            if not traceability_index.graph_database.has_link(
+                                link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                                lhs_node=part.link,
+                            ) and not graph_database.has_link(
+                                link_type=GraphLinkType.UID_TO_NODE,
+                                lhs_node=part.link,
+                            ):
+                                raise StrictDocException(
+                                    "DocumentIndex: "
+                                    "the inline link references an "
+                                    "object with an UID "
+                                    "that does not exist: "
+                                    f"{part.link}."
+                                )
+                            traceability_index.create_inline_link(part)
+
                 if requirement.reserved_uid is None:
                     continue
 

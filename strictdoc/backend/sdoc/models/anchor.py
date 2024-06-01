@@ -23,6 +23,9 @@ class Anchor:
         self.mid: MID = MID.create()
         self.reserved_mid: MID = self.mid
 
+    def get_display_title(self) -> str:
+        return self.title
+
     @property
     def document(self):
         if self.parent.parent.__class__.__name__ == "SDocDocument":

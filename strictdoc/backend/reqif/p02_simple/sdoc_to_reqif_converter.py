@@ -556,7 +556,7 @@ class P02_SDocToReqIFObjectConverter:
                 for data_type in data_types:
                     if data_type_ref == data_type.identifier:
                         for data_type_value in data_type.values:
-                            if data_type_value.key == field.get_value():
+                            if data_type_value.key == field.get_text_value():
                                 enum_ref_value = data_type_value.identifier
                                 break
 
@@ -569,7 +569,7 @@ class P02_SDocToReqIFObjectConverter:
                     value=[enum_ref_value],
                 )
             elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
-                field_values: List[str] = field.get_value().split(",")
+                field_values: List[str] = field.get_text_value().split(",")
                 field_values = list(map(lambda v: v.strip(), field_values))
 
                 data_type_ref = data_types_lookup[field.field_name]
@@ -595,7 +595,7 @@ class P02_SDocToReqIFObjectConverter:
             elif isinstance(grammar_field, GrammarElementFieldString):
                 is_multiline_field = field.is_multiline()
 
-                field_value: str = field.get_value()
+                field_value: str = field.get_text_value()
 
                 attribute_type: str
                 if context.multiline_is_xhtml:

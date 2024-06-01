@@ -105,17 +105,17 @@ def test_04_meta_multilines_not_nones():
         )
     ]
     meta_fields = list(requirement.enumerate_meta_fields())
-    assert meta_fields[0][1] == "A-1"
-    assert meta_fields[1][1] == test_value
+    assert meta_fields[0][1].get_text_value() == "A-1"
+    assert meta_fields[1][1].get_text_value() == test_value
 
     singleline_meta_fields = list(
         requirement.enumerate_meta_fields(skip_multi_lines=True)
     )
     assert len(singleline_meta_fields) == 1
-    assert singleline_meta_fields[0][1] == "A-1"
+    assert singleline_meta_fields[0][1].get_text_value() == "A-1"
 
     multiline_meta_fields = list(
         requirement.enumerate_meta_fields(skip_single_lines=True)
     )
     assert len(multiline_meta_fields) == 1
-    assert multiline_meta_fields[0][1] == test_value
+    assert multiline_meta_fields[0][1].get_text_value() == test_value

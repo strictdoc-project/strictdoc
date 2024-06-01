@@ -61,6 +61,11 @@ class SearchScreenViewObject:
         self.link_document_type: DocumentType = DocumentType.document()
         self.document: Optional[SDocDocument] = None
 
+    def render_truncated_node_statement(self, node):
+        return self.markup_renderer.render_truncated_node_statement(
+            self.document_type, node
+        )
+
     def render_screen(self, jinja_environment: Environment):
         template = jinja_environment.get_template("screens/search/index.jinja")
         return template.render(view_object=self)

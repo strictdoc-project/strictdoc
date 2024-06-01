@@ -132,12 +132,15 @@ class ExcelGenerator:
                         elif field_uc in ("COMMENT", "COMMENTS"):
                             # Using a transition marker to separate multiple
                             # comments
-                            if node.comments:
+                            comment_fields = node.get_comment_fields()
+                            if len(comment_fields) > 0:
                                 comment_row_value: str = ""
-                                for comment in node.comments:
+                                for comment_field_ in comment_fields:
                                     if len(comment_row_value) > 0:
                                         comment_row_value += "\n----------\n"
-                                    comment_row_value += comment
+                                    comment_row_value += (
+                                        comment_field_.get_text_value()
+                                    )
                                 worksheet.write(row, idx, comment_row_value)
                                 if (
                                     comment_row_value
@@ -172,7 +175,7 @@ class ExcelGenerator:
                                     columns[field][MAX_WIDTH_KEY] = value_len
                         elif field_uc in node.ordered_fields_lookup.keys():
                             req_field = node.ordered_fields_lookup[field_uc][0]
-                            value: str = req_field.get_value()
+                            value: str = req_field.get_text_value()
                             worksheet.write(row, idx, value)
                             value_len = len(value)
                             if value_len > columns[field][MAX_WIDTH_KEY]:

@@ -15,7 +15,7 @@
 
 {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) -%}
 {%- if true %}    {% endif %}* - **{{meta_field[0]}}:**
-      - {{ meta_field[1] }}
+      - {{ meta_field[1].get_text_value() }}
 {% endfor %}
 {% endif %}
 
@@ -31,10 +31,10 @@
 
 {% endif -%}
 
-{%- for comment in requirement.comments -%}
+{%- for comment_field_ in requirement.get_comment_fields() -%}
 **{{ requirement.get_field_human_title("COMMENT") }}:**
 
-{{ comment.rstrip() }}
+{{ comment_field_.get_text_value().rstrip() }}
 
 {% endfor -%}
 
@@ -42,7 +42,7 @@
 {%- for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) -%}
 **{{meta_field[0]}}:**
 
-{{ meta_field[1].rstrip() }}
+{{ meta_field[1].get_text_value().rstrip() }}
 
 {% endfor -%}
 {%- endif %}

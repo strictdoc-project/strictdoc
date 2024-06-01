@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.node import SDocNode, SDocCompositeNode
+from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
@@ -15,12 +15,12 @@ from strictdoc.core.traceability_index import (
     SDocNodeConnections,
     TraceabilityIndex,
 )
-from strictdoc.export.html.form_objects.requirement_form_object import (
-    RequirementFormObject,
-)
 from strictdoc.core.transforms.validation_error import (
     MultipleValidationError,
     SingleValidationError,
+)
+from strictdoc.export.html.form_objects.requirement_form_object import (
+    RequirementFormObject,
 )
 
 

@@ -31,7 +31,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import (
-    SDocCompositeNode,
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -68,9 +67,9 @@ from strictdoc.core.transforms.update_included_document import (
     UpdateIncludedDocumentTransform,
 )
 from strictdoc.core.transforms.update_requirement import (
+    DeleteRequirementCommand,
     UpdateRequirementResult,
     UpdateRequirementTransform,
-    DeleteRequirementCommand,
 )
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_config_form_object import (

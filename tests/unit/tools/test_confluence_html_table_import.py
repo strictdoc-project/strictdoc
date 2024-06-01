@@ -26,13 +26,16 @@ def test_01():
     assert section1_reqs[0].reserved_title == "REQ-1-1 Title"
     assert section1_reqs[0].reserved_statement == "REQ-1-1 Statement"
     assert section1_reqs[0].rationale == "REQ-1-1 Rationale"
-    assert len(section1_reqs[0].comments) == 0
+    assert len(section1_reqs[0].get_comment_fields()) == 0
 
     assert section1_reqs[1].reserved_uid == "REQ-1-2 UID"
     assert section1_reqs[1].reserved_title == "REQ-1-2 Title"
     assert section1_reqs[1].reserved_statement == "REQ-1-2 Statement"
     assert section1_reqs[1].rationale == "REQ-1-2 Rationale"
-    assert section1_reqs[1].comments[0] == "REQ-1-2 Comment"
+    assert (
+        section1_reqs[1].get_comment_fields()[0].get_text_value()
+        == "REQ-1-2 Comment"
+    )
 
     section2 = sdoc.section_contents[1]
     assert section2.title == "Section 2"
@@ -41,13 +44,16 @@ def test_01():
     assert section2_reqs[0].reserved_title == "REQ-2-1 Title"
     assert section2_reqs[0].reserved_statement == "REQ-2-1 Statement"
     assert section2_reqs[0].rationale == "REQ-2-1 Rationale"
-    assert len(section2_reqs[0].comments) == 0
+    assert len(section2_reqs[0].get_comment_fields()) == 0
 
     assert section2_reqs[1].reserved_uid == "REQ-2-2 UID"
     assert section2_reqs[1].reserved_title == "REQ-2-2 Title"
     assert section2_reqs[1].reserved_statement == "REQ-2-2 Statement"
     assert section2_reqs[1].rationale == "REQ-2-2 Rationale"
-    assert section2_reqs[1].comments[0] == "REQ-2-2 Comment"
+    assert (
+        section2_reqs[1].get_comment_fields()[0].get_text_value()
+        == "REQ-2-2 Comment"
+    )
 
 
 def test_02():
@@ -69,9 +75,15 @@ def test_02():
     assert section1_reqs[0].reserved_title == "REQ-1-1 Title"
     assert section1_reqs[0].reserved_statement == "REQ-1-1 Statement"
     assert section1_reqs[0].rationale == "REQ-1-1 Rationale"
-    assert len(section1_reqs[0].comments) == 1
-    assert section1_reqs[0].comments[0] == "REQ-1-1 comment wrapped in p"
-    assert section1_reqs[1].comments[0] == "- Item 1\n- Item 2"
+    assert len(section1_reqs[0].get_comment_fields()) == 1
+    assert (
+        section1_reqs[0].get_comment_fields()[0].get_text_value()
+        == "REQ-1-1 comment wrapped in p"
+    )
+    assert (
+        section1_reqs[1].get_comment_fields()[0].get_text_value()
+        == "- Item 1\n- Item 2"
+    )
 
 
 def test_fragments_01():

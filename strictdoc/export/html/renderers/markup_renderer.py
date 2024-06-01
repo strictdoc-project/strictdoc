@@ -4,8 +4,9 @@ from typing import Optional, Type, Union
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.section import FreeText
+from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
@@ -18,7 +19,6 @@ from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
-from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.rst import truncated_statement_with_no_rst
 
 
@@ -85,48 +85,62 @@ class MarkupRenderer:
             "rst/anchor.jinja"
         )
 
-    def render_requirement_statement(self, requirement):
-        assert isinstance(requirement, SDocNode)
+    def render_node_statement(self, document_type, node):
+        assert isinstance(node, SDocNode)
+        return self.render_node_field(document_type, node.get_content_field())
 
-        if requirement in self.cache:
-            return self.cache[requirement]
-        output = self.fragment_writer.write(requirement.reserved_statement)
-        self.cache[requirement] = output
-
-        return output
-
-    def render_truncated_requirement_statement(self, requirement):
-        assert isinstance(requirement, SDocNode), requirement
-        assert requirement.reserved_statement is not None
-
-        statement_to_render = truncated_statement_with_no_rst(
-            requirement.reserved_statement
+    def render_truncated_node_statement(self, document_type, node):
+        assert isinstance(node, SDocNode)
+        return self.render_node_field(
+            document_type, node.get_content_field(), truncated=True
         )
 
-        # One day we may want to start caching the truncated statements. Now
-        # it doesn't make sense because the deep traceability screen is the only
-        # one that uses truncated statements. There is no need to cache
-        # something which is used only once.
-        output = self.fragment_writer.write(statement_to_render)
+    def render_node_rationale(self, document_type, node: SDocNode):
+        assert isinstance(node, SDocNode)
+        return self.render_node_field(
+            document_type,
+            node.get_field_by_name(RequirementFieldName.RATIONALE),
+        )
 
-        return output
+    def render_node_field(
+        self, document_type, node_field: SDocNodeField, truncated: bool = False
+    ):
+        assert isinstance(node_field, SDocNodeField), node_field
 
-    def render_requirement_rationale(self, requirement):
-        assert isinstance(requirement, SDocNode)
+        if (document_type, node_field, truncated) in self.cache:
+            return self.cache[(document_type, node_field, truncated)]
 
-        if requirement in self.rationale_cache:
-            return self.rationale_cache[requirement]
-        output = self.fragment_writer.write(requirement.rationale)
-        self.rationale_cache[requirement] = output
-        return output
+        parts_output = ""
+        for part in node_field.parts:
+            if isinstance(part, str):
+                # FIXME: This is not great to jump over truncated every time
+                #        we render all non-DTR fields but good enough for now.
+                if truncated:
+                    parts_output += truncated_statement_with_no_rst(part)
+                    break
+                parts_output += part
+            elif isinstance(part, InlineLink):
+                linkable_node = (
+                    self.traceability_index.get_linkable_node_by_uid(part.link)
+                )
+                href = self.link_renderer.render_node_link(
+                    linkable_node.node, self.context_document, document_type
+                )
+                parts_output += self.fragment_writer.write_anchor_link(
+                    linkable_node.title, href
+                )
+            elif isinstance(part, Anchor):
+                parts_output += self.template_anchor.render(
+                    anchor=part,
+                    traceability_index=self.traceability_index,
+                    link_renderer=self.link_renderer,
+                    document_type=DocumentType.document(),
+                )
+            else:
+                raise NotImplementedError
+        output = self.fragment_writer.write(parts_output)
+        self.cache[(document_type, node_field, truncated)] = output
 
-    def render_comment(self, comment):
-        assert isinstance(comment, str)
-
-        if comment in self.cache:
-            return self.cache[comment]
-        output = self.fragment_writer.write(comment)
-        self.cache[comment] = output
         return output
 
     def render_free_text(self, document_type, free_text):
@@ -160,13 +174,5 @@ class MarkupRenderer:
 
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, free_text)] = output
-
-        return output
-
-    def render_meta_value(self, meta_field_value):
-        assert isinstance(meta_field_value, str)
-
-        # FIXME: Introduce and improve caching.
-        output = self.fragment_writer.write(meta_field_value)
 
         return output

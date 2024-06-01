@@ -253,7 +253,7 @@ class QueryObject:
             requirement = assert_cast(node, SDocNode)
             requirement_field_: SDocNodeField
             for requirement_field_ in requirement.enumerate_fields():
-                if expression.string in requirement_field_.get_value():
+                if expression.string in requirement_field_.get_text_value():
                     return True
             return False
         if isinstance(node, SDocSection):

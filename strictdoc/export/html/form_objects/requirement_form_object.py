@@ -123,7 +123,7 @@ class RequirementFormField:
             RequirementFieldType.STRING,
             RequirementFieldType.SINGLE_CHOICE,
         ):
-            field_value = requirement_field.get_value()
+            field_value = requirement_field.get_text_value()
             escaped_field_value = html.escape(field_value)
             return RequirementFormField(
                 field_mid=MID.create(),

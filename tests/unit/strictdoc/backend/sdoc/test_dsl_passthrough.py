@@ -344,9 +344,9 @@ This is a child body part 3
     assert isinstance(
         document.section_contents[0].section_contents[0], SDocCompositeNode
     )
-    requirement_1 = document.section_contents[0].section_contents[0]
+    requirement_1: SDocNode = document.section_contents[0].section_contents[0]
     assert (
-        requirement_1.comments[0]
+        requirement_1.get_comment_fields()[0].get_text_value()
         == "This is a body part 1\nThis is a body part 2\nThis is a body part 3\n"
     )
 
@@ -397,8 +397,11 @@ body 1.1.1.1
     assert isinstance(
         document.section_contents[0].section_contents[0], SDocCompositeNode
     )
-    requirement_1_1 = document.section_contents[0].section_contents[0]
-    assert requirement_1_1.comments[0] == "body composite 1.1\n"
+    requirement_1_1: SDocNode = document.section_contents[0].section_contents[0]
+    assert (
+        requirement_1_1.get_comment_fields()[0].get_text_value()
+        == "body composite 1.1\n"
+    )
 
     assert isinstance(
         document.section_contents[0].section_contents[0].requirements[0],
@@ -407,7 +410,10 @@ body 1.1.1.1
     requirement_1_1_1 = (
         document.section_contents[0].section_contents[0].requirements[0]
     )
-    assert requirement_1_1_1.comments[0] == "body composite 1.1.1\n"
+    assert (
+        requirement_1_1_1.get_comment_fields()[0].get_text_value()
+        == "body composite 1.1.1\n"
+    )
 
     assert isinstance(
         document.section_contents[0]
@@ -422,7 +428,10 @@ body 1.1.1.1
         .requirements[0]
         .requirements[0]
     )
-    assert requirement_1_1_1.comments[0] == "body 1.1.1.1\n"
+    assert (
+        requirement_1_1_1.get_comment_fields()[0].get_text_value()
+        == "body 1.1.1.1\n"
+    )
 
 
 # This test is needed to make sure that the grammar details related

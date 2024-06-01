@@ -1046,7 +1046,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
         if incoming_links is None or len(incoming_links) == 0:
             return
-        raise SingleValidationError(f"Cannot remove UID with incoming links.")
+        raise SingleValidationError("Cannot remove UID with incoming links.")
 
     def validate_section_can_remove_uid(self, *, section: SDocSection):
         section_incoming_links: Optional[List[InlineLink]] = (

@@ -1,0 +1,11 @@
+{#
+  In this template:
+  sdoc_entity = text_node
+#}
+
+<sdoc-section>
+  {# Use h/print, it contains anchor: #}
+  {% include "components/text_node/h/pdf.jinja" %}
+  {% include "components/text_node/uid/index.jinja" %}
+  {% include "components/text_node/text/index.jinja" %}
+</sdoc-section>

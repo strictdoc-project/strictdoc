@@ -42,7 +42,7 @@ class UpdateRequirementActionObject:
 
 @dataclass
 class UpdateRequirementResult:
-    this_document_requirements_to_update: Set[SDocNode]
+    this_document_requirements_to_update: List[SDocNode]
 
 
 class UpdateRequirementTransform:
@@ -209,7 +209,9 @@ class UpdateRequirementTransform:
         traceability_index.update_last_updated()
 
         return UpdateRequirementResult(
-            this_document_requirements_to_update=action_object.this_document_requirements_to_update
+            this_document_requirements_to_update=list(
+                action_object.this_document_requirements_to_update
+            )
         )
 
 

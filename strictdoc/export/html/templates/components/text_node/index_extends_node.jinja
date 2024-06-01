@@ -1,6 +1,8 @@
+{% assert node is defined %}
+
 {% extends "components/node/index.jinja" %}
 {%- set sdoc_entity = node -%}
-{%- set requirement = node -%}
+{%- set text_node = node -%}
 {% block sdoc_entity %}
-{% include "components/requirement/index.jinja" %}
+{% include "components/text_node/index.jinja" %}
 {% endblock sdoc_entity %}

@@ -1,0 +1,25 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Document free text.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section title
+
+[TEXT]
+MID: xyz567
+UID: TEXT-NODE-1
+STATEMENT: >>>
+Text statement.
+<<<
+
+[REQUIREMENT]
+MID: abcdef123456
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<
+
+[/SECTION]

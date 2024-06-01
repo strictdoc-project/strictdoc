@@ -1,0 +1,23 @@
+{# title // required field for section #}
+<sdoc-section-title
+  data-level="{{ section.context.title_number_string }}"
+>
+    {#- initiate the accumulating variable -#}
+    {%- set field_content_ = "" -%}
+
+    {%- if section.context.title_number_string -%}
+      {#- add title 'number' part to the accumulator -#}
+      {%- set field_content_ = field_content_ + section.context.title_number_string + ".&nbsp;" -%}
+    {%- endif -%}
+
+    {%- set title = section.reserved_title if section.is_requirement else section.title -%}
+    {%- if title is not none -%}
+      {#- add title 'value' part to the accumulator -#}
+      {%- set field_content_ = field_content_ + title -%}
+    {%- endif -%}
+
+    {#- pass the variable to the component -#}
+    {%- with field_content = field_content_ %}
+      {%- include "components/field/index.jinja" -%}
+    {%- endwith -%}
+</sdoc-section-title>

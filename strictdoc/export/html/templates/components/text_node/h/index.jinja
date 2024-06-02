@@ -1,4 +1,5 @@
 {# title // required field for text node #}
+{%- if text_node.reserved_title is not none -%}
 <sdoc-section-title
   data-level="{{ text_node.context.title_number_string }}"
 >
@@ -29,3 +30,4 @@
     {%- endwith -%}
   </h{{ h_level }}>
 </sdoc-section-title>
+{%- endif -%}

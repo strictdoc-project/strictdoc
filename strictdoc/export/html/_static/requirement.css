@@ -254,8 +254,20 @@ sdoc-section-text {
   margin-top: var(--base-padding);
 }
 
+sdoc-section-text:first-child {
+  margin-top: 0;
+}
+
 sdoc-section-title {
   font-weight: 700;
+}
+
+sdoc-section-title {
+  margin-bottom: var(--base-padding);
+}
+
+sdoc-section-title:last-child {
+  margin-bottom: 0;
 }
 
 sdoc-section-title * {
@@ -285,7 +297,8 @@ sdoc-meta {
 
   font-size: var(--font-size-sm);
   line-height: 24px; /* to keep the copy button from expanding out of the content line */
-  margin: var(--base-padding) 0;
+  /* margin: var(--base-padding) 0; */
+  margin: 0;
   padding: calc(var(--requirement-base-rhythm)*0.5);
   row-gap: 2px;
 

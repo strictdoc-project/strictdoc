@@ -31,7 +31,7 @@
       {%- endif %}
     {%- endif %}
     node-role="{{ node_type }}"
-    {%- if node_type_string is not none %}
+    {%- if node_type_string is not none and node_type_string != 'TEXT' %}
       show-node-type-name="{{ node_type_string }}"
     {%- endif %}
     data-included-document="{{ is_included }}"

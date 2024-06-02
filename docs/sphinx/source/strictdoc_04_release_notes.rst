@@ -3,6 +3,25 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+0.0.56 (2024-06-02)
+===================
+
+This is an intermediate bugfix release before the release which will contain major changes.
+
+The following issues have been fixed:
+
+`Composable documents: edge case when a single document path is provided for a document that depends on other documents (#1807) <https://github.com/strictdoc-project/strictdoc/issues/1807>`_
+
+`backend/sdoc: validate grammar from file like a normal grammar (#1831) <https://github.com/strictdoc-project/strictdoc/issues/1831>`_. Thanks to @haxtibal for reporting this.
+
+`backend/reqif: exporting grammar types (#1809) <https://github.com/strictdoc-project/strictdoc/issues/1809>`_. Thanks to ``@PQ`` from Discord for giving feedback about the end-to-end export/import between StrictDoc and Polarion.
+
+`html2pdf: specify UTF-8 encoding when writing HTML file (#1816) <https://github.com/strictdoc-project/strictdoc/issues/1816>`_. Thanks to @npalluat for reporting this based on their experience of running StrictDoc on Windows.
+
+`backend/sdoc: allow using "DESCRIPTION" or "CONTENT" field instead of "STATEMENT" (#1827) <https://github.com/strictdoc-project/strictdoc/issues/1827>`_  Previously only STATEMENT could be used as a reserved statement field. Now StrictDoc will auto-detect two more alternative fields if they are present: ``DESCRIPTION`` or ``CONTENT``. Thanks to @haxtibal for requesting this and explaining the use case.
+
+`pyproject.toml: update python-datauri (#1820) <https://github.com/strictdoc-project/strictdoc/issues/1820>`_ @DomenicP reported an issue to ``python-datauri`` which StrictDoc depends on. They ``ran into an integration issue with the datauri library installing tests to the virtual environment. The library maintainer was kind enough to quickly resolve the issue in fcurella/python-datauri#14.`` Thanks @DomenicP!
+
 0.0.55 (2024-04-28)
 ===================
 

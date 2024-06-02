@@ -325,10 +325,10 @@ class RequirementFormObject(ErrorObject):
         form_fields: List[RequirementFormField] = []
 
         fields_names = list(element.fields_map.keys())
-        title_field_idx = fields_names.index("TITLE")
+        content_field_idx = element.get_multiline_field_index()
 
         for field_idx, field_name in enumerate(fields_names):
-            multiline = field_idx > title_field_idx
+            multiline = field_idx >= content_field_idx
             field = element.fields_map[field_name]
 
             if field_name not in requirement_fields:
@@ -385,7 +385,7 @@ class RequirementFormObject(ErrorObject):
         form_fields: List[RequirementFormField] = []
 
         fields_names = list(element.fields_map.keys())
-        title_field_idx = fields_names.index("TITLE")
+        content_field_idx = element.get_multiline_field_index()
 
         for field_idx, field_name in enumerate(fields_names):
             if field_name == "REFS":
@@ -395,7 +395,7 @@ class RequirementFormObject(ErrorObject):
             form_field: RequirementFormField = (
                 RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
-                    multiline=field_idx > title_field_idx,
+                    multiline=field_idx >= content_field_idx,
                     value_unescaped="",
                     value_escaped="",
                 )
@@ -445,9 +445,11 @@ class RequirementFormObject(ErrorObject):
         form_refs_fields: List[RequirementReferenceFormField] = []
 
         fields_names = list(element.fields_map.keys())
-        title_field_idx = fields_names.index("TITLE")
+        content_field_idx = element.get_multiline_field_index()
 
         for field_idx, field_name in enumerate(fields_names):
+            multiline = field_idx >= content_field_idx
+
             # Handle all other fields in a general way.
             field = element.fields_map[field_name]
 
@@ -458,7 +460,7 @@ class RequirementFormObject(ErrorObject):
                     form_field = (
                         RequirementFormField.create_existing_from_grammar_field(
                             field,
-                            multiline=field_idx > title_field_idx,
+                            multiline=multiline,
                             requirement_field=requirement_field,
                         )
                     )
@@ -466,7 +468,7 @@ class RequirementFormObject(ErrorObject):
             else:
                 form_field = RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
-                    multiline=field_idx > title_field_idx,
+                    multiline=multiline,
                     value_unescaped="",
                     value_escaped="",
                 )
@@ -477,7 +479,7 @@ class RequirementFormObject(ErrorObject):
                 parent_reference: ParentReqReference = reference_value
                 form_ref_field = RequirementReferenceFormField(
                     field_mid=parent_reference.mid,
-                    field_type=(RequirementReferenceFormField.FieldType.PARENT),
+                    field_type=RequirementReferenceFormField.FieldType.PARENT,
                     field_value=parent_reference.ref_uid,
                     field_role=parent_reference.role,
                 )
@@ -486,7 +488,7 @@ class RequirementFormObject(ErrorObject):
                 child_reference: ChildReqReference = reference_value
                 form_ref_field = RequirementReferenceFormField(
                     field_mid=child_reference.mid,
-                    field_type=(RequirementReferenceFormField.FieldType.CHILD),
+                    field_type=RequirementReferenceFormField.FieldType.CHILD,
                     field_value=child_reference.ref_uid,
                     field_role=child_reference.role,
                 )
@@ -495,7 +497,7 @@ class RequirementFormObject(ErrorObject):
                 child_reference: FileReference = reference_value
                 form_ref_field = RequirementReferenceFormField(
                     field_mid=child_reference.mid,
-                    field_type=(RequirementReferenceFormField.FieldType.FILE),
+                    field_type=RequirementReferenceFormField.FieldType.FILE,
                     field_value=child_reference.get_posix_path(),
                     field_role=child_reference.role,
                 )

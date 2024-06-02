@@ -124,6 +124,11 @@ class GrammarElement:
             relations=[],
         )
 
+    def get_multiline_field_index(self) -> int:
+        multiline_field_index = self.content_field[1]
+        assert multiline_field_index != -1
+        return multiline_field_index
+
     def get_relation_types(self) -> List[str]:
         return list(
             map(lambda relation_: relation_.relation_type, self.relations)

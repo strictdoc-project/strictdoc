@@ -247,18 +247,30 @@ class SDocNode(SDocObject):
         )
 
     # Other properties
+    # FIXME: Remove @property.
     @property
     def is_requirement(self) -> bool:
         return True
 
+    def is_text_node(self) -> bool:
+        return self.requirement_type == "TEXT"
+
+    # FIXME: Remove @property.
     @property
     def is_section(self) -> bool:
         return False
 
+    # FIXME: Remove @property.
+    @property
+    def is_document(self) -> bool:
+        return False
+
+    # FIXME: Remove @property.
     @property
     def is_composite_requirement(self) -> bool:
         return False
 
+    # FIXME: Remove @property, use get_document().
     @property
     def document(self) -> SDocDocument:
         document: Optional[SDocDocument] = (

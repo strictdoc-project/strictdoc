@@ -78,29 +78,6 @@ class GraphLinkType(IntEnum):
     DOCUMENT_TO_TAGS = 7
 
 
-class LinkableNode:
-    def __init__(self, node: Union[SDocNode, SDocSection, Anchor]):
-        self.inner_node = node
-
-    @property
-    def title(self) -> str:
-        if isinstance(self.inner_node, SDocNode):
-            title = self.inner_node.get_title()
-            if title is not None:
-                return title
-            assert isinstance(self.inner_node.reserved_uid, str)
-            return self.inner_node.reserved_uid
-        else:
-            title = self.inner_node.title
-            if title is not None:
-                return title
-            return self.inner_node.value
-
-    @property
-    def node(self) -> Union[SDocNode, SDocSection, Anchor]:
-        return self.inner_node
-
-
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes
     def __init__(
         self,
@@ -361,11 +338,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
         )
 
-    def get_linkable_node_by_uid(self, uid) -> LinkableNode:
-        return LinkableNode(
-            assert_cast(
-                self.get_node_by_uid(uid), (SDocNode, SDocSection, Anchor)
-            )
+    def get_linkable_node_by_uid(
+        self, uid
+    ) -> Union[SDocNode, SDocSection, Anchor]:
+        return assert_cast(
+            self.get_node_by_uid(uid), (SDocNode, SDocSection, Anchor)
         )
 
     def get_node_by_uid_weak(
@@ -390,16 +367,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                     raise NotImplementedError
         return None
 
-    def get_linkable_node_by_uid_weak(self, uid) -> Union[LinkableNode, None]:
-        node_or_none = assert_optional_cast(
+    def get_linkable_node_by_uid_weak(
+        self, uid
+    ) -> Union[SDocNode, SDocSection, Anchor, None]:
+        return assert_optional_cast(
             self.graph_database.get_link_value_weak(
                 link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
             ),
             (SDocNode, SDocSection, Anchor),
         )
-        if node_or_none:
-            return LinkableNode(node_or_none)
-        return None
 
     def get_node_with_duplicate_anchor(
         self, anchor_uid: str
@@ -496,23 +472,20 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def create_inline_link(self, new_link: InlineLink):
         assert isinstance(new_link, InlineLink)
-
         # InlineLink points to a section or to anchor.
         if self.graph_database.has_link(
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=new_link.link
         ):
-            section_or_anchor: Union[SDocNode, SDocSection, Anchor] = (
-                assert_cast(
-                    self.graph_database.get_link_value(
-                        link_type=GraphLinkType.UID_TO_NODE,
-                        lhs_node=new_link.link,
-                    ),
-                    (SDocNode, SDocSection, Anchor),
-                )
+            node_or_anchor: Union[SDocNode, SDocSection, Anchor] = assert_cast(
+                self.graph_database.get_link_value(
+                    link_type=GraphLinkType.UID_TO_NODE,
+                    lhs_node=new_link.link,
+                ),
+                (SDocNode, SDocSection, Anchor),
             )
             self.graph_database.create_link(
                 link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
-                lhs_node=section_or_anchor.reserved_mid,
+                lhs_node=node_or_anchor.reserved_mid,
                 rhs_node=new_link,
             )
             self.graph_database.create_link(
@@ -1092,5 +1065,5 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         raise SingleValidationError(
             "UID uniqueness validation error: "
             "There is already an existing node "
-            f"with this UID: {existing_node_with_uid.get_title()}."
+            f"with this UID: {existing_node_with_uid.get_display_title()}."
         )

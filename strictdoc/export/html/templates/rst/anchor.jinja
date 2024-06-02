@@ -1,15 +1,20 @@
+{#
+  FIXME: node-role="section" is wrong here but that's what the anchor_controller
+         currently uses to find anchor nodes.
+#}
+
 .. raw:: html
 
-    <sdoc-anchor id="{{ anchor.value }}" data-uid="{{ anchor.value }}" data-anchor="{{ anchor.value }}" style="top:unset">
+    <sdoc-anchor id="{{ anchor.value }}" node-role="section" data-uid="{{ anchor.value }}" data-anchor="{{ anchor.value }}" style="top:unset">
     {%- set incoming_links = traceability_index.get_incoming_links(anchor) -%}
     {%- if incoming_links is not none and incoming_links|length > 0 -%}
     <template>
-      incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
+      Incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
       {%- for incoming_link in incoming_links -%}
       {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
       {%- set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), anchor.document, document_type) -%}
       <a href="{{ incoming_link_href }}">
-        {{ incoming_link_parent_node.get_title() }}
+        {{ incoming_link_parent_node.get_display_title() }}
       </a>
       {%- endfor -%}
     </template>

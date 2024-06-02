@@ -21,9 +21,9 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
         self,
         parent,
         mid: Optional[str],
-        uid,
+        uid: Optional[str],
         custom_level: Optional[str],
-        title,
+        title: str,
         requirement_prefix: Optional[str],
         free_texts: List[FreeText],
         section_contents: List[SDocObject],
@@ -37,7 +37,7 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
         self.uid: Optional[str] = meaningful_uid
         self.reserved_uid: Optional[str] = meaningful_uid
 
-        self.title = title
+        self.title: str = title
         self.reserved_title = title
         self.requirement_prefix: Optional[str] = requirement_prefix
 
@@ -71,7 +71,7 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
     def is_root_included_document(self):
         return False
 
-    def get_title(self):
+    def get_display_title(self) -> str:
         return self.title
 
     @property

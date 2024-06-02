@@ -11,6 +11,17 @@ CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#1-Ref
 CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#1-Referenced-section">🔗&nbsp;Referenced section</a>
 CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#1-Referenced-section">🔗&nbsp;Referenced section</a>
 
+# The referenced section shall have 6 incoming links.
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/section.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC-REFERENCED-SECTION
+
+CHECK-HTML-DOC-REFERENCED-SECTION: Incoming links from:
+CHECK-HTML-DOC-REFERENCED-SECTION: <a href="../10_node_LINK_references_a_section/input.html#{{.*}}">
+CHECK-HTML-DOC-REFERENCED-SECTION: <a href="../10_node_LINK_references_a_section/input.html#{{.*}}">
+CHECK-HTML-DOC-REFERENCED-SECTION: <a href="../10_node_LINK_references_a_section/input.html#{{.*}}">
+CHECK-HTML-DOC-REFERENCED-SECTION: <a href="../10_node_LINK_references_a_section/input.html#{{.*}}">
+CHECK-HTML-DOC-REFERENCED-SECTION: <a href="../10_node_LINK_references_a_section/input.html#{{.*}}">
+CHECK-HTML-DOC-REFERENCED-SECTION: <a href="../10_node_LINK_references_a_section/input.html#{{.*}}">
+
 RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-TABLE
 CHECK-HTML-TABLE: <a href="../10_node_LINK_references_a_section/section-TABLE.html#1-Referenced-section">{{.*}}Referenced section</a></p>
 

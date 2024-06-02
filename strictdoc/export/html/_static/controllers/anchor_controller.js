@@ -54,6 +54,7 @@ Stimulus.register("anchor_controller", class extends Controller {
       // Create anchor content block:
       const anchorBlock = document.createElement('div');
       anchorBlock.classList.add('anchor_block');
+      anchorBlock.setAttribute('data-testid', 'anchor_hover_button');
 
       // Create the button:
       const anchorButton = document.createElement('div');

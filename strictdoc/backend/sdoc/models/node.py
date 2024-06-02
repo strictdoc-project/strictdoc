@@ -177,8 +177,12 @@ class SDocNode(SDocObject):
     def get_node_type_string(self) -> Optional[str]:
         return self.requirement_type
 
-    def get_title(self) -> Optional[str]:
-        return self.reserved_title
+    def get_display_title(self) -> str:
+        if self.reserved_title is not None:
+            return self.reserved_title
+        if self.reserved_uid is not None:
+            return self.reserved_uid
+        return f"{self.requirement_type} with no title/UID"
 
     @property
     def is_root_included_document(self) -> bool:

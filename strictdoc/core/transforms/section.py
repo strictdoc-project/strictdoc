@@ -178,7 +178,7 @@ class CreateSectionCommand:
             traceability_index.get_node_by_mid(MID(reference_mid))
         )
 
-        document = None
+        document: SDocDocument
         if isinstance(reference_node, SDocDocument):
             if not reference_node.document_is_included():
                 document = reference_node
@@ -189,7 +189,9 @@ class CreateSectionCommand:
                 if whereto == "child":
                     document = reference_node
                 else:
-                    document = reference_node.get_included_document()
+                    document = assert_cast(
+                        reference_node.get_included_document(), SDocDocument
+                    )
         else:
             document = reference_node.document
 
@@ -303,7 +305,7 @@ class CreateSectionCommand:
             mid=None,
             uid=None,
             custom_level=None,
-            title=None,
+            title="NOT_RELEVANT",
             requirement_prefix=None,
             free_texts=[],
             section_contents=[],
@@ -334,8 +336,9 @@ class CreateSectionCommand:
 
         # Updating section content.
         if free_text_container is not None:
+            free_text: FreeText
             if len(section.free_texts) > 0:
-                free_text: FreeText = section.free_texts[0]
+                free_text = section.free_texts[0]
             else:
                 free_text = FreeText(section, [])
                 section.free_texts.append(free_text)
@@ -350,6 +353,7 @@ class CreateSectionCommand:
                     part.parent = free_text
                 elif isinstance(part, InlineLink):
                     part.parent = free_text
+                    traceability_index.create_inline_link(part)
         else:
             section.free_texts = []
 

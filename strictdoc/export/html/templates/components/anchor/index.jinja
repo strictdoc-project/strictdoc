@@ -10,14 +10,14 @@
 {%- set incoming_links = view_object.traceability_index.get_incoming_links(section) %}
 {%- if incoming_links is not none and incoming_links|length > 0 -%}
 <template>
-  incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
-  {%- for incoming_link in incoming_links -%}
+  Incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
+  {% for incoming_link in incoming_links -%}
   {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
   {%- set incoming_link_href = view_object.render_node_link(incoming_link.parent_node(), view_object.document, view_object.document_type) -%}
   <a href="{{ incoming_link_href }}">
-    {{ incoming_link_parent_node.get_title() }}
+    {{ incoming_link_parent_node.get_display_title() }}
   </a>
-  {%- endfor -%}
+  {% endfor -%}
 </template>
 {%- endif -%}
 {%- endif -%}

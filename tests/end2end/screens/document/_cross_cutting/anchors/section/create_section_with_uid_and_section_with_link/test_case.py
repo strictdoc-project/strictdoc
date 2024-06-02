@@ -1,3 +1,5 @@
+from selenium.webdriver.common.by import By
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_section import (
@@ -39,11 +41,10 @@ class Test(E2ECase):
                 root_node_menu.do_node_add_section_first()
             )
 
+            form_edit_section_1.do_fill_in_uid("SECT-1")
             form_edit_section_1.do_fill_in_title("First title")
             form_edit_section_1.do_fill_in_text(
                 "This is a free text of the first section."
-                "\n\n"
-                "[ANCHOR: AD1]"
             )
             form_edit_section_1.do_form_submit()
 
@@ -63,7 +64,7 @@ class Test(E2ECase):
             form_edit_section2.do_fill_in_text(
                 "This is a free text of the second section."
                 "\n\n"
-                "[LINK: AD1]"
+                "[LINK: SECT-1]"
             )
             form_edit_section2.do_form_submit()
 
@@ -71,5 +72,8 @@ class Test(E2ECase):
 
             section2.assert_section_title("Second title", "2")
             screen_document.assert_toc_contains("Second title")
+
+            self.hover('//*[@data-testid="anchor_hover_button"]', by=By.XPATH)
+            screen_document.assert_text("Incoming link from:")
 
         assert test_setup.compare_sandbox_and_expected_output()

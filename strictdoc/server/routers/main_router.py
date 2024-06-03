@@ -71,6 +71,9 @@ from strictdoc.core.transforms.update_requirement import (
     UpdateRequirementResult,
     UpdateRequirementTransform,
 )
+from strictdoc.core.transforms.validation_error import (
+    MultipleValidationErrorAsList,
+)
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_config_form_object import (
     DocumentConfigFormObject,
@@ -1261,43 +1264,61 @@ def create_main_router(
     def delete_section(
         node_id: str, context_document_mid: str, confirmed: bool = False
     ):
+        section: SDocSection = assert_cast(
+            export_action.traceability_index.get_node_by_mid(MID(node_id)),
+            SDocSection,
+        )
         assert (
             isinstance(context_document_mid, str)
             and len(context_document_mid) > 0
         ), context_document_mid
         if not confirmed:
+            errors: List[str]
+            try:
+                delete_command = DeleteSectionCommand(
+                    section=section,
+                    traceability_index=export_action.traceability_index,
+                )
+                delete_command.validate()
+                errors = []
+            except MultipleValidationErrorAsList as error_:
+                errors = error_.errors
             template = env().get_template(
                 "actions/document/delete_section/"
                 "stream_confirm_delete_section.jinja"
             )
             output = template.render(
-                section_mid=node_id, context_document_mid=context_document_mid
+                section_mid=node_id,
+                context_document_mid=context_document_mid,
+                errors=errors,
             )
             return HTMLResponse(
                 content=output,
-                status_code=200,
+                status_code=200 if len(errors) == 0 else 422,
                 headers={
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
-        section: SDocSection = assert_cast(
-            export_action.traceability_index.get_node_by_mid(MID(node_id)),
-            SDocSection,
-        )
         try:
-            # FIXME: Perform all necessary validations.
-            # https://github.com/strictdoc-project/strictdoc/issues/1556
             delete_command = DeleteSectionCommand(
                 section=section,
                 traceability_index=export_action.traceability_index,
             )
             delete_command.perform()
-        except MultipleValidationError:
-            # FIXME
-            output = ""
+        except MultipleValidationErrorAsList as error_:
+            errors = error_.errors
+            template = env().get_template(
+                "actions/document/delete_section/"
+                "stream_confirm_delete_section.jinja"
+            )
+            output = template.render(
+                section_mid=node_id,
+                context_document_mid=context_document_mid,
+                errors=errors,
+            )
             return HTMLResponse(
                 content=output,
-                status_code=422,
+                status_code=200 if len(errors) == 0 else 422,
                 headers={
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },

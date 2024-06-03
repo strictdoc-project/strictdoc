@@ -119,10 +119,11 @@ class Node:  # pylint: disable=invalid-name
         # Confirmation required
         return Confirm(self.test_case)
 
-    def do_delete_node(self) -> None:
+    def do_delete_node(self, proceed_with_confirm: bool = True) -> None:
         confirm = self._get_node_delete_confirm()
         confirm.assert_confirm()
-        confirm.do_confirm_action()
+        if proceed_with_confirm:
+            confirm.do_confirm_action()
 
     # Node actions
 

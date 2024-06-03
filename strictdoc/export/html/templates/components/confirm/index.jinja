@@ -13,6 +13,15 @@
   {{ confirm_message|default(
     "This is an unrecoverable action."
   ) }}
+
+  {% if errors|length > 0 %}
+    <div>
+  {% for error_ in errors %}
+    <p>{{ error_ }}</p>
+  {% endfor %}
+    <div>
+  {% endif %}
+
 </sdoc-modal-message>
 {% endblock modal_form__content %}
 {% block modal_form__footer_submit %}

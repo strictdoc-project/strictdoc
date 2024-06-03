@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[REQUIREMENT]
+STATEMENT: >>>
+See the section [LINK: SDOC_UG_CONTACT].
+<<<
+
+[SECTION]
+UID: SDOC_UG_CONTACT
+TITLE: Referenced section
+
+[/SECTION]

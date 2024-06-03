@@ -14,12 +14,16 @@
     "This is an unrecoverable action."
   ) }}
 
-  {% if errors is defined and errors|length > 0 %}
-    <div>
+  {# {% set errors = ['test error 1', 'test error 2'] %} #}
+  {% if errors|length > 0 %}
+    <div class="error">
+    <p>This node cannot be deleted:</p>
+    <ul>
   {% for error_ in errors %}
-    <p>{{ error_ }}</p>
+    <li>{{ error_ }}</li>
   {% endfor %}
-    <div>
+    </ul>
+    </div>
   {% endif %}
 
 </sdoc-modal-message>

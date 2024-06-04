@@ -9,7 +9,7 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.document_view import ViewElement
-from strictdoc.backend.sdoc.models.node import SDocNodeField
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_tree import Folder
 from strictdoc.core.project_config import ProjectConfig
@@ -121,17 +121,32 @@ class DocumentScreenViewObject:
 
         return output
 
-    def render_updated_node_and_toc(
-        self, node: Union[SDocDocument], jinja_environment: Environment
+    def render_updated_nodes_and_toc(
+        self,
+        nodes: List[Union[SDocDocument, SDocNode]],
+        jinja_environment: Environment,
     ) -> str:
-        template = jinja_environment.get_template(
-            "components/section/index_extends_node.jinja"
-        )
-        output = render_turbo_stream(
-            content=template.render(view_object=self, section=node),
-            action="replace",
-            target=f"article-{node.reserved_mid}",
-        )
+        output: str = ""
+
+        for node_ in nodes:
+            template_folder: str
+            if isinstance(node_, SDocDocument):
+                template_folder = "section"
+            elif isinstance(node_, SDocNode):
+                if node_.is_text_node():
+                    template_folder = "text_node"
+                else:
+                    template_folder = "requirement"
+            else:
+                raise NotImplementedError
+            template = jinja_environment.get_template(
+                f"components/{template_folder}/index_extends_node.jinja"
+            )
+            output += render_turbo_stream(
+                content=template.render(view_object=self, node=node_),
+                action="replace",
+                target=f"article-{node_.reserved_mid}",
+            )
 
         toc_template = jinja_environment.get_template(
             "screens/document/_shared/toc.jinja"

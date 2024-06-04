@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Document free text.
+[/FREETEXT]
+
+[SECTION]
+TITLE: Section title
+
+[TEXT]
+MID: xyz567
+UID: TEXT-NODE-1
+STATEMENT: >>>
+Modified text statement.
+<<<
+
+[/SECTION]

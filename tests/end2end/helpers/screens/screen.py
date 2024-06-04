@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
+from typing_extensions import deprecated
 
 from tests.end2end.helpers.components.collapsible_list import CollapsibleList
 from tests.end2end.helpers.components.node.document_root import DocumentRoot
@@ -82,8 +83,11 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
         Section(self.test_case, node_order).assert_is_section()
         return Section(self.test_case, node_order)
 
-    # Requirement
+    @deprecated("Use get_node instead.")
     def get_requirement(self, node_order: int = 1) -> Requirement:
+        return self.get_node(node_order)
+
+    def get_node(self, node_order: int = 1) -> Requirement:
         """Based on "//sdoc-node[@data-testid='node-requirement']" """
         requirement = Requirement.with_node(self.test_case, node_order)
         requirement.assert_is_requirement()

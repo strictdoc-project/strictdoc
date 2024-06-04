@@ -610,7 +610,7 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(section=section, view_object=view_object)
+        output = template.render(node=section, view_object=view_object)
         toc_template = env().get_template(
             "actions/document/_shared/stream_updated_toc.jinja.html"
         )
@@ -669,7 +669,7 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(view_object=view_object, section=section)
+        output = template.render(view_object=view_object, node=section)
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1143,7 +1143,9 @@ def create_main_router(
             requirement=requirement,
             traceability_index=export_action.traceability_index,
         )
-        result: UpdateRequirementResult = update_command.perform()
+        update_requirement_command_result: UpdateRequirementResult = (
+            update_command.perform()
+        )
 
         # Saving new content to .SDoc files.
         SDWriter().write_to_file(document)
@@ -1179,24 +1181,11 @@ def create_main_router(
             standalone=False,
         )
 
-        output = ""
-        for requirement in result.this_document_requirements_to_update:
-            template = env().get_template(
-                "actions/document/edit_requirement/"
-                "stream_update_requirement.jinja.html"
-            )
-            output += template.render(
-                requirement=requirement,
-                view_object=view_object,
-            )
-
-        toc_template = env().get_template(
-            "actions/document/_shared/stream_updated_toc.jinja.html"
-        )
-        output += toc_template.render(view_object=view_object)
-
         return HTMLResponse(
-            content=output,
+            content=view_object.render_updated_nodes_and_toc(
+                update_requirement_command_result.this_document_requirements_to_update,
+                env(),
+            ),
             status_code=200,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
@@ -1235,12 +1224,6 @@ def create_main_router(
             )
         )
         document = requirement.document
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "edit_requirement/"
-            "stream_update_requirement.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1262,12 +1245,10 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(
-            requirement=requirement,
-            view_object=view_object,
-        )
         return HTMLResponse(
-            content=output,
+            content=view_object.render_updated_nodes_and_toc(
+                [requirement], env()
+            ),
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
             },
@@ -2039,8 +2020,8 @@ def create_main_router(
             standalone=False,
         )
         return HTMLResponse(
-            content=view_object.render_updated_node_and_toc(
-                node=document, jinja_environment=env()
+            content=view_object.render_updated_nodes_and_toc(
+                nodes=[document], jinja_environment=env()
             ),
             status_code=200,
             headers={
@@ -2122,7 +2103,7 @@ def create_main_router(
             standalone=False,
         )
         output = template.render(
-            view_object=view_object, document=document, section=document
+            view_object=view_object, document=document, node=document
         )
         return HTMLResponse(
             content=output,

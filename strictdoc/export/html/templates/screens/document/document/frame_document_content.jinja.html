@@ -5,15 +5,18 @@
       >
         {% include "screens/document/document/frame_document_config.jinja.html" %}
 
-        {%- for section_or_requirement in view_object.document_content_iterator() %}
+        {%- for node in view_object.document_content_iterator() %}
 
-        {%- if section_or_requirement.is_requirement %}
-          {%- set requirement = section_or_requirement %}
-          {% include "components/requirement/index_extends_node.jinja" %}
-
-        {%- elif section_or_requirement.is_section or section_or_requirement.is_document %}
-          {%- set section = section_or_requirement %}
+        {%- if node.is_section or node.is_document %}
           {% include "components/section/index_extends_node.jinja" %}
+        {%- elif node.is_requirement %}
+          {%- if node.is_text_node() %}
+            {% include "components/text_node/index_extends_node.jinja" %}
+          {% else %}
+            {% include "components/requirement/index_extends_node.jinja" %}
+          {% endif %}
+        {%- else %}
+          {% assert false, "Must not reach here." %}
         {%- endif %}
 
         {%- endfor %}

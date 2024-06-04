@@ -1453,3 +1453,7 @@ a.sdoc-table_key_value-key::after {
   font-weight: 600;
   text-transform: uppercase;
 }
+
+.error {
+  color: var(--color-danger);
+}

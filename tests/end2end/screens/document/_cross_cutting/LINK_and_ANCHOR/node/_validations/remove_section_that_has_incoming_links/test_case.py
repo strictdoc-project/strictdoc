@@ -26,11 +26,12 @@ class Test(E2ECase):
             screen_document.assert_text("See the section")
             screen_document.assert_text("Referenced section")
 
-            section = screen_document.get_section()
+            section = screen_document.get_section(1)
             section.assert_section_title("Referenced section")
-            section.do_delete_node()  # confirm is inside
+            section.do_delete_node(proceed_with_confirm=False)
 
-            # FIXME: Check validation messages
-            # screen_document.assert_text("")  # noqa: ERA001
+            screen_document.assert_text(
+                "This section cannot be removed because it contains incoming links."
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

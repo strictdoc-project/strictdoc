@@ -743,7 +743,9 @@ class P01_SDocToReqIFObjectConverter:
         ] = section_spec_type
         spec_object_types.append(section_spec_type)
         free_text_spec_type = (
-            P01_SDocToReqIFObjectConverter._create_free_text_spec_object_type()
+            P01_SDocToReqIFObjectConverter._create_free_text_spec_object_type(
+                context
+            )
         )
         context.map_grammar_node_tags_to_spec_object_type[grammar.parent][
             "FREETEXT"
@@ -776,12 +778,15 @@ class P01_SDocToReqIFObjectConverter:
     @classmethod
     def _create_free_text_spec_object_type(
         cls,
+        context: P01_SDocToReqIFBuildContext,
     ):
         attribute_definitions = []
         chapter_name_attribute = SpecAttributeDefinition.create(
-            attribute_type=SpecObjectAttributeType.STRING,
+            attribute_type=SpecObjectAttributeType.XHTML
+            if context.multiline_is_xhtml
+            else SpecObjectAttributeType.STRING,
             identifier=ReqIFChapterField.TEXT,
-            datatype_definition=(StrictDocReqIFTypes.MULTI_LINE_STRING.value),
+            datatype_definition=StrictDocReqIFTypes.MULTI_LINE_STRING.value,
             long_name=ReqIFChapterField.TEXT,
         )
         attribute_definitions.append(chapter_name_attribute)

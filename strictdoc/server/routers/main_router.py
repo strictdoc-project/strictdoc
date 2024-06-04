@@ -926,6 +926,7 @@ def create_main_router(
 
         transform = CreateRequirementTransform(
             form_object=form_object,
+            project_config=project_config,
             whereto=whereto,
             requirement_mid=requirement_mid,
             reference_mid=reference_mid,

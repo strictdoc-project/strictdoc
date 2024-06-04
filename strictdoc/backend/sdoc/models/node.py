@@ -503,7 +503,11 @@ class SDocNode(SDocObject):
     # Below all mutating methods.
 
     def set_field_value(
-        self, *, field_name: str, form_field_index: int, value: Optional[str]
+        self,
+        *,
+        field_name: str,
+        form_field_index: int,
+        value: Optional[Union[str, SDocNodeField]],
     ) -> None:
         """
         The purpose of this purpose is to provide a single-method API for
@@ -515,7 +519,7 @@ class SDocNode(SDocObject):
         assert isinstance(field_name, str)
 
         # If a field value is being removed, there is not much to do.
-        if value is None or len(value) == 0:
+        if value is None or (isinstance(value, str) and len(value) == 0):
             # Comment is a special because there can be multiple comments.
             # Empty comments are simply ignored and do not show up in the
             # updated requirement.
@@ -539,7 +543,7 @@ class SDocNode(SDocObject):
         field_index = grammar_field_titles.index(field_name)
 
         multiline = field_index >= element.content_field[1]
-        if multiline:
+        if multiline and isinstance(value, str):
             value = ensure_newline(value)
 
         if field_name in self.ordered_fields_lookup:
@@ -551,6 +555,8 @@ class SDocNode(SDocObject):
                         field_value=value,
                         multiline=multiline,
                     )
+                    if isinstance(value, str)
+                    else value
                 )
             else:
                 self.ordered_fields_lookup[field_name].insert(
@@ -560,7 +566,9 @@ class SDocNode(SDocObject):
                         field_name=field_name,
                         field_value=value,
                         multiline=multiline,
-                    ),
+                    )
+                    if isinstance(value, str)
+                    else value,
                 )
             return
 
@@ -577,6 +585,8 @@ class SDocNode(SDocObject):
                 field_value=value,
                 multiline=multiline,
             )
+            if isinstance(value, str)
+            else value
         ]
         after_field_index = field_index + 1
         for field_title in grammar_field_titles[after_field_index:]:

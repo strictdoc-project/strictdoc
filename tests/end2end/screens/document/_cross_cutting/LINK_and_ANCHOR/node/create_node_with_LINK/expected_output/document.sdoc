@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Req #1
+STATEMENT: Req #1 statement.
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Req #2
+STATEMENT: >>>
+See [LINK: REQ-1].
+<<<

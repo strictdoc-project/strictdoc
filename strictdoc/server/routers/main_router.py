@@ -50,6 +50,9 @@ from strictdoc.core.transforms.constants import NodeCreationOrder
 from strictdoc.core.transforms.create_requirement import (
     CreateRequirementTransform,
 )
+from strictdoc.core.transforms.delete_requirement import (
+    DeleteRequirementCommand,
+)
 from strictdoc.core.transforms.delete_section import DeleteSectionCommand
 from strictdoc.core.transforms.section import (
     CreateSectionCommand,
@@ -67,7 +70,6 @@ from strictdoc.core.transforms.update_included_document import (
     UpdateIncludedDocumentTransform,
 )
 from strictdoc.core.transforms.update_requirement import (
-    DeleteRequirementCommand,
     UpdateRequirementResult,
     UpdateRequirementTransform,
 )
@@ -1379,7 +1381,21 @@ def create_main_router(
     def delete_requirement(
         node_id: str, context_document_mid: str, confirmed: bool = False
     ):
+        requirement: SDocNode = (
+            export_action.traceability_index.get_node_by_mid(MID(node_id))
+        )
         if not confirmed:
+            errors: List[str]
+            try:
+                delete_command = DeleteRequirementCommand(
+                    requirement=requirement,
+                    traceability_index=export_action.traceability_index,
+                )
+                delete_command.validate()
+                errors = []
+            except MultipleValidationErrorAsList as error_:
+                errors = error_.errors
+
             template = env().get_template(
                 "actions/document/delete_requirement/"
                 "stream_confirm_delete_requirement.jinja"
@@ -1387,18 +1403,15 @@ def create_main_router(
             output = template.render(
                 requirement_mid=node_id,
                 context_document_mid=context_document_mid,
+                errors=errors,
             )
             return HTMLResponse(
                 content=output,
-                status_code=200,
+                status_code=200 if len(errors) == 0 else 422,
                 headers={
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
-
-        requirement: SDocNode = (
-            export_action.traceability_index.get_node_by_mid(MID(node_id))
-        )
 
         try:
             delete_command = DeleteRequirementCommand(

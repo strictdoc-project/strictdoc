@@ -496,7 +496,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         else:
             raise NotImplementedError
 
-    def update_last_updated(self):
+    def update_last_updated(self) -> None:
         """
         This is a rather broad way of signalling that all documents of the index
         need to be re-generated when they are opened next time. Several UI

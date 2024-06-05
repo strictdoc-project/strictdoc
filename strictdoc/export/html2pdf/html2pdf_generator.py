@@ -13,6 +13,7 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html2pdf.pdf_print_driver import PDFPrintDriver
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.timing import measure_performance
 
 
@@ -24,6 +25,9 @@ class HTML2PDFGenerator:
         html_templates: HTMLTemplates,
         output_html2pdf_root: str,
     ):
+        if not project_config.is_activated_html2pdf():
+            raise StrictDocException("HTML2PDF feature is not enabled")
+
         path_to_output_pdf_html_dir = os.path.join(output_html2pdf_root, "html")
         path_to_output_pdf_pdf_dir = os.path.join(output_html2pdf_root, "pdf")
 

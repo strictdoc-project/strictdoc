@@ -1,0 +1,20 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Req #1
+STATEMENT: >>>
+[ANCHOR: ANC-1, Anchor title]
+<<<
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Req #2
+STATEMENT: >>>
+See [LINK: ANC-1].
+<<<

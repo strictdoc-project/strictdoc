@@ -90,6 +90,4 @@ def create_safe_document_file_name(string) -> str:
 
 
 def ensure_newline(text: str) -> str:
-    if not text.endswith("\n"):
-        text += "\n"
-    return text
+    return text.rstrip() + "\n"

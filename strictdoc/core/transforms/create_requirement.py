@@ -154,7 +154,10 @@ class CreateRequirementTransform:
                             get_textx_syntax_error_message(exception)
                         )
         if len(errors) > 0:
-            raise validation_error
+            for field_name_, field_errors_ in validation_error.errors.items():
+                for field_error_ in field_errors_:
+                    form_object.add_error(field_name_, field_error_)
+            return
 
         if whereto == NodeCreationOrder.CHILD:
             parent = reference_node
@@ -225,12 +228,16 @@ class CreateRequirementTransform:
                     if free_text_content is not None
                     else None
                 )
-
                 requirement.set_field_value(
                     field_name=form_field_name,
                     form_field_index=form_field_index,
                     value=requirement_field,
                 )
+                if free_text_content is not None:
+                    for part_ in requirement_field.parts:
+                        if isinstance(part_, str):
+                            continue
+                        part_.parent = requirement_field
 
         requirement.reserved_mid = MID(form_object.requirement_mid)
         if document.config.enable_mid:
@@ -262,5 +269,17 @@ class CreateRequirementTransform:
             else:
                 # FIXME
                 pass
+
+        for free_text_container_ in map_form_to_requirement_fields.values():
+            if free_text_container_ is None:
+                continue
+            for part in free_text_container_.parts:
+                if isinstance(part, Anchor):
+                    # Since this is a new section, we just need to register the
+                    # new anchor. By this time, we know that there is no
+                    # existing anchor with this name.
+                    traceability_index.update_with_anchor(part)
+                elif isinstance(part, InlineLink):
+                    traceability_index.create_inline_link(part)
 
         traceability_index.update_last_updated()

@@ -544,7 +544,17 @@ class TraceabilityIndexBuilder:
                                     f"{part.link}."
                                 )
                             traceability_index.create_inline_link(part)
-
+                        elif isinstance(part, Anchor):
+                            graph_database.create_link(
+                                link_type=GraphLinkType.MID_TO_NODE,
+                                lhs_node=part.mid,
+                                rhs_node=part,
+                            )
+                            graph_database.create_link(
+                                link_type=GraphLinkType.UID_TO_NODE,
+                                lhs_node=part.value,
+                                rhs_node=part,
+                            )
                 if requirement.reserved_uid is None:
                     continue
 

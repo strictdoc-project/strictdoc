@@ -885,6 +885,17 @@ def create_main_router(
             config=project_config,
         )
 
+        if not form_object.any_errors():
+            command = CreateRequirementTransform(
+                form_object=form_object,
+                project_config=project_config,
+                whereto=whereto,
+                requirement_mid=requirement_mid,
+                reference_mid=reference_mid,
+                traceability_index=export_action.traceability_index,
+            )
+            command.perform()
+
         if form_object.any_errors():
             template = env().get_template(
                 "actions/"
@@ -923,16 +934,6 @@ def create_main_router(
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
-
-        transform = CreateRequirementTransform(
-            form_object=form_object,
-            project_config=project_config,
-            whereto=whereto,
-            requirement_mid=requirement_mid,
-            reference_mid=reference_mid,
-            traceability_index=export_action.traceability_index,
-        )
-        transform.perform()
 
         # Saving new content to .SDoc files.
         SDWriter().write_to_file(document)

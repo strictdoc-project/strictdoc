@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Dict, List
 
 
@@ -12,7 +13,7 @@ class MultipleValidationErrorAsList(Exception):
         self.errors: List[str] = errors
 
 
+@dataclass
 class MultipleValidationError(Exception):
-    def __init__(self, message: str, errors: Dict[str, List[str]]):
-        super().__init__(message)
-        self.errors: Dict[str, List[str]] = errors
+    message: str
+    errors: Dict[str, List[str]]

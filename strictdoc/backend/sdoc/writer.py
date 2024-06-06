@@ -30,6 +30,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.string import ensure_newline
 
 
 class TAG(Enum):
@@ -391,7 +392,7 @@ class SDWriter:
                     output += "\n"
                     if len(field_value) > 0:
                         if field_value != "\n":
-                            output += field_value
+                            output += ensure_newline(field_value)
                     output += "<<<"
                     output += "\n"
                 else:

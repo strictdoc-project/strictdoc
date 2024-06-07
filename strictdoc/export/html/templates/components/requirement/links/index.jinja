@@ -1,5 +1,5 @@
   {%- if view_object.traceability_index.has_parent_requirements(requirement) %}
-    <sdoc-requirement-field-label>parent relations:</sdoc-requirement-field-label>
+    <sdoc-requirement-field-label>parents:</sdoc-requirement-field-label>
     <sdoc-requirement-field data-field-label="parent relations">
       <ul class="requirement__link">
         {%- for requirement, relation_role_ in view_object.traceability_index.get_parent_relations_with_roles(requirement) %}
@@ -20,7 +20,7 @@
   {%- endif %}
 
   {%- if view_object.traceability_index.has_children_requirements(requirement) %}
-    <sdoc-requirement-field-label>child relations:</sdoc-requirement-field-label>
+    <sdoc-requirement-field-label>children:</sdoc-requirement-field-label>
     <sdoc-requirement-field data-field-label="child relations">
       <ul class="requirement__link">
         {%- for requirement, relation_role_ in view_object.traceability_index.get_child_relations_with_roles(requirement) %}

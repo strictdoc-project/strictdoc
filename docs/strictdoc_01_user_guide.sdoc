@@ -874,6 +874,8 @@ A requirement relation can be specialized with a role. The role must be register
     - TYPE: Parent
       VALUE: REQ-1
       ROLE: Refines
+
+In this example REQ-1 is the parent of REQ-2 and REQ-2 refines REQ-1.
 [/FREETEXT]
 
 [/SECTION]

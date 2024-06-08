@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -197,7 +198,7 @@ class RequirementFormObject(ErrorObject):
         *,
         is_new: bool,
         element_type: str,
-        requirement_mid: Optional[str],
+        requirement_mid: str,
         document_mid: str,
         context_document_mid: str,
         mid_field: Optional[RequirementFormField],
@@ -212,7 +213,7 @@ class RequirementFormObject(ErrorObject):
         assert isinstance(element_type, str), element_type
         self.is_new: bool = is_new
         self.element_type: str = element_type
-        self.requirement_mid: Optional[str] = requirement_mid
+        self.requirement_mid: str = requirement_mid
         self.document_mid: str = document_mid
         self.context_document_mid: str = context_document_mid
         self.mid_field: Optional[RequirementFormField] = mid_field
@@ -622,6 +623,10 @@ class RequirementFormObject(ErrorObject):
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(context_document, SDocDocument)
 
+        """
+        MID uniqueness check.
+        FIXME: MID uniqueness if a node is updated.
+        """
         if self.is_new and self.mid_field is not None:
             existing_node_with_this_mid = (
                 traceability_index.get_node_by_mid_weak(
@@ -638,10 +643,20 @@ class RequirementFormObject(ErrorObject):
                     ),
                 )
 
-        if self.is_new and "UID" in self.fields:
-            requirement_uid = self.fields["UID"][0].field_unescaped_value
+        """
+        UID uniqueness check.
+        """
+        new_node_uid_or_none: Optional[str] = None
+        if "UID" in self.fields:
+            new_node_uid = self.fields["UID"][0].field_unescaped_value
+            if len(new_node_uid) > 0:
+                new_node_uid_or_none = new_node_uid
+
+        if new_node_uid_or_none is not None and (
+            self.is_new or self.exiting_requirement_uid != new_node_uid_or_none
+        ):
             existing_node_with_this_uid = (
-                traceability_index.get_node_by_uid_weak(requirement_uid)
+                traceability_index.get_node_by_uid_weak(new_node_uid_or_none)
             )
             if existing_node_with_this_uid is not None:
                 self.add_error(
@@ -649,10 +664,44 @@ class RequirementFormObject(ErrorObject):
                     (
                         "The chosen UID must be unique. "
                         "Another node with this UID already exists: "
-                        f"'{requirement_uid}'."
+                        f"'{new_node_uid_or_none}'."
                     ),
                 )
 
+        """
+        Ensure that UID doesn't have any incoming links if it is going to be
+        renamed or removed.
+        """
+        if self.exiting_requirement_uid is not None:
+            if (
+                new_node_uid_or_none is None
+                or self.exiting_requirement_uid != new_node_uid_or_none
+            ):
+                existing_node: SDocNode = traceability_index.get_node_by_mid(
+                    MID(self.requirement_mid)
+                )
+
+                existing_incoming_links: Optional[List[InlineLink]] = (
+                    traceability_index.get_incoming_links(existing_node)
+                )
+                if (
+                    existing_incoming_links is not None
+                    and len(existing_incoming_links) > 0
+                ):
+                    self.add_error(
+                        "UID",
+                        (
+                            "Renaming a node UID when the node has "
+                            "incoming links is not supported yet. "
+                            "Please delete all incoming links first."
+                        ),
+                    )
+
+        """
+        STATEMENT or another content field (DESCRIPTION, CONTENT) checks:
+        - Must be not empty.
+        - Must be valid RST.
+        """
         requirement_element = self.grammar.elements_by_type[self.element_type]
         statement_field_name = requirement_element.content_field[0]
         requirement_statement = self.fields[statement_field_name][

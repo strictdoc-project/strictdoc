@@ -1,6 +1,5 @@
 # mypy: disable-error-code="arg-type,union-attr"
 from collections import OrderedDict
-from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -16,11 +15,6 @@ from strictdoc.export.html.form_objects.grammar_element_form_object import (
     GrammarElementFormObject,
 )
 from strictdoc.helpers.cast import assert_cast
-
-
-@dataclass
-class UpdateRequirementResult:
-    this_document_requirements_to_update: Set[SDocNode]
 
 
 class UpdateGrammarElementCommand:

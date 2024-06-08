@@ -49,7 +49,7 @@ Modified free text!
 """
             )
             form_edit_requirement.do_form_submit_and_catch_error(
-                "A node cannot have two anchors with the same identifier: AD1."
+                "The node fields contain duplicate anchor: 'AD1'."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

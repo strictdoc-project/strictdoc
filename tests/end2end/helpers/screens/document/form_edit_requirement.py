@@ -58,6 +58,14 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
             Form_EditRequirement.XPATH.RELATION_ROW
         )
 
+    def get_node_relation_form_mid(self, order: int):
+        assert isinstance(order, int) and order >= 1, order
+        any_relation_xpath = "//*[@data-testid='requirement-form-relation-row']"
+        xpath = f"({any_relation_xpath})[{order}]"
+        element = self.test_case.find_element(xpath)
+        element_mid = element.get_attribute("mid")
+        return MID(element_mid)
+
     def do_form_add_field_relation(self) -> MID:
         any_relation_xpath = "//*[@data-testid='requirement-form-relation-row']"
         relations_number = len(

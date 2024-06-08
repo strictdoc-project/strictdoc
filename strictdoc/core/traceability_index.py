@@ -379,7 +379,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_node_with_duplicate_anchor(
         self, anchor_uid: str
-    ) -> Union[SDocDocument, SDocSection]:
+    ) -> Union[SDocDocument, SDocSection, SDocNode]:
         for document in self.document_tree.document_list:
             if len(document.free_texts) > 0:
                 for part in document.free_texts[0].parts:
@@ -387,15 +387,20 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                         return document
             document_iterator = DocumentCachingIterator(document)
             for node in document_iterator.all_content():
-                if not isinstance(node, (SDocDocument, SDocSection)):
-                    continue
-                if len(node.free_texts) > 0:
-                    for part in node.free_texts[0].parts:
-                        if (
-                            isinstance(part, Anchor)
-                            and part.value == anchor_uid
-                        ):
+                if isinstance(node, (SDocDocument, SDocSection)):
+                    if len(node.free_texts) > 0:
+                        for part in node.free_texts[0].parts:
+                            if (
+                                isinstance(part, Anchor)
+                                and part.value == anchor_uid
+                            ):
+                                return node
+                elif isinstance(node, SDocNode):
+                    for node_anchor_ in node.get_anchors():
+                        if node_anchor_.value == anchor_uid:
                             return node
+                else:
+                    raise AssertionError(f"Must not reach here: {node}.")
         raise NotImplementedError(
             f"Could not find a node with an anchor by anchor UID: {anchor_uid}"
         )
@@ -472,7 +477,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def create_inline_link(self, new_link: InlineLink):
         assert isinstance(new_link, InlineLink)
-        # InlineLink points to a section or to anchor.
+        # InlineLink points to a section, node or to anchor.
+        # FIXME: De-nest this code by returning early.
         if self.graph_database.has_link(
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=new_link.link
         ):
@@ -506,7 +512,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self.index_last_updated = datetime.today()
 
     def create_requirement(self, requirement: SDocNode):
-        assert isinstance(requirement, SDocNode)
+        assert isinstance(requirement, SDocNode), requirement
 
         self.graph_database.create_link(
             link_type=GraphLinkType.MID_TO_NODE,
@@ -733,7 +739,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             if not node.is_requirement:
                 continue
             requirement_node: SDocNode = node
-            assert requirement_node.reserved_uid is not None
+
+            # If a requirement has no UID, it cannot contribute to any relation-based
+            # connection between any two documents.
+            if requirement_node.reserved_uid is None:
+                continue
             requirement_connections = self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
                 lhs_node=requirement_node.reserved_uid,
@@ -907,13 +917,31 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             rhs_node=inline_link,
         )
 
+    def remove_anchor_by_uid(self, anchor_uid: str):
+        anchor: Anchor = self.graph_database.get_link_value(
+            link_type=GraphLinkType.UID_TO_NODE,
+            lhs_node=anchor_uid,
+        )
+        self.graph_database.delete_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=anchor.mid,
+            rhs_node=anchor,
+        )
+        self.graph_database.delete_link(
+            link_type=GraphLinkType.UID_TO_NODE,
+            lhs_node=anchor_uid,
+            rhs_node=anchor,
+        )
+
     def validate_node_against_anchors(
         self,
         *,
-        node: Union[SDocDocument, SDocSection, None],
+        node: Union[SDocDocument, SDocSection, SDocNode, None],
         new_anchors: List[Anchor],
-    ):
-        assert node is None or isinstance(node, (SDocDocument, SDocSection))
+    ) -> None:
+        assert node is None or isinstance(
+            node, (SDocDocument, SDocSection, SDocNode)
+        )
         assert isinstance(new_anchors, list)
 
         # Check that this node does not have duplicated anchors.
@@ -949,15 +977,21 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         #    that case, we need to check if these anchors are used by any LINKs,
         #    raising a validation if they do.
         existing_node_anchor_uids = set()
-        if len(node.free_texts) > 0:
-            for part in node.free_texts[0].parts:
-                if isinstance(part, Anchor):
-                    existing_node_anchor_uids.add(part.value)
+        if isinstance(node, SDocNode):
+            for node_anchor_ in node.get_anchors():
+                existing_node_anchor_uids.add(node_anchor_.value)
+        else:
+            if len(node.free_texts) > 0:
+                for part in node.free_texts[0].parts:
+                    if isinstance(part, Anchor):
+                        existing_node_anchor_uids.add(part.value)
 
-        # Validation 1: Assert all UIDs either:
-        #               a) new
-        #               b) exist in this node
-        #               c) raise a duplication error.
+        """
+        Validation 1: Assert all UIDs are either:
+        a) new
+        b) exist in this node
+        c) raise a duplication error.
+        """
         for anchor_uid in new_anchor_uids:
             if (
                 self.graph_database.has_link(
@@ -965,53 +999,42 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 )
                 and anchor_uid not in existing_node_anchor_uids
             ):
-                node_with_duplicate_anchor = (
-                    self.get_node_with_duplicate_anchor(anchor_uid)
+                duplicate_anchor: Anchor = self.graph_database.get_link_value(
+                    link_type=GraphLinkType.UID_TO_NODE, lhs_node=anchor_uid
                 )
-                node_type = (
-                    "Document"
-                    if isinstance(node_with_duplicate_anchor, SDocDocument)
-                    else "Section"
-                )
+                node_with_duplicate_anchor: Union[
+                    SDocDocument, SDocSection, SDocNode
+                ] = duplicate_anchor.parent_node()
                 raise SingleValidationError(
                     "Another node contains an anchor with the same UID: "
-                    f"{anchor_uid}. Node: {node_type} with title "
-                    f"'{node_with_duplicate_anchor.title}'."
+                    f"{anchor_uid}. {node_with_duplicate_anchor.get_display_node_type()}: "
+                    f"{node_with_duplicate_anchor.get_display_title()}."
                 )
 
-        # Validation 2: Check that removed anchors do not have any incoming
-        # links.
+        """
+        Validation 2: Check that removed anchors do not have any incoming
+        links.
+        """
         to_be_removed_anchor_uids = existing_node_anchor_uids - new_anchor_uids
-        document: SDocDocument
-        for document in self.document_tree.document_list:
-            document_iterator = DocumentCachingIterator(document)
-            for node_ in document_iterator.all_content():
-                if not isinstance(node_, (SDocDocument, SDocSection)):
-                    continue
-                if len(node_.free_texts) > 0:
-                    for part in node_.free_texts[0].parts:
-                        if (
-                            isinstance(part, InlineLink)
-                            and part.link in to_be_removed_anchor_uids
-                        ):
-                            node_with_duplicate_anchor = (
-                                self.get_node_with_duplicate_anchor(part.link)
-                            )
-                            node_type = (
-                                "Document"
-                                if isinstance(
-                                    node_with_duplicate_anchor, SDocDocument
-                                )
-                                else "Section"
-                            )
-
-                            raise SingleValidationError(
-                                f"Cannot remove anchor with UID "
-                                f"'{part.link}' because it has incoming "
-                                f"links. Containing node: "
-                                f"{node_type} with title "
-                                f"'{node_with_duplicate_anchor.title}'."
-                            )
+        for to_be_removed_anchor_uid_ in to_be_removed_anchor_uids:
+            to_be_removed_anchor: Anchor = self.graph_database.get_link_value(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=to_be_removed_anchor_uid_,
+            )
+            incoming_links = self.graph_database.get_link_values_weak(
+                link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
+                lhs_node=to_be_removed_anchor.reserved_mid,
+            )
+            if incoming_links is not None and len(incoming_links) > 0:
+                incoming_link: InlineLink = incoming_links[0]
+                incoming_link_parent_node = incoming_link.parent_node()
+                raise SingleValidationError(
+                    f"Cannot remove anchor with UID "
+                    f"'{incoming_link.link}' because it has incoming "
+                    f"links. Containing node: "
+                    f"{incoming_link_parent_node.get_display_node_type()}: "
+                    f"'{incoming_link_parent_node.get_display_title()}'."
+                )
 
     def validate_node_can_remove_uid(self, *, node: Union[SDocNode, Anchor]):
         incoming_links: Optional[List[InlineLink]] = self.get_incoming_links(

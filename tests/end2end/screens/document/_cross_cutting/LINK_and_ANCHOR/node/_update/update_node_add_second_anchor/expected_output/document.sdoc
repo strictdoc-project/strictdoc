@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[TEXT]
+STATEMENT: >>>
+Modified text
+
+[ANCHOR: AD1, Anchor title 1]
+
+[ANCHOR: AD2, Anchor title 2]
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: >>>
+[LINK: AD1]
+
+[LINK: AD2]
+<<<

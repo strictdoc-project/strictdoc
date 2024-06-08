@@ -148,6 +148,32 @@ Test
     assert input_sdoc == output
 
 
+def test_042_two_anchors():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Document 1
+
+[TEXT]
+STATEMENT: >>>
+Modified text
+
+[ANCHOR: AD1, Anchor title 1]
+
+[ANCHOR: AD2, Anchor title 2]
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_042_free_text_anchor_end_of_free_text():
     input_sdoc = """
 [DOCUMENT]

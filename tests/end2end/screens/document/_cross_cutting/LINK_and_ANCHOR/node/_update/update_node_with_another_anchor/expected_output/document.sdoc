@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[TEXT]
+STATEMENT: >>>
+Modified Hello world!
+
+[ANCHOR: AD2, Anchor title 2]
+<<<

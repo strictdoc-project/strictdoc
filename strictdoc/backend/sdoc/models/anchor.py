@@ -1,5 +1,5 @@
 # mypy: disable-error-code="no-untyped-def"
-from typing import Optional
+from typing import Any, Optional
 
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
@@ -35,3 +35,9 @@ class Anchor:
     @property
     def parent_or_including_document(self):
         return self.parent.parent_or_including_document
+
+    def parent_node(self) -> Any:
+        # Anchor -> FreeText -> Section|Document
+        # or
+        # Anchor -> SDocField -> SDocNode
+        return self.parent.parent

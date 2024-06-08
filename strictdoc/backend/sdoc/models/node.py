@@ -88,7 +88,6 @@ class SDocNodeField:
                     text += part.title
                 text += "]"
                 text += "\n"
-                text += "\n"
             else:
                 raise NotImplementedError(part)
         return text
@@ -286,6 +285,9 @@ class SDocNode(SDocObject):
 
     def get_included_document(self) -> Optional[SDocDocument]:
         return self.ng_including_document_reference.get_document()
+
+    def get_display_node_type(self) -> str:
+        return "Node"
 
     @property
     def parent_or_including_document(self) -> SDocDocument:

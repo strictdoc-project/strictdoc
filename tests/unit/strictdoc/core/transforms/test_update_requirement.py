@@ -1,12 +1,15 @@
+from strictdoc import environment
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementRelationChild,
     GrammarElementRelationParent,
 )
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.core.transforms.update_requirement import (
-    UpdateRequirementTransform,
+    CreateOrUpdateNodeCommand,
+    UpdateNodeInfo,
 )
 from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
@@ -59,10 +62,12 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
             field_role=None,
         )
     )
-    update_command = UpdateRequirementTransform(
+    update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
-        requirement=requirement2,
+        node_info=UpdateNodeInfo(requirement2),
+        context_document=document_1,
         traceability_index=traceability_index,
+        project_config=ProjectConfig.default_config(environment),
     )
     update_command.perform()
 
@@ -123,10 +128,12 @@ def test_02_single_document_add_second_parent_relation_with_role():
             context_document_mid=document_1.reserved_mid,
         )
     )
-    update_command = UpdateRequirementTransform(
+    update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
-        requirement=requirement2,
+        node_info=UpdateNodeInfo(requirement2),
+        context_document=document_1,
         traceability_index=traceability_index,
+        project_config=ProjectConfig.default_config(environment),
     )
     update_command.perform()
     assert len(requirement2.relations) == 1
@@ -211,10 +218,12 @@ def test_20_single_document_add_second_child_relation_with_role():
             field_role="IsImplementedBy",
         )
     )
-    update_command = UpdateRequirementTransform(
+    update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
-        requirement=requirement2,
+        node_info=UpdateNodeInfo(requirement2),
+        context_document=document_1,
         traceability_index=traceability_index,
+        project_config=ProjectConfig.default_config(environment),
     )
     update_command.perform()
 
@@ -292,10 +301,12 @@ def test_25_single_document_remove_child_relation():
     # Form object has no relations.
     form_object.reference_fields.clear()
 
-    update_command = UpdateRequirementTransform(
+    update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
-        requirement=requirement2,
+        node_info=UpdateNodeInfo(requirement2),
+        context_document=document_1,
         traceability_index=traceability_index,
+        project_config=ProjectConfig.default_config(environment),
     )
     update_command.perform()
 
@@ -373,10 +384,12 @@ def test_26_two_documents_remove_child_relation():
     # Form object has no relations.
     form_object.reference_fields.clear()
 
-    update_command = UpdateRequirementTransform(
+    update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
-        requirement=requirement2,
+        node_info=UpdateNodeInfo(requirement2),
+        context_document=document_1,
         traceability_index=traceability_index,
+        project_config=ProjectConfig.default_config(environment),
     )
     update_command.perform()
 

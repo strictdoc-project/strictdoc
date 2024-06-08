@@ -1,0 +1,21 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[TEXT]
+STATEMENT: >>>
+Hello world!
+
+[ANCHOR: AD1, Anchor title]
+<<<
+
+[TEXT]
+STATEMENT: >>>
+Hello world!
+
+[ANCHOR: AD2, Anchor title 2]
+<<<
+
+[TEXT]
+STATEMENT: >>>
+Modified Hello world! [LINK: AD2]
+<<<

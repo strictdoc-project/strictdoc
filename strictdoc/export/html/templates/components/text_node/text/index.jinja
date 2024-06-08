@@ -1,7 +1,0 @@
-{%- if text_node.has_reserved_statement() -%}
-  <sdoc-section-text>
-    {%- with field_content = view_object.render_node_statement(text_node) %}
-      {%- include "components/field/index.jinja" -%}
-    {%- endwith -%}
-  </sdoc-section-text>
-{%- endif -%}

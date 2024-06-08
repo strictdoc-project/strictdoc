@@ -31,6 +31,13 @@
     {% block sdoc_entity %}
     {% endblock sdoc_entity %}
 
+    {%- if not sdoc_entity.section_contents and view_object.document_type.is_document -%}
+      <sdoc-main-placeholder data-testid="document-root-placeholder">
+        The document is empty.
+        <br/>Start adding text, sections, and requirements.
+      </sdoc-main-placeholder>
+    {%- endif -%}
+
     {# node_controls #}
     {%- if is_not_standalone -%}
     {% include "components/node/node_controls/index.jinja" %}

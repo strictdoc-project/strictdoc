@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[REQUIREMENT]
+STATEMENT: >>>
+See [LINK: REQ-001].
+<<<
+
+[REQUIREMENT]
+TITLE: Linked-to requirement
+STATEMENT: >>>
+Requirement statement.
+
+[ANCHOR: REQ-001]
+<<<

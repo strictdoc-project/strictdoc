@@ -457,13 +457,30 @@ class TraceabilityIndexBuilder:
                                 children=[],
                             ),
                         )
-
                 if node.is_requirement:
                     requirement: SDocNode = node
                     if requirement.reserved_tags is not None:
                         for tag in requirement.reserved_tags:
                             document_tags.setdefault(tag, 0)
                             document_tags[tag] += 1
+                    for node_field_ in node.enumerate_fields():
+                        for part in node_field_.parts:
+                            # The inline links are handled at the next big
+                            # For loop pass because the information about
+                            # all Nodes and Anchors have not been
+                            # collected yet at this point.
+                            # see create_inline_link below.
+                            if isinstance(part, Anchor):
+                                graph_database.create_link(
+                                    link_type=GraphLinkType.MID_TO_NODE,
+                                    lhs_node=part.mid,
+                                    rhs_node=part,
+                                )
+                                graph_database.create_link(
+                                    link_type=GraphLinkType.UID_TO_NODE,
+                                    lhs_node=part.value,
+                                    rhs_node=part,
+                                )
 
         # Now iterate over the requirements again to build an in-depth map of
         # parents and children.
@@ -524,6 +541,11 @@ class TraceabilityIndexBuilder:
                     continue
                 requirement: SDocNode = node
 
+                """
+                At this point, we resolve LINKs, and the expectation is that
+                all UIDs or ANCHORS (they also have UIDs) are registered at the
+                previous pass.
+                """
                 for node_field_ in node.enumerate_fields():
                     for part in node_field_.parts:
                         if isinstance(part, InlineLink):
@@ -544,17 +566,6 @@ class TraceabilityIndexBuilder:
                                     f"{part.link}."
                                 )
                             traceability_index.create_inline_link(part)
-                        elif isinstance(part, Anchor):
-                            graph_database.create_link(
-                                link_type=GraphLinkType.MID_TO_NODE,
-                                lhs_node=part.mid,
-                                rhs_node=part,
-                            )
-                            graph_database.create_link(
-                                link_type=GraphLinkType.UID_TO_NODE,
-                                lhs_node=part.value,
-                                rhs_node=part,
-                            )
                 if requirement.reserved_uid is None:
                     continue
 

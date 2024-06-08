@@ -1,17 +1,18 @@
-{%- if requirement.reserved_title %}
+{# needs sdoc_entity, see README.txt #}
+{%- if sdoc_entity.reserved_title %}
   <sdoc-requirement-title>
 
     {#- initiate the accumulating variable -#}
     {%- set field_content_ = "" -%}
 
     {%- if title_number is true -%}
-      {%- if requirement.context.title_number_string %}
+      {%- if sdoc_entity.context.title_number_string %}
         {#- add title 'number' part to the accumulator -#}
-        {%- set field_content_ = field_content_ + requirement.context.title_number_string + ".&nbsp;" -%}
+        {%- set field_content_ = field_content_ + sdoc_entity.context.title_number_string + ".&nbsp;" -%}
       {%- endif -%}
     {%- endif -%}
 
-    {%- set title = requirement.reserved_title -%}
+    {%- set title = sdoc_entity.reserved_title -%}
     {%- if title is not none -%}
       {#- add title 'value' part to the accumulator -#}
       {%- set field_content_ = field_content_ + title -%}

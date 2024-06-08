@@ -1,17 +1,18 @@
-{% if requirement.mid_permanent and requirement.reserved_mid is not none %}
+{# needs sdoc_entity, see README.txt #}
+{% if sdoc_entity.mid_permanent and sdoc_entity.reserved_mid is not none %}
   <sdoc-requirement-field-label>MID:</sdoc-requirement-field-label>
   <sdoc-requirement-field
     data-field-type="singleline"
     data-field-label="MID"
   >
-    {%- with field_content = requirement.reserved_mid %}
+    {%- with field_content = sdoc_entity.reserved_mid %}
       {%- include "components/field/index.jinja" -%}
     {%- endwith -%}
   </sdoc-requirement-field>
 {% endif %}
 
-{%- if requirement.has_meta -%}
-  {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) if view_object.current_view.includes_field(requirement.requirement_type, meta_field[0]) %}
+{%- if sdoc_entity.has_meta -%}
+  {% for meta_field in sdoc_entity.enumerate_meta_fields(skip_multi_lines=True) if view_object.current_view.includes_field(requirement.requirement_type, meta_field[0]) %}
     <sdoc-requirement-field-label>{{ meta_field[0] }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field
       data-field-type="singleline"

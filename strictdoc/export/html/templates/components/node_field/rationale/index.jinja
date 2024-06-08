@@ -1,0 +1,11 @@
+{# needs sdoc_entity, see README.txt #}
+{%- if sdoc_entity.rationale is not none and view_object.current_view.includes_field(sdoc_entity.requirement_type, "RATIONALE") -%}
+  <sdoc-requirement-field-label>{{ sdoc_entity.get_field_human_title("RATIONALE") }}:</sdoc-requirement-field-label>
+  <sdoc-requirement-field
+    data-field-label="rationale"
+  >
+    {%- with field_content = view_object.render_node_rationale(sdoc_entity) %}
+      {%- include "components/field/index.jinja" -%}
+    {%- endwith -%}
+  </sdoc-requirement-field>
+{%- endif -%}

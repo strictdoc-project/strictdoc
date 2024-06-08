@@ -1,0 +1,19 @@
+{# needs sdoc_entity, see README.txt #}
+{%- if sdoc_entity.has_reserved_statement() and view_object.current_view.includes_field(sdoc_entity.requirement_type, sdoc_entity.get_content_field_name()) -%}
+  {%- if truncated_statement is true -%}
+    {# truncated in DTR tiny card #}
+    <sdoc-requirement-field data-field-label="statement">
+      <sdoc-autogen>{{ view_object.render_truncated_node_statement(sdoc_entity) }}</sdoc-autogen>
+    </sdoc-requirement-field>
+  {%- else -%}
+    {# default with label #}
+    <sdoc-requirement-field-label>{{ sdoc_entity.get_field_human_title_for_statement() }}:</sdoc-requirement-field-label>
+    <sdoc-requirement-field
+      data-field-label="statement"
+    >
+      {%- with field_content = view_object.render_node_statement(sdoc_entity) %}
+        {%- include "components/field/index.jinja" -%}
+      {%- endwith -%}
+    </sdoc-requirement-field>
+  {%- endif -%}
+{%- endif -%}

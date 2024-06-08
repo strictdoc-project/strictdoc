@@ -1,0 +1,18 @@
+{# needs sdoc_entity, see README.txt #}
+{%- if sdoc_entity.reserved_title %}
+  <sdoc-requirement-title
+    id="{{ view_object.render_local_anchor(sdoc_entity) }}"
+  >
+    {# title number #}
+    {%- if title_number is true -%}
+      {%- if sdoc_entity.context.title_number_string %}
+        {{ sdoc_entity.context.title_number_string }}.&nbsp;
+      {%- endif -%}
+    {%- endif -%}
+    {# title value #}
+    {%- set title = sdoc_entity.reserved_title -%}
+    {%- if title is not none -%}
+      {{ title }}
+    {%- endif -%}
+  </sdoc-requirement-title>
+{%- endif %}

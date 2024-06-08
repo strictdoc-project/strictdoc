@@ -1,0 +1,42 @@
+{# needs sdoc_entity, see README.txt #}
+  {%- if view_object.traceability_index.has_parent_requirements(sdoc_entity) %}
+    <sdoc-requirement-field-label>parents:</sdoc-requirement-field-label>
+    <sdoc-requirement-field data-field-label="parent relations">
+      <ul class="requirement__link">
+        {%- for sdoc_entity, relation_role_ in view_object.traceability_index.get_parent_relations_with_roles(sdoc_entity) %}
+        <li>
+          <a data-turbo="false" class="requirement__link-parent" href="{{ view_object.render_node_link(sdoc_entity, view_object.document, view_object.document_type) }}">
+            {%- if sdoc_entity.reserved_uid %}
+            <span class="requirement__parent-uid">{{ sdoc_entity.reserved_uid }}</span>
+            {%- endif %}
+            {{ sdoc_entity.reserved_title if sdoc_entity.reserved_title else "" }}
+            {% if relation_role_ is not none %}
+              <span class="requirement__type-tag">({{ relation_role_ }})</span>
+            {% endif %}
+          </a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </sdoc-requirement-field>
+  {%- endif %}
+
+  {%- if view_object.traceability_index.has_children_requirements(sdoc_entity) %}
+    <sdoc-requirement-field-label>children:</sdoc-requirement-field-label>
+    <sdoc-requirement-field data-field-label="child relations">
+      <ul class="requirement__link">
+        {%- for sdoc_entity, relation_role_ in view_object.traceability_index.get_child_relations_with_roles(sdoc_entity) %}
+        <li>
+          <a data-turbo="false" class="requirement__link-child" href="{{ view_object.render_node_link(sdoc_entity, view_object.document, view_object.document_type) }}">
+            {%- if sdoc_entity.reserved_uid %}
+            <span class="requirement__child-uid">{{ sdoc_entity.reserved_uid }}</span>
+            {%- endif %}
+            {{ sdoc_entity.reserved_title if sdoc_entity.reserved_title else "" }}
+            {% if relation_role_ is not none %}
+              <span class="requirement__type-tag">({{ relation_role_ }})</span>
+            {% endif %}
+          </a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </sdoc-requirement-field>
+  {%- endif %}

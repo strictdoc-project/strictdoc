@@ -28,10 +28,14 @@
 
         {%- if section_or_requirement.is_requirement %}
           {%- set requirement = section_or_requirement %}
+          {# TODO #}
+          {%- set sdoc_entity = requirement -%}
           {% include "components/requirement/pdf.jinja" %}
 
         {%- elif section_or_requirement.is_section %}
           {%- set section = section_or_requirement %}
+          {# TODO #}
+          {%- set sdoc_entity = section -%}
           {% include "components/section/pdf.jinja" %}
         {%- endif %}
 

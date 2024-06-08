@@ -401,7 +401,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
     def get_incoming_links(
-        self, node: Union[SDocNode, SDocSection]
+        self, node: Union[SDocNode, SDocSection, Anchor]
     ) -> Optional[List[InlineLink]]:
         incoming_links = self.graph_database.get_link_values_weak(
             link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
@@ -1013,7 +1013,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                                 f"'{node_with_duplicate_anchor.title}'."
                             )
 
-    def validate_node_can_remove_uid(self, *, node: SDocNode):
+    def validate_node_can_remove_uid(self, *, node: Union[SDocNode, Anchor]):
         incoming_links: Optional[List[InlineLink]] = self.get_incoming_links(
             node
         )

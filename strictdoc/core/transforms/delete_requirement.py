@@ -20,17 +20,19 @@ class DeleteRequirementCommand:
         self.traceability_index: TraceabilityIndex = traceability_index
 
     def validate(self) -> None:
-        try:
-            self.traceability_index.validate_node_can_remove_uid(
-                node=self.requirement
-            )
-        except SingleValidationError as exception_:
-            raise MultipleValidationErrorAsList(
-                "NOT_RELEVANT",
-                errors=[
-                    "This node cannot be removed because it contains incoming links."
-                ],
-            ) from exception_
+        nodes_with_incoming_links = [
+            self.requirement
+        ] + self.requirement.get_anchors()
+        for node_ in nodes_with_incoming_links:
+            try:
+                self.traceability_index.validate_node_can_remove_uid(node=node_)
+            except SingleValidationError as exception_:
+                raise MultipleValidationErrorAsList(
+                    "NOT_RELEVANT",
+                    errors=[
+                        "This node cannot be removed because it contains incoming links."
+                    ],
+                ) from exception_
 
     def perform(self) -> None:
         self.validate()

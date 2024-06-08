@@ -325,6 +325,14 @@ class SDocNode(SDocObject):
     def get_field_by_name(self, field_name: str) -> SDocNodeField:
         return self.ordered_fields_lookup[field_name][0]
 
+    def get_anchors(self) -> List[Anchor]:
+        this_node_anchors: List[Anchor] = []
+        for field_ in self.enumerate_fields():
+            for field_part_ in field_.parts:
+                if isinstance(field_part_, Anchor):
+                    this_node_anchors.append(field_part_)
+        return this_node_anchors
+
     def get_comment_fields(self) -> List[SDocNodeField]:
         if RequirementFieldName.COMMENT not in self.ordered_fields_lookup:
             return []

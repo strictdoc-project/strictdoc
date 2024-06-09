@@ -1,5 +1,6 @@
 {% extends "components/modal/index.jinja" %}
 {%- block modal_container %}
+  {%- set sdoc_entity = requirement -%}
   {% include "components/requirement/index.jinja" %}
 {% endblock modal_container %}
   {# <sdoc-requirement-uid>

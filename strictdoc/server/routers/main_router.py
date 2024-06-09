@@ -535,7 +535,6 @@ def create_main_router(
                 form_object=form_object,
                 section=section,
                 traceability_index=export_action.traceability_index,
-                config=project_config,
             )
             update_command.perform()
         except MultipleValidationError as validation_error:
@@ -1942,7 +1941,6 @@ def create_main_router(
                 form_object=form_object,
                 document=document,
                 traceability_index=export_action.traceability_index,
-                config=project_config,
             )
             update_command.perform()
         except MultipleValidationError as validation_error:
@@ -2037,7 +2035,6 @@ def create_main_router(
                 form_object=form_object,
                 document=document,
                 traceability_index=export_action.traceability_index,
-                config=project_config,
             )
             update_command.perform()
         except MultipleValidationError as validation_error:

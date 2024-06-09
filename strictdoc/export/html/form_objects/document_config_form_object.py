@@ -1,5 +1,4 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
-import html
 import re
 from collections import defaultdict
 from typing import Dict, List, Optional
@@ -7,7 +6,6 @@ from typing import Dict, List, Optional
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
@@ -23,8 +21,6 @@ class DocumentConfigFormObject(ErrorObject):
         document_uid: Optional[str],
         document_version: Optional[str],
         document_classification: Optional[str],
-        document_freetext_unescaped: str,
-        document_freetext_escaped: str,
     ):
         assert isinstance(document_mid, str), document_mid
         assert isinstance(document_title, str), document_title
@@ -42,8 +38,6 @@ class DocumentConfigFormObject(ErrorObject):
             if document_classification is not None
             else ""
         )
-        self.document_freetext_unescaped = document_freetext_unescaped
-        self.document_freetext_escaped = document_freetext_escaped
 
     @staticmethod
     def create_from_request(
@@ -83,22 +77,12 @@ class DocumentConfigFormObject(ErrorObject):
                 document_classification, multiline=False
             )
 
-        document_freetext: str = ""
-        if "FREETEXT" in config_fields:
-            document_freetext = config_fields["FREETEXT"][0]
-            document_freetext = sanitize_html_form_field(
-                document_freetext, multiline=True
-            )
-            document_freetext_escaped = html.escape(document_freetext)
-
         form_object = DocumentConfigFormObject(
             document_mid=document_mid,
             document_title=document_title,
             document_uid=document_uid,
             document_version=document_version,
             document_classification=document_classification,
-            document_freetext_unescaped=document_freetext,
-            document_freetext_escaped=document_freetext_escaped,
         )
         return form_object
 
@@ -109,19 +93,10 @@ class DocumentConfigFormObject(ErrorObject):
     ) -> "DocumentConfigFormObject":
         assert isinstance(document, SDocDocument)
 
-        document_freetext = ""
-        document_freetext_escaped = ""
-        if len(document.free_texts) > 0:
-            freetext: FreeText = document.free_texts[0]
-            document_freetext = freetext.get_parts_as_text()
-            document_freetext_escaped = html.escape(document_freetext)
-
         return DocumentConfigFormObject(
             document_mid=document.reserved_mid,
             document_title=document.title,
             document_uid=document.config.uid,
             document_version=document.config.version,
             document_classification=document.config.classification,
-            document_freetext_unescaped=document_freetext,
-            document_freetext_escaped=document_freetext_escaped,
         )

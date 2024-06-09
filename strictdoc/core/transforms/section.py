@@ -2,14 +2,8 @@
 from collections import defaultdict
 from typing import Dict, List, Optional, Union
 
-from textx import TextXSyntaxError
-
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.error_handling import get_textx_syntax_error_message
-from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
-from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.free_text import FreeText, FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -18,16 +12,12 @@ from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
 from strictdoc.core.transforms.constants import NodeCreationOrder
-from strictdoc.core.transforms.update_free_text import UpdateFreeTextCommand
 from strictdoc.core.transforms.validation_error import (
     MultipleValidationError,
     SingleValidationError,
 )
 from strictdoc.export.html.form_objects.section_form_object import (
     SectionFormObject,
-)
-from strictdoc.export.rst.rst_to_html_fragment_writer import (
-    RstToHtmlFragmentWriter,
 )
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
@@ -39,18 +29,10 @@ class UpdateSectionCommand:
         form_object: SectionFormObject,
         section: SDocSection,
         traceability_index: TraceabilityIndex,
-        config: ProjectConfig,
     ):
         self.form_object: SectionFormObject = form_object
         self.section: SDocSection = section
         self.traceability_index: TraceabilityIndex = traceability_index
-        self.update_free_text_command = UpdateFreeTextCommand(
-            node=section,
-            traceability_index=traceability_index,
-            config=config,
-            subject_field_name="section_statement",
-            subject_field_content=form_object.section_statement_unescaped,
-        )
 
     def perform(self):
         errors: Dict[str, List[str]] = defaultdict(list)
@@ -101,13 +83,6 @@ class UpdateSectionCommand:
             except SingleValidationError as validation_error_:
                 errors["section_uid"].append(validation_error_.args[0])
 
-        try:
-            self.update_free_text_command.validate()
-        except SingleValidationError as free_text_validation_error:
-            errors["section_statement"].append(
-                free_text_validation_error.args[0]
-            )
-
         if len(errors) > 0:
             raise validation_error
 
@@ -137,9 +112,6 @@ class UpdateSectionCommand:
             section.reserved_uid = None
 
         traceability_index.create_section(section)
-
-        # Updating section content.
-        self.update_free_text_command.perform()
 
 
 class CreateSectionCommand:
@@ -213,52 +185,6 @@ class CreateSectionCommand:
                 f"a UID '{form_object.section_uid}'."
             )
 
-        free_text_container: Optional[FreeTextContainer] = None
-        if len(form_object.section_statement_unescaped) > 0:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter(
-                path_to_output_dir=self.config.export_output_dir,
-                context_document=document,
-            ).write_with_validation(form_object.section_statement_unescaped)
-            if parsed_html is None:
-                errors["section_statement"].append(rst_error)
-            else:
-                try:
-                    free_text_container = SDFreeTextReader.read(
-                        form_object.section_statement_unescaped
-                    )
-                    anchors: List[Anchor] = []
-                    for part in free_text_container.parts:
-                        if isinstance(part, InlineLink):
-                            linked_to_node = traceability_index.get_linkable_node_by_uid_weak(
-                                part.link
-                            )
-                            if linked_to_node is None:
-                                errors["section_statement"].append(
-                                    "A LINK points to a node that does "
-                                    f"not exist: '{part.link}'."
-                                )
-                        elif isinstance(part, Anchor):
-                            anchors.append(part)
-                        else:
-                            pass
-                    if anchors is not None:
-                        try:
-                            traceability_index.validate_node_against_anchors(
-                                node=None, new_anchors=anchors
-                            )
-                        except (
-                            SingleValidationError
-                        ) as anchors_validation_error:
-                            errors["section_statement"].append(
-                                anchors_validation_error.args[0]
-                            )
-                except TextXSyntaxError as exception:
-                    errors["section_statement"].append(
-                        get_textx_syntax_error_message(exception)
-                    )
         if len(errors) > 0:
             raise validation_error
 
@@ -333,28 +259,5 @@ class CreateSectionCommand:
             and len(form_object.section_title) > 0
         ):
             section.title = form_object.section_title
-
-        # Updating section content.
-        if free_text_container is not None:
-            free_text: FreeText
-            if len(section.free_texts) > 0:
-                free_text = section.free_texts[0]
-            else:
-                free_text = FreeText(section, [])
-                section.free_texts.append(free_text)
-            free_text.parts = free_text_container.parts
-            free_text.parent = section
-            for part in free_text.parts:
-                if isinstance(part, Anchor):
-                    # Since this is a new section, we just need to register the
-                    # new anchor. By this time, we know that there is no
-                    # existing anchor with this name.
-                    traceability_index.update_with_anchor(part)
-                    part.parent = free_text
-                elif isinstance(part, InlineLink):
-                    part.parent = free_text
-                    traceability_index.create_inline_link(part)
-        else:
-            section.free_texts = []
 
         self._created_section = section

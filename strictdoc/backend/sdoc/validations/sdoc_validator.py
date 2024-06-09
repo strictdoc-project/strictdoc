@@ -117,16 +117,19 @@ class SDocValidator:
                             view,
                             tag.object_type,
                         )
+
+                    grammar_element: GrammarElement = (
+                        document.grammar.elements_by_type[tag.object_type]
+                    )
                     for field in tag.visible_fields:
-                        for grammar_element in document.grammar.elements:
-                            if field.name not in grammar_element.fields_map:
-                                raise StrictDocSemanticError.view_references_nonexisting_field(
-                                    document,
-                                    document_view,
-                                    view,
-                                    tag.object_type,
-                                    field.name,
-                                )
+                        if field.name not in grammar_element.fields_map:
+                            raise StrictDocSemanticError.view_references_nonexisting_field(
+                                document,
+                                document_view,
+                                view,
+                                tag.object_type,
+                                field.name,
+                            )
 
     @staticmethod
     def validate_node(

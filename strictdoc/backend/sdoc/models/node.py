@@ -44,7 +44,7 @@ class SDocNodeField:
         parts: List[Any],
         multiline__: Optional[str],
     ) -> None:
-        self.parent: Optional["SDocNode"] = parent
+        self.parent: Optional[SDocNode] = parent
         self.field_name = field_name
         self.parts: List[Any] = parts
         self.multiline: bool = multiline__ is not None and len(multiline__) > 0
@@ -112,9 +112,9 @@ class SDocNode(SDocObject):
         assert isinstance(requirement_type, str)
         assert isinstance(relations, list), relations
 
-        self.parent: Union[
-            "SDocDocument", "SDocSection", "SDocCompositeNode"
-        ] = parent
+        self.parent: Union[SDocDocument, SDocSection, SDocCompositeNode] = (
+            parent
+        )
 
         self.requirement_type: str = requirement_type
 
@@ -128,7 +128,7 @@ class SDocNode(SDocObject):
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        self.requirements: Optional[List["SDocNode"]] = requirements
+        self.requirements: Optional[List[SDocNode]] = requirements
 
         self.relations: List[Reference] = relations
 

@@ -1159,5 +1159,4 @@ MY_FIELD: >>>
 
     writer = SDWriter()
     output = writer.write(document)
-    print(output)
     assert expected_sdoc == output

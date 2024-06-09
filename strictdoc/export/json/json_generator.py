@@ -69,7 +69,7 @@ class JSONGenerator:
 
     @classmethod
     def _write_document(cls, document: SDocDocument) -> Dict:
-        document_dict: Dict["str", Any] = {
+        document_dict: Dict[str, Any] = {
             "TITLE": document.title,
             "REQ_PREFIX": None,
             JSONKey.GRAMMAR: {"ELEMENTS": []},

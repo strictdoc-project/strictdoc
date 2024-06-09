@@ -8,9 +8,6 @@ from reqif.unparser import ReqIFUnparser, ReqIFZUnparser
 from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
     P01_SDocToReqIFObjectConverter,
 )
-from strictdoc.backend.reqif.p02_simple.sdoc_to_reqif_converter import (
-    P02_SDocToReqIFObjectConverter,
-)
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -28,12 +25,6 @@ class ReqIFExport:
 
         if project_config.reqif_profile == ReqIFProfile.P01_SDOC:
             reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
-                document_tree=traceability_index.document_tree,
-                multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,
-                enable_mid=project_config.reqif_enable_mid,
-            )
-        elif project_config.reqif_profile == ReqIFProfile.P02_SIMPLE:
-            reqif_bundle = P02_SDocToReqIFObjectConverter.convert_document_tree(
                 document_tree=traceability_index.document_tree,
                 multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,
                 enable_mid=project_config.reqif_enable_mid,

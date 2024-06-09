@@ -3,6 +3,17 @@ TITLE: sample
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: UID
@@ -33,16 +44,18 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Document free text.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Section free text.
-[/FREETEXT]
+<<<
 
 [REQUIREMENT]
 STATEMENT: >>>
@@ -51,9 +64,6 @@ Statement line #1
 Statement line #2
 
 Statement line #3
-<<<
-RATIONALE: >>>
-This field is single-line but it is exported to ReqIF as XHTML and imported back as multiline.
 <<<
 
 [/SECTION]

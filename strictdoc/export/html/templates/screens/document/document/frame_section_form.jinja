@@ -47,10 +47,4 @@
   {% endif %}
   {# STATEMENT #}
 
-  {% set text_field_row_context.errors=form_object.get_errors("section_statement") %}
-  {% set text_field_row_context.field=form_object.section_statement_field %}
-  {% set text_field_row_context.field_editable = true %}
-  {% set text_field_row_context.field_type = "multiline" %}
-  {% include "components/form/row/row_with_text_field.jinja" %}
-
 {% endblock form_content %}

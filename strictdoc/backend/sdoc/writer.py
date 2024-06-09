@@ -273,6 +273,12 @@ class SDWriter:
 
         elif isinstance(root_node, SDocNode):
             output = ""
+
+            # Special case for backward compatibility.
+            if root_node.requirement_type == "TEXT" and root_node.basic_free_text:
+                output += self._print_free_text(root_node)
+                output += "\n"
+                return output
             if isinstance(root_node, SDocCompositeNode):
                 output += "[COMPOSITE_"
                 output += root_node.requirement_type
@@ -421,8 +427,10 @@ class SDWriter:
         return output
 
     @staticmethod
-    def _print_free_text(free_text):
-        assert isinstance(free_text, FreeText)
+    def _print_free_text(free_text: Union[FreeText, SDocNode]):
+        assert isinstance(free_text, FreeText) or (
+            isinstance(free_text, SDocNode) and free_text.basic_free_text
+        )
         output = ""
         output += "[FREETEXT]"
         output += "\n"
@@ -486,8 +494,14 @@ class SDWriter:
         return output
 
     @staticmethod
-    def print_free_text_content(free_text):
-        assert isinstance(free_text, FreeText)
+    def print_free_text_content(free_text: Union[FreeText, SDocNode]):
+        assert isinstance(free_text, FreeText) or (
+            isinstance(free_text, SDocNode) and free_text.basic_free_text
+        )
+
+        if isinstance(free_text, SDocNode):
+            free_text = free_text.get_content_field()
+
         output = ""
 
         for _, part in enumerate(free_text.parts):

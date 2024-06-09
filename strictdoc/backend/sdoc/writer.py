@@ -11,7 +11,11 @@ from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
+from strictdoc.backend.sdoc.models.node import (
+    SDocCompositeNode,
+    SDocNode,
+    SDocNodeField,
+)
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
@@ -275,7 +279,10 @@ class SDWriter:
             output = ""
 
             # Special case for backward compatibility.
-            if root_node.requirement_type == "TEXT" and root_node.basic_free_text:
+            if (
+                root_node.requirement_type == "TEXT"
+                and root_node.basic_free_text
+            ):
                 output += self._print_free_text(root_node)
                 output += "\n"
                 return output
@@ -499,12 +506,15 @@ class SDWriter:
             isinstance(free_text, SDocNode) and free_text.basic_free_text
         )
 
+        object_with_parts: Union[FreeText, SDocNodeField]
         if isinstance(free_text, SDocNode):
-            free_text = free_text.get_content_field()
+            object_with_parts = free_text.get_content_field()
+        else:
+            object_with_parts = free_text
 
         output = ""
 
-        for _, part in enumerate(free_text.parts):
+        for _, part in enumerate(object_with_parts.parts):
             if isinstance(part, str):
                 output += part
             elif isinstance(part, InlineLink):

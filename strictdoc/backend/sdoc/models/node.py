@@ -106,7 +106,7 @@ class SDocNode(SDocObject):
         fields: List[SDocNodeField],
         relations: List[Reference],
         requirements: Optional[List["SDocNode"]] = None,
-        basic_free_text: bool = False
+        basic_free_text: bool = False,
     ) -> None:
         assert parent
         assert isinstance(requirement_type, str)

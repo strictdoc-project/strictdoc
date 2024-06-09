@@ -67,7 +67,7 @@ class SDocParsingProcessor:
                     parent=None,
                     field_name="STATEMENT",
                     parts=free_text.parts,
-                    multiline__="true"
+                    multiline__="true",
                 )
             ]
             text_node = SDocNode(
@@ -77,9 +77,14 @@ class SDocParsingProcessor:
                 fields=fields,
                 relations=[],
                 requirements=None,
-                basic_free_text=True
+                basic_free_text=True,
             )
-            text_node.ng_document_reference = self.parse_context.document_reference
+            text_node.ng_document_reference = (
+                self.parse_context.document_reference
+            )
+            text_node.ng_including_document_reference = (
+                self.parse_context.context_document_reference
+            )
             for field_ in text_node.enumerate_fields():
                 field_.parent = text_node
             free_text.parent = None

@@ -1,24 +1,17 @@
 # mypy: disable-error-code="union-attr"
-from dataclasses import dataclass
-from typing import Dict, List, Set
+from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
-from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
 from strictdoc.export.html.form_objects.grammar_form_object import (
     GrammarFormObject,
 )
-
-
-@dataclass
-class UpdateRequirementResult:
-    this_document_requirements_to_update: Set[SDocNode]
 
 
 class UpdateGrammarCommand:

@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[TEXT]
+STATEMENT: >>>
+Modified Hello world!
+<<<
+
+[TEXT]
+STATEMENT: >>>
+Hello world!
+<<<

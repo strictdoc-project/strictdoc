@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[SECTION]
+TITLE: Section title
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: >>>
+Text statement.
+<<<
+
+[REQUIREMENT]
+UID: REQ-2
+STATEMENT: >>>
+Text statement.
+<<<
+
+[/SECTION]

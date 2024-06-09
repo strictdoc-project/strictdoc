@@ -47,9 +47,6 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.query_engine.query_object import Query, QueryObject
 from strictdoc.core.query_engine.query_reader import QueryReader
 from strictdoc.core.transforms.constants import NodeCreationOrder
-from strictdoc.core.transforms.create_requirement import (
-    CreateRequirementTransform,
-)
 from strictdoc.core.transforms.delete_requirement import (
     DeleteRequirementCommand,
 )
@@ -70,8 +67,10 @@ from strictdoc.core.transforms.update_included_document import (
     UpdateIncludedDocumentTransform,
 )
 from strictdoc.core.transforms.update_requirement import (
-    UpdateRequirementResult,
-    UpdateRequirementTransform,
+    CreateNodeInfo,
+    CreateOrUpdateNodeCommand,
+    CreateOrUpdateNodeResult,
+    UpdateNodeInfo,
 )
 from strictdoc.core.transforms.validation_error import (
     MultipleValidationErrorAsList,
@@ -886,13 +885,16 @@ def create_main_router(
         )
 
         if not form_object.any_errors():
-            command = CreateRequirementTransform(
+            command = CreateOrUpdateNodeCommand(
                 form_object=form_object,
-                project_config=project_config,
-                whereto=whereto,
-                requirement_mid=requirement_mid,
-                reference_mid=reference_mid,
+                node_info=CreateNodeInfo(
+                    whereto=whereto,
+                    requirement_mid=requirement_mid,
+                    reference_mid=reference_mid,
+                ),
+                context_document=context_document,
                 traceability_index=export_action.traceability_index,
+                project_config=project_config,
             )
             command.perform()
 
@@ -1103,12 +1105,31 @@ def create_main_router(
                 exiting_requirement_uid=requirement.reserved_uid,
             )
         )
+        context_document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(form_object.context_document_mid)
+            )
+        )
 
         form_object.validate(
             traceability_index=export_action.traceability_index,
             context_document=document,
             config=project_config,
         )
+
+        update_requirement_command_result_or_none: Optional[
+            CreateOrUpdateNodeResult
+        ] = None
+        if not form_object.any_errors():
+            update_command = CreateOrUpdateNodeCommand(
+                form_object=form_object,
+                node_info=UpdateNodeInfo(node_to_update=requirement),
+                context_document=context_document,
+                traceability_index=export_action.traceability_index,
+                project_config=project_config,
+            )
+
+            update_requirement_command_result_or_none = update_command.perform()
 
         if form_object.any_errors():
             template = env().get_template(
@@ -1145,13 +1166,11 @@ def create_main_router(
                 },
             )
 
-        update_command = UpdateRequirementTransform(
-            form_object=form_object,
-            requirement=requirement,
-            traceability_index=export_action.traceability_index,
-        )
-        update_requirement_command_result: UpdateRequirementResult = (
-            update_command.perform()
+        update_requirement_command_result: CreateOrUpdateNodeResult = (
+            assert_cast(
+                update_requirement_command_result_or_none,
+                CreateOrUpdateNodeResult,
+            )
         )
 
         # Saving new content to .SDoc files.

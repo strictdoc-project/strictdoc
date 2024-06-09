@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[TEXT]
+STATEMENT: >>>
+Modified Hello world!
+
+[ANCHOR: AD1, Anchor title]
+<<<
+
+[TEXT]
+STATEMENT: >>>
+Hello world! [LINK: AD1]
+<<<

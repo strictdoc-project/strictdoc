@@ -106,6 +106,26 @@ def test_013_normal_anchor_no_other_text():
     assert isinstance(free_text_container.parts[0], Anchor)
 
 
+def test_014_two_anchors():
+    free_text_input = """
+Hello world
+
+[ANCHOR: AD1, Anchor title 1]
+
+[ANCHOR: AD2, Anchor title 2]
+""".lstrip()
+
+    reader = SDFreeTextReader()
+
+    document = reader.read(free_text_input)
+    assert isinstance(document, FreeText)
+
+    assert document.parts[0] == "Hello world\n\n"
+    assert document.parts[1].value == "AD1"
+    assert document.parts[2] == "\n"
+    assert document.parts[3].value == "AD2"
+
+
 def test_020_link():
     free_text_input = """
 Hello world [LINK: FOO] Part

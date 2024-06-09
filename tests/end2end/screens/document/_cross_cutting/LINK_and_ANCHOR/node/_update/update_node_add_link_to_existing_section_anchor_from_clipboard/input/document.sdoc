@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[FREETEXT]
+Hello world!
+[/FREETEXT]
+
+[SECTION]
+UID: AD1
+TITLE: First section
+
+[/SECTION]
+
+[SECTION]
+TITLE: Second section
+
+[REQUIREMENT]
+STATEMENT: >>>
+Original statement.
+<<<
+
+[/SECTION]

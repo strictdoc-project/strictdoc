@@ -81,6 +81,9 @@ class SDocDocument:
     def is_composite_requirement(self) -> bool:
         return False
 
+    def get_display_node_type(self) -> str:
+        return "Document"
+
     def get_node_type_string(self) -> Optional[str]:
         return None
 

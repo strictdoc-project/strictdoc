@@ -209,6 +209,7 @@ class DocumentScreenViewObject:
         return self.link_renderer.render_url(url)
 
     def render_node_link(self, incoming_link, document, document_type):
+        assert incoming_link is not None, incoming_link
         return self.link_renderer.render_node_link(
             incoming_link, document, document_type
         )

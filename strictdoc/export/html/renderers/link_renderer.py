@@ -1,6 +1,6 @@
 # mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,var-annotated"
 import html
-from typing import Optional
+from typing import Optional, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -74,7 +74,7 @@ class LinkRenderer:
 
     def render_node_link(
         self,
-        node,
+        node: Union[SDocNode, SDocSection, Anchor],
         context_document: Optional[SDocDocument],
         document_type: DocumentType,
         force_full_path: bool = False,

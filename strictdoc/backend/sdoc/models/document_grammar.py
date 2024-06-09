@@ -203,6 +203,11 @@ class DocumentGrammar:
 
     @staticmethod
     def create_default(parent) -> "DocumentGrammar":
+        text_element: GrammarElement = (
+            DocumentGrammar.create_default_text_element()
+        )
+
+        # @sdoc[SDOC-SRS-132]
         fields: List[
             Union[
                 GrammarElementFieldString,
@@ -210,25 +215,6 @@ class DocumentGrammar:
                 GrammarElementFieldMultipleChoice,
             ]
         ] = [
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.UID,
-                human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.STATEMENT,
-                human_title=None,
-                required="True",
-            ),
-        ]
-        text_element = GrammarElement(
-            parent=None, tag="TEXT", fields=fields, relations=[]
-        )
-
-        # @sdoc[SDOC-SRS-132]
-        fields = [
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.UID,
@@ -315,6 +301,18 @@ class DocumentGrammar:
             )
         )
 
+    def has_text_element(self) -> bool:
+        for element_ in self.elements:
+            if element_.tag == "TEXT":
+                return True
+        return False
+
+    def add_element_first(self, element: GrammarElement):
+        self.elements.insert(0, element)
+        self.elements_by_type[element.tag] = element
+        self.registered_elements.add(element.tag)
+        self.is_default = False
+
     def update_element(
         self, existing_element: GrammarElement, updated_element: GrammarElement
     ):
@@ -338,6 +336,33 @@ class DocumentGrammar:
         self.elements = elements
         self.registered_elements = registered_elements
         self.elements_by_type = elements_by_type
+
+    @staticmethod
+    def create_default_text_element() -> GrammarElement:
+        fields: List[
+            Union[
+                GrammarElementFieldString,
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldMultipleChoice,
+            ]
+        ] = [
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.UID,
+                human_title=None,
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.STATEMENT,
+                human_title=None,
+                required="True",
+            ),
+        ]
+        text_element = GrammarElement(
+            parent=None, tag="TEXT", fields=fields, relations=[]
+        )
+        return text_element
 
 
 class DocumentGrammarWrapper:

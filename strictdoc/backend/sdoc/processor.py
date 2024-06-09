@@ -79,6 +79,12 @@ class SDocParsingProcessor:
                 requirements=None,
                 basic_free_text=True,
             )
+            for part_ in free_text.parts:
+                if isinstance(part_, str):
+                    continue
+                part_.parent = text_node
+            text_node.ng_line_start = free_text.ng_line_start
+            text_node.ng_col_start = free_text.ng_col_start
             text_node.ng_document_reference = (
                 self.parse_context.document_reference
             )
@@ -116,6 +122,10 @@ class SDocParsingProcessor:
         self.parse_context.document_config = document_config
 
     def process_document_grammar(self, document_grammar: DocumentGrammar):
+        if not document_grammar.has_text_element():
+            document_grammar.add_element_first(
+                DocumentGrammar.create_default_text_element()
+            )
         self.parse_context.document_grammar = document_grammar
 
     def process_document_grammar_element(self, grammar_element: GrammarElement):
@@ -298,4 +308,4 @@ class SDocParsingProcessor:
             )
 
     def process_free_text(self, free_text):
-        pass
+        preserve_source_location_data(free_text)

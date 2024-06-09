@@ -1098,6 +1098,11 @@ TITLE: Test Doc
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: STATEMENT
@@ -1123,6 +1128,11 @@ TITLE: Test Doc
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: STATEMENT
@@ -1149,4 +1159,5 @@ MY_FIELD: >>>
 
     writer = SDWriter()
     output = writer.write(document)
+    print(output)
     assert expected_sdoc == output

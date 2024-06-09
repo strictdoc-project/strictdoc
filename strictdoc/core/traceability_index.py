@@ -377,34 +377,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             (SDocNode, SDocSection, Anchor),
         )
 
-    def get_node_with_duplicate_anchor(
-        self, anchor_uid: str
-    ) -> Union[SDocDocument, SDocSection, SDocNode]:
-        for document in self.document_tree.document_list:
-            if len(document.free_texts) > 0:
-                for part in document.free_texts[0].parts:
-                    if isinstance(part, Anchor) and part.value == anchor_uid:
-                        return document
-            document_iterator = DocumentCachingIterator(document)
-            for node in document_iterator.all_content():
-                if isinstance(node, (SDocDocument, SDocSection)):
-                    if len(node.free_texts) > 0:
-                        for part in node.free_texts[0].parts:
-                            if (
-                                isinstance(part, Anchor)
-                                and part.value == anchor_uid
-                            ):
-                                return node
-                elif isinstance(node, SDocNode):
-                    for node_anchor_ in node.get_anchors():
-                        if node_anchor_.value == anchor_uid:
-                            return node
-                else:
-                    raise AssertionError(f"Must not reach here: {node}.")
-        raise NotImplementedError(
-            f"Could not find a node with an anchor by anchor UID: {anchor_uid}"
-        )
-
     def get_incoming_links(
         self, node: Union[SDocNode, SDocSection, Anchor]
     ) -> Optional[List[InlineLink]]:

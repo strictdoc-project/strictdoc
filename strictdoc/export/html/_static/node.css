@@ -40,7 +40,13 @@ sdoc-node {
   background-color: var(--color-bg-contrast);
   border-radius: 3px;
 
-  padding: calc(4 * var(--base-rhythm));
+  /* padding: calc(3 * var(--base-rhythm)) calc(4 * var(--base-rhythm)); */
+  padding-inline: calc(4 * var(--base-rhythm));
+  padding-block: calc(2 * var(--base-rhythm));
+}
+
+sdoc-node[node-role="root"] {
+  padding-top: calc(3 * var(--base-rhythm));
 }
 
 /* editable_node */

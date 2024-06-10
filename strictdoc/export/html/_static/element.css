@@ -333,6 +333,8 @@ sdoc-field {
      positioned relative to it:
   */
   position: relative;
+  flex-grow: 1;
+  width: 100%; /* holds within the width of the parent */
 }
 
 sdoc-field-content {

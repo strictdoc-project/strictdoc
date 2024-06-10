@@ -14,7 +14,7 @@
               {%- endwith -%}
             </div>
           </section>
-        {%- elif section_or_requirement.is_requirement %}
+        {%- elif section_or_requirement.is_requirement and not section_or_requirement.is_text_node() %}
           <section class="content_section">
             <div class="content_item" data-role="parents">
               {%- with requirement=section_or_requirement, node_controls = True, requirement_partial="components/requirement/tiny_extends_card.jinja" -%}

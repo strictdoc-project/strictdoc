@@ -7,7 +7,7 @@
   {% endif %}
 >
   <summary>
-    {%- with badge_text = "R" -%}
+    {%- with badge_text = "TEXT" if requirement.is_text_node() else "R" -%}
       {%- include "components/badge/index.jinja" -%}
     {%- endwith -%}
     <span>

@@ -65,6 +65,7 @@ sdoc-node[node-style="card"] {
   padding: 0;
 }
 
+sdoc-node[node-style="card"][node-role="text"],
 sdoc-node[node-style="card"][node-role="section"] {
   background-color: var(--color-bg-contrast);
   padding: calc(var(--base-rhythm)) calc(var(--base-rhythm)*2);

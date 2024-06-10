@@ -25,7 +25,6 @@ class Test(E2ECase):
 
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document title")
-            screen_document.assert_text("Hello world!")
 
             viewtype_selector = ViewType_Selector(self)
             screen_table = viewtype_selector.do_go_to_table()

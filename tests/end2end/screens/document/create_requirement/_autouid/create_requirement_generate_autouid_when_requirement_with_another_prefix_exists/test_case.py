@@ -28,8 +28,6 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             # Requirement 1
             requirement_1 = screen_document.get_requirement(1)
             assert requirement_1 is not None

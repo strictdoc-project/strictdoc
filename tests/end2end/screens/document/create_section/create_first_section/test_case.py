@@ -29,8 +29,6 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             root_node = screen_document.get_root_node()
             root_node_menu = root_node.do_open_node_menu()
             form_edit_section: Form_EditSection = (
@@ -39,14 +37,10 @@ class Test(E2ECase):
 
             form_edit_section.do_fill_in_uid("SECTION-UID")
             form_edit_section.do_fill_in_title("First title")
-            form_edit_section.do_fill_in_text(
-                "This is a free text of this section."
-            )
             form_edit_section.do_form_submit()
 
             section = screen_document.get_section()
             section.assert_section_title("First title", "1")
             screen_document.assert_toc_contains("First title")
-            # WIP: When the HTML/CSS look is decided, write the assertion:
 
         assert test_setup.compare_sandbox_and_expected_output()

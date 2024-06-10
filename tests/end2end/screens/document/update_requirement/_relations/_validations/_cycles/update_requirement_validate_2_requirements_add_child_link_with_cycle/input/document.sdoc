@@ -17,10 +17,6 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Child
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [REQUIREMENT]
 UID: REQ-001
 TITLE: Requirement title #1

@@ -3,6 +3,14 @@ TITLE: Document 1
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: UID
@@ -17,10 +25,6 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
     ROLE: Refines
-
-[FREETEXT]
-Hello world!
-[/FREETEXT]
 
 [REQUIREMENT]
 UID: REQ-001

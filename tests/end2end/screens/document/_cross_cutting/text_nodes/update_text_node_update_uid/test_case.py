@@ -33,8 +33,6 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
             screen_document.assert_not_empty_document()
 
-            screen_document.assert_text("Text statement.")
-
             node = screen_document.get_node()
             edit_form: Form_EditRequirement = (
                 node.do_open_form_edit_requirement()

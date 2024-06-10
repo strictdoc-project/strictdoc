@@ -28,8 +28,6 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             requirement1 = screen_document.get_requirement(1)
             requirement2 = screen_document.get_requirement(2)
 

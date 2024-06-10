@@ -30,7 +30,6 @@ class Test(E2ECase):
 
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
-            screen_document.assert_text("Hello world!")
 
             screen_document.assert_text("Requirement title")
 
@@ -40,7 +39,7 @@ class Test(E2ECase):
             form_edit_grammar.assert_on_grammar()
 
             form_edit_grammar_element: Form_EditGrammar = (
-                form_edit_grammar.do_click_edit_grammar_element(1)
+                form_edit_grammar.do_click_edit_grammar_element(2)
             )
             form_edit_grammar_element.assert_on_grammar()
 

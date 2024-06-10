@@ -4,10 +4,6 @@ TITLE: Document 1
 OPTIONS:
   ENABLE_MID: True
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [REQUIREMENT]
 MID: ec0c9dfe29554bfda007fe072120c2c4
 UID: REQ-1

@@ -15,10 +15,6 @@ ELEMENTS:
     TYPE: SingleChoice(A, B, C)
     REQUIRED: True
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [REQUIREMENT]
 TITLE: Requirement title
 STATEMENT: >>>

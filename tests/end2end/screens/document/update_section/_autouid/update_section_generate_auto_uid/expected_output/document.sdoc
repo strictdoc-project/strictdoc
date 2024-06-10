@@ -1,16 +1,8 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [SECTION]
 UID: SECTION-D-First-section
 TITLE: Modified title
-
-[FREETEXT]
-Modified statement.
-[/FREETEXT]
 
 [/SECTION]

@@ -28,8 +28,6 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             # Existing Requirement 1:
             added_requirement_1_level = "1"
             added_requirement_1_position = 1

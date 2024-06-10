@@ -6,6 +6,14 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: UID

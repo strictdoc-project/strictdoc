@@ -47,15 +47,7 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [SECTION]
 TITLE: First title
-
-[FREETEXT]
-This is a free text of this section.
-[/FREETEXT]
 
 [/SECTION]

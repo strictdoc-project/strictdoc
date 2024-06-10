@@ -1,25 +1,13 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [SECTION]
 UID: SAME-UID
 TITLE: Section 1
-
-[FREETEXT]
-Section 1 free text.
-[/FREETEXT]
 
 [/SECTION]
 
 [SECTION]
 TITLE: Section 2
-
-[FREETEXT]
-Section 2 free text.
-[/FREETEXT]
 
 [/SECTION]

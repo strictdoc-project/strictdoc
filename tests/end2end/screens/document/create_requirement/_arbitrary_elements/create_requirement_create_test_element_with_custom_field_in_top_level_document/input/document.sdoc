@@ -49,7 +49,3 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
-
-[FREETEXT]
-Hello world!
-[/FREETEXT]

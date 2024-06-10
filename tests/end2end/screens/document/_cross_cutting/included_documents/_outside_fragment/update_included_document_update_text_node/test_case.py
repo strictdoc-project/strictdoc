@@ -1,12 +1,9 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.node.requirement import Requirement
-from tests.end2end.helpers.components.node.section import Section
-from tests.end2end.helpers.screens.document.form_edit_included_document import (
-    Form_EditIncludedDocument,
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
 )
-from tests.end2end.helpers.screens.document.form_edit_requirement import \
-    Form_EditRequirement
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -36,9 +33,7 @@ class Test(E2ECase):
             node_form: Form_EditRequirement = (
                 node.do_open_form_edit_requirement()
             )
-            node_form.do_fill_in_field_statement(
-                "Modified text."
-            )
+            node_form.do_fill_in_field_statement("Modified text.")
             node_form.do_form_submit()
 
         assert test_setup.compare_sandbox_and_expected_output()

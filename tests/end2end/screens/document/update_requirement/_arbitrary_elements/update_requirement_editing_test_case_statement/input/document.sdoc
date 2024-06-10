@@ -47,10 +47,6 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [TEST_CASE]
 UID: TEST-1
 TITLE: Unit test ABC

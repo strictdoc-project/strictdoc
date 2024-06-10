@@ -10,7 +10,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 
-class Test_UC06_T08_SanitizeTrailingSymbols(E2ECase):
+class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -28,8 +28,6 @@ class Test_UC06_T08_SanitizeTrailingSymbols(E2ECase):
 
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
-
-            screen_document.assert_text("Hello world!")
 
             # Requirement
             root_node = screen_document.get_root_node()

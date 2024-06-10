@@ -1,5 +1,6 @@
 {# needs sdoc_entity, see README.txt #}
 {# title // required field for section #}
+{%- if sdoc_entity.reserved_title %}
 <sdoc-section-title
   data-level="{{ sdoc_entity.context.title_number_string }}"
 >
@@ -18,3 +19,4 @@
     {%- endif -%}
   </h{{ h_level }}>
 </sdoc-section-title>
+{%- endif %}

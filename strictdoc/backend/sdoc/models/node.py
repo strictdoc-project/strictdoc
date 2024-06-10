@@ -172,9 +172,8 @@ class SDocNode(SDocObject):
         # This is always true, unless the node is filtered out with --filter-requirements.
         self.ng_whitelisted = True
 
-    def get_type_string(self) -> str:
-        if self.is_text_node():
-            return "text"
+    @staticmethod
+    def get_type_string() -> str:
         return "requirement"
 
     def get_node_type_string(self) -> Optional[str]:

@@ -12,7 +12,7 @@
 {% endif %}
 
 {%- if sdoc_entity.has_meta -%}
-  {% for meta_field in sdoc_entity.enumerate_meta_fields(skip_multi_lines=True) if view_object.current_view.includes_field(requirement.requirement_type, meta_field[0]) %}
+  {% for meta_field in sdoc_entity.enumerate_meta_fields(skip_multi_lines=True) if view_object.current_view.includes_field(sdoc_entity.requirement_type, meta_field[0]) %}
     <sdoc-requirement-field-label>{{ meta_field[0] }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field
       data-field-type="singleline"

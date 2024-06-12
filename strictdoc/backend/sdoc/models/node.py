@@ -437,6 +437,13 @@ class SDocNode(SDocObject):
             meta_field_value = field.get_text_value()
             yield field, field.field_name, meta_field_value
 
+    def enumerate_all_fields_escaped(
+        self,
+    ) -> Generator[Tuple[SDocNodeField, str, str], None, None]:
+        for field in self.enumerate_fields():
+            meta_field_value = field.get_text_value_escaped()
+            yield field, field.field_name, meta_field_value
+
     def enumerate_meta_fields(
         self, skip_single_lines: bool = False, skip_multi_lines: bool = False
     ) -> Generator[Tuple[str, SDocNodeField], None, None]:

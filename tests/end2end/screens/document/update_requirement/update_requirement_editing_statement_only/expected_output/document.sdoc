@@ -1,10 +1,6 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [REQUIREMENT]
 STATEMENT: >>>
 Modified statement.

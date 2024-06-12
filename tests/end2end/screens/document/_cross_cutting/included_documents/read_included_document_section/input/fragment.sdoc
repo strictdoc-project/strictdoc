@@ -5,8 +5,9 @@ TITLE: Fragment
 UID: Section-UID-Before
 TITLE: First section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a free text of this section.
-[/FREETEXT]
+<<<
 
 [/SECTION]

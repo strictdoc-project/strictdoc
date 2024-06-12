@@ -208,6 +208,7 @@ class RequirementFormObject(ErrorObject):
         grammar: DocumentGrammar,
         # FIXME: Better name
         relation_types: List[str],
+        basic_free_text: bool,
     ):
         super().__init__()
         assert isinstance(element_type, str), element_type
@@ -227,6 +228,7 @@ class RequirementFormObject(ErrorObject):
         self.exiting_requirement_uid: Optional[str] = exiting_requirement_uid
         self.grammar: DocumentGrammar = grammar
         self.relation_types: List[str] = relation_types
+        self.basic_free_text: bool = basic_free_text
 
     @staticmethod
     def create_from_request(
@@ -236,6 +238,7 @@ class RequirementFormObject(ErrorObject):
         request_form_data: FormData,
         document: SDocDocument,
         exiting_requirement_uid: Optional[str],
+        basic_free_text: bool,
     ) -> "RequirementFormObject":
         request_form_data_as_list = [
             (field_name, field_value)
@@ -360,6 +363,7 @@ class RequirementFormObject(ErrorObject):
             exiting_requirement_uid=exiting_requirement_uid,
             grammar=grammar,
             relation_types=element.get_relation_types(),
+            basic_free_text=basic_free_text,
         )
         return form_object
 
@@ -418,6 +422,7 @@ class RequirementFormObject(ErrorObject):
             exiting_requirement_uid=None,
             grammar=grammar,
             relation_types=element.get_relation_types(),
+            basic_free_text=False,
         )
 
     @staticmethod
@@ -515,6 +520,7 @@ class RequirementFormObject(ErrorObject):
             exiting_requirement_uid=requirement.reserved_uid,
             grammar=grammar,
             relation_types=grammar_element_relations,
+            basic_free_text=requirement.basic_free_text,
         )
 
     @staticmethod

@@ -28,8 +28,6 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             # Requirement 1
             root_node = screen_document.get_root_node()
             root_node_menu = root_node.do_open_node_menu()
@@ -52,6 +50,7 @@ class Test(E2ECase):
 
             requirement_1.assert_requirement_has_mid()
 
+        # FIXME
         # Cannot compare the inputs/outputs because the newly generated MID is
         # always unique.
         # assert test_setup.compare_sandbox_and_expected_output()  # noqa: ERA001

@@ -1,11 +1,11 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def"
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -48,7 +48,13 @@ class RSTWriter:
                     output += self._print_free_text(free_text)
 
             elif isinstance(content_node, SDocNode):
-                output += self._print_requirement_fields(content_node)
+                if (
+                    content_node.requirement_type == "TEXT"
+                    and content_node.basic_free_text
+                ):
+                    output += self._print_free_text(content_node)
+                else:
+                    output += self._print_requirement_fields(content_node)
 
         if output.endswith("\n\n"):
             output = output[:-1]
@@ -117,12 +123,22 @@ class RSTWriter:
         )
         return output
 
-    def _print_free_text(self, free_text):
-        assert isinstance(free_text, FreeText)
-        if len(free_text.parts) == 0:
+    def _print_free_text(self, free_text: Union[FreeText, SDocNode]):
+        assert isinstance(free_text, FreeText) or (
+            isinstance(free_text, SDocNode) and free_text.basic_free_text
+        )
+
+        object_with_parts: Union[FreeText, SDocNodeField]
+        if isinstance(free_text, SDocNode):
+            object_with_parts = free_text.get_content_field()
+        else:
+            object_with_parts = free_text
+
+        if len(object_with_parts.parts) == 0:
             return ""
         output = ""
-        for part in free_text.parts:
+
+        for part in object_with_parts.parts:
             if isinstance(part, str):
                 output += part
             elif isinstance(part, InlineLink):

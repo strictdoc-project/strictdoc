@@ -1,0 +1,26 @@
+{# needs sdoc_entity, see README.txt #}
+{% if sdoc_entity.mid_permanent and sdoc_entity.reserved_mid is not none %}
+  <sdoc-requirement-field-label>MID:</sdoc-requirement-field-label>
+  <sdoc-requirement-field
+    data-field-type="singleline"
+    data-field-label="MID"
+  >
+    {%- with field_content = sdoc_entity.reserved_mid %}
+      {%- include "components/field/index.jinja" -%}
+    {%- endwith -%}
+  </sdoc-requirement-field>
+{% endif %}
+
+{%- if sdoc_entity.has_meta -%}
+  {% for meta_field in sdoc_entity.enumerate_meta_fields(skip_multi_lines=True) if view_object.current_view.includes_field(sdoc_entity.requirement_type, meta_field[0]) %}
+    <sdoc-requirement-field-label>{{ meta_field[0] }}:</sdoc-requirement-field-label>
+    <sdoc-requirement-field
+      data-field-type="singleline"
+      data-field-label="{{ meta_field[0] }}"
+    >
+      {%- with field_content = meta_field[1].get_text_value() %}
+        {%- include "components/field/index.jinja" -%}
+      {%- endwith -%}
+    </sdoc-requirement-field>
+  {% endfor %}
+{%- endif %}

@@ -1,10 +1,6 @@
 [DOCUMENT]
 TITLE: Document title
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [REQUIREMENT]
 STATEMENT: >>>
 Requirement statement.

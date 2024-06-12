@@ -3,6 +3,17 @@ TITLE: sample
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: UID
@@ -41,16 +52,18 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Document free text.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Section 1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Section 1 free text.
-[/FREETEXT]
+<<<
 
 [REQUIREMENT]
 UID: REQ-1

@@ -1,15 +1,30 @@
 [DOCUMENT]
 TITLE: sample
 
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
 [SECTION]
 TITLE: Section #1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a free text line #1.
 
 This is a free text line #2.
 
 This is a free text line #3.
-[/FREETEXT]
+<<<
 
 [/SECTION]

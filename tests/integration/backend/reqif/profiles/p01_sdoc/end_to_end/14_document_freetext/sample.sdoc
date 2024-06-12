@@ -1,6 +1,21 @@
 [DOCUMENT]
 TITLE: sample
 
-[FREETEXT]
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<

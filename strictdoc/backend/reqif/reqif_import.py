@@ -8,12 +8,6 @@ from reqif.reqif_bundle import ReqIFBundle, ReqIFZBundle
 from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
     P01_ReqIFToSDocConverter,
 )
-from strictdoc.backend.reqif.p02_simple.reqif_to_sdoc_converter import (
-    P02_ReqIFToSDocConverter,
-)
-from strictdoc.backend.reqif.p11_polarion.reqif_to_sdoc_converter import (
-    P11_ReqIFToSDocConverter,
-)
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.cli.cli_arg_parser import ImportReqIFCommandConfig
@@ -65,10 +59,6 @@ class ReqIFImport:
             or import_config.profile == ReqIFProfile.P01_SDOC
         ):
             return P01_ReqIFToSDocConverter()
-        if import_config.profile == ReqIFProfile.P02_SIMPLE:
-            return P02_ReqIFToSDocConverter()
-        if import_config.profile == ReqIFProfile.P11_POLARION:
-            return P11_ReqIFToSDocConverter()
         raise NotImplementedError(
             f"Unsupported profile: {import_config.profile}"
         )

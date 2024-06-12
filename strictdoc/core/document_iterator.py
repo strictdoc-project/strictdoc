@@ -72,6 +72,9 @@ class DocumentCachingIterator:
         custom_level: bool = False,
     ):
         def get_level_string_(node_) -> str:
+            if isinstance(node_, SDocNode) and node_.requirement_type == "TEXT":
+                return ""
+
             if node_.ng_resolved_custom_level == "None":
                 return ""
 
@@ -98,7 +101,10 @@ class DocumentCachingIterator:
 
             current_number = 0
             for subnode_ in node.section_contents:
-                if subnode_.ng_resolved_custom_level is None:
+                if subnode_.ng_resolved_custom_level is None and not (
+                    isinstance(subnode_, SDocNode)
+                    and subnode_.requirement_type == "TEXT"
+                ):
                     current_number += 1
 
                 yield from self._all_content(
@@ -126,7 +132,10 @@ class DocumentCachingIterator:
             current_number = 0
             if node.requirements is not None:
                 for subnode_ in node.requirements:
-                    if subnode_.ng_resolved_custom_level is None:
+                    if subnode_.ng_resolved_custom_level is None and not (
+                        isinstance(subnode_, SDocNode)
+                        and subnode_.requirement_type == "TEXT"
+                    ):
                         current_number += 1
 
                     yield from self._all_content(
@@ -166,7 +175,10 @@ class DocumentCachingIterator:
 
             current_number = 0
             for subnode_ in node.section_contents:
-                if subnode_.ng_resolved_custom_level is None:
+                if subnode_.ng_resolved_custom_level is None and not (
+                    isinstance(subnode_, SDocNode)
+                    and subnode_.requirement_type == "TEXT"
+                ):
                     current_number += 1
                 yield from self._all_content(
                     subnode_,

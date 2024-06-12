@@ -1,5 +1,6 @@
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
@@ -66,6 +67,32 @@ AAA  [/FREETEXT]
     assert input_sdoc == output
 
 
+def test_004_section_free_text():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[SECTION]
+TITLE: Section
+
+[FREETEXT]
+Hello world
+[/FREETEXT]
+
+[/SECTION]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_020_free_text_inline_link():
     input_sdoc = """
 [DOCUMENT]
@@ -108,12 +135,11 @@ String 4
 
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
-    assert len(document.free_texts[0].parts) == 3
-    assert isinstance(document.free_texts[0].parts[1], Anchor)
-    assert document.free_texts[0].parts[1].value == "REQ-001"
-
-    assert isinstance(document.free_texts[0].parts[0], str)
-    assert isinstance(document.free_texts[0].parts[2], str)
+    text_node: SDocNode = document.section_contents[0]
+    content_field: SDocNodeField = text_node.get_content_field()
+    assert len(content_field.parts) == 3
+    assert isinstance(content_field.parts[1], Anchor)
+    assert content_field.parts[1].value == "REQ-001"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -137,11 +163,13 @@ Test
 
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
-    assert len(document.free_texts[0].parts) == 2
-    assert isinstance(document.free_texts[0].parts[0], Anchor)
-    assert document.free_texts[0].parts[0].value == "REQ-001"
+    text_node: SDocNode = document.section_contents[0]
+    content_field: SDocNodeField = text_node.get_content_field()
+    assert len(content_field.parts) == 2
+    assert isinstance(content_field.parts[0], Anchor)
+    assert content_field.parts[0].value == "REQ-001"
 
-    assert isinstance(document.free_texts[0].parts[1], str)
+    assert isinstance(content_field.parts[1], str)
     writer = SDWriter()
     output = writer.write(document)
 
@@ -191,10 +219,12 @@ String 2 String 3
 
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
-    assert len(document.free_texts[0].parts) == 2
-    assert isinstance(document.free_texts[0].parts[0], str)
-    assert isinstance(document.free_texts[0].parts[1], Anchor)
-    assert document.free_texts[0].parts[1].value == "REQ-001"
+    text_node: SDocNode = document.section_contents[0]
+    content_field: SDocNodeField = text_node.get_content_field()
+    assert len(content_field.parts) == 2
+    assert isinstance(content_field.parts[0], str)
+    assert isinstance(content_field.parts[1], Anchor)
+    assert content_field.parts[1].value == "REQ-001"
 
     writer = SDWriter()
     output = writer.write(document)
@@ -220,10 +250,12 @@ String 5
 
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
-    assert len(document.free_texts[0].parts) == 3
-    assert isinstance(document.free_texts[0].parts[0], str)
-    assert isinstance(document.free_texts[0].parts[1], Anchor)
-    assert isinstance(document.free_texts[0].parts[2], str)
+    text_node: SDocNode = document.section_contents[0]
+    content_field: SDocNodeField = text_node.get_content_field()
+    assert len(content_field.parts) == 3
+    assert isinstance(content_field.parts[0], str)
+    assert isinstance(content_field.parts[1], Anchor)
+    assert isinstance(content_field.parts[2], str)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -247,8 +279,10 @@ String 4
 
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
-    assert len(document.free_texts[0].parts) == 1
-    assert isinstance(document.free_texts[0].parts[0], str)
+    text_node: SDocNode = document.section_contents[0]
+    content_field: SDocNodeField = text_node.get_content_field()
+    assert len(content_field.parts) == 1
+    assert isinstance(content_field.parts[0], str)
 
     writer = SDWriter()
     output = writer.write(document)
@@ -272,10 +306,11 @@ String 2 String 3
 
     document: SDocDocument = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
-
-    assert len(document.free_texts[0].parts) == 2
-    assert isinstance(document.free_texts[0].parts[0], str)
-    assert isinstance(document.free_texts[0].parts[1], Anchor)
+    text_node: SDocNode = document.section_contents[0]
+    content_field: SDocNodeField = text_node.get_content_field()
+    assert len(content_field.parts) == 2
+    assert isinstance(content_field.parts[0], str)
+    assert isinstance(content_field.parts[1], Anchor)
     writer = SDWriter()
     output = writer.write(document)
 
@@ -300,11 +335,12 @@ TEST
 
     document: SDocDocument = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
-
-    assert len(document.free_texts[0].parts) == 3
-    assert isinstance(document.free_texts[0].parts[0], str)
-    assert isinstance(document.free_texts[0].parts[1], Anchor)
-    assert isinstance(document.free_texts[0].parts[2], str)
+    text_node: SDocNode = document.section_contents[0]
+    content_field: SDocNodeField = text_node.get_content_field()
+    assert len(content_field.parts) == 3
+    assert isinstance(content_field.parts[0], str)
+    assert isinstance(content_field.parts[1], Anchor)
+    assert isinstance(content_field.parts[2], str)
     writer = SDWriter()
     output = writer.write(document)
 

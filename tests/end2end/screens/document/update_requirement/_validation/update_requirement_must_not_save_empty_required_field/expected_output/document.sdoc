@@ -15,10 +15,6 @@ ELEMENTS:
     TYPE: String
     REQUIRED: True
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [REQUIREMENT]
 TITLE: Requirement title
 STATEMENT: >>>

@@ -2,10 +2,6 @@
 TITLE: Document 1
 REQ_PREFIX: ZEP-
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [REQUIREMENT]
 UID: ZEP-1
 TITLE: Requirement title #1.1

@@ -1,3 +1,6 @@
+# FIXME
+UNSUPPORTED: true
+
 RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
 
 RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG

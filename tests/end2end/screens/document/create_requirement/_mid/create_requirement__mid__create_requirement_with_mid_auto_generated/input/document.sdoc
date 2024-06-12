@@ -2,7 +2,3 @@
 TITLE: Document 1
 OPTIONS:
   ENABLE_MID: True
-
-[FREETEXT]
-Hello world!
-[/FREETEXT]

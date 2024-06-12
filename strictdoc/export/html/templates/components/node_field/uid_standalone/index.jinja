@@ -1,0 +1,11 @@
+{# needs sdoc_entity, see README.txt #}
+{%- if sdoc_entity.reserved_uid is not none and sdoc_entity.reserved_uid|length > 0 -%}
+<sdoc-meta>
+  <sdoc-meta-label>UID:</sdoc-meta-label>
+  <sdoc-meta-field>
+    {%- with field_content = sdoc_entity.reserved_uid %}
+      {%- include "components/field/index.jinja" -%}
+    {%- endwith -%}
+  </sdoc-meta-field>
+</sdoc-meta>
+{%- endif %}

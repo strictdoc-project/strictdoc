@@ -47,6 +47,11 @@ class SDocGrammarReader:
         grammar: DocumentGrammar = grammar_wrapper.grammar
         grammar.parent = None
 
+        if not grammar.has_text_element():
+            grammar.add_element_first(
+                DocumentGrammar.create_default_text_element()
+            )
+
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts
         # of textx. The offending fields are stripped down because they

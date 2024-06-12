@@ -25,7 +25,6 @@ class Test(E2ECase):
             # First, go to first document and check that the first document's
             # requirement REQ-001 does contain a child relation to REQ-002.
             screen_document1 = screen_project_index.do_click_on_the_document(1)
-            screen_document1.assert_text("Hello world!")
             requirement1 = screen_document1.get_requirement()
             requirement1.assert_requirement_has_child_relation("REQ-002")
 
@@ -35,7 +34,6 @@ class Test(E2ECase):
             # Go to second document and check that the first document's
             # requirement REQ-001 does contain a parent relation to REQ-001,
             screen_document2 = screen_project_index.do_click_on_the_document(2)
-            screen_document2.assert_text("Hello world 2!")
             requirement2 = screen_document2.get_requirement()
             requirement2.assert_requirement_has_parent_relation("REQ-001")
 
@@ -53,13 +51,11 @@ class Test(E2ECase):
             # Now check that the documents do not have the link anymore.
             self.open(test_server.get_host_and_port())
             screen_document1 = screen_project_index.do_click_on_the_document(1)
-            screen_document1.assert_text("Hello world!")
             requirement1 = screen_document1.get_requirement()
             requirement1.assert_requirement_has_not_child_relation("REQ-002")
 
             self.open(test_server.get_host_and_port())
             screen_document2 = screen_project_index.do_click_on_the_document(2)
-            screen_document2.assert_text("Hello world 2!")
             requirement2 = screen_document2.get_requirement()
             requirement2.assert_requirement_has_not_parent_relation("REQ-001")
 

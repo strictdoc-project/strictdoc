@@ -13,6 +13,12 @@ class FreeText:
         self.parent = parent
         self.parts = parts
         self.ng_level = None
+        self.ng_line_start: Optional[int] = None
+        self.ng_line_end: Optional[int] = None
+        self.ng_col_start: Optional[int] = None
+        self.ng_col_end: Optional[int] = None
+        self.ng_byte_start: Optional[int] = None
+        self.ng_byte_end: Optional[int] = None
 
     @property
     def parent_or_including_document(self) -> Optional[Any]:

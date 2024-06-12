@@ -1,0 +1,26 @@
+{# needs sdoc_entity, see README.txt #}
+{# title // required field for section #}
+{%- if sdoc_entity.reserved_title %}
+<sdoc-section-title
+  data-level="{{ sdoc_entity.context.title_number_string }}"
+>
+    {#- initiate the accumulating variable -#}
+    {%- set field_content_ = "" -%}
+
+    {%- if sdoc_entity.context.title_number_string -%}
+      {#- add title 'number' part to the accumulator -#}
+      {%- set field_content_ = field_content_ + sdoc_entity.context.title_number_string + ".&nbsp;" -%}
+    {%- endif -%}
+
+    {%- set title = sdoc_entity.reserved_title if sdoc_entity.is_requirement else sdoc_entity.title -%}
+    {%- if title is not none -%}
+      {#- add title 'value' part to the accumulator -#}
+      {%- set field_content_ = field_content_ + title -%}
+    {%- endif -%}
+
+    {#- pass the variable to the component -#}
+    {%- with field_content = field_content_ %}
+      {%- include "components/field/index.jinja" -%}
+    {%- endwith -%}
+</sdoc-section-title>
+{%- endif %}

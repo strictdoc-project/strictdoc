@@ -28,8 +28,6 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             root_node = screen_document.get_root_node()
 
             root_node_menu = root_node.do_open_node_menu()
@@ -39,7 +37,6 @@ class Test(E2ECase):
             )
 
             form_edit_section.do_fill_in_title("Section 1")
-            form_edit_section.do_fill_in_text("Section 1 free text.")
             form_edit_section.do_fill_in_uid("SAME-UID")
             form_edit_section.do_form_submit()
 
@@ -50,7 +47,6 @@ class Test(E2ECase):
                 created_section_menu.do_node_add_section_below()
             )
             form_edit_section.do_fill_in_title("Section 2")
-            form_edit_section.do_fill_in_text("Section 2 free text.")
             form_edit_section.do_fill_in_uid("SAME-UID")
 
             form_edit_section.do_form_submit_and_catch_error(

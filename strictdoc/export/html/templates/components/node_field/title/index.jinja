@@ -1,0 +1,26 @@
+{# needs sdoc_entity, see README.txt #}
+{%- if sdoc_entity.reserved_title %}
+  <sdoc-requirement-title>
+
+    {#- initiate the accumulating variable -#}
+    {%- set field_content_ = "" -%}
+
+    {%- if title_number is true -%}
+      {%- if sdoc_entity.context.title_number_string %}
+        {#- add title 'number' part to the accumulator -#}
+        {%- set field_content_ = field_content_ + sdoc_entity.context.title_number_string + ".&nbsp;" -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- set title = sdoc_entity.reserved_title -%}
+    {%- if title is not none -%}
+      {#- add title 'value' part to the accumulator -#}
+      {%- set field_content_ = field_content_ + title -%}
+    {%- endif -%}
+
+    {#- pass the variable to the component -#}
+    {%- with field_content = field_content_ %}
+      {%- include "components/field/index.jinja" -%}
+    {%- endwith -%}
+  </sdoc-requirement-title>
+{%- endif %}

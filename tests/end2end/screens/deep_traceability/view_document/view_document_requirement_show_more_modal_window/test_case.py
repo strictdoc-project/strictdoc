@@ -27,7 +27,6 @@ class Test(E2ECase):
 
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document title")
-            screen_document.assert_text("Hello world!")
 
             viewtype_selector = ViewType_Selector(self)
             screen_deep_traceability = (
@@ -38,9 +37,8 @@ class Test(E2ECase):
             section = screen_deep_traceability.get_section()
 
             section.assert_section_title("Section title")
-            section.assert_node_does_not_contain("Section text")
 
-            requirement = screen_deep_traceability.get_requirement()
+            requirement = screen_deep_traceability.get_node()
 
             requirement.assert_requirement_title("Requirement title")
             requirement.assert_requirement_uid("REC_UID")

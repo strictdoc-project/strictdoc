@@ -55,7 +55,7 @@ class SDocDocument:
 
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
         self.mid_permanent: bool = mid is not None
-        self.included_documents: List["SDocDocument"] = []
+        self.included_documents: List[SDocDocument] = []
         self.context: SDocDocumentContext = SDocDocumentContext()
 
         self.ng_including_document_reference: Optional = None  # type: ignore[valid-type]
@@ -141,6 +141,8 @@ class SDocDocument:
                     return True
                 continue
             if section_or_requirement.is_requirement:
+                if section_or_requirement.requirement_type == "TEXT":
+                    continue
                 return True
             assert section_or_requirement.is_section, section_or_requirement
             task_list.extend(section_or_requirement.section_contents)

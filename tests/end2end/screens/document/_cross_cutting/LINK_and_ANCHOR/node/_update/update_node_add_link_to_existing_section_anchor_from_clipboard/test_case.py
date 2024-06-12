@@ -30,8 +30,6 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             section_1 = screen_document.get_section(node_order=1)
             section_1.do_copy_anchor_to_buffer()
             copied_text = self.paste_text()

@@ -1,0 +1,8 @@
+{# needs sdoc_entity, see README.txt #}
+{%- if sdoc_entity.has_reserved_statement() -%}
+  <sdoc-section-text>
+    {%- with field_content = view_object.render_node_statement(sdoc_entity) %}
+      {%- include "components/field/index.jinja" -%}
+    {%- endwith -%}
+  </sdoc-section-text>
+{%- endif -%}

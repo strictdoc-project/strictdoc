@@ -28,8 +28,6 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             section = screen_document.get_section()
 
             form_edit_section: Form_EditSection = (
@@ -37,7 +35,6 @@ class Test(E2ECase):
             )
 
             form_edit_section.do_clear_field("TITLE")
-            form_edit_section.do_fill_in_text("Modified statement.")
             form_edit_section.do_form_submit_and_catch_error(
                 "Section title must not be empty."
             )

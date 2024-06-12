@@ -26,22 +26,17 @@ class SectionFormObject(ErrorObject):
         section_mid: str,
         section_uid_field: RequirementFormField,
         section_title_field: RequirementFormField,
-        section_statement_field: RequirementFormField,
         context_document_mid: str,
     ):
         assert isinstance(section_mid, str)
         assert isinstance(section_uid_field, RequirementFormField)
         assert isinstance(section_title_field, RequirementFormField)
-        assert isinstance(section_statement_field, RequirementFormField)
         assert isinstance(context_document_mid, str)
 
         super().__init__()
         self.section_mid: str = section_mid
         self.section_uid_field: RequirementFormField = section_uid_field
         self.section_title_field: RequirementFormField = section_title_field
-        self.section_statement_field: RequirementFormField = (
-            section_statement_field
-        )
         self.context_document_mid = context_document_mid
 
     @property
@@ -51,10 +46,6 @@ class SectionFormObject(ErrorObject):
     @property
     def section_title(self):
         return self.section_title_field.field_unescaped_value
-
-    @property
-    def section_statement_unescaped(self):
-        return self.section_statement_field.field_unescaped_value
 
     @staticmethod
     def create_new(context_document_mid: str):
@@ -74,13 +65,6 @@ class SectionFormObject(ErrorObject):
                 field_unescaped_value="",
                 field_escaped_value="",
             ),
-            section_statement_field=RequirementFormField(
-                field_mid=MID.create(),
-                field_name="STATEMENT",
-                field_type=RequirementFormFieldType.MULTILINE,
-                field_unescaped_value="",
-                field_escaped_value="",
-            ),
             context_document_mid=context_document_mid,
         )
 
@@ -94,12 +78,6 @@ class SectionFormObject(ErrorObject):
         title_field_value = section.title if section.title is not None else ""
         title_escaped_field_value = html.escape(title_field_value)
 
-        statement_field_value = (
-            section.free_texts[0].get_parts_as_text()
-            if len(section.free_texts) > 0
-            else ""
-        )
-        statement_escaped_field_value = html.escape(statement_field_value)
         return SectionFormObject(
             section_mid=section.reserved_mid,
             section_uid_field=RequirementFormField(
@@ -115,13 +93,6 @@ class SectionFormObject(ErrorObject):
                 field_type=RequirementFormFieldType.SINGLELINE,
                 field_unescaped_value=title_field_value,
                 field_escaped_value=title_escaped_field_value,
-            ),
-            section_statement_field=RequirementFormField(
-                field_mid=MID.create(),
-                field_name="STATEMENT",
-                field_type=RequirementFormFieldType.MULTILINE,
-                field_unescaped_value=statement_field_value,
-                field_escaped_value=statement_escaped_field_value,
             ),
             context_document_mid=context_document_mid,
         )
@@ -173,22 +144,10 @@ class SectionFormObject(ErrorObject):
             field_escaped_value=html.escape(sanitized_title_field_value),
         )
 
-        statement_field_value = requirement_fields["STATEMENT"][0]
-        sanitized_statement_field_value: str = sanitize_html_form_field(
-            statement_field_value, multiline=True
-        )
-        section_statement_field = RequirementFormField(
-            field_mid=MID.create(),
-            field_name="STATEMENT",
-            field_type=RequirementFormFieldType.MULTILINE,
-            field_unescaped_value=sanitized_statement_field_value,
-            field_escaped_value=html.escape(sanitized_statement_field_value),
-        )
         form_object = SectionFormObject(
             section_mid=section_mid,
             section_uid_field=section_uid_field,
             section_title_field=section_title_field,
-            section_statement_field=section_statement_field,
             context_document_mid=context_document_mid,
         )
         return form_object

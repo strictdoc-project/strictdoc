@@ -3,9 +3,8 @@
     {% include "_shared/tags.jinja.html" %}
       <div class="content">
         <sdoc-node>
-        {% include "components/document_title/index.jinja" %}
-        {% include "components/meta/index.jinja" %}
-        {% include "components/abstract/index.jinja" %}
+        {% include "components/node_field/document_title/index.jinja" %}
+        {% include "components/node_field/document_meta/index.jinja" %}
 
         </sdoc-node>
         <table class="content-view-table">
@@ -26,13 +25,15 @@
               {%- endfor -%}
             </tr>
           </thead>
-          {%- for section_or_requirement in view_object.document_content_iterator() %}
-            {%- if section_or_requirement.is_composite_requirement or section_or_requirement.is_requirement %}
-              {%- set requirement = section_or_requirement %}
+          {%- for node in view_object.document_content_iterator() %}
+            {%- if node.is_composite_requirement or node.is_requirement %}
+              {%- set requirement = node %}
               <tr>
                 <td class="content-view-td content-view-td-type">
-                  {%- if section_or_requirement.is_composite_requirement %}
+                  {%- if node.is_composite_requirement %}
                     Composite requirement
+                  {%- elif node.is_text_node() %}
+                    Text
                   {%- else %}
                     Requirement
                   {%- endif -%}
@@ -141,8 +142,8 @@
                   </td>
                 {%- endfor -%}
               </tr>
-            {%- elif section_or_requirement.is_section %}
-              {%- set section = section_or_requirement %}
+            {%- elif node.is_section %}
+              {%- set section = node %}
               <tr>
                 <td class="content-view-td content-view-td-type">Section</td>
                 <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>

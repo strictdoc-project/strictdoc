@@ -1,0 +1,22 @@
+{# needs sdoc_entity, see README.txt #}
+{# title // required field for section #}
+{%- if sdoc_entity.reserved_title %}
+<sdoc-section-title
+  data-level="{{ sdoc_entity.context.title_number_string }}"
+>
+  {%  set h_level = sdoc_entity.ng_level + 1
+      if sdoc_entity.ng_level < 6
+      else 6  %}
+  <h{{ h_level }}
+    id="{{ view_object.render_local_anchor(section) }}"
+  >
+    {%- if sdoc_entity.context.title_number_string -%}
+      {{ sdoc_entity.context.title_number_string }}.&nbsp;
+    {%- endif -%}
+    {%- set title = sdoc_entity.reserved_title if sdoc_entity.is_requirement else sdoc_entity.title -%}
+    {%- if title is not none -%}
+      {{ title }}
+    {%- endif -%}
+  </h{{ h_level }}>
+</sdoc-section-title>
+{%- endif %}

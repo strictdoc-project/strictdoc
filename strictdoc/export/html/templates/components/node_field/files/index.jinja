@@ -1,0 +1,30 @@
+{# needs sdoc_entity, see README.txt #}
+  {%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
+    {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(sdoc_entity) %}
+    {%- if requirement_file_links %}
+      <sdoc-requirement-field-label>files:</sdoc-requirement-field-label>
+      <sdoc-requirement-field data-field-label="files">
+        <ul class="requirement__link">
+          {%- for link, opt_ranges in requirement_file_links %}
+            {%- if opt_ranges -%}
+              {%- for range in opt_ranges %}
+                <li>
+                  <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(sdoc_entity, link) }}#{{ sdoc_entity.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
+                    {{ link.get_posix_path() }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                    {# TODO optional relation role #}
+                  </a>
+                </li>
+              {%- endfor -%}
+            {%- else -%}
+              <li>
+                <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(sdoc_entity, link) }}#{{ sdoc_entity.reserved_uid }}">
+                  {{ link.get_posix_path() }}
+                  {# TODO optional relation role #}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </sdoc-requirement-field>
+    {%- endif %}
+  {%- endif %}

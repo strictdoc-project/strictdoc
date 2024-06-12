@@ -28,8 +28,6 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             root_node = screen_document.get_root_node()
             root_node_menu = root_node.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (

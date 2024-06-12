@@ -1,5 +1,4 @@
 # mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg"
-import html
 import re
 from collections import defaultdict
 from typing import Dict, List, Optional
@@ -8,7 +7,6 @@ from jinja2 import Environment, Template
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.form_data import parse_form_data
@@ -25,8 +23,6 @@ class IncludedDocumentFormObject(ErrorObject):
         document_mid: str,
         context_document_mid: str,
         document_title: str,
-        document_freetext_unescaped: str,
-        document_freetext_escaped: str,
         jinja_environment: Environment,
     ):
         assert isinstance(document_mid, str), document_mid
@@ -36,8 +32,6 @@ class IncludedDocumentFormObject(ErrorObject):
         self.document_mid: Optional[str] = document_mid
         self.context_document_mid: Optional[str] = context_document_mid
         self.document_title: str = document_title
-        self.document_freetext_unescaped = document_freetext_unescaped
-        self.document_freetext_escaped = document_freetext_escaped
         self.jinja_environment: Environment = jinja_environment
 
     @staticmethod
@@ -69,21 +63,10 @@ class IncludedDocumentFormObject(ErrorObject):
         )
         document_title = document_title if document_title is not None else ""
 
-        document_freetext: str = ""
-        document_freetext_escaped: str = ""
-        if "FREETEXT" in config_fields:
-            document_freetext = config_fields["FREETEXT"][0]
-            document_freetext = sanitize_html_form_field(
-                document_freetext, multiline=True
-            )
-            document_freetext_escaped = html.escape(document_freetext)
-
         form_object = IncludedDocumentFormObject(
             document_mid=document_mid,
             context_document_mid=context_document_mid,
             document_title=document_title,
-            document_freetext_unescaped=document_freetext,
-            document_freetext_escaped=document_freetext_escaped,
             jinja_environment=jinja_environment,
         )
         return form_object
@@ -97,19 +80,10 @@ class IncludedDocumentFormObject(ErrorObject):
     ) -> "IncludedDocumentFormObject":
         assert isinstance(document, SDocDocument)
 
-        document_freetext = ""
-        document_freetext_escaped = ""
-        if len(document.free_texts) > 0:
-            freetext: FreeText = document.free_texts[0]
-            document_freetext = freetext.get_parts_as_text()
-            document_freetext_escaped = html.escape(document_freetext)
-
         return IncludedDocumentFormObject(
             document_mid=document.reserved_mid,
             context_document_mid=context_document_mid,
             document_title=document.title,
-            document_freetext_unescaped=document_freetext,
-            document_freetext_escaped=document_freetext_escaped,
             jinja_environment=jinja_environment,
         )
 

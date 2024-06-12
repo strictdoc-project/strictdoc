@@ -1,0 +1,15 @@
+{# comments #}
+{# needs sdoc_entity, see README.txt #}
+
+{% if view_object.current_view.includes_field(sdoc_entity.requirement_type, "COMMENT") %}
+  {%- for comment_field_ in sdoc_entity.get_comment_fields() %}
+    <sdoc-requirement-field-label>{{ sdoc_entity.get_field_human_title("COMMENT") }}:</sdoc-requirement-field-label>
+    <sdoc-requirement-field
+      data-field-label="comment"
+    >
+      {%- with field_content = view_object.render_node_field(comment_field_) -%}
+        {%- include "components/field/index.jinja" -%}
+      {%- endwith -%}
+    </sdoc-requirement-field>
+  {%- endfor %}
+{%- endif %}

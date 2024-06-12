@@ -44,7 +44,7 @@ class SDocNodeField:
         parts: List[Any],
         multiline__: Optional[str],
     ) -> None:
-        self.parent: Optional["SDocNode"] = parent
+        self.parent: Optional[SDocNode] = parent
         self.field_name = field_name
         self.parts: List[Any] = parts
         self.multiline: bool = multiline__ is not None and len(multiline__) > 0
@@ -106,14 +106,15 @@ class SDocNode(SDocObject):
         fields: List[SDocNodeField],
         relations: List[Reference],
         requirements: Optional[List["SDocNode"]] = None,
+        basic_free_text: bool = False,
     ) -> None:
         assert parent
         assert isinstance(requirement_type, str)
         assert isinstance(relations, list), relations
 
-        self.parent: Union[
-            "SDocDocument", "SDocSection", "SDocCompositeNode"
-        ] = parent
+        self.parent: Union[SDocDocument, SDocSection, SDocCompositeNode] = (
+            parent
+        )
 
         self.requirement_type: str = requirement_type
 
@@ -127,9 +128,11 @@ class SDocNode(SDocObject):
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        self.requirements: Optional[List["SDocNode"]] = requirements
+        self.requirements: Optional[List[SDocNode]] = requirements
 
         self.relations: List[Reference] = relations
+
+        self.basic_free_text: bool = basic_free_text
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?
@@ -175,6 +178,9 @@ class SDocNode(SDocObject):
 
     def get_node_type_string(self) -> Optional[str]:
         return self.requirement_type
+
+    def get_node_type_string_lower(self) -> Optional[str]:
+        return self.requirement_type.lower()
 
     def get_display_title(self) -> str:
         if self.reserved_title is not None:

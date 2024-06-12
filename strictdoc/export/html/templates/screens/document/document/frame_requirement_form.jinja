@@ -21,6 +21,7 @@
   <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}" />
   <input type="hidden" id="context_document_mid" name="context_document_mid" value="{{ form_object.context_document_mid }}" />
   <input type="hidden" id="element_type" name="element_type" value="{{ form_object.element_type }}" />
+  <input type="hidden" id="basic_free_text" name="basic_free_text" value="{{ "true" if form_object.basic_free_text else "false" }}" />
 
 {# Fields #}
 <sdoc-tab-content id="Fields" active>

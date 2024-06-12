@@ -1,26 +1,14 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[FREETEXT]
-Hello world!
-[/FREETEXT]
-
 [SECTION]
 UID: SECTION-D-First-section
 TITLE: First section
-
-[FREETEXT]
-This is a free text of this section.
-[/FREETEXT]
 
 [/SECTION]
 
 [SECTION]
 UID: SECTION-D-First-section-2
 TITLE: First section
-
-[FREETEXT]
-Modified statement.
-[/FREETEXT]
 
 [/SECTION]

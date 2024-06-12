@@ -28,16 +28,11 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            screen_document.assert_text("Hello world!")
-
             section = screen_document.get_section(2)
             form_edit_section: Form_EditSection = (
                 section.do_open_form_edit_section()
             )
             form_edit_section.do_reset_uid_field()
-            form_edit_section.do_fill_in_text("Modified statement.")
             form_edit_section.do_form_submit()
-
-            section.assert_section_text("Modified statement.")
 
         assert test_setup.compare_sandbox_and_expected_output()

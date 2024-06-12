@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document 1
+CLASSIFICATION: Restricted
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<

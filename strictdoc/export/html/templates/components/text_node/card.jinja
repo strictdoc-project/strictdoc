@@ -1,10 +1,10 @@
 {#
   In this template:
-  sdoc_entity = section
+  sdoc_entity = text_node
 #}
 
-<sdoc-section>
-  {% include "components/section/title/index.jinja" %}
-  {% include "components/section/uid/index.jinja" %}
-  {% include "components/section/text/index.jinja" %}
-</sdoc-section>
+<sdoc-text>
+  {% include "components/node_field/section_title/index.jinja" %}
+  {% include "components/node_field/uid_standalone/index.jinja" %}
+  {% include "components/node_field/text/index.jinja" %}
+</sdoc-text>

@@ -11,7 +11,11 @@ from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
+from strictdoc.backend.sdoc.models.node import (
+    SDocCompositeNode,
+    SDocNode,
+    SDocNodeField,
+)
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
@@ -273,6 +277,15 @@ class SDWriter:
 
         elif isinstance(root_node, SDocNode):
             output = ""
+
+            # Special case for backward compatibility.
+            if (
+                root_node.requirement_type == "TEXT"
+                and root_node.basic_free_text
+            ):
+                output += self._print_free_text(root_node)
+                output += "\n"
+                return output
             if isinstance(root_node, SDocCompositeNode):
                 output += "[COMPOSITE_"
                 output += root_node.requirement_type
@@ -421,8 +434,10 @@ class SDWriter:
         return output
 
     @staticmethod
-    def _print_free_text(free_text):
-        assert isinstance(free_text, FreeText)
+    def _print_free_text(free_text: Union[FreeText, SDocNode]):
+        assert isinstance(free_text, FreeText) or (
+            isinstance(free_text, SDocNode) and free_text.basic_free_text
+        )
         output = ""
         output += "[FREETEXT]"
         output += "\n"
@@ -486,11 +501,20 @@ class SDWriter:
         return output
 
     @staticmethod
-    def print_free_text_content(free_text):
-        assert isinstance(free_text, FreeText)
+    def print_free_text_content(free_text: Union[FreeText, SDocNode]):
+        assert isinstance(free_text, FreeText) or (
+            isinstance(free_text, SDocNode) and free_text.basic_free_text
+        )
+
+        object_with_parts: Union[FreeText, SDocNodeField]
+        if isinstance(free_text, SDocNode):
+            object_with_parts = free_text.get_content_field()
+        else:
+            object_with_parts = free_text
+
         output = ""
 
-        for _, part in enumerate(free_text.parts):
+        for _, part in enumerate(object_with_parts.parts):
             if isinstance(part, str):
                 output += part
             elif isinstance(part, InlineLink):

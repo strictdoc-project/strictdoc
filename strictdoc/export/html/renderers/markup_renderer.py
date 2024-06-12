@@ -19,7 +19,6 @@ from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
-from strictdoc.helpers.rst import truncated_statement_with_no_rst
 
 
 class MarkupRenderer:
@@ -113,11 +112,6 @@ class MarkupRenderer:
         parts_output = ""
         for part in node_field.parts:
             if isinstance(part, str):
-                # FIXME: This is not great to jump over truncated every time
-                #        we render all non-DTR fields but good enough for now.
-                if truncated:
-                    parts_output += truncated_statement_with_no_rst(part)
-                    break
                 parts_output += part
             elif isinstance(part, InlineLink):
                 linkable_node = (

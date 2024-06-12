@@ -89,6 +89,14 @@ class SDocDocument:
     def get_type_string(self) -> str:
         return "document" if not self.document_is_included() else "section"
 
+    def get_debug_info(self) -> str:
+        debug_components: List[str] = [f"TITLE = '{self.title}'"]
+        if self.meta is not None:
+            debug_components.append(
+                f" ({self.meta.input_doc_rel_path.relative_path})"
+            )
+        return f"Document({', '.join(debug_components)})"
+
     def document_is_included(self) -> bool:
         return self.ng_including_document_reference.get_document() is not None
 

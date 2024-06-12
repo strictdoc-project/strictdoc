@@ -318,11 +318,19 @@ class TraceabilityIndexBuilder:
                 link_type=GraphLinkType.MID_TO_NODE,
                 lhs_node=document.reserved_mid,
             ):
+                other_document: SDocDocument = graph_database.get_link_value(
+                    link_type=GraphLinkType.MID_TO_NODE,
+                    lhs_node=document.reserved_mid,
+                )
                 raise StrictDocException(
                     "TraceabilityIndex: "
                     "the document MID is not unique: "
                     f"{document.reserved_mid}. "
-                    "All machine identifiers (MID) must be unique values."
+                    "All machine identifiers (MID) must be unique values. "
+                    f"Affected documents:\n"
+                    f"{other_document.get_debug_info()}\n"
+                    f"and\n"
+                    f"{document.get_debug_info()}."
                 )
 
             graph_database.create_link(
@@ -361,11 +369,19 @@ class TraceabilityIndexBuilder:
                     link_type=GraphLinkType.MID_TO_NODE,
                     lhs_node=node.reserved_mid,
                 ):
+                    other_node: SDocDocument = graph_database.get_link_value(
+                        link_type=GraphLinkType.MID_TO_NODE,
+                        lhs_node=node.reserved_mid,
+                    )
                     raise StrictDocException(
                         "TraceabilityIndex: "
                         "the node MID is not unique: "
                         f"{node.reserved_mid}. "
-                        f"All machine identifiers (MID) must be unique values."
+                        "All machine identifiers (MID) must be unique values. "
+                        f"Affected nodes:\n"
+                        f"{other_node.get_debug_info()}\n"
+                        f"and\n"
+                        f"{node.get_debug_info()}."
                     )
                 graph_database.create_link(
                     link_type=GraphLinkType.MID_TO_NODE,

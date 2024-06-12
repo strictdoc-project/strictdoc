@@ -295,6 +295,20 @@ class SDocNode(SDocObject):
     def get_display_node_type(self) -> str:
         return "Node"
 
+    def get_debug_info(self) -> str:
+        debug_components: List[str] = []
+        if self.reserved_mid is not None:
+            debug_components.append(f"MID = '{self.reserved_mid}'")
+        if self.reserved_uid is not None:
+            debug_components.append(f"UID = '{self.reserved_uid}'")
+        if self.reserved_title is not None:
+            debug_components.append(f"TITLE = '{self.reserved_title}'")
+        if self.document is not None:
+            debug_components.append(
+                f"document = {self.document.get_debug_info()}"
+            )
+        return f"Requirement({', '.join(debug_components)})"
+
     @property
     def parent_or_including_document(self) -> SDocDocument:
         including_document_or_none = (

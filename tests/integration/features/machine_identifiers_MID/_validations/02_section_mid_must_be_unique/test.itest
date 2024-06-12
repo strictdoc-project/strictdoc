@@ -1,0 +1,5 @@
+RUN: %expect_exit 1 %strictdoc export %S | filecheck %s --dump-input=fail
+CHECK: error: TraceabilityIndex: the node MID is not unique: ABC0123. All machine identifiers (MID) must be unique values. Affected nodes:
+CHECK: Section(TITLE = 'Foo', document = Document(TITLE = 'Doc 1',  (input.sdoc)))
+CHECK: and
+CHECK: Section(TITLE = 'Foo', document = Document(TITLE = 'Doc 2',  (input2.sdoc))).

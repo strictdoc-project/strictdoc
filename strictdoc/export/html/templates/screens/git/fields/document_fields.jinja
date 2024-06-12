@@ -63,36 +63,4 @@
   </div>
 </div>
 
-{% if node.free_texts|length > 0 %}
-{% set free_text = node.free_texts[0] %}
-{% set free_text_modified = document_change is not none and document_change.free_text_modified %}
-<div
-  class="diff_node_field"
-  multiline
-  {% if free_text_modified %}
-    modified="{{ side }}"
-  {% endif %}
->
-  {%- with badge_text = "free text" -%}
-    {%- include "components/badge/index.jinja" -%}
-  {%- endwith -%}
-
-  <div
-    class="sdoc_pre_content"
-  >
-    {%- if document_change is not none -%}
-      {%- set colored_diff = document_change.get_colored_free_text_diff(side) -%}
-      {%- if colored_diff is not none -%}
-        {{ colored_diff }}
-      {%- else -%}
-        {{ free_text.get_parts_as_text_escaped() }}
-      {%- endif -%}
-    {%- else -%}
-        {{ free_text.get_parts_as_text_escaped() }}
-    {%- endif -%}
-  </div>
-</div>
-
-{% endif %}
-
 </div>

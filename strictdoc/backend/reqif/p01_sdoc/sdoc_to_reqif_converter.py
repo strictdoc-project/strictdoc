@@ -47,7 +47,6 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
     ReferenceType,
 )
-from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.cast import assert_cast
@@ -234,29 +233,7 @@ class P01_SDocToReqIFObjectConverter:
             )
 
             current_hierarchy = root_hierarchy
-            if len(document.free_texts) > 0:
-                # fmt: off
-                document_free_text_spec_object = (
-                    P01_SDocToReqIFObjectConverter
-                    ._convert_document_free_text_to_spec_object(
-                        document,
-                        context=context,
-                    )
-                )
-                # fmt: on
-                spec_objects.append(document_free_text_spec_object)
-                hierarchy = ReqIFSpecHierarchy(
-                    xml_node=None,
-                    is_self_closed=False,
-                    identifier=generate_unique_identifier("SPEC-HIERARCHY"),
-                    last_change=None,
-                    long_name=None,
-                    spec_object=document_free_text_spec_object.identifier,
-                    children=[],
-                    ref_then_children_order=True,
-                    level=document.ng_level + 1,
-                )
-                current_hierarchy.add_child(hierarchy)
+
             # FIXME: ReqIF must export complete documents including fragments.
             for node in document_iterator.all_content(
                 print_fragments=False, print_fragments_from_files=False
@@ -422,44 +399,6 @@ class P01_SDocToReqIFObjectConverter:
         return reqif_bundle
 
     @classmethod
-    def _convert_document_free_text_to_spec_object(
-        cls,
-        document: SDocDocument,
-        context: P01_SDocToReqIFBuildContext,
-    ) -> ReqIFSpecObject:
-        assert isinstance(document, SDocDocument)
-        assert len(document.free_texts) > 0
-        attributes = []
-        free_text_value = (
-            SDWriter.print_free_text_content(document.free_texts[0])
-        ).rstrip()
-        if context.multiline_is_xhtml:
-            attribute_type = SpecObjectAttributeType.XHTML
-        else:
-            attribute_type = SpecObjectAttributeType.STRING
-            free_text_value = escape(free_text_value)
-
-        free_text_attribute = SpecObjectAttribute(
-            xml_node=None,
-            attribute_type=attribute_type,
-            definition_ref=ReqIFChapterField.TEXT,
-            value=free_text_value,
-        )
-        attributes.append(free_text_attribute)
-        spec_object = ReqIFSpecObject(
-            xml_node=None,
-            description=None,
-            identifier=generate_unique_identifier("DOCUMENT_FREETEXT"),
-            last_change=None,
-            long_name=None,
-            spec_object_type=context.map_grammar_node_tags_to_spec_object_type[
-                document
-            ]["FREETEXT"].identifier,
-            attributes=attributes,
-        )
-        return spec_object
-
-    @classmethod
     def _convert_section_to_spec_object(
         cls,
         *,
@@ -475,23 +414,6 @@ class P01_SDocToReqIFObjectConverter:
             value=section.title,
         )
         attributes.append(title_attribute)
-        if len(section.free_texts) > 0:
-            free_text_value = (
-                SDWriter.print_free_text_content(section.free_texts[0])
-            ).rstrip()
-            if context.multiline_is_xhtml:
-                attribute_type = SpecObjectAttributeType.XHTML
-            else:
-                attribute_type = SpecObjectAttributeType.STRING
-                free_text_value = escape(free_text_value)
-
-            free_text_attribute = SpecObjectAttribute(
-                xml_node=None,
-                attribute_type=attribute_type,
-                definition_ref=ReqIFChapterField.TEXT,
-                value=free_text_value,
-            )
-            attributes.append(free_text_attribute)
 
         """
         If MIDs is enabled and this section has an MID, use it for
@@ -742,15 +664,6 @@ class P01_SDocToReqIFObjectConverter:
             "SECTION"
         ] = section_spec_type
         spec_object_types.append(section_spec_type)
-        free_text_spec_type = (
-            P01_SDocToReqIFObjectConverter._create_free_text_spec_object_type(
-                context
-            )
-        )
-        context.map_grammar_node_tags_to_spec_object_type[grammar.parent][
-            "FREETEXT"
-        ] = free_text_spec_type
-        spec_object_types.append(free_text_spec_type)
 
         return spec_object_types
 
@@ -771,30 +684,6 @@ class P01_SDocToReqIFObjectConverter:
         spec_object_type = ReqIFSpecObjectType.create(
             identifier=spec_object_type_identifier,
             long_name="SECTION",
-            attribute_definitions=attribute_definitions,
-        )
-        return spec_object_type
-
-    @classmethod
-    def _create_free_text_spec_object_type(
-        cls,
-        context: P01_SDocToReqIFBuildContext,
-    ):
-        attribute_definitions = []
-        chapter_name_attribute = SpecAttributeDefinition.create(
-            attribute_type=SpecObjectAttributeType.XHTML
-            if context.multiline_is_xhtml
-            else SpecObjectAttributeType.STRING,
-            identifier=ReqIFChapterField.TEXT,
-            datatype_definition=StrictDocReqIFTypes.MULTI_LINE_STRING.value,
-            long_name=ReqIFChapterField.TEXT,
-        )
-        attribute_definitions.append(chapter_name_attribute)
-
-        spec_object_type_identifier = "FREE_TEXT_" + uuid.uuid4().hex
-        spec_object_type = ReqIFSpecObjectType.create(
-            identifier=spec_object_type_identifier,
-            long_name="FREETEXT",
             attribute_definitions=attribute_definitions,
         )
         return spec_object_type

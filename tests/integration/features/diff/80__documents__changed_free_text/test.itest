@@ -1,22 +1,19 @@
-# FIXME
-UNSUPPORTED: true
-
 RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
 
 RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">2</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">1</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No documents were modified.</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No sections were modified.</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">No requirements were modified.</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value">2 (1 removed, 1 added)</div>
 
 NOTE: This ensures that red-green diff is explained correctly.
-CHECK-CHANGELOG:<span class="lambda_red">This</span><span> is a</span><span> free text.
-CHECK-CHANGELOG-NEXT:</span></div>
+CHECK-CHANGELOG:<span class="sdoc_pre_content">This is a free text.
+CHECK-CHANGELOG:<span class="sdoc_pre_content">It is a MODIFIED free text.

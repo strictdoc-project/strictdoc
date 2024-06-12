@@ -232,10 +232,6 @@ class SDWriter:
                             if element_relation.relation_role is not None:
                                 output += f"    ROLE: {element_relation.relation_role}\n"
 
-        for free_text in document.free_texts:
-            output += "\n"
-            output += self._print_free_text(free_text)
-
         output += "\n"
 
         output += self._print_node(document, document, document_iterator)

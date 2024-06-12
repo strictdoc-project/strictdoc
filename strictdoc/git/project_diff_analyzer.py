@@ -25,7 +25,6 @@ from strictdoc.git.change import (
 )
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.diff import get_colored_diff_string, similar
-from strictdoc.helpers.md5 import get_md5
 from strictdoc.helpers.mid import MID
 
 
@@ -56,7 +55,6 @@ class ProjectTreeDiffStats:
     document_md5_hashes: Set[str] = field(default_factory=set)
     requirement_md5_hashes: Set[str] = field(default_factory=set)
     section_md5_hashes: Set[str] = field(default_factory=set)
-    free_text_md5_hashes: Set[str] = field(default_factory=set)
     map_nodes_to_hashes: Dict[Any, str] = field(default_factory=dict)
     map_mid_to_nodes: Dict[MID, Any] = field(default_factory=dict)
     map_uid_to_nodes: Dict[str, Any] = field(default_factory=dict)
@@ -73,9 +71,6 @@ class ProjectTreeDiffStats:
 
     def contains_requirement_md5(self, requirement_md5: str) -> bool:
         return requirement_md5 in self.requirement_md5_hashes
-
-    def contains_free_text_md5(self, free_text_md5: str) -> bool:
-        return free_text_md5 in self.free_text_md5_hashes
 
     def contains_section_md5(self, section_md5: str) -> bool:
         return section_md5 in self.section_md5_hashes
@@ -123,110 +118,6 @@ class ProjectTreeDiffStats:
         for field_ in other_requirement_fields:
             if field_.get_text_value() == field_value:
                 return field_
-        return None
-
-    def get_diffed_free_text(
-        self, node: Union[SDocSection, SDocDocument], side: str
-    ):
-        assert isinstance(node, (SDocSection, SDocDocument))
-        assert side in ("left", "right")
-
-        if isinstance(node, SDocDocument):
-            document: SDocDocument = assert_cast(node, SDocDocument)
-
-            other_document_or_none: Optional[SDocDocument] = None
-
-            if (
-                document.mid_permanent
-                and document.reserved_mid in self.map_mid_to_nodes
-            ):
-                other_document_or_none = self.map_mid_to_nodes[
-                    document.reserved_mid
-                ]
-            else:
-                other_document_or_none = self.map_rel_paths_to_docs.get(
-                    document.meta.input_doc_rel_path.relative_path
-                )
-            if other_document_or_none is None:
-                return None
-            other_document: SDocDocument = assert_cast(
-                other_document_or_none, SDocDocument
-            )
-            if len(other_document.free_texts) == 0:
-                return None
-            document_free_text = document.free_texts[0]
-            other_document_free_text = other_document.free_texts[0]
-            document_free_text_parts = (
-                document_free_text.get_parts_as_text_escaped()
-            )
-            other_document_free_text_parts = (
-                other_document_free_text.get_parts_as_text_escaped()
-            )
-            if side == "left":
-                return get_colored_diff_string(
-                    document_free_text_parts,
-                    other_document_free_text_parts,
-                    side,
-                )
-            else:
-                return get_colored_diff_string(
-                    other_document_free_text_parts,
-                    document_free_text_parts,
-                    side,
-                )
-
-        if isinstance(node, SDocSection):
-            section: SDocSection = assert_cast(node, SDocSection)
-            section_free_text = section.free_texts[0]
-            section_free_text_parts = (
-                section_free_text.get_parts_as_text_escaped()
-            )
-
-            if section.reserved_uid is not None:
-                other_section_or_none: Optional[SDocSection] = (
-                    self.map_uid_to_nodes.get(section.reserved_uid)
-                )
-                if other_section_or_none is not None:
-                    other_section: SDocSection = assert_cast(
-                        other_section_or_none, SDocSection
-                    )
-
-                    if len(other_section.free_texts) > 0:
-                        other_section_free_text = other_section.free_texts[0]
-                        other_section_free_text_parts = (
-                            other_section_free_text.get_parts_as_text_escaped()
-                        )
-
-                        if side == "left":
-                            return get_colored_diff_string(
-                                section_free_text_parts,
-                                other_section_free_text_parts,
-                                side,
-                            )
-                        else:
-                            return get_colored_diff_string(
-                                other_section_free_text_parts,
-                                section_free_text_parts,
-                                side,
-                            )
-                    else:
-                        if side == "left":
-                            return get_colored_diff_string(
-                                section_free_text_parts, "", side
-                            )
-                        else:
-                            return get_colored_diff_string(
-                                "", section_free_text_parts, side
-                            )
-                else:
-                    return None
-
-            # Section does not have a UID. We can still try to find a section
-            # with the same title if it still exists in the same parent
-            # section/document scope.
-            else:
-                pass
-
         return None
 
     def contains_requirement_relations(
@@ -458,9 +349,6 @@ class ChangeStats:
                 title_modified: bool = False
                 lhs_colored_title_diff: Optional[str] = None
                 rhs_colored_title_diff: Optional[str] = None
-                free_text_modified: bool = False
-                lhs_colored_free_text_diff: Optional[str] = None
-                rhs_colored_free_text_diff: Optional[str] = None
 
                 # If there is another section and the UIDs are not the
                 # same, consider the UID modified.
@@ -491,26 +379,7 @@ class ChangeStats:
                 else:
                     title_modified = True
 
-                if len(document.free_texts) > 0:
-                    free_text = document.free_texts[0]
-                    free_text_md5 = self_stats.get_md5_by_node(free_text)
-                    free_text_modified = not other_stats.contains_free_text_md5(
-                        free_text_md5
-                    )
-                    if (
-                        free_text_modified
-                        and other_document_or_none is not None
-                        and len(other_document_or_none.free_texts) > 0
-                    ):
-                        lhs_colored_free_text_diff = (
-                            other_stats.get_diffed_free_text(document, "left")
-                        )
-                        rhs_colored_free_text_diff = (
-                            self_stats.get_diffed_free_text(
-                                other_document_or_none, "right"
-                            )
-                        )
-                if uid_modified or title_modified or free_text_modified:
+                if uid_modified or title_modified:
                     lhs_document: Optional[SDocDocument]
                     rhs_document: Optional[SDocDocument]
                     if side == "left":
@@ -526,11 +395,8 @@ class ChangeStats:
                         rhs_document=rhs_document,
                         uid_modified=uid_modified,
                         title_modified=title_modified,
-                        free_text_modified=free_text_modified,
                         lhs_colored_title_diff=lhs_colored_title_diff,
                         rhs_colored_title_diff=rhs_colored_title_diff,
-                        lhs_colored_free_text_diff=lhs_colored_free_text_diff,
-                        rhs_colored_free_text_diff=rhs_colored_free_text_diff,
                     )
                     change_stats.map_nodes_to_changes[document] = (
                         document_change
@@ -597,9 +463,6 @@ class ChangeStats:
                         title_modified: bool = False
                         lhs_colored_title_diff: Optional[str] = None
                         rhs_colored_title_diff: Optional[str] = None
-                        free_text_modified: bool = False
-                        lhs_colored_free_text_diff: Optional[str] = None
-                        rhs_colored_free_text_diff: Optional[str] = None
 
                         # If there is another section and the UIDs are not the
                         # same, consider the UID modified.
@@ -634,34 +497,6 @@ class ChangeStats:
                         else:
                             title_modified = True
 
-                        if len(node.free_texts) > 0:
-                            free_text = node.free_texts[0]
-                            free_text_md5 = self_stats.get_md5_by_node(
-                                free_text
-                            )
-                            free_text_modified = (
-                                not other_stats.contains_free_text_md5(
-                                    free_text_md5
-                                )
-                            )
-                            if other_section_or_none is not None:
-                                if len(other_section_or_none.free_texts) > 0:
-                                    lhs_colored_free_text_diff = (
-                                        other_stats.get_diffed_free_text(
-                                            node, "left"
-                                        )
-                                    )
-
-                                    rhs_colored_free_text_diff = (
-                                        self_stats.get_diffed_free_text(
-                                            other_section_or_none, "right"
-                                        )
-                                    )
-                        else:
-                            if other_section_or_none is not None:
-                                if len(other_section_or_none.free_texts) > 0:
-                                    free_text_modified = True
-
                         """
                         Step: Create a section token that is used by JS to match
                         the LHS nodes with RHS nodes.
@@ -687,11 +522,8 @@ class ChangeStats:
                             rhs_section=rhs_section,
                             uid_modified=uid_modified,
                             title_modified=title_modified,
-                            free_text_modified=free_text_modified,
                             lhs_colored_title_diff=lhs_colored_title_diff,
                             rhs_colored_title_diff=rhs_colored_title_diff,
-                            lhs_colored_free_text_diff=lhs_colored_free_text_diff,
-                            rhs_colored_free_text_diff=rhs_colored_free_text_diff,
                         )
 
                         change_stats.map_nodes_to_changes[node] = section_change
@@ -1106,17 +938,6 @@ class ProjectDiffAnalyzer:
 
         map_nodes_to_hashers[document].update(document.title.encode("utf-8"))
 
-        # Document's top level free text.
-        if len(document.free_texts) > 0:
-            free_text = document.free_texts[0]
-            free_text_text = document.free_texts[0].get_parts_as_text()
-            free_text_md5 = get_md5(free_text_text)
-            map_nodes_to_hashers[document].update(
-                free_text_text.encode("utf-8")
-            )
-            document_tree_stats.free_text_md5_hashes.add(free_text_md5)
-            document_tree_stats.map_nodes_to_hashes[free_text] = free_text_md5
-
         for node in document_iterator.all_content(
             print_fragments=True, print_fragments_from_files=False
         ):
@@ -1130,16 +951,6 @@ class ProjectDiffAnalyzer:
                     )
                 hasher = hashlib.md5()
                 hasher.update(node.title.encode("utf-8"))
-                if len(node.free_texts) > 0:
-                    free_text = node.free_texts[0]
-                    free_text_text = node.free_texts[0].get_parts_as_text()
-                    free_text_md5 = get_md5(free_text_text)
-                    document_tree_stats.free_text_md5_hashes.add(free_text_md5)
-                    document_tree_stats.map_nodes_to_hashes[free_text] = (
-                        free_text_md5
-                    )
-
-                    hasher.update(free_text_text.encode("utf-8"))
                 map_nodes_to_hashers[node] = hasher
 
             elif isinstance(node, SDocNode):

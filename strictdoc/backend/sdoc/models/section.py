@@ -70,6 +70,14 @@ class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
     def get_node_type_string(self) -> Optional[str]:
         return None
 
+    def get_debug_info(self) -> str:
+        debug_components: List[str] = [f"TITLE = '{self.title}'"]
+        if self.document is not None:
+            debug_components.append(
+                f"document = {self.document.get_debug_info()}"
+            )
+        return f"Section({', '.join(debug_components)})"
+
     @property
     def is_root_included_document(self):
         return False

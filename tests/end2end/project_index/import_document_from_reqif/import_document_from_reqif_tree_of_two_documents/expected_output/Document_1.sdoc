@@ -1,9 +1,21 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[FREETEXT]
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
+[TEXT]
+STATEMENT: >>>
 Document 1 free text.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Document 1 section

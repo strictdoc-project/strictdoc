@@ -339,20 +339,6 @@ class TraceabilityIndexBuilder:
                 rhs_node=document_tags,
             )
 
-            for free_text in document.free_texts:
-                for part in free_text.parts:
-                    if isinstance(part, Anchor):
-                        graph_database.create_link(
-                            link_type=GraphLinkType.MID_TO_NODE,
-                            lhs_node=part.mid,
-                            rhs_node=part,
-                        )
-                        graph_database.create_link(
-                            link_type=GraphLinkType.UID_TO_NODE,
-                            lhs_node=part.value,
-                            rhs_node=part,
-                        )
-
             document_iterator = DocumentCachingIterator(document)
             d_01_document_iterators[document] = document_iterator
 
@@ -485,27 +471,6 @@ class TraceabilityIndexBuilder:
         # Now iterate over the requirements again to build an in-depth map of
         # parents and children.
         for document in document_tree.document_list:
-            if len(document.free_texts) > 0:
-                for part in document.free_texts[0].parts:
-                    if isinstance(part, InlineLink):
-                        # FIXME: Ensure that the section UIDs are written to UID_TO_NODE,
-                        # remove the second check of UID_TO_REQUIREMENT_CONNECTIONS.
-                        if not traceability_index.graph_database.has_link(
-                            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-                            lhs_node=part.link,
-                        ) and not graph_database.has_link(
-                            link_type=GraphLinkType.UID_TO_NODE,
-                            lhs_node=part.link,
-                        ):
-                            raise StrictDocException(
-                                "DocumentIndex: "
-                                "the inline link references an "
-                                "object with an UID "
-                                "that does not exist: "
-                                f"{part.link}."
-                            )
-                        traceability_index.create_inline_link(part)
-
             document_iterator = d_01_document_iterators[document]
 
             for node in document_iterator.all_content(

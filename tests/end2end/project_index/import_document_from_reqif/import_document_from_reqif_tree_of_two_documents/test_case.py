@@ -16,6 +16,7 @@ path_to_reqif_sample = os.path.join(
 )
 
 
+# FIXME
 class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)

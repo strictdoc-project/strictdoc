@@ -175,9 +175,6 @@ class JSONGenerator:
 
             document_dict[JSONKey.GRAMMAR]["ELEMENTS"].append(element_dict)
 
-        for free_text in document.free_texts:
-            document_dict["FREETEXT"] = cls._write_free_text_content(free_text)
-
         node_dict = JSONGenerator._write_node(document, document, ())
         document_dict[JSONKey.NODES] = node_dict[JSONKey.NODES]
 

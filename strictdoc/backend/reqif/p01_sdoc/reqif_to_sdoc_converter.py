@@ -95,15 +95,6 @@ class P01_ReqIFToSDocConverter:
         return spec_object_type.long_name == "SECTION"
 
     @staticmethod
-    def is_spec_object_free_text(
-        spec_object: ReqIFSpecObject, reqif_bundle: ReqIFBundle
-    ):
-        spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
-            spec_object.spec_object_type
-        )
-        return spec_object_type.long_name == "FREETEXT"
-
-    @staticmethod
     def convert_requirement_field_from_reqif(field_name: str) -> str:
         if field_name in ReqIFRequirementReservedField.SET:
             return REQIF_MAP_TO_SDOC_FIELD_MAP[field_name]
@@ -158,7 +149,7 @@ class P01_ReqIFToSDocConverter:
                 reqif_bundle=reqif_bundle,
             )
 
-            converted_node: Union[SDocSection, SDocNode, FreeText]
+            converted_node: Union[SDocSection, SDocNode]
             if is_section:
                 converted_node = (
                     P01_ReqIFToSDocConverter.create_section_from_spec_object(
@@ -168,18 +159,6 @@ class P01_ReqIFToSDocConverter:
                         reqif_bundle=reqif_bundle,
                     )
                 )
-            elif P01_ReqIFToSDocConverter.is_spec_object_free_text(
-                spec_object,
-                reqif_bundle=reqif_bundle,
-            ):
-                converted_node = (
-                    P01_ReqIFToSDocConverter.create_free_text_from_spec_object(
-                        spec_object=spec_object,
-                    )
-                )
-                if len(current_section_.free_texts) == 0:
-                    current_section_.free_texts.append(converted_node)
-                return converted_node, False
             else:
                 converted_node = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
                     spec_object=spec_object,
@@ -368,6 +347,7 @@ class P01_ReqIFToSDocConverter:
         else:
             raise NotImplementedError(spec_object, attribute_map)
 
+        # FIXME: REMOVE this.
         free_texts = []
         if ReqIFChapterField.TEXT in spec_object.attribute_map:
             free_text = unescape(

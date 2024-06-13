@@ -34,9 +34,6 @@ class RSTWriter:
                 document.title, 0, reference_uid=document_uid
             )
 
-        for free_text in document.free_texts:
-            output += self._print_free_text(free_text)
-
         for content_node in document_iterator.all_content():
             if isinstance(content_node, SDocSection):
                 output += self._print_rst_header(

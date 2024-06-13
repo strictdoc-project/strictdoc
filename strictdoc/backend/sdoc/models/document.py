@@ -41,7 +41,6 @@ class SDocDocument:
             view if view is not None else DocumentView.create_default(self)
         )
         self.grammar: Optional[DocumentGrammar] = grammar
-        self.free_texts: List[FreeText] = free_texts
         self.section_contents: List = section_contents
 
         # FIXME: Plain list of all fragments found in the document.
@@ -173,9 +172,3 @@ class SDocDocument:
         yield from self.grammar.elements[
             0
         ].enumerate_custom_content_field_titles()
-
-    def set_freetext(self, freetext: Optional[FreeText]) -> None:
-        if freetext is None:
-            self.free_texts = []
-            return
-        self.free_texts = [freetext]

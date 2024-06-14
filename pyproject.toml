@@ -50,7 +50,6 @@ classifiers = [
 dependencies = [
     "textx >= 3.0.0, == 3.*",
     "jinja2 >= 2.11.2",
-    "graphviz >= 0.20.1",
     # Reading project config from strictdoc.toml file.
     "toml",
 

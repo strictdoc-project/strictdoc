@@ -713,7 +713,6 @@ def release_pyinstaller(context):
             --add-data strictdoc/export/html2pdf/html2pdf.py:.
             --add-data strictdoc/export/html/templates:templates/html
             --add-data strictdoc/export/rst/templates:templates/rst
-            --add-data strictdoc/export/dot/templates:templates/dot
             --add-data strictdoc/export/html/_static:_static
             --add-data strictdoc/export/html/_static_extra:_static_extra
             strictdoc/cli/main.py
@@ -817,19 +816,6 @@ def performance_snakeviz(context):
         snakeviz output/profile.prof
     """
     run_invoke(context, command)
-
-
-@task()
-def dot(context):
-    run_invoke(
-        context,
-        """
-            python strictdoc/cli/main.py
-                export
-                    --formats dot
-                    .
-        """,
-    )
 
 
 @task()

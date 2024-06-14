@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document 1
+OPTIONS:
+  MARKUP: HTML
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+<b>This <a href="#">text</a> will be rendered directly as HTML!</b>
+<<<

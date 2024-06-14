@@ -212,7 +212,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=requirement.document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -255,7 +255,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=section.document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -325,7 +325,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -366,6 +366,14 @@ def create_main_router(
             section_mid=section_mid,
             request_form_data=request_form_data,
         )
+        reference_node: Union[SDocDocument, SDocSection] = (
+            export_action.traceability_index.get_node_by_mid(MID(reference_mid))
+        )
+        document = (
+            reference_node
+            if isinstance(reference_node, SDocDocument)
+            else reference_node.document
+        )
 
         context_document = export_action.traceability_index.get_node_by_mid(
             MID(context_document_mid)
@@ -392,7 +400,7 @@ def create_main_router(
                 static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
-                markup="RST",
+                markup=document.config.get_markup(),
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
@@ -432,7 +440,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -487,7 +495,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=section.document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -548,7 +556,7 @@ def create_main_router(
                 static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
-                markup="RST",
+                markup=section.document.config.get_markup(),
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
@@ -598,7 +606,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=section.document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -657,7 +665,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=section.document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -752,7 +760,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -823,7 +831,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -912,7 +920,7 @@ def create_main_router(
                 static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
-                markup="RST",
+                markup=document.config.get_markup(),
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
@@ -958,7 +966,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -1009,7 +1017,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -1146,7 +1154,7 @@ def create_main_router(
                 static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
-                markup="RST",
+                markup=document.config.get_markup(),
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
@@ -1193,7 +1201,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer: MarkupRenderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -1258,7 +1266,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -1369,7 +1377,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=section.document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -1472,7 +1480,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=requirement.document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -1572,7 +1580,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=moved_node.document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -1977,7 +1985,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -2061,7 +2069,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -2097,7 +2105,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -2141,7 +2149,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -2249,7 +2257,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
@@ -2390,7 +2398,7 @@ def create_main_router(
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup="RST",
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,

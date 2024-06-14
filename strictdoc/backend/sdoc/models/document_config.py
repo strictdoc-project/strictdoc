@@ -40,7 +40,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         requirement_style: Optional[str],
         requirement_in_toc: Optional[str],
         default_view: Optional[str],
-    ):
+    ) -> None:
         self.parent = parent
         self.version: Optional[str] = version
 
@@ -61,7 +61,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             else (False if root == "False" else None)
         )
 
-        self.markup = markup
+        self.markup: Optional[str] = markup
         self.auto_levels: bool = auto_levels is None or auto_levels == "On"
 
         if layout is not None:
@@ -80,6 +80,11 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
 
         self.ng_line_start: int = 0
         self.ng_col_start: int = 0
+
+    def get_markup(self) -> str:
+        if self.markup is None:
+            return "RST"
+        return self.markup
 
     def get_requirement_style_mode(self) -> str:
         if (

@@ -78,22 +78,6 @@ class SDocRuntimeEnvironment:
             self.path_to_strictdoc, "strictdoc", "export", "rst", "templates"
         )
 
-    def get_path_to_dot_templates(self):
-        if self.is_py_installer:
-            # If the application is run as a bundle, the PyInstaller bootloader
-            # extends the sys module by a flag frozen=True and sets the app
-            # path into variable _MEIPASS'.
-            bundle_dir = (
-                sys._MEIPASS  # pylint: disable=protected-access, no-member
-            )
-            return os.path.join(bundle_dir, "templates/dot")
-        if self.is_nuitka:
-            return os.path.join(self.path_to_strictdoc, "templates/dot")
-        # Normal Python
-        return os.path.join(
-            self.path_to_strictdoc, "strictdoc", "export", "dot", "templates"
-        )
-
     def get_path_to_html_templates(self):
         if self.is_py_installer:
             # If the application is run as a bundle, the PyInstaller bootloader

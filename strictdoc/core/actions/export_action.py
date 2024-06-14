@@ -10,7 +10,6 @@ from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
-from strictdoc.export.dot.document_dot_generator import DocumentDotGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
@@ -129,18 +128,6 @@ class ExportAction:
             Path(output_dot_root).mkdir(parents=True, exist_ok=True)
             SPDXGenerator().export_tree(
                 self.project_config, self.traceability_index, output_dot_root
-            )
-
-        if "dot" in self.project_config.export_formats:
-            output_dot_root = os.path.join(
-                self.project_config.export_output_dir, "dot"
-            )
-            Path(output_dot_root).mkdir(parents=True, exist_ok=True)
-            DocumentDotGenerator("profile1").export_tree(
-                self.traceability_index, output_dot_root
-            )
-            DocumentDotGenerator("profile2").export_tree(
-                self.traceability_index, output_dot_root
             )
 
         if "json" in self.project_config.export_formats:

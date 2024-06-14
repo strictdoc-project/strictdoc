@@ -1250,28 +1250,6 @@ RELATIONS:
 
 [/SECTION]
 
-[SECTION]
-MID: 5cefe175d19b4ef58b8398410d3de341
-UID: SECTION-SRS-Graphviz-Dot-export
-TITLE: Graphviz/Dot export
-
-[REQUIREMENT]
-MID: 0b68ccfc786f40a1b73bd5f853ddb350
-UID: SDOC-SRS-90
-STATUS: Active
-TITLE: Export to Graphviz/Dot
-STATEMENT: >>>
-StrictDoc shall support exporting requirements information to PDF format using Graphviz.
-<<<
-RATIONALE: >>>
-Graphviz is one of the most capable tools for visualizing graph information, which makes it a perfect tool for visualizing requirements graphs create in StrictDoc.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-56
-
-[/SECTION]
-
 [/SECTION]
 
 [SECTION]

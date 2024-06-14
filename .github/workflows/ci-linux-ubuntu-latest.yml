@@ -24,9 +24,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install APT packages
-      run: sudo apt install -y graphviz
-
     - name: Upgrade pip
       run: |
         python -m pip install --upgrade pip

@@ -256,7 +256,7 @@ class GrammarElementFormObject(ErrorObject):
             else:
                 fields_so_far.add(field.field_name)
 
-        if len(self.relations) == 0:
+        if len(self.relations) == 0 and self.element_name != "TEXT":
             self.add_error(
                 "Relations_Row",
                 (

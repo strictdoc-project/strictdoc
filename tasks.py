@@ -11,8 +11,8 @@ from typing import Optional
 if not hasattr(inspect, "getargspec"):
     inspect.getargspec = inspect.getfullargspec
 
-import invoke  # pylint: disable=wrong-import-position
-from invoke import task  # pylint: disable=wrong-import-position
+import invoke
+from invoke import task
 
 # Specifying encoding because Windows crashes otherwise when running Invoke
 # tasks below:
@@ -22,9 +22,7 @@ from invoke import task  # pylint: disable=wrong-import-position
 # seems to work.
 # FIXME: If you are a Windows user and expert, please advise on how to do this
 # properly.
-sys.stdout = open(  # pylint: disable=consider-using-with
-    1, "w", encoding="utf-8", closefd=False, buffering=1
-)
+sys.stdout = open(1, "w", encoding="utf-8", closefd=False, buffering=1)
 
 
 # To prevent all tasks from building to the same virtual environment.
@@ -95,7 +93,7 @@ def clean_itest_artifacts(context):
     run_invoke(context, find_command, warn=True)
 
 
-@task
+@task(aliases=["s"])
 def server(context, input_path=".", config=None):
     assert os.path.isdir(input_path), input_path
     if config is not None:
@@ -111,7 +109,7 @@ def server(context, input_path=".", config=None):
     )
 
 
-@task
+@task(aliases=["d"])
 def docs(context):
     run_invoke_with_tox(
         context,
@@ -180,7 +178,7 @@ def docs(context):
     )
 
 
-@task
+@task(aliases=["tu"])
 def test_unit(context, focus=None):
     focus_argument = f"-k {focus}" if focus is not None else ""
     run_invoke_with_tox(
@@ -204,7 +202,7 @@ def test_unit_server(context, focus=None):
     )
 
 
-@task()
+@task(aliases=["te"])
 def test_end2end(
     context,
     focus=None,
@@ -303,7 +301,7 @@ def test_coverage_report(context):
     )
 
 
-@task
+@task(aliases=["ti"])
 def test_integration(
     context,
     focus=None,
@@ -416,46 +414,7 @@ def lint_ruff_format(context):
         raise invoke.exceptions.UnexpectedExit(result)
 
 
-@task
-def lint_pylint(context):
-    # TODO: Fix --disable=import-error
-    try:
-        run_invoke_with_tox(
-            context,
-            ToxEnvironment.CHECK,
-            """
-                pylint
-                  --rcfile=.pylint.ini
-                  --disable=c-extension-no-member
-                  --disable=import-error
-                  strictdoc/ tests/ tasks.py
-            """,
-        )
-    except invoke.exceptions.UnexpectedExit as exc:
-        # pylink doesn't show an error message when exit code != 0, so we do.
-        print(  # noqa: T201
-            f"invoke: pylint exited with error code {exc.result.exited}"
-        )
-        raise exc
-
-
-@task
-def lint_flake8(context):
-    run_invoke_with_tox(
-        context,
-        ToxEnvironment.CHECK,
-        """
-            flake8
-                strictdoc/ tests/unit tests/unit_server
-                --ignore=E501,W503
-                --statistics
-                --max-line-length 80
-                --show-source
-        """,
-    )
-
-
-@task
+@task(aliases=["lr"])
 def lint_ruff(context):
     run_invoke_with_tox(
         context,
@@ -467,7 +426,7 @@ def lint_ruff(context):
 
 
 # @sdoc[SDOC-SRS-43]
-@task
+@task(aliases=["lm"])
 def lint_mypy(context):
     # FIXME
     if sys.version_info >= (3, 8):
@@ -494,17 +453,14 @@ def lint_mypy(context):
 # # @sdoc[/SDOC-SRS-43]
 
 
-@task
+@task(aliases=["l"])
 def lint(context):
     lint_ruff_format(context)
     lint_ruff(context)
-    # It looks like Ruff does the job, but keeping this for a while.
-    # lint_pylint(context)  # noqa: ERA001
-    # lint_flake8(context)  # noqa: ERA001
     lint_mypy(context)
 
 
-@task
+@task(aliases=["t"])
 def test(context):
     test_unit_coverage(context)
     test_unit_server(context)
@@ -512,7 +468,7 @@ def test(context):
     test_integration(context, html2pdf=True)
 
 
-@task
+@task(aliases=["c"])
 def check(context):
     lint(context)
     test(context)

@@ -733,7 +733,10 @@ class RequirementFormObject(ErrorObject):
             # STATEMENT/DESCRIPTION/CONTENT field has already been validated. Skip.
             if grammar_element_field_.title == statement_field_name:
                 continue
-            if grammar_element_field_.required:
+            if (
+                grammar_element_field_.gef_type == RequirementFieldType.STRING
+                and grammar_element_field_.required
+            ):
                 for form_field_ in self.fields[grammar_element_field_.title]:
                     field_value = form_field_.field_unescaped_value
                     if field_value is None or len(field_value) == 0:
@@ -755,7 +758,14 @@ class RequirementFormObject(ErrorObject):
                 field_value = self.fields[grammar_element_field_.title][
                     0
                 ].field_unescaped_value
+
                 if (
+                    len(field_value) == 0
+                    and not single_choice_grammar_element_field.required
+                ):
+                    # The empty single choice fields are allowed if the field is not REQUIRED.
+                    pass
+                elif (
                     field_value
                     not in single_choice_grammar_element_field.options
                 ):

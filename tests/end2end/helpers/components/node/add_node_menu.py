@@ -121,6 +121,16 @@ class AddNode_Menu:  # pylint: disable=invalid-name
         )
         return Form_EditRequirement(self.test_case)
 
+    def do_node_add_text_first(self) -> Form_EditRequirement:
+        self.test_case.click(
+            selector=(
+                '//*[@data-testid="node-root"]'
+                '//*[@data-testid="node-add-text-first-action"]'
+            ),
+            by=By.XPATH,
+        )
+        return Form_EditRequirement(self.test_case)
+
     def do_node_add_element_first(
         self, element_tag: str
     ) -> Form_EditRequirement:

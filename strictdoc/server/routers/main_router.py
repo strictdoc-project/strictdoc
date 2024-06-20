@@ -723,14 +723,16 @@ def create_main_router(
         else:
             document = reference_node.document
 
-        document_tree_stats: DocumentTreeStats = (
-            DocumentUIDAnalyzer.analyze_document_tree(
-                export_action.traceability_index
+        next_uid: Optional[str] = None
+        if element_type != "TEXT":
+            document_tree_stats: DocumentTreeStats = (
+                DocumentUIDAnalyzer.analyze_document_tree(
+                    export_action.traceability_index
+                )
             )
-        )
-        next_uid: str = document_tree_stats.get_next_requirement_uid(
-            reference_node.get_requirement_prefix()
-        )
+            next_uid = document_tree_stats.get_next_requirement_uid(
+                reference_node.get_requirement_prefix()
+            )
         form_object = RequirementFormObject.create_new(
             document=document,
             context_document_mid=context_document_mid,

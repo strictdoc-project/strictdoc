@@ -71,6 +71,8 @@ Any user feedback regarding the FREETEXT-TEXT migration is appreciated. Let us k
 
 Other changes in this release:
 
+- The validation messages for the uniqueness of MID fields were improved for the Document, Section and Requirement/Text nodes. Thanks to @bernhard-tuvsud for the improvement suggestion.
+
 - The UI validations have been added for SingleChoice and MultipleChoice fields. Thanks to @haxtibal for contributing the multiple choice field validation.
 
 - The experimental Graphviz/Dot traceability graph generator has been removed because this feature didn't show much value, mainly due to the static and non-programmable nature of PDF and SVG outputs produced by Graphviz.

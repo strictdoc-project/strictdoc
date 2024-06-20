@@ -2,7 +2,7 @@
 import html
 from collections import defaultdict
 from enum import Enum
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Union
 
 from starlette.datastructures import FormData
 
@@ -24,6 +24,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     FileEntry,
     FileEntryFormat,
     GrammarElementField,
+    GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     RequirementFieldType,
 )
@@ -100,6 +101,7 @@ class RequirementFormField:
         if grammar_field.gef_type in (
             RequirementFieldType.STRING,
             RequirementFieldType.SINGLE_CHOICE,
+            RequirementFieldType.MULTIPLE_CHOICE,
         ):
             return RequirementFormField(
                 field_mid=MID.create(),
@@ -123,6 +125,7 @@ class RequirementFormField:
         if grammar_field.gef_type in (
             RequirementFieldType.STRING,
             RequirementFieldType.SINGLE_CHOICE,
+            RequirementFieldType.MULTIPLE_CHOICE,
         ):
             field_value = requirement_field.get_text_value()
             escaped_field_value = html.escape(field_value)
@@ -748,34 +751,12 @@ class RequirementFormObject(ErrorObject):
                                 f"enter TBD (to be done) or TBC (to be confirmed)."
                             ),
                         )
-            if (
-                grammar_element_field_.gef_type
-                == RequirementFieldType.SINGLE_CHOICE
-            ):
-                single_choice_grammar_element_field: GrammarElementFieldSingleChoice = assert_cast(
-                    grammar_element_field_, GrammarElementFieldSingleChoice
-                )
-                field_value = self.fields[grammar_element_field_.title][
-                    0
-                ].field_unescaped_value
 
-                if (
-                    len(field_value) == 0
-                    and not single_choice_grammar_element_field.required
-                ):
-                    # The empty single choice fields are allowed if the field is not REQUIRED.
-                    pass
-                elif (
-                    field_value
-                    not in single_choice_grammar_element_field.options
-                ):
-                    self.add_error(
-                        grammar_element_field_.title,
-                        (
-                            f"Node's {grammar_element_field_.title} must be a value one of "
-                            f"{', '.join(single_choice_grammar_element_field.options)}."
-                        ),
-                    )
+            if grammar_element_field_.gef_type in (
+                RequirementFieldType.SINGLE_CHOICE,
+                RequirementFieldType.MULTIPLE_CHOICE,
+            ):
+                self._validate_choice(grammar_element_field_)
 
         requirement_uid: Optional[str] = (
             self.fields["UID"][0].field_unescaped_value
@@ -902,3 +883,56 @@ class RequirementFormObject(ErrorObject):
                         reference_field.validation_messages.append(
                             error_.to_validation_message()
                         )
+
+    def _validate_choice(self, grammar_element_field: GrammarElementField):
+        field_0 = self.fields[grammar_element_field.title][0]
+        if (
+            len(field_0.field_unescaped_value) == 0
+            and not grammar_element_field.required
+        ):
+            # The empty choice fields are allowed if the field is not REQUIRED.
+            return
+
+        choice_grammar_element_field: Union[
+            GrammarElementFieldSingleChoice,
+            GrammarElementFieldMultipleChoice,
+        ] = assert_cast(
+            grammar_element_field,
+            (
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldMultipleChoice,
+            ),
+        )
+        if (
+            grammar_element_field.gef_type == RequirementFieldType.SINGLE_CHOICE
+            and field_0.field_unescaped_value
+            not in choice_grammar_element_field.options
+        ):
+            self.add_error(
+                grammar_element_field.title,
+                (
+                    f"Node's {grammar_element_field.title} must be a value one of "
+                    f"{', '.join(choice_grammar_element_field.options)}."
+                ),
+            )
+        elif (
+            grammar_element_field.gef_type
+            == RequirementFieldType.MULTIPLE_CHOICE
+        ):
+            choices = [
+                choice.strip()
+                for choice in field_0.field_unescaped_value.split(",")
+            ]
+            if all(
+                choice in choice_grammar_element_field.options
+                for choice in choices
+            ):
+                field_0.field_unescaped_value = ", ".join(choices)
+            else:
+                self.add_error(
+                    grammar_element_field.title,
+                    (
+                        f"Node's {grammar_element_field.title} must not contain"
+                        f" values other than {', '.join(choice_grammar_element_field.options)}."
+                    ),
+                )

@@ -44,7 +44,7 @@
       {% set text_field_row_context.field_editable = true %}
       {% set text_field_row_context.field_type = "singleline" %}
       {% set text_field_row_context.reference_mid = form_object.requirement_mid %}
-      {%- if field_.field_name == "UID" and field_.field_escaped_value == "" -%}
+      {%- if form_object.element_type != "TEXT" and field_.field_name == "UID" and field_.field_escaped_value == "" -%}
         <turbo-frame id="uid_with_reset-{{ text_field_row_context.reference_mid }}">
           {# this template is turbo-frame and has a button to reset to the default value: #}
           {% include "components/form/row/row_uid_with_reset/frame.jinja" %}

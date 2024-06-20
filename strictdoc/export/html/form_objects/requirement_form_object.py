@@ -375,9 +375,14 @@ class RequirementFormObject(ErrorObject):
         *,
         document: SDocDocument,
         context_document_mid: str,
-        next_uid: str,
+        next_uid: Optional[str],
         element_type: str,
     ) -> "RequirementFormObject":
+        """
+        For now, the next_uid cannot be non-None for TEXT nodes. This will likely
+        change in the future.
+        """
+
         assert document.grammar is not None
 
         new_requirement_mid: MID = MID.create()
@@ -409,7 +414,7 @@ class RequirementFormObject(ErrorObject):
                 )
             )
             form_fields.append(form_field)
-            if form_field.field_name == "UID":
+            if form_field.field_name == "UID" and next_uid is not None:
                 form_field.field_unescaped_value = next_uid
                 form_field.field_escaped_value = next_uid
 

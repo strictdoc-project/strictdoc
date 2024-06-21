@@ -127,6 +127,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
         self.passthrough_input_path: Optional[str] = None
         self.passthrough_output_dir: Optional[str] = None
+        self.passthrough_free_text_to_text: bool = False
 
         self.excel_export_fields: Optional[List[str]] = None
 
@@ -218,6 +219,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
     def integrate_passthrough_config(self, config: PassthroughCommandConfig):
         self.passthrough_input_path = config.input_file
         self.passthrough_output_dir = config.output_dir
+        self.passthrough_free_text_to_text = config.free_text_to_text
         self.filter_requirements = config.filter_requirements
         self.filter_sections = config.filter_sections
 

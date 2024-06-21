@@ -385,6 +385,14 @@ class CommandParserBuilder:
             type=str,
             help="Filter which sections will be exported.",
         )
+        command_parser_passthrough.add_argument(
+            "--free-text-to-text",
+            action="store_true",
+            help=(
+                "This option makes all FREETEXT nodes to be converted to the new "
+                "TEXT nodes."
+            ),
+        )
 
     @staticmethod
     def add_dump_command(parent_command_parser):

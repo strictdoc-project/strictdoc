@@ -187,6 +187,7 @@ def test_passthrough_01_minimal():
         ("command", "passthrough"),
         ("filter_requirements", None),
         ("filter_sections", None),
+        ("free_text_to_text", False),
         ("input_file", "input.sdoc"),
         ("output_dir", None),
     ]
@@ -203,6 +204,7 @@ def test_passthrough_02_minimal():
         ("command", "passthrough"),
         ("filter_requirements", None),
         ("filter_sections", None),
+        ("free_text_to_text", False),
         ("input_file", "input.sdoc"),
         ("output_dir", "SANDBOX/"),
     ]

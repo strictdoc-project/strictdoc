@@ -660,6 +660,10 @@ A text node is the most basic document node which is used for normal document te
     <<<
 
 According to the [LINK: SECTION-UG-Strict-rule-2], arbitrary content cannot be written outside of StrictDoc's grammar structure. The ``[TEXT]`` node is therefore a designated grammar element for writing arbitrary text content, unless the other nodes, such as ``REQUIREMENT``, are used instead.
+
+.. warning::
+
+    If your project still uses older ``[FREETEXT]`` tags, consider migrating to the new ``[TEXT]`` syntax. The rationale behind FREETEXT-TEXT change and the migration path are described in [LINK: SECTION-UG-FREETEXT-TEXT].
 <<<
 
 [/SECTION]
@@ -2794,6 +2798,92 @@ The existing workaround for this problem is to increase a number of semaphores i
 
     sudo sysctl -w kern.posix.sem.max=20000
 [/FREETEXT]
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+TITLE: Appendices
+
+[SECTION]
+UID: SECTION-UG-FREETEXT-TEXT
+TITLE: FREETEXT-TEXT migration (June 2024)
+
+[TEXT]
+STATEMENT: >>>
+A new grammar node called ``TEXT`` has been introduced in the SDoc grammar, replacing the ``FREETEXT`` node as a more powerful feature.
+
+The reasons for the migration:
+
+- The ``[FREETEXT]..[/FREETEXT]`` markup element is limited. Unlike ``REQUIREMENT`` it is not possible to attach fields like MID or UID, which can be important for change tracking and importing/exporting from formats like ReqIF and SPDX, which assign unique identifiers to all nodes of the document / requirements graph, not just the requirements nodes.
+- Historically, the ``[FREETEXT]`` node was implemented differently compared to the ``REQUIREMENT`` node, creating a lot of branching and requiring two separate sets of code to handle free text and requirements slightly differently.
+- 15000 lines of code are removed, eliminating numerous branches, such as ``if node.is_requirement ... elif node.is_free_text``.
+
+.. image:: _assets/StrictDoc_Workspace-FREETEXT-TEXT.drawio.png
+   :alt: The FREE-TEXT migration
+   :class: image
+   :width: 100%
+
+There are three important consequences of this migration.
+
+**Consequence #1:** The ``TEXT`` nodes can now have ``UID`` (if declared in a grammar) and ``MID`` (if the ``ENABLE_MID: True`` option is enabled), but the automatic generation of UIDs is disabled for ``TEXT`` nodes in the first version after the migration. User feedback regarding the potential use cases for ``TEXT`` node's UID/MID identifiers would be nice to have.
+
+**Consequence #2:** Now it is possible to create ``[LINK]``s to any custom elements, not only ``FREETEXT`` elements like it was before. Thanks to @haxtibal for contributing the initial implementation of links to arbitrary nodes.
+
+**Consequence #3**: It is now possible to place ``[TEXT]`` nodes anywhere within a document or a section. Previously, ``[FREETEXT]`` nodes could only be placed directly after the Document or Section titles. This limitation originated from the original implementation of ``FREETEXT`` but has now been removed. This should improve the experience for users whose documents contain a mix of requirements and text nodes.
+
+**Consequence #4**: Previously, it was not possible to reference FREETEXT nodes from source files because FREETEXT lacked a UID field. Now, TEXT nodes can be referenced by a UID, just like any other REQUIREMENT-like node.
+<<<
+
+[SECTION]
+TITLE: How to migrate from FREETEXT to TEXT
+
+[TEXT]
+STATEMENT: >>>
+The backward compatibility is preserved. The users can still create SDoc documents with ``FREETEXT`` but internally the free text nodes will be anyway converted to ``TEXT`` nodes, and the FREETEXT node no longer exist in the SDoc document model.
+
+The users are encouraged to perform the migration as follows.
+
+The free text node:
+
+.. code-block::
+
+    [FREETEXT]
+    This is a free text node.
+    [/FREETEXT]
+
+becomes
+
+.. code-block::
+
+    [TEXT]
+    STATEMENT: >>>
+    This is a free text node.
+    <<<
+
+The ``TEXT`` node is now included to a default StrictDoc grammar by default. If a custom grammar is used, the default grammar definition for the ``TEXT`` node is as follows:
+
+.. code-block::
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: TEXT
+      FIELDS:
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+    - TAG: REQUIREMENT
+    ... REQUIREMENT fields
+    ... Optionally other elements definitions.
+
+The ``strictdoc passthrough --free-text-to-text ...`` command can be used for converting all FREETEXT nodes to TEXT nodes automatically. See ``strictdoc passthrough --help`` for more details.
+<<<
+
+[/SECTION]
 
 [/SECTION]
 

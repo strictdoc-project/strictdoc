@@ -38,7 +38,7 @@
       {%- set document_iterator = view_object.traceability_index.get_document_iterator(document) -%}
 
       {%- for section_or_requirement in document_iterator.all_content(print_fragments=True, print_fragments_from_files=False) %}
-        {%- if section_or_requirement.is_requirement %}
+        {%- if section_or_requirement.is_requirement and not section_or_requirement.is_text_node() %}
           <tr>
             <td>
               {%- set requirement = section_or_requirement %}

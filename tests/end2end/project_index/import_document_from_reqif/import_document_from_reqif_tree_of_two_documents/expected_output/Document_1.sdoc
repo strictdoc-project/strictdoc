@@ -20,8 +20,9 @@ Document 1 free text.
 [SECTION]
 TITLE: Document 1 section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Document 1 statement.
-[/FREETEXT]
+<<<
 
 [/SECTION]

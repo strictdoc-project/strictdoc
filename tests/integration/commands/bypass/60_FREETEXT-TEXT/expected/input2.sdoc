@@ -5,3 +5,13 @@ TITLE: Hello world doc
 STATEMENT: >>>
 Hello world!
 <<<
+
+[SECTION]
+TITLE: Section
+
+[TEXT]
+STATEMENT: >>>
+Section text.
+<<<
+
+[/SECTION]

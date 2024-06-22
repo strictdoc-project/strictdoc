@@ -7,6 +7,10 @@ sdoc-node {
   position: relative;
 }
 
+sdoc-node[show-node-type-name] sdoc-requirement {
+  margin-top: calc(2 * var(--base-rhythm));
+}
+
 sdoc-node[show-node-type-name]::before {
   /* content: '[' attr(show-node-type-name) ']'; */
   content: attr(show-node-type-name);

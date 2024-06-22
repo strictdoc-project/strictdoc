@@ -127,7 +127,7 @@
               href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
-              title="Add first child Section"
+              title="Add first child SECTION"
               data-testid="node-add-section-first-action"
             >{% include "_res/svg_ico16_add_child.jinja" %}</a>
           </li>
@@ -165,7 +165,7 @@
               href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
-              title="Add Section above"
+              title="Add SECTION above"
               data-testid="node-add-section-above-action"
             >{% include "_res/svg_ico16_add_above.jinja" %}</a>
           </li>
@@ -174,7 +174,7 @@
               href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
-              title="Add child Section"
+              title="Add child SECTION"
               data-testid="node-add-section-child-action"
             >{% include "_res/svg_ico16_add_child.jinja" %}</a>
           </li>
@@ -183,7 +183,7 @@
               href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
-              title="Add Section below"
+              title="Add SECTION below"
               data-testid="node-add-section-below-action"
             >{% include "_res/svg_ico16_add_below.jinja" %}</a>
           </li>
@@ -198,7 +198,7 @@
                 href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
-                title="Add Requirement above"
+                title="Add {{ element_.tag }} above"
                 data-testid="node-add-{{ element_.get_tag_lower() }}-above-action"
               >{% include "_res/svg_ico16_add_above.jinja" %}</a>
             </li>
@@ -207,7 +207,7 @@
                   href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                   data-turbo-action="replace"
                   data-turbo="true"
-                  title="Add child Requirement"
+                  title="Add child {{ element_.tag }}"
                   data-testid="node-add-{{ element_.get_tag_lower() }}-child-action"
                 >{% include "_res/svg_ico16_add_child.jinja" %}</a>
             </li>
@@ -216,7 +216,7 @@
                 href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
-                title="Add Requirement below"
+                title="Add {{ element_.tag }} below"
                 data-testid="node-add-{{ element_.get_tag_lower() }}-below-action"
               >{% include "_res/svg_ico16_add_below.jinja" %}</a>
             </li>
@@ -238,7 +238,7 @@
               href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
-              title="Add Section above"
+              title="Add SECTION above"
               data-testid="node-add-section-above-action"
             >{% include "_res/svg_ico16_add_above.jinja" %}</a>
           </li>
@@ -247,7 +247,7 @@
               href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&context_document_mid={{view_object.document.reserved_mid}}"
               data-turbo-action="replace"
               data-turbo="true"
-              title="Add Section below"
+              title="Add SECTION below"
               data-testid="node-add-section-below-action"
             >{% include "_res/svg_ico16_add_below.jinja" %}</a>
           </li>
@@ -263,7 +263,7 @@
                 href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
-                title="Add Requirement above"
+                title="Add {{ element_.tag }} above"
                 data-testid="node-add-{{ element_.get_tag_lower() }}-above-action"
               >{% include "_res/svg_ico16_add_above.jinja" %}</a>
             </li>
@@ -272,7 +272,7 @@
                 href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
-                title="Add Requirement below"
+                title="Add {{ element_.tag }} below"
                 data-testid="node-add-{{ element_.get_tag_lower() }}-below-action"
               >{% include "_res/svg_ico16_add_below.jinja" %}</a>
             </li>

@@ -277,7 +277,12 @@ class SDWriter:
             return self._print_document_from_file(document_from_file)
 
         if isinstance(root_node, SDocSection):
-            return self._print_section(root_node, document, document_iterator)
+            return self._print_section(
+                root_node,
+                document,
+                document_iterator,
+                convert_free_text_to_text,
+            )
 
         elif isinstance(root_node, SDocNode):
             output = ""
@@ -339,6 +344,7 @@ class SDWriter:
         section: SDocSection,
         document: SDocDocument,
         iterator: DocumentCachingIterator,
+        convert_free_text_to_text: bool = False,
     ):
         assert isinstance(section, SDocSection)
         output = ""
@@ -372,7 +378,10 @@ class SDWriter:
 
         for node_ in section.section_contents:
             output += self._print_node(
-                node_, document, document_iterator=iterator
+                node_,
+                document,
+                document_iterator=iterator,
+                convert_free_text_to_text=convert_free_text_to_text,
             )
 
         output += "[/SECTION]"

@@ -347,18 +347,6 @@ class P01_ReqIFToSDocConverter:
         else:
             raise NotImplementedError(spec_object, attribute_map)
 
-        # FIXME: REMOVE this.
-        free_texts = []
-        if ReqIFChapterField.TEXT in spec_object.attribute_map:
-            free_text = unescape(
-                spec_object.attribute_map[ReqIFChapterField.TEXT].value
-            )
-            free_texts.append(
-                FreeText(
-                    parent=None,
-                    parts=[free_text],
-                )
-            )
         # Sanitize the title. Titles can also come from XHTML attributes with
         # custom newlines such as:
         #             <ATTRIBUTE-VALUE-XHTML>
@@ -376,10 +364,31 @@ class P01_ReqIFToSDocConverter:
             custom_level=None,
             title=section_title,
             requirement_prefix=None,
-            free_texts=free_texts,
+            free_texts=[],
             section_contents=[],
         )
         section.ng_level = level
+
+        if ReqIFChapterField.TEXT in spec_object.attribute_map:
+            free_text = unescape(
+                spec_object.attribute_map[ReqIFChapterField.TEXT].value
+            )
+            node_field = SDocNodeField.create_from_string(
+                None,
+                field_name="STATEMENT",
+                field_value=free_text,
+                multiline=True,
+            )
+            node: SDocNode = SDocNode(
+                parent=section,
+                requirement_type="TEXT",
+                mid=None,
+                fields=[node_field],
+                relations=[],
+            )
+            node_field.parent = node
+            section.section_contents.append(node)
+
         return section
 
     @staticmethod

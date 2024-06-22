@@ -5,3 +5,11 @@ TITLE: Hello world doc
 Hello world!
 [/FREETEXT]
 
+[SECTION]
+TITLE: Section
+
+[FREETEXT]
+Section text.
+[/FREETEXT]
+
+[/SECTION]

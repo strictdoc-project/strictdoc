@@ -74,7 +74,7 @@ class SDWriter:
         return document_output
 
     def write_with_fragments(
-        self, document: SDocDocument
+        self, document: SDocDocument, convert_free_text_to_text: bool = False
     ) -> Tuple[str, Dict[str, str]]:
         fragments_dict: Dict[str, str] = {}
 
@@ -234,8 +234,12 @@ class SDWriter:
 
         output += "\n"
 
-        output += self._print_node(document, document, document_iterator)
-
+        output += self._print_node(
+            document,
+            document,
+            document_iterator,
+            convert_free_text_to_text=convert_free_text_to_text,
+        )
         output = output.rstrip()
         output += "\n"
 
@@ -246,6 +250,7 @@ class SDWriter:
         root_node: Union[SDocDocument, SDocSection, SDocNode, DocumentFromFile],
         document: SDocDocument,
         document_iterator: DocumentCachingIterator,
+        convert_free_text_to_text: bool = False,
     ):
         assert isinstance(
             document_iterator, DocumentCachingIterator
@@ -258,7 +263,10 @@ class SDWriter:
                 if not node_.ng_whitelisted:
                     continue
                 output += self._print_node(
-                    node_, document, document_iterator=document_iterator
+                    node_,
+                    document,
+                    document_iterator=document_iterator,
+                    convert_free_text_to_text=convert_free_text_to_text,
                 )
             return output
 
@@ -276,7 +284,8 @@ class SDWriter:
 
             # Special case for backward compatibility.
             if (
-                root_node.requirement_type == "TEXT"
+                not convert_free_text_to_text
+                and root_node.requirement_type == "TEXT"
                 and root_node.basic_free_text
             ):
                 output += self._print_free_text(root_node)
@@ -359,9 +368,6 @@ class SDWriter:
             output += section.requirement_prefix
             output += "\n"
 
-        for free_text in section.free_texts:
-            output += "\n"
-            output += self._print_free_text(free_text)
         output += "\n"
 
         for node_ in section.section_contents:

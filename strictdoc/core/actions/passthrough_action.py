@@ -37,7 +37,10 @@ class PassthroughAction:
             else os.path.join(os.getcwd(), "output", "sdoc")
         )
         for document in traceability_index.document_tree.document_list:
-            output, fragments_dict = writer.write_with_fragments(document)
+            output, fragments_dict = writer.write_with_fragments(
+                document,
+                convert_free_text_to_text=project_config.passthrough_free_text_to_text,
+            )
 
             path_to_output_file_dir: str = os.path.join(
                 output_dir, document.meta.input_doc_dir_rel_path.relative_path

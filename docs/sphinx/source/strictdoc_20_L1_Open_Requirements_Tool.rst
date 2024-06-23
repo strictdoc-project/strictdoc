@@ -916,7 +916,6 @@ Compared to the other visualizations, such a visualization helps to "see the for
 
 **Children:**
 
-- ``[SDOC-SRS-90]`` :ref:`SDOC-SRS-90`
 - ``[SDOC-SRS-113]`` :ref:`SDOC-SRS-113`
 
 .. _SDOC-SSS-28:

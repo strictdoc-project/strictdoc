@@ -72,7 +72,7 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
    * - 2023-Q1
      - Improvements of the Web-based interface towards first release. Improvements of the ReqIF support.
    * - 2023-Q2
-     - Further stabilization of the Web interface. Graphviz export. RST markup stability improvements. Work on StrictDoc's own requirements traceability.
+     - Further stabilization of the Web interface. RST markup stability improvements. Work on StrictDoc's own requirements traceability.
    * - 2023-Q3
      - Anchors and incoming links. Improvements of the ReqIF interface. Work on StrictDoc's own requirements traceability. Mermaid diagramming tool. Reverse parent / child links. Project statistics screen. Performance improvements.
    * - 2023-Q4
@@ -85,7 +85,7 @@ The roadmap diagram
 
 The following diagram contains the work items at the epic and single task levels. This PNG file is exported from a draw.io diagram, where the master version of the roadmap is maintained.
 
-.. image:: _assets/StrictDoc_Roadmap.drawio.png
+.. image:: _assets/StrictDoc_Workspace-Roadmap.drawio.png
    :alt: Development plan diagram
    :class: image
    :width: 100%

@@ -1565,35 +1565,6 @@ StrictDoc Excel export shall allow exporting SDoc documents to Excel with only s
 
 - ``[SDOC-SSS-60]`` :ref:`SDOC-SSS-60`
 
-.. _SECTION-SRS-Graphviz-Dot-export:
-
-Graphviz/Dot export
--------------------
-
-.. _SDOC-SRS-90:
-
-Export to Graphviz/Dot
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **UID:**
-      - SDOC-SRS-90
-    * - **STATUS:**
-      - Active
-
-StrictDoc shall support exporting requirements information to PDF format using Graphviz.
-
-**RATIONALE:**
-
-Graphviz is one of the most capable tools for visualizing graph information, which makes it a perfect tool for visualizing requirements graphs create in StrictDoc.
-
-**Parents:**
-
-- ``[SDOC-SSS-56]`` :ref:`SDOC-SSS-56`
-
 .. _SECTION-SRS-Command-line-interface:
 
 Command-line interface

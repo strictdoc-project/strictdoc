@@ -323,23 +323,15 @@ This documentation is written using StrictDoc. Here is the source file:
 Document structure
 ------------------
 
-An SDoc document consists of a ``[DOCUMENT]`` declaration followed by one or many
-``[REQUIREMENT]`` or ``[COMPOSITE_REQUIREMENT]`` statements which can be grouped
-into ``[SECTION]`` blocks.
+An SDoc document consists of a ``[DOCUMENT]`` declaration followed by a sequence of nodes:
 
-The following grammatical constructs are currently supported:
-
-- ``DOCUMENT``
-
-  - ``FREETEXT``
-
-- ``REQUIREMENT`` and ``COMPOSITE_REQUIREMENT``
-
-- ``SECTION``
-
-  - ``FREETEXT``
+- Lead nodes: ``[TEXT]`` or ``[REQUIREMENT]``
+- Composite nodes: ``[COMPOSITE_REQUIREMENT]``
+- Section nodes that group other nodes recursively: ``[SECTION]``.
 
 Each construct is described in more detail below.
+
+.. _SECTION-UG-Strict-rule-1:
 
 Strict rule #1: One empty line between all nodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -349,6 +341,8 @@ etc., to be separated with exactly one empty line from the nodes surrounding it.
 This rule is valid for all nodes. Absence of an empty line or presence of more
 than one empty line between two nodes will result in an SDoc parsing error.
 
+.. _SECTION-UG-Strict-rule-2:
+
 Strict rule #2: No content is allowed outside of SDoc grammar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -356,8 +350,9 @@ StrictDoc's grammar does not allow any content to be written outside of the SDoc
 grammatical constructs. It is assumed that the critical content shall always be
 written in form of requirements:
 ``[REQUIREMENT]`` and ``[COMPOSITE_REQUIREMENT]``. Non-critical content shall
-be specified using ``[FREETEXT]`` nodes. By design, the ``[FREETEXT]`` nodes can
-be only attached to the ``[DOCUMENT]`` and ``[SECTION]`` nodes.
+be specified using ``[TEXT]`` nodes.
+
+.. _SECTION-UG-Strict-rule-3:
 
 Strict rule #3: No empty strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -439,7 +434,7 @@ The following ``DOCUMENT`` fields are allowed:
      - Security classification of the document, e.g. Public, Internal, Restricted, Confidential
 
    * - ``REQ_PREFIX``
-     - Requirement prefix that should be used for automatic generation of UIDs. See :ref:`Automatic assignment of requirements UID <SECTION-UG-Automatic-assignment-of-requirements-UID>`.
+     - Requirement prefix that should be used for automatic generation of UIDs. See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID].
 
    * - ``ROOT``
      - Defines whether a document is a root object in a traceability graph. A root document is assumed to not have any parent requirements. The project statistics calculation will skip all root document's requirements when calculating the metric ``Non-root-level requirements not connected to any parent requirement``.
@@ -451,19 +446,6 @@ The ``DOCUMENT`` declaration must always have a ``TITLE`` field. The other
 fields are optional. The ``OPTIONS`` field can be used for specifying
 the document configuration options. Note: The sequence of the fields is defined
 by the document's Grammar, i.e. should not be changed.
-
-Finally an optional ``[FREETEXT]`` block can be included.
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-    OPTIONS:
-      REQUIREMENT_STYLE: Table
-
-    [FREETEXT]
-    StrictDoc is software for writing technical requirements and specifications.
-    [/FREETEXT]
 
 .. _DOCUMENT_FIELD_OPTIONS:
 
@@ -552,12 +534,31 @@ Default is ``True``.
     OPTIONS:
       REQUIREMENT_IN_TOC: True
 
-.. _ELEMENT_REQUIREMENT:
+Text
+~~~~
+
+A text node is the most basic document node which is used for normal document text.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [TEXT]
+    STATEMENT: >>>
+    StrictDoc is software for technical documentation.
+    <<<
+
+According to the [LINK: SECTION-UG-Strict-rule-2], arbitrary content cannot be written outside of StrictDoc's grammar structure. The ``[TEXT]`` node is therefore a designated grammar element for writing arbitrary text content, unless the other nodes, such as ``REQUIREMENT``, are used instead.
+
+.. warning::
+
+    If your project still uses older ``[FREETEXT]`` tags, consider migrating to the new ``[TEXT]`` syntax. The rationale behind FREETEXT-TEXT change and the migration path are described in [LINK: SECTION-UG-FREETEXT-TEXT].
 
 Requirement
 ~~~~~~~~~~~
 
-Minimal "Hello World" program with 3 empty requirements:
+The REQUIREMENT element is used for creating requirements, for example technical requirements or project requirements.
 
 .. code-block:: text
 
@@ -565,11 +566,8 @@ Minimal "Hello World" program with 3 empty requirements:
     TITLE: StrictDoc
 
     [REQUIREMENT]
-
-    [REQUIREMENT]
-
-    [REQUIREMENT]
-
+    TITLE: Requirements management
+    STATEMENT: StrictDoc shall enable requirements management.
 
 The following ``REQUIREMENT`` fields are supported:
 
@@ -611,15 +609,6 @@ The following ``REQUIREMENT`` fields are supported:
 Currently, all ``[REQUIREMENT]``'s fields are optional but most of the time at
 least the ``STATEMENT`` field as well as the ``TITLE`` field should be
 present.
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-
-    [REQUIREMENT]
-    TITLE: Requirements management
-    STATEMENT: StrictDoc shall enable requirements management.
 
 UID
 ^^^
@@ -748,6 +737,8 @@ A requirement relation can be specialized with a role. The role must be register
       VALUE: REQ-1
       ROLE: Refines
 
+In this example REQ-1 is the parent of REQ-2 and REQ-2 refines REQ-1.
+
 Title
 ^^^^^
 
@@ -873,42 +864,6 @@ StrictDoc creates section numbers automatically. In the example above, the
 sections will have their titles numbered accordingly: ``1 Chapter`` and
 ``1.1 Subchapter``.
 
-.. _ELEMENT_FREETEXT:
-
-Free text
-^^^^^^^^^
-
-A section can have a block of ``[FREETEXT]`` connected to it:
-
-.. code-block:: text
-
-    [DOCUMENT]
-    TITLE: StrictDoc
-
-    [SECTION]
-    TITLE: Free text
-
-    [FREETEXT]
-    A sections can have a block of ``[FREETEXT]`` connected to it:
-
-    ...
-    [/FREETEXT]
-
-    [/SECTION]
-
-According to the Strict Rule #2, arbitrary content cannot be written outside
-of StrictDoc's grammar structure. ``[SECTION] / [FREETEXT]`` is therefore a
-designated grammar element for writing free text content.
-
-**Note:** Free text can also be called "nonnormative" or "informative" text
-because it does not contribute anything to the traceability information of the
-document. The nonnormative text is there to give a context to the reader and
-help with the conceptual understanding of the information. If a certain
-information influences or is influenced by existing requirements, it has to be
-promoted to the requirement level: the information has to be broken down into
-atomic ``[REQUIREMENT]`` statements and get connected to the other requirement
-statements in the document.
-
 .. _SECTION_WITHOUT_A_LEVEL:
 
 Section without a level
@@ -969,10 +924,6 @@ Here is an example pair of files similar to examples above. First the
     [DOCUMENT]
     TITLE: StrictDoc
 
-    [FREETEXT]
-    ...
-    [/FREETEXT]
-
     [DOCUMENT_FROM_FILE]
     FILE: include.sdoc
 
@@ -1004,10 +955,6 @@ Which will resolve to the following document after inclusion:
     [DOCUMENT]
     TITLE: StrictDoc
 
-    [FREETEXT]
-    ...
-    [/FREETEXT]
-
     [SECTION]
     TITLE: Section ABC
 
@@ -1029,7 +976,7 @@ Which will resolve to the following document after inclusion:
 
 .. note::
 
-    The Composable Documents feature belongs to the list of features that may be less portable when it comes to interfacing with other tools. See :ref:`Portability considerations <UG_PORTABILITY_CONSIDERATIONS>`.
+    The Composable Documents feature belongs to the list of features that may be less portable when it comes to interfacing with other tools. See [LINK: UG_PORTABILITY_CONSIDERATIONS].
 
 .. _UG_COMPOSITE_REQUIREMENT:
 
@@ -1134,6 +1081,14 @@ a grammar with four fields including a custom ``VERIFICATION`` field.
 
     [GRAMMAR]
     ELEMENTS:
+    - TAG: TEXT
+      FIELDS:
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
     - TAG: REQUIREMENT
       FIELDS:
       - TITLE: UID
@@ -1206,6 +1161,14 @@ Example:
 
     [GRAMMAR]
     ELEMENTS:
+    - TAG: TEXT
+      FIELDS:
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
     - TAG: REQUIREMENT
       FIELDS:
       - TITLE: UID
@@ -1234,9 +1197,10 @@ Example:
       - Type: Parent
       - Type: File
 
-    [FREETEXT]
+    [TEXT]
+    STATEMENT: >>>
     This document is an example of a simple SDoc custom grammar.
-    [/FREETEXT]
+    <<<
 
     [REQUIREMENT]
     UID: ABC-123
@@ -1455,12 +1419,14 @@ When a ``[GRAMMAR]`` is declared with an ``IMPORT_FROM_FILE`` line, the grammar 
 Links
 -----
 
-StrictDoc supports creating inline links to document sections and anchors.
+StrictDoc supports creating inline links to document sections, anchors, requirements and custom grammar elements.
 
-Section links
-~~~~~~~~~~~~~
+Links
+~~~~~
 
-When a section has an UID, it is possible to reference this section from any other section's text using a ``[LINK: <Section UID>]`` tag.
+Elements that have an UID can be referenced from section text using a ``[LINK: <UID>]`` tag.
+To reference a section that has an UID, use ``[LINK: <Section UID>]`` tag.
+Likewise, a requirement can be referenced with ``[LINK: <Requirement UID>]``.
 
 Example:
 
@@ -1547,12 +1513,12 @@ Markup
 
 The Restructured Text (reST) markup is the default markup supported by
 StrictDoc. The reST markup can be written inside all StrictDoc's text blocks,
-such as ``[FREETEXT]``, ``STATEMENT``, ``COMMENT``, ``RATIONALE``.
+such as ``STATEMENT``, ``COMMENT``, ``RATIONALE``, etc.
 
 See the `reST syntax documentation <https://docutils.sourceforge.io/rst.html>`_
 for a full reference.
 
-Note: StrictDoc supports a Docutils-subset of RST, not a Sphinx-subset. See :ref:`Limitations of RST support by StrictDoc <SDOC_UG_LIMIT_RST>`.
+Note: StrictDoc supports a Docutils-subset of RST, not a Sphinx-subset. See [LINK: SDOC_UG_LIMIT_RST].
 
 The support of Tex and HTML is planned.
 
@@ -1565,11 +1531,12 @@ This is the example of how images are included using the reST syntax:
 
 .. code-block:: text
 
-    [FREETEXT]
+    [TEXT]
+    STATEMENT: >>>
     .. image:: _assets/sandbox1.svg
        :alt: Sandbox demo
        :class: image
-    [/FREETEXT]
+    <<<
 
 **Note:** Currently, it is not possible to upload images via the web user interface. Therefore, you must manually place the image into the ``_assets`` folder using either the command-line or a file browser.
 
@@ -1591,7 +1558,8 @@ Example of using MathJax:
 
 .. code-block:: text
 
-    [FREETEXT]
+    [TEXT]
+    STATEMENT: >>>
     The following fragment will be rendered with MathJax:
 
     .. raw:: latex html
@@ -1600,10 +1568,9 @@ Example of using MathJax:
         \mathbf{\underline{i}}_{\text{a}} \times
         \mathbf{\underline{j}}_{\text{a}}
         $$
+    <<<
 
-    [/FREETEXT]
-
-See :ref:`Selecting features <SDOC_UG_CONFIG_FEATURES>` for the description of other features.
+See [LINK: SDOC_UG_CONFIG_FEATURES] for the description of other features.
 
 Export formats
 ==============
@@ -2315,7 +2282,8 @@ The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as fol
 
 .. code::
 
-    [FREETEXT]
+    [TEXT]
+    STATEMENT: >>>
     .. raw:: html
 
         <pre class="mermaid">
@@ -2328,7 +2296,7 @@ The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as fol
         D --> F[Save Image and Code]
         F --> B
         </pre>
-    [/FREETEXT]
+    <<<
 
 To activate Mermaid, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
 
@@ -2382,9 +2350,7 @@ Note that currently, StrictDoc server maintains an in-memory state of a document
 
 The following essential features are still missing and will be worked on in the near future:
 
-- Editing of documents with non-string grammar fields is not supported yet.
-  Example: The ``SingleChoice`` type will not work in the \*.sdoc files.
-- Adding images to the multiline fields like requirement's ``STATEMENT`` and section's ``FREETEXT``.
+- Adding images to the multiline fields like such requirements and text nodes ``STATEMENT``.
 - Adding/editing sections with ``LEVEL: None``.
 - Deleting a document.
 - Deleting a section recursively with a correct cleanup of all traceability information.
@@ -2429,3 +2395,78 @@ The existing workaround for this problem is to increase a number of semaphores i
 .. code-block:: text
 
     sudo sysctl -w kern.posix.sem.max=20000
+
+Appendices
+==========
+
+.. _SECTION-UG-FREETEXT-TEXT:
+
+FREETEXT-TEXT migration (June 2024)
+-----------------------------------
+
+A new grammar node called ``TEXT`` has been introduced in the SDoc grammar, replacing the ``FREETEXT`` node as a more powerful feature.
+
+The reasons for the migration:
+
+- The ``[FREETEXT]..[/FREETEXT]`` markup element is limited. Unlike ``REQUIREMENT`` it is not possible to attach fields like MID or UID, which can be important for change tracking and importing/exporting from formats like ReqIF and SPDX, which assign unique identifiers to all nodes of the document / requirements graph, not just the requirements nodes.
+- Historically, the ``[FREETEXT]`` node was implemented differently compared to the ``REQUIREMENT`` node, creating a lot of branching and requiring two separate sets of code to handle free text and requirements slightly differently.
+- 15000 lines of code are removed, eliminating numerous branches, such as ``if node.is_requirement ... elif node.is_free_text``.
+
+.. image:: _assets/StrictDoc_Workspace-FREETEXT-TEXT.drawio.png
+   :alt: The FREE-TEXT migration
+   :class: image
+   :width: 100%
+
+There are three important consequences of this migration.
+
+**Consequence #1:** The ``TEXT`` nodes can now have ``UID`` (if declared in a grammar) and ``MID`` (if the ``ENABLE_MID: True`` option is enabled), but the automatic generation of UIDs is disabled for ``TEXT`` nodes in the first version after the migration. User feedback regarding the potential use cases for ``TEXT`` node's UID/MID identifiers would be nice to have.
+
+**Consequence #2:** Now it is possible to create a ``[LINK]`` to any custom elements, not only ``FREETEXT`` elements like it was before.
+
+**Consequence #3**: It is now possible to place ``[TEXT]`` nodes anywhere within a document or a section. Previously, ``[FREETEXT]`` nodes could only be placed directly after the Document or Section titles. This limitation originated from the original implementation of ``FREETEXT`` but has now been removed. This should improve the experience for users whose documents contain a mix of requirements and text nodes.
+
+**Consequence #4**: Previously, it was not possible to reference FREETEXT nodes from source files because FREETEXT lacked a UID field. Now, TEXT nodes can be referenced by a UID, just like any other REQUIREMENT-like node.
+
+How to migrate from FREETEXT to TEXT
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The backward compatibility is preserved. The users can still create SDoc documents with ``FREETEXT`` but internally the free text nodes will be anyway converted to ``TEXT`` nodes, and the FREETEXT node no longer exist in the SDoc document model.
+
+The users are encouraged to perform the migration as follows.
+
+The free text node:
+
+.. code-block::
+
+    [FREETEXT]
+    This is a free text node.
+    [/FREETEXT]
+
+becomes
+
+.. code-block::
+
+    [TEXT]
+    STATEMENT: >>>
+    This is a free text node.
+    <<<
+
+The ``TEXT`` node is now included to a default StrictDoc grammar by default. If a custom grammar is used, the default grammar definition for the ``TEXT`` node is as follows:
+
+.. code-block::
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: TEXT
+      FIELDS:
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+    - TAG: REQUIREMENT
+    ... REQUIREMENT fields
+    ... Optionally other elements definitions.
+
+The ``strictdoc passthrough --free-text-to-text ...`` command can be used for converting all FREETEXT nodes to TEXT nodes automatically. See ``strictdoc passthrough --help`` for more details.

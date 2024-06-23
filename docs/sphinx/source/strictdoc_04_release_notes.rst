@@ -3,6 +3,23 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+0.0.57 (2024-06-23)
+===================
+
+This release contains a significant, non-breaking change that affects the entire StrictDoc codebase and the SDoc data model: the ``FREETEXT-TEXT`` migration.
+
+The description of the migration and the migration paths are described in [LINK: SECTION-UG-FREETEXT-TEXT].
+
+Other changes in this release:
+
+- The validation messages for the uniqueness of MID fields were improved for the Document, Section and Requirement/Text nodes. Thanks to @bernhard-tuvsud for the improvement suggestion.
+
+- Due to the FREETEXT-TEXT migration, it is now possible to add LINKs to arbitrary nodes, such as REQUIREMENT and TEXT. Previously, LINKs could be added only to SECTION nodes. Thanks to @haxtibal for contributing the initial implementation.
+
+- The UI validations have been added for SingleChoice and MultipleChoice fields. Thanks to @haxtibal for contributing the multiple choice field validation.
+
+- The experimental Graphviz/Dot traceability graph generator has been removed because this feature didn't show much value, mainly due to the static and non-programmable nature of PDF and SVG outputs produced by Graphviz.
+
 0.0.56 (2024-06-02)
 ===================
 

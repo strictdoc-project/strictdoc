@@ -6,7 +6,7 @@ This document maintains a record of all changes to StrictDoc since November 2023
 [/FREETEXT]
 
 [SECTION]
-TITLE: Not released yet
+TITLE: 0.0.57 (2024-06-23)
 
 [TEXT]
 STATEMENT: >>>
@@ -17,6 +17,8 @@ The description of the migration and the migration paths are described in [LINK:
 Other changes in this release:
 
 - The validation messages for the uniqueness of MID fields were improved for the Document, Section and Requirement/Text nodes. Thanks to @bernhard-tuvsud for the improvement suggestion.
+
+- Due to the FREETEXT-TEXT migration, it is now possible to add LINKs to arbitrary nodes, such as REQUIREMENT and TEXT. Previously, LINKs could be added only to SECTION nodes. Thanks to @haxtibal for contributing the initial implementation.
 
 - The UI validations have been added for SingleChoice and MultipleChoice fields. Thanks to @haxtibal for contributing the multiple choice field validation.
 

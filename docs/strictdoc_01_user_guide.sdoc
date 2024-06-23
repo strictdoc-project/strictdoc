@@ -2829,7 +2829,7 @@ There are three important consequences of this migration.
 
 **Consequence #1:** The ``TEXT`` nodes can now have ``UID`` (if declared in a grammar) and ``MID`` (if the ``ENABLE_MID: True`` option is enabled), but the automatic generation of UIDs is disabled for ``TEXT`` nodes in the first version after the migration. User feedback regarding the potential use cases for ``TEXT`` node's UID/MID identifiers would be nice to have.
 
-**Consequence #2:** Now it is possible to create ``[LINK]``s to any custom elements, not only ``FREETEXT`` elements like it was before. Thanks to @haxtibal for contributing the initial implementation of links to arbitrary nodes.
+**Consequence #2:** Now it is possible to create a ``[LINK]`` to any custom elements, not only ``FREETEXT`` elements like it was before.
 
 **Consequence #3**: It is now possible to place ``[TEXT]`` nodes anywhere within a document or a section. Previously, ``[FREETEXT]`` nodes could only be placed directly after the Document or Section titles. This limitation originated from the original implementation of ``FREETEXT`` but has now been removed. This should improve the experience for users whose documents contain a mix of requirements and text nodes.
 

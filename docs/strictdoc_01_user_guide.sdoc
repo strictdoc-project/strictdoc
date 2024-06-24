@@ -1302,6 +1302,14 @@ declare them as the ``[REQUIREMENT]`` special fields:
     STATEMENT: System A shall do B.
     COMMENT: Test comment.
 
+Each grammar element must have exactly one content field named ``STATEMENT``,
+``DESCRIPTION`` or ``CONTENT``. The content field plays a key role in the HTML
+user interface as well as other export formats.
+
+All fields before the content field are considered meta information. Meta information
+fields are assumed to be single-line. The content field and all following fields
+accept single-line and multiline strings.
+
 **Note:** The order of fields must match the order of their declaration in the
 grammar.
 <<<
@@ -1324,10 +1332,12 @@ The supported field types are:
      - Simple String
 
    * - ``SingleChoice``
-     - Enum-like behavior, one choice is possible
+     - Enum-like behavior, one choice is possible. Must be single-line and thus
+       has to be defined before the content field.
 
    * - ``MultipleChoice``
-     - comma-separated words with fixed options
+     - comma-separated words with fixed options. Must be single-line and thus has
+       to be defined before the content field.
 
    * - ``Tag``
      - comma-separated list of tags/key words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are supported.

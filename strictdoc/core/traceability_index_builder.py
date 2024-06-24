@@ -62,7 +62,8 @@ class TraceabilityIndexBuilder:
         *,
         project_config: ProjectConfig,
         parallelizer,
-        skip_source_files=False,
+        skip_source_files: bool = False,
+        auto_uid_mode: bool = False,
     ) -> TraceabilityIndex:
         # TODO: It would be great to hide this code behind --development flag.
         # There is no need for this to be activated in the Pip-released builds.
@@ -102,7 +103,9 @@ class TraceabilityIndexBuilder:
         # - assets
         # - runtime configuration
         traceability_index: TraceabilityIndex = (
-            TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+            TraceabilityIndexBuilder.create_from_document_tree(
+                document_tree, auto_uid_mode
+            )
         )
         traceability_index.document_tree = document_tree
         traceability_index.asset_manager = asset_manager
@@ -193,6 +196,7 @@ class TraceabilityIndexBuilder:
     @timing_decorator("Build traceability graph")
     def create_from_document_tree(
         document_tree: DocumentTree,
+        auto_uid_mode: bool = True,
     ) -> TraceabilityIndex:
         # FIXME: Too many things going on below. Would be great to simplify this
         # workflow.
@@ -360,6 +364,7 @@ class TraceabilityIndexBuilder:
                             node,
                             document_grammar=document.grammar,
                             path_to_sdoc_file=document.meta.input_doc_full_path,
+                            auto_uid_mode=auto_uid_mode,
                         )
                     except StrictDocSemanticError as exc:
                         print(exc.to_print_message())  # noqa: T201

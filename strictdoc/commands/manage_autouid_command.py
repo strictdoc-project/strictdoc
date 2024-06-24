@@ -28,6 +28,7 @@ class ManageAutoUIDCommand:
                 TraceabilityIndexBuilder.create(
                     project_config=project_config,
                     parallelizer=parallelizer,
+                    auto_uid_mode=True,
                 )
             )
         except DocumentTreeError as exc:

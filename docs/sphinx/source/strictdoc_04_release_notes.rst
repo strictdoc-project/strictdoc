@@ -3,6 +3,21 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+0.0.58 (2024-06-25)
+===================
+
+This is a release with a single fix and a minor documentation update.
+
+The ``manage auto-uid`` command is now compatible with grammars that define the ``UID`` field as ``REQUIRED: True``. Previously, StrictDoc would raise a validation message if the ``auto-uid`` command was run against a document with ``UID`` defined as a required field but containing nodes without ``UID``. The new behavior allows the ``auto-uid`` command to operate without validation and correctly creates a new UID for the node. Thanks to @simhein for reporting this issue.
+
+@haxtibal contributed a patch to the User Guide that explains the StrictDoc convention of how the single-line (meta information) fields should be used compared to the multiline fields, such as ``STATEMENT``, ``RATIONALE``, ``COMMENT``, etc. Quoting the key part:
+
+    Each grammar element must have exactly one content field named ``STATEMENT``, ``DESCRIPTION`` or ``CONTENT``. The content field plays a key role in the HTML user interface as well as other export formats.
+
+    All fields before the content field are considered meta information. Meta information fields are assumed to be single-line. The content field and all following fields accept single-line and multiline strings.
+
+See the updated User Guide for more details.
+
 0.0.57 (2024-06-23)
 ===================
 

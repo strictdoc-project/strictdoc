@@ -1,0 +1,6 @@
+RUN: %expect_exit 1 %strictdoc passthrough %S/input.sdoc --output-dir %S/Output/ | filecheck %s
+
+CHECK: error: could not parse file: {{.*}}/input.sdoc.
+CHECK: Semantic error: Requirement is missing a field that is required by grammar: UID.
+CHECK: Location: {{.*}}/input.sdoc:25:1
+CHECK: Hint: Requirement fields: [STATEMENT], grammar fields: [UID, STATEMENT].

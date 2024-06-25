@@ -136,6 +136,7 @@ class SDocValidator:
         requirement: SDocNode,
         document_grammar: DocumentGrammar,
         path_to_sdoc_file: str,
+        auto_uid_mode: bool = True,
     ):
         if (
             requirement.requirement_type
@@ -185,6 +186,7 @@ class SDocValidator:
                         requirement_field=requirement_field,
                         grammar_field=grammar_field,
                         path_to_sdoc_file=path_to_sdoc_file,
+                        auto_uid_mode=auto_uid_mode,
                     )
                 )
             except StopIteration:
@@ -205,7 +207,9 @@ class SDocValidator:
                 grammar_field = next(grammar_fields_iterator, None)
                 requirement_field = next(requirement_field_iterator, None)
             else:
-                assert not grammar_field.required
+                assert not grammar_field.required or (
+                    grammar_field.title == "UID" and auto_uid_mode
+                )
                 grammar_field = next(grammar_fields_iterator, None)
 
         # REFS validation.
@@ -227,6 +231,7 @@ class SDocValidator:
         requirement_field: SDocNodeField,
         grammar_field: GrammarElementField,
         path_to_sdoc_file: str,
+        auto_uid_mode: bool = True,
     ) -> bool:
         if grammar_field is None:
             if requirement_field is None:
@@ -256,6 +261,25 @@ class SDocValidator:
 
         if grammar_field.title != requirement_field.field_name:
             if grammar_field.required:
+                if (
+                    grammar_field.title
+                    not in requirement.ordered_fields_lookup.keys()
+                ):
+                    # A special case: The Manage UID command auto-generates the UID,
+                    # so the field presence validation has to be relaxed.
+                    # The GitHub issue report:
+                    # manage auto-uid: UID field REQUIRED True leads to an error
+                    # https://github.com/strictdoc-project/strictdoc/issues/1896
+                    if grammar_field.title == "UID" and auto_uid_mode:
+                        return False
+
+                    raise StrictDocSemanticError.missing_required_field(
+                        node=requirement,
+                        grammar_field=grammar_field,
+                        document_grammar=document_grammar,
+                        path_to_sdoc_file=path_to_sdoc_file,
+                    )
+
                 raise StrictDocSemanticError.wrong_field_order(
                     node=requirement,
                     document_grammar=document_grammar,

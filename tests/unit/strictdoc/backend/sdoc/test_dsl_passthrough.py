@@ -193,6 +193,33 @@ TITLE: Test Section
     assert input_sdoc == output
 
 
+def test_022_requirement_uid_and_link():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+UID: With spaces and _ and - and . and non latin 特点
+STATEMENT: >>>
+This is a statement.
+
+[TEXT]
+STATEMENT: >>>
+[LINK: With spaces and _ and - and . and non latin 特点]
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter()
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_030_multiline_statement():
     input_sdoc = """
 [DOCUMENT]
@@ -912,7 +939,7 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected ' '" == exc_info.value.args[0].decode("utf-8")
+    assert "Expected ': '" == exc_info.value.args[0].decode("utf-8")
 
 
 def test_edge_case_03_uid_present_but_empty_with_space_character():
@@ -931,9 +958,8 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert (
-        "Expected '^\\[ANCHOR: ' or '[LINK: ' or '(?!>>>\\n)\\S.*' or '>>>\\n'"
-        in exc_info.value.args[0].decode("utf-8")
+    assert "Expected '([\\w]+[\\w\\-. ]*)'" in exc_info.value.args[0].decode(
+        "utf-8"
     )
 
 
@@ -953,9 +979,8 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert (
-        "Expected '^\\[ANCHOR: ' or '[LINK: ' or '(?!>>>\\n)\\S.*' or '>>>\\n'"
-        in exc_info.value.args[0].decode("utf-8")
+    assert "Expected '([\\w]+[\\w\\-. ]*)'" in exc_info.value.args[0].decode(
+        "utf-8"
     )
 
 
@@ -978,9 +1003,8 @@ COMMENT: >>>
     assert (
         "Expected '^\\[ANCHOR: ' or '[LINK: ' or "
         "'(?ms)(?!^<<<)(?!^\\[\\/FREETEXT\\]\\n)(?!\\[LINK: "
-        "([A-Za-z0-9]+[A-Za-z0-9_\\-]*))(?!^\\[ANCHOR: "
-        "([A-Za-z0-9]+[A-Za-z0-9_\\-]*)).'"
-        in exc_info.value.args[0].decode("utf-8")
+        "([\\w]+[\\w\\-. ]*))(?!^\\[ANCHOR: "
+        "([\\w]+[\\w\\-. ]*)).'" in exc_info.value.args[0].decode("utf-8")
     )
 
 

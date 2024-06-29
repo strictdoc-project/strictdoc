@@ -1,8 +1,9 @@
-REGEX_UID = r"([A-Za-z0-9]+[A-Za-z0-9_\-]*)"
+REGEX_UID = r"([\w]+[\w\-. ]*)"
 
 NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
 NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
 NEGATIVE_RELATIONS = "(?!^RELATIONS)"
+NEGATIVE_UID = "(?!^UID)"
 NEGATIVE_FREETEXT_END = "(?!^\\[\\/FREETEXT\\]\n)"
 NEGATIVE_INLINE_LINK_START = rf"(?!\[LINK: {REGEX_UID})"
 NEGATIVE_ANCHOR_START = rf"(?!^\[ANCHOR: {REGEX_UID})"
@@ -44,7 +45,7 @@ MultiLineString[noskipws]:
 ;
 
 FieldName[noskipws]:
-  /{NEGATIVE_RELATIONS}[A-Z]+[A-Z_]*/
+  /{NEGATIVE_UID}{NEGATIVE_RELATIONS}[A-Z]+[A-Z_]*/
 ;
 """
 
@@ -188,6 +189,8 @@ SDocCompositeNodeTagName[noskipws]:
 
 SDocNodeField[noskipws]:
   (
+    field_name = 'UID' ': ' parts=/{REGEX_UID}/ '\n'
+    |
     field_name = FieldName ':'
     (
         (' ' parts+=SingleLineTextPart '\n')

@@ -189,7 +189,7 @@ SDocCompositeNodeTagName[noskipws]:
 
 SDocNodeField[noskipws]:
   (
-    field_name = 'UID' ': ' parts=/{REGEX_UID}/ '\n'
+    field_name = 'UID' ': ' parts+=/{REGEX_UID}/ '\n'
     |
     field_name = FieldName ':'
     (

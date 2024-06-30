@@ -14,6 +14,9 @@ OPTIONS:
 ELEMENTS:
 - TAG: REQUIREMENT
   FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
   - TITLE: UID
     TYPE: String
     REQUIRED: False

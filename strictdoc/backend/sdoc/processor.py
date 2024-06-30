@@ -20,7 +20,6 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.textx import preserve_source_location_data
 
@@ -73,7 +72,6 @@ class SDocParsingProcessor:
             text_node = SDocNode(
                 parent=parent_node,
                 requirement_type="TEXT",
-                mid=None,
                 fields=fields,
                 relations=[],
                 requirements=None,
@@ -122,18 +120,15 @@ class SDocParsingProcessor:
         self.parse_context.document_config = document_config
 
     def process_document_grammar(self, document_grammar: DocumentGrammar):
+        preserve_source_location_data(document_grammar)
         if not document_grammar.has_text_element():
             document_grammar.add_element_first(
-                DocumentGrammar.create_default_text_element()
+                DocumentGrammar.create_default_text_element(document_grammar)
             )
         self.parse_context.document_grammar = document_grammar
 
     def process_document_grammar_element(self, grammar_element: GrammarElement):
         preserve_source_location_data(grammar_element)
-
-        SDocValidator.validate_grammar_element(
-            self.parse_context.path_to_sdoc_file, grammar_element
-        )
 
     def process_document_view(self, document_view: DocumentView):
         self.parse_context.document_view = document_view

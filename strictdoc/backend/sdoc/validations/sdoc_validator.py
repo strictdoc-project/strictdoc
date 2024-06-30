@@ -41,6 +41,7 @@ class SDocValidator:
         assert isinstance(document, SDocDocument), document
         SDocValidator._validate_document_config(document)
         SDocValidator._validate_document_view(document)
+        SDocValidator._validate_grammar(document)
 
     @staticmethod
     def validate_grammar_from_file(
@@ -49,6 +50,13 @@ class SDocValidator:
         for grammar_element_ in grammar_from_file.elements:
             SDocValidator.validate_grammar_element(
                 path_to_grammar, grammar_element_
+            )
+
+    @staticmethod
+    def _validate_grammar(document: SDocDocument):
+        for grammar_element_ in document.grammar.elements:
+            SDocValidator.validate_grammar_element(
+                document.meta.input_doc_full_path, grammar_element_
             )
 
     @staticmethod
@@ -62,6 +70,18 @@ class SDocValidator:
                 grammar_element.ng_line_start,
                 grammar_element.ng_col_start,
             )
+
+        # GrammarFromFile doesn't have a parent document.
+        document: Optional[SDocDocument] = grammar_element.parent.parent
+        if document is not None and document.config.enable_mid:
+            if (
+                grammar_element.tag != "TEXT"
+                and "MID" not in grammar_element.fields_map
+            ):
+                raise StrictDocSemanticError.grammar_element_has_no_mid_field(
+                    grammar_element,
+                    path_to_grammar,
+                )
         content_field: GrammarElementField = grammar_element.fields_map[
             grammar_element.content_field[0]
         ]

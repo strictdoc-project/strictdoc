@@ -2,6 +2,9 @@
 ELEMENTS:
 - TAG: REQUIREMENT
   FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
   - TITLE: TITLE
     TYPE: String
     REQUIRED: True

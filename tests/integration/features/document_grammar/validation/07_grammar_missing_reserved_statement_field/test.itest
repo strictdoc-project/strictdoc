@@ -1,6 +1,6 @@
 RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 
+CHECK: error: could not parse file: {{.*}}input.sdoc.
 CHECK: Semantic error: Grammar element 'REQUIREMENT' is missing a reserved content field declaration, one of {STATEMENT, DESCRIPTION, CONTENT}.
 CHECK: Location: {{.*}}input.sdoc:6:1
 CHECK: Hint: A content field plays a key role in StrictDoc's HTML user interface as well as in the other export formats. It is a reserved field that any grammar element must have.
-CHECK: error: Parallelizer: One of the child processes has exited prematurely.

@@ -175,7 +175,6 @@ ReservedKeyword[noskipws]:
 
 SDocNode[noskipws]:
   '[' !'SECTION' !SDocCompositeNodeTagName requirement_type = RequirementType ']' '\n'
-  ('MID: ' mid = SingleLineString '\n')?
   fields *= SDocNodeField
   (
     'RELATIONS:' '\n'
@@ -189,6 +188,8 @@ SDocCompositeNodeTagName[noskipws]:
 
 SDocNodeField[noskipws]:
   (
+    field_name = 'MID' ': ' parts+=SingleLineString '\n'
+    |
     field_name = 'UID' ': ' parts+=/{REGEX_UID}/ '\n'
     |
     field_name = FieldName ':'
@@ -210,8 +211,6 @@ SDocNodeField[noskipws]:
 
 SDocCompositeNode[noskipws]:
   '[COMPOSITE_' requirement_type = RequirementType ']' '\n'
-
-  ('MID: ' mid = SingleLineString '\n')?
 
   fields *= SDocNodeField
   (

@@ -465,6 +465,9 @@ class P01_SDocToReqIFObjectConverter:
 
         attributes: List[SpecObjectAttribute] = []
         for field in requirement.fields_as_parsed:
+            # The MID field, if exists, is extracted separately as a ReqIF Identifier.
+            if field.field_name == "MID":
+                continue
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
                 data_type_ref = data_types_lookup[field.field_name]

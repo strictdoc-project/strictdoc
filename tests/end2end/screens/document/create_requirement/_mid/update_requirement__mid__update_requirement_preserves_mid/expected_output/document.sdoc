@@ -1,4 +1,5 @@
 [DOCUMENT]
+MID: 6c85e9531ebd4764a52c6fb339cad78a
 TITLE: Document 1
 OPTIONS:
   ENABLE_MID: True
@@ -33,3 +34,10 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
+
+[REQUIREMENT]
+MID: ABCD1234
+TITLE: Requirement title #1
+STATEMENT: >>>
+MODIFIED requirement statement #1.
+<<<

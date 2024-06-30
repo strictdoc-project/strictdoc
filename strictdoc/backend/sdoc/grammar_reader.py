@@ -49,7 +49,7 @@ class SDocGrammarReader:
 
         if not grammar.has_text_element():
             grammar.add_element_first(
-                DocumentGrammar.create_default_text_element()
+                DocumentGrammar.create_default_text_element(grammar)
             )
 
         # HACK:

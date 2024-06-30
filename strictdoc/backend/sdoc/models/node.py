@@ -102,7 +102,6 @@ class SDocNode(SDocObject):
         self,
         parent: Union[SDocDocument, SDocSection, "SDocCompositeNode"],
         requirement_type: str,
-        mid: Optional[str],
         fields: List[SDocNodeField],
         relations: List[Reference],
         requirements: Optional[List["SDocNode"]] = None,
@@ -156,6 +155,12 @@ class SDocNode(SDocObject):
         self.ng_byte_end: Optional[int] = None
         self.context: SDocNodeContext = SDocNodeContext()
 
+        mid: Optional[str] = None
+        mid_fields: Optional[List[SDocNodeField]] = ordered_fields_lookup.get(
+            "MID", None
+        )
+        if mid_fields is not None:
+            mid = mid_fields[0].get_text_value()
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
         self.mid_permanent: bool = mid is not None
 

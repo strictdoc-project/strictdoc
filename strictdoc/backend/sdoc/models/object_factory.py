@@ -128,7 +128,6 @@ class SDocObjectFactory:
         requirement = SDocNode(
             parent=parent,
             requirement_type=requirement_type,
-            mid=None,
             fields=fields,
             relations=[],
         )

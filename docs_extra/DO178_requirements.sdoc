@@ -10,8 +10,19 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
 - TAG: REQUIREMENT
   FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
   - TITLE: UID
     TYPE: String
     REQUIRED: False

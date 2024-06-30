@@ -289,12 +289,6 @@ class TraceabilityIndexBuilder:
 
         document: SDocDocument
         for document in document_tree.document_list:
-            try:
-                SDocValidator.validate_document(document)
-            except StrictDocSemanticError as exc:
-                print(exc.to_print_message())  # noqa: T201
-                sys.exit(1)
-
             """
             First, resolve all grammars that are imported from grammar files.
             """
@@ -317,6 +311,12 @@ class TraceabilityIndexBuilder:
             # normal grammar vs imported grammar, the parent may not be set at
             # this point.
             document.grammar.parent = document
+
+            try:
+                SDocValidator.validate_document(document)
+            except StrictDocSemanticError as exc:
+                print(exc.to_print_message())  # noqa: T201
+                sys.exit(1)
 
             if graph_database.has_link(
                 link_type=GraphLinkType.MID_TO_NODE,

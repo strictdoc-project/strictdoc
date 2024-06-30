@@ -382,7 +382,6 @@ class P01_ReqIFToSDocConverter:
             node: SDocNode = SDocNode(
                 parent=section,
                 requirement_type="TEXT",
-                mid=None,
                 fields=[node_field],
                 relations=[],
             )
@@ -499,16 +498,22 @@ class P01_ReqIFToSDocConverter:
                 spec_object_type.identifier
             ]
         )
-
+        if requirement_mid is not None:
+            fields.insert(
+                0,
+                SDocNodeField.create_from_string(
+                    None, "MID", requirement_mid, multiline=False
+                ),
+            )
         requirement = SDocNode(
             parent=parent_section,
             requirement_type=grammar_element.tag,
-            mid=requirement_mid,
             fields=fields,
             relations=[],
         )
         requirement.ng_level = level
-
+        for field_ in fields:
+            field_.parent = requirement
         if foreign_key_id_or_none is not None:
             spec_object_parents = reqif_bundle.get_spec_object_parents(
                 spec_object.identifier

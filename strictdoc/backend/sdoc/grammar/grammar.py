@@ -1,4 +1,4 @@
-REGEX_UID = r"([\w]+[\w\-. ]*)"
+REGEX_UID = r"([\w]+[\w()\-. ]*)"
 
 NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
 NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"

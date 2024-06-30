@@ -4,13 +4,41 @@ TITLE: Document 1
 OPTIONS:
   ENABLE_MID: True
 
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
 [REQUIREMENT]
 MID: ec0c9dfe29554bfda007fe072120c2c4
 UID: REQ-1
 TITLE: Requirement title #1
 STATEMENT: >>>
 Requirement statement #1.
-<<<
-RATIONALE: >>>
-Requirement rationale #1.
 <<<

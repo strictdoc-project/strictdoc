@@ -149,6 +149,25 @@ def test_020_requirement_mid():
 [DOCUMENT]
 TITLE: Test Doc
 
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
 [REQUIREMENT]
 MID: abcdef123456
 STATEMENT: >>>
@@ -165,7 +184,6 @@ This is a statement 3
 
     writer = SDWriter()
     output = writer.write(document)
-
     assert input_sdoc == output
 
 

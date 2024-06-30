@@ -204,7 +204,6 @@ class RequirementFormObject(ErrorObject):
         requirement_mid: str,
         document_mid: str,
         context_document_mid: str,
-        mid_field: Optional[RequirementFormField],
         fields: List[RequirementFormField],
         reference_fields: List[RequirementReferenceFormField],
         exiting_requirement_uid: Optional[str],
@@ -220,7 +219,6 @@ class RequirementFormObject(ErrorObject):
         self.requirement_mid: str = requirement_mid
         self.document_mid: str = document_mid
         self.context_document_mid: str = context_document_mid
-        self.mid_field: Optional[RequirementFormField] = mid_field
         fields_dict: dict = defaultdict(list)
         for field in fields:
             fields_dict[field.field_name].append(field)
@@ -306,26 +304,6 @@ class RequirementFormObject(ErrorObject):
                 )
             )
 
-        # MID field is handled separately from other fields because it not part
-        # of any grammar, default or user-provided.
-        mid_field: Optional[RequirementFormField] = None
-        if "MID" in requirement_fields:
-            requirement_field_values = requirement_fields.get("MID", [])
-            for requirement_field_value in requirement_field_values:
-                sanitized_field_value: str = sanitize_html_form_field(
-                    requirement_field_value, multiline=False
-                )
-                mid_field: RequirementFormField = (
-                    RequirementFormField.create_mid_field(
-                        MID(sanitized_field_value)
-                    )
-                )
-
-                # This is where the original requirement MID auto-generated
-                # for a new requirement by StrictDoc can change because
-                # a user has provided a new one in the input form.
-                requirement_mid = sanitized_field_value
-
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type[element_type]
@@ -360,7 +338,6 @@ class RequirementFormObject(ErrorObject):
             requirement_mid=requirement_mid,
             document_mid=document.reserved_mid,
             context_document_mid=context_document_mid,
-            mid_field=mid_field,
             fields=form_fields,
             reference_fields=form_ref_fields,
             exiting_requirement_uid=exiting_requirement_uid,
@@ -390,14 +367,9 @@ class RequirementFormObject(ErrorObject):
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type[element_type]
 
-        mid_field: Optional[RequirementFormField] = None
-        if document.config.enable_mid:
-            mid_field: RequirementFormField = (
-                RequirementFormField.create_mid_field(new_requirement_mid)
-            )
         form_fields: List[RequirementFormField] = []
-
         fields_names = list(element.fields_map.keys())
+
         content_field_idx = element.get_multiline_field_index()
 
         for field_idx, field_name in enumerate(fields_names):
@@ -417,6 +389,13 @@ class RequirementFormObject(ErrorObject):
             if form_field.field_name == "UID" and next_uid is not None:
                 form_field.field_unescaped_value = next_uid
                 form_field.field_escaped_value = next_uid
+            elif form_field.field_name == "MID" and document.config.enable_mid:
+                form_field.field_unescaped_value = (
+                    new_requirement_mid.get_string_value()
+                )
+                form_field.field_escaped_value = (
+                    new_requirement_mid.get_string_value()
+                )
 
         return RequirementFormObject(
             is_new=True,
@@ -424,7 +403,6 @@ class RequirementFormObject(ErrorObject):
             requirement_mid=new_requirement_mid,
             document_mid=document.reserved_mid,
             context_document_mid=context_document_mid,
-            mid_field=mid_field,
             fields=form_fields,
             reference_fields=[],
             exiting_requirement_uid=None,
@@ -446,12 +424,6 @@ class RequirementFormObject(ErrorObject):
         element: GrammarElement = grammar.elements_by_type[
             requirement.requirement_type
         ]
-
-        mid_field: Optional[RequirementFormField] = None
-        if document.config.enable_mid:
-            mid_field: RequirementFormField = (
-                RequirementFormField.create_mid_field(requirement.reserved_mid)
-            )
 
         grammar_element_relations = element.get_relation_types()
 
@@ -522,7 +494,6 @@ class RequirementFormObject(ErrorObject):
             requirement_mid=requirement.reserved_mid,
             document_mid=document.reserved_mid,
             context_document_mid=context_document_mid,
-            mid_field=mid_field,
             fields=form_fields,
             reference_fields=form_refs_fields,
             exiting_requirement_uid=requirement.reserved_uid,
@@ -641,21 +612,21 @@ class RequirementFormObject(ErrorObject):
         MID uniqueness check.
         FIXME: MID uniqueness if a node is updated.
         """
-        if self.is_new and self.mid_field is not None:
-            existing_node_with_this_mid = (
-                traceability_index.get_node_by_mid_weak(
-                    MID(self.mid_field.field_unescaped_value)
+        if self.is_new and "MID" in self.fields:
+            new_node_mid = self.fields["MID"][0].field_unescaped_value
+            if len(new_node_mid) > 0:
+                existing_node_with_this_mid = (
+                    traceability_index.get_node_by_mid_weak(MID(new_node_mid))
                 )
-            )
-            if existing_node_with_this_mid is not None:
-                self.add_error(
-                    "MID",
-                    (
-                        f"A node with this MID already exists, "
-                        "please select another MID: "
-                        f"{self.mid_field.field_unescaped_value}."
-                    ),
-                )
+                if existing_node_with_this_mid is not None:
+                    self.add_error(
+                        "MID",
+                        (
+                            f"A node with this MID already exists, "
+                            "please select another MID: "
+                            f"{new_node_mid}."
+                        ),
+                    )
 
         """
         UID uniqueness check.

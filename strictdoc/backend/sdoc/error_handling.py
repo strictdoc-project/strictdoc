@@ -299,6 +299,25 @@ class StrictDocSemanticError(Exception):
         )
 
     @staticmethod
+    def grammar_element_has_no_mid_field(
+        grammar_element: GrammarElement,
+        path_to_sdoc_file: str,
+    ):
+        return StrictDocSemanticError(
+            title=(
+                f"Grammar element '{grammar_element.tag}' is missing the MID field "
+                f"which contradicts to the DOCUMENT's ENABLE_MID setting."
+            ),
+            hint=(
+                "Either disable the ENABLE_MID option or ensure that every element has the MID field defined."
+            ),
+            example=None,
+            line=1,
+            col=1,
+            filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
     def view_references_nonexisting_grammar_element(
         document: SDocDocument,
         document_view: DocumentView,

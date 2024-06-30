@@ -28,4 +28,3 @@ class Test(E2ECase):
             screen_document.assert_not_empty_document()
 
             screen_document.assert_text("Text statement.")
-            screen_document.assert_text("abcdef123456")

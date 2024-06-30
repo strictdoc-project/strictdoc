@@ -29,24 +29,19 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
 
             # Requirement 1
-            root_node = screen_document.get_root_node()
-            root_node_menu = root_node.do_open_node_menu()
+            requirement_node = screen_document.get_node()
             form_edit_requirement: Form_EditRequirement = (
-                root_node_menu.do_node_add_requirement_first()
+                requirement_node.do_open_form_edit_requirement()
             )
 
             form_edit_requirement.do_fill_in_field_title("Requirement title #1")
             form_edit_requirement.do_fill_in_field_statement(
-                "Requirement statement #1."
+                "MODIFIED requirement statement #1."
             )
             form_edit_requirement.do_form_submit()
 
             # Expected for Requirement 1:
-
             requirement_1 = screen_document.get_node()
             requirement_1.assert_requirement_has_mid()
 
-        # FIXME
-        # Cannot compare the inputs/outputs because the newly generated MID is
-        # always unique.
-        # assert test_setup.compare_sandbox_and_expected_output()  # noqa: ERA001
+        assert test_setup.compare_sandbox_and_expected_output()

@@ -27,15 +27,6 @@
 <sdoc-tab-content id="Fields" active>
   {% set text_field_row_context = namespace() %}
 
-  {% if form_object.mid_field is not none %}
-      {% set text_field_row_context.errors=form_object.get_errors("MID") %}
-      {% set text_field_row_context.field = form_object.mid_field %}
-      {% set text_field_row_context.field_editable = form_object.is_new %}
-      {% set text_field_row_context.field_type = "singleline" %}
-      {% set text_field_row_context.reference_mid = form_object.requirement_mid %}
-      {% include "components/form/row/row_with_text_field.jinja" %}
-  {% endif %}
-
   {# Single-line #}
   {%- for field_values_ in form_object.enumerate_fields(multiline=False) -%}
     {%- for field_ in field_values_ -%}

@@ -1,6 +1,20 @@
 [DOCUMENT]
 TITLE: Document 1
 
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
 [REQUIREMENT]
 MID: abcdef123456
 TITLE: Requirement title

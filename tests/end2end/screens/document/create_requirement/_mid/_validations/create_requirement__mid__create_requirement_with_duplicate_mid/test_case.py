@@ -29,7 +29,7 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
 
             # Requirement 1
-            requirement1_node = screen_document.get_requirement(1)
+            requirement1_node = screen_document.get_node(1)
             requirement1_node_menu = requirement1_node.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
                 requirement1_node_menu.do_node_add_requirement_below()
@@ -42,9 +42,6 @@ class Test(E2ECase):
             form_edit_requirement.do_fill_in_field_title("Requirement title #2")
             form_edit_requirement.do_fill_in_field_statement(
                 "Requirement statement #2."
-            )
-            form_edit_requirement.do_fill_in_field_rationale(
-                "Requirement rationale #2."
             )
             form_edit_requirement.do_form_submit_and_catch_error(
                 "A node with this MID already exists, "

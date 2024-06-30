@@ -395,11 +395,6 @@ class SDWriter:
     ):
         output = ""
 
-        if section_content.mid_permanent or document.config.enable_mid:
-            output += "MID: "
-            output += section_content.reserved_mid
-            output += "\n"
-
         element = document.grammar.elements_by_type[
             section_content.requirement_type
         ]
@@ -407,6 +402,10 @@ class SDWriter:
         for element_field in element.fields:
             field_name = element_field.title
             if field_name not in section_content.ordered_fields_lookup:
+                if field_name == "MID" and document.config.enable_mid:
+                    output += "MID: "
+                    output += section_content.reserved_mid
+                    output += "\n"
                 continue
             fields = section_content.ordered_fields_lookup[field_name]
             for field in fields:

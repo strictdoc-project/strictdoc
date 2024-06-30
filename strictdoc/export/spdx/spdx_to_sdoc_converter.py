@@ -180,7 +180,6 @@ class SPDXToSDocConverter:
         requirement = SDocNode(
             parent=sdoc_parent,
             requirement_type="SPDX_PACKAGE",
-            mid=None,
             fields=[],
             relations=[],
             requirements=None,
@@ -211,7 +210,6 @@ class SPDXToSDocConverter:
         requirement = SDocNode(
             parent=sdoc_parent,
             requirement_type="SPDX_PACKAGE",
-            mid=None,
             fields=[],
             relations=[],
             requirements=None,
@@ -252,7 +250,6 @@ class SPDXToSDocConverter:
         requirement = SDocNode(
             parent=sdoc_parent,
             requirement_type="SPDX_FILE",
-            mid=None,
             fields=fields,
             relations=[],
             requirements=None,
@@ -303,7 +300,6 @@ class SPDXToSDocConverter:
         requirement = SDocNode(
             parent=sdoc_parent,
             requirement_type="SPDX_SNIPPET",
-            mid=None,
             fields=fields,
             relations=[],
             requirements=None,

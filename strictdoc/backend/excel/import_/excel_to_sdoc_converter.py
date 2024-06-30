@@ -215,7 +215,6 @@ class ExcelToSDocConverter:
         requirement = SDocNode(
             parent=template_requirement.parent,
             requirement_type=template_requirement.requirement_type,
-            mid=None,
             fields=list(template_requirement.enumerate_fields()),
             relations=template_requirement.relations,
         )

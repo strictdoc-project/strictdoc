@@ -201,6 +201,9 @@ class DocumentGrammar:
 
         self.is_default = False
 
+        self.ng_line_start: Optional[int] = None
+        self.ng_col_start: Optional[int] = None
+
     @staticmethod
     def create_default(parent) -> "DocumentGrammar":
         text_element: GrammarElement = (
@@ -338,7 +341,7 @@ class DocumentGrammar:
         self.elements_by_type = elements_by_type
 
     @staticmethod
-    def create_default_text_element() -> GrammarElement:
+    def create_default_text_element(parent=None) -> GrammarElement:
         fields: List[
             Union[
                 GrammarElementFieldString,
@@ -360,7 +363,7 @@ class DocumentGrammar:
             ),
         ]
         text_element = GrammarElement(
-            parent=None, tag="TEXT", fields=fields, relations=[]
+            parent=parent, tag="TEXT", fields=fields, relations=[]
         )
         return text_element
 

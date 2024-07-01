@@ -30,11 +30,11 @@ class Anchor:
     def document(self):
         if self.parent.parent.__class__.__name__ == "SDocDocument":
             return self.parent.parent
-        return self.parent.parent.document
+        return self.parent_node().document
 
     @property
     def parent_or_including_document(self):
-        return self.parent.parent_or_including_document
+        return self.parent_node().parent_or_including_document
 
     def parent_node(self) -> Any:
         # Anchor -> FreeText -> Section|Document

@@ -5,6 +5,9 @@ RUN: %cat %S/Output/html/03_referencing_anchor_with_LINK_external/input.html | f
 CHECK-HTML-DOC: <p>See the <a href="../03_referencing_anchor_with_LINK_external/input2.html#AD1">{{.*}}AD1</a> for more details.</p>
 CHECK-HTML-DOC: <p>See the <a href="../03_referencing_anchor_with_LINK_external/input2.html#AD2">{{.*}}Software requirements specification</a> for more details.</p>
 CHECK-HTML-DOC: <p>See the <a href="../03_referencing_anchor_with_LINK_external/input2.html#Interface_Control_Document">{{.*}}Interface_Control_Document</a> for more details.</p>
+CHECK-HTML-DOC: <p>See the <a href="../03_referencing_anchor_with_LINK_external/input2.html#AD4">{{.*}}AD4</a> for more details.</p>
+CHECK-HTML-DOC: <p>See the <a href="../03_referencing_anchor_with_LINK_external/input2.html#AD5">{{.*}}Software Tests</a> for more details.</p>
+CHECK-HTML-DOC: <p>See the <a href="../03_referencing_anchor_with_LINK_external/input2.html#Supplemental-Guide">{{.*}}Supplemental Guide</a> for more details.</p>
 
 RUN: %cat %S/Output/html/03_referencing_anchor_with_LINK_external/input2.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC2
 CHECK-HTML-DOC2:<sdoc-anchor id="AD1"{{.*}}
@@ -13,3 +16,9 @@ CHECK-HTML-DOC2:<sdoc-anchor id="AD2"{{.*}}
 CHECK-HTML-DOC2:<li>AD2. Software requirements specification.</li>
 CHECK-HTML-DOC2:<sdoc-anchor id="Interface_Control_Document"{{.*}}
 CHECK-HTML-DOC2:<li>AD3. Interface Control Document.</li>
+CHECK-HTML-DOC2:<sdoc-anchor id="AD4"{{.*}}
+CHECK-HTML-DOC2:<li>AD4. Threat Model.</li>
+CHECK-HTML-DOC2:<sdoc-anchor id="AD5"{{.*}}
+CHECK-HTML-DOC2:<li>AD5. Software Tests.</li>
+CHECK-HTML-DOC2:<sdoc-anchor id="Supplemental Guide"{{.*}}
+CHECK-HTML-DOC2:<li>AD6. Supplemental Guide.</li>

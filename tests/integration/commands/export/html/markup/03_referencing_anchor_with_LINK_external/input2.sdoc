@@ -23,4 +23,21 @@ Anchors end.
 
 [/FREETEXT]
 
+[TEXT]
+STATEMENT: >>>
+[ANCHOR: AD4]
+
+1) AD4. Threat Model.
+
+[ANCHOR: AD5, Software Tests]
+
+2) AD5. Software Tests.
+
+[ANCHOR: Supplemental Guide]
+
+3) AD6. Supplemental Guide.
+
+Anchors end.
+<<<
+
 [/SECTION]

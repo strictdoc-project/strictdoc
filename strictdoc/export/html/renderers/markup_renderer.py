@@ -20,6 +20,8 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
 
+VALID_AFTER_INLINE_MARKUP = " \t-.,:;!?\\/'\")]}>"
+
 
 class MarkupRenderer:
     @staticmethod
@@ -109,10 +111,17 @@ class MarkupRenderer:
         if (document_type, node_field, truncated) in self.cache:
             return self.cache[(document_type, node_field, truncated)]
 
+        prev_part = None
         parts_output = ""
         for part in node_field.parts:
             if isinstance(part, str):
-                parts_output += part
+                if (
+                    isinstance(prev_part, InlineLink)
+                    and part[0] not in VALID_AFTER_INLINE_MARKUP
+                ):
+                    parts_output += f"\\{part}"
+                else:
+                    parts_output += part
             elif isinstance(part, InlineLink):
                 linkable_node = (
                     self.traceability_index.get_linkable_node_by_uid(part.link)
@@ -132,6 +141,7 @@ class MarkupRenderer:
                 )
             else:
                 raise NotImplementedError
+            prev_part = part
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, node_field, truncated)] = output
 

@@ -1,0 +1,8 @@
+RUN: %strictdoc export %S --formats=html --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Links
+
+RUN: %cat %S/Output/html/40_link/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+CHECK-HTML-FILE: <a href="#THING-1">🔗&nbsp;Thing</a> may be followed by whitespace.
+CHECK-HTML-FILE: <a href="#THING-1">🔗&nbsp;Thing</a>  may be followed by tab.
+CHECK-HTML-FILE: Maybe punctuation like comma follows <a href="#THING-1">🔗&nbsp;Thing</a>, or dot follows <a href="#THING-1">🔗&nbsp;Thing</a>.
+CHECK-HTML-FILE: <a href="#THING-1">🔗&nbsp;Thing</a>s may be followed by character.

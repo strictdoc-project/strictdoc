@@ -1,0 +1,39 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: CUSTOM
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: SUMMARY
+    TYPE: String
+    REQUIRED: False
+  - TITLE: DESCRIPTION
+    TYPE: String
+    REQUIRED: True
+  - TITLE: NOTE
+    TYPE: String
+    REQUIRED: False
+
+[CUSTOM]
+UID: NOTE-1
+SUMMARY: Goto [LINK: NOTE-2]
+DESCRIPTION: >>>
+Read [LINK: NOTE-2].
+<<<
+NOTE: >>>
+[LINK: NOTE-2] is below.
+<<<
+
+[CUSTOM]
+UID: NOTE-2
+SUMMARY: Goto [LINK: NOTE-1]
+DESCRIPTION: >>>
+Read [LINK: NOTE-1].
+<<<
+NOTE: >>>
+[LINK: NOTE-1] is above.
+<<<

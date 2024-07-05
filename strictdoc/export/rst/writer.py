@@ -10,6 +10,7 @@ from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.rst_templates import RSTTemplates
+from strictdoc.helpers.rst import escape_str_after_inline_markup
 
 
 class TAG(Enum):
@@ -42,14 +43,14 @@ class RSTWriter:
                     content_node.reserved_uid,
                 )
                 for free_text in content_node.free_texts:
-                    output += self._print_free_text(free_text)
+                    output += self._print_text(free_text)
 
             elif isinstance(content_node, SDocNode):
                 if (
                     content_node.requirement_type == "TEXT"
                     and content_node.basic_free_text
                 ):
-                    output += self._print_free_text(content_node)
+                    output += self._print_text(content_node)
                 else:
                     output += self._print_requirement_fields(content_node)
 
@@ -117,32 +118,37 @@ class RSTWriter:
             requirement=section_content,
             index=self.index,
             _print_rst_header=self._print_rst_header_2,
+            _print_node_field=self._print_node_field,
         )
         return output
 
-    def _print_free_text(self, free_text: Union[FreeText, SDocNode]):
-        assert isinstance(free_text, FreeText) or (
-            isinstance(free_text, SDocNode) and free_text.basic_free_text
+    def _print_text(self, text: Union[FreeText, SDocNode]):
+        assert isinstance(text, (FreeText, SDocNode))
+        return (
+            self._print_node_field(
+                text.get_content_field() if isinstance(text, SDocNode) else text
+            )
+            + "\n"
         )
 
-        object_with_parts: Union[FreeText, SDocNodeField]
-        if isinstance(free_text, SDocNode):
-            object_with_parts = free_text.get_content_field()
-        else:
-            object_with_parts = free_text
-
+    def _print_node_field(
+        self, object_with_parts: Union[FreeText, SDocNodeField]
+    ):
         if len(object_with_parts.parts) == 0:
             return ""
-        output = ""
 
+        output = ""
+        prev_part = None
         for part in object_with_parts.parts:
             if isinstance(part, str):
-                output += part
+                if isinstance(prev_part, InlineLink):
+                    output += escape_str_after_inline_markup(part)
+                else:
+                    output += part
             elif isinstance(part, InlineLink):
                 node_or_none = self.index.get_linkable_node_by_uid_weak(
                     part.link
                 )
-
                 # Labels that aren’t placed before a section title can still be
                 # referenced, but you must give the link an explicit title,
                 # using this syntax: :ref:`Link title <label-name>`.
@@ -155,5 +161,6 @@ class RSTWriter:
                 output += f".. _{part.value}:\n"
             else:
                 raise NotImplementedError
-        output += "\n"
+            prev_part = part
+
         return output

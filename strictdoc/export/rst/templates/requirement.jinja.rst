@@ -15,26 +15,26 @@
 
 {% for meta_field in requirement.enumerate_meta_fields(skip_multi_lines=True) -%}
 {%- if true %}    {% endif %}* - **{{meta_field[0]}}:**
-      - {{ meta_field[1].get_text_value() }}
+      - {{ _print_node_field(meta_field[1]) }}
 {% endfor %}
 {% endif %}
 
 {%- if requirement.reserved_statement is not none -%}
-{{ requirement.reserved_statement.rstrip() }}
+{{ _print_node_field(requirement.get_content_field()).rstrip() }}
 
 {% endif -%}
 
 {%- if requirement.rationale -%}
 **{{ requirement.get_field_human_title("RATIONALE") }}:**
 
-{{ requirement.rationale.rstrip() }}
+{{ _print_node_field(requirement.get_field_by_name("RATIONALE")).rstrip() }}
 
 {% endif -%}
 
 {%- for comment_field_ in requirement.get_comment_fields() -%}
 **{{ requirement.get_field_human_title("COMMENT") }}:**
 
-{{ comment_field_.get_text_value().rstrip() }}
+{{ _print_node_field(comment_field_).rstrip() }}
 
 {% endfor -%}
 
@@ -42,7 +42,7 @@
 {%- for meta_field in requirement.enumerate_meta_fields(skip_single_lines=True) -%}
 **{{meta_field[0]}}:**
 
-{{ meta_field[1].get_text_value().rstrip() }}
+{{ _print_node_field(meta_field[1]).rstrip() }}
 
 {% endfor -%}
 {%- endif %}

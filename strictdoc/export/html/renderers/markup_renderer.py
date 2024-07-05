@@ -19,8 +19,7 @@ from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
-
-VALID_AFTER_INLINE_MARKUP = " \t-.,:;!?\\/'\")]}>"
+from strictdoc.helpers.rst import escape_str_after_inline_markup
 
 
 class MarkupRenderer:
@@ -115,11 +114,8 @@ class MarkupRenderer:
         parts_output = ""
         for part in node_field.parts:
             if isinstance(part, str):
-                if (
-                    isinstance(prev_part, InlineLink)
-                    and part[0] not in VALID_AFTER_INLINE_MARKUP
-                ):
-                    parts_output += f"\\{part}"
+                if isinstance(prev_part, InlineLink):
+                    parts_output += escape_str_after_inline_markup(part)
                 else:
                     parts_output += part
             elif isinstance(part, InlineLink):

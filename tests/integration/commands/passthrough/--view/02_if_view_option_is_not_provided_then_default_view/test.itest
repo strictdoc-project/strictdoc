@@ -1,0 +1,6 @@
+RUN: %strictdoc passthrough %S --output-dir Output/
+RUN: %cat %S/Output/input.sdoc | filecheck %s --check-prefix=CHECK-SDOC
+
+CHECK-SDOC: REQ-1
+CHECK-SDOC: Requirement statement.
+CHECK-SDOC: Requirement rationale.

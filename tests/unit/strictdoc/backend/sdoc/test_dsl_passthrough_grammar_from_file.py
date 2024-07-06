@@ -3,7 +3,7 @@ from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
 
-def test_001_minimal_doc():
+def test_001_minimal_doc(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Fragment
@@ -22,7 +22,7 @@ TITLE: First section
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output

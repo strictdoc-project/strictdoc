@@ -29,7 +29,7 @@ class PassthroughAction:
             print(exc.to_print_message())  # noqa: T201
             sys.exit(1)
 
-        writer = SDWriter()
+        writer = SDWriter(project_config)
 
         output_dir = (
             project_config.passthrough_output_dir

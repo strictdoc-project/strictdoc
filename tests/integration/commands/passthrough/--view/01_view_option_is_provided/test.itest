@@ -1,0 +1,9 @@
+RUN: %strictdoc passthrough %S --view PRINT_VIEW --output-dir Output/
+RUN: %cat %S/Output/input.sdoc | filecheck %s --check-prefix CHECK-SDOC
+
+CHECK-SDOC: REQ-1
+CHECK-SDOC: Requirement statement.
+CHECK-SDOC-NOT: Requirement rationale.
+CHECK-SDOC-NOT: Requirement comment.
+CHECK-SDOC-NOT: Requirement first extra field.
+CHECK-SDOC: Requirement second extra field.

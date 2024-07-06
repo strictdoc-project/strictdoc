@@ -3,7 +3,7 @@ from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
 
-def test_01_integrated_example():
+def test_01_integrated_example(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -39,7 +39,7 @@ VIEWS:
 
     document: SDocDocument = reader.read(input_sdoc)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output

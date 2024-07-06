@@ -222,6 +222,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.passthrough_free_text_to_text = config.free_text_to_text
         self.filter_requirements = config.filter_requirements
         self.filter_sections = config.filter_sections
+        self.view = config.view
 
         # FIXME: Traceability Index is coupled with HTML output.
         self.export_output_html_root = "NOT_RELEVANT"

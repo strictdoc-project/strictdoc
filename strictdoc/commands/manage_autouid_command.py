@@ -71,7 +71,7 @@ class ManageAutoUIDCommand:
                 next_number += 1
 
         for document in traceability_index.document_tree.document_list:
-            document_content = SDWriter().write(document)
+            document_content = SDWriter(project_config).write(document)
             document_meta = document.meta
             with open(
                 document_meta.input_doc_full_path, "w", encoding="utf8"

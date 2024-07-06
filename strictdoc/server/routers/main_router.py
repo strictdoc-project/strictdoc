@@ -428,7 +428,7 @@ def create_main_router(
         section: SDocSection = create_command.get_created_section()
 
         # Saving new content to .SDoc file.
-        SDWriter().write_to_file(section.document)
+        SDWriter(project_config).write_to_file(section.document)
 
         # Update the index because other documents might reference this
         # document's sections. These documents will be regenerated on demand,
@@ -584,7 +584,7 @@ def create_main_router(
             )
 
         # Saving new content to .SDoc file.
-        SDWriter().write_to_file(section.document)
+        SDWriter(project_config).write_to_file(section.document)
 
         # Update the index because other documents might reference this
         # document's sections. These documents will be regenerated on demand,
@@ -950,9 +950,9 @@ def create_main_router(
             )
 
         # Saving new content to .SDoc files.
-        SDWriter().write_to_file(document)
+        SDWriter(project_config).write_to_file(document)
         if document != context_document:
-            SDWriter().write_to_file(context_document)
+            SDWriter(project_config).write_to_file(context_document)
 
         # Exporting the updated document to HTML. Note that this happens after
         # the traceability index last update marker has been updated. This way
@@ -1187,7 +1187,7 @@ def create_main_router(
         )
 
         # Saving new content to .SDoc files.
-        SDWriter().write_to_file(document)
+        SDWriter(project_config).write_to_file(document)
 
         # Exporting the updated document to HTML. Note that this happens after
         # the traceability index last update marker has been updated. This way
@@ -1368,7 +1368,7 @@ def create_main_router(
         )
 
         # Saving new content to .SDoc file.
-        SDWriter().write_to_file(section.document)
+        SDWriter(project_config).write_to_file(section.document)
 
         # Rendering back the Turbo template.
         template = env().get_template(
@@ -1464,7 +1464,7 @@ def create_main_router(
             )
 
         # Saving new content to .SDoc file.
-        SDWriter().write_to_file(requirement.document)
+        SDWriter(project_config).write_to_file(requirement.document)
 
         context_document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(
@@ -1570,7 +1570,7 @@ def create_main_router(
             raise NotImplementedError
 
         # Saving new content to .SDoc file.
-        SDWriter().write_to_file(moved_node.document)
+        SDWriter(project_config).write_to_file(moved_node.document)
 
         # Update the index because other documents might reference this
         # document's sections. These documents will be regenerated on demand,
@@ -1751,7 +1751,7 @@ def create_main_router(
             output_document_dir_rel_path=SDocRelativePath("FIXME"),
         )
 
-        SDWriter().write_to_file(document)
+        SDWriter(project_config).write_to_file(document)
 
         export_action.build_index()
         export_action.export()
@@ -1973,7 +1973,7 @@ def create_main_router(
             )
 
         # Re-generate the document's SDOC.
-        SDWriter().write_to_file(document)
+        SDWriter(project_config).write_to_file(document)
 
         # Update the index because other documents might be referenced by this
         # document's free text. These documents will be regenerated on demand,
@@ -2057,7 +2057,7 @@ def create_main_router(
             )
 
         # Re-generate the document's SDOC.
-        SDWriter().write_to_file(document)
+        SDWriter(project_config).write_to_file(document)
 
         # Update the index because other documents might be referenced by this
         # document's free text. These documents will be regenerated on demand,
@@ -2239,7 +2239,7 @@ def create_main_router(
             )
 
         # Re-generate the document's SDOC.
-        SDWriter().write_to_file(document)
+        SDWriter(project_config).write_to_file(document)
 
         # Re-generate the document.
         html_generator.export_single_document(
@@ -2380,7 +2380,7 @@ def create_main_router(
             )
 
         # Re-generate the document's SDOC.
-        SDWriter().write_to_file(document)
+        SDWriter(project_config).write_to_file(document)
 
         # Re-generate the document.
         html_generator.export_single_document(
@@ -2568,7 +2568,7 @@ def create_main_router(
                 output_document_dir_rel_path=SDocRelativePath("FIXME"),
             )
 
-            SDWriter().write_to_file(document)
+            SDWriter(project_config).write_to_file(document)
 
         export_action.build_index()
         export_action.export()

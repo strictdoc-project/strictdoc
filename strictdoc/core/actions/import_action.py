@@ -40,7 +40,7 @@ class ImportAction:
                     create_safe_document_file_name(document_.reserved_title)
                     + ".sdoc",
                 )
-                document_content = SDWriter().write(document_)
+                document_content = SDWriter(project_config).write(document_)
                 with open(
                     path_to_output_document, "w", encoding="utf8"
                 ) as output_file:
@@ -55,7 +55,7 @@ class ImportAction:
                 os.path.splitext(os.path.basename(import_config.input_path))[0]
                 + ".sdoc",
             )
-            document_content = SDWriter().write(excel_document)
+            document_content = SDWriter(project_config).write(excel_document)
             with open(
                 path_to_output_document, "w", encoding="utf8"
             ) as output_file:

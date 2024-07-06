@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Test Document
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: Requirement statement.
+RATIONALE: Requirement rationale.

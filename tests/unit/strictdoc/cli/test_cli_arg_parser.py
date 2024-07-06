@@ -190,6 +190,7 @@ def test_passthrough_01_minimal():
         ("free_text_to_text", False),
         ("input_file", "input.sdoc"),
         ("output_dir", None),
+        ("view", None),
     ]
 
 
@@ -207,4 +208,5 @@ def test_passthrough_02_minimal():
         ("free_text_to_text", False),
         ("input_file", "input.sdoc"),
         ("output_dir", "SANDBOX/"),
+        ("view", None),
     ]

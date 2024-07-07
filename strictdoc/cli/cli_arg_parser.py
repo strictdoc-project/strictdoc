@@ -74,12 +74,14 @@ class PassthroughCommandConfig:
         filter_requirements: Optional[str],
         filter_sections: Optional[str],
         free_text_to_text: bool,
+        view: Optional[str],
     ):
         self.input_file = input_file
         self.output_dir: Optional[str] = output_dir
         self.filter_requirements: Optional[str] = filter_requirements
         self.filter_sections: Optional[str] = filter_sections
         self.free_text_to_text: bool = free_text_to_text
+        self.view: Optional[str] = view
 
 
 @auto_described
@@ -266,6 +268,7 @@ class SDocArgsParser:
             filter_requirements=self.args.filter_requirements,
             filter_sections=self.args.filter_sections,
             free_text_to_text=self.args.free_text_to_text,
+            view=self.args.view,
         )
 
     def get_export_config(self) -> ExportCommandConfig:

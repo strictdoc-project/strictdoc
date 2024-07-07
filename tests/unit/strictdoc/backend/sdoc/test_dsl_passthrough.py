@@ -17,7 +17,7 @@ from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
 
-def test_001_minimal_doc():
+def test_001_minimal_doc(default_project_config):
     input_sdoc = """\
 [DOCUMENT]
 TITLE: Test Doc
@@ -34,13 +34,13 @@ TITLE: Test Doc
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_002_minimal_req():
+def test_002_minimal_req(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -54,13 +54,13 @@ TITLE: Hello
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_003_comments_01_several_comments():
+def test_003_comments_01_several_comments(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -77,13 +77,13 @@ COMMENT: Comment #3
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_004_several_tags():
+def test_004_several_tags(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -98,13 +98,13 @@ TITLE: Hello
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_010_multiple_sections():
+def test_010_multiple_sections(default_project_config):
     input_sdoc = """\
 [DOCUMENT]
 TITLE: Test Doc
@@ -139,12 +139,12 @@ This is a statement 3
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
     assert input_sdoc == output
 
 
-def test_020_requirement_mid():
+def test_020_requirement_mid(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -182,12 +182,12 @@ This is a statement 3
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
     assert input_sdoc == output
 
 
-def test_021_section_and_document_mid():
+def test_021_section_and_document_mid(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 MID: xyz09876
@@ -205,13 +205,13 @@ TITLE: Test Section
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_022_requirement_uid_and_link():
+def test_022_requirement_uid_and_link(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -232,13 +232,13 @@ STATEMENT: >>>
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_030_multiline_statement():
+def test_030_multiline_statement(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -270,13 +270,13 @@ This is a statement 3
         == "This is a statement 1\nThis is a statement 2\nThis is a statement 3\n"
     )
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_036_rationale_single_line():
+def test_036_rationale_single_line(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -296,7 +296,7 @@ RATIONALE: This is a Rationale
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
@@ -308,7 +308,7 @@ RATIONALE: This is a Rationale
     assert requirement_1.rationale == "This is a Rationale"
 
 
-def test_037_rationale_multi_line():
+def test_037_rationale_multi_line(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -332,7 +332,7 @@ This is a Rationale line 3
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
@@ -348,7 +348,7 @@ This is a Rationale line 3
     )
 
 
-def test_040_composite_requirement_1_level():
+def test_040_composite_requirement_1_level(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -382,7 +382,7 @@ This is a child body part 3
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
     assert input_sdoc == output
 
@@ -396,7 +396,7 @@ This is a child body part 3
     )
 
 
-def test_042_composite_requirement_2_level():
+def test_042_composite_requirement_2_level(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -434,7 +434,7 @@ body 1.1.1.1
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
@@ -481,7 +481,9 @@ body 1.1.1.1
 
 # This test is needed to make sure that the grammar details related
 # to the difference of parting single vs multiline strings are covered.
-def test_050_requirement_single_line_statement_one_symbol():
+def test_050_requirement_single_line_statement_one_symbol(
+    default_project_config,
+):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -499,13 +501,13 @@ STATEMENT: 1
     requirement = document.section_contents[0]
     assert requirement.reserved_statement == "1"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_060_file_ref():
+def test_060_file_ref(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -530,13 +532,13 @@ RELATIONS:
     assert reference.ref_type == ReferenceType.FILE
     assert reference.g_file_entry.g_file_path == "/tmp/sample.cpp"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_070_document_config_version():
+def test_070_document_config_version(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -553,13 +555,13 @@ VERSION: 0.0.1
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.version == "0.0.1"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_071_document_config_number():
+def test_071_document_config_number(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -576,13 +578,13 @@ UID: SDOC-01
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.uid == "SDOC-01"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_072_document_config_classification():
+def test_072_document_config_classification(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -601,13 +603,13 @@ CLASSIFICATION: Restricted
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.classification == "Restricted"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_073_document_config_requirement_prefix():
+def test_073_document_config_requirement_prefix(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -626,13 +628,13 @@ REQ_PREFIX: DOC-
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.requirement_prefix == "DOC-"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_090_document_config_all_fields():
+def test_090_document_config_all_fields(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -682,13 +684,13 @@ STATEMENT: ABC
     assert isinstance(requirement, SDocNode)
     assert requirement.custom_level == "456"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_100_basic_test():
+def test_100_basic_test(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -731,13 +733,13 @@ COMMENT: This requirement is very important
     assert requirement_1.reserved_tags[1] == "Tag 2"
     assert requirement_1.reserved_tags[2] == "Tag 3"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_081_document_config_markup_not_specified():
+def test_081_document_config_markup_not_specified(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -755,13 +757,13 @@ VERSION: 0.0.1
     assert document.config.version == "0.0.1"
     assert document.config.markup is None
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_081_document_config_markup_specified():
+def test_081_document_config_markup_specified(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -780,13 +782,15 @@ OPTIONS:
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.version == "0.0.1"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_082_document_config_auto_levels_specified_to_false():
+def test_082_document_config_auto_levels_specified_to_false(
+    default_project_config,
+):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -803,13 +807,13 @@ OPTIONS:
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.auto_levels is False
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_083_requirement_level():
+def test_083_requirement_level(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -842,13 +846,13 @@ STATEMENT: ABC
     assert isinstance(requirement, SDocNode)
     assert requirement.custom_level == "456"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_085_options_requirement_style():
+def test_085_options_requirement_style(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -865,13 +869,13 @@ OPTIONS:
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.requirement_style == "Table"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_087_options_requirement_in_toc():
+def test_087_options_requirement_in_toc(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -888,13 +892,13 @@ OPTIONS:
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.requirement_in_toc == "True"
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_089_document_config_use_mid():
+def test_089_document_config_use_mid(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 MID: foobar
@@ -911,13 +915,13 @@ OPTIONS:
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.enable_mid is True
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
 
 
-def test_edge_case_01_minimal_requirement():
+def test_edge_case_01_minimal_requirement(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -935,7 +939,7 @@ TITLE: Test Doc
     assert requirement.reserved_title is None
     assert requirement.reserved_statement is None
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
@@ -1133,7 +1137,9 @@ TITLE:
     assert "Expected SingleLineString" in exc_info.value.args[0].decode("utf-8")
 
 
-def test_edge_case_23_leading_spaces_do_not_imply_empy_field():
+def test_edge_case_23_leading_spaces_do_not_imply_empy_field(
+    default_project_config,
+):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -1199,6 +1205,6 @@ MY_FIELD: >>>
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
     assert expected_sdoc == output

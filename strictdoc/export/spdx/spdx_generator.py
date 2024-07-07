@@ -438,7 +438,7 @@ class SPDXGenerator:
         if True:
             sdoc_document = SPDXToSDocConverter.convert(spdx_container)
 
-            sdoc_output = SDWriter().write(sdoc_document)
+            sdoc_output = SDWriter(project_config).write(sdoc_document)
 
             sdoc_output_path = os.path.join(
                 output_spdx_root, "output.spdx.sdoc"

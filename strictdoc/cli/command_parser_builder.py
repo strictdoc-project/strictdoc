@@ -393,6 +393,11 @@ class CommandParserBuilder:
                 "TEXT nodes."
             ),
         )
+        command_parser_passthrough.add_argument(
+            "--view",
+            type=str,
+            help="Choose which view will be exported.",
+        )
 
     @staticmethod
     def add_dump_command(parent_command_parser):

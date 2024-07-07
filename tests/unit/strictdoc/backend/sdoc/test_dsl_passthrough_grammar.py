@@ -3,7 +3,7 @@ from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 
 
-def test_150_grammar_minimal_doc():
+def test_150_grammar_minimal_doc(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -44,13 +44,13 @@ ELEMENTS:
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert expected_sdoc == output
 
 
-def test_151_grammar_single_choice():
+def test_151_grammar_single_choice(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -104,13 +104,13 @@ SINGLE_CHOICE_FIELD: A
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert expected_sdoc == output
 
 
-def test_152_grammar_multiple_choice():
+def test_152_grammar_multiple_choice(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -164,13 +164,13 @@ MULTIPLE_CHOICE_FIELD: A, C
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert expected_sdoc == output
 
 
-def test_153_grammar_tag():
+def test_153_grammar_tag(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -224,13 +224,13 @@ TAG_FIELD: A, C
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert expected_sdoc == output
 
 
-def test_154_grammar_multiline_custom_field():
+def test_154_grammar_multiline_custom_field(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -292,13 +292,13 @@ Some text here...
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert expected_sdoc == output
 
 
-def test_170_grammar_relations():
+def test_170_grammar_relations(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -331,7 +331,7 @@ STATEMENT: This is a statement.
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    writer = SDWriter()
+    writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output

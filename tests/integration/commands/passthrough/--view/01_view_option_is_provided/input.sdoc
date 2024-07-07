@@ -1,0 +1,48 @@
+[DOCUMENT]
+TITLE: Test Document
+OPTIONS:
+  DEFAULT_VIEW: PRINT_VIEW
+VIEWS:
+- ID: PRINT_VIEW
+  NAME: Print view
+  TAGS:
+  - OBJECT_TYPE: REQUIREMENT
+    VISIBLE_FIELDS:
+    - NAME: UID
+    - NAME: STATEMENT
+    - NAME: SECOND_EXTRA_FIELD
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: FIRST_EXTRA_FIELD
+    TYPE: String
+    REQUIRED: False
+  - TITLE: SECOND_EXTRA_FIELD
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Test Requirement.
+STATEMENT: Requirement statement.
+RATIONALE: Requirement rationale.
+COMMENT: Requirement comment.
+FIRST_EXTRA_FIELD: Requirement first extra field.
+SECOND_EXTRA_FIELD: Requirement second extra field.

@@ -34,6 +34,8 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldString,
 )
 from strictdoc.backend.sdoc.writer import SDWriter
+from strictdoc.core.environment import SDocRuntimeEnvironment
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.string import ensure_newline, unescape
 
 
@@ -523,7 +525,8 @@ def main():
 
     document = documents[0]
 
-    document_content = SDWriter().write(document)
+    project_config = ProjectConfig.default_config(SDocRuntimeEnvironment(__file__))
+    document_content = SDWriter(project_config).write(document)
     output_folder = os.path.join(os.getcwd(), "Output")
     Path(output_folder).mkdir(parents=True, exist_ok=True)
     with open(

@@ -9,7 +9,10 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.document_view import DefaultViewElement
+from strictdoc.backend.sdoc.models.document_view import (
+    DefaultViewElement,
+    ViewElement,
+)
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
@@ -33,6 +36,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import ensure_newline
 
@@ -44,8 +48,8 @@ class TAG(Enum):
 
 
 class SDWriter:
-    def __init__(self):
-        pass
+    def __init__(self, project_config: ProjectConfig):
+        self.project_config: ProjectConfig = project_config
 
     def write_to_file(self, document: SDocDocument):
         document_content, fragments_dict = self.write_with_fragments(document)
@@ -389,12 +393,14 @@ class SDWriter:
 
         return output
 
-    @staticmethod
     def _print_requirement_fields(
-        section_content: SDocNode, document: SDocDocument
+        self, section_content: SDocNode, document: SDocDocument
     ):
         output = ""
 
+        current_view: ViewElement = document.view.get_current_view(
+            self.project_config.view
+        )
         element = document.grammar.elements_by_type[
             section_content.requirement_type
         ]
@@ -406,6 +412,10 @@ class SDWriter:
                     output += "MID: "
                     output += section_content.reserved_mid
                     output += "\n"
+                continue
+            if not current_view.includes_field(
+                section_content.requirement_type, field_name
+            ):
                 continue
             fields = section_content.ordered_fields_lookup[field_name]
             for field in fields:

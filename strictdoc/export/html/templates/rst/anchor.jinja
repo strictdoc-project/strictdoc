@@ -13,7 +13,7 @@
       Incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
       {%- for incoming_link in incoming_links -%}
       {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
-      {%- set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), anchor.document, document_type) -%}
+      {%- set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), anchor.parent_or_including_document, document_type) -%}
       <a href="{{ incoming_link_href }}">
         {{ incoming_link_parent_node.get_display_title() }}
       </a>

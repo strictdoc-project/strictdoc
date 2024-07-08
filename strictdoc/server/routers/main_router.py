@@ -149,6 +149,7 @@ def create_main_router(
         project_title=project_config.project_title,
         formats=["html"],
         fields=None,
+        generate_bundle_document=False,
         no_parallelization=False,
         enable_mathjax=False,
         included_documents=True,

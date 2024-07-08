@@ -1,4 +1,6 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
+from typing import Optional
+
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.paths import SDocRelativePath
@@ -8,7 +10,7 @@ from strictdoc.helpers.paths import SDocRelativePath
 class DocumentMeta:
     def __init__(
         self,
-        level,
+        level: int,
         file_tree_mount_folder,
         document_filename: str,
         document_filename_base,
@@ -48,7 +50,7 @@ class DocumentMeta:
             output_document_dir_rel_path, SDocRelativePath
         ), output_document_dir_rel_path
 
-        self.level = level
+        self.level: int = level
         self.file_tree_mount_folder = file_tree_mount_folder
         self.document_filename: str = document_filename
         self.document_filename_base = document_filename_base
@@ -107,42 +109,57 @@ class DocumentMeta:
         )
 
     # Links
-    def get_html_doc_link(self):
+    def get_html_doc_link(self) -> str:
+        file_name_part = f"{self.document_filename_base}.html"
+        if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
+            return file_name_part
         return (
             f"{self.output_document_dir_rel_path.relative_path_posix}"
-            f"/"
-            f"{self.document_filename_base}.html"
+            "/"
+            f"{file_name_part}"
         )
 
-    def get_html_table_link(self):
+    def get_html_table_link(self) -> str:
+        file_name_part = f"{self.document_filename_base}-TABLE.html"
+        if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
+            return file_name_part
         return (
             f"{self.output_document_dir_rel_path.relative_path_posix}"
-            f"/"
-            f"{self.document_filename_base}-TABLE.html"
+            "/"
+            f"{file_name_part}"
         )
 
-    def get_html_traceability_link(self):
+    def get_html_traceability_link(self) -> str:
+        file_name_part = f"{self.document_filename_base}-TRACE.html"
+        if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
+            return file_name_part
         return (
             f"{self.output_document_dir_rel_path.relative_path_posix}"
-            f"/"
-            f"{self.document_filename_base}-TRACE.html"
+            "/"
+            f"{file_name_part}"
         )
 
-    def get_html_deep_traceability_link(self):
+    def get_html_deep_traceability_link(self) -> str:
+        file_name_part = f"{self.document_filename_base}-DEEP-TRACE.html"
+        if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
+            return file_name_part
         return (
             f"{self.output_document_dir_rel_path.relative_path_posix}"
-            f"/"
-            f"{self.document_filename_base}-DEEP-TRACE.html"
+            "/"
+            f"{file_name_part}"
         )
 
-    def get_html_pdf_link(self):
+    def get_html_pdf_link(self) -> str:
+        file_name_part = f"{self.document_filename_base}-PDF.html"
+        if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
+            return file_name_part
         return (
             f"{self.output_document_dir_rel_path.relative_path_posix}"
-            f"/"
-            f"{self.document_filename_base}-PDF.html"
+            "/"
+            f"{file_name_part}"
         )
 
-    def get_html_standalone_document_link(self):
+    def get_html_standalone_document_link(self) -> str:
         return (
             f"{self.output_document_dir_rel_path.relative_path_posix}"
             f"/"
@@ -152,13 +169,12 @@ class DocumentMeta:
     def get_html_link(
         self,
         document_type: DocumentType,
-        other_doc_level,
-        force_full_path=False,
-    ):
+        other_doc_level: Optional[int],
+    ) -> str:
         assert isinstance(document_type, DocumentType)
 
         document_type_type = document_type.document_type
-        path_prefix = self.get_root_path_prefix(other_doc_level)
+        path_prefix: str = self.get_root_path_prefix(other_doc_level)
         if document_type_type == DocumentType.DOCUMENT:
             document_link = self.get_html_doc_link()
         elif document_type_type == DocumentType.TABLE:
@@ -171,12 +187,13 @@ class DocumentMeta:
             document_link = self.get_html_pdf_link()
         else:
             raise NotImplementedError
-        if not force_full_path:
-            return f"{path_prefix}/{document_link}"
-        return document_link
+        # We reach here the document is a bundle document.
+        if len(path_prefix) == 0:
+            return document_link
+        return f"{path_prefix}/{document_link}"
 
-    def get_root_path_prefix(self, other_doc_level=None):
-        level = self.level if not other_doc_level else other_doc_level
+    def get_root_path_prefix(self, other_doc_level=None) -> str:
+        level: int = self.level if not other_doc_level else other_doc_level
         if level == 0:
-            return ".."
-        return ("../" * level)[:-1]
+            return ""
+        return ("../" * level)[:-1]  # mypy: disable=no-any-return

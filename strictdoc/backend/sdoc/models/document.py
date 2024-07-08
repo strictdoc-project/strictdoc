@@ -27,6 +27,7 @@ class SDocDocument:
         grammar: Optional[DocumentGrammar],
         free_texts: List[FreeText],
         section_contents: List,
+        is_bundle_document: bool = False,
     ) -> None:
         assert isinstance(free_texts, list)
 
@@ -42,6 +43,8 @@ class SDocDocument:
         )
         self.grammar: Optional[DocumentGrammar] = grammar
         self.section_contents: List = section_contents
+
+        self.is_bundle_document: bool = is_bundle_document
 
         # FIXME: Plain list of all fragments found in the document.
         self.fragments_from_files: List = []

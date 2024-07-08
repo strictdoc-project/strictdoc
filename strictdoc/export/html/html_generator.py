@@ -122,7 +122,20 @@ class HTMLGenerator:
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
         export_output_html_root,
+        flat_assets: bool = False,
     ):
+        """
+        This is the primary method for copying all assets to the destination/output
+        folder during HTML and HTML2PDF exports.
+
+        :param bool flat_assets: This parameter is always set to False except when
+                                 exporting a "bundle document" with HTML2PDF.
+                                 The bundle document contains all documents of
+                                 the documentation tree. In this case, all assets
+                                 are simply copied to the top level _assets folder,
+                                 independently on how nested the contained documents are.
+        """
+
         # Export StrictDoc's own assets.
         output_html_static_files = os.path.join(
             export_output_html_root,
@@ -221,10 +234,14 @@ class HTMLGenerator:
         for asset_dir_ in traceability_index.asset_manager.iterate():
             source_path = asset_dir_.full_path
             output_relative_path = asset_dir_.relative_path
+
             destination_path = os.path.join(
                 export_output_html_root,
-                output_relative_path.relative_path,
+                output_relative_path.relative_path
+                if not flat_assets
+                else "_assets",
             )
+
             sync_dir(
                 source_path,
                 destination_path,
@@ -237,7 +254,9 @@ class HTMLGenerator:
                 for redundant_asset_ in redundant_asset_paths:
                     destination_path = os.path.join(
                         export_output_html_root,
-                        redundant_asset_.relative_path,
+                        redundant_asset_.relative_path
+                        if not flat_assets
+                        else "_assets",
                     )
                     sync_dir(
                         source_path,

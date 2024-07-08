@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
+# FIXME: Migrate this to a proper Enum.
 class DocumentType:
     DOCUMENT = "document"
     TABLE = "table"
@@ -6,8 +7,8 @@ class DocumentType:
     DEEPTRACE = "deeptrace"
     PDF = "pdf"
 
-    def __init__(self, document_type):
-        self.document_type = document_type
+    def __init__(self, document_type: str):
+        self.document_type: str = document_type
 
     @staticmethod
     def all():  # noqa: A003

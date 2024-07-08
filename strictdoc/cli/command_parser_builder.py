@@ -170,6 +170,17 @@ class CommandParserBuilder:
             help="Export fields, only used for Excel export",
         )
         command_parser_export.add_argument(
+            "--generate-bundle-document",
+            action="store_true",
+            default=False,
+            help=(
+                "EXPERIMENTAL: "
+                "In addition to generating individual documents, "
+                "also create a concatenated bundle that contains "
+                "all the documents together."
+            ),
+        )
+        command_parser_export.add_argument(
             "--no-parallelization",
             action="store_true",
             help=(

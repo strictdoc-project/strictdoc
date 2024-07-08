@@ -74,34 +74,46 @@ class LinkRenderer:
 
     def render_node_link(
         self,
-        node: Union[SDocNode, SDocSection, Anchor],
+        node: Union[SDocDocument, SDocNode, SDocSection, Anchor],
         context_document: Optional[SDocDocument],
         document_type: DocumentType,
-        force_full_path: bool = False,
         allow_local: bool = True,
     ):
         """
-        force_full_path: used by the Dot generator where relative paths
-                         are used directly, without being prepended with "../*"
         allow_local:     used on the DTR screen where we want to ensure that only
                          full paths are used when jumping to the DOC screen.
         """
+
+        assert isinstance(
+            node, (SDocDocument, SDocNode, SDocSection, Anchor)
+        ), node
+
         if isinstance(node, SDocDocument):
-            return (
-                f"{node.meta.get_root_path_prefix()}"
-                "/"
-                f"{node.meta.get_html_doc_link()}"
-                "#_TOP"
+            context_level_or_none = (
+                context_document.meta.level
+                if context_document is not None
+                else None
             )
+            document_link = node.meta.get_html_link(
+                document_type,
+                context_level_or_none,
+            )
+            return document_link + "#_TOP"
 
         assert isinstance(node, (SDocNode, SDocSection, Anchor)), node
         assert isinstance(document_type, DocumentType), document_type
         local_link = self.render_local_anchor(node)
+        including_document = node.get_included_document()
+        if (
+            including_document is not None
+            and including_document.is_bundle_document
+        ):
+            return f"#{local_link}"
+
         if (
             allow_local
             and context_document is not None
             and node.document == context_document
-            and not force_full_path
         ):
             return f"#{local_link}"
 
@@ -123,7 +135,6 @@ class LinkRenderer:
         document_link = node.parent_or_including_document.meta.get_html_link(
             document_type,
             level,
-            force_full_path=force_full_path,
         )
         requirement_link = f"{document_link}#{local_link}"
         self.req_link_cache[link_cache_key][node] = requirement_link
@@ -190,8 +201,7 @@ class LinkRenderer:
         context_source_file: SourceFile,
     ):
         def get_root_path_prefix(level):
-            if level == 0:
-                return ".."
+            assert level > 0
             return ("../" * level)[:-1]
 
         path_prefix = get_root_path_prefix(context_source_file.level + 1)
@@ -215,8 +225,7 @@ class LinkRenderer:
         assert len(source_link) > 0
 
         def get_root_path_prefix(level):
-            if level == 0:
-                return ".."
+            assert level > 0
             return ("../" * level)[:-1]
 
         path_prefix = get_root_path_prefix(context_source_file.level + 1)

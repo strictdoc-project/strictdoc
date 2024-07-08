@@ -21,7 +21,7 @@
         data-viewtype_link="document"
         class="viewtype__menu_item"
         title="Go to Document view"
-        href="{{ view_object.document.meta.get_root_path_prefix()}}/{{ view_object.document.meta.get_html_doc_link() }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "document") }}">
       Document</a>
     </li>
     {%- if view_object.project_config.is_activated_table_screen() -%}
@@ -30,7 +30,7 @@
         data-viewtype_link="table"
         class="viewtype__menu_item"
         title="Go to Table view"
-        href="{{ view_object.document.meta.get_root_path_prefix()}}/{{ view_object.document.meta.get_html_table_link() }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "table") }}">
       Table</a>
     </li>
     {%- endif -%}
@@ -40,7 +40,7 @@
         data-viewtype_link="traceability"
         class="viewtype__menu_item"
         title="Go to Traceability view"
-        href="{{ view_object.document.meta.get_root_path_prefix()}}/{{ view_object.document.meta.get_html_traceability_link() }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "trace") }}">
       Traceability</a>
     </li>
     {%- endif -%}
@@ -50,7 +50,7 @@
         data-viewtype_link="deep_traceability"
         class="viewtype__menu_item"
         title="Go to Deep Traceability view"
-        href="{{ view_object.document.meta.get_root_path_prefix()}}/{{ view_object.document.meta.get_html_deep_traceability_link() }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "deeptrace") }}">
       Deep Traceability</a>
     </li>
     {%- endif -%}
@@ -60,7 +60,7 @@
         data-viewtype_link="standalone_document"
         class="viewtype__menu_item"
         title="Go to Standalone Document view"
-        href="{{ view_object.document.meta.get_root_path_prefix()}}/{{ view_object.document.meta.get_html_standalone_document_link() }}">
+        href="{{ view_object.render_standalone_document_link(view_object.document, none) }}">
       Standalone</a>
     </li>
     {%- endif -%}
@@ -70,7 +70,7 @@
         data-viewtype_link="html2pdf"
         class="viewtype__menu_item"
         title="Go to PDF view"
-        href="{{ view_object.document.meta.get_root_path_prefix()}}/{{ view_object.document.meta.get_html_pdf_link() }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "pdf") }}">
       PDF</a>
     </li>
     {%- endif -%}

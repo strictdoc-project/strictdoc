@@ -1,8 +1,10 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call,no-untyped-def,union-attr,type-arg"
+from copy import deepcopy
 from datetime import datetime
 from enum import IntEnum
 from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Union
 
+from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -13,9 +15,11 @@ from strictdoc.backend.sdoc_source_code.reader import (
 )
 from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.graph_database import GraphDatabase
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.transforms.validation_error import (
     SingleValidationError,
 )
@@ -23,6 +27,7 @@ from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.mid import MID
+from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
@@ -1062,3 +1067,50 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             "There is already an existing node "
             f"with this UID: {existing_node_with_uid.get_display_title()}."
         )
+
+    def clone_to_bundle_document(
+        self, project_config: ProjectConfig
+    ) -> Tuple["TraceabilityIndex", SDocDocument]:
+        """
+        The only use case for this method is the generation of a bundle document.
+        Since the bundle document does not exist on file system, some parameters
+        are set artificially:
+        - The bundle is assumed to be an input file in the root input folder.
+        - The bundle is generated to the root of the output folder (level=0).
+        - Some variables do not contribute (yet) to the final result, so they
+          are marked as NOT_RELEVANT.
+        """
+        traceability_index_copy = deepcopy(self)
+        bundle_document = SDocDocument(
+            mid=None,
+            title=project_config.project_title,
+            config=None,
+            view=None,
+            grammar=None,
+            free_texts=[],
+            section_contents=[],
+            is_bundle_document=True,
+        )
+        bundle_document.meta = DocumentMeta(
+            level=0,
+            file_tree_mount_folder="NOT_RELEVANT",
+            document_filename="bundle.sdoc",
+            document_filename_base="bundle",
+            input_doc_full_path="NOT_RELEVANT",
+            input_doc_rel_path=SDocRelativePath("bundle.sdoc"),
+            input_doc_dir_rel_path=SDocRelativePath(""),
+            input_doc_assets_dir_rel_path=SDocRelativePath("NOT_RELEVANT"),
+            output_document_dir_full_path=project_config.export_output_html_root,
+            output_document_dir_rel_path=SDocRelativePath(""),
+        )
+        traceability_index_copy.document_iterators[bundle_document] = (
+            DocumentCachingIterator(bundle_document)
+        )
+        for document_ in traceability_index_copy.document_tree.document_list:
+            document_.ng_including_document_reference.set_document(
+                bundle_document
+            )
+            bundle_document.section_contents.append(document_)
+        traceability_index_copy.document_tree.document_list = [bundle_document]
+        bundle_document.ng_including_document_reference = DocumentReference()
+        return traceability_index_copy, bundle_document

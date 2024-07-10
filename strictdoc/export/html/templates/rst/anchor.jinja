@@ -5,7 +5,8 @@
 
 .. raw:: html
 
-    <sdoc-anchor id="{{ anchor.value }}" node-role="section" data-uid="{{ anchor.value }}" data-anchor="{{ anchor.value }}" style="top:unset">
+    {% set local_anchor = link_renderer.render_local_anchor(anchor) -%}
+    <sdoc-anchor id="{{ local_anchor }}" node-role="section" data-uid="{{ local_anchor }}" data-anchor="{{ local_anchor }}" style="top:unset">
     {%- set incoming_links = traceability_index.get_incoming_links(anchor) -%}
     {%- if incoming_links is not none and incoming_links|length > 0 -%}
     <template>

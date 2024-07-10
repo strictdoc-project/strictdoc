@@ -20,5 +20,5 @@ CHECK-HTML-DOC2:<sdoc-anchor id="AD4"{{.*}}
 CHECK-HTML-DOC2:<li>AD4. Threat Model.</li>
 CHECK-HTML-DOC2:<sdoc-anchor id="AD5"{{.*}}
 CHECK-HTML-DOC2:<li>AD5. Software Tests.</li>
-CHECK-HTML-DOC2:<sdoc-anchor id="Supplemental Guide"{{.*}}
+CHECK-HTML-DOC2:<sdoc-anchor id="Supplemental-Guide"{{.*}}
 CHECK-HTML-DOC2:<li>AD6. Supplemental Guide.</li>

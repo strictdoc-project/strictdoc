@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Document 2
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Req #1
+STATEMENT: >>>
+Here we have an anchor:
+
+[ANCHOR: ANC 1, Anchor title]
+<<<

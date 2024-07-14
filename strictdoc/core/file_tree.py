@@ -115,7 +115,7 @@ class FileTree:
 
     @staticmethod
     def create_single_file_tree(root_path) -> "FileTree":
-        single_file = File(0, root_path, SDocRelativePath(""))
+        single_file = File(1, root_path, SDocRelativePath(""))
         return FileTree(root_folder_or_file=single_file)
 
     def iterate(self) -> Iterator[Tuple[Union[Folder, File], File, str]]:

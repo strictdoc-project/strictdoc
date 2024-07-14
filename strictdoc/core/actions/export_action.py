@@ -7,9 +7,11 @@ from typing import Optional
 from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.backend.reqif.reqif_export import ReqIFExport
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
@@ -62,6 +64,16 @@ class ExportAction:
                 strictdoc_last_update=self.traceability_index.strictdoc_last_update,
             )
 
+            # The bundle document is generated only when the option is provided.
+            traceability_index_copy: Optional[TraceabilityIndex] = None
+            bundle_document: Optional[SDocDocument] = None
+            if self.project_config.generate_bundle_document:
+                traceability_index_copy, bundle_document = (
+                    self.traceability_index.clone_to_bundle_document(
+                        self.project_config
+                    )
+                )
+
             if (
                 "html" in self.project_config.export_formats
                 or "html-standalone" in self.project_config.export_formats
@@ -73,6 +85,12 @@ class ExportAction:
                     traceability_index=self.traceability_index,
                     parallelizer=self.parallelizer,
                 )
+                if self.project_config.generate_bundle_document:
+                    html_generator.export_single_document(
+                        document=bundle_document,
+                        traceability_index=traceability_index_copy,
+                        specific_documents=(DocumentType.DOCUMENT,),
+                    )
 
             if "html2pdf" in self.project_config.export_formats:
                 output_html2pdf_root = os.path.join(
@@ -85,6 +103,15 @@ class ExportAction:
                     html_templates,
                     output_html2pdf_root,
                 )
+
+                if self.project_config.generate_bundle_document:
+                    HTML2PDFGenerator.export_tree(
+                        self.project_config,
+                        traceability_index_copy,
+                        html_templates,
+                        output_html2pdf_root,
+                        flat_assets=True,
+                    )
 
         if "rst" in self.project_config.export_formats:
             output_rst_root = os.path.join(

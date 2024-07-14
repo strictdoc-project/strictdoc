@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: Dummy Software Requirements Specification #1
+
+[SECTION]
+UID: SEC-1
+TITLE: Section #1
+
+[TEXT]
+STATEMENT: >>>
+.. image:: _assets/file.svg
+   :alt: Test image
+   :class: image
+   :width: 100%
+<<<
+
+[/SECTION]

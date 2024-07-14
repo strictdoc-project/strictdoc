@@ -24,6 +24,7 @@ class HTML2PDFGenerator:
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
         output_html2pdf_root: str,
+        flat_assets: bool = False,
     ):
         if not project_config.is_activated_html2pdf():
             raise StrictDocException("HTML2PDF feature is not enabled")
@@ -35,6 +36,7 @@ class HTML2PDFGenerator:
             traceability_index=traceability_index,
             project_config=project_config,
             export_output_html_root=path_to_output_pdf_html_dir,
+            flat_assets=flat_assets,
         )
 
         paths_to_print: List[Tuple[str, str]] = []

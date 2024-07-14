@@ -136,6 +136,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         project_title: Optional[str],
         formats,
         fields,
+        generate_bundle_document: bool,
         no_parallelization: bool,
         enable_mathjax: bool,
         included_documents: bool,
@@ -153,6 +154,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.project_title: Optional[str] = project_title
         self.formats = formats
         self.fields = fields
+        self.generate_bundle_document: bool = generate_bundle_document
         self.no_parallelization: bool = no_parallelization
         self.enable_mathjax: bool = enable_mathjax
         self.included_documents: bool = included_documents
@@ -286,6 +288,7 @@ class SDocArgsParser:
             project_title,
             self.args.formats,
             self.args.fields,
+            self.args.generate_bundle_document,
             self.args.no_parallelization,
             self.args.enable_mathjax,
             self.args.included_documents,

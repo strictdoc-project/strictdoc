@@ -130,6 +130,9 @@ def get_pdf_from_html(driver, url) -> bytes:
         "landscape": False,
         "displayHeaderFooter": False,
         "printBackground": True,
+        # This is an experimental feature that generates a document outline
+        # (table of contents).
+        "generateDocumentOutline": True,
         # Whether to prefer page size as defined by css. Defaults to
         # false, in which case the content will be scaled to fit the paper size.
         "preferCSSPageSize": True,
@@ -197,7 +200,7 @@ def create_webdriver():
         options=webdriver_options,
         service=service,
     )
-    driver.set_page_load_timeout(15)
+    driver.set_page_load_timeout(60)
 
     return driver
 

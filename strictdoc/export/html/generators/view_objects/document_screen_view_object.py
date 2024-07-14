@@ -208,11 +208,34 @@ class DocumentScreenViewObject:
     def render_url(self, url: str):
         return self.link_renderer.render_url(url)
 
-    def render_node_link(self, incoming_link, document, document_type):
-        assert incoming_link is not None, incoming_link
+    def render_node_link(self, node, context_document, document_type):
+        assert node is not None, node
         return self.link_renderer.render_node_link(
-            incoming_link, document, document_type
+            node, context_document, document_type
         )
+
+    def render_document_link(
+        self,
+        document: SDocDocument,
+        context_document: SDocDocument,
+        document_type_string: str,
+    ):
+        assert document is not None, document
+        return self.link_renderer.render_node_link(
+            document, context_document, DocumentType(document_type_string)
+        )
+
+    @staticmethod
+    def render_standalone_document_link(
+        document: SDocDocument, context_document: SDocDocument
+    ):
+        if context_document is not None:
+            raise NotImplementedError
+        root_prefix = document.meta.get_root_path_prefix()
+        document_link = document.meta.get_html_standalone_document_link()
+        if len(root_prefix) == 0:
+            return document_link
+        return "/".join((root_prefix, document_link))
 
     def render_static_url(self, url: str):
         return self.link_renderer.render_static_url(url)

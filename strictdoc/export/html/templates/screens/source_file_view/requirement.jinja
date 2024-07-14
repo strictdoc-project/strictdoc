@@ -1,10 +1,10 @@
 {%- assert
     requirement.__class__.__name__ == "SDocNode",
-    "Expected requirement, got: "~requirement
+    "Expected requirement"
 -%}
 {%- assert
     view_object.link_renderer.__class__.__name__ == "LinkRenderer",
-    "Expected link renderer, got: "~view_object.link_renderer
+    "Expected link renderer"
 -%}
 
 <div id="requirement:{{ requirement.reserved_uid }}" class="source-file__requirement" data-reqid="{{ requirement.reserved_uid }}">
@@ -22,7 +22,7 @@
  {%- if requirement_file_links %}
   <ul class="requirement-tree_downward">
   {%- for link, opt_ranges in requirement_file_links %}
-    {%- assert link.__class__.__name__ == "FileReference", "Expected FileReference, got: "~link -%}
+    {%- assert link.__class__.__name__ == "FileReference", "Expected FileReference" -%}
 
     {%- set this_file_or_other = view_object.source_file.in_doctree_source_file_rel_path_posix == link.get_posix_path() -%}
     {%- set traceability_file_type = "this_file" if this_file_or_other else "other_file" -%}

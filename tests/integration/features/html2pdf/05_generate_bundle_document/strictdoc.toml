@@ -1,0 +1,5 @@
+[project]
+
+features = [
+  "HTML2PDF",
+]

@@ -36,8 +36,8 @@ class Anchor:
     def parent_or_including_document(self):
         return self.parent_node().parent_or_including_document
 
-    def get_included_document(self):
-        return self.parent_node().get_included_document()
+    def get_including_document(self):
+        return self.parent_node().get_including_document()
 
     def parent_node(self) -> Any:
         # Anchor -> FreeText -> Section|Document

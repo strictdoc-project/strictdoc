@@ -162,7 +162,7 @@ class CreateSectionCommand:
                     document = reference_node
                 else:
                     document = assert_cast(
-                        reference_node.get_included_document(), SDocDocument
+                        reference_node.get_including_document(), SDocDocument
                     )
         else:
             document = reference_node.document

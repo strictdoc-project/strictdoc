@@ -103,7 +103,7 @@ class LinkRenderer:
         assert isinstance(node, (SDocNode, SDocSection, Anchor)), node
         assert isinstance(document_type, DocumentType), document_type
         local_link = self.render_local_anchor(node)
-        including_document = node.get_included_document()
+        including_document = node.get_including_document()
         if (
             including_document is not None
             and including_document.is_bundle_document

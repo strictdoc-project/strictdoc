@@ -103,7 +103,7 @@ class SDocDocument:
     def document_is_included(self) -> bool:
         return self.ng_including_document_reference.get_document() is not None
 
-    def get_included_document(self) -> Optional["SDocDocument"]:
+    def get_including_document(self) -> Optional["SDocDocument"]:
         # FIXME: Fix no-any-return when the circular references between
         #        SDocDocument and DocumentReference are fixed.
         return self.ng_including_document_reference.get_document()  # type: ignore[no-any-return]

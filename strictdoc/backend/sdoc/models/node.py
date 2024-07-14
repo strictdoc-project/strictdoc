@@ -294,7 +294,7 @@ class SDocNode(SDocObject):
     def get_document(self) -> Optional[SDocDocument]:
         return self.ng_document_reference.get_document()
 
-    def get_included_document(self) -> Optional[SDocDocument]:
+    def get_including_document(self) -> Optional[SDocDocument]:
         return self.ng_including_document_reference.get_document()
 
     def get_display_node_type(self) -> str:

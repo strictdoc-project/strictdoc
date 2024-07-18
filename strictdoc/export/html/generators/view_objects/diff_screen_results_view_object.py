@@ -60,7 +60,9 @@ class DiffScreenResultsViewObject:
         self.error_message: Optional[str] = None
 
     def render_screen(self, jinja_environment: Environment):
-        template = jinja_environment.get_template("screens/git/index.jinja")
+        template = jinja_environment.overlay(autoescape=False).get_template(
+            "screens/git/index.jinja"
+        )
         return template.render(view_object=self)
 
     def render_url(self, url: str):

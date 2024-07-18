@@ -1,7 +1,7 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,operator"
-import html
 from typing import List
 
+from markupsafe import escape
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_for_filename
@@ -202,12 +202,9 @@ class SourceFileViewHTMLGenerator:
             assert closing_bracket_index is not None
             after_line = source_line[closing_bracket_index:].rstrip()
 
-            before_line = html.escape(before_line)
-            after_line = html.escape(after_line)
-
             pygmented_source_file_lines[pragma_line - 1] = (
-                before_line,
-                after_line,
+                escape(before_line),
+                escape(after_line),
                 pragma,
             )
         pygments_styles = (

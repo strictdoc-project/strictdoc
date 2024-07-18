@@ -6,6 +6,7 @@ from typing import Optional
 from jinja2 import Environment
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc.models.any_node import SDocAnyNode
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
@@ -25,8 +26,8 @@ class SearchScreenViewObject:
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
         templates: HTMLTemplates,
-        search_results,
-        search_value,
+        search_results: SDocAnyNode,
+        search_value: str,
         error,
     ):
         self.traceability_index: TraceabilityIndex = traceability_index

@@ -105,6 +105,7 @@ class NormalHTMLTemplates(HTMLTemplates):
             loader=FileSystemLoader(environment.get_path_to_html_templates()),
             undefined=StrictUndefined,
             extensions=[AssertExtension],
+            autoescape=True,
         )
 
     def jinja_environment(self) -> Environment:

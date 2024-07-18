@@ -33,5 +33,5 @@ class Test_UC55_G1_T01_NotAReqIFormat(E2ECase):
 
             form_import.do_form_submit_and_catch_error(
                 "Cannot parse ReqIF file: "
-                "Start tag expected, '<' not found, line 1, column 1 (, line 1)"
+                "Start tag expected, '<' not found, line 1, column 1 (<string>, line 1)"
             )

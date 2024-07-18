@@ -1,6 +1,8 @@
 # mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,var-annotated"
 from typing import Optional, Type, Union
 
+from markupsafe import Markup
+
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -141,7 +143,7 @@ class MarkupRenderer:
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, node_field, truncated)] = output
 
-        return output
+        return Markup(output)
 
     def render_free_text(self, document_type, free_text):
         assert isinstance(free_text, FreeText)

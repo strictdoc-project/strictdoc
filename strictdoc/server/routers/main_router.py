@@ -1,6 +1,5 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-redef,no-untyped-call,no-untyped-def,union-attr"
 import copy
-import html
 import os
 import re
 from mimetypes import guess_type
@@ -1074,8 +1073,7 @@ def create_main_router(
             field_mid=MID.create(),
             field_name="UID",
             field_type=RequirementFormFieldType.SINGLELINE,
-            field_unescaped_value=next_uid,
-            field_escaped_value=next_uid,
+            field_value=next_uid,
         )
         template = env().get_template(
             "components/form/row/row_uid_with_reset/stream.jinja"
@@ -1814,8 +1812,7 @@ def create_main_router(
                 field_mid=MID.create(),
                 field_name="COMMENT",
                 field_type=RequirementFormFieldType.MULTILINE,
-                field_unescaped_value="",
-                field_escaped_value="",
+                field_value="",
             ),
         )
         return HTMLResponse(
@@ -2722,14 +2719,12 @@ def create_main_router(
             except (AttributeError, NameError, TypeError) as attribute_error_:
                 error = attribute_error_.args[0]
 
-        search_value = html.escape(q) if q is not None else ""
-
         view_object = SearchScreenViewObject(
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             templates=html_templates,
             search_results=search_results,
-            search_value=search_value,
+            search_value=q if q is not None else "",
             error=error,
         )
         output = view_object.render_screen(html_templates.jinja_environment())

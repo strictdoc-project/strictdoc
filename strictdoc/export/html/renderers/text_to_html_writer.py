@@ -1,11 +1,11 @@
 # mypy: disable-error-code="no-untyped-def"
-import html
+from markupsafe import Markup, escape
 
 
 class TextToHtmlWriter:
     @staticmethod
     def write(text_fragment):
-        return html.escape(text_fragment, quote=True).replace("\n", "<br/>\n")
+        return escape(text_fragment).replace("\n", Markup("<br/>\n"))
 
     @staticmethod
     def write_link(title, _):

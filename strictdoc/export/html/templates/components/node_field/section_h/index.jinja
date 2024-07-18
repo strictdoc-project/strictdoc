@@ -14,7 +14,7 @@
 
     {%- if sdoc_entity.context.title_number_string -%}
       {#- add title 'number' part to the accumulator -#}
-      {%- set field_content_ = field_content_ + sdoc_entity.context.title_number_string + ".&nbsp;" -%}
+      {%- set field_content_ = field_content_ + sdoc_entity.context.title_number_string + ".&nbsp;"|safe -%}
     {%- endif -%}
 
     {%- set title = sdoc_entity.reserved_title if sdoc_entity.is_requirement else sdoc_entity.title -%}

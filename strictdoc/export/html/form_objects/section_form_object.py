@@ -1,5 +1,4 @@
 # mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg"
-import html
 from collections import defaultdict
 from typing import Dict
 
@@ -41,11 +40,11 @@ class SectionFormObject(ErrorObject):
 
     @property
     def section_uid(self):
-        return self.section_uid_field.field_unescaped_value
+        return self.section_uid_field.field_value
 
     @property
     def section_title(self):
-        return self.section_title_field.field_unescaped_value
+        return self.section_title_field.field_value
 
     @staticmethod
     def create_new(context_document_mid: str):
@@ -55,15 +54,13 @@ class SectionFormObject(ErrorObject):
                 field_mid=MID.create(),
                 field_name="UID",
                 field_type=RequirementFormFieldType.SINGLELINE,
-                field_unescaped_value="",
-                field_escaped_value="",
+                field_value="",
             ),
             section_title_field=RequirementFormField(
                 field_mid=MID.create(),
                 field_name="TITLE",
                 field_type=RequirementFormFieldType.SINGLELINE,
-                field_unescaped_value="",
-                field_escaped_value="",
+                field_value="",
             ),
             context_document_mid=context_document_mid,
         )
@@ -73,10 +70,7 @@ class SectionFormObject(ErrorObject):
         uid_field_value = (
             section.reserved_uid if section.reserved_uid is not None else ""
         )
-        uid_escaped_field_value = html.escape(uid_field_value)
-
         title_field_value = section.title if section.title is not None else ""
-        title_escaped_field_value = html.escape(title_field_value)
 
         return SectionFormObject(
             section_mid=section.reserved_mid,
@@ -84,15 +78,13 @@ class SectionFormObject(ErrorObject):
                 field_mid=MID.create(),
                 field_name="UID",
                 field_type=RequirementFormFieldType.SINGLELINE,
-                field_unescaped_value=uid_field_value,
-                field_escaped_value=uid_escaped_field_value,
+                field_value=uid_field_value,
             ),
             section_title_field=RequirementFormField(
                 field_mid=MID.create(),
                 field_name="TITLE",
                 field_type=RequirementFormFieldType.SINGLELINE,
-                field_unescaped_value=title_field_value,
-                field_escaped_value=title_escaped_field_value,
+                field_value=title_field_value,
             ),
             context_document_mid=context_document_mid,
         )
@@ -128,8 +120,7 @@ class SectionFormObject(ErrorObject):
             field_mid=MID.create(),
             field_name="UID",
             field_type=RequirementFormFieldType.SINGLELINE,
-            field_unescaped_value=sanitized_uid_field_value,
-            field_escaped_value=html.escape(sanitized_uid_field_value),
+            field_value=sanitized_uid_field_value,
         )
 
         title_field_value = requirement_fields["TITLE"][0]
@@ -140,8 +131,7 @@ class SectionFormObject(ErrorObject):
             field_mid=MID.create(),
             field_name="TITLE",
             field_type=RequirementFormFieldType.SINGLELINE,
-            field_unescaped_value=sanitized_title_field_value,
-            field_escaped_value=html.escape(sanitized_title_field_value),
+            field_value=sanitized_title_field_value,
         )
 
         form_object = SectionFormObject(

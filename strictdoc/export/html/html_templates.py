@@ -13,15 +13,34 @@ from jinja2 import (
     FileSystemLoader,
     ModuleLoader,
     StrictUndefined,
+    Template,
     TemplateRuntimeError,
     nodes,
 )
 from jinja2.ext import Extension
+from markupsafe import Markup
 
 from strictdoc import environment
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import measure_performance
+
+
+class JinjaEnvironment:
+    environment: Environment
+
+    def __init__(self, environment: Environment):
+        self.environment = environment
+
+    def get_template(self, *args, **kwargs) -> Template:
+        return self.environment.get_template(*args, **kwargs)
+
+    def render_template_as_markup(
+        self, template: str, *args, **kwargs
+    ) -> Markup:
+        return Markup(
+            self.environment.get_template(template).render(*args, **kwargs)
+        )
 
 
 # https://stackoverflow.com/questions/21778252/how-to-raise-an-exception-in-a-jinja2-macro
@@ -90,7 +109,7 @@ class HTMLTemplates:
 
         return NormalHTMLTemplates()
 
-    def jinja_environment(self) -> Environment:
+    def jinja_environment(self) -> JinjaEnvironment:
         raise NotImplementedError
 
     def reset_jinja_environment_if_outdated(
@@ -101,13 +120,18 @@ class HTMLTemplates:
 
 class NormalHTMLTemplates(HTMLTemplates):
     def __init__(self):
-        self._jinja_environment: Environment = Environment(
-            loader=FileSystemLoader(environment.get_path_to_html_templates()),
-            undefined=StrictUndefined,
-            extensions=[AssertExtension],
+        self._jinja_environment: JinjaEnvironment = JinjaEnvironment(
+            Environment(
+                loader=FileSystemLoader(
+                    environment.get_path_to_html_templates()
+                ),
+                undefined=StrictUndefined,
+                extensions=[AssertExtension],
+                autoescape=True,
+            )
         )
 
-    def jinja_environment(self) -> Environment:
+    def jinja_environment(self) -> JinjaEnvironment:
         return self._jinja_environment
 
     def reset_jinja_environment_if_outdated(
@@ -130,7 +154,7 @@ class CompiledHTMLTemplates(HTMLTemplates):
             CompiledHTMLTemplates.PATH_TO_JINJA_CACHE_DIR,
             path_to_output_dir_hash,
         )
-        self._jinja_environment: Optional[Environment] = None
+        self._jinja_environment: Optional[JinjaEnvironment] = None
 
     def compile_jinja_templates(self):
         if os.path.isdir(self.path_to_jinja_cache_bucket_dir):
@@ -139,6 +163,7 @@ class CompiledHTMLTemplates(HTMLTemplates):
             loader=FileSystemLoader(environment.get_path_to_html_templates()),
             undefined=StrictUndefined,
             extensions=[AssertExtension],
+            autoescape=True,
         )
         # TODO: Check if this line is still needed (might be some older workaround).
         jinja_environment.globals.update(isinstance=isinstance)
@@ -162,14 +187,17 @@ class CompiledHTMLTemplates(HTMLTemplates):
                 ignore_errors=False,
             )
 
-    def jinja_environment(self) -> Environment:
+    def jinja_environment(self) -> JinjaEnvironment:
         if self._jinja_environment is not None:
             return self._jinja_environment
         assert os.path.isdir(self.path_to_jinja_cache_bucket_dir)
-        self._jinja_environment = Environment(
-            loader=ModuleLoader(self.path_to_jinja_cache_bucket_dir),
-            undefined=StrictUndefined,
-            extensions=[AssertExtension],
+        self._jinja_environment = JinjaEnvironment(
+            Environment(
+                loader=ModuleLoader(self.path_to_jinja_cache_bucket_dir),
+                undefined=StrictUndefined,
+                extensions=[AssertExtension],
+                autoescape=True,
+            )
         )
         return self._jinja_environment
 

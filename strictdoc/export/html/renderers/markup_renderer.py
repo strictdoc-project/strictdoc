@@ -1,5 +1,7 @@
 from typing import Dict, Optional, Tuple, Union
 
+from markupsafe import Markup
+
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -84,7 +86,7 @@ class MarkupRenderer:
         # FIXME: Now that the underlying RST fragment caching is in place,
         # This caching could be removed. It is unlikely that it adds any serious
         # performance improvement.
-        self.cache: Dict[Tuple[DocumentType, SDocNodeField], str] = {}
+        self.cache: Dict[Tuple[DocumentType, SDocNodeField], Markup] = {}
 
         self.template_anchor = html_templates.jinja_environment().get_template(
             "rst/anchor.jinja"
@@ -92,13 +94,13 @@ class MarkupRenderer:
 
     def render_node_statement(
         self, document_type: DocumentType, node: SDocNode
-    ) -> str:
+    ) -> Markup:
         assert isinstance(node, SDocNode)
         return self.render_node_field(document_type, node.get_content_field())
 
     def render_truncated_node_statement(
         self, document_type: DocumentType, node: SDocNode
-    ) -> str:
+    ) -> Markup:
         assert isinstance(node, SDocNode)
         # FIXME: Double-check and switch to truncating using CSS.
         # https://github.com/strictdoc-project/strictdoc/issues/1925
@@ -106,7 +108,7 @@ class MarkupRenderer:
 
     def render_node_rationale(
         self, document_type: DocumentType, node: SDocNode
-    ) -> str:
+    ) -> Markup:
         assert isinstance(node, SDocNode)
         return self.render_node_field(
             document_type,
@@ -115,7 +117,7 @@ class MarkupRenderer:
 
     def render_node_field(
         self, document_type: DocumentType, node_field: SDocNodeField
-    ) -> str:
+    ) -> Markup:
         assert isinstance(node_field, SDocNodeField), node_field
 
         if (document_type, node_field) in self.cache:
@@ -149,6 +151,7 @@ class MarkupRenderer:
             else:
                 raise NotImplementedError
             prev_part = part
+
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, node_field)] = output
 

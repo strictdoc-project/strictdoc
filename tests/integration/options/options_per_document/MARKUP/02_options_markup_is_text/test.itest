@@ -3,4 +3,4 @@ CHECK: Published: Hello world doc
 
 RUN: %cat %S/Output/html/02_options_markup_is_text/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: **This text will not be converted to strong tag**
-CHECK-HTML: &lt;a href=&quot;url&quot;&gt;link&lt;/a&gt;
+CHECK-HTML: &lt;a href=&#34;url&#34;&gt;link&lt;/a&gt;

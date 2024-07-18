@@ -1,7 +1,7 @@
 # mypy: disable-error-code="arg-type,no-any-return,no-untyped-call,no-untyped-def,union-attr,type-arg"
 from typing import Dict, List, Optional, Set, Tuple, Union
 
-from jinja2 import Environment, Template
+from jinja2 import Template
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -23,6 +23,7 @@ from strictdoc.export.html.form_objects.form_object import (
     RowWithRelationFormObject,
     RowWithReservedFieldFormObject,
 )
+from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.form_data import parse_form_data
@@ -108,7 +109,7 @@ class GrammarElementFormObject(ErrorObject):
         fields: List[GrammarFormField],
         relations: List[GrammarFormRelation],
         project_config: ProjectConfig,
-        jinja_environment: Environment,
+        jinja_environment: JinjaEnvironment,
     ):
         assert isinstance(document_mid, str), document_mid
         super().__init__()
@@ -118,7 +119,7 @@ class GrammarElementFormObject(ErrorObject):
         self.fields: List[GrammarFormField] = fields
         self.relations: List[GrammarFormRelation] = relations
         self.project_config: ProjectConfig = project_config
-        self.jinja_environment: Environment = jinja_environment
+        self.jinja_environment: JinjaEnvironment = jinja_environment
 
     @staticmethod
     def create_from_request(
@@ -126,7 +127,7 @@ class GrammarElementFormObject(ErrorObject):
         document: SDocDocument,
         request_form_data: FormData,
         project_config: ProjectConfig,
-        jinja_environment: Environment,
+        jinja_environment: JinjaEnvironment,
     ) -> "GrammarElementFormObject":
         form_object_fields: List[GrammarFormField] = []
         form_object_relations: List[GrammarFormRelation] = []
@@ -193,7 +194,7 @@ class GrammarElementFormObject(ErrorObject):
         document: SDocDocument,
         element_mid: str,
         project_config: ProjectConfig,
-        jinja_environment: Environment,
+        jinja_environment: JinjaEnvironment,
     ) -> "GrammarElementFormObject":
         assert isinstance(document, SDocDocument)
         assert isinstance(document.grammar, DocumentGrammar)
@@ -371,10 +372,9 @@ class GrammarElementFormObject(ErrorObject):
         )
 
     def render_after_validation(self):
-        template: Template = self.jinja_environment.get_template(
-            "components/grammar_form_element/index.jinja"
+        rendered_template = self.jinja_environment.render_template_as_markup(
+            "components/grammar_form_element/index.jinja", form_object=self
         )
-        rendered_template = template.render(form_object=self)
         return render_turbo_stream(
             content=rendered_template, action="update", target="modal"
         )

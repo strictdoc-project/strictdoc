@@ -1,7 +1,10 @@
+from markupsafe import Markup
+
+
 class HTMLFragmentWriter:
     @staticmethod
-    def write(text_fragment: str) -> str:
-        return text_fragment
+    def write(text_fragment: str) -> Markup:
+        return Markup(text_fragment)
 
     @staticmethod
     def write_anchor_link(title: str, href: str) -> str:

@@ -1,7 +1,7 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,operator"
-import html
-from typing import List
+from typing import List, Tuple
 
+from markupsafe import Markup, escape
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_for_filename
@@ -46,8 +46,8 @@ class SourceFileViewHTMLGenerator:
         with open(source_file.full_path, encoding="utf-8") as opened_file:
             source_file_lines = opened_file.readlines()
 
-        pygmented_source_file_lines: List[str] = []
-        pygments_styles: str = ""
+        pygmented_source_file_lines: List[Markup] = []
+        pygments_styles: Markup = Markup("")
 
         if len(source_file_lines) > 0:
             coverage_info: SourceFileTraceabilityInfo = (
@@ -89,7 +89,7 @@ class SourceFileViewHTMLGenerator:
         source_file: SourceFile,
         source_file_lines: List[str],
         coverage_info: SourceFileTraceabilityInfo,
-    ):
+    ) -> Tuple[List[Markup], Markup]:
         assert isinstance(source_file, SourceFile)
         assert isinstance(source_file_lines, list)
         assert isinstance(coverage_info, SourceFileTraceabilityInfo)
@@ -202,12 +202,9 @@ class SourceFileViewHTMLGenerator:
             assert closing_bracket_index is not None
             after_line = source_line[closing_bracket_index:].rstrip()
 
-            before_line = html.escape(before_line)
-            after_line = html.escape(after_line)
-
             pygmented_source_file_lines[pragma_line - 1] = (
-                before_line,
-                after_line,
+                escape(before_line),
+                escape(after_line),
                 pragma,
             )
         pygments_styles = (
@@ -215,4 +212,6 @@ class SourceFileViewHTMLGenerator:
             + html_formatter.get_style_defs(".highlight")
         )
 
-        return pygmented_source_file_lines, pygments_styles
+        return list(map(Markup, pygmented_source_file_lines)), Markup(
+            pygments_styles
+        )

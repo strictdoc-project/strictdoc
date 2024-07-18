@@ -8,7 +8,7 @@
     {%- if title_number is true -%}
       {%- if sdoc_entity.context.title_number_string %}
         {#- add title 'number' part to the accumulator -#}
-        {%- set field_content_ = field_content_ + sdoc_entity.context.title_number_string + ".&nbsp;" -%}
+        {%- set field_content_ = field_content_ + sdoc_entity.context.title_number_string + ".&nbsp;"|safe -%}
       {%- endif -%}
     {%- endif -%}
 

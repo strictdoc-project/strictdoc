@@ -1,10 +1,10 @@
-import html
+from markupsafe import Markup, escape
 
 
 class TextToHtmlWriter:
     @staticmethod
-    def write(text_fragment: str) -> str:
-        return html.escape(text_fragment, quote=True).replace("\n", "<br/>\n")
+    def write(text_fragment: str) -> Markup:
+        return escape(text_fragment).replace("\n", Markup("<br/>\n"))
 
     @staticmethod
     def write_anchor_link(title: str, href: str) -> str:

@@ -1,3 +1,6 @@
+from markupsafe import Markup
+
+
 # mypy: disable-error-code="no-untyped-def"
 def render_turbo_stream(content: str, action: str, target: str):
     assert action in ("append", "replace", "update")
@@ -9,4 +12,4 @@ def render_turbo_stream(content: str, action: str, target: str):
   </template>
 </turbo-stream>
 """
-    return turbo_stream
+    return Markup(turbo_stream)

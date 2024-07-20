@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Dict, List, Optional, Union
 
 from fastapi import APIRouter, Form, UploadFile
-from jinja2 import Environment
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
 from reqif.unparser import ReqIFUnparser
@@ -112,7 +111,7 @@ from strictdoc.export.html.generators.view_objects.search_screen_view_object imp
     SearchScreenViewObject,
 )
 from strictdoc.export.html.html_generator import HTMLGenerator
-from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html2pdf.pdf_print_driver import PDFPrintDriver
@@ -183,7 +182,7 @@ def create_main_router(
         export_output_html_root=project_config.export_output_html_root,
     )
 
-    def env() -> Environment:
+    def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
 
     router = APIRouter()
@@ -200,12 +199,6 @@ def create_main_router(
     def requirement__show_full(reference_mid: str):
         requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
-        )
-        template = env().get_template(
-            "actions/"
-            "node/"
-            "show_full_node/"
-            "stream_show_full_requirement.jinja"
         )
         link_renderer = LinkRenderer(
             root_path=requirement.document.meta.get_root_path_prefix(),
@@ -228,8 +221,13 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(
-            view_object=view_object, requirement=requirement
+        output = env().render_template_as_markup(
+            "actions/"
+            "node/"
+            "show_full_node/"
+            "stream_show_full_requirement.jinja",
+            view_object=view_object,
+            requirement=requirement,
         )
         return HTMLResponse(
             content=output,
@@ -243,12 +241,6 @@ def create_main_router(
     def section__show_full(reference_mid: str):
         section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(reference_mid)
-        )
-        template = env().get_template(
-            "actions/"
-            "node/"
-            "show_full_node/"
-            "stream_show_full_section.jinja"
         )
         link_renderer = LinkRenderer(
             root_path=section.document.meta.get_root_path_prefix(),
@@ -265,7 +257,11 @@ def create_main_router(
         current_view: ViewElement = section.document.view.get_current_view(
             project_config.view
         )
-        output = template.render(
+        output = env().render_template_as_markup(
+            "actions/"
+            "node/"
+            "show_full_node/"
+            "stream_show_full_section.jinja",
             renderer=markup_renderer,
             section=section,
             traceability_index=export_action.traceability_index,
@@ -317,9 +313,6 @@ def create_main_router(
         else:
             raise NotImplementedError
 
-        template = env().get_template(
-            "actions/document/create_section/stream_new_section.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -332,7 +325,8 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        output = template.render(
+        output = env().render_template_as_markup(
+            "actions/document/create_section/stream_new_section.jinja.html",
             renderer=markup_renderer,
             form_object=section_form_object,
             reference_mid=reference_mid,
@@ -392,9 +386,6 @@ def create_main_router(
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
-            template = env().get_template(
-                "actions/document/create_section/stream_new_section.jinja.html"
-            )
             link_renderer = LinkRenderer(
                 root_path=context_document.meta.get_root_path_prefix(),
                 static_path=project_config.dir_for_sdoc_assets,
@@ -407,7 +398,8 @@ def create_main_router(
                 config=project_config,
                 context_document=context_document,
             )
-            output = template.render(
+            output = env().render_template_as_markup(
+                "actions/document/create_section/stream_new_section.jinja.html",
                 renderer=markup_renderer,
                 form_object=form_object,
                 reference_mid=reference_mid,
@@ -458,17 +450,13 @@ def create_main_router(
         )
 
         # Rendering back the Turbo template.
-        template = env().get_template(
-            "actions/document/create_section/stream_created_section.jinja.html"
-        )
-        output = template.render(
+        output = env().render_template_as_markup(
+            "actions/document/create_section/stream_created_section.jinja.html",
             view_object=view_object,
         )
 
-        toc_template = env().get_template(
-            "actions/document/_shared/stream_updated_toc.jinja.html"
-        )
-        output += toc_template.render(
+        output += env().render_template_as_markup(
+            "actions/document/_shared/stream_updated_toc.jinja.html",
             view_object=view_object,
         )
         return HTMLResponse(
@@ -487,9 +475,6 @@ def create_main_router(
         form_object = SectionFormObject.create_from_section(
             section=section, context_document_mid=context_document_mid
         )
-        template = env().get_template(
-            "actions/document/edit_section/stream_edit_section.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=section.document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -502,7 +487,8 @@ def create_main_router(
             config=project_config,
             context_document=section.document,
         )
-        output = template.render(
+        output = env().render_template_as_markup(
+            "actions/document/edit_section/stream_edit_section.jinja.html",
             renderer=markup_renderer,
             form_object=form_object,
             document_type=DocumentType.document(),
@@ -548,9 +534,6 @@ def create_main_router(
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
-            template = env().get_template(
-                "actions/document/edit_section/stream_edit_section.jinja.html"
-            )
             link_renderer = LinkRenderer(
                 root_path=section.document.meta.get_root_path_prefix(),
                 static_path=project_config.dir_for_sdoc_assets,
@@ -563,7 +546,8 @@ def create_main_router(
                 config=project_config,
                 context_document=section.document,
             )
-            output = template.render(
+            output = env().render_template_as_markup(
+                "actions/document/edit_section/stream_edit_section.jinja.html",
                 renderer=markup_renderer,
                 link_renderer=link_renderer,
                 form_object=form_object,
@@ -598,9 +582,6 @@ def create_main_router(
         )
 
         # Rendering back the Turbo template.
-        template = env().get_template(
-            "actions/document/edit_section/stream_updated_section.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=section.document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -622,11 +603,15 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(node=section, view_object=view_object)
-        toc_template = env().get_template(
-            "actions/document/_shared/stream_updated_toc.jinja.html"
+        output = env().render_template_as_markup(
+            "actions/document/edit_section/stream_updated_section.jinja.html",
+            node=section,
+            view_object=view_object,
         )
-        output += toc_template.render(view_object=view_object)
+        output += env().render_template_as_markup(
+            "actions/document/_shared/stream_updated_toc.jinja.html",
+            view_object=view_object,
+        )
         return HTMLResponse(
             content=output,
             headers={
@@ -636,13 +621,13 @@ def create_main_router(
 
     @router.get("/actions/document/cancel_new_section", response_class=Response)
     def cancel_new_section(section_mid: str):
-        template = env().get_template(
+        output = env().render_template_as_markup(
             "actions/"
             "document/"
             "create_section/"
-            "stream_cancel_new_section.jinja.html"
+            "stream_cancel_new_section.jinja.html",
+            section_mid=section_mid,
         )
-        output = template.render(section_mid=section_mid)
         return HTMLResponse(
             content=output,
             headers={
@@ -656,9 +641,6 @@ def create_main_router(
     def cancel_edit_section(section_mid: str):
         section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(section_mid)
-        )
-        template = env().get_template(
-            "actions/document/edit_section/stream_updated_section.jinja.html"
         )
         link_renderer = LinkRenderer(
             root_path=section.document.meta.get_root_path_prefix(),
@@ -681,7 +663,11 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(view_object=view_object, node=section)
+        output = env().render_template_as_markup(
+            "actions/document/edit_section/stream_updated_section.jinja.html",
+            view_object=view_object,
+            node=section,
+        )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -751,12 +737,6 @@ def create_main_router(
         else:
             raise NotImplementedError
 
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "create_requirement/"
-            "stream_new_requirement.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -769,7 +749,11 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        output = template.render(
+        output = env().render_template_as_markup(
+            "actions/"
+            "document/"
+            "create_requirement/"
+            "stream_new_requirement.jinja.html",
             is_new_requirement=True,
             renderer=markup_renderer,
             form_object=form_object,
@@ -822,12 +806,6 @@ def create_main_router(
         whereto = NodeCreationOrder.AFTER
         replace_action = "after"
 
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "create_requirement/"
-            "stream_new_requirement.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -840,7 +818,11 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        output = template.render(
+        output = env().render_template_as_markup(
+            "actions/"
+            "document/"
+            "create_requirement/"
+            "stream_new_requirement.jinja.html",
             is_new_requirement=True,
             renderer=markup_renderer,
             form_object=form_object,
@@ -911,12 +893,6 @@ def create_main_router(
             command.perform()
 
         if form_object.any_errors():
-            template = env().get_template(
-                "actions/"
-                "document/"
-                "create_requirement/"
-                "stream_new_requirement.jinja.html"
-            )
             link_renderer = LinkRenderer(
                 root_path=document.meta.get_root_path_prefix(),
                 static_path=project_config.dir_for_sdoc_assets,
@@ -929,8 +905,11 @@ def create_main_router(
                 config=project_config,
                 context_document=document,
             )
-
-            output = template.render(
+            output = env().render_template_as_markup(
+                "actions/"
+                "document/"
+                "create_requirement/"
+                "stream_new_requirement.jinja.html",
                 is_new_requirement=True,
                 renderer=markup_renderer,
                 form_object=form_object,
@@ -1008,12 +987,6 @@ def create_main_router(
             )
         )
         document = requirement.document
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "edit_requirement/"
-            "stream_edit_requirement.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1026,7 +999,11 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        output = template.render(
+        output = env().render_template_as_markup(
+            "actions/"
+            "document/"
+            "edit_requirement/"
+            "stream_edit_requirement.jinja.html",
             is_new_requirement=False,
             renderer=markup_renderer,
             form_object=form_object,
@@ -1075,10 +1052,8 @@ def create_main_router(
             field_type=RequirementFormFieldType.SINGLELINE,
             field_value=next_uid,
         )
-        template = env().get_template(
-            "components/form/row/row_uid_with_reset/stream.jinja"
-        )
-        output = template.render(
+        output = env().render_template_as_markup(
+            "components/form/row/row_uid_with_reset/stream.jinja",
             next_uid=next_uid,
             reference_mid=reference_mid,
             uid_form_field=uid_form_field,
@@ -1144,12 +1119,6 @@ def create_main_router(
             update_requirement_command_result_or_none = update_command.perform()
 
         if form_object.any_errors():
-            template = env().get_template(
-                "actions/"
-                "document/"
-                "edit_requirement/"
-                "stream_edit_requirement.jinja.html"
-            )
             link_renderer = LinkRenderer(
                 root_path=document.meta.get_root_path_prefix(),
                 static_path=project_config.dir_for_sdoc_assets,
@@ -1162,7 +1131,11 @@ def create_main_router(
                 config=project_config,
                 context_document=document,
             )
-            output = template.render(
+            output = env().render_template_as_markup(
+                "actions/"
+                "document/"
+                "edit_requirement/"
+                "stream_edit_requirement.jinja.html",
                 is_new_requirement=False,
                 renderer=markup_renderer,
                 requirement=requirement,
@@ -1234,13 +1207,13 @@ def create_main_router(
         "/actions/document/cancel_new_requirement", response_class=Response
     )
     def cancel_new_requirement(requirement_mid: str):
-        template = env().get_template(
+        output = env().render_template_as_markup(
             "actions/"
             "document/"
             "create_requirement/"
-            "stream_cancel_new_requirement.jinja.html"
+            "stream_cancel_new_requirement.jinja.html",
+            requirement_mid=requirement_mid,
         )
-        output = template.render(requirement_mid=requirement_mid)
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1318,11 +1291,9 @@ def create_main_router(
                 errors = []
             except MultipleValidationErrorAsList as error_:
                 errors = error_.errors
-            template = env().get_template(
+            output = env().render_template_as_markup(
                 "actions/document/delete_section/"
-                "stream_confirm_delete_section.jinja"
-            )
-            output = template.render(
+                "stream_confirm_delete_section.jinja",
                 section_mid=node_id,
                 context_document_mid=context_document_mid,
                 errors=errors,
@@ -1342,11 +1313,9 @@ def create_main_router(
             delete_command.perform()
         except MultipleValidationErrorAsList as error_:
             errors = error_.errors
-            template = env().get_template(
+            output = env().render_template_as_markup(
                 "actions/document/delete_section/"
-                "stream_confirm_delete_section.jinja"
-            )
-            output = template.render(
+                "stream_confirm_delete_section.jinja",
                 section_mid=node_id,
                 context_document_mid=context_document_mid,
                 errors=errors,
@@ -1370,9 +1339,6 @@ def create_main_router(
         SDWriter(project_config).write_to_file(section.document)
 
         # Rendering back the Turbo template.
-        template = env().get_template(
-            "actions/document/delete_section/stream_delete_section.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=section.document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1394,11 +1360,14 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(view_object=view_object)
-        toc_template = env().get_template(
-            "actions/document/_shared/stream_updated_toc.jinja.html"
+        output = env().render_template_as_markup(
+            "actions/document/delete_section/stream_delete_section.jinja.html",
+            view_object=view_object,
         )
-        output += toc_template.render(view_object=view_object)
+        output += env().render_template_as_markup(
+            "actions/document/_shared/stream_updated_toc.jinja.html",
+            view_object=view_object,
+        )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1429,11 +1398,9 @@ def create_main_router(
             except MultipleValidationErrorAsList as error_:
                 errors = error_.errors
 
-            template = env().get_template(
+            output = env().render_template_as_markup(
                 "actions/document/delete_requirement/"
-                "stream_confirm_delete_requirement.jinja"
-            )
-            output = template.render(
+                "stream_confirm_delete_requirement.jinja",
                 requirement_mid=node_id,
                 context_document_mid=context_document_mid,
                 errors=errors,
@@ -1472,10 +1439,6 @@ def create_main_router(
         )
 
         # Rendering back the Turbo template.
-        template = env().get_template(
-            "actions/document/delete_requirement/"
-            "stream_delete_requirement.jinja.html"
-        )
         link_renderer = LinkRenderer(
             root_path=requirement.document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1497,12 +1460,16 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(view_object=view_object)
-
-        toc_template = env().get_template(
-            "actions/document/_shared/stream_updated_toc.jinja.html"
+        output = env().render_template_as_markup(
+            "actions/document/delete_requirement/"
+            "stream_delete_requirement.jinja.html",
+            view_object=view_object,
         )
-        output += toc_template.render(view_object=view_object)
+
+        output += env().render_template_as_markup(
+            "actions/document/_shared/stream_updated_toc.jinja.html",
+            view_object=view_object,
+        )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1609,10 +1576,8 @@ def create_main_router(
     # Generic routes
     @router.get("/actions/project_index/new_document", response_class=Response)
     def get_new_document():
-        template = env().get_template(
-            "actions/project_index/stream_new_document.jinja.html"
-        )
-        output = template.render(
+        output = env().render_template_as_markup(
+            "actions/project_index/stream_new_document.jinja.html",
             error_object=ErrorObject(),
             document_title="",
             document_path="",
@@ -1680,10 +1645,8 @@ def create_main_router(
                 )
 
         if error_object.any_errors():
-            template = env().get_template(
-                "actions/project_index/stream_new_document.jinja.html"
-            )
-            output = template.render(
+            output = env().render_template_as_markup(
+                "actions/project_index/stream_new_document.jinja.html",
                 error_object=error_object,
                 document_title=document_title
                 if document_title is not None
@@ -1755,16 +1718,14 @@ def create_main_router(
         export_action.build_index()
         export_action.export()
 
-        template = env().get_template(
-            "actions/project_index/stream_create_document.jinja.html"
-        )
-
         view_object = ProjectTreeViewObject(
             traceability_index=export_action.traceability_index,
             project_config=project_config,
         )
-
-        output = template.render(view_object=view_object)
+        output = env().render_template_as_markup(
+            "actions/project_index/stream_create_document.jinja.html",
+            view_object=view_object,
+        )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1785,15 +1746,13 @@ def create_main_router(
         )
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
-        template = env().get_template(
+        # The data of the form object is ignored. What matters is the comment
+        # form data.
+        output = env().render_template_as_markup(
             "actions/"
             "document/"
             "add_requirement_comment/"
-            "stream_add_requirement_comment.jinja.html"
-        )
-        # The data of the form object is ignored. What matters is the comment
-        # form data.
-        output = template.render(
+            "stream_add_requirement_comment.jinja.html",
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
                 is_new=False,
@@ -1839,15 +1798,13 @@ def create_main_router(
 
         grammar_element_relations = element.get_relation_types()
 
-        template = env().get_template(
+        # The data of the form object is ignored. What matters is the relation
+        # form data.
+        output = env().render_template_as_markup(
             "actions/"
             "document/"
             "add_requirement_relation/"
-            "stream_add_requirement_relation.jinja.html"
-        )
-        # The data of the form object is ignored. What matters is the relation
-        # form data.
-        output = template.render(
+            "stream_add_requirement_relation.jinja.html",
             requirement_mid=requirement_mid,
             form_object=RequirementFormObject(
                 is_new=False,
@@ -1887,13 +1844,11 @@ def create_main_router(
             document=document
         )
 
-        template = env().get_template(
+        output = env().render_template_as_markup(
             "actions/"
             "document/"
             "edit_document_config/"
-            "stream_edit_document_config.jinja.html"
-        )
-        output = template.render(
+            "stream_edit_document_config.jinja.html",
             form_object=form_object,
             document=document,
         )
@@ -1952,13 +1907,11 @@ def create_main_router(
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
-            template = env().get_template(
+            html_output = env().render_template_as_markup(
                 "actions/"
                 "document/"
                 "edit_document_config/"
-                "stream_edit_document_config.jinja.html"
-            )
-            html_output: str = template.render(
+                "stream_edit_document_config.jinja.html",
                 form_object=form_object,
                 document=document,
             )
@@ -1999,13 +1952,13 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        template = env().get_template(
+        html_output = env().render_template_as_markup(
             "actions/"
             "document/"
             "edit_document_config/"
-            "stream_save_document_config.jinja.html"
+            "stream_save_document_config.jinja.html",
+            view_object=view_object,
         )
-        html_output = template.render(view_object=view_object)
         return HTMLResponse(
             content=html_output,
             status_code=200,
@@ -2110,12 +2063,6 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "edit_document_config/"
-            "stream_cancel_edit_document_config.jinja.html"
-        )
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
             document=document,
@@ -2125,7 +2072,14 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(view_object=view_object, document=document)
+        output = env().render_template_as_markup(
+            "actions/"
+            "document/"
+            "edit_document_config/"
+            "stream_cancel_edit_document_config.jinja.html",
+            view_object=view_object,
+            document=document,
+        )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -2154,9 +2108,6 @@ def create_main_router(
             config=project_config,
             context_document=document,
         )
-        template = env().get_template(
-            "actions/document/edit_section/stream_updated_section.jinja.html"
-        )
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
             document=document,
@@ -2166,8 +2117,11 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        output = template.render(
-            view_object=view_object, document=document, node=document
+        output = env().render_template_as_markup(
+            "actions/document/edit_section/stream_updated_section.jinja.html",
+            view_object=view_object,
+            document=document,
+            node=document,
         )
         return HTMLResponse(
             content=output,
@@ -2271,14 +2225,15 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "_shared/"
-            "stream_refresh_document.jinja.html"
-        )
-        output = form_object.render_close_form() + template.render(
-            view_object=view_object
+        output = (
+            form_object.render_close_form()
+            + env().render_template_as_markup(
+                "actions/"
+                "document/"
+                "_shared/"
+                "stream_refresh_document.jinja.html",
+                view_object=view_object,
+            )
         )
         return HTMLResponse(
             content=output,
@@ -2412,14 +2367,15 @@ def create_main_router(
             markup_renderer=markup_renderer,
             standalone=False,
         )
-        template = env().get_template(
-            "actions/"
-            "document/"
-            "_shared/"
-            "stream_refresh_document.jinja.html"
-        )
-        output = form_object.render_close_form() + template.render(
-            view_object=view_object
+        output = (
+            form_object.render_close_form()
+            + env().render_template_as_markup(
+                "actions/"
+                "document/"
+                "_shared/"
+                "stream_refresh_document.jinja.html",
+                view_object=view_object,
+            )
         )
         return HTMLResponse(
             content=output,
@@ -2474,11 +2430,9 @@ def create_main_router(
         response_class=Response,
     )
     def get_import_reqif_document_form():
-        template = env().get_template(
+        output = env().render_template_as_markup(
             "actions/project_index/import_reqif_document/"
-            "stream_form_import_reqif_document.jinja.html"
-        )
-        output = template.render(
+            "stream_form_import_reqif_document.jinja.html",
             error_object=ErrorObject(),
         )
         return HTMLResponse(
@@ -2515,11 +2469,9 @@ def create_main_router(
             error_object.add_error("reqif_file", str(exception))
 
         if error_object.any_errors():
-            template = env().get_template(
+            output = env().render_template_as_markup(
                 "actions/project_index/import_reqif_document/"
-                "stream_form_import_reqif_document.jinja.html"
-            )
-            output = template.render(
+                "stream_form_import_reqif_document.jinja.html",
                 error_object=error_object,
             )
             return HTMLResponse(
@@ -2571,15 +2523,15 @@ def create_main_router(
         export_action.build_index()
         export_action.export()
 
-        template = env().get_template(
-            "actions/project_index/import_reqif_document/"
-            "stream_refresh_with_imported_reqif_document.jinja.html"
-        )
         view_object = ProjectTreeViewObject(
             traceability_index=export_action.traceability_index,
             project_config=project_config,
         )
-        output = template.render(view_object=view_object)
+        output = env().render_template_as_markup(
+            "actions/project_index/import_reqif_document/"
+            "stream_refresh_with_imported_reqif_document.jinja.html",
+            view_object=view_object,
+        )
         return HTMLResponse(
             content=output,
             status_code=200,

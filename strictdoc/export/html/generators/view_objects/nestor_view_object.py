@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from jinja2 import Environment
-
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import DocumentView
@@ -10,7 +8,7 @@ from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
-from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
@@ -55,9 +53,10 @@ class NestorViewObject:
         self.link_document_type: DocumentType = DocumentType.document()
         self.document: Optional[SDocDocument] = None
 
-    def render_screen(self, jinja_environment: Environment) -> str:
-        template = jinja_environment.get_template("screens/nestor/index.jinja")
-        return template.render(view_object=self)
+    def render_screen(self, jinja_environment: JinjaEnvironment) -> str:
+        return jinja_environment.render_template_as_markup(
+            "screens/nestor/index.jinja", view_object=self
+        )
 
     def render_static_url(self, url: str) -> str:
         return self.link_renderer.render_static_url(url)

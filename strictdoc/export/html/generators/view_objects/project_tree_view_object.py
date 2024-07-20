@@ -1,12 +1,11 @@
 # mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
 from dataclasses import dataclass
 
-from jinja2 import Environment
-
 from strictdoc import __version__
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 
@@ -36,11 +35,10 @@ class ProjectTreeViewObject:
             traceability_index.contains_included_documents
         )
 
-    def render_screen(self, jinja_environment: Environment):
-        template = jinja_environment.get_template(
-            "screens/project_index/index.jinja"
+    def render_screen(self, jinja_environment: JinjaEnvironment):
+        return jinja_environment.render_template_as_markup(
+            "screens/project_index/index.jinja", view_object=self
         )
-        return template.render(view_object=self)
 
     def render_static_url(self, url: str):
         return self.link_renderer.render_static_url(url)

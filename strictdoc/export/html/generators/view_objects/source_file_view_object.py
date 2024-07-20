@@ -3,13 +3,12 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
-from jinja2 import Environment
-
 from strictdoc import __version__
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
@@ -44,11 +43,10 @@ class SourceFileViewObject:
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
 
-    def render_screen(self, jinja_environment: Environment):
-        template = jinja_environment.get_template(
-            "screens/source_file_view/index.jinja"
+    def render_screen(self, jinja_environment: JinjaEnvironment):
+        return jinja_environment.render_template_as_markup(
+            "screens/source_file_view/index.jinja", view_object=self
         )
-        return template.render(view_object=self)
 
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional, Union
 
-from jinja2 import Environment, Template
+from jinja2 import Template
 
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -15,6 +15,7 @@ from strictdoc.core.file_tree import Folder
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.server.helpers.turbo import render_turbo_stream
@@ -63,68 +64,65 @@ class DocumentScreenViewObject:
     def has_included_document(self):
         return len(self.document.included_documents) > 0
 
-    def render_screen(self, jinja_environment: Environment):
+    def render_screen(self, jinja_environment: JinjaEnvironment):
         if self.document_type.is_document:
             if self.document.config.layout == "Website":
-                template = jinja_environment.get_template(
-                    "website/document/index.jinja"
+                return jinja_environment.render_template_as_markup(
+                    "website/document/index.jinja", view_object=self
                 )
-            else:
-                template = jinja_environment.get_template(
-                    "screens/document/document/index.jinja"
-                )
+            return jinja_environment.render_template_as_markup(
+                "screens/document/document/index.jinja", view_object=self
+            )
         elif self.document_type.is_table():
-            template = jinja_environment.get_template(
-                "screens/document/table/index.jinja"
+            return jinja_environment.render_template_as_markup(
+                "screens/document/table/index.jinja", view_object=self
             )
         elif self.document_type.is_trace():
-            template = jinja_environment.get_template(
-                "screens/document/traceability/index.jinja"
+            return jinja_environment.render_template_as_markup(
+                "screens/document/traceability/index.jinja", view_object=self
             )
         elif self.document_type.is_deeptrace:
-            template = jinja_environment.get_template(
-                "screens/document/traceability_deep/index.jinja"
+            return jinja_environment.render_template_as_markup(
+                "screens/document/traceability_deep/index.jinja",
+                view_object=self,
             )
         elif self.document_type.is_pdf():
-            template = jinja_environment.get_template(
-                "screens/document/pdf/index.jinja"
+            return jinja_environment.render_template_as_markup(
+                "screens/document/pdf/index.jinja", view_object=self
             )
         else:
             raise NotImplementedError(self.document_type)
-        return template.render(view_object=self)
 
-    def render_table_screen(self, jinja_environment: Environment):
-        template = jinja_environment.get_template(
-            "screens/document/table/index.jinja"
+    def render_table_screen(self, jinja_environment: JinjaEnvironment):
+        return jinja_environment.render_template_as_markup(
+            "screens/document/table/index.jinja", view_object=self
         )
-        return template.render(view_object=self)
 
-    def render_trace_screen(self, jinja_environment: Environment):
-        template = jinja_environment.get_template(
-            "screens/document/traceability/index.jinja"
+    def render_trace_screen(self, jinja_environment: JinjaEnvironment):
+        return jinja_environment.render_template_as_markup(
+            "screens/document/traceability/index.jinja", view_object=self
         )
-        return template.render(view_object=self)
 
-    def render_updated_screen(self, jinja_environment: Environment) -> str:
-        template = jinja_environment.get_template(
+    def render_updated_screen(self, jinja_environment: JinjaEnvironment) -> str:
+        output = jinja_environment.render_template_as_markup(
             "actions/"
             "document/"
             "create_requirement/"
-            "stream_created_requirement.jinja.html"
+            "stream_created_requirement.jinja.html",
+            view_object=self,
         )
-        output = template.render(view_object=self)
 
-        toc_template = jinja_environment.get_template(
-            "actions/document/_shared/stream_updated_toc.jinja.html"
+        output += jinja_environment.render_template_as_markup(
+            "actions/document/_shared/stream_updated_toc.jinja.html",
+            view_object=self,
         )
-        output += toc_template.render(view_object=self)
 
         return output
 
     def render_updated_nodes_and_toc(
         self,
         nodes: List[Union[SDocDocument, SDocNode]],
-        jinja_environment: Environment,
+        jinja_environment: JinjaEnvironment,
     ) -> str:
         output: str = ""
 
@@ -139,20 +137,22 @@ class DocumentScreenViewObject:
                     template_folder = "requirement"
             else:
                 raise NotImplementedError
-            template = jinja_environment.get_template(
-                f"components/{template_folder}/index_extends_node.jinja"
+            content = jinja_environment.render_template_as_markup(
+                f"components/{template_folder}/index_extends_node.jinja",
+                view_object=self,
+                node=node_,
             )
             output += render_turbo_stream(
-                content=template.render(view_object=self, node=node_),
+                content=content,
                 action="replace",
                 target=f"article-{node_.reserved_mid}",
             )
 
-        toc_template = jinja_environment.get_template(
-            "screens/document/_shared/toc.jinja"
+        toc_content = jinja_environment.render_template_as_markup(
+            "screens/document/_shared/toc.jinja", view_object=self
         )
         output += render_turbo_stream(
-            content=toc_template.render(view_object=self),
+            content=toc_content,
             action="update",
             target="frame-toc",
         )
@@ -160,24 +160,24 @@ class DocumentScreenViewObject:
         return output
 
     def render_update_document_content_with_moved_node(
-        self, jinja_environment: Environment, moved_node
+        self, jinja_environment: JinjaEnvironment, moved_node
     ) -> str:
-        template = jinja_environment.get_template(
-            "screens/document/document/frame_document_content.jinja.html"
+        content = jinja_environment.render_template_as_markup(
+            "screens/document/document/frame_document_content.jinja.html",
+            view_object=self,
         )
         output = render_turbo_stream(
-            content=template.render(view_object=self),
+            content=content,
             action="replace",
             target="frame_document_content",
         )
-        toc_template = jinja_environment.get_template(
-            "actions/document/_shared/stream_updated_toc.jinja.html"
+        toc_content = jinja_environment.render_template_as_markup(
+            "actions/document/_shared/stream_updated_toc.jinja.html",
+            view_object=self,
+            last_moved_node_id=moved_node.reserved_mid,
         )
         output += render_turbo_stream(
-            toc_template.render(
-                view_object=self,
-                last_moved_node_id=moved_node.reserved_mid,
-            ),
+            toc_content,
             action="update",
             target="frame-toc",
         )

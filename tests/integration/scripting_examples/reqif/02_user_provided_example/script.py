@@ -467,8 +467,10 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             multiline: bool = False
             if (
                 "\n" in attribute_value
-                or field_name == ReqIFRequirementReservedField.TEXT
-                or field_name == ReqIFRequirementReservedField.COMMENT_NOTES
+                or field_name in (
+                    ReqIFRequirementReservedField.TEXT,
+                    ReqIFRequirementReservedField.COMMENT_NOTES
+                )
             ):
                 attribute_value = attribute_value.lstrip()
                 multiline = True

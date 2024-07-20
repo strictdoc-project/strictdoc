@@ -194,9 +194,7 @@ class FileFinder:
                 if (
                     not d.startswith(".")
                     and (d == "_static" or not d.startswith("_"))
-                    and d != "build"
-                    and d != "output"
-                    and d != "Output"
+                    and d not in ("build", "output", "Output")
                 )
             ]
             dirs.sort(key=alphanumeric_sort)
@@ -314,10 +312,7 @@ class PathFinder:
                 for d in dirs
                 if not d.startswith(".")
                 and not d.startswith("__")
-                and d != "build"
-                and d != "output"
-                and d != "Output"
-                and d != "tests"
+                and d not in ("build", "output", "Output", "tests")
             ]
 
             if os.path.basename(current_root_path) == directory:

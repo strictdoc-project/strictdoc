@@ -12,7 +12,7 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
@@ -465,7 +465,7 @@ class TraceabilityIndexBuilder:
                             ),
                         )
                 if node.is_requirement:
-                    requirement: SDocNode = node
+                    requirement: SDocNode = assert_cast(node, SDocNode)
                     if requirement.reserved_tags is not None:
                         for tag in requirement.reserved_tags:
                             document_tags.setdefault(tag, 0)
@@ -671,7 +671,9 @@ class TraceabilityIndexBuilder:
             ):
                 if not node.is_requirement:
                     continue
-                requirement = node
+                requirement: Union[SDocNode, SDocCompositeNode] = assert_cast(
+                    node, (SDocNode, SDocCompositeNode)
+                )
                 if requirement.reserved_uid is None:
                     continue
 

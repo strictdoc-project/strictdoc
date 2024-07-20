@@ -87,10 +87,9 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
         return self.markup
 
     def get_requirement_style_mode(self) -> str:
-        if (
-            self.requirement_style is None
-            or self.requirement_style == "Inline"
-            or self.requirement_style == "Simple"
+        if self.requirement_style is None or self.requirement_style in (
+            "Inline",
+            "Simple",
         ):
             return "simple"
         if self.requirement_style == "Table":

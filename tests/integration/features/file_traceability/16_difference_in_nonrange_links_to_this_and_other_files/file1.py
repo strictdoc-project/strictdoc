@@ -1,4 +1,4 @@
-
+# ruff: noqa
 
 def some_function():
     #

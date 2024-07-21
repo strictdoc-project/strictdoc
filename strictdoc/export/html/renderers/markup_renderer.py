@@ -1,5 +1,5 @@
 # mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,var-annotated"
-from typing import Optional, Type, Union
+from typing import Dict, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -34,8 +34,8 @@ class MarkupRenderer:
         assert isinstance(html_templates, HTMLTemplates)
         html_fragment_writer: Union[
             RstToHtmlFragmentWriter,
-            Type[HTMLFragmentWriter],
-            Type[TextToHtmlWriter],
+            HTMLFragmentWriter,
+            TextToHtmlWriter,
         ]
         if not markup or markup == "RST":
             html_fragment_writer = RstToHtmlFragmentWriter(
@@ -43,9 +43,9 @@ class MarkupRenderer:
                 context_document=context_document,
             )
         elif markup == "HTML":
-            html_fragment_writer = HTMLFragmentWriter
+            html_fragment_writer = HTMLFragmentWriter()
         else:
-            html_fragment_writer = TextToHtmlWriter
+            html_fragment_writer = TextToHtmlWriter()
         return MarkupRenderer(
             html_fragment_writer,
             traceability_index,
@@ -61,7 +61,7 @@ class MarkupRenderer:
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
         context_document: Optional[SDocDocument],
-    ):
+    ) -> None:
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(link_renderer, LinkRenderer)
         assert context_document is None or isinstance(
@@ -69,32 +69,41 @@ class MarkupRenderer:
         ), context_document
         assert isinstance(html_templates, HTMLTemplates)
 
-        self.fragment_writer = fragment_writer
-        self.traceability_index = traceability_index
+        self.fragment_writer: Union[
+            RstToHtmlFragmentWriter,
+            HTMLFragmentWriter,
+            TextToHtmlWriter,
+        ] = fragment_writer
+        self.traceability_index: TraceabilityIndex = traceability_index
         self.link_renderer: LinkRenderer = link_renderer
         self.context_document: Optional[SDocDocument] = context_document
 
         # FIXME: Now that the underlying RST fragment caching is in place,
         # This caching could be removed. It is unlikely that it adds any serious
         # performance improvement.
-        self.cache = {}
-        self.rationale_cache = {}
+        self.cache: Dict[Tuple[DocumentType, SDocNodeField], str] = {}
 
         self.template_anchor = html_templates.jinja_environment().get_template(
             "rst/anchor.jinja"
         )
 
-    def render_node_statement(self, document_type, node):
+    def render_node_statement(
+        self, document_type: DocumentType, node: SDocNode
+    ) -> str:
         assert isinstance(node, SDocNode)
         return self.render_node_field(document_type, node.get_content_field())
 
-    def render_truncated_node_statement(self, document_type, node):
+    def render_truncated_node_statement(
+        self, document_type: DocumentType, node: SDocNode
+    ) -> str:
         assert isinstance(node, SDocNode)
-        return self.render_node_field(
-            document_type, node.get_content_field(), truncated=True
-        )
+        # FIXME: Double-check and switch to truncating using CSS.
+        # https://github.com/strictdoc-project/strictdoc/issues/1925
+        return self.render_node_field(document_type, node.get_content_field())
 
-    def render_node_rationale(self, document_type, node: SDocNode):
+    def render_node_rationale(
+        self, document_type: DocumentType, node: SDocNode
+    ) -> str:
         assert isinstance(node, SDocNode)
         return self.render_node_field(
             document_type,
@@ -102,12 +111,12 @@ class MarkupRenderer:
         )
 
     def render_node_field(
-        self, document_type, node_field: SDocNodeField, truncated: bool = False
-    ):
+        self, document_type: DocumentType, node_field: SDocNodeField
+    ) -> str:
         assert isinstance(node_field, SDocNodeField), node_field
 
-        if (document_type, node_field, truncated) in self.cache:
-            return self.cache[(document_type, node_field, truncated)]
+        if (document_type, node_field) in self.cache:
+            return self.cache[(document_type, node_field)]
 
         prev_part = None
         parts_output = ""
@@ -138,6 +147,6 @@ class MarkupRenderer:
                 raise NotImplementedError
             prev_part = part
         output = self.fragment_writer.write(parts_output)
-        self.cache[(document_type, node_field, truncated)] = output
+        self.cache[(document_type, node_field)] = output
 
         return output

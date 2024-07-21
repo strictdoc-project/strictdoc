@@ -62,9 +62,10 @@ class RstToHtmlFragmentWriter:
             self.source_path: str = "<string>"
         self.context_document: Optional[SDocDocument] = context_document
 
-    def write(self, rst_fragment):
+    def write(self, rst_fragment: str) -> str:
         assert isinstance(rst_fragment, str), rst_fragment
 
+        # FIXME: This is broken.
         if len(rst_fragment) < 0:
             return self._write_no_cache(rst_fragment)
 
@@ -94,7 +95,7 @@ class RstToHtmlFragmentWriter:
 
         return rendered_html
 
-    def _write_no_cache(self, rst_fragment):
+    def _write_no_cache(self, rst_fragment: str) -> str:
         assert isinstance(rst_fragment, str), rst_fragment
 
         # How do I convert a docutils document tree into an HTML string?
@@ -137,7 +138,7 @@ class RstToHtmlFragmentWriter:
             print("<<<")  # noqa: T201
             sys.exit(1)
 
-        html = output["html_body"]
+        html: str = output["html_body"]
 
         return html
 

@@ -98,7 +98,7 @@ class DocumentConfig:  # pylint: disable=too-many-instance-attributes
             return "zebra"
         raise NotImplementedError(self.requirement_style)
 
-    def is_requirement_in_toc(self):
+    def is_requirement_in_toc(self) -> bool:
         return (
             self.requirement_in_toc is None or self.requirement_in_toc == "True"
         )

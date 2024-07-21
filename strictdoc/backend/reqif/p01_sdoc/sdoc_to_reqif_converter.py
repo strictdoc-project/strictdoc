@@ -235,21 +235,22 @@ class P01_SDocToReqIFObjectConverter:
             current_hierarchy = root_hierarchy
 
             # FIXME: ReqIF must export complete documents including fragments.
-            for node in document_iterator.all_content(
+            for node_ in document_iterator.all_content(
                 print_fragments=False, print_fragments_from_files=False
             ):
-                if node.is_composite_requirement:
+                if node_.is_composite_requirement:
                     raise NotImplementedError(
                         "Exporting composite requirements is not "
                         "supported yet.",
-                        node,
+                        node_,
                     )
-                if node.is_section:
+                if node_.is_section:
+                    section: SDocSection = assert_cast(node_, SDocSection)
                     # fmt: off
                     spec_object = (
                         P01_SDocToReqIFObjectConverter
                         ._convert_section_to_spec_object(
-                            section=node,
+                            section=section,
                             context=context,
                         )
                     )
@@ -264,14 +265,14 @@ class P01_SDocToReqIFObjectConverter:
                         spec_object=spec_object.identifier,
                         children=[],
                         ref_then_children_order=True,
-                        level=node.ng_level,
+                        level=section.ng_level,
                     )
-                    if node.ng_level > current_hierarchy.level:
+                    if section.ng_level > current_hierarchy.level:
                         parents[hierarchy] = current_hierarchy
                         current_hierarchy.add_child(hierarchy)
-                    elif node.ng_level < current_hierarchy.level:
+                    elif section.ng_level < current_hierarchy.level:
                         for _ in range(
-                            0, (current_hierarchy.level - node.ng_level + 1)
+                            0, (current_hierarchy.level - section.ng_level + 1)
                         ):
                             current_hierarchy = parents[current_hierarchy]
                         current_hierarchy.add_child(hierarchy)
@@ -282,9 +283,10 @@ class P01_SDocToReqIFObjectConverter:
                         parents[hierarchy] = current_hierarchy_parent
                     current_hierarchy = hierarchy
 
-                elif node.is_requirement:
+                elif node_.is_requirement:
+                    requirement = assert_cast(node_, SDocNode)
                     spec_object = cls._convert_requirement_to_spec_object(
-                        requirement=node,
+                        requirement=requirement,
                         grammar=assert_cast(document.grammar, DocumentGrammar),
                         context=context,
                         data_types=data_types,
@@ -302,10 +304,10 @@ class P01_SDocToReqIFObjectConverter:
                         spec_object=spec_object.identifier,
                         children=None,
                         ref_then_children_order=True,
-                        level=node.ng_level,
+                        level=requirement.ng_level,
                     )
                     for _ in range(
-                        0, (current_hierarchy.level - node.ng_level + 1)
+                        0, (current_hierarchy.level - requirement.ng_level + 1)
                     ):
                         current_hierarchy = parents[current_hierarchy]
                     parents[hierarchy] = current_hierarchy

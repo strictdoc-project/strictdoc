@@ -1,26 +1,28 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call,no-untyped-def,operator,type-arg"
-from typing import Optional, Tuple
+# mypy: disable-error-code="attr-defined"
+from typing import Iterator, Tuple, Union
 
+from strictdoc.backend.sdoc.models.any_node import SDocAnyNode
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
     SDocNode,
 )
-from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
+from strictdoc.backend.sdoc.models.section import SDocSection
+from strictdoc.helpers.cast import assert_cast
 
 
 class DocumentCachingIterator:
-    def __init__(self, document):
+    def __init__(self, document: SDocDocument) -> None:
         assert isinstance(document, SDocDocument)
 
-        self.document = document
+        self.document: SDocDocument = document
 
-    def table_of_contents(self):
+    def table_of_contents(self) -> Iterator[SDocAnyNode]:
         nodes_to_skip = (
-            (FreeText, SDocNode)
+            (SDocNode,)
             if not self.document.config.is_requirement_in_toc()
-            else FreeText
+            else ()
         )
 
         for node in self.all_content(
@@ -37,7 +39,7 @@ class DocumentCachingIterator:
         self,
         print_fragments: bool = False,
         print_fragments_from_files: bool = False,
-    ):
+    ) -> Iterator[SDocAnyNode]:
         root_node = self.document
 
         yield from self._all_content(
@@ -48,30 +50,17 @@ class DocumentCachingIterator:
             custom_level=not root_node.config.auto_levels,
         )
 
-    def all_content_from_node(
-        self,
-        node,
-        print_fragments: bool = False,
-        print_fragments_from_files: bool = False,
-    ):
-        document = node if isinstance(node, SDocDocument) else node.document
-        yield from self._all_content(
-            node,
-            print_fragments=print_fragments,
-            print_fragments_from_files=print_fragments_from_files,
-            level_stack=(),
-            custom_level=not document.config.auto_levels,
-        )
-
     def _all_content(
         self,
-        node,
+        node: Union[SDocAnyNode, DocumentFromFile],
         print_fragments: bool = False,
         print_fragments_from_files: bool = False,
-        level_stack: Optional[Tuple] = (),
+        level_stack: Tuple[int, ...] = (),
         custom_level: bool = False,
-    ):
-        def get_level_string_(node_) -> str:
+    ) -> Iterator[SDocAnyNode]:
+        def get_level_string_(
+            node_: Union[SDocSection, SDocNode, SDocCompositeNode],
+        ) -> str:
             if isinstance(node_, SDocNode) and node_.requirement_type == "TEXT":
                 return ""
 
@@ -108,7 +97,17 @@ class DocumentCachingIterator:
                     current_number += 1
 
                 yield from self._all_content(
-                    subnode_,
+                    # FIXME: sections_contents(SDocObject) shall be changed to SDocAnyNode.
+                    assert_cast(
+                        subnode_,
+                        (
+                            SDocNode,
+                            SDocCompositeNode,
+                            SDocSection,
+                            SDocDocument,
+                            DocumentFromFile,
+                        ),
+                    ),
                     print_fragments=print_fragments,
                     print_fragments_from_files=print_fragments_from_files,
                     level_stack=level_stack + (current_number,),
@@ -181,7 +180,17 @@ class DocumentCachingIterator:
                 ):
                     current_number += 1
                 yield from self._all_content(
-                    subnode_,
+                    # FIXME: sections_contents(SDocObject) shall be changed to SDocAnyNode.
+                    assert_cast(
+                        subnode_,
+                        (
+                            SDocNode,
+                            SDocCompositeNode,
+                            SDocSection,
+                            SDocDocument,
+                            DocumentFromFile,
+                        ),
+                    ),
                     print_fragments=print_fragments,
                     print_fragments_from_files=print_fragments_from_files,
                     level_stack=level_stack + (current_number,),

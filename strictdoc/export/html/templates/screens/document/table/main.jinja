@@ -166,28 +166,6 @@
                   {%- endif -%}
                 </td>
               </tr>
-              {%- if section.free_texts -%}
-                {%- for free_text in section.free_texts -%}
-                  <tr>
-                    <td class="content-view-td content-view-td-type">
-                      Free text
-                    </td>
-                    <td class="content-view-td content-view-td-meta">
-                      –
-                    </td>
-                    {%- for meta_field_title in view_object.document.enumerate_meta_field_titles() -%}
-                      <td class="content-view-td content-view-td-meta">
-                      </td>
-                    {%- endfor -%}
-                    <td class="content-view-td content-view-td-meta">
-                      {# Children & Parents #}
-                    </td>
-                    <td class="content-view-td" colspan="50">
-                      <sdoc-autogen>{{ view_object.render_free_text(view_object.document_type, free_text) }}</sdoc-autogen>
-                    </td>
-                  </tr>
-                {%- endfor -%}
-              {%- endif -%}
             {%- endif %}
           {%- endfor %}
         </table>

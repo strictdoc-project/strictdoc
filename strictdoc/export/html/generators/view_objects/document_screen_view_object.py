@@ -243,9 +243,6 @@ class DocumentScreenViewObject:
     def render_local_anchor(self, node):
         return self.link_renderer.render_local_anchor(node)
 
-    def render_free_text(self, document_type, free_text):
-        return self.markup_renderer.render_free_text(document_type, free_text)
-
     def render_node_statement(self, node):
         return self.markup_renderer.render_node_statement(
             self.document_type, node

@@ -67,9 +67,6 @@ class SourceFileViewObject:
     def render_local_anchor(self, node):
         return self.link_renderer.render_local_anchor(node)
 
-    def render_free_text(self, document_type, free_text):
-        return self.markup_renderer.render_free_text(document_type, free_text)
-
     def date_today(self):
         return datetime.today().strftime("%Y-%m-%d")
 

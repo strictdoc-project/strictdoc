@@ -5,7 +5,6 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.section import FreeText
 from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -140,39 +139,5 @@ class MarkupRenderer:
             prev_part = part
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, node_field, truncated)] = output
-
-        return output
-
-    def render_free_text(self, document_type, free_text):
-        assert isinstance(free_text, FreeText)
-        assert self.context_document is not None
-
-        if (document_type, free_text) in self.cache:
-            return self.cache[(document_type, free_text)]
-
-        parts_output = ""
-        for part in free_text.parts:
-            if isinstance(part, str):
-                parts_output += part
-            elif isinstance(part, InlineLink):
-                linkable_node = (
-                    self.traceability_index.get_linkable_node_by_uid(part.link)
-                )
-                href = self.link_renderer.render_node_link(
-                    linkable_node, self.context_document, document_type
-                )
-                parts_output += self.fragment_writer.write_anchor_link(
-                    linkable_node.get_display_title(), href
-                )
-            elif isinstance(part, Anchor):
-                parts_output += self.template_anchor.render(
-                    anchor=part,
-                    traceability_index=self.traceability_index,
-                    link_renderer=self.link_renderer,
-                    document_type=DocumentType.document(),
-                )
-
-        output = self.fragment_writer.write(parts_output)
-        self.cache[(document_type, free_text)] = output
 
         return output

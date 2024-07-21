@@ -126,7 +126,7 @@ class NormalHTMLTemplates(HTMLTemplates):
                 ),
                 undefined=StrictUndefined,
                 extensions=[AssertExtension],
-                autoescape=True,
+                autoescape=False,
             )
         )
 
@@ -162,7 +162,7 @@ class CompiledHTMLTemplates(HTMLTemplates):
             loader=FileSystemLoader(environment.get_path_to_html_templates()),
             undefined=StrictUndefined,
             extensions=[AssertExtension],
-            autoescape=True,
+            autoescape=False,
         )
         # TODO: Check if this line is still needed (might be some older workaround).
         jinja_environment.globals.update(isinstance=isinstance)
@@ -195,7 +195,7 @@ class CompiledHTMLTemplates(HTMLTemplates):
                 loader=ModuleLoader(self.path_to_jinja_cache_bucket_dir),
                 undefined=StrictUndefined,
                 extensions=[AssertExtension],
-                autoescape=True,
+                autoescape=False,
             )
         )
         return self._jinja_environment

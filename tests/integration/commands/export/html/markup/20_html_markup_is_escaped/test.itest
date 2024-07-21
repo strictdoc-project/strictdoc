@@ -1,0 +1,5 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+CHECK-HTML-DOC: This section&#39;s title shall be escaped: &lt;div&gt;

@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: This section's title shall be escaped: <div>
+
+[TEXT]
+STATEMENT: This text's statement shall be escaped: <div>.
+
+[REQUIREMENT]
+STATEMENT: This requirement's statement shall be escaped: <div>.
+
+[/SECTION]

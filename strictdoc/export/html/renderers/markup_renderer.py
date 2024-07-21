@@ -1,4 +1,3 @@
-# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,var-annotated"
 from typing import Dict, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -24,7 +23,7 @@ from strictdoc.helpers.rst import escape_str_after_inline_markup
 class MarkupRenderer:
     @staticmethod
     def create(
-        markup,
+        markup: Optional[str],
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
@@ -56,7 +55,11 @@ class MarkupRenderer:
 
     def __init__(
         self,
-        fragment_writer,
+        fragment_writer: Union[
+            RstToHtmlFragmentWriter,
+            HTMLFragmentWriter,
+            TextToHtmlWriter,
+        ],
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,

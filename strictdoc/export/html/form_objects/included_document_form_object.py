@@ -3,10 +3,10 @@ import re
 from collections import defaultdict
 from typing import Dict, List, Optional
 
-from jinja2 import Environment, Template
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.form_data import parse_form_data
@@ -23,7 +23,7 @@ class IncludedDocumentFormObject(ErrorObject):
         document_mid: str,
         context_document_mid: str,
         document_title: str,
-        jinja_environment: Environment,
+        jinja_environment: JinjaEnvironment,
     ):
         assert isinstance(document_mid, str), document_mid
         assert isinstance(context_document_mid, str), context_document_mid
@@ -32,11 +32,11 @@ class IncludedDocumentFormObject(ErrorObject):
         self.document_mid: Optional[str] = document_mid
         self.context_document_mid: Optional[str] = context_document_mid
         self.document_title: str = document_title
-        self.jinja_environment: Environment = jinja_environment
+        self.jinja_environment: JinjaEnvironment = jinja_environment
 
     @staticmethod
     def create_from_request(
-        *, request_form_data: FormData, jinja_environment: Environment
+        *, request_form_data: FormData, jinja_environment: JinjaEnvironment
     ) -> "IncludedDocumentFormObject":
         request_form_data_as_list = [
             (field_name, field_value)
@@ -76,7 +76,7 @@ class IncludedDocumentFormObject(ErrorObject):
         *,
         document: SDocDocument,
         context_document_mid: str,
-        jinja_environment: Environment,
+        jinja_environment: JinjaEnvironment,
     ) -> "IncludedDocumentFormObject":
         assert isinstance(document, SDocDocument)
 
@@ -88,10 +88,9 @@ class IncludedDocumentFormObject(ErrorObject):
         )
 
     def render_edit_form(self):
-        template: Template = self.jinja_environment.get_template(
-            "components/included_document_form/index.jinja"
+        rendered_template = self.jinja_environment.render_template_as_markup(
+            "components/included_document_form/index.jinja", form_object=self
         )
-        rendered_template = template.render(form_object=self)
         return render_turbo_stream(
             content=rendered_template,
             action="replace",

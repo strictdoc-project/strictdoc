@@ -3,10 +3,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
-from jinja2 import Environment
-
 from strictdoc import __version__
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.git.change_generator import ChangeContainer
 
@@ -59,8 +58,10 @@ class DiffScreenResultsViewObject:
         self.strictdoc_version = __version__
         self.error_message: Optional[str] = None
 
-    def render_screen(self, jinja_environment: Environment):
-        template = jinja_environment.get_template("screens/git/index.jinja")
+    def render_screen(self, jinja_environment: JinjaEnvironment):
+        template = jinja_environment.environment.overlay(
+            autoescape=False
+        ).get_template("screens/git/index.jinja")
         return template.render(view_object=self)
 
     def render_url(self, url: str):

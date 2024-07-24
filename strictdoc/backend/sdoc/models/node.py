@@ -1,5 +1,4 @@
 # mypy: disable-error-code="union-attr"
-import html
 from collections import OrderedDict
 from typing import Any, Generator, List, Optional, Tuple, Union
 
@@ -91,9 +90,6 @@ class SDocNodeField:
             else:
                 raise NotImplementedError(part)
         return text
-
-    def get_text_value_escaped(self) -> str:
-        return html.escape(self.get_text_value())
 
 
 @auto_described
@@ -454,13 +450,6 @@ class SDocNode(SDocObject):
     ) -> Generator[Tuple[SDocNodeField, str, str], None, None]:
         for field in self.enumerate_fields():
             meta_field_value = field.get_text_value()
-            yield field, field.field_name, meta_field_value
-
-    def enumerate_all_fields_escaped(
-        self,
-    ) -> Generator[Tuple[SDocNodeField, str, str], None, None]:
-        for field in self.enumerate_fields():
-            meta_field_value = field.get_text_value_escaped()
             yield field, field.field_name, meta_field_value
 
     def enumerate_meta_fields(

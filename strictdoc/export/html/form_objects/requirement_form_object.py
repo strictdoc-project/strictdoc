@@ -1,5 +1,4 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-redef,no-untyped-call,no-untyped-def,union-attr,type-arg"
-import html
 from collections import defaultdict
 from enum import Enum
 from typing import Dict, List, Optional, Set, Union
@@ -57,15 +56,12 @@ class RequirementFormField:
         field_mid: str,
         field_name: str,
         field_type: RequirementFormFieldType,
-        field_unescaped_value: str,
-        field_escaped_value: str,
+        field_value: str,
     ):
-        assert isinstance(field_unescaped_value, str)
-        assert isinstance(field_escaped_value, str)
+        assert isinstance(field_value, str)
         self.field_mid: str = field_mid
         self.field_name: str = field_name
-        self.field_unescaped_value: str = field_unescaped_value
-        self.field_escaped_value: str = field_escaped_value
+        self.field_value: str = field_value
         self.field_type = field_type
 
     def is_singleline(self):
@@ -85,18 +81,12 @@ class RequirementFormField:
         *,
         grammar_field: GrammarElementField,
         multiline: bool,
-        value_unescaped: str,
-        value_escaped: str,
+        value: str,
     ) -> "RequirementFormField":
-        assert isinstance(value_unescaped, str), (
+        assert isinstance(value, str), (
             grammar_field,
             multiline,
-            value_unescaped,
-        )
-        assert isinstance(value_escaped, str), (
-            grammar_field,
-            multiline,
-            value_escaped,
+            value,
         )
         if grammar_field.gef_type in (
             RequirementFieldType.STRING,
@@ -111,8 +101,7 @@ class RequirementFormField:
                     if multiline
                     else RequirementFormFieldType.SINGLELINE
                 ),
-                field_unescaped_value=value_unescaped,
-                field_escaped_value=value_escaped,
+                field_value=value,
             )
         raise NotImplementedError(grammar_field)
 
@@ -128,7 +117,6 @@ class RequirementFormField:
             RequirementFieldType.MULTIPLE_CHOICE,
         ):
             field_value = requirement_field.get_text_value()
-            escaped_field_value = html.escape(field_value)
             return RequirementFormField(
                 field_mid=MID.create(),
                 field_name=grammar_field.title,
@@ -137,8 +125,7 @@ class RequirementFormField:
                     if multiline
                     else RequirementFormFieldType.SINGLELINE
                 ),
-                field_unescaped_value=field_value,
-                field_escaped_value=escaped_field_value,
+                field_value=field_value,
             )
         raise NotImplementedError(grammar_field)
 
@@ -148,8 +135,7 @@ class RequirementFormField:
             field_mid=MID.create(),
             field_name="MID",
             field_type=RequirementFormFieldType.SINGLELINE,
-            field_unescaped_value=mid,
-            field_escaped_value=html.escape(mid),
+            field_value=mid,
         )
 
 
@@ -327,8 +313,7 @@ class RequirementFormObject(ErrorObject):
                 form_field = RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
                     multiline=multiline,
-                    value_unescaped=sanitized_field_value,
-                    value_escaped=html.escape(sanitized_field_value),
+                    value=sanitized_field_value,
                 )
                 form_fields.append(form_field)
 
@@ -381,21 +366,14 @@ class RequirementFormObject(ErrorObject):
                 RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
                     multiline=field_idx >= content_field_idx,
-                    value_unescaped="",
-                    value_escaped="",
+                    value="",
                 )
             )
             form_fields.append(form_field)
             if form_field.field_name == "UID" and next_uid is not None:
-                form_field.field_unescaped_value = next_uid
-                form_field.field_escaped_value = next_uid
+                form_field.field_value = next_uid
             elif form_field.field_name == "MID" and document.config.enable_mid:
-                form_field.field_unescaped_value = (
-                    new_requirement_mid.get_string_value()
-                )
-                form_field.field_escaped_value = (
-                    new_requirement_mid.get_string_value()
-                )
+                form_field.field_value = new_requirement_mid.get_string_value()
 
         return RequirementFormObject(
             is_new=True,
@@ -455,8 +433,7 @@ class RequirementFormObject(ErrorObject):
                 form_field = RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
                     multiline=multiline,
-                    value_unescaped="",
-                    value_escaped="",
+                    value="",
                 )
                 form_fields.append(form_field)
 
@@ -515,8 +492,7 @@ class RequirementFormObject(ErrorObject):
         for field_name, fields_ in form_object.fields.items():
             if field_name == "UID":
                 field: RequirementFormField = fields_[0]
-                field.field_unescaped_value = clone_uid
-                field.field_escaped_value = clone_uid
+                field.field_value = clone_uid
         form_object.requirement_mid = MID.create()
 
         return form_object
@@ -613,7 +589,7 @@ class RequirementFormObject(ErrorObject):
         FIXME: MID uniqueness if a node is updated.
         """
         if self.is_new and "MID" in self.fields:
-            new_node_mid = self.fields["MID"][0].field_unescaped_value
+            new_node_mid = self.fields["MID"][0].field_value
             if len(new_node_mid) > 0:
                 existing_node_with_this_mid = (
                     traceability_index.get_node_by_mid_weak(MID(new_node_mid))
@@ -633,7 +609,7 @@ class RequirementFormObject(ErrorObject):
         """
         new_node_uid_or_none: Optional[str] = None
         if "UID" in self.fields:
-            new_node_uid = self.fields["UID"][0].field_unescaped_value
+            new_node_uid = self.fields["UID"][0].field_value
             if len(new_node_uid) > 0:
                 new_node_uid_or_none = new_node_uid
 
@@ -689,9 +665,7 @@ class RequirementFormObject(ErrorObject):
         """
         requirement_element = self.grammar.elements_by_type[self.element_type]
         statement_field_name = requirement_element.content_field[0]
-        requirement_statement = self.fields[statement_field_name][
-            0
-        ].field_unescaped_value
+        requirement_statement = self.fields[statement_field_name][0].field_value
         if requirement_statement is None or len(requirement_statement) == 0:
             self.add_error(
                 statement_field_name,
@@ -717,7 +691,7 @@ class RequirementFormObject(ErrorObject):
                 and grammar_element_field_.required
             ):
                 for form_field_ in self.fields[grammar_element_field_.title]:
-                    field_value = form_field_.field_unescaped_value
+                    field_value = form_field_.field_value
                     if field_value is None or len(field_value) == 0:
                         self.add_error(
                             grammar_element_field_.title,
@@ -735,9 +709,7 @@ class RequirementFormObject(ErrorObject):
                 self._validate_choice(grammar_element_field_)
 
         requirement_uid: Optional[str] = (
-            self.fields["UID"][0].field_unescaped_value
-            if "UID" in self.fields
-            else None
+            self.fields["UID"][0].field_value if "UID" in self.fields else None
         )
         if len(self.reference_fields) > 0 and (
             requirement_uid is None or len(requirement_uid) == 0
@@ -862,10 +834,7 @@ class RequirementFormObject(ErrorObject):
 
     def _validate_choice(self, grammar_element_field: GrammarElementField):
         field_0 = self.fields[grammar_element_field.title][0]
-        if (
-            len(field_0.field_unescaped_value) == 0
-            and not grammar_element_field.required
-        ):
+        if len(field_0.field_value) == 0 and not grammar_element_field.required:
             # The empty choice fields are allowed if the field is not REQUIRED.
             return
 
@@ -881,8 +850,7 @@ class RequirementFormObject(ErrorObject):
         )
         if (
             grammar_element_field.gef_type == RequirementFieldType.SINGLE_CHOICE
-            and field_0.field_unescaped_value
-            not in choice_grammar_element_field.options
+            and field_0.field_value not in choice_grammar_element_field.options
         ):
             self.add_error(
                 grammar_element_field.title,
@@ -896,14 +864,13 @@ class RequirementFormObject(ErrorObject):
             == RequirementFieldType.MULTIPLE_CHOICE
         ):
             choices = [
-                choice.strip()
-                for choice in field_0.field_unescaped_value.split(",")
+                choice.strip() for choice in field_0.field_value.split(",")
             ]
             if all(
                 choice in choice_grammar_element_field.options
                 for choice in choices
             ):
-                field_0.field_unescaped_value = ", ".join(choices)
+                field_0.field_value = ", ".join(choices)
             else:
                 self.add_error(
                     grammar_element_field.title,

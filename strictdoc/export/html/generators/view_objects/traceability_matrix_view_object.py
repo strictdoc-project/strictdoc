@@ -1,15 +1,13 @@
 # mypy: disable-error-code="arg-type,no-any-return,no-untyped-call,no-untyped-def,union-attr,type-arg"
 from typing import Dict, List, Optional, Tuple
 
-from jinja2 import Environment
-
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
@@ -42,11 +40,10 @@ class TraceabilityMatrixViewObject:
             self.traceability_index.document_tree.document_list,
         )
 
-    def render_screen(self, jinja_environment: Environment):
-        template = jinja_environment.get_template(
-            "screens/traceability_matrix/index.jinja"
+    def render_screen(self, jinja_environment: JinjaEnvironment):
+        return jinja_environment.render_template_as_markup(
+            "screens/traceability_matrix/index.jinja", view_object=self
         )
-        return template.render(view_object=self)
 
     def render_static_url(self, url: str):
         return self.link_renderer.render_static_url(url)

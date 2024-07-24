@@ -11,6 +11,7 @@ from typing import Optional
 from docutils.core import publish_parts
 from docutils.parsers.rst import directives, roles
 from docutils.utils import SystemMessage
+from markupsafe import Markup
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.export.rst.directives.raw_html_role import raw_html_role
@@ -62,12 +63,12 @@ class RstToHtmlFragmentWriter:
             self.source_path: str = "<string>"
         self.context_document: Optional[SDocDocument] = context_document
 
-    def write(self, rst_fragment: str) -> str:
+    def write(self, rst_fragment: str) -> Markup:
         assert isinstance(rst_fragment, str), rst_fragment
 
         # FIXME: This is broken.
         if len(rst_fragment) < 0:
-            return self._write_no_cache(rst_fragment)
+            return Markup(self._write_no_cache(rst_fragment))
 
         path_to_rst_fragment_bucket_dir = os.path.join(
             self.path_to_rst_cache_dir, str(len(rst_fragment))
@@ -81,7 +82,7 @@ class RstToHtmlFragmentWriter:
                 with open(
                     path_to_cached_fragment, "rb"
                 ) as cached_fragment_file_:
-                    return cached_fragment_file_.read().decode("UTF-8")
+                    return Markup(cached_fragment_file_.read().decode("UTF-8"))
         else:
             Path(path_to_rst_fragment_bucket_dir).mkdir(
                 parents=True, exist_ok=True
@@ -93,7 +94,7 @@ class RstToHtmlFragmentWriter:
         with open(path_to_cached_fragment, "wb") as cached_fragment_file_:
             cached_fragment_file_.write(rendered_html_bytes)
 
-        return rendered_html
+        return Markup(rendered_html)
 
     def _write_no_cache(self, rst_fragment: str) -> str:
         assert isinstance(rst_fragment, str), rst_fragment
@@ -187,7 +188,7 @@ class RstToHtmlFragmentWriter:
         return html, None
 
     @staticmethod
-    def write_anchor_link(title, href):
+    def write_anchor_link(title, href) -> str:
         return f"""\
 :rawhtml:`<a href="{href}">🔗&nbsp;{title}</a>`\
 """

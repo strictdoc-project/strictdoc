@@ -3,16 +3,15 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
-from jinja2 import Environment
-
 from strictdoc import __version__
+from strictdoc.backend.sdoc.models.any_node import SDocAnyNode
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
-from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
@@ -25,8 +24,8 @@ class SearchScreenViewObject:
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
         templates: HTMLTemplates,
-        search_results,
-        search_value,
+        search_results: SDocAnyNode,
+        search_value: str,
         error,
     ):
         self.traceability_index: TraceabilityIndex = traceability_index
@@ -66,9 +65,10 @@ class SearchScreenViewObject:
             self.document_type, node
         )
 
-    def render_screen(self, jinja_environment: Environment):
-        template = jinja_environment.get_template("screens/search/index.jinja")
-        return template.render(view_object=self)
+    def render_screen(self, jinja_environment: JinjaEnvironment):
+        return jinja_environment.render_template_as_markup(
+            "screens/search/index.jinja", view_object=self
+        )
 
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()

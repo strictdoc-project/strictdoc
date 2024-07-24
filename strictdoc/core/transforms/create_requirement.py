@@ -108,14 +108,14 @@ class CreateRequirementTransform:
                 ) = RstToHtmlFragmentWriter(
                     path_to_output_dir=self.project_config.export_output_dir,
                     context_document=document,
-                ).write_with_validation(field_.field_unescaped_value)
+                ).write_with_validation(field_.field_value)
                 if parsed_html is None:
                     errors[field_.field_name].append(rst_error)
                 else:
                     try:
                         free_text_container: Optional[FreeTextContainer] = (
-                            SDFreeTextReader.read(field_.field_unescaped_value)
-                            if len(field_.field_unescaped_value) > 0
+                            SDFreeTextReader.read(field_.field_value)
+                            if len(field_.field_value) > 0
                             else None
                         )
                         map_form_to_requirement_fields[field_] = (
@@ -208,7 +208,7 @@ class CreateRequirementTransform:
                     requirement.set_field_value(
                         field_name=form_field_name,
                         form_field_index=form_field_index,
-                        value=form_field.field_unescaped_value,
+                        value=form_field.field_value,
                     )
                     continue
 

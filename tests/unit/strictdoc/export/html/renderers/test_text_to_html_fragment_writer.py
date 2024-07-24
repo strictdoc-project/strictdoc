@@ -7,7 +7,7 @@ def test_01_escapes_html_tags():
 """.strip()
 
     html_output = TextToHtmlWriter.write(text_input)
-    assert "&lt;a href=&quot;url&quot;&gt;link&lt;/a&gt;" == html_output
+    assert "&lt;a href=&#34;url&#34;&gt;link&lt;/a&gt;" == html_output
 
 
 def test_02_replaces_newlines_with_br():

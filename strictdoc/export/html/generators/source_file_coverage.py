@@ -1,10 +1,9 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
-from jinja2 import Environment
 
 from strictdoc import __version__
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 
@@ -24,11 +23,10 @@ class SourceCoverageViewObject:
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
 
-    def render_screen(self, jinja_environment: Environment):
-        template = jinja_environment.get_template(
-            "screens/source_file_coverage/index.jinja"
+    def render_screen(self, jinja_environment: JinjaEnvironment):
+        return jinja_environment.render_template_as_markup(
+            "screens/source_file_coverage/index.jinja", view_object=self
         )
-        return template.render(view_object=self)
 
     def render_static_url(self, url: str):
         return self.link_renderer.render_static_url(url)

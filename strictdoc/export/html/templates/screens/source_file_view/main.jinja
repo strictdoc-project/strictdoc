@@ -6,7 +6,7 @@
     {%- for line in view_object.pygmented_source_file_lines -%}
       <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
       <div data-line={{ loop.index }} class="source__line-content">
-        {%- if line.__class__.__name__ == "tuple" -%}
+        {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
           {%- set replacement_before, replacement_after, pragma = line -%}
           {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
           <pre class="sdoc-comment">{{ replacement_before }}{%- for req in pragma.reqs_objs -%}

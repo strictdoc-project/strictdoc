@@ -1,11 +1,16 @@
 # mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def,union-attr"
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, NamedTuple, Union
 
 from markupsafe import Markup
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc_source_code.models.range_marker import (
+    ForwardRangeMarker,
+    LineMarker,
+    RangeMarker,
+)
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.project_config import ProjectConfig
@@ -13,6 +18,18 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+
+
+class SourceMarkerTuple(NamedTuple):
+    before_line: Markup
+    after_line: Markup
+    pragma: Union[ForwardRangeMarker, LineMarker, RangeMarker]
+
+
+SourceLineEntry = Union[
+    Markup,
+    SourceMarkerTuple,
+]
 
 
 @dataclass
@@ -26,7 +43,7 @@ class SourceFileViewObject:
         markup_renderer: MarkupRenderer,
         source_file: SourceFile,
         pygments_styles: Markup,
-        pygmented_source_file_lines: List[Markup],
+        pygmented_source_file_lines: List[SourceLineEntry],
     ):
         self.traceability_index: TraceabilityIndex = traceability_index
         self.project_config: ProjectConfig = project_config
@@ -34,7 +51,7 @@ class SourceFileViewObject:
         self.markup_renderer: MarkupRenderer = markup_renderer
         self.source_file: SourceFile = source_file
         self.pygments_styles: Markup = pygments_styles
-        self.pygmented_source_file_lines: List[Markup] = (
+        self.pygmented_source_file_lines: List[SourceLineEntry] = (
             pygmented_source_file_lines
         )
 

@@ -1,5 +1,5 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,operator"
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from markupsafe import Markup, escape
 from pygments import highlight
@@ -28,10 +28,13 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.generators.view_objects.source_file_view_object import (
     SourceFileViewObject,
+    SourceLineEntry,
+    SourceMarkerTuple,
 )
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.helpers.cast import assert_cast
 
 
 class SourceFileViewHTMLGenerator:
@@ -46,7 +49,7 @@ class SourceFileViewHTMLGenerator:
         with open(source_file.full_path, encoding="utf-8") as opened_file:
             source_file_lines = opened_file.readlines()
 
-        pygmented_source_file_lines: List[Markup] = []
+        pygmented_source_file_lines: List[SourceLineEntry] = []
         pygments_styles: Markup = Markup("")
 
         if len(source_file_lines) > 0:
@@ -89,7 +92,10 @@ class SourceFileViewHTMLGenerator:
         source_file: SourceFile,
         source_file_lines: List[str],
         coverage_info: SourceFileTraceabilityInfo,
-    ) -> Tuple[List[Markup], Markup]:
+    ) -> Tuple[
+        List[SourceLineEntry],
+        Markup,
+    ]:
         assert isinstance(source_file, SourceFile)
         assert isinstance(source_file_lines, list)
         assert isinstance(coverage_info, SourceFileTraceabilityInfo)
@@ -154,7 +160,9 @@ class SourceFileViewHTMLGenerator:
         pygmented_source_file_content = pygmented_source_file_content[
             slice_start:slice_end
         ]
-        pygmented_source_file_lines = pygmented_source_file_content.split("\n")
+        pygmented_source_file_lines: List[Union[str, SourceMarkerTuple]] = list(
+            pygmented_source_file_content.split("\n")
+        )
         if hack_first_line:
             pygmented_source_file_lines[0] = "<span></span>"
 
@@ -177,12 +185,14 @@ class SourceFileViewHTMLGenerator:
 
         for pragma in coverage_info.pragmas:
             pragma_line = pragma.ng_source_line_begin
+            assert isinstance(pragma_line, int)
+            pygmented_source_file_line = assert_cast(
+                pygmented_source_file_lines[pragma_line - 1], str
+            )
             if isinstance(pragma, ForwardRangeMarker):
+                before_line = pygmented_source_file_line.rstrip("\n") + " "
                 pygmented_source_file_lines[pragma_line - 1] = (
-                    pygmented_source_file_lines[pragma_line - 1].rstrip("\n")
-                    + " ",
-                    "\n",
-                    pragma,
+                    SourceMarkerTuple(Markup(before_line), Markup("\n"), pragma)
                 )
                 continue
 
@@ -202,7 +212,7 @@ class SourceFileViewHTMLGenerator:
             assert closing_bracket_index is not None
             after_line = source_line[closing_bracket_index:].rstrip()
 
-            pygmented_source_file_lines[pragma_line - 1] = (
+            pygmented_source_file_lines[pragma_line - 1] = SourceMarkerTuple(
                 escape(before_line),
                 escape(after_line),
                 pragma,
@@ -212,6 +222,13 @@ class SourceFileViewHTMLGenerator:
             + html_formatter.get_style_defs(".highlight")
         )
 
-        return list(map(Markup, pygmented_source_file_lines)), Markup(
-            pygments_styles
-        )
+        return [
+            SourceFileViewHTMLGenerator.mark_safe(line)
+            for line in pygmented_source_file_lines
+        ], Markup(pygments_styles)
+
+    @staticmethod
+    def mark_safe(
+        line: Union[str, SourceMarkerTuple],
+    ) -> Union[Markup, SourceMarkerTuple]:
+        return line if isinstance(line, SourceMarkerTuple) else Markup(line)

@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: HTML escaping of source file content
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: >>>
+Source files are external input, their content must be HTML escaped.
+<<<
+RELATIONS:
+- TYPE: File
+  VALUE: file.py
+- TYPE: File
+  VALUE: file.py
+  LINE_RANGE: 6, 7

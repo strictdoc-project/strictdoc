@@ -1,17 +1,17 @@
 [DOCUMENT]
-TITLE: <b>"escaping" & 'title'</b>
+TITLE: <b>"escaping" & 'document title'</b>
 
 [SECTION]
-TITLE: <b>"escaping" & 'section'</b>
+TITLE: <b>"escaping" & 'section title'</b>
 
 [TEXT]
 STATEMENT: >>>
-<b>"escaping" & 'text'</b>
+<b>"escaping" & 'text statement'</b>
 <<<
 
 [REQUIREMENT]
 STATEMENT: >>>
-<b>"escaping" & 'statement'</b>
+<b>"escaping" & 'requirement statement'</b>
 <<<
 
 [/SECTION]

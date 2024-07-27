@@ -1,9 +1,24 @@
 RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
-CHECK-EXPORT: Published: <b>"escaping" & 'title'</b>
+CHECK-EXPORT: Published: <b>"escaping" & 'document title'</b>
 
-RUN: %grep '.b[^\-].*escaping.*title.*b.' %S/Output/html/01_no_special_characters_passed_to_output/input.html | filecheck %s --dump-input=fail
-RUN: %grep '.b[^\-].*escaping.*section.*b.' %S/Output/html/01_no_special_characters_passed_to_output/input.html | filecheck %s --dump-input=fail
-RUN: %grep '.b[^\-].*escaping.*statement.*b.' %S/Output/html/01_no_special_characters_passed_to_output/input.html | filecheck %s --dump-input=fail
-RUN: %grep '.b[^\-].*escaping.*title.*b.' %S/Output/html/01_no_special_characters_passed_to_output/input.html | filecheck %s --dump-input=fail
-CHECK-NOT: {{["<>]}}
-CHECK-NOT: {{& }}
+# The document <title>
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail
+CHECK: <title>&lt;b&gt;&#34;escaping&#34; &amp; &#39;document title&#39;&lt;/b&gt; - Document</title>
+
+# The left-hand bar: project tree document entry.
+CHECK:   class="document_title"
+CHECK-NEXT:   title="&lt;b&gt;&#34;escaping&#34; &amp; &#39;document title&#39;&lt;/b&gt;"
+CHECK-NEXT:   data-file_name="input.sdoc"
+CHECK-NEXT: >&lt;b&gt;&#34;escaping&#34; &amp; &#39;document title&#39;&lt;/b&gt;</div>
+
+# The right-hand bar: document TOC.
+CHECK:      <span class="section-number">
+CHECK-NEXT: 1
+CHECK-NEXT: </span>&lt;b&gt;&#34;escaping&#34; &amp; &#39;section title&#39;&lt;/b&gt;
+
+# The document title
+CHECK:        class="header__document_title"
+CHECK-NEXT:   title="&lt;b&gt;&#34;escaping&#34; &amp; &#39;document title&#39;&lt;/b&gt;"
+CHECK-NEXT: >
+CHECK-NEXT:   &lt;b&gt;&#34;escaping&#34; &amp; &#39;document title&#39;&lt;/b&gt;
+CHECK-NEXT: </div>

@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: <b>"escaping"&nbsp;'document title'</b>
+
+[SECTION]
+TITLE: <b>"escaping"&nbsp;'section title'</b>
+
+[TEXT]
+STATEMENT: >>>
+<b>"escaping"&nbsp;'text statement'</b>
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: >>>
+<b>"escaping"&nbsp;'requirement statement'</b>
+<<<
+
+[/SECTION]

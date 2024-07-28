@@ -1,0 +1,51 @@
+RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
+CHECK-EXPORT: Published: <b>"escaping"&nbsp;'document title'</b>
+
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-INPUT
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-DTR
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-TABLE
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-TRACE
+
+# Browser title bar: Document title.
+CHECK-ALL: <title>&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt; - {{Document|Deep Traceability|Table|Traceability}}</title>
+
+# Left-hand bar: project tree document entry.
+CHECK-ALL: class="document_title"
+CHECK-ALL-NEXT: title="&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;"
+CHECK-ALL-NEXT: data-file_name="input.sdoc"
+CHECK-ALL-NEXT: >&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;</div>
+
+# Right-hand bar: Document TOC.
+CHECK-ALL: <span class="section-number">
+CHECK-ALL-NEXT: {{[0-9]+}}
+CHECK-ALL-NEXT: </span>&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;
+
+# Header: Document path in tree.
+CHECK-ALL: class="header__document_title"
+CHECK-ALL-NEXT: title="&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;"
+CHECK-ALL-NEXT: >
+CHECK-ALL-NEXT: &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;
+
+# Main document: Title.
+CHECK-INPUT: <h1 data-testid="document-title">&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;</h1>
+CHECK-TABLE: <h1 data-testid="document-title">&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;</h1>
+
+# Main document: Section.
+CHECK-INPUT: <sdoc-autogen>1.&nbsp;&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;</sdoc-autogen>
+CHECK-DTR: <sdoc-autogen>1.&nbsp;&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;</sdoc-autogen>
+CHECK-TABLE: <div class="requirement__title">
+CHECK-TABLE-NEXT: &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;
+CHECK-TABLE-NEXT: </div>
+CHECK-TRACE: <sdoc-autogen>1.&nbsp;&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;</sdoc-autogen>
+
+# Main document: Text statement.
+CHECK-INPUT: <p>&lt;b&gt;&quot;escaping&quot;&amp;nbsp;'text statement'&lt;/b&gt;</p>
+CHECK-TABLE: <p>&lt;b&gt;&quot;escaping&quot;&amp;nbsp;'text statement'&lt;/b&gt;</p>
+CHECK-TRACE: <p>&lt;b&gt;&quot;escaping&quot;&amp;nbsp;'text statement'&lt;/b&gt;</p>
+
+# Main document: Requirement statement.
+CHECK-ALL: <p>&lt;b&gt;&quot;escaping&quot;&amp;nbsp;'requirement statement'&lt;/b&gt;</p>

@@ -16,7 +16,6 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
-  - TYPE: File
 
 [REQUIREMENT_TYPE]
 UID: Anonymized-0f5a0a32-034a-aa17-65d0-7387eefa020a

@@ -1,5 +1,5 @@
 # mypy: disable-error-code="no-untyped-def,union-attr,operator"
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
 from reqif.models.reqif_spec_object import ReqIFSpecObject
@@ -34,7 +34,9 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
+    GrammarElementRelationParent,
 )
+from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.string import (
     create_safe_requirement_tag_string,
     ensure_newline,
@@ -48,6 +50,12 @@ class P01_ReqIFToSDocBuildContext:
         self.import_markup: Optional[str] = import_markup
         self.map_spec_object_type_identifier_to_grammar_node_tags: Dict[
             str, GrammarElement
+        ] = {}
+        self.map_source_target_pairs_to_spec_relation_types: Dict[
+            Tuple[str, str], Any
+        ] = {}
+        self.unique_grammar_element_relations: Dict[
+            GrammarElement, OrderedSet[Tuple[str, Optional[str]]]
         ] = {}
 
 
@@ -68,6 +76,16 @@ class P01_ReqIFToSDocConverter:
             or len(reqif_bundle.core_content.req_if_content.specifications) == 0
         ):
             return []
+
+        for (
+            spec_relation_
+        ) in reqif_bundle.core_content.req_if_content.spec_relations:
+            spec_relation_type_ = reqif_bundle.lookup.get_spec_type_by_ref(
+                spec_relation_.relation_type_ref
+            )
+            context.map_source_target_pairs_to_spec_relation_types[
+                (spec_relation_.source, spec_relation_.target)
+            ] = spec_relation_type_
 
         documents: List[SDocDocument] = []
         for (
@@ -131,7 +149,9 @@ class P01_ReqIFToSDocConverter:
         # StrictDoc document is not created with irrelevant grammar elements that
         # actually belong to other Specifications in this ReqIF bundle.
         # Using Dict as an ordered set.
-        spec_object_type_identifiers_used_by_this_document: Dict[str, None] = {}
+        spec_object_type_identifiers_used_by_this_document: OrderedSet[str] = (
+            OrderedSet()
+        )
 
         def node_converter_lambda(
             current_hierarchy_,
@@ -140,9 +160,9 @@ class P01_ReqIFToSDocConverter:
             spec_object = reqif_bundle.get_spec_object_by_ref(
                 current_hierarchy_.spec_object
             )
-            spec_object_type_identifiers_used_by_this_document[
+            spec_object_type_identifiers_used_by_this_document.add(
                 spec_object.spec_object_type
-            ] = None
+            )
 
             is_section = P01_ReqIFToSDocConverter.is_spec_object_section(
                 spec_object,
@@ -181,7 +201,7 @@ class P01_ReqIFToSDocConverter:
         elements: List[GrammarElement] = []
         for (
             spec_object_type_identifier_
-        ) in spec_object_type_identifiers_used_by_this_document.keys():
+        ) in spec_object_type_identifiers_used_by_this_document:
             spec_object_type: ReqIFSpecObjectType = (
                 reqif_bundle.lookup.get_spec_type_by_ref(
                     spec_object_type_identifier_
@@ -194,7 +214,13 @@ class P01_ReqIFToSDocConverter:
                     spec_object_type_identifier_
                 ]
             )
+            if len(grammar_element.relations) == 0:
+                grammar_element.relations = create_default_relations(
+                    grammar_element
+                )
+
             elements.append(grammar_element)
+
         grammar: DocumentGrammar
         if len(elements) > 0:
             grammar = DocumentGrammar(parent=document, elements=elements)
@@ -287,9 +313,6 @@ class P01_ReqIFToSDocConverter:
             tag=create_safe_requirement_tag_string(spec_object_type.long_name),
             fields=fields,
             relations=[],
-        )
-        requirement_element.relations = create_default_relations(
-            requirement_element
         )
         return requirement_element
 
@@ -523,6 +546,45 @@ class P01_ReqIFToSDocConverter:
             )
             parent_refs: List[Reference] = []
             for spec_object_parent in spec_object_parents:
+                spec_relation_type = (
+                    context.map_source_target_pairs_to_spec_relation_types[
+                        (spec_object.identifier, spec_object_parent)
+                    ]
+                )
+
+                relation_role = (
+                    spec_relation_type.long_name
+                    if spec_relation_type.long_name is not None
+                    else None
+                )
+                if relation_role == "Parent":
+                    relation_role = None
+
+                if (
+                    grammar_element
+                    not in context.unique_grammar_element_relations
+                ):
+                    context.unique_grammar_element_relations[
+                        grammar_element
+                    ] = OrderedSet()
+
+                if (
+                    "Parent",
+                    relation_role,
+                ) not in context.unique_grammar_element_relations[
+                    grammar_element
+                ]:
+                    context.unique_grammar_element_relations[
+                        grammar_element
+                    ].add(("Parent", relation_role))
+                    grammar_element.relations.append(
+                        GrammarElementRelationParent(
+                            parent=grammar_element,
+                            relation_type="Parent",
+                            relation_role=relation_role,
+                        )
+                    )
+
                 parent_spec_object_parent = (
                     reqif_bundle.lookup.get_spec_object_by_ref(
                         spec_object_parent
@@ -535,7 +597,7 @@ class P01_ReqIFToSDocConverter:
                         parent_spec_object_parent.attribute_map[
                             foreign_key_id_or_none
                         ].value,
-                        role=None,
+                        role=relation_role,
                     )
                 )
             if len(parent_refs) > 0:

@@ -1795,8 +1795,8 @@ def create_main_router(
         )
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
-        element: GrammarElement = grammar.elements_by_type["REQUIREMENT"]
 
+        element: GrammarElement = grammar.elements_by_type[element_type]
         grammar_element_relations = element.get_relation_types()
 
         # The data of the form object is ignored. What matters is the relation

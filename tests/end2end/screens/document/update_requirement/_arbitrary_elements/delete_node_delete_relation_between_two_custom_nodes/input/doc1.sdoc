@@ -1,0 +1,38 @@
+[DOCUMENT]
+TITLE: Test document #1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: RULE
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: to trace objective
+
+[RULE]
+UID: RUL-1
+TITLE: Rule #1
+STATEMENT: >>>
+Rule #1 statement.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: OBJ-1
+  ROLE: to trace objective

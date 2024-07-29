@@ -3,7 +3,7 @@ import datetime
 import uuid
 from collections import defaultdict
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, List, Optional, Tuple
 
 from reqif.models.reqif_core_content import ReqIFCoreContent
 from reqif.models.reqif_data_type import (
@@ -22,6 +22,7 @@ from reqif.models.reqif_spec_object_type import (
     SpecAttributeDefinition,
 )
 from reqif.models.reqif_spec_relation import ReqIFSpecRelation
+from reqif.models.reqif_spec_relation_type import ReqIFSpecRelationType
 from reqif.models.reqif_specification import ReqIFSpecification
 from reqif.models.reqif_specification_type import ReqIFSpecificationType
 from reqif.models.reqif_types import SpecObjectAttributeType
@@ -29,7 +30,6 @@ from reqif.object_lookup import ReqIFObjectLookup
 from reqif.reqif_bundle import ReqIFBundle
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
-    SDOC_SPEC_RELATION_PARENT_TYPE_SINGLETON,
     SDOC_SPECIFICATION_TYPE_SINGLETON,
     SDOC_TO_REQIF_FIELD_MAP,
     ReqIFChapterField,
@@ -38,18 +38,22 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.reference import ParentReqReference
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    ParentReqReference,
+    Reference,
+)
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
-    ReferenceType,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.string import escape
 
 
@@ -69,10 +73,15 @@ class P01_SDocToReqIFBuildContext:
         self.multiline_is_xhtml: bool = multiline_is_xhtml
         self.enable_mid: bool = enable_mid
         self.map_uid_to_spec_objects: Dict[str, ReqIFSpecObject] = {}
-        self.map_uid_to_parent_uids: Dict[str, List[str]] = {}
+        self.map_node_uids_to_their_relations: Dict[str, List[Reference]] = (
+            defaultdict(list)
+        )
         self.map_grammar_node_tags_to_spec_object_type: Dict[
             SDocDocument, Dict[str, ReqIFSpecObjectType]
         ] = defaultdict(dict)
+        self.map_spec_relation_tuple_to_spec_relation_type: Dict[
+            Tuple[str, Optional[str]], ReqIFSpecRelationType
+        ] = {}
 
 
 class P01_SDocToReqIFObjectConverter:
@@ -334,18 +343,31 @@ class P01_SDocToReqIFObjectConverter:
 
         for (
             requirement_id,
-            parent_uids,
-        ) in context.map_uid_to_parent_uids.items():
+            node_relations_,
+        ) in context.map_node_uids_to_their_relations.items():
             spec_object = context.map_uid_to_spec_objects[requirement_id]
-            for parent_uid in parent_uids:
-                parent_spec_object = context.map_uid_to_spec_objects[parent_uid]
+            for node_relation_ in node_relations_:
+                # For now, the File-relations are not supported.
+                if not isinstance(
+                    node_relation_, (ParentReqReference, ChildReqReference)
+                ):
+                    continue
+                related_node_uid = node_relation_.ref_uid
+                parent_spec_object = context.map_uid_to_spec_objects[
+                    related_node_uid
+                ]
+                spec_relation_type: ReqIFSpecRelationType = (
+                    context.map_spec_relation_tuple_to_spec_relation_type[
+                        (node_relation_.ref_type, node_relation_.role)
+                    ]
+                )
                 spec_relations.append(
                     ReqIFSpecRelation(
                         xml_node=None,
                         description=None,
                         identifier=generate_unique_identifier("SPEC-RELATION"),
                         last_change=None,
-                        relation_type_ref=SDOC_SPEC_RELATION_PARENT_TYPE_SINGLETON,
+                        relation_type_ref=spec_relation_type.identifier,
                         source=spec_object.identifier,
                         target=parent_spec_object.identifier,
                         values_attribute=None,
@@ -544,18 +566,10 @@ class P01_SDocToReqIFObjectConverter:
             attributes.append(attribute)
 
         if requirement.reserved_uid is not None:
-            parent_references: List[str] = []
-            for reference in requirement.relations:
-                if reference.ref_type != ReferenceType.PARENT:
-                    continue
-                parent_reference: ParentReqReference = assert_cast(
-                    reference, ParentReqReference
-                )
-                parent_references.append(parent_reference.ref_uid)
-
-            context.map_uid_to_parent_uids[requirement.reserved_uid] = (
-                parent_references
-            )
+            if len(requirement.relations) > 0:
+                context.map_node_uids_to_their_relations[
+                    requirement.reserved_uid
+                ] = requirement.relations
 
         spec_object_type: ReqIFSpecObjectType = (
             context.map_grammar_node_tags_to_spec_object_type[
@@ -670,7 +684,31 @@ class P01_SDocToReqIFObjectConverter:
         ] = section_spec_type
         spec_object_types.append(section_spec_type)
 
-        return spec_object_types
+        # Using dict as an ordered set.
+        spec_relation_tuples: OrderedSet = OrderedSet()
+        for element_ in grammar.elements:
+            for relation_ in element_.relations:
+                spec_relation_tuples.add(
+                    (relation_.relation_type, relation_.relation_role)
+                )
+
+        spec_relation_types: List = []
+        for spec_relation_tuple_ in spec_relation_tuples:
+            spec_relation_type_name = (
+                spec_relation_tuple_[1]
+                if spec_relation_tuple_[1] is not None
+                else spec_relation_tuple_[0]
+            )
+            spec_relation_type = ReqIFSpecRelationType(
+                identifier=generate_unique_identifier(spec_relation_type_name),
+                long_name=spec_relation_type_name,
+            )
+            spec_relation_types.append(spec_relation_type)
+            context.map_spec_relation_tuple_to_spec_relation_type[
+                spec_relation_tuple_
+            ] = spec_relation_type
+
+        return spec_object_types + spec_relation_types
 
     @classmethod
     def _create_section_spec_object_type(

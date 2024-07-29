@@ -31,7 +31,8 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
-  - TYPE: File
+  - TYPE: Parent
+    ROLE: Traces
 
 [REQUIREMENT]
 UID: REQ-001
@@ -43,3 +44,11 @@ TITLE: Requirement #2
 RELATIONS:
 - TYPE: Parent
   VALUE: REQ-001
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Requirement #3
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-001
+  ROLE: Traces

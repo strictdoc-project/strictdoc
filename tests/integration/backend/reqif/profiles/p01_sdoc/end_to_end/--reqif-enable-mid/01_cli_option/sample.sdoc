@@ -37,7 +37,6 @@ ELEMENTS:
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
-  - TYPE: File
 
 [SECTION]
 MID: eece0e6eeb9f4dacbe1026a0ec818b4b

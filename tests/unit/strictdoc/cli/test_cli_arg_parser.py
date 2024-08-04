@@ -8,7 +8,7 @@ from strictdoc.cli.cli_arg_parser import (
 FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
-TOTAL_EXPORT_ARGS = 17
+TOTAL_EXPORT_ARGS = 18
 
 
 def cli_args_parser():

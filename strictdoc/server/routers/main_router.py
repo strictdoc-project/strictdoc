@@ -157,6 +157,7 @@ def create_main_router(
         reqif_multiline_is_xhtml=False,
         reqif_enable_mid=False,
         view=None,
+        chromedriver=None,
     )
     project_config.integrate_export_config(_export_config)
     project_config.is_running_on_server = True
@@ -2589,7 +2590,8 @@ def create_main_router(
 
             try:
                 pdf_print_driver.get_pdf_from_html(
-                    f"{path_to_output_html},{path_to_output_pdf}"
+                    project_config,
+                    f"{path_to_output_html},{path_to_output_pdf}",
                 )
             except TimeoutError:
                 return Response(

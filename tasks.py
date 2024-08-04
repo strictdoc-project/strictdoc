@@ -332,10 +332,16 @@ def test_integration(
     if not html2pdf:
         parallelize_opts = "" if not no_parallelization else "--threads 1"
         html2pdf_param = ""
+        chromedriver_param = ""
         test_folder = f"{cwd}/tests/integration"
     else:
         parallelize_opts = "--threads 1"
         html2pdf_param = "--param TEST_HTML2PDF=1"
+        chromedriver_path = os.environ.get("CHROMEWEBDRIVER")
+        assert (
+            chromedriver_path is not None
+        ), "TEST_HTML2PDF expects path to chromedriver in environment variable CHROMEWEBDRIVER"
+        chromedriver_param = f"--param CHROMEDRIVER={os.path.join(chromedriver_path, 'chromedriver')}"
         test_folder = f"{cwd}/tests/integration/features/html2pdf"
 
     strictdoc_cache_dir = os.path.join(tempfile.gettempdir(), "strictdoc_cache")
@@ -345,6 +351,7 @@ def test_integration(
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         --param STRICTDOC_CACHE_DIR="{strictdoc_cache_dir}"
         {html2pdf_param}
+        {chromedriver_param}
         -v
         {debug_opts}
         {focus_or_none}

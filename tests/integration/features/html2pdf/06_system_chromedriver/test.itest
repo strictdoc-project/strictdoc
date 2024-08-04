@@ -1,0 +1,16 @@
+REQUIRES: TEST_HTML2PDF
+
+# FIXME: Getting timeouts on Windows CI all the time. Needs to be checked or tested by users.
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+# GitHub images provide a chromedriver and export installed location, see
+# https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#browsers-and-drivers
+RUN: STRICTDOC_CACHE_DIR=%strictdoc_cache_dir %strictdoc export %S --formats=html2pdf --chromedriver=%chromedriver --output-dir Output | filecheck %s --dump-input=fail
+CHECK: HTML2PDF: JS logs from the print session
+CHECK-NOT: HTML2PDF: Chrome Driver available at path: {{.*}}strictdoc_cache{{.*}}
+
+RUN: %check_exists --file %S/Output/html2pdf/pdf/input.pdf
+
+RUN: %check_exists --file %S/Output/html2pdf/html/06_system_chromedriver/input.html
+
+RUN: python %S/test_pdf.py

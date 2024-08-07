@@ -2642,7 +2642,10 @@ There are three methods of PDF printing available:
 
 3. Also in the web interface, by navigating to a 'PDF' view of a document and using the browser's built-in Print function.
 
-The first two methods require the Chrome browser to be installed on the user's computer.
+The first two methods require the Chrome browser and chromedriver to be installed on the user's computer.
+StrictDoc downloads chromedriver on demand by default, or uses a pre installed executable if
+``strictdoc export --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc.toml`` option
+is given.
 
 The third method, the PDF screen, presents a version of the document that is optimized for browser printing. This approach allows for the creation of neatly formatted PDF documents or directly printed documents. Although this method is compatible with any browser, Chrome is recommended for the best printing results. Unlike Firefox and Safari, Chrome maintains the document's internal hyperlinks in the printed PDF.
 

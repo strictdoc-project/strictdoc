@@ -243,6 +243,13 @@ class CommandParserBuilder:
             type=str,
             help="Choose which view will be exported.",
         )
+        command_parser_export.add_argument(
+            "--chromedriver",
+            type=str,
+            help="Path to pre installed chromedriver for html2pdf. "
+            "If not given, chromedriver is downloaded and saved to"
+            "strictdoc cache.",
+        )
         add_config_argument(command_parser_export)
 
     @staticmethod

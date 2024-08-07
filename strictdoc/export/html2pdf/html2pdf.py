@@ -164,18 +164,20 @@ def get_pdf_from_html(driver, url) -> bytes:
     return data
 
 
-def create_webdriver():
+def create_webdriver(chromedriver: Optional[str]):
     print("HTML2PDF: creating Chrome Driver service.", flush=True)  # noqa: T201
+    if chromedriver is None:
+        cache_manager = HTML2PDF_CacheManager(
+            file_manager=FileManager(os_system_manager=OperationSystemManager())
+        )
 
-    cache_manager = HTML2PDF_CacheManager(
-        file_manager=FileManager(os_system_manager=OperationSystemManager())
-    )
-
-    http_client = HTML2PDF_HTTPClient()
-    download_manager = WDMDownloadManager(http_client)
-    path_to_chrome = ChromeDriverManager(
-        download_manager=download_manager, cache_manager=cache_manager
-    ).install()
+        http_client = HTML2PDF_HTTPClient()
+        download_manager = WDMDownloadManager(http_client)
+        path_to_chrome = ChromeDriverManager(
+            download_manager=download_manager, cache_manager=cache_manager
+        ).install()
+    else:
+        path_to_chrome = chromedriver
     print(f"HTML2PDF: Chrome Driver available at path: {path_to_chrome}")  # noqa: T201
 
     service = Service(path_to_chrome)
@@ -211,6 +213,11 @@ def main():
     os.environ["WDM_LOCAL"] = "1"
 
     parser = argparse.ArgumentParser(description="HTML2PDF printer script.")
+    parser.add_argument(
+        "--chromedriver",
+        type=str,
+        help="Optional chromedriver path. Downloaded if not given.",
+    )
     parser.add_argument("paths", help="Paths to input HTML file.")
     args = parser.parse_args()
 
@@ -218,7 +225,7 @@ def main():
 
     separate_path_pairs = paths.split(";")
 
-    driver = create_webdriver()
+    driver = create_webdriver(args.chromedriver)
 
     @atexit.register
     def exit_handler():

@@ -95,6 +95,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         reqif_enable_mid: bool,
         reqif_import_markup: Optional[str],
         config_last_update: Optional[datetime.datetime],
+        chromedriver: Optional[str],
     ):
         assert isinstance(environment, SDocRuntimeEnvironment)
         if source_root_path is not None:
@@ -149,6 +150,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         )
         self.is_running_on_server: bool = False
         self.view: Optional[str] = None
+        self.chromedriver: Optional[str] = chromedriver
 
     @staticmethod
     def default_config(environment: SDocRuntimeEnvironment):
@@ -172,6 +174,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             reqif_enable_mid=False,
             reqif_import_markup=None,
             config_last_update=None,
+            chromedriver=None,
         )
 
     # Some server command settings can override the project config settings.
@@ -194,6 +197,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.filter_sections = export_config.filter_sections
         self.excel_export_fields = export_config.fields
         self.view = export_config.view
+        self.chromedriver = export_config.chromedriver
         if self.source_root_path is None:
             source_root_path = export_config.input_paths[0]
             if not os.path.abspath(source_root_path):
@@ -368,6 +372,7 @@ class ProjectConfigLoader:
         reqif_multiline_is_xhtml = False
         reqif_enable_mid = False
         reqif_import_markup: Optional[str] = None
+        chromedriver: Optional[str] = None
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -507,6 +512,13 @@ class ProjectConfigLoader:
                     assert relation_tuple is not None
                     traceability_matrix_relation_columns.append(relation_tuple)
 
+            chromedriver = project_content.get("chromedriver", chromedriver)
+            if chromedriver is not None and not os.path.isfile(chromedriver):
+                print(  # noqa: T201
+                    f"warning: strictdoc.toml: chromedriver {chromedriver} "
+                    "not found."
+                )
+
         if "server" in config_dict:
             # FIXME: Introduce at least a basic validation for the host/port.
             server_content = config_dict["server"]
@@ -554,4 +566,5 @@ class ProjectConfigLoader:
             reqif_enable_mid=reqif_enable_mid,
             reqif_import_markup=reqif_import_markup,
             config_last_update=config_last_update,
+            chromedriver=chromedriver,
         )

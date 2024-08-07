@@ -146,6 +146,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         reqif_multiline_is_xhtml: bool,
         reqif_enable_mid: bool,
         view: Optional[str],
+        chromedriver: Optional[str],
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.input_paths: List[str] = input_paths
@@ -165,6 +166,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.reqif_enable_mid: bool = reqif_enable_mid
         self.view: Optional[str] = view
         self.output_html_root: str = os.path.join(output_dir, "html")
+        self.chromedriver: Optional[str] = chromedriver
 
     def get_path_to_config(self) -> str:
         # FIXME: The control flow can be improved.
@@ -298,6 +300,7 @@ class SDocArgsParser:
             self.args.reqif_multiline_is_xhtml,
             self.args.reqif_enable_mid,
             self.args.view,
+            self.args.chromedriver,
         )
 
     def get_import_config_reqif(self, _) -> ImportReqIFCommandConfig:

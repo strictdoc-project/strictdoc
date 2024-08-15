@@ -10,7 +10,7 @@
       <div class="pdf-toc-row" data-nodeid="{{ item.reserved_mid }}">
 
           <span class="pdf-toc-cell">
-            {{ item.context.title_number_string if item.context.title_number_string else "&nbsp;" * (item.ng_level * 2 - 1) }}
+            {{ item.context.title_number_string if item.context.title_number_string else "&nbsp;"|safe * (item.ng_level * 2 - 1) }}
           </span>
           <span dotted class="pdf-toc-cell">
             <a href="#{{ view_object.render_local_anchor(item) }}" data-turbo="false">

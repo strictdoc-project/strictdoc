@@ -11,7 +11,7 @@
       {%- include "components/badge/index.jinja" -%}
     {%- endwith -%}
     <span>
-      {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;" * (section.ng_level * 2 - 1) }}
+      {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;"|safe * (section.ng_level * 2 - 1) }}
     </span>
     <span>{{ section.title }}</span>
     {%- if tab == "diff" -%}

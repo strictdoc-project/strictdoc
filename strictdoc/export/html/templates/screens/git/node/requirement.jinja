@@ -11,7 +11,7 @@
       {%- include "components/badge/index.jinja" -%}
     {%- endwith -%}
     <span>
-      {{ requirement.context.title_number_string if requirement.context.title_number_string else "&nbsp;" * (requirement.ng_level * 2 - 1) }}
+      {{ requirement.context.title_number_string if requirement.context.title_number_string else "&nbsp;"|safe * (requirement.ng_level * 2 - 1) }}
     </span>
     {%- if requirement.reserved_title is not none -%}
       <span>

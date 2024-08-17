@@ -1,0 +1,8 @@
+RUN: %strictdoc export %S --output-dir Output --filter-requirements='("2" in node["TITLE"] or "4" in node["TITLE"])' --formats sdoc | filecheck %s --dump-input=fail
+CHECK: Export SDoc
+
+RUN: %cat %S/Output/sdoc/input.sdoc | filecheck %s --dump-input=fail --check-prefix CHECK-SDOC
+CHECK-SDOC-NOT: Title #1
+CHECK-SDOC: Title #2
+CHECK-SDOC-NOT: Title #3
+CHECK-SDOC: Title #4

@@ -23,7 +23,6 @@ from strictdoc.cli.cli_arg_parser import (
     ImportExcelCommandConfig,
     ImportReqIFCommandConfig,
     ManageAutoUIDCommandConfig,
-    PassthroughCommandConfig,
     create_sdoc_args_parser,
 )
 from strictdoc.commands.about_command import AboutCommand
@@ -33,7 +32,6 @@ from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.version_command import VersionCommand
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.actions.import_action import ImportAction
-from strictdoc.core.actions.passthrough_action import PassthroughAction
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.parallelizer import Parallelizer
@@ -44,27 +42,13 @@ def _main(parallelizer: Parallelizer) -> None:
     parser = create_sdoc_args_parser()
 
     project_config: ProjectConfig
-    if parser.is_passthrough_command:
-        passthrough_config: PassthroughCommandConfig = (
-            parser.get_passthrough_config()
-        )
-        input_file = passthrough_config.input_file
-        if not os.path.exists(input_file):
-            sys.stdout.flush()
-            message = "error: passthrough command's input path is neither a folder or a file."
-            print(f"{message}: {input_file}")  # noqa: T201
-            sys.exit(1)
 
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=os.getcwd(),
-            environment=environment,
-        )
-        project_config.integrate_passthrough_config(passthrough_config)
-
-        passthrough_action = PassthroughAction()
-        passthrough_action.passthrough(project_config)
-
-    elif parser.is_export_command:
+    if parser.is_passthrough_command or parser.is_export_command:
+        if parser.is_passthrough_command:
+            print(  # noqa: T201
+                "warning: passthrough is deprecated, use strictdoc "
+                "export --formats sdoc instead."
+            )
         export_config: ExportCommandConfig = parser.get_export_config()
         try:
             export_config.validate()
@@ -141,7 +125,7 @@ def _main(parallelizer: Parallelizer) -> None:
             environment=environment,
         )
         # FIXME: This must be improved.
-        project_config.export_input_paths = [manage_config.input_path]
+        project_config.input_paths = [manage_config.input_path]
         # FIXME: This must be improved.
         project_config.autouuid_include_sections = (
             manage_config.include_sections

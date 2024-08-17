@@ -30,8 +30,8 @@ class DocumentFinder:
     def find_sdoc_content(
         project_config: ProjectConfig, parallelizer: Parallelizer
     ) -> Tuple[DocumentTree, AssetManager]:
-        assert project_config.export_input_paths is not None
-        for paths_to_files_or_doc in project_config.export_input_paths:
+        assert project_config.input_paths is not None
+        for paths_to_files_or_doc in project_config.input_paths:
             if not os.path.exists(paths_to_files_or_doc):
                 sys.stdout.flush()
                 err = (
@@ -99,7 +99,7 @@ class DocumentFinder:
 
         process_document_binding = partial(
             DocumentFinder._process_worker_parse_document,
-            path_to_output_root=project_config.export_output_dir,
+            path_to_output_root=project_config.output_dir,
         )
 
         found_documents = parallelizer.run_parallel(
@@ -187,13 +187,13 @@ class DocumentFinder:
     def _build_file_tree(
         project_config: ProjectConfig,
     ) -> Tuple[List[FileTree], AssetManager]:
-        assert isinstance(project_config.export_input_paths, list)
-        assert len(project_config.export_input_paths) > 0
+        assert isinstance(project_config.input_paths, list)
+        assert len(project_config.input_paths) > 0
 
         root_trees: List[FileTree] = []
         asset_manager = AssetManager()
 
-        for path_to_doc_root_raw in project_config.export_input_paths:
+        for path_to_doc_root_raw in project_config.input_paths:
             if os.path.isfile(path_to_doc_root_raw):
                 path_to_doc_root = path_to_doc_root_raw
                 if not os.path.isabs(path_to_doc_root):
@@ -238,10 +238,10 @@ class DocumentFinder:
                 )
 
             # Finding SDoc files.
-            assert isinstance(project_config.export_output_dir, str)
+            assert isinstance(project_config.output_dir, str)
             file_tree_structure = FileFinder.find_files_with_extensions(
                 root_path=path_to_doc_root,
-                ignored_dirs=[project_config.export_output_dir],
+                ignored_dirs=[project_config.output_dir],
                 extensions=[".sdoc", ".sgra"],
                 include_paths=project_config.include_doc_paths,
                 exclude_paths=project_config.exclude_doc_paths,

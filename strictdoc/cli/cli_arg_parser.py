@@ -66,24 +66,6 @@ class ImportExcelCommandConfig:
         self.parser = parser
 
 
-class PassthroughCommandConfig:
-    def __init__(
-        self,
-        input_file,
-        output_dir: Optional[str],
-        filter_requirements: Optional[str],
-        filter_sections: Optional[str],
-        free_text_to_text: bool,
-        view: Optional[str],
-    ):
-        self.input_file = input_file
-        self.output_dir: Optional[str] = output_dir
-        self.filter_requirements: Optional[str] = filter_requirements
-        self.filter_sections: Optional[str] = filter_sections
-        self.free_text_to_text: bool = free_text_to_text
-        self.view: Optional[str] = view
-
-
 @auto_described
 class ServerCommandConfig:
     def __init__(
@@ -147,6 +129,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         reqif_enable_mid: bool,
         view: Optional[str],
         chromedriver: Optional[str],
+        free_text_to_text: bool,
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.input_paths: List[str] = input_paths
@@ -167,6 +150,7 @@ class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
         self.view: Optional[str] = view
         self.output_html_root: str = os.path.join(output_dir, "html")
         self.chromedriver: Optional[str] = chromedriver
+        self.free_text_to_text: bool = free_text_to_text
 
     def get_path_to_config(self) -> str:
         # FIXME: The control flow can be improved.
@@ -265,16 +249,6 @@ class SDocArgsParser:
             self.args.command == "manage" and self.args.subcommand == "auto-uid"
         )
 
-    def get_passthrough_config(self) -> PassthroughCommandConfig:
-        return PassthroughCommandConfig(
-            self.args.input_file,
-            self.args.output_dir,
-            filter_requirements=self.args.filter_requirements,
-            filter_sections=self.args.filter_sections,
-            free_text_to_text=self.args.free_text_to_text,
-            view=self.args.view,
-        )
-
     def get_export_config(self) -> ExportCommandConfig:
         project_title: Optional[str] = self.args.project_title
 
@@ -301,6 +275,7 @@ class SDocArgsParser:
             self.args.reqif_enable_mid,
             self.args.view,
             self.args.chromedriver,
+            self.args.free_text_to_text,
         )
 
     def get_import_config_reqif(self, _) -> ImportReqIFCommandConfig:

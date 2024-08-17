@@ -158,6 +158,7 @@ def create_main_router(
         reqif_enable_mid=False,
         view=None,
         chromedriver=None,
+        free_text_to_text=False,
     )
     project_config.integrate_export_config(_export_config)
     project_config.is_running_on_server = True
@@ -1666,8 +1667,8 @@ def create_main_router(
         if not document_path.endswith(".sdoc"):
             document_path = document_path + ".sdoc"
 
-        assert isinstance(project_config.export_input_paths, list)
-        full_input_path = os.path.abspath(project_config.export_input_paths[0])
+        assert isinstance(project_config.input_paths, list)
+        full_input_path = os.path.abspath(project_config.input_paths[0])
         file_tree_mount_folder = os.path.basename(
             os.path.dirname(full_input_path)
         )
@@ -2482,14 +2483,12 @@ def create_main_router(
                 },
             )
         assert documents is not None
-        assert isinstance(project_config.export_input_paths, list)
+        assert isinstance(project_config.input_paths, list)
         for document in documents:
             document_title = re.sub(r"[^A-Za-z0-9-]", "_", document.title)
             document_path = f"{document_title}.sdoc"
 
-            full_input_path = os.path.abspath(
-                project_config.export_input_paths[0]
-            )
+            full_input_path = os.path.abspath(project_config.input_paths[0])
             doc_full_path = os.path.join(full_input_path, document_path)
             doc_full_path_dir = os.path.dirname(doc_full_path)
             Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
@@ -2689,9 +2688,7 @@ def create_main_router(
 
     @router.get("/nestor", response_class=Response)
     def get_nestor():
-        output_json_root = os.path.join(
-            project_config.export_output_dir, "html"
-        )
+        output_json_root = os.path.join(project_config.output_dir, "html")
         Path(output_json_root).mkdir(parents=True, exist_ok=True)
         JSONGenerator().export_tree(
             export_action.traceability_index, project_config, output_json_root

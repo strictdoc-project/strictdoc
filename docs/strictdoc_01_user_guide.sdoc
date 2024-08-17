@@ -1208,7 +1208,7 @@ StrictDoc supports the automatic generation of machine identifiers (MIDs). This 
     OPTIONS:
       ENABLE_MID: True
 
-When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system. On the web server, MIDs are generated automatically when a document, section, or requirement is saved. In the command-line interface, the generation of ``MID`` can be initiated with a ``passthrough`` command. Executing ``strictdoc passthrough`` on a document with ``ENABLE_MID: True`` results in all nodes having auto-generated MIDs. Implementing the ENABLE_MID option on a per-document basis allows for the integration of MID-enabled documents alongside third-party documents where the MID feature may not be necessary or desired.
+When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system. On the web server, MIDs are generated automatically when a document, section, or requirement is saved. In the command-line interface, the generation of ``MID`` can be initiated with a ``export`` command. Executing ``strictdoc export --formats sdoc`` on a document with ``ENABLE_MID: True`` results in all nodes having auto-generated MIDs. Implementing the ENABLE_MID option on a per-document basis allows for the integration of MID-enabled documents alongside third-party documents where the MID feature may not be necessary or desired.
 
 Machine identifiers (MIDs) differ from and do not replace unique identifiers (UIDs). A requirement, section, or document node may have both ``MID`` and ``UID`` fields defined. For example:
 
@@ -1691,7 +1691,7 @@ TITLE: Search and filtering
 [FREETEXT]
 StrictDoc supports the search and filtering of document content.
 
-The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` and ``passthrough`` commands.
+The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` commands.
 [/FREETEXT]
 
 [SECTION]
@@ -1738,7 +1738,7 @@ Important rules:
 TITLE: Filtering content
 
 [FREETEXT]
-Both ``export`` and ``passthrough`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
+Both ``export`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
 
 Both options are based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted requirements/sections will be exported.
 
@@ -2893,7 +2893,7 @@ The ``TEXT`` node is now included to a default StrictDoc grammar by default. If 
     ... REQUIREMENT fields
     ... Optionally other elements definitions.
 
-The ``strictdoc passthrough --free-text-to-text ...`` command can be used for converting all FREETEXT nodes to TEXT nodes automatically. See ``strictdoc passthrough --help`` for more details.
+The ``strictdoc export --formats sdoc --free-text-to-text ...`` command can be used for converting all FREETEXT nodes to TEXT nodes automatically. See ``strictdoc export --help`` for more details.
 <<<
 
 [/SECTION]

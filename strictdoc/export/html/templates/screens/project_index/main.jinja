@@ -12,9 +12,9 @@
           Project tree configuration
         </div>
 
-        {% if view_object.project_config.export_input_paths|length %}
+        {% if view_object.project_config.input_paths|length %}
           <b>Input paths:</b>
-          {% for path_ in view_object.project_config.export_input_paths %}
+          {% for path_ in view_object.project_config.input_paths %}
           <code style="word-wrap: break-word;">{{ path_ }}</code><br/>
           {% endfor %}
         {% endif %}

@@ -145,11 +145,11 @@ class SourceFilesFinder:
             else doctree_root_abs_path
         )
 
-        assert isinstance(project_config.export_output_dir, str)
+        assert isinstance(project_config.output_dir, str)
 
         file_tree = FileFinder.find_files_with_extensions(
             root_path=doctree_root_abs_path,
-            ignored_dirs=[project_config.export_output_dir],
+            ignored_dirs=[project_config.output_dir],
             extensions=None,
             include_paths=project_config.include_source_paths,
             exclude_paths=project_config.exclude_source_paths,

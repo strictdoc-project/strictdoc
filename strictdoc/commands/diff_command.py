@@ -52,8 +52,8 @@ class DiffCommand:
         project_config_copy_lhs: ProjectConfig = deepcopy(project_config)
         project_config_copy_rhs: ProjectConfig = deepcopy(project_config)
 
-        project_config_copy_lhs.export_input_paths = [lhs_export_input_abs_path]
-        project_config_copy_rhs.export_input_paths = [rhs_export_input_abs_path]
+        project_config_copy_lhs.input_paths = [lhs_export_input_abs_path]
+        project_config_copy_rhs.input_paths = [rhs_export_input_abs_path]
 
         change_container: ChangeContainer = ChangeGenerator.generate(
             lhs_project_config=project_config_copy_lhs,

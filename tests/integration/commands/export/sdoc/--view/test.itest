@@ -1,4 +1,4 @@
-RUN: %strictdoc passthrough %S --view PRINT_VIEW --output-dir Output/
+RUN: %strictdoc export %S --view PRINT_VIEW --formats sdoc --output-dir Output/
 RUN: %cat %S/Output/sdoc/input.sdoc | filecheck %s --check-prefix CHECK-SDOC
 
 CHECK-SDOC: REQ-1

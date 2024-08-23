@@ -106,7 +106,7 @@ class CreateRequirementTransform:
                     parsed_html,
                     rst_error,
                 ) = RstToHtmlFragmentWriter(
-                    path_to_output_dir=self.project_config.export_output_dir,
+                    path_to_output_dir=self.project_config.output_dir,
                     context_document=document,
                 ).write_with_validation(field_.field_value)
                 if parsed_html is None:

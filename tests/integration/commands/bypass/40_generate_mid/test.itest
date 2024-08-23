@@ -1,7 +1,7 @@
 RUN: %expect_exit 0 %strictdoc passthrough %S/input.sdoc --output-dir=%S/Output | filecheck %s --dump-input=fail
 CHECK: Reading SDOC: input.sdoc
 
-RUN: %cat %S/Output/input.sdoc | filecheck %s --dump-input=fail --check-prefix=CHECK-OUT-SDOC
+RUN: %cat %S/Output/sdoc/input.sdoc | filecheck %s --dump-input=fail --check-prefix=CHECK-OUT-SDOC
 NOTE: Ensure that the MIDs are generated for Document, Section and two Requirements.
 CHECK-OUT-SDOC: MID: {{[a-f0-9]+}}
 CHECK-OUT-SDOC: MID: {{[a-f0-9]+}}

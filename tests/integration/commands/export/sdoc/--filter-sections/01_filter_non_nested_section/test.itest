@@ -1,0 +1,9 @@
+RUN: %strictdoc export %S --output-dir Output --filter-sections='"MUST_BE_FILTERED" not in node["TITLE"]' --formats sdoc | filecheck %s --dump-input=fail
+CHECK: Export SDoc
+
+RUN: %cat %S/Output/sdoc/input.sdoc | filecheck %s --dump-input=fail --check-prefix CHECK-SDOC
+CHECK-SDOC-NOT: MUST_BE_FILTERED
+CHECK-SDOC-NOT: Title #1
+CHECK-SDOC-NOT: Title #2
+CHECK-SDOC-NOT: Title #3
+CHECK-SDOC-NOT: Title #4

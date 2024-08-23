@@ -8,6 +8,7 @@ from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.backend.reqif.reqif_export import ReqIFExport
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
@@ -18,6 +19,7 @@ from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
 from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.export.spdx.spdx_generator import SPDXGenerator
+from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.timing import timing_decorator
 
 
@@ -94,7 +96,7 @@ class ExportAction:
 
             if "html2pdf" in self.project_config.export_formats:
                 output_html2pdf_root = os.path.join(
-                    self.project_config.export_output_dir, "html2pdf"
+                    self.project_config.output_dir, "html2pdf"
                 )
                 Path(output_html2pdf_root).mkdir(parents=True, exist_ok=True)
                 HTML2PDFGenerator.export_tree(
@@ -115,7 +117,7 @@ class ExportAction:
 
         if "rst" in self.project_config.export_formats:
             output_rst_root = os.path.join(
-                self.project_config.export_output_dir, "rst"
+                self.project_config.output_dir, "rst"
             )
             Path(output_rst_root).mkdir(parents=True, exist_ok=True)
             DocumentRSTGenerator.export_tree(
@@ -123,7 +125,7 @@ class ExportAction:
             )
 
         if "excel" in self.project_config.export_formats:
-            output_excel_root = f"{self.project_config.export_output_dir}/excel"
+            output_excel_root = f"{self.project_config.output_dir}/excel"
             ExcelGenerator.export_tree(
                 self.traceability_index,
                 output_excel_root,
@@ -131,7 +133,7 @@ class ExportAction:
             )
 
         if "reqif-sdoc" in self.project_config.export_formats:
-            output_reqif_root = f"{self.project_config.export_output_dir}/reqif"
+            output_reqif_root = f"{self.project_config.output_dir}/reqif"
             ReqIFExport.export(
                 project_config=self.project_config,
                 traceability_index=self.traceability_index,
@@ -140,7 +142,7 @@ class ExportAction:
             )
 
         if "reqifz-sdoc" in self.project_config.export_formats:
-            output_reqif_root = f"{self.project_config.export_output_dir}/reqif"
+            output_reqif_root = f"{self.project_config.output_dir}/reqif"
             ReqIFExport.export(
                 project_config=self.project_config,
                 traceability_index=self.traceability_index,
@@ -148,9 +150,12 @@ class ExportAction:
                 reqifz=True,
             )
 
+        if "sdoc" in self.project_config.export_formats:
+            self.export_sdoc()
+
         if "spdx" in self.project_config.export_formats:
             output_dot_root = os.path.join(
-                self.project_config.export_output_dir, "spdx"
+                self.project_config.output_dir, "spdx"
             )
             Path(output_dot_root).mkdir(parents=True, exist_ok=True)
             SPDXGenerator().export_tree(
@@ -159,9 +164,61 @@ class ExportAction:
 
         if "json" in self.project_config.export_formats:
             output_json_root = os.path.join(
-                self.project_config.export_output_dir, "json"
+                self.project_config.output_dir, "json"
             )
             Path(output_json_root).mkdir(parents=True, exist_ok=True)
             JSONGenerator().export_tree(
                 self.traceability_index, self.project_config, output_json_root
             )
+
+    def export_sdoc(self):
+        assert self.project_config.input_paths
+        try:
+            traceability_index: TraceabilityIndex = (
+                TraceabilityIndexBuilder.create(
+                    project_config=self.project_config,
+                    parallelizer=NullParallelizer(),
+                )
+            )
+        except DocumentTreeError as exc:
+            print(exc.to_print_message())  # noqa: T201
+            sys.exit(1)
+        else:
+            assert traceability_index.document_tree
+
+        writer = SDWriter(self.project_config)
+
+        output_base_dir = (
+            self.project_config.output_dir
+            if self.project_config.output_dir is not None
+            else os.path.join(os.getcwd(), "output")
+        )
+        output_dir = os.path.join(output_base_dir, "sdoc")
+        for document in traceability_index.document_tree.document_list:
+            assert document.meta
+            assert document.meta.document_filename_base
+            assert document.meta.input_doc_dir_rel_path
+            output, fragments_dict = writer.write_with_fragments(
+                document,
+                convert_free_text_to_text=self.project_config.free_text_to_text,
+            )
+
+            path_to_output_file_dir: str = os.path.join(
+                output_dir, document.meta.input_doc_dir_rel_path.relative_path
+            )
+            Path(path_to_output_file_dir).mkdir(parents=True, exist_ok=True)
+            path_to_output_file = os.path.join(
+                path_to_output_file_dir, document.meta.document_filename_base
+            )
+            path_to_output_file += ".sdoc"
+            with open(path_to_output_file, "w", encoding="utf8") as file:
+                file.write(output)
+
+            for fragment_path_, fragment_content_ in fragments_dict.items():
+                path_to_output_fragment = os.path.join(
+                    path_to_output_file_dir, fragment_path_
+                )
+                with open(
+                    path_to_output_fragment, "w", encoding="utf8"
+                ) as file_:
+                    file_.write(fragment_content_)

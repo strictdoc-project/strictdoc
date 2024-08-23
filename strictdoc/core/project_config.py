@@ -13,7 +13,6 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.cli.cli_arg_parser import (
     ExportCommandConfig,
-    PassthroughCommandConfig,
     ServerCommandConfig,
 )
 from strictdoc.helpers.auto_described import auto_described
@@ -117,19 +116,19 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         self.exclude_source_paths: List[str] = exclude_source_paths
 
         # Settings derived from the command-line parameters.
+
+        # Common settings
+        self.input_paths: Optional[List[str]] = None
+        self.output_dir: str = "output"
+
         # Export action.
-        self.export_input_paths: Optional[List[str]] = None
-        self.export_output_dir: str = "output"
         self.export_output_html_root: Optional[str] = None
         self.export_formats: Optional[List[str]] = None
         self.export_included_documents: bool = False
         self.generate_bundle_document: bool = False
         self.filter_requirements: Optional[str] = None
         self.filter_sections: Optional[str] = None
-
-        self.passthrough_input_path: Optional[str] = None
-        self.passthrough_output_dir: Optional[str] = None
-        self.passthrough_free_text_to_text: bool = False
+        self.free_text_to_text: bool = False
 
         self.excel_export_fields: Optional[List[str]] = None
 
@@ -187,12 +186,13 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
     def integrate_export_config(self, export_config: ExportCommandConfig):
         if export_config.project_title is not None:
             self.project_title = export_config.project_title
-        self.export_input_paths = export_config.input_paths
-        self.export_output_dir = export_config.output_dir
+        self.input_paths = export_config.input_paths
+        self.output_dir = export_config.output_dir
         self.export_output_html_root = export_config.output_html_root
         self.export_formats = export_config.formats
         self.export_included_documents = export_config.included_documents
         self.generate_bundle_document = export_config.generate_bundle_document
+        self.free_text_to_text = export_config.free_text_to_text
         self.filter_requirements = export_config.filter_requirements
         self.filter_sections = export_config.filter_sections
         self.excel_export_fields = export_config.fields
@@ -221,17 +221,6 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             )
         if not self.reqif_enable_mid:
             self.reqif_enable_mid = export_config.reqif_enable_mid
-
-    def integrate_passthrough_config(self, config: PassthroughCommandConfig):
-        self.passthrough_input_path = config.input_file
-        self.passthrough_output_dir = config.output_dir
-        self.passthrough_free_text_to_text = config.free_text_to_text
-        self.filter_requirements = config.filter_requirements
-        self.filter_sections = config.filter_sections
-        self.view = config.view
-
-        # FIXME: Traceability Index is coupled with HTML output.
-        self.export_output_html_root = "NOT_RELEVANT"
 
     def is_feature_activated(self, feature: ProjectFeature):
         return feature in self.project_features

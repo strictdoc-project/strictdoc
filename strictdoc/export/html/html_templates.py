@@ -148,7 +148,7 @@ class CompiledHTMLTemplates(HTMLTemplates):
 
     def __init__(self, project_config: ProjectConfig):
         path_to_output_dir_hash = hashlib.md5(
-            project_config.export_output_dir.encode("utf-8")
+            project_config.output_dir.encode("utf-8")
         ).hexdigest()
         self.path_to_jinja_cache_bucket_dir = os.path.join(
             CompiledHTMLTemplates.PATH_TO_JINJA_CACHE_DIR,

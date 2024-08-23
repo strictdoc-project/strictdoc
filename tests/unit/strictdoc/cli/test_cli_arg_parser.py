@@ -8,7 +8,7 @@ from strictdoc.cli.cli_arg_parser import (
 FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
-TOTAL_EXPORT_ARGS = 18
+TOTAL_EXPORT_ARGS = 19
 
 
 def cli_args_parser():
@@ -184,12 +184,24 @@ def test_passthrough_01_minimal():
     args = parser.parse_args(["passthrough", "input.sdoc"])
 
     assert sorted(args._get_kwargs()) == [
+        ("chromedriver", None),
         ("command", "passthrough"),
+        ("config", None),
+        ("enable_mathjax", False),
+        ("fields", None),
         ("filter_requirements", None),
         ("filter_sections", None),
+        ("formats", ["sdoc"]),
         ("free_text_to_text", False),
-        ("input_file", "input.sdoc"),
+        ("generate_bundle_document", False),
+        ("included_documents", False),
+        ("input_paths", ["input.sdoc"]),
+        ("no_parallelization", False),
         ("output_dir", None),
+        ("project_title", None),
+        ("reqif_enable_mid", False),
+        ("reqif_multiline_is_xhtml", False),
+        ("reqif_profile", None),
         ("view", None),
     ]
 
@@ -202,11 +214,23 @@ def test_passthrough_02_minimal():
     )
 
     assert sorted(args._get_kwargs()) == [
+        ("chromedriver", None),
         ("command", "passthrough"),
+        ("config", None),
+        ("enable_mathjax", False),
+        ("fields", None),
         ("filter_requirements", None),
         ("filter_sections", None),
+        ("formats", ["sdoc"]),
         ("free_text_to_text", False),
-        ("input_file", "input.sdoc"),
+        ("generate_bundle_document", False),
+        ("included_documents", False),
+        ("input_paths", ["input.sdoc"]),
+        ("no_parallelization", False),
         ("output_dir", "SANDBOX/"),
+        ("project_title", None),
+        ("reqif_enable_mid", False),
+        ("reqif_multiline_is_xhtml", False),
+        ("reqif_profile", None),
         ("view", None),
     ]

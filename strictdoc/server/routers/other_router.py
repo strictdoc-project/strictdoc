@@ -210,29 +210,29 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         )
 
         project_config_copy_lhs: ProjectConfig = deepcopy(project_config)
-        assert project_config_copy_lhs.export_input_paths is not None
+        assert project_config_copy_lhs.input_paths is not None
         project_config_copy_rhs: ProjectConfig = deepcopy(project_config)
-        assert project_config_copy_rhs.export_input_paths is not None
+        assert project_config_copy_rhs.input_paths is not None
 
         export_input_rel_path = os.path.relpath(
-            project_config_copy_lhs.export_input_paths[0], os.getcwd()
+            project_config_copy_lhs.input_paths[0], os.getcwd()
         )
         export_input_abs_path = os.path.join(
             git_client_lhs.path_to_git_root, export_input_rel_path
         )
-        project_config_copy_lhs.export_input_paths = [export_input_abs_path]
+        project_config_copy_lhs.input_paths = [export_input_abs_path]
 
         git_client_rhs = GitClient.create_repo_from_local_copy(
             right_revision_resolved
         )
 
         export_input_rel_path = os.path.relpath(
-            project_config_copy_rhs.export_input_paths[0], os.getcwd()
+            project_config_copy_rhs.input_paths[0], os.getcwd()
         )
         export_input_abs_path = os.path.join(
             git_client_rhs.path_to_git_root, export_input_rel_path
         )
-        project_config_copy_rhs.export_input_paths = [export_input_abs_path]
+        project_config_copy_rhs.input_paths = [export_input_abs_path]
 
         change_container: ChangeContainer = ChangeGenerator.generate(
             lhs_project_config=project_config_copy_lhs,

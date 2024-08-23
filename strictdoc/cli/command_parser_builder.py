@@ -15,6 +15,7 @@ EXPORT_FORMATS = [
     "excel",
     "reqif-sdoc",
     "reqifz-sdoc",
+    "sdoc",
     "spdx",
 ]
 EXCEL_PARSERS = ["basic"]
@@ -247,8 +248,16 @@ class CommandParserBuilder:
             "--chromedriver",
             type=str,
             help="Path to pre installed chromedriver for html2pdf. "
-            "If not given, chromedriver is downloaded and saved to"
+            "If not given, chromedriver is downloaded and saved to "
             "strictdoc cache.",
+        )
+        command_parser_export.add_argument(
+            "--free-text-to-text",
+            action="store_true",
+            help=(
+                "This option makes all FREETEXT nodes to be converted to the new "
+                "TEXT nodes."
+            ),
         )
         add_config_argument(command_parser_export)
 
@@ -380,13 +389,19 @@ class CommandParserBuilder:
 
     @staticmethod
     def add_passthrough_command(parent_command_parser):
+        # passthrough command is kept for backwards compatibility. It will
+        # internally be handled as export --formats sdoc.
         command_parser_passthrough = parent_command_parser.add_parser(
             "passthrough",
-            help="Read an SDoc file, then output it again. (used for testing)",
+            help="Read an SDoc file, then output it again. Deprecated, use "
+            "strictdoc export --formats sdoc instead.",
             formatter_class=formatter,
         )
         command_parser_passthrough.add_argument(
-            "input_file", type=str, help="Path to the input SDoc file."
+            "input_paths",
+            type=str,
+            nargs="+",
+            help="One or more folders with *.sdoc files",
         )
         command_parser_passthrough.add_argument(
             "--output-dir",
@@ -416,6 +431,63 @@ class CommandParserBuilder:
             type=str,
             help="Choose which view will be exported.",
         )
+
+        # Hidden default values to make deprecated passthrough parser compatible
+        # with SDocArgsParser.get_export_config.
+        command_parser_passthrough.add_argument(
+            "--project-title", const=None, help=argparse.SUPPRESS
+        )
+        command_parser_passthrough.add_argument(
+            "--formats",
+            default=["sdoc"],
+            help=argparse.SUPPRESS,
+        )
+        command_parser_passthrough.add_argument(
+            "--fields",
+            default=None,
+            help=argparse.SUPPRESS,
+        )
+        command_parser_passthrough.add_argument(
+            "--generate-bundle-document",
+            default=False,
+            help=argparse.SUPPRESS,
+        )
+        command_parser_passthrough.add_argument(
+            "--no-parallelization",
+            default=False,
+            help=argparse.SUPPRESS,
+        )
+        command_parser_passthrough.add_argument(
+            "--enable-mathjax",
+            default=False,
+            help=argparse.SUPPRESS,
+        )
+        command_parser_passthrough.add_argument(
+            "--included-documents",
+            default=False,
+            help=argparse.SUPPRESS,
+        )
+        command_parser_passthrough.add_argument(
+            "--reqif-profile",
+            default=None,
+            help=argparse.SUPPRESS,
+        )
+        command_parser_passthrough.add_argument(
+            "--reqif-multiline-is-xhtml",
+            default=False,
+            help=argparse.SUPPRESS,
+        )
+        command_parser_passthrough.add_argument(
+            "--reqif-enable-mid",
+            default=False,
+            help=argparse.SUPPRESS,
+        )
+        command_parser_passthrough.add_argument(
+            "--chromedriver",
+            default=None,
+            help=argparse.SUPPRESS,
+        )
+        add_config_argument(command_parser_passthrough)
 
     @staticmethod
     def add_dump_command(parent_command_parser):

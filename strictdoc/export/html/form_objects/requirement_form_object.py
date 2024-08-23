@@ -776,13 +776,8 @@ class RequirementFormObject(ErrorObject):
                     relation_target_uids_so_far.add(link_uid)
 
                     # Check if the target document supports a given relation.
-                    target_requirement: SDocNode = (
-                        traceability_index.get_node_by_uid(link_uid)
-                    )
-                    target_grammar_element: GrammarElement = (
-                        target_requirement.document.grammar.elements_by_type[
-                            self.element_type
-                        ]
+                    node_grammar_element: GrammarElement = (
+                        self.grammar.elements_by_type[self.element_type]
                     )
                     field_role_or_none = (
                         reference_field.field_role
@@ -790,16 +785,14 @@ class RequirementFormObject(ErrorObject):
                         and len(reference_field.field_role) > 0
                         else None
                     )
-                    if not target_grammar_element.has_relation_type_role(
+
+                    # This is not a realistic case to happen when a node is
+                    # edited in UI because the UI dropdown element whitelists
+                    # the available relation types.
+                    # Using an assert anyway just to make sure.
+                    assert node_grammar_element.has_relation_type_role(
                         reference_field.field_type, field_role_or_none
-                    ):
-                        reference_field.validation_messages.append(
-                            f"Relation target requirement's document "
-                            "does not have this relation registered: "
-                            f'type: "{reference_field.field_type}" '
-                            f'role: "{reference_field.field_role}".'
-                        )
-                        continue
+                    )
 
                     # Check if the relation forms a cycle.
                     ref_uid = reference_field.field_value

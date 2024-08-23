@@ -109,13 +109,10 @@ class ExcelGenerator:
                             if len(parent_refs) > 0:
                                 # TODO Allow multiple parent refs
                                 ref = parent_refs[0]
-                                if (
-                                    len(ref.ref_uid)
-                                    > columns[field][MAX_WIDTH_KEY]
-                                ):
-                                    columns[field][MAX_WIDTH_KEY] = len(
-                                        ref.ref_uid
-                                    )
+                                columns[field][MAX_WIDTH_KEY] = max(
+                                    len(ref.ref_uid),
+                                    columns[field][MAX_WIDTH_KEY],
+                                )
                                 if ref.ref_uid in req_uid_rows:
                                     worksheet.write_url(
                                         row,
@@ -171,15 +168,17 @@ class ExcelGenerator:
                                 )
                                 worksheet.write(row, idx, relations_row_value)
                                 value_len = len(relations_row_value)
-                                if value_len > columns[field][MAX_WIDTH_KEY]:
-                                    columns[field][MAX_WIDTH_KEY] = value_len
+                                columns[field][MAX_WIDTH_KEY] = max(
+                                    value_len, columns[field][MAX_WIDTH_KEY]
+                                )
                         elif field_uc in node.ordered_fields_lookup.keys():
                             req_field = node.ordered_fields_lookup[field_uc][0]
                             value: str = req_field.get_text_value()
                             worksheet.write(row, idx, value)
                             value_len = len(value)
-                            if value_len > columns[field][MAX_WIDTH_KEY]:
-                                columns[field][MAX_WIDTH_KEY] = value_len
+                            columns[field][MAX_WIDTH_KEY] = max(
+                                value_len, columns[field][MAX_WIDTH_KEY]
+                            )
                         elif hasattr(node, "special_fields"):
                             if len(node.special_fields):
                                 for special_field in node.special_fields:

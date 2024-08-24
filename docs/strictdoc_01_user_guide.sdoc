@@ -2631,7 +2631,8 @@ This feature is not enabled by default because it has not undergone sufficient t
 [SECTION]
 TITLE: HTML2PDF document generator
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc offers an experimental feature for converting HTML documents into PDF files. This feature aims to deliver a good PDF printing experience without the necessity of installing more sophisticated printing systems like LaTeX.
 
 There are three methods of PDF printing available:
@@ -2644,8 +2645,9 @@ There are three methods of PDF printing available:
 
 The first two methods require the Chrome browser and chromedriver to be installed on the user's computer.
 StrictDoc downloads chromedriver on demand by default, or uses a pre installed executable if
-``strictdoc export --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc.toml`` option
-is given.
+``strictdoc export --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc.toml`` option is given.
+
+When printing from the command line (the first method), you can use the ``--generate-bundle-document`` option to have StrictDoc generate a single PDF document that bundles together all individual PDFs.
 
 The third method, the PDF screen, presents a version of the document that is optimized for browser printing. This approach allows for the creation of neatly formatted PDF documents or directly printed documents. Although this method is compatible with any browser, Chrome is recommended for the best printing results. Unlike Firefox and Safari, Chrome maintains the document's internal hyperlinks in the printed PDF.
 
@@ -2661,7 +2663,7 @@ To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc.t
     ]
 
 This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to how the SDoc HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked out. One feature which is still missing is the ability to generate user-specific front pages with custom meta information.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 

@@ -400,7 +400,7 @@ class RequirementFormObject(ErrorObject):
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type[
-            requirement.requirement_type
+            requirement.node_type
         ]
 
         grammar_element_relations = element.get_relation_types()
@@ -467,7 +467,7 @@ class RequirementFormObject(ErrorObject):
                 form_refs_fields.append(form_ref_field)
         return RequirementFormObject(
             is_new=False,
-            element_type=requirement.requirement_type,
+            element_type=requirement.node_type,
             requirement_mid=requirement.reserved_mid,
             document_mid=document.reserved_mid,
             context_document_mid=context_document_mid,

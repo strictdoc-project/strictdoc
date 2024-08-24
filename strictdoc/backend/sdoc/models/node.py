@@ -97,21 +97,21 @@ class SDocNode(SDocObject):
     def __init__(
         self,
         parent: Union[SDocDocument, SDocSection, "SDocCompositeNode"],
-        requirement_type: str,
+        node_type: str,
         fields: List[SDocNodeField],
         relations: List[Reference],
         requirements: Optional[List["SDocNode"]] = None,
         basic_free_text: bool = False,
     ) -> None:
         assert parent
-        assert isinstance(requirement_type, str)
+        assert isinstance(node_type, str)
         assert isinstance(relations, list), relations
 
         self.parent: Union[SDocDocument, SDocSection, SDocCompositeNode] = (
             parent
         )
 
-        self.requirement_type: str = requirement_type
+        self.node_type: str = node_type
 
         ordered_fields_lookup: OrderedDict[str, List[SDocNodeField]] = (
             OrderedDict()
@@ -178,17 +178,17 @@ class SDocNode(SDocObject):
         return "requirement"
 
     def get_node_type_string(self) -> Optional[str]:
-        return self.requirement_type
+        return self.node_type
 
     def get_node_type_string_lower(self) -> Optional[str]:
-        return self.requirement_type.lower()
+        return self.node_type.lower()
 
     def get_display_title(self) -> str:
         if self.reserved_title is not None:
             return self.reserved_title
         if self.reserved_uid is not None:
             return self.reserved_uid
-        return f"{self.requirement_type} with no title/UID"
+        return f"{self.node_type} with no title/UID"
 
     @property
     def is_root_included_document(self) -> bool:
@@ -233,14 +233,14 @@ class SDocNode(SDocObject):
 
     def has_reserved_statement(self) -> bool:
         element: GrammarElement = self.document.grammar.elements_by_type[
-            self.requirement_type
+            self.node_type
         ]
         return element.content_field[0] in self.ordered_fields_lookup
 
     @property
     def reserved_statement(self) -> Optional[str]:
         element: GrammarElement = self.document.grammar.elements_by_type[
-            self.requirement_type
+            self.node_type
         ]
         return self._get_cached_field(
             element.content_field[0], singleline_only=False
@@ -259,7 +259,7 @@ class SDocNode(SDocObject):
         return True
 
     def is_text_node(self) -> bool:
-        return self.requirement_type == "TEXT"
+        return self.node_type == "TEXT"
 
     # FIXME: Remove @property.
     @property
@@ -335,13 +335,13 @@ class SDocNode(SDocObject):
 
     def get_content_field_name(self) -> str:
         element: GrammarElement = self.document.grammar.elements_by_type[
-            self.requirement_type
+            self.node_type
         ]
         return element.content_field[0]
 
     def get_content_field(self) -> SDocNodeField:
         element: GrammarElement = self.document.grammar.elements_by_type[
-            self.requirement_type
+            self.node_type
         ]
         return self.ordered_fields_lookup[element.content_field[0]][0]
 
@@ -456,7 +456,7 @@ class SDocNode(SDocObject):
         self, skip_single_lines: bool = False, skip_multi_lines: bool = False
     ) -> Generator[Tuple[str, SDocNodeField], None, None]:
         element: GrammarElement = self.document.grammar.elements_by_type[
-            self.requirement_type
+            self.node_type
         ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
         statement_field_index: int = element.content_field[1]
@@ -489,14 +489,14 @@ class SDocNode(SDocObject):
 
     def get_field_human_title(self, field_name: str) -> str:
         element: GrammarElement = self.document.grammar.elements_by_type[
-            self.requirement_type
+            self.node_type
         ]
         field_human_title = element.fields_map[field_name]
         return field_human_title.get_field_human_name()
 
     def get_field_human_title_for_statement(self) -> str:
         element: GrammarElement = self.document.grammar.elements_by_type[
-            self.requirement_type
+            self.node_type
         ]
         field_human_title = element.fields_map[element.content_field[0]]
         return field_human_title.get_field_human_name()
@@ -567,9 +567,7 @@ class SDocNode(SDocObject):
         assert grammar_or_none is not None
         grammar: DocumentGrammar = grammar_or_none
 
-        element: GrammarElement = grammar.elements_by_type[
-            self.requirement_type
-        ]
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
         field_index = grammar_field_titles.index(field_name)
 

@@ -485,7 +485,7 @@ class P01_SDocToReqIFObjectConverter:
         else:
             requirement_identifier = generate_unique_identifier("REQUIREMENT")
 
-        grammar_element = grammar.elements_by_type[requirement.requirement_type]
+        grammar_element = grammar.elements_by_type[requirement.node_type]
 
         attributes: List[SpecObjectAttribute] = []
         for field in requirement.fields_as_parsed:
@@ -574,7 +574,7 @@ class P01_SDocToReqIFObjectConverter:
         spec_object_type: ReqIFSpecObjectType = (
             context.map_grammar_node_tags_to_spec_object_type[
                 requirement.document
-            ][requirement.requirement_type]
+            ][requirement.node_type]
         )
         spec_object = ReqIFSpecObject.create(
             identifier=requirement_identifier,

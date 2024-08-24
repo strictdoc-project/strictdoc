@@ -1,7 +1,7 @@
 {# comments #}
 {# needs sdoc_entity, see README.txt #}
 
-{% if view_object.current_view.includes_field(sdoc_entity.requirement_type, "COMMENT") %}
+{% if view_object.current_view.includes_field(sdoc_entity.node_type, "COMMENT") %}
   {%- for comment_field_ in sdoc_entity.get_comment_fields() %}
     <sdoc-requirement-field-label>{{ sdoc_entity.get_field_human_title("COMMENT") }}:</sdoc-requirement-field-label>
     <sdoc-requirement-field

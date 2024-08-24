@@ -31,7 +31,7 @@ class DocumentBuilder:
 
         requirement = SDocObjectFactory.create_requirement(
             parent=parent,
-            requirement_type="REQUIREMENT",
+            node_type="REQUIREMENT",
             uid=uid,
             level=None,
             title=title,

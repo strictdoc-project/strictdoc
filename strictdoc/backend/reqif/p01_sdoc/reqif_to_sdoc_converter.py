@@ -404,7 +404,7 @@ class P01_ReqIFToSDocConverter:
             )
             node: SDocNode = SDocNode(
                 parent=section,
-                requirement_type="TEXT",
+                node_type="TEXT",
                 fields=[node_field],
                 relations=[],
             )
@@ -533,7 +533,7 @@ class P01_ReqIFToSDocConverter:
             )
         requirement = SDocNode(
             parent=parent_section,
-            requirement_type=grammar_element.tag,
+            node_type=grammar_element.tag,
             fields=fields,
             relations=[],
         )

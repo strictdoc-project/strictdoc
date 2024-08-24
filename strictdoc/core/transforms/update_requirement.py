@@ -255,7 +255,7 @@ class CreateOrUpdateNodeCommand:
             # FIXME: It is better to have a general create_node method because
             #        we are dealing with arbitrary nodes, not only Requirement.
             requirement = SDocObjectFactory.create_requirement(
-                parent=parent, requirement_type=form_object.element_type
+                parent=parent, node_type=form_object.element_type
             )
             requirement.reserved_mid = MID(form_object.requirement_mid)
             if document.config.enable_mid:

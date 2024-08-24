@@ -294,12 +294,12 @@ class DocumentGrammar:
             f"Could not find a grammar element with MID: {element_mid}"
         )
 
-    def dump_fields(self, requirement_type) -> str:
+    def dump_fields(self, node_type) -> str:
         return ", ".join(
             list(
                 map(
                     lambda g: g.title,
-                    self.elements_by_type[requirement_type].fields,
+                    self.elements_by_type[node_type].fields,
                 )
             )
         )

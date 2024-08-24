@@ -144,8 +144,7 @@ class QueryObject:
             return self._evaluate_node_has_child_requirements(node)
         if isinstance(expression, NodeIsRequirementExpression):
             return (
-                isinstance(node, SDocNode)
-                and node.requirement_type == "REQUIREMENT"
+                isinstance(node, SDocNode) and node.node_type == "REQUIREMENT"
             )
         if isinstance(expression, NodeIsSectionExpression):
             return isinstance(node, SDocSection)
@@ -204,7 +203,7 @@ class QueryObject:
             requirement: SDocNode = assert_cast(node, SDocNode)
             element: GrammarElement = (
                 requirement.document.grammar.elements_by_type[
-                    requirement.requirement_type
+                    requirement.node_type
                 ]
             )
             grammar_field_titles = list(map(lambda f: f.title, element.fields))

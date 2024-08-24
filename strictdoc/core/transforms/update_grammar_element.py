@@ -88,7 +88,7 @@ class UpdateGrammarElementCommand:
                 continue
 
             requirement: SDocNode = assert_cast(node, SDocNode)
-            if requirement.requirement_type != updated_element.tag:
+            if requirement.node_type != updated_element.tag:
                 continue
 
             requirement_field_names = list(

@@ -23,7 +23,7 @@ class SDocObjectFactory:
     @staticmethod
     def create_requirement(
         parent,
-        requirement_type: Optional[str] = "REQUIREMENT",
+        node_type: Optional[str] = "REQUIREMENT",
         uid: Optional[str] = None,
         level: Optional[str] = None,
         title: Optional[str] = None,
@@ -127,7 +127,7 @@ class SDocObjectFactory:
                 )
         requirement = SDocNode(
             parent=parent,
-            requirement_type=requirement_type,
+            node_type=node_type,
             fields=fields,
             relations=[],
         )
@@ -175,7 +175,7 @@ class SDocObjectFactory:
 
         requirement = SDocObjectFactory.create_requirement(
             parent=parent,
-            requirement_type="REQUIREMENT",
+            node_type="REQUIREMENT",
             uid=uid,
             level=None,
             title=title,

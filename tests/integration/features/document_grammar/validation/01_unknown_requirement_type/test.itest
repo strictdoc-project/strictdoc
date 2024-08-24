@@ -1,5 +1,5 @@
 RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 
 CHECK: error: could not parse file: {{.*}}input.sdoc.
-CHECK: Semantic error: Invalid requirement type: UNKNOWN_REQUIREMENT.
+CHECK: Semantic error: Invalid node type: UNKNOWN_REQUIREMENT.
 CHECK: Location: {{.*}}input.sdoc:15:1

@@ -71,7 +71,7 @@ class SDocParsingProcessor:
             ]
             text_node = SDocNode(
                 parent=parent_node,
-                requirement_type="TEXT",
+                node_type="TEXT",
                 fields=fields,
                 relations=[],
                 requirements=None,

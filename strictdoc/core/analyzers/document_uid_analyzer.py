@@ -69,7 +69,7 @@ class DocumentUIDAnalyzer:
                 continue
             if not isinstance(node, SDocNode):
                 continue
-            if node.requirement_type == "TEXT":
+            if node.node_type == "TEXT":
                 continue
             requirement: SDocNode = node
             requirement_parent_prefix: str = (

@@ -489,7 +489,7 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
                 )
             )
         requirement = SDocNode(
-            parent=parent_section, requirement_type="REQUIREMENT", fields=fields, relations=[]
+            parent=parent_section, node_type="REQUIREMENT", fields=fields, relations=[]
         )
 
         if foreign_key_id_or_none is not None:

@@ -151,7 +151,7 @@ class SDocDocument:
                     return True
                 continue
             if section_or_requirement.is_requirement:
-                if section_or_requirement.requirement_type == "TEXT":
+                if section_or_requirement.node_type == "TEXT":
                     continue
                 return True
             assert section_or_requirement.is_section, section_or_requirement

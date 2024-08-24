@@ -174,7 +174,7 @@ ReservedKeyword[noskipws]:
 ;
 
 SDocNode[noskipws]:
-  '[' !'SECTION' !SDocCompositeNodeTagName requirement_type = RequirementType ']' '\n'
+  '[' !'SECTION' !SDocCompositeNodeTagName node_type = RequirementType ']' '\n'
   fields *= SDocNodeField
   (
     'RELATIONS:' '\n'
@@ -210,7 +210,7 @@ SDocNodeField[noskipws]:
 ;
 
 SDocCompositeNode[noskipws]:
-  '[COMPOSITE_' requirement_type = RequirementType ']' '\n'
+  '[COMPOSITE_' node_type = RequirementType ']' '\n'
 
   fields *= SDocNodeField
   (

@@ -282,13 +282,13 @@ class JSONGenerator:
     ) -> Dict:
         node_dict: Dict[str, Any] = {
             "_TOC": level_string,
-            "TYPE": node.requirement_type,
+            "TYPE": node.node_type,
         }
 
         if node.mid_permanent or document.config.enable_mid:
             node_dict["MID"] = node.reserved_mid
 
-        element = document.grammar.elements_by_type[node.requirement_type]
+        element = document.grammar.elements_by_type[node.node_type]
 
         for element_field in element.fields:
             field_name = element_field.title

@@ -185,7 +185,7 @@ class ExcelToSDocConverter:
 
         template_requirement = SDocObjectFactory.create_requirement(
             document,
-            requirement_type="REQUIREMENT",
+            node_type="REQUIREMENT",
             title=title,
             uid=uid,
             level=None,
@@ -214,7 +214,7 @@ class ExcelToSDocConverter:
             template_requirement.relations = [reference]
         requirement = SDocNode(
             parent=template_requirement.parent,
-            requirement_type=template_requirement.requirement_type,
+            node_type=template_requirement.node_type,
             fields=list(template_requirement.enumerate_fields()),
             relations=template_requirement.relations,
         )

@@ -198,7 +198,7 @@ class CreateRequirementTransform:
         # FIXME: It is better to have a general create_node method because
         #        we are dealing with arbitrary nodes, not only Requirement.
         requirement = SDocObjectFactory.create_requirement(
-            parent=parent, requirement_type=form_object.element_type
+            parent=parent, node_type=form_object.element_type
         )
 
         # FIXME: Leave only one method based on set_field_value().

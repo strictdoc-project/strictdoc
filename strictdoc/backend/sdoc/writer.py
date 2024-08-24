@@ -294,7 +294,7 @@ class SDWriter:
             # Special case for backward compatibility.
             if (
                 not convert_free_text_to_text
-                and root_node.requirement_type == "TEXT"
+                and root_node.node_type == "TEXT"
                 and root_node.basic_free_text
             ):
                 output += self._print_free_text(root_node)
@@ -302,11 +302,11 @@ class SDWriter:
                 return output
             if isinstance(root_node, SDocCompositeNode):
                 output += "[COMPOSITE_"
-                output += root_node.requirement_type
+                output += root_node.node_type
                 output += "]\n"
             else:
                 output += "["
-                output += root_node.requirement_type
+                output += root_node.node_type
                 output += "]\n"
 
             output += self._print_requirement_fields(
@@ -323,7 +323,7 @@ class SDWriter:
                     )
 
                 output += "[/COMPOSITE_"
-                output += root_node.requirement_type
+                output += root_node.node_type
                 output += "]\n"
                 output += "\n"
 
@@ -401,9 +401,7 @@ class SDWriter:
         current_view: ViewElement = document.view.get_current_view(
             self.project_config.view
         )
-        element = document.grammar.elements_by_type[
-            section_content.requirement_type
-        ]
+        element = document.grammar.elements_by_type[section_content.node_type]
 
         for element_field in element.fields:
             field_name = element_field.title
@@ -414,7 +412,7 @@ class SDWriter:
                     output += "\n"
                 continue
             if not current_view.includes_field(
-                section_content.requirement_type, field_name
+                section_content.node_type, field_name
             ):
                 continue
             fields = section_content.ordered_fields_lookup[field_name]

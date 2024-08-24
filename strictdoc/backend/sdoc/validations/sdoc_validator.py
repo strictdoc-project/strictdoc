@@ -158,16 +158,13 @@ class SDocValidator:
         path_to_sdoc_file: str,
         auto_uid_mode: bool = True,
     ):
-        if (
-            requirement.requirement_type
-            not in document_grammar.registered_elements
-        ):
-            raise StrictDocSemanticError.unknown_requirement_type(
+        if requirement.node_type not in document_grammar.registered_elements:
+            raise StrictDocSemanticError.unknown_node_type(
                 requirement, path_to_sdoc_file
             )
 
         grammar_element = document_grammar.elements_by_type[
-            requirement.requirement_type
+            requirement.node_type
         ]
         registered_fields: Set[str] = set(grammar_element.get_field_titles())
 
@@ -181,7 +178,7 @@ class SDocValidator:
                 )
 
         grammar_element: GrammarElement = document_grammar.elements_by_type[
-            requirement.requirement_type
+            requirement.node_type
         ]
         grammar_fields_iterator: Iterator[GrammarElementField] = iter(
             grammar_element.fields

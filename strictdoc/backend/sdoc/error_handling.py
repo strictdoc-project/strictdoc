@@ -36,9 +36,9 @@ class StrictDocSemanticError(Exception):
         self.file_path = filename
 
     @staticmethod
-    def unknown_requirement_type(node: SDocNode, path_to_sdoc_file: str):
+    def unknown_node_type(node: SDocNode, path_to_sdoc_file: str):
         return StrictDocSemanticError(
-            title=f"Invalid requirement type: {node.requirement_type}.",
+            title=f"Invalid node type: {node.node_type}.",
             hint=None,
             example=None,
             line=node.ng_line_start,
@@ -54,14 +54,12 @@ class StrictDocSemanticError(Exception):
         document_grammar: DocumentGrammar,
         path_to_sdoc_file: str,
     ):
-        grammar_dump = document_grammar.dump_fields(
-            requirement.requirement_type
-        )
+        grammar_dump = document_grammar.dump_fields(requirement.node_type)
         return StrictDocSemanticError(
             title=f"Invalid requirement field: {field_name}",
             hint=(
                 f"Compare with the document grammar: [{grammar_dump}] "
-                f"for type: {requirement.requirement_type}."
+                f"for type: {requirement.node_type}."
             ),
             example=None,
             line=requirement.ng_line_start,
@@ -76,7 +74,7 @@ class StrictDocSemanticError(Exception):
         document_grammar: DocumentGrammar,
         path_to_sdoc_file: str,
     ):
-        grammar_fields = document_grammar.dump_fields(node.requirement_type)
+        grammar_fields = document_grammar.dump_fields(node.node_type)
         return StrictDocSemanticError(
             title=(
                 f"Requirement is missing a field that is required by "
@@ -99,7 +97,7 @@ class StrictDocSemanticError(Exception):
         document_grammar: DocumentGrammar,
         path_to_sdoc_file: str,
     ):
-        grammar_fields = document_grammar.dump_fields(node.requirement_type)
+        grammar_fields = document_grammar.dump_fields(node.node_type)
         return StrictDocSemanticError(
             title=(
                 f"Unexpected field outside grammar: "
@@ -126,13 +124,13 @@ class StrictDocSemanticError(Exception):
             problematic_field, SDocNodeField
         ), f"{problematic_field}"
         requirement_dump = node.dump_fields_as_parsed()
-        grammar_dump = document_grammar.dump_fields(node.requirement_type)
+        grammar_dump = document_grammar.dump_fields(node.node_type)
         return StrictDocSemanticError(
             title=f"Wrong field order for requirement: [{requirement_dump}].",
             hint=(
                 f"Problematic field: {problematic_field.field_name}. "
                 f"Compare with the document grammar: [{grammar_dump}] "
-                f"for type: {node.requirement_type}."
+                f"for type: {node.node_type}."
             ),
             example=None,
             line=node.ng_line_start,
@@ -156,9 +154,9 @@ class StrictDocSemanticError(Exception):
                 f"Problematic field: {requirement_field.field_name}. "
                 f"Compare with the document grammar: "
                 f"["
-                f"{document_grammar.dump_fields(node.requirement_type)}"
+                f"{document_grammar.dump_fields(node.node_type)}"
                 f"] "
-                f"for type: {node.requirement_type}."
+                f"for type: {node.node_type}."
             ),
             example=None,
             line=node.ng_line_start,
@@ -182,9 +180,9 @@ class StrictDocSemanticError(Exception):
                 f"Problematic field: {requirement_field.field_name}. "
                 f"Compare with the document grammar: "
                 f"["
-                f"{document_grammar.dump_fields(node.requirement_type)}"
+                f"{document_grammar.dump_fields(node.node_type)}"
                 f"] "
-                f"for type: {node.requirement_type}."
+                f"for type: {node.node_type}."
             ),
             example=None,
             line=node.ng_line_start,

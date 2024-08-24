@@ -1,5 +1,5 @@
 {# needs sdoc_entity, see README.txt #}
-{%- if sdoc_entity.has_reserved_statement() and view_object.current_view.includes_field(sdoc_entity.requirement_type, sdoc_entity.get_content_field_name()) -%}
+{%- if sdoc_entity.has_reserved_statement() and view_object.current_view.includes_field(sdoc_entity.node_type, sdoc_entity.get_content_field_name()) -%}
   {%- if truncated_statement is true -%}
     {# truncated in DTR tiny card #}
     <sdoc-requirement-field data-field-label="statement">

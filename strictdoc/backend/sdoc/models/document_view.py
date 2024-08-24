@@ -25,9 +25,9 @@ class ViewElement:
         self.hidden_tags: Optional[List[ViewElementHiddenTag]] = hidden_tags
         self.name: Optional[str] = name
 
-    def includes_field(self, requirement_type: str, field_name: str) -> bool:
+    def includes_field(self, node_type: str, field_name: str) -> bool:
         for tag_ in self.tags:
-            if tag_.object_type == requirement_type:
+            if tag_.object_type == node_type:
                 field_: ViewElementField
                 for field_ in tag_.visible_fields:
                     if field_.name == field_name:
@@ -43,7 +43,7 @@ class DefaultViewElement(ViewElement):
            works fine for now.
     """
 
-    def includes_field(self, requirement_type: str, field_name: str) -> bool:  # noqa: ARG002
+    def includes_field(self, node_type: str, field_name: str) -> bool:  # noqa: ARG002
         return True
 
 

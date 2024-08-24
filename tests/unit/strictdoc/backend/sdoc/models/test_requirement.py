@@ -83,7 +83,7 @@ def test_04_meta_multilines_not_nones():
 
     requirement = SDocObjectFactory.create_requirement(
         document,
-        requirement_type="REQUIREMENT",
+        node_type="REQUIREMENT",
         title=None,
         uid="A-1",
         level=None,

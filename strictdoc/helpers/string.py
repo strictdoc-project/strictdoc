@@ -1,5 +1,7 @@
 # mypy: disable-error-code="no-untyped-def"
+import random
 import re
+import string
 from typing import Optional
 
 REGEX_TRAILING_WHITESPACE_SINGLELINE = re.compile(r"\s{2,}")
@@ -82,6 +84,7 @@ def extract_numeric_uid_prefix_part(string: str) -> Optional[str]:
 
 
 def create_safe_requirement_tag_string(string) -> str:
+    assert isinstance(string, str), string
     return re.sub(r"[^A-Za-z0-9]+", "_", string).rstrip("_").upper()
 
 
@@ -91,3 +94,9 @@ def create_safe_document_file_name(string) -> str:
 
 def ensure_newline(text: str) -> str:
     return text.rstrip() + "\n"
+
+
+def generate_random_string(length=8):
+    characters = string.ascii_letters + string.digits  # a-z, A-Z, 0-9
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    return random_string

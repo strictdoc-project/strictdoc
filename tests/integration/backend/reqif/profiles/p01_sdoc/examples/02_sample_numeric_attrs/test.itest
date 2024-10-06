@@ -1,0 +1,9 @@
+RUN: %mkdir %S/output
+RUN: %strictdoc import reqif sdoc %S/sample.reqif %S/output/
+RUN: %cat %S/output/sample.sdoc | filecheck %s
+
+CHECK: FIXME
+
+RUN: %strictdoc export --formats=reqif-sdoc %S/output/sample.sdoc
+RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output2/
+RUN: %diff %S/output/sample.sdoc %S/output2/sample.sdoc

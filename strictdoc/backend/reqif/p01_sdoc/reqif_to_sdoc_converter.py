@@ -40,7 +40,7 @@ from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.string import (
     create_safe_requirement_tag_string,
     ensure_newline,
-    unescape,
+    unescape, generate_random_string,
 )
 
 
@@ -262,6 +262,19 @@ class P01_ReqIFToSDocConverter:
                         required="False",
                     )
                 )
+            # FIXME: StrictDoc grammar does not support integer or boolean types yet.
+            elif attribute.attribute_type in (
+                SpecObjectAttributeType.INTEGER,
+                SpecObjectAttributeType.BOOLEAN
+            ):
+                fields.append(
+                    GrammarElementFieldString(
+                        parent=None,
+                        title=field_name,
+                        human_title=None,
+                        required="False",
+                    )
+                )
             elif attribute.attribute_type == SpecObjectAttributeType.XHTML:
                 fields.append(
                     GrammarElementFieldString(
@@ -308,9 +321,14 @@ class P01_ReqIFToSDocConverter:
             else:
                 raise NotImplementedError(attribute) from None
 
+        # There are ReqIF files that do not assign a human-readable name to a
+        # spec type. In that case, StrictDoc cannot simply copy this name to
+        # a custom grammar.
+        spec_object_type_tag_name = spec_object_type.long_name if spec_object_type.long_name is not None else "NODE_" + generate_random_string()
+
         requirement_element = GrammarElement(
             parent=None,
-            tag=create_safe_requirement_tag_string(spec_object_type.long_name),
+            tag=create_safe_requirement_tag_string(spec_object_type_tag_name),
             fields=fields,
             relations=[],
         )
@@ -590,12 +608,30 @@ class P01_ReqIFToSDocConverter:
                         spec_object_parent
                     )
                 )
+                parent_spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
+                    parent_spec_object_parent.spec_object_type
+                )
+                parent_spec_object_type_attribute_map: Dict[str, SpecAttributeDefinition] = (
+                    parent_spec_object_type.attribute_map
+                )
+
+                parent_foreign_key_id_or_none: Optional[str] = None
+                for parent_attribute_ in parent_spec_object_parent.attributes:
+                    long_name_or_none = parent_spec_object_type_attribute_map[
+                        parent_attribute_.definition_ref
+                    ].long_name
+                    if long_name_or_none is None:
+                        raise NotImplementedError
+
+                    if long_name_or_none == "ReqIF.ForeignID":
+                        parent_foreign_key_id_or_none = parent_attribute_.definition_ref
+                assert parent_foreign_key_id_or_none is not None, parent_foreign_key_id_or_none
 
                 parent_refs.append(
                     ParentReqReference(
                         requirement,
                         parent_spec_object_parent.attribute_map[
-                            foreign_key_id_or_none
+                            parent_foreign_key_id_or_none
                         ].value,
                         role=relation_role,
                     )

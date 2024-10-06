@@ -1,0 +1,1006 @@
+[DOCUMENT]
+TITLE: sample
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT_TYPE
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-0f5a0a32-034a-aa17-65d0-7387eefa020a
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-44dd8e67-698c-55b1-7d34-9521af4baa3d
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-194ac1eb-d718-b59b-5d2a-c2b0ac0381ef
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-6e95e816-6fc9-0fe1-8b1f-66340311da94
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-f6fae293-6454-26af-9599-3cd947afb1e0
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-9550f586-0cf8-ffb5-6194-45eabf76b72e
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-18f87494-b44b-cfc0-4a58-a688927ac745
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-173d37f4-33ea-002f-bd8f-9e7d2166f5e4
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-fe0715df-5c7c-c4bf-014b-5889d2f5d1f0
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-4639e422-20ec-985f-cd05-fc91485ca840
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-72e31ec7-0080-ead1-250a-f1307249dfad
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-ae2a89dc-21f6-dc92-704b-1bc9aa9e701b
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-7afe60ca-6d37-a442-a8b9-1b38addc62f5
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-db5b3551-4a05-8b8a-2c90-5b22a10cc61d
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-30dbde48-e2f2-5354-39b8-b9734fef87a9
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-ecc4d376-9269-8c2e-7e63-42a2ea6186b4
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-943c995c-f427-11f0-15e6-4c1df2e40a68
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-7402a5d6-7727-a798-29ae-8f58279bc795
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-ac696c4c-befd-9175-2f89-ad7af4875c10
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-ce4509ee-1ad6-fb66-a56b-07ab090baeff
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-8bff626e-8a34-2f60-757c-5866d124aad3
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-4d043ab9-d12d-25cd-646e-3a2525cd7129
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-a12de824-d770-a19f-7eed-ff0709fe02f1
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-c3f3e981-f228-c6cc-b413-d612d1cf5680
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-4c6dff8f-ced4-426c-0736-82dac40188a1
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-e07fc0ee-25c7-8192-ba73-abc8685553bf
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-ed2b0598-8caf-f514-8b30-5b54a1071d90
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-350ecc6a-1a94-9865-7e2a-ba6f75a5f249
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-06bc1019-cec8-0126-a421-dd2d10183c77
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1ad4427f-f493-eb93-68a2-e931acb27582
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-989a94ba-cb9f-8c8a-4f48-50612d66b2af
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1a951d86-0ac9-1493-e0a2-b9560696f70b
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-e56c23d5-6544-cc92-da09-b82cc4ff9a0c
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-77475db9-12c8-62d2-373a-38b520556c8e
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-b7af10a2-c00a-95cc-933e-36ec7085071f
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-db0c83fa-d5da-8fac-f5a4-06aaefa23f13
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-c7d559b0-713e-fafb-74e9-82adf3df6088
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-42dc24bc-b7f9-93d2-47c5-611a436ad21f
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-153d04e5-2002-76d3-0cd8-8e6f4eff035c
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-1cddc3a3-bcbe-1ea2-46ce-f4595df91254
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-b836b433-d740-9ea9-2460-c5227088c4e1
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-8b9abcea-aee0-0557-d143-42ef108300c6
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1fce724a-08a6-7ee9-dc0f-b69138a9de99
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-f4b43ad0-08b7-5232-aa79-4e4a84f212e9
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-cf30f511-c65e-86a0-f98a-7ccba9cd1438
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-10a337ef-8a67-8e38-66da-2aa3192cd628
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-9b393413-a4e7-9bd2-5535-5bb66bd59650
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-3984d581-a95a-5393-8acf-c5f9eed20c7d
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-681a3fe8-5199-006f-539a-39db70322601
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-23d6757a-57f1-5ec8-a519-d76e5a8c765b
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-a7519a04-a083-33d6-2c5e-f91eae549bac
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-68d9213e-39e2-2569-2261-86eab86b4455
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-6221c8ef-3926-0044-d434-ac90b7bbe3c9
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-43fbd757-3591-c8f1-3c8e-3fa8815f35f5
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-537c5d00-c4a5-5b58-fbcd-f8e7c757332c
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-d607fbd4-aa5a-7bf0-f91c-d785bae47cb8
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-f1f70b6a-b237-5ba4-f6f0-7ed86039c8c0
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-89fa868b-4e71-d368-5ce1-7c043c5720aa
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1f8c4632-6827-d64d-e8e7-85345cf16220
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-9b393413-a4e7-9bd2-5535-5bb66bd59650
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-3b9b6aff-588a-36d5-c243-cf043bc4bee3
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-5af32bdb-5f81-d228-9381-0638fc1216ee
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-f76582b3-af38-9bae-27b1-d9839628d055
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-23cf983e-72e1-18f7-e22b-955040b5ee61
+- TYPE: Parent
+  VALUE: Anonymized-9b393413-a4e7-9bd2-5535-5bb66bd59650
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-a8bd8814-6474-3c79-6c7b-61043c0e6154
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-502dfc53-e2d0-5520-028c-0e4ec41e7e98
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-791208f2-62c4-21b2-8024-dfa079e07e83
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-2e40e940-b395-7f4c-f335-68362d4dc7f8
+- TYPE: Parent
+  VALUE: Anonymized-9b393413-a4e7-9bd2-5535-5bb66bd59650
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-dcc5987d-578c-e872-c870-5b5fb80f8a92
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-71eb257b-b956-b06d-dea6-9414b29eef97
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-400ba06c-96bc-d3b2-5163-110645ee1341
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-30284d11-2456-33ad-5e8f-67c68dc5a227
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-a0671105-2872-d544-f9d7-d752ece743d2
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-f4b43ad0-08b7-5232-aa79-4e4a84f212e9
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-13ec3144-891d-2482-df19-3d4fa4e00980
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-c11a93ba-e3f1-a5ec-b76e-194aa35c9127
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-52b0358c-2d9f-b9e4-ffc7-f9f872c50469
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-3c302075-4616-9b7d-a433-39598cf22cdb
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-767527af-f220-b1dd-504c-7230faec66ca
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-ecaa42ac-540a-ddfb-6c30-112bfa2fcc67
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-edf8c8e0-a2a8-698d-8822-37fa24b5f82e
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-c0230e02-cb71-76ea-3af5-222bbda6abf3
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-e6b3e266-a80d-1a21-aeaa-1f02a9460f63
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-91ca0cfa-4d2a-4b4f-1246-c8749654d10a
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-694674b7-6097-f5bb-19e0-02ed25dc1351
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-c8fa9ba1-7d02-9fad-3702-68051fea9941
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-86f962d3-08f6-710d-4e01-f22b4e27dc46
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-d62cf8f0-f755-810f-6647-f7a3d7518e4e
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-aef0da9f-cbe0-11a1-25e0-7d97ec8abae5
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-eb407823-4ffa-de5d-d197-ba5406393edb
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-482f3879-fb04-9f61-7fad-a2531977bd01
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-260b997d-99fd-0e36-9343-bef4f9b620c2
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-6fa584da-ccd4-c6ce-7e2b-a8eff91197b3
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-374dce94-8c64-5fd3-9a86-eac6c4aa73a4
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-39686a18-bfe5-f5f5-9a2c-090593e156a4
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-f5d0cceb-63ac-f35e-adaf-34789c171889
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-8a86dee2-68fe-162f-daff-0cca000f1f3b
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-77475db9-12c8-62d2-373a-38b520556c8e
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-ba994aaa-5370-2f1d-3581-3fcd4bb0a26a
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-04c29ccd-c709-a42e-fc4e-969acb1764f5
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-3a581c72-fef4-5cdd-f43d-47fae2995405
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-9b393413-a4e7-9bd2-5535-5bb66bd59650
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-8b9b12d4-5476-b8ea-7e07-181e2d23e59e
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-4be0c744-a9fa-30e2-dc7d-9aec21a94091
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-3a95dbe4-692f-865e-a3b8-5b7f29c7aff7
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-48a15b62-5a94-bbfb-aabd-673b12d33e4b
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1921d4d9-f1d8-0f8b-bd2a-0f161a8f5bad
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-0590bc57-cb89-1593-dda0-2075b861303e
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-7192410e-53c8-e8e6-3d91-3ebc159807ad
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-d9de25c4-83d3-1cdc-c92b-448d8351806f
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-9b393413-a4e7-9bd2-5535-5bb66bd59650
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-636ebdbd-a2f6-29e2-4247-ea1aa96ff225
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-5b767d4a-83f7-fb7b-ccc3-e85e11984a3e
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-fdc64080-4c67-3bcc-2431-28fd09882749
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-326fcdb7-dd39-9491-bc0c-945238cd054e
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-2f35d019-e056-09cb-d8ee-61d2ac91ad98
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-0ea2d2ee-ef46-1818-16d3-13e7134edfa1
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-2f02c572-5cca-06a1-ca6b-fac759bf2f5b
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1758dac6-7ab2-6a75-cbae-c16c8700628e
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-75e98b2f-3a25-def5-9a74-b64103427405
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-bb844bd6-3a08-82b3-dbe2-08e51cdf82a4
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-2e40e940-b395-7f4c-f335-68362d4dc7f8
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-a269b13f-ac4d-f66f-52ac-daa4f06c5deb
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-02cc1748-299a-8ae4-416c-b92adc14e34c
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-8e42ab12-5f54-284b-3819-66e5a6afdfcf
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-2de561ef-3b99-0e21-fccb-23b56e60aad5
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-fa51ba62-fbad-ee54-0d85-d9f04f4884db
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-cae61550-f088-110f-eeaf-d990943acec6
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-d8d7ae03-1dc4-0be2-0a9d-223c9592749b
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-72e31ec7-0080-ead1-250a-f1307249dfad
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-553f9061-4b75-7148-c84d-a1c71f834904
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-23cf983e-72e1-18f7-e22b-955040b5ee61
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-68ae8251-7506-b298-b48d-cabbb1297c6d
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-b2aeec5c-2e88-1c03-b52b-0ae39f3a4003
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-b5fdb3cc-6b57-8a08-75fd-08df6a48d033
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-8d8a47a0-27d9-80b7-6dd0-0ead630c84e3
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-ee0591ab-9f87-4689-5ba3-dd38edb7647a
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1dbad75d-248e-6d95-cfca-4abb6704106c
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-00f7a23e-e211-1ef9-2ebe-3a929a80eb69
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-735fa4f8-2a0c-c38d-1d93-34a32240210c
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-0bdc15cf-77f5-79cc-834b-cb218ef7cc4f
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-e3a56102-06f0-d3a3-b185-cb4862060a74
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-78400cff-a67d-f6d9-adb6-0c42286d0220
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1da2d9a7-d9d5-d066-219b-5b9d3840c4d3
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-043c5ea1-d1e5-c839-cc39-793405faf08d
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: Anonymized-e3a56102-06f0-d3a3-b185-cb4862060a74
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1f1213f8-bf77-9245-cecc-6a56da220029
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-3ad75214-9bb1-38d9-a181-c6eb59c0420e
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-837849a7-b5f9-e416-be0f-f14076e7c278
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-19f44c28-ea3a-8be5-21ba-edb12d3d266a
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-bb28787a-d958-9343-c076-61ec930f7b3b
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-6b3e6629-b03c-d217-baa7-4e169d671bb0
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-c9f6d2d5-6ad0-51dc-aff1-2cfc55291182
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-e3a56102-06f0-d3a3-b185-cb4862060a74
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-41aac05f-a88c-048c-e1b7-149ef87d8e30
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-d2e65e13-eada-077f-e659-0c6fcac35f94
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-2a6f5650-42d3-159d-a275-0dfdb2aa9db6
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-07700f1c-bf36-644b-242c-5adda2e732d2
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-baece43a-738e-c4a5-4001-17dba8ad8041
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+COMMENT: >>>
+Anonymized-d0f944b7-d4ec-53a6-183e-94b4a71fa395
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-7afe60ca-6d37-a442-a8b9-1b38addc62f5
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-301cf73c-60c3-7066-65dd-cda4ee6f8789
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-1a12eb8d-f455-23b7-83aa-c5c89b649fff
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-63600c41-9ece-ef1f-1dce-b6b9f9f2c18d
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-123d910a-fff2-1ab1-552c-2af630bedf76
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-ac222ce1-e831-72c8-e5a9-de76593175d3
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-4f6b1d8e-dbfb-1157-b56f-44221f608f44
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-98f2973a-7e7a-730c-356e-f86b445bc6b0
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-54e0cc54-e300-0d20-e92c-61b9161a23fc
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-a83e2dc5-3380-bbf6-1bd1-d8ae7372246e
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-7eb77f53-b28e-7d86-fcd5-da4c5a430d57
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-b9255729-aab4-3219-2f0a-2c761c2f4ffe
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-7eba4e1d-8c30-73d1-a1ee-4ccd2359f264
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-31deb015-0435-fbe1-669e-50f1b7d25481
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-c905e7d4-8a02-41ef-25c2-6ffad56f78a5
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-7747494e-e852-2092-9dae-fc6176d0f9af
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-2335a59f-7b04-9698-0cc5-55acce3caac8
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-a142a6b7-5df0-b3fa-4340-b93f76441048
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-63003d04-6848-85ac-7647-e41abcdf7abd
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-bc495fc8-e771-fd26-91cc-1ec1d10e6a0c
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-e25c828d-524d-abd3-abb4-ee4d22f28874
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-f51db3b0-560a-06a8-87fc-4d083737ec51
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-078acfa6-f5f3-e2f3-5e29-b98472b8be90
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-80e7217f-6da7-ef1f-9743-aee9aa9bdccb
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-7c72ccdd-ca3b-f651-83e2-52eea3bbb23b
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-4bda7565-2af5-c721-2c38-a5072ede5482
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-e0edc139-615e-9c0b-1c35-b6521e752250
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-4639e422-20ec-985f-cd05-fc91485ca840
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-08499f3e-7ff7-61de-238b-787ab44b34b7
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-875b3c61-ccc8-8209-cba5-ae1b6b5d5c8a
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<
+
+[REQUIREMENT_TYPE]
+UID: Anonymized-a1cdfbbf-b96b-2043-d7e3-8936e812cdb9
+STATEMENT: >>>
+<div>...Anonymized...</div>
+<<<

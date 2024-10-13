@@ -172,7 +172,7 @@ TITLE: Installing StrictDoc
 TITLE: Requirements
 
 [FREETEXT]
-- Python 3.7+
+- Python 3.8+
 - macOS, Linux or Windows
 - Command-line terminal program
 

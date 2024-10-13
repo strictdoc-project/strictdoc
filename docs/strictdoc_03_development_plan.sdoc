@@ -127,7 +127,7 @@ The end-to-end web interface tests are based on SeleniumBase test framework.
 TITLE: Python baseline
 
 [FREETEXT]
-The supported version of Python is kept to be as low as possible. As of 2023-Q4, the currently supported version is Python 3.7.
+The supported version of Python is kept to be as low as possible. As of 2024-Q4, the currently supported version is Python 3.8.
 
 Ideally, the lowest Python version should only be raised when it is consistently deprecated by the major software platforms like Ubuntu or GitHub Actions.
 

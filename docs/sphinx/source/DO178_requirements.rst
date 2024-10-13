@@ -19,6 +19,8 @@ Document concept
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - af14393406e64ab6b2911eefa4358f33
     * - **UID:**
       - DO178-1
     * - **COMPLIANCE:**
@@ -47,6 +49,8 @@ Strict specified grammar
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 0a19cae3756a4d2f9f0be9e57c44a8fa
     * - **UID:**
       - DO178-2
     * - **COMPLIANCE:**
@@ -77,6 +81,8 @@ Requirement UID autocompletion
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - dd075d6cd4fb4ad2b731a9b8068efade
     * - **UID:**
       - DO178-14
     * - **STATUS:**
@@ -108,6 +114,8 @@ Multiple git repositories document assembly
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 03346e43cd0b43529cc3b958a00d8d35
     * - **UID:**
       - DO178-3
     * - **COMPLIANCE:**
@@ -134,6 +142,8 @@ Document fragments in separate files
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 4f0809d49292413eb621a47a8b405bc7
     * - **UID:**
       - DO178-4
     * - **COMPLIANCE:**
@@ -160,6 +170,8 @@ PDF and HTML publishing
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - c74bba92cec34bf7b1046689c2dfc54c
     * - **UID:**
       - DO178-5
     * - **COMPLIANCE:**
@@ -188,6 +200,8 @@ Graphical user interface (GUI)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8b73ce9efcc840b2be272d5aaef08e70
     * - **UID:**
       - DO178-6
     * - **COMPLIANCE:**
@@ -218,6 +232,8 @@ Configuration: 'Host' parameter
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8c654ff659a94cceb0c7a52bc8ae4073
     * - **UID:**
       - DO178-8
     * - **STATUS:**
@@ -242,6 +258,8 @@ No use of proprietary technology
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - cfdb3867a4a64b3eb9405e998c11ae72
     * - **UID:**
       - DO178-7
     * - **COMPLIANCE:**
@@ -272,6 +290,8 @@ Source file coverage
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 40d4a56263d0420691dbde5d7889895a
     * - **UID:**
       - DO178-13
     * - **STATUS:**
@@ -296,6 +316,8 @@ Project-level grammar
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8bd26640450f448c8228464223c21373
     * - **UID:**
       - DO178-9
     * - **COMPLIANCE:**
@@ -331,6 +353,8 @@ WYSIWYG editing
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - db4336a8f119443cae6a70d74a0601da
     * - **UID:**
       - DO178-19
     * - **STATUS:**
@@ -355,6 +379,8 @@ Diff between document trees
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 7d18b7674050495c935dc4669dfb260e
     * - **UID:**
       - DO178-15
     * - **STATUS:**
@@ -381,6 +407,8 @@ Traceability matrices
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b0c13e71074242ab91d6344514b82657
     * - **UID:**
       - DO178-10
     * - **COMPLIANCE:**
@@ -411,6 +439,8 @@ Impact analysis
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 7e8a475859084e9d95eda3f2c1381ae7
     * - **UID:**
       - DO178-11
     * - **COMPLIANCE:**
@@ -454,6 +484,8 @@ Uncovered requirement report
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 23c11790799c4457804bcb9d6288931e
     * - **UID:**
       - DO178-12
     * - **COMPLIANCE:**
@@ -484,6 +516,8 @@ Interoperability with Sphinx
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a1fb2f7cd7cd4c8eb33c3407a791fd88
     * - **UID:**
       - DO178-16
     * - **COMPLIANCE:**
@@ -523,6 +557,8 @@ Multi-user editing of documents
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 756503f4934a4aed81dfe090b2538e2a
     * - **UID:**
       - DO178-17
     * - **COMPLIANCE:**
@@ -549,6 +585,8 @@ Support for Derived requirements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8120b4f6be4e4ecd83c0b69a3424e0be
     * - **UID:**
       - DO178-18
     * - **STATUS:**

@@ -41,7 +41,8 @@ StrictDoc shall be compatible with other software and engineering tools. This in
 [SECTION]
 TITLE: Project milestones
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 As an open-source project, StrictDoc is developed without strict deadlines, however there are certain high-level priorities that influence the development. The work is loosely organized in quarters.
 
 .. list-table::
@@ -88,8 +89,14 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
    * - 2023-Q4
      - Requirements relations and roles. UI improvements and stabilization. Further ReqIF work. Search engine and requirements filters. Project tree Diff/Changelog screens. Basic Git operations.
    * - 2024-Q1
+     - Experimental SPDX support. JSON export. Custom views (static HTML). Basic traceability matrix screen.
+   * - 2024-Q2
+     - Includable/composable documents. FREETEXT-to-TEXT migration. ReqIF improvements.
+   * - 2024-Q3
+     - HTML2PDF improvements. ReqIF roundtrip for RELATION/ROLE. Consistent automatic escaping of Jinja templates. Passthrough->export command migration.
+   * - 2024-Q4
      - TBD
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: The roadmap diagram

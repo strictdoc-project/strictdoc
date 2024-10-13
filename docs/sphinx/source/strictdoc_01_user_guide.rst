@@ -146,7 +146,7 @@ Installing StrictDoc
 Requirements
 ------------
 
-- Python 3.7+
+- Python 3.8+
 - macOS, Linux or Windows
 - Command-line terminal program
 
@@ -434,7 +434,7 @@ The following ``DOCUMENT`` fields are allowed:
      - Security classification of the document, e.g. Public, Internal, Restricted, Confidential
 
    * - ``REQ_PREFIX``
-     - Requirement prefix that should be used for automatic generation of UIDs. See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID].
+     - Requirement prefix that should be used for automatic generation of UIDs. See :ref:`Automatic assignment of requirements UID <SECTION-UG-Automatic-assignment-of-requirements-UID>`.
 
    * - ``ROOT``
      - Defines whether a document is a root object in a traceability graph. A root document is assumed to not have any parent requirements. The project statistics calculation will skip all root document's requirements when calculating the metric ``Non-root-level requirements not connected to any parent requirement``.
@@ -549,11 +549,11 @@ A text node is the most basic document node which is used for normal document te
     StrictDoc is software for technical documentation.
     <<<
 
-According to the [LINK: SECTION-UG-Strict-rule-2], arbitrary content cannot be written outside of StrictDoc's grammar structure. The ``[TEXT]`` node is therefore a designated grammar element for writing arbitrary text content, unless the other nodes, such as ``REQUIREMENT``, are used instead.
+According to the :ref:`Strict rule #2: No content is allowed outside of SDoc grammar <SECTION-UG-Strict-rule-2>`, arbitrary content cannot be written outside of StrictDoc's grammar structure. The ``[TEXT]`` node is therefore a designated grammar element for writing arbitrary text content, unless the other nodes, such as ``REQUIREMENT``, are used instead.
 
 .. warning::
 
-    If your project still uses older ``[FREETEXT]`` tags, consider migrating to the new ``[TEXT]`` syntax. The rationale behind FREETEXT-TEXT change and the migration path are described in [LINK: SECTION-UG-FREETEXT-TEXT].
+    If your project still uses older ``[FREETEXT]`` tags, consider migrating to the new ``[TEXT]`` syntax. The rationale behind FREETEXT-TEXT change and the migration path are described in :ref:`FREETEXT-TEXT migration (June 2024) <SECTION-UG-FREETEXT-TEXT>`.
 
 Requirement
 ~~~~~~~~~~~
@@ -976,7 +976,7 @@ Which will resolve to the following document after inclusion:
 
 .. note::
 
-    The Composable Documents feature belongs to the list of features that may be less portable when it comes to interfacing with other tools. See [LINK: UG_PORTABILITY_CONSIDERATIONS].
+    The Composable Documents feature belongs to the list of features that may be less portable when it comes to interfacing with other tools. See :ref:`Portability considerations <UG_PORTABILITY_CONSIDERATIONS>`.
 
 .. _UG_COMPOSITE_REQUIREMENT:
 
@@ -1032,7 +1032,7 @@ StrictDoc supports the automatic generation of machine identifiers (MIDs). This 
     OPTIONS:
       ENABLE_MID: True
 
-When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system. On the web server, MIDs are generated automatically when a document, section, or requirement is saved. In the command-line interface, the generation of ``MID`` can be initiated with a ``passthrough`` command. Executing ``strictdoc passthrough`` on a document with ``ENABLE_MID: True`` results in all nodes having auto-generated MIDs. Implementing the ENABLE_MID option on a per-document basis allows for the integration of MID-enabled documents alongside third-party documents where the MID feature may not be necessary or desired.
+When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system. On the web server, MIDs are generated automatically when a document, section, or requirement is saved. In the command-line interface, the generation of ``MID`` can be initiated with a ``export`` command. Executing ``strictdoc export --formats sdoc`` on a document with ``ENABLE_MID: True`` results in all nodes having auto-generated MIDs. Implementing the ENABLE_MID option on a per-document basis allows for the integration of MID-enabled documents alongside third-party documents where the MID feature may not be necessary or desired.
 
 Machine identifiers (MIDs) differ from and do not replace unique identifiers (UIDs). A requirement, section, or document node may have both ``MID`` and ``UID`` fields defined. For example:
 
@@ -1467,7 +1467,7 @@ Search and filtering
 
 StrictDoc supports the search and filtering of document content.
 
-The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` and ``passthrough`` commands.
+The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` commands.
 
 Query engine
 ------------
@@ -1508,7 +1508,7 @@ Important rules:
 Filtering content
 -----------------
 
-Both ``export`` and ``passthrough`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
+Both ``export`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
 
 Both options are based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted requirements/sections will be exported.
 
@@ -1528,7 +1528,7 @@ such as ``STATEMENT``, ``COMMENT``, ``RATIONALE``, etc.
 See the `reST syntax documentation <https://docutils.sourceforge.io/rst.html>`_
 for a full reference.
 
-Note: StrictDoc supports a Docutils-subset of RST, not a Sphinx-subset. See [LINK: SDOC_UG_LIMIT_RST].
+Note: StrictDoc supports a Docutils-subset of RST, not a Sphinx-subset. See :ref:`Limitations of RST support by StrictDoc <SDOC_UG_LIMIT_RST>`.
 
 The support of Tex and HTML is planned.
 
@@ -1580,7 +1580,7 @@ Example of using MathJax:
         $$
     <<<
 
-See [LINK: SDOC_UG_CONFIG_FEATURES] for the description of other features.
+See :ref:`Selecting features <SDOC_UG_CONFIG_FEATURES>` for the description of other features.
 
 Export formats
 ==============
@@ -2268,7 +2268,11 @@ There are three methods of PDF printing available:
 
 3. Also in the web interface, by navigating to a 'PDF' view of a document and using the browser's built-in Print function.
 
-The first two methods require the Chrome browser to be installed on the user's computer.
+The first two methods require the Chrome browser and chromedriver to be installed on the user's computer.
+StrictDoc downloads chromedriver on demand by default, or uses a pre installed executable if
+``strictdoc export --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc.toml`` option is given.
+
+When printing from the command line (the first method), you can use the ``--generate-bundle-document`` option to have StrictDoc generate a single PDF document that bundles together all individual PDFs.
 
 The third method, the PDF screen, presents a version of the document that is optimized for browser printing. This approach allows for the creation of neatly formatted PDF documents or directly printed documents. Although this method is compatible with any browser, Chrome is recommended for the best printing results. Unlike Firefox and Safari, Chrome maintains the document's internal hyperlinks in the printed PDF.
 
@@ -2479,4 +2483,4 @@ The ``TEXT`` node is now included to a default StrictDoc grammar by default. If 
     ... REQUIREMENT fields
     ... Optionally other elements definitions.
 
-The ``strictdoc passthrough --free-text-to-text ...`` command can be used for converting all FREETEXT nodes to TEXT nodes automatically. See ``strictdoc passthrough --help`` for more details.
+The ``strictdoc export --formats sdoc --free-text-to-text ...`` command can be used for converting all FREETEXT nodes to TEXT nodes automatically. See ``strictdoc export --help`` for more details.

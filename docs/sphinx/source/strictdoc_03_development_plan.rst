@@ -78,6 +78,12 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
    * - 2023-Q4
      - Requirements relations and roles. UI improvements and stabilization. Further ReqIF work. Search engine and requirements filters. Project tree Diff/Changelog screens. Basic Git operations.
    * - 2024-Q1
+     - Experimental SPDX support. JSON export. Custom views (static HTML). Basic traceability matrix screen.
+   * - 2024-Q2
+     - Includable/composable documents. FREETEXT-to-TEXT migration. ReqIF improvements.
+   * - 2024-Q3
+     - HTML2PDF improvements. ReqIF roundtrip for RELATION/ROLE. Consistent automatic escaping of Jinja templates. Passthrough->export command migration.
+   * - 2024-Q4
      - TBD
 
 The roadmap diagram
@@ -105,7 +111,7 @@ The end-to-end web interface tests are based on SeleniumBase test framework.
 Python baseline
 ===============
 
-The supported version of Python is kept to be as low as possible. As of 2023-Q4, the currently supported version is Python 3.7.
+The supported version of Python is kept to be as low as possible. As of 2024-Q4, the currently supported version is Python 3.8.
 
 Ideally, the lowest Python version should only be raised when it is consistently deprecated by the major software platforms like Ubuntu or GitHub Actions.
 

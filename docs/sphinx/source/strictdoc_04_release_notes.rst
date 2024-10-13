@@ -3,6 +3,27 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+0.0.59 (2024-10-13)
+===================
+
+This release includes several important improvements. Thanks to @haxtibal for implementing and testing many of the implemented changes.
+
+- Fixed multiple issues related to the handling of the UID field's format and accepted characters, both on its own and when used as part of LINK and ANCHOR tags. [@haxtibal]
+
+- Implemented a more consistent and unified approach to escaping Jinja templates. With this change, the Jinja templates that StrictDoc uses for rendering content are now automatically escaped, except for a few known edge cases that have been handled separately. For more details, see the "HTML Escaping" section of the Design Document, which describes the rationale and approach taken. [@haxtibal]
+
+- Extended the HTML2PDF feature to support the ``--generate-bundle-document`` option, which allows generating a single PDF document from all documents in an SDoc documentation tree.
+
+- Additionally, a project configuration option was added to specify a custom path to the ChromeDriver used by the HTML2PDF printer. [@haxtibal]
+
+- Enhanced the SDoc-ReqIF-SDoc roundtrip to include relation roles such as Refines, Implements, etc. These roles are now recognized in both directions. This feature was requested by a single user and requires further testing.
+
+- Deprecated the passthrough command. All passthrough functionality has been moved to the export command under the option ``--formats=sdoc``. Users are encouraged to switch to the export command, as using passthrough will now trigger a deprecation warning. [@haxtibal]
+
+- Fixed a bug related to editing custom (non-requirement) nodes and adding links between them, based on a report by @elfman2.
+
+- The Python 3.7 support was removed. The lowest Python baseline will now be 3.8 for some time.
+
 0.0.58 (2024-06-25)
 ===================
 
@@ -23,7 +44,7 @@ See the updated User Guide for more details.
 
 This release contains a significant, non-breaking change that affects the entire StrictDoc codebase and the SDoc data model: the ``FREETEXT-TEXT`` migration.
 
-The description of the migration and the migration paths are described in [LINK: SECTION-UG-FREETEXT-TEXT].
+The description of the migration and the migration paths are described in :ref:`FREETEXT-TEXT migration (June 2024) <SECTION-UG-FREETEXT-TEXT>`.
 
 Other changes in this release:
 

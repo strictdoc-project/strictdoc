@@ -164,6 +164,8 @@ Documents (CRUD)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 72d0dd23dedd4907b4a8924debe7343b
     * - **UID:**
       - SDOC-SSS-3
     * - **STATUS:**
@@ -197,6 +199,8 @@ Browsing documentation tree
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 9841bc9a56d740dd9e7988e52339618c
     * - **UID:**
       - SDOC-SSS-91
     * - **STATUS:**
@@ -217,6 +221,8 @@ Documents with nested sections/chapters structure
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - c4de5f1f46f343b6b4e8dc2a6121b0a2
     * - **UID:**
       - SDOC-SSS-51
     * - **STATUS:**
@@ -237,6 +243,8 @@ Assembling documents from fragments
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5236f36f278140539e347bacea921118
     * - **UID:**
       - SDOC-SSS-52
     * - **STATUS:**
@@ -268,6 +276,8 @@ Document meta information (UID, version, authors, signatures, etc)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8aeecdfa139341588d6ab8c0c3606a9b
     * - **UID:**
       - SDOC-SSS-53
     * - **STATUS:**
@@ -288,6 +298,8 @@ Document versioning
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - d1883b65e17442c0a22987d4ad415cb6
     * - **UID:**
       - SDOC-SSS-75
     * - **STATUS:**
@@ -309,6 +321,8 @@ Text formatting capabilities
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b8d7b22fd8a6478a9a21ecaa60cf0028
     * - **UID:**
       - SDOC-SSS-63
     * - **STATUS:**
@@ -354,6 +368,8 @@ Requirements CRUD
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 6e6f1464c47f4ced8e14c4153f40618b
     * - **UID:**
       - SDOC-SSS-4
     * - **STATUS:**
@@ -384,6 +400,8 @@ Minimal requirement field set
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - db42ad4b504e48e0bf51b4d82529a888
     * - **UID:**
       - SDOC-SSS-61
     * - **STATUS:**
@@ -426,6 +444,8 @@ Custom fields
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a69bae43b3224dfc8439a88451a98395
     * - **UID:**
       - SDOC-SSS-62
     * - **STATUS:**
@@ -458,6 +478,8 @@ Structuring requirements in documents
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5f89bdaa6cb74e2a8b9b030b6237b7ef
     * - **UID:**
       - SDOC-SSS-64
     * - **STATUS:**
@@ -487,6 +509,8 @@ Move requirement nodes within document
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 65575cc8a87e4d4480ccdf89d1fb6d67
     * - **UID:**
       - SDOC-SSS-5
     * - **STATUS:**
@@ -507,6 +531,8 @@ Move nodes between documents
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 06ab121d3c0f4d8c94652323b8f735c6
     * - **UID:**
       - SDOC-SSS-70
     * - **STATUS:**
@@ -527,6 +553,8 @@ Auto-provision of Requirement UIDs
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 637c129a91804d8cbe2280c1af14836d
     * - **UID:**
       - SDOC-SSS-6
     * - **STATUS:**
@@ -557,6 +585,8 @@ Link requirements together
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 1ce495a5194044d4a7a3dd030f766c9f
     * - **UID:**
       - SDOC-SSS-7
     * - **STATUS:**
@@ -586,6 +616,8 @@ Multiple link roles
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 44b9d75e50c84d6c8424cfb8a42a0771
     * - **UID:**
       - SDOC-SSS-8
     * - **STATUS:**
@@ -616,6 +648,8 @@ Reverse parent links
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 387bd5ff0e4a4a97962661e9d7451f19
     * - **UID:**
       - SDOC-SSS-71
     * - **STATUS:**
@@ -636,6 +670,8 @@ Unique identification of requirements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 3348caaed8d44be0928cc6f3c7414094
     * - **UID:**
       - SDOC-SSS-89
     * - **STATUS:**
@@ -665,6 +701,8 @@ Requirements database consistency checks
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 3850f0b8c8294455bf7be9e2acddbd40
     * - **UID:**
       - SDOC-SSS-47
     * - **STATUS:**
@@ -692,6 +730,8 @@ Requirement syntax validation (e.g. EARS)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 1216cb617c0f495a9c96471ef72bf80f
     * - **UID:**
       - SDOC-SSS-57
     * - **STATUS:**
@@ -715,6 +755,8 @@ Project-level configuration
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 4550038552894ef69b85b281cff60c60
     * - **UID:**
       - SDOC-SSS-92
     * - **STATUS:**
@@ -745,6 +787,8 @@ Document-level configuration
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 4550b38552894ef69b85b281cff60360
     * - **UID:**
       - SDOC-SSS-93
     * - **STATUS:**
@@ -782,6 +826,8 @@ Support large requirements sets
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a0a95079e3c0438bb3ea9e5af7ddddc9
     * - **UID:**
       - SDOC-SSS-13
     * - **STATUS:**
@@ -808,6 +854,8 @@ Support large project trees
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 64b982c9299a4c8eb7031495e940a3f8
     * - **UID:**
       - SDOC-SSS-14
     * - **STATUS:**
@@ -837,6 +885,8 @@ Data integrity of documentation/requirements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - d1323d222a0040b2b6122c59b3c00f06
     * - **UID:**
       - SDOC-SSS-94
     * - **STATUS:**
@@ -877,6 +927,8 @@ Excel-like viewing and editing of requirements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 831debedfa0e4e4c8434021569f96bad
     * - **UID:**
       - SDOC-SSS-73
     * - **STATUS:**
@@ -903,6 +955,8 @@ As recognized by the parent requirement, some requirements-based workflows are n
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5d412989005e4bc3b5dcfd94675615dc
     * - **UID:**
       - SDOC-SSS-56
     * - **STATUS:**
@@ -927,6 +981,8 @@ Traceability matrices
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5eb553abd3944bffbd003e37b3d1c5a5
     * - **UID:**
       - SDOC-SSS-28
     * - **STATUS:**
@@ -948,6 +1004,8 @@ Compliance matrices
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 06f0bb40f76142f4ba59d037aaedc9de
     * - **UID:**
       - SDOC-SSS-48
     * - **STATUS:**
@@ -969,6 +1027,8 @@ Requirements coverage
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 74ffae6279bc4e4095c03d6a247c3599
     * - **UID:**
       - SDOC-SSS-29
     * - **STATUS:**
@@ -995,6 +1055,8 @@ Progress report
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - e0e6d1f883764719919238e4974dccef
     * - **UID:**
       - SDOC-SSS-49
     * - **STATUS:**
@@ -1027,6 +1089,8 @@ Change management
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - ed4bd232bed84eda977263fa03e75b80
     * - **UID:**
       - SDOC-SSS-74
     * - **STATUS:**
@@ -1058,6 +1122,8 @@ General usability
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 7e33387f373d427d9e1af522f1e5bbc5
     * - **UID:**
       - SDOC-SSS-79
     * - **STATUS:**
@@ -1092,6 +1158,8 @@ Easy user experience
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 57b01915e4624634909dbb40f5d56697
     * - **UID:**
       - SDOC-SSS-80
     * - **STATUS:**
@@ -1120,6 +1188,8 @@ Support projects with a large number of users
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - d3e66072363d4e7ea2e2f9691c094bb2
     * - **UID:**
       - SDOC-SSS-81
     * - **STATUS:**
@@ -1144,6 +1214,8 @@ Individual use (home PC)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - db495bc2f11f4f96ace60cdb0bef4d66
     * - **UID:**
       - SDOC-SSS-82
     * - **STATUS:**
@@ -1166,6 +1238,8 @@ Server-based deployments (IT-friendly setup)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 90562d92b9a7468ba42567bc72cb6ebf
     * - **UID:**
       - SDOC-SSS-83
     * - **STATUS:**
@@ -1191,6 +1265,8 @@ Requirements database
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 4312ed066d19487eba18ec677430e60f
     * - **UID:**
       - SDOC-SSS-84
     * - **STATUS:**
@@ -1220,6 +1296,8 @@ Programming access via API (Web)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 81858dda65844dcd9640fdd74badecee
     * - **UID:**
       - SDOC-SSS-85
     * - **STATUS:**
@@ -1244,6 +1322,8 @@ Programming access via API (SDK)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - ee96cc5f18e14f6894e2775c546240d8
     * - **UID:**
       - SDOC-SSS-86
     * - **STATUS:**
@@ -1274,6 +1354,8 @@ Programmatic access to requirements data
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f4b122c5081f4b218aa93a119e372a34
     * - **UID:**
       - SDOC-SSS-87
     * - **STATUS:**
@@ -1304,6 +1386,8 @@ Static HTML export
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 3db06eb066b4441290e06b08405da0a9
     * - **UID:**
       - SDOC-SSS-30
     * - **STATUS:**
@@ -1332,6 +1416,8 @@ Graphical user interface (GUI)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - e718af582b0345c2b0ddb6e405cb6d9a
     * - **UID:**
       - SDOC-SSS-31
     * - **STATUS:**
@@ -1352,6 +1438,8 @@ Command-line interface
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - cd20e9613a65441a8862143ba6407f61
     * - **UID:**
       - SDOC-SSS-32
     * - **STATUS:**
@@ -1372,6 +1460,8 @@ Web API interface
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 4475857729e5476cbbb409cc844048fd
     * - **UID:**
       - SDOC-SSS-68
     * - **STATUS:**
@@ -1392,6 +1482,8 @@ Version control (Git)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5ac2f3010db84466bff854fc323e944c
     * - **UID:**
       - SDOC-SSS-33
     * - **STATUS:**
@@ -1418,6 +1510,8 @@ Support major operating systems
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b76fb774542849a182e2cdd89fdaab3c
     * - **UID:**
       - SDOC-SSS-67
     * - **STATUS:**
@@ -1444,6 +1538,8 @@ Conservative languages for implementation
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 871a7a66eb50436997fde692e90e93eb
     * - **UID:**
       - SDOC-SSS-69
     * - **STATUS:**
@@ -1479,6 +1575,8 @@ Long-term maintainability of a tool
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 0556a0b2773d4ee0b44b22773455a600
     * - **UID:**
       - SDOC-SSS-90
     * - **STATUS:**
@@ -1517,6 +1615,8 @@ Text files for storing documentation and requirements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f472e85f3398413795234a9298d4af3c
     * - **UID:**
       - SDOC-SSS-88
     * - **STATUS:**
@@ -1538,6 +1638,8 @@ Strict text language syntax
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b13bc3dfa7324f238bc06a88baf5edb6
     * - **UID:**
       - SDOC-SSS-55
     * - **STATUS:**
@@ -1560,6 +1662,8 @@ Machine-readable format
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 0b47da74f9ec45e6a77573185b95f327
     * - **UID:**
       - SDOC-SSS-54
     * - **STATUS:**
@@ -1584,6 +1688,8 @@ Requirements data from multiple repositories
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 13f3e7765b494237893c1585a7c9dfd0
     * - **UID:**
       - SDOC-SSS-34
     * - **STATUS:**
@@ -1611,6 +1717,8 @@ Traceability between requirements and source code
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 4692362c77974fb8bcbeefdc248d0e89
     * - **UID:**
       - SDOC-SSS-72
     * - **STATUS:**
@@ -1655,6 +1763,8 @@ ReqIF export/import
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 73e70548c2cf415f94adbf1066d5fe4b
     * - **UID:**
       - SDOC-SSS-58
     * - **STATUS:**
@@ -1684,6 +1794,8 @@ CSV export/import
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - c94de32c2c2e454d81c77724a4f29283
     * - **UID:**
       - SDOC-SSS-59
     * - **STATUS:**
@@ -1708,6 +1820,8 @@ Excel export/import
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f7a600a238e34075ac6b65852492cc2f
     * - **UID:**
       - SDOC-SSS-60
     * - **STATUS:**
@@ -1734,6 +1848,8 @@ Support user accounts
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f9d65df46ff24b0da6cb2bf011f0fc70
     * - **UID:**
       - SDOC-SSS-65
     * - **STATUS:**
@@ -1752,6 +1868,8 @@ Send notifications about updated requirements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 29d0374556494f38977ec3c928aa894d
     * - **UID:**
       - SDOC-SSS-66
     * - **STATUS:**
@@ -1775,6 +1893,8 @@ Requirements engineering
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f16ea50f686e412f9c21d8096055bb47
     * - **UID:**
       - SDOC-SSS-76
     * - **STATUS:**
@@ -1799,6 +1919,8 @@ Self-hosted requirements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 0bebdf77108a499c87e5c0838204c39c
     * - **UID:**
       - SDOC-SSS-50
     * - **STATUS:**
@@ -1827,6 +1949,8 @@ Test coverage
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 1a39a758930040029db320d8466806c1
     * - **UID:**
       - SDOC-SSS-77
     * - **STATUS:**
@@ -1858,6 +1982,8 @@ Tool qualification
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8cb5ac6812924f4c8f4afd156b2f021c
     * - **UID:**
       - SDOC-SSS-78
     * - **STATUS:**
@@ -1899,6 +2025,8 @@ Open source
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2f30b94fdc074c8fa5858dfccc6202e8
     * - **UID:**
       - SDOC-SSS-38
     * - **STATUS:**
@@ -1919,6 +2047,8 @@ Only open source dependencies
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 27b640de8cae44a680b23429c981bee9
     * - **UID:**
       - SDOC-SSS-39
     * - **STATUS:**
@@ -1939,6 +2069,8 @@ Free
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 1338faad11204073a97212fa0fd11317
     * - **UID:**
       - SDOC-SSS-40
     * - **STATUS:**

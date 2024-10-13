@@ -24,6 +24,8 @@ Real-time editing out of scope
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - fc76b207c152433888a86a166f58a425
     * - **UID:**
       - SDOC-SRS-13
     * - **STATUS:**
@@ -49,6 +51,8 @@ Auto-commit to Git repository
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - e61e7224e27d41ceacad9bf6051bd6f0
     * - **UID:**
       - SDOC-BACKLOG-6
     * - **STATUS:**
@@ -63,6 +67,8 @@ Auto-generate section UIDs
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 07a9636655314912a996ecf5692ae3d5
     * - **UID:**
       - SDOC-SRS-86
     * - **STATUS:**
@@ -84,6 +90,8 @@ View project home page
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 0a158ddac310483489ef08f618ba8741
     * - **UID:**
       - SDOC-SRS-52
     * - **STATUS:**
@@ -101,6 +109,8 @@ Traceability navigator
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - dbfe92e9ec3b44e9a3e1c9e89a0e9ef5
     * - **UID:**
       - SDOC-SRS-113
     * - **STATUS:**
@@ -130,6 +140,8 @@ Integration with other systems engineering processes
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5958a5c0aad8486b84ad31bc014d4ad3
     * - **UID:**
       - SDOC-RMC-27
     * - **STATUS:**
@@ -146,6 +158,8 @@ Integration with Capella
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 99e84f704c074cf28de51ce6fb183a66
     * - **UID:**
       - SDOC-RMC-29
     * - **STATUS:**
@@ -170,6 +184,8 @@ Support STPA method
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 44b30591f6674ede821324fe527babd9
     * - **UID:**
       - SDOC-RMC-55
     * - **STATUS:**
@@ -186,6 +202,8 @@ Formalized statements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 045aee37b0a24b3cb62cabd8b614aaf7
     * - **UID:**
       - SDOC-RMC-28
     * - **STATUS:**
@@ -209,6 +227,8 @@ AI Assistant
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 7e0fd5af118b4f5d8ecbf0d8ef3841e6
     * - **UID:**
       - SDOC-RMC-30
     * - **STATUS:**
@@ -230,6 +250,8 @@ Export to Tex
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 9ec7f471ccb243ea9d86cf2756403b8f
     * - **UID:**
       - SDOC-SRS-76
     * - **STATUS:**
@@ -244,6 +266,8 @@ Focused mode: Edit a single section / requirement
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5a0304abcd8a44dab5d032dce6625a5d
     * - **UID:**
       - SDOC-BACKLOG-1
     * - **STATUS:**
@@ -264,6 +288,8 @@ Interoperability with Doxygen
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 162a3da4d9d74c15b5078c9859657ce3
     * - **UID:**
       - SDOC-BACKLOG-2
     * - **STATUS:**
@@ -278,6 +304,8 @@ Fuzzy search (the whole documentation)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 06f16ede826749a389c8d7de9828e0eb
     * - **UID:**
       - SDOC-BACKLOG-3
     * - **STATUS:**
@@ -292,6 +320,8 @@ Derived requirements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 0e69828e1d914e20852aef7cfc4e87c4
     * - **UID:**
       - SDOC-BACKLOG-9
     * - **STATUS:**
@@ -312,6 +342,8 @@ Support Markdown markup
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 34246811634c493dbc771ae4c8bc3b14
     * - **UID:**
       - SDOC-BACKLOG-4
     * - **STATUS:**
@@ -326,6 +358,8 @@ Language Server Protocol (LSP)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 3f50a97bc70842dbabeea911f653ef90
     * - **UID:**
       - SDOC-BACKLOG-7
     * - **STATUS:**
@@ -340,6 +374,8 @@ UML
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 72285f9b09de48a29fef8f85431e4a94
     * - **UID:**
       - SDOC-BACKLOG-8
     * - **STATUS:**
@@ -354,6 +390,8 @@ Export/import to CSV
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 452fbd74d01843fe949d3bd804df203e
     * - **UID:**
       - SDOC-SRS-129
     * - **STATUS:**
@@ -374,6 +412,8 @@ Web API
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - bdedcdd91c7f4efb8787b5a82cfec49b
     * - **UID:**
       - SDOC-SRS-114
     * - **STATUS:**
@@ -403,6 +443,8 @@ Multi-user editing of documents
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f97dc050ddab4a08bf1689200118faaa
     * - **UID:**
       - SDOC-SRS-123
     * - **STATUS:**
@@ -424,6 +466,8 @@ User accounts
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - e5b2aff0c1db4b11a8c75c278813300b
     * - **UID:**
       - SDOC-SRS-130
     * - **STATUS:**
@@ -444,6 +488,8 @@ Update notifications
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 440f0bc311b84421a7e8bea9dfd2448b
     * - **UID:**
       - SDOC-SRS-131
     * - **STATUS:**
@@ -465,6 +511,8 @@ Requirement validation according to EARS syntax
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - caecd704ed634d718deff07ba0db7fa6
     * - **UID:**
       - SDOC-SRS-116
     * - **STATUS:**
@@ -485,6 +533,8 @@ WYSIWYG editing
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b74a7a3209d247f6b357513b0cce5000
     * - **UID:**
       - SDOC-SRS-121
     * - **STATUS:**
@@ -510,6 +560,8 @@ Tables HTML editor
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - fa7fd8fd3a694d8e93953fd60e19fdde
     * - **UID:**
       - SDOC-SRS-61
     * - **STATUS:**
@@ -526,6 +578,8 @@ Move requirement / section nodes between documents
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 7a06d1433e4c4b0eaf55ede14507eac9
     * - **UID:**
       - SDOC-SRS-94
     * - **STATUS:**
@@ -550,6 +604,8 @@ Auto-completion for requirements UIDs
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 956371b6a7824d0b91caa5603faeeae2
     * - **UID:**
       - SDOC-SRS-120
     * - **STATUS:**
@@ -576,6 +632,8 @@ Attach image to requirement
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 45b8513623744776899abfbf99c95286
     * - **UID:**
       - SDOC-SRS-58
     * - **STATUS:**
@@ -590,6 +648,8 @@ Provide contextual help about RST markup
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - c02a65f2716f4a86b8f83e3a7b4cd31c
     * - **UID:**
       - SDOC-SRS-60
     * - **STATUS:**
@@ -604,6 +664,8 @@ TBL: Hide/show columns
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 7aa5316dd056465e97044e221412290b
     * - **UID:**
       - SDOC-SRS-63
     * - **STATUS:**
@@ -620,6 +682,8 @@ TBL: Select/deselect tags
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 229378602d1847cb83c61ab3e97bb22b
     * - **UID:**
       - SDOC-SRS-64
     * - **STATUS:**
@@ -639,6 +703,8 @@ Impact analysis
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f5feb38777064d9db939279d32f79130
     * - **UID:**
       - SDOC-SRS-117
     * - **STATUS:**
@@ -666,6 +732,8 @@ ReqXLS
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a7c504087df04cedb5541d83ed988e9b
     * - **UID:**
       - SDOC-SRS-75
     * - **STATUS:**

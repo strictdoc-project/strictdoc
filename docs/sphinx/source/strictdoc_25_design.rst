@@ -105,3 +105,34 @@ StrictDoc relies on both tools to get:
 - Fast parsing of SDoc files.
 
 One important implementation detail of Arpeggio that influences StrictDoc user experience is that the parser stops immediately when it encounters an error. For a document that has several issues, the parser highlights only the first error without going any further. When the first error is resolved, the second error will be shown, etc.
+
+HTML escaping
+=============
+
+StrictDoc uses Jinja2 autoescaping_ for HTML output. `Template.render`_ calls
+will escape any Python object unless it's explicitly marked as safe.
+
+Good to know for a start:
+
+- If a Python object intentionally contains HTML it must be marked as safe
+  to bypass autoescaping. Templates can do this by piping to safe_, or Python code
+  can do it by wrapping an object into `markupsafe.Markup`_.
+- Passing text to the `Markup() <markupsafe.Markup_>`_ constructor marks that text
+  as safe, but *does not escape* it.
+- Text can be explicitly escaped with `markupsafe.escape`_. It's similar to
+  `html.escape`_, but the result is immediately marked safe.
+- `markupsafe.Markup`_ is responsible for some "magic". It's a :code:`str` subclass
+  with the same methods, but escaping arguments. For example,
+  :code:`"> " + Markup("<div>safe</div>")` will turn into :code:`"&gt; <div>safe</div>"`,
+  thanks to :code:`__radd__` in this specific case. To prevent escaping,
+  you would use :code:`Markup("> ") + Markup("<div>safe</div>")`. Basically the
+  same magic happens in templates when using safe_.
+- See also `Working with Automatic Escaping`_.
+
+.. _autoescaping: https://jinja.palletsprojects.com/en/latest/api/#autoescaping
+.. _Working with Automatic Escaping: https://jinja.palletsprojects.com/en/latest/templates/#working-with-automatic-escaping
+.. _markupsafe.Markup: https://markupsafe.palletsprojects.com/en/latest/escaping/#markupsafe.Markup
+.. _markupsafe.escape: https://markupsafe.palletsprojects.com/en/latest/escaping/#markupsafe.escape
+.. _safe: https://jinja.palletsprojects.com/en/latest/templates/#jinja-filters.safe
+.. _Template.render: https://jinja.palletsprojects.com/en/latest/api/#jinja2.Template.render
+.. _html.escape: https://docs.python.org/3/library/html.html#html.escape

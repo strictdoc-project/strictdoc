@@ -13,6 +13,8 @@ Data model
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - e8d5b55055254144b96d1ffeb587ec72
     * - **UID:**
       - SDOC-SRS-18
     * - **STATUS:**
@@ -46,6 +48,8 @@ Requirement model
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 3b31cad22529476db01aca41caf39750
     * - **UID:**
       - SDOC-SRS-26
     * - **STATUS:**
@@ -66,6 +70,8 @@ Requirement model fields
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8e2ffffd33af4a969d5bb7ca40cb49a4
     * - **UID:**
       - SDOC-SRS-100
     * - **STATUS:**
@@ -86,6 +92,8 @@ Requirement model default fields
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2d4020ba06d74571aef7aafe8604215b
     * - **UID:**
       - SDOC-SRS-132
     * - **STATUS:**
@@ -118,6 +126,8 @@ Document model
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f94419a390f2403daa3c4cd0e96f6cb6
     * - **UID:**
       - SDOC-SRS-98
     * - **STATUS:**
@@ -138,6 +148,8 @@ Document metadata
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 435f856197d743c1b9b1dcbe91a22863
     * - **UID:**
       - SDOC-SRS-110
     * - **STATUS:**
@@ -164,6 +176,8 @@ Section model
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 63821c507d584cf985f05904710b9779
     * - **UID:**
       - SDOC-SRS-99
     * - **STATUS:**
@@ -188,6 +202,8 @@ Free text
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 899d2f68749b4be1a3124fe4d01de1aa
     * - **UID:**
       - SDOC-SRS-135
     * - **STATUS:**
@@ -212,6 +228,8 @@ Composeable document
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 983653fc26214f46977dc792d65ae65f
     * - **UID:**
       - SDOC-SRS-109
     * - **STATUS:**
@@ -241,6 +259,8 @@ Requirement relations
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - fad4cf5dcf4d40518c7c9826fd6bd18a
     * - **UID:**
       - SDOC-SRS-31
     * - **STATUS:**
@@ -266,6 +286,8 @@ Requirement relation roles
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 9930894b08c44f5eba996c0a255e9e3f
     * - **UID:**
       - SDOC-SRS-101
     * - **STATUS:**
@@ -291,6 +313,8 @@ SDoc markup language
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 27a6da48c65445539e536ee034921fb5
     * - **UID:**
       - SDOC-SRS-20
     * - **STATUS:**
@@ -315,6 +339,8 @@ Identical SDoc content by import/export roundtrip
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 1f147feed60245378de2e099facd196d
     * - **UID:**
       - SDOC-SRS-136
     * - **STATUS:**
@@ -339,6 +365,8 @@ SDoc and Git storage
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f48a57c0cd764951a667127ce92fdb12
     * - **UID:**
       - SDOC-SRS-127
     * - **STATUS:**
@@ -362,6 +390,8 @@ SDoc file extension
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 9df34a7ab79842d99ee68303f334d4eb
     * - **UID:**
       - SDOC-SRS-104
     * - **STATUS:**
@@ -386,6 +416,8 @@ One document per one SDoc file
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8dd6dd3979484dadbe71ac91aab50608
     * - **UID:**
       - SDOC-SRS-105
     * - **STATUS:**
@@ -411,6 +443,8 @@ Fixed grammar
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - e5e3033c13f24fa083423230da7994f7
     * - **UID:**
       - SDOC-SRS-19
     * - **STATUS:**
@@ -434,6 +468,8 @@ Default grammar fields
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b97418ceccff438cb0457ed4bdf1be47
     * - **UID:**
       - SDOC-SRS-93
     * - **STATUS:**
@@ -462,6 +498,8 @@ Custom grammar / fields
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8924c29136944f65ac5efc8b6b90a07b
     * - **UID:**
       - SDOC-SRS-21
     * - **STATUS:**
@@ -486,6 +524,8 @@ Importable grammars
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 10d23bfbf4504c2e8c995ae89c500be4
     * - **UID:**
       - SDOC-SRS-122
     * - **STATUS:**
@@ -511,6 +551,8 @@ UID identifier format
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5405c74a9eba4e9193007f01ea98bc85
     * - **UID:**
       - SDOC-SRS-22
     * - **STATUS:**
@@ -539,6 +581,8 @@ Support RST markup
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f871dfc381354daf820cc1e2b94fdb05
     * - **UID:**
       - SDOC-SRS-24
     * - **STATUS:**
@@ -559,6 +603,8 @@ MathJAX
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b1b4f03d4e404a14be481626803fcfc2
     * - **UID:**
       - SDOC-SRS-27
     * - **STATUS:**
@@ -579,6 +625,8 @@ No indentation
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 39f117b79cfa4a8485c458280b3d36ce
     * - **UID:**
       - SDOC-SRS-23
     * - **STATUS:**
@@ -603,6 +651,8 @@ Type-safe fields
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 98628e1db3ca4f52b7632674b69dd657
     * - **UID:**
       - SDOC-SRS-25
     * - **STATUS:**
@@ -631,6 +681,8 @@ Traceability index
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2c8d7940a23c443f81a7eb373340894e
     * - **UID:**
       - SDOC-SRS-28
     * - **STATUS:**
@@ -651,6 +703,8 @@ Uniqueness UID in tree
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 272b8933276d4cd48a78fcfa11899573
     * - **UID:**
       - SDOC-SRS-29
     * - **STATUS:**
@@ -676,6 +730,8 @@ Detect links cycles
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8330d61fd5b1438fa90f127f88903a0d
     * - **UID:**
       - SDOC-SRS-30
     * - **STATUS:**
@@ -697,6 +753,8 @@ Link document nodes
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 07a1e7bef11d4fcca86cd31ee5245d8d
     * - **UID:**
       - SDOC-SRS-32
     * - **STATUS:**
@@ -726,6 +784,8 @@ Automatic resolution of reverse relations
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2dad5f293bc442eaa98859c4b5eac0d5
     * - **UID:**
       - SDOC-SRS-102
     * - **STATUS:**
@@ -766,6 +826,8 @@ Finding documents recursively
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 50b2d5d6eb1140f0a2b980203468a5f7
     * - **UID:**
       - SDOC-SRS-115
     * - **STATUS:**
@@ -801,6 +863,8 @@ Export to static HTML website
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 37f17fdd57ff47e9b7f4147adaeabde1
     * - **UID:**
       - SDOC-SRS-49
     * - **STATUS:**
@@ -821,6 +885,8 @@ Web interface
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 37399be2a8ac46889e3437209f9dffa9
     * - **UID:**
       - SDOC-SRS-50
     * - **STATUS:**
@@ -844,6 +910,8 @@ Export to printable HTML pages (HTML2PDF)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f2fd90ad8a2946e7b085233a9c7a8a75
     * - **UID:**
       - SDOC-SRS-51
     * - **STATUS:**
@@ -864,6 +932,8 @@ Preserve generated file names
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 8811f0ef33de4365bc66a602a8c184f6
     * - **UID:**
       - SDOC-SRS-48
     * - **STATUS:**
@@ -893,6 +963,8 @@ View project tree
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 100fa410f4b443e69c48738899cfb5bd
     * - **UID:**
       - SDOC-SRS-53
     * - **STATUS:**
@@ -917,6 +989,8 @@ Create document
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - eb04abcfd64146f3b7be509afd1693f9
     * - **UID:**
       - SDOC-SRS-107
     * - **STATUS:**
@@ -937,6 +1011,8 @@ Delete document
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - de7cda1156e043d7999933a2df630a30
     * - **UID:**
       - SDOC-SRS-108
     * - **STATUS:**
@@ -962,6 +1038,8 @@ Read document
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 9c962637ef7f45b6af6c83964b0a06d9
     * - **UID:**
       - SDOC-SRS-54
     * - **STATUS:**
@@ -982,6 +1060,8 @@ Update document
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 201187122be14ea48d69106d396c6790
     * - **UID:**
       - SDOC-SRS-106
     * - **STATUS:**
@@ -1002,6 +1082,8 @@ Edit requirement nodes
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 13968ae160744e10ba8979eaee2f4f54
     * - **UID:**
       - SDOC-SRS-55
     * - **STATUS:**
@@ -1022,6 +1104,8 @@ Move requirement / section nodes within document
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - edc02a3a97704007b70b93102c76b278
     * - **UID:**
       - SDOC-SRS-92
     * - **STATUS:**
@@ -1046,6 +1130,8 @@ Edit Document grammar
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 197e00dd3b1d42309250c89de23ea51b
     * - **UID:**
       - SDOC-SRS-56
     * - **STATUS:**
@@ -1070,6 +1156,8 @@ Edit Document options
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2706ac7ccb8148edb7b200a1b78c25d6
     * - **UID:**
       - SDOC-SRS-57
     * - **STATUS:**
@@ -1090,6 +1178,8 @@ Auto-generate requirements UIDs
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - d64f7a0f6ba54672a62634304c54e2d4
     * - **UID:**
       - SDOC-SRS-96
     * - **STATUS:**
@@ -1111,6 +1201,8 @@ Buttons to copy text to buffer
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 738b63b7f55b43eb99f5600bd65f5ba7
     * - **UID:**
       - SDOC-SRS-59
     * - **STATUS:**
@@ -1136,6 +1228,8 @@ View TBL screen
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - e12b4c5b4f13444d99279ab445df5bcc
     * - **UID:**
       - SDOC-SRS-62
     * - **STATUS:**
@@ -1161,6 +1255,8 @@ View TR screen
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 35d4c1dd30814c2a80918a90081a88b7
     * - **UID:**
       - SDOC-SRS-65
     * - **STATUS:**
@@ -1188,6 +1284,8 @@ View DTR screen
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 48bc17d898c94605b17d0267480f57ee
     * - **UID:**
       - SDOC-SRS-66
     * - **STATUS:**
@@ -1211,6 +1309,8 @@ Display project statistics
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 19f7c2d35237423e950584a4a7aa95a7
     * - **UID:**
       - SDOC-SRS-97
     * - **STATUS:**
@@ -1248,6 +1348,8 @@ Traceability matrix
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 167f6fe66d7247a6bf628ed6c1949275
     * - **UID:**
       - SDOC-SRS-112
     * - **STATUS:**
@@ -1273,6 +1375,8 @@ Project tree diff
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - aef80cc1a3144564bf23bf3c2a1cfd7f
     * - **UID:**
       - SDOC-SRS-111
     * - **STATUS:**
@@ -1300,6 +1404,8 @@ Link requirements with source files
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 221b544dab2e4b96be124e1caf84a7c2
     * - **UID:**
       - SDOC-SRS-33
     * - **STATUS:**
@@ -1320,6 +1426,8 @@ Annotate source file
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b9144222a7f3454da2989f494cd9647c
     * - **UID:**
       - SDOC-SRS-34
     * - **STATUS:**
@@ -1340,6 +1448,8 @@ Single-line code marker
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 61c25cab106e4283b2c6d64bf1db96b2
     * - **UID:**
       - SDOC-SRS-124
     * - **STATUS:**
@@ -1366,6 +1476,8 @@ Generate source coverage
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 3aeb1eea0dba4041a9161a1a8d291999
     * - **UID:**
       - SDOC-SRS-35
     * - **STATUS:**
@@ -1389,6 +1501,8 @@ Generate source file traceability
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 56ecfb19152e45b09c0e55de2d1d5f05
     * - **UID:**
       - SDOC-SRS-36
     * - **STATUS:**
@@ -1423,6 +1537,8 @@ Export to RST
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2aa615b9cf264e7aad826f4ff466e514
     * - **UID:**
       - SDOC-SRS-70
     * - **STATUS:**
@@ -1451,6 +1567,8 @@ Docutils
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 6faffbd1d4cc47ea88c08ef38966e5ec
     * - **UID:**
       - SDOC-SRS-71
     * - **STATUS:**
@@ -1485,6 +1603,8 @@ Export/import from/to ReqIF
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2bf94015818e4770b2b1947b5fdbb969
     * - **UID:**
       - SDOC-SRS-72
     * - **STATUS:**
@@ -1505,6 +1625,8 @@ Standalone ReqIF layer
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - bb52b698d7a544aca420d606e4e51356
     * - **UID:**
       - SDOC-SRS-73
     * - **STATUS:**
@@ -1534,6 +1656,8 @@ Export to Excel
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f7b587f66dda402dbd58768e2740742f
     * - **UID:**
       - SDOC-SRS-74
     * - **STATUS:**
@@ -1554,6 +1678,8 @@ Selected fields export
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5aa75848972249d5bec8a40812b99d86
     * - **UID:**
       - SDOC-SRS-134
     * - **STATUS:**
@@ -1582,6 +1708,8 @@ Command-line interface
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 598647eed3a446fe93e2c54b197f830e
     * - **UID:**
       - SDOC-SRS-103
     * - **STATUS:**
@@ -1612,6 +1740,8 @@ Auto-generate requirements UIDs
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 7daa1310876a421f8e39f8ac25b99c1d
     * - **UID:**
       - SDOC-SRS-85
     * - **STATUS:**
@@ -1635,6 +1765,8 @@ StrictDoc Python API
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a20c5b6a021f4dd5a5a5dda2880c1b87
     * - **UID:**
       - SDOC-SRS-125
     * - **STATUS:**
@@ -1665,6 +1797,8 @@ Web server
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 409f462f1f4645c8ad24980727a72521
     * - **UID:**
       - SDOC-SRS-126
     * - **STATUS:**
@@ -1697,6 +1831,8 @@ Warnings are errors
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - c4e9dce647654deeab8471d04573f8cb
     * - **UID:**
       - SDOC-SRS-6
     * - **STATUS:**
@@ -1722,6 +1858,8 @@ strictdoc.toml file
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - da446e6d3c6d4b13badd4a47bdbcc5a3
     * - **UID:**
       - SDOC-SRS-37
     * - **STATUS:**
@@ -1742,6 +1880,8 @@ Feature toggles
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a6e70c0619204a26b135d1e5fca45dd7
     * - **UID:**
       - SDOC-SRS-39
     * - **STATUS:**
@@ -1762,6 +1902,8 @@ StrictDoc shall allow a user to select a subset of StrictDoc's available feature
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a8a17295d3e24601891c7d19d5ca67d9
     * - **UID:**
       - SDOC-SRS-119
     * - **STATUS:**
@@ -1787,6 +1929,8 @@ Process-based parallelization
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - acd97ca6b9d2451da53168917d96705e
     * - **UID:**
       - SDOC-SRS-1
     * - **STATUS:**
@@ -1812,6 +1956,8 @@ Caching of parsed SDoc documents
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 54602f6d120548c8bbd70d1d25113d53
     * - **UID:**
       - SDOC-SRS-95
     * - **STATUS:**
@@ -1833,6 +1979,8 @@ Incremental generation of documents
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 6fec2f8c0baa4ddba95bee05ad03a785
     * - **UID:**
       - SDOC-SRS-2
     * - **STATUS:**
@@ -1856,6 +2004,8 @@ Caching of RST fragments
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 5f2df631605543d18d57e09bc3791003
     * - **UID:**
       - SDOC-SRS-3
     * - **STATUS:**
@@ -1881,6 +2031,8 @@ On-demand loading of HTML pages
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - d0c4828ed8434613aae844481bbef1ca
     * - **UID:**
       - SDOC-SRS-4
     * - **STATUS:**
@@ -1906,6 +2058,8 @@ Precompiled Jinja templates
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 4e014d3291ce460c993a0ff334eff4a7
     * - **UID:**
       - SDOC-SRS-5
     * - **STATUS:**
@@ -1939,6 +2093,8 @@ Priority handling of critical issues in StrictDoc
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 27319e3866b8423099774d8770950acd
     * - **UID:**
       - SDOC-SRS-133
     * - **STATUS:**
@@ -1968,6 +2124,8 @@ Requirements-based development
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - d0ab977bbb494cbf818c92a1cab1bef0
     * - **UID:**
       - SDOC-SRS-128
     * - **STATUS:**
@@ -1989,6 +2147,8 @@ Self-hosted requirements
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b3fff332c2e342ec9dd372ebd49cb64d
     * - **UID:**
       - SDOC-SRS-91
     * - **STATUS:**
@@ -2020,6 +2180,8 @@ Python language
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 4053ea6c8f6c4c29b89fea0e39912861
     * - **UID:**
       - SDOC-SRS-8
     * - **STATUS:**
@@ -2049,6 +2211,8 @@ Linux
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - ceee07bdc9bd42fc9a4d0e9b4bfc312f
     * - **UID:**
       - SDOC-SRS-9
     * - **STATUS:**
@@ -2069,6 +2233,8 @@ macOS
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f8c7586e1b324480ac0bd153e068350d
     * - **UID:**
       - SDOC-SRS-10
     * - **STATUS:**
@@ -2089,6 +2255,8 @@ Windows
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 6af3dbb1e05244579622d3d2a26b5413
     * - **UID:**
       - SDOC-SRS-11
     * - **STATUS:**
@@ -2114,6 +2282,8 @@ Use of open source components
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 83d5c896004948b48c3597d58267dafa
     * - **UID:**
       - SDOC-SRS-89
     * - **STATUS:**
@@ -2139,6 +2309,8 @@ No heavy UI frameworks
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b22bf982e73246a79a5ba4ae653d21e5
     * - **UID:**
       - SDOC-SRS-14
     * - **STATUS:**
@@ -2161,6 +2333,8 @@ No use of NPM
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 309e4108c1fa47e99d4331af642f3b81
     * - **UID:**
       - SDOC-SRS-15
     * - **STATUS:**
@@ -2185,6 +2359,8 @@ No use of JavaScript replacement languages (e.g., Typescript)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b9cacb97a045418385c7f870b23ac063
     * - **UID:**
       - SDOC-SRS-16
     * - **STATUS:**
@@ -2209,6 +2385,8 @@ Monolithic application with no microservices
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 70f05a744a0546909dc5b69de88ad41f
     * - **UID:**
       - SDOC-SRS-87
     * - **STATUS:**
@@ -2238,6 +2416,8 @@ No reliance on containerization
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 7d68821750a54cb5833b608cfc278f47
     * - **UID:**
       - SDOC-SRS-88
     * - **STATUS:**
@@ -2271,6 +2451,8 @@ Use of asserts
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 61d96cd1d03e40c48187ee67ac0b65f6
     * - **UID:**
       - SDOC-SRS-40
     * - **STATUS:**
@@ -2293,6 +2475,8 @@ Use of type annotations in Python code
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 72b5b0c925cf4ef49749b7e466675df1
     * - **UID:**
       - SDOC-SRS-41
     * - **STATUS:**
@@ -2318,6 +2502,8 @@ Compliance with Python community practices (PEP8 etc)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 6c0163c56ade49faa353ec06cbd676cd
     * - **UID:**
       - SDOC-SRS-42
     * - **STATUS:**
@@ -2343,6 +2529,8 @@ Static type checking
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2cc9b494ca6248058b6bf63b6e2c1cfa
     * - **UID:**
       - SDOC-SRS-43
     * - **STATUS:**
@@ -2368,6 +2556,8 @@ Unit testing
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2731c64ab32146eeb4b8167df4a34540
     * - **UID:**
       - SDOC-SRS-44
     * - **STATUS:**
@@ -2389,6 +2579,8 @@ CLI interface black-box integration testing
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 70ef3986cfc4437bbb10288d3b55958c
     * - **UID:**
       - SDOC-SRS-45
     * - **STATUS:**
@@ -2410,6 +2602,8 @@ Web end-to-end testing
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a42c65f1a53b4c9bb50bc2a1ecb855cb
     * - **UID:**
       - SDOC-SRS-46
     * - **STATUS:**
@@ -2431,6 +2625,8 @@ At least one integration or end-to-end test
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - c90f35ab9a7f4c29a418557151878b9f
     * - **UID:**
       - SDOC-SRS-47
     * - **STATUS:**
@@ -2470,6 +2666,8 @@ GitHub
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b112c60bc2f34114ab1f3361a1a10a00
     * - **UID:**
       - SDOC-SRS-12
     * - **STATUS:**
@@ -2491,6 +2689,8 @@ StrictDoc license
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - bd949cbbe07c4cb29492ea0c8e5c1eec
     * - **UID:**
       - SDOC-SRS-118
     * - **STATUS:**

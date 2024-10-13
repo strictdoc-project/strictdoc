@@ -10,6 +10,8 @@ Multiple files / include mechanism
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 68e87901205c4b0dbb6a0071479330b5
     * - **UID:**
       - ZEP-1
     * - **STATUS:**
@@ -34,6 +36,8 @@ Clear separation of requirements (machine-readable)
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 36415af620f645388af4dc51c2a19b97
     * - **UID:**
       - ZEP-2
     * - **STATUS:**
@@ -58,6 +62,8 @@ Custom fields
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 7a9e26240f5c4fe29143cf3348ac3d3b
     * - **UID:**
       - ZEP-3
     * - **STATUS:**
@@ -83,6 +89,8 @@ Links
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a5928d6204a84d02a3c367d6dbc54092
     * - **UID:**
       - ZEP-4
     * - **STATUS:**
@@ -107,6 +115,8 @@ Multiple link roles
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 55bbe693d12d4e00956d41a837ef15ef
     * - **UID:**
       - ZEP-5
     * - **STATUS:**
@@ -131,6 +141,8 @@ ReqIF export
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b58c387f3a2d4cf6a540e279dbe49e47
     * - **UID:**
       - ZEP-6
     * - **STATUS:**
@@ -155,6 +167,8 @@ CSV
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 17a141add32f4d7696b5a74b6507b9aa
     * - **UID:**
       - ZEP-7
     * - **STATUS:**
@@ -179,6 +193,8 @@ Unique ID management
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - d0d258d8640443578c7ec508c014b50d
     * - **UID:**
       - ZEP-8
     * - **STATUS:**
@@ -209,6 +225,8 @@ Text formatting capabilities
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 611546bf2409417e8844f93854d54268
     * - **UID:**
       - ZEP-9
     * - **STATUS:**
@@ -239,6 +257,8 @@ Minimal requirement field set
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - f1f6da87da5c49d1b8c3441b14863975
     * - **UID:**
       - ZEP-10
     * - **STATUS:**
@@ -270,6 +290,8 @@ Requirements to source code traceability
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 55cbd9b658164414adb0c13b0446e3f7
     * - **UID:**
       - ZEP-11
     * - **STATUS:**
@@ -294,6 +316,8 @@ Non-intrusive links in source code
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a2930225168147808e6554a4da49aeb4
     * - **UID:**
       - ZEP-12
     * - **STATUS:**
@@ -318,6 +342,8 @@ Structuring requirements in documents
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - 2614d6673a594da995df672e8943839e
     * - **UID:**
       - ZEP-13
     * - **STATUS:**
@@ -342,6 +368,8 @@ Status field
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - a92a28ce3bcb4b3590f36e778a604ccb
     * - **UID:**
       - ZEP-14
     * - **STATUS:**
@@ -366,6 +394,8 @@ Tool Qualifiability
     :align: left
     :header-rows: 0
 
+    * - **MID:**
+      - b74919612283422a9e139418a20926c6
     * - **UID:**
       - ZEP-15
     * - **STATUS:**

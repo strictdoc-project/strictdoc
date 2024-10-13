@@ -53,11 +53,12 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This document outlines a set of high-level requirements for StrictDoc, a text-based requirements management system. While StrictDoc already meets many of these requirements, a further discussion is needed to clarify any remaining questions. For the outstanding requirements, we can establish a practical implementation plan within the upcoming 2023-2024 StrictDoc roadmap.
 
 These requirements are recommended by engineers who adhere to the DO-178B and DO-178C standards of the aviation industry. For a visual summary of the DO-178 standard, please refer to this link: https://upload.wikimedia.org/wikipedia/commons/4/4f/DO-178B_Process_Visual_Summary_Rev_A.pdf.
-[/FREETEXT]
+<<<
 
 [SECTION]
 MID: 6be4dbe02b4346df9849eaa6fe077e0e

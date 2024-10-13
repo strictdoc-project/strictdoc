@@ -1,7 +1,8 @@
 [DOCUMENT]
 TITLE: Developer Guide
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This section contains everything that a StrictDoc developer/contributor should
 know to get the job done.
 
@@ -13,7 +14,7 @@ The instructions and conventions described below are a summary of what is
 considered to be the currently preferred development style for StrictDoc.
 
 Any feedback on this development guide is appreciated.
-[/FREETEXT]
+<<<
 
 [SECTION]
 UID: DEVGUIDE_GETTING_STARTED
@@ -22,7 +23,8 @@ TITLE: Getting started
 [SECTION]
 TITLE: System dependencies
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc itself mostly depends on other Python Pip packages, so there is nothing special to be installed.
 
 You may need to install ``libtidy`` if you want to run the integration tests. The HTML markup validation tests depend on libtidy.
@@ -38,16 +40,17 @@ From the core Python packages, StrictDoc needs Invoke, Tox and TOML:
 .. code:: bash
 
     pip install invoke tox toml
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Windows-specific: Long Path support
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 As `reported <https://github.com/strictdoc-project/strictdoc/issues/1118>`_ by a user, Windows Long Path support has to be enabled on a Windows system.
 
 You can find information on how to enable the long paths support at https://pip.pypa.io/warnings/enable-long-paths.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -56,7 +59,8 @@ You can find information on how to enable the long paths support at https://pip.
 [SECTION]
 TITLE: Installing StrictDoc from GitHub (developer mode)
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 **Note:** Use this way of installing StrictDoc only if you want to make changes
 in StrictDoc's source code. Otherwise, install StrictDoc as a normal Pip package by running ``pip install strictdoc``.
 
@@ -67,7 +71,7 @@ in StrictDoc's source code. Otherwise, install StrictDoc as a normal Pip package
     python3 strictdoc/cli/main.py
 
 The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc, but not StrictDoc itself.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -76,7 +80,8 @@ The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc, bu
 [SECTION]
 TITLE: Invoke for development tasks
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 All development tasks are managed using
 `Invoke <https://www.pyinvoke.org/>`_ in the ``tasks.py`` file. On macOS and
 Linux, all tasks run in dedicated virtual environments. On Windows, invoke uses
@@ -88,14 +93,15 @@ Make sure to familiarize yourself with the available developer tasks by running:
 .. code-block:: bash
 
     invoke --list
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Main "Check" task
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Before doing anything else, run the main ``check`` command to make sure that StrictDoc passes all tests on your system:
 
 .. code:: bash
@@ -103,7 +109,7 @@ Before doing anything else, run the main ``check`` command to make sure that Str
     invoke check
 
 The ``check`` command runs all StrictDoc lint and test tasks with the only exception of end-to-end Web tests that are run with a separate task (see below).
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -111,7 +117,8 @@ The ``check`` command runs all StrictDoc lint and test tasks with the only excep
 UID: DEVGUIDE_PYTHON_CODE
 TITLE: Python code
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 - The version of Python is set to be as low as possible given some constraints
   of StrictDoc's dependencies. Ideally, the lowest Python version should only be
   raised when it is consistently deprecated by major software platforms like
@@ -142,7 +149,7 @@ TITLE: Python code
   both unit and integration tests is preferred. The only exception where a
   contribution can contain no tests is "code climate" which is work which
   introduces changes in code but no change to the functionality.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -150,7 +157,8 @@ TITLE: Python code
 UID: DEVGUIDE_GIT_WORKFLOW
 TITLE: Git workflow
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 - The preferred Git workflow is "1 commit per 1 PR". If the work truly deserves
   a sequence of commits, each commit shall be self-contained and pass all checks
   from the ``invoke check`` command. The preferred approach: split the work into
@@ -188,38 +196,41 @@ where the context can be a major feature being added or a folder. A form of  ``c
 .. code-block::
 
     Code climate: fix all remaining major Pylint warnings
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Frontend development
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The shortest path to run the server when the StrictDoc's source code is cloned:
 
 .. code-block:: bash
 
     invoke server
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Running End-to-End Web tests
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. code:: bash
 
     invoke test-end2end
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Running integration tests
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The integration tests are run using Invoke:
 
 .. code-block:: bash
@@ -233,14 +244,15 @@ The ``--focus`` parameter can be used to run only selected tests that match a gi
     invoke test-integration --focus <keyword>
 
 See `How to test command-line programs with Python tools: LIT and FileCheck <https://stanislaw.github.io/2020-11-20-how-to-test-command-line-programs-with-python.html>`_ to learn more about LIT and FileCheck, which enable the StrictDoc integration tests.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Documentation
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 - Every change in the functionality or the infrastructure should be documented.
 - Every line of documentation shall be no longer than 80 characters. StrictDoc's
   own documentation has a few exceptions, however, the latest preference is
@@ -249,18 +261,19 @@ TITLE: Documentation
   split by a contributor manually.
 - The ``invoke docs`` task should be used for re-generating documentation on a
   developer machine.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Conventions
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 - ``snake_case`` everywhere, no ``kebab-case``.
 
   - This rule applies everywhere where applicable: file and folder names, HTML attributes.
   - Exception: HTML data-attributes and ``testid`` identifiers.
-[/FREETEXT]
+<<<
 
 [/SECTION]

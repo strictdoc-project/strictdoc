@@ -4,15 +4,17 @@ OPTIONS:
   REQUIREMENT_STYLE: Table
   REQUIREMENT_IN_TOC: True
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This document presents the goals of the StrictDoc project and describes how the
 project is developed.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Project goals
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc is an open-source tool for writing technical documentation and requirements management. The long-term goal of the project is to provide a capable, open-source platform for creating and managing technical documentation.
 
 **Requirements automation**
@@ -34,7 +36,7 @@ An important feature of StrictDoc is its focus on open data, ensuring ease of da
 **Synergies with other tools**
 
 StrictDoc shall be compatible with other software and engineering tools. This includes at least the compatibility with the Python ecosystem, the model-based systems engineering tools, such as Capella, and the formats providing Software Bill of Materials, such as SPDX.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -101,15 +103,15 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
 [SECTION]
 TITLE: The roadmap diagram
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The following diagram contains the work items at the epic and single task levels. This PNG file is exported from a draw.io diagram, where the master version of the roadmap is maintained.
 
 .. image:: _assets/StrictDoc_Workspace-Roadmap.drawio.png
    :alt: Development plan diagram
    :class: image
    :width: 100%
-
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -118,7 +120,8 @@ The following diagram contains the work items at the epic and single task levels
 [SECTION]
 TITLE: Verification
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc has three groups of tests: unit, integration, end-to-end tests.
 
 The unit tests are based on Pylint.
@@ -126,19 +129,20 @@ The unit tests are based on Pylint.
 The integration tests are based on the `LLVM Integrated Tester <https://llvm.org/docs/CommandGuide/lit.html>`_ and `FileCheck.py <https://github.com/mull-project/FileCheck.py/blob/main/pyproject.toml>`_. These tools are not very common, refer to `How to test command-line programs with Python tools: LIT and FileCheck <https://stanislaw.github.io/2020-11-20-how-to-test-command-line-programs-with-python.html>`_ for a good description.
 
 The end-to-end web interface tests are based on SeleniumBase test framework.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Python baseline
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The supported version of Python is kept to be as low as possible. As of 2024-Q4, the currently supported version is Python 3.8.
 
 Ideally, the lowest Python version should only be raised when it is consistently deprecated by the major software platforms like Ubuntu or GitHub Actions.
 
 Another reason for upgrading the minimum Python version is due to the upstream dependencies. As these dependencies stop supporting the older versions of Python, StrictDoc must be upgraded to maintain compatibility. With the existing dependency graph, this happens rather infrequently as most dependencies also maintain the compatibility with the older Python versions.
-[/FREETEXT]
+<<<
 
 [/SECTION]

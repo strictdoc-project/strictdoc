@@ -8,7 +8,8 @@ OPTIONS:
 [SECTION]
 TITLE: Introduction
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc is software for technical documentation and requirements management.
 
 Summary of StrictDoc features:
@@ -42,17 +43,18 @@ Summary of StrictDoc features:
   Further performance tuning should be possible.
 
 See also a summary of StrictDoc's existing limitations: [LINK: SDOC_UG_LIMIT].
-[/FREETEXT]
+<<<
 
 [SECTION]
 UID: SDOC_UG_CONTACT
 TITLE: Contact the developers
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Join us in Discord. Here is the invitation link: https://discord.gg/4BAAME9MmG
 
 The author can be also contacted via `email <s.pankevich@gmail.com>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -65,7 +67,8 @@ TITLE: Examples
 UID: SDOC_UG_HELLO_WORLD
 TITLE: Hello World
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 "Hello World" example of the SDoc text language:
 
 .. code-block:: text
@@ -125,32 +128,35 @@ The expected output should contain the following line:
     INFO:     Uvicorn running on http://127.0.0.1:5111 (Press CTRL+C to quit)
 
 Open the URL in the browser and explore the contents of the example.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: StrictDoc Examples repository
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_ repository contains a collection of basic examples. Visit the repository and read its README for details.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: StrictDoc Templates repository
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The `strictdoc-templates <https://github.com/strictdoc-project/strictdoc-templates>`_ repository contains a growing collection of templates from the industry standards like DO-178C (aviation) and ECSS-E-ST-40C (space).
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Other examples
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 For a more comprehensive example, check the source file of this documentation
 which is written using StrictDoc:
 `strictdoc_01_user_guide.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc>`_.
@@ -158,7 +164,7 @@ which is written using StrictDoc:
 - `StrictDoc HTML export <https://strictdoc-project.github.io>`_
 - `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
 - `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -171,7 +177,8 @@ TITLE: Installing StrictDoc
 [SECTION]
 TITLE: Requirements
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 - Python 3.8+
 - macOS, Linux or Windows
 - Command-line terminal program
@@ -183,38 +190,41 @@ Depending on an operating system, a terminal program can be, for example:
 - ``Terminal`` or ``PowerShell`` on Windows.
 
 A terminal program is required to input all the commands outlined in this user guide.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Installing StrictDoc as a Pip package (recommended way)
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. code-block:: text
 
     pip install strictdoc
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Installing "nightly" StrictDoc as a Pip package
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Sometimes, it takes a while before the latest features and fixes reach the stable Pip release. In that case, installing a Pip package from the Git repository directly is possible:
 
 .. code-block::
 
     pip install -U --pre git+https://github.com/strictdoc-project/strictdoc.git@main
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Installing StrictDoc into a Docker container
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc can be invoked inside of a Docker container. To make data available
 to the Docker container (here: ``strictdoc:latest``) as well as to the host
 system, one needs to mount a volume via ``-v`` option.
@@ -234,17 +244,18 @@ In the container terminal:
     bash-5.1# exit
 
 The documentation resides in ``./docs/output/html``.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Installing StrictDoc as a Snap package (not maintained)
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This way of installing StrictDoc is not maintained anymore. If you want to
 use it, refer to the instructions located in ``developer/snap/README.md``.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -256,7 +267,8 @@ TITLE: Running StrictDoc
 [SECTION]
 TITLE: Static HTML export
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The easiest way to see the static HTML export feature in action is to run the [LINK: SDOC_UG_HELLO_WORLD] example.
 
 The ``export`` command is the main producer of documentation. The native export format of StrictDoc is HTML. The ``export`` command supports a number of parameters, including the option for selecting export formats (HTML, RST, Excel, etc.). The options can be explored with the ``--help`` command.
@@ -264,14 +276,15 @@ The ``export`` command is the main producer of documentation. The native export 
 .. code-block:: bash
 
     strictdoc export --help
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Web server
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc supports a web-based user interface. The StrictDoc web server is launched via the ``server`` command which accepts a path to a documentation tree as a parameter.
 
 .. code-block:: bash
@@ -285,14 +298,15 @@ The ``server`` command accepts a number of options. To explore the options, run:
     strictdoc server --help
 
 **Note:** The implementation of the web interface is work-in-progress. See [LINK: SDOC_UG_LIMIT_WEB] for an overview of the existing limitations.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Security considerations
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. warning::
     **TL;DR**: StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
 
@@ -311,7 +325,7 @@ What makes StrictDoc's web server unsafe:
 Known security-related issues are tracked on GitHub, under the `"Security" label <https://github.com/strictdoc-project/strictdoc/issues?q=is%3Aissue+is%3Aopen+security+label%3ASecurity>`_. As StrictDoc becomes usable without command-line access, all known issues will need to be addressed or acknowledged as known limitations.
 
 We are committed to continuously enhancing the functionality and security of StrictDoc and welcome user feedback and contributions in this area.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -321,7 +335,8 @@ We are committed to continuously enhancing the functionality and security of Str
 UID: SDOC_UG_IDE_SUPPORT
 TITLE: IDE support
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc language markup (SDoc) can be activated in all IDEs that support the
 TextMate grammars. When the StrictDoc grammar is integrated into an IDE, the
 SDoc syntax becomes highlighted just as any other syntax like Markdown, RST,
@@ -358,14 +373,15 @@ can be only achieved with a dedicated Language Server Protocol (LSP)
 implementation for StrictDoc. The StrictDoc LSP is on StrictDoc's long-term
 roadmap, see `Enhancement: Language Protocol Server for SDoc text language #577
 <https://github.com/strictdoc-project/strictdoc/issues/577>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: SDoc syntax
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc defines a special syntax for writing specifications documents. This
 syntax is called SDoc and it's grammar is encoded with the
 `textX <https://github.com/textX/textX>`_
@@ -384,7 +400,7 @@ This is how a minimal possible SDoc document looks like:
 
 This documentation is written using StrictDoc. Here is the source file:
 `strictdoc_01_user_guide.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc>`_.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Document structure
@@ -404,12 +420,13 @@ Each construct is described in more detail below.
 UID: SECTION-UG-Strict-rule-1
 TITLE: Strict rule #1: One empty line between all nodes
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc's grammar requires each node, such as ``[REQUIREMENT]``, ``[SECTION]``,
 etc., to be separated with exactly one empty line from the nodes surrounding it.
 This rule is valid for all nodes. Absence of an empty line or presence of more
 than one empty line between two nodes will result in an SDoc parsing error.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -432,7 +449,8 @@ be specified using ``[TEXT]`` nodes.
 UID: SECTION-UG-Strict-rule-3
 TITLE: Strict rule #3: No empty strings
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc's grammar does not allow empty strings. This rule is applicable to
 both single-line and multiline strings and both section fields and requirement
 fields. A field is either missing or is a non-empty string.
@@ -470,7 +488,7 @@ If you need to provide a placeholder for a field that you know has to be filled
 out soon, add a "TBD" (to be done, by our team) or a "TBC" (to be confirmed with a customer or a supplier) string.
 
 The Project Statistics screen provides metrics for counting the number of TBDs (To Be Determined) and TBCs (To Be Confirmed) in a document, assisting in evaluating the document's maturity. This is a common practice in the regulared industries. See [LINK: SECTION-UG-Project-statistics-screen] for more details.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -534,7 +552,8 @@ by the document's Grammar, i.e. should not be changed.
 UID: DOCUMENT_FIELD_OPTIONS
 TITLE: Document configuration options
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The ``OPTIONS`` field may have the following attribute fields:
 
 .. list-table:: SDoc grammar ``DOCUMENT``-``OPTIONS`` fields
@@ -558,32 +577,35 @@ The ``OPTIONS`` field may have the following attribute fields:
 
    * - ``REQUIREMENT_IN_TOC``
      - ``True`` (default), ``False``
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: ENABLE_MID
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 See [LINK: SECTION-UG-Machine-identifiers-MID].
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: MARKUP
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The ``MARKUP`` option controls which markup renderer will be used.
 The available options are: ``RST``, ``HTML`` and ``Text``. Default is
 ``RST``.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: AUTO_LEVELS
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The ``AUTO_LEVELS`` option controls StrictDoc's system of automatic numbering
 of the section levels.
 The available options are: ``On`` /  ``Off``. Default is ``On``.
@@ -593,14 +615,15 @@ contain ``None`` to exclude that section from StrictDoc's automatic section
 numbering. See also [LINK: SECTION_WITHOUT_A_LEVEL].
 
 In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: REQUIREMENT_STYLE
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The ``REQUIREMENT_STYLE`` option controls whether requirement's elements are
 displayed inline or as table blocks. The available options are:
 
@@ -616,14 +639,15 @@ Default is ``Inline``.
     TITLE: Hello world
     OPTIONS:
       REQUIREMENT_STYLE: Inline
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: REQUIREMENT_IN_TOC
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The ``REQUIREMENT_IN_TOC`` option controls whether requirement's title appear
 in the table of contents (TOC). The available options are: ``True`` / ``False``.
 Default is ``True``.
@@ -634,7 +658,7 @@ Default is ``True``.
     TITLE: Hello world
     OPTIONS:
       REQUIREMENT_IN_TOC: True
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -729,7 +753,8 @@ present.
 [SECTION]
 TITLE: UID
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Unique identifier of the requirement.
 
 **Observation:** Some documents do not use unique identifiers which makes it
@@ -754,38 +779,41 @@ typical conventions for naming UIDs:
     [REQUIREMENT]
     UID: SDOC-HIGH-DATA-MODEL
     STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Level
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Also a ``[REQUIREMENT]`` can have no section level attached to it. To enable
 this behavior, the field ``LEVEL`` has to be set to ``None``.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Status
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Defines the current status of the ``[REQUIREMENT]``, e.g. ``Draft``, ``Active``,
 ``Deleted``.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Tags
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Allows to add tags to a ``[REQUIREMENT]``. Tags are a comma separated list of
 single words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are
 supported.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -793,7 +821,8 @@ supported.
 UID: SDOC_UG_REQUIREMENT_RELATIONS
 TITLE: Relations (previously REFS)
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The ``RELATIONS`` field is used to connect requirements to each other:
 
 .. code-block:: text
@@ -838,12 +867,13 @@ etc.) is planned.
 
 **Note:** By design, StrictDoc will only show parent or child links if both
 requirements connected with a reference have ``UID`` defined.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Requirement relation roles
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 A requirement relation can be specialized with a role. The role must be registered in the document grammar, see [LINK: SDOC_UG_GRAMMAR_RELATIONS].
 
 .. code-block::
@@ -872,7 +902,7 @@ A requirement relation can be specialized with a role. The role must be register
       ROLE: Refines
 
 In this example REQ-1 is the parent of REQ-2 and REQ-2 refines REQ-1.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -881,7 +911,8 @@ In this example REQ-1 is the parent of REQ-2 and REQ-2 refines REQ-1.
 [SECTION]
 TITLE: Title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The title of the requirement.
 Every requirement should have its ``TITLE`` field specified.
 
@@ -897,24 +928,26 @@ titles but some documents only use statements without title in which case their
     [REQUIREMENT]
     UID: REQ-001
     STATEMENT: StrictDoc shall enable requirements management.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Statement
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The statement of the requirement. The field can be single-line or multiline.
 Every requirement shall have its ``STATEMENT`` field specified.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Rationale
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 A requirement should have a ``RATIONALE`` field that explains/justifies why
 the requirement exists. Like comments, the rationale field can be single-line
 or multiline.
@@ -929,14 +962,15 @@ or multiline.
     STATEMENT: StrictDoc shall enable requirements management.
     COMMENT: Clarify the meaning or give additional information here.
     RATIONALE: The presence of the REQ-001 is justified.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Comment
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 A requirement can have one or more comments explaining the requirement. The
 comments can be single-line or multiline.
 
@@ -956,7 +990,7 @@ comments can be single-line or multiline.
 
     Each line is rendered as a separate paragraph.
     <<<
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -966,7 +1000,8 @@ comments can be single-line or multiline.
 UID: ELEMENT_SECTION
 TITLE: Section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The ``[SECTION]`` element is used for creating document chapters and grouping
 requirements into logical groups. It is equivalent to the use of ``#``, ``##``,
 ``###``, etc., in Markdown and ``====``, ``----``, ``~~~~`` in RST.
@@ -993,12 +1028,13 @@ requirements into logical groups. It is equivalent to the use of ``#``, ``##``,
     STATEMENT: ...
 
     [/SECTION]
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Nesting sections
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Sections can be nested within each other.
 
 .. code-block:: text
@@ -1022,7 +1058,7 @@ Sections can be nested within each other.
 StrictDoc creates section numbers automatically. In the example above, the
 sections will have their titles numbered accordingly: ``1 Chapter`` and
 ``1.1 Subchapter``.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1030,7 +1066,8 @@ sections will have their titles numbered accordingly: ``1 Chapter`` and
 UID: SECTION_WITHOUT_A_LEVEL
 TITLE: Section without a level
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 A section can have no level attached to it. To enable this behavior, the field
 ``LEVEL`` has to be set to ``None``.
 
@@ -1061,7 +1098,7 @@ numbering of the section levels (1, 1.1, 1.2, 2, ...).
 The behavior of the ``LEVEL: None`` option is recursive. If a parent section
 has its ``LEVEL`` set to ``None``, all its subsections' and requirements' levels
 are set to ``LEVEL: None`` by StrictDoc automatically.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1153,7 +1190,8 @@ Which will resolve to the following document after inclusion:
 UID: UG_COMPOSITE_REQUIREMENT
 TITLE: Composite requirement
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. note::
     The composite requirements feature shows promise, but it has not yet attracted significant demand from both the core developers of StrictDoc and its users. While the use of composite requirements via the command line is implemented and supported, the web interface does not currently offer this support. Experience has shown that composite requirements can often be represented as a combination of sections and standard requirements. If there is a compelling use case for full support of composite requirements, please reach out to the developers.
 
@@ -1188,7 +1226,7 @@ Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
 **Note:** Composite requirements should not be used in every document. Most
 often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]``
 elements should do the job.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1198,7 +1236,8 @@ elements should do the job.
 UID: SECTION-UG-Machine-identifiers-MID
 TITLE: Machine identifiers (MID)
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc supports the automatic generation of machine identifiers (MIDs). This optional feature can be enabled individually for each document through the document-level ``ENABLE_MID`` config option:
 
 .. code-block::
@@ -1232,7 +1271,7 @@ Advantages of using machine identifiers:
 3. MIDs increase the portability of requirements data. Even when UID naming conventions change or nodes are relocated, the MID continues to uniquely identify the original node.
 
 For larger projects, particularly those with extended maintenance cycles, we strongly recommend activating machine identifiers early in the project lifecycle. This proactive approach ensures robust tracking and management of documentation throughout the project's duration.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1415,7 +1454,8 @@ Example:
 [SECTION]
 TITLE: Reserved fields
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 While it is possible to declare a grammar with completely custom fields, there
 is a fixed set of reserved fields that StrictDoc uses for the presentation of the table of contents and the document structure:
 
@@ -1448,7 +1488,7 @@ is a fixed set of reserved fields that StrictDoc uses for the presentation of th
    * - RATIONALE
      - The rationale for a requirement. Visually presented in the same way as a
        comment.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1456,7 +1496,8 @@ is a fixed set of reserved fields that StrictDoc uses for the presentation of th
 UID: SDOC_UG_GRAMMAR_RELATIONS
 TITLE: Relations
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The custom grammar configuration includes the optional ``RELATION:`` section which specifies the relations a given document supports.
 
 .. code-block::
@@ -1485,12 +1526,13 @@ The custom grammar configuration includes the optional ``RELATION:`` section whi
 The supported relation types are ``Parent``, ``Child``, ``File``. The Parent/Child relations are valid between requirements, the File relation connects a requirement with a file.
 
 The default grammar relations, when a custom grammar is not specified, are ``Parent`` and ``File``.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Relation roles
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc's custom grammar support the configuration of relation roles. The Parent and Child relations can be further specialized with roles, such as Refines, Implements, Verifies, etc.
 
 .. code-block::
@@ -1508,7 +1550,7 @@ StrictDoc's custom grammar support the configuration of relation roles. The Pare
         ROLE: Refines
 
 With this grammar, StrictDoc will only allow creating requirements that have Parent relations with the ``ROLE: Refines`` specified. Any other relations will trigger validation errors.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1516,7 +1558,8 @@ With this grammar, StrictDoc will only allow creating requirements that have Par
 UID: SDOC_UG_GRAMMAR_RELATIONS_PARENT_VS_CHILD
 TITLE: Parent vs Child relations
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 **TL;DR** If there is no compelling reason to use the Child relations, avoid using them.
 
 Most of the technical requirements documents can be modeled with just a Parent relation type. A typical traceability graph for a requirements project is typically child-to-parent, where the higher-level parent requirements are referred to as "Parents" by their child requirements.
@@ -1576,7 +1619,7 @@ With such a setup, StrictDoc generates the correct traceability graph that will 
 Another example can be adapting the requirements of the Off-the-Shelf (OTS) project to the higher-level requirements of the user project. An intermediate requirements document can be created that connects the parent requirements of the user project with the immutable child requirements of the OTS project. This intermediate document can link the user requirement with the Parent and the OTS project with a Child link.
 
 Both examples above involve activity called Tailoring when an intermediate document (Compliance Matrix) serves as an interface between two layers of documents.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1585,7 +1628,8 @@ Both examples above involve activity called Tailoring when an intermediate docum
 [SECTION]
 TITLE: Importing grammar from grammar file
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 A document grammar can be described in a separate file with an extension ``.sgra`` and imported to a document. This feature may be useful when multiple documents need to share the same grammar.
 
 Example:
@@ -1624,7 +1668,7 @@ When a ``[GRAMMAR]`` is declared with an ``IMPORT_FROM_FILE`` line, the grammar 
 .. note::
 
     Editing of the grammars defined in ``.sgra`` files can be only done with a text editor, it is not implemented yet in the editable web interface.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1634,14 +1678,16 @@ When a ``[GRAMMAR]`` is declared with an ``IMPORT_FROM_FILE`` line, the grammar 
 UID: SDOC_UG_LINKS_AND_ANCHORS
 TITLE: Links
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc supports creating inline links to document sections, anchors, requirements and custom grammar elements.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Links
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Elements that have an UID can be referenced from section text using a ``[LINK: <UID>]`` tag.
 To reference a section that has an UID, use ``[LINK: <Section UID>]`` tag.
 Likewise, a requirement can be referenced with ``[LINK: <Requirement UID>]``.
@@ -1651,14 +1697,15 @@ Example:
 The following link references a section: [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 
 **Note:** Adding a ``LINK`` tag will only work from the section text. In the requirement fields, the LINK tag will not be recognized.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Anchors
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The ``[ANCHOR: <anchor uid>, <optional anchor title>]`` tag creates an anchor that can be referenced from other pages using ``[LINK <Anchor UID>]``.
 
 Example:
@@ -1666,16 +1713,17 @@ Example:
 This is a link to anchor: [LINK: ANCHOR-EXAMPLE].
 
 Note: ``ANCHOR`` is a block-level tag. It has to be placed in the beginning of a line with a newline break after the tag.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Anchor example
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This section contains an anchor named ``Anchor ABC``.
 
 [ANCHOR: ANCHOR-EXAMPLE, Anchor ABC]
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1688,16 +1736,18 @@ This section contains an anchor named ``Anchor ABC``.
 [SECTION]
 TITLE: Search and filtering
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc supports the search and filtering of document content.
 
 The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` commands.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Query engine
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The syntax of the search query is inspired by Python, utilizing a fixed grammar that converts search queries into corresponding Python expressions.
 
 Important rules:
@@ -1730,14 +1780,15 @@ Important rules:
 
    * - ``(node.is_requirement and node.has_child_requirements)``
      - Find all requirements which have child requirements.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Filtering content
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Both ``export`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
 
 Both options are based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted requirements/sections will be exported.
@@ -1747,7 +1798,7 @@ Example:
 .. code-block::
 
     strictdoc export . --filter-requirements '"System" in node["TITLE"]'
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1838,7 +1889,8 @@ TITLE: Export formats
 [SECTION]
 TITLE: HTML documentation tree by StrictDoc
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a default export option supported by StrictDoc.
 
 The following command creates an HTML export:
@@ -1853,12 +1905,13 @@ The following command creates an HTML export:
 The options ``--formats=html`` and ``--output-dir output-html`` can be skipped because HTML export is a default export option and the default output folder is ``output``.
 
 StrictDoc does not detect .sdoc files in the output folder. This is based on the assumption that StrictDoc should not read anything in the output folder, which is intended for transient output artifacts.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Standalone HTML pages
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The following command creates a normal HTML export with all pages having their
 assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc.toml`` file, specify:
 
@@ -1873,7 +1926,7 @@ assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc.
 The generated document are self-contained HTML pages that can be shared via
 email as single files. This option might be especially useful if you work with
 a single document instead of a documentation tree with multiple documents.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1882,7 +1935,8 @@ a single document instead of a documentation tree with multiple documents.
 [SECTION]
 TITLE: HTML export via Sphinx
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The following command creates an RST export:
 
 .. code-block:: text
@@ -1901,14 +1955,15 @@ The created RST files can be copied to a project created using Sphinx, see
 <https://strictdoc.readthedocs.io/en/latest/>`_
 is generated this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: PDF export via Sphinx/LaTeX
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 
 The following command creates an RST export:
 
@@ -1928,14 +1983,15 @@ The created RST files can be copied to a project created using Sphinx, see
 <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
 is generated this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: JSON
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The following command creates a JSON export:
 
 .. code-block::
@@ -1945,7 +2001,7 @@ The following command creates a JSON export:
 The structure of the exported JSON mostly mirrors the structure of the underlying SDoc objects that represent the project tree, documents, sections, requirements, and other nodes.
 
 When the exported documents are included to other documents using the [LINK: UG_COMPOSABLE_DOCUMENTS] feature, the JSON export does not include the included documents but only the including documents with the included content. This can be changed by adding the ``--included-documents`` option.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1958,7 +2014,8 @@ TITLE: Manage project tree
 UID: SECTION-UG-Automatic-assignment-of-requirements-UID
 TITLE: Automatic assignment of requirements UID
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 To assign requirement UIDs automatically:
 
 .. code-block::
@@ -1986,7 +2043,7 @@ A section-level requirement mask:
     [SECTION]
     TITLE: Section 2.
     REQ_PREFIX: LEVEL2-REQ-
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -1996,7 +2053,8 @@ A section-level requirement mask:
 UID: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE
 TITLE: Traceability between requirements and source code
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 **Note:** This feature is experimental, the documentation is incomplete.
 
 StrictDoc allows connecting requirements to source code files. Two types of
@@ -2061,14 +2119,15 @@ The
 `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_
 repository contains executable examples including the example of
 requirements-to-source-code traceability.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: ReqIF support
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc has an initial support of exporting to and importing from the ReqIF
 format.
 
@@ -2087,12 +2146,13 @@ Planned formats:
   `ReqIF Implementation Guide <https://www.ps-ent-2023.de/fileadmin/prod-download/PSI_ImplementationGuide_ReqIF_V1-7.pdf>`_
   that attempts to harmonize the developments of ReqIF by requirements
   management tools.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Import flow (ReqIF -> SDoc)
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. code-block:: text
 
     strictdoc import reqif sdoc input.reqif output.sdoc
@@ -2107,14 +2167,15 @@ The command does the following:
    used.
 
 3. The SDoc in-memory model is written to an .sdoc file.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Export flow (SDoc -> ReqIF)
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. code-block:: text
 
     strictdoc export --formats=reqif-sdoc %S/input.sdoc
@@ -2127,7 +2188,7 @@ The command does the following:
    argument.
 3. The ReqIF in-memory model is unparsed a to ReqIF XML file using ``reqif``
    library.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2135,7 +2196,8 @@ The command does the following:
 UID: SECTION-UG-ReqIF-options
 TITLE: ReqIF options
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The following options are available for ReqIF export/import commands.
 
 ``--reqif-multiline-is-xhtml`` This option makes StrictDoc to export all multiline fields as XHTML attributes, not as STRING (the default behavior). This is useful for interfacing with tools, such as Polarion, which assume XHTML as the primary format for writing multiline text.
@@ -2154,7 +2216,7 @@ All options can be also specified in a project's TOML file as follows:
     multiline_is_xhtml = true
     import_markup = "HTML"
     enable_mid = true
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2162,7 +2224,8 @@ All options can be also specified in a project's TOML file as follows:
 UID: SECTION-REQIF-DETAILS
 TITLE: ReqIF implementation details
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The ReqIF is a `standard <https://www.omg.org/spec/ReqIF>`_ which is
 maintained by Object Management Group (OMG). One important feature of the
 ReqIF standard is that it requires a fixed XML structure but still leaves
@@ -2185,7 +2248,7 @@ For further overview of the ReqIF format and the ``reqif`` library's
 implementation details, refer to
 `strictdoc-project/reqif <https://github.com/strictdoc-project/reqif>`_'s
 documentation.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2194,7 +2257,8 @@ documentation.
 [SECTION]
 TITLE: Excel support
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc provides a support for Excel XLS on input and Excel XLSX on output.
 
 On input, the headers of sheet1 are used to put together a custom grammar and
@@ -2203,12 +2267,13 @@ the importer to recognize names of headers and map these to strictdoc
 requirement fields.
 
 Note: A roundtrip "SDoc -> Excel -> SDoc" is not yet supported.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Import flow (Excel XLS -> SDoc)
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. code-block:: text
 
     strictdoc import excel basic input.xls output.sdoc
@@ -2219,14 +2284,15 @@ The command does the following:
    library.
 
 2. The SDoc in-memory model is written to an .sdoc file.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Export flow (SDoc -> Excel XLSX)
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. code-block:: text
 
     strictdoc export --formats=excel --output-dir=Output input.sdoc
@@ -2251,7 +2317,7 @@ For exporting a folder with multiple SDoc files, specify a path to a folder or `
     strictdoc export --formats=excel .
 
 If the ``output-dir`` option is not provided, the ``output/`` folder is the default value.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2264,30 +2330,33 @@ TITLE: Options
 UID: SDOC_UG_OPTIONS_PROJECT_LEVEL
 TITLE: Project-level options
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc supports reading configuration from a TOML file. The file must be called ``strictdoc.toml`` and shall be stored in the same folder which is provided as a path to the SDoc documents.
 
 For example, ``strictdoc export .`` will make StrictDoc recognize the config file, if it is stored under the current directory.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Project title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This option specifies a project title.
 
 .. code-block::
 
     [project]
     title = "StrictDoc Documentation"
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Path to assets
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 By default, StrictDoc copies its CSS/JS and other asset files to a folder ``_static`` in the HTML output directory.
 
 Sometimes, it is desirable to change the folder name. For example, the GitHub Pages static website engine expects the assets to be found in the ``assets`` folder.
@@ -2298,14 +2367,15 @@ The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
 
     [project]
     html_assets_strictdoc_dir = "assets"
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Path to source root
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc looks for source files in the directory from which the ``strictdoc`` program is run. This can be changed with the ``source_root_path`` option.
 
 .. code-block::
@@ -2319,14 +2389,15 @@ When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc 
     source_root_path = "source_root/"
 
 The ``source_root_path`` option supports relative paths, e.g. ``../source_root/``.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Include/exclude document paths
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Use ``include_doc_paths`` and ``exclude_doc_paths`` paths to whitelist/blacklist paths to SDoc documents.
 
 In the following example, StrictDoc will look for all files in the input project directory, except all documents in the ``tests/`` folder.
@@ -2363,14 +2434,15 @@ The behavior of wildcard symbols ``*`` and ``**`` is as follows:
      - Match all documents found in the ``docs/`` folder and all its subdirectories.
    * - ``**/docs/**``
      - Match all documents found in the ``docs/`` folder and all its subdirectories. The ``docs/`` folder can be a top-level folder or at any level of depth.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Include/exclude source files paths
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist paths to source files when the traceability between requirements and source files feature is enabled.
 
 .. code-block:: yaml
@@ -2390,7 +2462,7 @@ Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist
     ]
 
 The behavior of the wildcards is the same as for the ``include_doc_paths/exclude_doc_paths`` options.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2398,7 +2470,8 @@ The behavior of the wildcards is the same as for the ``include_doc_paths/exclude
 UID: SDOC_UG_CONFIG_FEATURES
 TITLE: Selecting features
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc has optional features and features that are developed with a lower priority.
 
 The feature of exporting the SDoc documents to HTML document view is a core feature and is always enabled. The option ``features`` allows selecting which additional features should be activated or not.
@@ -2429,12 +2502,13 @@ The following is an example of the default configuration. The same features are 
     ]
 
 See [LINK: SDOC_UG_EXPERIMENTAL_FEATURES] where the experimental features are outlined.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Enable all features
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 To select all available features, stable and experimental, specify ``ALL_FEATURES``.
 
 .. code-block::
@@ -2450,14 +2524,15 @@ The advantage of this option is that all feature toggles become activated, and a
 The disadvantage is that StrictDoc spends more time rendering extra screens that might not be needed by a particular user.
 
 If ``ALL_FEATURES`` is present, all features are activated, regardless of any other features that are also specified or not.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Disable all features
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 To disable all features, specify the ``features`` option but leave it empty:
 
 .. code-block:: yaml
@@ -2467,7 +2542,7 @@ To disable all features, specify the ``features`` option but leave it empty:
     features = [
       # Nothing specified.
     ]
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2479,7 +2554,8 @@ TITLE: Server configuration
 [SECTION]
 TITLE: Host and port
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 By default, StrictDoc runs the server on ``127.0.0.1:5111``.
 
 Use the ``[server]`` section to configure the host and port as follows.
@@ -2492,7 +2568,7 @@ Use the ``[server]`` section to configure the host and port as follows.
     [server]
     host = "localhost"
     port = 5000
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2506,7 +2582,8 @@ TITLE: Command-line interface options
 [SECTION]
 TITLE: Project title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 By default, StrictDoc generates a project tree with a project title
 "Untitled Project". To specify the project title use the option
 ``--project-title``.
@@ -2514,14 +2591,15 @@ By default, StrictDoc generates a project tree with a project title
 .. code-block:: text
 
     strictdoc export --project-title "My Project" .
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Parallelization
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 To improve performance for the large document trees (1000+ requirements),
 StrictDoc parallelizes reading and generation of the documents using
 process-based parallelization: ``multiprocessing.Pool`` and
@@ -2540,7 +2618,7 @@ To disable parallelization use the ``--no-parallelization`` option:
 this option will only have effect on the HTML export. All other export options
 are run from the main thread. Reading of the SDoc documents is parallelized for
 all export options and is disabled with this option as well.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2551,7 +2629,8 @@ all export options and is disabled with this option as well.
 [SECTION]
 TITLE: Python API
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 At present, StrictDoc lacks a documented public Python API. Nevertheless, users can leverage StrictDoc's internal API to enhance existing functions or create custom import, export, and analysis tools. The architecture of StrictDoc is highly modular, so for each functional block there shall always be a dedicated Python class with a public interface, see [LINK: SECTION-DD-High-level-architecture].
 
 One good example is the ``SDWriter`` class, which exercises the complete export of the Python data objects to the SDoc format. Since, the SDoc format is the primary data format of StrictDoc, the SDWriter is quite feature-rich in what it does and covers. The ``RSTWriter`` is less powerful because it does not reflect the full data model, but is probably worth a look as well.
@@ -2565,7 +2644,7 @@ The ``ManageAutoUIDCommand`` class features a good use of all APIs that one may 
 - And finally the final sequence writes the mutated traceability graph back to files using ``SDWriter``.
 
 For any custom Python API request, for example, a need to do a more advanced data analysis on SDoc data, open a GitHub issue and your specific issue will be handled.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2573,7 +2652,8 @@ For any custom Python API request, for example, a need to do a more advanced dat
 UID: UG_PORTABILITY_CONSIDERATIONS
 TITLE: Portability considerations
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. note::
 
     **TL;DR**: The following topic of portability becomes relevant if documentation created with StrictDoc has to be exported to another tool and especially if the other tool has to export the content back to StrictDoc. Writing custom export/import generators may be needed to enable a full interoperability when the less portable features are used.
@@ -2589,7 +2669,7 @@ The following is a list of features that are considered less portable when it co
 .. note::
 
     It is easier to extend StrictDoc to produce a format supported by a given tool than it is to make the other tool export a 100%-identical content back to StrictDoc. If there is a need to interface with a tool X and something is missing in StrictDoc, please reach out to the developers (see [LINK: SDOC_UG_CONTACT]).
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2597,19 +2677,21 @@ The following is a list of features that are considered less portable when it co
 UID: SDOC_UG_EXPERIMENTAL_FEATURES
 TITLE: Experimental features
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 At any point in time, StrictDoc supports features that are still experimental. These features are either not fully developed or their testing has not been completed yet.
 
 A feature is considered stable when all its known edge cases have been covered and enough users report that they have used and tested this feature.
 
 See also [LINK: SDOC_UG_CONFIG_FEATURES] for general instructions.
-[/FREETEXT]
+<<<
 
 [SECTION]
 UID: SECTION-UG-Project-statistics-screen
 TITLE: Project statistics screen
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The project statistics screen displays useful information about a documentation project as well as some requirements-based statistics.
 
 To activate the project statistics screen, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
@@ -2624,7 +2706,7 @@ To activate the project statistics screen, add/edit the ``strictdoc.toml`` confi
     ]
 
 This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2711,7 +2793,8 @@ This feature is not enabled by default because it has not received enough testin
 [SECTION]
 TITLE: Shadow features
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 At any given moment, StrictDoc may contain one or more features that have been implemented and are supported in the codebase, yet lack documentation.
 
 In most cases, these features are still in their early stages and may not even be documented as experimental features.
@@ -2719,7 +2802,7 @@ In most cases, these features are still in their early stages and may not even b
 The testing of these experimental features is typically done by developers or by selected users who have either requested or expressed interest in a specific feature.
 
 If you happen to stumble upon such a hidden feature, we encourage you to use it and provide bug reports or share your experiences with it. However, please be prepared to encounter various unknown or undefined behaviors in the process.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2733,9 +2816,10 @@ TITLE: StrictDoc's limitations
 UID: SDOC_UG_LIMIT_RST
 TITLE: Limitations of RST support by StrictDoc
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc uses Docutils for rendering RST to HTML, not Sphinx. The implication is that no Sphinx-specific RST directives are supported. Refer to this issue for the related discussion of the limitations: `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2769,11 +2853,12 @@ The following essential features are still missing and will be worked on in the 
 [SECTION]
 TITLE: Concurrent use of web user interface
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc's web user interface does not handle concurrency. If the same requirement/section is edited by two users at the same time, the last write wins.
 
 The measures for handling concurrent use are planned but have been not implemented yet.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -2784,15 +2869,17 @@ The measures for handling concurrent use are planned but have been not implement
 [SECTION]
 TITLE: Known issues
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This section documents some known issues and non-obvious implementation details.
-[/FREETEXT]
+<<<
 
 [SECTION]
 UID: SDOC_IMPL_2
 TITLE: Running out of semaphores on macOS
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This an edge case on macOS: Python crashes in the Parallelizer class when
 creating an output queue:
 
@@ -2812,7 +2899,7 @@ The existing workaround for this problem is to increase a number of semaphores i
 .. code-block:: text
 
     sudo sysctl -w kern.posix.sem.max=20000
-[/FREETEXT]
+<<<
 
 [/SECTION]
 

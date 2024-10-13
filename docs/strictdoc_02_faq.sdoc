@@ -5,29 +5,32 @@ OPTIONS:
   REQUIREMENT_STYLE: Inline
   REQUIREMENT_IN_TOC: True
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This document is a list of questions that people ask about StrictDoc.
 
 Missing a question or an answer? Ask it here: [LINK: SDOC_UG_CONTACT].
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: What is StrictDoc?
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc is software for writing technical requirements specifications.
 
 StrictDoc is a spare-time open-source project developed by Stanislav Pankevich (@stanislaw) and Maryna Balioura (@mettta) with contributions from the Open Source community.
 
 The project exists since mid-2019.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Resources about StrictDoc
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Talks:
 
 - `Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project <https://mirrors.dotsrc.org/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_. This presentation introduces the SPDX Safety Profile and details its application within the context of the Zephyr Project. There is also a presentation of the Zephyr project's methodology for capturing requirements using StrictDoc and a discussion of the upcoming plans for the integration of SPDX into StrictDoc.
@@ -43,14 +46,15 @@ Screencasts/tutorials:
 - `Automotive SPICE in opensource StrictDoc tool, with System Architecure ideas
   <https://www.youtube.com/watch?v=k2MCFWvCs7E>`_
   by Lukasz Juranek.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Which web server is recommended for StrictDoc documentation?
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This question can be answered in two ways. First of all, StrictDoc has its own web server that can be run with ``strictdoc server ...``. Refer to the User Guide for further information.
 
 The following suggestions assume that you are looking to using a web server to host the StrictDoc's static HTML export, without using StrictDoc's own web server.
@@ -60,14 +64,15 @@ Is your project public or private? If it is public, you could simply use `GitHub
 A very good alternative to GitHub pages is `Read the Docs <https://readthedocs.org>`_.
 
 If the project is private, you could use any server that reads HTML files from a folder. For example, Python has an embedded Web Server, see `this for example <https://pythonbasics.org/webserver>`_. Also you could try any web server based on Node.JS.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Is StrictDoc compatible with Sphinx?
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc is only partially compatible with Sphinx.
 
 StrictDoc does not have Sphinx in its dependency tree, and it does not use any of Sphinx API. Instead, StrictDoc uses Docutils for RST markup support. Using Docutils, StrictDoc can generate SDoc files to RST files.
@@ -80,14 +85,15 @@ There are users of StrictDoc who use both StrictDoc and Sphinx. The following wo
 - Run Sphinx against an RST documentation tree, obtain a Sphinx documentation website or LaTex PDF.
 
 There is a GitHub issue `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_ where a closer bridging between StrictDoc and Sphinx was discussed with no specific and actionable outcome. This comment is `especially relevant <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1505108384>`_ as well as the one about `possible implementation <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1545599711>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: How did the SDoc text language become what it is?
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Shortly: The SDoc markup is a hybrid of TOML and YAML with some influence from HTML/XML and `ASN.1 <https://en.wikipedia.org/wiki/ASN.1>`_. Using each of these formats as-is, and also the JSON format, was considered but discarded during the design. The SDoc markup has been pretty stable since its inception but the flexibility of the TextX parser allows easy modifications of the language in case of future evolutions. Any feedback to the current design of the markup language is appreciated.
 
 ----
@@ -168,7 +174,7 @@ The support of multiline strings is arranged by a custom solution which helps to
 **Discarded options**
 
 Taking TOML or YAML as-is didn't seem like a good option because these formats are designed to be used for configuration files or data serialization and not for large documents with hundreds of requirements. The most obvious problems for reusing either of TOML or YAML directly would have been with encoding the deeply nested documents and supporting readable and non-nested multiline strings.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -178,7 +184,8 @@ TITLE: How StrictDoc compares to other tools?
 [SECTION]
 TITLE: Doorstop
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The StrictDoc project is a close successor of another project called
 `Doorstop <https://github.com/doorstop-dev/doorstop>`_.
 
@@ -226,14 +233,15 @@ StrictDoc differs from Doorstop in a number of aspects:
 
 The roadmap of StrictDoc contains a work item for supporting the export/import
 to/from Doorstop format.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Sphinx
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
 a higher level of abstraction: StrictDoc's specialization is requirements and
 specifications documents. StrictDoc can generate documentation to a number of
@@ -250,14 +258,15 @@ is converted to RST format by StrictDoc which is further converted to the HTML
 website by readthedocs which uses Sphinx under the hood. The
 ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:
 `StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Sphinx-Needs
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 `Sphinx-Needs <https://sphinxcontrib-needs.readthedocs.io/en/latest/>`_ is a
 text-based requirements management system based on Sphinx. It is implemented
 as a Sphinx extension which extends the
@@ -310,14 +319,15 @@ The difference between Sphinx-Needs and StrictDoc:
   and
   `others
   <https://sphinxcontrib-needs.readthedocs.io/en/latest/index.html>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: FRET
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 `FRET <https://github.com/NASA-SW-VnV/fret>`_ is a framework for the
 elicitation, specification, formalization and understanding of requirements.
 
@@ -334,7 +344,7 @@ FRET has an impressive list of
 FRET's user interface is built with Electron.
 
 The detailed comparison is coming.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -343,7 +353,8 @@ The detailed comparison is coming.
 [SECTION]
 TITLE: How long has the StrictDoc project been around?
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The first StrictDoc commit dates back to ``2019-08-10``. A short development chronology of StrictDoc is as follows:
 
 **2019 – July – August**
@@ -372,20 +383,21 @@ The custom RST parser was replaced with a TextX-based DSL. Since then, StrictDoc
 **2022 – November**
 
 The FastAPI/Turbo/Stimulus-based Web interface prototype was created to complement the text-based interface with a graphical user interface (GUI). When the Web-based GUI is stable, StrictDoc may become useable by non-programmers too.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Which StrictDoc statistics are available?
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Most relevant GitHub statistics:
 
 - `Contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_
 
 The `pip trends <https://piptrends.com>`_ helps to visualize the Pip package download stats. The ``reqif`` satellite project is included for comparison as well:
 `strictdoc vs reqif <https://piptrends.com/compare/strictdoc-vs-reqif>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]

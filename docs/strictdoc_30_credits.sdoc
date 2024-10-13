@@ -1,7 +1,8 @@
 [DOCUMENT]
 TITLE: Credits
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 As an open-source project, StrictDoc is based on the work of many people and organizations:
 
 - StrictDoc receives contributions from other developers.
@@ -10,12 +11,13 @@ As an open-source project, StrictDoc is based on the work of many people and org
 - StrictDoc uses the commercial versions of JetBrains IDEs for free.
 
 This page gives due credit to everyone who made StrictDoc possible.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Contributions to StrictDoc
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The core team: @stanislaw and @mettta.
 
 The following people and organizations have contributed to StrictDoc. The contributions are listed in the alphabetic order.
@@ -32,14 +34,15 @@ Companies:
 - `Kontrol <https://www.kontrol.tech>`_ have sponsored the work related to the early implementation of the ReqIF import/export feature (@alex.d, @cbernt, @Relasym).
 
 Single/smaller contributions can be also seen on the `StrictDoc's Insights/Contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_ page.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Open source software
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc is based on other open source components. Without this support, we would have never reached where we are today.
 
 StrictDoc was heavily inspired by the `Doorstop <https://github.com/doorstop-dev/doorstop>`_ project. Without the strong example of Doorstop, StrictDoc would probably never exist.
@@ -61,25 +64,27 @@ StrictDoc uses `XlsxWriter <https://xlsxwriter.readthedocs.io>`_ and `xlrd <http
 The credits also recursively go to the building blocks of each of the above projects because most of them have their own dependencies.
 
 Refer to the `configuration file <https://github.com/strictdoc-project/strictdoc/blob/main/pyproject.toml>`_ for an up-to-date summary of StrictDoc's dependencies.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Hosting and Continuous Integration
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 StrictDoc is hosted on `GitHub <https://github.com>`_ and uses `GitHub Actions <https://docs.github.com/en/actions>`_ to run all of its build, test and release tasks. As an open-source project, StrictDoc gets these services from GitHub for free.
 
 StrictDoc's documentation is hosted on `Read the Docs <https://readthedocs.org>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Commercial IDEs by JetBrains
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 The StrictDoc's core team uses the commercial versions of
 `PyCharm <https://www.jetbrains.com/pycharm/>`_
 and
@@ -89,6 +94,6 @@ from `JetBrains <https://www.jetbrains.com/>`_.
 The `Licenses for Open Source Development - Community Support <https://www.jetbrains.com/community/opensource/#support>`_ from JetBrains are provided to the core team for free, based on the precondition that StrictDoc is developed as completely free software, without any monetization mechanisms.
 
 Before the license for the commercial JetBrains was obtained in 2023, the complete StrictDoc's Python codebase had been produced using `PyCharm, the Community edition <https://www.jetbrains.com/pycharm/download>`_.
-[/FREETEXT]
+<<<
 
 [/SECTION]

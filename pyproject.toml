@@ -6,17 +6,18 @@ build-backend = "hatchling.build"
 path = "strictdoc/__init__.py"
 
 [tool.hatch.build]
-exclude = [
-  "/.*",
-  "/developer",
-  "/docs",
-  "/tests",
+include = [
+    "/strictdoc/",
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "pyproject.toml"
 ]
 
-#[tool.hatch.build.targets.sdist]
-#include = [
-#    "/uvicorn",
-#]
+exclude = [
+    # Without this, the folder is still included to the output tar.gz because it has a Markdown file.
+    "/developer",
+]
 
 [project]
 name = "strictdoc"

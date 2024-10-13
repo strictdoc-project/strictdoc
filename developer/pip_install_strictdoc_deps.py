@@ -1,18 +1,11 @@
+import importlib.metadata as importlib_metadata
 import os
 import subprocess
 import sys
 import tempfile
 
-from packaging.requirements import Requirement
-
-try:
-    # For Python 3.8 and later
-    import importlib.metadata as importlib_metadata
-except ImportError:
-    # For Python 3.7 and earlier
-    import importlib_metadata
-
 import toml
+from packaging.requirements import Requirement
 
 
 class PackageNotFound(Exception):

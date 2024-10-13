@@ -436,10 +436,6 @@ def lint_ruff(context):
 # @sdoc[SDOC-SRS-43]
 @task(aliases=["lm"])
 def lint_mypy(context):
-    # FIXME
-    if sys.version_info >= (3, 8):
-        return
-
     # These checks do not seem to be useful:
     # - import
     # - misc
@@ -453,7 +449,7 @@ def lint_mypy(context):
                 --disable-error-code=misc
                 --cache-dir=build/mypy
                 --strict
-                --python-version=3.7
+                --python-version=3.8
         """,
     )
 

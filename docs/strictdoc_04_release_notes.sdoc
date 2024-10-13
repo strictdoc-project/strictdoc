@@ -25,6 +25,8 @@ This release includes several important improvements. Thanks to @haxtibal for im
 - Deprecated the passthrough command. All passthrough functionality has been moved to the export command under the option ``--formats=sdoc``. Users are encouraged to switch to the export command, as using passthrough will now trigger a deprecation warning. [@haxtibal]
 
 - Fixed a bug related to editing custom (non-requirement) nodes and adding links between them, based on a report by @elfman2.
+
+- The Python 3.7 support was removed. The lowest Python baseline will now be 3.8 for some time.
 <<<
 
 [/SECTION]

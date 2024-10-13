@@ -1,11 +1,299 @@
 # Changelog
 
-## [Unreleased](https://github.com/strictdoc-project/strictdoc/tree/HEAD)
+## [0.0.59](https://github.com/strictdoc-project/strictdoc/tree/0.0.59) (2024-10-13)
 
-[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.51...HEAD)
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.58...0.0.59)
+
+**Closed issues:**
+
+- CUSTOM GRAMMAR links issues [\#1928](https://github.com/strictdoc-project/strictdoc/issues/1928)
+- LINKs: Anchors with IDs containing whitespace are not referrable in exported HTML [\#1916](https://github.com/strictdoc-project/strictdoc/issues/1916)
+- HTML2PDF: Combine all documents into one PDF [\#1914](https://github.com/strictdoc-project/strictdoc/issues/1914)
+- Export: move the --view option from the passthrough to the export command [\#1913](https://github.com/strictdoc-project/strictdoc/issues/1913)
+- LINKs: Unexpected output / crash if appending "s" to \[LINK:\] for plural [\#1907](https://github.com/strictdoc-project/strictdoc/issues/1907)
+- LINKs: Exception when linking to anchor in another sdoc file [\#1905](https://github.com/strictdoc-project/strictdoc/issues/1905)
+- \[LINK: \<uid\>\] does not allow to express all valid UIDs [\#1897](https://github.com/strictdoc-project/strictdoc/issues/1897)
+- RST export: LINKs from requirements and other nodes: Resolve and export them correctly [\#1888](https://github.com/strictdoc-project/strictdoc/issues/1888)
+- 2024-Q2: Code climate [\#1770](https://github.com/strictdoc-project/strictdoc/issues/1770)
+- 2024-Q2: Documentation train [\#1756](https://github.com/strictdoc-project/strictdoc/issues/1756)
+- UI: Diff screen: Handle corner cases when calculating traceability back in project Git history [\#1707](https://github.com/strictdoc-project/strictdoc/issues/1707)
 
 **Merged pull requests:**
 
+-  Bump version to 0.0.59, regenerate Read the Docs [\#1947](https://github.com/strictdoc-project/strictdoc/pull/1947) ([stanislaw](https://github.com/stanislaw))
+- Drop Python 3.7 support [\#1946](https://github.com/strictdoc-project/strictdoc/pull/1946) ([stanislaw](https://github.com/stanislaw))
+- tasks: remove assert on the path to chromedriver [\#1945](https://github.com/strictdoc-project/strictdoc/pull/1945) ([stanislaw](https://github.com/stanislaw))
+- CI: drop Python 3.7 and 3.8 [\#1944](https://github.com/strictdoc-project/strictdoc/pull/1944) ([stanislaw](https://github.com/stanislaw))
+- tests/integration: HTML escaping: add assertions for project index and traceability matrix [\#1943](https://github.com/strictdoc-project/strictdoc/pull/1943) ([stanislaw](https://github.com/stanislaw))
+- Code climate: SDocNode: requirement\_type -\> node\_type [\#1941](https://github.com/strictdoc-project/strictdoc/pull/1941) ([stanislaw](https://github.com/stanislaw))
+-  docs: update the release notes  [\#1940](https://github.com/strictdoc-project/strictdoc/pull/1940) ([stanislaw](https://github.com/stanislaw))
+- UI: edit node: fix a case when editing a custom node [\#1939](https://github.com/strictdoc-project/strictdoc/pull/1939) ([stanislaw](https://github.com/stanislaw))
+- Move passthrough commands to export --formats sdoc [\#1937](https://github.com/strictdoc-project/strictdoc/pull/1937) ([haxtibal](https://github.com/haxtibal))
+- Mark more special HTML in templates as safe [\#1936](https://github.com/strictdoc-project/strictdoc/pull/1936) ([haxtibal](https://github.com/haxtibal))
+- Fix e2e test by using new chrome headless mode [\#1934](https://github.com/strictdoc-project/strictdoc/pull/1934) ([haxtibal](https://github.com/haxtibal))
+- HTML2PDF: System chromedriver for PDF export [\#1932](https://github.com/strictdoc-project/strictdoc/pull/1932) ([haxtibal](https://github.com/haxtibal))
+- Bump version to 0.0.59a1 [\#1931](https://github.com/strictdoc-project/strictdoc/pull/1931) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: relation roles export/import roundtrip [\#1930](https://github.com/strictdoc-project/strictdoc/pull/1930) ([stanislaw](https://github.com/stanislaw))
+- Fix html escaping of source line marks [\#1929](https://github.com/strictdoc-project/strictdoc/pull/1929) ([haxtibal](https://github.com/haxtibal))
+- Code climate: markup\_renderer: fix all mypy issues [\#1927](https://github.com/strictdoc-project/strictdoc/pull/1927) ([stanislaw](https://github.com/stanislaw))
+- Code climate: markup\_renderer: remove unused code [\#1926](https://github.com/strictdoc-project/strictdoc/pull/1926) ([stanislaw](https://github.com/stanislaw))
+- Code climate: remove unused render\_free\_text\(\) [\#1924](https://github.com/strictdoc-project/strictdoc/pull/1924) ([stanislaw](https://github.com/stanislaw))
+- Code climate: document\_iterator: add SDocAnyNode type hint [\#1923](https://github.com/strictdoc-project/strictdoc/pull/1923) ([stanislaw](https://github.com/stanislaw))
+-  Code climate: fix several issues related to new Ruff checks  [\#1922](https://github.com/strictdoc-project/strictdoc/pull/1922) ([stanislaw](https://github.com/stanislaw))
+- Use Jinja2 autoescaping  [\#1921](https://github.com/strictdoc-project/strictdoc/pull/1921) ([haxtibal](https://github.com/haxtibal))
+- Code climate: get\_included\_document -\> get\_including\_document [\#1919](https://github.com/strictdoc-project/strictdoc/pull/1919) ([stanislaw](https://github.com/stanislaw))
+- links: Consistent anchor id whitespace replacement [\#1917](https://github.com/strictdoc-project/strictdoc/pull/1917) ([haxtibal](https://github.com/haxtibal))
+- export: HTML2PDF: render bundle document  [\#1915](https://github.com/strictdoc-project/strictdoc/pull/1915) ([stanislaw](https://github.com/stanislaw))
+- views: Support custom views for passthrough [\#1910](https://github.com/strictdoc-project/strictdoc/pull/1910) ([haxtibal](https://github.com/haxtibal))
+- rst: Render links and anchors in node fields [\#1909](https://github.com/strictdoc-project/strictdoc/pull/1909) ([haxtibal](https://github.com/haxtibal))
+- rst: Fix link followed by non-ws/punctuation [\#1908](https://github.com/strictdoc-project/strictdoc/pull/1908) ([haxtibal](https://github.com/haxtibal))
+- LINKs: Fix link to anchor in other sdoc [\#1906](https://github.com/strictdoc-project/strictdoc/pull/1906) ([haxtibal](https://github.com/haxtibal))
+- Add parentheses to UID regex [\#1904](https://github.com/strictdoc-project/strictdoc/pull/1904) ([haxtibal](https://github.com/haxtibal))
+- backend/sdoc: SDocNode: Make MID a normal SDocField [\#1903](https://github.com/strictdoc-project/strictdoc/pull/1903) ([stanislaw](https://github.com/stanislaw))
+- Extend UID regex and use it in SDocNode [\#1902](https://github.com/strictdoc-project/strictdoc/pull/1902) ([haxtibal](https://github.com/haxtibal))
+
+## [0.0.58](https://github.com/strictdoc-project/strictdoc/tree/0.0.58) (2024-06-25)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.57...0.0.58)
+
+**Closed issues:**
+
+- manage auto-uid: UID field REQUIRED True leads to an error [\#1896](https://github.com/strictdoc-project/strictdoc/issues/1896)
+- Epic: TEXT nodes and FREETEXT-TEXT migration [\#1864](https://github.com/strictdoc-project/strictdoc/issues/1864)
+- Feature: \[LINK\] from/to a Requirement or other nodes: The web UI implementation. [\#1839](https://github.com/strictdoc-project/strictdoc/issues/1839)
+- Extend GUI to support adding FREETEXT blocks [\#1766](https://github.com/strictdoc-project/strictdoc/issues/1766)
+- Issue with Mixing FREETEXT and REQUIREMENT in .sdoc Files [\#1518](https://github.com/strictdoc-project/strictdoc/issues/1518)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.58 [\#1901](https://github.com/strictdoc-project/strictdoc/pull/1901) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: relax the validation of UID when running Manage/AutoUID [\#1899](https://github.com/strictdoc-project/strictdoc/pull/1899) ([stanislaw](https://github.com/stanislaw))
+- User Guide: Explain conventions related to content field [\#1898](https://github.com/strictdoc-project/strictdoc/pull/1898) ([haxtibal](https://github.com/haxtibal))
+- Bump version to 0.0.57, update documentation [\#1895](https://github.com/strictdoc-project/strictdoc/pull/1895) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.57](https://github.com/strictdoc-project/strictdoc/tree/0.0.57) (2024-06-23)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.56...0.0.57)
+
+**Fixed bugs:**
+
+- AssertionError when updating the relation for a requirement [\#1856](https://github.com/strictdoc-project/strictdoc/issues/1856)
+
+**Closed issues:**
+
+- TRM: filter out text nodes. [\#1892](https://github.com/strictdoc-project/strictdoc/issues/1892)
+- TEXT: Double-check the rendering of LEVELs for missing titles and LEVEL/None. [\#1891](https://github.com/strictdoc-project/strictdoc/issues/1891)
+- `Add child requirement` -\> `Add child node`. [\#1884](https://github.com/strictdoc-project/strictdoc/issues/1884)
+- Bug: UI requirement validation fails if optional SingleChoice field is not entered [\#1876](https://github.com/strictdoc-project/strictdoc/issues/1876)
+- Error message "document MID is not unique" missing clear indication of offending requirement and document [\#1865](https://github.com/strictdoc-project/strictdoc/issues/1865)
+- DIFF: render text nodes with T [\#1863](https://github.com/strictdoc-project/strictdoc/issues/1863)
+- UI bug: Rendering of “MARKUP: HTML” elements [\#1858](https://github.com/strictdoc-project/strictdoc/issues/1858)
+- Delete section: Add validations to the confirmation window [\#1556](https://github.com/strictdoc-project/strictdoc/issues/1556)
+- Form validation for grammar fields that are marked as required [\#1022](https://github.com/strictdoc-project/strictdoc/issues/1022)
+
+**Merged pull requests:**
+
+- UI: TRM: Exclude text nodes from the list [\#1893](https://github.com/strictdoc-project/strictdoc/pull/1893) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: writer: --free-text-to-text for SECTIONs [\#1886](https://github.com/strictdoc-project/strictdoc/pull/1886) ([stanislaw](https://github.com/stanislaw))
+- export/html: update hints on node control [\#1885](https://github.com/strictdoc-project/strictdoc/pull/1885) ([mettta](https://github.com/mettta))
+- docs: User Guide: describe FREETEXT-TEXT migration path [\#1883](https://github.com/strictdoc-project/strictdoc/pull/1883) ([stanislaw](https://github.com/stanislaw))
+- cli: passthrough: --free-text-to-text option to migrate FREETEXT-\>TEXT [\#1882](https://github.com/strictdoc-project/strictdoc/pull/1882) ([stanislaw](https://github.com/stanislaw))
+- docs: User Guide: implement FREETEXT-TEXT changes [\#1881](https://github.com/strictdoc-project/strictdoc/pull/1881) ([stanislaw](https://github.com/stanislaw))
+- docs: update release notes [\#1880](https://github.com/strictdoc-project/strictdoc/pull/1880) ([stanislaw](https://github.com/stanislaw))
+- UI: Do not auto-generate UID for TEXT nodes for now [\#1879](https://github.com/strictdoc-project/strictdoc/pull/1879) ([stanislaw](https://github.com/stanislaw))
+- UI: Support MultipleChoice in requirement form [\#1878](https://github.com/strictdoc-project/strictdoc/pull/1878) ([haxtibal](https://github.com/haxtibal))
+- UI: Node form validation: allow empty SingleChoice fields when REQUIRED is False [\#1877](https://github.com/strictdoc-project/strictdoc/pull/1877) ([stanislaw](https://github.com/stanislaw))
+- docs: prepare the release notes for FREETEXT-TEXT migration [\#1875](https://github.com/strictdoc-project/strictdoc/pull/1875) ([stanislaw](https://github.com/stanislaw))
+- tasks: remove pylint and flake8, create aliases for most common tasks [\#1874](https://github.com/strictdoc-project/strictdoc/pull/1874) ([stanislaw](https://github.com/stanislaw))
+- Remove Graphviz and DocumentDotGenerator [\#1873](https://github.com/strictdoc-project/strictdoc/pull/1873) ([stanislaw](https://github.com/stanislaw))
+- UI: Ensure that documents with HTML markup get rendered correctly when edited [\#1872](https://github.com/strictdoc-project/strictdoc/pull/1872) ([stanislaw](https://github.com/stanislaw))
+- UI: Edit grammar element relations form: TEXT node can have no relations [\#1871](https://github.com/strictdoc-project/strictdoc/pull/1871) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.57a2 [\#1870](https://github.com/strictdoc-project/strictdoc/pull/1870) ([stanislaw](https://github.com/stanislaw))
+- Node machine identifiers \(MID\): improve uniqueness validation message [\#1869](https://github.com/strictdoc-project/strictdoc/pull/1869) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: Document: remove .free\_texts [\#1868](https://github.com/strictdoc-project/strictdoc/pull/1868) ([stanislaw](https://github.com/stanislaw))
+- UI: Diff screen: Ensure escaping of requirement fields [\#1867](https://github.com/strictdoc-project/strictdoc/pull/1867) ([stanislaw](https://github.com/stanislaw))
+-  UI: HTML markup changes and adjust remaining tests, removing dependencies on FREETEXT  [\#1866](https://github.com/strictdoc-project/strictdoc/pull/1866) ([stanislaw](https://github.com/stanislaw))
+-  UI: Create/Update/Delete node: Implement all existing cases related to LINK/ANCHOR [\#1862](https://github.com/strictdoc-project/strictdoc/pull/1862) ([stanislaw](https://github.com/stanislaw))
+-  UI: Delete node: incoming links to anchors validation  [\#1859](https://github.com/strictdoc-project/strictdoc/pull/1859) ([stanislaw](https://github.com/stanislaw))
+- html: Rename "parent relations" to "parents" and "child relations" to "children" [\#1855](https://github.com/strictdoc-project/strictdoc/pull/1855) ([haxtibal](https://github.com/haxtibal))
+- UI: Create node: parse, validate, and render LINK/ANCHOR [\#1854](https://github.com/strictdoc-project/strictdoc/pull/1854) ([stanislaw](https://github.com/stanislaw))
+- UI: Create node: parse and validate LINK/ANCHOR [\#1852](https://github.com/strictdoc-project/strictdoc/pull/1852) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: when --reqif-multiline-is-xhtml, generate FREETEXT spec type attribute as XHTML [\#1851](https://github.com/strictdoc-project/strictdoc/pull/1851) ([stanislaw](https://github.com/stanislaw))
+- HTML2PDF: Fail early if feature is not enabled [\#1850](https://github.com/strictdoc-project/strictdoc/pull/1850) ([haxtibal](https://github.com/haxtibal))
+- UI: Delete section/node: Add validations to the confirmation window [\#1849](https://github.com/strictdoc-project/strictdoc/pull/1849) ([stanislaw](https://github.com/stanislaw))
+- export/html and UI: Rendering \[TEXT\] node, basic end2end tests [\#1848](https://github.com/strictdoc-project/strictdoc/pull/1848) ([stanislaw](https://github.com/stanislaw))
+- docs: release notes for 0.0.56 [\#1847](https://github.com/strictdoc-project/strictdoc/pull/1847) ([stanislaw](https://github.com/stanislaw))
+- Code climate: tests/end2end: anchors -\> LINK\_AND\_ANCHOR [\#1846](https://github.com/strictdoc-project/strictdoc/pull/1846) ([stanislaw](https://github.com/stanislaw))
+- UI: requirement\_form\_object: improve handling of multiline field boundary [\#1845](https://github.com/strictdoc-project/strictdoc/pull/1845) ([stanislaw](https://github.com/stanislaw))
+- export/html, LINK: referenced node shows an anchor link if referenced with \[LINK\] [\#1844](https://github.com/strictdoc-project/strictdoc/pull/1844) ([stanislaw](https://github.com/stanislaw))
+- Feature: \[LINK\] from all fields of Requirement or other nodes [\#1843](https://github.com/strictdoc-project/strictdoc/pull/1843) ([stanislaw](https://github.com/stanislaw))
+- Code climate: Introduce THIS\_TEST\_FOLDER to increase the portability of most itests [\#1842](https://github.com/strictdoc-project/strictdoc/pull/1842) ([stanislaw](https://github.com/stanislaw))
+- Code climate: remove useless \_\_init\_\_.py files [\#1840](https://github.com/strictdoc-project/strictdoc/pull/1840) ([stanislaw](https://github.com/stanislaw))
+- tests/integration: add an RST code block test just in case [\#1838](https://github.com/strictdoc-project/strictdoc/pull/1838) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: introduce \[TEXT\] node [\#1837](https://github.com/strictdoc-project/strictdoc/pull/1837) ([stanislaw](https://github.com/stanislaw))
+- Feature: LINK to requirements and custom nodes \(static export only for now\) [\#1835](https://github.com/strictdoc-project/strictdoc/pull/1835) ([haxtibal](https://github.com/haxtibal))
+- backend/reqif: --reqif-multiline-is-html: extend the integration test [\#1834](https://github.com/strictdoc-project/strictdoc/pull/1834) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: grammar: teach SDocNodeField to parse FreeText parts [\#1833](https://github.com/strictdoc-project/strictdoc/pull/1833) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: instantiate doc/grammar meta models at start time [\#1832](https://github.com/strictdoc-project/strictdoc/pull/1832) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: validate grammar from file like a normal grammar [\#1831](https://github.com/strictdoc-project/strictdoc/pull/1831) ([stanislaw](https://github.com/stanislaw))
+- UI: Form validation: SingleChoice and REQUIRED fields [\#1829](https://github.com/strictdoc-project/strictdoc/pull/1829) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.56](https://github.com/strictdoc-project/strictdoc/tree/0.0.56) (2024-05-20)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.55...0.0.56)
+
+**Closed issues:**
+
+- Custom grammar without STATEMENT field causes exception [\#1823](https://github.com/strictdoc-project/strictdoc/issues/1823)
+- RFC: Assessing impact of a clarified requirement? [\#1806](https://github.com/strictdoc-project/strictdoc/issues/1806)
+- Broken command manage auto-uid / Import sgra content into file when using manage auto uid [\#1804](https://github.com/strictdoc-project/strictdoc/issues/1804)
+- ReqIF: Export/import grammar types / SPEC-TYPEs [\#1801](https://github.com/strictdoc-project/strictdoc/issues/1801)
+- Rename globally: References -\> Relations [\#1042](https://github.com/strictdoc-project/strictdoc/issues/1042)
+
+**Merged pull requests:**
+
+- Bump version to 0.0.56a3 [\#1828](https://github.com/strictdoc-project/strictdoc/pull/1828) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: allow using "DESCRIPTION" or "CONTENT" field instead of "STATEMENT" [\#1827](https://github.com/strictdoc-project/strictdoc/pull/1827) ([stanislaw](https://github.com/stanislaw))
+- Code climate: backend/sdoc: free\_text: fix all mypy issues [\#1826](https://github.com/strictdoc-project/strictdoc/pull/1826) ([stanislaw](https://github.com/stanislaw))
+- cli: remove the legacy argument: --experimental-enable-file-traceability [\#1825](https://github.com/strictdoc-project/strictdoc/pull/1825) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: remove the last few occurences of REFS [\#1824](https://github.com/strictdoc-project/strictdoc/pull/1824) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: SDocField: improve handling of single/multiline fields [\#1822](https://github.com/strictdoc-project/strictdoc/pull/1822) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: finish migration, removing all instances of REFS [\#1821](https://github.com/strictdoc-project/strictdoc/pull/1821) ([stanislaw](https://github.com/stanislaw))
+- pyproject.toml: update python-datauri [\#1820](https://github.com/strictdoc-project/strictdoc/pull/1820) ([DomenicP](https://github.com/DomenicP))
+- Code climate: strictdoc/backend/sdoc/models/node.py: fix no-untyped-call and no-untyped-def mypy issues [\#1819](https://github.com/strictdoc-project/strictdoc/pull/1819) ([stanislaw](https://github.com/stanislaw))
+-  Code climate: strictdoc/helpers/parallelizer.py: fix all mypy issues  [\#1818](https://github.com/strictdoc-project/strictdoc/pull/1818) ([stanislaw](https://github.com/stanislaw))
+- Code climate: strictdoc/cli/main.py: fix all mypy issues [\#1817](https://github.com/strictdoc-project/strictdoc/pull/1817) ([stanislaw](https://github.com/stanislaw))
+- html2pdf: specify UTF-8 encoding when writing HTML file [\#1816](https://github.com/strictdoc-project/strictdoc/pull/1816) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.56a1 [\#1815](https://github.com/strictdoc-project/strictdoc/pull/1815) ([stanislaw](https://github.com/stanislaw))
+-  Code climate: parallelizer: fix all "no-untyped-call" mypy issues  [\#1814](https://github.com/strictdoc-project/strictdoc/pull/1814) ([stanislaw](https://github.com/stanislaw))
+- Code climate: document\_finder: fix all "no-untyped-def" mypy issues [\#1813](https://github.com/strictdoc-project/strictdoc/pull/1813) ([stanislaw](https://github.com/stanislaw))
+- Code climate: document\_finder: fix all "no-untyped-call" mypy issues [\#1812](https://github.com/strictdoc-project/strictdoc/pull/1812) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: further tweaks for multi-document ReqIF bundles [\#1811](https://github.com/strictdoc-project/strictdoc/pull/1811) ([stanislaw](https://github.com/stanislaw))
+- Experimental features: Nestor requirements graph visualizer [\#1810](https://github.com/strictdoc-project/strictdoc/pull/1810) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: exporting grammar types [\#1809](https://github.com/strictdoc-project/strictdoc/pull/1809) ([stanislaw](https://github.com/stanislaw))
+- Composable documents: edge case when a single document path is provided for a document that depends on other documents [\#1807](https://github.com/strictdoc-project/strictdoc/pull/1807) ([stanislaw](https://github.com/stanislaw))
+- tests/integration: add several tests to ensure auto-uid / composable documents intersection [\#1805](https://github.com/strictdoc-project/strictdoc/pull/1805) ([stanislaw](https://github.com/stanislaw))
+-  Bump version to 0.0.55  [\#1803](https://github.com/strictdoc-project/strictdoc/pull/1803) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.55](https://github.com/strictdoc-project/strictdoc/tree/0.0.55) (2024-04-28)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.54...0.0.55)
+
+**Closed issues:**
+
+- Reusing glossary entry across multiple documents in same doctree? [\#1779](https://github.com/strictdoc-project/strictdoc/issues/1779)
+- Composable documents: Enable correct resolution of asset paths when included documents are stored in arbitrarily nested folders [\#1777](https://github.com/strictdoc-project/strictdoc/issues/1777)
+
+**Merged pull requests:**
+
+- backend/reqif: --reqif-import-markup option to specify HTML or other options when importing [\#1802](https://github.com/strictdoc-project/strictdoc/pull/1802) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: --reqif-enable-mid option to allow bi-directional IDENTIFIER-MID mapping [\#1800](https://github.com/strictdoc-project/strictdoc/pull/1800) ([stanislaw](https://github.com/stanislaw))
+- pickle\_cache: reuse between Document and DocumentGrammar for caching both [\#1799](https://github.com/strictdoc-project/strictdoc/pull/1799) ([stanislaw](https://github.com/stanislaw))
+- pickle: catch AttributeErrors on schema changes, raise AssertionError otherwise [\#1798](https://github.com/strictdoc-project/strictdoc/pull/1798) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: update to the latest ReqIF library [\#1797](https://github.com/strictdoc-project/strictdoc/pull/1797) ([stanislaw](https://github.com/stanislaw))
+-  backend/reqif: fix the XHTML namespace  [\#1796](https://github.com/strictdoc-project/strictdoc/pull/1796) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: reqif\_to\_sdoc\_converter.py: fix no-untyped-call issues [\#1795](https://github.com/strictdoc-project/strictdoc/pull/1795) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: reqif\_to\_sdoc\_converter.py: fix arg-type issues [\#1794](https://github.com/strictdoc-project/strictdoc/pull/1794) ([stanislaw](https://github.com/stanislaw))
+- CI: drop Python 3.7 from macOS jobs [\#1793](https://github.com/strictdoc-project/strictdoc/pull/1793) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: export: --multiline-is-xhtml option [\#1792](https://github.com/strictdoc-project/strictdoc/pull/1792) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: reqif\_to\_sdoc: simplify iteration further [\#1791](https://github.com/strictdoc-project/strictdoc/pull/1791) ([stanislaw](https://github.com/stanislaw))
+- backend/reqif: reqif\_to\_sdoc: simplify iteration [\#1789](https://github.com/strictdoc-project/strictdoc/pull/1789) ([stanislaw](https://github.com/stanislaw))
+- Code climate: sdoc/models/section: remove unused code [\#1787](https://github.com/strictdoc-project/strictdoc/pull/1787) ([stanislaw](https://github.com/stanislaw))
+-  Code climate: sdoc/models/document: fix no-untyped-def  [\#1786](https://github.com/strictdoc-project/strictdoc/pull/1786) ([stanislaw](https://github.com/stanislaw))
+- Code climate: sdoc/models/document: fix no-untyped-call [\#1785](https://github.com/strictdoc-project/strictdoc/pull/1785) ([stanislaw](https://github.com/stanislaw))
+-  Code climate: enable remaining mypy checks  [\#1784](https://github.com/strictdoc-project/strictdoc/pull/1784) ([stanislaw](https://github.com/stanislaw))
+-  Code climate: enable attr-defined and no-any-return check  [\#1783](https://github.com/strictdoc-project/strictdoc/pull/1783) ([stanislaw](https://github.com/stanislaw))
+- Code climate: fix mypy version guard [\#1782](https://github.com/strictdoc-project/strictdoc/pull/1782) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.55a1 [\#1781](https://github.com/strictdoc-project/strictdoc/pull/1781) ([stanislaw](https://github.com/stanislaw))
+-     Composable Documents: copy assets in a redundant way for included documents [\#1780](https://github.com/strictdoc-project/strictdoc/pull/1780) ([stanislaw](https://github.com/stanislaw))
+- Technical debt: document\_screen\_view\_object: encapsulate render moved node update [\#1778](https://github.com/strictdoc-project/strictdoc/pull/1778) ([stanislaw](https://github.com/stanislaw))
+- Bump version 0.0.54 [\#1776](https://github.com/strictdoc-project/strictdoc/pull/1776) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.54](https://github.com/strictdoc-project/strictdoc/tree/0.0.54) (2024-04-17)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.53...0.0.54)
+
+**Closed issues:**
+
+- HTML2PDF: UnicodeEncodeError: 'charmap' codec can't encode character '\u02fd' in position 62111: character maps to \<undefined\> [\#1773](https://github.com/strictdoc-project/strictdoc/issues/1773)
+- 0.0.53 GUI does not support adding section or requirement to "empty" fragment file. [\#1765](https://github.com/strictdoc-project/strictdoc/issues/1765)
+- 0.0.53 GUI does not maintain in fragment file the grammar via IMPORT\_FROM\_FILE [\#1764](https://github.com/strictdoc-project/strictdoc/issues/1764)
+- Project Diff/Changelog: Ignore changes in included grammars for now [\#1759](https://github.com/strictdoc-project/strictdoc/issues/1759)
+- Project Diff/Changelog: do not display included documents  [\#1757](https://github.com/strictdoc-project/strictdoc/issues/1757)
+- UI: Store the TOC state for each node [\#1755](https://github.com/strictdoc-project/strictdoc/issues/1755)
+- Minor improvement of CSS layout: Nested documents [\#1752](https://github.com/strictdoc-project/strictdoc/issues/1752)
+- Source path shall be input path when not specified explicitly [\#1723](https://github.com/strictdoc-project/strictdoc/issues/1723)
+- 2024-Q1: Ongoing requirements work [\#1563](https://github.com/strictdoc-project/strictdoc/issues/1563)
+- 2024-Q1: Documentation train [\#1562](https://github.com/strictdoc-project/strictdoc/issues/1562)
+- Document finder: filter out the asset folders based on the included/excluded search paths [\#1369](https://github.com/strictdoc-project/strictdoc/issues/1369)
+- Feature onmouseclick section or requirement edit  [\#1176](https://github.com/strictdoc-project/strictdoc/issues/1176)
+- Document tree screen: redesign folder/sdoc cells [\#1021](https://github.com/strictdoc-project/strictdoc/issues/1021)
+
+**Merged pull requests:**
+
+- document\_from\_file: fix the resolution of parent Document or Section nodes [\#1775](https://github.com/strictdoc-project/strictdoc/pull/1775) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.54a1 [\#1772](https://github.com/strictdoc-project/strictdoc/pull/1772) ([stanislaw](https://github.com/stanislaw))
+- UI: Composable documents: Allow editing root node of included document [\#1771](https://github.com/strictdoc-project/strictdoc/pull/1771) ([stanislaw](https://github.com/stanislaw))
+- SDoc: SDWriter: refactor to a more simple recursive algorithm [\#1769](https://github.com/strictdoc-project/strictdoc/pull/1769) ([stanislaw](https://github.com/stanislaw))
+-  UI: Composable documents: fix writing back SDoc file with included grammars [\#1768](https://github.com/strictdoc-project/strictdoc/pull/1768) ([stanislaw](https://github.com/stanislaw))
+- HTML2PDF: minor changes and tests for UTF8 support on Windows [\#1767](https://github.com/strictdoc-project/strictdoc/pull/1767) ([stanislaw](https://github.com/stanislaw))
+- Source files finder: source\_root\_path shall be input path when not specified explicitly [\#1763](https://github.com/strictdoc-project/strictdoc/pull/1763) ([stanislaw](https://github.com/stanislaw))
+- export/html: collapsible\_toc.js : Store the TOC state for each node [\#1762](https://github.com/strictdoc-project/strictdoc/pull/1762) ([mettta](https://github.com/mettta))
+- Document finder: filter out the asset folders based on the included/excluded search paths [\#1761](https://github.com/strictdoc-project/strictdoc/pull/1761) ([stanislaw](https://github.com/stanislaw))
+- Project Diff/Changelog: Ignore changes in included grammars for now [\#1760](https://github.com/strictdoc-project/strictdoc/pull/1760) ([stanislaw](https://github.com/stanislaw))
+-  Project Diff/Changelog: do not display included documents  [\#1758](https://github.com/strictdoc-project/strictdoc/pull/1758) ([stanislaw](https://github.com/stanislaw))
+- export/html: update CSS for project tree on the document page [\#1754](https://github.com/strictdoc-project/strictdoc/pull/1754) ([mettta](https://github.com/mettta))
+- Bump version to 0.0.53 [\#1753](https://github.com/strictdoc-project/strictdoc/pull/1753) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.53](https://github.com/strictdoc-project/strictdoc/tree/0.0.53) (2024-04-01)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.52...0.0.53)
+
+**Merged pull requests:**
+
+- docs: update Roadmap [\#1751](https://github.com/strictdoc-project/strictdoc/pull/1751) ([stanislaw](https://github.com/stanislaw))
+- Code climate: CompositeRequirement -\> SDocCompositeNode [\#1750](https://github.com/strictdoc-project/strictdoc/pull/1750) ([stanislaw](https://github.com/stanislaw))
+- export/json: fix and simplify the iteration algorithm one more time [\#1749](https://github.com/strictdoc-project/strictdoc/pull/1749) ([stanislaw](https://github.com/stanislaw))
+- export/html: update 'legend' markup on search/git screens [\#1748](https://github.com/strictdoc-project/strictdoc/pull/1748) ([mettta](https://github.com/mettta))
+- docs: document less portable features [\#1747](https://github.com/strictdoc-project/strictdoc/pull/1747) ([stanislaw](https://github.com/stanislaw))
+- export/json: do not export included documents by default [\#1746](https://github.com/strictdoc-project/strictdoc/pull/1746) ([stanislaw](https://github.com/stanislaw))
+- docs: update requirements \(ZEP, data integrity, fix all missing statuses, a few rationales\) [\#1745](https://github.com/strictdoc-project/strictdoc/pull/1745) ([stanislaw](https://github.com/stanislaw))
+- Remove all BibTeX bibliography-related code and pybtex dependency [\#1744](https://github.com/strictdoc-project/strictdoc/pull/1744) ([stanislaw](https://github.com/stanislaw))
+- Code climate: improve a grammar form object class name [\#1743](https://github.com/strictdoc-project/strictdoc/pull/1743) ([stanislaw](https://github.com/stanislaw))
+-  document\_iterator: refactor the iteration algorithm  [\#1742](https://github.com/strictdoc-project/strictdoc/pull/1742) ([stanislaw](https://github.com/stanislaw))
+- export/html: add zoomable.js: to zoom and move DTR screen [\#1741](https://github.com/strictdoc-project/strictdoc/pull/1741) ([mettta](https://github.com/mettta))
+- export/json: handle more corner cases: nodes without levels, included documents [\#1740](https://github.com/strictdoc-project/strictdoc/pull/1740) ([stanislaw](https://github.com/stanislaw))
+- export/html: collapsible\_tree.js: double-click only affects current and child folders [\#1739](https://github.com/strictdoc-project/strictdoc/pull/1739) ([mettta](https://github.com/mettta))
+- Bump version to 0.0.52 [\#1738](https://github.com/strictdoc-project/strictdoc/pull/1738) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.52](https://github.com/strictdoc-project/strictdoc/tree/0.0.52) (2024-03-25)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.51...0.0.52)
+
+**Closed issues:**
+
+- UI: Source coverage screen: Migrate to new markup [\#1733](https://github.com/strictdoc-project/strictdoc/issues/1733)
+- Common include \[GRAMMAR\] for several documents \(per project\) [\#1692](https://github.com/strictdoc-project/strictdoc/issues/1692)
+- UI: Display the node type [\#1691](https://github.com/strictdoc-project/strictdoc/issues/1691)
+- UI: make errors refer to a field \(not a group of fields\) [\#1683](https://github.com/strictdoc-project/strictdoc/issues/1683)
+- Document screen: edge cases when moving nodes with JavaScript [\#1575](https://github.com/strictdoc-project/strictdoc/issues/1575)
+- Common include \[GRAMMAR\] for several documents \(per project\) [\#1120](https://github.com/strictdoc-project/strictdoc/issues/1120)
+
+**Merged pull requests:**
+
+- docs: regenerate Read the Docs [\#1737](https://github.com/strictdoc-project/strictdoc/pull/1737) ([stanislaw](https://github.com/stanislaw))
+- UI: Source coverage screen: Migrate to new markup [\#1736](https://github.com/strictdoc-project/strictdoc/pull/1736) ([mettta](https://github.com/mettta))
+- tests/end2end/project\_index: show\_hide\_included\_documents [\#1735](https://github.com/strictdoc-project/strictdoc/pull/1735) ([mettta](https://github.com/mettta))
+-  UI: Edit grammar form: block when a grammar is imported from file  [\#1734](https://github.com/strictdoc-project/strictdoc/pull/1734) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: including Grammars from grammar files \*.sgra [\#1732](https://github.com/strictdoc-project/strictdoc/pull/1732) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc: read/write LAYOUT option [\#1731](https://github.com/strictdoc-project/strictdoc/pull/1731) ([stanislaw](https://github.com/stanislaw))
+- export/html: introduce "Website" layout folder [\#1730](https://github.com/strictdoc-project/strictdoc/pull/1730) ([stanislaw](https://github.com/stanislaw))
+-  export/html: Display the node type \(requirement and custom\) in the document view [\#1727](https://github.com/strictdoc-project/strictdoc/pull/1727) ([stanislaw](https://github.com/stanislaw))
+- docs: regenerate Read the Docs [\#1726](https://github.com/strictdoc-project/strictdoc/pull/1726) ([stanislaw](https://github.com/stanislaw))
+- export/html: draggable\_list\_controller.js: Send a request to the server only if the object actually changes position [\#1722](https://github.com/strictdoc-project/strictdoc/pull/1722) ([mettta](https://github.com/mettta))
+- Fix a crash when following the user guide. [\#1720](https://github.com/strictdoc-project/strictdoc/pull/1720) ([MartyLake](https://github.com/MartyLake))
+- export/html: project\_index: add dashboard; enable the option to hide/show fragments [\#1719](https://github.com/strictdoc-project/strictdoc/pull/1719) ([mettta](https://github.com/mettta))
+- Regenerate CHANGELOG [\#1718](https://github.com/strictdoc-project/strictdoc/pull/1718) ([stanislaw](https://github.com/stanislaw))
 - Bump version to 0.0.51 [\#1717](https://github.com/strictdoc-project/strictdoc/pull/1717) ([stanislaw](https://github.com/stanislaw))
 
 ## [0.0.51](https://github.com/strictdoc-project/strictdoc/tree/0.0.51) (2024-03-20)

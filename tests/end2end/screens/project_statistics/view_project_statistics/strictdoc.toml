@@ -1,5 +1,6 @@
 [project]
 
 features = [
-  "PROJECT_STATISTICS_SCREEN"
+  "PROJECT_STATISTICS_SCREEN",
+  "SEARCH"
 ]

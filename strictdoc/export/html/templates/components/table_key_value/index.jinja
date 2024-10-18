@@ -7,7 +7,11 @@
     <div class="sdoc-table_key_value-section">{{ obj["Section"] }}</div>
   {% else %}
     {% if view_object.project_config.is_activated_search() and obj["Link"] is defined %}
-      <a class="sdoc-table_key_value-key" href="{{ obj["Link"] }}">{{ obj["Key"] }}</a>
+      <a
+        class="sdoc-table_key_value-key"
+        data-testid="search-{{ obj["Key"].lower().replace(" ", "-") }}"
+        href="{{ obj["Link"] }}">{{ obj["Key"] }}
+      </a>
     {% else %}
       <div class="sdoc-table_key_value-key">{{ obj["Key"] }}</div>
     {% endif %}

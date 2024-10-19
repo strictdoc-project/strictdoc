@@ -1,4 +1,6 @@
 # mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,union-attr"
+from typing import Optional
+
 from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -25,7 +27,13 @@ def get_textx_syntax_error_message(exception: TextXSyntaxError):
 
 class StrictDocSemanticError(Exception):
     def __init__(
-        self, title, hint, example, line=None, col=None, filename=None
+        self,
+        title: str,
+        hint: Optional[str],
+        example: Optional[str],
+        line: Optional[int] = None,
+        col: Optional[int] = None,
+        filename: Optional[str] = None,
     ):
         super().__init__(title, hint, line, col, filename)
         self.title = title

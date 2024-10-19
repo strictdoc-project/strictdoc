@@ -1,8 +1,11 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def"
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
+from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
+    ForwardFunctionRangeMarker,
+)
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     RangeMarker,
@@ -12,12 +15,13 @@ from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.ordered_set import OrderedSet
 
 
 class FileTraceabilityIndex:
     def __init__(self):
         # "file.py" -> List[SDocNode]
-        self.map_paths_to_reqs: Dict[str, List[SDocNode]] = {}
+        self.map_paths_to_reqs: Dict[str, OrderedSet[SDocNode]] = {}
 
         # "REQ-001" -> List[FileReference]
         self.map_reqs_uids_to_paths: Dict[str, List[FileReference]] = {}
@@ -27,7 +31,12 @@ class FileTraceabilityIndex:
             str, SourceFileTraceabilityInfo
         ] = {}
 
-        self.map_reqs_uids_to_line_range_file_refs: Dict[str, List[Any]] = {}
+        self.map_reqs_uids_to_line_range_file_refs: Dict[
+            str, List[Tuple[str, Tuple[int, int]]]
+        ] = {}
+        self.map_file_function_names_to_reqs_uids: Dict[
+            str, Dict[str, List[str]]
+        ] = {}
 
         # "file.py" -> (
         #   general_requirements: [SDocNode],  # noqa: ERA001
@@ -183,9 +192,9 @@ class FileTraceabilityIndex:
                 source_file_info.markers.append(start_marker)
                 source_file_info.markers.append(end_marker)
 
-        # assert 0, self.map_reqs_uids_to_line_range_file_refs
-
     def create_requirement(self, requirement: SDocNode) -> None:
+        assert requirement.reserved_uid is not None
+
         # A requirement can have multiple File references, and this function is
         # called for every File reference.
         if requirement.reserved_uid in self.map_reqs_uids_to_paths:
@@ -196,22 +205,35 @@ class FileTraceabilityIndex:
             if isinstance(ref, FileReference):
                 file_reference: FileReference = ref
                 requirements = self.map_paths_to_reqs.setdefault(
-                    file_reference.get_posix_path(), []
+                    file_reference.get_posix_path(), OrderedSet()
                 )
-                requirements.append(requirement)
+                requirements.add(requirement)
 
                 paths = self.map_reqs_uids_to_paths.setdefault(
                     requirement.reserved_uid, []
                 )
                 paths.append(ref)
 
-                if file_reference.g_file_entry.line_range is not None:
-                    requirements = (
+                if file_reference.g_file_entry.function is not None:
+                    one_file_function_name_to_reqs_uids = (
+                        self.map_file_function_names_to_reqs_uids.setdefault(
+                            file_reference.get_posix_path(), {}
+                        )
+                    )
+                    function_name_to_reqs_uids = (
+                        one_file_function_name_to_reqs_uids.setdefault(
+                            file_reference.g_file_entry.function, []
+                        )
+                    )
+                    function_name_to_reqs_uids.append(requirement.reserved_uid)
+                elif file_reference.g_file_entry.line_range is not None:
+                    assert requirement.reserved_uid is not None
+                    req_uid_to_line_range_file_refs = (
                         self.map_reqs_uids_to_line_range_file_refs.setdefault(
                             requirement.reserved_uid, []
                         )
                     )
-                    requirements.append(
+                    req_uid_to_line_range_file_refs.append(
                         (
                             file_reference.get_posix_path(),
                             file_reference.g_file_entry.line_range,
@@ -227,3 +249,39 @@ class FileTraceabilityIndex:
         self.map_paths_to_source_file_traceability_info[
             source_file_rel_path
         ] = traceability_info
+
+        for function_ in traceability_info.functions:
+            if (
+                source_file_rel_path
+                not in self.map_file_function_names_to_reqs_uids
+            ):
+                continue
+
+            reqs_uids = self.map_file_function_names_to_reqs_uids[
+                source_file_rel_path
+            ].get(function_.name, None)
+            if reqs_uids is None:
+                continue
+
+            reqs = []
+            for req_uid_ in reqs_uids:
+                req = Req(None, req_uid_)
+                reqs.append(req)
+
+            function_marker = ForwardFunctionRangeMarker(
+                parent=None, reqs_objs=reqs
+            )
+            function_marker.ng_source_line_begin = function_.line_begin
+            function_marker.ng_source_column_begin = 1
+            function_marker.ng_range_line_begin = function_.line_begin
+            function_marker.ng_range_line_end = function_.line_end
+            function_marker.ng_marker_line = function_.line_begin
+            function_marker.ng_marker_column = 1
+
+            for req_uid_ in reqs_uids:
+                markers = traceability_info.ng_map_reqs_to_markers.setdefault(
+                    req_uid_, []
+                )
+                markers.append(function_marker)
+
+            traceability_info.markers.append(function_marker)

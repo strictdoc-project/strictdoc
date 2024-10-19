@@ -1,0 +1,26 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement Title
+STATEMENT: Requirement Statement
+RELATIONS:
+- TYPE: File
+  VALUE: file.c
+  FUNCTION: hello_world
+- TYPE: File
+  VALUE: file.c
+  FUNCTION: hello_world_2
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Requirement Title #2
+STATEMENT: Requirement Statement #2
+RELATIONS:
+- TYPE: File
+  VALUE: file.c
+  FUNCTION: hello_world
+- TYPE: File
+  VALUE: file.c
+  FUNCTION: hello_world_2

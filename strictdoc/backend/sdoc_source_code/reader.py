@@ -8,6 +8,9 @@ from textx import get_location, metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
+from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
+    FunctionRangeMarker,
+)
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     LineMarker,
@@ -27,7 +30,6 @@ class ParseContext:
         self.lines_total = lines_total
         self.markers = []
         self.marker_stack: List[RangeMarker] = []
-        self.map_lines_to_markers = {}
         self.map_reqs_to_markers = {}
 
 
@@ -53,10 +55,14 @@ def source_file_traceability_info_processor(
     # Finding how many lines are covered by the requirements in the file.
     # Quick and dirty: https://stackoverflow.com/a/15273749/598057
     merged_ranges = []
-    marker: Union[LineMarker, RangeMarker, ForwardRangeMarker]
+    marker: Union[
+        FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
+    ]
     for marker in source_file_traceability_info.markers:
         # At this point, we don't have any ForwardRangeMarkers because they
-        # come from Requirements, not from source code.
+        # come from Requirements, not from source code. We also don't have
+        # function range markers because this general reader does not support
+        # parsing them.
         assert isinstance(marker, (RangeMarker, LineMarker)), marker
         if marker.ng_is_nodoc:
             continue
@@ -187,12 +193,10 @@ def range_marker_processor(marker: RangeMarker, parse_context: ParseContext):
 
     parse_context.markers.append(marker)
     marker.ng_source_line_begin = line
-    parse_context.map_lines_to_markers[line] = marker
 
     if marker.is_begin():
         marker.ng_range_line_begin = line
         parse_context.marker_stack.append(marker)
-        parse_context.map_lines_to_markers[line] = marker
         for req in marker.reqs:
             markers = parse_context.map_reqs_to_markers.setdefault(req, [])
             markers.append(marker)
@@ -230,8 +234,6 @@ def line_marker_processor(line_marker: LineMarker, parse_context: ParseContext):
     line_marker.ng_source_line_begin = line
     line_marker.ng_range_line_begin = line
     line_marker.ng_range_line_end = line
-
-    parse_context.map_lines_to_markers[line] = line_marker
 
     for req in line_marker.reqs:
         markers = parse_context.map_reqs_to_markers.setdefault(req, [])
@@ -289,13 +291,9 @@ class SourceFileTraceabilityReader:
                     input_string, file_name=file_path
                 )
             )
-            if source_file_traceability_info:
-                source_file_traceability_info.ng_map_lines_to_markers = (
-                    parse_context.map_lines_to_markers
-                )
-                source_file_traceability_info.ng_map_reqs_to_markers = (
-                    parse_context.map_reqs_to_markers
-                )
+            source_file_traceability_info.ng_map_reqs_to_markers = (
+                parse_context.map_reqs_to_markers
+            )
 
         except StrictDocSemanticError as exc:
             raise exc

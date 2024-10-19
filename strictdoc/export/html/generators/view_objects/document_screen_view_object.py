@@ -246,7 +246,7 @@ class DocumentScreenViewObject:
             else "/".join((root_prefix, document_link))
         )
 
-    def render_static_url(self, url: str) -> str:
+    def render_static_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_static_url(url))
 
     def render_local_anchor(self, node) -> str:

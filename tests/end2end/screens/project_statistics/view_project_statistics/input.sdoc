@@ -1,0 +1,35 @@
+[DOCUMENT]
+TITLE: Test document
+
+[SECTION]
+TITLE: Section title
+
+[REQUIREMENT]
+UID: REQ-1
+STATUS: Active
+TITLE: Requirement title
+STATEMENT: Requirement statement.
+RATIONALE: Rationale. TBD
+
+[REQUIREMENT]
+UID: REQ-2
+STATUS: Draft
+TITLE: Requirement title
+STATEMENT: Requirement statement.
+
+[REQUIREMENT]
+UID: REQ-3
+STATUS: Other
+TITLE: Requirement title
+STATEMENT: Requirement statement.
+
+[REQUIREMENT]
+STATUS: Backlog
+TITLE: Requirement title
+STATEMENT: Requirement statement. TBD
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: Requirement statement. TBC
+
+[/SECTION]

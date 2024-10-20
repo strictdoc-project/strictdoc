@@ -14,16 +14,16 @@ class RangeMarker:
         self.reqs_objs: List[Req] = reqs_objs
         self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
 
-        # Line number of the pragma in the source code.
+        # Line number of the marker in the source code.
         self.ng_source_line_begin = None
 
-        # Line number of the pragma range in the source code:
+        # Line number of the marker range in the source code:
         # TODO: Improve description.
-        # For Begin pragmas:
+        # For Begin ranges:
         #   ng_range_line_begin == ng_source_line_begin  # noqa: ERA001
-        #   ng_range_line_end == ng_source_line_begin of the End pragma  # noqa: ERA001, E501
-        # For End pragmas:
-        #   ng_range_line_begin == ng_range_line_begin of the Begin pragma  # noqa: ERA001, E501
+        #   ng_range_line_end == ng_source_line_begin of the End marker  # noqa: ERA001, E501
+        # For End ranges:
+        #   ng_range_line_begin == ng_range_line_begin of the Begin marker  # noqa: ERA001, E501
         #   ng_range_line_end == ng_source_line_begin  # noqa: ERA001
         self.ng_range_line_begin = None
         self.ng_range_line_end = None
@@ -51,7 +51,7 @@ class LineMarker:
         self.reqs_objs = reqs_objs
         self.reqs = list(map(lambda req: req.uid, reqs_objs))
 
-        # Line number of the pragma in the source code.
+        # Line number of the marker in the source code.
         self.ng_source_line_begin = None
 
         self.ng_range_line_begin = None
@@ -80,7 +80,7 @@ class ForwardRangeMarker:
 
         self.reqs_objs = reqs_objs
 
-        # Line number of the pragma in the source code.
+        # Line number of the marker in the source code.
         self.ng_source_line_begin = None
 
         self.ng_range_line_begin = None

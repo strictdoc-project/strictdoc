@@ -23,7 +23,7 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 class SourceMarkerTuple(NamedTuple):
     before_line: Markup
     after_line: Markup
-    pragma: Union[ForwardRangeMarker, LineMarker, RangeMarker]
+    marker: Union[ForwardRangeMarker, LineMarker, RangeMarker]
 
 
 SourceLineEntry = Union[

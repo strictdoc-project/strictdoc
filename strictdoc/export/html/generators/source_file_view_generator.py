@@ -183,39 +183,39 @@ class SourceFileViewHTMLGenerator:
             f"{pygmented_source_file_lines} == {source_file_lines}."
         )
 
-        for pragma in coverage_info.pragmas:
-            pragma_line = pragma.ng_source_line_begin
-            assert isinstance(pragma_line, int)
+        for marker in coverage_info.markers:
+            marker_line = marker.ng_source_line_begin
+            assert isinstance(marker_line, int)
             pygmented_source_file_line = assert_cast(
-                pygmented_source_file_lines[pragma_line - 1], str
+                pygmented_source_file_lines[marker_line - 1], str
             )
-            if isinstance(pragma, ForwardRangeMarker):
+            if isinstance(marker, ForwardRangeMarker):
                 before_line = pygmented_source_file_line.rstrip("\n") + " "
-                pygmented_source_file_lines[pragma_line - 1] = (
-                    SourceMarkerTuple(Markup(before_line), Markup("\n"), pragma)
+                pygmented_source_file_lines[marker_line - 1] = (
+                    SourceMarkerTuple(Markup(before_line), Markup("\n"), marker)
                 )
                 continue
 
-            source_line = source_file_lines[pragma_line - 1]
+            source_line = source_file_lines[marker_line - 1]
 
-            assert len(pragma.reqs_objs) > 0
+            assert len(marker.reqs_objs) > 0
             before_line = source_line[
-                : pragma.reqs_objs[0].ng_source_column - 1
+                : marker.reqs_objs[0].ng_source_column - 1
             ].rstrip("/")
             closing_bracket_index = (
                 source_line.index("]")
-                if isinstance(pragma, RangeMarker)
+                if isinstance(marker, RangeMarker)
                 else source_line.index(")")
-                if isinstance(pragma, LineMarker)
+                if isinstance(marker, LineMarker)
                 else None
             )
             assert closing_bracket_index is not None
             after_line = source_line[closing_bracket_index:].rstrip()
 
-            pygmented_source_file_lines[pragma_line - 1] = SourceMarkerTuple(
+            pygmented_source_file_lines[marker_line - 1] = SourceMarkerTuple(
                 escape(before_line),
                 escape(after_line),
-                pragma,
+                marker,
             )
         pygments_styles = (
             f"/* Lexer: {lexer.name} */\n"

@@ -7,17 +7,17 @@
       <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
       <div data-line={{ loop.index }} class="source__line-content">
         {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
-          {%- set replacement_before, replacement_after, pragma = line -%}
+          {%- set replacement_before, replacement_after, marker = line -%}
           {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
-          <pre class="sdoc-comment">{{ replacement_before }}{%- for req in pragma.reqs_objs -%}
+          <pre class="sdoc-comment">{{ replacement_before }}{%- for req in marker.reqs_objs -%}
               <a
                 class="pointer"
                 data-reqid="{{ req.uid }}"
-                data-begin="{{ pragma.ng_range_line_begin }}"
-                data-end="{{ pragma.ng_range_line_end }}"
+                data-begin="{{ marker.ng_range_line_begin }}"
+                data-end="{{ marker.ng_range_line_end }}"
                 data-traceability-file-type="this_file"
-                href="{{ view_object.link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, view_object.source_file.in_doctree_source_file_rel_path_posix, view_object.source_file, pragma) }}"
-                >{%- if pragma.is_end() -%}/{%- endif -%}{{ req.uid }}</a>{%- if not loop.last -%}, {% endif -%}
+                href="{{ view_object.link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, view_object.source_file.in_doctree_source_file_rel_path_posix, view_object.source_file, marker) }}"
+                >{%- if marker.is_end() -%}/{%- endif -%}{{ req.uid }}</a>{%- if not loop.last -%}, {% endif -%}
             {%- endfor -%}{{ replacement_after }}</pre>
       {%- elif line != "" -%}
         {# <!-- Pygments --> #}

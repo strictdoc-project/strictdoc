@@ -1,6 +1,7 @@
 # mypy: disable-error-code="no-untyped-def,type-arg,var-annotated"
 from typing import List, Union
 
+from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     LineMarker,
@@ -20,6 +21,7 @@ class SourceFileTraceabilityInfo:
         """
 
         self.parts: List = parts
+        self.functions: List[Function] = []
 
         """
         {

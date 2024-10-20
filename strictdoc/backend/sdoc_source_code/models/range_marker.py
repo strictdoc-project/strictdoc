@@ -16,6 +16,7 @@ class RangeMarker:
 
         # Line number of the marker in the source code.
         self.ng_source_line_begin = None
+        self.ng_source_column_begin = None
 
         # Line number of the marker range in the source code:
         # TODO: Improve description.
@@ -53,6 +54,7 @@ class LineMarker:
 
         # Line number of the marker in the source code.
         self.ng_source_line_begin = None
+        self.ng_source_column_begin = None
 
         self.ng_range_line_begin = None
         self.ng_range_line_end = None

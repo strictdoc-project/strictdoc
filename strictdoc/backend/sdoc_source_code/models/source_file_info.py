@@ -15,9 +15,8 @@ class SourceFileTraceabilityInfo:
         """
         At the init time, only the backward RangeMarkers are available from
         a source file. At runtime, the ForwardRangeMarkers are mixed in
-        from the Requirement/FileReference links. This is why the .pragmas
+        from the Requirement/FileReference links. This is why the .markers
         is a union.
-        FIXME: Rename pragmas to markers.
         """
 
         self.parts: List = parts
@@ -28,7 +27,7 @@ class SourceFileTraceabilityInfo:
           4: RangeMarker(...),
         }
         """
-        self.ng_map_lines_to_pragmas = {}
+        self.ng_map_lines_to_markers = {}
 
         """
         {
@@ -36,12 +35,12 @@ class SourceFileTraceabilityInfo:
          "REQ-002": RangeMarker(...),
         }
         """
-        self.ng_map_reqs_to_pragmas = {}
+        self.ng_map_reqs_to_markers = {}
 
         self.ng_lines_total = 0
         self.ng_lines_covered = 0
         self._coverage = 0
-        self.pragmas: List[
+        self.markers: List[
             Union[LineMarker, RangeMarker, ForwardRangeMarker]
         ] = []
 

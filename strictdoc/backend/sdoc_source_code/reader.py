@@ -25,10 +25,10 @@ from strictdoc.helpers.textx import drop_textx_meta
 class ParseContext:
     def __init__(self, lines_total):
         self.lines_total = lines_total
-        self.pragmas = []
-        self.pragma_stack: List[RangeMarker] = []
-        self.map_lines_to_pragmas = {}
-        self.map_reqs_to_pragmas = {}
+        self.markers = []
+        self.marker_stack: List[RangeMarker] = []
+        self.map_lines_to_markers = {}
+        self.map_reqs_to_markers = {}
 
 
 def req_processor(req: Req):
@@ -45,26 +45,26 @@ def source_file_traceability_info_processor(
     source_file_traceability_info: SourceFileTraceabilityInfo,
     parse_context: ParseContext,
 ):
-    if len(parse_context.pragma_stack) > 0:
+    if len(parse_context.marker_stack) > 0:
         raise create_unmatch_range_error(
-            parse_context.pragma_stack,
+            parse_context.marker_stack,
         )
-    source_file_traceability_info.pragmas = parse_context.pragmas
+    source_file_traceability_info.markers = parse_context.markers
     # Finding how many lines are covered by the requirements in the file.
     # Quick and dirty: https://stackoverflow.com/a/15273749/598057
     merged_ranges = []
-    pragma: Union[LineMarker, RangeMarker, ForwardRangeMarker]
-    for pragma in source_file_traceability_info.pragmas:
+    marker: Union[LineMarker, RangeMarker, ForwardRangeMarker]
+    for marker in source_file_traceability_info.markers:
         # At this point, we don't have any ForwardRangeMarkers because they
         # come from Requirements, not from source code.
-        assert isinstance(pragma, (RangeMarker, LineMarker)), pragma
-        if pragma.ng_is_nodoc:
+        assert isinstance(marker, (RangeMarker, LineMarker)), marker
+        if marker.ng_is_nodoc:
             continue
-        if not pragma.is_begin():
+        if not marker.is_begin():
             continue
         begin, end = (
-            assert_cast(pragma.ng_range_line_begin, int),
-            assert_cast(pragma.ng_range_line_end, int),
+            assert_cast(marker.ng_range_line_begin, int),
+            assert_cast(marker.ng_range_line_end, int),
         )
         if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
             merged_ranges[-1][1] = max(merged_ranges[-1][1], end)
@@ -79,17 +79,17 @@ def source_file_traceability_info_processor(
 
 
 def create_begin_end_range_reqs_mismatch_error(
-    location, lhs_pragma_reqs, rhs_pragma_reqs
+    location, lhs_marker_reqs, rhs_marker_reqs
 ):
-    lhs_pragma_reqs_str = ", ".join(lhs_pragma_reqs)
-    rhs_pragma_reqs_str = ", ".join(rhs_pragma_reqs)
+    lhs_marker_reqs_str = ", ".join(lhs_marker_reqs)
+    rhs_marker_reqs_str = ", ".join(rhs_marker_reqs)
 
     return StrictDocSemanticError(
         "STRICTDOC RANGE: BEGIN and END requirements mismatch",
         (
-            "STRICT RANGE pragma should START and END "
+            "STRICT RANGE marker should START and END "
             "with the same requirement(s): "
-            f"'{lhs_pragma_reqs_str}' != '{rhs_pragma_reqs_str}'."
+            f"'{lhs_marker_reqs_str}' != '{rhs_marker_reqs_str}'."
         ),
         # @sdoc[nosdoc]  # noqa: ERA001
         """
@@ -106,10 +106,10 @@ Content...
 
 def create_end_without_begin_error(location):
     return StrictDocSemanticError(
-        "STRICTDOC RANGE: END pragma without preceding BEGIN pragma",
+        "STRICTDOC RANGE: END marker without preceding BEGIN marker",
         (
             "STRICT RANGE shall be opened with "
-            "START pragma and ended with END pragma."
+            "START marker and ended with END marker."
         ),
         # @sdoc[nosdoc]  # noqa: ERA001
         """
@@ -155,61 +155,59 @@ def create_unmatch_range_error(unmatched_ranges: List[RangeMarker]):
     )
 
 
-def range_start_pragma_processor(
-    pragma: RangeMarker, parse_context: ParseContext
-):
-    location = get_location(pragma)
+def range_marker_processor(marker: RangeMarker, parse_context: ParseContext):
+    location = get_location(marker)
     line = location["line"]
 
-    if pragma.ng_is_nodoc:
-        if pragma.is_begin():
-            parse_context.pragma_stack.append(pragma)
-        elif pragma.is_end():
+    if marker.ng_is_nodoc:
+        if marker.is_begin():
+            parse_context.marker_stack.append(marker)
+        elif marker.is_end():
             try:
-                current_top_pragma: RangeMarker = (
-                    parse_context.pragma_stack.pop()
+                current_top_marker: RangeMarker = (
+                    parse_context.marker_stack.pop()
                 )
                 if (
-                    not current_top_pragma.ng_is_nodoc
-                    or current_top_pragma.is_end()
+                    not current_top_marker.ng_is_nodoc
+                    or current_top_marker.is_end()
                 ):
                     raise create_begin_end_range_reqs_mismatch_error(
-                        location, current_top_pragma.reqs, pragma.reqs
+                        location, current_top_marker.reqs, marker.reqs
                     )
             except IndexError:
                 raise create_end_without_begin_error(location) from None
         return
 
     if (
-        len(parse_context.pragma_stack) > 0
-        and parse_context.pragma_stack[-1].ng_is_nodoc
+        len(parse_context.marker_stack) > 0
+        and parse_context.marker_stack[-1].ng_is_nodoc
     ):
-        # This pragma is within a "nosdoc" block, so we ignore it.
+        # This marker is within a "nosdoc" block, so we ignore it.
         return
 
-    parse_context.pragmas.append(pragma)
-    pragma.ng_source_line_begin = line
-    parse_context.map_lines_to_pragmas[line] = pragma
+    parse_context.markers.append(marker)
+    marker.ng_source_line_begin = line
+    parse_context.map_lines_to_markers[line] = marker
 
-    if pragma.is_begin():
-        pragma.ng_range_line_begin = line
-        parse_context.pragma_stack.append(pragma)
-        parse_context.map_lines_to_pragmas[line] = pragma
-        for req in pragma.reqs:
-            pragmas = parse_context.map_reqs_to_pragmas.setdefault(req, [])
-            pragmas.append(pragma)
+    if marker.is_begin():
+        marker.ng_range_line_begin = line
+        parse_context.marker_stack.append(marker)
+        parse_context.map_lines_to_markers[line] = marker
+        for req in marker.reqs:
+            markers = parse_context.map_reqs_to_markers.setdefault(req, [])
+            markers.append(marker)
 
-    elif pragma.is_end():
+    elif marker.is_end():
         try:
-            current_top_pragma: RangeMarker = parse_context.pragma_stack.pop()
-            if pragma.reqs != current_top_pragma.reqs:
+            current_top_marker: RangeMarker = parse_context.marker_stack.pop()
+            if marker.reqs != current_top_marker.reqs:
                 raise create_begin_end_range_reqs_mismatch_error(
-                    location, current_top_pragma.reqs, pragma.reqs
+                    location, current_top_marker.reqs, marker.reqs
                 )
-            current_top_pragma.ng_range_line_end = line
+            current_top_marker.ng_range_line_end = line
 
-            pragma.ng_range_line_begin = current_top_pragma.ng_range_line_begin
-            pragma.ng_range_line_end = line
+            marker.ng_range_line_begin = current_top_marker.ng_range_line_begin
+            marker.ng_range_line_end = line
 
         except IndexError:
             raise create_end_without_begin_error(location) from None
@@ -222,22 +220,22 @@ def line_marker_processor(line_marker: LineMarker, parse_context: ParseContext):
     line = location["line"]
 
     if (
-        len(parse_context.pragma_stack) > 0
-        and parse_context.pragma_stack[-1].ng_is_nodoc
+        len(parse_context.marker_stack) > 0
+        and parse_context.marker_stack[-1].ng_is_nodoc
     ):
-        # This pragma is within a "nosdoc" block, so we ignore it.
+        # This marker is within a "nosdoc" block, so we ignore it.
         return
 
-    parse_context.pragmas.append(line_marker)
+    parse_context.markers.append(line_marker)
     line_marker.ng_source_line_begin = line
     line_marker.ng_range_line_begin = line
     line_marker.ng_range_line_end = line
 
-    parse_context.map_lines_to_pragmas[line] = line_marker
+    parse_context.map_lines_to_markers[line] = line_marker
 
     for req in line_marker.reqs:
-        pragmas = parse_context.map_reqs_to_pragmas.setdefault(req, [])
-        pragmas.append(line_marker)
+        markers = parse_context.map_reqs_to_markers.setdefault(req, [])
+        markers.append(line_marker)
 
 
 class SourceFileTraceabilityReader:
@@ -269,8 +267,8 @@ class SourceFileTraceabilityReader:
             source_file_traceability_info_processor, parse_context=parse_context
         )
         parse_req_processor = partial(req_processor)
-        parse_range_start_pragma_processor = partial(
-            range_start_pragma_processor, parse_context=parse_context
+        parse_range_marker_processor = partial(
+            range_marker_processor, parse_context=parse_context
         )
         parse_line_marker_processor = partial(
             line_marker_processor, parse_context=parse_context
@@ -278,7 +276,7 @@ class SourceFileTraceabilityReader:
 
         obj_processors = {
             "LineMarker": parse_line_marker_processor,
-            "RangeMarker": parse_range_start_pragma_processor,
+            "RangeMarker": parse_range_marker_processor,
             "Req": parse_req_processor,
             "SourceFileTraceabilityInfo": parse_source_traceability_processor,
         }
@@ -292,11 +290,11 @@ class SourceFileTraceabilityReader:
                 )
             )
             if source_file_traceability_info:
-                source_file_traceability_info.ng_map_lines_to_pragmas = (
-                    parse_context.map_lines_to_pragmas
+                source_file_traceability_info.ng_map_lines_to_markers = (
+                    parse_context.map_lines_to_markers
                 )
-                source_file_traceability_info.ng_map_reqs_to_pragmas = (
-                    parse_context.map_reqs_to_pragmas
+                source_file_traceability_info.ng_map_reqs_to_markers = (
+                    parse_context.map_reqs_to_markers
                 )
 
         except StrictDocSemanticError as exc:

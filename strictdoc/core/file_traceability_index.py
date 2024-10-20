@@ -60,13 +60,13 @@ class FileTraceabilityIndex:
                 f"Requirement {requirement.reserved_uid} references a file"
                 f" that does not exist: {file_link.get_posix_path()}."
             )
-            pragmas = source_file_traceability_info.ng_map_reqs_to_pragmas.get(
+            markers = source_file_traceability_info.ng_map_reqs_to_markers.get(
                 requirement.reserved_uid
             )
-            if not pragmas:
+            if not markers:
                 matching_links_with_opt_ranges.append((file_link, None))
                 continue
-            matching_links_with_opt_ranges.append((file_link, pragmas))
+            matching_links_with_opt_ranges.append((file_link, markers))
 
         return matching_links_with_opt_ranges
 
@@ -87,7 +87,7 @@ class FileTraceabilityIndex:
         )
         for (
             req_uid
-        ) in source_file_traceability_info.ng_map_reqs_to_pragmas.keys():
+        ) in source_file_traceability_info.ng_map_reqs_to_markers.keys():
             if req_uid not in self.map_reqs_uids_to_paths:
                 raise StrictDocException(
                     f"Source file {source_file_rel_path} references "
@@ -105,7 +105,7 @@ class FileTraceabilityIndex:
         for requirement in requirements:
             if (
                 requirement.reserved_uid
-                in source_file_traceability_info.ng_map_reqs_to_pragmas
+                in source_file_traceability_info.ng_map_reqs_to_markers
                 or requirement.reserved_uid
                 in self.map_reqs_uids_to_line_range_file_refs
             ):
@@ -176,12 +176,12 @@ class FileTraceabilityIndex:
                 end_marker.ng_range_line_begin = file_range[0]
                 end_marker.ng_range_line_end = file_range[1]
 
-                source_file_info.ng_map_reqs_to_pragmas.setdefault(
+                source_file_info.ng_map_reqs_to_markers.setdefault(
                     requirement_uid_, []
                 ).append(start_marker)
 
-                source_file_info.pragmas.append(start_marker)
-                source_file_info.pragmas.append(end_marker)
+                source_file_info.markers.append(start_marker)
+                source_file_info.markers.append(end_marker)
 
         # assert 0, self.map_reqs_uids_to_line_range_file_refs
 

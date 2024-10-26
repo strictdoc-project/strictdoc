@@ -7,6 +7,22 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [SECTION]
+TITLE: 0.0.60 (2024-10-26)
+
+[TEXT]
+STATEMENT: >>>
+This is a bugfix release with several fixes:
+
+- Web UI: Add 'TAG' as a supported fieldtype for requirement nodes. Previously, the UI interface would not open an element with a TAG-based field, raising a NotImplementedError. [@mplum]
+
+- Search Screen: Prevent query failure when node is missing requested field [@mplum]
+
+- Project Statistics: Fix generated search URLs for project statistics [@haxtibal]
+<<<
+
+[/SECTION]
+
+[SECTION]
 TITLE: 0.0.59 (2024-10-13)
 
 [TEXT]

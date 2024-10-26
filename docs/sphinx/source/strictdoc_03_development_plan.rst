@@ -96,7 +96,6 @@ The following diagram contains the work items at the epic and single task levels
    :class: image
    :width: 100%
 
-
 Verification
 ============
 

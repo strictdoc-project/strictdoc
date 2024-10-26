@@ -3,6 +3,17 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+0.0.60 (2024-10-26)
+===================
+
+This is a bugfix release with several fixes:
+
+- Web UI: Add 'TAG' as a supported fieldtype for requirement nodes. Previously, the UI interface would not open an element with a TAG-based field, raising a NotImplementedError. [@mplum]
+
+- Search Screen: Prevent query failure when node is missing requested field [@mplum]
+
+- Project Statistics: Fix generated search URLs for project statistics [@haxtibal]
+
 0.0.59 (2024-10-13)
 ===================
 

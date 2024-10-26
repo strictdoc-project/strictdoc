@@ -92,6 +92,7 @@ class RequirementFormField:
             RequirementFieldType.STRING,
             RequirementFieldType.SINGLE_CHOICE,
             RequirementFieldType.MULTIPLE_CHOICE,
+            RequirementFieldType.TAG,
         ):
             return RequirementFormField(
                 field_mid=MID.create(),

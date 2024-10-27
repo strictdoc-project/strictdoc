@@ -23,6 +23,12 @@ from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityReader,
 )
+from strictdoc.backend.sdoc_source_code.reader_c import (
+    SourceFileTraceabilityReader_C,
+)
+from strictdoc.backend.sdoc_source_code.reader_python import (
+    SourceFileTraceabilityReader_Python,
+)
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
@@ -178,10 +184,36 @@ class TraceabilityIndexBuilder:
                 if not is_source_file_referenced:
                     continue
                 source_file.is_referenced = True
-                traceability_reader = SourceFileTraceabilityReader()
-                traceability_info = traceability_reader.read_from_file(
-                    source_file.full_path
-                )
+
+                # FIXME: It should be possible to simplify this branching.
+                if project_config.is_activated_source_file_language_parsers():
+                    if source_file.full_path.endswith(".py"):
+                        traceability_reader_python = (
+                            SourceFileTraceabilityReader_Python()
+                        )
+                        traceability_info = (
+                            traceability_reader_python.read_from_file(
+                                source_file.full_path
+                            )
+                        )
+                    elif source_file.full_path.endswith(".c"):
+                        traceability_reader_c = SourceFileTraceabilityReader_C()
+                        traceability_info = (
+                            traceability_reader_c.read_from_file(
+                                source_file.full_path
+                            )
+                        )
+                    else:
+                        traceability_reader = SourceFileTraceabilityReader()
+                        traceability_info = traceability_reader.read_from_file(
+                            source_file.full_path
+                        )
+                else:
+                    traceability_reader = SourceFileTraceabilityReader()
+                    traceability_info = traceability_reader.read_from_file(
+                        source_file.full_path
+                    )
+
                 if traceability_info:
                     traceability_index.create_traceability_info(
                         source_file.in_doctree_source_file_rel_path_posix,

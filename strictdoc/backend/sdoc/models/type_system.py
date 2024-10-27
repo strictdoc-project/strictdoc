@@ -56,6 +56,7 @@ class FileEntry:
         g_file_format: Optional[str],
         g_file_path: str,
         g_line_range: Optional[str],
+        function: Optional[str],
     ):
         self.parent = parent
 
@@ -84,6 +85,11 @@ class FileEntry:
                 int(range_components_str[0]),
                 int(range_components_str[1]),
             )
+
+        # textX parses an optional element as an empty string. We make it to None ourselves.
+        self.function: Optional[str] = (
+            function if function is not None and len(function) > 0 else None
+        )
 
 
 class FileEntryFormat:

@@ -56,6 +56,11 @@ dependencies = [
     # Parsing and rendering RST.
     "docutils >= 0.16, == 0.*",
 
+    # Tree Sitter is used for language/AST-aware parsing of Python, C and other files.
+    "tree-sitter",
+    "tree-sitter-c",
+    "tree-sitter-python",
+
     # Requirements-to-source traceability. Colored syntax for source files.
     "pygments >= 2.10.0, == 2.*",
 

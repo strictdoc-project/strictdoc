@@ -47,6 +47,7 @@ class ProjectFeature(str, Enum):
     STANDALONE_DOCUMENT_SCREEN = "STANDALONE_DOCUMENT_SCREEN"
     TRACEABILITY_MATRIX_SCREEN = "TRACEABILITY_MATRIX_SCREEN"
     REQUIREMENT_TO_SOURCE_TRACEABILITY = "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+    SOURCE_FILE_LANGUAGE_PARSERS = "SOURCE_FILE_LANGUAGE_PARSERS"
 
     MERMAID = "MERMAID"
     RAPIDOC = "RAPIDOC"
@@ -276,6 +277,11 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
 
     def is_activated_rapidoc(self) -> bool:
         return ProjectFeature.RAPIDOC in self.project_features
+
+    def is_activated_source_file_language_parsers(self) -> bool:
+        return (
+            ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS in self.project_features
+        )
 
     def get_strictdoc_root_path(self) -> str:
         return self.environment.path_to_strictdoc

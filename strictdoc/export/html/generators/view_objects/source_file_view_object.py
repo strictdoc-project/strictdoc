@@ -6,6 +6,9 @@ from typing import List, NamedTuple, Union
 from markupsafe import Markup
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
+    FunctionRangeMarker,
+)
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     LineMarker,
@@ -23,7 +26,9 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 class SourceMarkerTuple(NamedTuple):
     before_line: Markup
     after_line: Markup
-    marker: Union[ForwardRangeMarker, LineMarker, RangeMarker]
+    marker: Union[
+        FunctionRangeMarker, ForwardRangeMarker, LineMarker, RangeMarker
+    ]
 
 
 SourceLineEntry = Union[

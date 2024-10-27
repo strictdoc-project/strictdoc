@@ -1,5 +1,5 @@
 # mypy: disable-error-code="no-untyped-def,type-arg"
-from typing import List
+from typing import Any, List, Optional
 
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.helpers.auto_described import auto_described
@@ -7,15 +7,16 @@ from strictdoc.helpers.auto_described import auto_described
 
 @auto_described
 class RangeMarker:
-    def __init__(self, parent, begin_or_end, reqs_objs: List[Req]):
+    def __init__(self, parent: Any, begin_or_end: str, reqs_objs: List[Req]):
         assert isinstance(reqs_objs, list)
-        self.parent = parent
-        self.begin_or_end = begin_or_end
+        self.parent: Any = parent
+        self.begin_or_end: str = begin_or_end
         self.reqs_objs: List[Req] = reqs_objs
         self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
 
         # Line number of the marker in the source code.
-        self.ng_source_line_begin = None
+        self.ng_source_line_begin: Optional[int] = None
+        self.ng_source_column_begin: Optional[int] = None
 
         # Line number of the marker range in the source code:
         # TODO: Improve description.
@@ -25,50 +26,51 @@ class RangeMarker:
         # For End ranges:
         #   ng_range_line_begin == ng_range_line_begin of the Begin marker  # noqa: ERA001, E501
         #   ng_range_line_end == ng_source_line_begin  # noqa: ERA001
-        self.ng_range_line_begin = None
-        self.ng_range_line_end = None
+        self.ng_range_line_begin: Optional[int] = None
+        self.ng_range_line_end: Optional[int] = None
 
         self.ng_is_nodoc = "nosdoc" in self.reqs
 
-    def is_begin(self):
+    def is_begin(self) -> bool:
         return self.begin_or_end == "["
 
-    def is_end(self):
+    def is_end(self) -> bool:
         return self.begin_or_end == "[/"
 
-    def is_range_marker(self):
+    def is_range_marker(self) -> bool:
         return True
 
-    def is_line_marker(self):
+    def is_line_marker(self) -> bool:
         return False
 
 
 @auto_described
 class LineMarker:
-    def __init__(self, parent, reqs_objs):
+    def __init__(self, parent: Any, reqs_objs: List[Req]) -> None:
         assert isinstance(reqs_objs, list)
         self.parent = parent
         self.reqs_objs = reqs_objs
         self.reqs = list(map(lambda req: req.uid, reqs_objs))
 
         # Line number of the marker in the source code.
-        self.ng_source_line_begin = None
+        self.ng_source_line_begin: Optional[int] = None
+        self.ng_source_column_begin: Optional[int] = None
 
-        self.ng_range_line_begin = None
-        self.ng_range_line_end = None
+        self.ng_range_line_begin: Optional[int] = None
+        self.ng_range_line_end: Optional[int] = None
 
         self.ng_is_nodoc = "nosdoc" in self.reqs
 
-    def is_begin(self):
+    def is_begin(self) -> bool:
         return True
 
-    def is_end(self):
+    def is_end(self) -> bool:
         return False
 
-    def is_range_marker(self):
+    def is_range_marker(self) -> bool:
         return False
 
-    def is_line_marker(self):
+    def is_line_marker(self) -> bool:
         return True
 
 
@@ -81,19 +83,19 @@ class ForwardRangeMarker:
         self.reqs_objs = reqs_objs
 
         # Line number of the marker in the source code.
-        self.ng_source_line_begin = None
+        self.ng_source_line_begin: Optional[int] = None
 
-        self.ng_range_line_begin = None
-        self.ng_range_line_end = None
+        self.ng_range_line_begin: Optional[int] = None
+        self.ng_range_line_end: Optional[int] = None
 
-    def is_begin(self):
+    def is_begin(self) -> bool:
         return self.start_or_end
 
-    def is_end(self):
+    def is_end(self) -> bool:
         return not self.start_or_end
 
-    def is_range_marker(self):
+    def is_range_marker(self) -> bool:
         return True
 
-    def is_line_marker(self):
+    def is_line_marker(self) -> bool:
         return False

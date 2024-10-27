@@ -15,6 +15,10 @@ from pygments.lexers.special import TextLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 from pygments.util import ClassNotFound
 
+from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
+    ForwardFunctionRangeMarker,
+    FunctionRangeMarker,
+)
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     LineMarker,
@@ -196,8 +200,18 @@ class SourceFileViewHTMLGenerator:
                 )
                 continue
 
-            source_line = source_file_lines[marker_line - 1]
+            if isinstance(marker, ForwardFunctionRangeMarker):
+                before_line = pygmented_source_file_line.rstrip("\n") + " "
+                pygmented_source_file_lines[marker_line - 1] = (
+                    SourceMarkerTuple(Markup(before_line), Markup("\n"), marker)
+                )
+                continue
 
+            if isinstance(marker, FunctionRangeMarker):
+                # FIXME
+                marker_line = marker.ng_marker_line
+
+            source_line = source_file_lines[marker_line - 1]
             assert len(marker.reqs_objs) > 0
             before_line = source_line[
                 : marker.reqs_objs[0].ng_source_column - 1
@@ -205,6 +219,8 @@ class SourceFileViewHTMLGenerator:
             closing_bracket_index = (
                 source_line.index("]")
                 if isinstance(marker, RangeMarker)
+                else source_line.index(", scope")
+                if isinstance(marker, FunctionRangeMarker)
                 else source_line.index(")")
                 if isinstance(marker, LineMarker)
                 else None

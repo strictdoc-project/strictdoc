@@ -17,3 +17,6 @@ CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#1#10"
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-2#1#10"
 CHECK-SOURCE-FILE:  <div data-line=3 class="source__line-content">
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#1#10"
+
+RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 76.9%

@@ -6,7 +6,10 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 
 RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#1#4">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#2#4">
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 CHECK-SOURCE-FILE: <a{{.*}}href="../{{.*}}/input.html#1-REQ-1"{{.*}}>
 CHECK-SOURCE-FILE: <span class="c1"># noqa: T201</span></pre>
+
+RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 75.0%

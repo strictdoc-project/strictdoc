@@ -19,3 +19,6 @@ CHECK-SOURCE-FILE: data-end="13"
 CHECK-SOURCE-FILE: data-traceability-file-type="this_file"
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#1#13"
 CHECK-SOURCE-FILE: >REQ-1</a>, scope=function)</pre></div><div id="line-6" class="source__line-number"><pre>6</pre></div>
+
+RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 81.2%

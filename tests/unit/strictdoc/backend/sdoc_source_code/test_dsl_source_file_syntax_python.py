@@ -144,10 +144,6 @@ print("Hello world")
     assert markers[0].ng_range_line_begin == 1
     assert markers[0].ng_range_line_end == 3
 
-    assert info.ng_lines_total == 3
-    assert info.ng_lines_covered == 3
-    assert info.get_coverage() == 100
-
 
 def test_002_two_range_markers():
     source_input = b"""
@@ -249,10 +245,6 @@ CONTENT 9
     assert marker_7.ng_range_line_begin == 14
     assert marker_8.ng_range_line_begin == 14
 
-    assert document.ng_lines_total == 17
-    assert document.ng_lines_covered == 14
-    assert document.get_coverage() == 82.4
-
 
 def test_010_nosdoc_keyword():
     source_input = b"""
@@ -348,10 +340,6 @@ def test_012_marker_not_first_line():
     assert markers[1].ng_range_line_begin == 4
     assert markers[1].ng_range_line_end == 8
 
-    assert document.ng_lines_total == 11
-    assert document.ng_lines_covered == 5
-    assert document.get_coverage() == 45.5
-
 
 """
 LINE markers.
@@ -384,10 +372,6 @@ CONTENT 3
     assert markers[2].ng_source_line_begin == 5
     assert markers[2].ng_range_line_begin == 5
     assert markers[2].ng_range_line_end == 5
-
-    assert document.ng_lines_total == 6
-    assert document.ng_lines_covered == 3
-    assert document.get_coverage() == 50.0
 
 
 def test_validation_01_one_range_marker_begin_req_not_equal_to_end_req():

@@ -88,6 +88,8 @@ class ForwardRangeMarker:
         self.ng_range_line_begin: Optional[int] = None
         self.ng_range_line_end: Optional[int] = None
 
+        self.ng_is_nodoc = False
+
     def is_begin(self) -> bool:
         return self.start_or_end
 

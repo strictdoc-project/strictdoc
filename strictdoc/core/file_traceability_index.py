@@ -1,5 +1,5 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def"
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
@@ -62,7 +62,18 @@ class FileTraceabilityIndex:
         file_links: List[FileReference] = self.map_reqs_uids_to_paths[
             requirement.reserved_uid
         ]
+
+        # Now that one requirement can have multiple File-relations to the same file.
+        # This can be multiple FUNCTION: or RANGE: forward-relations.
+        # To avoid duplication of results, visit each unique file link path only once.
+        visited_file_links: Set[str] = set()
         for file_link in file_links:
+            if (
+                file_link_path_ := file_link.get_posix_path()
+            ) in visited_file_links:
+                continue
+            visited_file_links.add(file_link_path_)
+
             source_file_traceability_info: Optional[
                 SourceFileTraceabilityInfo
             ] = self.map_paths_to_source_file_traceability_info.get(

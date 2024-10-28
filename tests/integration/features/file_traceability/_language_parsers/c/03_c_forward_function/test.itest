@@ -3,22 +3,23 @@ REQUIRES: PYTHON_39_OR_HIGHER
 RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RU: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+RUN: %check_exists --file "%S/Output/html/_source_files/file.c.html"
 
-RN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#1#13">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#9">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#11#13">
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#3#10">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#21#28">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#30#38">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#8#10">
 
-UN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <pre class="sdoc-comment">    @relation(<a
+RUN: %cat %S/Output/html/_source_files/file.c.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE:  <pre class="sdoc-comment"> * @relation(<a
 CHECK-SOURCE-FILE: class="pointer"
 CHECK-SOURCE-FILE: data-reqid="REQ-1"
-CHECK-SOURCE-FILE: data-begin="1"
-CHECK-SOURCE-FILE: data-end="13"
+CHECK-SOURCE-FILE: data-begin="3"
+CHECK-SOURCE-FILE: data-end="10"
 CHECK-SOURCE-FILE: data-traceability-file-type="this_file"
-CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#1#13"
-CHECK-SOURCE-FILE: >REQ-1</a>, scope=function)</pre></div><div id="line-6" class="source__line-number"><pre>6</pre></div>
+CHECK-SOURCE-FILE: href="../_source_files/file.c.html#REQ-1#3#10"
+CHECK-SOURCE-FILE: >REQ-1</a>, scope=function)</pre></div><div id="line-7" class="source__line-number"><pre>7</pre></div>
 
 # Two forward function links from two reqs REQ-1 and REQ-2 on the first function.
 CHECK-SOURCE-FILE: <div data-line=8 class="source__line-content">

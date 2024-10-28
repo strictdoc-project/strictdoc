@@ -21,3 +21,7 @@ CHECK-SOURCE-FILE: <b>[ 2-4 ]</b> file.py
 
 CHECK-SOURCE-FILE: href="../_source_files/file2.py.html#REQ-001#2#4"
 CHECK-SOURCE-FILE: <b>[ 2-4 ]</b> file2.py
+
+RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 42.9%
+CHECK-SOURCE-COVERAGE: 75.0%

@@ -1,19 +1,22 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def"
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     ForwardFunctionRangeMarker,
+    FunctionRangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
+    LineMarker,
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.ordered_set import OrderedSet
 
@@ -191,6 +194,53 @@ class FileTraceabilityIndex:
 
                 source_file_info.markers.append(start_marker)
                 source_file_info.markers.append(end_marker)
+
+        for (
+            traceability_info_
+        ) in self.map_paths_to_source_file_traceability_info.values():
+
+            def marker_comparator(marker):
+                return marker.ng_range_line_begin
+
+            sorted_markers = sorted(
+                traceability_info_.markers, key=marker_comparator
+            )
+
+            traceability_info_.markers = sorted_markers
+            # Finding how many lines are covered by the requirements in the file.
+            # Quick and dirty: https://stackoverflow.com/a/15273749/598057
+            merged_ranges: List[List[Any]] = []
+            marker: Union[
+                FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
+            ]
+            for marker in traceability_info_.markers:
+                assert isinstance(
+                    marker,
+                    (
+                        FunctionRangeMarker,
+                        ForwardRangeMarker,
+                        RangeMarker,
+                        LineMarker,
+                    ),
+                ), marker
+                if marker.ng_is_nodoc:
+                    continue
+                if not marker.is_begin():
+                    continue
+                begin, end = (
+                    assert_cast(marker.ng_range_line_begin, int),
+                    assert_cast(marker.ng_range_line_end, int),
+                )
+                if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
+                    merged_ranges[-1][1] = max(merged_ranges[-1][1], end)
+                else:
+                    merged_ranges.append([begin, end])
+            coverage = 0
+            for merged_range in merged_ranges:
+                coverage += merged_range[1] - merged_range[0] + 1
+            traceability_info_.set_coverage_stats(
+                traceability_info_.ng_lines_total, coverage
+            )
 
     def create_requirement(self, requirement: SDocNode) -> None:
         assert requirement.reserved_uid is not None

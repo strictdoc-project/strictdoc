@@ -7,4 +7,4 @@ TITLE: Requirement Title
 STATEMENT: Requirement Statement
 RELATIONS:
 - TYPE: File
-  VALUE: file.py
+  VALUE: file.c

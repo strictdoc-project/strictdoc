@@ -49,4 +49,8 @@ class SourceFileTraceabilityInfo:
     def set_coverage_stats(self, lines_total: int, lines_covered: int) -> None:
         self.ng_lines_total = lines_total
         self.ng_lines_covered = lines_covered
-        self._coverage = round(lines_covered / lines_total * 100, 1)
+        self._coverage = (
+            round(lines_covered / lines_total * 100, 1)
+            if lines_total != 0
+            else 0
+        )

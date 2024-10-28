@@ -2,17 +2,13 @@
 import sys
 import traceback
 from functools import partial
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from textx import get_location, metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
-)
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
-    ForwardRangeMarker,
     LineMarker,
     RangeMarker,
 )
@@ -20,7 +16,6 @@ from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
-from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import get_lines_count
 from strictdoc.helpers.textx import drop_textx_meta
 
@@ -52,36 +47,7 @@ def source_file_traceability_info_processor(
             parse_context.marker_stack,
         )
     source_file_traceability_info.markers = parse_context.markers
-    # Finding how many lines are covered by the requirements in the file.
-    # Quick and dirty: https://stackoverflow.com/a/15273749/598057
-    merged_ranges = []
-    marker: Union[
-        FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
-    ]
-    for marker in source_file_traceability_info.markers:
-        # At this point, we don't have any ForwardRangeMarkers because they
-        # come from Requirements, not from source code. We also don't have
-        # function range markers because this general reader does not support
-        # parsing them.
-        assert isinstance(marker, (RangeMarker, LineMarker)), marker
-        if marker.ng_is_nodoc:
-            continue
-        if not marker.is_begin():
-            continue
-        begin, end = (
-            assert_cast(marker.ng_range_line_begin, int),
-            assert_cast(marker.ng_range_line_end, int),
-        )
-        if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
-            merged_ranges[-1][1] = max(merged_ranges[-1][1], end)
-        else:
-            merged_ranges.append([begin, end])
-    coverage = 0
-    for merged_range in merged_ranges:
-        coverage += merged_range[1] - merged_range[0] + 1
-    source_file_traceability_info.set_coverage_stats(
-        parse_context.lines_total, coverage
-    )
+    source_file_traceability_info.ng_lines_total = parse_context.lines_total
 
 
 def create_begin_end_range_reqs_mismatch_error(

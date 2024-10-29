@@ -1,5 +1,5 @@
 void hello_world(void) {
-    // @sdoc[REQ-1]
+    // @relation(REQ-1, scope=range_start)
     printf("hello world\n");
-    // @sdoc[/REQ-1]
+    // @relation(REQ-1, scope=range_end)
 }

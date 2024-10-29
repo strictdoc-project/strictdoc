@@ -2,12 +2,12 @@ def hello_world():
     """
     @relation(REQ-1, scope=function)
     """
-    # @sdoc[REQ-1]
+    # @relation(REQ-1, scope=range_start)
     print("hello world")  # noqa: T201
-    # @sdoc(REQ-1)
+    # @relation(REQ-1, scope=line)
     print("hello world")  # noqa: T201
     print("hello world")  # noqa: T201
-    # @sdoc[/REQ-1]
+    # @relation(REQ-1, scope=range_end)
 
 def hello_world_2():
     print("hello world")  # noqa: T201

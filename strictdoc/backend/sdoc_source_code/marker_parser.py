@@ -12,11 +12,7 @@ from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 
 REGEX_REQ = r"[A-Za-z][A-Za-z0-9\\-]+"
 # @relation(REQ-1, scope=function)
-REGEX_FUNCTION = (
-    rf"@relation\((/?)({REGEX_REQ}(?:, {REGEX_REQ})*)\, scope=function\)"
-)
-REGEX_RANGE = rf"@sdoc\[(/?)({REGEX_REQ}(?:, {REGEX_REQ})*)\]"
-REGEX_LINE = rf"@sdoc\((/?)({REGEX_REQ}(?:, {REGEX_REQ})*)\)"
+REGEX_MARKER = rf"@relation\(({REGEX_REQ}(?:, {REGEX_REQ})*)\, scope=(function|line|range_start|range_end)\)"
 
 
 class MarkerParser:
@@ -32,30 +28,15 @@ class MarkerParser:
         for input_line_idx_, input_line_ in enumerate(
             input_string.splitlines()
         ):
-            match_function = None
-            match_line = None
-            match_range = None
-
-            match_function = re.search(REGEX_FUNCTION, input_line_)
-            if match_function is None:
-                match_range = re.search(REGEX_RANGE, input_line_)
-                if match_range is None:
-                    match_line = re.search(REGEX_LINE, input_line_)
-
-            match = (
-                match_function
-                if match_function is not None
-                else match_range
-                if match_range is not None
-                else match_line
-            )
+            match = re.search(REGEX_MARKER, input_line_)
             if match is None:
                 continue
 
-            start_or_end = match.group(1) != "/"
-            req_list = match.group(2)
+            assert match.lastindex is not None
+            marker_type = match.group(match.lastindex)
+            req_list = match.group(1)
 
-            first_requirement_index = match.start(2)
+            first_requirement_index = match.start(1)
 
             current_line = comment_line_start + input_line_idx_
             first_requirement_column = first_requirement_index + 1
@@ -75,7 +56,7 @@ class MarkerParser:
                 )
                 requirements.append(requirement)
 
-            if match_function is not None:
+            if marker_type == "function":
                 function_marker = FunctionRangeMarker(None, requirements)
                 function_marker.ng_source_line_begin = line_start
                 function_marker.ng_range_line_begin = line_start
@@ -83,7 +64,8 @@ class MarkerParser:
                 function_marker.ng_marker_line = current_line
                 function_marker.ng_marker_column = first_requirement_column
                 markers.append(function_marker)
-            elif match_range is not None:
+            elif marker_type in ("range_start", "range_end"):
+                start_or_end = marker_type == "range_start"
                 range_marker = RangeMarker(
                     None, "[" if start_or_end else "[/", requirements
                 )
@@ -91,8 +73,9 @@ class MarkerParser:
                 range_marker.ng_source_column_begin = first_requirement_column
                 range_marker.ng_range_line_begin = line_start
                 range_marker.ng_range_line_end = line_end
+                range_marker.ng_is_language_parsed = True
                 markers.append(range_marker)
-            elif match_line is not None:
+            elif marker_type == "line":
                 line_marker = LineMarker(None, requirements)
                 line_marker.ng_source_line_begin = line_start
                 line_marker.ng_range_line_begin = line_start

@@ -129,15 +129,16 @@ def hello_3():
 
 def test_001_one_range_marker():
     source_input = b"""
-# @sdoc[REQ-001, REQ-002, REQ-003]
+# @relation(REQ-001, REQ-002, REQ-003, scope=range_start)
 print("Hello world")
-# @sdoc[/REQ-001, REQ-002, REQ-003]
+# @relation(REQ-001, REQ-002, REQ-003, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader_Python()
 
     info: SourceFileTraceabilityInfo = reader.read(source_input)
     markers = info.markers
+
     assert markers[0].reqs == ["REQ-001", "REQ-002", "REQ-003"]
     assert markers[0].begin_or_end == "["
     assert markers[0].ng_source_line_begin == 1
@@ -147,16 +148,16 @@ print("Hello world")
 
 def test_002_two_range_markers():
     source_input = b"""
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001]
-# @sdoc[REQ-002]
+# @relation(REQ-001, scope=range_end)
+# @relation(REQ-002, scope=range_start)
 CONTENT 4
 CONTENT 5
 CONTENT 6
-# @sdoc[/REQ-002]
+# @relation(REQ-002, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader_Python()
@@ -187,21 +188,21 @@ CONTENT 6
 def test_008_three_nested_range_markers():
     source_input = b"""
 CONTENT 1
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 2
-# @sdoc[REQ-002]
+# @relation(REQ-002, scope=range_start)
 CONTENT 3
-# @sdoc[REQ-003]
+# @relation(REQ-003, scope=range_start)
 CONTENT 4
-# @sdoc[/REQ-003]
+# @relation(REQ-003, scope=range_end)
 CONTENT 5
-# @sdoc[/REQ-002]
+# @relation(REQ-002, scope=range_end)
 CONTENT 6
-# @sdoc[/REQ-001]
+# @relation(REQ-001, scope=range_end)
 CONTENT 7
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 8
-# @sdoc[/REQ-001]
+# @relation(REQ-001, scope=range_end)
 CONTENT 9
 """.lstrip()
 
@@ -265,18 +266,18 @@ CONTENT 3
 
 def test_011_nosdoc_keyword_then_normal_marker():
     source_input = b"""
-# @sdoc[nosdoc]
-# @sdoc[REQ-001]
+# @relation(nosdoc, scope=range_start)
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001]
-# @sdoc[/nosdoc]
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_end)
+# @relation(nosdoc, scope=range_end)
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001]
+# @relation(REQ-001, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader_Python()
@@ -287,18 +288,18 @@ CONTENT 3
 
 def test_011_nosdoc_keyword_then_normal_marker_4spaces_indent():
     source_input = b"""
-    # @sdoc[nosdoc]
-    # @sdoc[REQ-001]
+    # @relation(nosdoc, scope=range_start)
+    # @relation(REQ-001, scope=range_start)
     CONTENT 1
     CONTENT 2
     CONTENT 3
-    # @sdoc[/REQ-001]
-    # @sdoc[/nosdoc]
-    # @sdoc[REQ-001]
+    # @relation(REQ-001, scope=range_end)
+    # @relation(nosdoc, scope=range_end)
+    # @relation(REQ-001, scope=range_start)
     CONTENT 1
     CONTENT 2
     CONTENT 3
-    # @sdoc[/REQ-001]
+    # @relation(REQ-001, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader_Python()
@@ -313,11 +314,11 @@ def test_012_marker_not_first_line():
     source_input = b"""
 
 
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 # CONTENT 1
 # CONTENT 2
 # CONTENT 3
-# @sdoc[/REQ-001]
+# @relation(REQ-001, scope=range_end)
 
 
 
@@ -348,11 +349,11 @@ LINE markers.
 
 def test_050_line_marker():
     source_input = b"""
-# @sdoc(REQ-001)
+# @relation(REQ-001, scope=line)
 CONTENT 1
-# @sdoc(REQ-002)
+# @relation(REQ-002, scope=line)
 CONTENT 2
-# @sdoc(REQ-003)
+# @relation(REQ-003, scope=line)
 CONTENT 3
 """.lstrip()
 
@@ -376,11 +377,11 @@ CONTENT 3
 
 def test_validation_01_one_range_marker_begin_req_not_equal_to_end_req():
     source_input = b"""
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-002]
+# @relation(REQ-002, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader_Python()
@@ -397,7 +398,7 @@ CONTENT 3
 
 def test_validation_02_one_range_marker_end_without_begin():
     source_input = b"""
-# @sdoc[/REQ-002]
+# @relation(REQ-002, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader_Python()
@@ -414,8 +415,8 @@ def test_validation_02_one_range_marker_end_without_begin():
 
 def test_validation_03_range_start_without_range_end():
     source_input = b"""
-# @sdoc[REQ-001]
-# @sdoc[REQ-002]
+# @relation(REQ-001, scope=range_start)
+# @relation(REQ-002, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
@@ -433,5 +434,5 @@ CONTENT 3
     )
     assert (
         exc_info.value.args[1]
-        == "The @sdoc keywords are also unmatched on lines: [(2, 9)]."
+        == "The @sdoc keywords are also unmatched on lines: [(2, 13)]."
     )

@@ -219,8 +219,13 @@ class SourceFileViewHTMLGenerator:
             closing_bracket_index = (
                 source_line.index("]")
                 if isinstance(marker, RangeMarker)
+                and not marker.ng_is_language_parsed
                 else source_line.index(", scope")
                 if isinstance(marker, FunctionRangeMarker)
+                or (
+                    isinstance(marker, RangeMarker)
+                    and marker.ng_is_language_parsed
+                )
                 else source_line.index(")")
                 if isinstance(marker, LineMarker)
                 else None

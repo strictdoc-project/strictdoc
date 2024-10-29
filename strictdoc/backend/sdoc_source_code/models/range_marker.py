@@ -30,6 +30,7 @@ class RangeMarker:
         self.ng_range_line_end: Optional[int] = None
 
         self.ng_is_nodoc = "nosdoc" in self.reqs
+        self.ng_is_language_parsed = False
 
     def is_begin(self) -> bool:
         return self.begin_or_end == "["

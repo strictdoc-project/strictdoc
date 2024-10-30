@@ -18,21 +18,36 @@ RangeMarker[noskipws]:
   // It is a hard-won result: it is important that the "@sdoc" is within the
   // regex. Putting it next to the regex as "@sdoc" does not work.
   // TODO: It would be great to check this with the TextX developers.
+  (
   /^.*?@sdoc/
   (begin_or_end = "[/" | begin_or_end = "[")
   (reqs_objs += Req[', ']) ']' '\n'?
+  )
+  |
+  (
+  /^.*?@relation/
+  '('
+  (reqs_objs += Req[', ']) ', scope=' scope=/(range_start|range_end)/ ')' '\n'?
+  )
 ;
 
 LineMarker[noskipws]:
   // It is a hard-won result: it is important that the "@sdoc" is within the
   // regex. Putting it next to the regex as "@sdoc" does not work.
   // TODO: It would be great to check this with the TextX developers.
+  (
   /^.*?@sdoc/
   "(" (reqs_objs += Req[', ']) ')' '\n'?
+  )
+  |
+  (
+  /^.*?@relation/
+  "(" (reqs_objs += Req[', ']) ', scope=line)' '\n'?
+  )
 ;
 
 Req[noskipws]:
-  uid = /[A-Za-z][A-Za-z0-9\\-]+/
+  uid = /(?!scope=)[A-Za-z][A-Za-z0-9\\-]+/
 ;
 
 SingleLineString[noskipws]:

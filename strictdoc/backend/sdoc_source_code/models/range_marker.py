@@ -7,10 +7,24 @@ from strictdoc.helpers.auto_described import auto_described
 
 @auto_described
 class RangeMarker:
-    def __init__(self, parent: Any, begin_or_end: str, reqs_objs: List[Req]):
+    def __init__(
+        self,
+        parent: Any,
+        begin_or_end: str,
+        reqs_objs: List[Req],
+        scope: str = "",
+    ):
         assert isinstance(reqs_objs, list)
         self.parent: Any = parent
-        self.begin_or_end: str = begin_or_end
+        assert len(begin_or_end) > 0 or scope is not None
+
+        self.begin_or_end: str
+        if len(begin_or_end) > 0:
+            self.begin_or_end = begin_or_end
+        else:
+            assert scope in ("range_start", "range_end")
+            self.begin_or_end = "[" if scope == "range_start" else "[/"
+
         self.reqs_objs: List[Req] = reqs_objs
         self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
 

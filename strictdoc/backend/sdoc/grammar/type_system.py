@@ -48,6 +48,7 @@ FileEntry[noskipws]:
    '  VALUE: ' g_file_path = /.*$/ '\n'
   ('  LINE_RANGE: ' g_line_range = /.*$/ '\n')?
   ('  FUNCTION: ' function = /.*$/ '\n')?
+  ('  CLASS: ' clazz = /.*$/ '\n')?
 ;
 
 FileEntryFormat[noskipws]:

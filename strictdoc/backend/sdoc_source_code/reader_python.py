@@ -68,7 +68,7 @@ class SourceFileTraceabilityReader_Python:
                 )
                 functions_stack.append(function)
                 map_function_to_node[function] = node_
-            elif node_.type == "function_definition":
+            elif node_.type in ("class_definition", "function_definition"):
                 function_name: str = ""
                 function_block: Optional[Node] = None
 

@@ -287,6 +287,18 @@ class FileTraceabilityIndex:
                         )
                     )
                     function_name_to_reqs_uids.append(requirement.reserved_uid)
+                elif file_reference.g_file_entry.clazz is not None:
+                    one_file_function_name_to_reqs_uids = (
+                        self.map_file_function_names_to_reqs_uids.setdefault(
+                            file_reference.get_posix_path(), {}
+                        )
+                    )
+                    function_name_to_reqs_uids = (
+                        one_file_function_name_to_reqs_uids.setdefault(
+                            file_reference.g_file_entry.clazz, []
+                        )
+                    )
+                    function_name_to_reqs_uids.append(requirement.reserved_uid)
                 elif file_reference.g_file_entry.line_range is not None:
                     assert requirement.reserved_uid is not None
                     req_uid_to_line_range_file_refs = (

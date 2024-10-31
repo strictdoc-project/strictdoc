@@ -36,12 +36,20 @@ exclude_doc_paths = [
 include_source_paths = [
   "pyproject.toml",
   "tasks.py",
-  "strictdoc/**",
-  "tests/**"
+  "strictdoc/**.js",
+  "strictdoc/**.py",
+  "strictdoc/**.jinja.rst",
+  "tests/integration/**itest",
+  "tests/unit/**.py",
 ]
 
 exclude_source_paths = [
   # StrictDoc (almost never) uses __init__ files.
   # The used files will be whitelisted include_source_paths.
-  "**__init__.py"
+  "**__init__.py",
+  "build/**",
+  "output/**",
+  "strictdoc-project.github.io/**",
+  # FIXME: Figure out how to trace to these files.
+  "tests/unit/strictdoc/backend/sdoc_source_code**"
 ]

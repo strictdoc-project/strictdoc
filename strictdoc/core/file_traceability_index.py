@@ -26,8 +26,8 @@ class FileTraceabilityIndex:
         # "file.py" -> List[SDocNode]
         self.map_paths_to_reqs: Dict[str, OrderedSet[SDocNode]] = {}
 
-        # "REQ-001" -> List[FileReference]
-        self.map_reqs_uids_to_paths: Dict[str, List[FileReference]] = {}
+        # "REQ-001" -> {"file.py", ...}
+        self.map_reqs_uids_to_paths: Dict[str, OrderedSet[str]] = {}
 
         # "file.py" -> SourceFileTraceabilityInfo
         self.map_paths_to_source_file_traceability_info: Dict[
@@ -52,14 +52,14 @@ class FileTraceabilityIndex:
 
     def get_requirement_file_links(
         self, requirement: SDocNode
-    ) -> List[Tuple[FileReference, Optional[List[RangeMarker]]]]:
+    ) -> List[Tuple[str, Optional[List[RangeMarker]]]]:
         if requirement.reserved_uid not in self.map_reqs_uids_to_paths:
             return []
 
         matching_links_with_opt_ranges: List[
-            Tuple[FileReference, Optional[List[RangeMarker]]]
+            Tuple[str, Optional[List[RangeMarker]]]
         ] = []
-        file_links: List[FileReference] = self.map_reqs_uids_to_paths[
+        requirement_source_paths: OrderedSet[str] = self.map_reqs_uids_to_paths[
             requirement.reserved_uid
         ]
 
@@ -67,29 +67,32 @@ class FileTraceabilityIndex:
         # This can be multiple FUNCTION: or RANGE: forward-relations.
         # To avoid duplication of results, visit each unique file link path only once.
         visited_file_links: Set[str] = set()
-        for file_link in file_links:
-            if (
-                file_link_path_ := file_link.get_posix_path()
-            ) in visited_file_links:
+        for requirement_source_path_ in requirement_source_paths:
+            if requirement_source_path_ in visited_file_links:
                 continue
-            visited_file_links.add(file_link_path_)
+            visited_file_links.add(requirement_source_path_)
 
             source_file_traceability_info: Optional[
                 SourceFileTraceabilityInfo
             ] = self.map_paths_to_source_file_traceability_info.get(
-                file_link.get_posix_path()
+                requirement_source_path_
             )
             assert source_file_traceability_info is not None, (
                 f"Requirement {requirement.reserved_uid} references a file"
-                f" that does not exist: {file_link.get_posix_path()}."
+                f" that does not exist: {requirement_source_path_}."
             )
             markers = source_file_traceability_info.ng_map_reqs_to_markers.get(
                 requirement.reserved_uid
             )
+
             if not markers:
-                matching_links_with_opt_ranges.append((file_link, None))
+                matching_links_with_opt_ranges.append(
+                    (requirement_source_path_, None)
+                )
                 continue
-            matching_links_with_opt_ranges.append((file_link, markers))
+            matching_links_with_opt_ranges.append(
+                (requirement_source_path_, markers)
+            )
 
         return matching_links_with_opt_ranges
 
@@ -108,23 +111,15 @@ class FileTraceabilityIndex:
                 source_file_rel_path
             ]
         )
-        for (
-            req_uid
-        ) in source_file_traceability_info.ng_map_reqs_to_markers.keys():
-            if req_uid not in self.map_reqs_uids_to_paths:
-                raise StrictDocException(
-                    f"Source file {source_file_rel_path} references "
-                    f"a requirement that does not exist: {req_uid}."
-                )
 
         if source_file_rel_path not in self.map_paths_to_reqs:
             self.source_file_reqs_cache[source_file_rel_path] = (None, None)
             return None, None
         requirements = self.map_paths_to_reqs[source_file_rel_path]
         assert len(requirements) > 0
-
         general_requirements = []
         range_requirements = []
+
         for requirement in requirements:
             if (
                 requirement.reserved_uid
@@ -161,12 +156,12 @@ class FileTraceabilityIndex:
                 source_file_traceability_info: Optional[
                     SourceFileTraceabilityInfo
                 ] = self.map_paths_to_source_file_traceability_info.get(
-                    file_link.get_posix_path()
+                    file_link
                 )
                 if source_file_traceability_info is None:
                     raise StrictDocException(
                         f"Requirement {requirement_uid} references a file"
-                        f" that does not exist: {file_link.get_posix_path()}."
+                        f" that does not exist: {file_link}."
                     )
 
         for (
@@ -271,9 +266,9 @@ class FileTraceabilityIndex:
                 requirements.add(requirement)
 
                 paths = self.map_reqs_uids_to_paths.setdefault(
-                    requirement.reserved_uid, []
+                    requirement.reserved_uid, OrderedSet()
                 )
-                paths.append(ref)
+                paths.add(ref.get_posix_path())
 
                 if file_reference.g_file_entry.function is not None:
                     one_file_function_name_to_reqs_uids = (
@@ -317,6 +312,7 @@ class FileTraceabilityIndex:
         self,
         source_file_rel_path: str,
         traceability_info: SourceFileTraceabilityInfo,
+        traceability_index,
     ) -> None:
         assert isinstance(traceability_info, SourceFileTraceabilityInfo)
         self.map_paths_to_source_file_traceability_info[
@@ -358,3 +354,31 @@ class FileTraceabilityIndex:
                 markers.append(function_marker)
 
             traceability_info.markers.append(function_marker)
+
+        validated_requirement_uids: Set[str] = set()
+        for marker_ in traceability_info.markers:
+            if isinstance(marker_, ForwardRangeMarker):
+                continue
+            for requirement_uid_ in marker_.reqs:
+                if requirement_uid_ not in validated_requirement_uids:
+                    node = traceability_index.get_node_by_uid_weak2(
+                        requirement_uid_
+                    )
+                    if node is None:
+                        raise StrictDocException(
+                            f"Source file {source_file_rel_path} references "
+                            f"a requirement that does not exist: {requirement_uid_}."
+                        )
+                    validated_requirement_uids.add(requirement_uid_)
+
+                paths = self.map_reqs_uids_to_paths.setdefault(
+                    requirement_uid_, OrderedSet()
+                )
+                paths.add(source_file_rel_path)
+
+                requirement_paths = self.map_paths_to_reqs.setdefault(
+                    source_file_rel_path, OrderedSet()
+                )
+
+                node_id = traceability_index.get_node_by_uid(requirement_uid_)
+                requirement_paths.add(node_id)

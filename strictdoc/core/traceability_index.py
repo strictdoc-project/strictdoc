@@ -343,6 +343,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
         )
 
+    def get_node_by_uid_weak2(self, uid: str):
+        """
+        FIXME: This can likely replace _weak below with no problem.
+        """
+        assert isinstance(uid, str) and len(uid) > 0, uid
+        return self.graph_database.get_link_value_weak(
+            link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
+        )
+
     def get_linkable_node_by_uid(
         self, uid
     ) -> Union[SDocNode, SDocSection, Anchor]:
@@ -432,10 +441,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self,
         source_file_rel_path: str,
         traceability_info: SourceFileTraceabilityInfo,
+        traceability_index,
     ):
         assert isinstance(traceability_info, SourceFileTraceabilityInfo)
         self._file_traceability_index.create_traceability_info(
-            source_file_rel_path, traceability_info
+            source_file_rel_path, traceability_info, traceability_index
         )
 
     def create_section(self, section: SDocSection) -> None:

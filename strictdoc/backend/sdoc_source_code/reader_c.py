@@ -111,8 +111,6 @@ class SourceFileTraceabilityReader_C:
                 )
                 traceability_info.functions.append(new_function)
             elif node_.type == "comment":
-                # A marker example:
-                # @sdoc[REQ-001]
                 if node_.text is None:
                     raise NotImplementedError("Comment without a text")
 

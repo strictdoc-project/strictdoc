@@ -11,14 +11,14 @@
       {%- for range in opt_ranges %}
           <div class="traceability_matrix__file" with_relation="file">
             <a data-turbo="false" class="" href="{{ view_object.link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
-              <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b> {{ link.get_posix_path() }}
+              <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b> {{ link }}
             </a>
           </div>
       {%- endfor -%}
     {%- else -%}
         <div class="traceability_matrix__file" with_relation="file">
           <a data-turbo="false" href="{{ view_object.link_renderer.render_source_file_link_from_root(link) }}#{{ requirement.reserved_uid }}">
-            {{ link.get_posix_path() }}
+            {{ link }}
           </a>
         </div>
     {%- endif -%}

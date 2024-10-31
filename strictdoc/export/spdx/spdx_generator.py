@@ -42,7 +42,6 @@ from spdx_tools.spdx3.writer.json_ld.json_ld_writer import write_payload
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
-    FileReference,
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.writer import SDWriter
@@ -63,9 +62,9 @@ def create_relationship_summary(
     return f"{lhs.summary} --|{relation}|--> {rhs.summary}"
 
 
-def get_spdx_ref(node: Union[SDocDocument, SDocNode, FileReference]) -> str:
-    if isinstance(node, FileReference):
-        return re.sub(r"[/\\ ]", "_", node.get_native_path())
+def get_spdx_ref(node: Union[SDocDocument, SDocNode, str]) -> str:
+    if isinstance(node, str):
+        return re.sub(r"[/\\ ]", "_", node)
 
     identifier: Optional[str] = None
     if node.mid_permanent:
@@ -143,11 +142,11 @@ class SDocToSPDXConverter:
         )
 
     @staticmethod
-    def convert_file_to_file(file: FileReference, file_bytes) -> File:
+    def convert_file_to_file(node_link_path: str, file_bytes) -> File:
         return File(
-            spdx_id=f"SPDXRef-File-{get_spdx_ref(file)}",
-            name=file.get_native_path(),
-            summary=f"SPDX File for source file {file.get_native_path()}",
+            spdx_id=f"SPDXRef-File-{get_spdx_ref(node_link_path)}",
+            name=node_link_path,
+            summary=f"SPDX File for source file {node_link_path}",
             description=None,
             comment=None,
             verified_using=[
@@ -312,24 +311,22 @@ class SPDXGenerator:
                         )
                     )
 
-                    file_relations = (
-                        traceability_index.get_requirement_file_links(node)
+                    node_links = traceability_index.get_requirement_file_links(
+                        node
                     )
-                    file_relation_: FileReference
-                    for file_relation_, _ in file_relations:
-                        path_to_file = file_relation_.get_native_path()
-                        if path_to_file in lookup_file_name_to_spdx_file:
+                    for node_link_path_, _ in node_links:
+                        if node_link_path_ in lookup_file_name_to_spdx_file:
                             continue
 
-                        with open(path_to_file, "rb") as file_:
+                        with open(node_link_path_, "rb") as file_:
                             file_bytes = file_.read()
 
                         source_spdx_file = (
                             sdoc_spdx_converter.convert_file_to_file(
-                                file_relation_, file_bytes
+                                node_link_path_, file_bytes
                             )
                         )
-                        lookup_file_name_to_spdx_file[path_to_file] = (
+                        lookup_file_name_to_spdx_file[node_link_path_] = (
                             source_spdx_file
                         )
                         spdx_container.map_spdx_ref_to_objects[

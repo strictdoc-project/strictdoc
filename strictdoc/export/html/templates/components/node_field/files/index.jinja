@@ -10,7 +10,7 @@
               {%- for range in opt_ranges %}
                 <li>
                   <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(sdoc_entity, link) }}#{{ sdoc_entity.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
-                    {{ link.get_posix_path() }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                    {{ link }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
                     {# TODO optional relation role #}
                   </a>
                 </li>
@@ -18,7 +18,7 @@
             {%- else -%}
               <li>
                 <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(sdoc_entity, link) }}#{{ sdoc_entity.reserved_uid }}">
-                  {{ link.get_posix_path() }}
+                  {{ link }}
                   {# TODO optional relation role #}
                 </a>
               </li>

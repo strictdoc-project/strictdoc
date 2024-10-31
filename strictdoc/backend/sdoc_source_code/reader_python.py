@@ -72,19 +72,34 @@ class SourceFileTraceabilityReader_Python:
                 function_name: str = ""
                 function_block: Optional[Node] = None
 
-                # assert 0, node_.children
                 for child_ in node_.children:
                     if child_.type == "identifier":
                         if child_.text is not None:
                             function_name = child_.text.decode("utf-8")
-                    if child_.type == "function_declarator":
-                        # FIXME
-                        # assert 0, child_.children
-                        function_name = "FOO"
                     if child_.type == "block":
                         function_block = child_
 
                 assert function_name is not None, "Function name"
+
+                parent_class_name: Optional[str] = None
+                if (function_parent_node := node_.parent) is not None and (
+                    class_node_or_node := function_parent_node.parent
+                ) is not None:
+                    if (
+                        class_node_or_node.type == "class_definition"
+                        and len(class_node_or_node.children) > 1
+                    ):
+                        second_node_or_none = class_node_or_node.children[1]
+                        if (
+                            second_node_or_none.type == "identifier"
+                            and second_node_or_none.text is not None
+                        ):
+                            parent_class_name = second_node_or_none.text.decode(
+                                "utf8"
+                            )
+
+                if parent_class_name is not None:
+                    function_name = parent_class_name + "." + function_name
 
                 block_comment = None
                 if (

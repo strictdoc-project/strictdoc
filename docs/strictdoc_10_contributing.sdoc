@@ -27,6 +27,7 @@ following steps:
    single contribution.
 4. If the contribution is not trivial, read through the complete development
    guide.
+5. If the contribution is not trivial, please update the Release Notes with a high-level summary of your contribution. Refer to the release notes from previous releases for guidance on what information is desirable.
 <<<
 
 [/SECTION]

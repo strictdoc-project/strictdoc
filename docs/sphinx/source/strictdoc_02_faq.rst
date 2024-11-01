@@ -296,8 +296,6 @@ FRET has an impressive list of
 
 FRET's user interface is built with Electron.
 
-The detailed comparison is coming.
-
 How long has the StrictDoc project been around?
 ===============================================
 
@@ -329,6 +327,8 @@ The custom RST parser was replaced with a TextX-based DSL. Since then, StrictDoc
 **2022 – November**
 
 The FastAPI/Turbo/Stimulus-based Web interface prototype was created to complement the text-based interface with a graphical user interface (GUI). When the Web-based GUI is stable, StrictDoc may become useable by non-programmers too.
+
+See also: :ref:`Project milestones <SECTION-DP-Project-milestones>`.
 
 Which StrictDoc statistics are available?
 =========================================

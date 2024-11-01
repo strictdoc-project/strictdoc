@@ -24,6 +24,7 @@ The following people and organizations have contributed to StrictDoc. The contri
 
 - @BenGardiner – Import Excel feature, improvements of HTML and RST export, Document Fragments feature.
 - @GGBeer – Generating bibliography with BibTeX (ongoing), improvements of Excel export.
+- @haxtibal – Significant improvements and bug fixes to several StrictDoc features.
 - @lochsh – MathJax support.
 - @Relasym – Important fixes of how the documents are re-generated (or not).
 - @stumpyfr – Improvements of Excel export.
@@ -57,7 +58,9 @@ StrictDoc uses `FastAPI <https://github.com/tiangolo/fastapi>`_ and a combinatio
 
 StrictDoc uses `Jinja <https://jinja.palletsprojects.com>`_ as a templating engine. Jinja is used for both static HTML and RST exports as well as in the Web-based GUI.
 
-StrictDoc uses `Pygments <https://pygments.org>`_ to color-code the source files for its "requirements to source files" traceability feature.
+StrictDoc uses `Pygments <https://pygments.org>`_ to color-code the source files for the requirements-to-source-files traceability feature.
+
+StrictDoc uses `Tree-sitter <https://tree-sitter.github.io/tree-sitter/>`_ to enable language-aware parsing of source files for the requirements-to-source-files traceability feature.
 
 StrictDoc uses `XlsxWriter <https://xlsxwriter.readthedocs.io>`_ and `xlrd <https://xlrd.readthedocs.io/en/latest/>`_ for its Excel export/import features.
 
@@ -81,19 +84,15 @@ StrictDoc's documentation is hosted on `Read the Docs <https://readthedocs.org>`
 [/SECTION]
 
 [SECTION]
-TITLE: Commercial IDEs by JetBrains
+TITLE: Free and commercial IDEs by JetBrains
 
 [TEXT]
 STATEMENT: >>>
-The StrictDoc's core team uses the commercial versions of
+For Python development, the StrictDoc core team uses the community version of
 `PyCharm <https://www.jetbrains.com/pycharm/>`_
-and
-`WebStorm <https://www.jetbrains.com/webstorm/>`_
 from `JetBrains <https://www.jetbrains.com/>`_.
 
-The `Licenses for Open Source Development - Community Support <https://www.jetbrains.com/community/opensource/#support>`_ from JetBrains are provided to the core team for free, based on the precondition that StrictDoc is developed as completely free software, without any monetization mechanisms.
-
-Before the license for the commercial JetBrains was obtained in 2023, the complete StrictDoc's Python codebase had been produced using `PyCharm, the Community edition <https://www.jetbrains.com/pycharm/download>`_.
+In 2022-2023, the `Licenses for Open Source Development - Community Support <https://www.jetbrains.com/community/opensource/#support>`_ from JetBrains were provided to the core team for free, based on the precondition that StrictDoc is developed as completely free software, without any monetization mechanisms.
 <<<
 
 [/SECTION]

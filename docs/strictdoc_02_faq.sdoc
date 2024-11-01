@@ -342,8 +342,6 @@ FRET has an impressive list of
 `Publications <https://github.com/NASA-SW-VnV/fret/blob/master/PUBLICATIONS.md>`_.
 
 FRET's user interface is built with Electron.
-
-The detailed comparison is coming.
 <<<
 
 [/SECTION]
@@ -383,6 +381,8 @@ The custom RST parser was replaced with a TextX-based DSL. Since then, StrictDoc
 **2022 – November**
 
 The FastAPI/Turbo/Stimulus-based Web interface prototype was created to complement the text-based interface with a graphical user interface (GUI). When the Web-based GUI is stable, StrictDoc may become useable by non-programmers too.
+
+See also: [LINK: SECTION-DP-Project-milestones].
 <<<
 
 [/SECTION]

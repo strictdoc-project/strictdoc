@@ -3,6 +3,17 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+Unreleased 0.1.0 (2024-11-01)
+=============================
+
+This backward-compatible release introduces several new features for tracing requirements to source files:
+
+- StrictDoc now integrates with `Tree-sitter <https://tree-sitter.github.io/tree-sitter/>`_, enabling it to parse multiple programming languages. Using AST information, it achieves more precise tracing of requirements to source code.
+- Language-specific parsers for Python and C have been added, allowing functions (in C and Python) or classes (in Python) to be linked to requirements.
+- Both forward linking of requirements to source files and backward linking of source files to requirements are supported. These features can be used independently or together within the same project.
+
+With this release, we are also transitioning to a more `semantic versioning <https://semver.org>`_-oriented release scheme. From now on, the MAJOR.MINOR.PATCH version components will be maintained according to the recommendations of the semantic versioning specification.
+
 0.0.60 (2024-10-26)
 ===================
 

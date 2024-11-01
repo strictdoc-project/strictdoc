@@ -2,7 +2,6 @@
 import argparse
 import atexit
 import base64
-import json
 import os.path
 import sys
 import tempfile
@@ -110,16 +109,6 @@ def get_inches_from_millimeters(mm: float) -> float:
     return mm / 25.4
 
 
-def send_devtools(driver, cmd, params):
-    resource = (
-        f"/session/{driver.session_id}/chromium/send_command_and_get_result"
-    )
-    url = driver.command_executor._url + resource
-    body = json.dumps({"cmd": cmd, "params": params})
-    response = driver.command_executor._request("POST", url, body)
-    return response.get("value")
-
-
 def get_pdf_from_html(driver, url) -> bytes:
     print(f"HTML2PDF: opening URL with Chrome Driver: {url}")  # noqa: T201
 
@@ -152,7 +141,7 @@ def get_pdf_from_html(driver, url) -> bytes:
     }
 
     print("HTML2PDF: executing print command with Chrome Driver.")  # noqa: T201
-    result = send_devtools(driver, "Page.printToPDF", calculated_print_options)
+    result = driver.execute_cdp_cmd("Page.printToPDF", calculated_print_options)
 
     print("HTML2PDF: JS logs from the print session:")  # noqa: T201
     print('"""')  # noqa: T201

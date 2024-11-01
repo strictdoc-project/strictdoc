@@ -5,6 +5,3 @@ TITLE: Hello world doc
 UID: REQ-001
 TITLE: Requirement Title
 STATEMENT: Requirement Statement
-RELATIONS:
-- TYPE: File
-  VALUE: file.py

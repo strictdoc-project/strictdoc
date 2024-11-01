@@ -24,6 +24,9 @@ def source_file_traceability_info_processor(
         )
     source_file_traceability_info.markers = parse_context.markers
     source_file_traceability_info.ng_lines_total = parse_context.lines_total
+    source_file_traceability_info.ng_map_reqs_to_markers = (
+        parse_context.map_reqs_to_markers
+    )
 
 
 def create_begin_end_range_reqs_mismatch_error(

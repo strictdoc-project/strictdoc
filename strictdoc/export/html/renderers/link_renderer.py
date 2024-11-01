@@ -5,7 +5,6 @@ from typing import Optional, Union
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.reference import FileReference
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.export.html.document_type import DocumentType
@@ -160,9 +159,9 @@ class LinkRenderer:
 
     @staticmethod
     def render_source_file_link(
-        requirement: SDocNode, file_reference: FileReference
+        requirement: SDocNode, requirement_source_path: str
     ):
-        assert isinstance(file_reference, FileReference), file_reference
+        assert isinstance(requirement_source_path, str), requirement_source_path
 
         document_or_none: Optional[SDocDocument] = (
             requirement.ng_document_reference.get_document()
@@ -175,14 +174,14 @@ class LinkRenderer:
             "/"
             f"_source_files"
             "/"
-            f"{file_reference.get_posix_path()}.html"
+            f"{requirement_source_path}.html"
         )
         return source_file_link
 
     @staticmethod
-    def render_source_file_link_from_root(file_reference: FileReference):
-        assert isinstance(file_reference, FileReference)
-        return f"_source_files/{file_reference.get_posix_path()}.html"
+    def render_source_file_link_from_root(requirement_source_path: str):
+        assert isinstance(requirement_source_path, str)
+        return f"_source_files/{requirement_source_path}.html"
 
     @staticmethod
     def render_source_file_link_from_root_2(source_file: SourceFile):
@@ -197,9 +196,11 @@ class LinkRenderer:
     @staticmethod
     def render_requirement_in_source_file_link(
         requirement: SDocNode,
-        source_link: FileReference,
+        source_link: str,
         context_source_file: SourceFile,
     ):
+        assert isinstance(source_link, str), source_link
+
         def get_root_path_prefix(level):
             assert level > 0
             return ("../" * level)[:-1]
@@ -208,7 +209,7 @@ class LinkRenderer:
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
-            f"/{source_link.get_posix_path()}.html"
+            f"/{source_link}.html"
             f"#{requirement.reserved_uid}"
         )
         return source_file_link
@@ -242,15 +243,15 @@ class LinkRenderer:
     def render_requirement_in_source_file_range_link(
         self,
         requirement: SDocNode,
-        source_link: FileReference,
+        source_link: str,
         context_source_file: SourceFile,
         source_range,
     ):
-        assert isinstance(source_link, FileReference)
+        assert isinstance(source_link, str)
         assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
             requirement.reserved_uid,
-            source_link.get_posix_path(),
+            source_link,
             context_source_file,
             source_range,
         )

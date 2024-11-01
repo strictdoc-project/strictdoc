@@ -12,7 +12,7 @@ from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 
 REGEX_REQ = r"[A-Za-z][A-Za-z0-9\\-]+"
 # @relation(REQ-1, scope=function)
-REGEX_MARKER = rf"@relation\(({REGEX_REQ}(?:, {REGEX_REQ})*)\, scope=(class|function|line|range_start|range_end)\)"
+REGEX_MARKER = rf"@relation\(({REGEX_REQ}(?:, {REGEX_REQ})*)\, scope=(file|class|function|line|range_start|range_end)\)"
 
 
 class MarkerParser:
@@ -56,7 +56,7 @@ class MarkerParser:
                 )
                 requirements.append(requirement)
 
-            if marker_type in ("class", "function"):
+            if marker_type in ("file", "class", "function"):
                 function_marker = FunctionRangeMarker(None, requirements)
                 function_marker.ng_source_line_begin = line_start
                 function_marker.ng_range_line_begin = line_start

@@ -93,7 +93,7 @@
                               <li>
                                 <a class="requirement__link-file"
                                     href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
-                                  {{ link.get_posix_path() }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
+                                  {{ link }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
                                 </a>
                               </li>
                             {%- endfor -%}
@@ -101,7 +101,7 @@
                             <li>
                               <a class="requirement__link-file"
                                   href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
-                                {{ link.get_posix_path() }}
+                                {{ link }}
                               </a>
                             </li>
                           {%- endif -%}

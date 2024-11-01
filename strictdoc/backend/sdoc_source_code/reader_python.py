@@ -68,6 +68,44 @@ class SourceFileTraceabilityReader_Python:
                 )
                 functions_stack.append(function)
                 map_function_to_node[function] = node_
+                if (
+                    len(node_.children) > 0
+                    and node_.children[0].type == "expression_statement"
+                ):
+                    if len(node_.children[0].children) > 0:
+                        if node_.children[0].children[0].type == "string":
+                            block_comment = node_.children[0].children[0]
+
+                            # string contains of three parts:
+                            # string_start string_content string_end
+                            string_content = block_comment.children[1]
+                            assert string_content.text is not None
+
+                            block_comment_text = string_content.text.decode(
+                                "utf-8"
+                            )
+                            markers = MarkerParser.parse(
+                                block_comment_text,
+                                node_.start_point[0] + 1,
+                                # It is important that +1 is not present here because
+                                # currently StrictDoc does not display the last empty line (\n is 10).
+                                node_.end_point[0]
+                                if input_buffer[-1] == 10
+                                else node_.end_point[0] + 1,
+                                string_content.start_point[0] + 1,
+                                string_content.start_point[1] + 1,
+                            )
+                            for marker_ in markers:
+                                if isinstance(
+                                    marker_, FunctionRangeMarker
+                                ) and (function_range_marker_ := marker_):
+                                    function_range_marker_processor(
+                                        function_range_marker_, parse_context
+                                    )
+                                    traceability_info.markers.append(
+                                        function_range_marker_
+                                    )
+
             elif node_.type in ("class_definition", "function_definition"):
                 function_name: str = ""
                 function_block: Optional[Node] = None
@@ -172,8 +210,6 @@ class SourceFileTraceabilityReader_Python:
                 functions_stack.append(new_function)
                 traceability_info.functions.append(new_function)
             elif node_.type == "comment":
-                # A marker example:
-                # @sdoc[REQ-001]
                 if node_.text is None:
                     raise NotImplementedError("Comment without a text")
 
@@ -211,10 +247,6 @@ class SourceFileTraceabilityReader_Python:
 
         source_file_traceability_info_processor(
             traceability_info, parse_context
-        )
-
-        traceability_info.ng_map_reqs_to_markers = (
-            parse_context.map_reqs_to_markers
         )
 
         return traceability_info

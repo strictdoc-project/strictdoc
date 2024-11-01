@@ -28,8 +28,8 @@ class SourceFileTraceabilityInfo:
 
         """
         {
-         "REQ-001": RangeMarker(...),
-         "REQ-002": RangeMarker(...),
+         "REQ-001": [RangeMarker(...), ...],
+         "REQ-002": [RangeMarker(...), ...],
         }
         """
         self.ng_map_reqs_to_markers = {}

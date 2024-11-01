@@ -29,6 +29,8 @@ An important feature of StrictDoc is its focus on open data, ensuring ease of da
 
 StrictDoc shall be compatible with other software and engineering tools. This includes at least the compatibility with the Python ecosystem, the model-based systems engineering tools, such as Capella, and the formats providing Software Bill of Materials, such as SPDX.
 
+.. _SECTION-DP-Project-milestones:
+
 Project milestones
 ==================
 
@@ -84,7 +86,7 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
    * - 2024-Q3
      - HTML2PDF improvements. ReqIF roundtrip for RELATION/ROLE. Consistent automatic escaping of Jinja templates. Passthrough->export command migration.
    * - 2024-Q4
-     - TBD
+     - Connecting requirements to functions (C, Python) and classes (Python) in source code. Support the linking in both directions independently: from requirements to source using RELATION/File and from source to requirements using @relation markers.
 
 The roadmap diagram
 -------------------

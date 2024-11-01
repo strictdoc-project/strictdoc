@@ -17,7 +17,7 @@ Summary of StrictDoc features:
 - The documentation files are stored as human-readable text files.
 - A simple domain-specific language DSL is used for writing the documents. The
   text format for encoding this language is called SDoc (strict-doc).
-- StrictDoc reads ``*.sdoc`` files and builds an in-memory representation of a
+- StrictDoc reads \*.sdoc files and builds an in-memory representation of a
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
   into a number of formats including HTML, RST, ReqIF, PDF, JSON, Excel.
@@ -32,9 +32,9 @@ Summary of StrictDoc features:
 - Requirements to source files traceability (experimental). See
   [LINK: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE].
 - Custom grammar and custom fields support. The StrictDoc's grammar can be
-  extended to support arbitrary special fields, such as ``PRIORITY``, ``OWNER``,
+  extended to support arbitrary special fields, such as "PRIORITY", "OWNER",
   or even more specialized fields, such as
-  ``Automotive Safety Integrity Level (ASIL)`` or ``Verification method``.
+  "Automotive Safety Integrity Level (ASIL)" or "Verification method".
   See [LINK: SECTION-CUSTOM-GRAMMARS].
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
@@ -2057,49 +2057,16 @@ TITLE: Traceability between requirements and source code
 STATEMENT: >>>
 **Note:** This feature is experimental, the documentation is incomplete.
 
-StrictDoc allows connecting requirements to source code files. Two types of
-links are supported:
+StrictDoc allows connecting requirements to source code files in two ways:
 
-1\) A basic link where a requirement links to a whole file.
+1. Linking source files to requirements by adding special markers in the source code without modifying the requirements.
+2. Linking requirements to source files by adding relations in the requirements without altering the source code.
 
-.. code-block:: text
+The advantage of the first approach is that requirements remain agnostic to the source code and implementation details. Special markers are added solely to the source files, creating traceability back to the requirements.
 
-    [REQUIREMENT]
-    UID: REQ-001
-    RELATIONS:
-    - TYPE: File
-      VALUE: file.py
-    TITLE: File reference
-    STATEMENT: This requirement references the file.
+The benefit of the second approach is that traceability to source files is established without any modification to the source code. This can be useful in projects where adding markers to the source code is undesirable or not feasible.
 
-2\) A range-based link where a requirement links to a file and
-additionally in the file, there is a reverse link that connects a source range
-back to the requirement:
-
-The requirement declaration contains a reference of the type ``File``:
-
-.. code-block:: text
-
-    [REQUIREMENT]
-    UID: REQ-002
-    RELATIONS:
-    - TYPE: File
-      VALUE: file.py
-    TITLE: Range file reference
-    STATEMENT: This requirement references the file.py file.
-    COMMENT: >>>
-    If the file.py contains a source range that is connected back to this
-    requirement (REQ-002), the link becomes a link to the source range.
-    <<<
-
-The source file:
-
-.. code-block:: py
-
-    # @sdoc[REQ-002]
-    def hello_world():
-        print("hello world")
-    # @sdoc[/REQ-002]
+Both options can be used independently or in combination, depending on the project setup and allocation of software components.
 
 To activate the traceability to source files, configure the project config with a dedicated feature:
 
@@ -2120,6 +2087,183 @@ The
 repository contains executable examples including the example of
 requirements-to-source-code traceability.
 <<<
+
+[SECTION]
+UID: SECTION-UG-Language-aware-parsing-of-source-code
+TITLE: Language-aware parsing of source code
+
+[TEXT]
+STATEMENT: >>>
+For parsing source code and calculating traceability to requirements, StrictDoc uses a general parser that is agnostic of specific programming languages and their constructs, such as classes or functions. However, for languages with these constructs, establishing traceability to them can simplify the tracing process.
+
+As an experimental option, StrictDoc supports parsing source files of selected programming languages (currently Python and C) to recognize language syntax, primarily enabling traceability of functions (in Python, C, and others) and classes (in Python, C++, and others) to requirements.
+
+To activate language-aware traceability, configure the project with the following features:
+
+.. code:: toml
+
+    [project]
+
+    features = [
+      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+      "SOURCE_FILE_LANGUAGE_PARSERS"
+    ]
+
+Currently, only Python and C parsers are implemented. Upcoming implementations include parsers for Rust, C++, Bash, and more.
+<<<
+
+[/SECTION]
+
+[SECTION]
+TITLE: Linking source code to requirements
+
+[TEXT]
+STATEMENT: >>>
+To connect a source file to a requirement, a dedicated ``@relation`` marker must be added to the source file. Several marker types are supported, depending on the programming language. For example, the ``scope=class`` option is available for Python files but not for C files, as C does not support classes.
+
+.. note::
+
+    For language-specific parsing of source code, e.g., Python and C, make sure to enable the corresponding option, see [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
+
+**1\) Linking a file to a requirement**
+
+The marker must be added to the top comment of a file. Currently supported only in Python.
+
+.. code:: python
+
+    """
+    This file implements ...
+
+    @relation(REQ-1, scope=file)
+    """
+
+**2\) Linking a class to a requirement (Python only)**
+
+.. code:: python
+
+    class Foo:
+        """
+        This class implements ...
+
+        @relation(REQ-1, scope=file)
+        """
+
+**3\) Linking a function to a requirement (Python and C only)**
+
+.. code:: python
+
+    class Foo:
+        def bar(self):
+            """
+            This function implements ...
+
+            @relation(REQ-1, scope=function)
+            """
+
+or
+
+.. code:: c
+
+    /**
+     * Some text.
+     *
+     * @relation(REQ-1, scope=function)
+     */
+    void hello_world(void) {
+        print("Hello, World\n");
+    }
+
+**4\) Linking a range to a requirement**
+
+.. code:: python
+
+    def foo():
+        # @relation(REQ-1, scope=range_start)
+        print("Hello, World!")
+        # @relation(REQ-1, scope=range_end)
+
+**5\) Linking a single line to a requirement**
+
+.. code:: python
+
+    def foo():
+        # @relation(REQ-1, scope=line)
+        print("Hello, World!")
+<<<
+
+[/SECTION]
+
+[SECTION]
+TITLE: Linking requirements to source code
+
+[TEXT]
+STATEMENT: >>>
+The linking of requirements to source files is arranged with a special RELATION type ``File``.
+
+.. note::
+
+    For language-specific parsing of source code, e.g., Python and C, make sure to enable the corresponding option, see [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
+
+**1\) Linking a requirement to a whole source file**
+
+.. code-block:: text
+
+    [REQUIREMENT]
+    UID: REQ-001
+    RELATIONS:
+    - TYPE: File
+      VALUE: file.py
+    TITLE: File reference
+    STATEMENT: This requirement references the file.
+
+**2\) Linking a requirement to range in a source file**
+
+.. code-block:: text
+
+    [REQUIREMENT]
+    UID: REQ-002
+    TITLE: Range file reference
+    STATEMENT: This requirement references the file.py file.
+    RELATIONS:
+    - TYPE: File
+      VALUE: file.py
+      LINE_RANGE: 2, 4
+
+**3\) Linking a requirement to a function in a source file**
+
+.. code-block:: text
+
+    [REQUIREMENT]
+    UID: REQ-002
+    TITLE: Function reference
+    STATEMENT: This requirement references a function in a file.
+    RELATIONS:
+    - TYPE: File
+      VALUE: file.py
+      FUNCTION: hello_world
+    - TYPE: File
+      VALUE: file.c
+      FUNCTION: Foo.hello_world_2
+
+.. note::
+
+    For linking to functions in classes, a class name has to be added in a format: ``<class name>.<function name>``. This is currently only supported for Python source files.
+
+**4\) Linking a requirement to a class in a source file (Python only)**
+
+.. code-block:: text
+
+    [REQUIREMENT]
+    UID: REQ-002
+    TITLE: Class reference
+    STATEMENT: This requirement references a class in a file.
+    RELATIONS:
+    - TYPE: File
+      VALUE: file.py
+      CLASS: Foo
+<<<
+
+[/SECTION]
 
 [/SECTION]
 

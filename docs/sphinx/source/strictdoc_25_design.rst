@@ -55,7 +55,7 @@ High-level architecture
 
 The following diagram captures the high-level architecture of StrictDoc.
 
-.. image:: _assets/StrictDoc_Architecture.drawio.png
+.. image:: _assets/StrictDoc_Workspace-Architecture.drawio.png
    :alt: StrictDoc's architecture diagram
    :class: image
    :width: 100%

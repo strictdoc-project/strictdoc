@@ -1,26 +1,22 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import os.path
 import shutil
 import subprocess
-import tempfile
 from pathlib import Path
 from typing import Optional
 
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.timing import measure_performance
-
-PATH_TO_TMP_DIR = tempfile.gettempdir()
-PATH_TO_SANDBOX_DIR = os.path.join(
-    PATH_TO_TMP_DIR, "strictdoc_cache", "git_sandbox"
-)
 
 
 class GitClient:
-    def __init__(self, path_to_git_root: str):
+    def __init__(self, path_to_git_root: str) -> None:
         assert os.path.isdir(path_to_git_root)
         self.path_to_git_root: str = path_to_git_root
 
     @staticmethod
-    def create_repo_from_local_copy(revision: str):
+    def create_repo_from_local_copy(
+        revision: str, project_config: ProjectConfig
+    ) -> "GitClient":
         with measure_performance(f"Copy Git repo: {revision}"):
             path_to_cwd = os.getcwd()
             if revision == "HEAD+":
@@ -28,9 +24,10 @@ class GitClient:
                 assert os.path.isdir(path_to_project_git_dir)
                 return GitClient(path_to_cwd)
 
-            path_to_sandbox_git_repo = os.path.join(
-                PATH_TO_SANDBOX_DIR, revision
+            path_to_sandbox = os.path.join(
+                project_config.get_path_to_cache_dir(), "git"
             )
+            path_to_sandbox_git_repo = os.path.join(path_to_sandbox, revision)
             path_to_sandbox_git_repo_git = os.path.join(
                 path_to_sandbox_git_repo, ".git"
             )
@@ -42,7 +39,7 @@ class GitClient:
                 if git_client.is_clean_branch():
                     return git_client
 
-            Path(PATH_TO_SANDBOX_DIR).mkdir(parents=True, exist_ok=True)
+            Path(path_to_sandbox).mkdir(parents=True, exist_ok=True)
 
             # Running git worktree add ... below results with "path already
             # exists" error if the destination folder already exists, even if
@@ -74,7 +71,7 @@ class GitClient:
 
             return git_client
 
-    def is_clean_branch(self):
+    def is_clean_branch(self) -> bool:
         """
         https://unix.stackexchange.com/a/155077/77389
         """
@@ -89,7 +86,7 @@ class GitClient:
             return False
         return result.stdout == ""
 
-    def add_file(self, path_to_file):
+    def add_file(self, path_to_file: str) -> None:
         result = subprocess.run(
             ["git", "add", path_to_file],
             cwd=self.path_to_git_root,
@@ -99,7 +96,7 @@ class GitClient:
         )
         assert result.returncode == 0, result
 
-    def add_all(self):
+    def add_all(self) -> None:
         result = subprocess.run(
             ["git", "add", "."],
             cwd=self.path_to_git_root,
@@ -109,7 +106,7 @@ class GitClient:
         )
         assert result.returncode == 0, result
 
-    def commit(self, message: str):
+    def commit(self, message: str) -> None:
         result = subprocess.run(
             ["git", "commit", "-m", message],
             cwd=self.path_to_git_root,
@@ -119,7 +116,7 @@ class GitClient:
         )
         assert result.returncode == 0, result
 
-    def check_revision(self, revision: str):
+    def check_revision(self, revision: str) -> str:
         assert isinstance(revision, str)
         assert len(revision) > 0
         result = subprocess.run(
@@ -133,7 +130,7 @@ class GitClient:
             return result.stdout.strip()
         raise LookupError(f"Non-existing revision: {revision}.")
 
-    def commit_all(self, message: str):
+    def commit_all(self, message: str) -> None:
         result = subprocess.run(
             ["git", "commit", "-a", "-m", message],
             cwd=self.path_to_git_root,
@@ -143,7 +140,7 @@ class GitClient:
         )
         assert result.returncode == 0, result
 
-    def rebase_from_main(self):
+    def rebase_from_main(self) -> None:
         result = subprocess.run(
             ["git", "fetch", "origin"],
             cwd=self.path_to_git_root,
@@ -161,7 +158,7 @@ class GitClient:
         )
         assert result.returncode == 0, result
 
-    def push(self):
+    def push(self) -> None:
         result = subprocess.run(
             ["git", "push", "origin"],
             cwd=self.path_to_git_root,
@@ -171,7 +168,7 @@ class GitClient:
         )
         assert result.returncode == 0, result
 
-    def hard_reset(self, revision: Optional[str] = None):
+    def hard_reset(self, revision: Optional[str] = None) -> None:
         reset_args = ["git", "reset", "--hard"]
         if revision is not None:
             reset_args.append(revision)
@@ -184,7 +181,7 @@ class GitClient:
         )
         assert result.returncode == 0, result
 
-    def clean(self):
+    def clean(self) -> None:
         result = subprocess.run(
             ["git", "clean", "-fd"],
             cwd=self.path_to_git_root,

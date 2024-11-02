@@ -206,7 +206,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         assert right_revision_resolved is not None
 
         git_client_lhs = GitClient.create_repo_from_local_copy(
-            left_revision_resolved
+            left_revision_resolved, project_config
         )
 
         project_config_copy_lhs: ProjectConfig = deepcopy(project_config)
@@ -223,7 +223,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         project_config_copy_lhs.input_paths = [export_input_abs_path]
 
         git_client_rhs = GitClient.create_repo_from_local_copy(
-            right_revision_resolved
+            right_revision_resolved, project_config
         )
 
         export_input_rel_path = os.path.relpath(

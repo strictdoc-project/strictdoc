@@ -142,16 +142,13 @@ class NormalHTMLTemplates(HTMLTemplates):
 
 
 class CompiledHTMLTemplates(HTMLTemplates):
-    PATH_TO_JINJA_CACHE_DIR = os.path.join(
-        tempfile.gettempdir(), "strictdoc_cache", "jinja"
-    )
-
     def __init__(self, project_config: ProjectConfig):
         path_to_output_dir_hash = hashlib.md5(
             project_config.output_dir.encode("utf-8")
         ).hexdigest()
         self.path_to_jinja_cache_bucket_dir = os.path.join(
-            CompiledHTMLTemplates.PATH_TO_JINJA_CACHE_DIR,
+            project_config.get_path_to_cache_dir(),
+            "jinja",
             path_to_output_dir_hash,
         )
         self._jinja_environment: Optional[JinjaEnvironment] = None

@@ -1,4 +1,9 @@
 class Foo:
+    class Bar:
+        class Baz:
+            def hello_world(self):
+                print("hello world")  # noqa: T201
+
     def hello_world(self):
         """
         @relation(REQ-1, scope=function)

@@ -6,17 +6,19 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 
 RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#2#11">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#6#11">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#8#8">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#2#11">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#16">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#11#16">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#13#13">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#16">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-2#4#5">
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: def</span> <span class="nf">hello_world</span>
-CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#2#11"
-CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-2#2#11"
 CHECK-SOURCE-FILE:  <div data-line=3 class="source__line-content">
-CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#2#11"
+CHECK-SOURCE-FILE: def</span> <span class="nf">hello_world</span>
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-2#4#5"
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#7#16"
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#11#16"
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#13#13"
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 71.4%
+CHECK-SOURCE-COVERAGE: 63.2%

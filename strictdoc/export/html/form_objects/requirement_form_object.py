@@ -679,7 +679,7 @@ class RequirementFormObject(ErrorObject):
                 parsed_html,
                 rst_error,
             ) = RstToHtmlFragmentWriter(
-                path_to_output_dir=config.output_dir,
+                project_config=config,
                 context_document=context_document,
             ).write_with_validation(requirement_statement)
             if parsed_html is None:

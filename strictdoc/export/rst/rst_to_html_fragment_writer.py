@@ -4,7 +4,6 @@ import io
 import os
 import re
 import sys
-import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -14,6 +13,7 @@ from docutils.utils import SystemMessage
 from markupsafe import Markup
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.rst.directives.raw_html_role import raw_html_role
 from strictdoc.export.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
@@ -28,16 +28,16 @@ class RstToHtmlFragmentWriter:
     def __init__(
         self,
         *,
-        path_to_output_dir: str,
+        project_config: ProjectConfig,
         context_document: Optional[SDocDocument],
     ):
         path_to_output_dir_md5: str = hashlib.md5(
-            path_to_output_dir.encode("utf-8")
+            project_config.output_dir.encode("utf-8")
         ).hexdigest()
 
-        path_to_tmp_dir = tempfile.gettempdir()
+        path_to_tmp_dir = project_config.get_path_to_cache_dir()
         self.path_to_rst_cache_dir = os.path.join(
-            path_to_tmp_dir, "strictdoc_cache", "rst", path_to_output_dir_md5
+            path_to_tmp_dir, "rst", path_to_output_dir_md5
         )
 
         if context_document is not None:
@@ -63,7 +63,7 @@ class RstToHtmlFragmentWriter:
             self.source_path: str = "<string>"
         self.context_document: Optional[SDocDocument] = context_document
 
-    def write(self, rst_fragment: str) -> Markup:
+    def write(self, rst_fragment: str, use_cache: bool = True) -> Markup:
         assert isinstance(rst_fragment, str), rst_fragment
 
         # FIXME: This is broken.
@@ -77,7 +77,7 @@ class RstToHtmlFragmentWriter:
         path_to_cached_fragment = os.path.join(
             path_to_rst_fragment_bucket_dir, fragment_md5
         )
-        if os.path.isdir(path_to_rst_fragment_bucket_dir):
+        if use_cache and os.path.isdir(path_to_rst_fragment_bucket_dir):
             if os.path.isfile(path_to_cached_fragment):
                 with open(
                     path_to_cached_fragment, "rb"
@@ -91,8 +91,9 @@ class RstToHtmlFragmentWriter:
         rendered_html: str = self._write_no_cache(rst_fragment)
         rendered_html_bytes = rendered_html.encode("UTF-8")
 
-        with open(path_to_cached_fragment, "wb") as cached_fragment_file_:
-            cached_fragment_file_.write(rendered_html_bytes)
+        if use_cache:
+            with open(path_to_cached_fragment, "wb") as cached_fragment_file_:
+                cached_fragment_file_.write(rendered_html_bytes)
 
         return Markup(rendered_html)
 

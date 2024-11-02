@@ -54,7 +54,7 @@ class DocumentFinder:
     @staticmethod
     def _process_worker_parse_document(
         document_triple: Tuple[Union[Folder, File], File, str],
-        path_to_output_root: str,
+        project_config: ProjectConfig,
     ) -> Tuple[File, str, Union[SDocDocument, DocumentGrammar]]:
         _, doc_file, file_tree_mount_folder = document_triple
         doc_full_path = doc_file.get_full_path()
@@ -64,12 +64,16 @@ class DocumentFinder:
         ):
             document_or_grammar: Union[SDocDocument, DocumentGrammar]
             if doc_full_path.endswith(".sdoc"):
-                sdoc_reader: SDReader = SDReader(path_to_output_root)
-                document_or_grammar = sdoc_reader.read_from_file(doc_full_path)
+                sdoc_reader: SDReader = SDReader()
+                document_or_grammar = sdoc_reader.read_from_file(
+                    doc_full_path, project_config
+                )
                 assert isinstance(document_or_grammar, SDocDocument)
             elif doc_full_path.endswith(".sgra"):
-                sgra_reader = SDocGrammarReader(path_to_output_root)
-                document_or_grammar = sgra_reader.read_from_file(doc_full_path)
+                sgra_reader = SDocGrammarReader()
+                document_or_grammar = sgra_reader.read_from_file(
+                    doc_full_path, project_config
+                )
                 assert isinstance(document_or_grammar, DocumentGrammar)
             else:
                 raise NotImplementedError
@@ -99,7 +103,7 @@ class DocumentFinder:
 
         process_document_binding = partial(
             DocumentFinder._process_worker_parse_document,
-            path_to_output_root=project_config.output_dir,
+            project_config=project_config,
         )
 
         found_documents = parallelizer.run_parallel(

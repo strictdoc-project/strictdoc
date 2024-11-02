@@ -11,6 +11,7 @@ from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.textx import drop_textx_meta
@@ -22,9 +23,6 @@ class SDReader:
         classes=DOCUMENT_MODELS,
         use_regexp_group=True,
     )
-
-    def __init__(self, path_to_output_root: str = "NOT_RELEVANT"):
-        self.path_to_output_root = path_to_output_root
 
     @staticmethod
     def _read(input_string, file_path=None):
@@ -54,14 +52,16 @@ class SDReader:
         document, parse_context = SDReader._read(input_string, file_path)
         return document, parse_context
 
-    def read_from_file(self, file_path: str) -> SDocDocument:
+    def read_from_file(
+        self, file_path: str, project_config: ProjectConfig
+    ) -> SDocDocument:
         """
         This function parses the provided .sdoc file and returns a Document
         object.
         """
 
         unpickled_content = PickleCache.read_from_cache(
-            file_path, self.path_to_output_root
+            file_path, project_config, "sdoc"
         )
         if unpickled_content:
             return assert_cast(unpickled_content, SDocDocument)
@@ -82,7 +82,7 @@ class SDReader:
             # are not used anyway.
             drop_textx_meta(sdoc)
 
-            PickleCache.save_to_cache(sdoc, file_path, self.path_to_output_root)
+            PickleCache.save_to_cache(sdoc, file_path, project_config, "sdoc")
 
             return sdoc
         except StrictDocException as exception:

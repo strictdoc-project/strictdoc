@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammarWrapper,
 )
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_optional_cast
 from strictdoc.helpers.textx import (
     drop_textx_meta,
@@ -25,9 +26,6 @@ class SDocGrammarReader:
         classes=GRAMMAR_MODELS + [DocumentGrammarWrapper],
         use_regexp_group=True,
     )
-
-    def __init__(self, path_to_output_root: str) -> None:
-        self.path_to_output_root: str = path_to_output_root
 
     @staticmethod
     def read(
@@ -60,9 +58,11 @@ class SDocGrammarReader:
 
         return grammar
 
-    def read_from_file(self, file_path: str) -> DocumentGrammar:
+    def read_from_file(
+        self, file_path: str, project_config: ProjectConfig
+    ) -> DocumentGrammar:
         unpickled_content: Optional[DocumentGrammar] = assert_optional_cast(
-            PickleCache.read_from_cache(file_path, self.path_to_output_root),
+            PickleCache.read_from_cache(file_path, project_config, "grammar"),
             DocumentGrammar,
         )
         if unpickled_content is not None:
@@ -76,7 +76,7 @@ class SDocGrammarReader:
                 grammar_content, file_path=file_path
             )
             PickleCache.save_to_cache(
-                grammar, file_path, self.path_to_output_root
+                grammar, file_path, project_config, "grammar"
             )
 
             return grammar

@@ -1,5 +1,7 @@
 import os
 
+from strictdoc import environment
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
@@ -26,8 +28,9 @@ def test_01():
      - Row 2, column 3
 """.lstrip()
 
+    project_config = ProjectConfig.default_config(environment=environment)
     html_output = RstToHtmlFragmentWriter(
-        context_document=None, path_to_output_dir="NOT_RELEVANT"
+        context_document=None, project_config=project_config
     ).write(rst_input)
     assert '<table border="1"' in html_output
 
@@ -37,8 +40,9 @@ def test_02():
 - First item is a bullet point.
 """.lstrip()
 
+    project_config = ProjectConfig.default_config(environment=environment)
     html_output = RstToHtmlFragmentWriter(
-        context_document=None, path_to_output_dir="NOT_RELEVANT"
+        context_document=None, project_config=project_config
     ).write(rst_input)
     assert "<li>First item is a bullet point.</li>" in html_output
 
@@ -60,9 +64,9 @@ def test_with_validation_01_tables():
      - Row 2, column 3
 """.lstrip()
 
+    project_config = ProjectConfig.default_config(environment=environment)
     html_output, _ = RstToHtmlFragmentWriter(
-        context_document=None,
-        path_to_output_dir="NOT_RELEVANT",
+        context_document=None, project_config=project_config
     ).write_with_validation(rst_input)
     assert '<table border="1"' in html_output
 
@@ -75,9 +79,9 @@ def test_with_validation_02_warning_message():
   ---
 """.lstrip()
 
+    project_config = ProjectConfig.default_config(environment=environment)
     html_output, error = RstToHtmlFragmentWriter(
-        context_document=None,
-        path_to_output_dir="NOT_RELEVANT",
+        context_document=None, project_config=project_config
     ).write_with_validation(rst_input)
     assert html_output is None
     assert error == (
@@ -97,9 +101,9 @@ Hello. What nex?
   ----
 """.lstrip()
 
+    project_config = ProjectConfig.default_config(environment=environment)
     html_output, error = RstToHtmlFragmentWriter(
-        context_document=None,
-        path_to_output_dir="NOT_RELEVANT",
+        context_document=None, project_config=project_config
     ).write_with_validation(rst_input)
     assert html_output is None
     assert error == (

@@ -40,7 +40,7 @@ class MarkupRenderer:
         ]
         if not markup or markup == "RST":
             html_fragment_writer = RstToHtmlFragmentWriter(
-                path_to_output_dir=config.output_dir,
+                project_config=config,
                 context_document=context_document,
             )
         elif markup == "HTML":

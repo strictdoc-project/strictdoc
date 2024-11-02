@@ -31,7 +31,9 @@ from strictdoc.helpers.string import get_lines_count
 
 
 class SourceFileTraceabilityReader_C:
-    def read(self, input_buffer: bytes, file_path=None):
+    def read(
+        self, input_buffer: bytes, file_path=None
+    ) -> SourceFileTraceabilityInfo:
         assert isinstance(input_buffer, bytes)
 
         file_size = len(input_buffer)

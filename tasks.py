@@ -4,7 +4,6 @@ import inspect
 import os
 import re
 import sys
-import tempfile
 from enum import Enum
 from typing import Optional
 
@@ -345,12 +344,9 @@ def test_integration(
             chromedriver_param = f"--param CHROMEDRIVER={os.path.join(chromedriver_path, 'chromedriver')}"
         test_folder = f"{cwd}/tests/integration/features/html2pdf"
 
-    strictdoc_cache_dir = os.path.join(tempfile.gettempdir(), "strictdoc_cache")
-
     itest_command = f"""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
-        --param STRICTDOC_CACHE_DIR="{strictdoc_cache_dir}"
         {html2pdf_param}
         {chromedriver_param}
         -v

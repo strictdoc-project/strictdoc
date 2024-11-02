@@ -1,5 +1,7 @@
 [project]
 
+cache_dir = "./Output/cache"
+
 features = [
   "HTML2PDF",
 ]

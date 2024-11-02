@@ -1,7 +1,7 @@
 # mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,type-arg,var-annotated"
 import sys
 import traceback
-from typing import List, Optional, Union
+from typing import List, Optional, Sequence, Union
 
 import tree_sitter_python
 from tree_sitter import Language, Node, Parser
@@ -119,25 +119,9 @@ class SourceFileTraceabilityReader_Python:
 
                 assert function_name is not None, "Function name"
 
-                parent_class_name: Optional[str] = None
-                if (function_parent_node := node_.parent) is not None and (
-                    class_node_or_node := function_parent_node.parent
-                ) is not None:
-                    if (
-                        class_node_or_node.type == "class_definition"
-                        and len(class_node_or_node.children) > 1
-                    ):
-                        second_node_or_none = class_node_or_node.children[1]
-                        if (
-                            second_node_or_none.type == "identifier"
-                            and second_node_or_none.text is not None
-                        ):
-                            parent_class_name = second_node_or_none.text.decode(
-                                "utf8"
-                            )
-
-                if parent_class_name is not None:
-                    function_name = parent_class_name + "." + function_name
+                parent_names = self.get_node_ns(node_)
+                if parent_names:
+                    function_name = f"{'.'.join(parent_names)}.{function_name}"
 
                 block_comment = None
                 if (
@@ -271,3 +255,31 @@ class SourceFileTraceabilityReader_Python:
             # TODO: when --debug is provided
             # traceback.print_exc()  # noqa: ERA001
             sys.exit(1)
+
+    @staticmethod
+    def get_node_ns(node: Node) -> Sequence[str]:
+        """Walk up the tree and find parent classes"""
+        parent_scopes = []
+        cursor: Optional[Node] = node
+        while cursor:
+            if (block_node := cursor.parent) is not None and (
+                class_node_or_node := block_node.parent
+            ) is not None:
+                cursor = class_node_or_node
+                if (
+                    class_node_or_node.type == "class_definition"
+                    and len(class_node_or_node.children) > 1
+                ):
+                    second_node_or_none = class_node_or_node.children[1]
+                    if (
+                        second_node_or_none.type == "identifier"
+                        and second_node_or_none.text is not None
+                    ):
+                        parent_class_name = second_node_or_none.text.decode(
+                            "utf8"
+                        )
+                        parent_scopes.append(parent_class_name)
+            else:
+                cursor = None
+        parent_scopes.reverse()
+        return parent_scopes

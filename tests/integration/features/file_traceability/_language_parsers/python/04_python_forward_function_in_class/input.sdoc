@@ -17,4 +17,4 @@ STATEMENT: Requirement Statement
 RELATIONS:
 - TYPE: File
   VALUE: file.py
-  FUNCTION: Foo.hello_world
+  FUNCTION: Foo.Bar.Baz.hello_world

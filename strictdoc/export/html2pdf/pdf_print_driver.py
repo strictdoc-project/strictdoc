@@ -21,9 +21,16 @@ class PDFPrintDriver:
             sys.executable,
             environment.get_path_to_html2pdf(),
             paths_to_print,
+            "--cache-dir",
+            project_config.get_path_to_cache_dir(),
         ]
         if project_config.chromedriver is not None:
-            cmd.extend(["--chromedriver", project_config.chromedriver])
+            cmd.extend(
+                [
+                    "--chromedriver",
+                    project_config.chromedriver,
+                ]
+            )
         with measure_performance(
             "PDFPrintDriver: printing HTML to PDF using HTML2PDF and Chrome Driver"
         ):

@@ -22,15 +22,6 @@ from webdriver_manager.core.file_manager import FileManager
 from webdriver_manager.core.http import HttpClient
 from webdriver_manager.core.os_manager import OperationSystemManager
 
-STRICTDOC_CACHE_DIR = os.getenv("STRICTDOC_CACHE_DIR")
-if STRICTDOC_CACHE_DIR is not None:
-    PATH_TO_CACHE_DIR = STRICTDOC_CACHE_DIR
-else:
-    PATH_TO_CACHE_DIR = os.path.join(
-        tempfile.gettempdir(), "strictdoc_cache", "chromedriver"
-    )
-PATH_TO_CHROMEDRIVER_DIR = os.path.join(PATH_TO_CACHE_DIR, "chromedriver")
-
 # HTML2PDF.js prints unicode symbols to console. The following makes it work on
 # Windows which otherwise complains:
 # UnicodeEncodeError: 'charmap' codec can't encode characters in position 129-130: character maps to <undefined>
@@ -66,7 +57,15 @@ class HTML2PDF_HTTPClient(HttpClient):
 
 
 class HTML2PDF_CacheManager(DriverCacheManager):
+    def __init__(self, file_manager: FileManager, path_to_cache_dir: str):
+        super().__init__(file_manager=file_manager)
+        self.path_to_cache_dir: str = path_to_cache_dir
+
     def find_driver(self, driver: Driver):
+        path_to_cached_chrome_driver_dir = os.path.join(
+            self.path_to_cache_dir, "chromedriver"
+        )
+
         os_type = self.get_os_type()
         browser_type = driver.get_browser_type()
         browser_version = self._os_system_manager.get_browser_version_from_os(
@@ -74,7 +73,7 @@ class HTML2PDF_CacheManager(DriverCacheManager):
         )
 
         path_to_cached_chrome_driver_dir = os.path.join(
-            PATH_TO_CHROMEDRIVER_DIR, browser_version, os_type
+            path_to_cached_chrome_driver_dir, browser_version, os_type
         )
         path_to_cached_chrome_driver = os.path.join(
             path_to_cached_chrome_driver_dir, "chromedriver"
@@ -91,6 +90,10 @@ class HTML2PDF_CacheManager(DriverCacheManager):
         )
         path_to_downloaded_chrome_driver = super().find_driver(driver)
         if path_to_downloaded_chrome_driver is None:
+            print(  # noqa: T201
+                f"HTML2PDF_CacheManager: could not get a downloaded Chrome driver: "
+                f"{path_to_cached_chrome_driver}"
+            )
             return None
 
         print(  # noqa: T201
@@ -153,11 +156,14 @@ def get_pdf_from_html(driver, url) -> bytes:
     return data
 
 
-def create_webdriver(chromedriver: Optional[str]):
+def create_webdriver(chromedriver: Optional[str], path_to_cache_dir: str):
     print("HTML2PDF: creating Chrome Driver service.", flush=True)  # noqa: T201
     if chromedriver is None:
         cache_manager = HTML2PDF_CacheManager(
-            file_manager=FileManager(os_system_manager=OperationSystemManager())
+            file_manager=FileManager(
+                os_system_manager=OperationSystemManager()
+            ),
+            path_to_cache_dir=path_to_cache_dir,
         )
 
         http_client = HTML2PDF_HTTPClient()
@@ -207,14 +213,27 @@ def main():
         type=str,
         help="Optional chromedriver path. Downloaded if not given.",
     )
+    parser.add_argument(
+        "--cache-dir",
+        type=str,
+        help="Optional path to a cache directory whereto the Chrome driver is downloaded.",
+    )
     parser.add_argument("paths", help="Paths to input HTML file.")
     args = parser.parse_args()
 
     paths = args.paths
 
     separate_path_pairs = paths.split(";")
-
-    driver = create_webdriver(args.chromedriver)
+    path_to_cache_dir: str = (
+        args.cache_dir
+        if args.cache_dir is not None
+        else (
+            os.path.join(
+                tempfile.gettempdir(), "strictdoc_cache", "chromedriver"
+            )
+        )
+    )
+    driver = create_webdriver(args.chromedriver, path_to_cache_dir)
 
     @atexit.register
     def exit_handler():

@@ -112,7 +112,7 @@ class CreateOrUpdateNodeCommand:
                     parsed_html,
                     rst_error,
                 ) = RstToHtmlFragmentWriter(
-                    path_to_output_dir=self.project_config.output_dir,
+                    project_config=self.project_config,
                     context_document=self.context_document,
                 ).write_with_validation(field_.field_value)
                 if parsed_html is None:

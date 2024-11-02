@@ -1,6 +1,8 @@
 [project]
 title = "StrictDoc Documentation"
+
 html_assets_strictdoc_dir = "assets"
+cache_dir = "./output/cache"
 
 features = [
   # Stable features.

@@ -214,14 +214,14 @@ class SourceFileTraceabilityReader:
         RangeMarker,
     ]
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.meta_model = metamodel_from_str(
             SOURCE_FILE_GRAMMAR,
             classes=SourceFileTraceabilityReader.SOURCE_FILE_MODELS,
             use_regexp_group=True,
         )
 
-    def read(self, input_string, file_path=None):
+    def read(self, input_string, file_path=None) -> SourceFileTraceabilityInfo:
         # TODO: This might be possible to handle directly in the textx grammar.
         # AttributeError: 'str' object has no attribute '_tx_parser'
         file_size = len(input_string)
@@ -271,7 +271,7 @@ class SourceFileTraceabilityReader:
         drop_textx_meta(source_file_traceability_info)
         return source_file_traceability_info
 
-    def read_from_file(self, file_path):
+    def read_from_file(self, file_path) -> SourceFileTraceabilityInfo:
         try:
             with open(file_path, encoding="utf-8") as file:
                 sdoc_content = file.read()

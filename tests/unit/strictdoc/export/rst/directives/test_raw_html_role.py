@@ -1,5 +1,7 @@
 import os
 
+from strictdoc import environment
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
@@ -14,9 +16,10 @@ def test_01():
 :rawhtml:`<a href="foo.bar">LINK</a>`\
 """
 
+    project_config = ProjectConfig.default_config(environment=environment)
     html_output = RstToHtmlFragmentWriter(
-        path_to_output_dir="NOT_RELEVANT", context_document=None
-    ).write(rst_input)
+        project_config=project_config, context_document=None
+    ).write(rst_input, use_cache=False)
     assert (
         html_output
         == """\

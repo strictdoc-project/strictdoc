@@ -3,6 +3,7 @@ import datetime
 import os
 import re
 import sys
+import tempfile
 from enum import Enum
 from typing import List, Optional, Tuple
 
@@ -64,6 +65,8 @@ class ProjectFeature(str, Enum):
 class ProjectConfig:  # pylint: disable=too-many-instance-attributes
     DEFAULT_PROJECT_TITLE = "Untitled Project"
     DEFAULT_DIR_FOR_SDOC_ASSETS = "_static"
+    DEFAULT_DIR_FOR_SDOC_CACHE = "$TMPDIR"
+
     DEFAULT_FEATURES: List[str] = [
         ProjectFeature.TABLE_SCREEN,
         ProjectFeature.TRACEABILITY_SCREEN,
@@ -78,6 +81,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         environment: SDocRuntimeEnvironment,
         project_title: str,
         dir_for_sdoc_assets: str,
+        dir_for_sdoc_cache: str,
         project_features: List[str],
         server_host: str,
         server_port: int,
@@ -107,6 +111,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
         # Settings obtained from the strictdoc.toml config file.
         self.project_title: str = project_title
         self.dir_for_sdoc_assets: str = dir_for_sdoc_assets
+        self.dir_for_sdoc_cache: str = dir_for_sdoc_cache
         self.project_features: List[str] = project_features
         self.server_host: str = server_host
         self.server_port: int = server_port
@@ -159,6 +164,7 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
             environment=environment,
             project_title=ProjectConfig.DEFAULT_PROJECT_TITLE,
             dir_for_sdoc_assets=ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS,
+            dir_for_sdoc_cache=ProjectConfig.DEFAULT_DIR_FOR_SDOC_CACHE,
             project_features=ProjectConfig.DEFAULT_FEATURES,
             server_host=ProjectConfig.DEFAULT_SERVER_HOST,
             server_port=ProjectConfig.DEFAULT_SERVER_PORT,
@@ -286,6 +292,13 @@ class ProjectConfig:  # pylint: disable=too-many-instance-attributes
     def get_strictdoc_root_path(self) -> str:
         return self.environment.path_to_strictdoc
 
+    def get_path_to_cache_dir(self) -> str:
+        return (
+            self.dir_for_sdoc_cache
+            if self.dir_for_sdoc_cache != "$TMPDIR"
+            else tempfile.gettempdir()
+        )
+
     def get_static_files_path(self) -> str:
         return self.environment.get_static_files_path()
 
@@ -353,6 +366,7 @@ class ProjectConfigLoader:
 
         project_title = ProjectConfig.DEFAULT_PROJECT_TITLE
         dir_for_sdoc_assets = ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS
+        dir_for_sdoc_cache = ProjectConfig.DEFAULT_DIR_FOR_SDOC_CACHE
         project_features = ProjectConfig.DEFAULT_FEATURES
         server_host = ProjectConfig.DEFAULT_SERVER_HOST
         server_port = ProjectConfig.DEFAULT_SERVER_PORT
@@ -375,6 +389,10 @@ class ProjectConfigLoader:
             dir_for_sdoc_assets = project_content.get(
                 "html_assets_strictdoc_dir", dir_for_sdoc_assets
             )
+            dir_for_sdoc_cache = project_content.get(
+                "cache_dir", dir_for_sdoc_cache
+            )
+
             project_features = project_content.get("features", project_features)
             if not isinstance(project_features, list):
                 print(  # noqa: T201
@@ -546,6 +564,7 @@ class ProjectConfigLoader:
             environment=environment,
             project_title=project_title,
             dir_for_sdoc_assets=dir_for_sdoc_assets,
+            dir_for_sdoc_cache=dir_for_sdoc_cache,
             project_features=project_features,
             server_host=server_host,
             server_port=server_port,

@@ -80,6 +80,22 @@ def run_strictdoc_server(
                 # "tests/*",  # Doesn't work.
                 # "tests/**",  # Makes the process hang, server doesn't start.
                 # It looks like the regex engine does not support ** globs.
+                # Example:
+                # output/cache/server/html/_source_files/strictdoc/backend/reqif/sdoc_reqif_fields.py.html
+                "output/*/*.*",
+                "output/*/*/*.*",
+                "output/*/*/*/*.*",
+                "output/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*/*/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
+                "output/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
                 "tests/*/*.*",
                 "tests/*/*/*.*",
                 "tests/*/*/*/*.*",

@@ -103,7 +103,7 @@ def server(context, input_path=".", config=None):
         ToxEnvironment.DEVELOPMENT,
         f"""
             python -m strictdoc.cli.main
-                server {input_path} {config_argument} --reload
+                server {input_path} {config_argument} --output-path ./output/cache/server --reload
         """,
     )
 

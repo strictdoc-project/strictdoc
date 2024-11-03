@@ -8,6 +8,9 @@ from textx import get_location, metamodel_from_str
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
+from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
+    FunctionRangeMarker,
+)
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     LineMarker,
     RangeMarker,
@@ -206,10 +209,37 @@ def line_marker_processor(line_marker: LineMarker, parse_context: ParseContext):
         markers.append(line_marker)
 
 
+def function_range_marker_processor(
+    function_range_marker: FunctionRangeMarker, parse_context: ParseContext
+):
+    location = get_location(function_range_marker)
+    line = location["line"]
+    column = location["col"]
+
+    if (
+        len(parse_context.marker_stack) > 0
+        and parse_context.marker_stack[-1].ng_is_nodoc
+    ):
+        # This marker is within a "nosdoc" block, so we ignore it.
+        return
+
+    parse_context.markers.append(function_range_marker)
+    function_range_marker.ng_source_line_begin = 1
+    function_range_marker.ng_range_line_begin = 1
+    function_range_marker.ng_range_line_end = parse_context.lines_total
+    function_range_marker.ng_marker_line = line
+    function_range_marker.ng_marker_column = column
+
+    for req in function_range_marker.reqs:
+        markers = parse_context.map_reqs_to_markers.setdefault(req, [])
+        markers.append(function_range_marker)
+
+
 class SourceFileTraceabilityReader:
     SOURCE_FILE_MODELS = [
-        Req,
+        FunctionRangeMarker,
         LineMarker,
+        Req,
         SourceFileTraceabilityInfo,
         RangeMarker,
     ]
@@ -241,8 +271,12 @@ class SourceFileTraceabilityReader:
         parse_line_marker_processor = partial(
             line_marker_processor, parse_context=parse_context
         )
+        parse_function_range_marker_processor = partial(
+            function_range_marker_processor, parse_context=parse_context
+        )
 
         obj_processors = {
+            "FunctionRangeMarker": parse_function_range_marker_processor,
             "LineMarker": parse_line_marker_processor,
             "RangeMarker": parse_range_marker_processor,
             "Req": parse_req_processor,

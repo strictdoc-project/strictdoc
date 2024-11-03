@@ -1803,7 +1803,7 @@ The marker must be added to the top comment of a file. Currently supported only 
         """
         This class implements ...
 
-        @relation(REQ-1, scope=file)
+        @relation(REQ-1, scope=class)
         """
 
 **3\) Linking a function to a requirement (Python and C only)**

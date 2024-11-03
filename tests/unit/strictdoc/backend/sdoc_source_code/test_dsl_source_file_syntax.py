@@ -362,6 +362,27 @@ CONTENT 3
         assert markers[2].ng_range_line_end == 5
 
 
+def test_060_file_level_marker():
+    source_input = """\
+\"\"\"
+@relation(REQ-001, scope=file)
+\"\"\"
+
+def hello_world():
+    pass
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(source_input)
+    assert len(document.markers) == 1
+    markers = document.markers
+    assert markers[0].reqs == ["REQ-001"]
+    assert markers[0].ng_source_line_begin == 1
+    assert markers[0].ng_range_line_begin == 1
+    assert markers[0].ng_range_line_end == 6
+
+
 def test_validation_01_one_range_marker_begin_req_not_equal_to_end_req():
     source_input = """
 # @sdoc[REQ-001]

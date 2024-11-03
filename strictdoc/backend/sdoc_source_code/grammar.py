@@ -7,7 +7,7 @@ Part[noskipws]:
   // The EmptyLine is needed in addition to the SingleLineString because
   // otherwise textX's get_location() ignores the whitespaces.
   // TODO: Maybe there is a trick to disable that and only use SingleLineString.
-  EmptyLine | RangeMarker | LineMarker | SingleLineString
+  EmptyLine | RangeMarker | LineMarker | FunctionRangeMarker | SingleLineString
 ;
 
 EmptyLine[noskipws]:
@@ -29,6 +29,11 @@ RangeMarker[noskipws]:
   '('
   (reqs_objs += Req[', ']) ', scope=' scope=/(range_start|range_end)/ ')' '\n'?
   )
+;
+
+FunctionRangeMarker[noskipws]:
+  /^.*?@relation/
+  "(" (reqs_objs += Req[', ']) ', scope=file)' '\n'?
 ;
 
 LineMarker[noskipws]:

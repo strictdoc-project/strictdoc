@@ -2117,6 +2117,18 @@ The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
     [project]
     html_assets_strictdoc_dir = "assets"
 
+Path to cache dir
+^^^^^^^^^^^^^^^^^
+
+StrictDoc uses caching when reading and writing artifacts. By default, all caches are written to the system's temporary directory (``$TMPDIR``).
+
+The ``cache_dir`` option in the configuration file allows specifying a custom directory, such as ``./output/build``. This setting can help make caching artifacts visible alongside documentation artifacts.
+
+.. code:: toml
+
+    [project]
+    cache_dir = "./output/cache"
+
 Path to source root
 ~~~~~~~~~~~~~~~~~~~
 

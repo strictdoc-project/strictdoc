@@ -2517,6 +2517,8 @@ The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
     html_assets_strictdoc_dir = "assets"
 <<<
 
+[/SECTION]
+
 [SECTION]
 TITLE: Path to cache dir
 
@@ -2531,8 +2533,6 @@ The ``cache_dir`` option in the configuration file allows specifying a custom di
     [project]
     cache_dir = "./output/cache"
 <<<
-
-[/SECTION]
 
 [/SECTION]
 

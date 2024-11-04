@@ -2118,7 +2118,7 @@ The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
     html_assets_strictdoc_dir = "assets"
 
 Path to cache dir
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 StrictDoc uses caching when reading and writing artifacts. By default, all caches are written to the system's temporary directory (``$TMPDIR``).
 

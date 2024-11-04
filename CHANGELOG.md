@@ -1,5 +1,76 @@
 # Changelog
 
+## [Unreleased](https://github.com/strictdoc-project/strictdoc/tree/HEAD)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.2.0...HEAD)
+
+**Closed issues:**
+
+- Feature: Parsing source code functions into requirements graph [\#1957](https://github.com/strictdoc-project/strictdoc/issues/1957)
+
+**Merged pull requests:**
+
+-  Bump version to 0.2.0  [\#1984](https://github.com/strictdoc-project/strictdoc/pull/1984) ([stanislaw](https://github.com/stanislaw))
+
+## [0.2.0](https://github.com/strictdoc-project/strictdoc/tree/0.2.0) (2024-11-04)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.1.0...0.2.0)
+
+**Merged pull requests:**
+
+- backend/sdoc\_source\_code: C reader: recognize scope=file [\#1983](https://github.com/strictdoc-project/strictdoc/pull/1983) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: forward C function relations: include the top comment to the range [\#1982](https://github.com/strictdoc-project/strictdoc/pull/1982) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: each range is completed with a type [\#1981](https://github.com/strictdoc-project/strictdoc/pull/1981) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: general source code reader: support scope=file [\#1980](https://github.com/strictdoc-project/strictdoc/pull/1980) ([stanislaw](https://github.com/stanislaw))
+-  tasks: server: set --output-path to a local cache folder  [\#1979](https://github.com/strictdoc-project/strictdoc/pull/1979) ([stanislaw](https://github.com/stanislaw))
+- git\_client: use the cache dir from project config [\#1978](https://github.com/strictdoc-project/strictdoc/pull/1978) ([stanislaw](https://github.com/stanislaw))
+- export/html: html\_templates: use the cache dir from project config [\#1977](https://github.com/strictdoc-project/strictdoc/pull/1977) ([stanislaw](https://github.com/stanislaw))
+- export/html2pdf: use the cache dir from project config [\#1976](https://github.com/strictdoc-project/strictdoc/pull/1976) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: enable caching of source files [\#1975](https://github.com/strictdoc-project/strictdoc/pull/1975) ([stanislaw](https://github.com/stanislaw))
+- Forward functions: Search all parent classes [\#1974](https://github.com/strictdoc-project/strictdoc/pull/1974) ([haxtibal](https://github.com/haxtibal))
+
+## [0.1.0](https://github.com/strictdoc-project/strictdoc/tree/0.1.0) (2024-11-01)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.60...0.1.0)
+
+**Fixed bugs:**
+
+- Source traceability: experimetal RANGE: does not contribute to source coverage [\#1963](https://github.com/strictdoc-project/strictdoc/issues/1963)
+- html2pdf: update to the newer Chrome web driver API [\#1971](https://github.com/strictdoc-project/strictdoc/pull/1971) ([stanislaw](https://github.com/stanislaw))
+
+**Merged pull requests:**
+
+- Bump version to 0.1.0 [\#1973](https://github.com/strictdoc-project/strictdoc/pull/1973) ([stanislaw](https://github.com/stanislaw))
+- docs: document the language-aware parsing of source files for traceability [\#1972](https://github.com/strictdoc-project/strictdoc/pull/1972) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: enable scope=file marker for Python [\#1970](https://github.com/strictdoc-project/strictdoc/pull/1970) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: support scope=class [\#1969](https://github.com/strictdoc-project/strictdoc/pull/1969) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: support "Class.function" syntax for forward links to Python code [\#1968](https://github.com/strictdoc-project/strictdoc/pull/1968) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: make the default parser recognize @relation [\#1967](https://github.com/strictdoc-project/strictdoc/pull/1967) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: adjust the marker parser to the new @relation syntax [\#1966](https://github.com/strictdoc-project/strictdoc/pull/1966) ([stanislaw](https://github.com/stanislaw))
+- file\_traceability\_index: deduplicate requirement links based on functions [\#1965](https://github.com/strictdoc-project/strictdoc/pull/1965) ([stanislaw](https://github.com/stanislaw))
+- backend/sdoc\_source\_code: calculate coverage for forward range and function markers [\#1964](https://github.com/strictdoc-project/strictdoc/pull/1964) ([stanislaw](https://github.com/stanislaw))
+- Bump version to 0.0.60 [\#1962](https://github.com/strictdoc-project/strictdoc/pull/1962) ([stanislaw](https://github.com/stanislaw))
+- Feature: Parsing source code functions into requirements graph [\#1956](https://github.com/strictdoc-project/strictdoc/pull/1956) ([stanislaw](https://github.com/stanislaw))
+
+## [0.0.60](https://github.com/strictdoc-project/strictdoc/tree/0.0.60) (2024-10-26)
+
+[Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.59...0.0.60)
+
+**Closed issues:**
+
+- strictdoc 0.0.59 dependency lxml 4.9.4 does not install nor build on Windows 11 Enterprise 10.0.22631 [\#1951](https://github.com/strictdoc-project/strictdoc/issues/1951)
+
+**Merged pull requests:**
+
+- Add 'TAG' as a supported fieldtype for requirement nodes [\#1959](https://github.com/strictdoc-project/strictdoc/pull/1959) ([mplum](https://github.com/mplum))
+- Prevent query failure when node is missing requested field [\#1958](https://github.com/strictdoc-project/strictdoc/pull/1958) ([mplum](https://github.com/mplum))
+- Code climate: sdoc\_source\_code: rename all occurrences: pragma -\> marker [\#1955](https://github.com/strictdoc-project/strictdoc/pull/1955) ([stanislaw](https://github.com/stanislaw))
+- Fix generated search URLs for project statistics [\#1954](https://github.com/strictdoc-project/strictdoc/pull/1954) ([haxtibal](https://github.com/haxtibal))
+- pyproject.toml: remove unneeded lxml dependency [\#1952](https://github.com/strictdoc-project/strictdoc/pull/1952) ([stanislaw](https://github.com/stanislaw))
+- docs: migrate all FREETEXT to TEXT [\#1950](https://github.com/strictdoc-project/strictdoc/pull/1950) ([stanislaw](https://github.com/stanislaw))
+- Regenerate CHANGELOG [\#1949](https://github.com/strictdoc-project/strictdoc/pull/1949) ([stanislaw](https://github.com/stanislaw))
+- pyproject.toml: remove a some unneeded artifacts from the release tar [\#1948](https://github.com/strictdoc-project/strictdoc/pull/1948) ([stanislaw](https://github.com/stanislaw))
+
 ## [0.0.59](https://github.com/strictdoc-project/strictdoc/tree/0.0.59) (2024-10-13)
 
 [Full Changelog](https://github.com/strictdoc-project/strictdoc/compare/0.0.58...0.0.59)

@@ -1,5 +1,5 @@
 import re
-from typing import List, Union
+from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
@@ -23,6 +23,7 @@ class MarkerParser:
         line_end: int,
         comment_line_start: int,
         comment_column_start: int,
+        entity_name: Optional[str] = None,
     ) -> List[Union[FunctionRangeMarker, RangeMarker, LineMarker]]:
         markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]] = []
         for input_line_idx_, input_line_ in enumerate(
@@ -63,6 +64,12 @@ class MarkerParser:
                 function_marker.ng_range_line_end = line_end
                 function_marker.ng_marker_line = current_line
                 function_marker.ng_marker_column = first_requirement_column
+                if marker_type == "file":
+                    function_marker.set_description("the whole file")
+                elif marker_type == "function":
+                    function_marker.set_description(f"function {entity_name}")
+                elif marker_type == "class":
+                    function_marker.set_description(f"class {entity_name}")
                 markers.append(function_marker)
             elif marker_type in ("range_start", "range_end"):
                 start_or_end = marker_type == "range_start"

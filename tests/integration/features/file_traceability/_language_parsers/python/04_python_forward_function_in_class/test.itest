@@ -7,12 +7,19 @@ RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 
 RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#16">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#16">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#11#16">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#13#13">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#16">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-2#4#5">
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+
+CHECK-SOURCE-FILE: <b>[ 7-16 ]</b> file.py, function Foo.hello_world
+CHECK-SOURCE-FILE: <b>[ 7-16 ]</b> file.py, function Foo.hello_world
+CHECK-SOURCE-FILE: <b>[ 11-16 ]</b> file.py, range
+CHECK-SOURCE-FILE: <b>[ 13 ]</b> file.py, line
+CHECK-SOURCE-FILE: <b>[ 4-5 ]</b> file.py, function Foo.Bar.Baz.hello_world
+
 CHECK-SOURCE-FILE:  <div data-line=3 class="source__line-content">
 CHECK-SOURCE-FILE: def</span> <span class="nf">hello_world</span>
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-2#4#5"

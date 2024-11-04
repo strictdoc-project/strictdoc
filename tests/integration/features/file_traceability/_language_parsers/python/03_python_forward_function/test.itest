@@ -7,9 +7,9 @@ RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 
 RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#1#10">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#1#10">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#5#10">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#7">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#1#10">
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 CHECK-SOURCE-FILE: def</span> <span class="nf">hello_world</span>

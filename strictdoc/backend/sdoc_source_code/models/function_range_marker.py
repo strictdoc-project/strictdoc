@@ -1,8 +1,15 @@
 # mypy: disable-error-code="no-untyped-def,type-arg"
+from enum import Enum
 from typing import List, Optional
 
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.helpers.auto_described import auto_described
+
+
+class RangeMarkerType(Enum):
+    FUNCTION = "function"
+    CLASS = "class"
+    FILE = "file"
 
 
 @auto_described
@@ -33,6 +40,8 @@ class FunctionRangeMarker:
 
         self.ng_is_nodoc = "nosdoc" in self.reqs
 
+        self._description: Optional[str] = None
+
     def is_range_marker(self) -> bool:
         return True
 
@@ -44,6 +53,13 @@ class FunctionRangeMarker:
 
     def is_end(self) -> bool:
         return False
+
+    def get_description(self) -> Optional[str]:
+        return self._description
+
+    def set_description(self, description: str) -> None:
+        assert isinstance(description, str)
+        self._description = description
 
 
 @auto_described

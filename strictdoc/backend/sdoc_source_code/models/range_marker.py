@@ -58,6 +58,9 @@ class RangeMarker:
     def is_line_marker(self) -> bool:
         return False
 
+    def get_description(self) -> Optional[str]:
+        return "range"
+
 
 @auto_described
 class LineMarker:
@@ -88,6 +91,9 @@ class LineMarker:
     def is_line_marker(self) -> bool:
         return True
 
+    def get_description(self) -> Optional[str]:
+        return "line"
+
 
 @auto_described
 class ForwardRangeMarker:
@@ -116,3 +122,6 @@ class ForwardRangeMarker:
 
     def is_line_marker(self) -> bool:
         return False
+
+    def get_description(self) -> Optional[str]:
+        return "range"

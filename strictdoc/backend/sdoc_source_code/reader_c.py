@@ -89,6 +89,7 @@ class SourceFileTraceabilityReader_C:
                         function_last_line,
                         function_comment_node.start_point[0] + 1,
                         function_comment_node.start_point[1] + 1,
+                        entity_name=function_name,
                     )
                     for marker_ in markers:
                         if isinstance(marker_, FunctionRangeMarker) and (

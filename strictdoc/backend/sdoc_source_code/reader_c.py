@@ -1,10 +1,10 @@
 # mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,type-arg,var-annotated"
 import sys
 import traceback
-from typing import List, Union
+from typing import List, Optional, Union
 
 import tree_sitter_c
-from tree_sitter import Language, Parser
+from tree_sitter import Language, Node, Parser
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
@@ -68,6 +68,7 @@ class SourceFileTraceabilityReader_C:
                         function_name = child_.children[0].text.decode("utf8")
                 assert function_name is not None, "Function name"
 
+                function_comment_node: Optional[Node] = None
                 function_comment_text = None
                 if (
                     node_.prev_sibling is not None
@@ -105,10 +106,13 @@ class SourceFileTraceabilityReader_C:
                                 function_range_marker_
                             )
 
+                # The function range includes the top comment if it exists.
                 new_function = Function(
                     parent=None,
                     name=function_name,
-                    line_begin=node_.range.start_point[0] + 1,
+                    line_begin=function_comment_node.start_point[0] + 1
+                    if function_comment_node is not None
+                    else node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
                     parts=[],
                 )

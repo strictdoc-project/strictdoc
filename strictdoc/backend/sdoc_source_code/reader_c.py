@@ -57,7 +57,36 @@ class SourceFileTraceabilityReader_C:
 
         nodes = traverse_tree(tree)
         for node_ in nodes:
-            if node_.type == "function_definition":
+            if node_.type == "translation_unit":
+                if (
+                    len(node_.children) > 0
+                    and node_.children[0].type == "comment"
+                    and (comment_node := node_.children[0])
+                ):
+                    if comment_node.text is not None:
+                        comment_text = comment_node.text.decode("utf-8")
+                        markers = MarkerParser.parse(
+                            comment_text,
+                            node_.start_point[0] + 1,
+                            # It is important that +1 is not present here because
+                            # currently StrictDoc does not display the last empty line (\n is 10).
+                            node_.end_point[0]
+                            if input_buffer[-1] == 10
+                            else node_.end_point[0] + 1,
+                            node_.start_point[0] + 1,
+                            node_.start_point[1] + 1,
+                        )
+                        for marker_ in markers:
+                            if isinstance(marker_, FunctionRangeMarker) and (
+                                function_range_marker_ := marker_
+                            ):
+                                function_range_marker_processor(
+                                    function_range_marker_, parse_context
+                                )
+                                traceability_info.markers.append(
+                                    function_range_marker_
+                                )
+            elif node_.type == "function_definition":
                 function_name: str = ""
 
                 for child_ in node_.children:

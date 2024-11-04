@@ -3,6 +3,21 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
+Unreleased 0.2.0 (2024-11-XX)
+=============================
+
+This release introduces several enhancements to the source code processing introduced in release 0.1.0.
+
+The backend now supports improved function tracing in C, Python, and general parsing code:
+
+- Forward ranges to C functions now include the top comment.
+- Each range type is displayed in the output HTML.
+- The C source code reader has been updated to support file-level scoping.
+- The source code reader now caches parsed objects to disk, improving reading performance.
+- Proper handling of functions inside nested Python classes has been implemented, allowing syntax like Foo.Bar.do_baz. Thanks to @haxtibal for contributing this enhancement.
+
+Additionally, caching has been centralized, and the cache directory is now configurable. The project configuration file now supports a ``cache_dir`` option, which can be set to values such as ``./output/build``. This setting can help make caching artifacts visible alongside documentation artifacts.
+
 0.1.0 (2024-11-01)
 ==================
 

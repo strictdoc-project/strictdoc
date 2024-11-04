@@ -1783,9 +1783,13 @@ To connect a source file to a requirement, a dedicated ``@relation`` marker must
 
     For language-specific parsing of source code, e.g., Python and C, make sure to enable the corresponding option, see :ref:`Language-aware parsing of source code <SECTION-UG-Language-aware-parsing-of-source-code>`.
 
+.. warning::
+
+    The legacy ``@sdoc`` marker is still supported by StrictDoc but is deprecated. ``@relation`` is the new correct marker name.
+
 **1\) Linking a file to a requirement**
 
-The marker must be added to the top comment of a file. Currently supported only in Python.
+The marker must be added to the top comment of a file.
 
 .. code:: python
 

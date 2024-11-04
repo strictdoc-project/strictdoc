@@ -6,6 +6,7 @@ from strictdoc.backend.sdoc.models.reference import FileReference, Reference
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     ForwardFunctionRangeMarker,
     FunctionRangeMarker,
+    RangeMarkerType,
 )
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
@@ -38,6 +39,9 @@ class FileTraceabilityIndex:
             str, List[Tuple[str, Tuple[int, int]]]
         ] = {}
         self.map_file_function_names_to_reqs_uids: Dict[
+            str, Dict[str, List[str]]
+        ] = {}
+        self.map_file_class_names_to_reqs_uids: Dict[
             str, Dict[str, List[str]]
         ] = {}
 
@@ -84,7 +88,6 @@ class FileTraceabilityIndex:
             markers = source_file_traceability_info.ng_map_reqs_to_markers.get(
                 requirement.reserved_uid
             )
-
             if not markers:
                 matching_links_with_opt_ranges.append(
                     (requirement_source_path_, None)
@@ -248,6 +251,13 @@ class FileTraceabilityIndex:
                 traceability_info_.ng_lines_total, coverage
             )
 
+            for markers_ in traceability_info_.ng_map_reqs_to_markers.values():
+
+                def marker_comparator(marker):
+                    return marker.ng_range_line_begin, marker.ng_range_line_end
+
+                markers_.sort(key=marker_comparator)
+
     def create_requirement(self, requirement: SDocNode) -> None:
         assert requirement.reserved_uid is not None
 
@@ -283,17 +293,17 @@ class FileTraceabilityIndex:
                     )
                     function_name_to_reqs_uids.append(requirement.reserved_uid)
                 elif file_reference.g_file_entry.clazz is not None:
-                    one_file_function_name_to_reqs_uids = (
-                        self.map_file_function_names_to_reqs_uids.setdefault(
+                    one_file_class_name_to_reqs_uids = (
+                        self.map_file_class_names_to_reqs_uids.setdefault(
                             file_reference.get_posix_path(), {}
                         )
                     )
-                    function_name_to_reqs_uids = (
-                        one_file_function_name_to_reqs_uids.setdefault(
+                    class_name_to_reqs_uids = (
+                        one_file_class_name_to_reqs_uids.setdefault(
                             file_reference.g_file_entry.clazz, []
                         )
                     )
-                    function_name_to_reqs_uids.append(requirement.reserved_uid)
+                    class_name_to_reqs_uids.append(requirement.reserved_uid)
                 elif file_reference.g_file_entry.line_range is not None:
                     assert requirement.reserved_uid is not None
                     req_uid_to_line_range_file_refs = (
@@ -320,16 +330,29 @@ class FileTraceabilityIndex:
         ] = traceability_info
 
         for function_ in traceability_info.functions:
+            marker_type: RangeMarkerType
+
             if (
                 source_file_rel_path
-                not in self.map_file_function_names_to_reqs_uids
+                in self.map_file_function_names_to_reqs_uids
             ):
-                continue
+                reqs_uids = self.map_file_function_names_to_reqs_uids[
+                    source_file_rel_path
+                ].get(function_.name, None)
 
-            reqs_uids = self.map_file_function_names_to_reqs_uids[
-                source_file_rel_path
-            ].get(function_.name, None)
-            if reqs_uids is None:
+                if reqs_uids is not None:
+                    marker_type = RangeMarkerType.FUNCTION
+                else:
+                    continue
+            elif source_file_rel_path in self.map_file_class_names_to_reqs_uids:
+                reqs_uids = self.map_file_class_names_to_reqs_uids[
+                    source_file_rel_path
+                ].get(function_.name, None)
+                if reqs_uids is not None:
+                    marker_type = RangeMarkerType.CLASS
+                else:
+                    continue
+            else:
                 continue
 
             reqs = []
@@ -346,6 +369,10 @@ class FileTraceabilityIndex:
             function_marker.ng_range_line_end = function_.line_end
             function_marker.ng_marker_line = function_.line_begin
             function_marker.ng_marker_column = 1
+            if marker_type == RangeMarkerType.FUNCTION:
+                function_marker.set_description(f"function {function_.name}")
+            elif marker_type == RangeMarkerType.CLASS:
+                function_marker.set_description(f"class {function_.name}")
 
             for req_uid_ in reqs_uids:
                 markers = traceability_info.ng_map_reqs_to_markers.setdefault(

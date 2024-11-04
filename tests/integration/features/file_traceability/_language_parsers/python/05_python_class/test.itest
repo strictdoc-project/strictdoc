@@ -11,7 +11,9 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-2#1#8">
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#1#8"
+CHECK-SOURCE-FILE: <b>[ 1-8 ]</b> file.py, class Foo
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-2#1#8"
+CHECK-SOURCE-FILE: <b>[ 1-8 ]</b> file.py, class Foo
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: 72.7%

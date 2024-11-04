@@ -41,8 +41,12 @@
           >
             {% if range.is_range_marker() %}
             <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b> {{ link }}
+            {%- set description = range.get_description() -%}
+            {%- if description -%}
+              , {{ description }}
+            {%- endif -%}
             {% elif range.is_line_marker() %}
-            <b>[ {{ range.ng_range_line_begin }} ]</b> {{ link }}
+            <b>[ {{ range.ng_range_line_begin }} ]</b> {{ link }}, line
             {% endif %}
           </a>
           </div>

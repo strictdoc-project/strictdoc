@@ -3,8 +3,8 @@ $$$$$$$$$$$$$
 
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
 
-Unreleased 0.2.0 (2024-11-XX)
-=============================
+0.2.0 (2024-11-04)
+==================
 
 This release introduces several enhancements to the source code processing introduced in release 0.1.0.
 

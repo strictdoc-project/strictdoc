@@ -1,5 +1,6 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.node.document_root import Form_EditConfig
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -27,6 +28,15 @@ class Test(E2ECase):
 
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
+
+            document_node = screen_document.get_root_node()
+            form_edit_document: Form_EditConfig = (
+                document_node.do_open_form_edit_config()
+            )
+            form_edit_document.do_fill_in_document_uid("DOC-2")
+            form_edit_document.do_form_submit_and_catch_error(
+                "Renaming a node UID when the node has incoming links is not supported yet. Please delete all incoming links first."
+            )
 
             text_node_1 = screen_document.get_node(1)
             form_edit_requirement: Form_EditRequirement = (

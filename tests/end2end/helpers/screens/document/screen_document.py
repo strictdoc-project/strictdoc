@@ -98,3 +98,9 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
                 raise TimeoutError(
                     "StrictDoc custom timeout: Moving element in the TOC"
                 )
+
+    def do_click_on_tree_document(self, doc_order: int = 1) -> None:
+        self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
+        self.test_case.click_xpath(
+            f'(//*[@data-testid="tree-document-link"])[{doc_order}]'
+        )

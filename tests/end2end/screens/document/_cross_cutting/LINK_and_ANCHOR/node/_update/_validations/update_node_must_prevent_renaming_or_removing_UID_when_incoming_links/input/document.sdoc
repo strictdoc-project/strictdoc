@@ -1,10 +1,11 @@
 [DOCUMENT]
 TITLE: Document 1
+UID: DOC-1
 
 [REQUIREMENT]
 UID: REQ-1
 STATEMENT: >>>
-Hello world
+Hello world [LINK: DOC-1]
 <<<
 
 [REQUIREMENT]

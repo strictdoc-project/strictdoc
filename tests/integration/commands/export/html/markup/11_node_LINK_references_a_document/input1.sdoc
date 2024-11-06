@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document 1
+UID: DOC-1
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Foo Bar
+STATEMENT: >>>
+Read [LINK: DOC-1] then [LINK: DOC-2].
+<<<

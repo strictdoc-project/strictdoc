@@ -133,11 +133,11 @@ def test__adding_parent_link__01__two_requirements_in_one_document():
 
 
 def test__adding_parent_link__02__two_requirements_in_two_documents():
-    document_builder_1 = DocumentBuilder()
+    document_builder_1 = DocumentBuilder("DOC-1")
     requirement1 = document_builder_1.add_requirement("REQ-001")
     document_1 = document_builder_1.build()
 
-    document_builder_2 = DocumentBuilder()
+    document_builder_2 = DocumentBuilder("DOC-2")
     requirement2 = document_builder_2.add_requirement("REQ-002")
     document_2 = document_builder_2.build()
 

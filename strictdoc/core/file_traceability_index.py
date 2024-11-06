@@ -258,6 +258,10 @@ class FileTraceabilityIndex:
 
                 markers_.sort(key=marker_comparator)
 
+        # Sort by keys alphabetically.
+        for paths_ in self.map_reqs_uids_to_paths.values():
+            paths_.sort()
+
     def create_requirement(self, requirement: SDocNode) -> None:
         assert requirement.reserved_uid is not None
 

@@ -427,7 +427,7 @@ class TraceabilityIndexBuilder:
                                 )
 
                 if node.reserved_uid is not None:
-                    # @sdoc[SDOC-SRS-29]
+                    # @relation(SDOC-SRS-29, scope=range_start)
                     if traceability_index.graph_database.has_link(
                         link_type=GraphLinkType.UID_TO_NODE,
                         lhs_node=node.reserved_uid,
@@ -455,7 +455,7 @@ class TraceabilityIndexBuilder:
                                 f'and "{document.title}".'
                             )
                         sys.exit(1)
-                        # @sdoc[/SDOC-SRS-29]
+                    # @relation(SDOC-SRS-29, scope=range_end)
 
                     traceability_index.graph_database.create_link(
                         link_type=GraphLinkType.UID_TO_NODE,
@@ -687,7 +687,7 @@ class TraceabilityIndexBuilder:
                 if requirement.reserved_uid is None:
                     continue
 
-                # @sdoc[SDOC-SRS-30]  # noqa: ERA001
+                # @relation(SDOC-SRS-30, scope=range_start)
                 # Detect cycles
                 parents_cycle_detector.check_node(
                     requirement.reserved_uid,
@@ -703,7 +703,7 @@ class TraceabilityIndexBuilder:
                         lhs_node=requirement_id_,
                     ).get_child_uids(),
                 )
-                # @sdoc[/SDOC-SRS-30]
+                # @relation(SDOC-SRS-30, scope=range_end)
 
         map_documents_by_input_rel_path: Dict[str, SDocDocument] = {}
         for document_ in document_tree.document_list:
@@ -711,7 +711,7 @@ class TraceabilityIndexBuilder:
                 document_.meta.input_doc_full_path
             ] = document_
 
-        # @sdoc[SDOC-SRS-109]
+        # @relation(SDOC-SRS-109, scope=range_start)
         unique_document_from_file_occurences: Set[str] = set()
         for document_ in document_tree.document_list:
             document_from_file_: DocumentFromFile
@@ -764,7 +764,7 @@ class TraceabilityIndexBuilder:
                     resolved_document
                 )
 
-        # @sdoc[/SDOC-SRS-109]
+        # @relation(SDOC-SRS-109, scope=range_end)
 
         return traceability_index
 

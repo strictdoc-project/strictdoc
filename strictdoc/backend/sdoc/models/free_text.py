@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-135, scope=file)
+"""
+
 from typing import Any, List, Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor

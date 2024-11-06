@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-99, scope=file)
+"""
+
 # mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,union-attr"
 from typing import List, Optional, Union
 

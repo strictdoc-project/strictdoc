@@ -1,3 +1,4 @@
+REQUIRES: PYTHON_39_OR_HIGHER
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
 RUN: cd "%strictdoc_root/" && %strictdoc export "%strictdoc_root/" --output-dir="%S/Output"

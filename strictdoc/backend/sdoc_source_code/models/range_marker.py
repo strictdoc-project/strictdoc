@@ -24,6 +24,7 @@ class RangeMarker:
         else:
             assert scope in ("range_start", "range_end")
             self.begin_or_end = "[" if scope == "range_start" else "[/"
+            self.ng_new_relation_keyword = True
 
         self.reqs_objs: List[Req] = reqs_objs
         self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
@@ -44,7 +45,7 @@ class RangeMarker:
         self.ng_range_line_end: Optional[int] = None
 
         self.ng_is_nodoc = "nosdoc" in self.reqs
-        self.ng_is_language_parsed = False
+        self.ng_new_relation_keyword = False
 
     def is_begin(self) -> bool:
         return self.begin_or_end == "["

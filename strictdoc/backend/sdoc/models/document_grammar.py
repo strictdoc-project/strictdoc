@@ -210,7 +210,7 @@ class DocumentGrammar:
             DocumentGrammar.create_default_text_element()
         )
 
-        # @sdoc[SDOC-SRS-132]
+        # @relation(SDOC-SRS-132, scope=range_start)
         fields: List[
             Union[
                 GrammarElementFieldString,
@@ -270,7 +270,7 @@ class DocumentGrammar:
         requirement_element = GrammarElement(
             parent=None, tag="REQUIREMENT", fields=fields, relations=[]
         )
-        # @sdoc[/SDOC-SRS-132]
+        # @relation(SDOC-SRS-132, scope=range_end)
 
         requirement_element.relations = create_default_relations(
             requirement_element

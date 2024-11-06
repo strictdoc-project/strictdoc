@@ -1,3 +1,5 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
 RUN: cd "%strictdoc_root/" && %strictdoc export "%strictdoc_root/" --output-dir="%S/Output"
 
 RUN: %check_exists --file "%S/Output/html/index.html"

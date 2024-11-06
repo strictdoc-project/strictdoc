@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-26, scope=file)
+"""
+
 # mypy: disable-error-code="union-attr"
 from collections import OrderedDict
 from typing import Any, Generator, List, Optional, Tuple, Union

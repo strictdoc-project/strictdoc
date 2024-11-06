@@ -79,9 +79,6 @@ STATEMENT: >>>
 StrictDoc's data model shall support modeling requirements.
 <<<
 RELATIONS:
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/backend/sdoc/models/node.py
 - TYPE: Parent
   VALUE: SDOC-SSS-4
 
@@ -119,9 +116,6 @@ These fields are the most typical fields found in requirement documents.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-61
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/backend/sdoc/models/document_grammar.py
 
 [REQUIREMENT]
 MID: f94419a390f2403daa3c4cd0e96f6cb6
@@ -168,9 +162,6 @@ RATIONALE: >>>
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-51
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/backend/sdoc/models/section.py
 
 [REQUIREMENT]
 MID: 899d2f68749b4be1a3124fe4d01de1aa
@@ -184,9 +175,6 @@ RATIONALE: >>>
 Documentation comprises normative components, such as uniquely identifiable elements like requirements or design items, and non-normative components, including introductory text, overview chapters, and other content. The non-normative parts help provide a general understanding for the reader but do not contribute to traceability information. StrictDoc's free text is designed to store this type of non-normative information in SDoc documents.
 <<<
 RELATIONS:
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/backend/sdoc/models/free_text.py
 - TYPE: Parent
   VALUE: SDOC-SSS-3
 
@@ -209,12 +197,6 @@ RELATIONS:
   VALUE: SDOC-SSS-52
 - TYPE: Parent
   VALUE: DO178-4
-- TYPE: File
-  VALUE: strictdoc/backend/sdoc/models/document_from_file.py
-- TYPE: File
-  VALUE: strictdoc/backend/sdoc/models/document.py
-- TYPE: File
-  VALUE: strictdoc/core/traceability_index_builder.py
 
 [REQUIREMENT]
 MID: fad4cf5dcf4d40518c7c9826fd6bd18a
@@ -546,9 +528,6 @@ The requirement ensures that the Traceability Index takes of care of validating 
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-89
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/core/traceability_index_builder.py
 - TYPE: Parent
   VALUE: SDOC-SSS-94
 
@@ -563,9 +542,6 @@ The Traceability Index shall detect cycles between requirements.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-47
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/core/traceability_index_builder.py
 - TYPE: File
   FORMAT: Sourcecode
   VALUE: strictdoc/core/tree_cycle_detector.py

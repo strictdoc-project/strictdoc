@@ -42,8 +42,11 @@ class OrderedSet(t.MutableSet[T]):
     def __iter__(self) -> t.Iterator[T]:
         return self._d.__iter__()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{{{', '.join(str(i) for i in self)}}}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<OrderedSet {self}>"
+
+    def sort(self) -> None:
+        self._d = dict(sorted(self._d.items()))

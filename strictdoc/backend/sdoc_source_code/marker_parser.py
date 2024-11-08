@@ -80,7 +80,7 @@ class MarkerParser:
                 range_marker.ng_source_column_begin = first_requirement_column
                 range_marker.ng_range_line_begin = line_start
                 range_marker.ng_range_line_end = line_end
-                range_marker.ng_is_language_parsed = True
+                range_marker.ng_new_relation_keyword = True
                 markers.append(range_marker)
             elif marker_type == "line":
                 line_marker = LineMarker(None, requirements)

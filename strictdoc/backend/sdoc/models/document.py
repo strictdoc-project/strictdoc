@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-109, scope=file)
+"""
+
 # mypy: disable-error-code="union-attr,type-arg"
 from typing import Generator, List, Optional
 

@@ -1,3 +1,4 @@
+REQUIRES: PYTHON_39_OR_HIGHER
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
 # First run StrictDoc when CWD is the current test folder.

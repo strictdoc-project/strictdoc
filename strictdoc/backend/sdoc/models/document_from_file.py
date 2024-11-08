@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-109, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-def,type-arg"
 from typing import List, Optional
 

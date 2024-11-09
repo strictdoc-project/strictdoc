@@ -86,7 +86,7 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
    * - 2024-Q3
      - HTML2PDF improvements. ReqIF roundtrip for RELATION/ROLE. Consistent automatic escaping of Jinja templates. Passthrough->export command migration.
    * - 2024-Q4
-     - Connecting requirements to functions (C, Python) and classes (Python) in source code. Support the linking in both directions independently: from requirements to source using RELATION/File and from source to requirements using @relation markers.
+     - Connecting requirements to functions (C, Python) and classes (Python) in source code. Support the linking in both directions independently: from requirements to source using RELATION/File and from source to requirements using @relation markers. LINK to documents.
 
 The roadmap diagram
 -------------------
@@ -97,6 +97,11 @@ The following diagram contains the work items at the epic and single task levels
    :alt: Development plan diagram
    :class: image
    :width: 100%
+
+Versioning
+==========
+
+As of release 0.1.0 (2024-11-01), StrictDoc follows a `semantic versioning <https://semver.org>`_-oriented release scheme. The MAJOR.MINOR.PATCH components are managed according to the guidelines of the semantic versioning specification.
 
 Verification
 ============

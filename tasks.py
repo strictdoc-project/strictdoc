@@ -517,7 +517,7 @@ def check_dead_links(context):
         context,
         ToxEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_03_development_plan.sdoc
+            python3 tools/link_health.py docs/strictdoc_24_development_plan.sdoc
         """,
     )
     run_invoke_with_tox(

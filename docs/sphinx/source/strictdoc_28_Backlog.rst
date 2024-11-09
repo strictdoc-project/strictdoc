@@ -752,8 +752,6 @@ Backlog: Web-based user interface
 
 - **Integration with Git repository.** Make the server commit changes to .sdoc files automatically. To a user, provide visibility to what happens under the hood.
 
-- ``LINK`` between sections and documents.
-
 - Option to keep all multi-line text fields to 80 symbols width.
 
 - Moving nodes between documents.

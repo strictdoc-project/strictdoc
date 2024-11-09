@@ -354,9 +354,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_linkable_node_by_uid(
         self, uid
-    ) -> Union[SDocNode, SDocSection, Anchor]:
+    ) -> Union[SDocDocument, SDocNode, SDocSection, Anchor]:
         return assert_cast(
-            self.get_node_by_uid(uid), (SDocNode, SDocSection, Anchor)
+            self.get_node_by_uid(uid),
+            (SDocDocument, SDocNode, SDocSection, Anchor),
         )
 
     def get_node_by_uid_weak(
@@ -383,16 +384,16 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_linkable_node_by_uid_weak(
         self, uid
-    ) -> Union[SDocNode, SDocSection, Anchor, None]:
+    ) -> Union[SDocDocument, SDocNode, SDocSection, Anchor, None]:
         return assert_optional_cast(
             self.graph_database.get_link_value_weak(
                 link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
             ),
-            (SDocNode, SDocSection, Anchor),
+            (SDocDocument, SDocNode, SDocSection, Anchor),
         )
 
     def get_incoming_links(
-        self, node: Union[SDocNode, SDocSection, Anchor]
+        self, node: Union[SDocDocument, SDocNode, SDocSection, Anchor]
     ) -> Optional[List[InlineLink]]:
         incoming_links = self.graph_database.get_link_values_weak(
             link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
@@ -448,6 +449,20 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             source_file_rel_path, traceability_info, traceability_index
         )
 
+    def create_document(self, document: SDocDocument) -> None:
+        assert isinstance(document, SDocDocument)
+        if document.reserved_uid is not None:
+            self.graph_database.create_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=document.reserved_uid,
+                rhs_node=document,
+            )
+        self.graph_database.create_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=document.reserved_mid,
+            rhs_node=document,
+        )
+
     def create_section(self, section: SDocSection) -> None:
         assert isinstance(section, SDocSection)
         if section.reserved_uid is not None:
@@ -469,12 +484,14 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if self.graph_database.has_link(
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=new_link.link
         ):
-            node_or_anchor: Union[SDocNode, SDocSection, Anchor] = assert_cast(
+            node_or_anchor: Union[
+                SDocDocument, SDocNode, SDocSection, Anchor
+            ] = assert_cast(
                 self.graph_database.get_link_value(
                     link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=new_link.link,
                 ),
-                (SDocNode, SDocSection, Anchor),
+                (SDocDocument, SDocNode, SDocSection, Anchor),
             )
             self.graph_database.create_link(
                 link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
@@ -766,6 +783,21 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             lhs_node=other_document.reserved_mid,
             rhs_node=document.reserved_mid,
         )
+
+    def delete_document(self, document: SDocDocument) -> None:
+        assert isinstance(document, SDocDocument), document
+
+        self.graph_database.delete_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=document.reserved_mid,
+            rhs_node=document,
+        )
+        if document.reserved_uid is not None:
+            self.graph_database.delete_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=document.reserved_uid,
+                rhs_node=document,
+            )
 
     def delete_section(self, section: SDocSection) -> None:
         assert isinstance(section, SDocSection), section

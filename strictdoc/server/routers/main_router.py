@@ -870,7 +870,7 @@ def create_main_router(
                 requirement_mid=requirement_mid,
                 request_form_data=request_form_data,
                 document=document,
-                exiting_requirement_uid=None,
+                existing_requirement_uid=None,
                 basic_free_text=basic_free_text,
             )
         )
@@ -1090,7 +1090,7 @@ def create_main_router(
                 requirement_mid=requirement_mid,
                 request_form_data=request_form_data,
                 document=document,
-                exiting_requirement_uid=requirement.reserved_uid,
+                existing_requirement_uid=requirement.reserved_uid,
                 basic_free_text=requirement.basic_free_text,
             )
         )
@@ -1763,7 +1763,7 @@ def create_main_router(
                 context_document_mid=context_document_mid,
                 fields=[],
                 reference_fields=[],
-                exiting_requirement_uid=None,
+                existing_requirement_uid=None,
                 grammar=grammar,
                 relation_types=[],
                 basic_free_text=False,
@@ -1815,7 +1815,7 @@ def create_main_router(
                 context_document_mid=context_document_mid,
                 fields=[],
                 reference_fields=[],
-                exiting_requirement_uid=None,
+                existing_requirement_uid=None,
                 grammar=grammar,
                 relation_types=grammar_element_relations,
                 basic_free_text=False,

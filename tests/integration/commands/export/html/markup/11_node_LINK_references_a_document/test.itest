@@ -1,0 +1,10 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Document 1
+
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input1.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC1
+
+CHECK-HTML-DOC1: Read <a href="../11_node_LINK_references_a_document/input1.html#_TOP">🔗&nbsp;Document 1</a> then <a href="../11_node_LINK_references_a_document/input2.html#_TOP">🔗&nbsp;Document 2</a>.
+
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input2.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC2
+
+CHECK-HTML-DOC2: Read <a href="../11_node_LINK_references_a_document/input2.html#_TOP">🔗&nbsp;Document 2</a> then <a href="../11_node_LINK_references_a_document/input1.html#_TOP">🔗&nbsp;Document 1</a>.

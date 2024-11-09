@@ -193,7 +193,7 @@ class RequirementFormObject(ErrorObject):
         context_document_mid: str,
         fields: List[RequirementFormField],
         reference_fields: List[RequirementReferenceFormField],
-        exiting_requirement_uid: Optional[str],
+        existing_requirement_uid: Optional[str],
         grammar: DocumentGrammar,
         # FIXME: Better name
         relation_types: List[str],
@@ -213,7 +213,7 @@ class RequirementFormObject(ErrorObject):
         self.reference_fields: List[RequirementReferenceFormField] = (
             reference_fields
         )
-        self.exiting_requirement_uid: Optional[str] = exiting_requirement_uid
+        self.existing_requirement_uid: Optional[str] = existing_requirement_uid
         self.grammar: DocumentGrammar = grammar
         self.relation_types: List[str] = relation_types
         self.basic_free_text: bool = basic_free_text
@@ -225,7 +225,7 @@ class RequirementFormObject(ErrorObject):
         requirement_mid: str,
         request_form_data: FormData,
         document: SDocDocument,
-        exiting_requirement_uid: Optional[str],
+        existing_requirement_uid: Optional[str],
         basic_free_text: bool,
     ) -> "RequirementFormObject":
         request_form_data_as_list = [
@@ -326,7 +326,7 @@ class RequirementFormObject(ErrorObject):
             context_document_mid=context_document_mid,
             fields=form_fields,
             reference_fields=form_ref_fields,
-            exiting_requirement_uid=exiting_requirement_uid,
+            existing_requirement_uid=existing_requirement_uid,
             grammar=grammar,
             relation_types=element.get_relation_types(),
             basic_free_text=basic_free_text,
@@ -384,7 +384,7 @@ class RequirementFormObject(ErrorObject):
             context_document_mid=context_document_mid,
             fields=form_fields,
             reference_fields=[],
-            exiting_requirement_uid=None,
+            existing_requirement_uid=None,
             grammar=grammar,
             relation_types=element.get_relation_types(),
             basic_free_text=False,
@@ -474,7 +474,7 @@ class RequirementFormObject(ErrorObject):
             context_document_mid=context_document_mid,
             fields=form_fields,
             reference_fields=form_refs_fields,
-            exiting_requirement_uid=requirement.reserved_uid,
+            existing_requirement_uid=requirement.reserved_uid,
             grammar=grammar,
             relation_types=grammar_element_relations,
             basic_free_text=requirement.basic_free_text,
@@ -617,7 +617,7 @@ class RequirementFormObject(ErrorObject):
                 new_node_uid_or_none = new_node_uid
 
         if new_node_uid_or_none is not None and (
-            self.is_new or self.exiting_requirement_uid != new_node_uid_or_none
+            self.is_new or self.existing_requirement_uid != new_node_uid_or_none
         ):
             existing_node_with_this_uid = (
                 traceability_index.get_node_by_uid_weak(new_node_uid_or_none)
@@ -636,10 +636,10 @@ class RequirementFormObject(ErrorObject):
         Ensure that UID doesn't have any incoming links if it is going to be
         renamed or removed.
         """
-        if self.exiting_requirement_uid is not None:
+        if self.existing_requirement_uid is not None:
             if (
                 new_node_uid_or_none is None
-                or self.exiting_requirement_uid != new_node_uid_or_none
+                or self.existing_requirement_uid != new_node_uid_or_none
             ):
                 existing_node: SDocNode = traceability_index.get_node_by_mid(
                     MID(self.requirement_mid)
@@ -725,8 +725,8 @@ class RequirementFormObject(ErrorObject):
             )
 
         if (
-            self.exiting_requirement_uid is not None
-            and self.exiting_requirement_uid != requirement_uid
+            self.existing_requirement_uid is not None
+            and self.existing_requirement_uid != requirement_uid
         ):
             if len(self.reference_fields) > 0:
                 self.add_error(
@@ -738,7 +738,7 @@ class RequirementFormObject(ErrorObject):
                 )
             requirement_connections: SDocNodeConnections = (
                 traceability_index.get_node_connections(
-                    self.exiting_requirement_uid
+                    self.existing_requirement_uid
                 )
             )
             if len(requirement_connections.children):

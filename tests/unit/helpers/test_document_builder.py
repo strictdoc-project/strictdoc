@@ -15,8 +15,8 @@ from strictdoc.helpers.paths import SDocRelativePath
 
 
 class DocumentBuilder:
-    def __init__(self):
-        self.document: SDocDocument = self._create_empty_document()
+    def __init__(self, uid="DOC-1"):
+        self.document: SDocDocument = self._create_empty_document(uid)
         self.requirements = []
 
     def add_requirement(self, uid):
@@ -77,11 +77,11 @@ class DocumentBuilder:
         return self.document
 
     @staticmethod
-    def _create_empty_document() -> SDocDocument:
+    def _create_empty_document(uid: str) -> SDocDocument:
         config = DocumentConfig(
             parent=None,
             version="0.0.1",
-            uid="DOC-1",
+            uid=uid,
             classification=None,
             requirement_prefix=None,
             root=None,

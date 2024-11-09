@@ -323,12 +323,12 @@ def test_25_single_document_remove_child_relation():
 
 def test_26_two_documents_remove_child_relation():
     # Document 1
-    document_builder = DocumentBuilder()
+    document_builder = DocumentBuilder("DOC-1")
     requirement1 = document_builder.add_requirement("REQ-001")
     document_1 = document_builder.build()
 
     # Document 2
-    document_builder = DocumentBuilder()
+    document_builder = DocumentBuilder("DOC-2")
     requirement2 = document_builder.add_requirement("REQ-002")
     document_builder.add_requirement_relation(
         relation_type="Child",

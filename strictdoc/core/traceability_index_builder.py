@@ -232,7 +232,9 @@ class TraceabilityIndexBuilder:
                 ),
                 (
                     GraphLinkType.UID_TO_NODE,
-                    OneToOneDictionary(str, (SDocNode, SDocSection, Anchor)),
+                    OneToOneDictionary(
+                        str, (SDocDocument, SDocNode, SDocSection, Anchor)
+                    ),
                 ),
                 (
                     GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
@@ -352,7 +354,12 @@ class TraceabilityIndexBuilder:
                 lhs_node=document.reserved_mid,
                 rhs_node=document,
             )
-            # FIXME: Register Document with UID_TO_NODE
+            if document.uid:
+                graph_database.create_link(
+                    link_type=GraphLinkType.UID_TO_NODE,
+                    lhs_node=document.uid,
+                    rhs_node=document,
+                )
 
             document_tags: Dict[str, int] = {}
             graph_database.create_link(

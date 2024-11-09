@@ -54,6 +54,8 @@ STATEMENT: >>>
 Join us in Discord. Here is the invitation link: https://discord.gg/4BAAME9MmG
 
 The author can be also contacted via `email <s.pankevich@gmail.com>`_.
+
+See also [LINK: SDOC_FAQ] for common topics and [LINK: SDOC_TROUBLESHOOTING] for troubleshooting the most common issues.
 <<<
 
 [/SECTION]
@@ -1738,7 +1740,15 @@ TITLE: Search and filtering
 
 [TEXT]
 STATEMENT: >>>
-StrictDoc supports the search and filtering of document content.
+StrictDoc supports search and filtering of document content. However, this feature has not been extensively tested and is hidden behind a feature flag. To activate it, enable the corresponding setting in the ``strictdoc.toml`` configuration file:
+
+.. code-block::
+
+    [project]
+
+    features = [
+      "SEARCH"
+    ]
 
 The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` commands.
 <<<
@@ -2532,6 +2542,8 @@ The ``cache_dir`` option in the configuration file allows specifying a custom di
 
     [project]
     cache_dir = "./output/cache"
+
+See [LINK: SECTION-DD-Caching-artifacts] for an overview of how caching works.
 <<<
 
 [/SECTION]
@@ -3003,7 +3015,7 @@ The currently supported workflow for the ``server`` command must be hybrid:
 
 Note that currently, StrictDoc server maintains an in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
 
-The following essential features are still missing and will be worked on in the near future:
+The following essential features are still missing and will be worked on in the future:
 
 - Adding images to the multiline fields like such requirements and text nodes ``STATEMENT``.
 - Adding/editing sections with ``LEVEL: None``.

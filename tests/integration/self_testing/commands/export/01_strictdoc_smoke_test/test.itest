@@ -13,11 +13,6 @@ RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_faq-TABLE.
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_faq-TRACE.html"
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_faq-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_03_development_plan.html
-RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_development_plan-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_development_plan-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_development_plan-DEEP-TRACE.html"
-
 RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_10_contributing.html
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_10_contributing-TABLE.html"
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_10_contributing-TRACE.html"
@@ -27,6 +22,11 @@ RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Req
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-TABLE.html"
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-TRACE.html"
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_24_development_plan.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_24_development_plan-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_24_development_plan-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_24_development_plan-DEEP-TRACE.html"
 
 RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_25_design.html
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_25_design-TABLE.html"

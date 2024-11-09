@@ -106,6 +106,25 @@ StrictDoc relies on both tools to get:
 
 One important implementation detail of Arpeggio that influences StrictDoc user experience is that the parser stops immediately when it encounters an error. For a document that has several issues, the parser highlights only the first error without going any further. When the first error is resolved, the second error will be shown, etc.
 
+.. _SECTION-DD-Caching-artifacts:
+
+Caching artifacts
+=================
+
+StrictDoc caches artifacts to disk to speed up performance by avoiding repeated reading and computation of already-parsed objects.
+
+The cached artifacts include:
+
+- Precompiled Jinja templates
+- RST fragments converted to HTML
+- Pickled Python objects from parsed SDoc files
+- Pickled Python objects from parsed source files
+- Git revisions used for the Diff/Changelog feature.
+
+A general algorithm is as follows:
+
+An MD5 checksum is generated for a piece of content, and a file with this checksum in its name is written to disk. On subsequent reads, the checksum is recalculated, and the disk is checked for an existing file with the matching checksum. If a match is found, the file is read from disk, avoiding the need for extensive parsing or computation.
+
 HTML escaping
 =============
 

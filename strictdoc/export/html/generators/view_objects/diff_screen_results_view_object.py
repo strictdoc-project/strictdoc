@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
+from markupsafe import Markup
+
 from strictdoc import __version__
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.html_templates import JinjaEnvironment
@@ -58,31 +60,30 @@ class DiffScreenResultsViewObject:
         self.strictdoc_version = __version__
         self.error_message: Optional[str] = None
 
-    def render_screen(self, jinja_environment: JinjaEnvironment):
-        template = jinja_environment.environment.overlay(
-            autoescape=False
-        ).get_template("screens/git/index.jinja")
-        return template.render(view_object=self)
+    def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
+        return jinja_environment.render_template_as_markup(
+            "screens/git/index.jinja", view_object=self
+        )
 
-    def render_url(self, url: str):
-        return self.link_renderer.render_url(url)
+    def render_url(self, url: str) -> Markup:
+        return Markup(self.link_renderer.render_url(url))
 
-    def render_node_link(self, incoming_link, document, document_type):
+    def render_node_link(self, incoming_link, document, document_type) -> str:
         return self.link_renderer.render_node_link(
             incoming_link, document, document_type
         )
 
-    def render_static_url(self, url: str):
-        return self.link_renderer.render_static_url(url)
+    def render_static_url(self, url: str) -> Markup:
+        return Markup(self.link_renderer.render_static_url(url))
 
     def render_static_url_with_prefix(self, url: str) -> str:
         return self.link_renderer.render_static_url_with_prefix(url)
 
-    def render_local_anchor(self, node):
+    def render_local_anchor(self, node) -> str:
         return self.link_renderer.render_local_anchor(node)
 
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()
 
-    def date_today(self):
+    def date_today(self) -> str:
         return datetime.today().strftime("%Y-%m-%d")

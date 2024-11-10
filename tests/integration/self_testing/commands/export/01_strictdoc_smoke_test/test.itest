@@ -8,10 +8,15 @@ RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TRACE.html"
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
 
-RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_02_faq.html
-RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_faq-TABLE.html"
-RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_faq-TRACE.html"
-RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_faq-DEEP-TRACE.html"
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_02_feature_map.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_feature_map-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_feature_map-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_02_feature_map-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_03_faq.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_faq-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_faq-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_03_faq-DEEP-TRACE.html"
 
 RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_10_contributing.html
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_10_contributing-TABLE.html"

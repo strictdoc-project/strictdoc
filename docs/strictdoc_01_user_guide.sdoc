@@ -309,6 +309,7 @@ TITLE: Running StrictDoc
 
 [SECTION]
 MID: 1685e4d63d9746b784b4a55f17b0de30
+UID: SECTION-UG-Static-HTML-export
 TITLE: Static HTML export
 
 [TEXT]
@@ -327,6 +328,7 @@ The ``export`` command is the main producer of documentation. The native export 
 
 [SECTION]
 MID: 1a059d3ae7da45f8b53f3d74f3580980
+UID: SECTION-UG-Web-server
 TITLE: Web server
 
 [TEXT]
@@ -430,6 +432,7 @@ roadmap, see `Enhancement: Language Protocol Server for SDoc text language #577
 
 [SECTION]
 MID: 24fb3436fa8c4b36929183eaac269376
+UID: SECTION-UG-SDoc-syntax
 TITLE: SDoc syntax
 
 [TEXT]
@@ -1869,6 +1872,7 @@ This section contains an anchor named ``Anchor ABC``.
 
 [SECTION]
 MID: 72fdb23051184714ab32e22859504a77
+UID: SECTION-UG-Search-and-filtering
 TITLE: Search and filtering
 
 [TEXT]
@@ -2093,6 +2097,7 @@ a single document instead of a documentation tree with multiple documents.
 
 [SECTION]
 MID: f6091bab49714c1fa72c2fbca12c970b
+UID: SECTION-UG-HTML-export-via-Sphinx
 TITLE: HTML export via Sphinx
 
 [TEXT]
@@ -2122,6 +2127,7 @@ is generated this way, see the Invoke task:
 
 [SECTION]
 MID: c95a2b4c4fbd40fcbd92fe7f24c2cd91
+UID: SECTION-UG-PDF-export-via-Sphinx-LaTeX
 TITLE: PDF export via Sphinx/LaTeX
 
 [TEXT]
@@ -2449,6 +2455,7 @@ The linking of requirements to source files is arranged with a special RELATION 
 
 [SECTION]
 MID: 31411ccbe80144868da8961ea2dd38bc
+UID: SECTION-UG-ReqIF-support
 TITLE: ReqIF support
 
 [TEXT]
@@ -3107,7 +3114,38 @@ This feature is not enabled by default because it has not undergone sufficient t
 [/SECTION]
 
 [SECTION]
+MID: aa7ebc36cd2947ac9aa293d6c76d8848
+UID: SECTION-UG-Diff-changelog-screen
+TITLE: Diff/changelog screen
+
+[TEXT]
+MID: 131a7392a33f4225a62539dd173a920b
+STATEMENT: >>>
+The "Git Diff/Changelog" experimental feature in StrictDoc allows users to track changes between different versions of requirement documents. This feature provides a visual diff by highlighting what content has been added, removed, or modified within the SDoc files, using a style similar to Git diffs. It helps in maintaining version history, ensuring that changes are traceable, and supports auditing by showing how requirements evolve over time.
+
+To activate the Diff/Changelog screen, add/edit the strictdoc.toml config file in the root of your repository with documentation content.
+
+.. code:: toml
+
+    [project]
+    title = "My project"
+
+    features = [
+      "DIFF"
+    ]
+
+.. admonition:: Robust MID-based change tracking
+    :class: note
+
+    For optimal results when using the Diff/Changelog feature in a StrictDoc-based project, it is strongly recommended to enable Machine Identifiers (MIDs) for all project artifacts, such as TEXT, REQUIREMENT, etc.
+    Without MIDs, StrictDoc cannot ensure accurate change tracking. If a node lacks an MID, StrictDoc is unable to reliably detect whether it has been modified or relocated in subsequent versions of the documentation tree. For further details, refer to [LINK: SECTION-UG-Machine-identifiers-MID].
+<<<
+
+[/SECTION]
+
+[SECTION]
 MID: 0a4573d025f14e61b84aad14349d42f4
+UID: SECTION-UG-HTML2PDF-document-generator
 TITLE: HTML2PDF document generator
 
 [TEXT]

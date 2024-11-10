@@ -510,14 +510,28 @@ def check_dead_links(context):
         context,
         ToxEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_02_faq.sdoc
+            python3 tools/link_health.py docs/strictdoc_02_feature_map.sdoc
         """,
     )
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_24_development_plan.sdoc
+            python3 tools/link_health.py docs/strictdoc_03_faq.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_04_release_notes.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_05_troubleshooting.sdoc
         """,
     )
     run_invoke_with_tox(
@@ -525,6 +539,20 @@ def check_dead_links(context):
         ToxEnvironment.CHECK,
         """
             python3 tools/link_health.py docs/strictdoc_10_contributing.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_11_developer_guide.sdoc
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py docs/strictdoc_24_development_plan.sdoc
         """,
     )
     run_invoke_with_tox(

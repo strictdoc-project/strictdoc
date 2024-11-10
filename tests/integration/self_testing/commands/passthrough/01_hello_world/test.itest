@@ -3,7 +3,8 @@ REQUIRES: PYTHON_39_OR_HIGHER
 RUN: cd "%strictdoc_root/" && %strictdoc passthrough "%strictdoc_root/" --output-dir="%S/Output/"
 
 RUN: %diff "%strictdoc_root/docs/strictdoc_01_user_guide.sdoc" "%S/Output/sdoc/docs/strictdoc_01_user_guide.sdoc"
-RUN: %diff "%strictdoc_root/docs/strictdoc_02_faq.sdoc" "%S/Output/sdoc/docs/strictdoc_02_faq.sdoc"
+RUN: %diff "%strictdoc_root/docs/strictdoc_02_feature_map.sdoc" "%S/Output/sdoc/docs/strictdoc_02_feature_map.sdoc"
+RUN: %diff "%strictdoc_root/docs/strictdoc_03_faq.sdoc" "%S/Output/sdoc/docs/strictdoc_03_faq.sdoc"
 RUN: %diff "%strictdoc_root/docs/strictdoc_21_L2_StrictDoc_Requirements.sdoc" "%S/Output/sdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.sdoc"
 RUN: %diff "%strictdoc_root/docs/strictdoc_24_development_plan.sdoc" "%S/Output/sdoc/docs/strictdoc_24_development_plan.sdoc"
 RUN: %diff "%strictdoc_root/docs/strictdoc_25_design.sdoc" "%S/Output/sdoc/docs/strictdoc_25_design.sdoc"

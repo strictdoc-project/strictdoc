@@ -1,17 +1,5 @@
 {% assert requirement_change is defined %}
 
-{# MID field, if permanent, is always printed as-is. It is never marked as modified. #}
-{% if requirement.mid_permanent %}
-  <div
-    class="diff_node_field"
-  >
-    {%- with badge_text = "MID" -%}
-      {%- include "components/badge/index.jinja" -%}
-    {%- endwith -%}
-    <span class="sdoc_pre_content">{{ requirement.reserved_mid }}</span>
-  </div>
-{% endif %}
-
 <div class="diff_node_fields">
   {%- for requirement_field_triple_ in requirement.enumerate_all_fields() -%}
     {%- set is_multiline = requirement_field_triple_[0].is_multiline() -%}

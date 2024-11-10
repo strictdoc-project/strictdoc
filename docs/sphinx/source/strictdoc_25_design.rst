@@ -3,10 +3,24 @@
 Design Document
 $$$$$$$$$$$$$$$
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2c006e9044074d239db4a45328633657
+
 This document describes the architecture and the implementation details of StrictDoc. Compared to the User Guide that describes how to use StrictDoc, this Design Document focuses on the "how it works" of StrictDoc.
 
 Overview
 ========
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 23937f96ac8e437d81686071cc42d6bf
 
 StrictDoc consists of two applications:
 
@@ -17,6 +31,13 @@ Both applications share a significant subset of the backend and frontend logic. 
 
 Building blocks
 ===============
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - bae7db5591fe418a857af4fb02ad4fec
 
 StrictDoc is based on the following open-source libraries and tools:
 
@@ -53,6 +74,13 @@ StrictDoc is based on the following open-source libraries and tools:
 High-level architecture
 =======================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - dcb6369b8d0949f0b06c9ee5b2188b12
+
 The following diagram captures the high-level architecture of StrictDoc.
 
 .. image:: _assets/StrictDoc_Workspace-Architecture.drawio.png
@@ -62,6 +90,13 @@ The following diagram captures the high-level architecture of StrictDoc.
 
 StrictDoc command-line application
 ==================================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 0e0fca629004496084dbe5e217874c36
 
 StrictDoc command-line application is at the core of StrictDoc. The command-line interface contains commands for exporting/importing SDoc content from/to other formats and presenting documentation content to a user.
 
@@ -75,6 +110,13 @@ The command-line application can be seen as a Model-View-Controller application:
 StrictDoc web application
 =========================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - f84c0efa27954e44a8b5c1dd3517f90f
+
 StrictDoc Web application is based on FastAPI / Uvicorn. The end-to-end usage cycle of the web application is as follows:
 
 - A browser requests documents from a FastAPI server.
@@ -84,6 +126,13 @@ StrictDoc Web application is based on FastAPI / Uvicorn. The end-to-end usage cy
 
 The HTML Over the Wire (Hotwire) architecture
 ---------------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 5577da2187294eb986ec84d9fe26bbdf
 
 StrictDoc uses the `Hotwire architecture <https://hotwired.dev>`_.
 
@@ -95,6 +144,13 @@ Currently, the web server renders the HTML documents using the same generators t
 
 Parsing SDoc files
 ==================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 8a926f0a67424a1eb5db73bb5abca0cd
 
 StrictDoc uses `textX <https://github.com/textX/textX>`_  which is a ``meta-language for building Domain-Specific Languages (DSLs) in Python``. The textX itself is based on `Arpeggio <https://github.com/textX/Arpeggio>`_ which is a ``Parser interpreter based on PEG grammars written in Python``.
 
@@ -110,6 +166,13 @@ One important implementation detail of Arpeggio that influences StrictDoc user e
 
 Caching artifacts
 =================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d351d1bf6c2a48d88e9b9bdc50e029ff
 
 StrictDoc caches artifacts to disk to speed up performance by avoiding repeated reading and computation of already-parsed objects.
 
@@ -127,6 +190,13 @@ An MD5 checksum is generated for a piece of content, and a file with this checks
 
 HTML escaping
 =============
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e8a03713c7f644698d9a72cc79b2a299
 
 StrictDoc uses Jinja2 autoescaping_ for HTML output. `Template.render`_ calls
 will escape any Python object unless it's explicitly marked as safe.

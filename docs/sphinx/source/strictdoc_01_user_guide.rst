@@ -6,6 +6,13 @@ $$$$$$$$$$
 Introduction
 ============
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 27023bf63c414fd998437961c77a0e2e
+
 StrictDoc is software for technical documentation and requirements management.
 
 Summary of StrictDoc features:
@@ -45,6 +52,13 @@ See also a summary of StrictDoc's existing limitations: :ref:`StrictDoc's limita
 Contact the developers
 ----------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 3ae6491057674be1abf057b7e0d9bf21
+
 Join us in Discord. Here is the invitation link: https://discord.gg/4BAAME9MmG
 
 The author can be also contacted via `email <s.pankevich@gmail.com>`_.
@@ -58,6 +72,13 @@ Examples
 
 Hello World
 -----------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - ffbdb80fb21d48adbaeffb782d7994a2
 
 "Hello World" example of the SDoc text language:
 
@@ -122,15 +143,36 @@ Open the URL in the browser and explore the contents of the example.
 StrictDoc Examples repository
 -----------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d6bde8e4055b42138d216b48692c8f26
+
 The `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_ repository contains a collection of basic examples. Visit the repository and read its README for details.
 
 StrictDoc Templates repository
 ------------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 47c2088447d7452ba28962ee220ba63a
+
 The `strictdoc-templates <https://github.com/strictdoc-project/strictdoc-templates>`_ repository contains a growing collection of templates from the industry standards like DO-178C (aviation) and ECSS-E-ST-40C (space).
 
 Other examples
 --------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2eaa8bfe5a354fcbb704ea7fd94f3a0a
 
 For a more comprehensive example, check the source file of this documentation
 which is written using StrictDoc:
@@ -148,6 +190,13 @@ Installing StrictDoc
 Requirements
 ------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e7e4c2982d8e49deaa9b7413a09a4efa
+
 - Python 3.8+
 - macOS, Linux or Windows
 - Command-line terminal program
@@ -163,12 +212,26 @@ A terminal program is required to input all the commands outlined in this user g
 Installing StrictDoc as a Pip package (recommended way)
 -------------------------------------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 872a60c673854cfd909787f2379d88c7
+
 .. code-block:: text
 
     pip install strictdoc
 
 Installing "nightly" StrictDoc as a Pip package
 -----------------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 867f22a2767a434586d1ee4f7ee161fb
 
 Sometimes, it takes a while before the latest features and fixes reach the stable Pip release. In that case, installing a Pip package from the Git repository directly is possible:
 
@@ -178,6 +241,13 @@ Sometimes, it takes a while before the latest features and fixes reach the stabl
 
 Installing StrictDoc into a Docker container
 --------------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 32e04944c2a14ead93248ff1ea37a68d
 
 StrictDoc can be invoked inside of a Docker container. To make data available
 to the Docker container (here: ``strictdoc:latest``) as well as to the host
@@ -202,14 +272,30 @@ The documentation resides in ``./docs/output/html``.
 Installing StrictDoc as a Snap package (not maintained)
 -------------------------------------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2adfe1bc6be542c3885ca4ea80b8d6e1
+
 This way of installing StrictDoc is not maintained anymore. If you want to
 use it, refer to the instructions located in ``developer/snap/README.md``.
 
 Running StrictDoc
 =================
 
+.. _SECTION-UG-Static-HTML-export:
+
 Static HTML export
 ------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - c092847abfa04295b63f943c951f24c8
 
 The easiest way to see the static HTML export feature in action is to run the :ref:`Hello World <SDOC_UG_HELLO_WORLD>` example.
 
@@ -219,8 +305,17 @@ The ``export`` command is the main producer of documentation. The native export 
 
     strictdoc export --help
 
+.. _SECTION-UG-Web-server:
+
 Web server
 ----------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 1fc9f6f4f84d47439bf6aa3404227ca4
 
 StrictDoc supports a web-based user interface. The StrictDoc web server is launched via the ``server`` command which accepts a path to a documentation tree as a parameter.
 
@@ -238,6 +333,13 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
 Security considerations
 -----------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4fa89608f70e4a84a0e4b2930da28bbe
 
 .. warning::
     **TL;DR**: StrictDoc's web server is not yet hardened against unsafe use. Making StrictDoc safe for deployment in public networks is an ongoing effort.
@@ -262,6 +364,13 @@ We are committed to continuously enhancing the functionality and security of Str
 
 IDE support
 ===========
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - aad57726976f4882982458de90d168c7
 
 StrictDoc language markup (SDoc) can be activated in all IDEs that support the
 TextMate grammars. When the StrictDoc grammar is integrated into an IDE, the
@@ -300,8 +409,17 @@ implementation for StrictDoc. The StrictDoc LSP is on StrictDoc's long-term
 roadmap, see `Enhancement: Language Protocol Server for SDoc text language #577
 <https://github.com/strictdoc-project/strictdoc/issues/577>`_.
 
+.. _SECTION-UG-SDoc-syntax:
+
 SDoc syntax
 ===========
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 556a4f61a4884f3088a743a0717f397f
 
 StrictDoc defines a special syntax for writing specifications documents. This
 syntax is called SDoc and it's grammar is encoded with the
@@ -325,6 +443,13 @@ This documentation is written using StrictDoc. Here is the source file:
 Document structure
 ------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 5419c0c9bfcc4922ac5aa79ddb333188
+
 An SDoc document consists of a ``[DOCUMENT]`` declaration followed by a sequence of nodes:
 
 - Lead nodes: ``[TEXT]`` or ``[REQUIREMENT]``
@@ -338,6 +463,13 @@ Each construct is described in more detail below.
 Strict rule #1: One empty line between all nodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2ebd1f2d3c8746a383d71232756c3bd3
+
 StrictDoc's grammar requires each node, such as ``[REQUIREMENT]``, ``[SECTION]``,
 etc., to be separated with exactly one empty line from the nodes surrounding it.
 This rule is valid for all nodes. Absence of an empty line or presence of more
@@ -347,6 +479,13 @@ than one empty line between two nodes will result in an SDoc parsing error.
 
 Strict rule #2: No content is allowed outside of SDoc grammar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 686eb01cf7db44c4bd1edd72ccb02ed0
 
 StrictDoc's grammar does not allow any content to be written outside of the SDoc
 grammatical constructs. It is assumed that the critical content shall always be
@@ -358,6 +497,13 @@ be specified using ``[TEXT]`` nodes.
 
 Strict rule #3: No empty strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - c01ab5711463497498c91a968179d63c
 
 StrictDoc's grammar does not allow empty strings. This rule is applicable to
 both single-line and multiline strings and both section fields and requirement
@@ -404,6 +550,13 @@ Grammar elements
 
 Document
 ~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4b5c6f6fd70e44be8e5be10a38427e77
 
 The ``[DOCUMENT]`` element must always be present in an SDoc document. It is a
 root of an SDoc document graph.
@@ -454,6 +607,13 @@ by the document's Grammar, i.e. should not be changed.
 Document configuration options
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 45f3cb9a3da54852a83670af72a4d21b
+
 The ``OPTIONS`` field may have the following attribute fields:
 
 .. list-table:: SDoc grammar ``DOCUMENT``-``OPTIONS`` fields
@@ -481,10 +641,24 @@ The ``OPTIONS`` field may have the following attribute fields:
 ENABLE_MID
 """"""""""
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 196b9e9d857548bebecc698903a593de
+
 See :ref:`Machine identifiers (MID) <SECTION-UG-Machine-identifiers-MID>`.
 
 MARKUP
 """"""
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 19f65eabcd1c4f28a0091133979b5b6e
 
 The ``MARKUP`` option controls which markup renderer will be used.
 The available options are: ``RST``, ``HTML`` and ``Text``. Default is
@@ -492,6 +666,13 @@ The available options are: ``RST``, ``HTML`` and ``Text``. Default is
 
 AUTO_LEVELS
 """""""""""
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 915b35a9193348108e60968f9b60c1d0
 
 The ``AUTO_LEVELS`` option controls StrictDoc's system of automatic numbering
 of the section levels.
@@ -505,6 +686,13 @@ In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
 
 REQUIREMENT_STYLE
 """""""""""""""""
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 538a721c42824ad6b94a2f54780887ea
 
 The ``REQUIREMENT_STYLE`` option controls whether requirement's elements are
 displayed inline or as table blocks. The available options are:
@@ -525,6 +713,13 @@ Default is ``Inline``.
 REQUIREMENT_IN_TOC
 """"""""""""""""""
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e9e7522f3a094f5ea809f7bae93384d7
+
 The ``REQUIREMENT_IN_TOC`` option controls whether requirement's title appear
 in the table of contents (TOC). The available options are: ``True`` / ``False``.
 Default is ``True``.
@@ -538,6 +733,13 @@ Default is ``True``.
 
 Text
 ~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4474709783b74b1ca31fa754c712344e
 
 A text node is the most basic document node which is used for normal document text.
 
@@ -559,6 +761,13 @@ According to the :ref:`Strict rule #2: No content is allowed outside of SDoc gra
 
 Requirement
 ~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - f221cd0c72f846b385ec2f0a9ddd15d5
 
 The REQUIREMENT element is used for creating requirements, for example technical requirements or project requirements.
 
@@ -615,6 +824,13 @@ present.
 UID
 ^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2c3b050a2cd0444fb8948bb6adcb7085
+
 Unique identifier of the requirement.
 
 **Observation:** Some documents do not use unique identifiers which makes it
@@ -643,17 +859,38 @@ typical conventions for naming UIDs:
 Level
 ^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - bc3355748bb34f5da11336f5f1a72739
+
 Also a ``[REQUIREMENT]`` can have no section level attached to it. To enable
 this behavior, the field ``LEVEL`` has to be set to ``None``.
 
 Status
 ^^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - ab255589592043e2a6a86b74a9441d31
+
 Defines the current status of the ``[REQUIREMENT]``, e.g. ``Draft``, ``Active``,
 ``Deleted``.
 
 Tags
 ^^^^
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d7c2d72f849b413cb312d44813d25d5a
 
 Allows to add tags to a ``[REQUIREMENT]``. Tags are a comma separated list of
 single words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are
@@ -663,6 +900,13 @@ supported.
 
 Relations (previously REFS)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - c0c9c15d57e742ed80f12b8895f01de0
 
 The ``RELATIONS`` field is used to connect requirements to each other:
 
@@ -712,6 +956,13 @@ requirements connected with a reference have ``UID`` defined.
 Requirement relation roles
 """"""""""""""""""""""""""
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - a54f41576b2d40df92041862bef13600
+
 A requirement relation can be specialized with a role. The role must be registered in the document grammar, see :ref:`Relations <SDOC_UG_GRAMMAR_RELATIONS>`.
 
 .. code-block::
@@ -744,6 +995,13 @@ In this example REQ-1 is the parent of REQ-2 and REQ-2 refines REQ-1.
 Title
 ^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - f5f9008f417e40aa8acd9da18ccd89d1
+
 The title of the requirement.
 Every requirement should have its ``TITLE`` field specified.
 
@@ -763,11 +1021,25 @@ titles but some documents only use statements without title in which case their
 Statement
 ^^^^^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - cea069906c2e4329bea0d97744984ba8
+
 The statement of the requirement. The field can be single-line or multiline.
 Every requirement shall have its ``STATEMENT`` field specified.
 
 Rationale
 ^^^^^^^^^
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 7e63bdbce418401da8eb5aa607fd8fc2
 
 A requirement should have a ``RATIONALE`` field that explains/justifies why
 the requirement exists. Like comments, the rationale field can be single-line
@@ -786,6 +1058,13 @@ or multiline.
 
 Comment
 ^^^^^^^
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 3928acde165b4505943154199ecd739a
 
 A requirement can have one or more comments explaining the requirement. The
 comments can be single-line or multiline.
@@ -811,6 +1090,13 @@ comments can be single-line or multiline.
 
 Section
 ~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 14e5fea31b1c41bf8c743f18e51053e0
 
 The ``[SECTION]`` element is used for creating document chapters and grouping
 requirements into logical groups. It is equivalent to the use of ``#``, ``##``,
@@ -842,6 +1128,13 @@ requirements into logical groups. It is equivalent to the use of ``#``, ``##``,
 Nesting sections
 ^^^^^^^^^^^^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - fa700a9b975f493ba7ec2fd0a7b44bbe
+
 Sections can be nested within each other.
 
 .. code-block:: text
@@ -870,6 +1163,13 @@ sections will have their titles numbered accordingly: ``1 Chapter`` and
 
 Section without a level
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 094425a33e8941d9a0016b4ed714c664
 
 A section can have no level attached to it. To enable this behavior, the field
 ``LEVEL`` has to be set to ``None``.
@@ -906,6 +1206,13 @@ are set to ``LEVEL: None`` by StrictDoc automatically.
 
 Composing documents from other documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 6ed881a7cb8949cab3d1a1836846b716
 
 .. note::
     The composable documents is an early feature with only 50%+ of the implementation complete. See `Epic: UI: Composable documents <https://github.com/strictdoc-project/strictdoc/issues/1698>`_.
@@ -985,6 +1292,13 @@ Which will resolve to the following document after inclusion:
 Composite requirement
 ~~~~~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - ce69fe89236a4bcfa104a640def4b64a
+
 .. note::
     The composite requirements feature shows promise, but it has not yet attracted significant demand from both the core developers of StrictDoc and its users. While the use of composite requirements via the command line is implemented and supported, the web interface does not currently offer this support. Experience has shown that composite requirements can often be represented as a combination of sections and standard requirements. If there is a compelling use case for full support of composite requirements, please reach out to the developers.
 
@@ -1025,6 +1339,13 @@ elements should do the job.
 Machine identifiers (MID)
 -------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 7fe2832d60014259a8d67a09f1db102a
+
 StrictDoc supports the automatic generation of machine identifiers (MIDs). This optional feature can be enabled individually for each document through the document-level ``ENABLE_MID`` config option:
 
 .. code-block::
@@ -1063,6 +1384,13 @@ For larger projects, particularly those with extended maintenance cycles, we str
 
 Custom grammars
 ---------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4c2244d6affb4653844f730e1de88266
 
 **Observation:** Different industries have their own types of requirements
 documents with specialized meta information.
@@ -1137,6 +1465,13 @@ grammar.
 
 Supported field types
 ~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - a437c871dc3d46dba80460d5c8c22cf6
 
 The supported field types are:
 
@@ -1231,6 +1566,13 @@ Example:
 Reserved fields
 ~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4d69fa95bd974d859973dbb34679a7c4
+
 While it is possible to declare a grammar with completely custom fields, there
 is a fixed set of reserved fields that StrictDoc uses for the presentation of the table of contents and the document structure:
 
@@ -1269,6 +1611,13 @@ is a fixed set of reserved fields that StrictDoc uses for the presentation of th
 Relations
 ~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 012b0350547a48fc9ab3fbd6d9b5d502
+
 The custom grammar configuration includes the optional ``RELATION:`` section which specifies the relations a given document supports.
 
 .. code-block::
@@ -1301,6 +1650,13 @@ The default grammar relations, when a custom grammar is not specified, are ``Par
 Relation roles
 ^^^^^^^^^^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 01b8aa59963b42518d98c4e6b5e3259b
+
 StrictDoc's custom grammar support the configuration of relation roles. The Parent and Child relations can be further specialized with roles, such as Refines, Implements, Verifies, etc.
 
 .. code-block::
@@ -1323,6 +1679,13 @@ With this grammar, StrictDoc will only allow creating requirements that have Par
 
 Parent vs Child relations
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - b119e614781044eab641e20eaec872e5
 
 **TL;DR** If there is no compelling reason to use the Child relations, avoid using them.
 
@@ -1387,6 +1750,13 @@ Both examples above involve activity called Tailoring when an intermediate docum
 Importing grammar from grammar file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - df106206da0e446e87021fbf711fdb65
+
 A document grammar can be described in a separate file with an extension ``.sgra`` and imported to a document. This feature may be useful when multiple documents need to share the same grammar.
 
 Example:
@@ -1431,10 +1801,24 @@ When a ``[GRAMMAR]`` is declared with an ``IMPORT_FROM_FILE`` line, the grammar 
 Links
 -----
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 6ce1010a003146ec9e3e8d77ee89a082
+
 StrictDoc supports creating inline links to document sections, anchors, requirements and custom grammar elements.
 
 Links
 ~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 8b07c82f462348a58c3ab81be4db753d
 
 Elements that have an UID can be referenced from section text using a ``[LINK: <UID>]`` tag.
 To reference a section that has an UID, use ``[LINK: <Section UID>]`` tag.
@@ -1449,6 +1833,13 @@ The following link references a section: :ref:`Links <SDOC_UG_LINKS_AND_ANCHORS>
 Anchors
 ~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 294d6a0e96424dc8a93d6502c43e8501
+
 The ``[ANCHOR: <anchor uid>, <optional anchor title>]`` tag creates an anchor that can be referenced from other pages using ``[LINK <Anchor UID>]``.
 
 Example:
@@ -1460,12 +1851,28 @@ Note: ``ANCHOR`` is a block-level tag. It has to be placed in the beginning of a
 Anchor example
 ^^^^^^^^^^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - ba71ef8f24b342178b28e87b7609b8d7
+
 This section contains an anchor named ``Anchor ABC``.
 
 .. _ANCHOR-EXAMPLE:
 
+.. _SECTION-UG-Search-and-filtering:
+
 Search and filtering
 ====================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - de584af947a445e5bcc782bab6a93baf
 
 StrictDoc supports search and filtering of document content. However, this feature has not been extensively tested and is hidden behind a feature flag. To activate it, enable the corresponding setting in the ``strictdoc.toml`` configuration file:
 
@@ -1481,6 +1888,13 @@ The web interface includes the Search screen, designed for conducting queries ag
 
 Query engine
 ------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 29ffc3e91d8045589b0837f647286128
 
 The syntax of the search query is inspired by Python, utilizing a fixed grammar that converts search queries into corresponding Python expressions.
 
@@ -1518,6 +1932,13 @@ Important rules:
 Filtering content
 -----------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d52d86750ad54ce1b3263ebb092451c0
+
 Both ``export`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
 
 Both options are based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted requirements/sections will be exported.
@@ -1530,6 +1951,13 @@ Example:
 
 Markup
 ======
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - a3d675f38a1341548722239e994e55e1
 
 The Restructured Text (reST) markup is the default markup supported by
 StrictDoc. The reST markup can be written inside all StrictDoc's text blocks,
@@ -1544,6 +1972,13 @@ The support of Tex and HTML is planned.
 
 Images
 ------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e87ffdf6195c481cb39bc3d1ec29eca6
 
 To insert an image into a document, create a folder named ``_assets`` alongside your document and then place the image file into it.
 
@@ -1562,6 +1997,13 @@ This is the example of how images are included using the reST syntax:
 
 Mathjax support
 ---------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - abdf406fe10847929dd7cb12a030456f
 
 StrictDoc can include the `MathJax <https://www.mathjax.org/>`_ Javascript library to all of the document templates. To activate MathJax, edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
 
@@ -1598,6 +2040,13 @@ Export formats
 HTML documentation tree by StrictDoc
 ------------------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - a6bfffddf89045a1a7ecf55c9681fe14
+
 This is a default export option supported by StrictDoc.
 
 The following command creates an HTML export:
@@ -1616,6 +2065,13 @@ StrictDoc does not detect .sdoc files in the output folder. This is based on the
 Standalone HTML pages
 ~~~~~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 5674bfd50f31420baf56625d79d1ebff
+
 The following command creates a normal HTML export with all pages having their
 assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc.toml`` file, specify:
 
@@ -1631,8 +2087,17 @@ The generated document are self-contained HTML pages that can be shared via
 email as single files. This option might be especially useful if you work with
 a single document instead of a documentation tree with multiple documents.
 
+.. _SECTION-UG-HTML-export-via-Sphinx:
+
 HTML export via Sphinx
 ----------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - bf8160f43703418db306785c48463123
 
 The following command creates an RST export:
 
@@ -1653,8 +2118,17 @@ The created RST files can be copied to a project created using Sphinx, see
 is generated this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
 
+.. _SECTION-UG-PDF-export-via-Sphinx-LaTeX:
+
 PDF export via Sphinx/LaTeX
 ---------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 58595abe6ff148afbb45e2b6adc25110
 
 
 The following command creates an RST export:
@@ -1679,6 +2153,13 @@ is generated this way, see the Invoke task:
 JSON
 ----
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4d956edcd00846a98f59778dd7de9257
+
 The following command creates a JSON export:
 
 .. code-block::
@@ -1696,6 +2177,13 @@ Manage project tree
 
 Automatic assignment of requirements UID
 ----------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - ed367ed0bc284d4d9318bf6c844c3e3e
 
 To assign requirement UIDs automatically:
 
@@ -1729,6 +2217,13 @@ A section-level requirement mask:
 
 Traceability between requirements and source code
 =================================================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4398b17f61ad4dd290e72d7888597f48
 
 **Note:** This feature is experimental, the documentation is incomplete.
 
@@ -1767,6 +2262,13 @@ requirements-to-source-code traceability.
 Language-aware parsing of source code
 -------------------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 07bfe045a4934dd29d97fdb8ac567b7c
+
 For parsing source code and calculating traceability to requirements, StrictDoc uses a general parser that is agnostic of specific programming languages and their constructs, such as classes or functions. However, for languages with these constructs, establishing traceability to them can simplify the tracing process.
 
 As an experimental option, StrictDoc supports parsing source files of selected programming languages (currently Python and C) to recognize language syntax, primarily enabling traceability of functions (in Python, C, and others) and classes (in Python, C++, and others) to requirements.
@@ -1786,6 +2288,13 @@ Currently, only Python and C parsers are implemented. Upcoming implementations i
 
 Linking source code to requirements
 -----------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - c787c538cc0a422fb2898b525ec1006d
 
 To connect a source file to a requirement, a dedicated ``@relation`` marker must be added to the source file. Several marker types are supported, depending on the programming language. For example, the ``scope=class`` option is available for Python files but not for C files, as C does not support classes.
 
@@ -1865,6 +2374,13 @@ or
 Linking requirements to source code
 -----------------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 1c06fb7b90114633801d177459f482b5
+
 The linking of requirements to source files is arranged with a special RELATION type ``File``.
 
 .. note::
@@ -1929,8 +2445,17 @@ The linking of requirements to source files is arranged with a special RELATION 
       VALUE: file.py
       CLASS: Foo
 
+.. _SECTION-UG-ReqIF-support:
+
 ReqIF support
 =============
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - b510d9337e604bfda366f2ec605f4c88
 
 StrictDoc has an initial support of exporting to and importing from the ReqIF
 format.
@@ -1954,6 +2479,13 @@ Planned formats:
 Import flow (ReqIF -> SDoc)
 ---------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 079ed6d7ec3f4040b59efce7ccd37267
+
 .. code-block:: text
 
     strictdoc import reqif sdoc input.reqif output.sdoc
@@ -1972,6 +2504,13 @@ The command does the following:
 Export flow (SDoc -> ReqIF)
 ---------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 94641cac6b9748bfa2de8648ff197584
+
 .. code-block:: text
 
     strictdoc export --formats=reqif-sdoc %S/input.sdoc
@@ -1989,6 +2528,13 @@ The command does the following:
 
 ReqIF options
 -------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 57dd1fb10ba64e2f8e0b75baf772b634
 
 The following options are available for ReqIF export/import commands.
 
@@ -2013,6 +2559,13 @@ All options can be also specified in a project's TOML file as follows:
 
 ReqIF implementation details
 ----------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - edd5c3bf902e48deaee3248d12087a75
 
 The ReqIF is a `standard <https://www.omg.org/spec/ReqIF>`_ which is
 maintained by Object Management Group (OMG). One important feature of the
@@ -2040,6 +2593,13 @@ documentation.
 Excel support
 =============
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 65c1657a8fb04179960fca4ece265b18
+
 StrictDoc provides a support for Excel XLS on input and Excel XLSX on output.
 
 On input, the headers of sheet1 are used to put together a custom grammar and
@@ -2051,6 +2611,13 @@ Note: A roundtrip "SDoc -> Excel -> SDoc" is not yet supported.
 
 Import flow (Excel XLS -> SDoc)
 -------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - b01355b5a6d54409a0c7a684376a5278
 
 .. code-block:: text
 
@@ -2065,6 +2632,13 @@ The command does the following:
 
 Export flow (SDoc -> Excel XLSX)
 --------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 14161a9fa81d427f8a5a21367359339e
 
 .. code-block:: text
 
@@ -2099,12 +2673,26 @@ Options
 Project-level options
 ---------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 6449098df878484fbe8aed8a8b0e9a97
+
 StrictDoc supports reading configuration from a TOML file. The file must be called ``strictdoc.toml`` and shall be stored in the same folder which is provided as a path to the SDoc documents.
 
 For example, ``strictdoc export .`` will make StrictDoc recognize the config file, if it is stored under the current directory.
 
 Project title
 ~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 12501275599f4d7a954892e1a56778b9
 
 This option specifies a project title.
 
@@ -2115,6 +2703,13 @@ This option specifies a project title.
 
 Path to assets
 ~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 7d1102cda98c4ea18c6e646b73511097
 
 By default, StrictDoc copies its CSS/JS and other asset files to a folder ``_static`` in the HTML output directory.
 
@@ -2130,6 +2725,13 @@ The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
 Path to cache dir
 ~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e94e9762cc0e4e1eafe57d0d9e03eb5b
+
 StrictDoc uses caching when reading and writing artifacts. By default, all caches are written to the system's temporary directory (``$TMPDIR``).
 
 The ``cache_dir`` option in the configuration file allows specifying a custom directory, such as ``./output/build``. This setting can help make caching artifacts visible alongside documentation artifacts.
@@ -2143,6 +2745,13 @@ See :ref:`Caching artifacts <SECTION-DD-Caching-artifacts>` for an overview of h
 
 Path to source root
 ~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - be42ecf5c8a84fc3bca0b73ea50647de
 
 When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc looks for source files in the directory from which the ``strictdoc`` program is run. This can be changed with the ``source_root_path`` option.
 
@@ -2160,6 +2769,13 @@ The ``source_root_path`` option supports relative paths, e.g. ``../source_root/`
 
 Include/exclude document paths
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 27e5981c451d4ad4938ab622e3cf0be2
 
 Use ``include_doc_paths`` and ``exclude_doc_paths`` paths to whitelist/blacklist paths to SDoc documents.
 
@@ -2201,6 +2817,13 @@ The behavior of wildcard symbols ``*`` and ``**`` is as follows:
 Include/exclude source files paths
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 3908f98fab5c47668ba752d0e93033ab
+
 Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist paths to source files when the traceability between requirements and source files feature is enabled.
 
 .. code-block:: yaml
@@ -2225,6 +2848,13 @@ The behavior of the wildcards is the same as for the ``include_doc_paths/exclude
 
 Selecting features
 ~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - f43d8170c44b4d70ada2816fe71caf07
 
 StrictDoc has optional features and features that are developed with a lower priority.
 
@@ -2260,6 +2890,13 @@ See :ref:`Experimental features <SDOC_UG_EXPERIMENTAL_FEATURES>` where the exper
 Enable all features
 ^^^^^^^^^^^^^^^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d33880e1740d4d0892852cc8c425f66f
+
 To select all available features, stable and experimental, specify ``ALL_FEATURES``.
 
 .. code-block::
@@ -2279,6 +2916,13 @@ If ``ALL_FEATURES`` is present, all features are activated, regardless of any ot
 Disable all features
 ^^^^^^^^^^^^^^^^^^^^
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 9cf2ac683b7a4e939286146ef00631c1
+
 To disable all features, specify the ``features`` option but leave it empty:
 
 .. code-block:: yaml
@@ -2294,6 +2938,13 @@ Server configuration
 
 Host and port
 ^^^^^^^^^^^^^
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 9943131c688c400b99e2db9ec4854480
 
 By default, StrictDoc runs the server on ``127.0.0.1:5111``.
 
@@ -2314,6 +2965,13 @@ Command-line interface options
 Project title
 ~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 81d8e1beb5904cb78dfde2712ff3f311
+
 By default, StrictDoc generates a project tree with a project title
 "Untitled Project". To specify the project title use the option
 ``--project-title``.
@@ -2324,6 +2982,13 @@ By default, StrictDoc generates a project tree with a project title
 
 Parallelization
 ~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - f8ff07833ff942dfabdad2412350cd0c
 
 To improve performance for the large document trees (1000+ requirements),
 StrictDoc parallelizes reading and generation of the documents using
@@ -2347,6 +3012,13 @@ all export options and is disabled with this option as well.
 Python API
 ==========
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4504bffd6ced4aa78848ee9e03fdd4b7
+
 At present, StrictDoc lacks a documented public Python API. Nevertheless, users can leverage StrictDoc's internal API to enhance existing functions or create custom import, export, and analysis tools. The architecture of StrictDoc is highly modular, so for each functional block there shall always be a dedicated Python class with a public interface, see :ref:`High-level architecture <SECTION-DD-High-level-architecture>`.
 
 One good example is the ``SDWriter`` class, which exercises the complete export of the Python data objects to the SDoc format. Since, the SDoc format is the primary data format of StrictDoc, the SDWriter is quite feature-rich in what it does and covers. The ``RSTWriter`` is less powerful because it does not reflect the full data model, but is probably worth a look as well.
@@ -2365,6 +3037,13 @@ For any custom Python API request, for example, a need to do a more advanced dat
 
 Portability considerations
 ==========================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e15260727be84ce394386a4f95c627ae
 
 .. note::
 
@@ -2387,6 +3066,13 @@ The following is a list of features that are considered less portable when it co
 Experimental features
 =====================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 5b400736aec54789b2ed3ebcffcf961e
+
 At any point in time, StrictDoc supports features that are still experimental. These features are either not fully developed or their testing has not been completed yet.
 
 A feature is considered stable when all its known edge cases have been covered and enough users report that they have used and tested this feature.
@@ -2397,6 +3083,13 @@ See also :ref:`Selecting features <SDOC_UG_CONFIG_FEATURES>` for general instruc
 
 Project statistics screen
 -------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2fefc893de83432fa852886cc3a05fea
 
 The project statistics screen displays useful information about a documentation project as well as some requirements-based statistics.
 
@@ -2413,8 +3106,48 @@ To activate the project statistics screen, add/edit the ``strictdoc.toml`` confi
 
 This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.
 
+.. _SECTION-UG-Diff-changelog-screen:
+
+Diff/changelog screen
+---------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 131a7392a33f4225a62539dd173a920b
+
+The "Git Diff/Changelog" experimental feature in StrictDoc allows users to track changes between different versions of requirement documents. This feature provides a visual diff by highlighting what content has been added, removed, or modified within the SDoc files, using a style similar to Git diffs. It helps in maintaining version history, ensuring that changes are traceable, and supports auditing by showing how requirements evolve over time.
+
+To activate the Diff/Changelog screen, add/edit the strictdoc.toml config file in the root of your repository with documentation content.
+
+.. code:: toml
+
+    [project]
+    title = "My project"
+
+    features = [
+      "DIFF"
+    ]
+
+.. admonition:: Robust MID-based change tracking
+    :class: note
+
+    For optimal results when using the Diff/Changelog feature in a StrictDoc-based project, it is strongly recommended to enable Machine Identifiers (MIDs) for all project artifacts, such as TEXT, REQUIREMENT, etc.
+    Without MIDs, StrictDoc cannot ensure accurate change tracking. If a node lacks an MID, StrictDoc is unable to reliably detect whether it has been modified or relocated in subsequent versions of the documentation tree. For further details, refer to :ref:`Machine identifiers (MID) <SECTION-UG-Machine-identifiers-MID>`.
+
+.. _SECTION-UG-HTML2PDF-document-generator:
+
 HTML2PDF document generator
 ---------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 6e610b9a381f4b5d9d26004dd286e001
 
 StrictDoc offers an experimental feature for converting HTML documents into PDF files. This feature aims to deliver a good PDF printing experience without the necessity of installing more sophisticated printing systems like LaTeX.
 
@@ -2449,6 +3182,13 @@ This feature is not enabled by default because the implementation has not been c
 
 Mermaid diagramming and charting tool
 -------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 6a4e4467a5c0451ea8291fd94309d525
 
 The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as follows:
 
@@ -2486,6 +3226,13 @@ This feature is not enabled by default because it has not received enough testin
 Shadow features
 ---------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 38fa0af0d01e479ba7f5be046bae02eb
+
 At any given moment, StrictDoc may contain one or more features that have been implemented and are supported in the codebase, yet lack documentation.
 
 In most cases, these features are still in their early stages and may not even be documented as experimental features.
@@ -2504,12 +3251,26 @@ StrictDoc's limitations
 Limitations of RST support by StrictDoc
 ---------------------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - f7b039831f4e4c1ea19b45efe71c5365
+
 StrictDoc uses Docutils for rendering RST to HTML, not Sphinx. The implication is that no Sphinx-specific RST directives are supported. Refer to this issue for the related discussion of the limitations: `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_.
 
 .. _SDOC_UG_LIMIT_WEB:
 
 Limitations of web user interface
 ---------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 911c454331634018b8de24186ae8e742
 
 The existing implementation of the web user interface is alpha-quality and incomplete. The user interface and the underlying backend implementation are not yet autonomous from the command-line workflow. A user still has to access the command line to run the server and commit the documents to Git manually.
 
@@ -2534,6 +3295,13 @@ The following essential features are still missing and will be worked on in the 
 Concurrent use of web user interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - bdee3bde500a40878b70be44f113cf2c
+
 StrictDoc's web user interface does not handle concurrency. If the same requirement/section is edited by two users at the same time, the last write wins.
 
 The measures for handling concurrent use are planned but have been not implemented yet.
@@ -2541,12 +3309,26 @@ The measures for handling concurrent use are planned but have been not implement
 Known issues
 ============
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 9282f2d7218a4f2e967b6df45b0347ab
+
 This section documents some known issues and non-obvious implementation details.
 
 .. _SDOC_IMPL_2:
 
 Running out of semaphores on macOS
 ----------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - ec83d51626ee4e0cbb75c500ee306b06
 
 This an edge case on macOS: Python crashes in the Parallelizer class when
 creating an output queue:
@@ -2576,6 +3358,13 @@ Appendices
 FREETEXT-TEXT migration (June 2024)
 -----------------------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2509cce7ee634c7a8878c5e1094b83f2
+
 A new grammar node called ``TEXT`` has been introduced in the SDoc grammar, replacing the ``FREETEXT`` node as a more powerful feature.
 
 The reasons for the migration:
@@ -2601,6 +3390,13 @@ There are three important consequences of this migration.
 
 How to migrate from FREETEXT to TEXT
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 5d2f033604824264b1cc05840997c6b8
 
 The backward compatibility is preserved. The users can still create SDoc documents with ``FREETEXT`` but internally the free text nodes will be anyway converted to ``TEXT`` nodes, and the FREETEXT node no longer exist in the SDoc document model.
 

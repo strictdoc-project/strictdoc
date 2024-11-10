@@ -116,91 +116,13 @@ There is a GitHub issue `Unexpected restriction on specific RST directives / com
 
 [SECTION]
 MID: 235122d2c10748918c7c6ff736e39d18
+UID: SECTION-FAQ-How-did-the-SDoc-text-language-become-what-it-is
 TITLE: How did the SDoc text language become what it is?
 
 [TEXT]
 MID: b3561dd4f8e64f11a251c3471022aece
 STATEMENT: >>>
-Shortly: The SDoc markup is a hybrid of TOML and YAML with some influence from HTML/XML and `ASN.1 <https://en.wikipedia.org/wiki/ASN.1>`_. Using each of these formats as-is, and also the JSON format, was considered but discarded during the design. The SDoc markup has been pretty stable since its inception but the flexibility of the TextX parser allows easy modifications of the language in case of future evolutions. Any feedback to the current design of the markup language is appreciated.
-
-----
-
-The main use case for SDoc is to model a structure of a technical document that consists of tens and hundreds of technical requirements. The following high-level requirements for the markup are therefore relevant:
-
-- Encode documents of reasonable size (up to several hundreds or few thousands of A4-printed pages).
-- Visualize large blocks of requirements text without too much markup noise.
-- Support documents with nested (2-4 levels) or deeply nested structure (detailed technical specifications with up to 9-10 levels of chapter nesting).
-- Support multiple fields for requirement meta information which makes a requirement look like "a text with some meta information around it".
-
-SDoc format is inspired by several formats: TOML, YAML, ASN.1 and HTML/XML.
-
-**TOML: Square bracket syntax**
-
-From TOML, StrictDoc borrowed the ``[]`` bracket syntax to create the ``[REQUIREMENT]``, ``[SECTION]`` and other blocks but uses the YAML-like syntax for these blocks' fields, for example:
-
-.. code-block::
-
-    [REQUIREMENT]
-    TITLE: Requirement ABC
-    STATEMENT: The system A shall do B when C.
-
-**TOML/YAML: Arrays/dictionaries**
-
-StrictDoc has a rudimentary support of arrays and dictionaries. For example, the syntax for defining the document's ``[GRAMMAR]`` resembles what would look like an array of records in YAML:
-
-.. code-block::
-
-    [GRAMMAR]
-    ELEMENTS:
-    - TAG: REQUIREMENT
-      FIELDS:
-      - TITLE: UID
-        TYPE: String
-        REQUIRED: True
-      - TITLE: LEVEL
-        TYPE: String
-        REQUIRED: False
-
-**Capitalization of reserved keywords from ASN.1**
-
-From ASN.1, StrictDoc borrows the idea of having all reserved fields capitalized. This helps to visually distinguish between the grammar content and user content.
-
-**Nested sections**
-
-From HTML, the idea of opening and closing tags is taken to avoid any nesting that would otherwise be required to support the deeply nested documents with up to 6 or 8 levels, e.g., 1.1.1.1.1.1.1...
-
-.. code-block::
-
-    [SECTION]
-    TITLE: Section 1
-
-    [SECTION]
-    TITLE: Section 1.1
-
-    ...
-
-    [/SECTION]
-
-    [/SECTION]
-
-Taking HTML or XML as-is didn't seem like a good option because of the heavy visual noise that is produced around the actual content by the surrounding tags.
-
-**Multiline strings**
-
-The support of multiline strings is arranged by a custom solution which helps to avoid any nesting of multiline text as well as to visually indicate the start and end parts of the multiline string in a visually unambiguous way. This is how the multiline string is declared:
-
-.. code-block::
-
-    [REQUIREMENT]
-    TITLE: Requirement ABC
-    STATEMENT: >>>
-    The multiline requirement statement
-    without any nesting.
-    >>>
-
-**Discarded options**
-
-Taking TOML or YAML as-is didn't seem like a good option because these formats are designed to be used for configuration files or data serialization and not for large documents with hundreds of requirements. The most obvious problems for reusing either of TOML or YAML directly would have been with encoding the deeply nested documents and supporting readable and non-nested multiline strings.
+See [LINK: SECTION-FM-SDoc-text-markup] for a description of the SDoc feature.
 <<<
 
 [/SECTION]

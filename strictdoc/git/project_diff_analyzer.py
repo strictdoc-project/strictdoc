@@ -4,6 +4,8 @@ import statistics
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
+from markupsafe import Markup
+
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
@@ -24,7 +26,7 @@ from strictdoc.git.change import (
     SectionChange,
 )
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
-from strictdoc.helpers.diff import get_colored_diff_string, similar
+from strictdoc.helpers.diff import get_colored_html_diff_string, similar
 from strictdoc.helpers.mid import MID
 
 
@@ -347,8 +349,8 @@ class ChangeStats:
 
                 uid_modified: bool = False
                 title_modified: bool = False
-                lhs_colored_title_diff: Optional[str] = None
-                rhs_colored_title_diff: Optional[str] = None
+                lhs_colored_title_diff: Optional[Markup] = None
+                rhs_colored_title_diff: Optional[Markup] = None
 
                 # If there is another section and the UIDs are not the
                 # same, consider the UID modified.
@@ -366,12 +368,12 @@ class ChangeStats:
                 if other_document_or_none is not None:
                     if document.title != other_document_or_none.title:
                         title_modified = True
-                        lhs_colored_title_diff = get_colored_diff_string(
+                        lhs_colored_title_diff = get_colored_html_diff_string(
                             document.title,
                             other_document_or_none.title,
                             "left",
                         )
-                        rhs_colored_title_diff = get_colored_diff_string(
+                        rhs_colored_title_diff = get_colored_html_diff_string(
                             document.title,
                             other_document_or_none.title,
                             "right",
@@ -461,8 +463,8 @@ class ChangeStats:
 
                         uid_modified: bool = False
                         title_modified: bool = False
-                        lhs_colored_title_diff: Optional[str] = None
-                        rhs_colored_title_diff: Optional[str] = None
+                        lhs_colored_title_diff: Optional[Markup] = None
+                        rhs_colored_title_diff: Optional[Markup] = None
 
                         # If there is another section and the UIDs are not the
                         # same, consider the UID modified.
@@ -481,14 +483,14 @@ class ChangeStats:
                             if node.title != other_section_or_none.title:
                                 title_modified = True
                                 lhs_colored_title_diff = (
-                                    get_colored_diff_string(
+                                    get_colored_html_diff_string(
                                         node.title,
                                         other_section_or_none.title,
                                         "left",
                                     )
                                 )
                                 rhs_colored_title_diff = (
-                                    get_colored_diff_string(
+                                    get_colored_html_diff_string(
                                         node.title,
                                         other_section_or_none.title,
                                         "right",
@@ -769,10 +771,10 @@ class ChangeStats:
             other_requirement_field_value = (
                 other_requirement_field.get_text_value()
             )
-            left_diff = get_colored_diff_string(
+            left_diff = get_colored_html_diff_string(
                 requirement_field_value, other_requirement_field_value, "left"
             )
-            right_diff = get_colored_diff_string(
+            right_diff = get_colored_html_diff_string(
                 requirement_field_value, other_requirement_field_value, "right"
             )
 
@@ -857,12 +859,12 @@ class ChangeStats:
             comment_other_value = changed_other_field_.get_text_value()
             assert comment_other_value is not None
 
-            left_diff = get_colored_diff_string(
+            left_diff = get_colored_html_diff_string(
                 comment_value,
                 comment_other_value,
                 "left",
             )
-            right_diff = get_colored_diff_string(
+            right_diff = get_colored_html_diff_string(
                 comment_value,
                 comment_other_value,
                 "right",

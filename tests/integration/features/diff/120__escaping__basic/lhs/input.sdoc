@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Doc Title with special characters <>
+
+[SECTION]
+TITLE: To be removed section with special characters <>
+
+[REQUIREMENT]
+TITLE: To be removed title with special characters <>
+STATEMENT: To be removed statement with special characters <>
+
+[/SECTION]
+
+[SECTION]
+UID: SECT-1
+TITLE: To be changed section with special characters <>
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: To be changed title with special characters <>
+STATEMENT: To be changed statement with special characters <>
+
+[/SECTION]

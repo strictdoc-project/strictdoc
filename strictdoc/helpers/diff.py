@@ -2,17 +2,19 @@
 import difflib
 from difflib import SequenceMatcher
 
+from markupsafe import Markup, escape
+
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 
-red = lambda text: f'<span class="lambda_red">{text}</span>'
-green = lambda text: f'<span class="lambda_green">{text}</span>'
-white = lambda text: f"<span>{text}</span>"
+red = lambda text: f'<span class="lambda_red">{escape(text)}</span>'
+green = lambda text: f'<span class="lambda_green">{escape(text)}</span>'
+white = lambda text: f"<span>{escape(text)}</span>"
 
 
-def get_colored_diff_string(old: str, new: str, flag: str):
+def get_colored_html_diff_string(old: str, new: str, flag: str) -> Markup:
     assert old is not None
     assert new is not None
     assert flag in ("left", "right")
@@ -33,4 +35,4 @@ def get_colored_diff_string(old: str, new: str, flag: str):
                 result += red(old[code[1] : code[2]])
             else:
                 result += green(new[code[3] : code[4]])
-    return result
+    return Markup(result)

@@ -1,0 +1,29 @@
+RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
+
+RUN: cat %S/Output/diff.html | filecheck %s --dump-input=fail --check-prefix=CHECK-DIFF
+
+CHECK-DIFF:<span class="document_title">Doc Title with special characters &lt;&gt;</span>
+CHECK-DIFF:<span>Doc Title with</span><span> special characters &lt;&gt;</span></div>
+CHECK-DIFF:<span>To be removed section with special characters &lt;&gt;</span>
+CHECK-DIFF:<span class="badge" text="TITLE"></span><div class="sdoc_pre_content">To be removed section with special characters &lt;&gt;</div>
+CHECK-DIFF:To be removed title with special characters &lt;&gt;
+CHECK-DIFF:<span class="badge" text="TITLE"></span><span class="sdoc_pre_content">To be removed title with special characters &lt;&gt;</span>
+CHECK-DIFF:<span class="badge" text="STATEMENT"></span><span class="sdoc_pre_content">To be removed statement with special characters &lt;&gt;</span>
+CHECK-DIFF:<span>To be changed section with special characters &lt;&gt;</span>
+CHECK-DIFF:<span class="badge" text="TITLE"></span><div class="sdoc_pre_content"><span class="lambda_red">To be c</span><span>hanged section with</span><span> special characters &lt;&gt;</span></div>
+CHECK-DIFF:To be changed title with special characters &lt;&gt;
+CHECK-DIFF:<span class="badge" text="TITLE"></span><span class="sdoc_pre_content"><span class="lambda_red">To be c</span><span>hanged title with</span><span> special characters &lt;&gt;</span></span>
+CHECK-DIFF:<span class="badge" text="STATEMENT"></span><span class="sdoc_pre_content"><span class="lambda_red">To be c</span><span>hanged statement with </span><span>special characters &lt;&gt;</span></span>
+
+CHECK-DIFF:<span class="document_title">Doc Title with more special characters &lt;&gt;&amp;&#34;&#39;</span>
+CHECK-DIFF:<span>Doc Title with</span><span class="lambda_green"> more</span><span> special characters &lt;&gt;</span><span class="lambda_green">&amp;&#34;&#39;</span></div>
+CHECK-DIFF:<span>Added section with more special characters &lt;&gt;&amp;&#34;&#39;</span>
+CHECK-DIFF:<span class="badge" text="TITLE"></span><div class="sdoc_pre_content">Added section with more special characters &lt;&gt;&amp;&#34;&#39;</div>
+CHECK-DIFF:Added title with more special characters &lt;&gt;&amp;&#34;&#39;
+CHECK-DIFF:<span class="badge" text="TITLE"></span><span class="sdoc_pre_content">Added title with more special characters &lt;&gt;&amp;&#34;&#39;</span>
+CHECK-DIFF:<span class="badge" text="STATEMENT"></span><span class="sdoc_pre_content">Added statement with more special characters &lt;&gt;&amp;&#34;&#39;</span>
+CHECK-DIFF:<span>Changed section with more special characters &lt;&gt;&amp;&#34;&#39;</span>
+CHECK-DIFF:<span class="badge" text="TITLE"></span><div class="sdoc_pre_content"><span class="lambda_green">C</span><span>hanged section with</span><span class="lambda_green"> more</span><span> special characters &lt;&gt;</span><span class="lambda_green">&amp;&#34;&#39;</span>
+CHECK-DIFF:Changed title with more special characters &lt;&gt;&amp;&#34;&#39;
+CHECK-DIFF:<span class="badge" text="TITLE"></span><span class="sdoc_pre_content"><span class="lambda_green">C</span><span>hanged title with</span><span class="lambda_green"> more</span><span> special characters &lt;&gt;</span><span class="lambda_green">&amp;&#34;&#39;</span></span>
+CHECK-DIFF:<span class="badge" text="STATEMENT"></span><span class="sdoc_pre_content"><span class="lambda_green">C</span><span>hanged statement with </span><span class="lambda_green">more </span><span>special characters &lt;&gt;</span><span class="lambda_green">&amp;&#34;&#39;</span></span>

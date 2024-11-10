@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import Dict, List, Optional, Union
 
+from markupsafe import Markup
+
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
@@ -36,8 +38,8 @@ class DocumentChange:
         rhs_document: Optional[SDocDocument],
         uid_modified: bool,
         title_modified: bool,
-        lhs_colored_title_diff: Optional[str],
-        rhs_colored_title_diff: Optional[str],
+        lhs_colored_title_diff: Optional[Markup],
+        rhs_colored_title_diff: Optional[Markup],
     ):
         assert lhs_document is not None or rhs_document is not None
         if matched_uid is not None:
@@ -45,15 +47,15 @@ class DocumentChange:
         self.matched_uid: Optional[str] = matched_uid
         self.uid_modified: bool = uid_modified
         self.title_modified: bool = title_modified
-        self.lhs_colored_title_diff: Optional[str] = lhs_colored_title_diff
-        self.rhs_colored_title_diff: Optional[str] = rhs_colored_title_diff
+        self.lhs_colored_title_diff: Optional[Markup] = lhs_colored_title_diff
+        self.rhs_colored_title_diff: Optional[Markup] = rhs_colored_title_diff
 
         self.lhs_document: Optional[SDocDocument] = lhs_document
         self.rhs_document: Optional[SDocDocument] = rhs_document
 
         self.change_type: ChangeType = ChangeType.DOCUMENT_MODIFIED
 
-    def get_colored_title_diff(self, side: str) -> Optional[str]:
+    def get_colored_title_diff(self, side: str) -> Optional[Markup]:
         assert self.title_modified
         if side == "left":
             return self.lhs_colored_title_diff
@@ -74,8 +76,8 @@ class SectionChange:
         rhs_section: Optional[SDocSection],
         uid_modified: bool,
         title_modified: bool,
-        lhs_colored_title_diff: Optional[str],
-        rhs_colored_title_diff: Optional[str],
+        lhs_colored_title_diff: Optional[Markup],
+        rhs_colored_title_diff: Optional[Markup],
     ):
         assert lhs_section is not None or rhs_section is not None
         if matched_uid is not None:
@@ -85,8 +87,8 @@ class SectionChange:
         self.section_token: Optional[str] = section_token
         self.uid_modified: bool = uid_modified
         self.title_modified: bool = title_modified
-        self.lhs_colored_title_diff: Optional[str] = lhs_colored_title_diff
-        self.rhs_colored_title_diff: Optional[str] = rhs_colored_title_diff
+        self.lhs_colored_title_diff: Optional[Markup] = lhs_colored_title_diff
+        self.rhs_colored_title_diff: Optional[Markup] = rhs_colored_title_diff
 
         self.lhs_section: Optional[SDocSection] = lhs_section
         self.rhs_section: Optional[SDocSection] = rhs_section
@@ -108,7 +110,7 @@ class SectionChange:
     def is_paired_change(self) -> bool:
         return self.lhs_section is not None and self.rhs_section is not None
 
-    def get_colored_title_diff(self, side: str) -> Optional[str]:
+    def get_colored_title_diff(self, side: str) -> Optional[Markup]:
         assert self.title_modified
         if side == "left":
             return self.lhs_colored_title_diff
@@ -125,8 +127,8 @@ class RequirementFieldChange:
         field_name: str,
         lhs_field: Optional[SDocNodeField],
         rhs_field: Optional[SDocNodeField],
-        left_diff: Optional[str],
-        right_diff: Optional[str],
+        left_diff: Optional[Markup],
+        right_diff: Optional[Markup],
     ):
         assert isinstance(field_name, str) and len(field_name) > 0
         assert lhs_field is not None or rhs_field is not None
@@ -137,10 +139,10 @@ class RequirementFieldChange:
         self.field_name: str = field_name
         self.lhs_field: Optional[SDocNodeField] = lhs_field
         self.rhs_field: Optional[SDocNodeField] = rhs_field
-        self.left_diff: Optional[str] = left_diff
-        self.right_diff: Optional[str] = right_diff
+        self.left_diff: Optional[Markup] = left_diff
+        self.right_diff: Optional[Markup] = right_diff
 
-    def get_colored_free_text_diff(self, side: str) -> Optional[str]:
+    def get_colored_free_text_diff(self, side: str) -> Optional[Markup]:
         if side == "left":
             return self.left_diff
         if side == "right":

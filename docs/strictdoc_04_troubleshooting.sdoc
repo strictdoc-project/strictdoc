@@ -1,16 +1,36 @@
 [DOCUMENT]
+MID: 5680165c90f44903b3b1dc1013b8cb59
 TITLE: Troubleshooting
 UID: SDOC_TROUBLESHOOTING
+OPTIONS:
+  ENABLE_MID: True
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 
 [TEXT]
+MID: 7e3481d51ad14767b5c97132cad2e0a6
 STATEMENT: >>>
 This document summarizes solutions to the most common issues reported by StrictDoc users.
 <<<
 
 [SECTION]
+MID: 17152ac7de9f4c138b85e2956091206f
 TITLE: Caching issues
 
 [TEXT]
+MID: 9a32ac13510d401cbc1a608259652c78
 STATEMENT: >>>
 .. note::
 

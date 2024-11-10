@@ -1,7 +1,25 @@
 [DOCUMENT]
+MID: d92baa6b8cf745a2ab6be86616b06277
 TITLE: Credits
+OPTIONS:
+  ENABLE_MID: True
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 
 [TEXT]
+MID: 18cf0af34c194590b3eb391c2ef94074
 STATEMENT: >>>
 As an open-source project, StrictDoc is based on the work of many people and organizations:
 
@@ -14,9 +32,11 @@ This page gives due credit to everyone who made StrictDoc possible.
 <<<
 
 [SECTION]
+MID: c89b5ba9c6dc427497647b64048a2c98
 TITLE: Contributions to StrictDoc
 
 [TEXT]
+MID: e6de83e242bc4aea96622a2e7585f135
 STATEMENT: >>>
 The core team: @stanislaw and @mettta.
 
@@ -40,9 +60,11 @@ Single/smaller contributions can be also seen on the `StrictDoc's Insights/Contr
 [/SECTION]
 
 [SECTION]
+MID: 4d59a5df65d547e685cb491937793f69
 TITLE: Open source software
 
 [TEXT]
+MID: 4428ac9ec3504dda9f1e1e845ffb3c75
 STATEMENT: >>>
 StrictDoc is based on other open source components. Without this support, we would have never reached where we are today.
 
@@ -72,9 +94,11 @@ Refer to the `configuration file <https://github.com/strictdoc-project/strictdoc
 [/SECTION]
 
 [SECTION]
+MID: 2da7450f8b804a7a8494921486bd4d8e
 TITLE: Hosting and Continuous Integration
 
 [TEXT]
+MID: 5b702e6f9b714e458b059912ca8e196a
 STATEMENT: >>>
 StrictDoc is hosted on `GitHub <https://github.com>`_ and uses `GitHub Actions <https://docs.github.com/en/actions>`_ to run all of its build, test and release tasks. As an open-source project, StrictDoc gets these services from GitHub for free.
 
@@ -84,9 +108,11 @@ StrictDoc's documentation is hosted on `Read the Docs <https://readthedocs.org>`
 [/SECTION]
 
 [SECTION]
+MID: 43ccb6448b9d4b65a2c40df54d1707aa
 TITLE: Free and commercial IDEs by JetBrains
 
 [TEXT]
+MID: b4729e592d104fe3818c8949615ffef9
 STATEMENT: >>>
 For Python development, the StrictDoc core team uses the community version of
 `PyCharm <https://www.jetbrains.com/pycharm/>`_

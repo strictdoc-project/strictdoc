@@ -1,19 +1,38 @@
 [DOCUMENT]
+MID: e776a9eb7ba0455eb589787028aa0529
 TITLE: Development Plan
 OPTIONS:
+  ENABLE_MID: True
   REQUIREMENT_STYLE: Table
   REQUIREMENT_IN_TOC: True
 
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
 [TEXT]
+MID: 2ba509874f1744cf899643b58a6a2095
 STATEMENT: >>>
 This document presents the goals of the StrictDoc project and describes how the
 project is developed.
 <<<
 
 [SECTION]
+MID: 24b0bc5efe074a419b441900d30b2876
 TITLE: Project goals
 
 [TEXT]
+MID: bdbd5aecefdc41bca1c88b9bce71d512
 STATEMENT: >>>
 StrictDoc is an open-source tool for writing technical documentation and requirements management. The long-term goal of the project is to provide a capable, open-source platform for creating and managing technical documentation.
 
@@ -41,10 +60,12 @@ StrictDoc shall be compatible with other software and engineering tools. This in
 [/SECTION]
 
 [SECTION]
+MID: f1e3c17829fd4eebbd390fceaeb95619
 UID: SECTION-DP-Project-milestones
 TITLE: Project milestones
 
 [TEXT]
+MID: fd9294fdd2b546de993f649767371394
 STATEMENT: >>>
 As an open-source project, StrictDoc is developed without strict deadlines, however there are certain high-level priorities that influence the development. The work is loosely organized in quarters.
 
@@ -102,9 +123,11 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
 <<<
 
 [SECTION]
+MID: bf9f3f05501140da8d35cde39493c72f
 TITLE: The roadmap diagram
 
 [TEXT]
+MID: 53e101acb20e44e89de27f0f77c5f0cb
 STATEMENT: >>>
 The following diagram contains the work items at the epic and single task levels. This PNG file is exported from a draw.io diagram, where the master version of the roadmap is maintained.
 
@@ -119,9 +142,11 @@ The following diagram contains the work items at the epic and single task levels
 [/SECTION]
 
 [SECTION]
+MID: 625560c790a3492eaf45466b787602d7
 TITLE: Versioning
 
 [TEXT]
+MID: ae2a2af6e3f24f65845c6c37ea7da2e2
 STATEMENT: >>>
 As of release 0.1.0 (2024-11-01), StrictDoc follows a `semantic versioning <https://semver.org>`_-oriented release scheme. The MAJOR.MINOR.PATCH components are managed according to the guidelines of the semantic versioning specification.
 <<<
@@ -129,9 +154,11 @@ As of release 0.1.0 (2024-11-01), StrictDoc follows a `semantic versioning <http
 [/SECTION]
 
 [SECTION]
+MID: ef6bde37e1c54f49afdbd3c6785fd01c
 TITLE: Verification
 
 [TEXT]
+MID: 14d0e79fcadc43f1a1cee2d66ae6b763
 STATEMENT: >>>
 StrictDoc has three groups of tests: unit, integration, end-to-end tests.
 
@@ -145,9 +172,11 @@ The end-to-end web interface tests are based on SeleniumBase test framework.
 [/SECTION]
 
 [SECTION]
+MID: 2ae3a8822a424a9e8ad6976c2476d109
 TITLE: Python baseline
 
 [TEXT]
+MID: 081ee6266bab4a3a80f290c95e055a25
 STATEMENT: >>>
 The supported version of Python is kept to be as low as possible. As of 2024-Q4, the currently supported version is Python 3.8.
 

@@ -1,7 +1,25 @@
 [DOCUMENT]
+MID: 4f05169346ab4001b6ff19e8349e8fa7
 TITLE: Developer Guide
+OPTIONS:
+  ENABLE_MID: True
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 
 [TEXT]
+MID: f174b0cdec6b482daa2878c8cc0d02c3
 STATEMENT: >>>
 This section contains everything that a StrictDoc developer/contributor should
 know to get the job done.
@@ -17,13 +35,16 @@ Any feedback on this development guide is appreciated.
 <<<
 
 [SECTION]
+MID: c069e4c7b4d04dd09eb73f940e947bfd
 UID: DEVGUIDE_GETTING_STARTED
 TITLE: Getting started
 
 [SECTION]
+MID: 7477d397d0ca493f8e47532455d44965
 TITLE: System dependencies
 
 [TEXT]
+MID: df2e1de12c6b456898c48a36650813d4
 STATEMENT: >>>
 StrictDoc itself mostly depends on other Python Pip packages, so there is nothing special to be installed.
 
@@ -43,9 +64,11 @@ From the core Python packages, StrictDoc needs Invoke, Tox and TOML:
 <<<
 
 [SECTION]
+MID: b7a21564c30043acbf1733d9b47bd0bc
 TITLE: Windows-specific: Long Path support
 
 [TEXT]
+MID: 8591cf6dece04244824c3ac2a8666ba3
 STATEMENT: >>>
 As `reported <https://github.com/strictdoc-project/strictdoc/issues/1118>`_ by a user, Windows Long Path support has to be enabled on a Windows system.
 
@@ -57,9 +80,11 @@ You can find information on how to enable the long paths support at https://pip.
 [/SECTION]
 
 [SECTION]
+MID: 89ec30b9f67c489da635be391b0b0e15
 TITLE: Installing StrictDoc from GitHub (developer mode)
 
 [TEXT]
+MID: 2407bb186b274a58b97b54b99ba6e86f
 STATEMENT: >>>
 **Note:** Use this way of installing StrictDoc only if you want to make changes
 in StrictDoc's source code. Otherwise, install StrictDoc as a normal Pip package by running ``pip install strictdoc``.
@@ -78,9 +103,11 @@ The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc, bu
 [/SECTION]
 
 [SECTION]
+MID: 90d5d79146e64660a71cd74ac23f6811
 TITLE: Invoke for development tasks
 
 [TEXT]
+MID: 452b3c24463446a497ed6b8fcdb31fef
 STATEMENT: >>>
 All development tasks are managed using
 `Invoke <https://www.pyinvoke.org/>`_ in the ``tasks.py`` file. On macOS and
@@ -98,9 +125,11 @@ Make sure to familiarize yourself with the available developer tasks by running:
 [/SECTION]
 
 [SECTION]
+MID: e7ce6a2f13614974b43aba56f6ae7253
 TITLE: Main "Check" task
 
 [TEXT]
+MID: 09258e99cabb4455904b0e2c6687d492
 STATEMENT: >>>
 Before doing anything else, run the main ``check`` command to make sure that StrictDoc passes all tests on your system:
 
@@ -114,10 +143,12 @@ The ``check`` command runs all StrictDoc lint and test tasks with the only excep
 [/SECTION]
 
 [SECTION]
+MID: 07d9a3c17be8475089844f5eb2cd8299
 UID: DEVGUIDE_PYTHON_CODE
 TITLE: Python code
 
 [TEXT]
+MID: 3012a69ef5d244d49fcb90c088d4523b
 STATEMENT: >>>
 - The version of Python is set to be as low as possible given some constraints
   of StrictDoc's dependencies. Ideally, the lowest Python version should only be
@@ -154,10 +185,12 @@ STATEMENT: >>>
 [/SECTION]
 
 [SECTION]
+MID: 6e9707c99199464583f091056d1ae458
 UID: DEVGUIDE_GIT_WORKFLOW
 TITLE: Git workflow
 
 [TEXT]
+MID: 0e916453596b460b84a89f722354a825
 STATEMENT: >>>
 - The preferred Git workflow is "1 commit per 1 PR". If the work truly deserves
   a sequence of commits, each commit shall be self-contained and pass all checks
@@ -201,9 +234,11 @@ where the context can be a major feature being added or a folder. A form of  ``c
 [/SECTION]
 
 [SECTION]
+MID: 2420b2d7a4624bd99b0f8088dfa9abff
 TITLE: Frontend development
 
 [TEXT]
+MID: d818aad87db54985b8933f98528808ab
 STATEMENT: >>>
 The shortest path to run the server when the StrictDoc's source code is cloned:
 
@@ -215,9 +250,11 @@ The shortest path to run the server when the StrictDoc's source code is cloned:
 [/SECTION]
 
 [SECTION]
+MID: 73c717608cce4abca2c768f1dbfb705d
 TITLE: Running End-to-End Web tests
 
 [TEXT]
+MID: da3cbcd69b0545988daeb0f42098830d
 STATEMENT: >>>
 .. code:: bash
 
@@ -227,9 +264,11 @@ STATEMENT: >>>
 [/SECTION]
 
 [SECTION]
+MID: 240dc1426d994397ac1401834b4f0ef0
 TITLE: Running integration tests
 
 [TEXT]
+MID: 4e307b3b950840bbbe455c1ae3238a6e
 STATEMENT: >>>
 The integration tests are run using Invoke:
 
@@ -249,9 +288,11 @@ See `How to test command-line programs with Python tools: LIT and FileCheck <htt
 [/SECTION]
 
 [SECTION]
+MID: 7b4bf839b1c44b0d82001060596d8cbf
 TITLE: Documentation
 
 [TEXT]
+MID: d1f5fde86ebc4103bc4eb0334b1ec919
 STATEMENT: >>>
 - Every change in the functionality or the infrastructure should be documented.
 - Every line of documentation shall be no longer than 80 characters. StrictDoc's
@@ -266,9 +307,11 @@ STATEMENT: >>>
 [/SECTION]
 
 [SECTION]
+MID: a44e3b99323b4ac291f4b4d3948c3cc0
 TITLE: Conventions
 
 [TEXT]
+MID: 49b7349a3bee478cbe81d8ef25f6245c
 STATEMENT: >>>
 - ``snake_case`` everywhere, no ``kebab-case``.
 

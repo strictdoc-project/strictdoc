@@ -68,22 +68,11 @@ class DiffScreenResultsViewObject:
     def render_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_url(url))
 
-    def render_node_link(self, incoming_link, document, document_type) -> str:
-        return self.link_renderer.render_node_link(
-            incoming_link, document, document_type
-        )
-
     def render_static_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_static_url(url))
 
     def render_static_url_with_prefix(self, url: str) -> str:
         return self.link_renderer.render_static_url_with_prefix(url)
-
-    def render_local_anchor(self, node) -> str:
-        return self.link_renderer.render_local_anchor(node)
-
-    def is_empty_tree(self) -> bool:
-        return self.document_tree_iterator.is_empty_tree()
 
     def date_today(self) -> str:
         return datetime.today().strftime("%Y-%m-%d")

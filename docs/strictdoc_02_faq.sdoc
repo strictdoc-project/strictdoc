@@ -1,11 +1,28 @@
 [DOCUMENT]
+MID: a434bc71a7324efaaed7f5a58e56e544
 TITLE: F.A.Q.
 UID: SDOC_FAQ
 OPTIONS:
+  ENABLE_MID: True
   REQUIREMENT_STYLE: Inline
   REQUIREMENT_IN_TOC: True
 
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
 [TEXT]
+MID: 5acdfccd5771492f95b70328bd599cf7
 STATEMENT: >>>
 This document is a list of questions that people ask about StrictDoc.
 
@@ -13,9 +30,11 @@ Missing a question or an answer? Ask it here: [LINK: SDOC_UG_CONTACT].
 <<<
 
 [SECTION]
+MID: e972c79015524961863e095280a81aab
 TITLE: What is StrictDoc?
 
 [TEXT]
+MID: d8d92e4eb8254cbda8dcb37709a9df45
 STATEMENT: >>>
 StrictDoc is software for writing technical requirements specifications.
 
@@ -27,9 +46,11 @@ The project exists since mid-2019.
 [/SECTION]
 
 [SECTION]
+MID: 86827c92ec3a493d8a2382b75b5277a8
 TITLE: Resources about StrictDoc
 
 [TEXT]
+MID: 2ba0c8fa79604b708927ffed2ef94664
 STATEMENT: >>>
 Talks:
 
@@ -51,9 +72,11 @@ Screencasts/tutorials:
 [/SECTION]
 
 [SECTION]
+MID: 74235945ec4a4116aecbc883ffba54b7
 TITLE: Which web server is recommended for StrictDoc documentation?
 
 [TEXT]
+MID: 966a5c3babf84fc7a1454b2799d13470
 STATEMENT: >>>
 This question can be answered in two ways. First of all, StrictDoc has its own web server that can be run with ``strictdoc server ...``. Refer to the User Guide for further information.
 
@@ -69,9 +92,11 @@ If the project is private, you could use any server that reads HTML files from a
 [/SECTION]
 
 [SECTION]
+MID: 2e911dedb13348bf827f078bbbca44f4
 TITLE: Is StrictDoc compatible with Sphinx?
 
 [TEXT]
+MID: ac35a712b4a84f4ab2b61feb15c1550d
 STATEMENT: >>>
 StrictDoc is only partially compatible with Sphinx.
 
@@ -90,9 +115,11 @@ There is a GitHub issue `Unexpected restriction on specific RST directives / com
 [/SECTION]
 
 [SECTION]
+MID: 235122d2c10748918c7c6ff736e39d18
 TITLE: How did the SDoc text language become what it is?
 
 [TEXT]
+MID: b3561dd4f8e64f11a251c3471022aece
 STATEMENT: >>>
 Shortly: The SDoc markup is a hybrid of TOML and YAML with some influence from HTML/XML and `ASN.1 <https://en.wikipedia.org/wiki/ASN.1>`_. Using each of these formats as-is, and also the JSON format, was considered but discarded during the design. The SDoc markup has been pretty stable since its inception but the flexibility of the TextX parser allows easy modifications of the language in case of future evolutions. Any feedback to the current design of the markup language is appreciated.
 
@@ -179,12 +206,15 @@ Taking TOML or YAML as-is didn't seem like a good option because these formats a
 [/SECTION]
 
 [SECTION]
+MID: 1d4220cc9a5444a5bdbaee91c8c50670
 TITLE: How StrictDoc compares to other tools?
 
 [SECTION]
+MID: a4533ae81bfe446295242add9156198e
 TITLE: Doorstop
 
 [TEXT]
+MID: d0c305180d8747a1b70254eaf2c4f201
 STATEMENT: >>>
 The StrictDoc project is a close successor of another project called
 `Doorstop <https://github.com/doorstop-dev/doorstop>`_.
@@ -238,9 +268,11 @@ to/from Doorstop format.
 [/SECTION]
 
 [SECTION]
+MID: 5012af516d18447caa3a2dbce97d3e4a
 TITLE: Sphinx
 
 [TEXT]
+MID: 74b6be0dc2bb485987d8731348cdf5ce
 STATEMENT: >>>
 Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
 a higher level of abstraction: StrictDoc's specialization is requirements and
@@ -263,9 +295,11 @@ website by readthedocs which uses Sphinx under the hood. The
 [/SECTION]
 
 [SECTION]
+MID: 515bcae39d1f48eda0b72562871ab15a
 TITLE: Sphinx-Needs
 
 [TEXT]
+MID: 602327a9b8654e1eab4bc265e172a63d
 STATEMENT: >>>
 `Sphinx-Needs <https://sphinxcontrib-needs.readthedocs.io/en/latest/>`_ is a
 text-based requirements management system based on Sphinx. It is implemented
@@ -324,9 +358,11 @@ The difference between Sphinx-Needs and StrictDoc:
 [/SECTION]
 
 [SECTION]
+MID: 4a77366154d74cf7ab34044bed1cd542
 TITLE: FRET
 
 [TEXT]
+MID: e3eb1be604c6499292339ecbe7620c60
 STATEMENT: >>>
 `FRET <https://github.com/NASA-SW-VnV/fret>`_ is a framework for the
 elicitation, specification, formalization and understanding of requirements.
@@ -349,9 +385,11 @@ FRET's user interface is built with Electron.
 [/SECTION]
 
 [SECTION]
+MID: ff143a18e98144bd86e10e29616c187b
 TITLE: How long has the StrictDoc project been around?
 
 [TEXT]
+MID: 47d60404cf574aebb8c83795589c4137
 STATEMENT: >>>
 The first StrictDoc commit dates back to ``2019-08-10``. A short development chronology of StrictDoc is as follows:
 
@@ -388,9 +426,11 @@ See also: [LINK: SECTION-DP-Project-milestones].
 [/SECTION]
 
 [SECTION]
+MID: 6e5ed6bb36634220a0c583d21c96295f
 TITLE: Which StrictDoc statistics are available?
 
 [TEXT]
+MID: 730bfedff6b24c34a6d6331051fd76d3
 STATEMENT: >>>
 Most relevant GitHub statistics:
 

@@ -1,7 +1,25 @@
 [DOCUMENT]
+MID: 1739e662499648d38c210a8aafbb3361
 TITLE: Contributing to StrictDoc
+OPTIONS:
+  ENABLE_MID: True
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 
 [TEXT]
+MID: 13fe652f160d4af69e869c28a155437d
 STATEMENT: >>>
 Contributions to StrictDoc are welcome and appreciated.
 Presented below is a condensed checklist that summarises the information
@@ -9,9 +27,11 @@ of the development guide, see [LINK: DEVGUIDE_GETTING_STARTED].
 <<<
 
 [SECTION]
+MID: ec078ab0d7564738acd2961f72abb2c9
 TITLE: Contributor checklist
 
 [TEXT]
+MID: ae0fc6d87b114137ab6da7c9b5647b62
 STATEMENT: >>>
 Before opening your Pull Request, the contributor is encouraged to do the
 following steps:
@@ -33,12 +53,15 @@ following steps:
 [/SECTION]
 
 [SECTION]
+MID: 8b40cc35f3524bc7b4e444321c080837
 TITLE: How can I help?
 
 [SECTION]
+MID: 8e346888911649f2a3aaf49763aaef24
 TITLE: Spread the word
 
 [TEXT]
+MID: 07462b02027a423a85ab68525b78ac67
 STATEMENT: >>>
 If you like the StrictDoc project and use it in your daily work, there are several things you could do besides contributing Pull Requests:
 
@@ -50,9 +73,11 @@ If you like the StrictDoc project and use it in your daily work, there are sever
 [/SECTION]
 
 [SECTION]
+MID: 2696c7fda6d440f3a290f202bee08fe6
 TITLE: ReqIF users
 
 [TEXT]
+MID: 9cfbb025525f41c5a195be0e637dffee
 STATEMENT: >>>
 The existing capability of StrictDoc to export/import SDoc to ReqIF is very basic. If you have to deal with ReqIF and you experience errors/crashes when using StrictDoc against ReqIF files, feel free to contribute the anonymized ReqIF files via StrictDoc Issues on GitHub, and we will take care of your specific case.
 
@@ -62,9 +87,11 @@ It is straightforward to create an anonymized version of a ReqIF file. Just redu
 [/SECTION]
 
 [SECTION]
+MID: 4e1edb97346c43af952c4e74f9defbe8
 TITLE: TeX / LaTeX / Sphinx experts
 
 [TEXT]
+MID: 75ed9362d86748269f62f5920514b7c2
 STATEMENT: >>>
 The existing template for generating PDF documents using Sphinx looks like this: https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/. The template is maintained in a separate repository: https://github.com/strictdoc-project/sphinx-latex-reqspec-template and does a good job but could be improved in terms of look and structure used.
 

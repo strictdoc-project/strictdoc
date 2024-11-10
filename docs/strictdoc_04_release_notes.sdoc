@@ -25,6 +25,26 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [SECTION]
+MID: f4cd860f07b1479ba1845bce3c749d68
+TITLE: 0.2.1 (2024-11-10)
+
+[TEXT]
+MID: 26043bba142a4e739dd206e229829202
+STATEMENT: >>>
+This release includes a new feature, a bug fix, and some documentation updates.
+
+- The ``[LINK: ...]`` feature now supports linking to documents by UID. [@haxtibal]
+- HTML escaping was fixed on the Diff/Changelog screen. [@haxtibal]
+
+The documentation now includes two new pages:
+
+- The "Feature Map" document provides a high-level overview of the major StrictDoc features from the user's perspective.
+- The Troubleshooting document offers advice on clearing the user cache, one of the common solutions to user issues. We plan to expand this section with more tips over time.
+<<<
+
+[/SECTION]
+
+[SECTION]
 MID: f76d863243b5410788e457b9c3bf1d2b
 TITLE: 0.2.0 (2024-11-04)
 

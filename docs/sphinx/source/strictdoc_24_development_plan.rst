@@ -1,11 +1,25 @@
 Development Plan
 $$$$$$$$$$$$$$$$
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2ba509874f1744cf899643b58a6a2095
+
 This document presents the goals of the StrictDoc project and describes how the
 project is developed.
 
 Project goals
 =============
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - bdbd5aecefdc41bca1c88b9bce71d512
 
 StrictDoc is an open-source tool for writing technical documentation and requirements management. The long-term goal of the project is to provide a capable, open-source platform for creating and managing technical documentation.
 
@@ -33,6 +47,13 @@ StrictDoc shall be compatible with other software and engineering tools. This in
 
 Project milestones
 ==================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - fd9294fdd2b546de993f649767371394
 
 As an open-source project, StrictDoc is developed without strict deadlines, however there are certain high-level priorities that influence the development. The work is loosely organized in quarters.
 
@@ -91,6 +112,13 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
 The roadmap diagram
 -------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 53e101acb20e44e89de27f0f77c5f0cb
+
 The following diagram contains the work items at the epic and single task levels. This PNG file is exported from a draw.io diagram, where the master version of the roadmap is maintained.
 
 .. image:: _assets/StrictDoc_Workspace-Roadmap.drawio.png
@@ -101,10 +129,24 @@ The following diagram contains the work items at the epic and single task levels
 Versioning
 ==========
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - ae2a2af6e3f24f65845c6c37ea7da2e2
+
 As of release 0.1.0 (2024-11-01), StrictDoc follows a `semantic versioning <https://semver.org>`_-oriented release scheme. The MAJOR.MINOR.PATCH components are managed according to the guidelines of the semantic versioning specification.
 
 Verification
 ============
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 14d0e79fcadc43f1a1cee2d66ae6b763
 
 StrictDoc has three groups of tests: unit, integration, end-to-end tests.
 
@@ -116,6 +158,13 @@ The end-to-end web interface tests are based on SeleniumBase test framework.
 
 Python baseline
 ===============
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 081ee6266bab4a3a80f290c95e055a25
 
 The supported version of Python is kept to be as low as possible. As of 2024-Q4, the currently supported version is Python 3.8.
 

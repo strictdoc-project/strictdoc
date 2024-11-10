@@ -3,12 +3,26 @@
 F.A.Q.
 $$$$$$
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 5acdfccd5771492f95b70328bd599cf7
+
 This document is a list of questions that people ask about StrictDoc.
 
 Missing a question or an answer? Ask it here: :ref:`Contact the developers <SDOC_UG_CONTACT>`.
 
 What is StrictDoc?
 ==================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d8d92e4eb8254cbda8dcb37709a9df45
 
 StrictDoc is software for writing technical requirements specifications.
 
@@ -18,6 +32,13 @@ The project exists since mid-2019.
 
 Resources about StrictDoc
 =========================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2ba0c8fa79604b708927ffed2ef94664
 
 Talks:
 
@@ -38,6 +59,13 @@ Screencasts/tutorials:
 Which web server is recommended for StrictDoc documentation?
 ============================================================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 966a5c3babf84fc7a1454b2799d13470
+
 This question can be answered in two ways. First of all, StrictDoc has its own web server that can be run with ``strictdoc server ...``. Refer to the User Guide for further information.
 
 The following suggestions assume that you are looking to using a web server to host the StrictDoc's static HTML export, without using StrictDoc's own web server.
@@ -50,6 +78,13 @@ If the project is private, you could use any server that reads HTML files from a
 
 Is StrictDoc compatible with Sphinx?
 ====================================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - ac35a712b4a84f4ab2b61feb15c1550d
 
 StrictDoc is only partially compatible with Sphinx.
 
@@ -64,95 +99,32 @@ There are users of StrictDoc who use both StrictDoc and Sphinx. The following wo
 
 There is a GitHub issue `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_ where a closer bridging between StrictDoc and Sphinx was discussed with no specific and actionable outcome. This comment is `especially relevant <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1505108384>`_ as well as the one about `possible implementation <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1545599711>`_.
 
+.. _SECTION-FAQ-How-did-the-SDoc-text-language-become-what-it-is:
+
 How did the SDoc text language become what it is?
 =================================================
 
-Shortly: The SDoc markup is a hybrid of TOML and YAML with some influence from HTML/XML and `ASN.1 <https://en.wikipedia.org/wiki/ASN.1>`_. Using each of these formats as-is, and also the JSON format, was considered but discarded during the design. The SDoc markup has been pretty stable since its inception but the flexibility of the TextX parser allows easy modifications of the language in case of future evolutions. Any feedback to the current design of the markup language is appreciated.
+.. list-table::
+    :align: left
+    :header-rows: 0
 
-----
+    * - **MID:**
+      - b3561dd4f8e64f11a251c3471022aece
 
-The main use case for SDoc is to model a structure of a technical document that consists of tens and hundreds of technical requirements. The following high-level requirements for the markup are therefore relevant:
-
-- Encode documents of reasonable size (up to several hundreds or few thousands of A4-printed pages).
-- Visualize large blocks of requirements text without too much markup noise.
-- Support documents with nested (2-4 levels) or deeply nested structure (detailed technical specifications with up to 9-10 levels of chapter nesting).
-- Support multiple fields for requirement meta information which makes a requirement look like "a text with some meta information around it".
-
-SDoc format is inspired by several formats: TOML, YAML, ASN.1 and HTML/XML.
-
-**TOML: Square bracket syntax**
-
-From TOML, StrictDoc borrowed the ``[]`` bracket syntax to create the ``[REQUIREMENT]``, ``[SECTION]`` and other blocks but uses the YAML-like syntax for these blocks' fields, for example:
-
-.. code-block::
-
-    [REQUIREMENT]
-    TITLE: Requirement ABC
-    STATEMENT: The system A shall do B when C.
-
-**TOML/YAML: Arrays/dictionaries**
-
-StrictDoc has a rudimentary support of arrays and dictionaries. For example, the syntax for defining the document's ``[GRAMMAR]`` resembles what would look like an array of records in YAML:
-
-.. code-block::
-
-    [GRAMMAR]
-    ELEMENTS:
-    - TAG: REQUIREMENT
-      FIELDS:
-      - TITLE: UID
-        TYPE: String
-        REQUIRED: True
-      - TITLE: LEVEL
-        TYPE: String
-        REQUIRED: False
-
-**Capitalization of reserved keywords from ASN.1**
-
-From ASN.1, StrictDoc borrows the idea of having all reserved fields capitalized. This helps to visually distinguish between the grammar content and user content.
-
-**Nested sections**
-
-From HTML, the idea of opening and closing tags is taken to avoid any nesting that would otherwise be required to support the deeply nested documents with up to 6 or 8 levels, e.g., 1.1.1.1.1.1.1...
-
-.. code-block::
-
-    [SECTION]
-    TITLE: Section 1
-
-    [SECTION]
-    TITLE: Section 1.1
-
-    ...
-
-    [/SECTION]
-
-    [/SECTION]
-
-Taking HTML or XML as-is didn't seem like a good option because of the heavy visual noise that is produced around the actual content by the surrounding tags.
-
-**Multiline strings**
-
-The support of multiline strings is arranged by a custom solution which helps to avoid any nesting of multiline text as well as to visually indicate the start and end parts of the multiline string in a visually unambiguous way. This is how the multiline string is declared:
-
-.. code-block::
-
-    [REQUIREMENT]
-    TITLE: Requirement ABC
-    STATEMENT: >>>
-    The multiline requirement statement
-    without any nesting.
-    >>>
-
-**Discarded options**
-
-Taking TOML or YAML as-is didn't seem like a good option because these formats are designed to be used for configuration files or data serialization and not for large documents with hundreds of requirements. The most obvious problems for reusing either of TOML or YAML directly would have been with encoding the deeply nested documents and supporting readable and non-nested multiline strings.
+See :ref:`SDoc text markup <SECTION-FM-SDoc-text-markup>` for a description of the SDoc feature.
 
 How StrictDoc compares to other tools?
 ======================================
 
 Doorstop
 --------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d0c305180d8747a1b70254eaf2c4f201
 
 The StrictDoc project is a close successor of another project called
 `Doorstop <https://github.com/doorstop-dev/doorstop>`_.
@@ -205,6 +177,13 @@ to/from Doorstop format.
 Sphinx
 ------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 74b6be0dc2bb485987d8731348cdf5ce
+
 Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
 a higher level of abstraction: StrictDoc's specialization is requirements and
 specifications documents. StrictDoc can generate documentation to a number of
@@ -224,6 +203,13 @@ website by readthedocs which uses Sphinx under the hood. The
 
 Sphinx-Needs
 ------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 602327a9b8654e1eab4bc265e172a63d
 
 `Sphinx-Needs <https://sphinxcontrib-needs.readthedocs.io/en/latest/>`_ is a
 text-based requirements management system based on Sphinx. It is implemented
@@ -281,6 +267,13 @@ The difference between Sphinx-Needs and StrictDoc:
 FRET
 ----
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e3eb1be604c6499292339ecbe7620c60
+
 `FRET <https://github.com/NASA-SW-VnV/fret>`_ is a framework for the
 elicitation, specification, formalization and understanding of requirements.
 
@@ -298,6 +291,13 @@ FRET's user interface is built with Electron.
 
 How long has the StrictDoc project been around?
 ===============================================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 47d60404cf574aebb8c83795589c4137
 
 The first StrictDoc commit dates back to ``2019-08-10``. A short development chronology of StrictDoc is as follows:
 
@@ -332,6 +332,13 @@ See also: :ref:`Project milestones <SECTION-DP-Project-milestones>`.
 
 Which StrictDoc statistics are available?
 =========================================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 730bfedff6b24c34a6d6331051fd76d3
 
 Most relevant GitHub statistics:
 

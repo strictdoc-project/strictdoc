@@ -3,10 +3,24 @@
 Troubleshooting
 $$$$$$$$$$$$$$$
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 7e3481d51ad14767b5c97132cad2e0a6
+
 This document summarizes solutions to the most common issues reported by StrictDoc users.
 
 Caching issues
 ==============
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 9a32ac13510d401cbc1a608259652c78
 
 .. note::
 

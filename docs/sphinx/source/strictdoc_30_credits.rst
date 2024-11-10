@@ -1,6 +1,13 @@
 Credits
 $$$$$$$
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 18cf0af34c194590b3eb391c2ef94074
+
 As an open-source project, StrictDoc is based on the work of many people and organizations:
 
 - StrictDoc receives contributions from other developers.
@@ -12,6 +19,13 @@ This page gives due credit to everyone who made StrictDoc possible.
 
 Contributions to StrictDoc
 ==========================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e6de83e242bc4aea96622a2e7585f135
 
 The core team: @stanislaw and @mettta.
 
@@ -33,6 +47,13 @@ Single/smaller contributions can be also seen on the `StrictDoc's Insights/Contr
 
 Open source software
 ====================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4428ac9ec3504dda9f1e1e845ffb3c75
 
 StrictDoc is based on other open source components. Without this support, we would have never reached where we are today.
 
@@ -61,12 +82,26 @@ Refer to the `configuration file <https://github.com/strictdoc-project/strictdoc
 Hosting and Continuous Integration
 ==================================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 5b702e6f9b714e458b059912ca8e196a
+
 StrictDoc is hosted on `GitHub <https://github.com>`_ and uses `GitHub Actions <https://docs.github.com/en/actions>`_ to run all of its build, test and release tasks. As an open-source project, StrictDoc gets these services from GitHub for free.
 
 StrictDoc's documentation is hosted on `Read the Docs <https://readthedocs.org>`_.
 
 Free and commercial IDEs by JetBrains
 =====================================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - b4729e592d104fe3818c8949615ffef9
 
 For Python development, the StrictDoc core team uses the community version of
 `PyCharm <https://www.jetbrains.com/pycharm/>`_

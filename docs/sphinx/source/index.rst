@@ -5,9 +5,10 @@ Welcome to StrictDoc's documentation!
    :maxdepth: 1
 
    strictdoc_01_user_guide
-   strictdoc_02_faq
-   strictdoc_03_release_notes
-   strictdoc_04_troubleshooting
+   strictdoc_02_feature_map
+   strictdoc_03_faq
+   strictdoc_04_release_notes
+   strictdoc_05_troubleshooting
    strictdoc_10_contributing
    strictdoc_11_developer_guide
    strictdoc_20_L1_Open_Requirements_Tool

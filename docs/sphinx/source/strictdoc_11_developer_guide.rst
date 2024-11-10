@@ -1,6 +1,13 @@
 Developer Guide
 $$$$$$$$$$$$$$$
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - f174b0cdec6b482daa2878c8cc0d02c3
+
 This section contains everything that a StrictDoc developer/contributor should
 know to get the job done.
 
@@ -21,6 +28,13 @@ Getting started
 System dependencies
 -------------------
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - df2e1de12c6b456898c48a36650813d4
+
 StrictDoc itself mostly depends on other Python Pip packages, so there is nothing special to be installed.
 
 You may need to install ``libtidy`` if you want to run the integration tests. The HTML markup validation tests depend on libtidy.
@@ -40,12 +54,26 @@ From the core Python packages, StrictDoc needs Invoke, Tox and TOML:
 Windows-specific: Long Path support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 8591cf6dece04244824c3ac2a8666ba3
+
 As `reported <https://github.com/strictdoc-project/strictdoc/issues/1118>`_ by a user, Windows Long Path support has to be enabled on a Windows system.
 
 You can find information on how to enable the long paths support at https://pip.pypa.io/warnings/enable-long-paths.
 
 Installing StrictDoc from GitHub (developer mode)
 -------------------------------------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2407bb186b274a58b97b54b99ba6e86f
 
 **Note:** Use this way of installing StrictDoc only if you want to make changes
 in StrictDoc's source code. Otherwise, install StrictDoc as a normal Pip package by running ``pip install strictdoc``.
@@ -60,6 +88,13 @@ The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc, bu
 
 Invoke for development tasks
 ============================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 452b3c24463446a497ed6b8fcdb31fef
 
 All development tasks are managed using
 `Invoke <https://www.pyinvoke.org/>`_ in the ``tasks.py`` file. On macOS and
@@ -76,6 +111,13 @@ Make sure to familiarize yourself with the available developer tasks by running:
 Main "Check" task
 =================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 09258e99cabb4455904b0e2c6687d492
+
 Before doing anything else, run the main ``check`` command to make sure that StrictDoc passes all tests on your system:
 
 .. code:: bash
@@ -88,6 +130,13 @@ The ``check`` command runs all StrictDoc lint and test tasks with the only excep
 
 Python code
 ===========
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 3012a69ef5d244d49fcb90c088d4523b
 
 - The version of Python is set to be as low as possible given some constraints
   of StrictDoc's dependencies. Ideally, the lowest Python version should only be
@@ -124,6 +173,13 @@ Python code
 
 Git workflow
 ============
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 0e916453596b460b84a89f722354a825
 
 - The preferred Git workflow is "1 commit per 1 PR". If the work truly deserves
   a sequence of commits, each commit shall be self-contained and pass all checks
@@ -166,6 +222,13 @@ where the context can be a major feature being added or a folder. A form of  ``c
 Frontend development
 ====================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d818aad87db54985b8933f98528808ab
+
 The shortest path to run the server when the StrictDoc's source code is cloned:
 
 .. code-block:: bash
@@ -175,12 +238,26 @@ The shortest path to run the server when the StrictDoc's source code is cloned:
 Running End-to-End Web tests
 ============================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - da3cbcd69b0545988daeb0f42098830d
+
 .. code:: bash
 
     invoke test-end2end
 
 Running integration tests
 =========================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 4e307b3b950840bbbe455c1ae3238a6e
 
 The integration tests are run using Invoke:
 
@@ -199,6 +276,13 @@ See `How to test command-line programs with Python tools: LIT and FileCheck <htt
 Documentation
 =============
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d1f5fde86ebc4103bc4eb0334b1ec919
+
 - Every change in the functionality or the infrastructure should be documented.
 - Every line of documentation shall be no longer than 80 characters. StrictDoc's
   own documentation has a few exceptions, however, the latest preference is
@@ -210,6 +294,13 @@ Documentation
 
 Conventions
 ===========
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 49b7349a3bee478cbe81d8ef25f6245c
 
 - ``snake_case`` everywhere, no ``kebab-case``.
 

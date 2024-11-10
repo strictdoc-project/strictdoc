@@ -1,10 +1,44 @@
 Release Notes
 $$$$$$$$$$$$$
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 0dd2649ec4784c9480eac6f4aef3158b
+
 This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
+
+0.2.1 (2024-11-10)
+==================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 26043bba142a4e739dd206e229829202
+
+This release includes a new feature, a bug fix, and some documentation updates.
+
+- The ``[LINK: ...]`` feature now supports linking to documents by UID. [@haxtibal]
+- HTML escaping was fixed on the Diff/Changelog screen. [@haxtibal]
+
+The documentation now includes two new pages:
+
+- The "Feature Map" document provides a high-level overview of the major StrictDoc features from the user's perspective.
+- The Troubleshooting document offers advice on clearing the user cache, one of the common solutions to user issues. We plan to expand this section with more tips over time.
 
 0.2.0 (2024-11-04)
 ==================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 611e8df13d464fd1b22e5026cf3ce531
 
 This release introduces several enhancements to the source code processing introduced in release 0.1.0.
 
@@ -21,6 +55,13 @@ Additionally, caching has been centralized, and the cache directory is now confi
 0.1.0 (2024-11-01)
 ==================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e37e230c932448798bd9978d4f27f32c
+
 This backward-compatible release introduces several new features for tracing requirements to source files:
 
 - StrictDoc now integrates with `Tree-sitter <https://tree-sitter.github.io/tree-sitter/>`_, enabling it to parse multiple programming languages. Using AST information, it achieves more precise tracing of requirements to source code.
@@ -32,6 +73,13 @@ With this release, we are also transitioning to a more `semantic versioning <htt
 0.0.60 (2024-10-26)
 ===================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 65daf4400b464021ba3cb7a06061e651
+
 This is a bugfix release with several fixes:
 
 - Web UI: Add 'TAG' as a supported fieldtype for requirement nodes. Previously, the UI interface would not open an element with a TAG-based field, raising a NotImplementedError. [@mplum]
@@ -42,6 +90,13 @@ This is a bugfix release with several fixes:
 
 0.0.59 (2024-10-13)
 ===================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e9d5e3f8f6b04647afb95bae6b2f503a
 
 This release includes several important improvements. Thanks to @haxtibal for implementing and testing many of the implemented changes.
 
@@ -64,6 +119,13 @@ This release includes several important improvements. Thanks to @haxtibal for im
 0.0.58 (2024-06-25)
 ===================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - fd7f4d5b58e54f64aa43349684a675c4
+
 This is a release with a single fix and a minor documentation update.
 
 The ``manage auto-uid`` command is now compatible with grammars that define the ``UID`` field as ``REQUIRED: True``. Previously, StrictDoc would raise a validation message if the ``auto-uid`` command was run against a document with ``UID`` defined as a required field but containing nodes without ``UID``. The new behavior allows the ``auto-uid`` command to operate without validation and correctly creates a new UID for the node. Thanks to @simhein for reporting this issue.
@@ -78,6 +140,13 @@ See the updated User Guide for more details.
 
 0.0.57 (2024-06-23)
 ===================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - f99185cb69cf47d4bc6e1bd404b67467
 
 This release contains a significant, non-breaking change that affects the entire StrictDoc codebase and the SDoc data model: the ``FREETEXT-TEXT`` migration.
 
@@ -95,6 +164,13 @@ Other changes in this release:
 
 0.0.56 (2024-06-02)
 ===================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 61f17be85ac442a0b70003825d671ced
 
 This is an intermediate bugfix release before the release which will contain major changes.
 
@@ -115,6 +191,13 @@ The following issues have been fixed:
 0.0.55 (2024-04-28)
 ===================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 00abb07e55534a75a8cfd50d8cfc5732
+
 The ReqIF export/import feature was extended to support three new command-line options for an improved export/import interfacing with Polarion. See :ref:`ReqIF options <SECTION-UG-ReqIF-options>` for more details.
 
 The Composable Documents feature was extended to support copying assets to the HTML output folder in a redundant way in the case when an included document is stored in a different directory than the parent including document. See https://github.com/strictdoc-project/strictdoc/issues/1777 for the problem definition. Thanks to @Briceus from StrictDoc's Discord channel for reporting this issue.
@@ -123,6 +206,13 @@ StrictDoc's caching feature was extended to work around pickling errors when an 
 
 0.0.54 (2024-04-17)
 ===================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e5bf489ac0684ea4b626574b5439c7dd
 
 1) Two improvements were made to the Composable Documents feature, when included document's root node is edited in including document:
 
@@ -136,6 +226,13 @@ StrictDoc's caching feature was extended to work around pickling errors when an 
 0.0.53 (2024-04-01)
 ===================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 2ac296f6326b4481beb7d67b95dbb23c
+
 The JSON export algorithm was extended to support composable documents. By default, the included documents are exported only as part of their including documents. To export both the including documents and included documents' standalone SDoc content, the option ``--included-documents`` option has to be specified with the ``export`` command.
 
 All code related to pybtex/BibTeX bibliographies has been removed from the StrictDoc project tree. This work was left unfinished for a long time and became unused legacy code over time. See the PR: `Remove all BibTeX bibliography-related code and pybtex dependency <https://github.com/strictdoc-project/strictdoc/pull/1744>`_ for more explanation.
@@ -143,10 +240,24 @@ All code related to pybtex/BibTeX bibliographies has been removed from the Stric
 0.0.52 (2024-03-25)
 ===================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 72d6e38e89cc471b8d3f46ae5654e0e6
+
 The **Grammar from File** feature has been implemented. Now it is possible to declare a usual StrictDoc ``[GRAMMAR]`` in a dedicated file with an ``.sgra`` extension. When a grammar is declared in a separate file, it is possible to share this grammar between several documents. Editing of the grammars defined in ``.sgra`` files can be only done with a text editor, it is not implemented yet in the editable web interface.
 
 0.0.51 (2024-03-20)
 ===================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - e81c4206bcb148979762ee3f2aa5c9ba
 
 This is a bugfix release with only one change.
 
@@ -154,6 +265,13 @@ A regression was introduced during recent internal refactoring, resulting in mal
 
 0.0.50 (2024-03-19)
 ===================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - a9d7c449d1a7400496504926c744e500
 
 **Breaking change:** The "Fragments" feature has been replaced by the "Composable documents" feature:
 
@@ -172,6 +290,13 @@ A regression was introduced during recent internal refactoring, resulting in mal
 0.0.49 (2024-03-11)
 ===================
 
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 0b8c8f40923744b089845afeb44223e9
+
 The web interface code has been extended to allow editing arbitrary nodes. Previously, only editing the REQUIREMENT type was possible. From now on, it is possible to use the web interface to create custom grammar elements and nodes of corresponding grammar element types.
 
 A basic JSON export feature has been added. Now it is possible to export a StrictDoc project tree to a single JSON file with a structure that mirrors the structure of the SDoc grammar.
@@ -186,6 +311,13 @@ The Excel export algorithm was extended to support generating multiple Excel fil
 
 0.0.48 (2024-01-24)
 ===================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 6cff333594d6430886053b59b265e806
 
 The requirement-to-source traceability feature was extended to support linking requirements to the RST files.
 
@@ -203,6 +335,13 @@ The Requirements Coverage has been transformed into **the Traceability Matrix** 
 
 0.0.47 (2023-11-20)
 ===================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - c422af340d5b45c48bfe89130e1bba52
 
 A **query search engine** is introduced which allows filtering a documentation tree by queries like ``(node.is_requirement and "System" in node["TITLE"])``.
 Building on the search engine capability, the "Search" screen is introduced in the web interface. Additionally, it is now possible to specify ``--filter-requirements <query>`` and ``filter-sections <query>`` when running ``export`` and ``passthrough`` commands. The visual design of the project statistics was improved as well as the new design for the search screen has already landed.

@@ -45,7 +45,7 @@ class RangeMarker:
         self.ng_range_line_end: Optional[int] = None
 
         self.ng_is_nodoc = "nosdoc" in self.reqs
-        self.ng_new_relation_keyword = False
+        self.ng_new_relation_keyword = scope is not None and len(scope) > 0
 
     def is_begin(self) -> bool:
         return self.begin_or_end == "["

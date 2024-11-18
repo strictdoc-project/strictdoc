@@ -54,6 +54,6 @@ class SourceFileTraceabilityCachingReader:
         if project_config.is_activated_source_file_language_parsers():
             if path_to_file.endswith(".py"):
                 return SourceFileTraceabilityReader_Python()
-            if path_to_file.endswith(".c"):
+            if path_to_file.endswith(".c") or path_to_file.endswith(".h"):
                 return SourceFileTraceabilityReader_C()
         return SourceFileTraceabilityReader()

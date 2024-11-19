@@ -1,5 +1,5 @@
 # mypy: disable-error-code="no-untyped-def,type-arg,var-annotated"
-from typing import List, Union
+from typing import Dict, List, Union
 
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -33,6 +33,9 @@ class SourceFileTraceabilityInfo:
         }
         """
         self.ng_map_reqs_to_markers = {}
+
+        self.ng_map_names_to_markers: Dict[str, List] = {}
+        self.ng_map_names_to_definition_functions: Dict[str, Function] = {}
 
         self.ng_lines_total = 0
         self.ng_lines_covered = 0

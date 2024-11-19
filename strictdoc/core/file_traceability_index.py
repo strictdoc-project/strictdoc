@@ -3,6 +3,8 @@ from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
+from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
+from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     ForwardFunctionRangeMarker,
     FunctionRangeMarker,
@@ -45,6 +47,11 @@ class FileTraceabilityIndex:
             str, Dict[str, List[str]]
         ] = {}
 
+        # This is only public non-static functions from languages like C.
+        self.map_all_function_names_to_definition_functions: Dict[
+            str, Function
+        ] = {}
+
         # "file.py" -> (
         #   general_requirements: [SDocNode],  # noqa: ERA001
         #   range_requirements: [SDocNode]  # noqa: ERA001
@@ -52,7 +59,13 @@ class FileTraceabilityIndex:
         self.source_file_reqs_cache = {}
 
     def has_source_file_reqs(self, source_file_rel_path: str) -> bool:
-        return self.map_paths_to_reqs.get(source_file_rel_path) is not None
+        path_reqs = self.map_paths_to_reqs.get(source_file_rel_path)
+        if path_reqs is not None and len(path_reqs) > 0:
+            return True
+        file_trace_info = self.map_paths_to_source_file_traceability_info[
+            source_file_rel_path
+        ]
+        return len(file_trace_info.markers) > 0
 
     def get_requirement_file_links(
         self, requirement: SDocNode
@@ -153,7 +166,7 @@ class FileTraceabilityIndex:
         )
         return source_file_tr_info
 
-    def validate(self):
+    def validate_and_resolve(self, traceability_index):
         for requirement_uid, file_links in self.map_reqs_uids_to_paths.items():
             for file_link in file_links:
                 source_file_traceability_info: Optional[
@@ -203,6 +216,89 @@ class FileTraceabilityIndex:
 
                 source_file_info.markers.append(start_marker)
                 source_file_info.markers.append(end_marker)
+
+        """
+        Resolve definitions to declarations (only applicable for C and C++).
+        """
+
+        reversed_trace_info = {
+            value: key
+            for key, value in self.map_paths_to_source_file_traceability_info.items()
+        }
+
+        for (
+            traceability_info_
+        ) in self.map_paths_to_source_file_traceability_info.values():
+            for function_ in traceability_info_.functions:
+                if (
+                    FunctionAttribute.DECLARATION in function_.attributes
+                    and function_.name
+                    in self.map_all_function_names_to_definition_functions
+                ):
+                    definition_function: Optional[Function]
+                    if not function_.is_public():
+                        definition_function = traceability_info_.ng_map_names_to_definition_functions.get(
+                            function_.name
+                        )
+                    else:
+                        definition_function = (
+                            self.map_all_function_names_to_definition_functions[
+                                function_.name
+                            ]
+                        )
+                    if definition_function is None:
+                        continue
+                    definition_function_trace_info: SourceFileTraceabilityInfo = definition_function.parent
+
+                    for marker_ in function_.markers:
+                        function_marker = ForwardFunctionRangeMarker(
+                            parent=None,
+                            reqs_objs=marker_.reqs_objs,
+                            scope="function",
+                        )
+                        function_marker.ng_source_line_begin = (
+                            definition_function.line_begin
+                        )
+                        function_marker.ng_source_column_begin = 1
+                        function_marker.ng_range_line_begin = (
+                            definition_function.line_begin
+                        )
+                        function_marker.ng_range_line_end = (
+                            definition_function.line_end
+                        )
+                        function_marker.ng_marker_line = (
+                            definition_function.line_begin
+                        )
+                        function_marker.ng_marker_column = 1
+                        function_marker.set_description(
+                            f"function {function_.name}"
+                        )
+
+                        for req_uid_ in marker_.reqs:
+                            markers = definition_function_trace_info.ng_map_reqs_to_markers.setdefault(
+                                req_uid_, []
+                            )
+                            markers.append(function_marker)
+
+                            path_to_info = reversed_trace_info[
+                                definition_function_trace_info
+                            ]
+                            self.map_reqs_uids_to_paths.setdefault(
+                                req_uid_, OrderedSet()
+                            )
+                            self.map_reqs_uids_to_paths[req_uid_].add(
+                                path_to_info
+                            )
+
+                            node = traceability_index.get_node_by_uid(req_uid_)
+                            self.map_paths_to_reqs.setdefault(
+                                path_to_info, OrderedSet()
+                            )
+                            self.map_paths_to_reqs[path_to_info].add(node)
+
+                        definition_function_trace_info.markers.append(
+                            function_marker
+                        )
 
         for (
             traceability_info_
@@ -336,6 +432,15 @@ class FileTraceabilityIndex:
         for function_ in traceability_info.functions:
             marker_type: RangeMarkerType
 
+            if FunctionAttribute.DEFINITION in function_.attributes:
+                assert (
+                    function_.name
+                    not in self.map_all_function_names_to_definition_functions
+                )
+                self.map_all_function_names_to_definition_functions[
+                    function_.name
+                ] = function_
+
             if (
                 source_file_rel_path
                 in self.map_file_function_names_to_reqs_uids
@@ -365,7 +470,7 @@ class FileTraceabilityIndex:
                 reqs.append(req)
 
             function_marker = ForwardFunctionRangeMarker(
-                parent=None, reqs_objs=reqs
+                parent=None, reqs_objs=reqs, scope=marker_type.value
             )
             function_marker.ng_source_line_begin = function_.line_begin
             function_marker.ng_source_column_begin = 1

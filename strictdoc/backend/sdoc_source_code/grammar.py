@@ -33,7 +33,7 @@ RangeMarker[noskipws]:
 
 FunctionRangeMarker[noskipws]:
   /^.*?@relation/
-  "(" (reqs_objs += Req[', ']) ', scope=file)' '\n'?
+  "(" (reqs_objs += Req[', ']) ', scope=' scope="file" ')' '\n'?
 ;
 
 LineMarker[noskipws]:

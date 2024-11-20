@@ -38,7 +38,7 @@ def test_01_single_string():
     info = reader.read(input_string)
 
     assert isinstance(info, SourceFileTraceabilityInfo)
-    assert len(info.parts) == 0
+    assert len(info.functions) == 0
     assert len(info.markers) == 0
 
 
@@ -72,7 +72,6 @@ void hello_world_2(void) {
     )
 
     assert isinstance(info, SourceFileTraceabilityInfo)
-    assert len(info.parts) == 2
     assert len(info.markers) == 2
     assert info.markers[0].ng_source_line_begin == 3
     assert info.markers[0].ng_range_line_begin == 3

@@ -152,9 +152,6 @@ class SourceFileTraceabilityReader_C:
                             traceability_info.markers.append(
                                 function_range_marker_
                             )
-                            traceability_info.parts.append(
-                                function_range_marker_
-                            )
                             function_markers.append(marker_)
 
                 # The function range includes the top comment if it exists.
@@ -165,7 +162,7 @@ class SourceFileTraceabilityReader_C:
                     if function_comment_node is not None
                     else node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
-                    parts=[],
+                    child_functions=[],
                     markers=function_markers,
                     attributes=function_attributes,
                 )
@@ -215,9 +212,6 @@ class SourceFileTraceabilityReader_C:
                             traceability_info.markers.append(
                                 function_range_marker_
                             )
-                            traceability_info.parts.append(
-                                function_range_marker_
-                            )
                             function_markers.append(marker_)
 
                 # The function range includes the top comment if it exists.
@@ -228,7 +222,7 @@ class SourceFileTraceabilityReader_C:
                     if function_comment_node is not None
                     else node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
-                    parts=[],
+                    child_functions=[],
                     markers=function_markers,
                     attributes={FunctionAttribute.DEFINITION},
                 )
@@ -260,12 +254,10 @@ class SourceFileTraceabilityReader_C:
                         range_marker_ := marker_
                     ):
                         range_marker_processor(range_marker_, parse_context)
-                        traceability_info.parts.append(range_marker_)
                     elif isinstance(marker_, LineMarker) and (
                         line_marker_ := marker_
                     ):
                         line_marker_processor(line_marker_, parse_context)
-                        traceability_info.parts.append(line_marker_)
                     else:
                         continue
             else:

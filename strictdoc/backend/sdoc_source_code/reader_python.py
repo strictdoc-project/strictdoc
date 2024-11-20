@@ -66,7 +66,7 @@ class SourceFileTraceabilityReader_Python:
                     name="module",
                     line_begin=node_.start_point[0] + 1,
                     line_end=node_.end_point[0] + 1,
-                    parts=[],
+                    child_functions=[],
                     markers=[],
                     attributes=set(),
                 )
@@ -189,7 +189,7 @@ class SourceFileTraceabilityReader_Python:
                     name=function_name,
                     line_begin=node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
-                    parts=[],
+                    child_functions=[],
                     # Python functions do not need to track markers.
                     markers=[],
                     attributes=set(),
@@ -198,7 +198,7 @@ class SourceFileTraceabilityReader_Python:
 
                 parent_function = functions_stack[-1]
 
-                parent_function.parts.append(new_function)
+                parent_function.child_functions.append(new_function)
                 functions_stack.append(new_function)
                 traceability_info.functions.append(new_function)
             elif node_.type == "comment":
@@ -235,8 +235,6 @@ class SourceFileTraceabilityReader_Python:
             functions_stack[0].name == "module"
             or functions_stack[0].name == "translation_unit"
         )
-
-        traceability_info.parts = functions_stack[0].parts
 
         source_file_traceability_info_processor(
             traceability_info, parse_context

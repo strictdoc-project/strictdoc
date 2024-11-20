@@ -15,7 +15,7 @@ from strictdoc.helpers.auto_described import auto_described
 
 @auto_described
 class SourceFileTraceabilityInfo:
-    def __init__(self, parts: List):
+    def __init__(self, g_parts: List):
         """
         At the init time, only the backward RangeMarkers are available from
         a source file. At runtime, the ForwardRangeMarkers are mixed in
@@ -23,7 +23,7 @@ class SourceFileTraceabilityInfo:
         is a union.
         """
 
-        self.parts: List = parts
+        self.g_parts: List = g_parts
         self.functions: List[Function] = []
 
         """

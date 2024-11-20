@@ -39,7 +39,7 @@ def test_01_single_string():
     info = reader.read(input_string)
 
     assert isinstance(info, SourceFileTraceabilityInfo)
-    assert len(info.parts) == 0
+    assert len(info.functions) == 0
     assert len(info.markers) == 0
 
 
@@ -79,52 +79,52 @@ def hello_3():
     info: SourceFileTraceabilityInfo = reader.read(input_string)
 
     assert isinstance(info, SourceFileTraceabilityInfo)
-    assert len(info.parts) == 3
+    assert len(info.functions) == 9
 
-    function_1 = info.parts[0]
+    function_1 = info.functions[0]
     assert isinstance(function_1, Function)
     assert function_1.name == "hello_1"
-    assert len(function_1.parts) == 1
+    assert len(function_1.child_functions) == 1
 
-    function_1_1 = function_1.parts[0]
+    function_1_1 = function_1.child_functions[0]
     assert isinstance(function_1_1, Function)
     assert function_1_1.name == "hello_1_1"
-    assert len(function_1_1.parts) == 1
+    assert len(function_1_1.child_functions) == 1
 
-    function_1_1_1 = function_1_1.parts[0]
+    function_1_1_1 = function_1_1.child_functions[0]
     assert isinstance(function_1_1_1, Function)
     assert function_1_1_1.name == "hello_1_1_1"
-    assert len(function_1_1_1.parts) == 0
+    assert len(function_1_1_1.child_functions) == 0
 
-    function_2 = info.parts[1]
+    function_2 = info.functions[3]
     assert isinstance(function_2, Function)
     assert function_2.name == "hello_2"
-    assert len(function_2.parts) == 1
+    assert len(function_2.child_functions) == 1
 
-    function_2_1 = function_2.parts[0]
+    function_2_1 = function_2.child_functions[0]
     assert isinstance(function_2_1, Function)
     assert function_2_1.name == "hello_2_1"
-    assert len(function_2_1.parts) == 1
+    assert len(function_2_1.child_functions) == 1
 
-    function_2_1_1 = function_2_1.parts[0]
+    function_2_1_1 = function_2_1.child_functions[0]
     assert isinstance(function_2_1_1, Function)
     assert function_2_1_1.name == "hello_2_1_1"
-    assert len(function_2_1_1.parts) == 0
+    assert len(function_2_1_1.child_functions) == 0
 
-    function_3 = info.parts[2]
+    function_3 = info.functions[6]
     assert isinstance(function_3, Function)
     assert function_3.name == "hello_3"
-    assert len(function_3.parts) == 1
+    assert len(function_3.child_functions) == 1
 
-    function_3_1 = function_3.parts[0]
+    function_3_1 = function_3.child_functions[0]
     assert isinstance(function_3_1, Function)
     assert function_3_1.name == "hello_3_1"
-    assert len(function_3_1.parts) == 1
+    assert len(function_3_1.child_functions) == 1
 
-    function_3_1_1 = function_3_1.parts[0]
+    function_3_1_1 = function_3_1.child_functions[0]
     assert isinstance(function_3_1_1, Function)
     assert function_3_1_1.name == "hello_3_1_1"
-    assert len(function_3_1_1.parts) == 0
+    assert len(function_3_1_1.child_functions) == 0
 
 
 def test_001_one_range_marker():

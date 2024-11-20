@@ -1,6 +1,6 @@
 SOURCE_FILE_GRAMMAR = """
 SourceFileTraceabilityInfo[noskipws]:
-  parts += Part
+  g_parts += Part
 ;
 
 Part[noskipws]:

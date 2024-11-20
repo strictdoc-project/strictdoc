@@ -214,7 +214,7 @@ CONTENT 3
     reader = SourceFileTraceabilityReader()
 
     document = reader.read(source_input)
-    assert len(document.parts) == 7
+    assert len(document.g_parts) == 7
     assert len(document.markers) == 0
 
 
@@ -237,7 +237,7 @@ CONTENT 3
     reader = SourceFileTraceabilityReader()
 
     document = reader.read(source_input)
-    assert len(document.parts) == 12
+    assert len(document.g_parts) == 12
     assert len(document.markers) == 2
 
 
@@ -260,7 +260,7 @@ def test_011_nosdoc_keyword_then_normal_marker_4spaces_indent():
     reader = SourceFileTraceabilityReader()
 
     document = reader.read(source_input)
-    assert len(document.parts) == 12
+    assert len(document.g_parts) == 12
     assert len(document.markers) == 2
 
 

@@ -15,14 +15,16 @@ class Function:
         name: str,
         line_begin: int,
         line_end: int,
-        parts: List[Any],
+        child_functions: List[Any],
         markers: List[FunctionRangeMarker],
         attributes: Set[FunctionAttribute],
     ):
         assert parent is not None
         self.parent = parent
         self.name = name
-        self.parts: List[Any] = parts
+        # Child functions are supported in programming languages that can nest
+        # functions, for example, Python.
+        self.child_functions: List[Function] = child_functions
         self.markers: List[FunctionRangeMarker] = markers
         self.line_begin = line_begin
         self.line_end = line_end

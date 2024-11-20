@@ -111,7 +111,14 @@ class ProjectConfig:
         # Settings obtained from the strictdoc.toml config file.
         self.project_title: str = project_title
         self.dir_for_sdoc_assets: str = dir_for_sdoc_assets
+
+        if env_cache_dir := os.environ.get("STRICTDOC_CACHE_DIR"):
+            # The only use case for STRICTDOC_CACHE_DIR is to make the cache
+            # local to an itest folder.
+            assert env_cache_dir == "Output/cache", env_cache_dir
+            dir_for_sdoc_cache = env_cache_dir
         self.dir_for_sdoc_cache: str = dir_for_sdoc_cache
+
         self.project_features: List[str] = project_features
         self.server_host: str = server_host
         self.server_port: int = server_port

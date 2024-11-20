@@ -8,6 +8,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
 from tests.end2end.server import SDocTestServer
+from tests.end2end.test_helpers import available_systems
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 path_to_expected_downloaded_file = os.path.join(
@@ -16,6 +17,7 @@ path_to_expected_downloaded_file = os.path.join(
 
 
 class Test(E2ECase):
+    @available_systems(["linux"])
     def test(self):
         shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)
 

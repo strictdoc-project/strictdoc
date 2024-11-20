@@ -62,7 +62,7 @@ class File(FileOrFolderEntry):
         return os.path.basename(os.path.dirname(self.root_path))
 
 
-class Folder(FileOrFolderEntry):  # pylint: disable=too-many-instance-attributes
+class Folder(FileOrFolderEntry):
     def __init__(self, root_path: str, rel_path: str, level):
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)

@@ -109,7 +109,7 @@ class ServerCommandConfig:
 
 
 @auto_described
-class ExportCommandConfig:  # pylint: disable=too-many-instance-attributes
+class ExportCommandConfig:
     def __init__(
         self,
         input_paths,

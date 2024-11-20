@@ -20,7 +20,7 @@ class SectionContext:
 
 
 @auto_described
-class SDocSection(SDocObject):  # pylint: disable=too-many-instance-attributes
+class SDocSection(SDocObject):
     def __init__(
         self,
         parent,

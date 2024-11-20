@@ -62,7 +62,7 @@ class ProjectFeature(str, Enum):
 
 
 @auto_described
-class ProjectConfig:  # pylint: disable=too-many-instance-attributes
+class ProjectConfig:
     DEFAULT_PROJECT_TITLE = "Untitled Project"
     DEFAULT_DIR_FOR_SDOC_ASSETS = "_static"
     DEFAULT_DIR_FOR_SDOC_CACHE = "$TMPDIR"

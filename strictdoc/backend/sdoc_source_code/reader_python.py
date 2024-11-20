@@ -62,11 +62,13 @@ class SourceFileTraceabilityReader_Python:
         for node_ in nodes:
             if node_.type == "module":
                 function = Function(
-                    parent=None,
+                    parent=traceability_info,
                     name="module",
                     line_begin=node_.start_point[0] + 1,
                     line_end=node_.end_point[0] + 1,
                     parts=[],
+                    markers=[],
+                    attributes=set(),
                 )
                 functions_stack.append(function)
                 map_function_to_node[function] = node_
@@ -183,11 +185,14 @@ class SourceFileTraceabilityReader_Python:
                     functions_stack = functions_stack[:1]
 
                 new_function = Function(
-                    parent=None,
+                    parent=traceability_info,
                     name=function_name,
                     line_begin=node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
                     parts=[],
+                    # Python functions do not need to track markers.
+                    markers=[],
+                    attributes=set(),
                 )
                 map_function_to_node[new_function] = node_
 

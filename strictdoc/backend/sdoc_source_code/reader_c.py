@@ -7,6 +7,7 @@ import tree_sitter_c
 from tree_sitter import Language, Node, Parser
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -26,7 +27,11 @@ from strictdoc.backend.sdoc_source_code.processors.general_language_marker_proce
     range_marker_processor,
     source_file_traceability_info_processor,
 )
-from strictdoc.backend.sdoc_source_code.tree_sitter_helpers import traverse_tree
+from strictdoc.backend.sdoc_source_code.tree_sitter_helpers import (
+    traverse_tree,
+    ts_find_child_node_by_type,
+    ts_find_child_nodes_by_type,
+)
 from strictdoc.helpers.string import get_lines_count
 
 
@@ -87,90 +92,34 @@ class SourceFileTraceabilityReader_C:
                                     function_range_marker_
                                 )
             elif node_.type == "declaration":
-                if (
-                    len(node_.children) > 1
-                    and node_.children[1].type == "function_declarator"
+                function_declarator_node = ts_find_child_node_by_type(
+                    node_, "function_declarator"
+                )
+                if function_declarator_node is None:
+                    continue
+
+                function_identifier_node = ts_find_child_node_by_type(
+                    function_declarator_node, "identifier"
+                )
+                if function_identifier_node is None:
+                    continue
+
+                if function_identifier_node.text is None:
+                    continue
+
+                function_name: str = function_identifier_node.text.decode(
+                    "utf8"
+                )
+                assert function_name is not None, function_name
+
+                function_attributes = {FunctionAttribute.DECLARATION}
+                for specifier_node_ in ts_find_child_nodes_by_type(
+                    node_, "storage_class_specifier"
                 ):
-                    function_declarator_node = node_.children[1]
+                    if specifier_node_.text == b"static":
+                        function_attributes.add(FunctionAttribute.STATIC)
 
-                    if (
-                        function_declarator_node.children[0].type
-                        != "identifier"
-                    ):
-                        continue
-
-                    function_identifier_node = (
-                        function_declarator_node.children[0]
-                    )
-                    if function_identifier_node.text is None:
-                        continue
-
-                    function_name: str = function_identifier_node.text.decode(
-                        "utf8"
-                    )
-                    assert function_name is not None, function_name
-
-                    function_comment_node: Optional[Node] = None
-                    function_comment_text = None
-                    if (
-                        node_.prev_sibling is not None
-                        and node_.prev_sibling.type == "comment"
-                    ):
-                        function_comment_node = node_.prev_sibling
-                        assert function_comment_node.text is not None
-                        function_comment_text = (
-                            function_comment_node.text.decode("utf8")
-                        )
-
-                        function_last_line = node_.end_point[0] + 1
-
-                        markers: List[
-                            Union[FunctionRangeMarker, RangeMarker, LineMarker]
-                        ] = MarkerParser.parse(
-                            function_comment_text,
-                            function_comment_node.start_point[0] + 1,
-                            function_last_line,
-                            function_comment_node.start_point[0] + 1,
-                            function_comment_node.start_point[1] + 1,
-                            entity_name=function_name,
-                        )
-                        for marker_ in markers:
-                            if isinstance(marker_, FunctionRangeMarker) and (
-                                function_range_marker_ := marker_
-                            ):
-                                function_range_marker_processor(
-                                    function_range_marker_, parse_context
-                                )
-                                traceability_info.markers.append(
-                                    function_range_marker_
-                                )
-                                traceability_info.parts.append(
-                                    function_range_marker_
-                                )
-
-                    # The function range includes the top comment if it exists.
-                    new_function = Function(
-                        parent=None,
-                        name=function_name,
-                        line_begin=function_comment_node.start_point[0] + 1
-                        if function_comment_node is not None
-                        else node_.range.start_point[0] + 1,
-                        line_end=node_.range.end_point[0] + 1,
-                        parts=[],
-                    )
-                    traceability_info.functions.append(new_function)
-
-            elif node_.type == "function_definition":
-                function_name: str = ""
-
-                for child_ in node_.children:
-                    if child_.type == "function_declarator":
-                        assert child_.children[0].type == "identifier"
-                        assert child_.children[0].text
-
-                        function_name = child_.children[0].text.decode("utf8")
-                assert function_name is not None, "Function name"
-
+                function_markers: List[FunctionRangeMarker] = []
                 function_comment_node: Optional[Node] = None
                 function_comment_text = None
                 if (
@@ -185,9 +134,7 @@ class SourceFileTraceabilityReader_C:
 
                     function_last_line = node_.end_point[0] + 1
 
-                    markers: List[
-                        Union[FunctionRangeMarker, RangeMarker, LineMarker]
-                    ] = MarkerParser.parse(
+                    markers = MarkerParser.parse(
                         function_comment_text,
                         function_comment_node.start_point[0] + 1,
                         function_last_line,
@@ -208,18 +155,91 @@ class SourceFileTraceabilityReader_C:
                             traceability_info.parts.append(
                                 function_range_marker_
                             )
+                            function_markers.append(marker_)
 
                 # The function range includes the top comment if it exists.
                 new_function = Function(
-                    parent=None,
+                    parent=traceability_info,
                     name=function_name,
                     line_begin=function_comment_node.start_point[0] + 1
                     if function_comment_node is not None
                     else node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
                     parts=[],
+                    markers=function_markers,
+                    attributes=function_attributes,
                 )
                 traceability_info.functions.append(new_function)
+
+            elif node_.type == "function_definition":
+                function_name: str = ""
+
+                for child_ in node_.children:
+                    if child_.type == "function_declarator":
+                        assert child_.children[0].type == "identifier"
+                        assert child_.children[0].text
+
+                        function_name = child_.children[0].text.decode("utf8")
+                assert function_name is not None, "Function name"
+
+                function_markers: List[FunctionRangeMarker] = []
+                function_comment_node: Optional[Node] = None
+                function_comment_text = None
+                if (
+                    node_.prev_sibling is not None
+                    and node_.prev_sibling.type == "comment"
+                ):
+                    function_comment_node = node_.prev_sibling
+                    assert function_comment_node.text is not None
+                    function_comment_text = function_comment_node.text.decode(
+                        "utf8"
+                    )
+
+                    function_last_line = node_.end_point[0] + 1
+
+                    markers = MarkerParser.parse(
+                        function_comment_text,
+                        function_comment_node.start_point[0] + 1,
+                        function_last_line,
+                        function_comment_node.start_point[0] + 1,
+                        function_comment_node.start_point[1] + 1,
+                        entity_name=function_name,
+                    )
+                    for marker_ in markers:
+                        if isinstance(marker_, FunctionRangeMarker) and (
+                            function_range_marker_ := marker_
+                        ):
+                            function_range_marker_processor(
+                                function_range_marker_, parse_context
+                            )
+                            traceability_info.markers.append(
+                                function_range_marker_
+                            )
+                            traceability_info.parts.append(
+                                function_range_marker_
+                            )
+                            function_markers.append(marker_)
+
+                # The function range includes the top comment if it exists.
+                new_function = Function(
+                    parent=traceability_info,
+                    name=function_name,
+                    line_begin=function_comment_node.start_point[0] + 1
+                    if function_comment_node is not None
+                    else node_.range.start_point[0] + 1,
+                    line_end=node_.range.end_point[0] + 1,
+                    parts=[],
+                    markers=function_markers,
+                    attributes={FunctionAttribute.DEFINITION},
+                )
+                traceability_info.functions.append(new_function)
+                if len(function_markers) > 0:
+                    traceability_info.ng_map_names_to_markers[function_name] = (
+                        function_markers
+                    )
+                    traceability_info.ng_map_names_to_definition_functions[
+                        function_name
+                    ] = new_function
             elif node_.type == "comment":
                 if node_.text is None:
                     raise NotImplementedError("Comment without a text")

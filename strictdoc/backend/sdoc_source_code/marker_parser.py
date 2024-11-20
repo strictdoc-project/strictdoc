@@ -58,7 +58,9 @@ class MarkerParser:
                 requirements.append(requirement)
 
             if marker_type in ("file", "class", "function"):
-                function_marker = FunctionRangeMarker(None, requirements)
+                function_marker = FunctionRangeMarker(
+                    None, requirements, scope=marker_type
+                )
                 function_marker.ng_source_line_begin = line_start
                 function_marker.ng_range_line_begin = line_start
                 function_marker.ng_range_line_end = line_end

@@ -147,12 +147,14 @@ class SourceFilesFinder:
 
         assert isinstance(project_config.output_dir, str)
 
+        exclude_paths = project_config.exclude_source_paths + ["**.DS_Store"]
+
         file_tree = FileFinder.find_files_with_extensions(
             root_path=doctree_root_abs_path,
             ignored_dirs=[project_config.output_dir],
             extensions=None,
             include_paths=project_config.include_source_paths,
-            exclude_paths=project_config.exclude_source_paths,
+            exclude_paths=exclude_paths,
         )
         root_level = doctree_root_abs_path.count(os.sep)
 

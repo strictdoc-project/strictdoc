@@ -170,15 +170,6 @@ class TraceabilityIndexBuilder:
             source_files = source_tree.source_files
             source_file: SourceFile
             for source_file in source_files:
-                # Is file referenced by forward links?
-                is_source_file_referenced = (
-                    traceability_index.has_source_file_reqs(
-                        source_file.in_doctree_source_file_rel_path_posix
-                    )
-                )
-                if is_source_file_referenced:
-                    source_file.is_referenced = True
-
                 with measure_performance(
                     f"Reading source: {source_file.in_doctree_source_file_rel_path}"
                 ):
@@ -197,7 +188,23 @@ class TraceabilityIndexBuilder:
                     # Is file referenced by backwards links?
                     if len(traceability_info.markers) > 0:
                         source_file.is_referenced = True
-            traceability_index.get_file_traceability_index().validate()
+
+            traceability_index.get_file_traceability_index().validate_and_resolve(
+                traceability_index
+            )
+
+            # Iterate again to resolve if the file is referenced.
+            # FIXME: Not great to iterate two times.
+            for source_file in source_files:
+                # Is file referenced by forward links?
+                is_source_file_referenced = (
+                    traceability_index.has_source_file_reqs(
+                        source_file.in_doctree_source_file_rel_path_posix
+                    )
+                )
+                if is_source_file_referenced:
+                    source_file.is_referenced = True
+
             traceability_index.document_tree.attach_source_tree(source_tree)
 
         return traceability_index

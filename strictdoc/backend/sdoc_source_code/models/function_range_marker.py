@@ -14,11 +14,14 @@ class RangeMarkerType(Enum):
 
 @auto_described
 class FunctionRangeMarker:
-    def __init__(self, parent, reqs_objs: List[Req]):
+    def __init__(self, parent, reqs_objs: List[Req], scope: str):
         assert isinstance(reqs_objs, list)
+        assert isinstance(scope, str), scope
         self.parent = parent
         self.reqs_objs: List[Req] = reqs_objs
         self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
+
+        self.scope: RangeMarkerType = RangeMarkerType(scope)
 
         # Line number of the marker in the source code.
         self.ng_source_line_begin: Optional[int] = None
@@ -64,5 +67,5 @@ class FunctionRangeMarker:
 
 @auto_described
 class ForwardFunctionRangeMarker(FunctionRangeMarker):
-    def __init__(self, parent, reqs_objs: List[Req]):
-        super().__init__(parent, reqs_objs)
+    def __init__(self, parent, reqs_objs: List[Req], scope: str):
+        super().__init__(parent, reqs_objs, scope)

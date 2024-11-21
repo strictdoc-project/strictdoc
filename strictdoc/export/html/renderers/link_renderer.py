@@ -139,6 +139,23 @@ class LinkRenderer:
         self.req_link_cache[link_cache_key][node] = requirement_link
         return requirement_link
 
+    def render_node_doxygen_link(
+        self,
+        node: Union[SDocDocument, SDocNode, SDocSection, Anchor],
+    ):
+        """
+        allow_local:     used on the DTR screen where we want to ensure that only
+                         full paths are used when jumping to the DOC screen.
+        """
+
+        assert isinstance(node, (SDocNode, SDocSection, Anchor)), node
+        local_link = self.render_local_anchor(node)
+        document_link = (
+            node.parent_or_including_document.meta.get_html_doc_link()
+        )
+        requirement_link = f"{document_link}#{local_link}"
+        return requirement_link
+
     def render_requirement_link_from_source_file(self, node, source_file):
         assert isinstance(node, SDocNode)
         assert isinstance(source_file, SourceFile)

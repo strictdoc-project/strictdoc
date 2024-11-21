@@ -6,7 +6,7 @@ RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Compile Jinja templates {{.*}}s
 CHECK: Published: Hello world doc
 
-RUN: rm -rf Output/
+RUN: rm -rf Output/html
 
 RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
 CHECK-SECOND-NOT: Compile Jinja templates {{.*}}s

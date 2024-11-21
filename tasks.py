@@ -5,7 +5,7 @@ import os
 import re
 import sys
 from enum import Enum
-from typing import Optional
+from typing import Optional, Dict
 
 if not hasattr(inspect, "getargspec"):
     inspect.getargspec = inspect.getfullargspec
@@ -58,10 +58,13 @@ def run_invoke_with_tox(
     context,
     environment_type: ToxEnvironment,
     command: str,
+    environment: Optional[Dict] = None,
 ) -> invoke.runners.Result:
     assert isinstance(environment_type, ToxEnvironment)
     assert isinstance(command, str)
+
     tox_py_version = f"py{sys.version_info.major}{sys.version_info.minor}"
+
     return run_invoke(
         context,
         f"""
@@ -69,6 +72,7 @@ def run_invoke_with_tox(
                 -e {tox_py_version}-{environment_type.value} --
                 {command}
         """,
+        environment=environment,
     )
 
 
@@ -369,6 +373,7 @@ def test_integration(
         context,
         environment,
         itest_command,
+        environment={"STRICTDOC_CACHE_DIR": "Output/cache"},
     )
 
 

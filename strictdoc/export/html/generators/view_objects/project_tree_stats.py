@@ -12,7 +12,7 @@ class DocumentStats:
 
 
 @dataclass
-class DocumentTreeStats:  # pylint: disable=too-many-instance-attributes
+class DocumentTreeStats:
     total_documents: int = 0
     total_requirements: int = 0
     total_sections: int = 0

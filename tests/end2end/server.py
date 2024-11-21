@@ -62,7 +62,7 @@ class TestStderrLogThread(Thread):
             stderr_log_file.flush()
 
 
-class SDocTestServer:  # pylint: disable=too-many-instance-attributes
+class SDocTestServer:
     @staticmethod
     def create(input_path: str):
         if os.path.isdir(input_path):

@@ -25,6 +25,20 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [SECTION]
+MID: 591c1b85c6fb4453aee08e23cb9f257a
+TITLE: 0.3.0 (2024-11-21)
+
+[TEXT]
+MID: b39a3b3d9f8640e380dad5a2fdb75d79
+STATEMENT: >>>
+This release includes an enhancement to the feature for tracing requirements to C source code.
+
+From now on, if a ``@relation`` marker is specified in a C function declaration, StrictDoc will perform its "magic" and automatically connect the referenced requirement to the corresponding C function definition. This allows a ``@relation`` marker to be placed in the main documentation block, typically located above C function declarations, while ensuring the requirement is also linked to the function definition.
+<<<
+
+[/SECTION]
+
+[SECTION]
 MID: f4cd860f07b1479ba1845bce3c749d68
 TITLE: 0.2.1 (2024-11-10)
 

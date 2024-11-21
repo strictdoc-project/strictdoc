@@ -2357,6 +2357,10 @@ or
         print("Hello, World\n");
     }
 
+.. note::
+
+    For the C language, if a ``@relation marker`` is included in a function declaration prototype (which is the most common practice), StrictDoc also creates a link between the requirement and the corresponding C function definition.
+
 **4\) Linking a range to a requirement**
 
 .. code:: python

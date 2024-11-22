@@ -12,7 +12,9 @@ from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 
 REGEX_REQ = r"[A-Za-z][A-Za-z0-9\\-]+"
 # @relation(REQ-1, scope=function) or @relation{REQ-1, scope=function}
-REGEX_MARKER = rf"@relation(\(|{{)({REGEX_REQ}(?:, {REGEX_REQ})*)\, scope=(file|class|function|line|range_start|range_end)(\)|}})"
+REGEX_MARKER = re.compile(
+    rf"@relation[({{]({REGEX_REQ}(?:, {REGEX_REQ})*), scope=(file|class|function|line|range_start|range_end)[)}}]"
+)
 
 
 class MarkerParser:
@@ -29,13 +31,13 @@ class MarkerParser:
         for input_line_idx_, input_line_ in enumerate(
             input_string.splitlines()
         ):
-            match = re.search(REGEX_MARKER, input_line_)
+            match = REGEX_MARKER.search(input_line_)
             if match is None:
                 continue
 
             assert match.lastindex is not None
-            marker_type = match.group(3)
-            req_list = match.group(2)
+            marker_type = match.group(match.lastindex)
+            req_list = match.group(1)
 
             first_requirement_index = match.start(1)
 

@@ -1,9 +1,9 @@
 # mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,type-arg,var-annotated"
 import sys
 import traceback
-from typing import List, Optional, Union
+from typing import List, Optional, Sequence, Union
 
-import tree_sitter_c
+import tree_sitter_cpp
 from tree_sitter import Language, Node, Parser
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
+    RangeMarkerType,
 )
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     LineMarker,
@@ -52,7 +53,7 @@ class SourceFileTraceabilityReader_C:
         parse_context = ParseContext(file_path, length)
 
         # Works since Python 3.9 but we also lint this with mypy from Python 3.8.
-        language_arg = tree_sitter_c.language()
+        language_arg = tree_sitter_cpp.language()
         py_language = Language(  # type: ignore[call-arg, unused-ignore]
             language_arg
         )
@@ -82,6 +83,12 @@ class SourceFileTraceabilityReader_C:
                             node_.start_point[1] + 1,
                         )
                         for marker_ in markers:
+                            if not isinstance(marker_, FunctionRangeMarker):
+                                continue
+                            # At the top level, only accept the scope=file markers.
+                            # Everything else will be handled by functions and classes.
+                            if marker_.scope != RangeMarkerType.FILE:
+                                continue
                             if isinstance(marker_, FunctionRangeMarker) and (
                                 function_range_marker_ := marker_
                             ):
@@ -91,15 +98,40 @@ class SourceFileTraceabilityReader_C:
                                 traceability_info.markers.append(
                                     function_range_marker_
                                 )
-            elif node_.type == "declaration":
+
+            elif node_.type in ("declaration", "field_declaration"):
                 function_declarator_node = ts_find_child_node_by_type(
                     node_, "function_declarator"
                 )
-                if function_declarator_node is None:
-                    continue
 
+                # C++ reference declaration wrap the function declaration one time.
+                if function_declarator_node is None:
+                    # Example: TrkVertex& operator-=(const TrkVertex& c);
+                    reference_declarator_node = ts_find_child_node_by_type(
+                        node_, "reference_declarator"
+                    )
+                    if reference_declarator_node is None:
+                        continue
+
+                    function_declarator_node = ts_find_child_node_by_type(
+                        reference_declarator_node, "function_declarator"
+                    )
+                    if function_declarator_node is None:
+                        continue
+
+                # For normal C functions the identifier is "identifier".
+                # For C++, there are:
+                # Class function declarations: bool CanSend(const CanFrame &frame);         # noqa: ERA001
+                # Operators:                   TrkVertex& operator-=(const TrkVertex& c);   # noqa: ERA001
+                # Destructors:                 ~TrkVertex();                                # noqa: ERA001
                 function_identifier_node = ts_find_child_node_by_type(
-                    function_declarator_node, "identifier"
+                    function_declarator_node,
+                    node_type=(
+                        "identifier",
+                        "field_identifier",
+                        "operator_name",
+                        "destructor_name",
+                    ),
                 )
                 if function_identifier_node is None:
                     continue
@@ -110,7 +142,15 @@ class SourceFileTraceabilityReader_C:
                 function_name: str = function_identifier_node.text.decode(
                     "utf8"
                 )
-                assert function_name is not None, function_name
+                assert (
+                    function_name is not None
+                ), "function_name must not be None"
+
+                parent_names = self.get_node_ns(node_)
+                if len(parent_names) > 0:
+                    function_name = (
+                        f"{'::'.join(parent_names)}::{function_name}"
+                    )
 
                 function_attributes = {FunctionAttribute.DECLARATION}
                 for specifier_node_ in ts_find_child_nodes_by_type(
@@ -173,11 +213,28 @@ class SourceFileTraceabilityReader_C:
 
                 for child_ in node_.children:
                     if child_.type == "function_declarator":
-                        assert child_.children[0].type == "identifier"
-                        assert child_.children[0].text
+                        identifier_node = ts_find_child_node_by_type(
+                            child_,
+                            (
+                                "identifier",
+                                "qualified_identifier",
+                                "destructor_name",
+                            ),
+                        )
+                        if identifier_node is None:
+                            raise NotImplementedError(child_)
 
-                        function_name = child_.children[0].text.decode("utf8")
-                assert function_name is not None, "Function name"
+                        assert identifier_node.text is not None
+                        function_name = identifier_node.text.decode("utf8")
+
+                assert (
+                    function_name is not None
+                ), "Could not parse function name"
+                parent_names = self.get_node_ns(node_)
+                if len(parent_names) > 0:
+                    function_name = (
+                        f"{'::'.join(parent_names)}::{function_name}"
+                    )
 
                 function_markers: List[FunctionRangeMarker] = []
                 function_comment_node: Optional[Node] = None
@@ -187,7 +244,9 @@ class SourceFileTraceabilityReader_C:
                     and node_.prev_sibling.type == "comment"
                 ):
                     function_comment_node = node_.prev_sibling
-                    assert function_comment_node.text is not None
+                    assert (
+                        function_comment_node.text is not None
+                    ), function_comment_node
                     function_comment_text = function_comment_node.text.decode(
                         "utf8"
                     )
@@ -287,9 +346,28 @@ class SourceFileTraceabilityReader_C:
             sys.exit(1)
         except Exception as exc:  # pylint: disable=broad-except
             print(  # noqa: T201
-                f"error: SourceFileTraceabilityReader_Python: could not parse file: "
+                f"error: SourceFileTraceabilityReader_C: could not parse file: "
                 f"{file_path}.\n{exc.__class__.__name__}: {exc}"
             )
-            # TODO: when --debug is provided
-            # traceback.print_exc()  # noqa: ERA001
+            traceback.print_exc()
             sys.exit(1)
+
+    @staticmethod
+    def get_node_ns(node: Node) -> Sequence[str]:
+        """Walk up the tree and find parent classes"""
+        parent_scopes = []
+        cursor: Optional[Node] = node
+        while cursor is not None:
+            if cursor.type == "class_specifier" and len(cursor.children) > 1:
+                second_node_or_none = cursor.children[1]
+                if (
+                    second_node_or_none.type == "type_identifier"
+                    and second_node_or_none.text is not None
+                ):
+                    parent_class_name = second_node_or_none.text.decode("utf8")
+                    parent_scopes.append(parent_class_name)
+
+            cursor = cursor.parent
+
+        parent_scopes.reverse()
+        return parent_scopes

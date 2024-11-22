@@ -1,4 +1,4 @@
-from typing import Generator, Optional
+from typing import Generator, Optional, Tuple, Union
 
 from tree_sitter import Node, Tree
 
@@ -18,9 +18,14 @@ def traverse_tree(tree: Tree) -> Generator[Node, None, None]:
             break
 
 
-def ts_find_child_node_by_type(node: Node, node_type: str) -> Optional[Node]:
+def ts_find_child_node_by_type(
+    node: Node, node_type: Union[str, Tuple[str, ...], str]
+) -> Optional[Node]:
+    node_types: Tuple[str, ...] = (
+        node_type if isinstance(node_type, tuple) else (node_type,)
+    )
     for child_ in node.children:
-        if child_.type == node_type:
+        if child_.type in node_types:
             return child_
     return None
 

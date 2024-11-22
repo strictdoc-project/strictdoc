@@ -1,4 +1,4 @@
 RUN: %strictdoc export %S --formats doxygen --output-dir Output | filecheck %s --dump-input=fail
 CHECK: Step 'Export SDoc' took: {{.*}} sec.
 
-RUN: %diff %S/strictdoc.xml %S/Output/doxygen/strictdoc.xml
+RUN: %diff %S/strictdoc.tag %S/Output/doxygen/strictdoc.tag

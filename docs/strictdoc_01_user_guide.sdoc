@@ -2299,7 +2299,7 @@ TITLE: Linking source code to requirements
 [TEXT]
 MID: c787c538cc0a422fb2898b525ec1006d
 STATEMENT: >>>
-To connect a source file to a requirement, a dedicated ``@relation`` marker must be added to the source file. Several marker types are supported, depending on the programming language. For example, the ``scope=class`` option is available for Python files but not for C files, as C does not support classes.
+To connect a source file to a requirement, a dedicated ``@relation`` marker must be added to the source file. Several marker types are supported, depending on the programming language. For example, the ``scope=class`` option is available for Python files but not for C files, as C does not support classes. The marker supports both () and {} for arguments.
 
 .. note::
 

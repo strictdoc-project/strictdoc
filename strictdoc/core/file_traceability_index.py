@@ -436,10 +436,11 @@ class FileTraceabilityIndex:
                 assert (
                     function_.name
                     not in self.map_all_function_names_to_definition_functions
-                )
-                self.map_all_function_names_to_definition_functions[
-                    function_.name
-                ] = function_
+                ), function_.name
+                if function_.is_public():
+                    self.map_all_function_names_to_definition_functions[
+                        function_.name
+                    ] = function_
 
             if (
                 source_file_rel_path

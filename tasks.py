@@ -5,7 +5,7 @@ import os
 import re
 import sys
 from enum import Enum
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 if not hasattr(inspect, "getargspec"):
     inspect.getargspec = inspect.getfullargspec

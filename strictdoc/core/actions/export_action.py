@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.export.doxygen.doxygen_generator import DoxygenGenerator
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
@@ -152,6 +153,18 @@ class ExportAction:
 
         if "sdoc" in self.project_config.export_formats:
             self.export_sdoc()
+
+        if "doxygen" in self.project_config.export_formats:
+            output_doxygen_root = os.path.join(
+                self.project_config.output_dir, "doxygen"
+            )
+            doxygen_generator = DoxygenGenerator(
+                project_config=self.project_config
+            )
+            doxygen_generator.export(
+                traceability_index=self.traceability_index,
+                path_to_output_dir=output_doxygen_root,
+            )
 
         if "spdx" in self.project_config.export_formats:
             output_dot_root = os.path.join(

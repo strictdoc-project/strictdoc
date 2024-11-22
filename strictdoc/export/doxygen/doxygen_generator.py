@@ -20,7 +20,7 @@ class DoxygenGenerator:
         path_to_output_dir: str,
     ) -> None:
         Path(path_to_output_dir).mkdir(parents=True, exist_ok=True)
-        output_path = os.path.join(path_to_output_dir, "strictdoc.xml")
+        output_path = os.path.join(path_to_output_dir, "strictdoc.tag")
 
         link_renderer = LinkRenderer(
             root_path="NOT_RELEVANT", static_path="NOT_RELEVANT"
@@ -28,7 +28,7 @@ class DoxygenGenerator:
 
         def template_node(node_uid: str, path_to_html: str) -> str:
             return f"""\
-  <compound kind="page">
+  <compound kind="file">
     <name>{node_uid}</name>
     <filename>html/{path_to_html}</filename>
   </compound>

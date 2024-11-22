@@ -102,3 +102,23 @@ def test_05_():
     assert function_range.ng_range_line_end == 6
     assert function_range.reqs_objs[0].ng_source_line == 4
     assert function_range.reqs_objs[0].ng_source_column == 14
+
+
+def test_06_():
+    input_string = """\
+/**
+ * Some text.
+ *
+ * @relation{REQ-1, scope=function}
+ */
+"""
+
+    function_ranges = MarkerParser.parse(input_string, 1, 5, 1, 1)
+    function_range = function_ranges[0]
+
+    assert isinstance(function_range, FunctionRangeMarker)
+    assert function_range.ng_source_line_begin == 1
+    assert function_range.ng_range_line_begin == 1
+    assert function_range.ng_range_line_end == 5
+    assert function_range.reqs_objs[0].ng_source_line == 4
+    assert function_range.reqs_objs[0].ng_source_column == 14

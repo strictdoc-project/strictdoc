@@ -4,3 +4,6 @@ exceptions:
   - url: https://www.bugseng.com/blog/requirement-traceability-all-substance-and-no-fuss
     code: HTTP_403
   - url: http://example.com/strictdoc
+  # FIXME
+  - url: https://strictdoc.readthedocs.io/en/latest/sphinx
+  - url: https://strictdoc.readthedocs.io/en/latest/sphinx/

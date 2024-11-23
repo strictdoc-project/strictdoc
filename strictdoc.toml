@@ -52,7 +52,6 @@ exclude_source_paths = [
   "**__init__.py",
   "build/**",
   "output/**",
-  "strictdoc-project.github.io/**",
   # FIXME: Figure out how to trace to these files.
   "tests/unit/strictdoc/backend/sdoc_source_code**"
 ]

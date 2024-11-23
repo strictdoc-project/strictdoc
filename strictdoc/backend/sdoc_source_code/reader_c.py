@@ -124,14 +124,8 @@ class SourceFileTraceabilityReader_C:
                 # Class function declarations: bool CanSend(const CanFrame &frame);         # noqa: ERA001
                 # Operators:                   TrkVertex& operator-=(const TrkVertex& c);   # noqa: ERA001
                 # Destructors:                 ~TrkVertex();                                # noqa: ERA001
-                function_identifier_node = ts_find_child_node_by_type(
+                function_identifier_node = self._get_function_name_node(
                     function_declarator_node,
-                    node_type=(
-                        "identifier",
-                        "field_identifier",
-                        "operator_name",
-                        "destructor_name",
-                    ),
                 )
                 if function_identifier_node is None:
                     continue
@@ -139,7 +133,13 @@ class SourceFileTraceabilityReader_C:
                 if function_identifier_node.text is None:
                     continue
 
-                function_name: str = function_identifier_node.text.decode(
+                assert function_identifier_node.text is not None
+                function_display_name = function_identifier_node.text.decode(
+                    "utf8"
+                )
+
+                assert function_declarator_node.text is not None
+                function_name: str = function_declarator_node.text.decode(
                     "utf8"
                 )
                 assert (
@@ -151,6 +151,9 @@ class SourceFileTraceabilityReader_C:
                     function_name = (
                         f"{'::'.join(parent_names)}::{function_name}"
                     )
+                    function_display_name = (
+                        f"{'::'.join(parent_names)}::{function_display_name}"
+                    )
 
                 function_attributes = {FunctionAttribute.DECLARATION}
                 for specifier_node_ in ts_find_child_nodes_by_type(
@@ -161,7 +164,6 @@ class SourceFileTraceabilityReader_C:
 
                 function_markers: List[FunctionRangeMarker] = []
                 function_comment_node: Optional[Node] = None
-                function_comment_text = None
                 if (
                     node_.prev_sibling is not None
                     and node_.prev_sibling.type == "comment"
@@ -180,7 +182,7 @@ class SourceFileTraceabilityReader_C:
                         function_last_line,
                         function_comment_node.start_point[0] + 1,
                         function_comment_node.start_point[1] + 1,
-                        entity_name=function_name,
+                        entity_name=function_display_name,
                     )
                     for marker_ in markers:
                         if isinstance(marker_, FunctionRangeMarker) and (
@@ -198,6 +200,7 @@ class SourceFileTraceabilityReader_C:
                 new_function = Function(
                     parent=traceability_info,
                     name=function_name,
+                    display_name=function_display_name,
                     line_begin=function_comment_node.start_point[0] + 1
                     if function_comment_node is not None
                     else node_.range.start_point[0] + 1,
@@ -211,21 +214,22 @@ class SourceFileTraceabilityReader_C:
             elif node_.type == "function_definition":
                 function_name: str = ""
 
-                for child_ in node_.children:
-                    if child_.type == "function_declarator":
-                        identifier_node = ts_find_child_node_by_type(
-                            child_,
-                            (
-                                "identifier",
-                                "qualified_identifier",
-                                "destructor_name",
-                            ),
-                        )
-                        if identifier_node is None:
-                            raise NotImplementedError(child_)
+                function_declarator_node = ts_find_child_node_by_type(
+                    node_, "function_declarator"
+                )
+                assert function_declarator_node is not None
 
-                        assert identifier_node.text is not None
-                        function_name = identifier_node.text.decode("utf8")
+                assert function_declarator_node.text is not None
+                function_name = function_declarator_node.text.decode("utf8")
+
+                identifier_node = self._get_function_name_node(
+                    function_declarator_node
+                )
+                if identifier_node is None:
+                    raise NotImplementedError(function_declarator_node)
+
+                assert identifier_node.text is not None
+                function_display_name = identifier_node.text.decode("utf8")
 
                 assert (
                     function_name is not None
@@ -234,6 +238,9 @@ class SourceFileTraceabilityReader_C:
                 if len(parent_names) > 0:
                     function_name = (
                         f"{'::'.join(parent_names)}::{function_name}"
+                    )
+                    function_display_name = (
+                        f"{'::'.join(parent_names)}::{function_display_name}"
                     )
 
                 function_markers: List[FunctionRangeMarker] = []
@@ -259,7 +266,7 @@ class SourceFileTraceabilityReader_C:
                         function_last_line,
                         function_comment_node.start_point[0] + 1,
                         function_comment_node.start_point[1] + 1,
-                        entity_name=function_name,
+                        entity_name=function_display_name,
                     )
                     for marker_ in markers:
                         if isinstance(marker_, FunctionRangeMarker) and (
@@ -277,6 +284,7 @@ class SourceFileTraceabilityReader_C:
                 new_function = Function(
                     parent=traceability_info,
                     name=function_name,
+                    display_name=function_display_name,
                     line_begin=function_comment_node.start_point[0] + 1
                     if function_comment_node is not None
                     else node_.range.start_point[0] + 1,
@@ -351,6 +359,21 @@ class SourceFileTraceabilityReader_C:
             )
             traceback.print_exc()
             sys.exit(1)
+
+    @staticmethod
+    def _get_function_name_node(function_declarator_node: Node):
+        assert function_declarator_node.type == "function_declarator"
+        function_identifier_node = ts_find_child_node_by_type(
+            function_declarator_node,
+            node_type=(
+                "identifier",
+                "field_identifier",
+                "operator_name",
+                "destructor_name",
+                "qualified_identifier",
+            ),
+        )
+        return function_identifier_node
 
     @staticmethod
     def get_node_ns(node: Node) -> Sequence[str]:

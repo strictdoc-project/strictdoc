@@ -13,6 +13,7 @@ class Function:
         self,
         parent: Any,
         name: str,
+        display_name: str,
         line_begin: int,
         line_end: int,
         child_functions: List[Any],
@@ -22,6 +23,8 @@ class Function:
         assert parent is not None
         self.parent = parent
         self.name = name
+        self.display_name = display_name
+
         # Child functions are supported in programming languages that can nest
         # functions, for example, Python.
         self.child_functions: List[Function] = child_functions

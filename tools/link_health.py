@@ -257,7 +257,7 @@ def check_link(link_and_exceptions) -> ResponseData:
 
     if link in exceptions:
         code = exceptions[link]
-        if head_response.status.value == code:
+        if code is None or head_response.status.value == code:
             print(  # noqa: T201
                 f"\nHEAD {link} -> Known exception: "
                 f"[{head_response.get_error_message()}]"
@@ -339,9 +339,8 @@ def main():
             all_codes = Status.all()
             for exception_dict in exceptions_dict:
                 assert "url" in exception_dict
-                assert "code" in exception_dict
-                exception_code = exception_dict["code"]
-                if exception_code not in all_codes:
+                exception_code = exception_dict.get("code")
+                if exception_code is not None and exception_code not in all_codes:
                     raise Exception(
                         f"Unknown expected error code: {exception_code}. "
                         f"Valid codes: {all_codes}"

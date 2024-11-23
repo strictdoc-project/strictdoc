@@ -1862,93 +1862,6 @@ This section contains an anchor named ``Anchor ABC``.
 
 .. _ANCHOR-EXAMPLE:
 
-.. _SECTION-UG-Search-and-filtering:
-
-Search and filtering
-====================
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **MID:**
-      - de584af947a445e5bcc782bab6a93baf
-
-StrictDoc supports search and filtering of document content. However, this feature has not been extensively tested and is hidden behind a feature flag. To activate it, enable the corresponding setting in the ``strictdoc.toml`` configuration file:
-
-.. code-block::
-
-    [project]
-
-    features = [
-      "SEARCH"
-    ]
-
-The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` commands.
-
-Query engine
-------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **MID:**
-      - 29ffc3e91d8045589b0837f647286128
-
-The syntax of the search query is inspired by Python, utilizing a fixed grammar that converts search queries into corresponding Python expressions.
-
-Important rules:
-
-- Every query component shall start with ``node.``.
-- ``and`` and ``or`` expressions must be grouped using round brackets.
-- Only double quotes are accepted for strings.
-
-.. list-table:: Query examples
-   :widths: 50 50
-   :header-rows: 1
-
-   * - **Query**
-     - **Description**
-
-   * - ``node.is_requirement``
-     - Find all requirements.
-
-   * - ``node.is_section``
-     - Find all sections.
-
-   * - ``node.is_root``
-     - Find all requirements or sections from documents with ``ROOT: True``. See :ref:`Document <SECTION-UG-Document>` for the description of the ``ROOT`` option.
-
-   * - ``(node.is_requirement and "System" in node["TITLE"])``
-     - Find all requirements with a TITLE that equals to "System".
-
-   * - ``(node.is_requirement and node.has_parent_requirements)``
-     - Find all requirements which have parent requirements.
-
-   * - ``(node.is_requirement and node.has_child_requirements)``
-     - Find all requirements which have child requirements.
-
-Filtering content
------------------
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **MID:**
-      - d52d86750ad54ce1b3263ebb092451c0
-
-Both ``export`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
-
-Both options are based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted requirements/sections will be exported.
-
-Example:
-
-.. code-block::
-
-    strictdoc export . --filter-requirements '"System" in node["TITLE"]'
-
 Markup
 ======
 
@@ -2225,8 +2138,6 @@ Traceability between requirements and source code
     * - **MID:**
       - 4398b17f61ad4dd290e72d7888597f48
 
-**Note:** This feature is experimental, the documentation is incomplete.
-
 StrictDoc allows connecting requirements to source code files in two ways:
 
 1. Linking source files to requirements by adding special markers in the source code without modifying the requirements.
@@ -2284,7 +2195,7 @@ To activate language-aware traceability, configure the project with the followin
       "SOURCE_FILE_LANGUAGE_PARSERS"
     ]
 
-Currently, only Python and C parsers are implemented. Upcoming implementations include parsers for Rust, C++, Bash, and more.
+Currently, only Python and C/C++ parsers are implemented. Upcoming implementations include parsers for Rust, Bash, and more.
 
 Linking source code to requirements
 -----------------------------------
@@ -2296,7 +2207,7 @@ Linking source code to requirements
     * - **MID:**
       - c787c538cc0a422fb2898b525ec1006d
 
-To connect a source file to a requirement, a dedicated ``@relation`` marker must be added to the source file. Several marker types are supported, depending on the programming language. For example, the ``scope=class`` option is available for Python files but not for C files, as C does not support classes.
+To connect a source file to a requirement, a dedicated ``@relation`` marker must be added to the source file. Several marker types are supported, depending on the programming language. For example, the ``scope=class`` option is available for Python files but not for C files, as C does not support classes. The marker supports both () and {} for arguments.
 
 .. note::
 
@@ -2305,6 +2216,8 @@ To connect a source file to a requirement, a dedicated ``@relation`` marker must
 .. warning::
 
     The legacy ``@sdoc`` marker is still supported by StrictDoc but is deprecated. ``@relation`` is the new correct marker name.
+
+It is also possible to use @relation markers and be compatible with Doxygen. See :ref:`Doxygen <SECTION-UG-Doxygen>`.
 
 **1\) Linking a file to a requirement**
 
@@ -2329,7 +2242,7 @@ The marker must be added to the top comment of a file.
         @relation(REQ-1, scope=class)
         """
 
-**3\) Linking a function to a requirement (Python and C only)**
+**3\) Linking a function to a requirement (Python, C, and C++ only)**
 
 .. code:: python
 
@@ -2353,6 +2266,10 @@ or
     void hello_world(void) {
         print("Hello, World\n");
     }
+
+.. note::
+
+    For the C and C++ languages, if a ``@relation`` marker is included in a function declaration prototype (which is the most common practice), StrictDoc also creates a link between the requirement and the corresponding C function definition.
 
 **4\) Linking a range to a requirement**
 
@@ -3061,6 +2978,72 @@ The following is a list of features that are considered less portable when it co
 
     It is easier to extend StrictDoc to produce a format supported by a given tool than it is to make the other tool export a 100%-identical content back to StrictDoc. If there is a need to interface with a tool X and something is missing in StrictDoc, please reach out to the developers (see :ref:`Contact the developers <SDOC_UG_CONTACT>`).
 
+Interoperability with other tools
+=================================
+
+.. _SECTION-UG-Doxygen:
+
+Doxygen
+-------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - a8664547ac7e41399d7d8d263869abc6
+
+HTML documentation generated by StrictDoc can be integrated with Doxygen documentation.
+
+Doxygen includes a ``TAGFILE`` feature that allows linking to external documentation. This tagfile is in XML format and looks like this:
+
+.. code::
+
+    <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+    <tagfile doxygen_version="1.9.8">
+      <compound kind="file">
+        <name>REQ-1</name>
+        <filename>strictdocfolder/mystrictdocreq.html#REQ-1</filename>
+      </compound>
+    </tagfile>
+
+StrictDoc automatically generates a Doxygen tagfile containing the requirements using the export command:
+
+.. code::
+
+    strictdoc export . --formats=html,doxygen
+
+When a requirement is referenced in a source code comment block with the command ``\ref REQ-1``, Doxygen includes a link to the corresponding ``<filename/>`` in the output.
+
+The location of the StrictDoc export can be specified in the TAGFILE field, either as a relative path, e.g., ``TAGFILES = strictdoc.tag=../../strictdoc``, or as an absolute URL, e.g., ``TAGFILES = strictdoc.tag=http://example.com/strictdoc``.
+
+To make the StrictDoc @relation keyword work with Doxygen, an alias has to be created:
+
+.. code::
+
+    ALIASES  += relation{2}="\ref \1"
+
+resulting in the following syntax to be recognized by Doxygen: ``@relation{REQ-1, scope=function}``.
+
+Relevant Doxygen documentation:
+
+- `Linking to external documentation <https://www.doxygen.nl/manual/external.html>`_
+- `TAGFILES <https://www.doxygen.nl/manual/config.html#cfg_tagfiles>`_
+
+Valispace
+---------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 5fe39dedfa4640d2bd7127ff23b0e3de
+
+Valispace provides a Python API, including an example script for exporting all project requirements in JSON format. See `Examples: Get a complete project requirements tree <https://github.com/valispace/ValispacePythonAPI/pull/22>`_.
+
+The ``GetAllProjectRequirementsTree.py`` script can be used to create a converter that generates SDoc text files customized to the specifics of the project.
+
 .. _SDOC_UG_EXPERIMENTAL_FEATURES:
 
 Experimental features
@@ -3078,6 +3061,93 @@ At any point in time, StrictDoc supports features that are still experimental. T
 A feature is considered stable when all its known edge cases have been covered and enough users report that they have used and tested this feature.
 
 See also :ref:`Selecting features <SDOC_UG_CONFIG_FEATURES>` for general instructions.
+
+.. _SECTION-UG-Search-and-filtering:
+
+Search and filtering
+--------------------
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - de584af947a445e5bcc782bab6a93baf
+
+StrictDoc supports search and filtering of document content. However, this feature has not been extensively tested and is hidden behind a feature flag. To activate it, enable the corresponding setting in the ``strictdoc.toml`` configuration file:
+
+.. code-block::
+
+    [project]
+
+    features = [
+      "SEARCH"
+    ]
+
+The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` commands.
+
+Query engine
+~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - 29ffc3e91d8045589b0837f647286128
+
+The syntax of the search query is inspired by Python, utilizing a fixed grammar that converts search queries into corresponding Python expressions.
+
+Important rules:
+
+- Every query component shall start with ``node.``.
+- ``and`` and ``or`` expressions must be grouped using round brackets.
+- Only double quotes are accepted for strings.
+
+.. list-table:: Query examples
+   :widths: 50 50
+   :header-rows: 1
+
+   * - **Query**
+     - **Description**
+
+   * - ``node.is_requirement``
+     - Find all requirements.
+
+   * - ``node.is_section``
+     - Find all sections.
+
+   * - ``node.is_root``
+     - Find all requirements or sections from documents with ``ROOT: True``. See :ref:`Document <SECTION-UG-Document>` for the description of the ``ROOT`` option.
+
+   * - ``(node.is_requirement and "System" in node["TITLE"])``
+     - Find all requirements with a TITLE that equals to "System".
+
+   * - ``(node.is_requirement and node.has_parent_requirements)``
+     - Find all requirements which have parent requirements.
+
+   * - ``(node.is_requirement and node.has_child_requirements)``
+     - Find all requirements which have child requirements.
+
+Filtering content
+~~~~~~~~~~~~~~~~~
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - d52d86750ad54ce1b3263ebb092451c0
+
+Both ``export`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
+
+Both options are based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted requirements/sections will be exported.
+
+Example:
+
+.. code-block::
+
+    strictdoc export . --filter-requirements '"System" in node["TITLE"]'
 
 .. _SECTION-UG-Project-statistics-screen:
 

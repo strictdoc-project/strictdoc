@@ -5,6 +5,7 @@ from contextlib import ExitStack
 
 import uvicorn
 
+from strictdoc import __version__
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.pickle import pickle_dump
@@ -12,16 +13,18 @@ from strictdoc.server.config import SDocServerEnvVariable
 
 
 def print_warning_message():
-    print("")  # noqa: T201
-    print("******************************************")  # noqa: T201
-    print("*               WARNING                  *")  # noqa: T201
-    print("*                                        *")  # noqa: T201
-    print("* The StrictDoc Web-based user interface *")  # noqa: T201
-    print("* is a highly experimental feature.      *")  # noqa: T201
-    print("* Things may go wrong, so get ready      *")  # noqa: T201
-    print("* to report bugs.                        *")  # noqa: T201
-    print("******************************************")  # noqa: T201
-    print("", flush=True)  # noqa: T201
+    strictdoc_version = "StrictDoc web server v" + __version__
+    print(  # noqa: T201
+        f"""
+*********************************************************
+* {strictdoc_version.center(53)} *
+*                                                       *
+* Share feedback and report issues on GitHub:           *
+* https://github.com/strictdoc-project/strictdoc/issues *
+*********************************************************
+""",
+        flush=True,
+    )
 
 
 def run_strictdoc_server(

@@ -8,7 +8,39 @@ $$$$$$$$$$$$$
     * - **MID:**
       - 0dd2649ec4784c9480eac6f4aef3158b
 
-This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available here: `StrictDoc Changelog <https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md>`_.
+This document maintains a record of all changes to StrictDoc since November 2023. It serves as a user-friendly version of the changelog, complementing the automatically generated, commit-by-commit changelog available as GitHub releases: `StrictDoc Releases <https://github.com/strictdoc-project/strictdoc/releases>`_.
+
+Unreleased (2024-11-XX)
+=======================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - f4e63483a11b442993c47b5d0574e89b
+
+This release introduces language-aware tracing between requirements and C++ source code.
+
+Currently, only C++ functions can be traced using a marker like ``@relation(REQ-1, scope=function)``. The ability to add markers to classes has not yet been implemented.
+
+A new export format has been added to generate a Doxygen tagfile for a documentation tree. When the tagfile is registered in the Doxygen configuration, requirements can be referenced using Doxygen keywords. For example: ``\relation{REQ-1, scope=function}``. Special thanks to @johanenglund for contributing the idea and helping to implement the solution.
+
+Additionally, a minor HTML2PDF formatting issue has been resolved. Previously, RST admonitions were not rendered correctly when spanning across two pages.
+
+0.3.0 (2024-11-21)
+==================
+
+.. list-table::
+    :align: left
+    :header-rows: 0
+
+    * - **MID:**
+      - b39a3b3d9f8640e380dad5a2fdb75d79
+
+This release includes an enhancement to the feature for tracing requirements to C source code.
+
+From now on, if a ``@relation`` marker is specified in a C function declaration, StrictDoc will perform its "magic" and automatically connect the referenced requirement to the corresponding C function definition. This allows a ``@relation`` marker to be placed in the main documentation block, typically located above C function declarations, while ensuring the requirement is also linked to the function definition.
 
 0.2.1 (2024-11-10)
 ==================

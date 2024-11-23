@@ -17,9 +17,27 @@ formats:
 build:
   os: ubuntu-22.04
   tools:
-    python: "3.8"
+    python: "3.10"
+  commands:
+    - pip install --upgrade strictdoc
+    - strictdoc export . --output $READTHEDOCS_OUTPUT/
+    # This is what Read the Docs does by default to generate Sphinx.
+    # Some modifications were made because the paths were not resolved for some reason.
+    - python -m virtualenv $READTHEDOCS_VIRTUALENV_PATH
+    - python -m pip install --upgrade --no-cache-dir pip setuptools
+    - python -m pip install --upgrade --no-cache-dir sphinx
+    - python -m pip install --exists-action=w --no-cache-dir -r docs/sphinx/requirements.txt
+    # HTML
+    - SPHINXOPTS="-W --keep-going" python -m sphinx -T -b html -d _build/doctrees -D language=en docs/sphinx/source/ $READTHEDOCS_OUTPUT/html/sphinx
+    # PDF
+    - python -m sphinx -T -b latex -d _build/doctrees -D language=en docs/sphinx/source/ build/pdf/
+    - cat build/pdf/latexmkrc
+    - mkdir $READTHEDOCS_OUTPUT/pdf
+    - cd build/pdf/ && latexmk -r latexmkrc -pdf -f -dvi- -ps- -jobname=strictdoc -interaction=nonstopmode && mv strictdoc.pdf $READTHEDOCS_OUTPUT/pdf/
+    # EPUB
+    - mkdir $READTHEDOCS_OUTPUT/epub
+    - python -m sphinx -T -b epub -d _build/doctrees -D language=en docs/sphinx/source/ build/epub/ && cp build/epub/StrictDoc.epub $READTHEDOCS_OUTPUT/epub/
 
-# Optionally set the version of Python and requirements required to build your docs
 python:
   install:
     - requirements: docs/sphinx/requirements.txt

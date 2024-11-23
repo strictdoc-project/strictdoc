@@ -35,7 +35,7 @@ from typing import List, Union
 import requests
 import yaml
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 
 class Parallelizer:

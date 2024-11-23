@@ -192,8 +192,8 @@ For a more comprehensive example, check the source file of this documentation
 which is written using StrictDoc:
 `strictdoc_01_user_guide.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc>`_.
 
-- `StrictDoc HTML export <https://strictdoc-project.github.io>`_
-- `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest>`_
+- `StrictDoc HTML export (this website) <https://strictdoc.readthedocs.io/en/latest/>`_
+- `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest/sphinx/>`_
 - `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
 <<<
 
@@ -1975,7 +1975,7 @@ The following command creates an HTML export:
     strictdoc export docs/ --formats=html --output-dir output-html
 
 **Example:** This documentation is exported by StrictDoc to HTML:
-`StrictDoc HTML export <https://strictdoc-project.github.io>`_.
+`StrictDoc HTML export <https://strictdoc.readthedocs.io>`_.
 
 The options ``--formats=html`` and ``--output-dir output-html`` can be skipped because HTML export is a default export option and the default output folder is ``output``.
 

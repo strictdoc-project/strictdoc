@@ -76,6 +76,14 @@ def run_invoke_with_tox(
     )
 
 
+@task(default=True)
+def list_tasks(context):
+    clean_command = """
+        invoke --list
+    """
+    run_invoke(context, clean_command)
+
+
 @task
 def clean(context):
     # https://unix.stackexchange.com/a/689930/77389
@@ -123,20 +131,6 @@ def docs(context):
                     --formats=html
                     --output-dir output/strictdoc_website
                     --project-title "StrictDoc"
-        """,
-    )
-
-    assert os.path.isdir(
-        "strictdoc-project.github.io/"
-    ), "Expecting the documentation to be cloned."
-    assert os.path.isdir(
-        "strictdoc-project.github.io/.git/"
-    ), "Expecting the documentation to be a valid Git repository."
-    run_invoke_with_tox(
-        context,
-        ToxEnvironment.DOCUMENTATION,
-        """
-            cp -rv output/strictdoc_website/html/* strictdoc-project.github.io/
         """,
     )
 

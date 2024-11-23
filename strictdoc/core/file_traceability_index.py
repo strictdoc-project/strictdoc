@@ -271,7 +271,7 @@ class FileTraceabilityIndex:
                         )
                         function_marker.ng_marker_column = 1
                         function_marker.set_description(
-                            f"function {function_.name}"
+                            f"function {function_.display_name}"
                         )
 
                         for req_uid_ in marker_.reqs:
@@ -446,9 +446,11 @@ class FileTraceabilityIndex:
                 source_file_rel_path
                 in self.map_file_function_names_to_reqs_uids
             ):
+                # FIXME: Using display_name, not name. A separate exercise is
+                #        to disambiguate forward links to C++ overloaded functions.
                 reqs_uids = self.map_file_function_names_to_reqs_uids[
                     source_file_rel_path
-                ].get(function_.name, None)
+                ].get(function_.display_name, None)
 
                 if reqs_uids is not None:
                     marker_type = RangeMarkerType.FUNCTION
@@ -480,7 +482,9 @@ class FileTraceabilityIndex:
             function_marker.ng_marker_line = function_.line_begin
             function_marker.ng_marker_column = 1
             if marker_type == RangeMarkerType.FUNCTION:
-                function_marker.set_description(f"function {function_.name}")
+                function_marker.set_description(
+                    f"function {function_.display_name}"
+                )
             elif marker_type == RangeMarkerType.CLASS:
                 function_marker.set_description(f"class {function_.name}")
 

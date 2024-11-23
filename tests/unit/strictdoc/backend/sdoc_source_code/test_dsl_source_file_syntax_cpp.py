@@ -39,7 +39,8 @@ class Foo
     assert len(info.markers) == 1
 
     function: Function = info.functions[0]
-    assert function.name == "Foo::CanSend"
+    assert function.name == "Foo::CanSend(const CanFrame &frame)"
+    assert function.display_name == "Foo::CanSend"
     assert function.line_begin == 4
     assert function.line_end == 7
 
@@ -70,7 +71,8 @@ class Bar {
     assert len(info.markers) == 1
 
     function: Function = info.functions[0]
-    assert function.name == "Foo::Bar::CanSend"
+    assert function.name == "Foo::Bar::CanSend(const CanFrame &frame)"
+    assert function.display_name == "Foo::Bar::CanSend"
     assert function.line_begin == 4
     assert function.line_end == 7
 
@@ -98,7 +100,8 @@ bool Foo::Bar::CanSend(const CanFrame &frame) {
     assert len(info.markers) == 1
 
     function: Function = info.functions[0]
-    assert function.name == "Foo::Bar::CanSend"
+    assert function.name == "Foo::Bar::CanSend(const CanFrame &frame)"
+    assert function.display_name == "Foo::Bar::CanSend"
     assert function.line_begin == 1
     assert function.line_end == 6
 
@@ -131,7 +134,8 @@ class TrkVertex
     assert len(info.markers) == 1
 
     function: Function = info.functions[0]
-    assert function.name == "TrkVertex::operator-="
+    assert function.name == "TrkVertex::operator-=(const TrkVertex& c)"
+    assert function.display_name == "TrkVertex::operator-="
     assert function.line_begin == 7
     assert function.line_end == 10
 
@@ -171,17 +175,20 @@ class TrkVertex
     assert len(info.markers) == 3
 
     function_1: Function = info.functions[0]
-    assert function_1.name == "TrkVertex::TrkVertex"
+    assert function_1.name == "TrkVertex::TrkVertex()"
+    assert function_1.display_name == "TrkVertex::TrkVertex"
     assert function_1.line_begin == 4
     assert function_1.line_end == 7
 
     function_2: Function = info.functions[1]
-    assert function_2.name == "TrkVertex::TrkVertex"
+    assert function_2.name == "TrkVertex::TrkVertex(double x, double y)"
+    assert function_2.display_name == "TrkVertex::TrkVertex"
     assert function_2.line_begin == 9
     assert function_2.line_end == 12
 
     function_3: Function = info.functions[2]
-    assert function_3.name == "TrkVertex::~TrkVertex"
+    assert function_3.name == "TrkVertex::~TrkVertex()"
+    assert function_3.display_name == "TrkVertex::~TrkVertex"
     assert function_3.line_begin == 14
     assert function_3.line_end == 17
 
@@ -229,17 +236,20 @@ class TrkVertex
     assert len(info.markers) == 3
 
     function_1: Function = info.functions[0]
-    assert function_1.name == "TrkVertex::TrkVertex"
+    assert function_1.name == "TrkVertex::TrkVertex()"
+    assert function_1.display_name == "TrkVertex::TrkVertex"
     assert function_1.line_begin == 4
     assert function_1.line_end == 7
 
     function_2: Function = info.functions[1]
-    assert function_2.name == "TrkVertex::TrkVertex"
+    assert function_2.name == "TrkVertex::TrkVertex(double x, double y)"
+    assert function_2.display_name == "TrkVertex::TrkVertex"
     assert function_2.line_begin == 9
     assert function_2.line_end == 12
 
     function_3: Function = info.functions[2]
-    assert function_3.name == "TrkVertex::~TrkVertex"
+    assert function_3.name == "TrkVertex::~TrkVertex()"
+    assert function_3.display_name == "TrkVertex::~TrkVertex"
     assert function_3.line_begin == 14
     assert function_3.line_end == 17
 

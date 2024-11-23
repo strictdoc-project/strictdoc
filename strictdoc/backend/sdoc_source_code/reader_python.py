@@ -64,6 +64,7 @@ class SourceFileTraceabilityReader_Python:
                 function = Function(
                     parent=traceability_info,
                     name="module",
+                    display_name="module",
                     line_begin=node_.start_point[0] + 1,
                     line_end=node_.end_point[0] + 1,
                     child_functions=[],
@@ -187,6 +188,7 @@ class SourceFileTraceabilityReader_Python:
                 new_function = Function(
                     parent=traceability_info,
                     name=function_name,
+                    display_name=function_name,
                     line_begin=node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
                     child_functions=[],

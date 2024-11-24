@@ -133,18 +133,16 @@ class SourceFileTraceabilityReader_C:
                 if function_identifier_node.text is None:
                     continue
 
-                assert function_identifier_node.text is not None
+                assert function_identifier_node.text is not None, node_.text
                 function_display_name = function_identifier_node.text.decode(
                     "utf8"
                 )
 
-                assert function_declarator_node.text is not None
+                assert function_declarator_node.text is not None, node_.text
                 function_name: str = function_declarator_node.text.decode(
                     "utf8"
                 )
-                assert (
-                    function_name is not None
-                ), "function_name must not be None"
+                assert function_name is not None, node_.text
 
                 parent_names = self.get_node_ns(node_)
                 if len(parent_names) > 0:
@@ -169,7 +167,7 @@ class SourceFileTraceabilityReader_C:
                     and node_.prev_sibling.type == "comment"
                 ):
                     function_comment_node = node_.prev_sibling
-                    assert function_comment_node.text is not None
+                    assert function_comment_node.text is not None, node_.text
                     function_comment_text = function_comment_node.text.decode(
                         "utf8"
                     )
@@ -217,9 +215,24 @@ class SourceFileTraceabilityReader_C:
                 function_declarator_node = ts_find_child_node_by_type(
                     node_, "function_declarator"
                 )
-                assert function_declarator_node is not None
+                # C++ reference declaration wrap the function declaration one time.
+                if function_declarator_node is None:
+                    # Example: Foo& Foo::operator+(const Foo& c) { return *this; }
+                    reference_declarator_node = ts_find_child_node_by_type(
+                        node_, "reference_declarator"
+                    )
+                    if reference_declarator_node is None:
+                        continue
 
-                assert function_declarator_node.text is not None
+                    function_declarator_node = ts_find_child_node_by_type(
+                        reference_declarator_node, "function_declarator"
+                    )
+                    if function_declarator_node is None:
+                        continue
+
+                assert function_declarator_node is not None, node_.text
+
+                assert function_declarator_node.text is not None, node_.text
                 function_name = function_declarator_node.text.decode("utf8")
 
                 identifier_node = self._get_function_name_node(
@@ -228,12 +241,10 @@ class SourceFileTraceabilityReader_C:
                 if identifier_node is None:
                     raise NotImplementedError(function_declarator_node)
 
-                assert identifier_node.text is not None
+                assert identifier_node.text is not None, node_.text
                 function_display_name = identifier_node.text.decode("utf8")
 
-                assert (
-                    function_name is not None
-                ), "Could not parse function name"
+                assert function_name is not None, node_.text
                 parent_names = self.get_node_ns(node_)
                 if len(parent_names) > 0:
                     function_name = (
@@ -251,9 +262,7 @@ class SourceFileTraceabilityReader_C:
                     and node_.prev_sibling.type == "comment"
                 ):
                     function_comment_node = node_.prev_sibling
-                    assert (
-                        function_comment_node.text is not None
-                    ), function_comment_node
+                    assert function_comment_node.text is not None, node_.text
                     function_comment_text = function_comment_node.text.decode(
                         "utf8"
                     )

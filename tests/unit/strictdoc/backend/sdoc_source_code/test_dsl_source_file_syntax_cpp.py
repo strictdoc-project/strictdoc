@@ -264,3 +264,58 @@ class TrkVertex
     marker_3: FunctionRangeMarker = info.markers[2]
     assert marker_3.ng_range_line_begin == 14
     assert marker_3.ng_range_line_end == 17
+
+
+def test_22_definition_with_reference():
+    """
+    The function returning reference is mostly tested here.
+
+    All other members are just for some context around the function.
+    """
+    input_string = b"""\
+class Foo
+{
+    int a_, b_;
+
+   public:
+    Foo() {}
+    Foo(int a, int b) : a_(a), b_(b) {}
+
+    /**
+     * @relation(REQ-1, scope=function)
+     */
+    Foo& operator+(const Foo& c);
+};
+
+Foo& Foo::operator+(const Foo& c) { return *this; }
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info = reader.read(input_string)
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.functions) == 4
+    assert len(info.markers) == 1
+
+    function_1: Function = info.functions[0]
+    assert function_1.name == "Foo::Foo()"
+    assert function_1.display_name == "Foo::Foo"
+    assert function_1.line_begin == 6
+    assert function_1.line_end == 6
+
+    function_2: Function = info.functions[1]
+    assert function_2.name == "Foo::Foo(int a, int b)"
+    assert function_2.display_name == "Foo::Foo"
+    assert function_2.line_begin == 7
+    assert function_2.line_end == 7
+
+    function_3: Function = info.functions[2]
+    assert function_3.name == "Foo::operator+(const Foo& c)"
+    assert function_3.display_name == "Foo::operator+"
+    assert function_3.line_begin == 9
+    assert function_3.line_end == 12
+
+    marker_1: FunctionRangeMarker = info.markers[0]
+    assert marker_1.ng_range_line_begin == 9
+    assert marker_1.ng_range_line_end == 12

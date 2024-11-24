@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Section 1 (with text)
+
+[TEXT]
+STATEMENT: >>>
+Text
+<<<
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section 2 (with text)
+
+[TEXT]
+STATEMENT: >>>
+Text
+<<<
+
+[/SECTION]
+
+[SECTION]
+TITLE: Section 3 (without text)
+
+[/SECTION]

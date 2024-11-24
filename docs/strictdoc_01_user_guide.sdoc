@@ -2032,7 +2032,7 @@ The created RST files can be copied to a project created using Sphinx, see
     cd docs/sphinx && make html
 
 `StrictDoc's own Sphinx/HTML documentation
-<https://strictdoc.readthedocs.io/en/latest/>`_
+<https://strictdoc.readthedocs.io/en/latest/sphinx>`_
 is generated this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
 <<<

@@ -131,6 +131,12 @@ See [LINK: SECTION-FM-SDoc-text-markup] for a description of the SDoc feature.
 MID: 1d4220cc9a5444a5bdbaee91c8c50670
 TITLE: How StrictDoc compares to other tools?
 
+[TEXT]
+MID: 45093addf6ec4772a0289fd958ae61dc
+STATEMENT: >>>
+This section offers a comparison of several requirements tools similar to StrictDoc.
+<<<
+
 [SECTION]
 MID: a4533ae81bfe446295242add9156198e
 TITLE: Doorstop
@@ -200,16 +206,17 @@ Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
 a higher level of abstraction: StrictDoc's specialization is requirements and
 specifications documents. StrictDoc can generate documentation to a number of
 formats including HTML format as well as the RST format which is a default
-input format for Sphinx. A two stage generation is therefore possible:
+input format for Sphinx. A two-stage generation is therefore possible:
 StrictDoc generates RST documentation which then can be generated to HTML, PDF,
 and other formats using Sphinx.
 
 If you are reading this documentation at
-https://strictdoc.readthedocs.io/en/latest
-then you are already looking at the example: this documentation stored in
-`strictdoc_03_faq <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_03_faq.sdoc>`_
-is converted to RST format by StrictDoc which is further converted to the HTML
-website by readthedocs which uses Sphinx under the hood. The
+https://strictdoc.readthedocs.io/en/latest,
+you are very close to a `StrictDoc-Sphinx example <https://strictdoc.readthedocs.io/en/latest/sphinx/>`_.
+
+This documentation is first converted to RST format by StrictDoc, which is then processed by Read the Docs using Sphinx to generate the HTML website.
+
+The
 ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:
 `StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
 <<<
@@ -300,6 +307,18 @@ FRET has an impressive list of
 `Publications <https://github.com/NASA-SW-VnV/fret/blob/master/PUBLICATIONS.md>`_.
 
 FRET's user interface is built with Electron.
+<<<
+
+[/SECTION]
+
+[SECTION]
+MID: 723731c256fc43dfb315a300f6429945
+TITLE: Other tools
+
+[TEXT]
+MID: ad24dca8ed9c449ab76c1798f38eb37c
+STATEMENT: >>>
+See also this GitHub gist for an overview of more tools available on GitHub: https://gist.github.com/stanislaw/aa40eb7de9f522ad482e5d239c435ff8.
 <<<
 
 [/SECTION]

@@ -20,6 +20,7 @@ from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.source_tree import SourceFile
 from strictdoc.core.transforms.validation_error import (
     SingleValidationError,
 )
@@ -440,13 +441,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def create_traceability_info(
         self,
-        source_file_rel_path: str,
+        source_file: SourceFile,
         traceability_info: SourceFileTraceabilityInfo,
-        traceability_index,
     ):
-        assert isinstance(traceability_info, SourceFileTraceabilityInfo)
         self._file_traceability_index.create_traceability_info(
-            source_file_rel_path, traceability_info, traceability_index
+            source_file, traceability_info, self
         )
 
     def create_document(self, document: SDocDocument) -> None:

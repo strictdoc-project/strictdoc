@@ -4,6 +4,7 @@ RUN: %strictdoc export %S --no-parallelization --output-dir Output | filecheck %
 CHECK-NOT: Published: Hello world doc 2
 CHECK: Published: Hello world doc 1
 
+FIXME: RUNs
 UN: %check_exists --file "%S/Output/html/index.html"
 UN: %check_exists --file "%S/Output/html/input/intermediate/requirements/input.html"
 

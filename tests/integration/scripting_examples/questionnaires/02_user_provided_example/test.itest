@@ -1,0 +1,9 @@
+# TBD: Figure out how to set PYTHONPATH on Windows.
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+RUN: %mkdir %S/output
+RUN: PYTHONPATH=%strictdoc_root python %S/export_questionnaires.py export . --output-dir=%S/output/
+
+RUN: %check_exists --file "%S/output/tsrm_questionnaires.xlsx"
+
+RUN: %excel_diff "%S/output/tsrm_questionnaires.xlsx" "%S/output/tsrm_questionnaires.xlsx"

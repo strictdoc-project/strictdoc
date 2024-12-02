@@ -11,6 +11,7 @@ class DocumentConfig:
         return DocumentConfig(
             parent=document,
             version=None,
+            date=None,
             uid=None,
             classification=None,
             requirement_prefix=None,
@@ -29,6 +30,7 @@ class DocumentConfig:
         *,
         parent,
         version: Optional[str],
+        date: Optional[str],
         uid: Optional[str],
         classification: Optional[str],
         requirement_prefix: Optional[str],
@@ -43,6 +45,7 @@ class DocumentConfig:
     ) -> None:
         self.parent = parent
         self.version: Optional[str] = version
+        self.date: Optional[str] = date
 
         meaningful_uid: Optional[str] = None
         if uid is not None and len(uid) > 0:

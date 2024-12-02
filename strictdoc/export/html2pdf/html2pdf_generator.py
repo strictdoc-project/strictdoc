@@ -30,7 +30,7 @@ class HTML2PDFGenerator:
         if not project_config.is_activated_html2pdf():
             raise StrictDocException("HTML2PDF feature is not enabled")
 
-        git_client: GitClient = GitClient(commit_hash=None)
+        git_client: GitClient = GitClient()
 
         path_to_output_pdf_html_dir = os.path.join(output_html2pdf_root, "html")
         path_to_output_pdf_pdf_dir = os.path.join(output_html2pdf_root, "pdf")

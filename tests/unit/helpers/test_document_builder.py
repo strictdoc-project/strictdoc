@@ -81,6 +81,7 @@ class DocumentBuilder:
         config = DocumentConfig(
             parent=None,
             version="0.0.1",
+            date=None,
             uid=uid,
             classification=None,
             requirement_prefix=None,

@@ -70,6 +70,7 @@ SDocDocument[noskipws]:
 DocumentConfig[noskipws]:
   ('UID: ' uid = /{REGEX_UID}/ '\n')?
   ('VERSION: ' version = SingleLineString '\n')?
+  ('DATE: ' date = SingleLineString '\n')?
   ('CLASSIFICATION: ' classification = SingleLineString '\n')?
   ('REQ_PREFIX: ' requirement_prefix = SingleLineString '\n')?
   ('ROOT: ' (root = BooleanChoice) '\n')?

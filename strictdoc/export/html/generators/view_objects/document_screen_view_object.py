@@ -209,6 +209,19 @@ class DocumentScreenViewObject:
             self.document.config.version, resolver
         )
 
+    def render_document_date(self) -> Optional[str]:
+        if self.document.config.date is None:
+            return None
+
+        def resolver(variable_name):
+            if variable_name == "GIT_COMMIT_DATE":
+                return self.git_client.get_commit_date()
+            elif variable_name == "GIT_COMMIT_DATETIME":
+                return self.git_client.get_commit_datetime()
+            return variable_name
+
+        return interpolate_at_pattern_lazy(self.document.config.date, resolver)
+
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()
 

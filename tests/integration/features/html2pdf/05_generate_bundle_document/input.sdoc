@@ -1,5 +1,7 @@
 [DOCUMENT]
 TITLE: Dummy Software Requirements Specification #1
+VERSION: @GIT_VERSION, @GIT_BRANCH
+DATE: @GIT_COMMIT_DATETIME
 
 [SECTION]
 UID: SEC-1

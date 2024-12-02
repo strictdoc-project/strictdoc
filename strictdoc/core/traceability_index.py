@@ -7,6 +7,7 @@ from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Union
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -1132,6 +1133,22 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             section_contents=[],
             is_bundle_document=True,
         )
+        bundle_document.config = DocumentConfig.default_config(bundle_document)
+
+        if (
+            project_config.bundle_document_version is not None
+            and len(project_config.bundle_document_version) > 0
+        ):
+            bundle_document.config.version = (
+                project_config.bundle_document_version
+            )
+
+        if (
+            project_config.bundle_document_date is not None
+            and len(project_config.bundle_document_date) > 0
+        ):
+            bundle_document.config.date = project_config.bundle_document_date
+
         bundle_document.meta = DocumentMeta(
             level=0,
             file_tree_mount_folder="NOT_RELEVANT",

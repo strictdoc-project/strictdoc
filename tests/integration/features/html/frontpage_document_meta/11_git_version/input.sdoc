@@ -1,0 +1,3 @@
+[DOCUMENT]
+TITLE: Hello world doc
+VERSION: @GIT_VERSION, @GIT_BRANCH

@@ -221,6 +221,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         output = env().render_template_as_markup(
@@ -448,6 +449,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
 
@@ -603,6 +605,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         output = env().render_template_as_markup(
@@ -663,6 +666,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         output = env().render_template_as_markup(
@@ -964,6 +968,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
 
@@ -1191,6 +1196,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
 
@@ -1256,6 +1262,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         return HTMLResponse(
@@ -1360,6 +1367,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         output = env().render_template_as_markup(
@@ -1459,6 +1467,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         output = env().render_template_as_markup(
@@ -1563,6 +1572,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         return HTMLResponse(
@@ -1951,6 +1961,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         html_output = env().render_template_as_markup(
@@ -2035,6 +2046,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         return HTMLResponse(
@@ -2071,6 +2083,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         output = env().render_template_as_markup(
@@ -2116,6 +2129,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         output = env().render_template_as_markup(
@@ -2224,6 +2238,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         output = (
@@ -2366,6 +2381,7 @@ def create_main_router(
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            git_client=html_generator.git_client,
             standalone=False,
         )
         output = (
@@ -2573,6 +2589,7 @@ def create_main_router(
                 export_action.traceability_index,
                 markup_renderer,
                 link_renderer,
+                git_client=html_generator.git_client,
                 standalone=False,
                 html_templates=html_templates,
             )

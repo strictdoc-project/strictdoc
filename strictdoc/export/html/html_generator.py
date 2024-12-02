@@ -44,6 +44,7 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
 from strictdoc.helpers.file_system import sync_dir
+from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.timing import measure_performance
 
@@ -54,6 +55,7 @@ class HTMLGenerator:
     ):
         self.project_config: ProjectConfig = project_config
         self.html_templates = html_templates
+        self.git_client: GitClient = GitClient(commit_hash=None)
 
     def export_complete_tree(
         self,
@@ -326,6 +328,7 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
+                git_client=self.git_client,
                 standalone=False,
                 html_templates=self.html_templates,
             )
@@ -346,7 +349,8 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
-                self.html_templates,
+                git_client=self.git_client,
+                html_templates=self.html_templates,
             )
             document_out_file = document_meta.get_html_table_path()
             with open(document_out_file, "w", encoding="utf8") as file:
@@ -365,7 +369,8 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
-                self.html_templates,
+                git_client=self.git_client,
+                html_templates=self.html_templates,
             )
             document_out_file = document_meta.get_html_traceability_path()
             with open(document_out_file, "w", encoding="utf8") as file:
@@ -384,7 +389,8 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
-                self.html_templates,
+                git_client=self.git_client,
+                html_templates=self.html_templates,
             )
             document_out_file = document_meta.get_html_deep_traceability_path()
             with open(document_out_file, "w", encoding="utf8") as file:
@@ -401,6 +407,7 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
+                git_client=self.git_client,
                 standalone=False,
                 html_templates=self.html_templates,
             )
@@ -418,6 +425,7 @@ class HTMLGenerator:
                 traceability_index,
                 markup_renderer,
                 link_renderer,
+                git_client=self.git_client,
                 standalone=True,
                 html_templates=self.html_templates,
             )

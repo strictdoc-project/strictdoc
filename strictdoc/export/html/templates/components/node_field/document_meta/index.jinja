@@ -8,10 +8,12 @@
       {%- endwith -%}
     </sdoc-meta-field>
     {%- endif -%}
-    {%- if view_object.document.config.version -%}
+
+    {% set document_version_ = view_object.render_document_version() %}
+    {%- if document_version_ is not none -%}
     <sdoc-meta-label data-testid="document-config-version-label">VERSION:</sdoc-meta-label>
     <sdoc-meta-field data-testid="document-config-version-field">
-      {%- with field_content = view_object.document.config.version %}
+      {%- with field_content = document_version_ %}
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </sdoc-meta-field>

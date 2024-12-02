@@ -19,6 +19,8 @@ from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.helpers.git_client import GitClient
+from strictdoc.helpers.string import interpolate_at_pattern_lazy
 from strictdoc.server.helpers.turbo import render_turbo_stream
 
 
@@ -33,6 +35,7 @@ class DocumentScreenViewObject:
         project_config: ProjectConfig,
         link_renderer: LinkRenderer,
         markup_renderer: MarkupRenderer,
+        git_client: GitClient,
         standalone: bool,
     ):
         self.document_type: DocumentType = document_type
@@ -42,6 +45,7 @@ class DocumentScreenViewObject:
         self.project_config: ProjectConfig = project_config
         self.link_renderer: LinkRenderer = link_renderer
         self.markup_renderer: MarkupRenderer = markup_renderer
+        self.git_client: GitClient = git_client
         self.standalone: bool = standalone
         self.document_iterator = self.traceability_index.get_document_iterator(
             self.document
@@ -189,6 +193,21 @@ class DocumentScreenViewObject:
             target="frame-toc",
         )
         return output
+
+    def render_document_version(self) -> Optional[str]:
+        if self.document.config.version is None:
+            return None
+
+        def resolver(variable_name):
+            if variable_name == "GIT_VERSION":
+                return self.git_client.get_commit_hash()
+            elif variable_name == "GIT_BRANCH":
+                return self.git_client.get_branch()
+            return variable_name
+
+        return interpolate_at_pattern_lazy(
+            self.document.config.version, resolver
+        )
 
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()

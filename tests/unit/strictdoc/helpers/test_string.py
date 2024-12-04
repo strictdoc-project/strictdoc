@@ -1,4 +1,5 @@
 from strictdoc.helpers.string import (
+    interpolate_at_pattern_lazy,
     is_safe_alphanumeric_string,
     sanitize_html_form_field,
 )
@@ -61,3 +62,15 @@ def test_is_safe_alphanumeric_string():
     assert is_safe_alphanumeric_string("docs/document.ext.sdoc") is True
     assert is_safe_alphanumeric_string("docs/docs2/document.sdoc") is True
     assert is_safe_alphanumeric_string("docs/document1.sdoc") is True
+
+
+def test_interpolate_at_pattern_lazy():
+    def resolver(variable_name):
+        if variable_name == "GIT_VERSION":
+            return "abcd123"
+        elif variable_name == "GIT_BRANCH":
+            return "main"
+        return variable_name
+
+    result = interpolate_at_pattern_lazy("@GIT_VERSION, @GIT_BRANCH", resolver)
+    assert result == "abcd123, main"

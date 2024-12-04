@@ -14,6 +14,7 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html2pdf.pdf_print_driver import PDFPrintDriver
 from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.timing import measure_performance
 
 
@@ -28,6 +29,8 @@ class HTML2PDFGenerator:
     ):
         if not project_config.is_activated_html2pdf():
             raise StrictDocException("HTML2PDF feature is not enabled")
+
+        git_client: GitClient = GitClient(commit_hash=None)
 
         path_to_output_pdf_html_dir = os.path.join(output_html2pdf_root, "html")
         path_to_output_pdf_pdf_dir = os.path.join(output_html2pdf_root, "pdf")
@@ -64,6 +67,7 @@ class HTML2PDFGenerator:
                     traceability_index,
                     markup_renderer,
                     link_renderer,
+                    git_client=git_client,
                     standalone=False,
                     html_templates=html_templates,
                 )

@@ -1,0 +1,41 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+# This is a rare case where an integration test has to create a Git repository.
+# Creating a repository outside the strictdoc folder to not cause Git to report
+# that there are embedded Git repositories.
+RUN: mkdir -p /tmp/strictdoc_itests
+RUN: THIS_TMP_DIR=$(mktemp -d %STRICTDOC_TMP_DIR/XXXXXX); cd $THIS_TMP_DIR
+RUN: THIS_TMP_DIR_NAME=$(basename "$THIS_TMP_DIR")
+RUN: echo $THIS_TMP_DIR
+
+# FIXME: This is not cleaned automatically.
+
+RUN: cp %S/input.sdoc $THIS_TMP_DIR/
+
+RUN: git init --initial-branch=main
+RUN: %strictdoc export . --output-dir Output
+RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-1
+CHECK-1: N/A, N/A
+
+RUN: git config user.name "Test User"
+RUN: git config user.email "test@example.com"
+RUN: git add .
+RUN: git commit -m "Initial commit"
+RUN: rm -rf Output/
+RUN: %strictdoc export . --output-dir Output
+RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-2
+CHECK-2: {{[a-f0-9]{7}}}, main
+
+RUN: git tag v1.0
+RUN: rm -rf Output/
+RUN: %strictdoc export . --output-dir Output
+RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-3
+CHECK-3: v1.0, main
+
+RUN: touch foo
+RUN: git add .
+RUN: git commit -m "Second commit"
+RUN: rm -rf Output/
+RUN: %strictdoc export . --output-dir Output
+RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-4
+CHECK-4: v1.0-1-g{{[a-f0-9]{7}}}, main

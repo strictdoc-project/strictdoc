@@ -4,7 +4,9 @@ import inspect
 import os
 import re
 import sys
+import tempfile
 from enum import Enum
+from pathlib import Path
 from typing import Dict, Optional
 
 if not hasattr(inspect, "getargspec"):
@@ -22,6 +24,8 @@ from invoke import task
 # FIXME: If you are a Windows user and expert, please advise on how to do this
 # properly.
 sys.stdout = open(1, "w", encoding="utf-8", closefd=False, buffering=1)
+
+STRICTDOC_TMP_DIR = os.path.join(tempfile.gettempdir(), "strictdoc_tmp_dir")
 
 
 # To prevent all tasks from building to the same virtual environment.
@@ -96,8 +100,9 @@ def clean(context):
 @task
 def clean_itest_artifacts(context):
     # https://unix.stackexchange.com/a/689930/77389
-    find_command = """
-        git clean -dfX tests/integration/
+    find_command = f"""
+        git clean -dfX tests/integration/ ;
+        rm -rf {STRICTDOC_TMP_DIR}
     """
     # The command sometimes exits with 1 even if the files are deleted.
     # warn=True ensures that the execution continues.
@@ -311,6 +316,8 @@ def test_integration(
 ):
     clean_itest_artifacts(context)
 
+    Path(STRICTDOC_TMP_DIR).mkdir(exist_ok=True)
+
     cwd = os.getcwd()
 
     if strictdoc is None:
@@ -345,6 +352,7 @@ def test_integration(
     itest_command = f"""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
+        --param STRICTDOC_TMP_DIR="{STRICTDOC_TMP_DIR}"
         {html2pdf_param}
         {chromedriver_param}
         -v

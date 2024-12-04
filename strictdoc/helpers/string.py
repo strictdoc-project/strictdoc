@@ -90,3 +90,13 @@ def create_safe_document_file_name(string) -> str:
 
 def ensure_newline(text: str) -> str:
     return text.rstrip() + "\n"
+
+
+def interpolate_at_pattern_lazy(template: str, value_resolver) -> str:
+    pattern = r"@(\w+)"
+
+    def replace_variable(match):
+        variable_name = match.group(1)
+        return value_resolver(variable_name)
+
+    return re.sub(pattern, replace_variable, template)

@@ -1,0 +1,626 @@
+[DOCUMENT]
+TITLE: NMFTA Telematics (Vehicle Connection Component) Security Requirements
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: CATEGORY
+    TYPE: String
+    REQUIRED: False
+  - TITLE: CRITICALITY
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PUB_REFS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: VERIFICATION
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-020
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-030
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-040
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-041
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-041
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-041
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-050
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-050
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-050
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-060
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-060
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-060
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-061
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-061
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-061
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-062
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-062
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-062
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-063
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-063
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-063
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-AC-080
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement AC-080
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-080
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-CM-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement CM-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: CM-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-CM-020
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement CM-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: CM-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-CM-030
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement CM-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: CM-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-CM-040
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement CM-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: CM-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-IA-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement IA-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: IA-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-IA-020
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement IA-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: IA-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-IA-030
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement IA-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: IA-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-IR-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement IR-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: IR-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-M-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement M-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: M-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-M-040
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement M-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: M-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-PS-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement PS-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: PS-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-RA-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement RA-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RA-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-RA-020
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement RA-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RA-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SAA-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SAA-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SAA-020
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SAA-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SAA-030
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SAA-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SAA-040
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SAA-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SAA-050
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SAA-050
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-050
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SCP-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SCP-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SCP-011
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SCP-011
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-011
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SCP-020
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SCP-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SCP-030
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SCP-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SCP-040
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SCP-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SCP-060
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SCP-060
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-060
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SCP-100
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SCP-100
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-100
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SCP-140
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SCP-140
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-140
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-010
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-011
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-011
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-011
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-020
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-021
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-021
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-021
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-030
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-040
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-041
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-041
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-041
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-060
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-060
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-060
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-070
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-070
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-070
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-071
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-071
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-071
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-080
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-080
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-080
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-081
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-081
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-081
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-090
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-090
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-090
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-120
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-120
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-120
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-130
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-130
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-130
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-140
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-140
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-140
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-150
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-150
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-150
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-170
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-170
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-170
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-171
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-171
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-171
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-180
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-180
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-180
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: VEH-SII-200
+STATEMENT: >>>
+This Vehicle Connection component must satisfy requirement SII-200
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-200
+  ROLE: Refines

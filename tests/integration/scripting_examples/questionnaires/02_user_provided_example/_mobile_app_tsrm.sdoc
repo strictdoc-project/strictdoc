@@ -1,0 +1,546 @@
+[DOCUMENT]
+TITLE: NMFTA Telematics (Mobile App Component) Security Requirements
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: CATEGORY
+    TYPE: String
+    REQUIRED: False
+  - TITLE: CRITICALITY
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PUB_REFS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: VERIFICATION
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-AC-010
+STATEMENT: >>>
+This Mobile App component must satisfy requirement AC-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-AC-030
+STATEMENT: >>>
+This Mobile App component must satisfy requirement AC-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-AC-040
+STATEMENT: >>>
+This Mobile App component must satisfy requirement AC-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-AC-041
+STATEMENT: >>>
+This Mobile App component must satisfy requirement AC-041
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-041
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-AC-050
+STATEMENT: >>>
+This Mobile App component must satisfy requirement AC-050
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-050
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-AC-080
+STATEMENT: >>>
+This Mobile App component must satisfy requirement AC-080
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: AC-080
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-CM-020
+STATEMENT: >>>
+This Mobile App component must satisfy requirement CM-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: CM-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-CM-030
+STATEMENT: >>>
+This Mobile App component must satisfy requirement CM-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: CM-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-CM-040
+STATEMENT: >>>
+This Mobile App component must satisfy requirement CM-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: CM-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-IA-010
+STATEMENT: >>>
+This Mobile App component must satisfy requirement IA-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: IA-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-IA-030
+STATEMENT: >>>
+This Mobile App component must satisfy requirement IA-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: IA-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-IR-010
+STATEMENT: >>>
+This Mobile App component must satisfy requirement IR-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: IR-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-M-010
+STATEMENT: >>>
+This Mobile App component must satisfy requirement M-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: M-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-PS-010
+STATEMENT: >>>
+This Mobile App component must satisfy requirement PS-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: PS-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-RA-010
+STATEMENT: >>>
+This Mobile App component must satisfy requirement RA-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RA-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-RA-020
+STATEMENT: >>>
+This Mobile App component must satisfy requirement RA-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RA-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SAA-010
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SAA-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SAA-020
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SAA-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SAA-030
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SAA-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SAA-040
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SAA-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SAA-050
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SAA-050
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SAA-050
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-010
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-011
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-011
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-011
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-020
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-030
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-040
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-040
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-040
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-090
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-090
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-090
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-091
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-091
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-091
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-120
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-120
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-120
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-130
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-130
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-130
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SCP-140
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SCP-140
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SCP-140
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-010
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-010
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-010
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-011
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-011
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-011
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-020
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-020
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-020
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-021
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-021
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-021
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-030
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-030
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-030
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-070
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-070
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-070
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-071
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-071
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-071
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-080
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-080
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-080
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-081
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-081
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-081
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-090
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-090
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-090
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-120
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-120
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-120
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-130
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-130
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-130
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-140
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-140
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-140
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-150
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-150
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-150
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-170
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-170
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-170
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-171
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-171
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-171
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-180
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-180
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-180
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-190
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-190
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-190
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: MOBILE-SII-200
+STATEMENT: >>>
+This Mobile App component must satisfy requirement SII-200
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SII-200
+  ROLE: Refines

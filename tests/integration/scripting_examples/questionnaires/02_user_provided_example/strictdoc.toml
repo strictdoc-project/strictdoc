@@ -1,0 +1,9 @@
+[project]
+
+title = "Heavy Duty Vehicle Cybersecurity Requirements (HD VCR)"
+
+include_doc_paths = [
+  "*.sdoc"
+]
+
+features = []

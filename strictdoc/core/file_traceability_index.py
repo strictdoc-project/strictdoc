@@ -1,5 +1,5 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def"
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
@@ -19,6 +19,7 @@ from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.ordered_set import OrderedSet
@@ -111,6 +112,11 @@ class FileTraceabilityIndex:
             )
 
         return matching_links_with_opt_ranges
+
+    def indexed_source_files(self) -> Iterator[SourceFile]:
+        for _, sfti in self.map_paths_to_source_file_traceability_info.items():
+            if sfti.source_file is not None:
+                yield sfti.source_file
 
     def get_source_file_reqs(
         self, source_file_rel_path: str
@@ -420,13 +426,14 @@ class FileTraceabilityIndex:
 
     def create_traceability_info(
         self,
-        source_file_rel_path: str,
+        source_file: SourceFile,
         traceability_info: SourceFileTraceabilityInfo,
         traceability_index,
     ) -> None:
         assert isinstance(traceability_info, SourceFileTraceabilityInfo)
+        traceability_info.source_file = source_file
         self.map_paths_to_source_file_traceability_info[
-            source_file_rel_path
+            source_file.in_doctree_source_file_rel_path_posix
         ] = traceability_info
 
         for function_ in traceability_info.functions:
@@ -443,22 +450,25 @@ class FileTraceabilityIndex:
                     ] = function_
 
             if (
-                source_file_rel_path
+                source_file.in_doctree_source_file_rel_path_posix
                 in self.map_file_function_names_to_reqs_uids
             ):
                 # FIXME: Using display_name, not name. A separate exercise is
                 #        to disambiguate forward links to C++ overloaded functions.
                 reqs_uids = self.map_file_function_names_to_reqs_uids[
-                    source_file_rel_path
+                    source_file.in_doctree_source_file_rel_path_posix
                 ].get(function_.display_name, None)
 
                 if reqs_uids is not None:
                     marker_type = RangeMarkerType.FUNCTION
                 else:
                     continue
-            elif source_file_rel_path in self.map_file_class_names_to_reqs_uids:
+            elif (
+                source_file.in_doctree_source_file_rel_path_posix
+                in self.map_file_class_names_to_reqs_uids
+            ):
                 reqs_uids = self.map_file_class_names_to_reqs_uids[
-                    source_file_rel_path
+                    source_file.in_doctree_source_file_rel_path_posix
                 ].get(function_.name, None)
                 if reqs_uids is not None:
                     marker_type = RangeMarkerType.CLASS
@@ -507,7 +517,7 @@ class FileTraceabilityIndex:
                     )
                     if node is None:
                         raise StrictDocException(
-                            f"Source file {source_file_rel_path} references "
+                            f"Source file {source_file.in_doctree_source_file_rel_path_posix} references "
                             f"a requirement that does not exist: {requirement_uid_}."
                         )
                     validated_requirement_uids.add(requirement_uid_)
@@ -515,10 +525,11 @@ class FileTraceabilityIndex:
                 paths = self.map_reqs_uids_to_paths.setdefault(
                     requirement_uid_, OrderedSet()
                 )
-                paths.add(source_file_rel_path)
+                paths.add(source_file.in_doctree_source_file_rel_path_posix)
 
                 requirement_paths = self.map_paths_to_reqs.setdefault(
-                    source_file_rel_path, OrderedSet()
+                    source_file.in_doctree_source_file_rel_path_posix,
+                    OrderedSet(),
                 )
 
                 node_id = traceability_index.get_node_by_uid(requirement_uid_)

@@ -164,6 +164,9 @@ class TraceabilityIndexBuilder:
         if not skip_source_files and project_config.is_feature_activated(
             ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
         ):
+            file_tracability_index = (
+                traceability_index.get_file_traceability_index()
+            )
             source_tree: SourceTree = SourceFilesFinder.find_source_files(
                 project_config=project_config
             )
@@ -181,21 +184,18 @@ class TraceabilityIndexBuilder:
 
                 if traceability_info:
                     traceability_index.create_traceability_info(
-                        source_file.in_doctree_source_file_rel_path_posix,
+                        source_file,
                         traceability_info,
-                        traceability_index,
                     )
                     # Is file referenced by backwards links?
                     if len(traceability_info.markers) > 0:
                         source_file.is_referenced = True
 
-            traceability_index.get_file_traceability_index().validate_and_resolve(
-                traceability_index
-            )
+            file_tracability_index.validate_and_resolve(traceability_index)
 
             # Iterate again to resolve if the file is referenced.
             # FIXME: Not great to iterate two times.
-            for source_file in source_files:
+            for source_file in file_tracability_index.indexed_source_files():
                 # Is file referenced by forward links?
                 is_source_file_referenced = (
                     traceability_index.has_source_file_reqs(

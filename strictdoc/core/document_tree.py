@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.core.source_tree import SourceTree
 
 
 class DocumentTree:
@@ -28,7 +29,7 @@ class DocumentTree:
             map_grammars_by_filenames
         )
 
-        self.source_tree = None  # attached later.
+        self.source_tree: Optional[SourceTree] = None  # attached later.
 
     def __repr__(self):
         return (
@@ -53,5 +54,5 @@ class DocumentTree:
     ) -> Optional[DocumentGrammar]:
         return self.map_grammars_by_filenames.get(filename)
 
-    def attach_source_tree(self, source_tree):
+    def attach_source_tree(self, source_tree: SourceTree):
         self.source_tree = source_tree

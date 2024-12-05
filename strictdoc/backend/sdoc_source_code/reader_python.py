@@ -244,12 +244,14 @@ class SourceFileTraceabilityReader_Python:
 
         return traceability_info
 
-    def read_from_file(self, file_path):
+    def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
         try:
             with open(file_path, "rb") as file:
                 sdoc_content = file.read()
                 sdoc = self.read(sdoc_content, file_path=file_path)
                 return sdoc
+        except UnicodeDecodeError:
+            raise
         except NotImplementedError:
             traceback.print_exc()
             sys.exit(1)

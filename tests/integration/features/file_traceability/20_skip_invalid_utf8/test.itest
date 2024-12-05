@@ -1,0 +1,13 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+# invalid_file.* was created with echo "00 08 00 00" | xxd -r -p > file.bin
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: warning: Skip tracing binary file {{.*}}invalid_file.bin
+CHECK: warning: Skip tracing binary file {{.*}}invalid_file.c
+CHECK: warning: Skip tracing binary file {{.*}}invalid_file.py
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+
+RUN: %cat %S/Output/html/20_skip_invalid_utf8/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">

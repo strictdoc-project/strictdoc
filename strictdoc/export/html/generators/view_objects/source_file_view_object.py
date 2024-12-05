@@ -15,8 +15,8 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
     RangeMarker,
 )
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
-from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.source_tree import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer

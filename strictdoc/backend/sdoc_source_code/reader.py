@@ -305,12 +305,14 @@ class SourceFileTraceabilityReader:
         drop_textx_meta(source_file_traceability_info)
         return source_file_traceability_info
 
-    def read_from_file(self, file_path) -> SourceFileTraceabilityInfo:
+    def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
         try:
             with open(file_path, encoding="utf-8") as file:
                 sdoc_content = file.read()
                 sdoc = self.read(sdoc_content, file_path=file_path)
                 return sdoc
+        except UnicodeDecodeError:
+            raise
         except NotImplementedError:
             traceback.print_exc()
             sys.exit(1)

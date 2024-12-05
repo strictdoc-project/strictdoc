@@ -6,7 +6,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.core.finders.source_files_finder import SourceFile
+from strictdoc.core.source_tree import SourceFile
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.helpers.string import create_safe_title_string
 

@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional, Union
 
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
@@ -20,7 +20,7 @@ class SourceFileTraceabilityCachingReader:
     @staticmethod
     def read_from_file(
         path_to_file: str, project_config: ProjectConfig
-    ) -> SourceFileTraceabilityInfo:
+    ) -> Optional[SourceFileTraceabilityInfo]:
         unpickled_content = PickleCache.read_from_cache(
             path_to_file, project_config, "source_file"
         )
@@ -34,12 +34,21 @@ class SourceFileTraceabilityCachingReader:
         reader = SourceFileTraceabilityCachingReader._get_reader(
             path_to_file, project_config
         )
-        traceability_info: SourceFileTraceabilityInfo = reader.read_from_file(
-            path_to_file
-        )
-        PickleCache.save_to_cache(
-            traceability_info, path_to_file, project_config, "source_file"
-        )
+        try:
+            if (
+                traceability_info := reader.read_from_file(path_to_file)
+            ) is not None:
+                PickleCache.save_to_cache(
+                    traceability_info,
+                    path_to_file,
+                    project_config,
+                    "source_file",
+                )
+        except UnicodeDecodeError:
+            print(  # noqa: T201
+                f"warning: Skip tracing binary file {path_to_file}."
+            )
+            return None
 
         return traceability_info
 

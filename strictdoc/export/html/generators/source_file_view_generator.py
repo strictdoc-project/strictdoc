@@ -27,8 +27,8 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
-from strictdoc.core.finders.source_files_finder import SourceFile
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.source_tree import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.generators.view_objects.source_file_view_object import (
     SourceFileViewObject,

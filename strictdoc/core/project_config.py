@@ -75,6 +75,8 @@ class ProjectConfig:
     ]
     DEFAULT_SERVER_HOST = "127.0.0.1"
     DEFAULT_SERVER_PORT = 5111
+    DEFAULT_BUNDLE_DOCUMENT_VERSION = "@GIT_VERSION (Git branch: @GIT_BRANCH)"
+    DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE = "@GIT_COMMIT_DATETIME"
 
     def __init__(
         self,
@@ -91,6 +93,8 @@ class ProjectConfig:
         include_source_paths: List[str],
         exclude_source_paths: List[str],
         html2pdf_template: Optional[str],
+        bundle_document_version: Optional[str],
+        bundle_document_date: Optional[str],
         traceability_matrix_relation_columns: Optional[
             List[Tuple[str, Optional[str]]]
         ],
@@ -146,6 +150,8 @@ class ProjectConfig:
         self.excel_export_fields: Optional[List[str]] = None
 
         self.html2pdf_template: Optional[str] = html2pdf_template
+        self.bundle_document_version: Optional[str] = bundle_document_version
+        self.bundle_document_date: Optional[str] = bundle_document_date
 
         self.traceability_matrix_relation_columns: Optional[
             List[Tuple[str, Optional[str]]]
@@ -181,6 +187,8 @@ class ProjectConfig:
             include_source_paths=[],
             exclude_source_paths=[],
             html2pdf_template=None,
+            bundle_document_version=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION,
+            bundle_document_date=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE,
             traceability_matrix_relation_columns=None,
             reqif_profile=ReqIFProfile.P01_SDOC,
             reqif_multiline_is_xhtml=False,
@@ -383,6 +391,9 @@ class ProjectConfigLoader:
         include_source_paths = []
         exclude_source_paths = []
         html2pdf_template: Optional[str] = None
+        bundle_document_version = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION
+        bundle_document_date = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE
+
         traceability_matrix_relation_columns: Optional[List[Tuple]] = None
         reqif_profile = ReqIFProfile.P01_SDOC
         reqif_multiline_is_xhtml = False
@@ -513,6 +524,14 @@ class ProjectConfigLoader:
                     )
                     sys.exit(1)
 
+            bundle_document_version = project_content.get(
+                "bundle_document_version", bundle_document_version
+            )
+
+            bundle_document_date = project_content.get(
+                "bundle_document_date", bundle_document_date
+            )
+
             traceability_matrix_relation_columns_config: Optional[List] = (
                 project_content.get(
                     "traceability_matrix_relation_columns", None
@@ -581,6 +600,8 @@ class ProjectConfigLoader:
             include_source_paths=include_source_paths,
             exclude_source_paths=exclude_source_paths,
             html2pdf_template=html2pdf_template,
+            bundle_document_version=bundle_document_version,
+            bundle_document_date=bundle_document_date,
             traceability_matrix_relation_columns=traceability_matrix_relation_columns,
             reqif_profile=reqif_profile,
             reqif_multiline_is_xhtml=reqif_multiline_is_xhtml,

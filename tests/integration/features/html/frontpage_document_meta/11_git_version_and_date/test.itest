@@ -16,6 +16,7 @@ RUN: git init --initial-branch=main
 RUN: %strictdoc export . --output-dir Output
 RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-1
 CHECK-1: N/A, N/A
+CHECK-1: N/A
 
 RUN: git config user.name "Test User"
 RUN: git config user.email "test@example.com"
@@ -25,12 +26,14 @@ RUN: rm -rf Output/
 RUN: %strictdoc export . --output-dir Output
 RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-2
 CHECK-2: {{[a-f0-9]{7}}}, main
+CHECK-2: {{\d{4}-\d{2}-\d{2}}}, {{\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}}}
 
 RUN: git tag v1.0
 RUN: rm -rf Output/
 RUN: %strictdoc export . --output-dir Output
 RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-3
 CHECK-3: v1.0, main
+CHECK-3: {{\d{4}-\d{2}-\d{2}}}, {{\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}}}
 
 RUN: touch foo
 RUN: git add .
@@ -39,3 +42,4 @@ RUN: rm -rf Output/
 RUN: %strictdoc export . --output-dir Output
 RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-4
 CHECK-4: v1.0-1-g{{[a-f0-9]{7}}}, main
+CHECK-4: {{\d{4}-\d{2}-\d{2}}}, {{\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}}}

@@ -1,5 +1,6 @@
 # mypy: disable-error-code="no-untyped-def"
 import os
+import sys
 import time
 
 from fastapi import FastAPI
@@ -12,6 +13,12 @@ from strictdoc.helpers.pickle import pickle_load
 from strictdoc.server.config import SDocServerEnvVariable
 from strictdoc.server.routers.main_router import create_main_router
 from strictdoc.server.routers.other_router import create_other_router
+
+# Define O_TEMPORARY for Windows only
+if sys.platform == "win32":
+    O_TEMPORARY = os.O_TEMPORARY
+else:
+    O_TEMPORARY = 0
 
 
 def create_app(
@@ -67,7 +74,7 @@ def strictdoc_production_app():
     # See https://stackoverflow.com/a/15235559
     def temp_opener(name, flag, mode=0o777):
         try:
-            flag |= os.O_TEMPORARY
+            flag |= O_TEMPORARY
         except AttributeError:
             pass  # Only Windows has this flag
 

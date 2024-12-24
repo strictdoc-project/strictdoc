@@ -18,6 +18,17 @@
       {%- endwith -%}
     </sdoc-meta-field>
     {%- endif -%}
+
+    {% set document_date_ = view_object.render_document_date() %}
+    {%- if document_date_ is not none -%}
+    <sdoc-meta-label data-testid="document-config-version-label">DATE:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-version-field">
+      {%- with field_content = document_date_ %}
+        {%- include "components/field/index.jinja" -%}
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {%- endif -%}
+
     {%- if view_object.document.config.classification -%}
     <sdoc-meta-label data-testid="document-config-classification-label">CLASSIFICATION:</sdoc-meta-label>
     <sdoc-meta-field data-testid="document-config-classification-field">
@@ -26,5 +37,6 @@
       {%- endwith -%}
     </sdoc-meta-field>
     {%- endif -%}
+
   </sdoc-meta>
 {%- endif -%}

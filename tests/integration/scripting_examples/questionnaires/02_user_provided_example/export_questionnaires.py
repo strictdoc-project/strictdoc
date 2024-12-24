@@ -9,10 +9,13 @@ from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.cli.cli_arg_parser import create_sdoc_args_parser, ExportCommandConfig
+from strictdoc.cli.cli_arg_parser import (
+    ExportCommandConfig,
+    create_sdoc_args_parser,
+)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
-from strictdoc.core.traceability_index import TraceabilityIndex, GraphLinkType
+from strictdoc.core.traceability_index import GraphLinkType, TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.helpers.parallelizer import Parallelizer
 
@@ -40,7 +43,7 @@ class ExportQuestionnaires:
     def export(self):
         assert self.traceability_index
 
-        tsrm_path = os.path.join(project_config.output_dir, 'tsrm_questionnaires.xlsx')
+        tsrm_path = os.path.join(project_config.output_dir, "tsrm_questionnaires.xlsx")
 
         fields = ["Criticality", "Requirement", "Yes", "In-Part", "No", "N/A", "Notes"]
         column_widths = ExcelGenerator._init_columns_width(fields)
@@ -53,7 +56,7 @@ class ExportQuestionnaires:
             workbook.set_properties({"title": "Telematics Security Requirements Matrix Questionnaires",
                                      "comments": "Created with StrictDoc from sources in "
                                                  "https://github.com/nmfta-repo/nmfta-telematics_security_requirements .", })
-            wrap_format = workbook.add_format({'text_wrap': True})
+            wrap_format = workbook.add_format({"text_wrap": True})
             for name in [MOBILE_SEC_REQ, VEHICLE_CONN_SEC_REQ, CONNECTIVITY_SEC_REQ, CLOUD_SEC_REQ]:
                 document = self.find_doc(name)
                 worksheet = workbook.add_worksheet(name=name[:30])
@@ -77,12 +80,12 @@ class ExportQuestionnaires:
                 for row, node in enumerate(nodes):
                     worksheet.write(row + 1, 0, str(self.get_parent_criticality(node)), wrap_format)
                     worksheet.write(row + 1, 1,
-                                    str(node.get_field_by_name("STATEMENT").get_text_value().strip()) + ':\n' + str(
+                                    str(node.get_field_by_name("STATEMENT").get_text_value().strip()) + ":\n" + str(
                                         self.get_parent_statement(node)), wrap_format)
 
                 # add a table around all this data, allowing filtering and ordering in Excel
                 worksheet.add_table(0, 0, row - 1, len(fields) - 1,
-                                    {"columns": ExcelGenerator._init_headers(fields), 'style': 'Table Style Medium 4'})
+                                    {"columns": ExcelGenerator._init_headers(fields), "style": "Table Style Medium 4"})
 
                 # enforce columns width
                 ExcelGenerator._set_columns_width(workbook, worksheet, column_widths, fields)
@@ -101,7 +104,7 @@ class ExportQuestionnaires:
         parent: SDocNode
         parent = self.traceability_index.graph_database.get_link_value(
             link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-            lhs_node=node.get_field_by_name('UID').get_text_value()).parents[0][0]
+            lhs_node=node.get_field_by_name("UID").get_text_value()).parents[0][0]
         return parent
 
     def find_doc(self, name):
@@ -113,7 +116,7 @@ class ExportQuestionnaires:
         return applicable_doc
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = create_sdoc_args_parser()
     project_config: ProjectConfig
 

@@ -55,7 +55,7 @@ class HTMLGenerator:
     ):
         self.project_config: ProjectConfig = project_config
         self.html_templates = html_templates
-        self.git_client: GitClient = GitClient(commit_hash=None)
+        self.git_client: GitClient = GitClient()
 
     def export_complete_tree(
         self,

@@ -24,7 +24,7 @@ class ProgressStatisticsGenerator:
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
     ):
-        git_client = GitClient.create()
+        git_client = GitClient()
 
         document_tree_stats: DocumentTreeStats = DocumentTreeStats()
         document_tree_stats.total_documents = len(

@@ -595,7 +595,10 @@ The following ``DOCUMENT`` fields are allowed:
      - Unique identifier of the document
 
    * - ``VERSION``
-     - Current version of the document
+     - Current version of the document. Special @-macros GIT_VERSION and GIT_BRANCH can be used to get the document version from Git automatically. Example: ``VERSION: @GIT_VERSION (Git branch: @GIT_BRANCH)``.
+
+   * - ``DATE``
+     - Publication date of the document. Special @-macros GIT_COMMIT_DATE and GIT_COMMIT_DATETIME can be used to get the document date from Git. Example: ``DATE: @GIT_COMMIT_DATETIME``.
 
    * - ``CLASSIFICATION``
      - Security classification of the document, e.g. Public, Internal, Restricted, Confidential
@@ -3237,7 +3240,14 @@ The first two methods require the Chrome browser and chromedriver to be installe
 StrictDoc downloads chromedriver on demand by default, or uses a pre installed executable if
 ``strictdoc export --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc.toml`` option is given.
 
-When printing from the command line (the first method), you can use the ``--generate-bundle-document`` option to have StrictDoc generate a single PDF document that bundles together all individual PDFs.
+When printing from the command line (the first method), you can use the ``--generate-bundle-document`` option to have StrictDoc generate a single PDF document that bundles together all individual PDFs. The bundle document gets the document version/date information from Git by default which can be controlled in the ``strictdoc.toml`` config (the default values are shown):
+
+.. code-block:: text
+
+    bundle_document_version = "@GIT_VERSION (Git branch: @GIT_BRANCH)"
+    bundle_document_date = "@GIT_COMMIT_DATETIME"
+
+To disable bundle document version/date automatic generation, set ``bundle_document_version``/``bundle_document_date`` to empty strings or use any custom values.
 
 The third method, the PDF screen, presents a version of the document that is optimized for browser printing. This approach allows for the creation of neatly formatted PDF documents or directly printed documents. Although this method is compatible with any browser, Chrome is recommended for the best printing results. Unlike Firefox and Safari, Chrome maintains the document's internal hyperlinks in the printed PDF.
 

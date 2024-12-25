@@ -26,7 +26,7 @@ This document maintains a record of all changes to StrictDoc since November 2023
 
 [SECTION]
 MID: e7df8274f42c4e01b02ad840e6b2569c
-TITLE: Unreleased (2024-11-XX)
+TITLE: 0.4.0 (2024-12-25)
 
 [TEXT]
 MID: f4e63483a11b442993c47b5d0574e89b
@@ -37,7 +37,13 @@ Currently, only C++ functions can be traced using a marker like ``@relation(REQ-
 
 A new export format has been added to generate a Doxygen tagfile for a documentation tree. When the tagfile is registered in the Doxygen configuration, requirements can be referenced using Doxygen keywords. For example: ``\relation{REQ-1, scope=function}``. Special thanks to @johanenglund for contributing the idea and helping to implement the solution.
 
-Additionally, a minor HTML2PDF formatting issue has been resolved. Previously, RST admonitions were not rendered correctly when spanning across two pages.
+The @-macros @GIT_VERSION, @GIT_BRANCH, @GIT_COMMIT_DATE, and @GIT_COMMIT_DATETIME were introduced to simplify the automatic insertion of document version information and publication dates into published documents.
+
+An edge case for reading source files has been addressed. StrictDoc will now issue a warning if it encounters a binary file instead of a source code file, preventing a crash. [Contributed by @haxtibal]
+
+A user has contributed an example demonstrating how requirements can be generated into an Excel questionnaire for users to fill out, enabling requirements compliance tracking. The example is located at ``tests/integration/scripting_examples/questionnaires/``. [Contributed by @BenGardiner]
+
+Additionally, a minor HTML2PDF formatting issue has been resolved. Previously, the RST admonitions in StrictDoc's own documentation were not rendered correctly when spanning across two pages.
 <<<
 
 [/SECTION]

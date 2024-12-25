@@ -111,10 +111,16 @@ class DocumentFinder:
         )
 
         doc_file: File
-        for doc_file, file_tree_mount_folder, document in found_documents:
+        for doc_file, file_tree_mount_folder_, document in found_documents:
             assert isinstance(
-                file_tree_mount_folder, str
-            ), file_tree_mount_folder
+                file_tree_mount_folder_, str
+            ), file_tree_mount_folder_
+
+            # If only one input tree is provided, skip generating paths relative
+            # to each tree's mount folder.
+            file_tree_mount_folder_or_none = (
+                file_tree_mount_folder_ if len(file_trees) > 1 else None
+            )
 
             if isinstance(document, DocumentGrammar):
                 map_grammars_by_filenames[doc_file.file_name] = document
@@ -127,15 +133,41 @@ class DocumentFinder:
             doc_relative_path_folder: SDocRelativePath = SDocRelativePath(
                 os.path.dirname(doc_file.rel_path.relative_path)
             )
-            output_document_dir_rel_path: SDocRelativePath = SDocRelativePath(
-                os.path.join(
-                    file_tree_mount_folder,
+
+            # Generate document's relative output path.
+            output_document_dir_rel_path_str = ""
+            if file_tree_mount_folder_or_none is not None:
+                output_document_dir_rel_path_str = (
+                    file_tree_mount_folder_or_none
+                )
+            if len(doc_relative_path_folder.relative_path) > 0:
+                output_document_dir_rel_path_str = os.path.join(
+                    output_document_dir_rel_path_str,
                     doc_relative_path_folder.relative_path,
                 )
-                if len(doc_relative_path_folder.relative_path) > 0
-                else file_tree_mount_folder
+            output_document_dir_rel_path: SDocRelativePath = SDocRelativePath(
+                output_document_dir_rel_path_str
             )
 
+            # Generate relative path to assets dir.
+            input_doc_assets_dir_rel_path_str = ""
+            if file_tree_mount_folder_or_none is not None:
+                input_doc_assets_dir_rel_path_str = (
+                    file_tree_mount_folder_or_none
+                )
+            if doc_relative_path_folder.length() > 0:
+                input_doc_assets_dir_rel_path_str = os.path.join(
+                    input_doc_assets_dir_rel_path_str,
+                    doc_relative_path_folder.relative_path,
+                )
+            input_doc_assets_dir_rel_path_str = os.path.join(
+                input_doc_assets_dir_rel_path_str, "_assets"
+            )
+            input_doc_assets_dir_rel_path: SDocRelativePath = SDocRelativePath(
+                input_doc_assets_dir_rel_path_str
+            )
+
+            # Generate document's output full path.
             document_filename = doc_file.file_name
             document_filename_base = os.path.splitext(document_filename)[0]
 
@@ -143,19 +175,9 @@ class DocumentFinder:
                 output_root_html, output_document_dir_rel_path.relative_path
             )
 
-            input_doc_assets_dir_rel_path: SDocRelativePath = SDocRelativePath(
-                os.path.join(
-                    file_tree_mount_folder,
-                    doc_relative_path_folder.relative_path,
-                    "_assets",
-                )
-                if doc_relative_path_folder.length() > 0
-                else "/".join((file_tree_mount_folder, "_assets"))
-            )
-
             document_meta = DocumentMeta(
                 doc_file.level,
-                file_tree_mount_folder,
+                file_tree_mount_folder_or_none,
                 document_filename,
                 document_filename_base,
                 input_doc_full_path,

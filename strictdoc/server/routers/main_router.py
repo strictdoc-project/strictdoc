@@ -1677,11 +1677,13 @@ def create_main_router(
         if not document_path.endswith(".sdoc"):
             document_path = document_path + ".sdoc"
 
+        # FIXME: This code is hardcoded under the assumption of only one
+        #        input folder, not multiple. Note that the CLI interface supports
+        #        exporting of multiple folders that may or not have the same root.
+        #        This feature is not supported by the server and UI.
+        #        https://github.com/strictdoc-project/strictdoc/issues/2041
         assert isinstance(project_config.input_paths, list)
         full_input_path = os.path.abspath(project_config.input_paths[0])
-        file_tree_mount_folder = os.path.basename(
-            os.path.dirname(full_input_path)
-        )
         doc_full_path = os.path.join(full_input_path, document_path)
         doc_full_path_dir = os.path.dirname(doc_full_path)
         document_file_name = os.path.basename(doc_full_path)
@@ -1689,13 +1691,12 @@ def create_main_router(
         input_doc_assets_dir_rel_path = (
             "/".join(
                 (
-                    file_tree_mount_folder,
                     input_doc_dir_rel_path,
                     "_assets",
                 )
             )
             if len(input_doc_dir_rel_path) > 0
-            else "/".join((file_tree_mount_folder, "_assets"))
+            else "_assets"
         )
 
         Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
@@ -2498,6 +2499,12 @@ def create_main_router(
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
+
+        # FIXME: This code is hardcoded under the assumption of only one
+        #        input folder, not multiple. Note that the CLI interface supports
+        #        exporting of multiple folders that may or not have the same root.
+        #        This feature is not supported by the server and UI.
+        #        https://github.com/strictdoc-project/strictdoc/issues/2041
         assert documents is not None
         assert isinstance(project_config.input_paths, list)
         for document in documents:
@@ -2509,13 +2516,7 @@ def create_main_router(
             doc_full_path_dir = os.path.dirname(doc_full_path)
             Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
 
-            file_tree_mount_folder = os.path.basename(
-                os.path.dirname(full_input_path)
-            )
-
-            input_doc_assets_dir_rel_path = "/".join(
-                (file_tree_mount_folder, "_assets")
-            )
+            input_doc_assets_dir_rel_path = "_assets"
 
             # FIXME: Fill in the meta information correctly.
             document.meta = DocumentMeta(

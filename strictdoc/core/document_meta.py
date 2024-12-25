@@ -11,7 +11,7 @@ class DocumentMeta:
     def __init__(
         self,
         level: int,
-        file_tree_mount_folder,
+        file_tree_mount_folder: Optional[str],
         document_filename: str,
         document_filename_base,
         input_doc_full_path,
@@ -20,7 +20,7 @@ class DocumentMeta:
         input_doc_assets_dir_rel_path: SDocRelativePath,
         output_document_dir_full_path,
         output_document_dir_rel_path: SDocRelativePath,
-    ):
+    ) -> None:
         """
         Example explaining meta data stored by this class:
 
@@ -51,7 +51,7 @@ class DocumentMeta:
         ), output_document_dir_rel_path
 
         self.level: int = level
-        self.file_tree_mount_folder = file_tree_mount_folder
+        self.file_tree_mount_folder: Optional[str] = file_tree_mount_folder
         self.document_filename: str = document_filename
         self.document_filename_base = document_filename_base
         self.input_doc_full_path = input_doc_full_path
@@ -196,4 +196,10 @@ class DocumentMeta:
         level: int = self.level if not other_doc_level else other_doc_level
         if level == 0:
             return ""
-        return ("../" * level)[:-1]  # mypy: disable=no-any-return
+
+        walk_levels_up = (
+            level if self.file_tree_mount_folder is not None else (level - 1)
+        )
+
+        # [:-1] strips the last slash.
+        return ("../" * walk_levels_up)[:-1]

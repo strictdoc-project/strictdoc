@@ -25,5 +25,5 @@ def test_get_document():
             )
         )
     )
-    response = client.get("/01_hello_world/sample.html")
+    response = client.get("/sample.html")
     assert response.status_code == 200

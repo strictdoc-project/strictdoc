@@ -129,11 +129,11 @@ class DocumentFinder:
             )
             output_document_dir_rel_path: SDocRelativePath = SDocRelativePath(
                 os.path.join(
-                    file_tree_mount_folder,
+                    "",
                     doc_relative_path_folder.relative_path,
                 )
                 if len(doc_relative_path_folder.relative_path) > 0
-                else file_tree_mount_folder
+                else ""
             )
 
             document_filename = doc_file.file_name
@@ -145,12 +145,12 @@ class DocumentFinder:
 
             input_doc_assets_dir_rel_path: SDocRelativePath = SDocRelativePath(
                 os.path.join(
-                    file_tree_mount_folder,
+                    "",
                     doc_relative_path_folder.relative_path,
                     "_assets",
                 )
                 if doc_relative_path_folder.length() > 0
-                else "/".join((file_tree_mount_folder, "_assets"))
+                else "_assets"
             )
 
             document_meta = DocumentMeta(

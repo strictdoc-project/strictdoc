@@ -196,4 +196,5 @@ class DocumentMeta:
         level: int = self.level if not other_doc_level else other_doc_level
         if level == 0:
             return ""
-        return ("../" * level)[:-1]  # mypy: disable=no-any-return
+
+        return ("../" * (level - 1))[:-1]

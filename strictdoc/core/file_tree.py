@@ -119,7 +119,7 @@ class FileTree:
         return FileTree(root_folder_or_file=single_file)
 
     def iterate(self) -> Iterator[Tuple[Union[Folder, File], File, str]]:
-        file_tree_mount_folder = self.root_folder_or_file.mount_folder()
+        file_tree_mount_folder = "" # self.root_folder_or_file.mount_folder()
 
         task_list = [self.root_folder_or_file]
         while len(task_list) > 0:

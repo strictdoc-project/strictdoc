@@ -20,7 +20,9 @@ build:
     python: "3.10"
   commands:
     - pip install --upgrade strictdoc
-    - strictdoc export . --output $READTHEDOCS_OUTPUT/
+    - ls -l
+    - echo $READTHEDOCS_VERSION
+    - strictdoc export ./ --output $READTHEDOCS_OUTPUT/
     # This is what Read the Docs does by default to generate Sphinx.
     # Some modifications were made because the paths were not resolved for some reason.
     - python -m virtualenv $READTHEDOCS_VIRTUALENV_PATH

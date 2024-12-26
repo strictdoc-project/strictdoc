@@ -166,6 +166,16 @@ def main() -> None:
     if getattr(sys, "frozen", False):
         multiprocessing.freeze_support()
 
+    # This is crucial for a good performance on macOS. Linux uses 'fork' by default.
+    # Changed in version 3.8: On macOS, the spawn start method is now the default.
+    # The fork start method should be considered unsafe as it can lead to crashes
+    # of the subprocess as macOS system libraries may start threads. See bpo-33725.
+    # https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods
+    # 2024-12-26: StrictDoc has been working with 'fork' just fine, so keep doing it until
+    #             anything serious appears against using it.
+    if sys.platform != "win32":
+        multiprocessing.set_start_method("fork", force=True)
+
     # How to make python 3 print() utf8
     # https://stackoverflow.com/a/3597849/598057
     # sys.stdout.reconfigure(encoding='utf-8') for Python 3.7

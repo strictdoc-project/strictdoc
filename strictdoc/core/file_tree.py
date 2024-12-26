@@ -188,6 +188,15 @@ class FileFinder:
                 dirs[:] = []
                 continue
 
+            current_root_relative_path = os.path.relpath(
+                current_root_path, start=root_path
+            )
+            current_root_relative_path = (
+                (current_root_relative_path + "/")
+                if current_root_relative_path != "."
+                else ""
+            )
+
             dirs[:] = [
                 d
                 for d in dirs
@@ -199,16 +208,17 @@ class FileFinder:
             ]
             dirs.sort(key=alphanumeric_sort)
 
-            rel_path = os.path.relpath(current_root_path, start=root_path)
-            rel_path = rel_path if rel_path != "." else ""
-
             current_root_path_level: int = (
                 current_root_path.count(os.sep) - root_level
             )
 
             current_tree = folder_map.setdefault(
                 current_root_path,
-                Folder(current_root_path, rel_path, current_root_path_level),
+                Folder(
+                    current_root_path,
+                    current_root_relative_path,
+                    current_root_path_level,
+                ),
             )
 
             for file in files:
@@ -218,7 +228,7 @@ class FileFinder:
                     continue
 
                 full_file_path = os.path.join(current_root_path, file)
-                rel_file_path = os.path.join(rel_path, file)
+                rel_file_path = os.path.join(current_root_relative_path, file)
 
                 if path_filter_excludes.match(rel_file_path):
                     continue
@@ -296,16 +306,17 @@ class PathFinder:
                 current_root_path, start=root_path
             )
             current_root_relative_path = (
-                current_root_relative_path
+                current_root_relative_path + "/"
                 if current_root_relative_path != "."
                 else ""
             )
 
-            if path_filter_excludes.match(current_root_relative_path):
-                continue
-
-            if not path_filter_includes.match(current_root_relative_path):
-                continue
+            if len(current_root_relative_path) > 0:
+                if path_filter_excludes.match(
+                    current_root_relative_path
+                ) or not path_filter_includes.match(current_root_relative_path):
+                    dirs[:] = []
+                    continue
 
             dirs[:] = [
                 d

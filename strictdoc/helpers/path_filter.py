@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def"
 import re
 from typing import List
 
@@ -17,7 +16,7 @@ REGEX_MASK_VALIDATION = rf"[^(\\|\/)]{REGEX_DOUBLE_WILDCARD}"
 MOST_COMMON_CHARACTERS = ("[", "]", "(", ")", "{", "}", "?", "+", "!")
 
 
-def validate_mask(mask: str):
+def validate_mask(mask: str) -> None:
     if mask == "":
         raise SyntaxError("Path mask must not be empty.")
 
@@ -53,12 +52,18 @@ def compile_regex_mask(path_mask: str) -> str:
 
 
 class PathFilter:
-    def __init__(self, filtered_paths: List[str], positive_or_negative: bool):
+    def __init__(
+        self, filtered_paths: List[str], positive_or_negative: bool
+    ) -> None:
         self.filtered_paths: List[str] = filtered_paths
-        self.compiled_regex_masks: List[str] = []
+        compiled_regex_masks: List[str] = []
         for filtered_path in filtered_paths:
             validate_mask(filtered_path)
-            self.compiled_regex_masks.append(compile_regex_mask(filtered_path))
+            compiled_regex_masks.append(compile_regex_mask(filtered_path))
+
+        self.master_regex: re.Pattern[str] = re.compile(
+            "(" + "|".join(compiled_regex_masks) + ")"
+        )
         self.positive_or_negative: bool = positive_or_negative
 
     def match(self, found_path: str) -> bool:
@@ -69,9 +74,8 @@ class PathFilter:
             return self.positive_or_negative
 
         portable_found_path = found_path.replace("\\", "/")
-        for regex_mask in self.compiled_regex_masks:
-            regex_match = re.match(regex_mask, portable_found_path)
-            if regex_match is not None:
-                return True
+        regex_match = self.master_regex.match(portable_found_path)
+        if regex_match is not None:
+            return True
 
         return False

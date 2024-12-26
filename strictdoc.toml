@@ -37,13 +37,13 @@ exclude_doc_paths = [
 ]
 
 include_source_paths = [
-  "pyproject.toml",
-  "tasks.py",
-  "strictdoc/**.js",
   "strictdoc/**.py",
+  "strictdoc/**.js",
   "strictdoc/**.jinja.rst",
   "tests/integration/**itest",
   "tests/unit/**.py",
+  "tasks.py",
+  "pyproject.toml",
 ]
 
 exclude_source_paths = [

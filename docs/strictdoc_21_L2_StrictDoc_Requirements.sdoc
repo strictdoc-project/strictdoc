@@ -1240,7 +1240,7 @@ RELATIONS:
   VALUE: strictdoc/backend/excel/export/excel_generator.py
 - TYPE: File
   FORMAT: Sourcecode
-  VALUE: tests/integration/backend/excel/export/20_excel_export_multiple_docs/test.itest
+  VALUE: tests/integration/features/excel/export/20_excel_export_multiple_docs/test.itest
 
 [REQUIREMENT]
 MID: 5aa75848972249d5bec8a40812b99d86
@@ -1256,7 +1256,7 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/backend/excel/export/excel_generator.py
 - TYPE: File
-  VALUE: tests/integration/backend/excel/export/03_custom_fields_to_export/test.itest
+  VALUE: tests/integration/features/excel/export/03_custom_fields_to_export/test.itest
 
 [/SECTION]
 

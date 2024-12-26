@@ -80,9 +80,21 @@ class HTMLGenerator:
             traceability_index=traceability_index,
         )
 
-        parallelizer.run_parallel(
-            traceability_index.document_tree.document_list, export_binding
-        )
+        # By default, do not export included documents. Only, if the option to
+        # include is provided.
+        documents_to_export: List[SDocDocument] = []
+
+        if self.project_config.export_included_documents:
+            documents_to_export[:] = (
+                traceability_index.document_tree.document_list
+            )
+        else:
+            for document_ in traceability_index.document_tree.document_list:
+                if document_.document_is_included():
+                    continue
+                documents_to_export.append(document_)
+
+        parallelizer.run_parallel(documents_to_export, export_binding)
 
         # Export document tree.
         # FIXME: It is important that this export is **after** the parallelized

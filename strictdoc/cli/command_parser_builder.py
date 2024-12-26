@@ -201,8 +201,7 @@ class CommandParserBuilder:
             action="store_true",
             help=(
                 "By default the included documents are not exported. "
-                "This option makes both including and included documents to be exported. "
-                "NOTE: The option is currently only valid for JSON export."
+                "This option makes both including and included documents to be exported."
             ),
         )
         command_parser_export.add_argument(

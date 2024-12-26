@@ -45,6 +45,11 @@ class HTML2PDFGenerator:
         paths_to_print: List[Tuple[str, str]] = []
 
         for document_ in traceability_index.document_tree.document_list:
+            # Skip generating the included documents, unless the option is provided.
+            if not project_config.export_included_documents:
+                if document_.document_is_included():
+                    continue
+
             root_path = document_.meta.get_root_path_prefix()
 
             link_renderer = LinkRenderer(

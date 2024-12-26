@@ -3,7 +3,7 @@ REQUIRES: TEST_HTML2PDF
 # FIXME: Getting timeouts on Windows CI all the time. Needs to be checked or tested by users.
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
-RUN: %strictdoc export %S --formats=html2pdf --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --formats=html2pdf --included-documents --output-dir Output | filecheck %s --dump-input=fail
 CHECK: HTML2PDF: JS logs from the print session
 
 RUN: %check_exists --file %S/Output/html2pdf/html/04_composable_document_with_assets/input.html

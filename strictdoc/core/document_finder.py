@@ -42,12 +42,14 @@ class DocumentFinder:
                 print(err)  # noqa: T201
                 sys.exit(1)
 
-        file_tree, asset_manager = DocumentFinder._build_file_tree(
-            project_config=project_config
-        )
-        document_tree = DocumentFinder._build_document_tree(
-            file_tree, project_config, parallelizer
-        )
+        with measure_performance("Completed finding SDoc and assets"):
+            file_tree, asset_manager = DocumentFinder._build_file_tree(
+                project_config=project_config
+            )
+        with measure_performance("Completed building document tree"):
+            document_tree = DocumentFinder._build_document_tree(
+                file_tree, project_config, parallelizer
+            )
 
         return document_tree, asset_manager
 
@@ -106,9 +108,10 @@ class DocumentFinder:
             project_config=project_config,
         )
 
-        found_documents = parallelizer.run_parallel(
-            file_tree_list, process_document_binding
-        )
+        with measure_performance("Completed parsing all documents"):
+            found_documents = parallelizer.run_parallel(
+                file_tree_list, process_document_binding
+            )
 
         doc_file: File
         for doc_file, file_tree_mount_folder, document in found_documents:
@@ -226,12 +229,13 @@ class DocumentFinder:
             path_to_doc_root_base = os.path.dirname(path_to_doc_root)
 
             # Finding assets.
-            tree_asset_dirs: List[str] = PathFinder.find_directories(
-                path_to_doc_root,
-                "_assets",
-                include_paths=project_config.include_doc_paths,
-                exclude_paths=project_config.exclude_doc_paths,
-            )
+            with measure_performance("Find asset directories"):
+                tree_asset_dirs: List[str] = PathFinder.find_directories(
+                    path_to_doc_root,
+                    "_assets",
+                    include_paths=project_config.include_doc_paths,
+                    exclude_paths=project_config.exclude_doc_paths,
+                )
 
             for asset_dir_ in tree_asset_dirs:
                 asset_manager.add_asset_dir(
@@ -243,13 +247,14 @@ class DocumentFinder:
 
             # Finding SDoc files.
             assert isinstance(project_config.output_dir, str)
-            file_tree_structure = FileFinder.find_files_with_extensions(
-                root_path=path_to_doc_root,
-                ignored_dirs=[project_config.output_dir],
-                extensions=[".sdoc", ".sgra"],
-                include_paths=project_config.include_doc_paths,
-                exclude_paths=project_config.exclude_doc_paths,
-            )
+            with measure_performance("Find SDoc files"):
+                file_tree_structure = FileFinder.find_files_with_extensions(
+                    root_path=path_to_doc_root,
+                    ignored_dirs=[project_config.output_dir],
+                    extensions=[".sdoc", ".sgra"],
+                    include_paths=project_config.include_doc_paths,
+                    exclude_paths=project_config.exclude_doc_paths,
+                )
             root_trees.append(file_tree_structure)
 
         return root_trees, asset_manager

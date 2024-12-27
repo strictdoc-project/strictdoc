@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,operator"
+from pathlib import Path
 from typing import List, Tuple, Union
 
 from markupsafe import Markup, escape
@@ -42,6 +43,28 @@ from strictdoc.helpers.cast import assert_cast
 
 
 class SourceFileViewHTMLGenerator:
+    @staticmethod
+    def export_to_file(
+        *,
+        project_config: ProjectConfig,
+        source_file: SourceFile,
+        traceability_index: TraceabilityIndex,
+        html_templates: HTMLTemplates,
+    ) -> None:
+        document_content = SourceFileViewHTMLGenerator.export(
+            project_config=project_config,
+            source_file=source_file,
+            traceability_index=traceability_index,
+            html_templates=html_templates,
+        )
+        Path(source_file.output_dir_full_path).mkdir(
+            parents=True, exist_ok=True
+        )
+        with open(
+            source_file.output_file_full_path, "w", encoding="utf-8"
+        ) as file:
+            file.write(document_content)
+
     @staticmethod
     def export(
         *,

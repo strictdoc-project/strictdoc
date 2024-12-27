@@ -2,6 +2,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
+ALL_EDGES = ".all"
+
 
 class AbstractBucket(ABC):
     @abstractmethod
@@ -12,9 +14,6 @@ class AbstractBucket(ABC):
     def get_count(self) -> Any:
         raise NotImplementedError
 
-    def get_reverse_count(self) -> Any:
-        raise NotImplementedError
-
     @abstractmethod
     def get_link_value(self, *, lhs_node: Any) -> Any:
         raise NotImplementedError
@@ -23,13 +22,7 @@ class AbstractBucket(ABC):
     def get_link_value_weak(self, *, lhs_node: Any) -> Optional[Any]:
         raise NotImplementedError
 
-    def get_link_values_weak(self, *, lhs_node: Any) -> Optional[Any]:
-        raise NotImplementedError
-
     def get_link_values(self, *, lhs_node: Any) -> Any:
-        raise NotImplementedError
-
-    def get_link_values_reverse_weak(self, *, rhs_node: Any) -> Optional[Any]:
         raise NotImplementedError
 
     def get_link_values_reverse(self, *, rhs_node: Any) -> Any:

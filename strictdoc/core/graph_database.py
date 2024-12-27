@@ -34,24 +34,10 @@ class GraphDatabase:
     def get_link_value(self, *, link_type: Hashable, lhs_node: Any) -> Any:
         return self._id_to_bucket[link_type].get_link_value(lhs_node=lhs_node)
 
-    def get_link_values_weak(
-        self, *, link_type: Hashable, lhs_node: Any
-    ) -> Optional[OrderedSet]:
-        return self._id_to_bucket[link_type].get_link_values_weak(
-            lhs_node=lhs_node
-        )
-
     def get_link_values(
         self, *, link_type: Hashable, lhs_node: Any
     ) -> OrderedSet:
         return self._id_to_bucket[link_type].get_link_values(lhs_node=lhs_node)
-
-    def get_link_values_reverse_weak(
-        self, *, link_type: Hashable, rhs_node: Any
-    ) -> Optional[OrderedSet]:
-        return self._id_to_bucket[link_type].get_link_values_reverse_weak(
-            rhs_node=rhs_node
-        )
 
     def get_link_values_reverse(
         self, *, link_type: Hashable, rhs_node: Any

@@ -42,13 +42,11 @@ class SDocNodeConnections:
     def __init__(
         self,
         requirement: SDocNode,
-        document: SDocDocument,
         parents: List[Tuple[SDocNode, Optional[str]]],
         children: List[Tuple[SDocNode, Optional[str]]],
     ):
         assert isinstance(requirement, SDocNode), requirement
         self.requirement: SDocNode = requirement
-        self.document: SDocDocument = document
         self.parents: List[Tuple[SDocNode, Optional[str]]] = parents
         self.children: List[Tuple[SDocNode, Optional[str]]] = children
 
@@ -397,21 +395,21 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def get_incoming_links(
         self, node: Union[SDocDocument, SDocNode, SDocSection, Anchor]
     ) -> Optional[List[InlineLink]]:
-        incoming_links = self.graph_database.get_link_values_weak(
+        incoming_links = self.graph_database.get_link_values(
             link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
             lhs_node=node.reserved_mid,
         )
-        if incoming_links is None:
+        if incoming_links is None or len(incoming_links) == 0:
             return None
         # FIXME: Should the graph database return OrderedSet or a copied list()?
         return list(incoming_links)
 
     def get_document_children(self, document) -> Set[SDocDocument]:
-        child_documents_mids = self.graph_database.get_link_values_weak(
+        child_documents_mids = self.graph_database.get_link_values(
             link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
             lhs_node=document.reserved_mid,
         )
-        if child_documents_mids is None:
+        if child_documents_mids is None or len(child_documents_mids) == 0:
             return set()
         return set(
             map(
@@ -424,11 +422,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
     def get_document_parents(self, document) -> Set[SDocDocument]:
-        parent_documents_mids = self.graph_database.get_link_values_weak(
+        parent_documents_mids = self.graph_database.get_link_values(
             link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
             lhs_node=document.reserved_mid,
         )
-        if parent_documents_mids is None:
+        if parent_documents_mids is None or len(parent_documents_mids) == 0:
             return set()
         return set(
             map(
@@ -534,7 +532,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 lhs_node=requirement.reserved_uid,
                 rhs_node=SDocNodeConnections(
                     requirement=requirement,
-                    document=requirement.document,
                     parents=[],
                     children=[],
                 ),
@@ -555,7 +552,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                     lhs_node=requirement.reserved_uid,
                     rhs_node=SDocNodeConnections(
                         requirement=requirement,
-                        document=requirement.document,
                         parents=[],
                         children=[],
                     ),
@@ -1040,7 +1036,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 link_type=GraphLinkType.UID_TO_NODE,
                 lhs_node=to_be_removed_anchor_uid_,
             )
-            incoming_links = self.graph_database.get_link_values_weak(
+            incoming_links = self.graph_database.get_link_values(
                 link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
                 lhs_node=to_be_removed_anchor.reserved_mid,
             )

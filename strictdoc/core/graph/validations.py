@@ -32,12 +32,12 @@ class RemoveNodeValidation:
     def validate_anchor(database: GraphDatabase, anchor: Anchor):
         assert isinstance(anchor, Anchor)
 
-        existing_links = database.get_link_values_weak(
+        existing_links = database.get_link_values(
             link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
             lhs_node=anchor.reserved_mid,
         )
 
-        if existing_links is not None:
+        if existing_links is not None and len(existing_links) > 0:
             raise ConstraintViolation(
                 f"Cannot delete anchor {anchor} because it has incoming links: "
                 f"{anchor.value} -> {existing_links}"

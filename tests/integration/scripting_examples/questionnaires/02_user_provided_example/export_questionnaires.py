@@ -14,6 +14,7 @@ from strictdoc.cli.cli_arg_parser import (
     create_sdoc_args_parser,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.core.traceability_index import GraphLinkType, TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
@@ -102,9 +103,11 @@ class ExportQuestionnaires:
 
     def get_parent(self, node) -> SDocNode:
         parent: SDocNode
-        parent = self.traceability_index.graph_database.get_link_value(
-            link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-            lhs_node=node.get_field_by_name("UID").get_text_value()).parents[0][0]
+        parent = self.traceability_index.graph_database.get_link_values(
+            link_type=GraphLinkType.NODE_TO_PARENT_NODES,
+            lhs_node=node,
+            edge=ALL_EDGES
+        )[0]
         return parent
 
     def find_doc(self, name):

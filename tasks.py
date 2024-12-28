@@ -92,7 +92,7 @@ def list_tasks(context):
 def clean(context):
     # https://unix.stackexchange.com/a/689930/77389
     clean_command = """
-        rm -rfv output/ docs/sphinx/build/
+        rm -rf output/ docs/sphinx/build/
     """
     run_invoke(context, clean_command)
 

@@ -17,7 +17,10 @@ class OneToOneDictionary(AbstractBucket):
     def get_count(self) -> Any:
         return len(self._dict)
 
-    def get_link_value(self, *, lhs_node: Any) -> Any:
+    def get_link_value(
+        self, *, lhs_node: Any, edge: Optional[str] = None
+    ) -> Any:
+        assert edge is None
         assert isinstance(lhs_node, self._lhs_type)
         return self._dict[lhs_node]
 
@@ -25,7 +28,10 @@ class OneToOneDictionary(AbstractBucket):
         assert isinstance(lhs_node, self._lhs_type)
         return self._dict.get(lhs_node, None)
 
-    def create_link(self, *, lhs_node: Any, rhs_node: Any):
+    def create_link(
+        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
+    ):
+        assert edge is None
         assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
         assert isinstance(rhs_node, self._rhs_type), (rhs_node, self._rhs_type)
         assert (
@@ -39,11 +45,9 @@ class OneToOneDictionary(AbstractBucket):
         self._dict[lhs_node] = rhs_node
 
     def delete_link(
-        self,
-        *,
-        lhs_node: Any,
-        rhs_node: Any,
+        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
     ):
+        assert edge is None
         assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
         assert isinstance(rhs_node, self._rhs_type), (rhs_node, self._rhs_type)
         assert lhs_node in self._dict

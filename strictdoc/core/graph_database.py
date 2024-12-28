@@ -31,13 +31,26 @@ class GraphDatabase:
             lhs_node=lhs_node
         )
 
-    def get_link_value(self, *, link_type: Hashable, lhs_node: Any) -> Any:
-        return self._id_to_bucket[link_type].get_link_value(lhs_node=lhs_node)
+    def get_link_value(
+        self, *, link_type: Hashable, lhs_node: Any, edge: Optional[str] = None
+    ) -> Any:
+        return self._id_to_bucket[link_type].get_link_value(
+            lhs_node=lhs_node, edge=edge
+        )
 
     def get_link_values(
-        self, *, link_type: Hashable, lhs_node: Any
+        self, *, link_type: Hashable, lhs_node: Any, edge: Optional[str] = None
     ) -> OrderedSet:
-        return self._id_to_bucket[link_type].get_link_values(lhs_node=lhs_node)
+        return self._id_to_bucket[link_type].get_link_values(
+            lhs_node=lhs_node, edge=edge
+        )
+
+    def get_link_values_with_edges(
+        self, *, link_type: Hashable, lhs_node: Any, edge: Optional[str] = None
+    ) -> List[Tuple[Any, Optional[str]]]:
+        return self._id_to_bucket[link_type].get_link_values_with_edges(
+            lhs_node=lhs_node, edge=edge
+        )
 
     def get_link_values_reverse(
         self, *, link_type: Hashable, rhs_node: Any
@@ -46,11 +59,18 @@ class GraphDatabase:
             rhs_node=rhs_node
         )
 
-    def create_link(self, *, link_type: Hashable, lhs_node: Any, rhs_node: Any):
+    def create_link(
+        self,
+        *,
+        link_type: Hashable,
+        lhs_node: Any,
+        rhs_node: Any,
+        edge: Optional[str] = None,
+    ):
         assert lhs_node is not None, lhs_node
         assert rhs_node is not None, rhs_node
         self._id_to_bucket[link_type].create_link(
-            lhs_node=lhs_node, rhs_node=rhs_node
+            lhs_node=lhs_node, rhs_node=rhs_node, edge=edge
         )
 
     def create_link_weak(
@@ -68,9 +88,10 @@ class GraphDatabase:
         link_type: Hashable,
         lhs_node: Any,
         rhs_node: Any,
+        edge: Optional[str] = None,
     ):
         self._id_to_bucket[link_type].delete_link(
-            lhs_node=lhs_node, rhs_node=rhs_node
+            lhs_node=lhs_node, rhs_node=rhs_node, edge=edge
         )
 
     def delete_link_weak(

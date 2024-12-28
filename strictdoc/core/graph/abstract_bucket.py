@@ -1,6 +1,6 @@
 # mypy: disable-error-code="no-untyped-def"
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any, List, Optional, Tuple
 
 ALL_EDGES = ".all"
 
@@ -15,21 +15,32 @@ class AbstractBucket(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_link_value(self, *, lhs_node: Any) -> Any:
+    def get_link_value(
+        self, *, lhs_node: Any, edge: Optional[str] = None
+    ) -> Any:
         raise NotImplementedError
 
     @abstractmethod
     def get_link_value_weak(self, *, lhs_node: Any) -> Optional[Any]:
         raise NotImplementedError
 
-    def get_link_values(self, *, lhs_node: Any) -> Any:
+    def get_link_values(
+        self, *, lhs_node: Any, edge: Optional[str] = None
+    ) -> Any:
+        raise NotImplementedError
+
+    def get_link_values_with_edges(
+        self, *, lhs_node: Any, edge: Optional[str] = None
+    ) -> List[Tuple[Any, Optional[str]]]:
         raise NotImplementedError
 
     def get_link_values_reverse(self, *, rhs_node: Any) -> Any:
         raise NotImplementedError
 
     @abstractmethod
-    def create_link(self, *, lhs_node: Any, rhs_node: Any):
+    def create_link(
+        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
+    ):
         raise NotImplementedError
 
     @abstractmethod
@@ -38,10 +49,7 @@ class AbstractBucket(ABC):
 
     @abstractmethod
     def delete_link(
-        self,
-        *,
-        lhs_node: Any,
-        rhs_node: Any,
+        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
     ):
         raise NotImplementedError
 

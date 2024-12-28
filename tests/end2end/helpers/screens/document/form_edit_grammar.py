@@ -1,15 +1,15 @@
 # pylint: disable=invalid-name
 
 from selenium.webdriver.common.by import By
-from seleniumbase import BaseCase
 
 from strictdoc.helpers.mid import MID
+from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.form.form import Form
 
 
 class Form_EditGrammar(Form):  # pylint: disable=invalid-name
-    def __init__(self, test_case: BaseCase) -> None:
-        assert isinstance(test_case, BaseCase)
+    def __init__(self, test_case: E2ECase) -> None:
+        assert isinstance(test_case, E2ECase), test_case
         super().__init__(test_case)
 
     def assert_on_grammar(self) -> None:
@@ -106,6 +106,9 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
 
     def do_move_grammar_field_up(self, mid: MID) -> None:
         assert isinstance(mid, MID)
+        # Without this, the driver does not scroll by itself, even though the
+        # click_xpath calls into scroll=True.
+        self.do_scroll_to_grammar_field(mid)
         self.test_case.click_xpath(
             f"(//*[@mid='{mid}' "
             "and "
@@ -114,10 +117,19 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
 
     def do_move_grammar_field_down(self, mid: MID) -> None:
         assert isinstance(mid, MID)
+        # Without this, the driver does not scroll by itself, even though the
+        # click_xpath calls into scroll=True.
+        self.do_scroll_to_grammar_field(mid)
         self.test_case.click_xpath(
             f"(//*[@mid='{mid}' "
             "and "
             "@data-testid='form-move-down-field-action-custom-field'])"
+        )
+
+    def do_scroll_to_grammar_field(self, mid: MID) -> None:
+        assert isinstance(mid, MID)
+        self.test_case.sdoc_do_scroll_to_element_by_xpath(
+            f"(//*[@mid='{mid}' and @data-testid='form-move-up-field-action-custom-field'])",
         )
 
     def do_delete_grammar_field(self, mid: MID) -> None:

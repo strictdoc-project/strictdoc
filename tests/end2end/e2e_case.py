@@ -1,6 +1,7 @@
 from time import sleep
 
 from selenium.common import WebDriverException
+from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 
@@ -65,3 +66,14 @@ class E2ECase(BaseCase):
             "const text = await navigator.clipboard.readText(); return text;"
         )
         return pasted_text
+
+    def sdoc_do_scroll_to_element_by_xpath(self, xpath: str) -> None:
+        assert isinstance(xpath, str), xpath
+        element = self.wait_for_element_visible(
+            xpath,
+            by=By.XPATH,
+        )
+        self.execute_script(
+            "arguments[0].scrollIntoView({behavior: 'instant', block: 'center'});",
+            element,
+        )

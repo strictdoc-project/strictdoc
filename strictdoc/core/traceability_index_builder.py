@@ -483,7 +483,6 @@ class TraceabilityIndexBuilder:
                             lhs_node=node.reserved_uid,
                             rhs_node=SDocNodeConnections(
                                 requirement=node,
-                                document=document,
                                 parents=[],
                                 children=[],
                             ),
@@ -619,8 +618,8 @@ class TraceabilityIndexBuilder:
                             (requirement, parent_reference.role)
                         )
                         # Set document dependencies.
-                        parent_document = (
-                            parent_requirement_connections.document
+                        parent_document: SDocDocument = assert_cast(
+                            parent_requirement.get_document(), SDocDocument
                         )
                         if document != parent_document:
                             graph_database.create_link_weak(

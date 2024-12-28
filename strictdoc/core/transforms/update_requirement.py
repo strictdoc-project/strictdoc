@@ -21,7 +21,6 @@ from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
     GraphLinkType,
-    SDocNodeConnections,
     TraceabilityIndex,
 )
 from strictdoc.core.transforms.constants import NodeCreationOrder
@@ -347,20 +346,22 @@ class CreateOrUpdateNodeCommand:
             reference_id_to_remove,
             _,
         ) in action_object.reference_ids_to_remove:
-            removed_uid_parent_requirement = (
+            removed_uid_parent_requirement: SDocNode = (
                 traceability_index.graph_database.get_link_value(
-                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
+                    link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=reference_id_to_remove,
                 )
             )
             action_object.removed_uid_parent_documents_to_update.add(
-                removed_uid_parent_requirement.document
+                assert_cast(
+                    removed_uid_parent_requirement.get_document(), SDocDocument
+                )
             )
             # If a link was pointing towards a parent requirement in this
             # document, we will have to re-render it now.
             if removed_uid_parent_requirement.document == document:
                 action_object.this_document_requirements_to_update.add(
-                    removed_uid_parent_requirement.requirement
+                    removed_uid_parent_requirement
                 )
 
         for (
@@ -386,17 +387,14 @@ class CreateOrUpdateNodeCommand:
             if reference_field.field_type not in ("Parent", "Child"):
                 continue
             ref_uid = reference_field.field_value
-            requirement_connections: SDocNodeConnections = (
-                traceability_index.graph_database.get_link_value(
-                    link_type=GraphLinkType.UID_TO_REQUIREMENT_CONNECTIONS,
-                    lhs_node=ref_uid,
-                )
+
+            node: SDocNode = traceability_index.graph_database.get_link_value(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=ref_uid,
             )
 
-            if requirement_connections.document == document:
-                action_object.this_document_requirements_to_update.add(
-                    requirement_connections.requirement
-                )
+            if node.get_document() == document:
+                action_object.this_document_requirements_to_update.add(node)
 
         self._update_traceability_index_with_links_and_anchors(
             requirement, existing_node_fields

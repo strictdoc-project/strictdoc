@@ -2,15 +2,15 @@
 
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
-from seleniumbase import BaseCase
 
 from strictdoc.helpers.mid import MID
+from tests.end2end.e2e_case import E2ECase
 
 
 class Form:  # pylint: disable=invalid-name
-    def __init__(self, test_case: BaseCase) -> None:
-        assert isinstance(test_case, BaseCase)
-        self.test_case: BaseCase = test_case
+    def __init__(self, test_case: E2ECase) -> None:
+        assert isinstance(test_case, E2ECase)
+        self.test_case: E2ECase = test_case
 
     # Base
 

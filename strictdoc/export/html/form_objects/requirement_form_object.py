@@ -1,7 +1,7 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-redef,no-untyped-call,no-untyped-def,union-attr,type-arg"
 from collections import defaultdict
 from enum import Enum
-from typing import Dict, List, Optional, Set, Union
+from typing import Dict, Iterable, List, Optional, Set, Union
 
 from starlette.datastructures import FormData
 
@@ -27,9 +27,10 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     RequirementFieldType,
 )
+from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
-    SDocNodeConnections,
+    GraphLinkType,
     TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import SingleShotTreeCycleDetector
@@ -736,12 +737,15 @@ class RequirementFormObject(ErrorObject):
                     "parent requirement relations. For now, manually delete the "
                     "relations, rename the UID, recreate the relations.",
                 )
-            requirement_connections: SDocNodeConnections = (
-                traceability_index.get_node_connections(
+
+            existing_node = assert_cast(
+                traceability_index.get_node_by_uid_weak(
                     self.existing_requirement_uid
-                )
+                ),
+                SDocNode,
             )
-            if len(requirement_connections.children):
+
+            if traceability_index.has_children_requirements(existing_node):
                 self.add_error(
                     "UID",
                     "Not supported yet: "
@@ -800,15 +804,37 @@ class RequirementFormObject(ErrorObject):
                     # Check if the relation forms a cycle.
                     ref_uid = reference_field.field_value
 
-                    def parent_lambda(requirement_id_) -> List[str]:
-                        return traceability_index.get_node_connections(
-                            requirement_id_
-                        ).get_parent_uids()
+                    def parent_lambda(node_id):
+                        node = traceability_index.graph_database.get_link_value(
+                            link_type=GraphLinkType.UID_TO_NODE,
+                            lhs_node=node_id,
+                        )
+                        return list(
+                            map(
+                                lambda node_: node_.reserved_uid,
+                                traceability_index.graph_database.get_link_values(
+                                    link_type=GraphLinkType.NODE_TO_PARENT_NODES,
+                                    lhs_node=node,
+                                    edge=ALL_EDGES,
+                                ),
+                            )
+                        )
 
-                    def child_lambda(requirement_id_) -> List[str]:
-                        return traceability_index.get_node_connections(
-                            requirement_id_
-                        ).get_child_uids()
+                    def child_lambda(node_id) -> Iterable[str]:
+                        node = traceability_index.graph_database.get_link_value(
+                            link_type=GraphLinkType.UID_TO_NODE,
+                            lhs_node=node_id,
+                        )
+                        return list(
+                            map(
+                                lambda node_: node_.reserved_uid,
+                                traceability_index.graph_database.get_link_values(
+                                    link_type=GraphLinkType.NODE_TO_CHILD_NODES,
+                                    lhs_node=node,
+                                    edge=ALL_EDGES,
+                                ),
+                            )
+                        )
 
                     relations_lambda = (
                         parent_lambda

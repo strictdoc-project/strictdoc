@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES, AbstractBucket
 from strictdoc.helpers.ordered_set import OrderedSet
@@ -26,14 +26,16 @@ class ManyToManySet(AbstractBucket):
                     total_count += len(lhs_node_edge_links_)
         return total_count
 
-    def get_link_value(self, *, lhs_node: Any) -> Any:
+    def get_link_value(
+        self, *, lhs_node: Any, edge: Optional[str] = None
+    ) -> Any:
         raise NotImplementedError
 
     def get_link_value_weak(self, *, lhs_node: Any) -> Any:
         raise NotImplementedError
 
     def get_link_values(
-        self, *, lhs_node: Any, edge: Optional[str] = None
+        self, *, lhs_node: Any, edge: Optional[str] = ALL_EDGES
     ) -> OrderedSet[Any]:
         assert isinstance(lhs_node, self._lhs_type), lhs_node
         if edge == ALL_EDGES:
@@ -47,8 +49,19 @@ class ManyToManySet(AbstractBucket):
                 edge, OrderedSet()
             )
 
+    def get_link_values_with_edges(
+        self, *, lhs_node: Any, edge: Optional[str] = ALL_EDGES
+    ) -> List[Tuple[Any, Optional[str]]]:
+        assert isinstance(lhs_node, self._lhs_type), lhs_node
+        all_values: List[Tuple[Any, Optional[str]]] = []
+        for edge_, edge_links_ in self._links.setdefault(lhs_node, {}).items():
+            if edge in (ALL_EDGES, edge_):
+                for edge_link_ in edge_links_:
+                    all_values.append((edge_link_, edge_))
+        return all_values
+
     def get_link_values_reverse(
-        self, *, rhs_node: Any, edge: Optional[str] = None
+        self, *, rhs_node: Any, edge: Optional[str] = ALL_EDGES
     ) -> OrderedSet[Any]:
         assert isinstance(rhs_node, self._rhs_type), rhs_node
         if edge == ALL_EDGES:
@@ -115,7 +128,7 @@ class ManyToManySet(AbstractBucket):
         *,
         lhs_node: Any,
         rhs_node: Any,
-        edge: Optional[str] = None,
+        edge: Optional[str] = ALL_EDGES,
     ) -> None:
         assert isinstance(lhs_node, self._lhs_type), lhs_node
         assert isinstance(rhs_node, self._rhs_type), rhs_node
@@ -140,7 +153,7 @@ class ManyToManySet(AbstractBucket):
             rhs_node_links[edge].remove(lhs_node)
 
     def delete_link_weak(
-        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
+        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = ALL_EDGES
     ) -> None:
         assert isinstance(lhs_node, self._lhs_type), lhs_node
         assert isinstance(rhs_node, self._rhs_type), rhs_node

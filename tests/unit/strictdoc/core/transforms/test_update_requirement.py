@@ -38,7 +38,9 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
     )
     traceability_index.document_tree = document_tree
     assert traceability_index.get_parent_requirements(requirement1) == []
@@ -112,7 +114,9 @@ def test_02_single_document_add_second_parent_relation_with_role():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
     )
     traceability_index.document_tree = document_tree
     assert traceability_index.get_parent_requirements(requirement1) == []
@@ -191,7 +195,9 @@ def test_20_single_document_add_second_child_relation_with_role():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
     )
     traceability_index.document_tree = document_tree
     requirement1_parents = list(
@@ -278,7 +284,9 @@ def test_25_single_document_remove_child_relation():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
     )
     traceability_index.document_tree = document_tree
     requirement1_parents = list(
@@ -360,14 +368,12 @@ def test_26_two_documents_remove_child_relation():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree,
+            project_config=ProjectConfig.default_config(environment),
+        )
     )
     traceability_index.document_tree = document_tree
-
-    assert traceability_index.get_document_children(document_1) == set()
-    assert traceability_index.get_document_parents(document_2) == set()
-    assert traceability_index.get_document_parents(document_1) == {document_2}
-    assert traceability_index.get_document_children(document_2) == {document_1}
 
     requirement2_children = list(
         traceability_index.get_child_relations_with_roles(requirement2)
@@ -402,7 +408,3 @@ def test_26_two_documents_remove_child_relation():
         traceability_index.get_child_relations_with_roles(requirement2)
     )
     assert requirement2_children == []
-    assert traceability_index.get_document_children(document_1) == set()
-    assert traceability_index.get_document_children(document_2) == set()
-    assert traceability_index.get_document_parents(document_1) == set()
-    assert traceability_index.get_document_parents(document_2) == set()

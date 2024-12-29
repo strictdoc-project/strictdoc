@@ -54,7 +54,6 @@ class SDocDocument:
         self.fragments_from_files: List = []
 
         self.ng_level: int = 0
-        self.ng_needs_generation = False
         self.ng_has_requirements = False
 
         self.meta: Optional[DocumentMeta] = None

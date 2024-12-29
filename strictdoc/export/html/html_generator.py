@@ -43,6 +43,7 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
+from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.paths import SDocRelativePath
@@ -280,17 +281,19 @@ class HTMLGenerator:
 
     def export_single_document_with_performance(
         self,
-        document,
+        document: SDocDocument,
         traceability_index,
         specific_documents: Optional[Tuple[DocumentType]] = None,
     ):
         if specific_documents is None:
             specific_documents = DocumentType.all()
 
-        if (
-            not self.project_config.is_running_on_server
-            and not document.ng_needs_generation
-        ):
+        input_doc_full_path = document.meta.input_doc_full_path
+        output_doc_full_path = document.meta.output_document_full_path
+
+        if os.path.isfile(output_doc_full_path) and get_file_modification_time(
+            input_doc_full_path
+        ) < get_file_modification_time(output_doc_full_path):
             with measure_performance(f"Skip: {document.title}"):
                 return
         with measure_performance(f"Published: {document.title}"):

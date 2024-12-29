@@ -1,8 +1,8 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call,no-untyped-def,union-attr,type-arg"
+import datetime
 from copy import deepcopy
-from datetime import datetime
 from enum import IntEnum
-from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -18,6 +18,7 @@ from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.file_dependency_manager import FileDependencyManager
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.graph_database import GraphDatabase
@@ -28,6 +29,7 @@ from strictdoc.core.transforms.validation_error import (
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
+from strictdoc.helpers.file_modification_time import set_file_modification_time
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.paths import SDocRelativePath
@@ -40,8 +42,6 @@ class GraphLinkType(IntEnum):
     NODE_TO_PARENT_NODES = 3
     NODE_TO_CHILD_NODES = 4
     NODE_TO_INCOMING_LINKS = 5
-    DOCUMENT_TO_PARENT_DOCUMENTS = 6
-    DOCUMENT_TO_CHILD_DOCUMENTS = 7
     DOCUMENT_TO_TAGS = 8
 
 
@@ -51,6 +51,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         document_iterators: Dict[SDocDocument, DocumentCachingIterator],
         file_traceability_index: FileTraceabilityIndex,
         graph_database: GraphDatabase,
+        file_dependency_manager: FileDependencyManager,
     ):
         self._document_iterators: Dict[
             SDocDocument, DocumentCachingIterator
@@ -60,9 +61,14 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self.graph_database: GraphDatabase = graph_database
         self.document_tree: Optional[DocumentTree] = None
         self.asset_manager: Optional[AssetManager] = None
-        self.index_last_updated = datetime.today()
+        self.file_dependency_manager: FileDependencyManager = (
+            file_dependency_manager
+        )
+        self.index_last_updated = datetime.datetime.today()
         self.contains_included_documents = False
-        self.strictdoc_last_update = None
+        self.strictdoc_last_update: datetime.datetime = (
+            datetime.datetime.fromtimestamp(0)
+        )
 
     @property
     def document_iterators(self):
@@ -362,40 +368,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         # FIXME: Should the graph database return OrderedSet or a copied list()?
         return list(incoming_links)
 
-    def get_document_children(self, document) -> Set[SDocDocument]:
-        child_documents_mids = self.graph_database.get_link_values(
-            link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
-            lhs_node=document.reserved_mid,
-        )
-        if child_documents_mids is None or len(child_documents_mids) == 0:
-            return set()
-        return set(
-            map(
-                lambda document_mid_: self.graph_database.get_link_value(
-                    link_type=GraphLinkType.MID_TO_NODE,
-                    lhs_node=document_mid_,
-                ),
-                child_documents_mids,
-            )
-        )
-
-    def get_document_parents(self, document) -> Set[SDocDocument]:
-        parent_documents_mids = self.graph_database.get_link_values(
-            link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
-            lhs_node=document.reserved_mid,
-        )
-        if parent_documents_mids is None or len(parent_documents_mids) == 0:
-            return set()
-        return set(
-            map(
-                lambda document_mid_: self.graph_database.get_link_value(
-                    link_type=GraphLinkType.MID_TO_NODE,
-                    lhs_node=document_mid_,
-                ),
-                parent_documents_mids,
-            )
-        )
-
     def create_traceability_info(
         self,
         source_file: SourceFile,
@@ -469,7 +441,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         actions use this method to ensure a complete re-generation of all
         documents.
         """
-        self.index_last_updated = datetime.today()
+        self.index_last_updated = datetime.datetime.today()
 
     def create_requirement(self, requirement: SDocNode):
         assert isinstance(requirement, SDocNode), requirement
@@ -549,18 +521,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             edge=role,
         )
 
-        if document != parent_requirement_document:
-            self.graph_database.create_link_weak(
-                link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
-                lhs_node=document.reserved_mid,
-                rhs_node=parent_requirement_document.reserved_mid,
-            )
-            self.graph_database.create_link_weak(
-                link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
-                lhs_node=parent_requirement_document.reserved_mid,
-                rhs_node=document.reserved_mid,
-            )
-
         cycle_detector = TreeCycleDetector()
 
         def parent_cycle_traverse_(node_id):
@@ -584,9 +544,14 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
         # Mark document and parent document (if different) for re-generation.
-        document.ng_needs_generation = True
+        set_file_modification_time(
+            document.meta.input_doc_full_path, datetime.datetime.today()
+        )
         if parent_requirement_document != document:
-            parent_requirement_document.ng_needs_generation = True
+            set_file_modification_time(
+                parent_requirement_document.meta.input_doc_full_path,
+                datetime.datetime.today(),
+            )
 
     def update_requirement_child_uid(
         self, requirement: SDocNode, child_uid: str, role: Optional[str]
@@ -625,18 +590,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             edge=role,
         )
 
-        if document != child_requirement_document:
-            self.graph_database.create_link_weak(
-                link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
-                lhs_node=child_requirement_document.reserved_mid,
-                rhs_node=document.reserved_mid,
-            )
-            self.graph_database.create_link_weak(
-                link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
-                lhs_node=document.reserved_mid,
-                rhs_node=child_requirement_document.reserved_mid,
-            )
-
         cycle_detector = TreeCycleDetector()
 
         def child_cycle_traverse_(node_id):
@@ -660,9 +613,14 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
         # Mark document and parent document (if different) for re-generation.
-        document.ng_needs_generation = True
+        set_file_modification_time(
+            document.meta.input_doc_full_path, datetime.datetime.today()
+        )
         if child_requirement_document != document:
-            child_requirement_document.ng_needs_generation = True
+            set_file_modification_time(
+                child_requirement_document.meta.input_doc_full_path,
+                datetime.datetime.today(),
+            )
 
     def update_with_anchor(self, anchor: Anchor):
         # By this time, we know that the validations have passed just before.
@@ -731,27 +689,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             for child_requirement_, _ in requirement_children:
                 if child_requirement_.document == other_document:
                     return
-
-        self.graph_database.delete_link_weak(
-            link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
-            lhs_node=document.reserved_mid,
-            rhs_node=other_document.reserved_mid,
-        )
-        self.graph_database.delete_link_weak(
-            link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
-            lhs_node=other_document.reserved_mid,
-            rhs_node=document.reserved_mid,
-        )
-        self.graph_database.delete_link_weak(
-            link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
-            lhs_node=document.reserved_mid,
-            rhs_node=other_document.reserved_mid,
-        )
-        self.graph_database.delete_link_weak(
-            link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
-            lhs_node=other_document.reserved_mid,
-            rhs_node=document.reserved_mid,
-        )
 
     def delete_document(self, document: SDocDocument) -> None:
         assert isinstance(document, SDocDocument), document
@@ -842,9 +779,14 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             )
 
         # Mark document and parent document (if different) for re-generation.
-        document.ng_needs_generation = True
+        set_file_modification_time(
+            document.meta.input_doc_full_path, datetime.datetime.today()
+        )
         if parent_requirement_document != document:
-            parent_requirement_document.ng_needs_generation = True
+            set_file_modification_time(
+                parent_requirement_document.meta.input_doc_full_path,
+                datetime.datetime.today(),
+            )
 
     def remove_requirement_child_uid(
         self, requirement: SDocNode, child_uid: str, role: Optional[str]
@@ -885,9 +827,14 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             )
 
         # Mark document and parent document (if different) for re-generation.
-        document.ng_needs_generation = True
+        set_file_modification_time(
+            document.meta.input_doc_full_path, datetime.datetime.today()
+        )
         if child_requirement_document != document:
-            child_requirement_document.ng_needs_generation = True
+            set_file_modification_time(
+                child_requirement_document.meta.input_doc_full_path,
+                datetime.datetime.today(),
+            )
 
     def remove_inline_link(self, inline_link: InlineLink) -> None:
         sections_with_incoming_links = (

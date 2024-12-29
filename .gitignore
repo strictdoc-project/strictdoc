@@ -21,6 +21,7 @@ output.zip
 
 ### StrictDoc's default export path
 output/**
+Output/**
 developer/**/output/**
 tests/unit_server/**/output/**
 

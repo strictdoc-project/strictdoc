@@ -1,5 +1,6 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-redef,no-untyped-call,no-untyped-def,union-attr"
 import copy
+import datetime
 import os
 import re
 from mimetypes import guess_type
@@ -117,7 +118,10 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html2pdf.pdf_print_driver import PDFPrintDriver
 from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.file_modification_time import (
+    get_file_modification_time,
+    set_file_modification_time,
+)
 from strictdoc.helpers.file_system import get_etag
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import NullParallelizer
@@ -1720,7 +1724,7 @@ def create_main_router(
             input_doc_assets_dir_rel_path=SDocRelativePath(
                 input_doc_assets_dir_rel_path
             ),
-            output_document_dir_full_path=None,
+            output_document_dir_full_path="NOT_RELEVANT",
             output_document_dir_rel_path=SDocRelativePath("FIXME"),
         )
 
@@ -2529,7 +2533,7 @@ def create_main_router(
                 input_doc_assets_dir_rel_path=SDocRelativePath(
                     input_doc_assets_dir_rel_path
                 ),
-                output_document_dir_full_path=None,
+                output_document_dir_full_path="NOT_RELEVANT",
                 output_document_dir_rel_path=SDocRelativePath("FIXME"),
             )
 
@@ -2878,7 +2882,11 @@ def create_main_router(
                     return HTMLResponse(
                         content=f"Not Found: {url_to_document}", status_code=404
                     )
-                document.ng_needs_generation = True
+
+                set_file_modification_time(
+                    document.meta.input_doc_full_path, datetime.datetime.today()
+                )
+
                 html_generator.export_single_document_with_performance(
                     document=document,
                     traceability_index=export_action.traceability_index,

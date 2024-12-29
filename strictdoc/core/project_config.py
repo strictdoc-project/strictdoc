@@ -19,6 +19,7 @@ from strictdoc.cli.cli_arg_parser import (
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.md5 import get_md5
 from strictdoc.helpers.path_filter import validate_mask
 
 
@@ -121,6 +122,13 @@ class ProjectConfig:
             # local to an itest folder.
             assert env_cache_dir == "Output/cache", env_cache_dir
             dir_for_sdoc_cache = env_cache_dir
+        elif dir_for_sdoc_cache == "$TMPDIR":
+            dir_for_sdoc_cache = os.path.join(
+                tempfile.gettempdir(),
+                "strictdoc_cache",
+                get_md5(os.getcwd()),
+            )
+
         self.dir_for_sdoc_cache: str = dir_for_sdoc_cache
 
         self.project_features: List[str] = project_features
@@ -308,11 +316,7 @@ class ProjectConfig:
         return self.environment.path_to_strictdoc
 
     def get_path_to_cache_dir(self) -> str:
-        return (
-            self.dir_for_sdoc_cache
-            if self.dir_for_sdoc_cache != "$TMPDIR"
-            else tempfile.gettempdir()
-        )
+        return self.dir_for_sdoc_cache
 
     def get_static_files_path(self) -> str:
         return self.environment.get_static_files_path()

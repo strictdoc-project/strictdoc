@@ -14,7 +14,7 @@ from strictdoc.helpers.cast import assert_cast
 
 class DocumentCachingIterator:
     def __init__(self, document: SDocDocument) -> None:
-        assert isinstance(document, SDocDocument)
+        assert isinstance(document, SDocDocument), document
 
         self.document: SDocDocument = document
 

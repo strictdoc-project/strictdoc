@@ -1,4 +1,5 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-redef,no-untyped-call,no-untyped-def,union-attr"
+import datetime
 import glob
 import os
 import sys
@@ -25,8 +26,8 @@ from strictdoc.backend.sdoc_source_code.caching_reader import (
 )
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.document_iterator import DocumentCachingIterator
-from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.file_dependency_manager import FileDependencyManager
 from strictdoc.core.finders.source_files_finder import (
     SourceFile,
     SourceFilesFinder,
@@ -50,7 +51,9 @@ from strictdoc.core.traceability_index import (
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
-from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.file_modification_time import (
+    get_file_modification_time,
+)
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
@@ -81,7 +84,7 @@ class TraceabilityIndexBuilder:
             else 0
         )
 
-        strictdoc_last_update = get_file_modification_time(
+        strictdoc_last_update: datetime.datetime = get_file_modification_time(
             latest_strictdoc_own_file
         )
         if (
@@ -103,7 +106,9 @@ class TraceabilityIndexBuilder:
         # - runtime configuration
         traceability_index: TraceabilityIndex = (
             TraceabilityIndexBuilder.create_from_document_tree(
-                document_tree, auto_uid_mode
+                document_tree,
+                project_config,
+                auto_uid_mode,
             )
         )
         traceability_index.document_tree = document_tree
@@ -113,51 +118,6 @@ class TraceabilityIndexBuilder:
         TraceabilityIndexBuilder._filter_nodes(
             project_config=project_config, traceability_index=traceability_index
         )
-
-        # Incremental re-generation of documents
-        document: SDocDocument
-        for document in traceability_index.document_tree.document_list:
-            # If a document file exists we want to check its modification path
-            # in order to skip its generation in case it has not changed since
-            # the last generation. We also check the Traceability Index for the
-            # document's dependencies to see if they must be regenerated as
-            # well.
-            document_meta_or_none: Optional[DocumentMeta] = document.meta
-            assert document_meta_or_none is not None
-            document_meta: DocumentMeta = document_meta_or_none
-            full_output_path = os.path.join(
-                project_config.get_strictdoc_root_path(),
-                document_meta.get_html_doc_path(),
-            )
-            if not os.path.isfile(full_output_path):
-                document.ng_needs_generation = True
-            else:
-                output_file_mtime = get_file_modification_time(full_output_path)
-                sdoc_mtime = get_file_modification_time(
-                    document_meta.input_doc_full_path
-                )
-                if not (
-                    sdoc_mtime < output_file_mtime
-                    and strictdoc_last_update < output_file_mtime
-                ):
-                    document.ng_needs_generation = True
-            if document.ng_needs_generation:
-                todo_list = [document]
-                finished = set()
-                while todo_list:
-                    document_ = todo_list.pop()
-                    if document_ in finished:
-                        continue
-                    document_.ng_needs_generation = True
-                    document_parents = traceability_index.get_document_parents(
-                        document_
-                    )
-                    document_children = (
-                        traceability_index.get_document_children(document_)
-                    )
-                    todo_list.extend(document_parents)
-                    todo_list.extend(document_children)
-                    finished.add(document_)
 
         # File traceability
         if not skip_source_files and project_config.is_feature_activated(
@@ -206,12 +166,24 @@ class TraceabilityIndexBuilder:
 
             traceability_index.document_tree.attach_source_tree(source_tree)
 
+        """
+        Resolve all modification dates to support the incremental generation of
+        all artifacts.
+        """
+
+        file_dependency_manager = traceability_index.file_dependency_manager
+
+        file_dependency_manager.resolve_modification_dates(
+            traceability_index.strictdoc_last_update
+        )
+
         return traceability_index
 
     @staticmethod
     @timing_decorator("Build traceability graph")
     def create_from_document_tree(
         document_tree: DocumentTree,
+        project_config: ProjectConfig,
         auto_uid_mode: bool = True,
     ) -> TraceabilityIndex:
         # FIXME: Too many things going on below. Would be great to simplify this
@@ -255,14 +227,6 @@ class TraceabilityIndexBuilder:
                     ManyToManySet(MID, InlineLink),
                 ),
                 (
-                    GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
-                    ManyToManySet(MID, MID),
-                ),
-                (
-                    GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
-                    ManyToManySet(MID, MID),
-                ),
-                (
                     GraphLinkType.DOCUMENT_TO_TAGS,
                     OneToOneDictionary(MID, dict),
                 ),
@@ -270,10 +234,17 @@ class TraceabilityIndexBuilder:
         )
         graph_database.remove_node_validation = RemoveNodeValidation()
 
+        file_dependency_manager: FileDependencyManager = (
+            FileDependencyManager.create_from_cache(
+                project_config=project_config
+            )
+        )
+
         traceability_index = TraceabilityIndex(
             d_01_document_iterators,
             file_traceability_index=d_07_file_traceability_index,
             graph_database=graph_database,
+            file_dependency_manager=file_dependency_manager,
         )
 
         # It seems to be impossible to accomplish everything in just one for
@@ -583,15 +554,18 @@ class TraceabilityIndexBuilder:
                             parent_requirement.get_document(), SDocDocument
                         )
                         if document != parent_document:
-                            graph_database.create_link_weak(
-                                link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
-                                lhs_node=requirement.document.reserved_mid,
-                                rhs_node=parent_document.reserved_mid,
+                            # This is where we help the incremental generation to
+                            # understand that the related documents must be
+                            # re-generated together.
+                            file_dependency_manager.add_dependency(
+                                document.meta.input_doc_full_path,
+                                document.meta.output_document_full_path,
+                                parent_document.meta.input_doc_full_path,
                             )
-                            graph_database.create_link_weak(
-                                link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
-                                lhs_node=parent_document.reserved_mid,
-                                rhs_node=requirement.document.reserved_mid,
+                            file_dependency_manager.add_dependency(
+                                parent_document.meta.input_doc_full_path,
+                                parent_document.meta.output_document_full_path,
+                                document.meta.input_doc_full_path,
                             )
                     elif reference.ref_type == ReferenceType.CHILD:
                         child_reference: ChildReqReference = assert_cast(
@@ -623,15 +597,18 @@ class TraceabilityIndexBuilder:
                         )
                         # Set document dependencies.
                         if document != child_requirement.document:
-                            graph_database.create_link_weak(
-                                link_type=GraphLinkType.DOCUMENT_TO_PARENT_DOCUMENTS,
-                                lhs_node=child_requirement.document.reserved_mid,
-                                rhs_node=document.reserved_mid,
+                            # This is where we help the incremental generation to
+                            # understand that the related documents must be
+                            # re-generated together.
+                            file_dependency_manager.add_dependency(
+                                document.meta.input_doc_full_path,
+                                document.meta.output_document_full_path,
+                                child_requirement.document.meta.input_doc_full_path,
                             )
-                            graph_database.create_link_weak(
-                                link_type=GraphLinkType.DOCUMENT_TO_CHILD_DOCUMENTS,
-                                lhs_node=document.reserved_mid,
-                                rhs_node=child_requirement.document.reserved_mid,
+                            file_dependency_manager.add_dependency(
+                                child_requirement.document.meta.input_doc_full_path,
+                                child_requirement.document.meta.output_document_full_path,
+                                document.meta.input_doc_full_path,
                             )
                     else:
                         raise AssertionError(reference.ref_type)
@@ -658,16 +635,18 @@ class TraceabilityIndexBuilder:
                 # @relation(SDOC-SRS-30, scope=range_start)
                 # Detect cycles
                 def parent_cycle_traverse_(node_id):
-                    node = traceability_index.graph_database.get_link_value(
-                        link_type=GraphLinkType.UID_TO_NODE,
-                        lhs_node=node_id,
+                    current_node = (
+                        traceability_index.graph_database.get_link_value(
+                            link_type=GraphLinkType.UID_TO_NODE,
+                            lhs_node=node_id,
+                        )
                     )
                     return list(
                         map(
                             lambda node_: node_.reserved_uid,
                             traceability_index.graph_database.get_link_values(
                                 link_type=GraphLinkType.NODE_TO_PARENT_NODES,
-                                lhs_node=node,
+                                lhs_node=current_node,
                             ),
                         )
                     )
@@ -678,16 +657,18 @@ class TraceabilityIndexBuilder:
                 )
 
                 def child_cycle_traverse_(node_id):
-                    node = traceability_index.graph_database.get_link_value(
-                        link_type=GraphLinkType.UID_TO_NODE,
-                        lhs_node=node_id,
+                    current_node = (
+                        traceability_index.graph_database.get_link_value(
+                            link_type=GraphLinkType.UID_TO_NODE,
+                            lhs_node=node_id,
+                        )
                     )
                     return list(
                         map(
                             lambda node_: node_.reserved_uid,
                             traceability_index.graph_database.get_link_values(
                                 link_type=GraphLinkType.NODE_TO_CHILD_NODES,
-                                lhs_node=node,
+                                lhs_node=current_node,
                             ),
                         )
                     )

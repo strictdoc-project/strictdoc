@@ -56,7 +56,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self._document_iterators: Dict[
             SDocDocument, DocumentCachingIterator
         ] = document_iterators
-        self._file_traceability_index = file_traceability_index
+        self._file_traceability_index: FileTraceabilityIndex = (
+            file_traceability_index
+        )
 
         self.graph_database: GraphDatabase = graph_database
         self.document_tree: Optional[DocumentTree] = None

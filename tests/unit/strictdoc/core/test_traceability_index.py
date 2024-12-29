@@ -21,7 +21,7 @@ def test_valid_01_one_document_with_1req():
         map_grammars_by_filenames={},
     )
     traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
-        document_tree
+        document_tree, project_config=document_builder.project_config
     )
     parent_requirements = traceability_index.get_parent_requirements(
         requirement
@@ -73,7 +73,7 @@ def test_valid_02_one_document_with_1req():
         map_grammars_by_filenames={},
     )
     traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
-        document_tree
+        document_tree, project_config=document_builder.project_config
     )
     requirement1_parents = traceability_index.get_parent_requirements(
         requirement1
@@ -113,7 +113,9 @@ def test__adding_parent_link__01__two_requirements_in_one_document():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
     )
     traceability_index.update_requirement_parent_uid(
         requirement2, "REQ-001", None
@@ -152,7 +154,9 @@ def test__adding_parent_link__02__two_requirements_in_two_documents():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder_1.project_config
+        )
     )
     traceability_index.update_requirement_parent_uid(
         requirement2, "REQ-001", None
@@ -169,18 +173,6 @@ def test__adding_parent_link__02__two_requirements_in_two_documents():
         requirement1
     )
     assert req1_child_requirements == [requirement2]
-
-    # Document 1 has Document 2 as a child document.
-    document1_child_documents = traceability_index.get_document_children(
-        document_1
-    )
-    assert next(iter(document1_child_documents)) == document_2
-
-    # Document 2 has Document 1 as a parent document.
-    document2_child_documents = traceability_index.get_document_parents(
-        document_2
-    )
-    assert next(iter(document2_child_documents)) == document_1
 
 
 def test__adding_parent_link__04__two_requirements_remove_parent_link():
@@ -206,7 +198,9 @@ def test__adding_parent_link__04__two_requirements_remove_parent_link():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
     )
     traceability_index.remove_requirement_parent_uid(
         requirement2, "REQ-001", role=None
@@ -238,7 +232,9 @@ def test_get_node_by_mid():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
     )
     assert (
         traceability_index.get_node_by_mid(MID(document_1.reserved_mid))

@@ -1,4 +1,5 @@
 # mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,type-arg"
+import datetime
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple, Union
@@ -36,6 +37,7 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.helpers.file_modification_time import set_file_modification_time
 from strictdoc.helpers.mid import MID
 
 
@@ -193,7 +195,9 @@ class CreateRequirementTransform:
 
         # Reset the 'needs generation' flag on all documents.
         for document_ in traceability_index.document_tree.document_list:
-            document_.ng_needs_generation = False
+            set_file_modification_time(
+                document_.meta.input_doc_full_path, datetime.datetime.today()
+            )
 
         # FIXME: It is better to have a general create_node method because
         #        we are dealing with arbitrary nodes, not only Requirement.

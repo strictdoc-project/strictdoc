@@ -99,14 +99,22 @@ def clean(context):
 
 @task
 def clean_itest_artifacts(context):
-    # https://unix.stackexchange.com/a/689930/77389
-    find_command = f"""
-        git clean -dfX tests/integration/ ;
-        rm -rf {STRICTDOC_TMP_DIR}
-    """
     # The command sometimes exits with 1 even if the files are deleted.
     # warn=True ensures that the execution continues.
-    run_invoke(context, find_command, warn=True)
+    run_invoke(
+        context,
+        """
+        git clean -dfX tests/integration/
+        """,
+        warn=True,
+    )
+
+    run_invoke(
+        context,
+        f"""
+        rm -rf {STRICTDOC_TMP_DIR}
+        """,
+    )
 
 
 @task(aliases=["s"])

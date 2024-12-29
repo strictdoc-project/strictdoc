@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
+import os
 from typing import Optional
 
 from strictdoc.export.html.document_type import DocumentType
@@ -18,7 +19,7 @@ class DocumentMeta:
         input_doc_rel_path: SDocRelativePath,
         input_doc_dir_rel_path: SDocRelativePath,
         input_doc_assets_dir_rel_path: SDocRelativePath,
-        output_document_dir_full_path,
+        output_document_dir_full_path: str,
         output_document_dir_rel_path: SDocRelativePath,
     ):
         """
@@ -60,9 +61,13 @@ class DocumentMeta:
         self.input_doc_assets_dir_rel_path: SDocRelativePath = (
             input_doc_assets_dir_rel_path
         )
-        self.output_document_dir_full_path = output_document_dir_full_path
+        self.output_document_dir_full_path: str = output_document_dir_full_path
         self.output_document_dir_rel_path: SDocRelativePath = (
             output_document_dir_rel_path
+        )
+        self.output_document_full_path: str = os.path.join(
+            self.output_document_dir_full_path,
+            self.get_html_doc_path(),
         )
 
     # Paths

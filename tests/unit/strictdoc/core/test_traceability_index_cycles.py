@@ -36,7 +36,9 @@ def test_invalid_01_2_reqs_cycled():
         map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError):
-        _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        _ = TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
 
 
 def test_invalid_02_4_reqs_cycled():
@@ -83,7 +85,9 @@ def test_invalid_02_4_reqs_cycled():
         map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError):
-        _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        _ = TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
 
 
 def test_invalid_03_3_reqs_cycled():
@@ -123,7 +127,9 @@ def test_invalid_03_3_reqs_cycled():
         map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError):
-        _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        _ = TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
 
 
 def test_invalid_04_5_reqs_cycled():
@@ -177,7 +183,9 @@ def test_invalid_04_5_reqs_cycled():
         map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError) as exc_info:
-        _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        _ = TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
 
     exception: DocumentTreeError = exc_info.value
     assert exception.problem_uid == "REQ-003"
@@ -252,7 +260,9 @@ def test_invalid_05_4_reqs_good_then_3_cycled():
         map_grammars_by_filenames={},
     )
     with pytest.raises(DocumentTreeError):
-        _ = TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        _ = TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
 
 
 def test__adding_parent_link__03__two_requirements_disallow_cycle():
@@ -272,7 +282,9 @@ def test__adding_parent_link__03__two_requirements_disallow_cycle():
         map_grammars_by_filenames={},
     )
     traceability_index: TraceabilityIndex = (
-        TraceabilityIndexBuilder.create_from_document_tree(document_tree)
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
     )
     traceability_index.update_requirement_parent_uid(
         requirement2, "REQ-001", None

@@ -1,0 +1,27 @@
+RUN: %strictdoc export %S --output-dir Output --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-FIRST
+CHECK-FIRST: Published: Child doc
+CHECK-FIRST: Published: Grandchild doc
+CHECK-FIRST: Published: Parent doc
+
+RUN: %strictdoc export %S --output-dir Output --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
+CHECK-SECOND: Skip: Child doc
+CHECK-SECOND: Skip: Grandchild doc
+CHECK-SECOND: Skip: Parent doc
+
+RUN: %touch %S/parent.sdoc
+RUN: %strictdoc export %S --output-dir Output --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-THIRD
+CHECK-THIRD: Published: Child doc
+CHECK-THIRD: Skip: Grandchild doc
+CHECK-THIRD: Published: Parent doc
+
+RUN: %touch %S/child.sdoc
+RUN: %strictdoc export %S --output-dir Output --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-FOURTH
+CHECK-FOURTH: Published: Child doc
+CHECK-FOURTH: Published: Grandchild doc
+CHECK-FOURTH: Published: Parent doc
+
+RUN: %touch %S/grandchild.sdoc
+RUN: %strictdoc export %S --output-dir Output --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-FIFTH
+CHECK-FIFTH: Published: Child doc
+CHECK-FIFTH: Published: Grandchild doc
+CHECK-FIFTH: Skip: Parent doc

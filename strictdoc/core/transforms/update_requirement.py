@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+import datetime
 from copy import copy
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple, Union
@@ -36,6 +37,7 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.file_modification_time import set_file_modification_time
 from strictdoc.helpers.mid import MID
 
 
@@ -249,7 +251,10 @@ class CreateOrUpdateNodeCommand:
 
             # Reset the 'needs generation' flag on all documents.
             for document_ in traceability_index.document_tree.document_list:
-                document_.ng_needs_generation = False
+                set_file_modification_time(
+                    document_.meta.input_doc_full_path,
+                    datetime.datetime.today(),
+                )
 
             # FIXME: It is better to have a general create_node method because
             #        we are dealing with arbitrary nodes, not only Requirement.
@@ -291,7 +296,9 @@ class CreateOrUpdateNodeCommand:
             requirement.relations = []
 
         for document_ in traceability_index.document_tree.document_list:
-            document_.ng_needs_generation = False
+            set_file_modification_time(
+                document_.meta.input_doc_full_path, datetime.datetime.today()
+            )
 
         # Updating Traceability Index: Links
         for reference_field in form_object.reference_fields:

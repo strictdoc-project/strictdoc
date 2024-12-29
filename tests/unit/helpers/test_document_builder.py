@@ -1,5 +1,8 @@
+import os
+import tempfile
 from typing import Optional
 
+from strictdoc import environment
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -10,13 +13,20 @@ from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
 )
+from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.paths import SDocRelativePath
 
 
 class DocumentBuilder:
     def __init__(self, uid="DOC-1"):
-        self.document: SDocDocument = self._create_empty_document(uid)
+        self.project_config: ProjectConfig = ProjectConfig.default_config(
+            environment
+        )
+        self.document: SDocDocument = self._create_empty_document(
+            self.project_config, uid
+        )
         self.requirements = []
 
     def add_requirement(self, uid):
@@ -77,7 +87,9 @@ class DocumentBuilder:
         return self.document
 
     @staticmethod
-    def _create_empty_document(uid: str) -> SDocDocument:
+    def _create_empty_document(
+        project_config: ProjectConfig, uid: str
+    ) -> SDocDocument:
         config = DocumentConfig(
             parent=None,
             version="0.0.1",
@@ -106,16 +118,24 @@ class DocumentBuilder:
             section_contents=section_contents,
         )
         document.grammar = DocumentGrammar.create_default(document)
+
+        # FIXME: Rework how these files are created in a better way.
+        tmpdir = tempfile.gettempdir()
+        temp_file_path = os.path.join(tmpdir, "input.sdoc")
+
         document.meta = DocumentMeta(
             level=0,
             file_tree_mount_folder="",
             document_filename="input.sdoc",
             document_filename_base="input",
-            input_doc_full_path="/tmp/input.sdoc",
+            input_doc_full_path=temp_file_path,
             input_doc_rel_path=SDocRelativePath("input.sdoc"),
             input_doc_dir_rel_path=SDocRelativePath(""),
             input_doc_assets_dir_rel_path=SDocRelativePath("_assets"),
             output_document_dir_full_path="FOO",
             output_document_dir_rel_path=SDocRelativePath("BAR"),
         )
+        writer = SDWriter(project_config=project_config)
+        writer.write_to_file(document)
+
         return document

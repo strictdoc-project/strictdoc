@@ -507,15 +507,12 @@ class HTMLGenerator:
             if not source_file.is_referenced:
                 continue
 
-            with measure_performance(
-                f"File: {source_file.in_doctree_source_file_rel_path}"
-            ):
-                SourceFileViewHTMLGenerator.export_to_file(
-                    project_config=self.project_config,
-                    source_file=source_file,
-                    traceability_index=traceability_index,
-                    html_templates=self.html_templates,
-                )
+            SourceFileViewHTMLGenerator.export_to_file(
+                project_config=self.project_config,
+                source_file=source_file,
+                traceability_index=traceability_index,
+                html_templates=self.html_templates,
+            )
 
         source_coverage_content = SourceFileCoverageHTMLGenerator.export(
             project_config=self.project_config,

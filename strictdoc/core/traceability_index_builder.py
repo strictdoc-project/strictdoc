@@ -3,7 +3,7 @@ import datetime
 import glob
 import os
 import sys
-from typing import Dict, Iterator, List, Optional, Set, Union
+from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from textx import TextXSyntaxError
 
@@ -163,6 +163,24 @@ class TraceabilityIndexBuilder:
                 )
                 if is_source_file_referenced:
                     source_file.is_referenced = True
+
+                    source_file_reqs: Tuple[List[SDocNode], List[SDocNode]] = (
+                        traceability_index.get_source_file_reqs(
+                            source_file.in_doctree_source_file_rel_path_posix
+                        )
+                    )
+                    for node_ in source_file_reqs[0] + source_file_reqs[1]:
+                        node_document = node_.document
+                        traceability_index.file_dependency_manager.add_dependency(
+                            source_file.full_path,
+                            source_file.output_file_full_path,
+                            node_document.meta.input_doc_full_path,
+                        )
+                        traceability_index.file_dependency_manager.add_dependency(
+                            node_document.meta.input_doc_full_path,
+                            node_document.meta.output_document_full_path,
+                            source_file.full_path,
+                        )
 
             traceability_index.document_tree.attach_source_tree(source_tree)
 

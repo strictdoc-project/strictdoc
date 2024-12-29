@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Grandchild doc
+
+[REQUIREMENT]
+UID: REQ-GRANDCHILD
+TITLE: Grandchild Req
+STATEMENT: Grandchild Req Statement
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-CHILD
+- TYPE: File
+  VALUE: file_refs_grandchild.py

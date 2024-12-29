@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,operator"
+import os
 from pathlib import Path
 from typing import List, Tuple, Union
 
@@ -40,6 +41,8 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.file_modification_time import get_file_modification_time
+from strictdoc.helpers.timing import measure_performance
 
 
 class SourceFileViewHTMLGenerator:
@@ -51,19 +54,32 @@ class SourceFileViewHTMLGenerator:
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
     ) -> None:
-        document_content = SourceFileViewHTMLGenerator.export(
-            project_config=project_config,
-            source_file=source_file,
-            traceability_index=traceability_index,
-            html_templates=html_templates,
-        )
-        Path(source_file.output_dir_full_path).mkdir(
-            parents=True, exist_ok=True
-        )
-        with open(
-            source_file.output_file_full_path, "w", encoding="utf-8"
-        ) as file:
-            file.write(document_content)
+        if os.path.isfile(
+            source_file.output_file_full_path
+        ) and get_file_modification_time(
+            source_file.full_path
+        ) < get_file_modification_time(source_file.output_file_full_path):
+            with measure_performance(
+                f"Skip: {source_file.in_doctree_source_file_rel_path}"
+            ):
+                return
+
+        with measure_performance(
+            f"File: {source_file.in_doctree_source_file_rel_path}"
+        ):
+            document_content = SourceFileViewHTMLGenerator.export(
+                project_config=project_config,
+                source_file=source_file,
+                traceability_index=traceability_index,
+                html_templates=html_templates,
+            )
+            Path(source_file.output_dir_full_path).mkdir(
+                parents=True, exist_ok=True
+            )
+            with open(
+                source_file.output_file_full_path, "w", encoding="utf-8"
+            ) as file:
+                file.write(document_content)
 
     @staticmethod
     def export(

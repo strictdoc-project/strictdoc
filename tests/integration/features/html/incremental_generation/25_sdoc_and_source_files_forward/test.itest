@@ -1,0 +1,35 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+# Create a separate input folder to ensure clear management of the SDoc files.
+RUN: %mkdir %S/sandbox
+RUN: %cp %S/strictdoc.toml %S/sandbox/
+RUN: %cp %S/child.sdoc %S/sandbox/
+RUN: %cp %S/grandchild.sdoc %S/sandbox/
+RUN: %cp %S/parent.sdoc %S/sandbox/
+RUN: %cp %S/src/file_refs_grandchild.py %S/sandbox/
+
+RUN: %strictdoc export %S/sandbox --output-dir Output --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-1
+CHECK-1: Published: Child doc
+CHECK-1: Published: Grandchild doc
+CHECK-1: Published: Parent doc
+CHECK-1-NOT: File: file_refs_grandchild.py
+
+RUN: %cp %S/grandchild_with_link.sdoc %S/sandbox/grandchild.sdoc
+RUN: %strictdoc export %S/sandbox --output-dir Output --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-2
+CHECK-2: Published: Child doc
+CHECK-2: Published: Grandchild doc
+CHECK-2: Skip: Parent doc
+CHECK-2: File: file_refs_grandchild.py
+
+RUN: %strictdoc export %S/sandbox --output-dir Output --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-3
+CHECK-3: Skip: Child doc
+CHECK-3: Skip: Grandchild doc
+CHECK-3: Skip: Parent doc
+CHECK-3: Skip: file_refs_grandchild.py
+
+RUN: %cp %S/grandchild.sdoc %S/sandbox/grandchild.sdoc
+RUN: %strictdoc export %S/sandbox --output-dir Output --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-4
+CHECK-4: Published: Child doc
+CHECK-4: Published: Grandchild doc
+CHECK-4: Skip: Parent doc
+CHECK-4-NOT: File: file_refs_grandchild.py

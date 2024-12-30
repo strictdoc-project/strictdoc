@@ -8,7 +8,6 @@ from typing import Dict, Optional, Set
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.file_modification_time import (
     get_file_modification_time,
-    set_file_modification_time,
 )
 from strictdoc.helpers.pickle import pickle_dump, pickle_load
 
@@ -25,6 +24,7 @@ class FileDependencyManager:
     path_to_cache: str
     dependencies_now: Dict[str, FileDependencyEntry]
     dependencies_prev: Dict[str, FileDependencyEntry]
+    dependencies_must_renegerate: Set[str]
 
     @staticmethod
     def create_from_cache(
@@ -35,7 +35,7 @@ class FileDependencyManager:
 
         if not os.path.isfile(path_to_cache):
             return FileDependencyManager(
-                path_to_cache_dir, path_to_cache, {}, {}
+                path_to_cache_dir, path_to_cache, {}, {}, set()
             )
 
         with open(path_to_cache, "rb") as cache_file:
@@ -52,7 +52,12 @@ class FileDependencyManager:
             unpickled_content.dependencies_now.clear()
             return unpickled_content
 
-        return FileDependencyManager(path_to_cache_dir, path_to_cache, {}, {})
+        return FileDependencyManager(
+            path_to_cache_dir, path_to_cache, {}, {}, set()
+        )
+
+    def must_generate(self, path_to_input_file: str) -> bool:
+        return path_to_input_file in self.dependencies_must_renegerate
 
     def add_dependency(
         self,
@@ -80,7 +85,7 @@ class FileDependencyManager:
     def resolve_modification_dates(
         self, strictdoc_last_update: datetime.datetime
     ) -> None:
-        visited_dependencies = set()
+        self.dependencies_must_renegerate.clear()
 
         items_now, items_before = (
             self.dependencies_now.items(),
@@ -106,18 +111,19 @@ class FileDependencyManager:
                     # If the file is not a no longer existing file, mark it for
                     # regeneration.
                     if os.path.isfile(path_to_input_file_):
-                        visited_dependencies.add(path_to_input_file_)
+                        self.dependencies_must_renegerate.add(
+                            path_to_input_file_
+                        )
 
                     for path_to_dependent_input_file_ in entry_.dependencies:
                         if (
                             path_to_dependent_input_file_
-                            in visited_dependencies
+                            in self.dependencies_must_renegerate
                         ):
                             continue
 
-                        visited_dependencies.add(path_to_dependent_input_file_)
-
-        for dependency_ in visited_dependencies:
-            set_file_modification_time(dependency_, datetime.datetime.today())
+                        self.dependencies_must_renegerate.add(
+                            path_to_dependent_input_file_
+                        )
 
         self.save_to_cache()

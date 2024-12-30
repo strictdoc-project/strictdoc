@@ -282,7 +282,7 @@ class HTMLGenerator:
     def export_single_document_with_performance(
         self,
         document: SDocDocument,
-        traceability_index,
+        traceability_index: TraceabilityIndex,
         specific_documents: Optional[Tuple[DocumentType]] = None,
     ):
         if specific_documents is None:
@@ -291,9 +291,13 @@ class HTMLGenerator:
         input_doc_full_path = document.meta.input_doc_full_path
         output_doc_full_path = document.meta.output_document_full_path
 
-        if os.path.isfile(output_doc_full_path) and get_file_modification_time(
-            input_doc_full_path
-        ) < get_file_modification_time(output_doc_full_path):
+        if os.path.isfile(output_doc_full_path) and (
+            get_file_modification_time(input_doc_full_path)
+            < get_file_modification_time(output_doc_full_path)
+            and not traceability_index.file_dependency_manager.must_generate(
+                document.meta.input_doc_full_path
+            )
+        ):
             with measure_performance(f"Skip: {document.title}"):
                 return
         with measure_performance(f"Published: {document.title}"):

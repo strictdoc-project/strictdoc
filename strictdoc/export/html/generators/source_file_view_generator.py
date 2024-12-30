@@ -54,11 +54,13 @@ class SourceFileViewHTMLGenerator:
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
     ) -> None:
-        if os.path.isfile(
-            source_file.output_file_full_path
-        ) and get_file_modification_time(
-            source_file.full_path
-        ) < get_file_modification_time(source_file.output_file_full_path):
+        if os.path.isfile(source_file.output_file_full_path) and (
+            get_file_modification_time(source_file.full_path)
+            < get_file_modification_time(source_file.output_file_full_path)
+            and not traceability_index.file_dependency_manager.must_generate(
+                source_file.full_path
+            )
+        ):
             with measure_performance(
                 f"Skip: {source_file.in_doctree_source_file_rel_path}"
             ):

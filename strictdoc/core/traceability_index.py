@@ -1088,6 +1088,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             DocumentCachingIterator(bundle_document)
         )
         for document_ in traceability_index_copy.document_tree.document_list:
+            # Ignore all included documents. They are anyway included by
+            # the including documents.
+            if document_.document_is_included():
+                continue
+
             document_.ng_including_document_reference.set_document(
                 bundle_document
             )

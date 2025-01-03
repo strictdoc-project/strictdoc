@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -134,13 +135,10 @@ class ProjectTreeDiffStats:
         if other_requirement is None:
             return False
         for reference_ in other_requirement.relations:
-            if isinstance(reference_, ParentReqReference):
-                parent_reference: ParentReqReference = assert_cast(
-                    reference_, ParentReqReference
-                )
+            if isinstance(reference_, (ParentReqReference, ChildReqReference)):
                 if (
-                    parent_reference.ref_uid == relation_uid
-                    and parent_reference.role == relation_role
+                    reference_.ref_uid == relation_uid
+                    and reference_.role == relation_role
                 ):
                     return True
         return False
@@ -994,7 +992,9 @@ class ProjectDiffAnalyzer:
                         )
 
                 for reference_ in node.relations:
-                    if isinstance(reference_, ParentReqReference):
+                    if isinstance(
+                        reference_, (ParentReqReference, ChildReqReference)
+                    ):
                         hasher.update(reference_.ref_uid.encode("utf-8"))
                         if reference_.role is not None:
                             hasher.update(reference_.role.encode("utf-8"))

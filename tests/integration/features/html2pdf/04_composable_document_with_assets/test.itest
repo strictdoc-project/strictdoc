@@ -14,7 +14,15 @@ RUN: %check_exists --file %S/Output/html2pdf/html/04_composable_document_with_as
 RUN: %check_exists --file %S/Output/html2pdf/html/04_composable_document_with_assets/nested/_assets/file.svg
 RUN: %check_exists --file %S/Output/html2pdf/html/04_composable_document_with_assets/nested/subnested/_assets/file.svg
 
+# By default, a bundle document is not generated.
+RUN: %check_exists --file --invert %S/Output/html2pdf/pdf/bundle.pdf
+
 RUN: %cat %S/Output/html2pdf/html/04_composable_document_with_assets/nested/subnested/input3.html | filecheck %s --check-prefix CHECK-DOC-HTML
 CHECK-DOC-HTML:data="_assets/file.svg"
 
 RUN: python %S/test_pdf.py
+
+RUN: %strictdoc export %S --formats=html2pdf --included-documents --generate-bundle-document --output-dir Output | filecheck %s --dump-input=fail
+# With --generate-bundle-document, a bundle document is generated.
+RUN: %check_exists --file %S/Output/html2pdf/pdf/bundle.pdf
+RUN: python %S/test_bundle_pdf.py

@@ -26,3 +26,12 @@ CHECK-CHANGELOG:Requirement #2
 CHECK-CHANGELOG:System shall do 2.
 CHECK-CHANGELOG:text="relation"{{.*}}REQ-1
 CHECK-CHANGELOG:Requirement #1
+
+RUN: cat %S/Output/diff.html | filecheck %s --check-prefix=CHECK-DIFF
+
+CHECK-DIFF:<span class="badge" text="UID"></span><span class="sdoc_pre_content">REQ-1</span>
+CHECK-DIFF:<span class="badge" text="child-relation"></span><div class="sdoc_pre_content"><b>REQ-2</b>
+
+CHECK-DIFF:modified="right"
+CHECK-DIFF:<span class="badge" text="UID"></span><span class="sdoc_pre_content">REQ-2</span>
+CHECK-DIFF:<span class="badge" text="relation"></span><div class="sdoc_pre_content"><b>REQ-1</b>

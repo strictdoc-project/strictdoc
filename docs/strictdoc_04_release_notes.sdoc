@@ -25,6 +25,24 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [SECTION]
+MID: d9e164994bb941ada8aecc73000bd51d
+TITLE: 0.5.0 (2025-01-06)
+
+[TEXT]
+MID: d0d93f5eb37247079cc182e924dabd14
+STATEMENT: >>>
+This release contains several enhancements, bug fixes, and performance improvements:
+
+- The Diff screen now supports child relations. Special thanks to @mplum for contributing the core patch.
+- On macOS, the parallelization algorithm now uses "fork" instead of "spawn", leading to a good performance boost.
+- The source file traceability HTML is now incrementally generated, re-rendering only when the source file or its related requirements are modified.
+- The HTML2PDF feature excludes included documents when creating a bundled document. The assumption is that a user is only interested in seeing the final including documents, not the included standalone documents.
+- Asset search optimization: Asset-finding code now filters out irrelevant directories early, avoiding repeated and unnecessary searches, improving efficiency.
+<<<
+
+[/SECTION]
+
+[SECTION]
 MID: e7df8274f42c4e01b02ad840e6b2569c
 TITLE: 0.4.0 (2024-12-25)
 

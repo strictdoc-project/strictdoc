@@ -12,7 +12,7 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#5#10">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#7">
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: def</span> <span class="nf">hello_world</span>
+CHECK-SOURCE-FILE: def</span><span class="w"> </span><span class="nf">hello_world</span>
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#1#10"
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-2#1#10"
 CHECK-SOURCE-FILE:  <div data-line=3 class="source__line-content">

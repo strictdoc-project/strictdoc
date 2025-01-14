@@ -115,9 +115,9 @@ class DocumentFinder:
 
         doc_file: File
         for doc_file, file_tree_mount_folder, document in found_documents:
-            assert isinstance(
-                file_tree_mount_folder, str
-            ), file_tree_mount_folder
+            assert isinstance(file_tree_mount_folder, str), (
+                file_tree_mount_folder
+            )
 
             if isinstance(document, DocumentGrammar):
                 map_grammars_by_filenames[doc_file.file_name] = document

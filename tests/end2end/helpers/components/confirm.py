@@ -26,8 +26,7 @@ class Confirm:  # pylint: disable=invalid-name
     def assert_confirm_section_delete(self) -> None:
         self.test_case.assert_element('//*[@data-testid="confirm-message"]')
         self.test_case.assert_element(
-            '//*[@data-testid="confirm-action"]'
-            '[contains(., "Delete section")]',
+            '//*[@data-testid="confirm-action"][contains(., "Delete section")]',
             by=By.XPATH,
         )
 

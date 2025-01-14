@@ -187,11 +187,7 @@ class LinkRenderer:
         document: SDocDocument = document_or_none
         path_prefix = document.meta.get_root_path_prefix()
         source_file_link = (
-            f"{path_prefix}"
-            "/"
-            f"_source_files"
-            "/"
-            f"{requirement_source_path}.html"
+            f"{path_prefix}/_source_files/{requirement_source_path}.html"
         )
         return source_file_link
 

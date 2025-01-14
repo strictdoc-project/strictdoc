@@ -586,9 +586,9 @@ class ProjectConfigLoader:
             # FIXME
             reqif_import_markup = reqif_content.get("import_markup", None)
             if reqif_import_markup is not None:
-                assert (
-                    reqif_import_markup in SDocMarkup.ALL
-                ), reqif_import_markup
+                assert reqif_import_markup in SDocMarkup.ALL, (
+                    reqif_import_markup
+                )
 
         return ProjectConfig(
             environment=environment,

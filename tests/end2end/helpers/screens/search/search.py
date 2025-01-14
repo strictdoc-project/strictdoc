@@ -16,7 +16,7 @@ class Screen_SearchResults(Screen):  # pylint: disable=invalid-name
             else "Nothing matching the query was found."
         )
         self.test_case.assert_element(
-            "//div[@class='sdoc-form-success']" f"[contains(., '{content}')]",
+            f"//div[@class='sdoc-form-success'][contains(., '{content}')]",
             by=By.XPATH,
         )
 

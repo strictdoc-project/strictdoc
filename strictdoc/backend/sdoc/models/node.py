@@ -60,9 +60,9 @@ class SDocNodeField:
         multiline: bool,
     ) -> "SDocNodeField":
         assert isinstance(field_name, str) and len(field_name) > 0, field_name
-        assert (
-            isinstance(field_value, str) and len(field_value) > 0
-        ), field_value
+        assert isinstance(field_value, str) and len(field_value) > 0, (
+            field_value
+        )
 
         return SDocNodeField(
             parent=parent,
@@ -223,9 +223,9 @@ class SDocNode(SDocObject):
         field: SDocNodeField = self.ordered_fields_lookup[
             RequirementFieldName.TAGS
         ][0]
-        assert (
-            not field.is_multiline()
-        ), f"Field {RequirementFieldName.TAGS} must be a single-line field."
+        assert not field.is_multiline(), (
+            f"Field {RequirementFieldName.TAGS} must be a single-line field."
+        )
         tags = field.get_text_value().split(", ")
         return tags
 
@@ -286,9 +286,9 @@ class SDocNode(SDocObject):
         document: Optional[SDocDocument] = (
             self.ng_document_reference.get_document()
         )
-        assert (
-            document is not None
-        ), "A valid requirement must always have a reference to the document."
+        assert document is not None, (
+            "A valid requirement must always have a reference to the document."
+        )
         return document
 
     def get_document(self) -> Optional[SDocDocument]:
@@ -325,9 +325,9 @@ class SDocNode(SDocObject):
         document: Optional[SDocDocument] = (
             self.ng_document_reference.get_document()
         )
-        assert (
-            document is not None
-        ), "A valid requirement must always have a reference to the document."
+        assert document is not None, (
+            "A valid requirement must always have a reference to the document."
+        )
         return document
 
     def document_is_included(self) -> bool:

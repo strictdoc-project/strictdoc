@@ -135,9 +135,9 @@ class SPDXToSDocConverter:
                     ]
                     to_element_sdoc = map_spdxref_to_sdoc[to_element.spdx_id]
 
-                    assert (
-                        to_element_sdoc.reserved_uid is not None
-                    ), to_element_sdoc
+                    assert to_element_sdoc.reserved_uid is not None, (
+                        to_element_sdoc
+                    )
 
                     from_element_sdoc.relations.append(
                         ChildReqReference(
@@ -162,9 +162,9 @@ class SPDXToSDocConverter:
                     ]
                     to_element_sdoc = map_spdxref_to_sdoc[to_element.spdx_id]
 
-                    assert (
-                        to_element_sdoc.reserved_uid is not None
-                    ), to_element_sdoc
+                    assert to_element_sdoc.reserved_uid is not None, (
+                        to_element_sdoc
+                    )
 
                     from_element_sdoc.relations.append(
                         ParentReqReference(

@@ -11,9 +11,9 @@ class AssetDir:
     relative_path: SDocRelativePath
 
     def __post_init__(self):
-        assert isinstance(
-            self.relative_path, SDocRelativePath
-        ), self.relative_path
+        assert isinstance(self.relative_path, SDocRelativePath), (
+            self.relative_path
+        )
 
 
 class AssetManager:

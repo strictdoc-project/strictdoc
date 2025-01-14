@@ -229,10 +229,7 @@ def create_main_router(
             standalone=False,
         )
         output = env().render_template_as_markup(
-            "actions/"
-            "node/"
-            "show_full_node/"
-            "stream_show_full_requirement.jinja",
+            "actions/node/show_full_node/stream_show_full_requirement.jinja",
             view_object=view_object,
             requirement=requirement,
         )
@@ -265,10 +262,7 @@ def create_main_router(
             project_config.view
         )
         output = env().render_template_as_markup(
-            "actions/"
-            "node/"
-            "show_full_node/"
-            "stream_show_full_section.jinja",
+            "actions/node/show_full_node/stream_show_full_section.jinja",
             renderer=markup_renderer,
             section=section,
             traceability_index=export_action.traceability_index,
@@ -293,9 +287,9 @@ def create_main_router(
         assert isinstance(whereto, str), whereto
         assert NodeCreationOrder.is_valid(whereto), whereto
 
-        assert (
-            isinstance(reference_mid, str) and len(reference_mid) > 0
-        ), reference_mid
+        assert isinstance(reference_mid, str) and len(reference_mid) > 0, (
+            reference_mid
+        )
 
         section_form_object = SectionFormObject.create_new(
             context_document_mid=context_document_mid
@@ -521,9 +515,9 @@ def create_main_router(
             MID(section_mid)
         )
 
-        assert (
-            isinstance(section_mid, str) and len(section_mid) > 0
-        ), f"{section_mid}"
+        assert isinstance(section_mid, str) and len(section_mid) > 0, (
+            f"{section_mid}"
+        )
 
         form_object: SectionFormObject = SectionFormObject.create_from_request(
             section_mid=section_mid,
@@ -1089,9 +1083,9 @@ def create_main_router(
         )
         document = requirement.document
 
-        assert (
-            isinstance(requirement_mid, str) and len(requirement_mid) > 0
-        ), f"{requirement_mid}"
+        assert isinstance(requirement_mid, str) and len(requirement_mid) > 0, (
+            f"{requirement_mid}"
+        )
 
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_request(
@@ -1238,9 +1232,9 @@ def create_main_router(
         "/actions/document/cancel_edit_requirement", response_class=Response
     )
     def cancel_edit_requirement(requirement_mid: str):
-        assert (
-            isinstance(requirement_mid, str) and len(requirement_mid) > 0
-        ), f"{requirement_mid}"
+        assert isinstance(requirement_mid, str) and len(requirement_mid) > 0, (
+            f"{requirement_mid}"
+        )
         requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(
                 MID(requirement_mid)
@@ -2248,10 +2242,7 @@ def create_main_router(
         output = (
             form_object.render_close_form()
             + env().render_template_as_markup(
-                "actions/"
-                "document/"
-                "_shared/"
-                "stream_refresh_document.jinja.html",
+                "actions/document/_shared/stream_refresh_document.jinja.html",
                 view_object=view_object,
             )
         )
@@ -2391,10 +2382,7 @@ def create_main_router(
         output = (
             form_object.render_close_form()
             + env().render_template_as_markup(
-                "actions/"
-                "document/"
-                "_shared/"
-                "stream_refresh_document.jinja.html",
+                "actions/document/_shared/stream_refresh_document.jinja.html",
                 view_object=view_object,
             )
         )

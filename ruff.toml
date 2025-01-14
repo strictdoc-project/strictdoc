@@ -88,8 +88,16 @@ ignore = [
 # Avoid trying to fix flake8-bugbear (`B`) violations.
 unfixable = ["B"]
 
+# Skip non UTF-8 test files
+exclude = ["tests/**/invalid_file*"]
+
 # B008 Do not perform function calls in argument defaults.
 # The call is performed only once at function definition time.
 
 [lint.per-file-ignores]
 "strictdoc/server/routers/main_router.py" = ["B008"]
+
+# Some of our helpers have deliberatly the name of a standard library module
+
+[lint.flake8-builtins]
+builtins-allowed-modules = ["math", "pickle", "string"]

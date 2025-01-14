@@ -38,18 +38,18 @@ class DocumentMeta:
             output_document_dir_rel_path = "doc_project"
         )
         """
-        assert isinstance(
-            input_doc_rel_path, SDocRelativePath
-        ), input_doc_rel_path
-        assert isinstance(
-            input_doc_dir_rel_path, SDocRelativePath
-        ), input_doc_dir_rel_path
-        assert isinstance(
-            input_doc_assets_dir_rel_path, SDocRelativePath
-        ), input_doc_assets_dir_rel_path
-        assert isinstance(
-            output_document_dir_rel_path, SDocRelativePath
-        ), output_document_dir_rel_path
+        assert isinstance(input_doc_rel_path, SDocRelativePath), (
+            input_doc_rel_path
+        )
+        assert isinstance(input_doc_dir_rel_path, SDocRelativePath), (
+            input_doc_dir_rel_path
+        )
+        assert isinstance(input_doc_assets_dir_rel_path, SDocRelativePath), (
+            input_doc_assets_dir_rel_path
+        )
+        assert isinstance(output_document_dir_rel_path, SDocRelativePath), (
+            output_document_dir_rel_path
+        )
 
         self.level: int = level
         self.file_tree_mount_folder = file_tree_mount_folder

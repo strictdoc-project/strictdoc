@@ -32,8 +32,7 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
         )
         # should have the menu button (may be invisible)
         self.test_case.assert_element_present(
-            f"{self.node_xpath}"
-            "//*[@data-testid='document-edit-config-action']",
+            f"{self.node_xpath}//*[@data-testid='document-edit-config-action']",
             by=By.XPATH,
         )
 

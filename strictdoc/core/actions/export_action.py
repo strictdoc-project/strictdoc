@@ -51,9 +51,9 @@ class ExportAction:
 
     @timing_decorator("Export SDoc")
     def export(self) -> None:
-        assert (
-            self.traceability_index is not None
-        ), "The index must be built at this point."
+        assert self.traceability_index is not None, (
+            "The index must be built at this point."
+        )
         if (
             "html" in self.project_config.export_formats
             or "html-standalone" in self.project_config.export_formats

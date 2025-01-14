@@ -74,9 +74,9 @@ class SDocObjectFactory:
                 )
             )
         if statement_multiline is not None:
-            assert isinstance(
-                statement_multiline, str
-            ), f"{statement_multiline}"
+            assert isinstance(statement_multiline, str), (
+                f"{statement_multiline}"
+            )
             fields.append(
                 SDocNodeField.create_from_string(
                     parent=None,

@@ -261,9 +261,9 @@ class SDWriter:
         document_iterator: DocumentCachingIterator,
         convert_free_text_to_text: bool = False,
     ):
-        assert isinstance(
-            document_iterator, DocumentCachingIterator
-        ), document_iterator
+        assert isinstance(document_iterator, DocumentCachingIterator), (
+            document_iterator
+        )
 
         if isinstance(root_node, SDocDocument):
             output = ""

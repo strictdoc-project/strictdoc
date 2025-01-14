@@ -32,9 +32,9 @@ class ParseContext:
 
 
 def req_processor(req: Req):
-    assert isinstance(
-        req, Req
-    ), f"Expected req to be Req, got: {req}, {type(req)}"
+    assert isinstance(req, Req), (
+        f"Expected req to be Req, got: {req}, {type(req)}"
+    )
     location = get_location(req)
     assert location
     req.ng_source_line = location["line"]

@@ -128,9 +128,9 @@ class StrictDocSemanticError(Exception):
         problematic_field: SDocNodeField,
         path_to_sdoc_file: str,
     ):
-        assert isinstance(
-            problematic_field, SDocNodeField
-        ), f"{problematic_field}"
+        assert isinstance(problematic_field, SDocNodeField), (
+            f"{problematic_field}"
+        )
         requirement_dump = node.dump_fields_as_parsed()
         grammar_dump = document_grammar.dump_fields(node.node_type)
         return StrictDocSemanticError(

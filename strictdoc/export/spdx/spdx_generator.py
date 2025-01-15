@@ -271,9 +271,9 @@ class SPDXGenerator:
                     if node.reserved_uid is None:
                         continue
 
-                    assert (
-                        node.reserved_title is not None
-                    ), "The current implementation only supports requirements with a title."
+                    assert node.reserved_title is not None, (
+                        "The current implementation only supports requirements with a title."
+                    )
 
                     """
                     Create SPDX Snippet from SDoc Requirement.

@@ -12,9 +12,9 @@ class RowWithReservedFieldFormObject:
     jinja_environment: JinjaEnvironment
 
     def __post_init__(self):
-        assert isinstance(
-            self.jinja_environment, JinjaEnvironment
-        ), self.jinja_environment
+        assert isinstance(self.jinja_environment, JinjaEnvironment), (
+            self.jinja_environment
+        )
 
     def render(self):
         rendered_template = self.jinja_environment.render_template_as_markup(
@@ -35,9 +35,9 @@ class RowWithCustomFieldFormObject:
 
     def __post_init__(self):
         assert self.field is not None
-        assert isinstance(
-            self.jinja_environment, JinjaEnvironment
-        ), self.jinja_environment
+        assert isinstance(self.jinja_environment, JinjaEnvironment), (
+            self.jinja_environment
+        )
 
     def render(self):
         rendered_template = self.jinja_environment.render_template_as_markup(
@@ -58,9 +58,9 @@ class RowWithRelationFormObject:
 
     def __post_init__(self):
         assert self.relation is not None
-        assert isinstance(
-            self.jinja_environment, JinjaEnvironment
-        ), self.jinja_environment
+        assert isinstance(self.jinja_environment, JinjaEnvironment), (
+            self.jinja_environment
+        )
 
     def render(self):
         rendered_template = self.jinja_environment.render_template_as_markup(

@@ -196,9 +196,9 @@ class SourceFileViewHTMLGenerator:
         start_pattern = '<div class="highlight"><pre>'
         end_pattern = "</pre></div>\n"
         assert pygmented_source_file_content.startswith(start_pattern)
-        assert pygmented_source_file_content.endswith(
-            end_pattern
-        ), f"{pygmented_source_file_content}"
+        assert pygmented_source_file_content.endswith(end_pattern), (
+            f"{pygmented_source_file_content}"
+        )
 
         slice_start = len(start_pattern)
         slice_end = len(pygmented_source_file_content) - len(end_pattern)
@@ -213,9 +213,9 @@ class SourceFileViewHTMLGenerator:
 
         if pygmented_source_file_lines[-1] == "":
             pygmented_source_file_lines.pop()
-        assert (
-            "###" in pygmented_source_file_lines[-1]
-        ), "Expected marker to be in place."
+        assert "###" in pygmented_source_file_lines[-1], (
+            "Expected marker to be in place."
+        )
         # Pop ###, pop "\n"
         pygmented_source_file_lines.pop()
         if pygmented_source_file_lines[-1] == "":

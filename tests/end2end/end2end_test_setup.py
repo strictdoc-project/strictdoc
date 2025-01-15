@@ -23,9 +23,9 @@ class End2EndTestSetup:
         self.path_to_expected_output_dir = os.path.join(
             path_to_test_dir, "expected_output"
         )
-        assert os.path.isdir(
+        assert os.path.isdir(self.path_to_expected_output_dir), (
             self.path_to_expected_output_dir
-        ), self.path_to_expected_output_dir
+        )
 
         # Sandbox is where the StrictDoc server will find its documents.
         self.path_to_sandbox = os.path.join(path_to_test_dir, ".sandbox")
@@ -46,9 +46,9 @@ class End2EndTestSetup:
         path_to_expected_output_dir_file = os.path.join(
             self.path_to_expected_output_dir, file_name
         )
-        assert os.path.isfile(
+        assert os.path.isfile(path_to_expected_output_dir_file), (
             path_to_expected_output_dir_file
-        ), path_to_expected_output_dir_file
+        )
         return path_to_expected_output_dir_file
 
     def compare_sandbox_and_expected_output(self):

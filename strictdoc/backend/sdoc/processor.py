@@ -168,9 +168,9 @@ class SDocParsingProcessor:
                 )
 
     def process_document_from_file(self, document_from_file: DocumentFromFile):
-        assert isinstance(
-            document_from_file, DocumentFromFile
-        ), document_from_file
+        assert isinstance(document_from_file, DocumentFromFile), (
+            document_from_file
+        )
 
         # Windows paths are backslashes, so using abspath in addition.
         resolved_path_to_fragment_file = os.path.abspath(

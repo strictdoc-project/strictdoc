@@ -110,9 +110,9 @@ class SDocSection(SDocObject):
         document: Optional[SDocDocument] = (
             self.ng_document_reference.get_document()
         )
-        assert (
-            document is not None
-        ), "A valid requirement must always have a reference to the document."
+        assert document is not None, (
+            "A valid requirement must always have a reference to the document."
+        )
         return document
 
     def document_is_included(self):

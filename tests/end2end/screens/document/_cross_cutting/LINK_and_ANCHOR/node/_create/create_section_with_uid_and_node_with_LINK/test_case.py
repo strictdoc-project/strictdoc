@@ -62,7 +62,7 @@ class Test(E2ECase):
             )
             form_edit_requirement.do_fill_in_field_title("Second title")
             form_edit_requirement.do_fill_in_field_statement(
-                "This is a text of the requirement." "\n\n" "[LINK: SECT-1]"
+                "This is a text of the requirement.\n\n[LINK: SECT-1]"
             )
             form_edit_requirement.do_form_submit()
 

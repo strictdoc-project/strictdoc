@@ -19,9 +19,9 @@ class Form_EditSection(Form):  # pylint: disable=invalid-name
 
     def do_fill_in_text(self, field_value: str) -> None:
         assert isinstance(field_value, str)
-        assert (
-            len(field_value) > 0
-        ), "To clear a text field, use do_clear_text() instead."
+        assert len(field_value) > 0, (
+            "To clear a text field, use do_clear_text() instead."
+        )
         super().do_fill_in("STATEMENT", field_value)
 
     def do_reset_uid_field(self, field_name: str = "") -> None:

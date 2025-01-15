@@ -13,9 +13,9 @@ class RowWithGrammarElementFormObject:
 
     def __post_init__(self):
         assert self.field is not None
-        assert isinstance(
-            self.jinja_environment, JinjaEnvironment
-        ), self.jinja_environment
+        assert isinstance(self.jinja_environment, JinjaEnvironment), (
+            self.jinja_environment
+        )
 
     def render(self):
         if self.field.is_new:

@@ -109,6 +109,11 @@ class SDWriter:
                 output += f"VERSION: {version}"
                 output += "\n"
 
+            date = document_config.date
+            if date is not None:
+                output += f"DATE: {date}"
+                output += "\n"
+
             classification = document_config.classification
             if classification is not None:
                 output += f"CLASSIFICATION: {classification}"
@@ -256,9 +261,9 @@ class SDWriter:
         document_iterator: DocumentCachingIterator,
         convert_free_text_to_text: bool = False,
     ):
-        assert isinstance(
-            document_iterator, DocumentCachingIterator
-        ), document_iterator
+        assert isinstance(document_iterator, DocumentCachingIterator), (
+            document_iterator
+        )
 
         if isinstance(root_node, SDocDocument):
             output = ""

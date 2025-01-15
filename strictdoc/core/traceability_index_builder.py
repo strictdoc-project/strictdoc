@@ -710,9 +710,9 @@ class TraceabilityIndexBuilder:
             for document_from_file_ in document_.fragments_from_files:
                 traceability_index.contains_included_documents = True
 
-                assert isinstance(
-                    document_from_file_, DocumentFromFile
-                ), document_from_file_
+                assert isinstance(document_from_file_, DocumentFromFile), (
+                    document_from_file_
+                )
 
                 assert (
                     document_from_file_.resolved_full_path_to_document_file

@@ -34,9 +34,9 @@ class OneToOneDictionary(AbstractBucket):
         assert edge is None
         assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
         assert isinstance(rhs_node, self._rhs_type), (rhs_node, self._rhs_type)
-        assert (
-            lhs_node not in self._dict
-        ), f"OneToOneDictionary: Cannot create a link because lhs_node already exists: {lhs_node}."
+        assert lhs_node not in self._dict, (
+            f"OneToOneDictionary: Cannot create a link because lhs_node already exists: {lhs_node}."
+        )
         self._dict[lhs_node] = rhs_node
 
     def create_link_weak(self, *, lhs_node: Any, rhs_node: Any):

@@ -21,9 +21,9 @@ class ReqIFImport:
     ) -> List[SDocDocument]:
         converter = ReqIFImport.select_reqif_profile(import_config)
 
-        assert os.path.isfile(
+        assert os.path.isfile(import_config.input_path), (
             import_config.input_path
-        ), import_config.input_path
+        )
 
         if import_config.input_path.endswith(".reqifz"):
             reqifz_bundle: ReqIFZBundle = ReqIFZParser.parse(

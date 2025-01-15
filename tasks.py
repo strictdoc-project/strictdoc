@@ -235,9 +235,9 @@ def test_end2end(
         )
         parallelize_argument = "--numprocesses=2 --strictdoc-parallelize"
 
-    assert shard is None or re.match(
-        r"[1-9][0-9]*/[1-9][0-9]*", shard
-    ), f"--shard argument has an incorrect format: {shard}."
+    assert shard is None or re.match(r"[1-9][0-9]*/[1-9][0-9]*", shard), (
+        f"--shard argument has an incorrect format: {shard}."
+    )
     shard_argument = f"--strictdoc-shard={shard}" if shard else ""
 
     focus_argument = f"-k {focus}" if focus is not None else ""

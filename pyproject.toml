@@ -48,7 +48,7 @@ classifiers = [
 
 # @sdoc[SDOC-SRS-89]
 dependencies = [
-    "textx >= 3.0.0, == 3.*",
+    "textx >= 4.0.0, == 4.*",
     "jinja2 >= 2.11.2",
     # Reading project config from strictdoc.toml file.
     "toml",

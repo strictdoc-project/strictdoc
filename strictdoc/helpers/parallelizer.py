@@ -116,11 +116,17 @@ class MultiprocessingParallelizer(Parallelizer):
         output_queue: "multiprocessing.Queue[Tuple[int, Any]]",
     ) -> None:
         while True:
-            content_idx, content, processing_func = input_queue.get(block=True)
-            result = processing_func(content)
-            sys.stdout.flush()
-            sys.stderr.flush()
-            output_queue.put((content_idx, result))
+            try:
+                content_idx, content, processing_func = input_queue.get(
+                    block=True
+                )
+                result = processing_func(content)
+                sys.stdout.flush()
+                sys.stderr.flush()
+                output_queue.put((content_idx, result))
+            except KeyboardInterrupt:
+                sys.stdout.flush()
+                sys.stderr.flush()
 
 
 class NullParallelizer(Parallelizer):

@@ -92,11 +92,43 @@ in StrictDoc's source code. Otherwise, install StrictDoc as a normal Pip package
 .. code-block::
 
     git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
-    python developer/pip_install_strictdoc_deps.py
+    pip install toml
+    python3 developer/pip_install_strictdoc_deps.py
     python3 strictdoc/cli/main.py
 
 The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc, but not StrictDoc itself.
 <<<
+
+[SECTION]
+MID: 1814a8c25afc40cba6dca1696cae119b
+TITLE: Development within a virtual environment
+
+[TEXT]
+MID: a3e14b05452b48e2a0d8726fa00a7f00
+STATEMENT: >>>
+An alternative approach for those familiar with development in a virtual environment:
+
+.. code:: bash
+
+    git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
+    python3 -m venv .venv
+    . ./.venv/bin/activate
+    pip install -e .
+    python3 strictdoc/cli/main.py
+
+**Note:** Windows users, substitute: ``.\.venv\Scripts\activate``
+
+After this, running ``developer/pip_install_strictdoc_deps.py`` should report that all packages are already installed.
+
+This installs all the default dependencies of StrictDoc.
+To also install the dev dependencies specified in ``pyproject.toml``:
+
+.. code:: bash
+
+    pip install ".[development]"
+<<<
+
+[/SECTION]
 
 [/SECTION]
 

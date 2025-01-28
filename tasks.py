@@ -221,6 +221,7 @@ def test_end2end(
     long_timeouts=False,
     headless=False,
     shard=None,
+    test_path=None,
 ):
     long_timeouts_argument = (
         "--strictdoc-long-timeouts" if long_timeouts else ""
@@ -258,6 +259,8 @@ def test_end2end(
             -o cache_dir=build/pytest_end2end
             tests/end2end
     """
+    if test_path:
+        test_command = test_command.rstrip() + f"/{test_path}"
 
     # On Windows, GitHub Actions fails with:
     # response = {'status': 500, 'value':

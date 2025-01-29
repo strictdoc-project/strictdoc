@@ -2,8 +2,7 @@
 import os
 from typing import List, NamedTuple, Optional, Tuple
 
-import xlrd
-
+from strictdoc.backend.excel.import_.excel_sheet_proxy import ExcelSheetProxy
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -43,23 +42,22 @@ class ExcelToSDocConverter:
     @staticmethod
     # optional argument title is present for external scripts to assign a title
     def convert(excel_file, title=None) -> SDocDocument:
-        excel_workbook = xlrd.open_workbook(filename=excel_file, on_demand=True)
-        xlrd_sheet: xlrd.sheet.Sheet = excel_workbook.sheet_by_index(0)
+        sheet = ExcelSheetProxy(excel_file)
 
         excel_file_name = os.path.basename(excel_file)
         if title is None:
-            title = excel_file_name + " sheet " + xlrd_sheet.name
+            title = excel_file_name + " sheet " + sheet.name()
 
-        all_header_columns = list(range(xlrd_sheet.ncols))
+        all_header_columns = list(range(sheet.ncols()))
 
         for i in range(16):  # the first 16 rows should do ¯\_(ツ)_/¯
-            if xlrd_sheet.row_values(0)[0].strip() != "":
+            if sheet.row_values(i)[0].strip() != "":
                 header_row_idx = i
                 break
         else:
             raise NotImplementedError
 
-        header_row = xlrd_sheet.row_values(header_row_idx)
+        header_row = sheet.row_values(header_row_idx)
         safe_header_row = [safe_name(x) for x in header_row]
 
         statement_column = None
@@ -105,8 +103,8 @@ class ExcelToSDocConverter:
         document = ExcelToSDocConverter.create_document(
             title, extra_header_pairs
         )
-        for i in range(header_row_idx + 1, xlrd_sheet.nrows):
-            row_values = xlrd_sheet.row_values(i)
+        for i in range(header_row_idx + 1, sheet.nrows()):
+            row_values = sheet.row_values(i)
             requirement = ExcelToSDocConverter.create_requirement(
                 row_values, document, columns
             )

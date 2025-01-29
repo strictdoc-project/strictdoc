@@ -86,8 +86,9 @@ TITLE: Installing StrictDoc from GitHub (developer mode)
 [TEXT]
 MID: 2407bb186b274a58b97b54b99ba6e86f
 STATEMENT: >>>
-**Note:** Use this way of installing StrictDoc only if you want to make changes
-in StrictDoc's source code. Otherwise, install StrictDoc as a normal Pip package by running ``pip install strictdoc``.
+.. note::
+    Use this way of installing StrictDoc only if you want to make changes in StrictDoc's source code.
+    Otherwise, install StrictDoc as a normal Pip package by running ``pip install strictdoc``.
 
 .. code-block::
 
@@ -116,7 +117,9 @@ An alternative approach for those familiar with development in a virtual environ
     pip install -e .
     python3 strictdoc/cli/main.py
 
-**Note:** Windows users, substitute: ``.\.venv\Scripts\activate``
+.. note::
+
+    Windows users, substitute: ``.\.venv\Scripts\activate``
 
 After this, running ``developer/pip_install_strictdoc_deps.py`` should report that all packages are already installed.
 

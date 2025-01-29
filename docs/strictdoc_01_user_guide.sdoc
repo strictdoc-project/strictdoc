@@ -346,7 +346,10 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
     strictdoc server --help
 
-**Note:** The implementation of the web interface is work-in-progress. See [LINK: SDOC_UG_LIMIT_WEB] for an overview of the existing limitations.
+.. note::
+
+    The implementation of the web interface is work-in-progress.
+    See [LINK: SDOC_UG_LIMIT_WEB] for an overview of the existing limitations.
 <<<
 
 [/SECTION]
@@ -419,13 +422,13 @@ For any other IDE, when possible, it is recommended to use the TextMate JSON
 format, unless a given IDE is known to only support the TextMate bundle format
 (``.tmbundle``). The exception is Sublime Text which has its own format.
 
-**Note:** The TextMate grammar and the Sublime Syntax for StrictDoc only
-provides syntax highlighting.
-More advanced features like autocompletion and deep validation of requirements
-can be only achieved with a dedicated Language Server Protocol (LSP)
-implementation for StrictDoc. The StrictDoc LSP is on StrictDoc's long-term
-roadmap, see `Enhancement: Language Protocol Server for SDoc text language #577
-<https://github.com/strictdoc-project/strictdoc/issues/577>`_.
+.. note::
+
+    The TextMate grammar and the Sublime Syntax for StrictDoc only provides syntax highlighting.
+    More advanced features like autocompletion and deep validation of requirements can be only achieved with a dedicated Language Server Protocol (LSP) implementation for StrictDoc.
+    The StrictDoc LSP is on StrictDoc's long-term roadmap, see
+    `Enhancement: Language Protocol Server for SDoc text language #577
+    <https://github.com/strictdoc-project/strictdoc/issues/577>`_.
 <<<
 
 [/SECTION]
@@ -614,8 +617,11 @@ The following ``DOCUMENT`` fields are allowed:
 
 The ``DOCUMENT`` declaration must always have a ``TITLE`` field. The other
 fields are optional. The ``OPTIONS`` field can be used for specifying
-the document configuration options. Note: The sequence of the fields is defined
-by the document's Grammar, i.e. should not be changed.
+the document configuration options.
+
+.. note::
+
+    The sequence of the fields is defined by the document's Grammar, i.e. should not be changed.
 <<<
 
 [SECTION]
@@ -845,11 +851,10 @@ MID: 2c3b050a2cd0444fb8948bb6adcb7085
 STATEMENT: >>>
 Unique identifier of the requirement.
 
-**Observation:** Some documents do not use unique identifiers which makes it
-impossible to trace their requirements to each other. Within StrictDoc's
-framework, it is assumed that a good requirements document has all of its
-requirements uniquely identifiable, however, the ``UID`` field is optional to
-accommodate for documents without connections between requirements.
+.. admonition:: Observation
+
+    Some documents do not use unique identifiers which makes it impossible to trace their requirements to each other.
+    Within StrictDoc's framework, it is assumed that a good requirements document has all of its requirements uniquely identifiable, however, the ``UID`` field is optional to accommodate for documents without connections between requirements.
 
 StrictDoc does not impose any limitations on the format of a UID. Examples of
 typical conventions for naming UIDs:
@@ -951,18 +956,24 @@ The ``TYPE: File``-``VALUE`` attribute contains a filename referencing the
 implementation of (parts of) this requirement. A requirement may add multiple
 file references requirements by adding multiple ``TYPE: File``-``VALUE`` items.
 
-**Note:** The ``TYPE: Parent`` and ``TYPE: Child`` are currently the only fully supported types of
-connection. Linking requirements to files is still experimental (see also
-[LINK: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE]).
+.. note::
 
-**Note:** In most requirements projects, only the Parent relations should be used, possibly with roles. The Child relation should be used only in specific cases. See [LINK: SDOC_UG_GRAMMAR_RELATIONS_PARENT_VS_CHILD] for more details.
+    The ``TYPE: Parent`` and ``TYPE: Child`` are currently the only fully supported types of connection.
+    Linking requirements to files is still experimental (see also [LINK: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE]).
 
-**Note:** In the near future, adding information about external references (e.g.
-company policy documents, technical specifications, regulatory requirements,
-etc.) is planned.
+.. note::
 
-**Note:** By design, StrictDoc will only show parent or child links if both
-requirements connected with a reference have ``UID`` defined.
+    In most requirements projects, only the Parent relations should be used, possibly with roles.
+    The Child relation should be used only in specific cases.
+    See [LINK: SDOC_UG_GRAMMAR_RELATIONS_PARENT_VS_CHILD] for more details.
+
+.. note::
+
+    In the near future, adding information about external references (e.g. company policy documents, technical specifications, regulatory requirements, etc.) is planned.
+
+.. note::
+
+    By design, StrictDoc will only show parent or child links if both requirements connected with a reference have ``UID`` defined.
 <<<
 
 [SECTION]
@@ -1016,18 +1027,20 @@ STATEMENT: >>>
 The title of the requirement.
 Every requirement should have its ``TITLE`` field specified.
 
-**Observation:** Many real-world documents have requirements with statements and
-titles but some documents only use statements without title in which case their
-``UID`` becomes their ``TITLE`` and vice versa. Example:
+.. admonition:: Observation
 
-.. code-block:: text
+    Many real-world documents have requirements with statements and titles but some documents only use statements without title in which case their ``UID`` becomes their ``TITLE`` and vice versa.
 
-    [DOCUMENT]
-    TITLE: StrictDoc
+    Example:
 
-    [REQUIREMENT]
-    UID: REQ-001
-    STATEMENT: StrictDoc shall enable requirements management.
+    .. code-block:: text
+
+        [DOCUMENT]
+        TITLE: StrictDoc
+
+        [REQUIREMENT]
+        UID: REQ-001
+        STATEMENT: StrictDoc shall enable requirements management.
 <<<
 
 [/SECTION]
@@ -1339,9 +1352,10 @@ Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
 ``[COMPOSITE_REQUIREMENT]`` elements can be nested within each other. However,
 ``[COMPOSITE_REQUIREMENT]`` cannot nest sections.
 
-**Note:** Composite requirements should not be used in every document. Most
-often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]``
-elements should do the job.
+.. note::
+
+    Composite requirements should not be used in every document.
+    Most often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]`` elements should do the job.
 <<<
 
 [/SECTION]
@@ -1401,10 +1415,11 @@ TITLE: Custom grammars
 [TEXT]
 MID: 4c2244d6affb4653844f730e1de88266
 STATEMENT: >>>
-**Observation:** Different industries have their own types of requirements
-documents with specialized meta information.
-Examples: ``ASIL`` in the automotive industry or
-``HERITAGE`` field in some of the requirements documents by NASA.
+.. admonition:: Observation
+
+    Different industries have their own types of requirements documents with specialized meta information.
+    Examples:
+    ``ASIL`` in the automotive industry or ``HERITAGE`` field in some of the requirements documents by NASA.
 
 StrictDoc allows declaration of custom grammars with custom fields that are
 specific to a particular document.
@@ -1469,8 +1484,9 @@ All fields before the content field are considered meta information. Meta inform
 fields are assumed to be single-line. The content field and all following fields
 accept single-line and multiline strings.
 
-**Note:** The order of fields must match the order of their declaration in the
-grammar.
+.. note::
+
+    The order of fields must match the order of their declaration in the grammar.
 <<<
 
 [SECTION]
@@ -1832,7 +1848,10 @@ Example:
 
 The following link references a section: [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 
-**Note:** Adding a ``LINK`` tag will only work from the section text. In the requirement fields, the LINK tag will not be recognized.
+.. note::
+
+    Adding a ``LINK`` tag will only work from the section text.
+    In the requirement fields, the LINK tag will not be recognized.
 <<<
 
 [/SECTION]
@@ -1850,7 +1869,10 @@ Example:
 
 This is a link to anchor: [LINK: ANCHOR-EXAMPLE].
 
-Note: ``ANCHOR`` is a block-level tag. It has to be placed in the beginning of a line with a newline break after the tag.
+.. note::
+
+    ``ANCHOR`` is a block-level tag.
+    It has to be placed in the beginning of a line with a newline break after the tag.
 <<<
 
 [SECTION]
@@ -1887,7 +1909,10 @@ such as ``STATEMENT``, ``COMMENT``, ``RATIONALE``, etc.
 See the `reST syntax documentation <https://docutils.sourceforge.io/rst.html>`_
 for a full reference.
 
-Note: StrictDoc supports a Docutils-subset of RST, not a Sphinx-subset. See [LINK: SDOC_UG_LIMIT_RST].
+.. note::
+
+    StrictDoc supports a Docutils-subset of RST, not a Sphinx-subset.
+    See [LINK: SDOC_UG_LIMIT_RST].
 
 The support of Tex and HTML is planned.
 <<<
@@ -1912,7 +1937,10 @@ This is the example of how images are included using the reST syntax:
        :class: image
     <<<
 
-**Note:** Currently, it is not possible to upload images via the web user interface. Therefore, you must manually place the image into the ``_assets`` folder using either the command-line or a file browser.
+.. note::
+
+    Currently, it is not possible to upload images via the web user interface.
+    Therefore, you must manually place the image into the ``_assets`` folder using either the command-line or a file browser.
 <<<
 
 [/SECTION]
@@ -1977,8 +2005,10 @@ The following command creates an HTML export:
 
     strictdoc export docs/ --formats=html --output-dir output-html
 
-**Example:** This documentation is exported by StrictDoc to HTML:
-`StrictDoc HTML export <https://strictdoc.readthedocs.io>`_.
+.. admonition:: Example
+
+    This documentation is exported by StrictDoc to HTML:
+    `StrictDoc HTML export <https://strictdoc.readthedocs.io>`_
 
 The options ``--formats=html`` and ``--output-dir output-html`` can be skipped because HTML export is a default export option and the default output folder is ``output``.
 
@@ -2385,10 +2415,11 @@ STATEMENT: >>>
 StrictDoc has an initial support of exporting to and importing from the ReqIF
 format.
 
-**Note:** It is not possible to implement a single export/import procedure that
-works well for all ReqIF XML files produced by various requirements management
-tools. The export/import workflow is therefore tool-specific. See
-[LINK: SECTION-REQIF-DETAILS] for more details.
+.. note::
+
+    It is not possible to implement a single export/import procedure that works well for all ReqIF XML files produced by various requirements management tools.
+    The export/import workflow is therefore tool-specific.
+    See [LINK: SECTION-REQIF-DETAILS] for more details.
 
 Supported formats:
 
@@ -2530,7 +2561,9 @@ the requirements are imported one row per requirement. A best effort is made by
 the importer to recognize names of headers and map these to strictdoc
 requirement fields.
 
-Note: A roundtrip "SDoc -> Excel -> SDoc" is not yet supported.
+.. note::
+
+    A roundtrip "SDoc -> Excel -> SDoc" is not yet supported.
 <<<
 
 [SECTION]
@@ -2930,10 +2963,11 @@ To disable parallelization use the ``--no-parallelization`` option:
 
     strictdoc export --no-parallelization docs/
 
-**Note:** Currently, only the generation of HTML documents is parallelized, so
-this option will only have effect on the HTML export. All other export options
-are run from the main thread. Reading of the SDoc documents is parallelized for
-all export options and is disabled with this option as well.
+.. note::
+
+    Currently, only the generation of HTML documents is parallelized, so this option will only have effect on the HTML export.
+    All other export options are run from the main thread.
+    Reading of the SDoc documents is parallelized for all export options and is disabled with this option as well.
 <<<
 
 [/SECTION]

@@ -1,6 +1,6 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import os
-from typing import List, NamedTuple, Optional, Tuple
+from typing import List, NamedTuple, Optional, Tuple, Union
 
 from strictdoc.backend.excel.import_.excel_sheet_proxy import ExcelSheetProxy
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -41,14 +41,16 @@ def safe_name(dangerous_name):
 class ExcelToSDocConverter:
     @staticmethod
     # optional argument title is present for external scripts to assign a title
-    def convert(excel_file, title=None) -> SDocDocument:
+    def convert(
+        excel_file: str, title: Union[str, None] = None
+    ) -> SDocDocument:
         sheet = ExcelSheetProxy(excel_file)
 
         excel_file_name = os.path.basename(excel_file)
         if title is None:
             title = excel_file_name + " sheet " + sheet.name()
 
-        all_header_columns = list(range(sheet.ncols()))
+        all_header_columns = list(range(sheet.ncols))
 
         for i in range(16):  # the first 16 rows should do ¯\_(ツ)_/¯
             if sheet.row_values(i)[0].strip() != "":
@@ -103,7 +105,7 @@ class ExcelToSDocConverter:
         document = ExcelToSDocConverter.create_document(
             title, extra_header_pairs
         )
-        for i in range(header_row_idx + 1, sheet.nrows()):
+        for i in range(header_row_idx + 1, sheet.nrows):
             row_values = sheet.row_values(i)
             requirement = ExcelToSDocConverter.create_requirement(
                 row_values, document, columns

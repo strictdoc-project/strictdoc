@@ -60,7 +60,7 @@ class ManageAutoUIDCommandConfig:
 
 
 class ImportExcelCommandConfig:
-    def __init__(self, input_path, output_path, parser):
+    def __init__(self, input_path: str, output_path: str, parser):
         self.input_path = input_path
         self.output_path = output_path
         self.parser = parser

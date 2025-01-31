@@ -2554,7 +2554,7 @@ TITLE: Excel support
 [TEXT]
 MID: 65c1657a8fb04179960fca4ece265b18
 STATEMENT: >>>
-StrictDoc provides a support for Excel XLS on input and Excel XLSX on output.
+StrictDoc provides a support for Excel XLS/XLSX on input and Excel XLSX on output.
 
 On input, the headers of sheet1 are used to put together a custom grammar and
 the requirements are imported one row per requirement. A best effort is made by
@@ -2568,7 +2568,7 @@ requirement fields.
 
 [SECTION]
 MID: 4a34ea5da82b4e469cf5a87178f69536
-TITLE: Import flow (Excel XLS -> SDoc)
+TITLE: Import flow (Excel XLS/XLSX -> SDoc)
 
 [TEXT]
 MID: b01355b5a6d54409a0c7a684376a5278
@@ -2579,8 +2579,8 @@ STATEMENT: >>>
 
 The command does the following:
 
-1. The Excel XLS is parsed to SDoc in-memory model using the ``xlrd``
-   library.
+1. The Excel file is parsed to SDoc in-memory model using the ``xlrd``
+   library for XLS or the ``openpyxl`` library for XLSX files.
 
 2. The SDoc in-memory model is written to an .sdoc file.
 <<<

@@ -48,7 +48,7 @@ class ExcelToSDocConverter:
 
         excel_file_name = os.path.basename(excel_file)
         if title is None:
-            title = excel_file_name + " sheet " + sheet.name()
+            title = excel_file_name + " sheet " + sheet.name
 
         all_header_columns = list(range(sheet.ncols))
 

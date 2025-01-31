@@ -2657,8 +2657,8 @@ def create_main_router(
                 node_query = QueryObject(
                     query, export_action.traceability_index
                 )
-            except:
-                error = "error: Cannot parse query."
+            except Exception as e:
+                error = f"error: {e}"
 
         if node_query is not None:
             result = []

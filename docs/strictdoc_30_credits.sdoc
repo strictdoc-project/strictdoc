@@ -84,7 +84,7 @@ StrictDoc uses `Pygments <https://pygments.org>`_ to color-code the source files
 
 StrictDoc uses `Tree-sitter <https://tree-sitter.github.io/tree-sitter/>`_ to enable language-aware parsing of source files for the requirements-to-source-files traceability feature.
 
-StrictDoc uses `XlsxWriter <https://xlsxwriter.readthedocs.io>`_ and `xlrd <https://xlrd.readthedocs.io/en/latest/>`_ for its Excel export/import features.
+StrictDoc uses `XlsxWriter <https://xlsxwriter.readthedocs.io>`_, `xlrd <https://xlrd.readthedocs.io/en/latest/>`_ and `openpyxl <https://openpyxl.readthedocs.io/en/stable/>`_ for its Excel export/import features.
 
 The credits also recursively go to the building blocks of each of the above projects because most of them have their own dependencies.
 

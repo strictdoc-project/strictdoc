@@ -1,3 +1,6 @@
 RUN: %mkdir %S/output
 RUN: %strictdoc import excel basic %S/input.xls %S/output/
 RUN: %diff %S/output/input.sdoc %S/expected/expected.sdoc
+RUN: %mkdir %S/output_xlsx
+RUN: %strictdoc import excel basic %S/input.xlsx %S/output_xlsx/
+RUN: %diff %S/output_xlsx/input.sdoc %S/expected_xslx/expected.sdoc

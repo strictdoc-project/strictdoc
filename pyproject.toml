@@ -88,10 +88,7 @@ dependencies = [
     "WebSockets",
 
     # HTML2PDF dependencies
-    "selenium",
-    "webdriver-manager",
-    # requests is used by StrictDoc's custom HTML2PDF_HTTPClient.
-    "requests",
+    "html2print",
 ]
 # @sdoc[/SDOC-SRS-89]
 

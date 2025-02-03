@@ -712,7 +712,6 @@ def release_pyinstaller(context):
             --additional-hooks-dir developer/pyinstaller_hooks
             --distpath {path_to_pyi_dist}
             --hidden-import strictdoc.server.app
-            --add-data strictdoc/export/html2pdf/html2pdf.py:.
             --add-data strictdoc/export/html/templates:templates/html
             --add-data strictdoc/export/rst/templates:templates/rst
             --add-data strictdoc/export/html/_static:_static

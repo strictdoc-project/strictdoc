@@ -4,7 +4,7 @@ REQUIRES: TEST_HTML2PDF
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
 RUN: %strictdoc export %S --formats=html2pdf --output-dir Output | filecheck %s --dump-input=fail
-CHECK: HTML2PDF: JS logs from the print session
+CHECK: html2print: JS logs from the print session
 
 RUN: %check_exists --file %S/Output/html2pdf/html/03_three_documents_with_assets/input.html
 RUN: %check_exists --file %S/Output/html2pdf/html/03_three_documents_with_assets/nested/input2.html

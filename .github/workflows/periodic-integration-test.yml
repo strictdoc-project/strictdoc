@@ -52,7 +52,14 @@ jobs:
       - name: Build and test using PyInstaller
         run: |
           invoke release-pyinstaller
+
+      - name: Test the PyInstaller-based StrictDoc
+        run: |
           invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc
+
+      - name: Test the PyInstaller-based StrictDoc (HTML2PDF)
+        run: |
+          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc --html2pdf
 
   periodic_integration_test_macos:
     name: PIT – macOS
@@ -96,10 +103,17 @@ jobs:
         run: |
           pip install -r requirements.bootstrap.txt
 
-      - name: Build and test using PyInstaller
+      - name: Build using PyInstaller
         run: |
           invoke release-pyinstaller
+
+      - name: Test the PyInstaller-based StrictDoc
+        run: |
           invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc
+
+      - name: Test the PyInstaller-based StrictDoc (HTML2PDF)
+        run: |
+          invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc --html2pdf
 
   check_dead_links:
     name: PIT – Check dead links

@@ -1,4 +1,3 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from tests.end2end.helpers.screens.screen import Screen

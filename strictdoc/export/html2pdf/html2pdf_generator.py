@@ -107,17 +107,11 @@ class HTML2PDFGenerator:
 
             paths_to_print.append((path_to_output_html_doc, path_to_output_pdf))
 
-        paths_to_print_argument = ";".join(
-            map(
-                lambda in_out_path_pair_: f"{in_out_path_pair_[0]},{in_out_path_pair_[1]}",
-                paths_to_print,
-            )
-        )
         pdf_print_driver = PDFPrintDriver()
         try:
             pdf_print_driver.get_pdf_from_html(
                 project_config,
-                paths_to_print_argument,
+                paths_to_print,
             )
         except TimeoutError:
             print("error: HTML2PDF: timeout error.")  # noqa: T201

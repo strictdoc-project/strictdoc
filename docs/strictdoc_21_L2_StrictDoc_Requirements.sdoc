@@ -687,8 +687,6 @@ RELATIONS:
 - TYPE: Parent
   VALUE: DO178-5
 - TYPE: File
-  VALUE: strictdoc/export/html2pdf/html2pdf.py
-- TYPE: File
   VALUE: strictdoc/export/html/_static/html2pdf/bundle.js
 
 [REQUIREMENT]

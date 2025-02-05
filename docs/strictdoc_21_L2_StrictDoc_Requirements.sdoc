@@ -686,8 +686,6 @@ StrictDoc shall provide export to printable HTML pages.
 RELATIONS:
 - TYPE: Parent
   VALUE: DO178-5
-- TYPE: File
-  VALUE: strictdoc/export/html/_static/html2pdf/bundle.js
 
 [REQUIREMENT]
 MID: 8811f0ef33de4365bc66a602a8c184f6

@@ -4,6 +4,8 @@ from functools import partial
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+from html2print.html2print import PATH_TO_HTML2PDF_JS
+
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.asset_manager import AssetDir
 from strictdoc.core.document_meta import DocumentMeta
@@ -228,6 +230,14 @@ class HTMLGenerator:
                 mathjax_src,
                 output_html_nestor,
                 message="Copying Nestor assets",
+            )
+
+        # Export HTML2PDF
+        if project_config.is_feature_activated(ProjectFeature.HTML2PDF):
+            sync_dir(
+                os.path.dirname(PATH_TO_HTML2PDF_JS),
+                output_html_static_files,
+                message="Copying HTML2PDF.js",
             )
 
         # Export project's assets.

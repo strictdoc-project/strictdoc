@@ -1,6 +1,5 @@
 import os
 import shutil
-import sys
 
 from tests.end2end.conftest import DOWNLOADED_FILES_PATH, test_environment
 from tests.end2end.e2e_case import E2ECase
@@ -8,7 +7,6 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
 from tests.end2end.server import SDocTestServer
-from tests.end2end.test_helpers import available_systems
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 path_to_expected_downloaded_file = os.path.join(
@@ -17,7 +15,6 @@ path_to_expected_downloaded_file = os.path.join(
 
 
 class Test(E2ECase):
-    @available_systems(["linux"])
     def test(self):
         shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)
 
@@ -42,10 +39,6 @@ class Test(E2ECase):
             assert not os.path.exists(path_to_expected_downloaded_file)
 
             screen_document.do_export_pdf()
-
-            # FIXME: does not work on Linux CI
-            if sys.platform.startswith("linux"):
-                return
 
             self.sleep(test_environment.download_file_timeout_seconds)
             assert os.path.exists(path_to_expected_downloaded_file)

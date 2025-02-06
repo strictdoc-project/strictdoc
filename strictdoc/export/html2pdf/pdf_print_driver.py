@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg"
 from subprocess import CompletedProcess, TimeoutExpired, run
 from typing import List, Tuple
 
@@ -11,7 +10,7 @@ class PDFPrintDriver:
     def get_pdf_from_html(
         project_config: ProjectConfig,
         paths_to_print: List[Tuple[str, str]],
-    ):
+    ) -> None:
         assert isinstance(paths_to_print, list), paths_to_print
         cmd: List[str] = [
             # Using sys.executable instead of "python" is important because
@@ -37,7 +36,7 @@ class PDFPrintDriver:
             "PDFPrintDriver: printing HTML to PDF using HTML2PDF and Chrome Driver"
         ):
             try:
-                _: CompletedProcess = run(
+                _: CompletedProcess[bytes] = run(
                     cmd,
                     capture_output=False,
                     check=False,

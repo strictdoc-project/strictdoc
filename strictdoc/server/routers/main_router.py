@@ -2596,10 +2596,11 @@ def create_main_router(
         with open(path_to_output_html, mode="w", encoding="utf8") as temp_file_:
             temp_file_.write(document_content)
 
+            assert os.path.isfile(path_to_output_html), path_to_output_html
             try:
                 pdf_print_driver.get_pdf_from_html(
                     project_config,
-                    f"{path_to_output_html},{path_to_output_pdf}",
+                    [(path_to_output_html, path_to_output_pdf)],
                 )
             except TimeoutError:
                 return Response(

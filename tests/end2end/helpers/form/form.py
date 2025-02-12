@@ -131,6 +131,27 @@ class Form:  # pylint: disable=invalid-name
                 f"'{field_value}'."
             )
 
+    def do_use_first_autocomplete_result_mid(
+        self, mid: MID, test_id: str, field_value: str
+    ) -> None:
+        assert isinstance(mid, MID)
+        assert isinstance(test_id, str)
+        assert isinstance(field_value, str)
+
+        field_xpath = f"(//*[@mid='{mid}' and @data-testid='{test_id}'])"
+        for _ in range(3):
+            self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
+            element = self.test_case.find_element(field_xpath)
+            element.send_keys(Keys.ARROW_DOWN)
+            element.send_keys(Keys.RETURN)
+            if field_value in element.text:
+                break
+        else:
+            raise AssertionError(
+                f"The text field could not be filled with the value: "
+                f"'{field_value}'."
+            )
+
     def do_clear_field(self, field_name: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)
         # HACK: The only way the field is actually cleared.

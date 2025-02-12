@@ -11,7 +11,6 @@ Stimulus.register("autocompletable", class extends Controller {
   static classes = ["selected"]
   static values = {
     ready: Boolean,
-    submitOnEnter: Boolean,
     url: String,
     minLength: Number,
     delay: { type: Number, default: 300 },
@@ -45,15 +44,16 @@ Stimulus.register("autocompletable", class extends Controller {
       this.close()   
     });
 
-    autocompletable.addEventListener("input", (event) => {
-      this.hidden.value = ""
-    
+    autocompletable.addEventListener("input", (event) => {    
       const query = autocompletable.innerText.trim()
       if (query && query.length >= this.minLengthValue) {
         this.fetchResults(query)
       } else {
         this.hideAndRemoveOptions()
       }
+
+      const text = filterSingleLine(this.autocompletable.innerText) 
+      this.hidden.value = text
     });
 
     this.results.addEventListener("mousedown", this.onResultsMouseDown)
@@ -127,10 +127,9 @@ Stimulus.register("autocompletable", class extends Controller {
     const selected = this.selectedOption
     if (selected && this.resultsShown) {
       this.commit(selected)
-      if (!this.hasSubmitOnEnterValue) {
-        event.preventDefault()
-      }
     }
+    /* single line, dont allow enter */
+    event.preventDefault()
   }
 
   commit(selected) {
@@ -217,7 +216,7 @@ Stimulus.register("autocompletable", class extends Controller {
   }
 
   doFetch = async (url) => {
-    const response = await fetch(url, this.optionsForFetch())
+    const response = await fetch(url)
 
     if (!response.ok) {
       throw new Error(`Server responded with status ${response.status}`)
@@ -282,10 +281,11 @@ Stimulus.register("autocompletable", class extends Controller {
     return this.hasSelectedClass ? this.selectedClasses : ["autocomplete-active"]
   }
 
-  optionsForFetch() {
-    return { headers: { "X-Requested-With": "XMLHttpRequest" } } // override if you need
-  }
 });
+
+function filterSingleLine(text) {
+  return text.replace(/\s/g, ' ').replace(/\s\s+/g, ' ')
+};
 
 const debounce = (fn, delay = 10) => {
   let timeoutId = null

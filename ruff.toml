@@ -100,4 +100,4 @@ exclude = ["tests/**/invalid_file*"]
 # Some of our helpers have deliberatly the name of a standard library module
 
 [lint.flake8-builtins]
-builtins-allowed-modules = ["math", "pickle", "string"]
+builtins-allowed-modules = ["math", "pickle", "string", "html"]

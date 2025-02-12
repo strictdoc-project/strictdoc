@@ -137,6 +137,8 @@ from strictdoc.server.error_object import ErrorObject
 HTTP_STATUS_PRECONDITION_FAILED = 412
 HTTP_STATUS_GATEWAY_TIMEOUT = 504
 
+AUTOCOMPLETE_LIMIT = 50
+
 
 def create_main_router(
     server_config: ServerCommandConfig, project_config: ProjectConfig
@@ -2690,6 +2692,49 @@ def create_main_router(
             error=error,
         )
         output = view_object.render_screen(html_templates.jinja_environment())
+
+        return Response(
+            content=output,
+            status_code=200,
+        )
+
+    # @relation(SDOC-SRS-120, scope=function)
+    @router.get("/autocomplete/uid", response_class=Response)
+    def get_autocomplete_results(q: Optional[str] = None):
+        output = ""
+        if q is not None:
+            query_words = q.lower().split()
+            resulting_nodes = []
+            for (
+                document
+            ) in export_action.traceability_index.document_tree.document_list:
+                document_iterator = (
+                    export_action.traceability_index.get_document_iterator(
+                        document
+                    )
+                )
+                for node in document_iterator.all_content(
+                    print_fragments=False, print_fragments_from_files=False
+                ):
+                    if node.reserved_uid is not None:
+                        words = node.reserved_uid.strip().lower()
+                        if node.reserved_title is not None:
+                            words = (
+                                words
+                                + " "
+                                + node.reserved_title.strip().lower()
+                            )
+                        if all(word.lower() in words for word in query_words):
+                            resulting_nodes.append(node)
+                        if len(resulting_nodes) >= AUTOCOMPLETE_LIMIT:
+                            break
+                if len(resulting_nodes) >= AUTOCOMPLETE_LIMIT:
+                    break
+
+            output = env().render_template_as_markup(
+                "autocomplete/uid/stream_autocomplete_uid.jinja.html",
+                nodes=resulting_nodes,
+            )
 
         return Response(
             content=output,

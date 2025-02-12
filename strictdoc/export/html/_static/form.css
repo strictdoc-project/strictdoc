@@ -227,8 +227,11 @@ sdoc-form-grid {
   padding:
           calc(var(--base-rhythm)*4)
           calc(var(--base-rhythm)*3); /* (4-1) related to column gap */
-  overflow: visible; /* related to autocompletable */
-  
+
+  overflow-x: clip; /* Prevents overflow issues affecting:
+                       - field_action::before (highlight visibility on delete) and
+                       - autocompletable (dropdown visibility) */
+
   /* content container has no padding-block */
   margin-top: calc(var(--base-rhythm)*2);
   margin-bottom: calc(var(--base-rhythm)*2);

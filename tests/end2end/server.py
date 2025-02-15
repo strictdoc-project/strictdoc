@@ -220,7 +220,7 @@ class SDocTestServer:
                 "\nTestSDocServer: exiting due to an exception.\n"
             )
             print(f"--- Exception ---\n {exit_due_exception}")  # noqa: T201
-            last_lines_number = 10
+            last_lines_number = 25
             print(  # noqa: T201
                 f"\n--- Captured Uvicorn stdout "
                 f"(last {last_lines_number} lines) ---\n"

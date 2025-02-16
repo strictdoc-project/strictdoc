@@ -1,3 +1,9 @@
+FIXME: Apparently, there is an edge case on Windows when the Parallelizer cannot
+       recognize a crashed child process sometimes.
+       https://github.com/strictdoc-project/strictdoc/actions/runs/13359164657/job/37306146977?pr=2082
+
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
 RUN: %expect_exit 1 %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
 
 CHECK: error: could not parse file: {{.*}}input1.sdoc.

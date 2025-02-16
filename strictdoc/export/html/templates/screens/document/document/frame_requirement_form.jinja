@@ -69,6 +69,7 @@
     {% set relation_row_context.errors = field_.validation_messages %}
     {% set relation_row_context.relation_types = form_object.relation_types %}
     {% set relation_row_context.form_object = form_object %}
+    {% set requirement_mid = form_object.requirement_mid %}
     {% include "components/form/row/row_with_relation.jinja" %}
   {%- endfor -%}
 

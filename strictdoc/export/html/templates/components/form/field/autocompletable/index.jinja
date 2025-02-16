@@ -1,0 +1,69 @@
+{%- assert field_class_name is defined, "field_class_name is defined" -%}
+{%- assert field_editable is defined, "field_editable is defined" -%}
+{%- assert field_input_name is defined, "field_input_name is defined" -%}
+{%- assert field_label is defined, "field_label is defined" -%}
+{%- assert field_label is not none, "field_label is not none" -%}
+{# FIXME: Remove #}
+{%- assert field_name is not defined, "field_name is not defined" -%}
+{%- assert field_placeholder is defined, "field_placeholder is defined" -%}
+{%- assert field_placeholder is not none, "field_placeholder is not none" -%}
+{%- assert field_value is defined, "field_value is defined" -%}
+{%- assert mid is defined, "mid is defined" -%}
+{%- assert requirement_mid is defined, "requirement_mid is defined" -%}
+{%- assert testid_postfix is defined, "testid_postfix is defined" -%}
+
+{% if field_required is not defined -%}
+{% set field_required=false -%}
+{%- endif -%}
+
+{#
+  CSS note:
+  Flex order in <sdoc-form-field> should not be used to ensure that the output
+  of an error block affects the autocompletable physically following it.
+  So the <sdoc-form-error> block should be inside the <sdoc-form-field>,
+  which must necessarily have "display:block", but after the autocompletable.
+  Otherwise, unnecessary spaces are produced in the content,
+  and it breaks Selenium's end2end tests.
+#}
+
+<sdoc-form-field>
+  <sdoc-autocompletable
+    {% if errors is defined and errors|length -%}
+      errors="true"
+    {%- endif %}
+    {% if field_required -%}
+      required="true"
+    {%- endif %}
+    data-controller="autocompletable"
+    role="textbox"
+    {%- if field_editable is defined and not field_editable -%}
+      contenteditable="false"
+    {%- else -%}
+      contenteditable="true"
+    {%- endif -%}
+    id="{{ field_input_name }}"
+    mid="{{ mid }}"
+    placeholder="{{ field_placeholder }}"
+    data-field-label="{{ field_label }}{%- if field_required -%}&nbsp;*{%- endif -%}"
+    {%- if field_class_name is not none -%}
+      class="{{ field_class_name }}"
+    {%- endif -%}
+    data-testid="form-field-{{ testid_postfix }}"
+    data-autocompletable-target="input"
+    data-autocompletable-url-value="/autocomplete/uid?exclude_requirement_mid={{ requirement_mid }}"
+  >
+    {{- field_value -}}
+  </sdoc-autocompletable>
+
+  <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %} data-autocompletable-target="hidden"/>
+  <ul class="autocomplete-items {{ result_class_name}}" ></ul>
+
+  {%- if errors is defined and errors|length > 0 -%}
+    {%- for error_ in errors -%}
+    <sdoc-form-error>
+      {{ error_ }}
+    </sdoc-form-error>
+    {%- endfor -%}
+  {%- endif -%}
+
+</sdoc-form-field>

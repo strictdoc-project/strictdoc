@@ -364,6 +364,7 @@ def test_integration(
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         --param STRICTDOC_TMP_DIR="{STRICTDOC_TMP_DIR}"
+        --timeout 180
         {html2pdf_param}
         {chromedriver_param}
         -v

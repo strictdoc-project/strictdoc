@@ -25,6 +25,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [SECTION]
+MID: 58b99c15df8445ce9832e24a17588e2c
+TITLE: Unreleased work
+
+[TEXT]
+MID: c5725f24fcd24d54929e155f6ad47b44
+STATEMENT: >>>
+The autocompletion dropdown has been added to the relation editor in the Web GUI. Thanks to @thseiler for contributing this work.
+<<<
+
+[/SECTION]
+
+[SECTION]
 MID: ff59e375101145b3bf12465ce2b5fc14
 TITLE: 0.6.0 (2025-02-16)
 

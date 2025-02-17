@@ -262,18 +262,6 @@ STATUS: Backlog
 TITLE: UML
 
 [REQUIREMENT]
-MID: 452fbd74d01843fe949d3bd804df203e
-UID: SDOC-SRS-129
-STATUS: Backlog
-TITLE: Export/import to CSV
-STATEMENT: >>>
-StrictDoc shall allow exporting/import SDoc content to/from CSV.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-59
-
-[REQUIREMENT]
 MID: bdedcdd91c7f4efb8787b5a82cfec49b
 UID: SDOC-SRS-114
 STATUS: Backlog
@@ -390,25 +378,6 @@ Moving the nodes within a document is a convenience feature that speeds up the r
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-70
-
-[REQUIREMENT]
-MID: 956371b6a7824d0b91caa5603faeeae2
-UID: SDOC-SRS-120
-STATUS: Backlog
-TITLE: Auto-completion for requirements UIDs
-STATEMENT: >>>
-StrictDoc's Document screen shall provide controls for automatic completion of requirements UIDs.
-<<<
-COMMENT: >>>
-The automatic completion can be especially useful when a user has to fill in a parent relation UID.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-6
-- TYPE: Parent
-  VALUE: DO178-14
-- TYPE: Parent
-  VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
 MID: 45b8513623744776899abfbf99c95286
@@ -539,11 +508,13 @@ STATEMENT: >>>
 
 - Filtering of requirements by tags.
 
-- Import/export: Excel, CSV, PlantUML, Confluence, Tex, Doorstop.
+- Import/export: PlantUML, Confluence, Tex, Doorstop.
 
 - **Partial evaluation of Jinja templates.** Many of the template variables could be made to be evaluated once, for example, config object's variables.
 
 - UI version for mobile devices (at least some basic tweaks).
+
+- Similar to the possibility of creating a child requirement to a section, one could provide a button for each of the relations defined in the grammar which would allow to quickly build a tree structure.
 <<<
 
 [/SECTION]

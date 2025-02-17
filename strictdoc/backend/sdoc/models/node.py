@@ -262,6 +262,9 @@ class SDocNode(SDocObject):
     def is_requirement(self) -> bool:
         return True
 
+    def is_normative_node(self) -> bool:
+        return not self.is_text_node()
+
     def is_text_node(self) -> bool:
         return self.node_type == "TEXT"
 

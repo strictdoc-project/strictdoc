@@ -21,7 +21,7 @@ class DocumentTreeStats:
     git_commit_hash: Optional[str] = None
 
     # Section
-    sections_without_free_text: int = 0
+    sections_without_text_nodes: int = 0
 
     # UID
     requirements_no_uid: int = 0

@@ -855,6 +855,25 @@ RELATIONS:
   VALUE: strictdoc/commands/manage_autouid_command.py
 
 [REQUIREMENT]
+MID: 956371b6a7824d0b91caa5603faeeae2
+UID: SDOC-SRS-120
+STATUS: Backlog
+TITLE: Auto-completion for requirements UIDs
+STATEMENT: >>>
+StrictDoc's Document screen shall provide controls for automatic completion of requirements UIDs.
+<<<
+COMMENT: >>>
+The automatic completion can be especially useful when a user has to fill in a parent relation UID.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-6
+- TYPE: Parent
+  VALUE: DO178-14
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
+
+[REQUIREMENT]
 MID: 738b63b7f55b43eb99f5600bd65f5ba7
 UID: SDOC-SRS-59
 STATUS: Active

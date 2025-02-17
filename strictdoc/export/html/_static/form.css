@@ -227,7 +227,10 @@ sdoc-form-grid {
   padding:
           calc(var(--base-rhythm)*4)
           calc(var(--base-rhythm)*3); /* (4-1) related to column gap */
-  overflow-x: hidden; /* related to field_action::before */
+
+  overflow-x: clip; /* Prevents overflow issues affecting:
+                       - field_action::before (highlight visibility on delete) and
+                       - autocompletable (dropdown visibility) */
 
   /* content container has no padding-block */
   margin-top: calc(var(--base-rhythm)*2);
@@ -306,13 +309,44 @@ sdoc-form-field-group:focus-within::before {
  * sdoc-contenteditable
  */
 
-sdoc-contenteditable {
+sdoc-contenteditable,
+sdoc-autocompletable {
   display: block;
   position: relative;
 }
 
-sdoc-contenteditable[contenteditable="false"] {
+sdoc-contenteditable[contenteditable="false"],
+sdoc-autocompletable[contenteditable="false"] {
   color: var(--color-fg-secondary);
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  background-color: var(--color-bg-contrast);
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 40vw;
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: 999;
+}
+
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: var(--color-highlight) !important;
+}
+
+.autocompletable-result-item {
+  position:relative;
+  display:block;
+  padding:.25rem 0.25rem;
+  margin-bottom:-1px;
+  border:1px solid rgba(0,0,0,.125)
 }
 
 .monospace {
@@ -329,7 +363,8 @@ sdoc-contenteditable[contenteditable="false"] {
 /* todo: Join sdoc-contenteditable with sdoc-form-field */
 
 sdoc-form-field label,
-sdoc-contenteditable::before {
+sdoc-contenteditable::before,
+sdoc-autocompletable::before {
   /* for contenteditable */
   content: attr(data-field-label);
   /* for all */
@@ -346,7 +381,8 @@ sdoc-contenteditable::before {
 }
 
 sdoc-form-field:focus-within label,
-sdoc-contenteditable:focus::before {
+sdoc-contenteditable:focus::before,
+sdoc-autocompletable:focus::before {
   color: var(--color-fg-accent);
 }
 

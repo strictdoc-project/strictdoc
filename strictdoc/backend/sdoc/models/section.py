@@ -130,6 +130,12 @@ class SDocSection(SDocObject):
     def is_section(self):
         return True
 
+    def has_any_text_nodes(self):
+        return any(
+            not node_.is_section and node_.node_type == "TEXT"
+            for node_ in self.section_contents
+        )
+
     @property
     def is_root(self) -> bool:
         return self.document.config.root is True

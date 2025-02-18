@@ -265,4 +265,4 @@ class QueryObject:
                 f"Section objects, got: {node.__class__.__name__}. To fix "
                 f"the error, prepend your query with node.is_section."
             )
-        return len(node.free_texts) > 0
+        return node.has_any_text_nodes()

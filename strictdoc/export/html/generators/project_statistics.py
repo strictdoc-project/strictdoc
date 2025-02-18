@@ -39,18 +39,14 @@ class ProgressStatisticsGenerator:
             ):
                 if isinstance(node, SDocSection):
                     document_tree_stats.total_sections += 1
+                    if not node.has_any_text_nodes():
+                        document_tree_stats.sections_without_text_nodes += 1
 
-                    contains_text_nodes = any(
-                        isinstance(node_, SDocNode)
-                        and node_.node_type == "TEXT"
-                        for node_ in node.section_contents
-                    )
-                    if contains_text_nodes:
-                        document_tree_stats.sections_without_free_text += 1
-
-                if isinstance(node, SDocNode):
+                elif isinstance(node, SDocNode):
                     requirement: SDocNode = assert_cast(node, SDocNode)
-                    document_tree_stats.total_requirements += 1
+                    if not requirement.is_text_node():
+                        document_tree_stats.total_requirements += 1
+
                     if requirement.reserved_uid is None:
                         document_tree_stats.requirements_no_uid += 1
 

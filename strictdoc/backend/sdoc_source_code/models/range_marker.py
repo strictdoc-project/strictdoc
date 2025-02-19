@@ -13,6 +13,7 @@ class RangeMarker:
         begin_or_end: str,
         reqs_objs: List[Req],
         scope: str = "",
+        role: Optional[str] = None,
     ):
         assert isinstance(reqs_objs, list)
         self.parent: Any = parent
@@ -28,6 +29,9 @@ class RangeMarker:
 
         self.reqs_objs: List[Req] = reqs_objs
         self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
+        self.role: Optional[str] = (
+            role if role is not None and len(role) > 0 else None
+        )
 
         # Line number of the marker in the source code.
         self.ng_source_line_begin: Optional[int] = None
@@ -65,11 +69,16 @@ class RangeMarker:
 
 @auto_described
 class LineMarker:
-    def __init__(self, parent: Any, reqs_objs: List[Req]) -> None:
+    def __init__(
+        self, parent: Any, reqs_objs: List[Req], role: Optional[str] = None
+    ) -> None:
         assert isinstance(reqs_objs, list)
         self.parent = parent
         self.reqs_objs = reqs_objs
         self.reqs = list(map(lambda req: req.uid, reqs_objs))
+        self.role: Optional[str] = (
+            role if role is not None and len(role) > 0 else None
+        )
 
         # Line number of the marker in the source code.
         self.ng_source_line_begin: Optional[int] = None
@@ -98,11 +107,16 @@ class LineMarker:
 
 @auto_described
 class ForwardRangeMarker:
-    def __init__(self, start_or_end: bool, reqs_objs: List):
+    def __init__(
+        self, start_or_end: bool, reqs_objs: List, role: Optional[str] = None
+    ):
         assert len(reqs_objs) > 0
         self.start_or_end: bool = start_or_end
 
         self.reqs_objs = reqs_objs
+        self.role: Optional[str] = (
+            role if role is not None and len(role) > 0 else None
+        )
 
         # Line number of the marker in the source code.
         self.ng_source_line_begin: Optional[int] = None

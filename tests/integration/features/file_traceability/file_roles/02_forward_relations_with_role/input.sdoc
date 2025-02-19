@@ -1,0 +1,63 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: File
+    ROLE: Implementation
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement Title 1
+STATEMENT: >>>
+Requirement with forward relations from files.
+<<<
+RELATIONS:
+- TYPE: File
+  ROLE: Implementation
+  VALUE: file.c
+- TYPE: File
+  ROLE: Implementation
+  VALUE: file.c
+  FUNCTION: foo
+- TYPE: File
+  ROLE: Implementation
+  VALUE: file.c
+  LINE_RANGE: 10, 11
+- TYPE: File
+  ROLE: Implementation
+  VALUE: file.py
+- TYPE: File
+  ROLE: Implementation
+  VALUE: file.py
+  FUNCTION: foo
+- TYPE: File
+  ROLE: Implementation
+  VALUE: file.py
+  CLASS: Foo
+- TYPE: File
+  ROLE: Implementation
+  VALUE: file.py
+  LINE_RANGE: 9, 14
+- TYPE: File
+  ROLE: Implementation
+  VALUE: file.txt
+- TYPE: File
+  ROLE: Implementation
+  VALUE: file.txt
+  LINE_RANGE: 1, 2

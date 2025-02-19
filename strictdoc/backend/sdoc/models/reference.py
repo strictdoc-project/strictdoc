@@ -19,10 +19,14 @@ class Reference:
 
 @auto_described
 class FileReference(Reference):
-    def __init__(self, parent, g_file_entry: FileEntry):
+    def __init__(
+        self, parent, g_file_entry: FileEntry, role: Optional[str] = None
+    ):
         super().__init__(ReferenceType.FILE, parent)
         self.g_file_entry: FileEntry = g_file_entry
-        self.role: Optional[str] = None
+        self.role: Optional[str] = (
+            role if role is not None and len(role) > 0 else None
+        )
         self.mid = MID.create()
 
     def get_posix_path(self) -> str:

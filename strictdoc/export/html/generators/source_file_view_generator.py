@@ -40,7 +40,6 @@ from strictdoc.export.html.generators.view_objects.source_file_view_object impor
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import measure_performance
 
@@ -231,9 +230,26 @@ class SourceFileViewHTMLGenerator:
         for marker in coverage_info.markers:
             marker_line = marker.ng_source_line_begin
             assert isinstance(marker_line, int)
-            pygmented_source_file_line = assert_cast(
-                pygmented_source_file_lines[marker_line - 1], str
-            )
+            # TODO: Don't merge, will get a dedicated fix with #2099
+            pygmented_source_file_line = pygmented_source_file_lines[
+                marker_line - 1
+            ]
+            if (
+                isinstance(pygmented_source_file_line, SourceMarkerTuple)
+                and isinstance(
+                    pygmented_source_file_line.marker,
+                    (FunctionRangeMarker, LineMarker, RangeMarker),
+                )
+                and isinstance(
+                    marker, (FunctionRangeMarker, LineMarker, RangeMarker)
+                )
+            ):
+                pygmented_source_file_line.marker.reqs.extend(marker.reqs)
+                pygmented_source_file_line.marker.reqs_objs.extend(
+                    marker.reqs_objs
+                )
+                continue
+            assert isinstance(pygmented_source_file_line, str)
             if isinstance(marker, ForwardRangeMarker):
                 before_line = pygmented_source_file_line.rstrip("\n") + " "
                 pygmented_source_file_lines[marker_line - 1] = (

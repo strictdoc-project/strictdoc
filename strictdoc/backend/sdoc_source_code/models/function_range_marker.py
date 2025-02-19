@@ -14,12 +14,17 @@ class RangeMarkerType(Enum):
 
 @auto_described
 class FunctionRangeMarker:
-    def __init__(self, parent, reqs_objs: List[Req], scope: str):
+    def __init__(
+        self, parent, reqs_objs: List[Req], scope: str, role: Optional[str]
+    ):
         assert isinstance(reqs_objs, list)
         assert isinstance(scope, str), scope
         self.parent = parent
         self.reqs_objs: List[Req] = reqs_objs
         self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
+        self.role: Optional[str] = (
+            role if role is not None and len(role) > 0 else None
+        )
 
         self.scope: RangeMarkerType = RangeMarkerType(scope)
 
@@ -67,5 +72,11 @@ class FunctionRangeMarker:
 
 @auto_described
 class ForwardFunctionRangeMarker(FunctionRangeMarker):
-    def __init__(self, parent, reqs_objs: List[Req], scope: str):
-        super().__init__(parent, reqs_objs, scope)
+    def __init__(
+        self,
+        parent,
+        reqs_objs: List[Req],
+        scope: str,
+        role: Optional[str] = None,
+    ):
+        super().__init__(parent, reqs_objs, scope, role)

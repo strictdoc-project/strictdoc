@@ -348,6 +348,7 @@ class GrammarElementFormObject(ErrorObject):
                     GrammarElementRelationFile(
                         parent=None,
                         relation_type=relation.relation_type,
+                        relation_role=relation.relation_role,
                     )
                 )
             else:

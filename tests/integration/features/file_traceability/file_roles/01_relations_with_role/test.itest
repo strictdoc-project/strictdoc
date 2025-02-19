@@ -1,0 +1,2 @@
+RUN: %strictdoc export . --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc

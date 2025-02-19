@@ -231,6 +231,16 @@ class SourceFileViewHTMLGenerator:
         for marker in coverage_info.markers:
             marker_line = marker.ng_source_line_begin
             assert isinstance(marker_line, int)
+            # TODO: Better support multiple markers per SourceMarkerTuple instead of squashing
+            if isinstance(
+                pygmented_source_file_lines[marker_line - 1], SourceMarkerTuple
+            ):
+                source_marker_tuple: SourceMarkerTuple = (
+                    pygmented_source_file_lines[marker_line - 1]
+                )
+                source_marker_tuple.marker.reqs.extend(marker.reqs)
+                source_marker_tuple.marker.reqs_objs.extend(marker.reqs_objs)
+                continue
             pygmented_source_file_line = assert_cast(
                 pygmented_source_file_lines[marker_line - 1], str
             )

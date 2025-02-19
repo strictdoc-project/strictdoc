@@ -35,6 +35,7 @@ def create_default_relations(
         GrammarElementRelationFile(
             parent=parent,
             relation_type="File",
+            relation_role=None,
         ),
     ]
 

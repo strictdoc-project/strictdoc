@@ -1,4 +1,6 @@
-SOURCE_FILE_GRAMMAR = """
+REGEX_ROLE = r"[^)]+"
+
+SOURCE_FILE_GRAMMAR = f"""
 SourceFileTraceabilityInfo[noskipws]:
   g_parts += Part
 ;
@@ -27,13 +29,13 @@ RangeMarker[noskipws]:
   (
   /^.*?@relation/
   '('
-  (reqs_objs += Req[', ']) ', scope=' scope=/(range_start|range_end)/ ')' '\n'?
+  (reqs_objs += Req[', ']) ', scope=' scope=/(range_start|range_end)/ (", role=" role=/{REGEX_ROLE}/)? ')' '\n'?
   )
 ;
 
 FunctionRangeMarker[noskipws]:
   /^.*?@relation/
-  "(" (reqs_objs += Req[', ']) ', scope=' scope="file" ')' '\n'?
+  "(" (reqs_objs += Req[', ']) ', scope=' scope="file" (", role=" role=/{REGEX_ROLE}/)? ')' '\n'?
 ;
 
 LineMarker[noskipws]:
@@ -47,7 +49,7 @@ LineMarker[noskipws]:
   |
   (
   /^.*?@relation/
-  "(" (reqs_objs += Req[', ']) ', scope=line)' '\n'?
+  "(" (reqs_objs += Req[', ']) ', scope=line' (", role=" role=/{REGEX_ROLE}/)? ")" '\n'?
   )
 ;
 

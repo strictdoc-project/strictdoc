@@ -87,7 +87,7 @@
                     {%- if requirement_file_links %}
                       Source files:
                       <ul class="requirement__link">
-                        {%- for link, opt_ranges in requirement_file_links %}
+                        {%- for link, fwd_role_, opt_ranges in requirement_file_links %}
                           {%- if opt_ranges -%}
                             {%- for range in opt_ranges %}
                               <li>

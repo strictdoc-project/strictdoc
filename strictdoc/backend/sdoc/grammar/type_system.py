@@ -40,6 +40,7 @@ ChildReqReference[noskipws]:
 FileReference[noskipws]:
   // FileReference is an early, experimental feature. Do not use yet.
   '- TYPE: File' '\n'
+  ('  ROLE: ' role = /.+$/ '\n')?
   g_file_entry = FileEntry
 ;
 

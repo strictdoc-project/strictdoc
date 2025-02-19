@@ -21,7 +21,7 @@
  {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
  {%- if requirement_file_links %}
   <ul class="requirement-tree_downward">
-  {%- for link, opt_ranges in requirement_file_links %}
+  {%- for link, fwd_role_, opt_ranges in requirement_file_links %}
     {%- assert link.__class__.__name__ == "str", "Expected str" -%}
 
     {%- set this_file_or_other = view_object.source_file.in_doctree_source_file_rel_path_posix == link -%}

@@ -1,0 +1,6 @@
+A generic line @relation(REQ-001, scope=line, role=Implementation)
+
+@relation(REQ-001, scope=range_start, role=Implementation)
+A generic
+line range
+@relation(REQ-001, scope=range_end)

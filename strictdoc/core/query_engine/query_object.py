@@ -1,6 +1,7 @@
 # mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def,union-attr,operator"
 from typing import List, Optional
 
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -201,8 +202,11 @@ class QueryObject:
         field_name = expression.field_name
         if node.is_requirement:
             requirement: SDocNode = assert_cast(node, SDocNode)
+            requirement_document: SDocDocument = assert_cast(
+                requirement.get_document(), SDocDocument
+            )
             element: GrammarElement = (
-                requirement.document.grammar.elements_by_type[
+                requirement_document.grammar.elements_by_type[
                     requirement.node_type
                 ]
             )

@@ -164,8 +164,9 @@ class CreateSectionCommand:
                     document = assert_cast(
                         reference_node.get_including_document(), SDocDocument
                     )
-        else:
-            document = reference_node.document
+        elif document_ := reference_node.get_document():
+            assert isinstance(document_, SDocDocument)
+            document = document_
 
         if len(form_object.section_title) == 0:
             errors["section_title"].append("Section title must not be empty.")

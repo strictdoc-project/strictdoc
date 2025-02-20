@@ -2,25 +2,27 @@
 @relation(SDOC-SRS-26, scope=file)
 """
 
-# mypy: disable-error-code="union-attr"
 from collections import OrderedDict
 from typing import Any, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.object import SDocObject
+from strictdoc.backend.sdoc.models.model import (
+    SDocCompositeNodeIF,
+    SDocDocumentIF,
+    SDocNodeIF,
+    SDocSectionIF,
+)
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
     ReferenceType,
@@ -97,10 +99,10 @@ class SDocNodeField:
 
 
 @auto_described
-class SDocNode(SDocObject):
+class SDocNode(SDocNodeIF):
     def __init__(
         self,
-        parent: Union[SDocDocument, SDocSection, "SDocCompositeNode"],
+        parent: Union[SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF],
         node_type: str,
         fields: List[SDocNodeField],
         relations: List[Reference],
@@ -111,9 +113,9 @@ class SDocNode(SDocObject):
         assert isinstance(node_type, str)
         assert isinstance(relations, list), relations
 
-        self.parent: Union[SDocDocument, SDocSection, SDocCompositeNode] = (
-            parent
-        )
+        self.parent: Union[
+            SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF
+        ] = parent
 
         self.node_type: str = node_type
 
@@ -200,7 +202,8 @@ class SDocNode(SDocObject):
 
     @property
     def is_root(self) -> bool:
-        return self.document.config.root is True
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        return document.config.root is True
 
     # Reserved fields
 
@@ -236,16 +239,16 @@ class SDocNode(SDocObject):
         )
 
     def has_reserved_statement(self) -> bool:
-        element: GrammarElement = self.document.grammar.elements_by_type[
-            self.node_type
-        ]
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
         return element.content_field[0] in self.ordered_fields_lookup
 
     @property
     def reserved_statement(self) -> Optional[str]:
-        element: GrammarElement = self.document.grammar.elements_by_type[
-            self.node_type
-        ]
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
         return self._get_cached_field(
             element.content_field[0], singleline_only=False
         )
@@ -283,22 +286,35 @@ class SDocNode(SDocObject):
     def is_composite_requirement(self) -> bool:
         return False
 
-    # FIXME: Remove @property, use get_document().
+    # FIXME: Remove this, use get_document().
     @property
-    def document(self) -> SDocDocument:
-        document: Optional[SDocDocument] = (
+    def document(self) -> Optional[SDocDocumentIF]:
+        return self.get_document()
+
+    def get_document(self) -> Optional[SDocDocumentIF]:
+        assert self.ng_document_reference is not None
+        return self.ng_document_reference.get_document()
+
+    def get_including_document(self) -> Optional[SDocDocumentIF]:
+        assert self.ng_including_document_reference is not None
+        return self.ng_including_document_reference.get_document()
+
+    def get_parent_or_including_document(self) -> SDocDocumentIF:
+        assert self.ng_including_document_reference is not None
+        including_document_or_none = (
+            self.ng_including_document_reference.get_document()
+        )
+        if including_document_or_none is not None:
+            return including_document_or_none
+
+        assert self.ng_document_reference is not None
+        document: Optional[SDocDocumentIF] = (
             self.ng_document_reference.get_document()
         )
         assert document is not None, (
             "A valid requirement must always have a reference to the document."
         )
         return document
-
-    def get_document(self) -> Optional[SDocDocument]:
-        return self.ng_document_reference.get_document()
-
-    def get_including_document(self) -> Optional[SDocDocument]:
-        return self.ng_including_document_reference.get_document()
 
     def get_display_node_type(self) -> str:
         return "Node"
@@ -311,45 +327,39 @@ class SDocNode(SDocObject):
             debug_components.append(f"UID = '{self.reserved_uid}'")
         if self.reserved_title is not None:
             debug_components.append(f"TITLE = '{self.reserved_title}'")
-        if self.document is not None:
-            debug_components.append(
-                f"document = {self.document.get_debug_info()}"
-            )
+
+        document: Optional[SDocDocumentIF] = self.get_document()
+        if document is not None:
+            debug_components.append(f"document = {document.get_debug_info()}")
         return f"Requirement({', '.join(debug_components)})"
 
+    # FIXME: Remove this method. Use get_parent_or_including_document() instead.
     @property
-    def parent_or_including_document(self) -> SDocDocument:
-        including_document_or_none = (
-            self.ng_including_document_reference.get_document()
-        )
-        if including_document_or_none is not None:
-            return including_document_or_none
-
-        document: Optional[SDocDocument] = (
-            self.ng_document_reference.get_document()
-        )
-        assert document is not None, (
-            "A valid requirement must always have a reference to the document."
-        )
-        return document
+    def parent_or_including_document(self) -> SDocDocumentIF:
+        return self.get_parent_or_including_document()
 
     def document_is_included(self) -> bool:
+        assert self.ng_including_document_reference is not None
         return self.ng_including_document_reference.get_document() is not None
 
     def get_requirement_style_mode(self) -> str:
-        assert self.ng_document_reference.get_document() is not None
-        return self.ng_document_reference.get_document().config.get_requirement_style_mode()
+        document: SDocDocumentIF = assert_cast(
+            self.get_document(), SDocDocumentIF
+        )
+        return document.config.get_requirement_style_mode()
 
     def get_content_field_name(self) -> str:
-        element: GrammarElement = self.document.grammar.elements_by_type[
-            self.node_type
-        ]
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
         return element.content_field[0]
 
     def get_content_field(self) -> SDocNodeField:
-        element: GrammarElement = self.document.grammar.elements_by_type[
-            self.node_type
-        ]
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
         return self.ordered_fields_lookup[element.content_field[0]][0]
 
     def get_field_by_name(self, field_name: str) -> SDocNodeField:
@@ -462,7 +472,9 @@ class SDocNode(SDocObject):
     def enumerate_meta_fields(
         self, skip_single_lines: bool = False, skip_multi_lines: bool = False
     ) -> Generator[Tuple[str, SDocNodeField], None, None]:
-        element: GrammarElement = self.document.grammar.elements_by_type[
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+
+        element: GrammarElement = document.grammar.elements_by_type[
             self.node_type
         ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
@@ -495,22 +507,30 @@ class SDocNode(SDocObject):
         return field.get_text_value()
 
     def get_field_human_title(self, field_name: str) -> str:
-        element: GrammarElement = self.document.grammar.elements_by_type[
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        element: GrammarElement = document.grammar.elements_by_type[
             self.node_type
         ]
         field_human_title = element.fields_map[field_name]
         return field_human_title.get_field_human_name()
 
     def get_field_human_title_for_statement(self) -> str:
-        element: GrammarElement = self.document.grammar.elements_by_type[
-            self.node_type
-        ]
+        document: SDocDocumentIF = assert_cast(
+            self.get_document(), SDocDocumentIF
+        )
+        grammar: DocumentGrammar = assert_cast(
+            document.grammar, DocumentGrammar
+        )
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
         field_human_title = element.fields_map[element.content_field[0]]
         return field_human_title.get_field_human_name()
 
     def get_requirement_prefix(self) -> str:
-        parent: Union[SDocSection, SDocDocument] = assert_cast(
-            self.parent, (SDocSection, SDocDocument, SDocCompositeNode)
+        parent: Union[SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF] = (
+            assert_cast(
+                self.parent,
+                (SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF),
+            )
         )
         return parent.get_requirement_prefix()
 
@@ -569,7 +589,9 @@ class SDocNode(SDocObject):
             return
 
         # If a field value is being added or updated.
-        document: SDocDocument = self.document
+        document: SDocDocumentIF = assert_cast(
+            self.get_document(), SDocDocumentIF
+        )
         grammar_or_none: Optional[DocumentGrammar] = document.grammar
         assert grammar_or_none is not None
         grammar: DocumentGrammar = grammar_or_none
@@ -642,10 +664,10 @@ class SDocNode(SDocObject):
 
 
 @auto_described
-class SDocCompositeNode(SDocNode):
+class SDocCompositeNode(SDocNode, SDocCompositeNodeIF):
     def __init__(
         self,
-        parent: Union[SDocDocument, SDocSection, "SDocCompositeNode"],
+        parent: Union[SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF],
         **fields: Any,
     ) -> None:
         super().__init__(parent, **fields)
@@ -658,12 +680,14 @@ class SDocCompositeNode(SDocNode):
         return True
 
     @property
-    def document(self) -> SDocDocument:
+    def document(self) -> SDocDocumentIF:
+        assert self.ng_document_reference is not None
         document = self.ng_document_reference.get_document()
         assert document is not None
         return document
 
     def document_is_included(self) -> bool:
+        assert self.ng_including_document_reference is not None
         return self.ng_including_document_reference.get_document() is not None
 
     def get_requirement_prefix(self) -> str:

@@ -359,14 +359,15 @@ class CreateOrUpdateNodeCommand:
                     lhs_node=reference_id_to_remove,
                 )
             )
+            removed_uid_parent_requirement_document = assert_cast(
+                removed_uid_parent_requirement.get_document(), SDocDocument
+            )
             action_object.removed_uid_parent_documents_to_update.add(
-                assert_cast(
-                    removed_uid_parent_requirement.get_document(), SDocDocument
-                )
+                removed_uid_parent_requirement_document
             )
             # If a link was pointing towards a parent requirement in this
             # document, we will have to re-render it now.
-            if removed_uid_parent_requirement.document == document:
+            if removed_uid_parent_requirement_document == document:
                 action_object.this_document_requirements_to_update.add(
                     removed_uid_parent_requirement
                 )

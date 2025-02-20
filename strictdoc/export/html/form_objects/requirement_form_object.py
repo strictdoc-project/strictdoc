@@ -398,7 +398,9 @@ class RequirementFormObject(ErrorObject):
         context_document_mid: str,
     ) -> "RequirementFormObject":
         assert isinstance(requirement, SDocNode)
-        document: SDocDocument = requirement.document
+        document: SDocDocument = assert_cast(
+            requirement.get_document(), SDocDocument
+        )
         assert document.grammar is not None
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type[

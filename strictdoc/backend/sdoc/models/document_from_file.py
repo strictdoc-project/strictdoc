@@ -2,53 +2,62 @@
 @relation(SDOC-SRS-109, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-def,type-arg"
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.model import (
+    SDocDocumentFromFileIF,
+    SDocDocumentIF,
+    SDocElementIF,
+    SDocNodeIF,
+    SDocSectionIF,
+)
 from strictdoc.helpers.auto_described import auto_described
 
 
 @auto_described
-class DocumentFromFile:
+class DocumentFromFile(SDocDocumentFromFileIF):
     def __init__(
         self,
-        parent,
-        file,
-    ):
-        self.parent = parent
-        self.file = file
+        parent: Union[SDocDocumentIF, SDocSectionIF],
+        file: str,
+    ) -> None:
+        self.parent: Union[SDocDocumentIF, SDocSectionIF] = parent
+        self.file: str = file
 
-        self.ng_has_requirements = False
+        self.ng_has_requirements: bool = False
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_included_document_reference: Optional[DocumentReference] = None
-        self.ng_resolved_custom_level = None
-        self.ng_whitelisted = True
-        self.resolved_full_path_to_document_file = None
-        self.resolved_document: Optional = None  # type: ignore[valid-type]
-
-    @property
-    def document(self):
-        raise NotImplementedError
+        self.ng_resolved_custom_level: Optional[str] = None
+        self.ng_whitelisted: bool = True
+        self.resolved_full_path_to_document_file: Optional[str] = None
+        self.resolved_document: Optional[SDocDocumentIF] = None
 
     def has_any_requirements(self) -> bool:
-        task_list = list(self.section_contents)
+        task_list: List[SDocElementIF] = list(self.section_contents)
         while len(task_list) > 0:
-            section_or_requirement = task_list.pop(0)
-            if isinstance(section_or_requirement, DocumentFromFile):
-                if section_or_requirement.has_any_requirements():
+            element = task_list.pop(0)
+            if isinstance(element, SDocNodeIF):
+                if element.is_normative_node():
                     return True
-            if section_or_requirement.is_requirement:
-                return True
-            assert section_or_requirement.is_section, section_or_requirement
-            task_list.extend(section_or_requirement.section_contents)
+                continue
+
+            if isinstance(element, SDocDocumentFromFileIF):
+                if element.has_any_requirements():
+                    return True
+
+            task_list.extend(element.section_contents)
         return False
 
     @property
-    def section_contents(self) -> List:
+    def section_contents(self) -> List[SDocDocumentIF]:
+        assert self.resolved_document is not None
         return [self.resolved_document]
 
-    def configure_with_resolved_document(self, resolved_document):
+    def configure_with_resolved_document(
+        self, resolved_document: SDocDocument
+    ) -> None:
         assert self.ng_included_document_reference is None
         assert self.ng_document_reference is not None
 
@@ -57,10 +66,14 @@ class DocumentFromFile:
 
         including_document_or_section = self.parent
 
-        if including_document_or_section.__class__.__name__ == "SDocDocument":
+        if isinstance(including_document_or_section, SDocDocumentIF):
             including_document = including_document_or_section
-        elif including_document_or_section.__class__.__name__ == "SDocSection":
-            including_document = including_document_or_section.document
+        elif isinstance(including_document_or_section, SDocSectionIF):
+            including_document_: Optional[SDocDocumentIF] = (
+                including_document_or_section.get_document()
+            )
+            assert isinstance(including_document_, SDocDocumentIF)
+            including_document = including_document_
         else:
             raise AssertionError(including_document_or_section)
 

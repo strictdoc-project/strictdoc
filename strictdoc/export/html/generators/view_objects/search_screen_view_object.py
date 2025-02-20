@@ -1,12 +1,12 @@
 # mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def,union-attr"
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from strictdoc import __version__
-from strictdoc.backend.sdoc.models.any_node import SDocAnyNode
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import DocumentView
+from strictdoc.backend.sdoc.models.model import SDocElementIF
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -24,14 +24,14 @@ class SearchScreenViewObject:
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
         templates: HTMLTemplates,
-        search_results: SDocAnyNode,
+        search_results: List[SDocElementIF],
         search_value: str,
         error,
-    ):
+    ) -> None:
         self.traceability_index: TraceabilityIndex = traceability_index
         self.project_config: ProjectConfig = project_config
         self.templates: HTMLTemplates = templates
-        self.search_results = search_results
+        self.search_results: List[SDocElementIF] = search_results
         self.search_value = search_value
         self.error = error
 

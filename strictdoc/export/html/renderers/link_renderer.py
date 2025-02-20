@@ -8,6 +8,7 @@ from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import create_safe_title_string
 
 
@@ -112,7 +113,7 @@ class LinkRenderer:
         if (
             allow_local
             and context_document is not None
-            and node.document == context_document
+            and node.get_document() == context_document
         ):
             return f"#{local_link}"
 
@@ -167,7 +168,9 @@ class LinkRenderer:
                 return document_type_cache[node]
         else:
             self.req_link_cache[link_cache_key] = {}
-        document_link = node.document.meta.get_html_link(
+
+        document = assert_cast(node.get_document(), SDocDocument)
+        document_link = document.meta.get_html_link(
             DocumentType.document(), source_file.level + 1
         )
         requirement_link = f"{document_link}#{local_link}"

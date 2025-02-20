@@ -213,7 +213,6 @@ class ExportAction:
             assert document.meta.input_doc_dir_rel_path
             output, fragments_dict = writer.write_with_fragments(
                 document,
-                convert_free_text_to_text=self.project_config.free_text_to_text,
             )
 
             path_to_output_file_dir: str = os.path.join(

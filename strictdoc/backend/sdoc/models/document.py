@@ -8,7 +8,6 @@ from typing import Generator, List, Optional
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DocumentView
-from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
@@ -29,12 +28,9 @@ class SDocDocument:
         config: Optional[DocumentConfig],
         view: Optional[DocumentView],
         grammar: Optional[DocumentGrammar],
-        free_texts: List[FreeText],
         section_contents: List,
         is_bundle_document: bool = False,
     ) -> None:
-        assert isinstance(free_texts, list)
-
         self.title: str = title
         self.reserved_title: str = title
         self.config: DocumentConfig = (

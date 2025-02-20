@@ -17,8 +17,9 @@ Requirement 1 comment #2.
 [SECTION]
 TITLE: User interfaces
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Some free text...
-[/FREETEXT]
+<<<
 
 [/SECTION]

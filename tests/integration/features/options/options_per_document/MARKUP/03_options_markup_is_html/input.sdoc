@@ -3,6 +3,7 @@ TITLE: Hello world doc
 OPTIONS:
   MARKUP: HTML
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 <b>This <a href="#">text</a> will be rendered directly as HTML!</b>
-[/FREETEXT]
+<<<

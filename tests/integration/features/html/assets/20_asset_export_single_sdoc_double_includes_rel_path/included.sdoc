@@ -4,10 +4,11 @@ TITLE: Included doc
 [SECTION]
 TITLE: Images
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. image:: _assets/sandbox1.svg
    :alt: Sandbox demo
    :class: image
-[/FREETEXT]
+<<<
 
 [/SECTION]

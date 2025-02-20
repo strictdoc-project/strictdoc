@@ -404,7 +404,6 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             custom_level=None,
             title=section_title,
             requirement_prefix=None,
-            free_texts=[],
             section_contents=[],
         )
         return section

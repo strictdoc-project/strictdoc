@@ -4,8 +4,9 @@ TITLE: Hello world doc
 [SECTION]
 TITLE: New section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Changed free text!
-[/FREETEXT]
+<<<
 
 [/SECTION]

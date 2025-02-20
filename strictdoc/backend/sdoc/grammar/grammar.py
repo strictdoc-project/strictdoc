@@ -4,7 +4,6 @@ NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
 NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
 NEGATIVE_RELATIONS = "(?!^RELATIONS)"
 NEGATIVE_UID = "(?!^UID)"
-NEGATIVE_FREETEXT_END = "(?!^\\[\\/FREETEXT\\]\n)"
 NEGATIVE_INLINE_LINK_START = rf"(?!\[LINK: {REGEX_UID})"
 NEGATIVE_ANCHOR_START = rf"(?!^\[ANCHOR: {REGEX_UID})"
 
@@ -18,7 +17,7 @@ SingleLineTextPart[noskipws]:
 ;
 
 NormalString[noskipws]:
-  (/(?ms){NEGATIVE_MULTILINE_STRING_END}{NEGATIVE_FREETEXT_END}{NEGATIVE_INLINE_LINK_START}{NEGATIVE_ANCHOR_START}./)+
+  (/(?ms){NEGATIVE_MULTILINE_STRING_END}{NEGATIVE_INLINE_LINK_START}{NEGATIVE_ANCHOR_START}./)+
 ;
 
 InlineLink[noskipws]:
@@ -63,7 +62,6 @@ SDocDocument[noskipws]:
   (config = DocumentConfig)?
   (view = DocumentView)?
   ('\n' grammar = DocumentGrammar)?
-  free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
 ;
 
@@ -146,7 +144,6 @@ SDocSection[noskipws]:
   ('LEVEL: ' custom_level = SingleLineString '\n')?
   'TITLE: ' title = SingleLineString '\n'
   ('REQ_PREFIX: ' requirement_prefix = SingleLineString '\n')?
-  free_texts *= SpaceThenFreeText
   section_contents *= SectionOrRequirement
   '\n'
   '[/SECTION]'
@@ -166,12 +163,8 @@ SpaceThenRequirement[noskipws]:
   '\n' (SDocNode | SDocCompositeNode)
 ;
 
-SpaceThenFreeText[noskipws]:
-  '\n' (FreeText)
-;
-
 ReservedKeyword[noskipws]:
-  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'DOCUMENT_FROM_FILE' | 'FREETEXT'
+  'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'DOCUMENT_FROM_FILE'
 ;
 
 SDocNode[noskipws]:
@@ -228,9 +221,4 @@ SDocCompositeNode[noskipws]:
 RequirementStatus[noskipws]:
   'Draft' | 'Active' | 'Deleted';
 
-FreeText[noskipws]:
-  /\[FREETEXT\]\n/
-  parts*=TextPart
-  /\[\/FREETEXT\]\n/
-;
 """

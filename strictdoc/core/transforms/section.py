@@ -233,7 +233,6 @@ class CreateSectionCommand:
             custom_level=None,
             title="NOT_RELEVANT",
             requirement_prefix=None,
-            free_texts=[],
             section_contents=[],
         )
 

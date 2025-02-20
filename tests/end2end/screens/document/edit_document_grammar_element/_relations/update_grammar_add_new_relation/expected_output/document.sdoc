@@ -43,9 +43,10 @@ ELEMENTS:
   - TYPE: Parent
     ROLE: Refines
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<
 
 [REQUIREMENT]
 TITLE: Requirement title

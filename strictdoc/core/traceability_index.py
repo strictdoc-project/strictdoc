@@ -1052,7 +1052,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             config=None,
             view=None,
             grammar=None,
-            free_texts=[],
             section_contents=[],
             is_bundle_document=True,
         )

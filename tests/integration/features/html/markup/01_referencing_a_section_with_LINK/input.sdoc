@@ -4,8 +4,9 @@ TITLE: Hello world doc
 [SECTION]
 TITLE: Referencing section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 [LINK: SECTION]
-[/FREETEXT]
+<<<
 
 [/SECTION]

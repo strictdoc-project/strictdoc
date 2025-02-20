@@ -44,9 +44,10 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<
 
 [REQUIREMENT]
 TITLE: Requirement title

@@ -5,17 +5,19 @@ TITLE: Hello world doc
 UID: CHAPTER_1
 TITLE: Chapter 1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Here's the chapter 1.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Chapter 2
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 See [LINK: CHAPTER_1] for more details.
-[/FREETEXT]
+<<<
 
 [/SECTION]

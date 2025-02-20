@@ -3,7 +3,8 @@ TITLE: Hello world doc
 OPTIONS:
   MARKUP: Text
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 **This text will not be converted to strong tag**
 <a href="url">link</a>
-[/FREETEXT]
+<<<

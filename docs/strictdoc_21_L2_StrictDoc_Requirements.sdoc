@@ -283,9 +283,6 @@ RELATIONS:
   VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_document_views.py
 - TYPE: File
   FORMAT: Sourcecode
-  VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_free_text.py
-- TYPE: File
-  FORMAT: Sourcecode
   VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough_grammar.py
 - TYPE: File
   FORMAT: Sourcecode

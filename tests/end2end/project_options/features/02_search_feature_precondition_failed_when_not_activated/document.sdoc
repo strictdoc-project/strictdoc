@@ -1,6 +1,7 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<

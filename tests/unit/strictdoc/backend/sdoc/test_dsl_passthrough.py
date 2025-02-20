@@ -1024,7 +1024,7 @@ COMMENT: >>>
     assert exc_info.type is TextXSyntaxError
     assert (
         "Expected '^\\[ANCHOR: ' or '[LINK: ' or "
-        "'(?ms)(?!^<<<)(?!^\\[\\/FREETEXT\\]\\n)(?!\\[LINK: "
+        "'(?ms)(?!^<<<)(?!\\[LINK: "
         "([\\w]+[\\w()\\-. ]*))(?!^\\[ANCHOR: "
         "([\\w]+[\\w()\\-. ]*)).'" in exc_info.value.args[0].decode("utf-8")
     )

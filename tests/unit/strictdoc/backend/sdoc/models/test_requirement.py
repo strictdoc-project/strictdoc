@@ -65,7 +65,6 @@ def test_04_meta_multilines_not_nones():
         config=document_config,
         view=None,
         grammar=None,
-        free_texts=[],
         section_contents=[],
     )
     grammar: DocumentGrammar = DocumentGrammar.create_default(document)

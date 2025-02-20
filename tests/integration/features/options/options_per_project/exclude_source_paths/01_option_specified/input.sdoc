@@ -1,9 +1,10 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[FREETEXT]
-**Hello world**
-[/FREETEXT]
+[TEXT]
+STATEMENT: >>>
+Hello world!
+<<<
 
 [REQUIREMENT]
 UID: REQ-001

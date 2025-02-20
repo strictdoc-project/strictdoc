@@ -153,7 +153,6 @@ class ProjectConfig:
         self.generate_bundle_document: bool = False
         self.filter_requirements: Optional[str] = None
         self.filter_sections: Optional[str] = None
-        self.free_text_to_text: bool = False
 
         self.excel_export_fields: Optional[List[str]] = None
 
@@ -222,7 +221,6 @@ class ProjectConfig:
         self.export_formats = export_config.formats
         self.export_included_documents = export_config.included_documents
         self.generate_bundle_document = export_config.generate_bundle_document
-        self.free_text_to_text = export_config.free_text_to_text
         self.filter_requirements = export_config.filter_requirements
         self.filter_sections = export_config.filter_sections
         self.excel_export_fields = export_config.fields

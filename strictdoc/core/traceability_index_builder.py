@@ -410,28 +410,6 @@ class TraceabilityIndexBuilder:
                     rhs_node=node,
                 )
 
-                if node.is_section:
-                    for free_text in node.free_texts:
-                        for part in free_text.parts:
-                            if isinstance(part, InlineLink):
-                                # The inline links are handled at the next big
-                                # for loop pass because the information about
-                                # all Sections and Anchors has not been
-                                # collected yet at this point.
-                                # see create_inline_link below.
-                                pass
-                            elif isinstance(part, Anchor):
-                                graph_database.create_link(
-                                    link_type=GraphLinkType.MID_TO_NODE,
-                                    lhs_node=part.mid,
-                                    rhs_node=part,
-                                )
-                                graph_database.create_link(
-                                    link_type=GraphLinkType.UID_TO_NODE,
-                                    lhs_node=part.value,
-                                    rhs_node=part,
-                                )
-
                 if node.reserved_uid is not None:
                     # @relation(SDOC-SRS-29, scope=range_start)
                     if traceability_index.graph_database.has_link(

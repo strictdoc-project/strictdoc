@@ -4,13 +4,14 @@ TITLE: Hello world doc
 [SECTION]
 TITLE: Referencing section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 See the [LINK: AD1] for more details.
 
 See the [LINK: AD2] for more details.
 
 See the [LINK: Interface_Control_Document] for more details.
-[/FREETEXT]
+<<<
 
 [TEXT]
 STATEMENT: >>>

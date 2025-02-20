@@ -271,9 +271,6 @@ class JSONGenerator:
         if section.requirement_prefix is not None:
             node_dict["REQ_PREFIX"] = section.requirement_prefix
 
-        for free_text in section.free_texts:
-            node_dict["FREETEXT"] = cls._write_free_text_content(free_text)
-
         return node_dict
 
     @classmethod

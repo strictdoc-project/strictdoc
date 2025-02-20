@@ -1,6 +1,6 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr,type-arg"
 import os.path
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from textx import TextXSyntaxError, get_model
 
@@ -13,7 +13,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.document_view import DocumentView
-from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
     SDocNode,
@@ -54,46 +53,6 @@ class SDocParsingProcessor:
         document.ng_including_document_reference = (
             self.parse_context.context_document_reference
         )
-        self.rewrite_free_text_to_text_node_if_needed(document)
-
-    def rewrite_free_text_to_text_node_if_needed(
-        self, parent_node: Union[SDocDocument, SDocSection]
-    ):
-        if len(parent_node.free_texts) > 0:
-            free_text: FreeText = parent_node.free_texts[0]
-            fields = [
-                SDocNodeField(
-                    parent=None,
-                    field_name="STATEMENT",
-                    parts=free_text.parts,
-                    multiline__="true",
-                )
-            ]
-            text_node = SDocNode(
-                parent=parent_node,
-                node_type="TEXT",
-                fields=fields,
-                relations=[],
-                requirements=None,
-                basic_free_text=True,
-            )
-            for part_ in free_text.parts:
-                if isinstance(part_, str):
-                    continue
-                part_.parent = text_node
-            text_node.ng_line_start = free_text.ng_line_start
-            text_node.ng_col_start = free_text.ng_col_start
-            text_node.ng_document_reference = (
-                self.parse_context.document_reference
-            )
-            text_node.ng_including_document_reference = (
-                self.parse_context.context_document_reference
-            )
-            for field_ in text_node.enumerate_fields():
-                field_.parent = text_node
-            free_text.parent = None
-            parent_node.free_texts.clear()
-            parent_node.section_contents.insert(0, text_node)
 
     def get_default_processors(self):
         return {
@@ -107,7 +66,6 @@ class SDocParsingProcessor:
             "SDocCompositeNode": self.process_composite_requirement,
             "SDocNode": self.process_requirement,
             "SDocNodeField": self.process_node_field,
-            "FreeText": self.process_free_text,
         }
 
     def process_document_config(self, document_config: DocumentConfig):
@@ -145,7 +103,6 @@ class SDocParsingProcessor:
         section.ng_including_document_reference = (
             self.parse_context.context_document_reference
         )
-        self.rewrite_free_text_to_text_node_if_needed(section)
 
         if self.parse_context.document_config.auto_levels:
             if (
@@ -301,6 +258,3 @@ class SDocParsingProcessor:
                 col=col_start,
                 filename=self.parse_context.path_to_sdoc_file,
             )
-
-    def process_free_text(self, free_text):
-        preserve_source_location_data(free_text)

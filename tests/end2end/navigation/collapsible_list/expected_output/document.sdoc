@@ -1,30 +1,34 @@
 [DOCUMENT]
 TITLE: Document title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Section 1 title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a free text of this section 1.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Nested section 1 title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a free text of this nested section 1.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Nested section 11 title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a free text of this nested section 11.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
@@ -35,16 +39,18 @@ This is a free text of this nested section 11.
 [SECTION]
 TITLE: Section 2 title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a free text of this section 2.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Nested section 2 title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a free text of this nested section 2.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 

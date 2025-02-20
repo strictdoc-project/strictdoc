@@ -1,16 +1,18 @@
 [DOCUMENT]
 TITLE: Document title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Section title
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a free text of this section.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 

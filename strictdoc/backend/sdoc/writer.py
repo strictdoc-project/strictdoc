@@ -25,7 +25,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     FileEntry,
     GrammarElementFieldMultipleChoice,
@@ -78,7 +78,7 @@ class SDWriter:
         return document_output
 
     def write_with_fragments(
-        self, document: SDocDocument, convert_free_text_to_text: bool = False
+        self, document: SDocDocument
     ) -> Tuple[str, Dict[str, str]]:
         fragments_dict: Dict[str, str] = {}
 
@@ -247,7 +247,6 @@ class SDWriter:
             document,
             document,
             document_iterator,
-            convert_free_text_to_text=convert_free_text_to_text,
         )
         output = output.rstrip()
         output += "\n"
@@ -259,7 +258,6 @@ class SDWriter:
         root_node: Union[SDocDocument, SDocSection, SDocNode, DocumentFromFile],
         document: SDocDocument,
         document_iterator: DocumentCachingIterator,
-        convert_free_text_to_text: bool = False,
     ):
         assert isinstance(document_iterator, DocumentCachingIterator), (
             document_iterator
@@ -275,7 +273,6 @@ class SDWriter:
                     node_,
                     document,
                     document_iterator=document_iterator,
-                    convert_free_text_to_text=convert_free_text_to_text,
                 )
             return output
 
@@ -290,21 +287,11 @@ class SDWriter:
                 root_node,
                 document,
                 document_iterator,
-                convert_free_text_to_text,
             )
 
         elif isinstance(root_node, SDocNode):
             output = ""
 
-            # Special case for backward compatibility.
-            if (
-                not convert_free_text_to_text
-                and root_node.node_type == "TEXT"
-                and root_node.basic_free_text
-            ):
-                output += self._print_free_text(root_node)
-                output += "\n"
-                return output
             if isinstance(root_node, SDocCompositeNode):
                 output += "[COMPOSITE_"
                 output += root_node.node_type
@@ -353,7 +340,6 @@ class SDWriter:
         section: SDocSection,
         document: SDocDocument,
         iterator: DocumentCachingIterator,
-        convert_free_text_to_text: bool = False,
     ):
         assert isinstance(section, SDocSection)
         output = ""
@@ -390,7 +376,6 @@ class SDWriter:
                 node_,
                 document,
                 document_iterator=iterator,
-                convert_free_text_to_text=convert_free_text_to_text,
             )
 
         output += "[/SECTION]"
@@ -457,21 +442,6 @@ class SDWriter:
         return output
 
     @staticmethod
-    def _print_free_text(free_text: Union[FreeText, SDocNode]):
-        assert isinstance(free_text, FreeText) or (
-            isinstance(free_text, SDocNode) and free_text.basic_free_text
-        )
-        output = ""
-        output += "[FREETEXT]"
-        output += "\n"
-        output += SDWriter.print_free_text_content(free_text)
-        if output[-1] != "\n":
-            output += "\n"
-        output += "[/FREETEXT]"
-        output += "\n"
-        return output
-
-    @staticmethod
     def _print_grammar_field_type(grammar_field):
         output = ""
         output += "  - TITLE: "
@@ -521,39 +491,6 @@ class SDWriter:
         output += file_entry.g_file_path
         output += "\n"
 
-        return output
-
-    @staticmethod
-    def print_free_text_content(free_text: Union[FreeText, SDocNode]):
-        assert isinstance(free_text, FreeText) or (
-            isinstance(free_text, SDocNode) and free_text.basic_free_text
-        )
-
-        object_with_parts: Union[FreeText, SDocNodeField]
-        if isinstance(free_text, SDocNode):
-            object_with_parts = free_text.get_content_field()
-        else:
-            object_with_parts = free_text
-
-        output = ""
-
-        for _, part in enumerate(object_with_parts.parts):
-            if isinstance(part, str):
-                output += part
-            elif isinstance(part, InlineLink):
-                output += "[LINK: "
-                output += part.link
-                output += "]"
-            elif isinstance(part, Anchor):
-                output += "[ANCHOR: "
-                output += part.value
-                if part.has_title:
-                    output += ", "
-                    output += part.title
-                output += "]"
-                output += "\n"
-            else:
-                raise NotImplementedError(part)
         return output
 
     @classmethod

@@ -1,12 +1,12 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def"
 from enum import Enum
-from typing import Optional, Union
+from typing import Optional
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.section import FreeText, SDocSection
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.rst_templates import RSTTemplates
@@ -42,8 +42,6 @@ class RSTWriter:
                     content_node.ng_level,
                     content_node.reserved_uid,
                 )
-                for free_text in content_node.free_texts:
-                    output += self._print_text(free_text)
 
             elif isinstance(content_node, SDocNode):
                 if (
@@ -122,18 +120,11 @@ class RSTWriter:
         )
         return output
 
-    def _print_text(self, text: Union[FreeText, SDocNode]):
-        assert isinstance(text, (FreeText, SDocNode))
-        return (
-            self._print_node_field(
-                text.get_content_field() if isinstance(text, SDocNode) else text
-            )
-            + "\n"
-        )
+    def _print_text(self, text: SDocNode):
+        assert isinstance(text, SDocNode)
+        return self._print_node_field(text.get_content_field()) + "\n"
 
-    def _print_node_field(
-        self, object_with_parts: Union[FreeText, SDocNodeField]
-    ):
+    def _print_node_field(self, object_with_parts: SDocNodeField):
         if len(object_with_parts.parts) == 0:
             return ""
 

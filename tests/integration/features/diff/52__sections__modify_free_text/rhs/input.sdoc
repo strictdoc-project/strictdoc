@@ -5,8 +5,9 @@ TITLE: Hello world doc
 UID: SECT-1
 TITLE: New section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Changed free text!
-[/FREETEXT]
+<<<
 
 [/SECTION]

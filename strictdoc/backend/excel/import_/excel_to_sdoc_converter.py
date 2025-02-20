@@ -126,7 +126,6 @@ class ExcelToSDocConverter:
             config=document_config,
             view=None,
             grammar=None,
-            free_texts=[],
             section_contents=[],
         )
 

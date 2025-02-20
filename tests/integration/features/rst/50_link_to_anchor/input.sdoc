@@ -4,21 +4,23 @@ TITLE: Hello world doc
 [SECTION]
 TITLE: Chapter 1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Here's the chapter 1 with anchor:
 
 [ANCHOR: ANCHOR_1]
 
 Some other text.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Chapter 2
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 See [LINK: ANCHOR_1] for more details.
-[/FREETEXT]
+<<<
 
 [/SECTION]

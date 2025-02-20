@@ -4,20 +4,22 @@ TITLE: Hello world doc
 [SECTION]
 TITLE: Referencing section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 See the [LINK: AD1] for more details.
 
 See the [LINK: Software_requirements_specification] for more details.
 
 See the [LINK: Interface_Control_Document] for more details.
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Section with anchor
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Anchors start.
 
 [ANCHOR: AD1]
@@ -33,7 +35,6 @@ Anchors start.
 3) AD3. Interface Control Document.
 
 Anchors end.
-
-[/FREETEXT]
+<<<
 
 [/SECTION]

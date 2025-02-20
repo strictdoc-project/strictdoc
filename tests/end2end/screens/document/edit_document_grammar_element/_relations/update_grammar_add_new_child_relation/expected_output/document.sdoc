@@ -43,9 +43,10 @@ ELEMENTS:
   - TYPE: Child
     ROLE: IsRefinedBy
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<
 
 [REQUIREMENT]
 TITLE: Requirement title

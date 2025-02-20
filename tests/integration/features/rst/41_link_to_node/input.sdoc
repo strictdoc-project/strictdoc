@@ -5,9 +5,10 @@ TITLE: Hello world doc
 UID: CHAPTER_1
 TITLE: Chapter 1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 See [LINK: REQ-1] for more details.
-[/FREETEXT]
+<<<
 
 [TEXT]
 UID: THING

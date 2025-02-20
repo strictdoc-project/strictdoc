@@ -1,9 +1,10 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<
 
 [DOCUMENT_FROM_FILE]
 FILE: fragment.sdoc

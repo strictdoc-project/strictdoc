@@ -1,41 +1,46 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Section title #2
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 NOT_RELEVANT
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Section title #1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 NOT_RELEVANT
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Section title #2.1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 NOT_RELEVANT
-[/FREETEXT]
+<<<
 
 [/SECTION]
 
 [SECTION]
 TITLE: Section title #2.2
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 NOT_RELEVANT
-[/FREETEXT]
+<<<
 
 [/SECTION]
 

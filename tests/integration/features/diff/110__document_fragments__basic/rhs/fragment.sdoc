@@ -1,9 +1,10 @@
 [DOCUMENT]
 TITLE: Fragment
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a fragment free text.
-[/FREETEXT]
+<<<
 
 [REQUIREMENT]
 TITLE: Hello

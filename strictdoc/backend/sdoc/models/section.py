@@ -7,7 +7,6 @@ from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.object import SDocObject
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
@@ -29,7 +28,6 @@ class SDocSection(SDocObject):
         custom_level: Optional[str],
         title: str,
         requirement_prefix: Optional[str],
-        free_texts: List[FreeText],
         section_contents: List[SDocObject],
     ):
         self.parent = parent
@@ -45,7 +43,6 @@ class SDocSection(SDocObject):
         self.reserved_title = title
         self.requirement_prefix: Optional[str] = requirement_prefix
 
-        self.free_texts: List[FreeText] = free_texts
         self.section_contents = section_contents
 
         # HEF4

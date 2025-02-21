@@ -8,7 +8,7 @@ from strictdoc.cli.cli_arg_parser import (
 FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
-TOTAL_EXPORT_ARGS = 19
+TOTAL_EXPORT_ARGS = 18
 
 
 def cli_args_parser():
@@ -192,7 +192,6 @@ def test_passthrough_01_minimal():
         ("filter_requirements", None),
         ("filter_sections", None),
         ("formats", ["sdoc"]),
-        ("free_text_to_text", False),
         ("generate_bundle_document", False),
         ("included_documents", False),
         ("input_paths", ["input.sdoc"]),
@@ -222,7 +221,6 @@ def test_passthrough_02_minimal():
         ("filter_requirements", None),
         ("filter_sections", None),
         ("formats", ["sdoc"]),
-        ("free_text_to_text", False),
         ("generate_bundle_document", False),
         ("included_documents", False),
         ("input_paths", ["input.sdoc"]),

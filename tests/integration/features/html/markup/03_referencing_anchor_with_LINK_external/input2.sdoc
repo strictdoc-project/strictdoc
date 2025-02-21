@@ -4,7 +4,8 @@ TITLE: Hello world doc
 [SECTION]
 TITLE: Section with anchor
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Anchors start.
 
 [ANCHOR: AD1]
@@ -20,8 +21,7 @@ Anchors start.
 3) AD3. Interface Control Document.
 
 Anchors end.
-
-[/FREETEXT]
+<<<
 
 [TEXT]
 STATEMENT: >>>

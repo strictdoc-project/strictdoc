@@ -106,7 +106,6 @@ class DocumentBuilder:
             requirement_in_toc=None,
             default_view=None,
         )
-        free_texts = []
         section_contents = []
         document = SDocDocument(
             mid=None,
@@ -114,7 +113,6 @@ class DocumentBuilder:
             config=config,
             view=None,
             grammar=None,
-            free_texts=free_texts,
             section_contents=section_contents,
         )
         document.grammar = DocumentGrammar.create_default(document)

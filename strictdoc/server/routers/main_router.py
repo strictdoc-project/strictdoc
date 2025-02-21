@@ -164,7 +164,6 @@ def create_main_router(
         reqif_enable_mid=False,
         view=None,
         chromedriver=None,
-        free_text_to_text=False,
     )
     project_config.integrate_export_config(_export_config)
     project_config.is_running_on_server = True
@@ -1705,7 +1704,6 @@ def create_main_router(
             config=None,
             view=None,
             grammar=DocumentGrammar.create_default(parent=None),
-            free_texts=[],
             section_contents=[],
         )
         # FIXME: Fill in the document meta correctly.

@@ -332,7 +332,7 @@ class P01_ReqIFToSDocConverter:
             else "<No title>"
         )
         document = SDocDocument(
-            None, document_title, document_config, None, None, [], []
+            None, document_title, document_config, None, None, []
         )
         if context.enable_mid:
             document.reserved_mid = specification.identifier
@@ -387,7 +387,6 @@ class P01_ReqIFToSDocConverter:
             custom_level=None,
             title=section_title,
             requirement_prefix=None,
-            free_texts=[],
             section_contents=[],
         )
         section.ng_level = level

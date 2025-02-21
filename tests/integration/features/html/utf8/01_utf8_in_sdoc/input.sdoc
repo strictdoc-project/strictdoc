@@ -1,6 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc with UTF-8 symbols: –
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 UTF-8 symbols: 😀😀😀 ✓✓✓ ☂☂☂
-[/FREETEXT]
+<<<

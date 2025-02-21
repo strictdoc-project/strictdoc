@@ -1,4 +1,0 @@
-RUN: %expect_exit 0 %strictdoc passthrough %S/ --output-dir=%S/Output/ --free-text-to-text
-
-RUN: %diff %S/Output/sdoc/input1.sdoc %S/expected/input1.sdoc
-RUN: %diff %S/Output/sdoc/input2.sdoc %S/expected/input2.sdoc

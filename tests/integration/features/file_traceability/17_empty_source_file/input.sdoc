@@ -1,10 +1,6 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[FREETEXT]
-**Hello world**
-[/FREETEXT]
-
 [REQUIREMENT]
 UID: REQ-001
 RELATIONS:

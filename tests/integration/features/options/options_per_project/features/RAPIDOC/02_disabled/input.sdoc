@@ -1,7 +1,8 @@
 [DOCUMENT]
 TITLE: Rapidoc Openapi test
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Expanded Rapidoc view in Freetext
 
 .. raw:: html
@@ -15,7 +16,7 @@ Expanded Rapidoc view in Freetext
     paths-expanded = "true"
     match-paths = "get /products"
     > </rapi-doc-mini>
-[/FREETEXT]
+<<<
 
 [REQUIREMENT]
 TITLE: Rapidoc in requirement for Table/Traceability view 

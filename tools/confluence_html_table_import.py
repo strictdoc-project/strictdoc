@@ -47,7 +47,6 @@ class ConfluenceHTMLTableImport:
             config=None,
             grammar=None,
             view=None,
-            free_texts=[],
             section_contents=[],
         )
         document.grammar = DocumentGrammar.create_default(document)
@@ -56,7 +55,6 @@ class ConfluenceHTMLTableImport:
             section = SDocSection(
                 document, None,None, "1", section_name,
                 requirement_prefix=None,
-                free_texts=[],
                 section_contents=[]
             )
             section.ng_document_reference = DocumentReference()

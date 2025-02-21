@@ -1,7 +1,8 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. raw:: html
 
     <pre class="mermaid">
@@ -14,4 +15,4 @@ TITLE: Hello world doc
     D --> F[Save Image and Code]
     F --> B
     </pre>
-[/FREETEXT]
+<<<

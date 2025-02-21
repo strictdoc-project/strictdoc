@@ -45,9 +45,10 @@ ELEMENTS:
   - TYPE: Parent
     ROLE: Refines
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 These recommended security requirements are intended to be informative, not directional in nature. While all reasonable steps have been taken to ensure that the recommendations are well-supported by our research and third-party verification, NMFTA and the parties contributing to these recommendations do not accept liability or responsibility for any damage or harm incurred as a result of actions taken based upon these recommendations.
-[/FREETEXT]
+<<<
 
 [REQUIREMENT]
 UID: AA-010

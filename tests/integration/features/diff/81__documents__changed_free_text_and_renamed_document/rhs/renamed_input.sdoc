@@ -1,6 +1,7 @@
 [DOCUMENT]
 TITLE: Renamed hello world doc
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 This is a MODIFIED free text.
-[/FREETEXT]
+<<<

@@ -1,9 +1,10 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world!
-[/FREETEXT]
+<<<
 
 [TEXT]
 STATEMENT: Text statement.

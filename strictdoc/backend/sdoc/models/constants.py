@@ -10,7 +10,6 @@ from strictdoc.backend.sdoc.models.document_view import (
     DocumentView,
     ViewElement,
 )
-from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
@@ -48,7 +47,6 @@ SECTION_MODELS = [
     ParentReqReference,
     ChildReqReference,
     FileReference,
-    FreeText,
     InlineLink,
     Anchor,
     FileEntry,

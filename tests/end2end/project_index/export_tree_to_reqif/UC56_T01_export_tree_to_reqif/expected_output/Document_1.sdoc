@@ -1,15 +1,17 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Document 1 free text.
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Document 1 section
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Document 1 statement.
-[/FREETEXT]
+<<<
 
 [/SECTION]

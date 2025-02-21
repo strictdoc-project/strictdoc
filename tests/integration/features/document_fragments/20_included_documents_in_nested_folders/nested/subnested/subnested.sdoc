@@ -3,12 +3,13 @@ TITLE: Hello world doc 3
 OPTIONS:
   AUTO_LEVELS: On
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. image:: _assets/file.svg
    :alt: Test image
    :class: image
    :width: 100%
-[/FREETEXT]
+<<<
 
 [SECTION]
 TITLE: Section 1.2.3

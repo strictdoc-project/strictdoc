@@ -2,6 +2,7 @@
 MID: ABCD0123
 TITLE: Hello world doc
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Text.
-[/FREETEXT]
+<<<

@@ -40,7 +40,6 @@ class SPDXToSDocConverter:
             config=None,
             view=None,
             grammar=None,
-            free_texts=[],
             section_contents=[],
         )
 
@@ -80,7 +79,6 @@ class SPDXToSDocConverter:
             custom_level=None,
             title="Files",
             requirement_prefix=None,
-            free_texts=[],
             section_contents=[],
         )
         document.section_contents.append(file_section)
@@ -104,7 +102,6 @@ class SPDXToSDocConverter:
             custom_level=None,
             title="Snippets",
             requirement_prefix=None,
-            free_texts=[],
             section_contents=[],
         )
         document.section_contents.append(snippets_section)

@@ -1,12 +1,13 @@
 [DOCUMENT]
 TITLE: Dummy Software Requirements Specification #2
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 .. image:: _assets/file.svg
    :alt: Test image
    :class: image
    :width: 100%
-[/FREETEXT]
+<<<
 
 [DOCUMENT_FROM_FILE]
 FILE: subnested/input3.sdoc

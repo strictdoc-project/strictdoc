@@ -251,14 +251,6 @@ class CommandParserBuilder:
             "If not given, chromedriver is downloaded and saved to "
             "strictdoc cache.",
         )
-        command_parser_export.add_argument(
-            "--free-text-to-text",
-            action="store_true",
-            help=(
-                "This option makes all FREETEXT nodes to be converted to the new "
-                "TEXT nodes."
-            ),
-        )
         add_config_argument(command_parser_export)
 
     @staticmethod
@@ -417,14 +409,6 @@ class CommandParserBuilder:
             "--filter-sections",
             type=str,
             help="Filter which sections will be exported.",
-        )
-        command_parser_passthrough.add_argument(
-            "--free-text-to-text",
-            action="store_true",
-            help=(
-                "This option makes all FREETEXT nodes to be converted to the new "
-                "TEXT nodes."
-            ),
         )
         command_parser_passthrough.add_argument(
             "--view",

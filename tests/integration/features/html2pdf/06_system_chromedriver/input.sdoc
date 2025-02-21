@@ -1,6 +1,7 @@
 [DOCUMENT]
 TITLE: Dummy Software Requirements Specification #1
 
-[FREETEXT]
+[TEXT]
+STATEMENT: >>>
 Hello world! 😊😊😊
-[/FREETEXT]
+<<<

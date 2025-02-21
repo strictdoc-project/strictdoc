@@ -129,7 +129,7 @@ class SDocSection(SDocObject):
 
     def has_any_text_nodes(self):
         return any(
-            not node_.is_section and node_.node_type == "TEXT"
+            node_.__class__.__name__ == "SDocNode" and node_.node_type == "TEXT"
             for node_ in self.section_contents
         )
 

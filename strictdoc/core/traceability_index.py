@@ -502,13 +502,16 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         # there is nothing to do.
         if any(node_.reserved_uid == parent_uid for node_ in parent_nodes):
             return
-        parent_requirement = self.graph_database.get_link_value(
+
+        parent_requirement: SDocNode = self.graph_database.get_link_value(
             link_type=GraphLinkType.UID_TO_NODE,
             lhs_node=parent_uid,
         )
 
-        document = requirement.document
-        parent_requirement_document = parent_requirement.document
+        document = assert_cast(requirement.get_document(), SDocDocument)
+        parent_requirement_document = assert_cast(
+            parent_requirement.get_document(), SDocDocument
+        )
 
         self.graph_database.create_link(
             link_type=GraphLinkType.NODE_TO_PARENT_NODES,
@@ -576,8 +579,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             lhs_node=child_uid,
         )
 
-        document = requirement.document
-        child_requirement_document = child_requirement.document
+        document = assert_cast(requirement.get_document(), SDocDocument)
+        child_requirement_document = assert_cast(
+            child_requirement.get_document(), SDocDocument
+        )
 
         self.graph_database.create_link(
             link_type=GraphLinkType.NODE_TO_PARENT_NODES,
@@ -656,15 +661,16 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
     def update_disconnect_two_documents_if_no_links_left(
-        self, document, other_document
+        self, document: SDocDocument, other_document: SDocDocument
     ):
         assert document != other_document
 
         for node in self.document_iterators[document].all_content(
             print_fragments=False, print_fragments_from_files=False
         ):
-            if not node.is_requirement:
+            if not isinstance(node, SDocNode):
                 continue
+
             requirement_node: SDocNode = node
 
             # If a requirement has no UID, it cannot contribute to any relation-based
@@ -672,15 +678,20 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             if requirement_node.reserved_uid is None:
                 continue
 
-            requirement_parents = self.graph_database.get_link_values(
-                link_type=GraphLinkType.NODE_TO_PARENT_NODES,
-                lhs_node=requirement_node,
+            requirement_parents: OrderedSet[SDocNode] = (
+                self.graph_database.get_link_values(
+                    link_type=GraphLinkType.NODE_TO_PARENT_NODES,
+                    lhs_node=requirement_node,
+                )
             )
 
             # If at least one parent or child relation points to the other
             # document, terminate, not deleting the link between documents.
             for parent_requirement in requirement_parents:
-                if parent_requirement.document == other_document:
+                parent_requirement_document: SDocDocument = assert_cast(
+                    parent_requirement.get_document(), SDocDocument
+                )
+                if parent_requirement_document == other_document:
                     return
 
             requirement_children = self.graph_database.get_link_values(
@@ -770,8 +781,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             edge=role,
         )
 
-        document = requirement.document
-        parent_requirement_document = parent_requirement.document
+        document = assert_cast(requirement.get_document(), SDocDocument)
+        parent_requirement_document = assert_cast(
+            parent_requirement.get_document(), SDocDocument
+        )
 
         # If there are no requirements linking between the documents,
         # remove the link.
@@ -797,16 +810,16 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert isinstance(child_uid, str), child_uid
         assert role is None or len(role) > 0, role
 
-        requirement = self.graph_database.get_link_value(
-            link_type=GraphLinkType.UID_TO_NODE,
-            lhs_node=requirement.reserved_uid,
-        )
-        child_requirement = self.graph_database.get_link_value(
+        child_requirement: SDocNode = self.graph_database.get_link_value(
             link_type=GraphLinkType.UID_TO_NODE,
             lhs_node=child_uid,
         )
-        document = requirement.document
-        child_requirement_document = child_requirement.document
+        document: SDocDocument = assert_cast(
+            requirement.get_document(), SDocDocument
+        )
+        child_requirement_document: SDocDocument = assert_cast(
+            child_requirement.get_document(), SDocDocument
+        )
 
         self.graph_database.delete_link(
             link_type=GraphLinkType.NODE_TO_CHILD_NODES,
@@ -944,9 +957,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                 duplicate_anchor: Anchor = self.graph_database.get_link_value(
                     link_type=GraphLinkType.UID_TO_NODE, lhs_node=anchor_uid
                 )
-                node_with_duplicate_anchor: Union[
-                    SDocDocument, SDocSection, SDocNode
-                ] = duplicate_anchor.parent_node()
+                node_with_duplicate_anchor: SDocNode = assert_cast(
+                    duplicate_anchor.parent_node(), SDocNode
+                )
                 raise SingleValidationError(
                     "Another node contains an anchor with the same UID: "
                     f"{anchor_uid}. {node_with_duplicate_anchor.get_display_node_type()}: "

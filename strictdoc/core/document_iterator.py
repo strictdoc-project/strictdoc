@@ -1,9 +1,16 @@
 # mypy: disable-error-code="attr-defined"
 from typing import Iterator, Tuple, Union
 
-from strictdoc.backend.sdoc.models.any_node import SDocAnyNode
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
+from strictdoc.backend.sdoc.models.model import (
+    SDocCompositeNodeIF,
+    SDocDocumentFromFileIF,
+    SDocDocumentIF,
+    SDocElementIF,
+    SDocNodeIF,
+    SDocSectionIF,
+)
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
     SDocNode,
@@ -18,7 +25,7 @@ class DocumentCachingIterator:
 
         self.document: SDocDocument = document
 
-    def table_of_contents(self) -> Iterator[SDocAnyNode]:
+    def table_of_contents(self) -> Iterator[SDocElementIF]:
         nodes_to_skip = (
             (SDocNode,)
             if not self.document.config.is_requirement_in_toc()
@@ -39,7 +46,7 @@ class DocumentCachingIterator:
         self,
         print_fragments: bool = False,
         print_fragments_from_files: bool = False,
-    ) -> Iterator[SDocAnyNode]:
+    ) -> Iterator[SDocElementIF]:
         root_node = self.document
 
         yield from self._all_content(
@@ -52,12 +59,12 @@ class DocumentCachingIterator:
 
     def _all_content(
         self,
-        node: Union[SDocAnyNode, DocumentFromFile],
+        node: Union[SDocElementIF, DocumentFromFile],
         print_fragments: bool = False,
         print_fragments_from_files: bool = False,
         level_stack: Tuple[int, ...] = (),
         custom_level: bool = False,
-    ) -> Iterator[SDocAnyNode]:
+    ) -> Iterator[SDocElementIF]:
         def get_level_string_(
             node_: Union[SDocSection, SDocNode, SDocCompositeNode],
         ) -> str:
@@ -97,15 +104,14 @@ class DocumentCachingIterator:
                     current_number += 1
 
                 yield from self._all_content(
-                    # FIXME: sections_contents(SDocObject) shall be changed to SDocAnyNode.
                     assert_cast(
                         subnode_,
                         (
-                            SDocNode,
-                            SDocCompositeNode,
-                            SDocSection,
-                            SDocDocument,
-                            DocumentFromFile,
+                            SDocNodeIF,
+                            SDocCompositeNodeIF,
+                            SDocSectionIF,
+                            SDocDocumentIF,
+                            SDocDocumentFromFileIF,
                         ),
                     ),
                     print_fragments=print_fragments,
@@ -180,15 +186,14 @@ class DocumentCachingIterator:
                 ):
                     current_number += 1
                 yield from self._all_content(
-                    # FIXME: sections_contents(SDocObject) shall be changed to SDocAnyNode.
                     assert_cast(
                         subnode_,
                         (
-                            SDocNode,
-                            SDocCompositeNode,
-                            SDocSection,
-                            SDocDocument,
-                            DocumentFromFile,
+                            SDocNodeIF,
+                            SDocCompositeNodeIF,
+                            SDocSectionIF,
+                            SDocDocumentIF,
+                            SDocDocumentFromFileIF,
                         ),
                     ),
                     print_fragments=print_fragments,
@@ -203,6 +208,8 @@ class DocumentCachingIterator:
                 if print_fragments_from_files:
                     yield node
                 return
+
+            assert node.resolved_document is not None
 
             yield from self._all_content(
                 node.resolved_document,

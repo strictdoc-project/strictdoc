@@ -4,7 +4,6 @@ from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
-from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
@@ -13,11 +12,9 @@ from strictdoc.backend.sdoc.models.document_view import (
     DefaultViewElement,
     ViewElement,
 )
-from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
     SDocNode,
-    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,

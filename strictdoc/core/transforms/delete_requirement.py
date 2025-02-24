@@ -1,8 +1,11 @@
 from typing import Union
 
-from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.model import (
+    SDocCompositeNodeIF,
+    SDocDocumentIF,
+    SDocSectionIF,
+)
 from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.transforms.validation_error import (
     MultipleValidationErrorAsList,
@@ -40,7 +43,7 @@ class DeleteRequirementCommand:
         self.traceability_index.delete_requirement(self.requirement)
 
         requirement_parent: Union[
-            SDocSection, SDocDocument, SDocCompositeNode
+            SDocSectionIF, SDocDocumentIF, SDocCompositeNodeIF
         ] = self.requirement.parent
 
         if isinstance(requirement_parent, SDocCompositeNode):

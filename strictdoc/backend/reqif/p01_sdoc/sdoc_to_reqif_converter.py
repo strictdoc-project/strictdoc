@@ -430,6 +430,10 @@ class P01_SDocToReqIFObjectConverter:
         context: P01_SDocToReqIFBuildContext,
     ) -> ReqIFSpecObject:
         assert isinstance(section, SDocSection)
+        parent_document: SDocDocument = assert_cast(
+            section.get_document(), SDocDocument
+        )
+
         attributes = []
         title_attribute = SpecObjectAttribute(
             xml_node=None,
@@ -443,7 +447,7 @@ class P01_SDocToReqIFObjectConverter:
         If MIDs is enabled and this section has an MID, use it for
         SPEC-OBJECT IDENTIFIER.
         """
-        enable_mid = context.enable_mid and section.document.config.enable_mid
+        enable_mid = context.enable_mid and parent_document.config.enable_mid
         section_identifier: str
         if enable_mid and section.reserved_mid is not None:
             section_identifier = section.reserved_mid
@@ -451,7 +455,7 @@ class P01_SDocToReqIFObjectConverter:
             section_identifier = generate_unique_identifier("SECTION")
 
         spec_object_type: ReqIFSpecObjectType = (
-            context.map_grammar_node_tags_to_spec_object_type[section.document][
+            context.map_grammar_node_tags_to_spec_object_type[parent_document][
                 "SECTION"
             ]
         )
@@ -475,9 +479,9 @@ class P01_SDocToReqIFObjectConverter:
         data_types: List,
         data_types_lookup: Dict[str, str],
     ) -> ReqIFSpecObject:
-        enable_mid = (
-            context.enable_mid and requirement.document.config.enable_mid
-        )
+        node_document = assert_cast(requirement.get_document(), SDocDocument)
+
+        enable_mid = context.enable_mid and node_document.config.enable_mid
 
         requirement_identifier: str
         if enable_mid and requirement.reserved_mid is not None:
@@ -541,7 +545,7 @@ class P01_SDocToReqIFObjectConverter:
 
                 field_value: str = field.get_text_value().rstrip()
 
-                attribute_type: str
+                attribute_type: SpecObjectAttributeType
                 if context.multiline_is_xhtml:
                     attribute_type = (
                         SpecObjectAttributeType.XHTML
@@ -572,9 +576,9 @@ class P01_SDocToReqIFObjectConverter:
                 ] = requirement.relations
 
         spec_object_type: ReqIFSpecObjectType = (
-            context.map_grammar_node_tags_to_spec_object_type[
-                requirement.document
-            ][requirement.node_type]
+            context.map_grammar_node_tags_to_spec_object_type[node_document][
+                requirement.node_type
+            ]
         )
         spec_object = ReqIFSpecObject.create(
             identifier=requirement_identifier,
@@ -718,7 +722,7 @@ class P01_SDocToReqIFObjectConverter:
         chapter_name_attribute = SpecAttributeDefinition.create(
             attribute_type=SpecObjectAttributeType.STRING,
             identifier="ReqIF.ChapterName",
-            datatype_definition=(StrictDocReqIFTypes.SINGLE_LINE_STRING.value),
+            datatype_definition=StrictDocReqIFTypes.SINGLE_LINE_STRING.value,
             long_name="ReqIF.ChapterName",
         )
         attribute_definitions.append(chapter_name_attribute)

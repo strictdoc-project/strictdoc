@@ -6,8 +6,11 @@
 from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.object import SDocObject
+from strictdoc.backend.sdoc.models.model import (
+    SDocDocumentIF,
+    SDocSectionContentIF,
+    SDocSectionIF,
+)
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
 
@@ -19,7 +22,7 @@ class SectionContext:
 
 
 @auto_described
-class SDocSection(SDocObject):
+class SDocSection(SDocSectionIF):
     def __init__(
         self,
         parent,
@@ -28,7 +31,7 @@ class SDocSection(SDocObject):
         custom_level: Optional[str],
         title: str,
         requirement_prefix: Optional[str],
-        section_contents: List[SDocObject],
+        section_contents: List[SDocSectionContentIF],
     ):
         self.parent = parent
 
@@ -86,25 +89,26 @@ class SDocSection(SDocObject):
     def get_display_title(self) -> str:
         return self.title
 
+    # FIXME: Remove this method, use get_document() instead.
     @property
-    def document(self):
+    def document(self) -> Optional[SDocDocumentIF]:
         return self.ng_document_reference.get_document()
 
-    def get_document(self):
+    def get_document(self) -> Optional[SDocDocumentIF]:
         return self.ng_document_reference.get_document()
 
     def get_including_document(self):
         return self.ng_including_document_reference.get_document()
 
     @property
-    def parent_or_including_document(self) -> SDocDocument:
+    def parent_or_including_document(self) -> SDocDocumentIF:
         including_document_or_none = (
             self.ng_including_document_reference.get_document()
         )
         if including_document_or_none is not None:
             return including_document_or_none
 
-        document: Optional[SDocDocument] = (
+        document: Optional[SDocDocumentIF] = (
             self.ng_document_reference.get_document()
         )
         assert document is not None, (
@@ -140,10 +144,10 @@ class SDocSection(SDocObject):
     def get_requirement_prefix(self) -> str:
         if self.requirement_prefix is not None:
             return self.requirement_prefix
-        parent: Union[SDocSection, SDocDocument] = self.parent
+        parent: Union[SDocSectionIF, SDocDocumentIF] = self.parent
         return parent.get_requirement_prefix()
 
-    def blacklist_if_needed(self):
+    def blacklist_if_needed(self) -> None:
         for node_ in self.section_contents:
             if node_.ng_whitelisted:
                 return

@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.model import SDocDocumentFromFileIF
 from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -170,7 +171,9 @@ class TraceabilityIndexBuilder:
                         )
                     )
                     for node_ in source_file_reqs[0] + source_file_reqs[1]:
-                        node_document = node_.document
+                        node_document = assert_cast(
+                            node_.get_document(), SDocDocument
+                        )
                         traceability_index.file_dependency_manager.add_dependency(
                             source_file.full_path,
                             source_file.output_file_full_path,
@@ -416,13 +419,15 @@ class TraceabilityIndexBuilder:
                         link_type=GraphLinkType.UID_TO_NODE,
                         lhs_node=node.reserved_uid,
                     ):
-                        already_existing_node = (
+                        already_existing_node: SDocNode = (
                             traceability_index.graph_database.get_link_value(
                                 link_type=GraphLinkType.UID_TO_NODE,
                                 lhs_node=node.reserved_uid,
                             )
                         )
-                        other_req_doc = already_existing_node.document
+                        other_req_doc = assert_cast(
+                            already_existing_node.get_document(), SDocDocument
+                        )
                         if other_req_doc == document:
                             print(  # noqa: T201
                                 "error: DocumentIndex: "
@@ -592,18 +597,21 @@ class TraceabilityIndexBuilder:
                             edge=child_reference.role,
                         )
                         # Set document dependencies.
-                        if document != child_requirement.document:
+                        child_requirement_document = assert_cast(
+                            child_requirement.get_document(), SDocDocument
+                        )
+                        if document != child_requirement_document:
                             # This is where we help the incremental generation to
                             # understand that the related documents must be
                             # re-generated together.
                             file_dependency_manager.add_dependency(
                                 document.meta.input_doc_full_path,
                                 document.meta.output_document_full_path,
-                                child_requirement.document.meta.input_doc_full_path,
+                                child_requirement_document.meta.input_doc_full_path,
                             )
                             file_dependency_manager.add_dependency(
-                                child_requirement.document.meta.input_doc_full_path,
-                                child_requirement.document.meta.output_document_full_path,
+                                child_requirement_document.meta.input_doc_full_path,
+                                child_requirement_document.meta.output_document_full_path,
                                 document.meta.input_doc_full_path,
                             )
                     else:
@@ -684,7 +692,7 @@ class TraceabilityIndexBuilder:
         # @relation(SDOC-SRS-109, scope=range_start)
         unique_document_from_file_occurences: Set[str] = set()
         for document_ in document_tree.document_list:
-            document_from_file_: DocumentFromFile
+            document_from_file_: SDocDocumentFromFileIF
             for document_from_file_ in document_.fragments_from_files:
                 traceability_index.contains_included_documents = True
 

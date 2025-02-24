@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.document_view import DocumentView
+from strictdoc.backend.sdoc.models.model import SDocDocumentFromFileIF
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
     SDocNode,
@@ -36,8 +37,7 @@ class ParseContext:
         self.document_view: Optional[DocumentView] = None
         self.document_has_requirements = False
 
-        # FIXME: Plain list of all fragments found in the document.
-        self.fragments_from_files: List = []
+        self.fragments_from_files: List[SDocDocumentFromFileIF] = []
 
 
 class SDocParsingProcessor:

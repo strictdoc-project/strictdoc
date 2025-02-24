@@ -1,6 +1,6 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,type-arg"
 from collections import OrderedDict
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import Dict, Generator, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
@@ -152,7 +152,7 @@ class GrammarElement:
                 return True
         return False
 
-    def enumerate_meta_field_titles(self):
+    def enumerate_meta_field_titles(self) -> Generator[str, None, None]:
         for field in self.fields:
             if field.title in (
                 RequirementFieldName.TITLE,
@@ -163,7 +163,9 @@ class GrammarElement:
                 continue
             yield field.title
 
-    def enumerate_custom_content_field_titles(self):
+    def enumerate_custom_content_field_titles(
+        self,
+    ) -> Generator[str, None, None]:
         after_title_or_statement = False
         for field in self.fields:
             if field.title in (

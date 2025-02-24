@@ -355,7 +355,7 @@ def test_26_two_documents_remove_child_relation():
             document_2_requirement_grammar_element, "Child", "IsRefinedBy"
         )
     )
-    assert requirement1.document != requirement2.document
+    assert requirement1.get_document() != requirement2.get_document()
 
     file_tree = []
     document_list = [document_1, document_2]

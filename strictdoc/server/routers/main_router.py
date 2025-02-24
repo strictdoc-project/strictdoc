@@ -207,21 +207,24 @@ def create_main_router(
         requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         )
+        requirement_document: SDocDocument = assert_cast(
+            requirement.get_document(), SDocDocument
+        )
         link_renderer = LinkRenderer(
-            root_path=requirement.document.meta.get_root_path_prefix(),
+            root_path=requirement_document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup=requirement.document.config.get_markup(),
+            markup=requirement_document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
             config=project_config,
-            context_document=requirement.document,
+            context_document=requirement_document,
         )
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            document=requirement.document,
+            document=requirement_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             link_renderer=link_renderer,

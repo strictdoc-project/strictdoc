@@ -8,7 +8,7 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.jinja2.html#REQ-001">
 
 RUN: %cat %S/Output/html/_source_files/file.jinja2.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 # Links to REQ-001, REQ-002, REQ-003 are correct.
-CHECK-SOURCE-FILE:{{.*}}href="../20_jinja/example.html#2-REQ-002"{{.*}}
-CHECK-SOURCE-FILE:{{.*}}href="../20_jinja/example.html#3-REQ-003"{{.*}}
+CHECK-SOURCE-FILE:{{.*}}href="../20_jinja/example.html#REQ-002"{{.*}}
+CHECK-SOURCE-FILE:{{.*}}href="../20_jinja/example.html#REQ-003"{{.*}}
 
-CHECK-SOURCE-FILE:{{.*}}href="../20_jinja/example.html#1-REQ-001"{{.*}}
+CHECK-SOURCE-FILE:{{.*}}href="../20_jinja/example.html#REQ-001"{{.*}}

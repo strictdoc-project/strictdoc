@@ -5,10 +5,10 @@ RUN: %cat %S/Output/html/02_level_is_None_for_requirements/input.html | filechec
 
 CHECK-HTML:href="#1-First-section-numbered"
 CHECK-HTML:href="#-Second-section-unnumbered"
-CHECK-HTML:href="#-REQ-001"
-CHECK-HTML:href="#-REQ-002"
+CHECK-HTML:href="#REQ-001"
+CHECK-HTML:href="#REQ-002"
 CHECK-HTML:href="#2-Second-section-numbered"
-CHECK-HTML:href="#2.1-REQ-003"
+CHECK-HTML:href="#REQ-003"
 
 
 CHECK-HTML:<sdoc-anchor

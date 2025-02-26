@@ -27,5 +27,5 @@ CHECK-3-REQUIREMENTS: href="../../_source_files/strictdoc/core/traceability_inde
 CHECK-3-REQUIREMENTS: href="../../_source_files/strictdoc/core/tree_cycle_detector.py.html#SDOC-SRS-30"
 
 RUN: %cat "%S/Output/html/_source_files/strictdoc/core/tree_cycle_detector.py.html" | filecheck %s --check-prefix CHECK-TREE-CYCLE-DETECTOR
-CHECK-TREE-CYCLE-DETECTOR: href="../../../strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html#{{.*}}-SDOC-SRS-30"
+CHECK-TREE-CYCLE-DETECTOR: href="../../../strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html#SDOC-SRS-30"
 CHECK-TREE-CYCLE-DETECTOR: href="../../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-SRS-30

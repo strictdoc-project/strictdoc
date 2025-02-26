@@ -43,6 +43,6 @@ class Test(E2ECase):
                 requirement.do_go_to_this_requirement_in_document_view()
             )
             screen_document_.assert_on_screen_document()
-            screen_document_.assert_target_by_anchor("1-REQ-001")
+            screen_document_.assert_target_by_anchor("REQ-001")
 
         assert test_setup.compare_sandbox_and_expected_output()

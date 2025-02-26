@@ -13,7 +13,7 @@ RUN: %cat %S/Output/html/_source_files/file.ml.html | filecheck %s --check-prefi
 NOTE: Ensure that the lexer is recognized correctly.
 CHECK-SOURCE-FILE: OCaml
 
-CHECK-SOURCE-FILE: <a{{.*}}href="../80_auto_finding_of_lexers/input.html#1-REQ-001">
+CHECK-SOURCE-FILE: <a{{.*}}href="../80_auto_finding_of_lexers/input.html#REQ-001">
 CHECK-SOURCE-FILE: href="../_source_files/file.ml.html#REQ-001#3#5"
 CHECK-SOURCE-FILE: <b>[ 3-5 ]</b> file.ml
 

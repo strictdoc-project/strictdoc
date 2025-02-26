@@ -13,7 +13,7 @@ RUN: %check_exists --file %S/Output/html2pdf/html/%THIS_TEST_FOLDER/nested/subne
 
 RUN: %cat %S/Output/html2pdf/html/bundle.html | filecheck %s --check-prefix CHECK-DOC-HTML
 # This ensures that the link is resolved correctly.
-CHECK-DOC-HTML:<a href="#1.1-Section-1">🔗&nbsp;Section #1</a>
+CHECK-DOC-HTML:<a href="#SEC-1">🔗&nbsp;Section #1</a>
 
 # Git meta information.
 CHECK-DOC-HTML: {{.* \(Git branch: .*\)}}

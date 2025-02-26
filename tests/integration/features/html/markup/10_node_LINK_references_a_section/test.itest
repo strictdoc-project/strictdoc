@@ -4,12 +4,12 @@ CHECK: Published: Hello world doc
 RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
 
 # [LINK: ...] is used 6 times in the doc.
-CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#1-Referenced-section">🔗&nbsp;Referenced section</a>
-CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#1-Referenced-section">🔗&nbsp;Referenced section</a>
-CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#1-Referenced-section">🔗&nbsp;Referenced section</a>
-CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#1-Referenced-section">🔗&nbsp;Referenced section</a>
-CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#1-Referenced-section">🔗&nbsp;Referenced section</a>
-CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#1-Referenced-section">🔗&nbsp;Referenced section</a>
+CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#SECTION">🔗&nbsp;Referenced section</a>
+CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#SECTION">🔗&nbsp;Referenced section</a>
+CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#SECTION">🔗&nbsp;Referenced section</a>
+CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#SECTION">🔗&nbsp;Referenced section</a>
+CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#SECTION">🔗&nbsp;Referenced section</a>
+CHECK-HTML-DOC: <a href="../10_node_LINK_references_a_section/section.html#SECTION">🔗&nbsp;Referenced section</a>
 
 # The referenced section shall have 6 incoming links.
 RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/section.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC-REFERENCED-SECTION
@@ -23,7 +23,7 @@ CHECK-HTML-DOC-REFERENCED-SECTION: <a href="../10_node_LINK_references_a_section
 CHECK-HTML-DOC-REFERENCED-SECTION: <a href="../10_node_LINK_references_a_section/input.html#{{.*}}">
 
 RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-TABLE
-CHECK-HTML-TABLE: <a href="../10_node_LINK_references_a_section/section-TABLE.html#1-Referenced-section">{{.*}}Referenced section</a></p>
+CHECK-HTML-TABLE: <a href="../10_node_LINK_references_a_section/section-TABLE.html#SECTION">{{.*}}Referenced section</a></p>
 
 RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-TRACE
-CHECK-HTML-TRACE: <a href="../10_node_LINK_references_a_section/section-TRACE.html#1-Referenced-section">{{.*}}Referenced section</a></p>
+CHECK-HTML-TRACE: <a href="../10_node_LINK_references_a_section/section-TRACE.html#SECTION">{{.*}}Referenced section</a></p>

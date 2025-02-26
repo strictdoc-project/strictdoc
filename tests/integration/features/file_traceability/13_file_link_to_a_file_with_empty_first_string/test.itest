@@ -11,4 +11,4 @@ RUN: %cat %S/Output/html/13_file_link_to_a_file_with_empty_first_string/input.ht
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a{{.*}}href="../13_file_link_to_a_file_with_empty_first_string/input.html#1-REQ-001"{{.*}}>
+CHECK-SOURCE-FILE: <a{{.*}}href="../13_file_link_to_a_file_with_empty_first_string/input.html#REQ-001"{{.*}}>

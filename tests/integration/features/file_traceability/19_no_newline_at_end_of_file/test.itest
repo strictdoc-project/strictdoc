@@ -7,5 +7,5 @@ RUN: %cat %S/Output/html/19_no_newline_at_end_of_file/input.html | filecheck %s 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a{{.*}}href="../19_no_newline_at_end_of_file/input.html#1-REQ-001"{{.*}}>
+CHECK-SOURCE-FILE: <a{{.*}}href="../19_no_newline_at_end_of_file/input.html#REQ-001"{{.*}}>
 CHECK-SOURCE-FILE: <pre class="highlight"><span class="mi">123123</span>  <span class="c1"># noqa: W292, B018</span></pre>

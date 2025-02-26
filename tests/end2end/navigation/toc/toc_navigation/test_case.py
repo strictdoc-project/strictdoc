@@ -53,8 +53,8 @@ class Test(E2ECase):
             # *** where unique_prefix = node.context.title_number_string
 
             toc_section_without_uid_anchor = "1-Section-without-UID"
-            toc_section_with_uid_anchor = "2-Section-with-UID"
-            toc_requirement_with_title_anchor = "3-REQ_02"
+            toc_section_with_uid_anchor = "SECTION_01"
+            toc_requirement_with_title_anchor = "REQ_02"
 
             screen_toc.do_toc_go_to_anchor(toc_section_without_uid_anchor)
             screen_document.assert_target_by_anchor(

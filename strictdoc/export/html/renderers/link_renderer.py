@@ -49,11 +49,11 @@ class LinkRenderer:
         if isinstance(node, Anchor):
             return f"{self._string_to_link(node.value)}"
 
-        if node.reserved_uid and len(node.reserved_uid) > 0:
-            # uid is unique enough
-            local_anchor = f"{self._string_to_link(node.reserved_uid)}"
+        if node.reserved_uid is not None and len(node.reserved_uid) > 0:
+            # UID is unique enough.
+            local_anchor = self._string_to_link(node.reserved_uid)
         else:
-            # we need to provide some uniqueness
+            # If an element as no UID, provide some uniqueness.
             unique_prefix = node.context.title_number_string
             if isinstance(node, (SDocSection, SDocDocument)):
                 local_anchor = (

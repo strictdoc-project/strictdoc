@@ -10,7 +10,7 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.unknown_extension.html#REQ-001#2
 
 RUN: %cat %S/Output/html/_source_files/file.unknown_extension.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
 
-CHECK-SOURCE-FILE: <a{{.*}}href="../70_unregistered_file_extensions/input.html#1-REQ-001">
+CHECK-SOURCE-FILE: <a{{.*}}href="../70_unregistered_file_extensions/input.html#REQ-001">
 
 CHECK-SOURCE-FILE: href="../_source_files/file.unknown_extension.html#REQ-001#2#4"
 CHECK-SOURCE-FILE: <b>[ 2-4 ]</b> file.unknown_extension

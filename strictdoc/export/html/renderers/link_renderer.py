@@ -49,26 +49,30 @@ class LinkRenderer:
         if isinstance(node, Anchor):
             return f"{self._string_to_link(node.value)}"
 
-        unique_prefix = node.context.title_number_string
-        if isinstance(node, (SDocSection, SDocDocument)):
-            local_anchor = f"{unique_prefix}-{self._string_to_link(node.title)}"
-        elif isinstance(node, SDocNode):
-            if node.reserved_uid and len(node.reserved_uid) > 0:
-                local_anchor = (
-                    f"{unique_prefix}-{self._string_to_link(node.reserved_uid)}"
-                )
-            elif (
-                node.reserved_title is not None and len(node.reserved_title) > 0
-            ):
-                local_anchor = (
-                    f"{unique_prefix}-"
-                    f"{self._string_to_link(node.reserved_title)}"
-                )
-            else:
-                # TODO: This is not reliable
-                local_anchor = str(id(node))
+        if node.reserved_uid is not None and len(node.reserved_uid) > 0:
+            # UID is unique enough.
+            local_anchor = self._string_to_link(node.reserved_uid)
         else:
-            raise NotImplementedError
+            # If an element as no UID, provide some uniqueness.
+            unique_prefix = node.context.title_number_string
+            if isinstance(node, (SDocSection, SDocDocument)):
+                local_anchor = (
+                    f"{unique_prefix}-{self._string_to_link(node.title)}"
+                )
+            elif isinstance(node, SDocNode):
+                if (
+                    node.reserved_title is not None
+                    and len(node.reserved_title) > 0
+                ):
+                    local_anchor = (
+                        f"{unique_prefix}-"
+                        f"{self._string_to_link(node.reserved_title)}"
+                    )
+                else:
+                    # TODO: This is not reliable
+                    local_anchor = str(id(node))
+            else:
+                raise NotImplementedError
         self.local_anchor_cache[node] = local_anchor
         return local_anchor
 

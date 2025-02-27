@@ -7,4 +7,4 @@ RUN: %cat %S/Output/html/30_cc/example.html | filecheck %s --dump-input=fail --c
 CHECK-HTML: <a{{.*}}href="../_source_files/file.cc.html#REQ-001">
 
 RUN: %cat %S/Output/html/_source_files/file.cc.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a{{.*}}href="../30_cc/example.html#1-REQ-001"{{.*}}>
+CHECK-SOURCE-FILE: <a{{.*}}href="../30_cc/example.html#REQ-001"{{.*}}>

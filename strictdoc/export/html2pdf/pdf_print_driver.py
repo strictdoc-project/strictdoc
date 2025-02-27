@@ -1,3 +1,4 @@
+import os.path
 from subprocess import CompletedProcess, TimeoutExpired, run
 from typing import List, Tuple
 
@@ -12,6 +13,9 @@ class PDFPrintDriver:
         paths_to_print: List[Tuple[str, str]],
     ) -> None:
         assert isinstance(paths_to_print, list), paths_to_print
+        path_to_html2print_cache = os.path.join(
+            project_config.get_path_to_cache_dir(), "html2pdf"
+        )
         cmd: List[str] = [
             # Using sys.executable instead of "python" is important because
             # venv subprocess call to python resolves to wrong interpreter,
@@ -19,7 +23,7 @@ class PDFPrintDriver:
             "html2print",
             "print",
             "--cache-dir",
-            project_config.get_path_to_cache_dir(),
+            path_to_html2print_cache,
         ]
         if project_config.chromedriver is not None:
             cmd.extend(

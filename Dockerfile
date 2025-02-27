@@ -44,7 +44,7 @@ ENV PATH="/home/strictdoc_user/.venv/bin:$PATH"
 
 # Install StrictDoc.
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir strictdoc
+    pip install --no-cache-dir git+https://github.com/strictdoc-project/strictdoc.git@main
 
 # Set the working directory to the user's home directory.
 WORKDIR /data

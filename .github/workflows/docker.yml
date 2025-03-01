@@ -1,0 +1,25 @@
+name: StrictDoc Docker CI
+
+on:
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build Docker image with PR branch
+      run: |
+        docker build . \
+          --build-arg STRICTDOC_SOURCE=${{ github.event.pull_request.head.sha }} \
+          -t strictdoc:pr-${{ github.event.pull_request.number }}
+
+    - name: Run container and test StrictDoc installation
+      run: |
+        docker run --name strictdoc --rm -v "$(pwd):/home/strictdoc_user/data" \
+            --entrypoint="" \
+            strictdoc:pr-${{ github.event.pull_request.number }} \
+            /bin/bash -c "ls -ld ; false && strictdoc export --formats=html,html2pdf ."

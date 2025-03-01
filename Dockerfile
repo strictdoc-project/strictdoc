@@ -11,6 +11,7 @@ FROM ubuntu:24.04
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     curl \
+    git \
     python3 \
     python3-pip \
     python3-venv \
@@ -42,11 +43,20 @@ RUN python3 -m venv /home/strictdoc_user/.venv
 # Ensure the virtual environment is used by modifying the PATH.
 ENV PATH="/home/strictdoc_user/.venv/bin:$PATH"
 
-# Install StrictDoc.
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir git+https://github.com/strictdoc-project/strictdoc.git@main
+# Install StrictDoc. Set default StrictDoc installation from PyPI but allow
+# overriding it with an environment variable.
+ARG STRICTDOC_SOURCE="pypi"
+ENV STRICTDOC_SOURCE=${STRICTDOC_SOURCE}
+
+RUN if [ "$STRICTDOC_SOURCE" = "pypi" ]; then \
+      pip install --no-cache-dir --upgrade pip && \
+      pip install --no-cache-dir strictdoc; \
+    else \
+      pip install --no-cache-dir --upgrade pip && \
+      pip install --no-cache-dir git+https://github.com/strictdoc-project/strictdoc.git@${STRICTDOC_SOURCE}; \
+    fi
 
 # Set the working directory to the user's home directory.
-WORKDIR /data
+WORKDIR /home/strictdoc_user/data
 
 ENTRYPOINT ["/bin/bash"]

@@ -1,6 +1,8 @@
 [DOCUMENT]
 MID: 2e7deb9808bb42879e7463b1d7ac9bba
 TITLE: Technical Note: Zephyr requirements tool requirements
+VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
+DATE: @GIT_COMMIT_DATETIME
 REQ_PREFIX: ZEP-
 ROOT: True
 OPTIONS:

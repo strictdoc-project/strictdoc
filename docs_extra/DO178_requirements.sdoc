@@ -1,7 +1,8 @@
 [DOCUMENT]
 MID: b3727ea826c24d42a84e88983e7c1e24
 TITLE: Technical Note: DO-178C requirements tool requirements
-VERSION: v0.1
+VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
+DATE: @GIT_COMMIT_DATETIME
 CLASSIFICATION: Draft
 REQ_PREFIX: DO178-
 ROOT: True

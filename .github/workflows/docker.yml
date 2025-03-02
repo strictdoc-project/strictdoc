@@ -1,0 +1,40 @@
+name: StrictDoc Docker CI
+
+on:
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.12
+
+    - name: Upgrade pip
+      run: |
+        python -m pip install --upgrade pip
+
+    - name: Install minimal Python packages
+      run: |
+        pip install -r requirements.bootstrap.txt
+
+    - name: Build Docker image with PR branch
+      run: |
+        invoke build-docker \
+          --image pr-${{ github.event.pull_request.number }} \
+          --source=${{ github.event.pull_request.head.sha }}
+
+    - name: Set permissions for the output folder.
+      run: |
+        mkdir -p output/ && chmod 777 output/
+
+    - name: Run container and test StrictDoc installation
+      run: |
+        invoke test-docker \
+          --image pr-${{ github.event.pull_request.number }}

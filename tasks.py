@@ -43,6 +43,7 @@ def run_invoke(
     context,
     cmd,
     environment: Optional[dict] = None,
+    pty: bool = False,
     warn: bool = False,
 ) -> invoke.runners.Result:
     def one_line_command(string):
@@ -53,7 +54,7 @@ def run_invoke(
         env=environment,
         hide=False,
         warn=warn,
-        pty=False,
+        pty=pty,
         echo=True,
     )
 
@@ -829,4 +830,63 @@ def autouid(context):
                 manage auto-uid
                 drafts/requirements
         """,
+    )
+
+
+@task(aliases=["bd"])
+def build_docker(
+    context,
+    image: str = "strictdoc:latest",
+    no_cache: bool = False,
+    source="pypi",
+):
+    no_cache_argument = "--no-cache" if no_cache else ""
+    run_invoke(
+        context,
+        f"""
+        docker build .
+            --build-arg STRICTDOC_SOURCE={source}
+            -t {image}
+            {no_cache_argument}
+        """,
+    )
+
+
+@task(aliases=["rd"])
+def run_docker(
+    context, image: str = "strictdoc:latest", command: Optional[str] = None
+):
+    command_argument = (
+        f'/bin/bash -c "{command}"' if command is not None else ""
+    )
+    entry_point_argument = '--entrypoint=""' if command_argument else ""
+
+    run_invoke(
+        context,
+        f"""
+        docker run
+            --name strictdoc
+            --rm
+            -it
+            -v "$(pwd):/data"
+            {entry_point_argument}
+            {image}
+            {command_argument}
+        """,
+        pty=True,
+    )
+
+
+@task(aliases=["td"])
+def test_docker(context, image: str = "strictdoc:latest"):
+    run_invoke(
+        context,
+        """
+        mkdir -p output/ && chmod 777 output/
+        """,
+    )
+    run_docker(
+        context,
+        image=image,
+        command=("strictdoc export --formats=html,html2pdf ."),
     )

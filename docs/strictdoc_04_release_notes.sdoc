@@ -33,6 +33,8 @@ TITLE: Unreleased work
 [TEXT]
 MID: c5725f24fcd24d54929e155f6ad47b44
 STATEMENT: >>>
+This release includes the following enhancements.
+
 The autocompletion dropdown has been added to the relation editor in the Web GUI. [@thseiler]
 
 Link anchors are no longer generated using section numbers, which improves their stability when StrictDoc documentation is linked from external sources. If a requirement is moved to another section within the same document, the original link will still correctly resolve to the UID [@thseiler].

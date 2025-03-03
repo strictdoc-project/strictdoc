@@ -889,9 +889,14 @@ def test_docker(context, image: str = "strictdoc:latest"):
         image=image,
         command="strictdoc export --formats=html,html2pdf .",
     )
-    run_invoke(
-        context,
-        """
-        [ "$(stat -c "%U" output/html2pdf/pdf/docs/strictdoc_01_user_guide.pdf)" = "$(whoami)" ]
-        """,
+
+    def check_file_owner(filepath):
+        import pwd
+
+        file_owner = pwd.getpwuid(os.stat(filepath).st_uid).pw_name
+        current_user = os.environ.get("USER", "")
+        return file_owner == current_user
+
+    assert check_file_owner(
+        "output/html2pdf/pdf/docs/strictdoc_01_user_guide.pdf"
     )

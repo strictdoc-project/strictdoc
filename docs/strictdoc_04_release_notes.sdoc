@@ -33,7 +33,15 @@ TITLE: Unreleased work
 [TEXT]
 MID: c5725f24fcd24d54929e155f6ad47b44
 STATEMENT: >>>
-The autocompletion dropdown has been added to the relation editor in the Web GUI. Thanks to @thseiler for contributing this work.
+The autocompletion dropdown has been added to the relation editor in the Web GUI. [@thseiler]
+
+Link anchors are no longer generated using section numbers, which improves their stability when StrictDoc documentation is linked from external sources. If a requirement is moved to another section within the same document, the original link will still correctly resolve to the UID [@thseiler].
+
+The legacy FREETEXT parsing has been completely removed from Document and Section. The [FREETEXT] marker is no longer recognized by StrictDoc, allowing for the removal of a significant amount of legacy code.
+
+Based on user feedback, the StrictDoc's Dockerfile now supports the HTML2PDF feature. The container file was refactored to be based on Ubuntu 24 which is the default Linux platform for StrictDoc development and testing. The image installs Google Chrome which enables the HTML2PDF to work out of the box without any other installation steps.
+
+Over the years, StrictDoc has been transitioning to a 100% statically-typed codebase. As part of the ongoing refactoring of StrictDoc's type system, more type annotations have been added to the core StrictDoc model classes (Document, Node, Section, DocumentFromFile, etc.). These improvements should further reduce the risk of future regressions due to stronger static type checking.
 <<<
 
 [/SECTION]

@@ -859,7 +859,6 @@ def run_docker(
     command_argument = (
         f'/bin/bash -c "{command}"' if command is not None else ""
     )
-    entry_point_argument = '--entrypoint=""' if command_argument else ""
 
     run_invoke(
         context,
@@ -868,8 +867,8 @@ def run_docker(
             --name strictdoc
             --rm
             -it
+            -e HOST_UID=$(id -u) -e HOST_GID=$(id -g)
             -v "$(pwd):/data"
-            {entry_point_argument}
             {image}
             {command_argument}
         """,
@@ -882,11 +881,17 @@ def test_docker(context, image: str = "strictdoc:latest"):
     run_invoke(
         context,
         """
-        mkdir -p output/ && chmod 777 output/
+        rm -rf output/ && mkdir -p output/ && chmod 777 output/
         """,
     )
     run_docker(
         context,
         image=image,
-        command=("strictdoc export --formats=html,html2pdf ."),
+        command="strictdoc export --formats=html,html2pdf .",
+    )
+    run_invoke(
+        context,
+        """
+        [ "$(stat -c "%U" output/html2pdf/pdf/docs/strictdoc_01_user_guide.pdf)" = "$(whoami)" ]
+        """,
     )

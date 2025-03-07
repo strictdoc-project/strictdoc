@@ -231,54 +231,34 @@ class SourceFileViewHTMLGenerator:
         for marker in coverage_info.markers:
             marker_line = marker.ng_source_line_begin
             assert isinstance(marker_line, int)
-            pygmented_source_file_line = assert_cast(
-                pygmented_source_file_lines[marker_line - 1], str
-            )
-            if isinstance(marker, ForwardRangeMarker):
-                before_line = pygmented_source_file_line.rstrip("\n") + " "
-                pygmented_source_file_lines[marker_line - 1] = (
-                    SourceMarkerTuple(Markup(before_line), Markup("\n"), marker)
+
+            source_marker_tuple: SourceMarkerTuple
+            if isinstance(
+                pygmented_source_file_lines[marker_line - 1], SourceMarkerTuple
+            ):
+                source_marker_tuple = (
+                    pygmented_source_file_lines[marker_line - 1]
                 )
+            else:
+                pygmented_source_file_line = assert_cast(
+                    pygmented_source_file_lines[marker_line - 1], str
+                )
+                source_marker_tuple = SourceMarkerTuple(
+                    source_line=Markup(pygmented_source_file_line),
+                    markers=[],
+                )
+                pygmented_source_file_lines[
+                    marker_line - 1
+                ] = source_marker_tuple
+
+            if isinstance(marker, (
+                ForwardRangeMarker, ForwardFunctionRangeMarker, FunctionRangeMarker, RangeMarker, LineMarker
+            )):
+                source_marker_tuple.markers.append(marker)
                 continue
 
-            if isinstance(marker, ForwardFunctionRangeMarker):
-                before_line = pygmented_source_file_line.rstrip("\n") + " "
-                pygmented_source_file_lines[marker_line - 1] = (
-                    SourceMarkerTuple(Markup(before_line), Markup("\n"), marker)
-                )
-                continue
+            raise NotImplementedError(marker)
 
-            if isinstance(marker, FunctionRangeMarker):
-                # FIXME
-                marker_line = marker.ng_marker_line
-
-            source_line = source_file_lines[marker_line - 1]
-            assert len(marker.reqs_objs) > 0
-            before_line = source_line[
-                : marker.reqs_objs[0].ng_source_column - 1
-            ].rstrip("/")
-            closing_bracket_index = (
-                source_line.index("]")
-                if isinstance(marker, RangeMarker)
-                and not marker.ng_new_relation_keyword
-                else source_line.index(", scope")
-                if isinstance(marker, FunctionRangeMarker)
-                or (
-                    isinstance(marker, RangeMarker)
-                    and marker.ng_new_relation_keyword
-                )
-                else source_line.index(")")
-                if isinstance(marker, LineMarker)
-                else None
-            )
-            assert closing_bracket_index is not None
-            after_line = source_line[closing_bracket_index:].rstrip()
-
-            pygmented_source_file_lines[marker_line - 1] = SourceMarkerTuple(
-                escape(before_line),
-                escape(after_line),
-                marker,
-            )
         pygments_styles = (
             f"/* Lexer: {lexer.name} */\n"
             + html_formatter.get_style_defs(".highlight")

@@ -23,11 +23,13 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 
-class SourceMarkerTuple(NamedTuple):
-    before_line: Markup
-    after_line: Markup
-    marker: Union[
-        FunctionRangeMarker, ForwardRangeMarker, LineMarker, RangeMarker
+@dataclass
+class SourceMarkerTuple:
+    source_line: Markup
+    markers: List[
+        Union[
+            FunctionRangeMarker, ForwardRangeMarker, LineMarker, RangeMarker
+        ]
     ]
 
 

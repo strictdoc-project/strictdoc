@@ -32,12 +32,12 @@ class ConfluenceHTMLTableImport:
 
         soup = BeautifulSoup(html_content, "html5lib")
 
-        headers = soup.findChildren("h1")
-        tables = soup.findChildren("table")
+        headers = soup.find_all("h1", recursive=True)
+        tables = soup.find_all("table", recursive=True)
         assert len(headers) == len(tables)
 
         reqs_array_array = []
-        for reqs_table in soup.findChildren("table"):
+        for reqs_table in soup.find_all("table", recursive=True):
             reqs = ConfluenceHTMLTableImport.parse_table(reqs_table)
             reqs_array_array.append(reqs)
 
@@ -97,7 +97,7 @@ class ConfluenceHTMLTableImport:
             "COMMENT": -1,
             "RATIONALE": -1,
         }
-        for th_idx, th in enumerate(first_tr.findChildren("th")):
+        for th_idx, th in enumerate(first_tr.find_all("th", recursive=False)):
             content_wrapper_div = th.find("div", class_="content-wrapper")
             if content_wrapper_div:
                 p = content_wrapper_div.find("p")
@@ -124,17 +124,17 @@ class ConfluenceHTMLTableImport:
 
         reqs = []
 
-        for tr in tbody.findChildren("tr")[1:]:
-            req_uid = tr.findChildren("td")[field_to_index_map["UID"]].text
-            req_type = tr.findChildren("td")[field_to_index_map["TYPE"]].text
-            req_title = tr.findChildren("td")[field_to_index_map["TITLE"]].text
-            req_statement = tr.findChildren("td")[
+        for tr in tbody.find_all("tr", recursive=False)[1:]:
+            req_uid = tr.find_all("td", recursive=False)[field_to_index_map["UID"]].text
+            req_type = tr.find_all("td", recursive=False)[field_to_index_map["TYPE"]].text
+            req_title = tr.find_all("td", recursive=False)[field_to_index_map["TITLE"]].text
+            req_statement = tr.find_all("td", recursive=False)[
                 field_to_index_map["STATEMENT"]
             ].text
             req_comment = ConfluenceHTMLTableImport.parse_tag_to_text(
-                tr.findChildren("td")[field_to_index_map["COMMENT"]]
+                tr.find_all("td", recursive=False)[field_to_index_map["COMMENT"]]
             )
-            req_rationale = tr.findChildren("td")[
+            req_rationale = tr.find_all("td", recursive=False)[
                 field_to_index_map["RATIONALE"]
             ].text
 
@@ -155,14 +155,14 @@ class ConfluenceHTMLTableImport:
     def parse_tag_to_text(tag):
         # The parsing below is too primitive but it works for now.
         # TODO: Consider implementing an HTML->RST converter.
-        children = tag.findChildren(recursive=False)
+        children = tag.find_all(recursive=False)
         if len(children) == 0:
             return tag.text
         paragraphs = []
         for child in children:
             if child.name == "ul":
                 ul_rst_list = []
-                for li in child.findChildren(recursive=False):
+                for li in child.find_all(recursive=False):
                     assert li.name == "li"
                     ul_rst_list.append(f"- {li.text}")
                 paragraphs.append("\n".join(ul_rst_list))

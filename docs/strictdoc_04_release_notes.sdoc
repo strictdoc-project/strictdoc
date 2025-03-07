@@ -27,6 +27,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [SECTION]
+MID: d64fb5003399496bbb18ffb6e05efaf4
+TITLE: Unreleased
+
+[TEXT]
+MID: a7bd074d2dcd40a6af106e91720d90d3
+STATEMENT: >>>
+The command ``strictdoc server`` command has been extended to support the ``--host`` parameter. A user requested this feature to allow changing the server host which enables running the server within the StrictDoc Docker container.
+<<<
+
+[/SECTION]
+
+[SECTION]
 MID: 58b99c15df8445ce9832e24a17588e2c
 TITLE: 0.7.0 (2025-03-03)
 

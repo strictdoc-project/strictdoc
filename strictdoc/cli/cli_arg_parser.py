@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from strictdoc.cli.command_parser_builder import CommandParserBuilder
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.net import is_valid_host
 
 
 class CLIValidationError(Exception):
@@ -75,12 +76,14 @@ class ServerCommandConfig:
         output_path: Optional[str],
         config_path: Optional[str],
         reload: bool,
+        host: Optional[str],
         port: Optional[int],
     ):
         self._input_path: str = input_path
         self.output_path: Optional[str] = output_path
         self._config_path: Optional[str] = config_path
         self.reload: bool = reload
+        self.host: Optional[str] = host
         self.port: Optional[int] = port
 
     def get_full_input_path(self) -> str:
@@ -106,6 +109,12 @@ class ServerCommandConfig:
                 "Provided path to a configuration file does not exist: "
                 f"{self._config_path}"
             )
+
+        if (host_ := self.host) is not None:
+            if not is_valid_host(host_):
+                raise CLIValidationError(
+                    f"Provided 'host' argument is not a valid host: {host_}"
+                )
 
 
 @auto_described
@@ -302,6 +311,7 @@ class SDocArgsParser:
             output_path=self.args.output_path,
             config_path=self.args.config,
             reload=self.args.reload,
+            host=self.args.host,
             port=self.args.port,
         )
 

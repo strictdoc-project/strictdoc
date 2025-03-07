@@ -1,0 +1,4 @@
+RUN: %mkdir %S/output/
+RUN: %expect_exit 1 %strictdoc server --host foo#bar . | filecheck %s --dump-input=fail
+
+CHECK: error: Provided 'host' argument is not a valid host: foo#bar

@@ -368,6 +368,7 @@ class CommandParserBuilder:
         command_parser_server.add_argument(
             "--no-reload", dest="reload", action="store_false"
         )
+        command_parser_server.add_argument("--host", type=str)
         command_parser_server.add_argument("--port", type=IntRange(1024, 65000))
         add_config_argument(command_parser_server)
 

@@ -668,8 +668,6 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-80
 - TYPE: File
-  VALUE: strictdoc/server/main.py
-- TYPE: File
   VALUE: strictdoc/server/app.py
 - TYPE: File
   VALUE: strictdoc/server/routers/main_router.py

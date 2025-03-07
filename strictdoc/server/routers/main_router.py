@@ -34,10 +34,6 @@ from strictdoc.backend.sdoc.models.node import (
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.writer import SDWriter
-from strictdoc.cli.cli_arg_parser import (
-    ExportCommandConfig,
-    ServerCommandConfig,
-)
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.analyzers.document_stats import DocumentTreeStats
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
@@ -140,32 +136,9 @@ HTTP_STATUS_GATEWAY_TIMEOUT = 504
 AUTOCOMPLETE_LIMIT = 50
 
 
-def create_main_router(
-    server_config: ServerCommandConfig, project_config: ProjectConfig
-) -> APIRouter:
+def create_main_router(project_config: ProjectConfig) -> APIRouter:
     parallelizer = NullParallelizer()
 
-    # FIXME: Remove this unused export config.
-    _export_config = ExportCommandConfig(
-        input_paths=[server_config.get_full_input_path()],
-        output_dir=server_config.output_path,
-        config_path=None,
-        project_title=project_config.project_title,
-        formats=["html"],
-        fields=None,
-        generate_bundle_document=False,
-        no_parallelization=False,
-        enable_mathjax=False,
-        included_documents=True,
-        filter_requirements=None,
-        filter_sections=None,
-        reqif_profile=project_config.reqif_profile,
-        reqif_multiline_is_xhtml=False,
-        reqif_enable_mid=False,
-        view=None,
-        chromedriver=None,
-    )
-    project_config.integrate_export_config(_export_config)
     project_config.is_running_on_server = True
 
     export_action = ExportAction(
@@ -2590,10 +2563,10 @@ def create_main_router(
             )
 
         path_to_output_html = os.path.join(
-            server_config.output_path, "html", "_temp.html"
+            project_config.export_output_html_root, "_temp.html"
         )
         path_to_output_pdf = os.path.join(
-            server_config.output_path, "html", "_temp.pdf"
+            project_config.export_output_html_root, "html", "_temp.pdf"
         )
         pdf_print_driver = PDFPrintDriver()
         with open(path_to_output_html, mode="w", encoding="utf8") as temp_file_:
@@ -2789,8 +2762,7 @@ def create_main_router(
             url_to_document
         )
         full_path_to_document = os.path.join(
-            server_config.output_path,
-            "html",
+            project_config.export_output_html_root,
             document_relative_path.relative_path,
         )
         must_generate_document = False

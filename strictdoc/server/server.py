@@ -38,11 +38,13 @@ def run_strictdoc_server(
                 tempfile.TemporaryDirectory()
             )
 
+        project_config.integrate_server_config(server_config)
+
         # uvicorn.run does not support passing arguments to the main
         # function (strictdoc_production_app). Passing the pickled config
         # through the environmental variables interface.
         tmp_config_file = stack.enter_context(tempfile.NamedTemporaryFile())
-        config_dump = pickle_dump((server_config, project_config))
+        config_dump = pickle_dump(project_config)
         tmp_config_file.write(config_dump)
         tmp_config_file.flush()
 
@@ -52,7 +54,9 @@ def run_strictdoc_server(
             "strictdoc.server.app:strictdoc_production_app",
             app_dir=".",
             factory=True,
-            host=project_config.server_host,
+            host=server_config.host
+            if server_config.host is not None
+            else project_config.server_host,
             log_level="info",
             # "server" command port overrides the strictdoc.toml option for now.
             # Eventually, I am considering to remove the CLI option for the

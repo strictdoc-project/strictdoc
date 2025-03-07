@@ -20,6 +20,7 @@ from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.md5 import get_md5
+from strictdoc.helpers.net import is_valid_host
 from strictdoc.helpers.path_filter import validate_mask
 
 
@@ -147,7 +148,9 @@ class ProjectConfig:
         self.output_dir: str = "output"
 
         # Export action.
-        self.export_output_html_root: Optional[str] = None
+        self.export_output_html_root: str = os.path.join(
+            self.output_dir, "html"
+        )
         self.export_formats: Optional[List[str]] = None
         self.export_included_documents: bool = False
         self.generate_bundle_document: bool = False
@@ -208,14 +211,39 @@ class ProjectConfig:
     # Some server command settings can override the project config settings.
     def integrate_server_config(self, server_config: ServerCommandConfig):
         self.is_running_on_server = True
-        if server_config.port is not None:
-            server_port = server_config.port
-            self.server_port = server_port
+        if (server_host_ := server_config.host) is not None:
+            self.server_host = server_host_
+        if (server_port_ := server_config.port) is not None:
+            self.server_port = server_port_
+
+        self.input_paths = [server_config.get_full_input_path()]
+        if self.source_root_path is None:
+            source_root_path = self.input_paths[0]
+            if not os.path.abspath(source_root_path):
+                source_root_path = os.path.abspath(source_root_path)
+            source_root_path = source_root_path.rstrip("/")
+            self.source_root_path = source_root_path
+
+        if (output_dir_ := server_config.output_path) is not None:
+            self.output_dir = output_dir_
+            self.export_output_html_root = os.path.join(output_dir_, "html")
+
+        self.export_formats = ["html"]
+        self.generate_bundle_document = False
+        self.export_included_documents = True
 
     def integrate_export_config(self, export_config: ExportCommandConfig):
         if export_config.project_title is not None:
             self.project_title = export_config.project_title
+
         self.input_paths = export_config.input_paths
+        if self.source_root_path is None:
+            source_root_path = export_config.input_paths[0]
+            if not os.path.abspath(source_root_path):
+                source_root_path = os.path.abspath(source_root_path)
+            source_root_path = source_root_path.rstrip("/")
+            self.source_root_path = source_root_path
+
         self.output_dir = export_config.output_dir
         self.export_output_html_root = export_config.output_html_root
         self.export_formats = export_config.formats
@@ -226,12 +254,6 @@ class ProjectConfig:
         self.excel_export_fields = export_config.fields
         self.view = export_config.view
         self.chromedriver = export_config.chromedriver
-        if self.source_root_path is None:
-            source_root_path = export_config.input_paths[0]
-            if not os.path.abspath(source_root_path):
-                source_root_path = os.path.abspath(source_root_path)
-            source_root_path = source_root_path.rstrip("/")
-            self.source_root_path = source_root_path
 
         if (
             export_config.enable_mathjax
@@ -561,13 +583,24 @@ class ProjectConfigLoader:
                 )
 
         if "server" in config_dict:
-            # FIXME: Introduce at least a basic validation for the host/port.
             server_content = config_dict["server"]
             server_host = server_content.get("host", server_host)
+            if not is_valid_host(server_host):
+                print(  # noqa: T201
+                    "error: strictdoc.toml: 'host': "
+                    f"invalid host: {server_host}'."
+                )
+                sys.exit(1)
+
             server_port = server_content.get("port", server_port)
-            assert (
+            if not (
                 isinstance(server_port, int) and 1024 < server_port < 65000
-            ), server_port
+            ):
+                print(  # noqa: T201
+                    "error: strictdoc.toml: 'port': "
+                    f"invalid port: {server_port}'."
+                )
+                sys.exit(1)
 
         if "reqif" in config_dict:
             # FIXME: Introduce at least a basic validation.

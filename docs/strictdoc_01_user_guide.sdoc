@@ -382,6 +382,8 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
     strictdoc server --help
 
+StrictDoc uses ``127.0.0.1`` as a default host and ``5111`` as a default port. When running within Docker, the host argument ``--host`` can be specified, for example, ``--host 0.0.0.0`` or a more specific host or IP address. The host and port can be also configured in a TOML config file, see [LINK: SECTION-UG-Host-and-port].
+
 .. note::
 
     The implementation of the web interface is work-in-progress.
@@ -2931,6 +2933,7 @@ TITLE: Server configuration
 
 [SECTION]
 MID: c520cefdfe3e47ccb1a0ada95ee5c4f0
+UID: SECTION-UG-Host-and-port
 TITLE: Host and port
 
 [TEXT]

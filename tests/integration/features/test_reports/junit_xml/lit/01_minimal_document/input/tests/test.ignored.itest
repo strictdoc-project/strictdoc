@@ -1,0 +1,2 @@
+# @relation(REQ-1, scope=file)
+RUN: echo foo

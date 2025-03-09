@@ -26,6 +26,7 @@ from invoke import task
 sys.stdout = open(1, "w", encoding="utf-8", closefd=False, buffering=1)
 
 STRICTDOC_TMP_DIR = os.path.join(tempfile.gettempdir(), "strictdoc_tmp_dir")
+TEST_REPORTS_DIR = "build/test_reports"
 
 
 # To prevent all tasks from building to the same virtual environment.
@@ -195,11 +196,17 @@ def docs(context):
 @task(aliases=["tu"])
 def test_unit(context, focus=None):
     focus_argument = f"-k {focus}" if focus is not None else ""
+
+    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
         f"""
-            pytest tests/unit/ {focus_argument} -o cache_dir=build/pytest_unit
+            pytest tests/unit/
+                {focus_argument}
+                --junit-xml={TEST_REPORTS_DIR}/tests_unit.xml
+                -o cache_dir=build/pytest_unit
         """,
     )
 
@@ -207,11 +214,17 @@ def test_unit(context, focus=None):
 @task
 def test_unit_server(context, focus=None):
     focus_argument = f"-k {focus}" if focus is not None else ""
+
+    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
         f"""
-            pytest tests/unit_server/ {focus_argument} -o cache_dir=build/pytest_unit_server
+            pytest tests/unit_server/
+                {focus_argument}
+                --junit-xml={TEST_REPORTS_DIR}/tests_unit_server.xml
+                -o cache_dir=build/pytest_unit_server
         """,
     )
 
@@ -260,11 +273,14 @@ def test_end2end(
             {exit_first_argument}
             {long_timeouts_argument}
             {headless_argument}
+            --junit-xml={TEST_REPORTS_DIR}/tests_end2end.xml
             -o cache_dir=build/pytest_end2end
             tests/end2end
     """
     if test_path:
         test_command = test_command.rstrip() + f"/{test_path}"
+
+    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
 
     # On Windows, GitHub Actions fails with:
     # response = {'status': 500, 'value':
@@ -285,15 +301,17 @@ def test_end2end(
 
 @task
 def test_unit_coverage(context):
+    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
-        """
+        f"""
             coverage run
             --rcfile=.coveragerc
             --branch
             --omit=.venv*/*
             -m pytest
+            --junit-xml={TEST_REPORTS_DIR}/tests_unit.xml
             -o cache_dir=build/pytest_unit_with_coverage
             tests/unit/
         """,
@@ -332,6 +350,7 @@ def test_integration(
     clean_itest_artifacts(context)
 
     Path(STRICTDOC_TMP_DIR).mkdir(exist_ok=True)
+    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
 
     cwd = os.getcwd()
 
@@ -343,6 +362,11 @@ def test_integration(
     debug_opts = "-vv --show-all" if debug else ""
     focus_or_none = f"--filter {focus}" if focus else ""
     fail_first_argument = "--max-failures 1" if fail_first else ""
+    junit_xml_report_argument = (
+        "--xunit-xml-output build/test_reports/tests_integration_html2pdf.xml"
+        if html2pdf
+        else "--xunit-xml-output build/test_reports/tests_integration.xml"
+    )
 
     # HTML2PDF tests are running Chrome Driver which does not seem to be
     # parallelizable, or at least not in the way StrictDoc uses it.
@@ -369,6 +393,7 @@ def test_integration(
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         --param STRICTDOC_TMP_DIR="{STRICTDOC_TMP_DIR}"
         --timeout 180
+        {junit_xml_report_argument}
         {html2pdf_param}
         {chromedriver_param}
         -v

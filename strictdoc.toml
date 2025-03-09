@@ -52,6 +52,7 @@ exclude_source_paths = [
   "**__init__.py",
   "build/**",
   "output/**",
+  "tests/integration/**ignored.itest",
   # FIXME: Figure out how to trace to these files.
-  "tests/unit/strictdoc/backend/sdoc_source_code**"
+  "tests/unit/strictdoc/backend/sdoc_source_code**",
 ]

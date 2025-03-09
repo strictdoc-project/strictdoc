@@ -314,7 +314,7 @@ class SPDXGenerator:
                     node_links = traceability_index.get_requirement_file_links(
                         node
                     )
-                    for node_link_path_, _ in node_links:
+                    for node_link_path_, _role, _range_markers in node_links:
                         if node_link_path_ in lookup_file_name_to_spdx_file:
                             continue
 

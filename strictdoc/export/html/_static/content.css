@@ -6,7 +6,7 @@
   scroll-behavior: smooth;
   scrollbar-gutter: stable both-edges;
   padding: var(--base-gap) /* == calc(var(--base-rhythm)*6) */
-           calc(var(--base-rhythm)*5); /* compensate both-edges scrollbar-gutter */
+           calc(var(--base-rhythm)*6); /* compensate both-edges scrollbar-gutter */
 
   height: 100%;
   background-color: var(--color-bg-main);

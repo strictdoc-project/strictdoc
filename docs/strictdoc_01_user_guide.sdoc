@@ -73,12 +73,34 @@ TITLE: Contact the developers
 [TEXT]
 MID: 3ae6491057674be1abf057b7e0d9bf21
 STATEMENT: >>>
-Join us in Discord. Here is the invitation link: https://discord.gg/4BAAME9MmG
+Join the StrictDoc mailing list on groups.io: https://groups.io/g/strictdoc. As of Q1 2025, this is the primary channel for general discussions and announcements about StrictDoc, uniting three previously separate communities: email, GitHub, and Discord.
 
-The author can be also contacted via `email <s.pankevich@gmail.com>`_.
+For more interactive discussions, join us in Discord. Here is the invitation link: https://discord.gg/4BAAME9MmG.
+
+The developers can be also contacted via email: Stanislav Pankevich `s.pankevich@gmail.com <s.pankevich@gmail.com>`_ and Maryna Balioura `mettta@gmail.com <mettta@gmail.com>`_.
 
 See also [LINK: SDOC_FAQ] for common topics and [LINK: SDOC_TROUBLESHOOTING] for troubleshooting the most common issues.
 <<<
+
+[SECTION]
+MID: 8e4ede8cdc70402b91a59026d31a7020
+TITLE: StrictDoc office hours
+
+[TEXT]
+MID: c46def916b6f4df692c95f47414feebb
+STATEMENT: >>>
+The StrictDoc team hosts a weekly 1-hour office hours meeting.
+
+StrictDoc Office Hours provide an open space for users and contributors to connect with the core team. Spontaneous participation is highly encouraged – feel free to join at any time with questions, ideas, or feedback. By default, these slots are used for StrictDoc development unless a specific topic is agreed upon in advance.
+
+The goal is to balance core development priorities with community-driven input. While the team follows a focused roadmap, these sessions create space for discussing feature requests, improvements, and other topics that matter most to users – especially active contributors. Agenda updates will be posted in the calendar when applicable.
+
+Here is a `public Google calendar <https://calendar.google.com/calendar/embed?src=9e52bdb79398efa1c138c5938a54d48918b2858a9564f7326477879ec27c34b3%40group.calendar.google.com&ctz=Europe%2FBerlin>`_ to subscribe to.
+
+When adding the calendar, it's recommended to enable notifications for new and updated events. This ensures you'll be informed if an event's agenda is updated with announcements or if the event is canceled.
+<<<
+
+[/SECTION]
 
 [/SECTION]
 

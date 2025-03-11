@@ -361,6 +361,15 @@ sdoc-field-content {
   transition: .5s ease-out;
 }
 
+/* Fix: Prevent .copy_to_clipboard-button from receiving hover when covered by dropdown menu */
+sdoc-field > sdoc-field-service .copy_to_clipboard-button {
+  visibility: hidden;
+}
+
+sdoc-field:hover > sdoc-field-service .copy_to_clipboard-button {
+  visibility: visible;
+}
+
 /* button overrides */
 .copy_to_clipboard-button.action_button {
   height: calc(var(--base-rhythm)*3);

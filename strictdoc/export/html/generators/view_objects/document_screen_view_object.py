@@ -237,7 +237,10 @@ class DocumentScreenViewObject:
     def folder_contains_including_documents(self, folder: Folder):
         assert isinstance(folder, Folder), folder
         for file_ in folder.files:
-            if not file_.has_extension(".sdoc"):
+            if not (
+                file_.has_extension(".sdoc")
+                or file_.has_extension(".junit.xml")
+            ):
                 continue
             document_ = self.get_document_by_path(file_.get_full_path())
             if not document_.document_is_included():

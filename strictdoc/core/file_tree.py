@@ -197,14 +197,14 @@ class FileFinder:
                 else ""
             )
 
+            if path_filter_excludes.match(current_root_relative_path):
+                dirs[:] = []
+                continue
+
             dirs[:] = [
                 d
                 for d in dirs
-                if (
-                    not d.startswith(".")
-                    and (d == "_static" or not d.startswith("_"))
-                    and d not in ("build", "output", "Output")
-                )
+                if (not d.startswith(".") and d not in ("output", "Output"))
             ]
             dirs.sort(key=alphanumeric_sort)
 

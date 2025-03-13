@@ -254,6 +254,9 @@ class SourceFileTraceabilityReader_C:
                         f"{'::'.join(parent_names)}::{function_display_name}"
                     )
 
+                if function_name.startswith("TEST_F"):
+                    function_display_name = function_name
+
                 function_markers: List[FunctionRangeMarker] = []
                 function_comment_node: Optional[Node] = None
                 function_comment_text = None

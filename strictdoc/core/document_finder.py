@@ -7,6 +7,9 @@ from strictdoc.backend.sdoc.grammar_reader import SDocGrammarReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.reader import SDReader
+from strictdoc.backend.sdoc_source_code.test_reports.junit_xml_reader import (
+    JUnitXMLReader,
+)
 from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
@@ -77,6 +80,12 @@ class DocumentFinder:
                     doc_full_path, project_config
                 )
                 assert isinstance(document_or_grammar, DocumentGrammar)
+            elif doc_full_path.endswith(".junit.xml"):
+                junit_xml_reader = JUnitXMLReader()
+                document_or_grammar = junit_xml_reader.read_from_file(
+                    doc_file, project_config
+                )
+                assert isinstance(document_or_grammar, SDocDocument)
             else:
                 raise NotImplementedError
         drop_textx_meta(document_or_grammar)
@@ -251,7 +260,7 @@ class DocumentFinder:
                 file_tree_structure = FileFinder.find_files_with_extensions(
                     root_path=path_to_doc_root,
                     ignored_dirs=[project_config.output_dir],
-                    extensions=[".sdoc", ".sgra"],
+                    extensions=[".sdoc", ".sgra", ".junit.xml"],
                     include_paths=project_config.include_doc_paths,
                     exclude_paths=project_config.exclude_doc_paths,
                 )

@@ -1,4 +1,5 @@
 REQUIRES: PYTHON_39_OR_HIGHER
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
 RUN: cd "%strictdoc_root/" && %strictdoc export "%strictdoc_root/" --output-dir="%S/Output"
 
@@ -53,3 +54,59 @@ CHECK-DOCUMENT-NOT: Export to ReqIF
 CHECK-DOCUMENT-NOT: turbo.js
 CHECK-DOCUMENT-NOT: stimulus.js
 CHECK-DOCUMENT-NOT: controller.js
+
+RUN: %check_exists --file "%S/Output/html/index.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
+
+TODO: etree.parse fails on the "&nbsp;" surprisingly. Fix it later :(
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html"
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TABLE.html"
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TRACE.html"
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
+
+RUN: %html_markup_validator "%S/Output/html/index.html"
+RUN: %html_markup_validator "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html"
+RUN: %html_markup_validator "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TABLE.html"
+RUN: %html_markup_validator "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TRACE.html"
+RUN: %html_markup_validator "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
+
+TODO: etree.parse fails on the "&nbsp;" surprisingly. Fix it later :(
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool.html"
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-TABLE.html"
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-TRACE.html"
+RUN: sed -i.bak 's/\&nbsp;/ /g' "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-DEEP-TRACE.html"
+
+RUN: %html_markup_validator "%S/Output/html/index.html"
+RUN: %html_markup_validator "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool.html"
+RUN: %html_markup_validator "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-TABLE.html"
+RUN: %html_markup_validator "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-TRACE.html"
+RUN: %html_markup_validator "%S/Output/html/strictdoc/docs/strictdoc_20_L1_Open_Requirements_Tool-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements-DEEP-TRACE.html"
+
+RUN: %check_exists --file %S/Output/html/strictdoc/docs/strictdoc_24_development_plan.html
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_24_development_plan-TABLE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_24_development_plan-TRACE.html"
+RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_24_development_plan-DEEP-TRACE.html"
+
+RUN: %check_exists --file "%S/Output/html/_source_files/strictdoc/core/tree_cycle_detector.py.html"
+RUN: %check_exists --file "%S/Output/html/_source_files/strictdoc/core/traceability_index_builder.py.html"
+
+RUN: %cat %S/Output/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html | filecheck %s --check-prefix CHECK-3-REQUIREMENTS
+CHECK-3-REQUIREMENTS: href="../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-SRS-30#{{.*}}#{{.*}}"
+CHECK-3-REQUIREMENTS: href="../../_source_files/strictdoc/core/tree_cycle_detector.py.html#SDOC-SRS-30"
+
+RUN: %cat "%S/Output/html/_source_files/strictdoc/core/tree_cycle_detector.py.html" | filecheck %s --check-prefix CHECK-TREE-CYCLE-DETECTOR
+CHECK-TREE-CYCLE-DETECTOR: href="../../../strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html#SDOC-SRS-30"
+CHECK-TREE-CYCLE-DETECTOR: href="../../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-SRS-30

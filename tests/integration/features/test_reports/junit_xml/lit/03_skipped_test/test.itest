@@ -1,0 +1,14 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+
+# Ensure that the test report document is generated.
+CHECK: Published: Test report: StrictDoc integration tests
+RUN: %check_exists --file "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_integration.lit.junit.html"
+
+# Ensure that the source and test files are generated.
+RUN: %check_exists --file "%S/Output/html/_source_files/tests/integration/foo/test.ignored.itest.html"
+
+# Ensure that the test report document has the right content.
+RUN: %cat "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_integration.lit.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+CHECK-TEST-REPORT: <tr><td><strong>Number of skipped tests:</strong></td>
+CHECK-TEST-REPORT-NEXT:<td>1</td>
+CHECK-TEST-REPORT: SKIPPED

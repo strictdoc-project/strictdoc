@@ -3,6 +3,7 @@ from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference, Reference
+from strictdoc.backend.sdoc.models.type_system import FileEntry
 from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -173,6 +174,78 @@ class FileTraceabilityIndex:
         return source_file_tr_info
 
     def validate_and_resolve(self, traceability_index):
+        for requirement_uid in self.map_reqs_uids_to_paths.keys():
+            file_links = self.map_reqs_uids_to_paths[requirement_uid]
+            for file_link in list(file_links):
+                if file_link == "#FORWARD#":
+                    node: SDocNode = traceability_index.get_node_by_uid(
+                        requirement_uid
+                    )
+                    test_function = node.get_meta_field_value_by_title(
+                        "TEST_FUNCTION"
+                    )
+                    assert test_function is not None
+
+                    functions: List[Function] = (
+                        self.map_all_function_names_to_definition_functions[
+                            test_function
+                        ]
+                    )
+                    assert len(functions) == 1
+
+                    function: Function = functions[0]
+                    resolved_path_to_function_file = function.parent.source_file.in_doctree_source_file_rel_path_posix
+
+                    file_links.remove("#FORWARD#")
+                    file_links.add(resolved_path_to_function_file)
+
+                    for relation_ in node.relations:
+                        if isinstance(relation_, FileReference):
+                            if (
+                                relation_.g_file_entry.g_file_path
+                                == "#FORWARD#"
+                            ):
+                                relation_.g_file_entry = FileEntry(
+                                    relation_,
+                                    g_file_format=relation_.g_file_entry.g_file_format,
+                                    g_file_path=resolved_path_to_function_file,
+                                    g_line_range=None,
+                                    function=relation_.g_file_entry.function,
+                                    clazz=None,
+                                )
+
+                    node.set_field_value(
+                        field_name="TEST_PATH",
+                        form_field_index=0,
+                        value=resolved_path_to_function_file,
+                    )
+
+                    self.create_requirement(node, overwrite=True)
+                    trace_info = (
+                        self.map_paths_to_source_file_traceability_info[
+                            resolved_path_to_function_file
+                        ]
+                    )
+                    function_marker = ForwardFunctionRangeMarker(
+                        parent=None,
+                        reqs_objs=[Req(None, requirement_uid)],
+                        scope=RangeMarkerType.FUNCTION.value,
+                    )
+                    function_marker.ng_source_line_begin = function.line_begin
+                    function_marker.ng_source_column_begin = 1
+                    function_marker.ng_range_line_begin = function.line_begin
+                    function_marker.ng_range_line_end = function.line_end
+                    function_marker.ng_marker_line = function.line_begin
+                    function_marker.ng_marker_column = 1
+                    function_marker.set_description(
+                        f"function {function.display_name}"
+                    )
+                    markers = trace_info.ng_map_reqs_to_markers.setdefault(
+                        requirement_uid, []
+                    )
+                    markers.append(function_marker)
+                    trace_info.markers.append(function_marker)
+
         for requirement_uid, file_links in self.map_reqs_uids_to_paths.items():
             for file_link in file_links:
                 source_file_traceability_info: Optional[
@@ -371,32 +444,49 @@ class FileTraceabilityIndex:
         for paths_ in self.map_reqs_uids_to_paths.values():
             paths_.sort()
 
-    def create_requirement(self, requirement: SDocNode) -> None:
+    def create_requirement(
+        self, requirement: SDocNode, overwrite=False
+    ) -> None:
+        """
+        overwrite=True is used when a node has to be re-registered when it gets
+        a correct relative path. This is only used for SDoc documents produced
+        on the fly from JUnit XML test reports. Some tools produce JUnit XML test
+        report with test results where only a function name but not a test file
+        path is provided. For these test results, StrictDoc initially creates
+        a forward-declared path #FORWARD#. When all traceability graph is
+        initially collected, the traceability index resolves the forward path
+        declarations. As part of this process, the node has to be re-registered
+        with this function.
+        """
         assert requirement.reserved_uid is not None
 
         # A requirement can have multiple File references, and this function is
         # called for every File reference.
-        if requirement.reserved_uid in self.map_reqs_uids_to_paths:
+        if (
+            not overwrite
+            and requirement.reserved_uid in self.map_reqs_uids_to_paths
+        ):
             return
 
         ref: Reference
         for ref in requirement.relations:
             if isinstance(ref, FileReference):
                 file_reference: FileReference = ref
+                file_posix_path = file_reference.get_posix_path()
                 requirements = self.map_paths_to_reqs.setdefault(
-                    file_reference.get_posix_path(), OrderedSet()
+                    file_posix_path, OrderedSet()
                 )
                 requirements.add(requirement)
 
                 paths = self.map_reqs_uids_to_paths.setdefault(
                     requirement.reserved_uid, OrderedSet()
                 )
-                paths.add(ref.get_posix_path())
+                paths.add(file_posix_path)
 
                 if file_reference.g_file_entry.function is not None:
                     one_file_function_name_to_reqs_uids = (
                         self.map_file_function_names_to_reqs_uids.setdefault(
-                            file_reference.get_posix_path(), {}
+                            file_posix_path, {}
                         )
                     )
                     function_name_to_reqs_uids = (
@@ -404,11 +494,16 @@ class FileTraceabilityIndex:
                             file_reference.g_file_entry.function, []
                         )
                     )
+                    if overwrite:
+                        assert (
+                            requirement.reserved_uid
+                            not in function_name_to_reqs_uids
+                        )
                     function_name_to_reqs_uids.append(requirement.reserved_uid)
                 elif file_reference.g_file_entry.clazz is not None:
                     one_file_class_name_to_reqs_uids = (
                         self.map_file_class_names_to_reqs_uids.setdefault(
-                            file_reference.get_posix_path(), {}
+                            file_posix_path, {}
                         )
                     )
                     class_name_to_reqs_uids = (
@@ -416,6 +511,11 @@ class FileTraceabilityIndex:
                             file_reference.g_file_entry.clazz, []
                         )
                     )
+                    if overwrite:
+                        assert (
+                            requirement.reserved_uid
+                            not in class_name_to_reqs_uids
+                        )
                     class_name_to_reqs_uids.append(requirement.reserved_uid)
                 elif file_reference.g_file_entry.line_range is not None:
                     assert requirement.reserved_uid is not None
@@ -424,12 +524,16 @@ class FileTraceabilityIndex:
                             requirement.reserved_uid, []
                         )
                     )
-                    req_uid_to_line_range_file_refs.append(
-                        (
-                            file_reference.get_posix_path(),
-                            file_reference.g_file_entry.line_range,
-                        )
+                    path_range_pair = (
+                        file_posix_path,
+                        file_reference.g_file_entry.line_range,
                     )
+                    if overwrite:
+                        assert (
+                            path_range_pair
+                            not in req_uid_to_line_range_file_refs
+                        )
+                    req_uid_to_line_range_file_refs.append(path_range_pair)
 
     def create_traceability_info(
         self,

@@ -19,7 +19,7 @@
     {% endfor %}
 
     {% for file_ in folder.files %}
-      {% if file_.has_extension(".sdoc") %}
+      {% if file_.has_extension(".sdoc") or file_.has_extension(".junit.xml") %}
         {% with file = file_ %}
           {% include "screens/project_index/project_tree_file.jinja" %}
         {% endwith %}

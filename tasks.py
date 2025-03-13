@@ -205,7 +205,8 @@ def test_unit(context, focus=None):
         f"""
             pytest tests/unit/
                 {focus_argument}
-                --junit-xml={TEST_REPORTS_DIR}/tests_unit.xml
+                --junit-xml={TEST_REPORTS_DIR}/tests_unit.pytest.junit.xml
+                -o junit_suite_name="StrictDoc Unit Tests"
                 -o cache_dir=build/pytest_unit
         """,
     )
@@ -223,7 +224,8 @@ def test_unit_server(context, focus=None):
         f"""
             pytest tests/unit_server/
                 {focus_argument}
-                --junit-xml={TEST_REPORTS_DIR}/tests_unit_server.xml
+                --junit-xml={TEST_REPORTS_DIR}/tests_unit_server.pytest.junit.xml
+                -o junit_suite_name="StrictDoc Web Server Unit Tests"
                 -o cache_dir=build/pytest_unit_server
         """,
     )
@@ -273,7 +275,8 @@ def test_end2end(
             {exit_first_argument}
             {long_timeouts_argument}
             {headless_argument}
-            --junit-xml={TEST_REPORTS_DIR}/tests_end2end.xml
+            --junit-xml={TEST_REPORTS_DIR}/tests_end2end.pytest.junit.xml
+            -o junit_suite_name="StrictDoc End-to-End Tests"
             -o cache_dir=build/pytest_end2end
             tests/end2end
     """
@@ -311,8 +314,9 @@ def test_unit_coverage(context):
             --branch
             --omit=.venv*/*
             -m pytest
-            --junit-xml={TEST_REPORTS_DIR}/tests_unit.xml
+            --junit-xml={TEST_REPORTS_DIR}/tests_unit.pytest.junit.xml
             -o cache_dir=build/pytest_unit_with_coverage
+            -o junit_suite_name="StrictDoc Unit Tests"
             tests/unit/
         """,
     )
@@ -363,9 +367,9 @@ def test_integration(
     focus_or_none = f"--filter {focus}" if focus else ""
     fail_first_argument = "--max-failures 1" if fail_first else ""
     junit_xml_report_argument = (
-        "--xunit-xml-output build/test_reports/tests_integration_html2pdf.xml"
+        "--xunit-xml-output build/test_reports/tests_integration_html2pdf.lit.junit.xml"
         if html2pdf
-        else "--xunit-xml-output build/test_reports/tests_integration.xml"
+        else "--xunit-xml-output build/test_reports/tests_integration.lit.junit.xml"
     )
 
     # HTML2PDF tests are running Chrome Driver which does not seem to be

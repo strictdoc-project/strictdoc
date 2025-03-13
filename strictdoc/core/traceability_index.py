@@ -197,13 +197,13 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_parent_relations_with_role(
         self, requirement: SDocNode, role: Optional[str]
-    ):
+    ) -> List[Any]:  # FIXME: Make Any->SDocNode
         assert isinstance(requirement, SDocNode)
         if (
             requirement.reserved_uid is None
             or len(requirement.reserved_uid) == 0
         ):
-            return
+            return []
 
         return list(
             self.graph_database.get_link_values_with_edges(
@@ -213,13 +213,15 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             )
         )
 
-    def get_child_relations_with_roles(self, requirement: SDocNode):
+    def get_child_relations_with_roles(
+        self, requirement: SDocNode
+    ) -> List[Any]:  # FIXME: Make Any->SDocNode
         assert isinstance(requirement, SDocNode)
         if (
             requirement.reserved_uid is None
             or len(requirement.reserved_uid) == 0
         ):
-            return
+            return []
 
         return list(
             self.graph_database.get_link_values_with_edges(
@@ -231,13 +233,13 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_child_relations_with_role(
         self, requirement: SDocNode, role: Optional[str]
-    ):
+    ) -> List[Any]:  # FIXME: Make Any->SDocNode
         assert isinstance(requirement, SDocNode)
         if (
             requirement.reserved_uid is None
             or len(requirement.reserved_uid) == 0
         ):
-            return
+            return []
 
         return list(
             self.graph_database.get_link_values_with_edges(

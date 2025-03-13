@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="8"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="0"
+	timestamp="2025-03-10T10:30:39"
+	>
+	<testcase name="TestPrtMath.TransitionDistance" classname="TestPrtMath.TransitionDistance" time="0.023645" status="run">
+		<properties/>
+		<system-out>xxxxx
+</system-out>
+		<skipped message="Why this test is skipped..."/>
+	</testcase>
+</testsuite>

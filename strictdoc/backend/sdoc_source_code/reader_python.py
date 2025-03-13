@@ -128,6 +128,7 @@ class SourceFileTraceabilityReader_Python:
                 if parent_names:
                     function_name = f"{'.'.join(parent_names)}.{function_name}"
 
+                function_markers = []
                 block_comment = None
                 if (
                     function_block is not None
@@ -169,6 +170,7 @@ class SourceFileTraceabilityReader_Python:
                                     traceability_info.markers.append(
                                         function_range_marker_
                                     )
+                                    function_markers.append(marker_)
 
                 # FIXME: This look more complex than needed but can't make mypy happy.
                 cursor_: Optional[Node] = node_
@@ -203,6 +205,10 @@ class SourceFileTraceabilityReader_Python:
                 parent_function.child_functions.append(new_function)
                 functions_stack.append(new_function)
                 traceability_info.functions.append(new_function)
+
+                traceability_info.ng_map_names_to_markers[function_name] = (
+                    function_markers
+                )
             elif node_.type == "comment":
                 if node_.text is None:
                     raise NotImplementedError("Comment without a text")

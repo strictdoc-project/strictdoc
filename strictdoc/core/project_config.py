@@ -5,7 +5,7 @@ import re
 import sys
 import tempfile
 from enum import Enum
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import toml
 
@@ -94,6 +94,7 @@ class ProjectConfig:
         source_root_path: Optional[str],
         include_source_paths: List[str],
         exclude_source_paths: List[str],
+        test_report_root_dict: Dict[str, str],
         html2pdf_template: Optional[str],
         bundle_document_version: Optional[str],
         bundle_document_date: Optional[str],
@@ -140,6 +141,7 @@ class ProjectConfig:
         self.source_root_path: Optional[str] = source_root_path
         self.include_source_paths: List[str] = include_source_paths
         self.exclude_source_paths: List[str] = exclude_source_paths
+        self.test_report_root_dict: Dict[str, str] = test_report_root_dict
 
         # Settings derived from the command-line parameters.
 
@@ -196,6 +198,7 @@ class ProjectConfig:
             source_root_path=None,
             include_source_paths=[],
             exclude_source_paths=[],
+            test_report_root_dict=[],
             html2pdf_template=None,
             bundle_document_version=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION,
             bundle_document_date=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE,
@@ -414,6 +417,7 @@ class ProjectConfigLoader:
         source_root_path = None
         include_source_paths = []
         exclude_source_paths = []
+        test_report_root_dict = {}
         html2pdf_template: Optional[str] = None
         bundle_document_version = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION
         bundle_document_date = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE
@@ -582,6 +586,18 @@ class ProjectConfigLoader:
                     "not found."
                 )
 
+            if (
+                test_report_root_dict_ := project_content.get(
+                    "test_report_root_dict", None
+                )
+            ) is not None:
+                assert isinstance(test_report_root_dict_, list), (
+                    test_report_root_dict
+                )
+                for test_report_root_entry_ in test_report_root_dict_:
+                    assert isinstance(test_report_root_entry_, dict)
+                    test_report_root_dict.update(test_report_root_entry_)
+
         if "server" in config_dict:
             server_content = config_dict["server"]
             server_host = server_content.get("host", server_host)
@@ -634,6 +650,7 @@ class ProjectConfigLoader:
             source_root_path=source_root_path,
             include_source_paths=include_source_paths,
             exclude_source_paths=exclude_source_paths,
+            test_report_root_dict=test_report_root_dict,
             html2pdf_template=html2pdf_template,
             bundle_document_version=bundle_document_version,
             bundle_document_date=bundle_document_date,

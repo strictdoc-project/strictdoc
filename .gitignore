@@ -51,3 +51,6 @@ __*.sgra
 
 ### webdriver_manager: cache with downloaded Chrome Driver binaries ###
 strictdoc/export/html2pdf/.wdm
+
+### Test reports
+reports/

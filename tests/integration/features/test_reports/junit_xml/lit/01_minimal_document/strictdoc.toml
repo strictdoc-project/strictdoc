@@ -3,3 +3,7 @@
 features = [
   "REQUIREMENT_TO_SOURCE_TRACEABILITY",
 ]
+
+test_report_root_dict = [
+  { "reports/tests_integration.lit.junit.xml" = "tests/integration" },
+]

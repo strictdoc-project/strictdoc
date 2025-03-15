@@ -288,6 +288,80 @@ class DocumentGrammar:
 
         return grammar
 
+    @staticmethod
+    def create_for_test_report(parent) -> "DocumentGrammar":
+        text_element: GrammarElement = (
+            DocumentGrammar.create_default_text_element()
+        )
+
+        fields: List[
+            Union[
+                GrammarElementFieldString,
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldMultipleChoice,
+            ]
+        ] = [
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.UID,
+                human_title=None,
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title="TEST_PATH",
+                human_title=None,
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title="TEST_FUNCTION",
+                human_title=None,
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title="DURATION",
+                human_title=None,
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.STATUS,
+                human_title=None,
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.TITLE,
+                human_title=None,
+                required="False",
+            ),
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.STATEMENT,
+                human_title=None,
+                required="False",
+            ),
+        ]
+        requirement_element = GrammarElement(
+            parent=None, tag="TEST_RESULT", fields=fields, relations=[]
+        )
+
+        requirement_element.relations = create_default_relations(
+            requirement_element
+        )
+
+        elements: List[GrammarElement] = [text_element, requirement_element]
+        grammar = DocumentGrammar(
+            parent=parent, elements=elements, import_from_file=None
+        )
+        grammar.is_default = True
+        text_element.parent = grammar
+        requirement_element.parent = grammar
+
+        return grammar
+
     def get_element_by_mid(self, element_mid: str):
         for element_ in self.elements:
             if element_.mid == element_mid:

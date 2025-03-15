@@ -1,0 +1,6 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: Test statement.

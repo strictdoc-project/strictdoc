@@ -16,7 +16,7 @@
             </div>
           {% endif %}
         {% endif %}
-      {% elif folder_or_file.has_extension(".sdoc") %}
+      {% elif folder_or_file.has_extension(".sdoc") or folder_or_file.has_extension(".junit.xml") %}
         {%- set document_ = view_object.get_document_by_path(folder_or_file.get_full_path()) %}
         {% if not document_.document_is_included() %}
         <a

@@ -1,0 +1,20 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+# Failing test will exit with a non-zero code. Use "true" to make LIT continue running.
+RUN: cd %S && PYTHONPATH=$(pwd) pytest tests/ --junit-xml=%S/Output/tests_unit.pytest.junit.xml --rootdir=%S ; true
+RUN: mkdir -p reports/ && cp %S/Output/tests_unit.pytest.junit.xml reports/tests_unit.pytest.junit.xml
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+
+# Ensure that the test report document is generated.
+CHECK: Published: Test report: pytest
+RUN: %check_exists --file "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_unit.pytest.junit.html"
+
+# Ensure that the source and test files are generated.
+RUN: %check_exists --file "%S/Output/html/_source_files/src/foo.py.html"
+RUN: %check_exists --file "%S/Output/html/_source_files/tests/test_foo.py.html"
+
+# Ensure that the test report document has the right content.
+RUN: %cat "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_unit.pytest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+CHECK-TEST-REPORT: FAILED
+CHECK-TEST-REPORT: href="../../_source_files/tests/test_foo.py.html#tests.test_foo.test_foo#3#7">
+CHECK-TEST-REPORT: tests/test_foo.py, <i>lines: 3-7</i>, function test_foo

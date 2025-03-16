@@ -183,8 +183,8 @@ class SDocValidator:
         grammar_fields_iterator: Iterator[GrammarElementField] = iter(
             grammar_element.fields
         )
-        requirement_field_iterator: Iterator[SDocNodeField] = iter(
-            requirement.fields_as_parsed
+        requirement_field_iterator: Iterator[SDocNodeField] = (
+            requirement.enumerate_fields()
         )
 
         requirement_field: Optional[SDocNodeField] = next(

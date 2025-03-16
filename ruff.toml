@@ -60,6 +60,9 @@ ignore = [
     # warning: The following rules may cause conflicts when used with the formatter: `ISC001`.
     "ISC001",
 
+    # PGH004 Use specific rule codes when using ruff: noqa
+    "PGH004",
+
     # Too many return statements
     "PLR0911",
 

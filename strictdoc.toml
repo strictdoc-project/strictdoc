@@ -29,10 +29,12 @@ features = [
 include_doc_paths = [
   "docs/**",
   "docs_extra/**",
+  "reports/**",
 ]
 
 exclude_doc_paths = [
   "docs/sphinx/**",
+  "build/**",
   "tests/**",
 ]
 
@@ -42,6 +44,7 @@ include_source_paths = [
   "strictdoc/**.jinja.rst",
   "tests/integration/**itest",
   "tests/unit/**.py",
+  "tests/unit_server/**.py",
   "tasks.py",
   "pyproject.toml",
 ]
@@ -53,6 +56,9 @@ exclude_source_paths = [
   "build/**",
   "output/**",
   "tests/integration/**ignored.itest",
-  # FIXME: Figure out how to trace to these files.
-  "tests/unit/strictdoc/backend/sdoc_source_code**",
+]
+
+test_report_root_dict = [
+  { "reports/tests_integration.lit.junit.xml" = "tests/integration" },
+  { "reports/tests_integration_html2pdf.lit.junit.xml" = "tests/integration" },
 ]

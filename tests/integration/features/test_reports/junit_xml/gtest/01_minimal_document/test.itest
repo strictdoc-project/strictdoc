@@ -1,0 +1,15 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+
+# Ensure that the test report document is generated.
+CHECK: Published: Test report: (empty)
+RUN: %check_exists --file "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_unit.gtest.junit.html"
+
+# Ensure that the source and test files are generated.
+RUN: %check_exists --file "%S/Output/html/_source_files/tests/test.cpp.html"
+
+# Ensure that the test report document has the right content.
+RUN: %cat "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_unit.gtest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+CHECK-TEST-REPORT:href="../../_source_files/tests/test.cpp.html#TestPrtMath.TransitionDistance#1#10">
+CHECK-TEST-REPORT: tests/test.cpp, <i>lines: 1-10</i>, function TEST_F(TestPrtMath, TransitionDistance)

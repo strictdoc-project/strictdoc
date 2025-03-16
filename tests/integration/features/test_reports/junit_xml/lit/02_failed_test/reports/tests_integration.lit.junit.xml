@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites time="372.58">
+    <testsuite name="StrictDoc integration tests" tests="358" failures="0" skipped="0">
+        <testcase classname="StrictDoc integration tests.foo" name="test.ignored.itest" time="5.50">
+    		<failure>A failure description</failure>
+        </testcase>
+    </testsuite>
+</testsuites>

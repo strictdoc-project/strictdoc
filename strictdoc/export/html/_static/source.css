@@ -84,6 +84,21 @@
 
 .source-file__requirements .pointer.active {
   background-color: var(--color-highlight);
+  position: relative;
+  pointer-events: none;
+}
+
+.source-file__requirements .pointer.active::after {
+  content: '\2715';
+  position: absolute;
+  inset: 0;
+  padding: 0.25rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  z-index: 10;
+  pointer-events: all;
+  background: rgba(255, 255, 255, 0.01);
 }
 
 .source-file__requirement {

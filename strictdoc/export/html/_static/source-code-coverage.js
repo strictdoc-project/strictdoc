@@ -71,6 +71,7 @@ class Switch {
     size,
     stroke,
     units,
+    alignRight,
   }) {
     this.colorOn = colorOn || 'rgb(100, 200, 50)';
     this.colorOff = colorOff || 'rgb(200, 200, 200)';
@@ -81,6 +82,7 @@ class Switch {
     this.size = size || 0.75;
     this.stroke = stroke || 0.25;
     this.units = units || 'rem';
+    this.alignRight = alignRight || true;
 
     this.callback = callback;
   }
@@ -117,11 +119,15 @@ class Switch {
     }
     .${this.componentClass}__label {
       display: inline-flex;
+      gap: ${this.size * 0.5}${this.units};
+      font-size: ${this.size * 1.5}${this.units}; /* 0.75rem; */
       line-height: ${this.size}${this.units};
       align-items: center;
       justify-content: flex-start;
       user-select: none;
       cursor: pointer;
+      flex-direction: ${this.alignRight ? "row-reverse" : "row"};
+      text-align: ${this.alignRight ? "right" : "left"};
     }
     .${this.componentClass}__input {
       opacity: 0;
@@ -138,7 +144,6 @@ class Switch {
       display: inline-block;
       width: ${this.size * 2 + this.stroke * 2}${this.units};
       height: ${this.size + this.stroke * 2}${this.units};
-      margin-right: ${this.size * 0.5}${this.units};
       border-radius: ${this.size * 0.5 + this.stroke}${this.units};
     }
     .${this.componentClass}__slider::before  {
@@ -179,8 +184,8 @@ class Dom {
   constructor({
     sourceId,
     sourceContainerId,
+    referContainerId,
     hashSplitter,
-    strictdocCommentSelector,
     strictdocPointerSelector,
     strictdocRequirementSelector,
     activeClass,
@@ -189,10 +194,10 @@ class Dom {
     // CONSTANTS
     this.sourceId = sourceId || 'source';
     this.sourceContainerId = sourceContainerId || 'sourceContainer';
+    this.referContainerId = referContainerId || 'referContainer';
     this.hashSplitter = hashSplitter || '#';
 
     // STRICTDOC SPECIFIC
-    this.strictdocCommentSelector = strictdocCommentSelector || 'pre span';
     this.strictdocPointerSelector = strictdocPointerSelector || '.pointer';
     this.strictdocRequirementSelector = strictdocRequirementSelector || '.source-file__requirement';
     this.activeClass = activeClass || 'active';
@@ -202,25 +207,30 @@ class Dom {
     this.yellowHighlighter;
 
     // elements
+    this.filterContainer;
     this.sourceContainer;
+    this.referContainer;
     this.source;
     this.lines = {};
     this.requirements = {};
     this.ranges = {};
-    this.highlightedRange;
+    this.highlightingElement; // yellow
 
     // state
     this.active = {
       range: null,
       requirement: null,
       pointers: [],
-      labels: [],
+      // labels: [],
+      filter: null,
     };
   }
 
   prepare() {
 
+    this._prepareFilterContainer();
     this._prepareSourceContainer();
+    this._prepareReferContainer();
     this._prepareSource();
 
     this.yellowHighlighter = new Highlighter({
@@ -228,7 +238,7 @@ class Dom {
       rgb: '255,255,155',
       alpha: '1',
     });
-    this.highlightedRange = this.yellowHighlighter.create();
+    this.highlightingElement = this.yellowHighlighter.create();
 
     this.greenHighlighter = new Highlighter({
       target: this.source,
@@ -240,6 +250,10 @@ class Dom {
     this._prepareRequirements();
     this._prepareRanges();
 
+    console.log('this.lines', this.lines);
+    console.log('this.requirements', this.requirements);
+    console.log('this.ranges', this.ranges);
+    console.log('this.active', this.active);
   }
 
   useLocationHash() {
@@ -250,7 +264,7 @@ class Dom {
       requirement: this.requirements[reqId],
       pointers: rangeAlias ? this.ranges[rangeAlias].pointers : null,
       range: rangeAlias ? this.ranges[rangeAlias].highlighter : null,
-      labels: (reqId && rangeAlias) ? this.ranges[rangeAlias][reqId] : null,
+      // labels: (reqId && rangeAlias) ? this.ranges[rangeAlias][reqId] : null,
     });
 
     this.highlightRange(this.active.range);
@@ -260,24 +274,24 @@ class Dom {
     range,
     requirement,
     pointers,
-    labels,
+    // labels,
   }) => {
 
     // remove old 'active'
     this.active.requirement?.classList.remove(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer?.classList.remove(this.activeClass));
-    this.active.labels?.forEach(label => label?.classList.remove(this.activeClass));
+    // this.active.labels?.forEach(label => label?.classList.remove(this.activeClass));
 
     // make changes to state
     this.active.range = range;
     this.active.requirement = requirement;
     this.active.pointers = pointers;
-    this.active.labels = labels;
+    // this.active.labels = labels;
 
     // add new 'active'
     this.active.requirement?.classList.add(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer.classList.add(this.activeClass));
-    this.active.labels?.forEach(label => label.classList.add(this.activeClass));
+    // this.active.labels?.forEach(label => label.classList.add(this.activeClass));
 
   };
 
@@ -290,7 +304,7 @@ class Dom {
   highlightRange(range) {
     const top = range?.offsetTop || 0;
     const height = range?.offsetHeight || 0;
-    this.yellowHighlighter.move(this.highlightedRange, top, height);
+    this.yellowHighlighter.move(this.highlightingElement, top, height);
 
     if (range) {
       // range.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
@@ -315,19 +329,25 @@ class Dom {
 
   _prepareSourceContainer() {
     this.sourceContainer = document.getElementById('sourceContainer');
+  }
 
-    this.sourceContainer.style.position = 'absolute';
-    this.sourceContainer.style.top = 0;
-    this.sourceContainer.style.bottom = 0;
-    this.sourceContainer.style.right = 0;
-    this.sourceContainer.style.left = 0;
-    this.sourceContainer.style.overflow = 'auto';
+  _prepareReferContainer() {
+    this.referContainer = document.getElementById('referContainer');
+  }
+
+  _prepareFilterContainer() {
+    this.filterContainer = document.getElementById('sourceCodeCoverageFilter');
   }
 
   _prepareLines() {
-    this.lines = [...document.querySelectorAll('[data-line]')]
+    // Both .source__line-content and .source__line-number
+    // have data-line={{ loop.index }}
+    this.lines = [...document.querySelectorAll('.source__line-number')]
       .reduce((acc, line) => {
-        acc[line.dataset.line] = line;
+        acc[line.dataset.line] = {
+          line: line,
+          ranges: []
+        };
         return acc
       }, {});
   }
@@ -358,11 +378,14 @@ class Dom {
         const range = this._generateRangeAlias(rangeBegin, rangeEnd);
 
         if (!ranges[range]) {
+          // add new range
           ranges[range] = {};
           ranges[range].pointers = [];
 
-          ranges[range].beginLine = this.lines[rangeBegin];
-          ranges[range].endLine = this.lines[rangeEnd];
+          ranges[range].beginLine = this.lines[rangeBegin].line;
+          ranges[range].endLine = this.lines[rangeEnd].line;
+          ranges[range].begin = rangeBegin;
+          ranges[range].end = rangeEnd;
 
           const top = ranges[range].beginLine.offsetTop;
           const height = ranges[range].endLine.offsetTop + ranges[range].endLine.offsetHeight - top;
@@ -370,31 +393,87 @@ class Dom {
         }
 
         if (rangeReq) {
-
           // add pointer from code
-          if (ranges[range][rangeReq]) {
-            ranges[range][rangeReq].push(pointer);
-          } else {
-            ranges[range][rangeReq] = [pointer]
-          }
-
+          (ranges[range][rangeReq] ??= []).push(pointer);
         } else {
-
           // add pointer from menu
           ranges[range].pointers.push(pointer);
+        }
+
+        const start = parseInt(rangeBegin, 10);
+        const end = parseInt(rangeEnd, 10);
+
+        for (let i = start; i <= end; i++) {
+          (this.lines[i].ranges ??= []).push(range);
+          console.assert(this.lines[i].line, `The line ${i} must be registered.`)
+          this.lines[i].line?.classList.add("source__filter");
         }
 
       });
   }
 
   _generateRangeAlias(begin, end) { return `${begin}${this.hashSplitter}${end}` };
+
+  _createFilterInfoBlock(lineNumber) {
+    const block = document.createElement('div');
+    block.innerHTML = `
+    The requirements related to&nbsp;the&nbsp;line&nbsp;<mark>${lineNumber}</mark>
+    are&nbsp;shown. <a href="" class="strictdoc__link">Reset&nbsp;filter</a>`;
+
+    const link = block.querySelector(".strictdoc__link");
+    link.addEventListener("click", (event) => {
+        event.preventDefault();
+        this.removeActiveFilter();
+        this.resetFilters();
+    });
+
+    return block;
+  }
+
+  filterRequirements(event) {
+    const filterButton = event.target.closest(".source__filter");
+    if (!filterButton) return;
+    const clickedLineNumber = parseInt(filterButton.dataset.line, 10);
+    console.log(`Clicked line:`, clickedLineNumber);
+
+    const currentActiveLineNumber = parseInt(this.active.filter);
+
+    this.active.filter && this.removeActiveFilter();
+    this.active.filter && this.resetFilters();
+    if(currentActiveLineNumber !== clickedLineNumber) {
+      this.setFilter(clickedLineNumber);
+    }
+
+  }
+
+  removeActiveFilter() {
+    console.log('remove', this.active.filter);
+    this.lines[parseInt(this.active.filter)].line.classList.remove("active");
+  }
+
+  resetFilters() {
+    console.log('reset filter');
+    this.active.filter = null;
+    this.filterContainer.innerHTML = '';
+
+    // todo reset filtered requirements
+    this.referContainer.classList.remove("filtered");
+  }
+
+  setFilter(clickedLineNumber) {
+    this.lines[clickedLineNumber].line.classList.add("active");
+    this.active.filter = clickedLineNumber;
+    this.filterContainer.append(this._createFilterInfoBlock(clickedLineNumber));
+
+    // todo filter requirements
+    this.referContainer.classList.add("filtered");
+  }
 }
 
 const dom = new Dom({
   // sourceId: 'source',
   // sourceContainerId: 'sourceContainer',
   // hashSplitter: '#',
-  // strictdocCommentSelector: 'pre span',
 });
 
 window.addEventListener("load", function () {
@@ -404,11 +483,17 @@ window.addEventListener("load", function () {
   const switcher = new Switch(
     {
       labelText: 'Show coverage',
+      size: 0.5,
+      stroke: 0.2,
       checked: true,
       callback: (checked) => dom.toggleRangesVisibility(checked),
     }
   );
   document.getElementById('sourceCodeCoverageSwitch').append(switcher.create());
+
+  dom.source.addEventListener("click", function (event) {
+    dom.filterRequirements(event);
+  });
 
 });
 

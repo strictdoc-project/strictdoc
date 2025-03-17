@@ -1,5 +1,9 @@
-  <div class="nav_panel">
-  <div id="referContainer" class="source-file__refer">
+<div class="source-file__aside">
+  <div class="source-file__tools">
+    <div id="sourceCodeCoverageFilter" class="source-file__requirements-filter"></div>
+  </div>
+  <div class="source-file__refer" id="referContainer">
+    <div class="source-file__requirements">
 
   {# ranges #}
   {%- set source_file_general_reqs, source_file_range_reqs =
@@ -8,15 +12,9 @@
   {%- if source_file_range_reqs -%}
   <div class="source-file__ranges">
 
-    <details open>
-      <summary>
-        <div id="sourceCodeCoverageSwitch" class="source-file__toggle-switch"></div>
-        The following requirements refer <b>to&nbsp;the&nbsp;ranges</b> in this source&nbsp;file.
-      </summary>
         {%- for requirement in source_file_range_reqs -%}
           {% include "screens/source_file_view/requirement.jinja" %}
         {%- endfor -%}
-    </details>
 
   </div>
   {%- endif -%}
@@ -25,15 +23,13 @@
   {%- if source_file_general_reqs -%}
   <div class="source-file__reqs">
 
-    <details open>
-      <summary>See requirements that refer to&nbsp;this source&nbsp;file <b>without specifying a&nbsp;range</b>.</summary>
       {%- for requirement in source_file_general_reqs -%}
         {% include "screens/source_file_view/requirement.jinja" %}
       {%- endfor -%}
-    </details>
 
   </div>
   {%- endif -%}
 
-</div>
+    </div>
+  </div>
 </div>

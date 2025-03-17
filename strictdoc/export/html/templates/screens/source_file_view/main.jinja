@@ -5,6 +5,7 @@
   <div id="source" class="source">
     {%- for line in view_object.pygmented_source_file_lines -%}
       <div data-line={{ loop.index }} id="line-{{ loop.index }}" class="source__line-number">
+        <div class="source__line-ranges"></div>
         <div class="source__line-filter">{% include "_res/svg_ico16_source_filter.jinja" %}</div>
         <pre>{{ loop.index }}</pre>
       </div>

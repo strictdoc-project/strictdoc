@@ -188,6 +188,10 @@ class Dom {
     hashSplitter,
     strictdocPointerSelector,
     strictdocRequirementSelector,
+    strictdocLineNumberSelector,
+    strictdocLineRangeSelector,
+    strictdocSourceFilterClass,
+    filteredClass,
     activeClass,
   }) {
 
@@ -200,6 +204,10 @@ class Dom {
     // STRICTDOC SPECIFIC
     this.strictdocPointerSelector = strictdocPointerSelector || '.pointer';
     this.strictdocRequirementSelector = strictdocRequirementSelector || '.source-file__requirement';
+    this.strictdocLineNumberSelector = strictdocLineNumberSelector || '.source__line-number';
+    this.strictdocLineRangeSelector = strictdocLineRangeSelector || '.source__line-ranges';
+    this.strictdocSourceFilterClass = strictdocSourceFilterClass || 'source__filter';
+    this.filteredClass = filteredClass || 'filtered';
     this.activeClass = activeClass || 'active';
 
     // objects
@@ -249,6 +257,7 @@ class Dom {
     this._prepareLines();
     this._prepareRequirements();
     this._prepareRanges();
+    this._updateLinesWithRanges();
 
     console.log('this.lines', this.lines);
     console.log('this.requirements', this.requirements);
@@ -342,7 +351,7 @@ class Dom {
   _prepareLines() {
     // Both .source__line-content and .source__line-number
     // have data-line={{ loop.index }}
-    this.lines = [...document.querySelectorAll('.source__line-number')]
+    this.lines = [...document.querySelectorAll(this.strictdocLineNumberSelector)]
       .reduce((acc, line) => {
         acc[line.dataset.line] = {
           line: line,
@@ -400,16 +409,37 @@ class Dom {
           ranges[range].pointers.push(pointer);
         }
 
-        const start = parseInt(rangeBegin, 10);
-        const end = parseInt(rangeEnd, 10);
+        // const start = parseInt(rangeBegin, 10);
+        // const end = parseInt(rangeEnd, 10);
 
-        for (let i = start; i <= end; i++) {
-          (this.lines[i].ranges ??= []).push(range);
-          console.assert(this.lines[i].line, `The line ${i} must be registered.`)
-          this.lines[i].line?.classList.add("source__filter");
-        }
+        // for (let i = start; i <= end; i++) {
+        //   (this.lines[i].ranges ??= []).push(range);
+        //   console.assert(this.lines[i].line, `The line ${i} must be registered.`)
+        //   this.lines[i].line?.classList.add(this.strictdocSourceFilterClass);
+        // }
 
       });
+  }
+
+  _updateLinesWithRanges() {
+    Object.entries(this.ranges).forEach(([key, value]) => {
+      // console.log(value);
+
+      const begin = parseInt(value.begin, 10);
+      const end = parseInt(value.end, 10);
+
+      for (let i = begin; i <= end; i++) {
+        (this.lines[i].ranges ??= []).push(key);
+        (this.lines[i].pointers ??= []).push(...value.pointers);
+
+        const currentLine = this.lines[i].line;
+        console.assert(this.lines[i].line, `The line ${i} must be registered.`);
+        currentLine.classList.add(this.strictdocSourceFilterClass);
+      }
+
+      const rangeNumContainer = this.lines[begin].line.querySelector(this.strictdocLineRangeSelector);
+      rangeNumContainer.innerHTML = this.lines[begin].pointers.length;
+    });
   }
 
   _generateRangeAlias(begin, end) { return `${begin}${this.hashSplitter}${end}` };
@@ -431,7 +461,7 @@ class Dom {
   }
 
   filterRequirements(event) {
-    const filterButton = event.target.closest(".source__filter");
+    const filterButton = event.target.closest(`.${this.strictdocSourceFilterClass}`);
     if (!filterButton) return;
     const clickedLineNumber = parseInt(filterButton.dataset.line, 10);
     console.log(`Clicked line:`, clickedLineNumber);
@@ -448,7 +478,7 @@ class Dom {
 
   removeActiveFilter() {
     console.log('remove', this.active.filter);
-    this.lines[parseInt(this.active.filter)].line.classList.remove("active");
+    this.lines[parseInt(this.active.filter)].line.classList.remove(this.activeClass);
   }
 
   resetFilters() {
@@ -457,16 +487,16 @@ class Dom {
     this.filterContainer.innerHTML = '';
 
     // todo reset filtered requirements
-    this.referContainer.classList.remove("filtered");
+    this.referContainer.classList.remove(this.filteredClass);
   }
 
   setFilter(clickedLineNumber) {
-    this.lines[clickedLineNumber].line.classList.add("active");
+    this.lines[clickedLineNumber].line.classList.add(this.activeClass);
     this.active.filter = clickedLineNumber;
     this.filterContainer.append(this._createFilterInfoBlock(clickedLineNumber));
 
     // todo filter requirements
-    this.referContainer.classList.add("filtered");
+    this.referContainer.classList.add(this.filteredClass);
   }
 }
 

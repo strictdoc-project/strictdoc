@@ -187,6 +187,33 @@
   visibility: hidden;
 }
 
+.source__line-number .source__line-ranges {
+  color: var(--color-fg-accent);
+  font-size: 11px;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* justify-content: center; */
+  pointer-events: none;
+  user-select: none;
+}
+
+.source__line-number .source__line-ranges:not(:empty)::before {
+  content: '▸';
+  margin-right: 4px;
+}
+
+.source__line-number:hover .source__line-ranges,
+.source__line-number.active .source__line-ranges {
+  display: none;
+}
+
 /* using as icon: templates/_res/svg_ico16_source_filter.jinja */
 /* .source__filter added by JS */
 

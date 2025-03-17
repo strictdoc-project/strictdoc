@@ -80,6 +80,7 @@ def run_strictdoc_server(
                 "*.css",
                 "*.js",
                 "*.toml",
+                "*.c",
             ],
             reload_excludes=[
                 # "tests",  # Doesn't work.

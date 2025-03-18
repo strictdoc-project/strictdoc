@@ -1,0 +1,69 @@
+[DOCUMENT]
+MID: 6a8bc1d467c348dbad29707cd6a3f260
+TITLE: Stable URI Test
+OPTIONS:
+  ENABLE_MID: True
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[REQUIREMENT]
+MID: 7726fa20788c493ca8d02bccd2480a9c
+UID: ROOT-1
+TITLE: Requirement in root
+STATEMENT: lorem ipsum
+
+[SECTION]
+MID: 15fa7f4bd56a41eb9da62584961d73b4
+TITLE: Section without UID containing a requirement
+
+[REQUIREMENT]
+MID: 753286690619492fa9c3ae4f9bf5368d
+UID: REQ-WITHIN-SECTION-THAT-HAS-NO-UID
+TITLE: Requirment within a Section
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+MID: 82e3eec5e08146bd8fe213f5a1d8a355
+UID: SECTION-1
+TITLE: Section that has an UID
+
+[TEXT]
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+MID: 0915d681276c4f44a1e1930434edc5cf
+UID: SECTION-2
+TITLE: Section with UID containing a requirement
+
+[REQUIREMENT]
+MID: 63414e7641a8445b962c3c1edc91bf0f
+UID: REQ-WITHIN-SECTION-2
+TITLE: Requirement within a Section that has a UID
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+MID: 0dd59cda6a3a4ec784d7dc2b5791b92f
+UID: SECTION-3
+TITLE: Nested Sections Test
+
+[SECTION]
+MID: 9978c6da28744db89acbe5875caf5a5c
+UID: SECTION-3-1
+TITLE: Subsection for the nexted section test
+
+[REQUIREMENT]
+MID: 3e06d65b527d4cab87680232880a3430
+UID: REQ-WITHIN-SECTION-3-1
+TITLE: Requirement within a nested Section
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[/SECTION]

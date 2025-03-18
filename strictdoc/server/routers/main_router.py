@@ -7,7 +7,8 @@ from mimetypes import guess_type
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
-from fastapi import APIRouter, Form, UploadFile
+from fastapi import APIRouter, Form, HTTPException, UploadFile
+from fastapi.responses import RedirectResponse
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
 from reqif.unparser import ReqIFUnparser
@@ -2724,6 +2725,35 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             content=output,
             status_code=200,
         )
+
+    @router.get("/UID/{uid_or_mid}", response_class=RedirectResponse)
+    def redirect_to_uid(uid_or_mid: str):
+        # resolve UID or MID
+        mid_pattern = r"^[a-fA-F0-9]{32}$"
+        if re.search(mid_pattern, uid_or_mid):
+            linkable_node = (
+                export_action.traceability_index.get_node_by_mid_weak(
+                    MID(uid_or_mid)
+                )
+            )
+        else:
+            linkable_node = (
+                export_action.traceability_index.get_linkable_node_by_uid_weak(
+                    uid_or_mid
+                )
+            )
+
+        # if found, send a 302 redirect response to guide the user to the
+        # correct URL (page + #anchor)
+        if linkable_node:
+            link_renderer = LinkRenderer(
+                root_path="", static_path=project_config.dir_for_sdoc_assets
+            )
+            href = link_renderer.render_node_link(
+                linkable_node, None, document_type=DocumentType.document()
+            )
+            return RedirectResponse(url=href, status_code=302)
+        raise HTTPException(status_code=404, detail="UID or MID was not found")
 
     @router.get("/nestor", response_class=Response)
     def get_nestor():

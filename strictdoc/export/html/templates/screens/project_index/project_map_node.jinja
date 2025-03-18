@@ -1,0 +1,13 @@
+{%- assert node is defined -%}
+{%- set mid = '' -%}
+{%- if node.reserved_mid is defined and node.mid_permanent is defined and node.mid_permanent -%}
+  {%- set mid = node.reserved_mid -%}
+{%- endif -%}
+
+{%- set uid = '' -%}
+{%- if node.reserved_uid is defined -%}
+  {%- set uid = node.reserved_uid -%}
+{%- endif -%}
+
+{%- if uid %}  { {%- if mid -%}"MID":"{{ mid }}",{%- endif -%} "UID":"{{ uid }}"},
+{% endif -%}

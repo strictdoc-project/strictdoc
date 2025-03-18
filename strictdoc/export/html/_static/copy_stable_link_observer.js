@@ -9,12 +9,31 @@
     button.addEventListener("click", (event) => {
       event.preventDefault();
 
-      const clip = button.dataset.path;
+      const link = button.dataset.path;
       const copyIcon = button.querySelector(".copy_to_clipboard-copy_icon");
       const doneIcon = button.querySelector(".copy_to_clipboard-done_icon");
 
-      updateClipboard(clip, confirmCopy(button, copyIcon, doneIcon));
+      // resolve any relative urls with respect to current URL
+      const resolved = isAbsoluteUrl(link)
+      ? link
+      : new URL(link, window.location.href).href;
+
+      // expand folder to index if we run from the local file system
+      const expanded = (window.location.protocol === 'file:')
+      ? resolved.replace(/#/, 'index.html#')
+      : resolved
+
+      updateClipboard(expanded, confirmCopy(button, copyIcon, doneIcon));
     });
+  }
+
+  function isAbsoluteUrl(url) {
+    try {
+      new URL(url); // throws if it's relative
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   function updateClipboard(newClip, callback) {

@@ -29,6 +29,9 @@ from strictdoc.export.html.generators.document_trace import (
 from strictdoc.export.html.generators.document_tree import (
     DocumentTreeHTMLGenerator,
 )
+from strictdoc.export.html.generators.project_map import (
+    ProjectMapGenerator,
+)
 from strictdoc.export.html.generators.project_statistics import (
     ProgressStatisticsGenerator,
 )
@@ -105,6 +108,9 @@ class HTMLGenerator:
         # well with the multiprocessing's processed-based parallelization.
         # _pickle.PicklingError: Can't pickle <function sync_do_first at 0x1077bdf80>: it's not the same object as jinja2.filters.sync_do_first
         self.export_project_tree_screen(traceability_index=traceability_index)
+
+        # Export JavaScript map of the document tree (project map)
+        self.export_project_map(traceability_index=traceability_index)
 
         # Export project statistics.
         if self.project_config.is_feature_activated(
@@ -479,6 +485,25 @@ class HTMLGenerator:
             self.project_config.export_output_html_root, "index.html"
         )
         writer = DocumentTreeHTMLGenerator()
+        output = writer.export(
+            self.project_config,
+            traceability_index=traceability_index,
+            html_templates=self.html_templates,
+        )
+        with open(output_file, "w", encoding="utf8") as file:
+            file.write(output)
+
+    def export_project_map(
+        self,
+        *,
+        traceability_index: TraceabilityIndex,
+    ):
+        assets_dir = os.path.join(
+            self.project_config.export_output_html_root,
+            self.project_config.dir_for_sdoc_assets,
+        )
+        output_file = os.path.join(assets_dir, "project_map.js")
+        writer = ProjectMapGenerator()
         output = writer.export(
             self.project_config,
             traceability_index=traceability_index,

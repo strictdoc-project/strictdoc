@@ -1,0 +1,16 @@
+{%- assert section is defined -%}
+{%- with node = section -%}
+  {%- include "screens/project_index/project_map_node.jinja" -%}
+{%- endwith -%}
+
+{%- for node_ in section.section_contents -%}  
+  {%- if node_.__class__.__name__ == "DocumentFromFile" or node_.is_section -%}
+    {%- with section = node_ -%}
+      {%- include "screens/project_index/project_map_section.jinja" -%}
+    {%- endwith -%}
+  {%- else -%}
+    {%- with node = node_ -%}
+      {%- include "screens/project_index/project_map_node.jinja" -%}
+    {%- endwith -%}
+  {%- endif  -%}
+{%- endfor -%}

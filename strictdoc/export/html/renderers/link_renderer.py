@@ -27,7 +27,7 @@ class LinkRenderer:
         self.local_anchor_cache = {}
         self.req_link_cache = {}
 
-    def render_url(self, url):
+    def render_url(self, url: str) -> str:
         url = html.escape(url)
         if len(self.root_path) == 0:
             return url
@@ -39,7 +39,7 @@ class LinkRenderer:
     # This rarely used helper adds slashes to the import statements within
     # <script type="module">, for example project_index/index.jinja.
     # Otherwise, scripts are not imported correctly.
-    def render_static_url_with_prefix(self, url):
+    def render_static_url_with_prefix(self, url: str) -> str:
         static_url = "/" + self.static_path + "/" + url
         return static_url
 

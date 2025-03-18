@@ -1,0 +1,5 @@
+[DOCUMENT]
+TITLE: Stable URI Test
+
+[DOCUMENT_FROM_FILE]
+FILE: included_fragment.sdoc

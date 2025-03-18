@@ -27,7 +27,8 @@
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js') }}";
   </script>
 
-  <script src="{{ view_object.render_static_url('controllers/autocompletable_field_controller.js') }}"></script>
+  <script type="module" src="{{ view_object.render_static_url('controllers/autocompletable_field_controller.js') }}"></script>
+
   {% if not view_object.has_included_document() %}
   <script src="{{ view_object.render_static_url('controllers/draggable_list_controller.js') }}"></script>
   {% endif %}

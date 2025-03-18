@@ -10,7 +10,7 @@ class DocumentTreeIterator:
         assert isinstance(document_tree, DocumentTree)
         self.document_tree: DocumentTree = document_tree
 
-    def is_empty_tree(self):
+    def is_empty_tree(self) -> bool:
         return len(self.document_tree.document_list) == 0
 
     def iterator(self):

@@ -1,0 +1,55 @@
+[DOCUMENT]
+TITLE: File In Subfolder
+UID: SUB-DOC-UID
+
+[REQUIREMENT]
+UID: SUB-ROOT-1
+TITLE: Requirement in root
+STATEMENT: lorem ipsum
+
+[SECTION]
+TITLE: Section without UID containing a requirement
+
+[REQUIREMENT]
+UID: SUB-REQ-WITHIN-SECTION-THAT-HAS-NO-UID
+TITLE: Requirment within a Section
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+UID: SUB-SECTION-1
+TITLE: Section that has an UID
+
+[TEXT]
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+UID: SUB-SECTION-2
+TITLE: Section with UID containing a requirement
+
+[REQUIREMENT]
+UID: SUB-REQ-WITHIN-SECTION-2
+TITLE: Requirement within a Section that has a UID
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+UID: SUB-SECTION-3
+TITLE: Nested Sections Test
+
+[SECTION]
+UID: SUB-SECTION-3-1
+TITLE: Subsection for the nexted section test
+
+[REQUIREMENT]
+UID: SUB-REQ-WITHIN-SECTION-3-1
+TITLE: Requirement within a nested Section
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[/SECTION]

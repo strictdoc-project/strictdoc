@@ -349,10 +349,17 @@ class DocumentScreenViewObject:
 
     def should_display_stable_link(
         self, node: Union[SDocDocument, SDocSection, SDocNode]
-    ):
+    ) -> bool:
         assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
         return node.reserved_uid is not None
 
-    def get_stable_link(self, node: Union[SDocDocument, SDocSection, SDocNode]):
+    def get_stable_link(
+        self, node: Union[SDocDocument, SDocSection, SDocNode]
+    ) -> str:
         assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
-        return "#TBD"
+        base_url = self.link_renderer.render_url("")
+        if node.reserved_uid is not None:
+            return base_url + "#" + node.reserved_uid
+        if node.reserved_mid is not None and node.mid_permanent:
+            return base_url + "#" + node.reserved_mid
+        return base_url

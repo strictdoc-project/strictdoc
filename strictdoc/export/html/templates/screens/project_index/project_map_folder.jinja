@@ -1,0 +1,15 @@
+{%- assert folder is defined %}
+{%- for folder_ in folder.subfolder_trees %}
+  {%- if folder_.has_sdoc_content %}
+    {%- with folder = folder_ %}
+      {%- include "screens/project_index/project_map_folder.jinja" %}
+    {%- endwith %}
+  {%- endif %}
+{%- endfor %}
+{%- for file_ in folder.files %}
+  {%- if file_.has_extension(".sdoc") %}
+    {%- with file = file_ %}
+      {%- include "screens/project_index/project_map_file.jinja" %}
+    {%- endwith %}
+  {%- endif %}
+{%- endfor -%}

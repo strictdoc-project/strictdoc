@@ -1,0 +1,5 @@
+[DOCUMENT]
+TITLE: File In Subfolder
+
+[DOCUMENT_FROM_FILE]
+FILE: included_fragment_subfolder.sdoc

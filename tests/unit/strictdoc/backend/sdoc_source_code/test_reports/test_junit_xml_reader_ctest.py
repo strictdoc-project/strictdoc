@@ -13,7 +13,7 @@ from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.paths import SDocRelativePath
 
 
-def test_01_google_test():
+def test_01_ctest():
     source_input = """
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuite name="(empty)"
@@ -38,7 +38,7 @@ def test_01_google_test():
     )
 
     with tempfile.NamedTemporaryFile(
-        mode="w+", delete=True, suffix=".gtest.junit.xml"
+        mode="w+", delete=True, suffix=".ctest.junit.xml"
     ) as temp_file:
         doc_file: File = File(
             0,
@@ -56,5 +56,5 @@ def test_01_google_test():
         )
         assert (
             test_result_node.get_meta_field_value_by_title("TEST_FUNCTION")
-            == "TEST_F(TestPrtMath, TransitionDistance)"
+            == "#GTEST#TestPrtMath.TransitionDistance"
         )

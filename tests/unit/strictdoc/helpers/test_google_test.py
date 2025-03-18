@@ -4,10 +4,16 @@ from strictdoc.helpers.google_test import convert_function_name_to_gtest_macro
 
 
 def test_convert_function_name_to_gtest_macro():
-    assert (
-        convert_function_name_to_gtest_macro("TestPrtMath.TransitionDistance")
-        == "TEST_F(TestPrtMath, TransitionDistance)"
-    )
+    assert convert_function_name_to_gtest_macro(
+        "TestPrtMath.TransitionDistance"
+    ) == [
+        "TEST(TestPrtMath, TransitionDistance)",
+        "TEST_F(TestPrtMath, TransitionDistance)",
+    ]
+
+    assert convert_function_name_to_gtest_macro(
+        "MyTestPattern/MyTestHelperPattern.TestName3/1"
+    ) == ["TEST_P(MyTestHelperPattern, TestName3)"]
 
     with pytest.raises(ValueError, match="Input string must contain a dot."):
         convert_function_name_to_gtest_macro("InvalidString")

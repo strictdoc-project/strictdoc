@@ -1,0 +1,22 @@
+# This test mainly verifies that the test results are resolved for multiple test
+# cases and multiple files.
+
+REQUIRES: PYTHON_39_OR_HIGHER
+
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+
+# Ensure that the test report document is generated.
+CHECK: Published: Test report
+RUN: %check_exists --file "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_unit.gtest.junit.html"
+
+# Ensure that the source and test files are generated.
+RUN: %check_exists --file "%S/Output/html/_source_files/tests/test1.cpp.html"
+
+# Ensure that the test report document has the right content.
+RUN: %cat "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_unit.gtest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+CHECK-TEST-REPORT:href="../../_source_files/tests/test1.cpp.html#MyTestSuiteName.TestName#15#21">
+CHECK-TEST-REPORT: tests/test1.cpp, <i>lines: 15-21</i>, function TEST(MyTestSuiteName, TestName)
+CHECK-TEST-REPORT:href="../../_source_files/tests/test1.cpp.html#MyTestHelper.TestName2#32#36">
+CHECK-TEST-REPORT: tests/test1.cpp, <i>lines: 32-36</i>, function TEST_F(MyTestHelper, TestName2)
+CHECK-TEST-REPORT:href="../../_source_files/tests/test1.cpp.html#MyTestPattern/MyTestHelperPattern.TestName3/1#44#48">
+CHECK-TEST-REPORT: tests/test1.cpp, <i>lines: 44-48</i>, function TEST_P(MyTestHelperPattern, TestName3)

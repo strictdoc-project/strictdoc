@@ -1,6 +1,7 @@
 # mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,type-arg,var-annotated"
 import sys
 import traceback
+from itertools import islice
 from typing import List, Optional, Sequence, Union
 
 import tree_sitter_python
@@ -73,43 +74,50 @@ class SourceFileTraceabilityReader_Python:
                 )
                 functions_stack.append(function)
                 map_function_to_node[function] = node_
-                if (
-                    len(node_.children) > 0
-                    and node_.children[0].type == "expression_statement"
-                ):
-                    if len(node_.children[0].children) > 0:
-                        if node_.children[0].children[0].type == "string":
-                            block_comment = node_.children[0].children[0]
+                if len(node_.children) > 0:
+                    # look for the docstring within the first 30 children (arbitrary chosen limit)
+                    # so that we dont miss it if the file starts with comments (#!, encoding marker, etc...)
+                    first_match = next(
+                        (
+                            child
+                            for child in islice(node_.children, 30)
+                            if child.type == "expression_statement"
+                            and len(child.children) > 0
+                            and child.children[0].type == "string"
+                        ),
+                        None,
+                    )
 
-                            # string contains of three parts:
-                            # string_start string_content string_end
-                            string_content = block_comment.children[1]
-                            assert string_content.text is not None
+                    if first_match is not None:
+                        block_comment = first_match.children[0]
 
-                            block_comment_text = string_content.text.decode(
-                                "utf-8"
-                            )
-                            markers = MarkerParser.parse(
-                                block_comment_text,
-                                node_.start_point[0] + 1,
-                                # It is important that +1 is not present here because
-                                # currently StrictDoc does not display the last empty line (\n is 10).
-                                node_.end_point[0]
-                                if input_buffer[-1] == 10
-                                else node_.end_point[0] + 1,
-                                string_content.start_point[0] + 1,
-                                string_content.start_point[1] + 1,
-                            )
-                            for marker_ in markers:
-                                if isinstance(
-                                    marker_, FunctionRangeMarker
-                                ) and (function_range_marker_ := marker_):
-                                    function_range_marker_processor(
-                                        function_range_marker_, parse_context
-                                    )
-                                    traceability_info.markers.append(
-                                        function_range_marker_
-                                    )
+                        # string contains of three parts:
+                        # string_start string_content string_end
+                        string_content = block_comment.children[1]
+                        assert string_content.text is not None
+
+                        block_comment_text = string_content.text.decode("utf-8")
+                        markers = MarkerParser.parse(
+                            block_comment_text,
+                            node_.start_point[0] + 1,
+                            # It is important that +1 is not present here because
+                            # currently StrictDoc does not display the last empty line (\n is 10).
+                            node_.end_point[0]
+                            if input_buffer[-1] == 10
+                            else node_.end_point[0] + 1,
+                            string_content.start_point[0] + 1,
+                            string_content.start_point[1] + 1,
+                        )
+                        for marker_ in markers:
+                            if isinstance(marker_, FunctionRangeMarker) and (
+                                function_range_marker_ := marker_
+                            ):
+                                function_range_marker_processor(
+                                    function_range_marker_, parse_context
+                                )
+                                traceability_info.markers.append(
+                                    function_range_marker_
+                                )
 
             elif node_.type in ("class_definition", "function_definition"):
                 function_name: str = ""

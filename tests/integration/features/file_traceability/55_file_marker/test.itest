@@ -4,5 +4,5 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: [ 1-9 ]
-CHECK-SOURCE-FILE: [ 6-9 ]
+CHECK-SOURCE-FILE: [ 1-10 ]
+CHECK-SOURCE-FILE: [ 7-10 ]

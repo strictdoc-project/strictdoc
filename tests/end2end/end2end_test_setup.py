@@ -66,7 +66,7 @@ class End2EndTestSetup:
             for expected_file in expected_files
             if expected_file not in sandbox_files
         ]
-        if len(diff_sandbox) > 0 or len(diff_expected):
+        if len(diff_sandbox) > 0 or diff_expected:
             raise AssertionError(
                 f"Sandbox and expected output folders are not identical:\n"
                 f"{self.path_to_sandbox}\n"

@@ -4,11 +4,10 @@
   {%- if view_object.pygmented_source_file_lines|length > 0 -%}
   <div id="source" class="source">
     {%- for line in view_object.pygmented_source_file_lines -%}
-      <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
-      <div data-line={{ loop.index }} class="source__line-content">
-        {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
-          {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
-          <pre class="sdoc-comment">{{ line.source_line }}
+      {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
+        <div class="" style="background-color: #fafafa;"></div>
+        <div class="" style="background-color: #fafafa; visibility: visible; padding: 20px 0px;">
+          <pre class="sdoc-comment">
           {%- for marker_ in line.markers -%}
               {%- set is_last_marker = not loop.last %}
               {%- for req in marker_.reqs_objs -%}
@@ -23,6 +22,13 @@
             {%- endfor -%}
           {%- endfor -%}
           </pre>
+        </div>
+      {% endif %}
+      <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
+      <div data-line={{ loop.index }} class="source__line-content">
+        {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
+          {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
+          <pre class="sdoc-comment">{{ line.source_line }}</pre>
         {%- elif line != "" -%}
           {# <!-- Pygments --> #}
           <pre class="highlight">{{ line }}</pre>

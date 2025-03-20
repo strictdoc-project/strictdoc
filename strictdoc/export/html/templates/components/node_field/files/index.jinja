@@ -5,7 +5,7 @@
       <sdoc-requirement-field-label>files:</sdoc-requirement-field-label>
       <sdoc-requirement-field data-field-label="files">
         <ul class="requirement__link">
-          {%- for link, opt_ranges in requirement_file_links %}
+          {%- for link, fwd_role, opt_ranges in requirement_file_links %}
             {%- if opt_ranges -%}
               {%- for range in opt_ranges %}
                 <li>
@@ -16,6 +16,11 @@
                       , {{ description }}
                     {%- endif -%}
                     {# TODO optional relation role #}
+                    {% if range.role is not none %}
+                        <span class="requirement__type-tag">({{ range.role }})</span>
+                    {% elif fwd_role is not none %}
+                        <span class="requirement__type-tag">({{ fwd_role }})</span>
+                    {% endif %}
                   </a>
                 </li>
               {%- endfor -%}
@@ -23,7 +28,9 @@
               <li>
                 <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(sdoc_entity, link) }}#{{ sdoc_entity.reserved_uid }}">
                   {{ link }}
-                  {# TODO optional relation role #}
+                  {% if fwd_role is not none %}
+                      <span class="requirement__type-tag">({{ fwd_role }})</span>
+                  {% endif %}
                 </a>
               </li>
             {%- endif -%}

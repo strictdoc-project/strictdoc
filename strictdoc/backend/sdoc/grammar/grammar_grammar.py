@@ -39,6 +39,7 @@ GrammarElementRelationChild[noskipws]:
 
 GrammarElementRelationFile[noskipws]:
   '  - TYPE: ' relation_type='File' '\n'
+  ('    ROLE: ' relation_role=/.+/ '\n')?
 ;
 
 GrammarElementField[noskipws]:

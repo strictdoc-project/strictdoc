@@ -504,6 +504,7 @@ class SPDXToSDocConverter:
                 GrammarElementRelationFile(
                     parent=None,
                     relation_type="File",
+                    relation_role=None,
                 ),
             ],
         )
@@ -565,6 +566,7 @@ class SPDXToSDocConverter:
                     GrammarElementRelationFile(
                         parent=None,
                         relation_type="File",
+                        relation_role=None,
                     ),
                 ],
             )

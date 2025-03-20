@@ -239,11 +239,17 @@ class GrammarElementRelationChild:
 
 @auto_described
 class GrammarElementRelationFile:
-    def __init__(self, parent, relation_type: str):
+    def __init__(
+        self, parent, relation_type: str, relation_role: Optional[str]
+    ):
         assert relation_type == "File"
         self.parent = parent
         self.relation_type = relation_type
-        self.relation_role: Optional[str] = None
+        self.relation_role: Optional[str] = (
+            relation_role
+            if relation_role is not None and len(relation_role) > 0
+            else None
+        )
         self.mid: MID = MID.create()
 
 

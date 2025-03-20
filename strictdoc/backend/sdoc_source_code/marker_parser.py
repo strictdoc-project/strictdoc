@@ -11,9 +11,10 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 
 REGEX_REQ = r"[A-Za-z][A-Za-z0-9\\-]+"
+REGEX_ROLE = r"[A-Za-z][A-Za-z0-9\\-]+"
 # @relation(REQ-1, scope=function) or @relation{REQ-1, scope=function}
 REGEX_MARKER = re.compile(
-    rf"@relation[({{]({REGEX_REQ}(?:, {REGEX_REQ})*), scope=(file|class|function|line|range_start|range_end)[)}}]"
+    rf"@relation[({{]({REGEX_REQ}(?:, {REGEX_REQ})*), scope=(file|class|function|line|range_start|range_end)(?:, role=({REGEX_ROLE}))?[)}}]"
 )
 
 
@@ -36,7 +37,8 @@ class MarkerParser:
                 continue
 
             assert match.lastindex is not None
-            marker_type = match.group(match.lastindex)
+            marker_type = match.group(2)
+            marker_role = match.group(3) if len(match.groups()) >= 3 else None
             req_list = match.group(1)
 
             first_requirement_index = match.start(1)
@@ -61,7 +63,7 @@ class MarkerParser:
 
             if marker_type in ("file", "class", "function"):
                 function_marker = FunctionRangeMarker(
-                    None, requirements, scope=marker_type
+                    None, requirements, scope=marker_type, role=marker_role
                 )
                 function_marker.ng_source_line_begin = line_start
                 function_marker.ng_range_line_begin = line_start
@@ -78,7 +80,10 @@ class MarkerParser:
             elif marker_type in ("range_start", "range_end"):
                 start_or_end = marker_type == "range_start"
                 range_marker = RangeMarker(
-                    None, "[" if start_or_end else "[/", requirements
+                    None,
+                    "[" if start_or_end else "[/",
+                    requirements,
+                    role=marker_role,
                 )
                 range_marker.ng_source_line_begin = line_start
                 range_marker.ng_source_column_begin = first_requirement_column
@@ -87,8 +92,9 @@ class MarkerParser:
                 range_marker.ng_new_relation_keyword = True
                 markers.append(range_marker)
             elif marker_type == "line":
-                line_marker = LineMarker(None, requirements)
+                line_marker = LineMarker(None, requirements, role=marker_role)
                 line_marker.ng_source_line_begin = line_start
+                line_marker.ng_source_column_begin = first_requirement_column
                 line_marker.ng_range_line_begin = line_start
                 line_marker.ng_range_line_end = line_end
                 markers.append(line_marker)

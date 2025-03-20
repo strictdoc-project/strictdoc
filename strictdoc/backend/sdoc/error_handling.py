@@ -1,5 +1,5 @@
 # mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,union-attr"
-from typing import Optional
+from typing import Optional, Union
 
 from textx import TextXSyntaxError
 
@@ -19,6 +19,15 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import Reference
+from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
+    ForwardFunctionRangeMarker,
+    FunctionRangeMarker,
+)
+from strictdoc.backend.sdoc_source_code.models.range_marker import (
+    ForwardRangeMarker,
+    LineMarker,
+    RangeMarker,
+)
 
 
 def get_textx_syntax_error_message(exception: TextXSyntaxError):
@@ -255,6 +264,28 @@ class StrictDocSemanticError(Exception):
             line=node.ng_line_start,
             col=node.ng_col_start,
             filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
+    def invalid_marker_role(
+        node: SDocNode,
+        marker: Union[
+            ForwardFunctionRangeMarker,
+            FunctionRangeMarker,
+            LineMarker,
+            RangeMarker,
+            ForwardRangeMarker,
+        ],
+        path_to_src_file: str,
+    ):
+        role_and_type = marker.role if marker.role is not None else "Any"
+        return StrictDocSemanticError(
+            title=(f"File marker role is not registered: {role_and_type}."),
+            hint=f"Problematic requirement: {node.reserved_uid}.",
+            example=None,
+            line=marker.ng_source_line_begin,
+            col=marker.ng_source_column_begin,
+            filename=path_to_src_file,
         )
 
     @staticmethod

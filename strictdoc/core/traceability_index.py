@@ -378,7 +378,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         traceability_info: SourceFileTraceabilityInfo,
     ):
         self._file_traceability_index.create_traceability_info(
-            source_file, traceability_info, self
+            source_file, traceability_info
         )
 
     def create_document(self, document: SDocDocument) -> None:

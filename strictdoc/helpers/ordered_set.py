@@ -48,5 +48,5 @@ class OrderedSet(t.MutableSet[T]):
     def __repr__(self) -> str:
         return f"<OrderedSet {self}>"
 
-    def sort(self) -> None:
-        self._d = dict(sorted(self._d.items()))
+    def sort(self, key=None) -> None:
+        self._d = dict(sorted(self._d.items(), key=key))

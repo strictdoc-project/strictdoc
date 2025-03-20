@@ -254,7 +254,8 @@ class SourceFileTraceabilityReader_C:
                         f"{'::'.join(parent_names)}::{function_display_name}"
                     )
 
-                if function_name.startswith("TEST_F"):
+                # FIXME: Special hack for Google Test macros TEST, TEST_F, TEST_P.
+                if function_name.startswith("TEST"):
                     function_display_name = function_name
 
                 function_markers: List[FunctionRangeMarker] = []

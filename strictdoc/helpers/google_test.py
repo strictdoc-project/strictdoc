@@ -1,4 +1,7 @@
-def convert_function_name_to_gtest_macro(input_str: str) -> str:
+from typing import List
+
+
+def convert_function_name_to_gtest_macro(input_str: str) -> List[str]:
     """
     Converts a Google Test-produced test name from JUnit XML as follows:
     TestPrtMath.TransitionDistance -> TEST_F(TestPrtMath, TransitionDistance)
@@ -9,6 +12,14 @@ def convert_function_name_to_gtest_macro(input_str: str) -> str:
     assert isinstance(input_str, str)
     assert len(input_str) > 0
 
+    # Google Test parts show up like this in the XML:
+    # XML: MyTestPattern/MyTestHelperPattern.TestName3/3  # noqa: ERA001
+    # C++: TEST_P(MyTestHelperPattern, TestName3)
+    is_pattern_function = "/" in input_str
+    if is_pattern_function:
+        input_str_parts = input_str.split("/")
+        input_str = input_str_parts[1]
+
     if "." not in input_str:
         raise ValueError("Input string must contain a dot.")
 
@@ -16,4 +27,9 @@ def convert_function_name_to_gtest_macro(input_str: str) -> str:
     if len(parts) != 2:
         raise ValueError("Input string must contain exactly one dot.")
 
-    return f"TEST_F({parts[0]}, {parts[1]})"
+    if is_pattern_function:
+        return [
+            f"TEST_P({parts[0]}, {parts[1]})",
+        ]
+
+    return [f"TEST({parts[0]}, {parts[1]})", f"TEST_F({parts[0]}, {parts[1]})"]

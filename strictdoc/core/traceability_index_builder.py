@@ -187,87 +187,6 @@ class TraceabilityIndexBuilder:
 
             traceability_index.document_tree.attach_source_tree(source_tree)
 
-            """
-            Resolve test report information.
-            """
-
-            for document_ in document_tree.document_list:
-                if not document_.meta.input_doc_full_path.endswith(
-                    ".junit.xml"
-                ):
-                    continue
-
-                document_iterator = DocumentCachingIterator(document_)
-                for node__ in document_iterator.all_content(
-                    print_fragments=False,
-                    print_fragments_from_files=False,
-                ):
-                    if (
-                        not isinstance(node__, SDocNode)
-                        or node__.node_type != "TEST_RESULT"
-                    ):
-                        continue
-
-                    test_status: str = assert_cast(
-                        node__.get_meta_field_value_by_title("STATUS"), str
-                    )
-                    if test_status == "SKIPPED":
-                        continue
-
-                    test_path: str = assert_cast(
-                        node__.get_meta_field_value_by_title("TEST_PATH"), str
-                    )
-                    test_function: Optional[str] = (
-                        node__.get_meta_field_value_by_title("TEST_FUNCTION")
-                    )
-
-                    if test_function is not None:
-                        trace_info = file_tracability_index.map_paths_to_source_file_traceability_info[
-                            test_path
-                        ]
-
-                        for marker_ in trace_info.ng_map_names_to_markers[
-                            test_function
-                        ]:
-                            for requirement_uid_ in marker_.reqs:
-                                related_requirement = traceability_index.graph_database.get_link_value(
-                                    link_type=GraphLinkType.UID_TO_NODE,
-                                    lhs_node=requirement_uid_,
-                                )
-                                traceability_index.graph_database.create_link(
-                                    link_type=GraphLinkType.NODE_TO_PARENT_NODES,
-                                    lhs_node=node__,
-                                    rhs_node=related_requirement,
-                                    edge="Verifies",
-                                )
-                                traceability_index.graph_database.create_link(
-                                    link_type=GraphLinkType.NODE_TO_CHILD_NODES,
-                                    lhs_node=related_requirement,
-                                    rhs_node=node__,
-                                    edge="Verified by",
-                                )
-
-                    elif test_path is not None:
-                        related_requirements = (
-                            file_tracability_index.get_source_file_reqs(
-                                test_path
-                            )
-                        )
-
-                        for related_requirement_ in related_requirements[1]:
-                            traceability_index.graph_database.create_link(
-                                link_type=GraphLinkType.NODE_TO_PARENT_NODES,
-                                lhs_node=node__,
-                                rhs_node=related_requirement_,
-                                edge="Verifies",
-                            )
-                            traceability_index.graph_database.create_link(
-                                link_type=GraphLinkType.NODE_TO_CHILD_NODES,
-                                lhs_node=related_requirement_,
-                                rhs_node=node__,
-                                edge="Verified by",
-                            )
-
         """
         Resolve all modification dates to support the incremental generation of
         all artifacts.
@@ -599,7 +518,7 @@ class TraceabilityIndexBuilder:
                 # indeed exist.
                 for reference in requirement.relations:
                     if reference.ref_type == ReferenceType.FILE:
-                        d_07_file_traceability_index.create_requirement(
+                        d_07_file_traceability_index.create_requirement_with_forward_source_links(
                             requirement
                         )
                     elif reference.ref_type == ReferenceType.PARENT:

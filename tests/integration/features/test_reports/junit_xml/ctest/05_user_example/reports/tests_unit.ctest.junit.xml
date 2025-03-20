@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="5"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="0"
+	timestamp="2025-03-18T16:42:24"
+	>
+	<testcase name="MyTestSuiteName.TestName" classname="MyTestSuiteName.TestName" time="0.00497625" status="run">
+		<properties/>
+		<system-out>Running main() from /home/johan/Development/projects/line/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = MyTestSuiteName.TestName
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MyTestSuiteName
+[ RUN      ] MyTestSuiteName.TestName
+[       OK ] MyTestSuiteName.TestName (0 ms)
+[----------] 1 test from MyTestSuiteName (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+</system-out>
+	</testcase>
+	<testcase name="MyTestHelper.TestName2" classname="MyTestHelper.TestName2" time="0.00496465" status="run">
+		<properties/>
+		<system-out>Running main() from /home/johan/Development/projects/line/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = MyTestHelper.TestName2
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MyTestHelper
+[ RUN      ] MyTestHelper.TestName2
+[       OK ] MyTestHelper.TestName2 (0 ms)
+[----------] 1 test from MyTestHelper (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+</system-out>
+	</testcase>
+	<testcase name="MyTestPattern/MyTestHelperPattern.TestName3/1" classname="MyTestPattern/MyTestHelperPattern.TestName3/1" time="0.00425819" status="run">
+		<properties/>
+		<system-out>Running main() from /home/johan/Development/projects/line/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = MyTestPattern/MyTestHelperPattern.TestName3/0
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MyTestPattern/MyTestHelperPattern
+[ RUN      ] MyTestPattern/MyTestHelperPattern.TestName3/0
+[       OK ] MyTestPattern/MyTestHelperPattern.TestName3/0 (0 ms)
+[----------] 1 test from MyTestPattern/MyTestHelperPattern (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+</system-out>
+	</testcase>
+	<testcase name="MyTestPattern/MyTestHelperPattern.TestName3/2" classname="MyTestPattern/MyTestHelperPattern.TestName3/2" time="0.00458189" status="run">
+		<properties/>
+		<system-out>Running main() from /home/johan/Development/projects/line/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = MyTestPattern/MyTestHelperPattern.TestName3/1
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MyTestPattern/MyTestHelperPattern
+[ RUN      ] MyTestPattern/MyTestHelperPattern.TestName3/1
+[       OK ] MyTestPattern/MyTestHelperPattern.TestName3/1 (0 ms)
+[----------] 1 test from MyTestPattern/MyTestHelperPattern (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+</system-out>
+	</testcase>
+	<testcase name="MyTestPattern/MyTestHelperPattern.TestName3/3" classname="MyTestPattern/MyTestHelperPattern.TestName3/3" time="0.00450156" status="run">
+		<properties/>
+		<system-out>Running main() from /home/johan/Development/projects/line/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = MyTestPattern/MyTestHelperPattern.TestName3/2
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MyTestPattern/MyTestHelperPattern
+[ RUN      ] MyTestPattern/MyTestHelperPattern.TestName3/2
+[       OK ] MyTestPattern/MyTestHelperPattern.TestName3/2 (0 ms)
+[----------] 1 test from MyTestPattern/MyTestHelperPattern (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+</system-out>
+	</testcase>
+</testsuite>

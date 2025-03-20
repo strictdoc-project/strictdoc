@@ -15,19 +15,21 @@ from strictdoc.backend.sdoc.models.type_system import FileEntry, FileEntryFormat
 from strictdoc.core.file_tree import File
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
-from strictdoc.helpers.google_test import convert_function_name_to_gtest_macro
 from strictdoc.helpers.paths import path_to_posix_path
 
 
 class JUnitXMLFormat(IntEnum):
     LLVM_LIT = 1
-    GOOGLE_TEST = 2
-    PYTEST = 3
+    CTEST = 2
+    GOOGLE_TEST = 3
+    PYTEST = 4
 
     @staticmethod
     def create_from_path(file_path: str) -> "JUnitXMLFormat":
         if file_path.endswith(".lit.junit.xml"):
             return JUnitXMLFormat.LLVM_LIT
+        if file_path.endswith(".ctest.junit.xml"):
+            return JUnitXMLFormat.CTEST
         if file_path.endswith(".gtest.junit.xml"):
             return JUnitXMLFormat.GOOGLE_TEST
         if file_path.endswith(".pytest.junit.xml"):
@@ -261,13 +263,19 @@ class JUnitXMLReader:
                     test_case_node_title = rel_path_to_test
                     test_case_node_duration = xml_testcase_time
                     test_case_node_test_path = rel_path_to_test
-                elif xml_format == JUnitXMLFormat.GOOGLE_TEST:
+                elif xml_format == JUnitXMLFormat.CTEST:
                     test_case_node_uid = xml_testcase_name
                     test_case_node_title = xml_testcase_name
                     test_case_node_duration = xml_testcase_time
-                    test_case_node_test_function = (
-                        convert_function_name_to_gtest_macro(xml_testcase_name)
+                    test_case_node_test_function = "#GTEST#" + xml_testcase_name
+                elif xml_format == JUnitXMLFormat.GOOGLE_TEST:
+                    google_test_name = (
+                        xml_testcase_classname + "." + xml_testcase_name
                     )
+                    test_case_node_uid = google_test_name
+                    test_case_node_title = google_test_name
+                    test_case_node_duration = xml_testcase_time
+                    test_case_node_test_function = "#GTEST#" + google_test_name
                 elif xml_format == JUnitXMLFormat.PYTEST:
                     test_case_node_uid = (
                         xml_testcase_classname + "." + xml_testcase_name

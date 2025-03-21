@@ -71,6 +71,7 @@ class Switch {
     size,
     stroke,
     units,
+    alignRight,
   }) {
     this.colorOn = colorOn || 'rgb(100, 200, 50)';
     this.colorOff = colorOff || 'rgb(200, 200, 200)';
@@ -81,6 +82,7 @@ class Switch {
     this.size = size || 0.75;
     this.stroke = stroke || 0.25;
     this.units = units || 'rem';
+    this.alignRight = alignRight || true;
 
     this.callback = callback;
   }
@@ -117,11 +119,15 @@ class Switch {
     }
     .${this.componentClass}__label {
       display: inline-flex;
+      gap: ${this.size * 0.5}${this.units};
+      font-size: ${this.size * 1.5}${this.units}; /* 0.75rem; */
       line-height: ${this.size}${this.units};
       align-items: center;
       justify-content: flex-start;
       user-select: none;
       cursor: pointer;
+      flex-direction: ${this.alignRight ? "row-reverse" : "row"};
+      text-align: ${this.alignRight ? "right" : "left"};
     }
     .${this.componentClass}__input {
       opacity: 0;
@@ -138,7 +144,6 @@ class Switch {
       display: inline-block;
       width: ${this.size * 2 + this.stroke * 2}${this.units};
       height: ${this.size + this.stroke * 2}${this.units};
-      margin-right: ${this.size * 0.5}${this.units};
       border-radius: ${this.size * 0.5 + this.stroke}${this.units};
     }
     .${this.componentClass}__slider::before  {
@@ -404,6 +409,8 @@ window.addEventListener("load", function () {
   const switcher = new Switch(
     {
       labelText: 'Show coverage',
+      size: 0.5,
+      stroke: 0.2,
       checked: true,
       callback: (checked) => dom.toggleRangesVisibility(checked),
     }

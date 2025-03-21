@@ -103,10 +103,6 @@
   content: '\25BC';
 }
 
-.source-file__toggle-switch:not(:empty) {
-  margin-bottom: 1rem;
-}
-
 /* CODE */
 
 .source-file__source {

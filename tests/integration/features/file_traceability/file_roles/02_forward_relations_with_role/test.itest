@@ -13,6 +13,10 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#1#1">
 CHECK-HTML: file.c, <i>lines: 1-1</i>, function foo
 CHECK-HTML: <span{{.*}}>(Implementation)</span>
 
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#1#11">
+CHECK-HTML: file.c, <i>lines: 1-11</i>, range
+CHECK-HTML: <span{{.*}}>(Implementation)</span>
+
 CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#8#8">
 CHECK-HTML: file.c, <i>lines: 8-8</i>, function foo
 CHECK-HTML: <span{{.*}}>(Implementation)</span>
@@ -23,6 +27,10 @@ CHECK-HTML: <span{{.*}}>(Implementation)</span>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#1#2">
 CHECK-HTML: file.py, <i>lines: 1-2</i>, class Foo
+CHECK-HTML: <span{{.*}}">(Implementation)</span>
+
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#1#18">
+CHECK-HTML: file.py, <i>lines: 1-18</i>, range
 CHECK-HTML: <span{{.*}}">(Implementation)</span>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#5#6">

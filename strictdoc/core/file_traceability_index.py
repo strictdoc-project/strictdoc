@@ -33,10 +33,8 @@ class FileTraceabilityIndex:
         # "file.py" -> List[SDocNode]
         self.map_paths_to_reqs: Dict[str, OrderedSet[SDocNode]] = {}
 
-        # "REQ-001" -> {("file.py", "Implementation"), ...}
-        self.map_reqs_uids_to_paths_with_role: Dict[
-            str, OrderedSet[Tuple[str, Optional[str]]]
-        ] = {}
+        # "REQ-001" -> {"file.py", ...}
+        self.map_reqs_uids_to_paths: Dict[str, OrderedSet[str]] = {}
 
         # "file.py" -> SourceFileTraceabilityInfo
         self.map_paths_to_source_file_traceability_info: Dict[
@@ -83,25 +81,20 @@ class FileTraceabilityIndex:
 
     def get_requirement_file_links(
         self, requirement: SDocNode
-    ) -> List[Tuple[str, Optional[str], Optional[List[RangeMarker]]]]:
-        if (
-            requirement.reserved_uid
-            not in self.map_reqs_uids_to_paths_with_role
-        ):
+    ) -> List[Tuple[str, List[RangeMarker]]]:
+        if requirement.reserved_uid not in self.map_reqs_uids_to_paths:
             return []
 
-        matching_links_with_opt_ranges: List[
-            Tuple[str, Optional[str], Optional[List[RangeMarker]]]
-        ] = []
-        requirement_source_paths: OrderedSet[Tuple[str, Optional[str]]] = (
-            self.map_reqs_uids_to_paths_with_role[requirement.reserved_uid]
-        )
+        matching_links_with_markers: List[Tuple[str, List[RangeMarker]]] = []
+        requirement_source_paths: OrderedSet[str] = self.map_reqs_uids_to_paths[
+            requirement.reserved_uid
+        ]
 
         # Now that one requirement can have multiple File-relations to the same file.
         # This can be multiple FUNCTION: or RANGE: forward-relations.
         # To avoid duplication of results, visit each unique file link path only once.
         visited_file_links: Set[str] = set()
-        for requirement_source_path_, forward_role in requirement_source_paths:
+        for requirement_source_path_ in requirement_source_paths:
             if requirement_source_path_ in visited_file_links:
                 continue
             visited_file_links.add(requirement_source_path_)
@@ -119,15 +112,15 @@ class FileTraceabilityIndex:
                 requirement.reserved_uid
             )
             if not markers:
-                matching_links_with_opt_ranges.append(
-                    (requirement_source_path_, forward_role, None)
+                matching_links_with_markers.append(
+                    (requirement_source_path_, [])
                 )
                 continue
-            matching_links_with_opt_ranges.append(
-                (requirement_source_path_, forward_role, markers)
+            matching_links_with_markers.append(
+                (requirement_source_path_, markers)
             )
 
-        return matching_links_with_opt_ranges
+        return matching_links_with_markers
 
     def indexed_source_files(self) -> Iterator[SourceFile]:
         for _, sfti in self.map_paths_to_source_file_traceability_info.items():
@@ -297,9 +290,9 @@ class FileTraceabilityIndex:
                     file_posix_path, OrderedSet()
                 ).add(forward_requirement_)
 
-                self.map_reqs_uids_to_paths_with_role.setdefault(
+                self.map_reqs_uids_to_paths.setdefault(
                     forward_requirement_.reserved_uid, OrderedSet()
-                ).add((file_posix_path, relation_.role))
+                ).add(file_posix_path)
 
                 if file_reference.g_file_entry.function is not None:
                     one_file_function_name_to_reqs_uids = (
@@ -328,6 +321,20 @@ class FileTraceabilityIndex:
                     path_range_with_role = (
                         file_posix_path,
                         file_reference.g_file_entry.line_range,
+                        relation_.role,
+                    )
+                    self.map_reqs_uids_to_line_range_file_refs.setdefault(
+                        forward_requirement_.reserved_uid, []
+                    ).append(path_range_with_role)
+                else:
+                    # represent whole-file reference as forward range marker
+                    # from start line to end line
+                    end_line = self.map_paths_to_source_file_traceability_info[
+                        file_posix_path
+                    ].ng_lines_total
+                    path_range_with_role = (
+                        file_posix_path,
+                        (1, end_line),
                         relation_.role,
                     )
                     self.map_reqs_uids_to_line_range_file_refs.setdefault(
@@ -388,14 +395,9 @@ class FileTraceabilityIndex:
                             )
                         validated_requirement_uids.add(requirement_uid_)
 
-                    self.map_reqs_uids_to_paths_with_role.setdefault(
+                    self.map_reqs_uids_to_paths.setdefault(
                         requirement_uid_, OrderedSet()
-                    ).add(
-                        (
-                            source_file.in_doctree_source_file_rel_path_posix,
-                            marker_.role,
-                        )
-                    )
+                    ).add(source_file.in_doctree_source_file_rel_path_posix)
 
                     node_id = traceability_index.get_node_by_uid(
                         requirement_uid_
@@ -410,8 +412,8 @@ class FileTraceabilityIndex:
         for (
             requirement_uid,
             file_links,
-        ) in self.map_reqs_uids_to_paths_with_role.items():
-            for file_link, _forward_role in file_links:
+        ) in self.map_reqs_uids_to_paths.items():
+            for file_link in file_links:
                 source_file_traceability_info: Optional[
                     SourceFileTraceabilityInfo
                 ] = self.map_paths_to_source_file_traceability_info.get(
@@ -506,9 +508,9 @@ class FileTraceabilityIndex:
                                 path_to_info = reversed_trace_info[
                                     definition_function_trace_info
                                 ]
-                                self.map_reqs_uids_to_paths_with_role.setdefault(
+                                self.map_reqs_uids_to_paths.setdefault(
                                     req_uid_, OrderedSet()
-                                ).add((path_to_info, marker_.role))
+                                ).add(path_to_info)
 
                                 node = traceability_index.get_node_by_uid(
                                     req_uid_
@@ -602,12 +604,8 @@ class FileTraceabilityIndex:
                         )
 
         # Sort by paths alphabetically.
-        for paths_with_role in self.map_reqs_uids_to_paths_with_role.values():
-
-            def compare_pathrole_by_path(path_with_role):
-                return path_with_role[0]
-
-            paths_with_role.sort(key=compare_pathrole_by_path)
+        for paths_with_role in self.map_reqs_uids_to_paths.values():
+            paths_with_role.sort()
 
         # Sort by node UID alphabetically.
         for path_requirements_ in self.map_paths_to_reqs.values():

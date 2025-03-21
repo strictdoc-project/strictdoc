@@ -236,9 +236,9 @@ class SourceFileViewHTMLGenerator:
             if isinstance(
                 pygmented_source_file_lines[marker_line - 1], SourceMarkerTuple
             ):
-                source_marker_tuple = (
-                    pygmented_source_file_lines[marker_line - 1]
-                )
+                source_marker_tuple = pygmented_source_file_lines[
+                    marker_line - 1
+                ]
             else:
                 pygmented_source_file_line = assert_cast(
                     pygmented_source_file_lines[marker_line - 1], str
@@ -247,13 +247,20 @@ class SourceFileViewHTMLGenerator:
                     source_line=Markup(pygmented_source_file_line),
                     markers=[],
                 )
-                pygmented_source_file_lines[
-                    marker_line - 1
-                ] = source_marker_tuple
+                pygmented_source_file_lines[marker_line - 1] = (
+                    source_marker_tuple
+                )
 
-            if isinstance(marker, (
-                ForwardRangeMarker, ForwardFunctionRangeMarker, FunctionRangeMarker, RangeMarker, LineMarker
-            )):
+            if isinstance(
+                marker,
+                (
+                    ForwardRangeMarker,
+                    ForwardFunctionRangeMarker,
+                    FunctionRangeMarker,
+                    RangeMarker,
+                    LineMarker,
+                ),
+            ):
                 source_marker_tuple.markers.append(marker)
                 continue
 

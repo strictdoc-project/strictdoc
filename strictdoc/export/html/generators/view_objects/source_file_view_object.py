@@ -27,10 +27,14 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 class SourceMarkerTuple:
     source_line: Markup
     markers: List[
-        Union[
-            FunctionRangeMarker, ForwardRangeMarker, LineMarker, RangeMarker
-        ]
+        Union[FunctionRangeMarker, ForwardRangeMarker, LineMarker, RangeMarker]
     ]
+
+    def is_end(self) -> bool:
+        return any(map(lambda m_: m_.is_end(), self.markers))
+
+    def is_line_marker(self) -> bool:
+        return any(map(lambda m_: isinstance(m_, LineMarker), self.markers))
 
 
 SourceLineEntry = Union[

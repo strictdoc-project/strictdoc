@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-untyped-def,type-arg"
+from copy import copy
 from enum import Enum
 from typing import List, Optional
 
@@ -48,6 +49,8 @@ class FunctionRangeMarker:
 
         self.ng_is_nodoc = "nosdoc" in self.reqs
 
+        self.begin_or_end: bool = True
+
         self._description: Optional[str] = None
 
     def is_range_marker(self) -> bool:
@@ -57,10 +60,10 @@ class FunctionRangeMarker:
         return False
 
     def is_begin(self) -> bool:
-        return True
+        return self.begin_or_end
 
     def is_end(self) -> bool:
-        return False
+        return not self.begin_or_end
 
     def get_description(self) -> Optional[str]:
         return self._description
@@ -69,6 +72,12 @@ class FunctionRangeMarker:
         assert isinstance(description, str)
         self._description = description
 
+    def create_end_marker(self):
+        marker_copy = copy(self)
+        marker_copy.begin_or_end = False
+        marker_copy.ng_range_line_begin = self.ng_range_line_begin
+        marker_copy.ng_source_line_begin = self.ng_range_line_end
+        return marker_copy
 
 @auto_described
 class ForwardFunctionRangeMarker(FunctionRangeMarker):

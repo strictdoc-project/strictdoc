@@ -8,10 +8,6 @@ STATEMENT: REQ-1 references forward to file.c:foo by file relation.
 RELATIONS:
 - TYPE: File
   VALUE: file.c
-  FUNCTION: foo
-- TYPE: File
-  VALUE: file.c
-  FUNCTION: bar
 
 [REQUIREMENT]
 UID: REQ-2
@@ -22,3 +18,10 @@ STATEMENT: file.c:foo references "backward" to REQ-2 by function annotation in C
 UID: REQ-3
 TITLE: Requirement 3
 STATEMENT: file.c:foo references "backward" to REQ-3 by function annotation in C comment.
+
+[REQUIREMENT]
+UID: REQ-4
+TITLE: Requirement 4
+STATEMENT: >>>
+next req
+<<<

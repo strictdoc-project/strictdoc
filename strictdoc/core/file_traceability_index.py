@@ -1,4 +1,5 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def"
+from copy import copy
 from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
@@ -373,7 +374,8 @@ class FileTraceabilityIndex:
                     )
 
             validated_requirement_uids: Set[str] = set()
-            for marker_ in trace_info_.markers:
+            for marker_ in copy(trace_info_.markers):
+                # FIXME: Is this 'continue' needed here?
                 if isinstance(marker_, ForwardRangeMarker):
                     continue
                 for requirement_uid_ in marker_.reqs:
@@ -405,6 +407,10 @@ class FileTraceabilityIndex:
                         source_file.in_doctree_source_file_rel_path_posix,
                         OrderedSet(),
                     ).add(node_id)
+
+                if isinstance(marker_, FunctionRangeMarker):
+                    marker_copy = marker_.create_end_marker()
+                    trace_info_.markers.append(marker_copy)
 
         # STEP: Validate that all requirements reference existing files.
         for (

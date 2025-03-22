@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import List, Tuple, Union
 
-from markupsafe import Markup, escape
+from markupsafe import Markup
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_for_filename
@@ -129,8 +129,9 @@ class SourceFileViewHTMLGenerator:
             source_file=source_file,
             pygments_styles=pygments_styles,
             pygmented_source_file_lines=pygmented_source_file_lines,
+            jinja_environment=html_templates.jinja_environment(),
         )
-        return view_object.render_screen(html_templates.jinja_environment())
+        return view_object.render_screen()
 
     @staticmethod
     def get_pygmented_source_lines(
@@ -236,9 +237,10 @@ class SourceFileViewHTMLGenerator:
             if isinstance(
                 pygmented_source_file_lines[marker_line - 1], SourceMarkerTuple
             ):
-                source_marker_tuple = pygmented_source_file_lines[
-                    marker_line - 1
-                ]
+                source_marker_tuple = assert_cast(
+                    pygmented_source_file_lines[marker_line - 1],
+                    SourceMarkerTuple,
+                )
             else:
                 pygmented_source_file_line = assert_cast(
                     pygmented_source_file_lines[marker_line - 1], str

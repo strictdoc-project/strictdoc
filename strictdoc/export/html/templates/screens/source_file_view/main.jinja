@@ -7,21 +7,26 @@
       {%- if line.__class__.__name__ == "SourceMarkerTuple" and not line.is_end() -%}
         <div class="" style="background-color: #fafafa;"></div>
         <div class="" style="background-color: #fafafa; visibility: visible; padding: 20px 0px;">
-          <pre class="sdoc-comment">
-          {%- for marker_ in line.markers -%}
-              {%- set is_last_marker = not loop.last %}
+          {% if false %}
+            {%- for marker_ in line.markers -%}
               {%- for req in marker_.reqs_objs -%}
-              <a
-                class="pointer"
-                data-reqid="{{ req.uid }}"
-                data-begin="{{ marker_.ng_range_line_begin }}"
-                data-end="{{ marker_.ng_range_line_end }}"
-                data-traceability-file-type="this_file"
-                href="{{ view_object.link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, view_object.source_file.in_doctree_source_file_rel_path_posix, view_object.source_file, marker_) }}"
-                >{%- if marker_.is_end() -%}/{%- endif -%}{{ req.uid }}</a>
+                <a
+                  class="pointer"
+                  data-reqid="{{ req.uid }}"
+                  data-begin="{{ marker_.ng_range_line_begin }}"
+                  data-end="{{ marker_.ng_range_line_end }}"
+                  data-traceability-file-type="this_file"
+                  href="{{ view_object.link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, view_object.source_file.in_doctree_source_file_rel_path_posix, view_object.source_file, marker_) }}"
+                  >{%- if marker_.is_end() -%}/{%- endif -%}{{ req.uid }}</a>
+              {%- endfor -%}
             {%- endfor -%}
-          {%- endfor -%}
-          </pre>
+          {% else %}
+            {%- for marker_ in line.markers -%}
+              {%- for req in marker_.reqs_objs -%}
+                {{ view_object.render_detailed_node_for_banner(req.uid) }}
+              {%- endfor -%}
+            {%- endfor -%}
+          {% endif %}
         </div>
       {% endif %}
       <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
@@ -39,9 +44,7 @@
       {%- if line.__class__.__name__ == "SourceMarkerTuple" and (line.is_end() or line.is_line_marker()) -%}
         <div class="" style="background-color: #fafafa;"></div>
         <div class="" style="background-color: #fafafa; visibility: visible; padding: 20px 0px;">
-          <pre class="sdoc-comment">
           {%- for marker_ in line.markers -%}
-              {%- set is_last_marker = not loop.last %}
               {%- for req in marker_.reqs_objs -%}
               <a
                 class="pointer"
@@ -53,7 +56,6 @@
                 >{%- if marker_.is_end() or marker_.is_line_marker() -%}/{%- endif -%}{{ req.uid }}</a>
             {%- endfor -%}
           {%- endfor -%}
-          </pre>
         </div>
       {% endif %}
     {%- endfor -%}

@@ -72,12 +72,13 @@ class FunctionRangeMarker:
         assert isinstance(description, str)
         self._description = description
 
-    def create_end_marker(self):
+    def create_end_marker(self) -> "FunctionRangeMarker":
         marker_copy = copy(self)
         marker_copy.begin_or_end = False
         marker_copy.ng_range_line_begin = self.ng_range_line_begin
         marker_copy.ng_source_line_begin = self.ng_range_line_end
         return marker_copy
+
 
 @auto_described
 class ForwardFunctionRangeMarker(FunctionRangeMarker):

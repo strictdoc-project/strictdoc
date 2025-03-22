@@ -1,0 +1,14 @@
+{# needs sdoc_entity #}
+
+  <sdoc-node
+    node-style="readonly"
+    node-role="{{ sdoc_entity.get_type_string() }}"
+    data-testid="node-{{ sdoc_entity.get_type_string() }}"
+  >
+
+    {# sdoc_entity #}
+    {% block sdoc_entity %}
+    {# {% include "components/"~sdoc_entity.get_type_string()~"/card.jinja" %} #}
+    {% endblock sdoc_entity %}
+
+  </sdoc-node>

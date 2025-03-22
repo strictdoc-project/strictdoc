@@ -53,6 +53,11 @@ sdoc-node[node-role="root"] {
   padding-top: calc(3 * var(--base-rhythm));
 }
 
+sdoc-node[node-style="readonly"][node-role="requirement"] {
+  padding: calc(1 * var(--base-rhythm));
+  margin: 4px 0;
+}
+
 /* editable_node */
 
 sdoc-node[node-style="card"][node-role="requirement"],

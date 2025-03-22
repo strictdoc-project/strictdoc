@@ -30,7 +30,7 @@
         </div>
       {% endif %}
       <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
-      <div data-line={{ loop.index }} class="source__line-content">
+      <div data-line="{{ loop.index }}" class="source__line-content">
         {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
           {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
           <pre class="sdoc-comment">{{ line.source_line }}</pre>

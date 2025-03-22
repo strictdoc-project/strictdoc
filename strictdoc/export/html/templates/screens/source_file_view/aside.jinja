@@ -1,5 +1,9 @@
-  <div class="nav_panel">
-  <div id="referContainer" class="source-file__refer">
+<div class="source-file__aside">
+  <div class="source-file__tools">
+    <div id="sourceCodeCoverageFilter" class="source-file__requirements-filter"></div>
+  </div>
+  <div class="source-file__refer" id="referContainer">
+    <div class="source-file__requirements">
 
   {# ranges #}
   {%- set source_file_general_reqs, source_file_range_reqs =
@@ -34,5 +38,6 @@
   </div>
   {%- endif -%}
 
-</div>
+    </div>
+  </div>
 </div>

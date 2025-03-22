@@ -7,6 +7,47 @@
   --source-line: 1px solid rgba(0, 0, 0, .05);
 }
 
+/* left panel */
+
+.source-file__aside {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* left scrollable panel */
+
+.source-file__refer { /* wrapper */
+  position: relative;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.source-file__requirements {
+  position: relative;
+  height: 100%;
+  overflow-y: scroll;
+  padding: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*8);
+
+  font-size: var(--font-size-sm);
+
+  transition: margin-left .5s;
+  scrollbar-color: transparent var(--scrollbarBG);
+}
+
+.source-file__requirements:hover {
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+
+.source-file__requirements::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.source-file__requirements:hover::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG)
+}
+
 /* SDOC-NODE in SOURCE */
 
 .source-file__requirement {
@@ -107,16 +148,12 @@
 
 .source-file__source {
   /* position: relative; */
+  position: absolute;
+  inset: 0px;
+  overflow: auto;
+
   padding: 66px 0;
   transition: box-shadow 0.3s ease-in;
-
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  /* inset: 0px; */
-  overflow: auto;
 }
 
 .source {
@@ -144,12 +181,19 @@
   transition: height 0.3s ease-in, top 0.3s ease-in;
 }
 
+/* line-number */
+
 .source__line-number {
   grid-column: 1 / 2;
-  padding: 0.25rem 2rem;
+  padding: 0.25rem 1rem;
   text-align: right;
   border-bottom: var(--source-line);
+  color: var(--color-fg-secondary);
+  user-select: none;
+  position: relative;
 }
+
+/* line content */
 
 .source__line-content {
   grid-column: 2 / 3;

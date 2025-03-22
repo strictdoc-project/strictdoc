@@ -1083,40 +1083,6 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   color: black;
 }
 
-/* left scrollable panel */
-
-.nav_panel {
-  position: relative;
-  height: 100%;
-  overflow-y: scroll;
-  border-right: var(--base-border);
-  padding: calc(var(--base-rhythm)*2);
-  padding-bottom: calc(var(--base-rhythm)*8);
-
-  font-size: var(--font-size-sm);
-
-  transition: margin-left .5s;
-  scrollbar-color: transparent var(--scrollbarBG);
-}
-
-.nav_panel:hover {
-  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
-}
-
-.nav_panel::-webkit-scrollbar-thumb {
-  background-color: transparent;
-}
-
-.nav_panel:hover::-webkit-scrollbar-thumb {
-  background-color: var(--thumbBG)
-}
-
-.nav_panel__header {
-  font-size: var(--font-size-xsm);
-  white-space: nowrap;
-  margin-bottom: calc(var(--base-rhythm)*2);
-}
-
 /* tree */
 
 .tree {

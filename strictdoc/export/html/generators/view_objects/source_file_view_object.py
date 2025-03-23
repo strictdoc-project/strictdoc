@@ -93,6 +93,15 @@ class SourceFileViewObject:
             requirement_style="table",
         )
 
+    def render_aside_requirement(self, node_uid: str) -> Markup:
+        node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
+        return self.jinja_environment.render_template_as_markup(
+            "screens/source_file_view/requirement.jinja",
+            requirement=node,
+            view_object=self,
+            requirement_style="table",
+        )
+
     def render_node_title(self, node: SDocNode) -> Markup:
         return Markup(node.get_display_title())
 
@@ -106,6 +115,13 @@ class SourceFileViewObject:
 
     def render_url(self, url: str):
         return self.link_renderer.render_url(url)
+
+    def render_marker_range_link(self, marker):
+        return self.link_renderer.render_requirement_in_source_file_range_link(
+            self.source_file.in_doctree_source_file_rel_path_posix,
+            self.source_file,
+            marker,
+        )
 
     def render_node_link(self, incoming_link, document, document_type):
         return self.link_renderer.render_node_link(

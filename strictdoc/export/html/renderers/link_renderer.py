@@ -262,7 +262,6 @@ class LinkRenderer:
 
     def render_requirement_in_source_file_range_link(
         self,
-        requirement: SDocNode,
         source_link: str,
         context_source_file: SourceFile,
         source_range,
@@ -270,7 +269,7 @@ class LinkRenderer:
         assert isinstance(source_link, str)
         assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
-            requirement.reserved_uid,
+            "",
             source_link,
             context_source_file,
             source_range,

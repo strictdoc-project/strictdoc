@@ -298,6 +298,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             source_file_rel_path
         )
 
+    def get_source_file_markers(self, source_file_rel_path: str) -> List[Any]:
+        return self._file_traceability_index.get_source_file_markers(
+            source_file_rel_path
+        )
+
     def get_coverage_info(
         self, source_file_rel_path
     ) -> SourceFileTraceabilityInfo:

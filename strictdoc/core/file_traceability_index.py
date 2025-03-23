@@ -135,6 +135,12 @@ class FileTraceabilityIndex:
             if sfti.source_file is not None:
                 yield sfti.source_file
 
+    def get_source_file_markers(self, source_file_rel_path: str) -> List[Any]:
+        trace_info = self.map_paths_to_source_file_traceability_info[
+            source_file_rel_path
+        ]
+        return trace_info.markers
+
     def get_source_file_reqs(
         self, source_file_rel_path: str
     ) -> Tuple[Optional[List[SDocNode]], Optional[List[SDocNode]]]:

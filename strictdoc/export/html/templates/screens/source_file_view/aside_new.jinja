@@ -17,7 +17,11 @@
           {% if marker_.begin_or_end %}
           <div>
           <a
+            class="pointer"
+            data-begin="{{ marker_.ng_range_line_begin }}"
+            data-end="{{ marker_.ng_range_line_end }}"
             href="{{ view_object.render_marker_range_link(marker_) }}"
+            data-traceability-file-type="this_file"
           >
           [{{ marker_.ng_range_line_begin }}-{{ marker_.ng_range_line_end }}]
           </a>

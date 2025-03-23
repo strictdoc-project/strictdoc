@@ -236,7 +236,7 @@ class LinkRenderer:
 
     @staticmethod
     def render_requirement_in_source_file_range_link_using_id(
-        req_uid: str,
+        req_uid: str,  # noqa: ARG004
         source_link: str,
         context_source_file: SourceFile,
         source_range,
@@ -250,11 +250,12 @@ class LinkRenderer:
             return ("../" * level)[:-1]
 
         path_prefix = get_root_path_prefix(context_source_file.level + 1)
+        # FIXME: Req UID (empty #) is no longer used.
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
             f"/{source_link}.html"
-            f"#{req_uid}"
+            "#"
             f"#{source_range.ng_range_line_begin}"
             f"#{source_range.ng_range_line_end}"
         )
@@ -269,6 +270,7 @@ class LinkRenderer:
         assert isinstance(source_link, str)
         assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
+            # FIXME: No longer used.
             "",
             source_link,
             context_source_file,

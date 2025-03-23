@@ -5,37 +5,59 @@
   <div id="source" class="source">
     {%- for line in view_object.pygmented_source_file_lines -%}
       {%- if line.__class__.__name__ == "SourceMarkerTuple" and not line.is_end() -%}
-        <div>
-        <!-- This is empty instead of a line number. -->
-        </div>
-        <div>
-          {% if false %}
+        {# TODO : get current range for source__range #}
+        {%- set current_marker = line.markers[0] -%}
+        {%- set current_marker_link = view_object.render_marker_range_link(current_marker) -%}
+        {%- set current_range_begin = line.markers[0].ng_range_line_begin -%}
+        {%- set current_range_end = line.markers[0].ng_range_line_end -%}
+        <div
+          class="source__range collapsed"
+          data-begin="{{ current_range_begin }}"
+          data-end="{{ current_range_end }}"
+        >
+          <div class="source__range-cell">
+          <!-- This is empty instead of a line number. -->
+            <div
+              class="source__range-handler "
+              data-begin="{{ current_range_begin }}"
+              data-end="{{ current_range_end }}"
+            ></div>
+          </div>
+          <div class="source__range-cell">
+            <div class="source__range-header">
+            <a
+              class="source__range-pointer"
+              data-begin="{{ current_range_begin }}"
+              data-end="{{ current_range_end }}"
+              data-traceability-file-type="this_file"
+              href="{{ current_marker_link }}"
+            >[ {{ current_range_begin }} – {{ current_range_end }} ]</a></div>
+            <div class="source__range-banner source__range-start">
+{# <p style="font-size: xx-small;">{{ line.markers }}</p> #}
             {%- for marker_ in line.markers -%}
               {%- for req in marker_.reqs_objs -%}
                 <a
-                  class="pointer"
+                  class="source__range-pointer"
                   data-reqid="{{ req.uid }}"
                   data-begin="{{ marker_.ng_range_line_begin }}"
                   data-end="{{ marker_.ng_range_line_end }}"
                   data-traceability-file-type="this_file"
                   href="{{ view_object.link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, view_object.source_file.in_doctree_source_file_rel_path_posix, view_object.source_file, marker_) }}"
                   >{%- if marker_.is_end() -%}/{%- endif -%}{{ req.uid }}</a>
-              {%- endfor -%}
-            {%- endfor -%}
-          {% else %}
-            {%- for marker_ in line.markers -%}
-              {%- for req in marker_.reqs_objs -%}
                 {{ view_object.render_detailed_node_for_banner(req.uid) }}
               {%- endfor -%}
             {%- endfor -%}
-          {% endif %}
+            </div>
+          </div>
         </div>
       {% endif %}
-      <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
+
+      <div data-line="{{ loop.index }}" class="source__line">
+      <div data-line="{{ loop.index }}" id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
       <div data-line="{{ loop.index }}" class="source__line-content">
         {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
           {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
-          <pre class="sdoc-comment">{{ line.source_line }}</pre>
+          <pre class="highlight">{{ line.source_line }}</pre>
         {%- elif line != "" -%}
           {# <!-- Pygments --> #}
           <pre class="highlight">{{ line }}</pre>
@@ -43,15 +65,17 @@
           <pre data-state="empty" style="user-select: none">&nbsp;</pre>
         {%- endif -%}
       </div>
+      </div>
       {%- if line.__class__.__name__ == "SourceMarkerTuple" and (line.is_end() or line.is_line_marker()) -%}
-        <div>
+      {# <div class="source__range collapsed">
+        <div class="source__range-cell">
         <!-- This is empty instead of a line number. -->
         </div>
-        <div>
-          {%- for marker_ in line.markers -%}
+        <div class="source__range-cell source__range-end">
+            {%- for marker_ in line.markers -%}
               {%- for req in marker_.reqs_objs -%}
               <a
-                class="pointer"
+                class="source__range-pointer"
                 data-reqid="{{ req.uid }}"
                 data-begin="{{ marker_.ng_range_line_begin }}"
                 data-end="{{ marker_.ng_range_line_end }}"
@@ -61,6 +85,7 @@
             {%- endfor -%}
           {%- endfor -%}
         </div>
+      </div> #}
       {% endif %}
     {%- endfor -%}
   </div>

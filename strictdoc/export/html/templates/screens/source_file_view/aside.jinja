@@ -3,14 +3,13 @@
     <div id="sourceCodeCoverageFilter" class="source-file__requirements-filter"></div>
   </div>
   <div class="source-file__refer" id="referContainer">
-    <div class="source-file__requirements">
 
   {# ranges #}
   {%- set source_file_general_reqs, source_file_range_reqs =
     view_object.traceability_index.get_source_file_reqs(view_object.source_file.in_doctree_source_file_rel_path_posix) -%}
 
   {%- if source_file_range_reqs -%}
-  <div class="source-file__ranges">
+  <div class="source-file__toc">
 
     {%- for requirement in source_file_range_reqs -%}
       {% include "screens/source_file_view/requirement.jinja" %}
@@ -19,6 +18,5 @@
   </div>
   {%- endif -%}
 
-    </div>
   </div>
 </div>

@@ -88,6 +88,7 @@ class LineMarker:
         self.ng_range_line_end: Optional[int] = None
 
         self.ng_is_nodoc = "nosdoc" in self.reqs
+        self.begin_or_end = True
 
     def is_begin(self) -> bool:
         return True

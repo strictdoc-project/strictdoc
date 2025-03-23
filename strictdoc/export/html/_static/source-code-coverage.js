@@ -6,60 +6,6 @@ const __log = (topic, ...payload) => {
   );
 }
 
-class Highlighter {
-  constructor({
-    target,
-    rgb,
-    alpha,
-  }) {
-    this.target = target || document.body;
-    this.rgb = rgb || '75,255,0';
-    this.alpha = alpha || '0.2';
-  }
-
-  create(top = 0, height = 0) {
-    const element = document.createElement('div');
-    this._addBaseStyle(element);
-    this.target.prepend(element);
-    this.move(element, top, height);
-    this.on(element);
-    return element
-  }
-
-  off(element) {
-    this._colorize(element, this.rgb, 0)
-  }
-
-  on(element) {
-    this._colorize(element)
-  }
-
-  toggleVisibility(element, toggler) {
-    if (toggler) {
-      this.on(element)
-    } else {
-      this.off(element)
-    }
-  }
-
-  move(element, top, height) {
-    element.style.top = top + 'px';
-    element.style.height = height + 'px';
-  }
-
-  _colorize(element, rgb, alpha = 1) {
-    element.style.background = rgb ? `rgba(${rgb}, ${alpha})` : `rgba(${this.rgb}, ${this.alpha})`;
-  }
-
-  _addBaseStyle(element) {
-    element.style.position = 'absolute';
-    element.style.zIndex = '-1';
-    element.style.left = '0';
-    element.style.right = '0';
-    element.style.transition = 'height 0.3s ease-in, top 0.3s ease-in, background 0.15s ease-in';
-  }
-}
-
 class Switch {
   constructor({
     callback,
@@ -76,7 +22,7 @@ class Switch {
     this.colorOn = colorOn || 'rgb(100, 200, 50)';
     this.colorOff = colorOff || 'rgb(200, 200, 200)';
     this.labelText = labelText || '';
-    this.checked = checked || true;
+    this.checked = checked || false; // todo: replace true/false with strings
 
     this.componentClass = componentClass || 'std-switch-scc';
     this.size = size || 0.75;
@@ -184,40 +130,64 @@ class Dom {
   constructor({
     sourceId,
     sourceContainerId,
+    referContainerId,
     hashSplitter,
-    strictdocCommentSelector,
     strictdocPointerSelector,
     strictdocRequirementSelector,
+    strictdocRangeBannerSelector,
+    strictdocRangeBannerHeaderSelector,
+    strictdocRangeHandlerSelector,
+    strictdocLineSelector,
+    strictdocLineNumberSelector,
+    strictdocLineContentSelector,
+    strictdocLineRangeSelector,
+    strictdocSourceFilterClass,
+    filteredClass,
+    coveredClass,
     activeClass,
+    collapsedClass,
+    expandedClass,
+    coverageClass,
+    highlightClass,
   }) {
 
     // CONSTANTS
     this.sourceId = sourceId || 'source';
     this.sourceContainerId = sourceContainerId || 'sourceContainer';
+    this.referContainerId = referContainerId || 'referContainer';
     this.hashSplitter = hashSplitter || '#';
 
     // STRICTDOC SPECIFIC
-    this.strictdocCommentSelector = strictdocCommentSelector || 'pre span';
-    this.strictdocPointerSelector = strictdocPointerSelector || '.pointer';
+    this.strictdocPointerSelector = strictdocPointerSelector || '.source__range-pointer';
     this.strictdocRequirementSelector = strictdocRequirementSelector || '.source-file__requirement';
+    this.strictdocRangeBannerSelector = strictdocRangeBannerSelector || '.source__range';
+    this.strictdocRangeBannerHeaderSelector = strictdocRangeBannerHeaderSelector || '.source__range-header';
+    this.strictdocRangeHandlerSelector = strictdocRangeHandlerSelector || '.source__range-handler';
+    this.strictdocLineSelector = strictdocLineSelector || '.source__line';
+    this.strictdocLineNumberSelector = strictdocLineNumberSelector || '.source__line-number';
+    this.strictdocLineContentSelector = strictdocLineContentSelector || '.source__line-content';
+    this.strictdocLineRangeSelector = strictdocLineRangeSelector || '.source__line-ranges';
+    this.strictdocSourceFilterClass = strictdocSourceFilterClass || 'source__filter';
+    this.filteredClass = filteredClass || 'filtered';
     this.activeClass = activeClass || 'active';
-
-    // objects
-    this.greenHighlighter;
-    this.yellowHighlighter;
+    this.coveredClass = coveredClass || 'covered';
+    this.coverageClass = coverageClass || 'coverage';
+    this.collapsedClass = collapsedClass || 'collapsed';
+    this.expandedClass = expandedClass || 'expanded';
+    this.highlightClass = highlightClass || 'highlighted';
 
     // elements
     this.sourceContainer;
+    this.referContainer;
     this.source;
     this.lines = {};
     this.requirements = {};
     this.ranges = {};
-    this.highlightedRange;
 
     // state
     this.active = {
       range: null,
-      requirement: null,
+      // requirement: null,
       pointers: [],
       labels: [],
     };
@@ -225,25 +195,27 @@ class Dom {
 
   prepare() {
 
+    // rgb: '75,255,0',
+    // alpha: '0.2',
+    // rgb: '255,255,155',
+    // alpha: '1',
+
     this._prepareSourceContainer();
+    this._prepareReferContainer();
     this._prepareSource();
 
-    this.yellowHighlighter = new Highlighter({
-      target: this.source,
-      rgb: '255,255,155',
-      alpha: '1',
-    });
-    this.highlightedRange = this.yellowHighlighter.create();
-
-    this.greenHighlighter = new Highlighter({
-      target: this.source,
-      rgb: '75,255,0',
-      alpha: '0.2',
-    });
-
     this._prepareLines();
-    this._prepareRequirements();
     this._prepareRanges();
+    this._updateLinesWithRanges();
+    this._updateRangesWithRequirements();
+    this._updateRangesWithHandlers();
+    this._updateRangesWithBanners();
+    // this._prepareRequirements(); // todo
+
+    console.log('this.lines', this.lines);
+    console.log('this.ranges', this.ranges);
+    console.log('this.requirements', this.requirements);
+    console.log('this.active', this.active);
 
   }
 
@@ -252,64 +224,100 @@ class Dom {
     const rangeAlias = rangeBegin ? this._generateRangeAlias(rangeBegin, rangeEnd) : undefined;
 
     this.changeActive({
-      requirement: this.requirements[reqId],
+      // requirement: this.requirements[reqId],
+      rangeBegin,
+      rangeEnd,
+      rangeAlias,
       pointers: rangeAlias ? this.ranges[rangeAlias].pointers : null,
-      range: rangeAlias ? this.ranges[rangeAlias].highlighter : null,
+      // range: rangeAlias ? this.ranges[rangeAlias].highlighter : null,
       labels: (reqId && rangeAlias) ? this.ranges[rangeAlias][reqId] : null,
     });
 
-    this.highlightRange(this.active.range);
+    this.highlightRange();
   }
 
   changeActive = ({
-    range,
-    requirement,
+    rangeBegin,
+    rangeEnd,
+    rangeAlias,
+    //// range,
+    // handler,
+    // banner,
+    //// requirement,
     pointers,
     labels,
   }) => {
 
     // remove old 'active'
-    this.active.requirement?.classList.remove(this.activeClass);
+    // this.active.requirement?.classList.remove(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer?.classList.remove(this.activeClass));
     this.active.labels?.forEach(label => label?.classList.remove(this.activeClass));
+    // this.active.handler.classList.remove(this.expandedClass);
+    // this.active.handler.classList.add(this.collapsedClass);
+    // this.active.banner.classList.remove(this.expandedClass);
+    // this.active.banner.classList.add(this.collapsedClass);
 
     // make changes to state
-    this.active.range = range;
-    this.active.requirement = requirement;
+    //// this.active.range = range;
+    //// this.active.requirement = requirement;
     this.active.pointers = pointers;
     this.active.labels = labels;
+    // this.active.handler = handler;
+    // this.active.banner = banner;
+    this.active.rangeBegin = rangeBegin;
+    this.active.rangeEnd = rangeEnd;
+    this.active.rangeAlias = rangeAlias;
 
     // add new 'active'
-    this.active.requirement?.classList.add(this.activeClass);
+    // this.active.requirement?.classList.add(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer.classList.add(this.activeClass));
     this.active.labels?.forEach(label => label.classList.add(this.activeClass));
 
-  };
+  }
 
-  toggleRangesVisibility(toggler) {
-    for (let key in this.ranges) {
-      this.greenHighlighter.toggleVisibility(this.ranges[key].highlighter, toggler)
+  toggleRangeBannerVisibility(handler) {
+    const banner = handler.closest(this.strictdocRangeBannerSelector);
+
+    if (banner.classList.contains(this.expandedClass)) {
+      banner.classList.remove(this.expandedClass);
+      banner.classList.add(this.collapsedClass);
+    } else {
+      banner.classList.add(this.expandedClass);
+      banner.classList.remove(this.collapsedClass);
     }
   }
 
-  highlightRange(range) {
-    const top = range?.offsetTop || 0;
-    const height = range?.offsetHeight || 0;
-    this.yellowHighlighter.move(this.highlightedRange, top, height);
-
-    if (range) {
-      // range.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
-      this.sourceContainer.scrollTo({
-        top: top - 200, // TODO 200 to config
-        behavior: 'smooth',
-      });
+  toggleCoverageVisibility(toggler) {
+    if (toggler) {
+      this.source.classList.add(this.coverageClass);
     } else {
-      // this.source.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
-      this.sourceContainer.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+      this.source.classList.remove(this.coverageClass);
     }
+  }
+
+  highlightRange() {
+    console.log('highlightRange');
+
+    const activeRange = this.ranges[this.active.rangeAlias].bannerHeader;
+    this.scrollTo(activeRange);
+
+    const begin = parseInt(this.active.rangeBegin, 10);
+    const end = parseInt(this.active.rangeEnd, 10);
+
+    for (var key in this.lines) {
+      this.lines[key].line.classList.remove(this.highlightClass);
+      if (key >= begin && key <= end) {
+        this.lines[key].line.classList.add(this.highlightClass);
+      }
+    }
+  }
+
+  scrollTo(element) {
+    const top = element.offsetTop || 0;
+    this.sourceContainer.scrollTo({
+      top: top,
+      behavior: 'smooth',
+    });
   }
 
   _prepareSource() {
@@ -321,33 +329,34 @@ class Dom {
   _prepareSourceContainer() {
     this.sourceContainer = document.getElementById('sourceContainer');
 
-    this.sourceContainer.style.position = 'absolute';
-    this.sourceContainer.style.top = 0;
-    this.sourceContainer.style.bottom = 0;
-    this.sourceContainer.style.right = 0;
-    this.sourceContainer.style.left = 0;
-    this.sourceContainer.style.overflow = 'auto';
+    // this.sourceContainer.style.position = 'absolute';
+    // this.sourceContainer.style.top = 0;
+    // this.sourceContainer.style.bottom = 0;
+    // this.sourceContainer.style.right = 0;
+    // this.sourceContainer.style.left = 0;
+    // this.sourceContainer.style.overflow = 'auto';
+  }
+
+  _prepareReferContainer() {
+    this.referContainer = document.getElementById('referContainer');
   }
 
   _prepareLines() {
-    this.lines = [...document.querySelectorAll('[data-line]')]
+    this.lines = [...document.querySelectorAll(this.strictdocLineSelector)]
       .reduce((acc, line) => {
-        acc[line.dataset.line] = line;
-        return acc
-      }, {});
-  }
-
-  _prepareRequirements() {
-    this.requirements = [...document.querySelectorAll(this.strictdocRequirementSelector)]
-      .reduce((acc, requirement) => {
-        acc[requirement.dataset.reqid] = requirement;
+        const lineNumber = line.querySelector(this.strictdocLineNumberSelector);
+        const lineContent = line.querySelector(this.strictdocLineContentSelector);
+        acc[line.dataset.line] = {
+          line: line,
+          lineNumber: lineNumber,
+          lineContent: lineContent,
+          ranges: []
+        };
         return acc
       }, {});
   }
 
   _prepareRanges() {
-    const ranges = this.ranges;
-
     [...document.querySelectorAll(this.strictdocPointerSelector)]
       .map(pointer => {
         const thisFileOrOther = pointer.dataset.traceabilityFileType;
@@ -362,34 +371,112 @@ class Dom {
 
         const range = this._generateRangeAlias(rangeBegin, rangeEnd);
 
-        if (!ranges[range]) {
-          ranges[range] = {};
-          ranges[range].pointers = [];
+        if (!this.ranges[range]) {
+          // add new range
+          this.ranges[range] = {};
+          this.ranges[range].pointers = [];
 
-          ranges[range].beginLine = this.lines[rangeBegin];
-          ranges[range].endLine = this.lines[rangeEnd];
+          this.ranges[range].beginLine = this.lines[rangeBegin].lineNumber;
+          this.ranges[range].endLine = this.lines[rangeEnd].lineNumber;
+          this.ranges[range].begin = rangeBegin;
+          this.ranges[range].end = rangeEnd;
 
-          const top = ranges[range].beginLine.offsetTop;
-          const height = ranges[range].endLine.offsetTop + ranges[range].endLine.offsetHeight - top;
-          ranges[range].highlighter = this.greenHighlighter.create(top, height);
+          const top = this.ranges[range].beginLine.offsetTop;
+          const height = this.ranges[range].endLine.offsetTop + this.ranges[range].endLine.offsetHeight - top;
         }
 
+        // todo pointers?
         if (rangeReq) {
 
           // add pointer from code
-          if (ranges[range][rangeReq]) {
-            ranges[range][rangeReq].push(pointer);
-          } else {
-            ranges[range][rangeReq] = [pointer]
-          }
+          (this.ranges[range][rangeReq] ??= []).push(pointer);
 
         } else {
 
           // add pointer from menu
-          ranges[range].pointers.push(pointer);
+          this.ranges[range].pointers.push(pointer);
         }
 
+        // const start = parseInt(rangeBegin, 10);
+        // const end = parseInt(rangeEnd, 10);
+
+        // for (let i = start; i <= end; i++) {
+        //   (this.lines[i].ranges ??= []).push(range);
+        //   console.assert(this.lines[i].lineNumber, `The line ${i} must be registered.`)
+        //   this.lines[i].lineNumber?.classList.add("source__filter");
+        // }
+
       });
+  }
+
+  _updateRangesWithRequirements() {
+    const requirements = [...document.querySelectorAll(this.strictdocRequirementSelector)];
+    requirements.forEach(requirement => {
+
+      const rangeBegin = requirement.dataset.begin;
+      const rangeEnd = requirement.dataset.end;
+      const rangeReq = requirement.dataset.reqid;
+
+      const range = this._generateRangeAlias(rangeBegin, rangeEnd);
+      console.assert(this.ranges[range], "The range must be registered:", range);
+
+      (this.ranges[range].requirements ??= {})[rangeReq] = {};
+      this.ranges[range].requirements[rangeReq].begin = rangeBegin;
+      this.ranges[range].requirements[rangeReq].end = rangeEnd;
+      this.ranges[range].requirements[rangeReq].element = requirement;
+    })
+  }
+
+  _updateRangesWithHandlers() {
+    const handlers = [...document.querySelectorAll(this.strictdocRangeHandlerSelector)];
+    handlers.forEach(handler => {
+
+      const rangeBegin = handler.dataset.begin;
+      const rangeEnd = handler.dataset.end;
+      const range = this._generateRangeAlias(rangeBegin, rangeEnd);
+
+      console.assert(this.ranges[range], "The range must be registered:", range);
+
+      this.ranges[range].handler = handler;
+      handler.addEventListener("click", event => this.toggleRangeBannerVisibility(event.currentTarget));
+    })
+  }
+
+  _updateRangesWithBanners() {
+    const banners = [...document.querySelectorAll(this.strictdocRangeBannerSelector)];
+    banners.forEach(banner => {
+
+      const rangeBegin = banner.dataset.begin;
+      const rangeEnd = banner.dataset.end;
+
+      if (rangeBegin && rangeEnd) {
+        const range = this._generateRangeAlias(rangeBegin, rangeEnd);
+        console.assert(this.ranges[range], "The range must be registered:", range);
+        this.ranges[range].banner = banner;
+        this.ranges[range].bannerHeader = banner.querySelector(this.strictdocRangeBannerHeaderSelector); // 'source__range-header'
+      }
+    })
+  }
+
+  _updateLinesWithRanges() {
+    Object.entries(this.ranges).forEach(([key, value]) => {
+      // console.log(value);
+
+      const begin = parseInt(value.begin, 10);
+      const end = parseInt(value.end, 10);
+
+      for (let i = begin; i <= end; i++) {
+        (this.lines[i].ranges ??= []).push(key);
+        (this.lines[i].pointers ??= []).push(...value.pointers);
+
+        console.assert(this.lines[i].lineNumber, `The line ${i} must be registered.`);
+        this.lines[i].lineNumber.classList.add(this.strictdocSourceFilterClass);
+        this.lines[i].line.classList.add(this.coveredClass);
+      }
+
+      // const rangeNumContainer = this.lines[begin].line.querySelector(this.strictdocLineRangeSelector);
+      // rangeNumContainer.innerHTML = this.lines[begin].pointers.length;
+    });
   }
 
   _generateRangeAlias(begin, end) { return `${begin}${this.hashSplitter}${end}` };
@@ -399,7 +486,6 @@ const dom = new Dom({
   // sourceId: 'source',
   // sourceContainerId: 'sourceContainer',
   // hashSplitter: '#',
-  // strictdocCommentSelector: 'pre span',
 });
 
 window.addEventListener("load", function () {
@@ -411,8 +497,8 @@ window.addEventListener("load", function () {
       labelText: 'Show coverage',
       size: 0.5,
       stroke: 0.2,
-      checked: true,
-      callback: (checked) => dom.toggleRangesVisibility(checked),
+      checked: false,
+      callback: (checked) => dom.toggleCoverageVisibility(checked),
     }
   );
   document.getElementById('sourceCodeCoverageSwitch').append(switcher.create());

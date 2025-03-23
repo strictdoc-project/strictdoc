@@ -15,6 +15,10 @@ void bar() {
 }
 // @relation(REQ-3, scope=range_end)
 
+void someFunc() {
+  // someFunc
+}
+
 // @relation(REQ-3, scope=function)
 void boo() {
   // boo

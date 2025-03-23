@@ -23,7 +23,7 @@
   overflow-y: hidden;
 }
 
-.source-file__requirements {
+.source-file__toc {
   position: relative;
   height: 100%;
   overflow-y: scroll;
@@ -36,15 +36,15 @@
   scrollbar-color: transparent var(--scrollbarBG);
 }
 
-.source-file__requirements:hover {
+.source-file__toc:hover {
   scrollbar-color: var(--thumbBG) var(--scrollbarBG);
 }
 
-.source-file__requirements::-webkit-scrollbar-thumb {
+.source-file__toc::-webkit-scrollbar-thumb {
   background-color: transparent;
 }
 
-.source-file__requirements:hover::-webkit-scrollbar-thumb {
+.source-file__toc:hover::-webkit-scrollbar-thumb {
   background-color: var(--thumbBG)
 }
 
@@ -74,32 +74,6 @@
   display: inline-block;
   padding: .15rem .25rem .15rem 0;
   line-height: 1;
-}
-
-.source-file__refer .pointer.active {
-  background-color: var(--color-highlight);
-}
-
-.reset_range_highlight {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 1rem;
-  height: 1rem;
-  background-color: var(--color-highlight);
-  justify-content: center;
-  align-items: center;
-  text-decoration: none !important;
-  padding: 0 !important;
-  display: none !important;
-}
-
-.reset_range_highlight::before {
-  content: '\2715';
-}
-
-.pointer.active + .reset_range_highlight {
-  display: flex !important;
 }
 
 [data-viewtype="source-file"] .current_file_pseudolink {
@@ -181,11 +155,111 @@
   transition: height 0.3s ease-in, top 0.3s ease-in;
 }
 
+/* source__range */
+
+.source__range {
+  grid-column: 1 / -1;
+  display: contents;
+}
+
+.source__range-cell {
+  background-color: var(--color-bg-main);
+  /* background-color: var(--color-bg-contrast); */
+  /* grid-column: 1 / -1; */
+  border-bottom: var(--source-line);
+  /* padding-left: 4rem; */
+}
+
+.source__range-start {
+  padding-top: 2rem;
+}
+
+.source__range-end {
+  padding-top: 2px;
+  padding-bottom: 12px;
+  /* background-color: var(--color-bg-main); */
+  background-color: var(--color-bg-contrast);
+  font-size: 9px;
+
+  display: none;
+}
+
+.source__range-header {
+  font-size: xx-small;
+  font-weight: bold;
+  padding: 0.25rem;
+}
+
+.source__range.collapsed .source__range-banner {
+  display: none;
+}
+
+.source__range.collapsed .source__range-header {
+  display: block;
+}
+
+.source__range .source__range-header {
+  /* display: none; */
+}
+
+.source__range.expanded .source__range-cell {
+  background-color: var(--color-bg-contrast);
+}
+
+/* source__range-handler */
+
+.source__range-handler {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background-color: aliceblue; */
+}
+
+.source__range-handler::after {
+  content: '›‹';
+  transform: rotate(90deg);
+}
+
+.source__range .source__range-handler::after {
+  content: '›‹';
+}
+
+.source__range.collapsed .source__range-handler::after {
+  content: '‹›';
+}
+
+.source__range .source__range-handler:hover::after {
+  content: '› ‹';
+}
+
+.source__range.collapsed .source__range-handler:hover::after {
+  content: '‹ ›';
+}
+
+/* source__line */
+
+.source__line {
+  grid-column: 1 / -1;
+  display: contents;
+}
+
+.source.coverage .source__line.covered > div {
+  background: rgba(75, 255, 0, 0.2);
+}
+
+.source__line.highlighted > div {
+  background: var(--color-highlight) !important;
+}
+
 /* line-number */
 
 .source__line-number {
   grid-column: 1 / 2;
-  padding: 0.25rem 1rem;
+  padding: 0.25rem 1rem 0.25rem 2rem;
   text-align: right;
   border-bottom: var(--source-line);
   color: var(--color-fg-secondary);
@@ -202,32 +276,25 @@
   border-left: var(--source-line);
 }
 
-.sdoc-comment {
-  font-style: normal;
-  color: rgba(0, 0, 0, .4);
-}
+/* pointers */
 
-.sdoc-comment .pointer {
-  /* user-select: none; */
-  color: inherit;
-  text-decoration: none;
+/* source-file__source */
+
+.source__range-pointer {
   display: inline-block;
-  /* font-size: 0.85em; */
-  padding: 0 4px;
-  font-style: normal;
-  border: 1px solid;
-  border-radius: 2px;
-  transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
+  font-size: x-small;
+  font-weight: bold;
+  padding: 0 0.25rem;
 }
 
-.sdoc-comment .pointer:hover {
-  border-color: #000;
+.source__range-pointer.active {
+  background-color: var(--color-highlight);
 }
 
-.sdoc-comment .pointer.active {
-  border-color: #000;
-  background-color: #fff;
-  color: #000;
+.source__range-pointer .source__range-pointer_description {
+  display: inline;
+  font-weight: normal;
+  text-decoration: none;
 }
 
 /* Pygments */

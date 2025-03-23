@@ -3,7 +3,6 @@
     <div id="sourceCodeCoverageFilter" class="source-file__requirements-filter"></div>
   </div>
   <div class="source-file__refer" id="referContainer">
-    <div class="source-file__requirements">
 
       {%- set
           markers =
@@ -11,13 +10,13 @@
       -%}
 
       {%- if markers -%}
-      <div class="source-file__ranges">
+      <div class="source-file__toc">
 
         {%- for marker_ in markers -%}
           {% if marker_.begin_or_end %}
-          <div>
+
           <a
-            class="pointer"
+            class="source__range-pointer"
             data-begin="{{ marker_.ng_range_line_begin }}"
             data-end="{{ marker_.ng_range_line_end }}"
             href="{{ view_object.render_marker_range_link(marker_) }}"
@@ -26,15 +25,14 @@
           [{{ marker_.ng_range_line_begin }}-{{ marker_.ng_range_line_end }}]
           </a>
           {% for node_uid_ in marker_.reqs %}
-            {{ view_object.render_aside_requirement(node_uid_) }}
+            {{ view_object.render_aside_requirement(node_uid_, marker_.ng_range_line_begin, marker_.ng_range_line_end) }}
           {% endfor %}
-          </div>
+
           {% endif %}
         {%- endfor -%}
 
       </div>
       {%- endif -%}
 
-    </div>
   </div>
 </div>

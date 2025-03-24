@@ -48,7 +48,7 @@ class RangeMarker:
         self.ng_range_line_begin: Optional[int] = None
         self.ng_range_line_end: Optional[int] = None
 
-        self.ng_is_nodoc = "nosdoc" in self.reqs
+        self.ng_is_nodoc: bool = "nosdoc" in self.reqs
         self.ng_new_relation_keyword = scope is not None and len(scope) > 0
 
     def is_begin(self) -> bool:
@@ -74,8 +74,8 @@ class LineMarker:
     ) -> None:
         assert isinstance(reqs_objs, list)
         self.parent = parent
-        self.reqs_objs = reqs_objs
-        self.reqs = list(map(lambda req: req.uid, reqs_objs))
+        self.reqs_objs: List[Req] = reqs_objs
+        self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
         self.role: Optional[str] = (
             role if role is not None and len(role) > 0 else None
         )
@@ -87,7 +87,7 @@ class LineMarker:
         self.ng_range_line_begin: Optional[int] = None
         self.ng_range_line_end: Optional[int] = None
 
-        self.ng_is_nodoc = "nosdoc" in self.reqs
+        self.ng_is_nodoc: bool = "nosdoc" in self.reqs
 
     def is_begin(self) -> bool:
         return True
@@ -113,7 +113,7 @@ class ForwardRangeMarker:
         assert len(reqs_objs) > 0
         self.start_or_end: bool = start_or_end
 
-        self.reqs_objs = reqs_objs
+        self.reqs_objs: List[str] = reqs_objs
         self.role: Optional[str] = (
             role if role is not None and len(role) > 0 else None
         )
@@ -124,7 +124,7 @@ class ForwardRangeMarker:
         self.ng_range_line_begin: Optional[int] = None
         self.ng_range_line_end: Optional[int] = None
 
-        self.ng_is_nodoc = False
+        self.ng_is_nodoc: bool = False
 
     def is_begin(self) -> bool:
         return self.start_or_end
@@ -140,3 +140,12 @@ class ForwardRangeMarker:
 
     def get_description(self) -> Optional[str]:
         return "range"
+
+
+@auto_described
+class ForwardFileMarker(ForwardRangeMarker):
+    def __init__(self, reqs_objs: List, role: Optional[str] = None):
+        super().__init__(True, reqs_objs, role)
+
+    def get_description(self) -> Optional[str]:
+        return "file"

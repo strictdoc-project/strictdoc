@@ -60,4 +60,4 @@ RELATIONS:
 - TYPE: File
   ROLE: Implementation
   VALUE: file.txt
-  LINE_RANGE: 1, 2
+  LINE_RANGE: 1, 1

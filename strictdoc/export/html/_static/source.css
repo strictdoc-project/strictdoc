@@ -27,8 +27,10 @@
   position: relative;
   height: 100%;
   overflow-y: scroll;
-  padding: calc(var(--base-rhythm)*2);
-  padding-bottom: calc(var(--base-rhythm)*8);
+  padding:  calc(var(--base-padding)*2)
+            calc(var(--base-padding) / 2)
+            calc(var(--base-padding)*4)
+            var(--base-padding);
 
   font-size: var(--font-size-sm);
 
@@ -48,22 +50,65 @@
   background-color: var(--thumbBG)
 }
 
+.source-file__toc-range {
+  margin-bottom: 2rem;
+}
+
+.source-file__toc-range-header {
+  font-size: x-small;
+}
+
 /* SDOC-NODE in SOURCE */
 
 .source-file__requirement {
-  position: static;
-  padding: var(--base-padding);
-  background-color: var(--color-bg-secondary);
+  position: relative;
+  /* padding: var(--base-padding); */
+  /* background-color: var(--color-bg-secondary);*/
   border: 1px solid var(--color-border);
-  margin: 1rem 0 0 0;
+  border-radius: calc(var(--base-rhythm) / 2);
+  padding: var(--base-rhythm);
+  margin: var(--base-rhythm) 0;
   transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
   font-size: var(--font-size-xsm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.source-file__requirement_link {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  text-align: right;
+  padding: 0.25rem;
+
+  /* content: '⎘'; */
+  padding-top: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.source-file__requirement_link::after {
+  /* content: '⎘'; */
+  /* content: '⤴'; */
+  content: '⎘';
+  /* font-weight: bold; */
 }
 
 .source-file__requirement.active {
-  background-color: var(--color-bg-contrast);
-  border: 1px solid var(--color-fg-contrast);
+  /* background-color: var(--color-bg-contrast);
+  border: 1px solid var(--color-fg-contrast); */
 }
+
+.source-file__requirement-info {
+  margin-bottom: var(--base-rhythm);
+}
+
+/* requirement_file */
 
 [data-viewtype="source-file"] .requirement_file li {
   position: relative;
@@ -79,43 +124,6 @@
 [data-viewtype="source-file"] .current_file_pseudolink {
   font-weight: bold;
   color: #808080;
-}
-
-/* REQS */
-
-.source-file__refer > * {
-  margin-bottom: 3rem;
-}
-
-.source-file__refer summary {
-  display: block;
-  padding: var(--base-padding);
-  background-color: #fff;
-  color: var(--color-accent);;
-  cursor: pointer;
-  user-select: none;
-  position: relative;
-  padding-right: 2rem;
-  font-size: 0.85rem;
-}
-
-.source-file__refer summary::-webkit-details-marker {
-  display: none;
-}
-
-.source-file__refer summary::before {
-  /* content: '⊕'; */
-  content: '\25B6';
-  text-align: right;
-  line-height: 1;
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-}
-
-.source-file__refer details[open] > summary::before {
-  /* content: '⊖'; */
-  content: '\25BC';
 }
 
 /* CODE */
@@ -283,8 +291,7 @@
 .source__range-pointer {
   display: inline-block;
   font-size: x-small;
-  font-weight: bold;
-  padding: 0 0.25rem;
+  padding: 0 calc(var(--base-rhythm)/2);
 }
 
 .source__range-pointer.active {
@@ -292,9 +299,20 @@
 }
 
 .source__range-pointer .source__range-pointer_description {
-  display: inline;
   font-weight: normal;
-  text-decoration: none;
+}
+
+.source-file__toc-range-description {
+  padding-left: var(--base-rhythm);
+}
+
+.source__range-button {
+  font-weight: bold;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--base-rhythm) / 2);
+  padding: 0 calc(var(--base-rhythm)/2);
+  display: flex;
+  align-items: center;
 }
 
 /* Pygments */

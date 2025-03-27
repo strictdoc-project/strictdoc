@@ -14,20 +14,25 @@
 
         {%- for marker_ in markers -%}
           {% if marker_.begin_or_end %}
-
-          <a
-            class="source__range-pointer"
-            data-begin="{{ marker_.ng_range_line_begin }}"
-            data-end="{{ marker_.ng_range_line_end }}"
-            href="{{ view_object.render_marker_range_link(marker_) }}"
-            data-traceability-file-type="this_file"
-          >
-          [{{ marker_.ng_range_line_begin }}-{{ marker_.ng_range_line_end }}]
-          </a>
-          {% for node_uid_ in marker_.reqs %}
-            {{ view_object.render_aside_requirement(node_uid_, marker_.ng_range_line_begin, marker_.ng_range_line_end) }}
-          {% endfor %}
-
+          <div class="source-file__toc-range">
+            <div class="source-file__toc-range-header">
+              <a
+                class="source__range-pointer source__range-button"
+                data-begin="{{ marker_.ng_range_line_begin }}"
+                data-end="{{ marker_.ng_range_line_end }}"
+                href="{{ view_object.render_marker_range_link(marker_) }}"
+                data-traceability-file-type="this_file"
+              >
+              [ {{ marker_.ng_range_line_begin }} – {{ marker_.ng_range_line_end }} ]
+              </a>
+              <div class="source-file__toc-range-description">
+                scope: <b>{{ marker_.get_description() }}</b>
+              </div>
+            </div>
+            {% for node_uid_ in marker_.reqs %}
+              {{ view_object.render_aside_requirement(node_uid_, marker_.ng_range_line_begin, marker_.ng_range_line_end) }}
+            {% endfor %}
+          </div>
           {% endif %}
         {%- endfor -%}
 

@@ -15,19 +15,22 @@
   data-end="{{ range_end }}"
 >
   <a
-    href="{{ view_object.link_renderer.render_requirement_link_from_source_file(requirement, view_object.source_file) }}">
+    class="source-file__requirement_link"
+    href="{{ view_object.link_renderer.render_requirement_link_from_source_file(requirement, view_object.source_file) }}"
+    title="Go to requirement in document"
+  ></a>
+  <div class="source-file__requirement-info">
     {%- if requirement.reserved_uid %}
     <div class="requirement__child-uid">{{ requirement.reserved_uid }}</div>
     {%- endif %}
     {%- if requirement.reserved_title is not none %}
       {{ requirement.reserved_title }}
     {%- endif %}
-  </a>
-</div>
+  </div>
 
  {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
  {%- if requirement_file_links %}
-  <ul class="requirement-tree_downward">
+
   {%- for link, fwd_role_, opt_ranges in requirement_file_links %}
     {%- assert link.__class__.__name__ == "str", "Expected str" -%}
 
@@ -36,8 +39,8 @@
 
     {%- if opt_ranges -%}
       {%- for range in opt_ranges %}
-        <li class="requirement-tree_downward_node">
-          <div class="requirement-tree_downward_item">
+
+          <div class="">
           <a
             class="source__range-pointer"
             data-begin="{{ range.ng_range_line_begin }}"
@@ -49,6 +52,7 @@
             {% if range.is_range_marker() %}
             <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b>
             <span class="source__range-pointer_description">{{ link }}
+            temporary and must be removed
             {%- set description = range.get_description() -%}
             {%- if description -%}
               , {{ description }}
@@ -60,29 +64,30 @@
             {% endif %}
           </a>
           </div>
-        </li>
+
       {%- endfor -%}
     {%- else -%}
       {%- if this_file_or_other -%}
-        <li class="requirement-tree_downward_node">
-          <div class="requirement-tree_downward_item">
+
+          <div class="">
           <span class="current_file_pseudolink">
               {{ link }}
             </span>
           </div>
-        </li>
+
 
         {%- else -%}
 
-      <li class="requirement-tree_downward_node">
-          <div class="requirement-tree_downward_item">
+
+          <div class="">
           <a href="{{ view_object.link_renderer.render_requirement_in_source_file_link(requirement, link, view_object.source_file) }}" >
           {{ link }}
           </a>
           </div>
-        </li>
+
     {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
-  </ul>
+
 {%- endif %}
+</div>

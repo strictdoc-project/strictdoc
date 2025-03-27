@@ -174,12 +174,12 @@
   background-color: var(--color-bg-main);
   /* background-color: var(--color-bg-contrast); */
   /* grid-column: 1 / -1; */
-  border-bottom: var(--source-line);
+  /* border-bottom: var(--source-line); */
   /* padding-left: 4rem; */
 }
 
 .source__range-start {
-  padding-top: 2rem;
+  /* padding-top: 2rem; */
 }
 
 .source__range-end {
@@ -192,14 +192,24 @@
   display: none;
 }
 
-.source__range-header {
-  font-size: xx-small;
-  font-weight: bold;
-  padding: 0.25rem;
+.source__range-banner {
+  grid-column: 1 / -1;
+  background-color: var(--color-bg-main);
+  padding: 1rem;
 }
 
 .source__range.collapsed .source__range-banner {
   display: none;
+}
+
+.source__range-banner sdoc-requirement[requirement-view="table"] sdoc-requirement-field-label {
+  background-color: var(--requirement-bg-light-color);
+}
+
+.source__range-header {
+  font-size: xx-small;
+  font-weight: bold;
+  padding: 0.25rem;
 }
 
 .source__range.collapsed .source__range-header {
@@ -211,7 +221,7 @@
 }
 
 .source__range.expanded .source__range-cell {
-  background-color: var(--color-bg-contrast);
+  /* background-color: var(--color-bg-contrast); */
 }
 
 /* source__range-handler */
@@ -246,6 +256,11 @@
 
 .source__range.collapsed .source__range-handler:hover::after {
   content: '‹ ›';
+}
+
+.source__range.active .source__range-handler,
+.source__range.active .source__range-banner {
+  border-left: 4px solid yellow;
 }
 
 /* source__line */
@@ -308,11 +323,14 @@
 
 .source__range-button {
   font-weight: bold;
-  border: 1px solid var(--color-border);
+  /* border: 1px solid var(--color-border); */
   border-radius: calc(var(--base-rhythm) / 2);
   padding: 0 calc(var(--base-rhythm)/2);
   display: flex;
   align-items: center;
+  width: fit-content;
+  font-size: 14px;
+  /* background-color: white; */
 }
 
 /* Pygments */

@@ -252,6 +252,7 @@ class Dom {
     // this.active.requirement?.classList.remove(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer?.classList.remove(this.activeClass));
     this.active.labels?.forEach(label => label?.classList.remove(this.activeClass));
+    this.active.rangeAlias && this.ranges[this.active.rangeAlias].banner.classList.remove(this.activeClass);
     // this.active.handler.classList.remove(this.expandedClass);
     // this.active.handler.classList.add(this.collapsedClass);
     // this.active.banner.classList.remove(this.expandedClass);
@@ -272,7 +273,7 @@ class Dom {
     // this.active.requirement?.classList.add(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer.classList.add(this.activeClass));
     this.active.labels?.forEach(label => label.classList.add(this.activeClass));
-
+    this.ranges[rangeAlias].banner.classList.add(this.activeClass);
   }
 
   toggleRangeBannerVisibility(handler) {

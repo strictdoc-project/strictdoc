@@ -246,6 +246,8 @@ class SourceFileViewHTMLGenerator:
                     pygmented_source_file_lines[marker_line - 1], str
                 )
                 source_marker_tuple = SourceMarkerTuple(
+                    ng_range_line_begin=marker.ng_range_line_begin,
+                    ng_range_line_end=marker.ng_range_line_end,
                     source_line=Markup(pygmented_source_file_line),
                     markers=[],
                 )

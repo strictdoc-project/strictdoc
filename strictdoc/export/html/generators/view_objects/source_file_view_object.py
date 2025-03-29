@@ -28,6 +28,8 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 
 @dataclass
 class SourceMarkerTuple:
+    ng_range_line_begin: int
+    ng_range_line_end: int
     source_line: Markup
     markers: List[
         Union[FunctionRangeMarker, ForwardRangeMarker, LineMarker, RangeMarker]

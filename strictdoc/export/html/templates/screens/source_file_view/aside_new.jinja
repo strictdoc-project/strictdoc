@@ -2,42 +2,34 @@
   <div class="source-file__tools">
     <div id="sourceCodeCoverageFilter" class="source-file__requirements-filter"></div>
   </div>
+
   <div class="source-file__refer" id="referContainer">
-
-      {%- set
-          markers =
-            view_object.traceability_index.get_source_file_markers(view_object.source_file.in_doctree_source_file_rel_path_posix)
-      -%}
-
-      {%- if markers -%}
-      <div class="source-file__toc">
-
-        {%- for marker_ in markers -%}
-          {% if marker_.begin_or_end %}
+    <div class="source-file__toc">
+      {%- for line in view_object.pygmented_source_file_lines -%}
+        {%- if line.__class__.__name__ == "SourceMarkerTuple" and not line.is_end() -%}
           <div class="source-file__toc-range">
             <div class="source-file__toc-range-header">
               <a
                 class="source__range-pointer source__range-button"
-                data-begin="{{ marker_.ng_range_line_begin }}"
-                data-end="{{ marker_.ng_range_line_end }}"
-                href="{{ view_object.render_marker_range_link(marker_) }}"
+                data-begin="{{ line.ng_range_line_begin }}"
+                data-end="{{ line.ng_range_line_end }}"
+                href="{{ view_object.render_marker_range_link(line.markers[0]) }}"
                 data-traceability-file-type="this_file"
               >
-              [{{ marker_.ng_range_line_begin }} – {{ marker_.ng_range_line_end }}]
+              [{{ line.ng_range_line_begin }} – {{ line.ng_range_line_end }}]
               </a>
               <div class="source-file__toc-range-description">
-                scope: <b>{{ marker_.get_description() }}</b>
+                scope: <b>{{ line.markers[0].get_description() }}</b>
               </div>
             </div>
-            {% for node_uid_ in marker_.reqs %}
-              {{ view_object.render_aside_requirement(node_uid_, marker_.ng_range_line_begin, marker_.ng_range_line_end) }}
+            {% for marker_ in line.markers %}
+              {% for node_uid_ in marker_.reqs %}
+                {{ view_object.render_aside_requirement(node_uid_, marker_.ng_range_line_begin, marker_.ng_range_line_end) }}
+              {% endfor %}
             {% endfor %}
           </div>
-          {% endif %}
-        {%- endfor -%}
-
-      </div>
-      {%- endif -%}
-
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
   </div>
 </div>

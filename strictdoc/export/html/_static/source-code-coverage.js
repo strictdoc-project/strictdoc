@@ -273,7 +273,7 @@ class Dom {
     // this.active.requirement?.classList.add(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer.classList.add(this.activeClass));
     this.active.labels?.forEach(label => label.classList.add(this.activeClass));
-    this.ranges[rangeAlias].banner.classList.add(this.activeClass);
+    this.ranges[rangeAlias]?.banner.classList.add(this.activeClass);
   }
 
   toggleRangeBannerVisibility(handler) {
@@ -297,9 +297,7 @@ class Dom {
   }
 
   highlightRange() {
-    console.log('highlightRange');
-
-    const activeRange = this.ranges[this.active.rangeAlias].bannerHeader;
+    const activeRange = this.ranges[this.active.rangeAlias]?.bannerHeader || 0;
     this.scrollTo(activeRange);
 
     const begin = parseInt(this.active.rangeBegin, 10);

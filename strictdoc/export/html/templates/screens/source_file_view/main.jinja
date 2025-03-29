@@ -14,46 +14,58 @@
           data-end="{{ current_range_end }}"
         >
           <div class="source__range-cell">
-          <!-- This is empty instead of a line number. -->
-            <div
-              class="source__range-handler "
-              data-begin="{{ current_range_begin }}"
-              data-end="{{ current_range_end }}"
-            ></div>
+            <div class="source__range-buttons">
+              <div
+                class="source__range-handler "
+                data-begin="{{ current_range_begin }}"
+                data-end="{{ current_range_end }}"
+              ></div>
+              <a
+                  class="source__range-pointer source__range-button"
+                  data-begin="{{ current_range_begin }}"
+                  data-end="{{ current_range_end }}"
+                  data-traceability-file-type="this_file"
+                  href="{{ current_marker_link }}"
+                >[{{ current_range_begin }} – {{ current_range_end }}]</a>
+            </div>
           </div>
           <div class="source__range-cell">
             <div class="source__range-header">
-            <a
-              class="source__range-pointer source__range-button"
-              data-begin="{{ current_range_begin }}"
-              data-end="{{ current_range_end }}"
-              data-traceability-file-type="this_file"
-              href="{{ current_marker_link }}"
-            >[{{ current_range_begin }} – {{ current_range_end }}]</a></div>
-          </div>
-          <div class="source__range-banner source__range-start">
-            {%- for marker_ in line.markers -%}
-              {%- for req in marker_.reqs_objs -%}
-                {{ view_object.render_detailed_node_for_banner(req.uid) }}
+              Scope: <b>{{ line.markers[0].get_description() }}</b>
+            </div>
+            <ul class="source__range-titles-list">
+              {%- for marker_ in line.markers -%}
+                {%- for req in marker_.reqs_objs -%}
+                <li>
+                  {{ view_object.render_node_title_for_banner_header(req.uid) }}
+                </li>
+                {%- endfor -%}
               {%- endfor -%}
-            {%- endfor -%}
+            </ul>
+            <div class="source__range-banner source__range-start">
+              {%- for marker_ in line.markers -%}
+                {%- for req in marker_.reqs_objs -%}
+                  {{ view_object.render_detailed_node_for_banner(req.uid) }}
+                {%- endfor -%}
+              {%- endfor -%}
+            </div>
           </div>
         </div>
       {% endif %}
 
       <div data-line="{{ loop.index }}" class="source__line">
-      <div data-line="{{ loop.index }}" id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
-      <div data-line="{{ loop.index }}" class="source__line-content">
-        {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
-          {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
-          <pre class="highlight">{{ line.source_line }}</pre>
-        {%- elif line != "" -%}
-          {# <!-- Pygments --> #}
-          <pre class="highlight">{{ line }}</pre>
-        {%- else -%}
-          <pre data-state="empty" style="user-select: none">&nbsp;</pre>
-        {%- endif -%}
-      </div>
+        <div data-line="{{ loop.index }}" id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
+        <div data-line="{{ loop.index }}" class="source__line-content">
+          {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
+            {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
+            <pre class="highlight">{{ line.source_line }}</pre>
+          {%- elif line != "" -%}
+            {# <!-- Pygments --> #}
+            <pre class="highlight">{{ line }}</pre>
+          {%- else -%}
+            <pre data-state="empty" style="user-select: none">&nbsp;</pre>
+          {%- endif -%}
+        </div>
       </div>
       {%- if line.__class__.__name__ == "SourceMarkerTuple" and (line.is_end() or line.is_line_marker()) -%}
       {# <div class="source__range collapsed">

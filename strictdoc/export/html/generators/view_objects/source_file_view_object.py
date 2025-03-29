@@ -95,6 +95,10 @@ class SourceFileViewObject:
             requirement_style="table",
         )
 
+    def render_node_title_for_banner_header(self, node_uid: str) -> Markup:
+        node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
+        return node.reserved_title + ' ' + node.node_type
+
     def render_aside_requirement(self, node_uid: str, range_begin: str, range_end: str) -> Markup:
         node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
         return self.jinja_environment.render_template_as_markup(

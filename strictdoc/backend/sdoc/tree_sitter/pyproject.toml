@@ -13,17 +13,22 @@ classifiers = [
   "Topic :: Text Processing :: Linguistic",
   "Typing :: Typed",
 ]
-authors = [{ name = "Stanislav Pankevich, Maryna Balioura", email = "s.pankevich@gmail.com, mettta@gmail.com" }]
-requires-python = ">=3.10"
+authors = [
+  { name = "Stanislav Pankevich", email = "s.pankevich@gmail.com" },
+  { name = "Maryna Balioura", email = "mettta@gmail.com" }
+]
+requires-python = ">=3.9"
 license.text = "Apache 2"
 readme = "README.md"
+
+dependencies = [
+  "tree-sitter==0.24.0",
+  # "tree-sitter-python==0.23"
+]
 
 [project.urls]
 Homepage = "https://strictdoc.readthedocs.io/en/stable/"
 Funding = "https://strictdoc.readthedocs.io/en/stable/"
-
-[project.optional-dependencies]
-core = ["tree-sitter~=0.24"]
 
 [tool.cibuildwheel]
 build = "cp310-*"

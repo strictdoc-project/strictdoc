@@ -1,0 +1,334 @@
+[
+  {
+    "type": "DOCUMENT",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "NODE",
+          "named": true
+        },
+        {
+          "type": "document_error",
+          "named": true
+        },
+        {
+          "type": "document_literal",
+          "named": true
+        },
+        {
+          "type": "document_literal_error",
+          "named": true
+        },
+        {
+          "type": "left_bracket",
+          "named": true
+        },
+        {
+          "type": "left_bracket_error",
+          "named": true
+        },
+        {
+          "type": "newline_character",
+          "named": true
+        },
+        {
+          "type": "newline_character_error",
+          "named": true
+        },
+        {
+          "type": "right_bracket",
+          "named": true
+        },
+        {
+          "type": "right_bracket_error",
+          "named": true
+        },
+        {
+          "type": "trailing_end_error",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "EOF",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "NODE",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "NODE_FIELD_MULTILINE",
+          "named": true
+        },
+        {
+          "type": "NODE_FIELD_SINGLELINE",
+          "named": true
+        },
+        {
+          "type": "left_bracket",
+          "named": true
+        },
+        {
+          "type": "left_bracket_error",
+          "named": true
+        },
+        {
+          "type": "newline_character",
+          "named": true
+        },
+        {
+          "type": "newline_character_error",
+          "named": true
+        },
+        {
+          "type": "node_literal",
+          "named": true
+        },
+        {
+          "type": "right_bracket",
+          "named": true
+        },
+        {
+          "type": "right_bracket_error",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "NODE_FIELD_MULTILINE",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "newline_character",
+          "named": true
+        },
+        {
+          "type": "newline_character_error",
+          "named": true
+        },
+        {
+          "type": "node_field_name",
+          "named": true
+        },
+        {
+          "type": "semicolon_character",
+          "named": true
+        },
+        {
+          "type": "semicolon_character_error",
+          "named": true
+        },
+        {
+          "type": "single_line_string",
+          "named": true
+        },
+        {
+          "type": "three_arrows_left",
+          "named": true
+        },
+        {
+          "type": "three_arrows_right",
+          "named": true
+        },
+        {
+          "type": "whitespace_character",
+          "named": true
+        },
+        {
+          "type": "whitespace_character_error",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "NODE_FIELD_SINGLELINE",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "newline_character",
+          "named": true
+        },
+        {
+          "type": "newline_character_error",
+          "named": true
+        },
+        {
+          "type": "node_field_name",
+          "named": true
+        },
+        {
+          "type": "node_field_singleline_value",
+          "named": true
+        },
+        {
+          "type": "semicolon_character",
+          "named": true
+        },
+        {
+          "type": "semicolon_character_error",
+          "named": true
+        },
+        {
+          "type": "whitespace_character",
+          "named": true
+        },
+        {
+          "type": "whitespace_character_error",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "document_error",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "document_literal_error",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "newline_character_error",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "node_field_name",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "node_field_singleline_value",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "right_bracket_error",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "semicolon_character_error",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "single_line_string",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "newline_character",
+          "named": true
+        },
+        {
+          "type": "newline_character_error",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "top_node",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "DOCUMENT",
+          "named": true
+        },
+        {
+          "type": "EOF",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "whitespace_character_error",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "\u0000",
+    "named": false
+  },
+  {
+    "type": "%%%",
+    "named": false
+  },
+  {
+    "type": "document_literal",
+    "named": true
+  },
+  {
+    "type": "left_bracket",
+    "named": true
+  },
+  {
+    "type": "left_bracket_error",
+    "named": true
+  },
+  {
+    "type": "newline_character",
+    "named": true
+  },
+  {
+    "type": "node_literal",
+    "named": true
+  },
+  {
+    "type": "right_bracket",
+    "named": true
+  },
+  {
+    "type": "semicolon_character",
+    "named": true
+  },
+  {
+    "type": "three_arrows_left",
+    "named": true
+  },
+  {
+    "type": "three_arrows_right",
+    "named": true
+  },
+  {
+    "type": "trailing_end_error",
+    "named": true
+  },
+  {
+    "type": "whitespace_character",
+    "named": true
+  }
+]

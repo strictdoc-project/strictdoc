@@ -1,0 +1,432 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
+  "name": "strictdoc",
+  "rules": {
+    "top_node": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "DOCUMENT"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "EOF"
+        }
+      ]
+    },
+    "DOCUMENT": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_document"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "document_error"
+        }
+      ]
+    },
+    "_document": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_left_bracket"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_document_literal"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_right_bracket"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline_character"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline_character"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "NODE"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "trailing_end_error"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "document_error": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "."
+      }
+    },
+    "trailing_end_error": {
+      "type": "PATTERN",
+      "value": "[ \\n]+"
+    },
+    "EOF": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
+            "type": "STRING",
+            "value": "%%%"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "\u0000"
+        }
+      ]
+    },
+    "_document_literal": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "document_literal"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "document_literal_error"
+        }
+      ]
+    },
+    "document_literal": {
+      "type": "STRING",
+      "value": "DOCUMENT"
+    },
+    "document_literal_error": {
+      "type": "PATTERN",
+      "value": "."
+    },
+    "NODE": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_node"
+        }
+      ]
+    },
+    "_node": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_left_bracket"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "node_literal"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_right_bracket"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline_character"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_NODE_FIELD"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline_character"
+        }
+      ]
+    },
+    "node_error": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "."
+      }
+    },
+    "node_literal": {
+      "type": "STRING",
+      "value": "NODE"
+    },
+    "_NODE_FIELD": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "NODE_FIELD_SINGLELINE"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "NODE_FIELD_MULTILINE"
+        }
+      ]
+    },
+    "NODE_FIELD_SINGLELINE": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "node_field_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_semicolon_character"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_whitespace_character"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "node_field_singleline_value"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline_character"
+        }
+      ]
+    },
+    "NODE_FIELD_MULTILINE": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "node_field_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_semicolon_character"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_whitespace_character"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "three_arrows_right"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline_character"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SYMBOL",
+            "name": "single_line_string"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "three_arrows_left"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline_character"
+        }
+      ]
+    },
+    "node_field_name": {
+      "type": "PATTERN",
+      "value": "[A-Z0-9]+"
+    },
+    "node_field_singleline_value": {
+      "type": "PATTERN",
+      "value": "[A-Z0-9]+"
+    },
+    "three_arrows_right": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": ">>>"
+      }
+    },
+    "three_arrows_left": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": "<<<"
+      }
+    },
+    "single_line_string": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "IMMEDIATE_TOKEN",
+          "content": {
+            "type": "PATTERN",
+            "value": ".*"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline_character"
+        }
+      ]
+    },
+    "_left_bracket": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "left_bracket"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "left_bracket_error"
+        }
+      ]
+    },
+    "left_bracket": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": "["
+      }
+    },
+    "left_bracket_error": {
+      "type": "PATTERN",
+      "value": "[^\\[]"
+    },
+    "_right_bracket": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "right_bracket"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "right_bracket_error"
+        }
+      ]
+    },
+    "right_bracket": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": "]"
+      }
+    },
+    "right_bracket_error": {
+      "type": "PATTERN",
+      "value": "."
+    },
+    "_semicolon_character": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "semicolon_character"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "semicolon_character_error"
+        }
+      ]
+    },
+    "semicolon_character": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": ":"
+      }
+    },
+    "semicolon_character_error": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "."
+      }
+    },
+    "_whitespace_character": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "whitespace_character"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "whitespace_character_error"
+        }
+      ]
+    },
+    "whitespace_character": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": " "
+      }
+    },
+    "whitespace_character_error": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "."
+      }
+    },
+    "_newline_character": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "newline_character"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "newline_character_error"
+        }
+      ]
+    },
+    "newline_character": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": "\n"
+      }
+    },
+    "newline_character_error": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "."
+      }
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "\\s"
+    }
+  ],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [],
+  "inline": [],
+  "supertypes": []
+}

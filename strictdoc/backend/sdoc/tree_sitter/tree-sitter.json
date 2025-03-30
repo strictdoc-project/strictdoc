@@ -1,0 +1,40 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "strictdoc",
+      "camelcase": "StrictDoc",
+      "title": "StrictDoc",
+      "scope": "source.strictdoc",
+      "file-types": [
+        "sdoc"
+      ],
+      "injection-regex": "^strictdoc$",
+      "class-name": "TreeSitterStrictdoc"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "Apache 2",
+    "description": "TBD",
+    "authors": [
+      {
+        "name": "Stanislav Pankevich, Maryna Balioura",
+        "email": "s.pankevich@gmail.com, mettta@gmail.com"
+      }
+    ],
+    "links": {
+      "repository": "https://strictdoc.readthedocs.io/en/stable/",
+      "funding": "https://strictdoc.readthedocs.io/en/stable/"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}

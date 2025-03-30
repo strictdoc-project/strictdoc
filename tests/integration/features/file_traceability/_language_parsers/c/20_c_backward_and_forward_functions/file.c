@@ -1,8 +1,8 @@
 // @relation(REQ-1, scope=file)
 
 /**
- * @relation(REQ-2, scope=function)
- * @relation(REQ-1, scope=function)
+ * @relation(REQ-2, scope=function, role=Implementation)
+ * @relation(REQ-1, scope=function, role=Test)
  */
 void foo() {
   // foo

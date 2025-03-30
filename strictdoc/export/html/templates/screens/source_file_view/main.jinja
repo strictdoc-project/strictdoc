@@ -31,13 +31,13 @@
           </div>
           <div class="source__range-cell">
             <div class="source__range-header">
-              Scope: <b>{{ line.markers[0].get_description() }}</b>
+              Scope: {{ line.markers[0].get_description() }}
             </div>
             <ul class="source__range-titles-list">
               {%- for marker_ in line.markers -%}
                 {%- for req in marker_.reqs_objs -%}
                 <li>
-                  {{ view_object.render_node_title_for_banner_header(req.uid) }}
+                  {{ view_object.render_node_title_for_banner_header(req.uid, marker_.role) }}
                 </li>
                 {%- endfor -%}
               {%- endfor -%}

@@ -216,8 +216,8 @@
 }
 
 ul.source__range-titles-list {
-  padding-left: 1.5rem;
-  margin: .25rem 0 .5rem;
+  margin: var(--base-rhythm);
+  list-style-type: none;
 }
 
 .source__range.collapsed .source__range-header,

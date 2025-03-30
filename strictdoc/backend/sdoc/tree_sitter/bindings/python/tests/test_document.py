@@ -72,7 +72,6 @@ def test__document__error__incomplete_literal():
     print_tree(tree.root_node, input_content)
 
     assert tree.root_node.type == "ERROR"
-    assert tree.root_node.children[0].type == "left_bracket"
     assert tree.root_node.children[1].type == "document_literal_error"
 
 
@@ -90,11 +89,38 @@ def test__document__error__misspelled_literal():
     print_tree(tree.root_node, input_content)
 
     assert tree.root_node.type == "ERROR"
-    assert tree.root_node.children[0].type == "DOCUMENT"
-    assert tree.root_node.children[0].children[1].type == "document_literal_error"
+    assert tree.root_node.children[1].type == "document_literal_error"
 
 
 def test__document__error__no_first_newline():
+    parser = StrictDocParser()
+
+    input_content = b"[DOCUMENT]"
+
+    with pytest.raises(RuntimeError) as exc_info:
+        parser.parse(input_content)
+
+    tree = exc_info.value.args[0]
+    print_tree(tree.root_node, input_content)
+
+    assert exc_info.value.args[1] == "newline_character_error"
+
+
+def test__document__error__only_one_newline():
+    parser = StrictDocParser()
+
+    input_content = b"[DOCUMENT]\n"
+
+    with pytest.raises(RuntimeError) as exc_info:
+        parser.parse(input_content)
+
+    tree = exc_info.value.args[0]
+    print_tree(tree.root_node, input_content)
+
+    assert exc_info.value.args[1] == "newline_character_error"
+
+
+def test__document__error__space_instead_first_newline():
     parser = StrictDocParser()
 
     input_content = b"[DOCUMENT] "
@@ -102,7 +128,7 @@ def test__document__error__no_first_newline():
     with pytest.raises(RuntimeError) as exc_info:
         parser.parse(input_content)
 
-    assert exc_info.value.args[1] == "newline_character_error"
-
     tree = exc_info.value.args[0]
     print_tree(tree.root_node, input_content)
+
+    assert exc_info.value.args[1] == "newline_character_error"

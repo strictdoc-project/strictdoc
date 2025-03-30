@@ -13,7 +13,7 @@ class StrictDocParser:
 
         parser = tree_sitter.Parser(language)
 
-        tree: tree_sitter.Tree = parser.parse(input_content)
+        tree: tree_sitter.Tree = parser.parse(input_content + b"%%%")
 
         list(traverse_tree_with_validation(tree))
 

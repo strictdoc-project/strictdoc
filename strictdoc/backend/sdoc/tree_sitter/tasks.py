@@ -52,13 +52,22 @@ def install(context):
 
 
 @task()
-def test(context, clear=False):
+def test(context, clear=False, focus=None):
     if clear:
         clean(context)
-        generate(context)
+
+    generate(context)
+
+    if clear:
         install(context)
 
-    command = """
-        PYTHONPATH=bindings/python pytest bindings/python/tests
+    focus_argument = f"-k {focus}" if focus else ""
+    command = f"""
+        PYTHONPATH=bindings/python
+        pytest bindings/python/tests
+            {focus_argument}
+            --capture=no
+            --show-capture=all
+            --verbose
     """
     run_invoke_cmd(context, command)

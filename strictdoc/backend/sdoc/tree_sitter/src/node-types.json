@@ -1,12 +1,121 @@
 [
   {
-    "type": "source_file",
+    "type": "DOCUMENT",
     "named": true,
-    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "document_error",
+          "named": true
+        },
+        {
+          "type": "document_literal",
+          "named": true
+        },
+        {
+          "type": "document_literal_error",
+          "named": true
+        },
+        {
+          "type": "left_bracket",
+          "named": true
+        },
+        {
+          "type": "left_bracket_error",
+          "named": true
+        },
+        {
+          "type": "newline_character",
+          "named": true
+        },
+        {
+          "type": "newline_character_error",
+          "named": true
+        },
+        {
+          "type": "right_bracket",
+          "named": true
+        },
+        {
+          "type": "right_bracket_error",
+          "named": true
+        },
+        {
+          "type": "trailing_end_error",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "document_error",
+    "named": true,
     "fields": {}
   },
   {
-    "type": "hello",
-    "named": false
+    "type": "document_literal_error",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "newline_character_error",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "right_bracket_error",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "top_node",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "DOCUMENT",
+          "named": true
+        },
+        {
+          "type": "EOF",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "EOF",
+    "named": true
+  },
+  {
+    "type": "document_literal",
+    "named": true
+  },
+  {
+    "type": "left_bracket",
+    "named": true
+  },
+  {
+    "type": "left_bracket_error",
+    "named": true
+  },
+  {
+    "type": "newline_character",
+    "named": true
+  },
+  {
+    "type": "right_bracket",
+    "named": true
+  },
+  {
+    "type": "trailing_end_error",
+    "named": true
   }
 ]

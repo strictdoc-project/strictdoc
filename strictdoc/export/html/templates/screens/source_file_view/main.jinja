@@ -13,30 +13,26 @@
           data-begin="{{ current_range_begin }}"
           data-end="{{ current_range_end }}"
         >
-          <div class="source__range-cell">
-            <div class="source__range-button">
-              {%- with
-                begin=current_range_begin,
-                end=current_range_end,
-                href=current_marker_link
-              -%}
-                {% include "screens/source_file_view/range_button.jinja" %}
-              {%- endwith -%}
-            </div>
+          <div class="source__range-header">{# used by scroll to #}
+
+            {%- with
+              begin=current_range_begin,
+              end=current_range_end,
+              href=current_marker_link,
+              scope=line.markers[0].get_description()
+            -%}
+              {% include "screens/source_file_view/range_button.jinja" %}
+            {%- endwith -%}
+
           </div>
           <div class="source__range-cell">
-            <div class="source__range-header">{# used by scroll to #}
-              Scope: {{ line.markers[0].get_description() }}
-            </div>
-          </div>
-          <div class="source__range-cell source__range-collapsible">
             <div
               class="source__range-handler"
               data-begin="{{ current_range_begin }}"
               data-end="{{ current_range_end }}"
             >{% include "_res/svg_ico16_section_collapse.jinja" %}</div>
           </div>
-          <div class="source__range-cell source__range-collapsible">
+          <div class="source__range-cell">
             <ul class="source__range-titles-list">
               {%- for marker_ in line.markers -%}
                 {%- for req in marker_.reqs_objs -%}

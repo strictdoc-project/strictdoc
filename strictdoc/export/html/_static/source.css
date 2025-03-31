@@ -174,45 +174,13 @@
 }
 
 .source__range-cell {
-  background-color: var(--color-bg-main);
-  /* background-color: var(--color-bg-contrast); */
-  /* grid-column: 1 / -1; */
-  /* border-bottom: var(--source-line); */
-  /* padding-left: 4rem; */
-}
-
-.source__range-start {
-  /* padding-top: 2rem; */
-}
-
-.source__range-end {
-  padding-top: 2px;
-  padding-bottom: 12px;
-  /* background-color: var(--color-bg-main); */
-  background-color: var(--color-bg-contrast);
-  font-size: 9px;
-
-  display: none;
-}
-
-.source__range-banner {
-  /* grid-column: 1 / -1; */
-  /* background-color: var(--color-bg-main); */
-  padding: 0 1rem 1rem 0;
-}
-
-.source__range.collapsed .source__range-banner {
-  display: none;
-}
-
-.source__range-banner sdoc-requirement[requirement-view="table"] sdoc-requirement-field-label {
-  background-color: var(--requirement-bg-light-color);
+  background-color: var(--color-highlight-secondary);
 }
 
 .source__range-header {
-  /* font-size: x-small; */
-  /* font-weight: bold; */
   padding: var(--base-rhythm);
+  grid-column: 1 / -1;
+  background-color: var(--color-highlight-secondary);
 }
 
 .source__range-button {
@@ -223,30 +191,31 @@
   height: 100%;
 }
 
+.source__range-banner {
+  padding: 0 1rem 1rem 0;
+}
+
+.source__range.collapsed .source__range-banner {
+  display: none;
+}
+
 ul.source__range-titles-list {
   margin: var(--base-rhythm);
   list-style-type: none;
 }
 
-.source__range.collapsed .source__range-header,
 .source__range.collapsed .source__range-titles-list {
   display: block;
-}
-
-.source__range .source__range-header {
-  /* display: none; */
-}
-
-.source__range.expanded .source__range-cell {
-  /* background-color: var(--color-bg-contrast); */
 }
 
 .source__range.expanded .source__range-titles-list {
   display: none;
 }
 
-.source__range-collapsible {
-  background-color: var(--color-highlight-secondary);
+/* sdoc-requirement */
+
+.source__range-banner sdoc-requirement[requirement-view="table"] sdoc-requirement-field-label {
+  background-color: var(--requirement-bg-light-color);
 }
 
 /* source__range-handler */

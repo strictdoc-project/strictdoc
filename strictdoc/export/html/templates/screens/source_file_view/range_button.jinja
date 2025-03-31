@@ -2,7 +2,8 @@
 {%- with
   begin=current_range_begin,
   end=current_range_end,
-  href=current_marker_link
+  href=current_marker_link,
+  scope=line__.marker__.get_description()
 -%}
   {% include "screens/source_file_view/range_button.jinja" %}
 {%- endwith -%}
@@ -13,4 +14,4 @@
   data-begin="{{ begin }}"
   data-end="{{ end }}"
   href="{{ href }}"
->{{ begin }}-{{ end }}</a>
+>{{ begin }} - {{ end }}{% if scope is defined %} | {{ scope }}{% endif %}</a>

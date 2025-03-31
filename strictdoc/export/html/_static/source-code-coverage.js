@@ -359,8 +359,8 @@ class Dom {
     [...document.querySelectorAll(this.strictdocPointerSelector)]
       .map(pointer => {
         const thisFileOrOther = pointer.dataset.traceabilityFileType;
-        console.assert(!!thisFileOrOther, "The file type shall be specified.", pointer);
-        if (thisFileOrOther !== "this_file") {
+        // consider only references to the current file:
+        if (thisFileOrOther === "other_file") {
           return;
         }
 

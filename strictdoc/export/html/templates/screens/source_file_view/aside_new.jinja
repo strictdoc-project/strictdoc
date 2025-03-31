@@ -9,14 +9,13 @@
         {%- if line.__class__.__name__ == "SourceMarkerTuple" and not line.is_end() -%}
           <div class="source-file__toc-range">
             <div class="source-file__toc-range-header">
-              <a
-                class="source__range-pointer action_button"
-                data-begin="{{ line.ng_range_line_begin }}"
-                data-end="{{ line.ng_range_line_end }}"
-                href="{{ view_object.render_marker_range_link(line.markers[0]) }}"
-              >
-              {{ line.ng_range_line_begin }}–{{ line.ng_range_line_end }}
-              </a>
+              {%- with
+                begin=line.ng_range_line_begin,
+                end=line.ng_range_line_end,
+                href=view_object.render_marker_range_link(line.markers[0])
+              -%}
+                {% include "screens/source_file_view/range_button.jinja" %}
+              {%- endwith -%}
               <div class="source-file__toc-range-description">
                 scope: <b>{{ line.markers[0].get_description() }}</b>
               </div>

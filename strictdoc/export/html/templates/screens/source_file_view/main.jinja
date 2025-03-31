@@ -20,12 +20,13 @@
                 data-begin="{{ current_range_begin }}"
                 data-end="{{ current_range_end }}"
               >{% include "_res/svg_ico16_section_collapse.jinja" %}</div>
-              <a
-                  class="source__range-pointer action_button"
-                  data-begin="{{ current_range_begin }}"
-                  data-end="{{ current_range_end }}"
-                  href="{{ current_marker_link }}"
-                >{{ current_range_begin }}-{{ current_range_end }}</a>
+              {%- with
+                begin=current_range_begin,
+                end=current_range_end,
+                href=current_marker_link
+              -%}
+                {% include "screens/source_file_view/range_button.jinja" %}
+              {%- endwith -%}
             </div>
           </div>
           <div class="source__range-cell">

@@ -69,17 +69,15 @@
     {%- else -%}
       {%- if this_file_or_other -%}
 
-          <div class="">
-          <span class="current_file_pseudolink">
+          <div>
+            <span class="current_file_pseudolink">
               {{ link }}
             </span>
           </div>
 
-
         {%- else -%}
 
-
-          <div class="">
+          <div>
           <a href="{{ view_object.link_renderer.render_requirement_in_source_file_link(requirement, link, view_object.source_file) }}" >
           {{ link }}
           </a>

@@ -237,44 +237,33 @@ ul.source__range-titles-list {
   display: none;
 }
 
+/* .source__range-buttons */
+
+.source__range-buttons {
+  display: flex;
+  gap: calc(var(--base-rhythm)/2);
+  padding: calc(var(--base-rhythm)/2) 0;
+}
+
+.source__range-pointer.action_button {
+  padding: 0 var(--base-rhythm) !important;
+}
+
 /* source__range-handler */
 
-.source__range-handler {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* background-color: aliceblue; */
+/* .source__range .source__range-handler:hover .collapsed,
+.source__range.expanded .source__range-handler:hover .expanded */
+.source__range .source__range-handler .expanded,
+.source__range.expanded .source__range-handler .collapsed {
+  display: none;
 }
 
-.source__range-handler::after {
-  content: '›‹';
-  transform: rotate(90deg);
+/* .source__range .source__range-handler:hover .expanded,
+.source__range.expanded .source__range-handler:hover .collapsed, */
+.source__range .source__range-handler .collapsed,
+.source__range.expanded .source__range-handler .expanded {
+  display: unset;
 }
-
-.source__range .source__range-handler::after {
-  content: '›‹';
-}
-
-.source__range.collapsed .source__range-handler::after {
-  content: '‹›';
-}
-
-.source__range .source__range-handler:hover::after {
-  content: '› ‹';
-}
-
-.source__range.collapsed .source__range-handler:hover::after {
-  content: '‹ ›';
-}
-
-/* .source__range.active .source__range-handler,
-.source__range.active .source__range-banner {
-  border-left: 4px solid yellow;
-} */
 
 /* source__line */
 
@@ -323,7 +312,8 @@ ul.source__range-titles-list {
 }
 
 .source__range-pointer.active {
-  background-color: var(--color-highlight);
+  background-color: var(--color-highlight) !important;
+  color: var(--color-fg-contrast) !important;
 }
 
 .source__range-pointer .source__range-pointer_description {
@@ -332,25 +322,6 @@ ul.source__range-titles-list {
 
 .source-file__toc-range-description {
   padding-left: var(--base-rhythm);
-}
-
-.source__range-button {
-  font-weight: bold;
-  /* border: 1px solid var(--color-border); */
-  border-radius: calc(var(--base-rhythm) / 2);
-  padding: 0 calc(var(--base-rhythm)/2);
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  font-size: 14px;
-  white-space: nowrap;
-  /* background-color: white; */
-}
-
-.source__range-buttons {
-  display: flex;
-  gap: var(--base-rhythm);
-  padding: var(--base-rhythm);
 }
 
 /* Pygments */

@@ -16,17 +16,17 @@
           <div class="source__range-cell">
             <div class="source__range-buttons">
               <div
-                class="source__range-handler "
+                class="source__range-handler action_button"
                 data-begin="{{ current_range_begin }}"
                 data-end="{{ current_range_end }}"
-              ></div>
+              >{% include "_res/svg_ico16_section_collapse.jinja" %}</div>
               <a
-                  class="source__range-pointer source__range-button"
+                  class="source__range-pointer action_button"
                   data-begin="{{ current_range_begin }}"
                   data-end="{{ current_range_end }}"
                   data-traceability-file-type="this_file"
                   href="{{ current_marker_link }}"
-                >[{{ current_range_begin }} – {{ current_range_end }}]</a>
+                >{{ current_range_begin }}-{{ current_range_end }}</a>
             </div>
           </div>
           <div class="source__range-cell">

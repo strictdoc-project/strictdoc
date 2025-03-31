@@ -10,13 +10,13 @@
           <div class="source-file__toc-range">
             <div class="source-file__toc-range-header">
               <a
-                class="source__range-pointer source__range-button"
+                class="source__range-pointer action_button"
                 data-begin="{{ line.ng_range_line_begin }}"
                 data-end="{{ line.ng_range_line_end }}"
                 href="{{ view_object.render_marker_range_link(line.markers[0]) }}"
                 data-traceability-file-type="this_file"
               >
-              [{{ line.ng_range_line_begin }} – {{ line.ng_range_line_end }}]
+              {{ line.ng_range_line_begin }}–{{ line.ng_range_line_end }}
               </a>
               <div class="source-file__toc-range-description">
                 scope: <b>{{ line.markers[0].get_description() }}</b>

@@ -396,14 +396,6 @@ class Dom {
           this.ranges[range].pointers.push(pointer);
         }
 
-        // const start = parseInt(rangeBegin, 10);
-        // const end = parseInt(rangeEnd, 10);
-
-        // for (let i = start; i <= end; i++) {
-        //   (this.lines[i].ranges ??= []).push(range);
-        //   console.assert(this.lines[i].lineNumber, `The line ${i} must be registered.`)
-        //   this.lines[i].lineNumber?.classList.add("source__filter");
-        // }
 
       });
   }

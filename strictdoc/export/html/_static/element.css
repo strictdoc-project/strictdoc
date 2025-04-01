@@ -112,6 +112,7 @@ a.action_button:visited {
   padding-left: calc(var(--base-rhythm)*1.5);
   padding-right: calc(var(--base-rhythm)*1.5);
   min-height: calc(var(--base-rhythm)*4);
+  max-width: 100%;
 
   /* box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px; */
   color: var(--color-action);

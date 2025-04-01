@@ -52,7 +52,6 @@
             {% if range.is_range_marker() %}
             <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b>
             <span class="source__range-pointer_description">{{ link }}
-            temporary and must be removed
             {%- set description = range.get_description() -%}
             {%- if description -%}
               , {{ description }}

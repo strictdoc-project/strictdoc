@@ -299,10 +299,16 @@ ul.source__range-titles-list {
 
 .source__range-pointer .source__range-pointer_description {
   font-weight: normal;
+  word-break: break-word;
 }
 
-.source-file__toc-range-description {
-  padding-left: var(--base-rhythm);
+.overflowing_ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+  display: inline-block;
 }
 
 /* Pygments */

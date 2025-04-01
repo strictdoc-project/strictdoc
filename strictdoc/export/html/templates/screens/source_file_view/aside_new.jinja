@@ -12,13 +12,11 @@
               {%- with
                 begin=line.ng_range_line_begin,
                 end=line.ng_range_line_end,
-                href=view_object.render_marker_range_link(line.markers[0])
+                href=view_object.render_marker_range_link(line.markers[0]),
+                scope=line.markers[0].get_description()
               -%}
                 {% include "screens/source_file_view/range_button.jinja" %}
               {%- endwith -%}
-              <div class="source-file__toc-range-description">
-                scope: <b>{{ line.markers[0].get_description() }}</b>
-              </div>
             </div>
             {% for marker_ in line.markers %}
               {% for node_uid_ in marker_.reqs %}

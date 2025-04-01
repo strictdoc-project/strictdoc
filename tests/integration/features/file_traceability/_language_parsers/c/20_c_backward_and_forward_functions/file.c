@@ -20,7 +20,7 @@ void someFunc() {
 }
 
 // @relation(REQ-3, scope=function)
-void boo() {
+void longFunctionName() {
   // boo
   // boo
   // boo

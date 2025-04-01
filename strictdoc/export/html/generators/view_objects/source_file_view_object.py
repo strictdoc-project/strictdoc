@@ -1,7 +1,7 @@
 # mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def,union-attr"
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 from markupsafe import Markup
 
@@ -95,9 +95,10 @@ class SourceFileViewObject:
             requirement_style="table",
         )
 
-    def render_node_title_for_banner_header(self, node_uid: str, role: Optional[str]) -> Markup:
+    def render_node_title_for_banner_header(
+        self, node_uid: str, role: Optional[str]
+    ) -> Markup:
         node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
-        # return node.reserved_title + ' ' + node.node_type
         return self.jinja_environment.render_template_as_markup(
             "screens/source_file_view/node_title_for_banner_header.jinja",
             node=node,
@@ -105,7 +106,9 @@ class SourceFileViewObject:
             role=role,
         )
 
-    def render_aside_requirement(self, node_uid: str, range_begin: str, range_end: str) -> Markup:
+    def render_aside_requirement(
+        self, node_uid: str, range_begin: str, range_end: str
+    ) -> Markup:
         node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
         return self.jinja_environment.render_template_as_markup(
             "screens/source_file_view/requirement.jinja",

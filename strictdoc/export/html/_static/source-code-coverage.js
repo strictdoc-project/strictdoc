@@ -298,7 +298,9 @@ class Dom {
 
   highlightRange() {
     const activeRange = this.ranges[this.active.rangeAlias]?.bannerHeader || 0;
-    this.scrollTo(activeRange);
+
+    // scroll to highlighted, do not scroll when unset highlighting:
+    this.active.rangeAlias && this.scrollTo(activeRange);
 
     const begin = parseInt(this.active.rangeBegin, 10);
     const end = parseInt(this.active.rangeEnd, 10);
@@ -396,6 +398,17 @@ class Dom {
           this.ranges[range].pointers.push(pointer);
         }
 
+        pointer.addEventListener("click", (event) => {
+          const currentHash = window.location.hash;
+          const targetHash = `#${rangeReq || ""}${this.hashSplitter}${rangeBegin}${this.hashSplitter}${rangeEnd}`;
+          console.log(currentHash, targetHash);
+          if (currentHash === targetHash) {
+            console.log(currentHash, targetHash);
+            event.preventDefault();
+            history.replaceState(null, '', window.location.pathname);
+            this.useLocationHash();
+          }
+        });
 
       });
   }

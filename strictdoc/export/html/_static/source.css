@@ -99,11 +99,6 @@
   /* font-weight: bold; */
 }
 
-.source-file__requirement.active {
-  /* background-color: var(--color-bg-contrast);
-  border: 1px solid var(--color-fg-contrast); */
-}
-
 .source-file__requirement-info {
   margin-bottom: var(--base-rhythm);
 }
@@ -292,6 +287,14 @@ ul.source__range-titles-list {
 .source__range-pointer.active {
   background-color: var(--color-highlight) !important;
   color: var(--color-fg-contrast) !important;
+}
+
+.focus .source__range-pointer.active {
+  outline: solid 3px yellow;
+}
+
+.focus .source__range:not(.active) {
+  display: none;
 }
 
 .source__range-pointer .source__range-pointer_description {

@@ -149,6 +149,7 @@ class Dom {
     expandedClass,
     coverageClass,
     highlightClass,
+    focusClass,
   }) {
 
     // CONSTANTS
@@ -175,6 +176,7 @@ class Dom {
     this.collapsedClass = collapsedClass || 'collapsed';
     this.expandedClass = expandedClass || 'expanded';
     this.highlightClass = highlightClass || 'highlighted';
+    this.focusClass = focusClass || 'focus';
 
     // elements
     this.sourceContainer;
@@ -190,6 +192,7 @@ class Dom {
       // requirement: null,
       pointers: [],
       labels: [],
+      focus: false,
     };
   }
 
@@ -399,18 +402,69 @@ class Dom {
         }
 
         pointer.addEventListener("click", (event) => {
-          const currentHash = window.location.hash;
           const targetHash = `#${rangeReq || ""}${this.hashSplitter}${rangeBegin}${this.hashSplitter}${rangeEnd}`;
-          console.log(currentHash, targetHash);
-          if (currentHash === targetHash) {
-            console.log(currentHash, targetHash);
+          const currentHash = window.location.hash;
+          const isSameHash = currentHash === targetHash;
+          const isModifierPressed = event.metaKey || event.ctrlKey;
+
+          // Modifier click
+          if (isModifierPressed) {
+            event.preventDefault(); // cancel opening a new browser tab
+
+            if (isSameHash) {
+              this._toggleFocus();
+            } else {
+              // Sets the URL hash to activate a specific range without reloading the page:
+              window.location.hash = targetHash;
+              this.useLocationHash();
+              this._activateFocus();
+            }
+            return;
+          }
+
+          // Normal click
+          if (isSameHash) {
+            // active → reset
             event.preventDefault();
+            // Removes hash from URL without reloading or adding history entry:
             history.replaceState(null, '', window.location.pathname);
             this.useLocationHash();
+            this._clearFocus();
+          } else {
+            // inactive → just reset the focus,
+            // the basic functionality via URL will work itself out
+            this._clearFocus();
           }
         });
 
       });
+  }
+
+  _toggleFocus() {
+    if (this.active.focus) {
+      this.sourceContainer.classList.remove(this.focusClass);
+      this.referContainer.classList.remove(this.focusClass);
+    } else {
+      this.sourceContainer.classList.add(this.focusClass);
+      this.referContainer.classList.add(this.focusClass);
+    }
+    this.active.focus = !this.active.focus;
+  }
+
+  _activateFocus() {
+    if (!this.active.focus) {
+      this.active.focus = true;
+      this.sourceContainer.classList.add(this.focusClass);
+      this.referContainer.classList.add(this.focusClass);
+    }
+  }
+
+  _clearFocus() {
+    if (this.active.focus) {
+      this.active.focus = false;
+      this.sourceContainer.classList.remove(this.focusClass);
+      this.referContainer.classList.remove(this.focusClass);
+    }
   }
 
   _updateRangesWithRequirements() {

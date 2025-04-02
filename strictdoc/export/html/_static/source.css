@@ -147,9 +147,6 @@
 
   font-size: 14px;
   z-index: 1;
-
-  border-top: var(--source-line);
-  background: var(--color-bg-contrast);
 }
 
 .source_highlight {
@@ -173,9 +170,11 @@
 }
 
 .source__range-header {
-  padding: var(--base-rhythm);
   grid-column: 1 / -1;
   background-color: var(--color-highlight-secondary);
+  padding: var(--base-rhythm);
+  margin-top: var(--tree-gap);
+  border-top-left-radius: var(--base-rhythm);
 }
 
 .source__range-button {
@@ -261,6 +260,7 @@ ul.source__range-titles-list {
   text-align: right;
   border-bottom: var(--source-line);
   color: var(--color-fg-secondary);
+  background: var(--color-bg-contrast);
   user-select: none;
   position: relative;
 }
@@ -272,11 +272,10 @@ ul.source__range-titles-list {
   padding: 0.25rem 1rem 0.25rem .5rem;
   border-bottom: var(--source-line);
   border-left: var(--source-line);
+  background: var(--color-bg-contrast);
 }
 
 /* pointers */
-
-/* source-file__source */
 
 .source__range-pointer {
   display: inline-block;

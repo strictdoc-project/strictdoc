@@ -151,6 +151,7 @@
   /* font-size: var(--font-size-sm); */
   font-size: 14px;
   min-width: 100%;
+  margin-bottom: var(--tree-gap);
 }
 
 .source {

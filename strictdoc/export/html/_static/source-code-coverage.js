@@ -300,10 +300,7 @@ class Dom {
   }
 
   highlightRange() {
-    const activeRange = this.ranges[this.active.rangeAlias]?.bannerHeader || 0;
-
-    // scroll to highlighted, do not scroll when unset highlighting:
-    this.active.rangeAlias && this.scrollTo(activeRange);
+    this.scrollToActiveRangeIfNeeded();
 
     const begin = parseInt(this.active.rangeBegin, 10);
     const end = parseInt(this.active.rangeEnd, 10);
@@ -313,6 +310,14 @@ class Dom {
       if (key >= begin && key <= end) {
         this.lines[key].line.classList.add(this.highlightClass);
       }
+    }
+  }
+
+  scrollToActiveRangeIfNeeded() {
+    // scroll to highlighted, do not scroll to top when unset highlighting:
+    if (this.active.rangeAlias) {
+      const activeRange = this.ranges[this.active.rangeAlias]?.bannerHeader || 0;
+      this.scrollTo(activeRange);
     }
   }
 
@@ -419,6 +424,7 @@ class Dom {
               this.useLocationHash();
               this._activateFocus();
             }
+            this.scrollToActiveRangeIfNeeded();
             return;
           }
 

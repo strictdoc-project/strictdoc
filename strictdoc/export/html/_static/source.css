@@ -129,8 +129,14 @@
   inset: 0px;
   overflow: auto;
 
-  padding: 66px 0;
+  padding: var(--tree-gap) 0 calc(var(--tree-gap)*10);
   transition: box-shadow 0.3s ease-in;
+}
+
+.source-file__source .sdoc-table_key_value {
+  /* font-size: var(--font-size-sm); */
+  font-size: 14px;
+  min-width: 100%;
 }
 
 .source {
@@ -143,6 +149,7 @@
   transition: transform 0.3s ease-in;
   position: relative;
 
+  min-width: 100%;
   width: max-content;
 
   font-size: 14px;

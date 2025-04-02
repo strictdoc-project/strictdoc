@@ -1,6 +1,9 @@
 <div class="main">
 {# todo: update this template #}
 <div id="sourceContainer" class="source-file__source">
+
+  {% include "screens/source_file_view/file_stats.jinja" %}
+
   {%- if view_object.pygmented_source_file_lines|length > 0 -%}
   <div id="source" class="source">
     {%- for line in view_object.pygmented_source_file_lines -%}

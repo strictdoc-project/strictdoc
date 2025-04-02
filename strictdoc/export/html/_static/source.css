@@ -7,6 +7,20 @@
   --source-line: 1px solid rgba(0, 0, 0, .05);
 }
 
+[data-viewtype="source-file"] .layout {
+  grid-template-columns:
+      fit-content(var(--base-gap))
+      minmax(200px, 20%) /* replaced: fit-content(20%) */
+      fit-content(20%)
+      minmax(0, 1fr)
+      fit-content(20%)
+      auto;
+  grid-template-areas:
+      "nav header header header header aside"
+      "nav tree bar_left main bar_right aside"
+      "nav footer footer footer footer aside";
+}
+
 /* left panel */
 
 .source-file__aside {
@@ -286,8 +300,6 @@ ul.source__range-titles-list {
 
 .source__range-pointer {
   display: inline-block;
-  font-size: x-small;
-  padding: 0 calc(var(--base-rhythm)/2);
 }
 
 .source__range-pointer.active {

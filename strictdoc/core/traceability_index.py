@@ -1,7 +1,6 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call,no-untyped-def,union-attr,type-arg"
 import datetime
 from copy import deepcopy
-from enum import IntEnum
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
@@ -15,6 +14,7 @@ from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.asset_manager import AssetManager
+from strictdoc.core.constants import GraphLinkType
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
@@ -34,15 +34,6 @@ from strictdoc.helpers.mid import MID
 from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.sorting import alphanumeric_sort
-
-
-class GraphLinkType(IntEnum):
-    MID_TO_NODE = 1
-    UID_TO_NODE = 2
-    NODE_TO_PARENT_NODES = 3
-    NODE_TO_CHILD_NODES = 4
-    NODE_TO_INCOMING_LINKS = 5
-    DOCUMENT_TO_TAGS = 8
 
 
 class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes

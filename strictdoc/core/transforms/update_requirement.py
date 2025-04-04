@@ -19,9 +19,11 @@ from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
+from strictdoc.core.constants import (
+    GraphLinkType,
+)
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
-    GraphLinkType,
     TraceabilityIndex,
 )
 from strictdoc.core.transforms.constants import NodeCreationOrder

@@ -317,7 +317,9 @@ class Dom {
     // scroll to highlighted, do not scroll to top when unset highlighting:
     if (this.active.rangeAlias) {
       const activeRange = this.ranges[this.active.rangeAlias]?.bannerHeader || 0;
-      this.scrollTo(activeRange);
+      requestAnimationFrame(() => {
+        this.scrollTo(activeRange);
+      });
     }
   }
 
@@ -389,9 +391,6 @@ class Dom {
           this.ranges[range].endLine = this.lines[rangeEnd].lineNumber;
           this.ranges[range].begin = rangeBegin;
           this.ranges[range].end = rangeEnd;
-
-          const top = this.ranges[range].beginLine.offsetTop;
-          const height = this.ranges[range].endLine.offsetTop + this.ranges[range].endLine.offsetHeight - top;
         }
 
         // todo pointers?
@@ -412,19 +411,23 @@ class Dom {
           const isSameHash = currentHash === targetHash;
           const isModifierPressed = event.metaKey || event.ctrlKey;
 
+          const targetBannerHeader = this.ranges[range]?.bannerHeader;
+          const topBefore = targetBannerHeader?.getBoundingClientRect().top;
+
           // Modifier click
           if (isModifierPressed) {
             event.preventDefault(); // cancel opening a new browser tab
 
             if (isSameHash) {
               this._toggleFocus();
+              this._compensateSourceContainerScrollPosition(targetBannerHeader, topBefore);
             } else {
               // Sets the URL hash to activate a specific range without reloading the page:
               window.location.hash = targetHash;
               this.useLocationHash();
               this._activateFocus();
+              this._compensateSourceContainerScrollPosition(targetBannerHeader, topBefore);
             }
-            this.scrollToActiveRangeIfNeeded();
             return;
           }
 
@@ -436,14 +439,30 @@ class Dom {
             history.replaceState(null, '', window.location.pathname);
             this.useLocationHash();
             this._clearFocus();
+            this._compensateSourceContainerScrollPosition(targetBannerHeader, topBefore);
           } else {
             // inactive → just reset the focus,
             // the basic functionality via URL will work itself out
             this._clearFocus();
+            this._compensateSourceContainerScrollPosition(targetBannerHeader, topBefore);
           }
         });
 
       });
+  }
+
+  _compensateSourceContainerScrollPosition(element, topBefore) {
+    // Compensates scroll to keep the given element in the same viewport position.
+    // Expects the element and its initial .getBoundingClientRect().top value as input.
+    // Measures element's top offset relative to the viewport before and after DOM changes.
+    // Uses requestAnimationFrame to wait for DOM/layout updates before measuring again.
+    // Calculates delta = after - before, i.e. how much the element moved visually.
+    // Scrolls by that delta to restore the element's original viewport position.
+    requestAnimationFrame(() => {
+      const topAfter = element?.getBoundingClientRect().top;
+      const delta = topAfter - topBefore;
+      this.sourceContainer.scrollBy({ top: delta });
+    });
   }
 
   _toggleFocus() {

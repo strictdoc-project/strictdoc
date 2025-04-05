@@ -4,8 +4,8 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 
 RUN: %cat %S/Output/html/19_no_newline_at_end_of_file/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">
+CHECK-HTML: href="../_source_files/file.py.html#REQ-001#1#3"
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a{{.*}}href="../19_no_newline_at_end_of_file/input.html#REQ-001"{{.*}}>
+CHECK-SOURCE-FILE: href="../19_no_newline_at_end_of_file/input.html#REQ-001"
 CHECK-SOURCE-FILE: <pre class="highlight"><span class="mi">123123</span>  <span class="c1"># noqa: W292, B018</span></pre>

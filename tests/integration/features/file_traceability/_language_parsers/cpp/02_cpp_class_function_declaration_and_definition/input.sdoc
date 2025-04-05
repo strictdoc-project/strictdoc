@@ -5,6 +5,3 @@ TITLE: Hello world doc
 UID: REQ-1
 TITLE: Requirement Title
 STATEMENT: Requirement Statement
-RELATIONS:
-- TYPE: File
-  VALUE: file.hpp

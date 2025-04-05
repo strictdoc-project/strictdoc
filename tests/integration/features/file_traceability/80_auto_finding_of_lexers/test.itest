@@ -6,16 +6,22 @@ RUN: %check_exists --file "%S/Output/html/_source_files/file.ml.html"
 RUN: %cat %S/Output/html/80_auto_finding_of_lexers/input.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
 
-CHECK-HTML: <a{{.*}}href="../_source_files/file.ml.html#REQ-001#3#5"
+CHECK-HTML: href="../_source_files/file.ml.html#REQ-001#3#5"
 
 RUN: %cat %S/Output/html/_source_files/file.ml.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
 
-NOTE: Ensure that the lexer is recognized correctly.
+# Ensure that the lexer is recognized correctly.
 CHECK-SOURCE-FILE: OCaml
 
-CHECK-SOURCE-FILE: <a{{.*}}href="../80_auto_finding_of_lexers/input.html#REQ-001">
+CHECK-SOURCE-FILE: href="../80_auto_finding_of_lexers/input.html#REQ-001"
+
+CHECK-SOURCE-FILE: href="../_source_files/file.ml.html#REQ-001#1#5"
+CHECK-SOURCE-FILE: <b>[ 1-5 ]</b>
+CHECK-SOURCE-FILE: file.ml, entire file
+
 CHECK-SOURCE-FILE: href="../_source_files/file.ml.html#REQ-001#3#5"
-CHECK-SOURCE-FILE: <b>[ 3-5 ]</b> file.ml
+CHECK-SOURCE-FILE: <b>[ 3-5 ]</b>
+CHECK-SOURCE-FILE: file.ml, range
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: file.ml

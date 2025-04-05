@@ -218,6 +218,21 @@ class FileTraceabilityIndex:
                 )
                 file_posix_path = file_reference.get_posix_path()
 
+                #
+                # Validate that all requirements reference existing files.
+                #
+                source_file_traceability_info: Optional[
+                    SourceFileTraceabilityInfo
+                ] = self.map_paths_to_source_file_traceability_info.get(
+                    file_posix_path
+                )
+                if source_file_traceability_info is None:
+                    raise StrictDocException(
+                        f"Requirement {forward_requirement_.reserved_uid} "
+                        "references a file that does not exist: "
+                        f"{file_posix_path}."
+                    )
+
                 if file_posix_path == "#FORWARD#":
                     test_function = (
                         forward_requirement_.get_meta_field_value_by_title(
@@ -423,23 +438,6 @@ class FileTraceabilityIndex:
                     marker_copy = marker_.create_end_marker()
                     trace_info_.markers.append(marker_copy)
 
-        # STEP: Validate that all requirements reference existing files.
-        for (
-            requirement_uid,
-            file_links,
-        ) in self.map_reqs_uids_to_paths.items():
-            for file_link in file_links:
-                source_file_traceability_info: Optional[
-                    SourceFileTraceabilityInfo
-                ] = self.map_paths_to_source_file_traceability_info.get(
-                    file_link
-                )
-                if source_file_traceability_info is None:
-                    raise StrictDocException(
-                        f"Requirement {requirement_uid} references a file"
-                        f" that does not exist: {file_link}."
-                    )
-
         #
         # Resolve definitions to declarations (only applicable for C and C++).
         #
@@ -484,7 +482,7 @@ class FileTraceabilityIndex:
                                 marker_type=RangeMarkerType.FUNCTION,
                                 reqs=marker_.reqs_objs,
                                 role=marker_.role,
-                                description=f"function {function_.display_name}",
+                                description=f"function {function_.display_name}()",
                             )
 
                             for req_uid_ in marker_.reqs:
@@ -690,7 +688,9 @@ class FileTraceabilityIndex:
         if description is not None:
             function_marker.set_description(description)
         elif marker_type == RangeMarkerType.FUNCTION:
-            function_marker.set_description(f"function {function.display_name}")
+            function_marker.set_description(
+                f"function {function.display_name}()"
+            )
         elif marker_type == RangeMarkerType.CLASS:
             function_marker.set_description(f"class {function.name}")
         return function_marker

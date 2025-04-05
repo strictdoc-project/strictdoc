@@ -3,12 +3,12 @@ CHECK: Published: Example: Traceability between requirements and source files
 
 RUN: %check_exists --file "%S/Output/html/_source_files/file.jinja2.html"
 
-RUN: %cat %S/Output/html/20_jinja/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="../_source_files/file.jinja2.html#REQ-001">
+RUN: %cat %S/Output/html/20_jinja/example.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: href="../_source_files/file.jinja2.html#REQ-001#1#5">
 
-RUN: %cat %S/Output/html/_source_files/file.jinja2.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %S/Output/html/_source_files/file.jinja2.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
 # Links to REQ-001, REQ-002, REQ-003 are correct.
-CHECK-SOURCE-FILE:{{.*}}href="../20_jinja/example.html#REQ-002"{{.*}}
-CHECK-SOURCE-FILE:{{.*}}href="../20_jinja/example.html#REQ-003"{{.*}}
+CHECK-SOURCE-FILE:href="../20_jinja/example.html#REQ-002"
+CHECK-SOURCE-FILE:href="../20_jinja/example.html#REQ-003"
 
-CHECK-SOURCE-FILE:{{.*}}href="../20_jinja/example.html#REQ-001"{{.*}}
+CHECK-SOURCE-FILE:href="../20_jinja/example.html#REQ-001"

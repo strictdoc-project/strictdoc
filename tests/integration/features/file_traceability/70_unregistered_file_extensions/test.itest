@@ -10,10 +10,15 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.unknown_extension.html#REQ-001#2
 
 RUN: %cat %S/Output/html/_source_files/file.unknown_extension.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
 
-CHECK-SOURCE-FILE: <a{{.*}}href="../70_unregistered_file_extensions/input.html#REQ-001">
+CHECK-SOURCE-FILE: href="../70_unregistered_file_extensions/input.html#REQ-001"
+
+CHECK-SOURCE-FILE: href="../_source_files/file.unknown_extension.html#REQ-001#1#5"
+CHECK-SOURCE-FILE: <b>[ 1-5 ]</b>
+CHECK-SOURCE-FILE: file.unknown_extension, entire file
 
 CHECK-SOURCE-FILE: href="../_source_files/file.unknown_extension.html#REQ-001#2#4"
-CHECK-SOURCE-FILE: <b>[ 2-4 ]</b> file.unknown_extension
+CHECK-SOURCE-FILE: <b>[ 2-4 ]</b>
+CHECK-SOURCE-FILE: file.unknown_extension, range
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: file.unknown_extension

@@ -10,8 +10,6 @@ RUN: %check_exists --file "%S/Output/html/_source_files/file2.py.html"
 # below. This attribute difference is used by JavaScript code.
 
 RUN: %cat %S/Output/html/_source_files/file1.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE:<a
-CHECK-SOURCE-FILE:class="pointer"
 CHECK-SOURCE-FILE:data-begin="5"
 CHECK-SOURCE-FILE:data-end="7"
 CHECK-SOURCE-FILE:data-traceability-file-type="this_file"
@@ -19,8 +17,6 @@ CHECK-SOURCE-FILE:href="../_source_files/file1.py.html#REQ-01#5#7"
 CHECK-SOURCE-FILE:title="lines 5-7 in file file1.py"
 CHECK-SOURCE-FILE:>
 
-CHECK-SOURCE-FILE:<a
-CHECK-SOURCE-FILE:class="pointer"
 CHECK-SOURCE-FILE:data-begin="3"
 CHECK-SOURCE-FILE:data-end="6"
 CHECK-SOURCE-FILE:data-traceability-file-type="other_file"

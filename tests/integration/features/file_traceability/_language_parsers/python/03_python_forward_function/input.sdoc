@@ -3,7 +3,7 @@ TITLE: Hello world doc
 
 [REQUIREMENT]
 UID: REQ-1
-TITLE: Requirement Title
+TITLE: Requirement Title #1
 STATEMENT: Requirement Statement
 RELATIONS:
 - TYPE: File
@@ -12,7 +12,7 @@ RELATIONS:
 
 [REQUIREMENT]
 UID: REQ-2
-TITLE: Requirement Title
+TITLE: Requirement Title #2
 STATEMENT: Requirement Statement
 RELATIONS:
 - TYPE: File

@@ -38,7 +38,9 @@
       {{ requirement.reserved_title }}
     {%- endif %}
   </div>
-  </summary>
+  {% if ranged %}
+    </summary>
+  {% endif %}
 
  {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
  {%- if requirement_file_links %}

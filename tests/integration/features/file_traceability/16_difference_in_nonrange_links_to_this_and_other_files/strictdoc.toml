@@ -1,5 +1,0 @@
-[project]
-
-features = [
-  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-]

@@ -151,4 +151,4 @@ class ForwardFileMarker(ForwardRangeMarker):
         super().__init__(True, reqs_objs, role)
 
     def get_description(self) -> Optional[str]:
-        return "file"
+        return "entire file"

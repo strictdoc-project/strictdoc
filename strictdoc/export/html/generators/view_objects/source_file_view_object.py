@@ -143,7 +143,7 @@ class SourceFileViewObject:
         return self.link_renderer.render_url(url)
 
     def render_marker_range_link(self, marker):
-        return self.link_renderer.render_requirement_in_source_file_range_link(
+        return self.link_renderer.render_marker_range_link(
             self.source_file.in_doctree_source_file_rel_path_posix,
             self.source_file,
             marker,

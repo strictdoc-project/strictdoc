@@ -250,18 +250,17 @@ class LinkRenderer:
             return ("../" * level)[:-1]
 
         path_prefix = get_root_path_prefix(context_source_file.level + 1)
-        # FIXME: Req UID (empty #) is no longer used.
         source_file_link = (
             f"{path_prefix}"
             f"/_source_files"
             f"/{source_link}.html"
-            "#"
+            f"#{req_uid}"
             f"#{source_range.ng_range_line_begin}"
             f"#{source_range.ng_range_line_end}"
         )
         return source_file_link
 
-    def render_requirement_in_source_file_range_link(
+    def render_marker_range_link(
         self,
         source_link: str,
         context_source_file: SourceFile,
@@ -270,8 +269,24 @@ class LinkRenderer:
         assert isinstance(source_link, str)
         assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
-            # FIXME: No longer used.
+            # No requirement UID provided because the link is formed for a range only.
             "",
+            source_link,
+            context_source_file,
+            source_range,
+        )
+
+    def render_requirement_in_source_file_range_link(
+        self,
+        requirement: SDocNode,
+        source_link: str,
+        context_source_file: SourceFile,
+        source_range,
+    ):
+        assert isinstance(source_link, str)
+        assert isinstance(context_source_file, SourceFile)
+        return self.render_requirement_in_source_file_range_link_using_id(
+            requirement.reserved_uid,
             source_link,
             context_source_file,
             source_range,

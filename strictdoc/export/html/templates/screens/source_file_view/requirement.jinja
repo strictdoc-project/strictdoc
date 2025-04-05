@@ -7,13 +7,24 @@
     "Expected link renderer"
 -%}
 
+{% set ranged = false %}
+{% if range_begin is not none and range_end is not none %}
+  {% set ranged = true %}
+{% endif %}
+
 <div
   id="requirement:{{ requirement.reserved_uid }}"
   class="source-file__requirement"
   data-reqid="{{ requirement.reserved_uid }}"
-  data-begin="{{ range_begin }}"
-  data-end="{{ range_end }}"
+  {% if ranged %}
+    data-begin="{{ range_begin }}"
+    data-end="{{ range_end }}"
+  {% endif %}
 >
+  {% if ranged %}
+  <details>
+    <summary>
+  {% endif %}
   <a
     class="source-file__requirement_link"
     href="{{ view_object.link_renderer.render_requirement_link_from_source_file(requirement, view_object.source_file) }}"
@@ -27,6 +38,7 @@
       {{ requirement.reserved_title }}
     {%- endif %}
   </div>
+  </summary>
 
  {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
  {%- if requirement_file_links %}
@@ -85,6 +97,10 @@
     {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
+
+  {% if ranged %}
+  </details>
+  {% endif %}
 
 {%- endif %}
 </div>

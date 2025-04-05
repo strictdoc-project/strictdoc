@@ -107,7 +107,10 @@ class SourceFileViewObject:
         )
 
     def render_aside_requirement(
-        self, node_uid: str, range_begin: str, range_end: str
+        self,
+        node_uid: str,
+        range_begin: Optional[str] = None,
+        range_end: Optional[str] = None
     ) -> Markup:
         node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
         return self.jinja_environment.render_template_as_markup(

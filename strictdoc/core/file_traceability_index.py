@@ -14,10 +14,10 @@ from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     RangeMarkerType,
 )
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
+    ForwardFileMarker,
     ForwardRangeMarker,
     LineMarker,
     RangeMarker,
-    ForwardFileMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.backend.sdoc_source_code.reader import (
@@ -43,11 +43,6 @@ class FileTraceabilityIndex:
             str, SourceFileTraceabilityInfo
         ] = {}
 
-        # "REQ-1" -> [ ("file.py", (10, 12), "Impl" ), ... ]
-        self.map_reqs_uids_to_line_range_file_refs: Dict[
-            str, List[Tuple[str, Tuple[int, int], Optional[str]]]
-        ] = {}
-
         # "file.py" -> { { "foo" -> [("REQ-1", "Impl"), ("REQ-2", "Test")] }, ... }
         self.map_file_function_names_to_reqs_uids: Dict[
             str, Dict[str, List[Tuple[str, Optional[str]]]]
@@ -61,11 +56,8 @@ class FileTraceabilityIndex:
             str, List[Function]
         ] = {}
 
-        # "file.py" -> (
-        #   general_requirements: [SDocNode],  # noqa: ERA001
-        #   range_requirements: [SDocNode]  # noqa: ERA001
-        # )  # noqa: ERA001
-        self.source_file_reqs_cache = {}
+        # "file.py" -> [SDocNode]  # noqa: ERA001
+        self.source_file_reqs_cache: Dict[str, Optional[List[SDocNode]]] = {}
 
         self.requirements_with_forward_links: OrderedSet[SDocNode] = (
             OrderedSet()
@@ -137,7 +129,7 @@ class FileTraceabilityIndex:
 
     def get_source_file_reqs(
         self, source_file_rel_path: str
-    ) -> Tuple[Optional[List[SDocNode]], Optional[List[SDocNode]]]:
+    ) -> Optional[List[SDocNode]]:
         assert (
             source_file_rel_path
             in self.map_paths_to_source_file_traceability_info
@@ -152,28 +144,22 @@ class FileTraceabilityIndex:
         )
 
         if source_file_rel_path not in self.map_paths_to_reqs:
-            self.source_file_reqs_cache[source_file_rel_path] = (None, None)
-            return None, None
+            self.source_file_reqs_cache[source_file_rel_path] = None
+            return None
+
         requirements = self.map_paths_to_reqs[source_file_rel_path]
         assert len(requirements) > 0
-        general_requirements = []
         range_requirements = []
 
         for requirement in requirements:
             if (
                 requirement.reserved_uid
                 in source_file_traceability_info.ng_map_reqs_to_markers
-                or requirement.reserved_uid
-                in self.map_reqs_uids_to_line_range_file_refs
             ):
                 range_requirements.append(requirement)
-            else:
-                general_requirements.append(requirement)
-        self.source_file_reqs_cache[source_file_rel_path] = (
-            general_requirements,
-            range_requirements,
-        )
-        return general_requirements, range_requirements
+
+        self.source_file_reqs_cache[source_file_rel_path] = range_requirements
+        return range_requirements
 
     def get_coverage_info(
         self, source_file_rel_path: str
@@ -343,9 +329,6 @@ class FileTraceabilityIndex:
                     ).append(start_marker)
                     source_file_info.markers.append(start_marker)
                     source_file_info.markers.append(end_marker)
-                    self.map_reqs_uids_to_line_range_file_refs.setdefault(
-                        uid, []
-                    ).append((file_posix_path, line_range, relation_.role))
                 else:
                     uid = forward_requirement_.reserved_uid
                     source_file_info = (
@@ -353,22 +336,17 @@ class FileTraceabilityIndex:
                             file_posix_path
                         ]
                     )
-                    marker = self.forward_file_marker_from_file_info(
-                        source_file_info,
-                        uid,
-                        relation_.role,
-                    )
-                    file_range = (
-                        marker.ng_range_line_begin,
-                        marker.ng_range_line_end,
+                    forward_file_marker = (
+                        self.forward_file_marker_from_file_info(
+                            source_file_info,
+                            uid,
+                            relation_.role,
+                        )
                     )
                     source_file_info.ng_map_reqs_to_markers.setdefault(
                         forward_requirement_.reserved_uid, []
-                    ).append(marker)
-                    source_file_info.markers.append(marker)
-                    self.map_reqs_uids_to_line_range_file_refs.setdefault(
-                        uid, []
-                    ).append((file_posix_path, file_range, relation_.role))
+                    ).append(forward_file_marker)
+                    source_file_info.markers.append(forward_file_marker)
 
         #
         # STEP: Add markers for forward relations to functions and classes
@@ -409,6 +387,9 @@ class FileTraceabilityIndex:
                     )
 
             validated_requirement_uids: Set[str] = set()
+            marker_: Union[
+                FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
+            ]
             for marker_ in copy(trace_info_.markers):
                 # FIXME: Is this 'continue' needed here?
                 if isinstance(marker_, ForwardRangeMarker):
@@ -550,26 +531,23 @@ class FileTraceabilityIndex:
             # Finding how many lines are covered by the requirements in the file.
             # Quick and dirty: https://stackoverflow.com/a/15273749/598057
             merged_ranges: List[List[int]] = []
-            marker: Union[
-                FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
-            ]
-            for marker in traceability_info_.markers:
+            for marker_ in traceability_info_.markers:
                 assert isinstance(
-                    marker,
+                    marker_,
                     (
                         FunctionRangeMarker,
                         ForwardRangeMarker,
                         RangeMarker,
                         LineMarker,
                     ),
-                ), marker
-                if marker.ng_is_nodoc:
+                ), marker_
+                if marker_.ng_is_nodoc:
                     continue
-                if not marker.is_begin():
+                if not marker_.is_begin():
                     continue
                 begin, end = (
-                    assert_cast(marker.ng_range_line_begin, int),
-                    assert_cast(marker.ng_range_line_end, int),
+                    assert_cast(marker_.ng_range_line_begin, int),
+                    assert_cast(marker_.ng_range_line_end, int),
                 )
                 if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
                     merged_ranges[-1][1] = max(merged_ranges[-1][1], end)

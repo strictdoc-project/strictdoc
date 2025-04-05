@@ -25,7 +25,6 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     LineMarker,
     RangeMarker,
-    ForwardFileMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
@@ -233,9 +232,6 @@ class SourceFileViewHTMLGenerator:
         )
 
         for marker in coverage_info.markers:
-            # if isinstance(marker, ForwardFileMarker):
-            #    continue
-
             marker_line = marker.ng_source_line_begin
             assert isinstance(marker_line, int)
 

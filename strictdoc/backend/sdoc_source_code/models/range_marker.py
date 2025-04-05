@@ -115,6 +115,8 @@ class ForwardRangeMarker:
         self.start_or_end: bool = start_or_end
 
         self.reqs_objs: List[str] = reqs_objs
+        self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
+
         self.role: Optional[str] = (
             role if role is not None and len(role) > 0 else None
         )

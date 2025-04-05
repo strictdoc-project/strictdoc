@@ -17,8 +17,8 @@
 
     <div class="project_tree-file-aside">
       {%- if source_file.is_referenced -%}
-      {%- set general_reqs, range_reqs =
-      view_object.traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
+      {%- set range_reqs =
+          view_object.traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
       {%- if range_reqs -%}
       {%- set coverage_info =
       view_object.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix) -%}
@@ -27,13 +27,6 @@
           <span class="value-bar_filler" style="width:{{ coverage_info.get_coverage() }}%"></span>
         </span>
         <span class="value-bar_text">{{ coverage_info.get_coverage() }}%</span>
-      </div>
-      {%- elif general_reqs -%}
-      <div class="value-bar">
-        <span class="value-bar_bar" data-value>
-          <span class="value-bar_filler"></span>
-        </span>
-        <span class="value-bar_text"></span>
       </div>
       {%- else -%}
       <div class="value-bar">

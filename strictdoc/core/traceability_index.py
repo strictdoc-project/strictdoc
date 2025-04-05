@@ -293,7 +293,9 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             requirement
         )
 
-    def get_source_file_reqs(self, source_file_rel_path):
+    def get_source_file_reqs(
+        self, source_file_rel_path
+    ) -> Optional[List[SDocNode]]:
         return self._file_traceability_index.get_source_file_reqs(
             source_file_rel_path
         )

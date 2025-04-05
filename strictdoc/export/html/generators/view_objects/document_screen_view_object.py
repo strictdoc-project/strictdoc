@@ -250,10 +250,10 @@ class DocumentScreenViewObject:
     def render_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_url(url))
 
-    def render_node_link(self, node, context_document, document_type) -> str:
-        assert node is not None, node
+    def render_node_link(self, node) -> str:
+        assert isinstance(node, SDocNode), node
         return self.link_renderer.render_node_link(
-            node, context_document, document_type
+            node, self.document, self.document_type
         )
 
     def render_document_link(

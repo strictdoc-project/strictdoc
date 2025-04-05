@@ -56,7 +56,7 @@
                       {%- for requirement in view_object.traceability_index.get_parent_requirements(requirement) %}
                         <li>
                           <a class="requirement__link-parent"
-                            href="{{ view_object.render_node_link(requirement, view_object.document, view_object.document_type) }}">
+                            href="{{ view_object.render_node_link(requirement) }}">
                             {%- if requirement.reserved_uid %}
                               <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
                             {%- endif %}
@@ -72,7 +72,7 @@
                       {%- for requirement in view_object.traceability_index.get_children_requirements(requirement) %}
                         <li>
                           <a class="requirement__link-child"
-                            href="{{ view_object.render_node_link(requirement, view_object.document, view_object.document_type) }}">
+                            href="{{ view_object.render_node_link(requirement) }}">
                             {%- if requirement.reserved_uid %}
                               <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
                             {%- endif %}

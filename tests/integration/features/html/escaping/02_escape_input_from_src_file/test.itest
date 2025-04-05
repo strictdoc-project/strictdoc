@@ -3,8 +3,8 @@ CHECK-EXPORT: Published: HTML escaping of source file content
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --check-prefix CHECK-SRC
 
-# Line marker.
-CHECK-SRC: # &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;line mark&#39;&lt;/b&gt; @sdoc(REQ-1)
+# Line marker. Using a regex at the end to avoid StrictDoc's own documentation from tracing this file.
+CHECK-SRC: # &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;line mark&#39;&lt;/b&gt; {{.}}sdoc(REQ-1)
 
 # Normal source code line.
 CHECK-SRC: <pre class="highlight"><span class="s2">{{\s+}}&lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;normal src line&#39;&lt;/b&gt;
@@ -15,8 +15,6 @@ CHECK-SRC: &quot;&quot;&quot;&lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;forward
 # Forward range marker after.
 CHECK-SRC: &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;forward range mark after&#39;&lt;/b&gt;
 
-# Range marker before.
-CHECK-SRC: # &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;range mark before&#39;&lt;/b&gt; @sdoc[REQ-1]
-
-# Range marker after.
-CHECK-SRC: # &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;range mark after&#39;&lt;/b&gt; @sdoc[/REQ-1]
+# Range marker before and after. Using a regex at the end to avoid StrictDoc's own documentation from tracing this file.
+CHECK-SRC: # &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;range mark before&#39;&lt;/b&gt; {{.}}sdoc[REQ-1]
+CHECK-SRC: # &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;range mark after&#39;&lt;/b&gt; {{.}}sdoc[/REQ-1]

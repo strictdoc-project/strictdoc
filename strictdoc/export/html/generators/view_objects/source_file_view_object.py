@@ -8,7 +8,7 @@ from markupsafe import Markup
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import NullViewElement
-from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
@@ -136,6 +136,17 @@ class SourceFileViewObject:
             DocumentType.document(), node
         )
 
+    def render_node_rationale(self, node) -> Markup:
+        return self.markup_renderer.render_node_rationale(
+            DocumentType.document(), node
+        )
+
+    def render_node_field(self, node_field: SDocNodeField) -> Markup:
+        assert isinstance(node_field, SDocNodeField), node_field
+        return self.markup_renderer.render_node_field(
+            DocumentType.document(), node_field
+        )
+
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()
 
@@ -149,9 +160,10 @@ class SourceFileViewObject:
             marker,
         )
 
-    def render_node_link(self, incoming_link, document, document_type):
+    def render_node_link(self, node: SDocNode) -> str:
+        assert isinstance(node, SDocNode), node
         return self.link_renderer.render_node_link(
-            incoming_link, document, document_type
+            node, None, DocumentType.document()
         )
 
     def render_static_url(self, url: str):

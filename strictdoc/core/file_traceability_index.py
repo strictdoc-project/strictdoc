@@ -218,21 +218,6 @@ class FileTraceabilityIndex:
                 )
                 file_posix_path = file_reference.get_posix_path()
 
-                #
-                # Validate that all requirements reference existing files.
-                #
-                source_file_traceability_info: Optional[
-                    SourceFileTraceabilityInfo
-                ] = self.map_paths_to_source_file_traceability_info.get(
-                    file_posix_path
-                )
-                if source_file_traceability_info is None:
-                    raise StrictDocException(
-                        f"Requirement {forward_requirement_.reserved_uid} "
-                        "references a file that does not exist: "
-                        f"{file_posix_path}."
-                    )
-
                 if file_posix_path == "#FORWARD#":
                     test_function = (
                         forward_requirement_.get_meta_field_value_by_title(
@@ -289,6 +274,21 @@ class FileTraceabilityIndex:
                         field_name="TEST_PATH",
                         form_field_index=0,
                         value=resolved_path_to_function_file,
+                    )
+
+                #
+                # Validate that all requirements reference existing files.
+                #
+                source_file_traceability_info: Optional[
+                    SourceFileTraceabilityInfo
+                ] = self.map_paths_to_source_file_traceability_info.get(
+                    file_posix_path
+                )
+                if source_file_traceability_info is None:
+                    raise StrictDocException(
+                        f"Requirement {forward_requirement_.reserved_uid} "
+                        "references a file that does not exist: "
+                        f"{file_posix_path}."
                     )
 
                 #

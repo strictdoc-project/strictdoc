@@ -553,7 +553,7 @@ class FileTraceabilityIndex:
             traceability_info_.markers = sorted_markers
             # Finding how many lines are covered by the requirements in the file.
             # Quick and dirty: https://stackoverflow.com/a/15273749/598057
-            merged_ranges: List[List[Any]] = []
+            merged_ranges: List[List[int]] = []
             marker: Union[
                 FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
             ]
@@ -582,8 +582,18 @@ class FileTraceabilityIndex:
             coverage = 0
             for merged_range in merged_ranges:
                 coverage += merged_range[1] - merged_range[0] + 1
+
+            for function_ in traceability_info_.functions:
+                for merged_range in merged_ranges:
+                    if (
+                        function_.line_begin >= merged_range[0]
+                        and function_.line_end <= merged_range[1]
+                    ):
+                        traceability_info_.covered_functions += 1
+                        break
+
             traceability_info_.set_coverage_stats(
-                traceability_info_.ng_lines_total, coverage
+                merged_ranges, traceability_info_.ng_lines_total, coverage
             )
 
             for (

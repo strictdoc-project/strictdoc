@@ -6,6 +6,7 @@ from typing import List, Optional, Union
 from markupsafe import Markup
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import NullViewElement
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -15,6 +16,9 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     LineMarker,
     RangeMarker,
+)
+from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+    SourceFileTraceabilityInfo,
 )
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
@@ -54,6 +58,7 @@ class SourceFileViewObject:
         self,
         *,
         traceability_index: TraceabilityIndex,
+        trace_info: SourceFileTraceabilityInfo,
         project_config: ProjectConfig,
         link_renderer: LinkRenderer,
         markup_renderer: MarkupRenderer,
@@ -63,6 +68,7 @@ class SourceFileViewObject:
         jinja_environment: JinjaEnvironment,
     ):
         self.traceability_index: TraceabilityIndex = traceability_index
+        self.trace_info: SourceFileTraceabilityInfo = trace_info
         self.project_config: ProjectConfig = project_config
         self.link_renderer: LinkRenderer = link_renderer
         self.markup_renderer: MarkupRenderer = markup_renderer
@@ -110,7 +116,7 @@ class SourceFileViewObject:
         self,
         node_uid: str,
         range_begin: Optional[str] = None,
-        range_end: Optional[str] = None
+        range_end: Optional[str] = None,
     ) -> Markup:
         node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
         return self.jinja_environment.render_template_as_markup(
@@ -157,7 +163,28 @@ class SourceFileViewObject:
     def date_today(self):
         return datetime.today().strftime("%Y-%m-%d")
 
-    def get_document_by_path(self, full_path: str):
+    def get_document_by_path(self, full_path: str) -> SDocDocument:
         return self.traceability_index.document_tree.get_document_by_path(
             full_path
         )
+
+    def get_source_file_path(self) -> str:
+        return self.source_file.in_doctree_source_file_rel_path_posix
+
+    def get_file_stats_lines_total(self) -> str:
+        return str(self.trace_info.ng_lines_total)
+
+    def get_file_stats_lines_covered(self) -> str:
+        covered = self.trace_info.ng_lines_covered
+        total = self.trace_info.ng_lines_total
+        percentage = (covered / total * 100) if total > 0 else 0
+        return f"{covered} / {total} ({percentage:.1f}%)"
+
+    def get_file_stats_functions_total(self) -> str:
+        return str(len(self.trace_info.functions))
+
+    def get_file_stats_functions_covered(self) -> str:
+        covered = self.trace_info.covered_functions
+        total = len(self.trace_info.functions)
+        percentage = (covered / total * 100) if total > 0 else 0
+        return f"{covered} / {total} ({percentage:.1f}%)"

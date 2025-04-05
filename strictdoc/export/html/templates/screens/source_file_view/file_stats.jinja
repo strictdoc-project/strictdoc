@@ -1,11 +1,13 @@
 <div class="sdoc-table_key_value">
   {# <div class="sdoc-table_key_value-section">File information</div> #}
   <div class="sdoc-table_key_value-key">Path:</div>
-  <div class="sdoc-table_key_value-value"><b>src/strictdoc/generator/file.c</b></div>
+  <div class="sdoc-table_key_value-value">{{ view_object.get_source_file_path() }}</div>
   <div class="sdoc-table_key_value-key">Lines:</div>
-  <div class="sdoc-table_key_value-value">3034</div>
+  <div class="sdoc-table_key_value-value">{{ view_object.get_file_stats_lines_total() }}</div>
+  <div class="sdoc-table_key_value-key">Lines covered with requirements:</div>
+  <div class="sdoc-table_key_value-value">{{ view_object.get_file_stats_lines_covered() }}</div>
   <div class="sdoc-table_key_value-key">Functions:</div>
-  <div class="sdoc-table_key_value-value">21</div>
+  <div class="sdoc-table_key_value-value">{{ view_object.get_file_stats_functions_total() }}</div>
   <div class="sdoc-table_key_value-key">Functions covered by requirements:</div>
-  <div class="sdoc-table_key_value-value">16 (70%)</div>
+  <div class="sdoc-table_key_value-value">{{ view_object.get_file_stats_functions_covered() }}</div>
 </div>

@@ -39,9 +39,19 @@ class SourceFileTraceabilityInfo:
         self.ng_map_names_to_markers: Dict[str, List] = {}
         self.ng_map_names_to_definition_functions: Dict[str, Function] = {}
 
+        #
+        # Merged ranges contain ranges that are fully covered by one or more
+        # forward or backward relations. If a range is part of a larger range,
+        # it gets merged into the larger range. The merged ranges are tracked so
+        # that for each source code function it can be answered whether the
+        # function is covered by any requirement or not.
+        #
+        self.merged_ranges: List[List[int]] = []
         self.ng_lines_total = 0
         self.ng_lines_covered = 0
         self._coverage: float = 0
+        self.covered_functions: int = 0
+
         self.markers: List[
             Union[
                 FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
@@ -51,7 +61,13 @@ class SourceFileTraceabilityInfo:
     def get_coverage(self):
         return self._coverage
 
-    def set_coverage_stats(self, lines_total: int, lines_covered: int) -> None:
+    def set_coverage_stats(
+        self,
+        merged_ranges: List[List[int]],
+        lines_total: int,
+        lines_covered: int,
+    ) -> None:
+        self.merged_ranges = merged_ranges
         self.ng_lines_total = lines_total
         self.ng_lines_covered = lines_covered
         self._coverage = (

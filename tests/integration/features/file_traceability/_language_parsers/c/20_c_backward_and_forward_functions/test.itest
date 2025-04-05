@@ -1,7 +1,7 @@
 REQUIRES: PYTHON_39_OR_HIGHER
 
 RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Published: Reproducer
 
 RUN: %check_exists --file "%S/Output/html/_source_files/file.c.html"
 

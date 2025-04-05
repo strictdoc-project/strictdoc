@@ -97,17 +97,18 @@ class SourceFileViewHTMLGenerator:
         pygmented_source_file_lines: List[SourceLineEntry] = []
         pygments_styles: Markup = Markup("")
 
-        if len(source_file_lines) > 0:
-            coverage_info: SourceFileTraceabilityInfo = (
-                traceability_index.get_coverage_info(
-                    source_file.in_doctree_source_file_rel_path_posix
-                )
+        trace_info: SourceFileTraceabilityInfo = (
+            traceability_index.get_coverage_info(
+                source_file.in_doctree_source_file_rel_path_posix
             )
+        )
+
+        if len(source_file_lines) > 0:
             (
                 pygmented_source_file_lines,
                 pygments_styles,
             ) = SourceFileViewHTMLGenerator.get_pygmented_source_lines(
-                source_file, source_file_lines, coverage_info
+                source_file, source_file_lines, trace_info
             )
         link_renderer = LinkRenderer(
             root_path=source_file.path_depth_prefix,
@@ -123,6 +124,7 @@ class SourceFileViewHTMLGenerator:
         )
         view_object = SourceFileViewObject(
             traceability_index=traceability_index,
+            trace_info=trace_info,
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
@@ -245,6 +247,8 @@ class SourceFileViewHTMLGenerator:
                 pygmented_source_file_line = assert_cast(
                     pygmented_source_file_lines[marker_line - 1], str
                 )
+                assert marker.ng_range_line_begin is not None
+                assert marker.ng_range_line_end is not None
                 source_marker_tuple = SourceMarkerTuple(
                     ng_range_line_begin=marker.ng_range_line_begin,
                     ng_range_line_end=marker.ng_range_line_end,

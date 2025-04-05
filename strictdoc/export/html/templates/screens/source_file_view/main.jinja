@@ -71,6 +71,13 @@
         </div>
       </div>
       {%- if line.__class__.__name__ == "SourceMarkerTuple" and (line.is_end() or line.is_line_marker()) -%}
+
+        <div
+          class="source__range-end"
+          data-begin="{{ line.markers[0].ng_range_line_begin }}"
+          data-end="{{ line.markers[0].ng_range_line_end }}"
+        ></div>
+
       {# <div class="source__range collapsed">
         <div class="source__range-cell">
         <!-- This is empty instead of a line number. -->

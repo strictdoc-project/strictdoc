@@ -204,6 +204,16 @@
   display: contents;
 }
 
+.source__range-end {
+  grid-column: 1 / -1;
+  margin-top: var(--tree-gap);
+}
+
+.focus .source__range:not(.active),
+.focus .source__range-end {
+  display: none;
+}
+
 .source__range-cell {
   background-color: var(--color-highlight-secondary);
 }
@@ -327,10 +337,6 @@ ul.source__range-titles-list {
 
 .focus .source__range-pointer.active {
   outline: solid 3px yellow;
-}
-
-.focus .source__range:not(.active) {
-  display: none;
 }
 
 .source__range-pointer .source__range-pointer_description {

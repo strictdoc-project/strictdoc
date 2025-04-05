@@ -6,6 +6,45 @@ const __log = (topic, ...payload) => {
   );
 }
 
+class SimpleTabs {
+  constructor(tabsContainer, tabContentSelector = "sdoc-tab-content") {
+    this.tabsContainer = tabsContainer;
+    this.tabContents = document.querySelectorAll(tabContentSelector);
+    this.tabs = tabsContainer.querySelectorAll("sdoc-tab");
+    this._init();
+  }
+
+  _init() {
+    this.tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        this.activateTab(tab.innerText.trim());
+      });
+    });
+
+    // Activate the tab marked as active, or the first one
+    const activeTab = [...this.tabs].find((t) => t.hasAttribute("active")) || this.tabs[0];
+    this.activateTab(activeTab.innerText.trim());
+  }
+
+  activateTab(tabName) {
+    this.tabs.forEach((tab) => {
+      if (tab.innerText.trim() === tabName) {
+        tab.setAttribute("active", "");
+      } else {
+        tab.removeAttribute("active");
+      }
+    });
+
+    this.tabContents.forEach((content) => {
+      if (content.id === tabName) {
+        content.setAttribute("active", "");
+      } else {
+        content.removeAttribute("active");
+      }
+    });
+  }
+}
+
 class Switch {
   constructor({
     callback,
@@ -500,13 +539,19 @@ class Dom {
       const rangeEnd = requirement.dataset.end;
       const rangeReq = requirement.dataset.reqid;
 
-      const range = this._generateRangeAlias(rangeBegin, rangeEnd);
-      console.assert(this.ranges[range], "The range must be registered:", range);
+      if (rangeEnd && rangeBegin) {
+        const range = this._generateRangeAlias(rangeBegin, rangeEnd);
+        console.assert(this.ranges[range], "The range must be registered:", range);
 
-      (this.ranges[range].requirements ??= {})[rangeReq] = {};
-      this.ranges[range].requirements[rangeReq].begin = rangeBegin;
-      this.ranges[range].requirements[rangeReq].end = rangeEnd;
-      this.ranges[range].requirements[rangeReq].element = requirement;
+        (this.ranges[range].requirements ??= {})[rangeReq] = {};
+        this.ranges[range].requirements[rangeReq].begin = rangeBegin;
+        this.ranges[range].requirements[rangeReq].end = rangeEnd;
+        this.ranges[range].requirements[rangeReq].element = requirement;
+      } else {
+        this.requirements[rangeReq] = requirement;
+      }
+
+
     })
   }
 
@@ -585,6 +630,11 @@ window.addEventListener("load", function () {
     }
   );
   document.getElementById('sourceCodeCoverageSwitch').append(switcher.create());
+
+  const tabsContainer = document.querySelector("sdoc-tabs");
+  if (tabsContainer) {
+    new SimpleTabs(tabsContainer);
+  }
 
 });
 

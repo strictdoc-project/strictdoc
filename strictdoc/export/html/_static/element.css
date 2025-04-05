@@ -1526,3 +1526,15 @@ sdoc-tab[data-errors]::after {
   position: relative;
   right: calc(var(--base-rhythm)*(-1));
 }
+
+sdoc-tabs.in_aside_panel {
+  background-color: var(--color-highlight-secondary);
+}
+
+sdoc-tabs.in_aside_panel sdoc-tab:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+sdoc-tabs.in_aside_panel sdoc-tab[active] {
+  background-color: var(--color-bg-main);
+}

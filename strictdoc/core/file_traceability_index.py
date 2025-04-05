@@ -553,7 +553,9 @@ class FileTraceabilityIndex:
                     merged_ranges.append([begin, end])
             coverage = 0
             for merged_range in merged_ranges:
-                coverage += merged_range[1] - merged_range[0] + 1
+                for line_ in range(merged_range[0], merged_range[1] + 1):
+                    if traceability_info_.file_stats.lines_info[line_]:
+                        coverage += 1
 
             for function_ in traceability_info_.functions:
                 for merged_range in merged_ranges:
@@ -564,9 +566,7 @@ class FileTraceabilityIndex:
                         traceability_info_.covered_functions += 1
                         break
 
-            traceability_info_.set_coverage_stats(
-                merged_ranges, traceability_info_.ng_lines_total, coverage
-            )
+            traceability_info_.set_coverage_stats(merged_ranges, coverage)
 
             for (
                 req_uid_,
@@ -731,5 +731,5 @@ class FileTraceabilityIndex:
         )
         marker.ng_range_line_begin = 1
         marker.ng_source_line_begin = 1
-        marker.ng_range_line_end = file_info.ng_lines_total
+        marker.ng_range_line_end = file_info.file_stats.lines_total
         return marker

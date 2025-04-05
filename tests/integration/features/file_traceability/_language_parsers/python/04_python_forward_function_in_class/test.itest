@@ -30,4 +30,4 @@ CHECK-SOURCE-FILE: <b>[ 4-5 ]</b>
 CHECK-SOURCE-FILE: file.py, function Foo.Bar.Baz.hello_world
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 63.2%
+CHECK-SOURCE-COVERAGE: 70.6%

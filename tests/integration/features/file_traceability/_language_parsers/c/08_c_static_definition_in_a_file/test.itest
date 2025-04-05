@@ -21,4 +21,4 @@ CHECK-SOURCE-FILE: <b>[ 12-19 ]</b>
 CHECK-SOURCE-FILE: file.c, function hello_world_2
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 84.2%
+CHECK-SOURCE-COVERAGE: 94.1%

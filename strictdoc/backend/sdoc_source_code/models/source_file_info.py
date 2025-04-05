@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 )
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.file_stats import SourceFileStats
 
 
 @auto_described
@@ -47,8 +48,9 @@ class SourceFileTraceabilityInfo:
         # function is covered by any requirement or not.
         #
         self.merged_ranges: List[List[int]] = []
-        self.ng_lines_total = 0
+        self.file_stats: SourceFileStats = SourceFileStats()
         self.ng_lines_covered = 0
+        self.lines_info: Dict[int, bool] = {}
         self._coverage: float = 0
         self.covered_functions: int = 0
 
@@ -64,14 +66,12 @@ class SourceFileTraceabilityInfo:
     def set_coverage_stats(
         self,
         merged_ranges: List[List[int]],
-        lines_total: int,
         lines_covered: int,
     ) -> None:
         self.merged_ranges = merged_ranges
-        self.ng_lines_total = lines_total
         self.ng_lines_covered = lines_covered
         self._coverage = (
-            round(lines_covered / lines_total * 100, 1)
-            if lines_total != 0
+            round(lines_covered / self.file_stats.lines_non_empty * 100, 1)
+            if self.file_stats.lines_non_empty != 0
             else 0
         )

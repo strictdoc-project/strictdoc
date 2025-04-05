@@ -184,13 +184,18 @@ class SourceFileViewObject:
         return self.source_file.in_doctree_source_file_rel_path_posix
 
     def get_file_stats_lines_total(self) -> str:
-        return str(self.trace_info.ng_lines_total)
+        return str(self.trace_info.file_stats.lines_total)
 
-    def get_file_stats_lines_covered(self) -> str:
+    def get_file_stats_lines_total_non_empty(self) -> str:
+        return str(self.trace_info.file_stats.lines_non_empty)
+
+    def get_file_stats_non_empty_lines_covered(self) -> str:
         covered = self.trace_info.ng_lines_covered
-        total = self.trace_info.ng_lines_total
-        percentage = (covered / total * 100) if total > 0 else 0
-        return f"{covered} / {total} ({percentage:.1f}%)"
+        total_non_empty = self.trace_info.file_stats.lines_non_empty
+        percentage = (
+            (covered / total_non_empty * 100) if total_non_empty > 0 else 0
+        )
+        return f"{covered} / {total_non_empty} ({percentage:.1f}%)"
 
     def get_file_stats_functions_total(self) -> str:
         return str(len(self.trace_info.functions))

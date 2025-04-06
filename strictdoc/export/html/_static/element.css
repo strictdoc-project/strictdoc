@@ -202,6 +202,15 @@ a.action_icon:visited {
   z-index: 2;
 }
 
+.action_icon.secondary,
+a.action_icon.secondary,
+a.action_icon.secondary:link,
+a.action_icon.secondary:visited {
+  color: var(--color-link);
+}
+
+.action_icon.secondary:hover,
+a.action_icon.secondary:hover,
 .action_icon:hover,
 a.action_icon:hover {
   color: var(--color-hover);

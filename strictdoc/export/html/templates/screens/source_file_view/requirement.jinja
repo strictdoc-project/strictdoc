@@ -12,6 +12,7 @@
   {% set ranged = true %}
 {% endif %}
 
+<div class="source-file__toc-range-node">
 <div
   id="requirement:{{ requirement.reserved_uid }}"
   class="source-file__requirement"
@@ -25,18 +26,20 @@
   <details>
     <summary>
   {% endif %}
-  <a
-    class="source-file__requirement_link"
-    href="{{ view_object.link_renderer.render_requirement_link_from_source_file(requirement, view_object.source_file) }}"
-    title="Go to requirement in document"
-  ></a>
-  <div class="source-file__requirement-info">
-    {%- if requirement.reserved_uid %}
-    <div class="requirement__child-uid">{{ requirement.reserved_uid }}</div>
-    {%- endif %}
-    {%- if requirement.reserved_title is not none %}
-      {{ requirement.reserved_title }}
-    {%- endif %}
+  <div class="source-file__requirement-header">
+    <a
+      class="action_icon secondary"
+      href="{{ view_object.link_renderer.render_requirement_link_from_source_file(requirement, view_object.source_file) }}"
+      title="Go to requirement in document"
+    >{% include "_res/svg_ico16_go_to_doc.jinja" %}</a>
+    <div class="source-file__requirement-info">
+      {%- if requirement.reserved_uid %}
+      <div class="requirement__child-uid">{{ requirement.reserved_uid }}</div>
+      {%- endif %}
+      {%- if requirement.reserved_title is not none %}
+        {{ requirement.reserved_title }}
+      {%- endif %}
+    </div>
   </div>
   {% if ranged %}
     </summary>
@@ -54,7 +57,6 @@
     {%- if markers -%}
       {%- for range in markers %}
 
-          <div>
           <a
             class="source__range-pointer"
             data-begin="{{ range.ng_range_line_begin }}"
@@ -76,7 +78,6 @@
             <span class="source__range-pointer_description">{{ link }}, line</span>
             {% endif %}
           </a>
-          </div>
 
       {%- endfor -%}
     {%- else -%}
@@ -105,4 +106,5 @@
   {% endif %}
 
 {%- endif %}
+</div>
 </div>

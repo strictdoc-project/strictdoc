@@ -1538,6 +1538,7 @@ sdoc-tab[data-errors]::after {
 
 sdoc-tabs.in_aside_panel {
   background-color: var(--color-highlight-secondary);
+  border-bottom: 4px solid var(--color-bg-main);
 }
 
 sdoc-tabs.in_aside_panel sdoc-tab:hover {

@@ -12,7 +12,9 @@
 
       {%- if source_file_range_reqs -%}
         {%- for requirement in source_file_range_reqs -%}
-          {{ view_object.render_aside_requirement(requirement.reserved_uid) }}
+          <div class="source-file__toc-node">
+            {{ view_object.render_aside_requirement(requirement.reserved_uid) }}
+          </div>
         {%- endfor -%}
       {%- endif -%}
     </div>

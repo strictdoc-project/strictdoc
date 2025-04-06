@@ -12,7 +12,6 @@
   {% set ranged = true %}
 {% endif %}
 
-<div class="source-file__toc-range-node">
 <div
   id="requirement:{{ requirement.reserved_uid }}"
   class="source-file__requirement"
@@ -47,6 +46,8 @@
 
  {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
  {%- if requirement_file_links %}
+
+ <div class="source-file__requirement-links">
 
   {%- for link, markers in requirement_file_links %}
     {%- assert link.__class__.__name__ == "str", "Expected str" -%}
@@ -101,10 +102,11 @@
     {%- endif -%}
   {%- endfor -%}
 
+  </div>
+
   {% if ranged %}
   </details>
   {% endif %}
 
 {%- endif %}
-</div>
 </div>

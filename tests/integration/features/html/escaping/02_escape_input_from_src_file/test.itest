@@ -1,59 +1,20 @@
 RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
 CHECK-EXPORT: Published: HTML escaping of source file content
 
-RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SRC
+RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --check-prefix CHECK-SRC
 
-# Line marker.
-CHECK-SRC: <pre class="sdoc-comment"># &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;line mark&#39;&lt;/b&gt; @sdoc(<a
-CHECK-SRC-NEXT: class="pointer"
-CHECK-SRC-NEXT: data-reqid="REQ-1"
-CHECK-SRC-NEXT: data-begin="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-end="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-traceability-file-type="this_file"
-CHECK-SRC-NEXT: href="../_source_files/file.py.html#REQ-1#{{[0-9]+}}#{{[0-9]+}}"
-CHECK-SRC-NEXT: >REQ-1</a>)</pre></div><div id="line-{{[0-9]+}}" class="source__line-number"><pre>2</pre>
+# Line marker. Using a regex at the end to avoid StrictDoc's own documentation from tracing this file.
+CHECK-SRC: # &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;line mark&#39;&lt;/b&gt; {{.}}sdoc(REQ-1)
 
 # Normal source code line.
-CHECK-SRC: <pre class="highlight"><span class="s2">{{\s+}}&lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;normal src line&#39;&lt;/b&gt;</span></pre>
+CHECK-SRC: <pre class="highlight"><span class="s2">{{\s+}}&lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;normal src line&#39;&lt;/b&gt;
 
 # Forward range marker before.
-CHECK-SRC: <pre class="sdoc-comment">{{\s+}}<span class="n">test2</span>{{\s+}}<span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;forward range mark before&#39;&lt;/b&gt;</span>{{\s+}}<a
-CHECK-SRC-NEXT: class="pointer"
-CHECK-SRC-NEXT: data-reqid="REQ-1"
-CHECK-SRC-NEXT: data-begin="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-end="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-traceability-file-type="this_file"
-CHECK-SRC-NEXT: href="../_source_files/file.py.html#REQ-1#{{[0-9]+}}#{{[0-9]+}}"
-CHECK-SRC-NEXT: >REQ-1</a>
-CHECK-SRC-NEXT: </pre>
+CHECK-SRC: &quot;&quot;&quot;&lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;forward range mark before&#39;&lt;/b&gt;
 
 # Forward range marker after.
-CHECK-SRC: <pre class="sdoc-comment"><span class="s2">{{\s+}}&lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;forward range mark after&#39;&lt;/b&gt;</span>{{\s+}}<a
-CHECK-SRC-NEXT: class="pointer"
-CHECK-SRC-NEXT: data-reqid="REQ-1"
-CHECK-SRC-NEXT: data-begin="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-end="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-traceability-file-type="this_file"
-CHECK-SRC-NEXT: href="../_source_files/file.py.html#REQ-1#{{[0-9]+}}#{{[0-9]+}}"
-CHECK-SRC-NEXT: >/REQ-1</a>
-CHECK-SRC-NEXT: </pre>
+CHECK-SRC: &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;forward range mark after&#39;&lt;/b&gt;
 
-# Range marker before.
-CHECK-SRC: <pre class="sdoc-comment"># &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;range mark before&#39;&lt;/b&gt; @sdoc[<a
-CHECK-SRC-NEXT: class="pointer"
-CHECK-SRC-NEXT: data-reqid="REQ-1"
-CHECK-SRC-NEXT: data-begin="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-end="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-traceability-file-type="this_file"
-CHECK-SRC-NEXT: href="../_source_files/file.py.html#REQ-1#{{[0-9]+}}#{{[0-9]+}}"
-CHECK-SRC-NEXT: >REQ-1</a>]</pre>
-
-# Range marker after.
-CHECK-SRC: <pre class="sdoc-comment"># &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;range mark after&#39;&lt;/b&gt; @sdoc[<a
-CHECK-SRC-NEXT: class="pointer"
-CHECK-SRC-NEXT: data-reqid="REQ-1"
-CHECK-SRC-NEXT: data-begin="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-end="{{[0-9]+}}"
-CHECK-SRC-NEXT: data-traceability-file-type="this_file"
-CHECK-SRC-NEXT: href="../_source_files/file.py.html#REQ-1#{{[0-9]+}}#{{[0-9]+}}"
-CHECK-SRC-NEXT: >/REQ-1</a>]</pre>
+# Range marker before and after. Using a regex at the end to avoid StrictDoc's own documentation from tracing this file.
+CHECK-SRC: # &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;range mark before&#39;&lt;/b&gt; {{.}}sdoc[REQ-1]
+CHECK-SRC: # &lt;b&gt;&quot;escaping&quot;&amp;nbsp;&#39;range mark after&#39;&lt;/b&gt; {{.}}sdoc[/REQ-1]

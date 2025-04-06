@@ -12,11 +12,9 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#5#10">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#7">
 
 RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: def</span><span class="w"> </span><span class="nf">hello_world</span>
-CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#1#10"
-CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-2#1#10"
-CHECK-SOURCE-FILE:  <div data-line=3 class="source__line-content">
-CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#1#10"
+CHECK-SOURCE-FILE: 1 - 10 | function hello_world()
+CHECK-SOURCE-FILE: 5 - 10 | range
+CHECK-SOURCE-FILE: 7 - 7 | line
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 76.9%
+CHECK-SOURCE-COVERAGE: 83.3%

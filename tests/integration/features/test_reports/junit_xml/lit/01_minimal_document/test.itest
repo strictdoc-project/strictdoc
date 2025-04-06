@@ -9,4 +9,4 @@ RUN: %check_exists --file "%S/Output/html/_source_files/tests/integration/foo/te
 
 # Ensure that the test report document has the right content.
 RUN: %cat "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_integration.lit.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
-CHECK-TEST-REPORT: href="../../_source_files/tests/integration/foo/test.ignored.itest.html#tests/integration/foo/test.ignored.itest">
+CHECK-TEST-REPORT: href="../../_source_files/tests/integration/foo/test.ignored.itest.html#tests/integration/foo/test.ignored.itest#1#2">

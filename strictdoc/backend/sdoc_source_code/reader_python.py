@@ -28,7 +28,7 @@ from strictdoc.backend.sdoc_source_code.processors.general_language_marker_proce
     source_file_traceability_info_processor,
 )
 from strictdoc.backend.sdoc_source_code.tree_sitter_helpers import traverse_tree
-from strictdoc.helpers.string import get_lines_count
+from strictdoc.helpers.file_stats import SourceFileStats
 
 
 class SourceFileTraceabilityReader_Python:
@@ -44,8 +44,8 @@ class SourceFileTraceabilityReader_Python:
         if file_size == 0:
             return traceability_info
 
-        length = get_lines_count(input_buffer)
-        parse_context = ParseContext(file_path, length)
+        file_stats = SourceFileStats.create(input_buffer)
+        parse_context = ParseContext(file_path, file_stats)
 
         # Works since Python 3.9 but we also lint this with mypy from Python 3.8.
         language_arg = tree_sitter_python.language()

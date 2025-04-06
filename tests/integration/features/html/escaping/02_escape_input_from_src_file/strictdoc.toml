@@ -3,3 +3,7 @@
 features = [
   "REQUIREMENT_TO_SOURCE_TRACEABILITY",
 ]
+
+exclude_source_paths = [
+  "test.itest",
+]

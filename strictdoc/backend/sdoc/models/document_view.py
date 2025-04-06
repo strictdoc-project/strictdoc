@@ -9,8 +9,17 @@ from strictdoc.backend.sdoc.models.type_system import (
 from strictdoc.helpers.auto_described import auto_described
 
 
+class NullViewElement:
+    def includes_field(
+        self,
+        node_type: str,  # noqa: ARG002
+        field_name: str,  # noqa: ARG002
+    ) -> bool:
+        return True
+
+
 @auto_described()
-class ViewElement:
+class ViewElement(NullViewElement):
     def __init__(
         self,
         parent,

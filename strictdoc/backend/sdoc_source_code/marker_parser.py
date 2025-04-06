@@ -71,9 +71,9 @@ class MarkerParser:
                 function_marker.ng_marker_line = current_line
                 function_marker.ng_marker_column = first_requirement_column
                 if marker_type == "file":
-                    function_marker.set_description("the whole file")
+                    function_marker.set_description("entire file")
                 elif marker_type == "function":
-                    function_marker.set_description(f"function {entity_name}")
+                    function_marker.set_description(f"function {entity_name}()")
                 elif marker_type == "class":
                     function_marker.set_description(f"class {entity_name}")
                 markers.append(function_marker)

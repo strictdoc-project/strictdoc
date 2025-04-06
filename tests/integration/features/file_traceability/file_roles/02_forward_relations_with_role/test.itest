@@ -7,10 +7,14 @@ RUN: %check_exists --file "%S/Output/html/_source_files/file.c.html"
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 RUN: %check_exists --file "%S/Output/html/_source_files/file.txt.html"
 
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#1#1">
 CHECK-HTML: file.c, <i>lines: 1-1</i>, function foo
+CHECK-HTML: <span{{.*}}>(Implementation)</span>
+
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#1#11">
+CHECK-HTML: file.c, <i>lines: 1-11</i>, entire file
 CHECK-HTML: <span{{.*}}>(Implementation)</span>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#8#8">
@@ -25,6 +29,10 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#1#2">
 CHECK-HTML: file.py, <i>lines: 1-2</i>, class Foo
 CHECK-HTML: <span{{.*}}">(Implementation)</span>
 
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#1#18">
+CHECK-HTML: file.py, <i>lines: 1-18</i>, entire file
+CHECK-HTML: <span{{.*}}">(Implementation)</span>
+
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#5#6">
 CHECK-HTML: file.py, <i>lines: 5-6</i>, function foo
 CHECK-HTML: <span{{.*}}">(Implementation)</span>
@@ -34,5 +42,5 @@ CHECK-HTML: file.py, <i>lines: 9-14</i>, range
 CHECK-HTML: <span{{.*}}">(Implementation)</span>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.txt.html#REQ-001#1#2">
-CHECK-HTML: file.txt, <i>lines: 1-2</i>, range
+CHECK-HTML: file.txt, <i>lines: 1-2</i>, entire file
 CHECK-HTML: <span{{.*}}">(Implementation)</span>

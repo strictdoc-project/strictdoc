@@ -10,9 +10,9 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%S/Output/html/_source_files/subdir/file.py.html"
 
 RUN: %cat %S/Output/html/11_paths_with_windows_backward_slashes/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="../_source_files/subdir/file.py.html#REQ-001">
+CHECK-HTML: href="../_source_files/subdir/file.py.html#REQ-001#1#2"
 CHECK-HTML: subdir/file.py
 
 RUN: %cat %S/Output/html/_source_files/subdir/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a{{.*}}href="../../11_paths_with_windows_backward_slashes/input.html#REQ-001"{{.*}}>
+CHECK-SOURCE-FILE: href="../../11_paths_with_windows_backward_slashes/input.html#REQ-001"
 CHECK-SOURCE-FILE: subdir/file.py

@@ -1,0 +1,50 @@
+[DOCUMENT]
+TITLE: Reproducer
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: File
+    ROLE: Implementation
+  - TYPE: File
+    ROLE: Test
+  - TYPE: File
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement 1
+STATEMENT: REQ-1 references forward to file.c:foo by file relation.
+RELATIONS:
+- TYPE: File
+  VALUE: file.c
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Requirement 2
+STATEMENT: file.c:foo references "backward" to REQ-2 by function annotation in C comment.
+
+[REQUIREMENT]
+UID: REQ-3
+TITLE: Requirement 3
+STATEMENT: file.c:foo references "backward" to REQ-3 by function annotation in C comment.
+
+[REQUIREMENT]
+UID: REQ-4
+TITLE: Requirement 4
+STATEMENT: >>>
+next req
+<<<

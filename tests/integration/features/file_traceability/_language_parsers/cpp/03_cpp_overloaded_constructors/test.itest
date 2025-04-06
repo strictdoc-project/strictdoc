@@ -14,8 +14,8 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.hpp.html#REQ-1#6#7">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.hpp.html#REQ-1#8#9">
 
 RUN: %cat %S/Output/html/_source_files/file.hpp.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a{{.*}}href="../{{.*}}/input.html#REQ-1"{{.*}}>
+CHECK-SOURCE-FILE: href="../{{.*}}/input.html#REQ-1"
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 69.2%
+CHECK-SOURCE-COVERAGE: 90.0%
 CHECK-SOURCE-COVERAGE: 60.0%

@@ -82,9 +82,9 @@ class SearchScreenViewObject:
     def render_static_url_with_prefix(self, url: str) -> str:
         return self.link_renderer.render_static_url_with_prefix(url)
 
-    def render_node_link(self, incoming_link, document, document_type):
+    def render_node_link(self, incoming_link):
         return self.link_renderer.render_node_link(
-            incoming_link, document, document_type
+            incoming_link, None, DocumentType.document()
         )
 
     def render_static_url(self, url: str):

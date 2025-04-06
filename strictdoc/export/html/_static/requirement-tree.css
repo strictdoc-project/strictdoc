@@ -207,7 +207,7 @@
   line-height: 1.2;
 }
 
-.requirement-tree_downward .requirement-tree_downward_node {
+.requirement-tree_downward_node {
   position: relative;
   border-left: var(--requirement-tree-downward-line);
 }
@@ -248,7 +248,8 @@
   /* margin-left: calc(var(--requirement-tree-downward-margin) + var(--requirement-tree-downward-string-margin)); */
   margin-left: calc(var(--requirement-tree-downward-margin) - 0.25rem);
 
-  
+  border-radius: 4px;
+  overflow: clip;
   border: 1px solid var(--requirement-tree-line-color);
   background-color: var(--color-bg-main);
 

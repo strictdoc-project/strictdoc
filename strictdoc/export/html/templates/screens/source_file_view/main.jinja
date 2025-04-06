@@ -1,31 +1,83 @@
 <div class="main">
 {# todo: update this template #}
 <div id="sourceContainer" class="source-file__source">
+
+  {% include "screens/source_file_view/file_stats.jinja" %}
+
   {%- if view_object.pygmented_source_file_lines|length > 0 -%}
   <div id="source" class="source">
     {%- for line in view_object.pygmented_source_file_lines -%}
-      <div id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
-      <div data-line={{ loop.index }} class="source__line-content">
-        {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
-          {%- set replacement_before, replacement_after, marker = line -%}
-          {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
-          <pre class="sdoc-comment">{{ replacement_before }}{%- for req in marker.reqs_objs -%}
-              <a
-                class="pointer"
-                data-reqid="{{ req.uid }}"
-                data-begin="{{ marker.ng_range_line_begin }}"
-                data-end="{{ marker.ng_range_line_end }}"
-                data-traceability-file-type="this_file"
-                href="{{ view_object.link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, view_object.source_file.in_doctree_source_file_rel_path_posix, view_object.source_file, marker) }}"
-                >{%- if marker.is_end() -%}/{%- endif -%}{{ req.uid }}</a>{%- if not loop.last -%}, {% endif -%}
-            {%- endfor -%}{{ replacement_after }}</pre>
-      {%- elif line != "" -%}
-        {# <!-- Pygments --> #}
-        <pre class="highlight">{{ line }}</pre>
-      {%- else -%}
-        <pre data-state="empty" style="user-select: none">&nbsp;</pre>
-      {%- endif -%}
+      {%- if line.__class__.__name__ == "SourceMarkerTuple" and not line.is_end() -%}
+        {%- set current_marker_link = view_object.render_marker_range_link(line) -%}
+        {%- set current_range_begin = line.ng_range_line_begin -%}
+        {%- set current_range_end = line.ng_range_line_end -%}
+        <div
+          class="source__range collapsed"
+          data-begin="{{ current_range_begin }}"
+          data-end="{{ current_range_end }}"
+        >
+          <div class="source__range-header">{# used by scroll to #}
+
+            {%- with
+              begin=current_range_begin,
+              end=current_range_end,
+              href=current_marker_link,
+              scope=line.markers[0].get_description()
+            -%}
+              {% include "screens/source_file_view/range_button.jinja" %}
+            {%- endwith -%}
+
+          </div>
+          <div class="source__range-cell">
+            <div
+              class="source__range-handler"
+              data-begin="{{ current_range_begin }}"
+              data-end="{{ current_range_end }}"
+            >{% include "_res/svg_ico16_section_collapse.jinja" %}</div>
+          </div>
+          <div class="source__range-cell">
+            <ul class="source__range-titles-list">
+              {%- for marker_ in line.markers -%}
+                {%- for req in marker_.reqs_objs -%}
+                <li>
+                  {{ view_object.render_node_title_for_banner_header(req.uid, marker_.role) }}
+                </li>
+                {%- endfor -%}
+              {%- endfor -%}
+            </ul>
+            <div class="source__range-banner source__range-start">
+              {%- for marker_ in line.markers -%}
+                {%- for req in marker_.reqs_objs -%}
+                  {{ view_object.render_detailed_node_for_banner(req.uid) }}
+                {%- endfor -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <div data-line="{{ loop.index }}" class="source__line">
+        <div data-line="{{ loop.index }}" id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
+        <div data-line="{{ loop.index }}" class="source__line-content">
+          {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
+            {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
+            <pre class="highlight">{{ line.source_line }}</pre>
+          {%- elif line != "" -%}
+            {# <!-- Pygments --> #}
+            <pre class="highlight">{{ line }}</pre>
+          {%- else -%}
+            <pre data-state="empty" style="user-select: none">&nbsp;</pre>
+          {%- endif -%}
+        </div>
       </div>
+      {%- if line.__class__.__name__ == "SourceMarkerTuple" and (line.is_end() or line.is_line_marker()) -%}
+        <div
+          class="source__range-closer"
+          {# data-begin="{{ marker_.ng_range_line_begin }}" #}
+          data-end="{{ line.markers[0].ng_range_line_end }}"
+        ></div>
+        {# {%- if marker_.is_end() or marker_.is_line_marker() -%}/{%- endif -%} #}
+      {% endif %}
     {%- endfor -%}
   </div>
   {%- else -%}

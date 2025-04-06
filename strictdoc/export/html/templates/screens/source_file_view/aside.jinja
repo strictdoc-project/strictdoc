@@ -1,39 +1,51 @@
-  <div class="nav_panel">
-  <div id="referContainer" class="source-file__refer">
+<div class="source-file__aside">
+  <sdoc-tabs class="in_aside_panel">
+    <sdoc-tab data-testid="source-file-tab-Nodes" active="" style="order: 0;">Nodes</sdoc-tab>
+    <sdoc-tab data-testid="source-file-tab-Ranges" style="order: 1;">Ranges</sdoc-tab>
+  </sdoc-tabs>
 
-  {# ranges #}
-  {%- set source_file_general_reqs, source_file_range_reqs =
-    view_object.traceability_index.get_source_file_reqs(view_object.source_file.in_doctree_source_file_rel_path_posix) -%}
+  <div class="source-file__refer" id="referContainer">
+  <sdoc-tab-content id="Nodes" active>
+    <div class="source-file__toc">
+      {%- set source_file_range_reqs =
+        view_object.traceability_index.get_source_file_reqs(view_object.source_file.in_doctree_source_file_rel_path_posix) -%}
 
-  {%- if source_file_range_reqs -%}
-  <div class="source-file__ranges">
-
-    <details open>
-      <summary>
-        <div id="sourceCodeCoverageSwitch" class="source-file__toggle-switch"></div>
-        The following requirements refer <b>to&nbsp;the&nbsp;ranges</b> in this source&nbsp;file.
-      </summary>
+      {%- if source_file_range_reqs -%}
         {%- for requirement in source_file_range_reqs -%}
-          {% include "screens/source_file_view/requirement.jinja" %}
+          <div class="source-file__toc-node">
+            {{ view_object.render_aside_requirement(requirement.reserved_uid) }}
+          </div>
         {%- endfor -%}
-    </details>
-
-  </div>
-  {%- endif -%}
-
-  {# requirements #}
-  {%- if source_file_general_reqs -%}
-  <div class="source-file__reqs">
-
-    <details open>
-      <summary>See requirements that refer to&nbsp;this source&nbsp;file <b>without specifying a&nbsp;range</b>.</summary>
-      {%- for requirement in source_file_general_reqs -%}
-        {% include "screens/source_file_view/requirement.jinja" %}
+      {%- endif -%}
+    </div>
+  </sdoc-tab-content>
+  <sdoc-tab-content id="Ranges">
+    <div class="source-file__toc">
+      {%- for line in view_object.pygmented_source_file_lines -%}
+        {%- if line.__class__.__name__ == "SourceMarkerTuple" and not line.is_end() -%}
+          <div class="source-file__toc-range">
+            <div class="source-file__toc-range-header">
+              {%- with
+                begin=line.ng_range_line_begin,
+                end=line.ng_range_line_end,
+                href=view_object.render_marker_range_link(line.markers[0]),
+                scope=line.markers[0].get_description()
+              -%}
+                {% include "screens/source_file_view/range_button.jinja" %}
+              {%- endwith -%}
+            </div>
+            {% for marker_ in line.markers %}
+              {% for node_uid_ in marker_.reqs %}
+                <div class="source-file__toc-range-node">
+                {{ view_object.render_aside_requirement(node_uid_, marker_.ng_range_line_begin, marker_.ng_range_line_end) }}
+                </div>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {%- endif -%}
       {%- endfor -%}
-    </details>
-
+    </div>
+  </sdoc-tab-content>
   </div>
-  {%- endif -%}
 
-</div>
 </div>

@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import List, Tuple, Union
 
-from markupsafe import Markup, escape
+from markupsafe import Markup
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_for_filename
@@ -97,17 +97,18 @@ class SourceFileViewHTMLGenerator:
         pygmented_source_file_lines: List[SourceLineEntry] = []
         pygments_styles: Markup = Markup("")
 
-        if len(source_file_lines) > 0:
-            coverage_info: SourceFileTraceabilityInfo = (
-                traceability_index.get_coverage_info(
-                    source_file.in_doctree_source_file_rel_path_posix
-                )
+        trace_info: SourceFileTraceabilityInfo = (
+            traceability_index.get_coverage_info(
+                source_file.in_doctree_source_file_rel_path_posix
             )
+        )
+
+        if len(source_file_lines) > 0:
             (
                 pygmented_source_file_lines,
                 pygments_styles,
             ) = SourceFileViewHTMLGenerator.get_pygmented_source_lines(
-                source_file, source_file_lines, coverage_info
+                source_file, source_file_lines, trace_info
             )
         link_renderer = LinkRenderer(
             root_path=source_file.path_depth_prefix,
@@ -123,14 +124,16 @@ class SourceFileViewHTMLGenerator:
         )
         view_object = SourceFileViewObject(
             traceability_index=traceability_index,
+            trace_info=trace_info,
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
             source_file=source_file,
             pygments_styles=pygments_styles,
             pygmented_source_file_lines=pygmented_source_file_lines,
+            jinja_environment=html_templates.jinja_environment(),
         )
-        return view_object.render_screen(html_templates.jinja_environment())
+        return view_object.render_screen()
 
     @staticmethod
     def get_pygmented_source_lines(
@@ -231,54 +234,46 @@ class SourceFileViewHTMLGenerator:
         for marker in coverage_info.markers:
             marker_line = marker.ng_source_line_begin
             assert isinstance(marker_line, int)
-            pygmented_source_file_line = assert_cast(
-                pygmented_source_file_lines[marker_line - 1], str
-            )
-            if isinstance(marker, ForwardRangeMarker):
-                before_line = pygmented_source_file_line.rstrip("\n") + " "
+
+            source_marker_tuple: SourceMarkerTuple
+            if isinstance(
+                pygmented_source_file_lines[marker_line - 1], SourceMarkerTuple
+            ):
+                source_marker_tuple = assert_cast(
+                    pygmented_source_file_lines[marker_line - 1],
+                    SourceMarkerTuple,
+                )
+            else:
+                pygmented_source_file_line = assert_cast(
+                    pygmented_source_file_lines[marker_line - 1], str
+                )
+                assert marker.ng_range_line_begin is not None
+                assert marker.ng_range_line_end is not None
+                source_marker_tuple = SourceMarkerTuple(
+                    ng_range_line_begin=marker.ng_range_line_begin,
+                    ng_range_line_end=marker.ng_range_line_end,
+                    source_line=Markup(pygmented_source_file_line),
+                    markers=[],
+                )
                 pygmented_source_file_lines[marker_line - 1] = (
-                    SourceMarkerTuple(Markup(before_line), Markup("\n"), marker)
+                    source_marker_tuple
                 )
-                continue
 
-            if isinstance(marker, ForwardFunctionRangeMarker):
-                before_line = pygmented_source_file_line.rstrip("\n") + " "
-                pygmented_source_file_lines[marker_line - 1] = (
-                    SourceMarkerTuple(Markup(before_line), Markup("\n"), marker)
-                )
-                continue
-
-            if isinstance(marker, FunctionRangeMarker):
-                # FIXME
-                marker_line = marker.ng_marker_line
-
-            source_line = source_file_lines[marker_line - 1]
-            assert len(marker.reqs_objs) > 0
-            before_line = source_line[
-                : marker.reqs_objs[0].ng_source_column - 1
-            ].rstrip("/")
-            closing_bracket_index = (
-                source_line.index("]")
-                if isinstance(marker, RangeMarker)
-                and not marker.ng_new_relation_keyword
-                else source_line.index(", scope")
-                if isinstance(marker, FunctionRangeMarker)
-                or (
-                    isinstance(marker, RangeMarker)
-                    and marker.ng_new_relation_keyword
-                )
-                else source_line.index(")")
-                if isinstance(marker, LineMarker)
-                else None
-            )
-            assert closing_bracket_index is not None
-            after_line = source_line[closing_bracket_index:].rstrip()
-
-            pygmented_source_file_lines[marker_line - 1] = SourceMarkerTuple(
-                escape(before_line),
-                escape(after_line),
+            if isinstance(
                 marker,
-            )
+                (
+                    ForwardRangeMarker,
+                    ForwardFunctionRangeMarker,
+                    FunctionRangeMarker,
+                    RangeMarker,
+                    LineMarker,
+                ),
+            ):
+                source_marker_tuple.markers.append(marker)
+                continue
+
+            raise NotImplementedError(marker)
+
         pygments_styles = (
             f"/* Lexer: {lexer.name} */\n"
             + html_formatter.get_style_defs(".highlight")

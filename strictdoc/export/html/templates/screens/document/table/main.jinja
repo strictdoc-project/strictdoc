@@ -56,7 +56,7 @@
                       {%- for requirement in view_object.traceability_index.get_parent_requirements(requirement) %}
                         <li>
                           <a class="requirement__link-parent"
-                            href="{{ view_object.render_node_link(requirement, view_object.document, view_object.document_type) }}">
+                            href="{{ view_object.render_node_link(requirement) }}">
                             {%- if requirement.reserved_uid %}
                               <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
                             {%- endif %}
@@ -72,7 +72,7 @@
                       {%- for requirement in view_object.traceability_index.get_children_requirements(requirement) %}
                         <li>
                           <a class="requirement__link-child"
-                            href="{{ view_object.render_node_link(requirement, view_object.document, view_object.document_type) }}">
+                            href="{{ view_object.render_node_link(requirement) }}">
                             {%- if requirement.reserved_uid %}
                               <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
                             {%- endif %}
@@ -87,24 +87,15 @@
                     {%- if requirement_file_links %}
                       Source files:
                       <ul class="requirement__link">
-                        {%- for link, fwd_role_, opt_ranges in requirement_file_links %}
-                          {%- if opt_ranges -%}
-                            {%- for range in opt_ranges %}
-                              <li>
-                                <a class="requirement__link-file"
-                                    href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
-                                  {{ link }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
-                                </a>
-                              </li>
-                            {%- endfor -%}
-                          {%- else -%}
+                        {%- for link, markers in requirement_file_links %}
+                          {%- for marker in markers %}
                             <li>
                               <a class="requirement__link-file"
-                                  href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}">
-                                {{ link }}
+                                  href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ marker.ng_range_line_begin }}#{{ marker.ng_range_line_end }}">
+                                {{ link }}, <i>lines: {{ marker.ng_range_line_begin }}-{{ marker.ng_range_line_end }}</i>
                               </a>
                             </li>
-                          {%- endif -%}
+                          {%- endfor -%}
                         {%- endfor -%}
                       </ul>
                     {%- endif %}

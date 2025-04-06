@@ -1,16 +1,9 @@
 # mypy: disable-error-code="no-untyped-def"
 import re
-from typing import Optional, Union
+from typing import Optional
 
 REGEX_TRAILING_WHITESPACE_SINGLELINE = re.compile(r"\s{2,}")
 REGEX_TRAILING_WHITESPACE_MULTILINE = re.compile(r" +\n")
-
-
-def get_lines_count(string_or_bytes: Union[str, bytes]):
-    string = string_or_bytes
-    if isinstance(string_or_bytes, bytes):
-        string = string_or_bytes.decode("utf-8")
-    return len(string.splitlines())
 
 
 # WIP: Check if this is used.

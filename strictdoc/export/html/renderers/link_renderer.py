@@ -105,7 +105,7 @@ class LinkRenderer:
             return document_link + "#_TOP"
 
         assert isinstance(node, (SDocNode, SDocSection, Anchor)), node
-        assert isinstance(document_type, DocumentType), document_type
+        assert isinstance(document_type, DocumentType), type(document_type)
         local_link = self.render_local_anchor(node)
         including_document = node.get_including_document()
         if (
@@ -236,7 +236,7 @@ class LinkRenderer:
 
     @staticmethod
     def render_requirement_in_source_file_range_link_using_id(
-        req_uid: str,
+        req_uid: str,  # noqa: ARG004
         source_link: str,
         context_source_file: SourceFile,
         source_range,
@@ -259,6 +259,22 @@ class LinkRenderer:
             f"#{source_range.ng_range_line_end}"
         )
         return source_file_link
+
+    def render_marker_range_link(
+        self,
+        source_link: str,
+        context_source_file: SourceFile,
+        source_range,
+    ):
+        assert isinstance(source_link, str)
+        assert isinstance(context_source_file, SourceFile)
+        return self.render_requirement_in_source_file_range_link_using_id(
+            # No requirement UID provided because the link is formed for a range only.
+            "",
+            source_link,
+            context_source_file,
+            source_range,
+        )
 
     def render_requirement_in_source_file_range_link(
         self,

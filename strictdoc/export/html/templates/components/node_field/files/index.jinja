@@ -5,35 +5,21 @@
       <sdoc-requirement-field-label>files:</sdoc-requirement-field-label>
       <sdoc-requirement-field data-field-label="files">
         <ul class="requirement__link">
-          {%- for link, fwd_role, opt_ranges in requirement_file_links %}
-            {%- if opt_ranges -%}
-              {%- for range in opt_ranges %}
-                <li>
-                  <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(sdoc_entity, link) }}#{{ sdoc_entity.reserved_uid }}#{{ range.ng_range_line_begin }}#{{ range.ng_range_line_end }}">
-                    {{ link }}, <i>lines: {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }}</i>
-                    {%- set description = range.get_description() -%}
-                    {%- if description -%}
-                      , {{ description }}
-                    {%- endif -%}
-                    {# TODO optional relation role #}
-                    {% if range.role is not none %}
-                        <span class="requirement__type-tag">({{ range.role }})</span>
-                    {% elif fwd_role is not none %}
-                        <span class="requirement__type-tag">({{ fwd_role }})</span>
-                    {% endif %}
-                  </a>
-                </li>
-              {%- endfor -%}
-            {%- else -%}
+          {%- for link, markers in requirement_file_links %}
+            {%- for marker in markers %}
               <li>
-                <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(sdoc_entity, link) }}#{{ sdoc_entity.reserved_uid }}">
-                  {{ link }}
-                  {% if fwd_role is not none %}
-                      <span class="requirement__type-tag">({{ fwd_role }})</span>
+                <a data-turbo="false" class="requirement__link-file" href="{{ view_object.link_renderer.render_source_file_link(sdoc_entity, link) }}#{{ sdoc_entity.reserved_uid }}#{{ marker.ng_range_line_begin }}#{{ marker.ng_range_line_end }}">
+                  {{ link }}, <i>lines: {{ marker.ng_range_line_begin }}-{{ marker.ng_range_line_end }}</i>
+                  {%- set description = marker.get_description() -%}
+                  {%- if description -%}
+                    , {{ description }}
+                  {%- endif -%}
+                  {% if marker.role is not none %}
+                      <span class="requirement__type-tag">({{ marker.role }})</span>
                   {% endif %}
                 </a>
               </li>
-            {%- endif -%}
+            {%- endfor -%}
           {%- endfor -%}
         </ul>
       </sdoc-requirement-field>

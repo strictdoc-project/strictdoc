@@ -9,7 +9,7 @@ RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-inpu
 CHECK-HTML: <a{{.*}}href="../_source_files/file.hpp.html#REQ-1#4#5">
 
 RUN: %cat %S/Output/html/_source_files/file.hpp.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: <a{{.*}}href="../{{.*}}/input.html#REQ-1"{{.*}}>
+CHECK-SOURCE-FILE: href="../{{.*}}/input.html#REQ-1"
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: 33.3%

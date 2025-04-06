@@ -5,7 +5,7 @@
       <ul class="requirement__link">
         {%- for sdoc_entity, relation_role_ in view_object.traceability_index.get_parent_relations_with_roles(sdoc_entity) %}
         <li>
-          <a data-turbo="false" class="requirement__link-parent" href="{{ view_object.render_node_link(sdoc_entity, view_object.document, view_object.document_type) }}">
+          <a data-turbo="false" class="requirement__link-parent" href="{{ view_object.render_node_link(sdoc_entity) }}">
             {%- if sdoc_entity.reserved_uid %}
             <span class="requirement__parent-uid">{{ sdoc_entity.reserved_uid }}</span>
             {%- endif %}
@@ -26,7 +26,7 @@
       <ul class="requirement__link">
         {%- for sdoc_entity, relation_role_ in view_object.traceability_index.get_child_relations_with_roles(sdoc_entity) %}
         <li>
-          <a data-turbo="false" class="requirement__link-child" href="{{ view_object.render_node_link(sdoc_entity, view_object.document, view_object.document_type) }}">
+          <a data-turbo="false" class="requirement__link-child" href="{{ view_object.render_node_link(sdoc_entity) }}">
             {%- if sdoc_entity.reserved_uid %}
             <span class="requirement__child-uid">{{ sdoc_entity.reserved_uid }}</span>
             {%- endif %}

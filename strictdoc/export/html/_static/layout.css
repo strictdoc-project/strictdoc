@@ -33,6 +33,7 @@
 
 .layout_tree {
   grid-area: tree;
+  min-width: 0;
 }
 
 .layout_toc,

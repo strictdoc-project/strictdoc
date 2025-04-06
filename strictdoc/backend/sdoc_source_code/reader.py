@@ -19,16 +19,9 @@ from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
-from strictdoc.helpers.string import get_lines_count
+from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
+from strictdoc.helpers.file_stats import SourceFileStats
 from strictdoc.helpers.textx import drop_textx_meta
-
-
-class ParseContext:
-    def __init__(self, lines_total):
-        self.lines_total = lines_total
-        self.markers = []
-        self.marker_stack: List[RangeMarker] = []
-        self.map_reqs_to_markers = {}
 
 
 def req_processor(req: Req):
@@ -50,7 +43,7 @@ def source_file_traceability_info_processor(
             parse_context.marker_stack,
         )
     source_file_traceability_info.markers = parse_context.markers
-    source_file_traceability_info.ng_lines_total = parse_context.lines_total
+    source_file_traceability_info.file_stats = parse_context.file_stats
 
 
 def create_begin_end_range_reqs_mismatch_error(
@@ -226,7 +219,9 @@ def function_range_marker_processor(
     parse_context.markers.append(function_range_marker)
     function_range_marker.ng_source_line_begin = 1
     function_range_marker.ng_range_line_begin = 1
-    function_range_marker.ng_range_line_end = parse_context.lines_total
+    function_range_marker.ng_range_line_end = (
+        parse_context.file_stats.lines_total
+    )
     function_range_marker.ng_marker_line = line
     function_range_marker.ng_marker_column = column
 
@@ -258,8 +253,8 @@ class SourceFileTraceabilityReader:
         if file_size == 0:
             return SourceFileTraceabilityInfo([])
 
-        length = get_lines_count(input_string)
-        parse_context = ParseContext(length)
+        file_stats = SourceFileStats.create(input_string)
+        parse_context = ParseContext(file_path, file_stats)
 
         parse_source_traceability_processor = partial(
             source_file_traceability_info_processor, parse_context=parse_context

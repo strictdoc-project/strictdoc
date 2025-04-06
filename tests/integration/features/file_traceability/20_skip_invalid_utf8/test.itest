@@ -10,4 +10,4 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
 
 RUN: %cat %S/Output/html/20_skip_invalid_utf8/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001">
+CHECK-HTML: href="../_source_files/file.py.html#REQ-001#1#2">

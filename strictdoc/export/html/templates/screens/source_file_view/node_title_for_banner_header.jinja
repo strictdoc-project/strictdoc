@@ -1,0 +1,11 @@
+{#
+  Important: The minuses %- and -% are important here because otherwise extra
+  whitespace is printed before and after the braces.
+#}
+{% set badge_text = node.node_type %}
+• "{{ node.get_display_title() }}" ({{ node.node_type }}
+  {%- if role is not none -%}
+  , {{ role }}
+  {%- endif -%}
+)
+{# {% include "components/badge/index.jinja" %}  #}

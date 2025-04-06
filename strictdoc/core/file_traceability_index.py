@@ -23,6 +23,7 @@ from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.core.constants import GraphLinkType
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
@@ -276,6 +277,27 @@ class FileTraceabilityIndex:
                         value=resolved_path_to_function_file,
                     )
 
+                    #
+                    # This transitively connects requirements and test results
+                    # through the test source files.
+                    #
+                    for function_marker_ in function.markers:
+                        for req_ in function_marker_.reqs:
+                            node = traceability_index.get_node_by_uid_weak2(
+                                req_
+                            )
+                            traceability_index.graph_database.create_link(
+                                link_type=GraphLinkType.NODE_TO_PARENT_NODES,
+                                lhs_node=forward_requirement_,
+                                rhs_node=node,
+                                edge="Satisfies",
+                            )
+                            traceability_index.graph_database.create_link(
+                                link_type=GraphLinkType.NODE_TO_CHILD_NODES,
+                                lhs_node=node,
+                                rhs_node=forward_requirement_,
+                                edge="IsSatisfiedBy",
+                            )
                 #
                 # Validate that all requirements reference existing files.
                 #

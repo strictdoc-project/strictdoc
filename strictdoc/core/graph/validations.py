@@ -2,11 +2,11 @@
 from typing import Any
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
+from strictdoc.core.constants import GraphLinkType
 from strictdoc.core.graph_database import (
     ConstraintViolation,
     GraphDatabase,
 )
-from strictdoc.core.traceability_index import GraphLinkType
 from strictdoc.helpers.mid import MID
 
 

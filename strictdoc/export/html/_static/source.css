@@ -204,13 +204,13 @@
   display: contents;
 }
 
-.source__range-end {
+.source__range-closer {
   grid-column: 1 / -1;
   margin-top: var(--tree-gap);
 }
 
 .focus .source__range:not(.active),
-.focus .source__range-end {
+.focus .source__range-closer:not(.active) {
   display: none;
 }
 

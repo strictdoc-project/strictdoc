@@ -176,6 +176,7 @@ class Dom {
     strictdocRangeBannerSelector,
     strictdocRangeBannerHeaderSelector,
     strictdocRangeHandlerSelector,
+    strictdocRangeCloserSelector,
     strictdocLineSelector,
     strictdocLineNumberSelector,
     strictdocLineContentSelector,
@@ -203,6 +204,7 @@ class Dom {
     this.strictdocRangeBannerSelector = strictdocRangeBannerSelector || '.source__range';
     this.strictdocRangeBannerHeaderSelector = strictdocRangeBannerHeaderSelector || '.source__range-header';
     this.strictdocRangeHandlerSelector = strictdocRangeHandlerSelector || '.source__range-handler';
+    this.strictdocRangeCloserSelector = strictdocRangeCloserSelector || '.source__range-closer';
     this.strictdocLineSelector = strictdocLineSelector || '.source__line';
     this.strictdocLineNumberSelector = strictdocLineNumberSelector || '.source__line-number';
     this.strictdocLineContentSelector = strictdocLineContentSelector || '.source__line-content';
@@ -224,6 +226,7 @@ class Dom {
     this.lines = {};
     this.requirements = {};
     this.ranges = {};
+    this.closers = {};
 
     // state
     this.active = {
@@ -252,12 +255,13 @@ class Dom {
     this._updateRangesWithRequirements();
     this._updateRangesWithHandlers();
     this._updateRangesWithBanners();
-    // this._prepareRequirements(); // todo
+    this._updateRangesWithClosers();
 
-    console.log('this.lines', this.lines);
-    console.log('this.ranges', this.ranges);
-    console.log('this.requirements', this.requirements);
-    console.log('this.active', this.active);
+    // console.log('this.lines', this.lines);
+    // console.log('this.ranges', this.ranges);
+    // console.log('this.closers', this.closers);
+    // console.log('this.requirements', this.requirements);
+    // console.log('this.active', this.active);
 
   }
 
@@ -294,19 +298,16 @@ class Dom {
     // this.active.requirement?.classList.remove(this.activeClass);
     this.active.pointers?.forEach(pointer => pointer?.classList.remove(this.activeClass));
     this.active.labels?.forEach(label => label?.classList.remove(this.activeClass));
-    this.active.rangeAlias && this.ranges[this.active.rangeAlias].banner.classList.remove(this.activeClass);
-    // this.active.handler.classList.remove(this.expandedClass);
-    // this.active.handler.classList.add(this.collapsedClass);
-    // this.active.banner.classList.remove(this.expandedClass);
-    // this.active.banner.classList.add(this.collapsedClass);
+    if (this.active.rangeAlias) {
+      this.ranges[this.active.rangeAlias].banner.classList.remove(this.activeClass);
+      this.closers[this.active.rangeEnd].classList.remove(this.activeClass);
+    }
 
     // make changes to state
     //// this.active.range = range;
     //// this.active.requirement = requirement;
     this.active.pointers = pointers;
     this.active.labels = labels;
-    // this.active.handler = handler;
-    // this.active.banner = banner;
     this.active.rangeBegin = rangeBegin;
     this.active.rangeEnd = rangeEnd;
     this.active.rangeAlias = rangeAlias;
@@ -316,6 +317,7 @@ class Dom {
     this.active.pointers?.forEach(pointer => pointer.classList.add(this.activeClass));
     this.active.labels?.forEach(label => label.classList.add(this.activeClass));
     this.ranges[rangeAlias]?.banner.classList.add(this.activeClass);
+    this.closers[this.active.rangeEnd]?.classList.add(this.activeClass);
   }
 
   toggleRangeBannerVisibility(handler) {
@@ -582,6 +584,18 @@ class Dom {
         console.assert(this.ranges[range], "The range must be registered:", range);
         this.ranges[range].banner = banner;
         this.ranges[range].bannerHeader = banner.querySelector(this.strictdocRangeBannerHeaderSelector); // 'source__range-header'
+      }
+    })
+  }
+
+  _updateRangesWithClosers() {
+    const closers = [...document.querySelectorAll(this.strictdocRangeCloserSelector)];
+    closers.forEach(closer => {
+
+      const rangeEnd = closer.dataset.end;
+
+      if (rangeEnd) {
+        this.closers[rangeEnd] = closer;
       }
     })
   }

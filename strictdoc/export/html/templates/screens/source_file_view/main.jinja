@@ -71,31 +71,12 @@
         </div>
       </div>
       {%- if line.__class__.__name__ == "SourceMarkerTuple" and (line.is_end() or line.is_line_marker()) -%}
-
         <div
-          class="source__range-end"
-          data-begin="{{ line.markers[0].ng_range_line_begin }}"
+          class="source__range-closer"
+          {# data-begin="{{ marker_.ng_range_line_begin }}" #}
           data-end="{{ line.markers[0].ng_range_line_end }}"
         ></div>
-
-      {# <div class="source__range collapsed">
-        <div class="source__range-cell">
-        <!-- This is empty instead of a line number. -->
-        </div>
-        <div class="source__range-cell source__range-end">
-            {%- for marker_ in line.markers -%}
-              {%- for req in marker_.reqs_objs -%}
-              <a
-                class="source__range-pointer"
-                data-reqid="{{ req.uid }}"
-                data-begin="{{ marker_.ng_range_line_begin }}"
-                data-end="{{ marker_.ng_range_line_end }}"
-                href="{{ view_object.link_renderer.render_requirement_in_source_file_range_link_using_id(req.uid, view_object.source_file.in_doctree_source_file_rel_path_posix, view_object.source_file, marker_) }}"
-                >{%- if marker_.is_end() or marker_.is_line_marker() -%}/{%- endif -%}{{ req.uid }}</a>
-            {%- endfor -%}
-          {%- endfor -%}
-        </div>
-      </div> #}
+        {# {%- if marker_.is_end() or marker_.is_line_marker() -%}/{%- endif -%} #}
       {% endif %}
     {%- endfor -%}
   </div>

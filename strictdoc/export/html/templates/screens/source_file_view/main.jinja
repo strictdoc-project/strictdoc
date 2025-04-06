@@ -40,7 +40,7 @@
               {%- for marker_ in line.markers -%}
                 {%- for req in marker_.reqs_objs -%}
                 <li>
-                  {{ view_object.render_node_title_for_banner_header(req.uid, marker_.role) }}
+                  {{ view_object.render_node_title_for_banner_header(marker_, req.uid) }}
                 </li>
                 {%- endfor -%}
               {%- endfor -%}

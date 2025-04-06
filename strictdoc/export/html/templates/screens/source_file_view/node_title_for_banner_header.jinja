@@ -3,7 +3,11 @@
   whitespace is printed before and after the braces.
 #}
 {% set badge_text = node.node_type %}
-• "{{ node.get_display_title() }}" ({{ node.node_type }}
+• {% if is_forward_from_requirements_to_code -%}
+{%- else -%}
+{%- endif -%}
+
+"{{ node.get_display_title() }}" ({{ node.node_type }}
   {%- if role is not none -%}
   , {{ role }}
   {%- endif -%}

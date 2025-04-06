@@ -53,6 +53,9 @@ class FunctionRangeMarker:
 
         self._description: Optional[str] = None
 
+    def is_forward(self) -> bool:
+        return False
+
     def is_range_marker(self) -> bool:
         return True
 
@@ -90,3 +93,6 @@ class ForwardFunctionRangeMarker(FunctionRangeMarker):
         role: Optional[str] = None,
     ):
         super().__init__(parent, reqs_objs, scope, role)
+
+    def is_forward(self) -> bool:
+        return True

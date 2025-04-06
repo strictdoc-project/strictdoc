@@ -3,11 +3,13 @@
   whitespace is printed before and after the braces.
 #}
 {% set badge_text = node.node_type %}
-• {% if is_forward_from_requirements_to_code -%}
-{%- else -%}
-{%- endif -%}
 
-"{{ node.get_display_title() }}" ({{ node.node_type }}
+{% if is_forward_from_requirements_to_code -%}
+<span class="source__range-title-icon" title="Relation from document node to source file">{% include "_res/svg_ico16_source_pointer_in.jinja" %}</span>
+{%- else -%}
+<span class="source__range-title-icon" title="Relation from source file to document node">{% include "_res/svg_ico16_source_pointer_out.jinja" %}</span>
+{%- endif %}
+  "{{ node.get_display_title() }}" ({{ node.node_type }}
   {%- if role is not none -%}
   , {{ role }}
   {%- endif -%}

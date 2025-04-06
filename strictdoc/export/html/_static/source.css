@@ -265,6 +265,10 @@ ul.source__range-titles-list {
   display: none;
 }
 
+.source__range-title-icon {
+  cursor: help;
+}
+
 /* sdoc-requirement */
 
 .source__range-banner sdoc-requirement[requirement-view="table"] sdoc-requirement-field-label {

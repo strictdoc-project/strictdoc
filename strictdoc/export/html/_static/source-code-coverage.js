@@ -408,6 +408,11 @@ class Dom {
       }, {});
   }
 
+  _getRangePart(hash) {
+    const parts = hash.split(this.hashSplitter);
+    return `${this.hashSplitter}${parts[parts.length - 2]}${this.hashSplitter}${parts[parts.length - 1]}`;
+  };
+
   _prepareRanges() {
     [...document.querySelectorAll(this.strictdocPointerSelector)]
       .map(pointer => {
@@ -449,7 +454,14 @@ class Dom {
         pointer.addEventListener("click", (event) => {
           const targetHash = `#${rangeReq || ""}${this.hashSplitter}${rangeBegin}${this.hashSplitter}${rangeEnd}`;
           const currentHash = window.location.hash;
+
           const isSameHash = currentHash === targetHash;
+          // Buttons linked to requirements include an ID in the hash,
+          // while buttons in the source code do not.
+          // Therefore, only the range part of the hash (e.g., #3#10)
+          // should be compared to identify the currently active range.
+          const isSameRange = this._getRangePart(currentHash) === `${this.hashSplitter}${rangeBegin}${this.hashSplitter}${rangeEnd}`;
+
           const isModifierPressed = event.metaKey || event.ctrlKey;
 
           const targetBannerHeader = this.ranges[range]?.bannerHeader;
@@ -459,7 +471,7 @@ class Dom {
           if (isModifierPressed) {
             event.preventDefault(); // cancel opening a new browser tab
 
-            if (isSameHash) {
+            if (isSameRange) {
               this._toggleFocus();
               this._compensateSourceContainerScrollPosition(targetBannerHeader, topBefore);
             } else {
@@ -473,7 +485,7 @@ class Dom {
           }
 
           // Normal click
-          if (isSameHash) {
+          if (isSameRange) {
             // active → reset
             event.preventDefault();
             // Removes hash from URL without reloading or adding history entry:

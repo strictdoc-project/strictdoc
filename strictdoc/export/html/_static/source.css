@@ -251,7 +251,7 @@
 }
 
 .source__range-closer-label::before {
-  content: '//  ';
+  content: 'End of  ';
 }
 
 .focus .source__range:not(.active),

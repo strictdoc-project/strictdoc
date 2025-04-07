@@ -104,6 +104,24 @@
   margin-top: var(--base-rhythm);
 }
 
+.source-file__requirement-info {
+  word-break: break-word;
+}
+
+.source-file__requirement-uid {
+  display: block;
+  position: relative;
+  font-weight: bold;
+  word-break: break-word;
+}
+
+.source-file__requirement details {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+}
+
 .source-file__requirement summary {
   list-style: none;
   display: flex;

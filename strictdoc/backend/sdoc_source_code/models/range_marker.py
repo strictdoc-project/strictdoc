@@ -63,6 +63,9 @@ class RangeMarker:
     def is_line_marker(self) -> bool:
         return False
 
+    def is_forward(self) -> bool:
+        return False
+
     def get_description(self) -> Optional[str]:
         return "range"
 
@@ -101,6 +104,9 @@ class LineMarker:
 
     def is_line_marker(self) -> bool:
         return True
+
+    def is_forward(self) -> bool:
+        return False
 
     def get_description(self) -> Optional[str]:
         return "line"
@@ -144,6 +150,9 @@ class ForwardRangeMarker:
     def get_description(self) -> Optional[str]:
         return "range"
 
+    def is_forward(self) -> bool:
+        return True
+
 
 @auto_described
 class ForwardFileMarker(ForwardRangeMarker):
@@ -152,3 +161,6 @@ class ForwardFileMarker(ForwardRangeMarker):
 
     def get_description(self) -> Optional[str]:
         return "entire file"
+
+    def is_forward(self) -> bool:
+        return True

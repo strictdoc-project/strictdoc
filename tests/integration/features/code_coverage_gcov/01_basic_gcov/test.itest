@@ -1,0 +1,15 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+RUN: cd %S/Output && gcc --coverage -g -O0 -o main ../src/main.c
+
+RUN: cd %S/Output && ./main | filecheck %s --check-prefix CHECK-C
+CHECK-C: This function is covered
+
+RUN: cd %S/Output && gcovr --object-directory ./ --root ../ --html --html-details -o coverage.html
+RUN: cd %S/Output && gcovr --object-directory ./ --root ../ --json --json-pretty -o coverage.gcov.json
+RUN: cd %S/Output && mkdir docs/ && cp coverage.gcov.json docs/
+RUN: cp %S/strictdoc.toml %S/Output/docs/
+RUN: cp -r %S/src %S/Output/docs/
+RUN: cd %S/Output/docs && %strictdoc export .  | filecheck %s
+
+CHECK: Published: Code coverage report

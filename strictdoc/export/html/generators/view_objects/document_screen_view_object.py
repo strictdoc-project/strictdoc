@@ -240,6 +240,7 @@ class DocumentScreenViewObject:
             if not (
                 file_.has_extension(".sdoc")
                 or file_.has_extension(".junit.xml")
+                or file_.has_extension(".gcov.json")
             ):
                 continue
             document_ = self.get_document_by_path(file_.get_full_path())

@@ -14,4 +14,5 @@
   data-begin="{{ begin }}"
   data-end="{{ end }}"
   href="{{ href }}"
->{% include "screens/source_file_view/range_definition.jinja" %}</a>
+  title="Click to toggle range (Ctrl/Cmd + Click with focus)"
+><span class="source__range-definition">{{ begin }} - {{ end }}{% if scope is defined %} | {{ scope }}{% endif %}</span></a>

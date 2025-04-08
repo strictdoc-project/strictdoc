@@ -74,14 +74,18 @@
         <div
           class="source__range-closer"
           data-end="{{ line.markers[0].ng_range_line_end }}"
-        ><div class="source__range-closer-label">
-        {%- with
-            begin=line.markers[0].ng_range_line_begin,
-            end=line.markers[0].ng_range_line_end,
-            scope=line.markers[0].get_description()
-          -%}
-            {% include "screens/source_file_view/range_definition.jinja" %}
-          {%- endwith -%}</div></div>
+        >
+          <div class="source__range-closer-label">
+            {%- with
+              begin=line.markers[0].ng_range_line_begin,
+              end=line.markers[0].ng_range_line_end,
+              href=view_object.render_marker_range_link(line),
+              scope=line.markers[0].get_description()
+            -%}
+              {% include "screens/source_file_view/range_button.jinja" %}
+            {%- endwith -%}
+          </div>
+        </div>
       {% endif %}
     {%- endfor -%}
   </div>

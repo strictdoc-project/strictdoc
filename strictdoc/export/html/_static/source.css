@@ -239,19 +239,17 @@
 }
 
 .source__range-closer-label {
-  display: inline-flex;
+  display: flex;
   border-radius: 0 0 6px 6px;
   column-gap: calc(var(--base-rhythm)* 1);
-  padding-left: calc(var(--base-rhythm)* 1.5);
-  padding-right: calc(var(--base-rhythm)* 1.5);
   background-color: var(--color-highlight-secondary);
-  color: var(--color-fg-secondary);
-  color: rgba(0, 0, 0, .33);
-  /* font-size: var(--font-size-xsm); */
+  padding: var(--base-rhythm);
 }
 
-.source__range-closer-label::before {
-  content: 'End of  ';
+.source__range-closer-label .source__range-definition::before {
+  content: 'End of';
+  display: inline-block;
+  margin-right: 6px;
 }
 
 .focus .source__range:not(.active),

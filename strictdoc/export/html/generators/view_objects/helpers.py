@@ -57,7 +57,7 @@ def screen_should_display_file(
     assert isinstance(file, File), file
     assert traceability_index.document_tree is not None
 
-    if file.has_extension(".junit.xml"):
+    if file.has_extension(".junit.xml") or file.has_extension(".gcov.json"):
         return True
 
     if file.has_extension(".sdoc"):

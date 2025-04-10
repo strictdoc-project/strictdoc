@@ -401,14 +401,6 @@ ul.source__range-titles-list {
   max-width: 100%;
   min-width: 0;
   display: inline-block;
-  font-size: var(--font-size-xsm);
-  font-weight: 600;
-  text-align: left;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
 }
 
 /* Pygments */

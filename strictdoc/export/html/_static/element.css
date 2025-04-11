@@ -738,10 +738,12 @@ sdoc-anchor[visible]:hover .anchor_back_links_number {
 .value-bar {
   display: flex;
   height: 1rem;
+  align-items: center;
+  gap: 4px;
 }
 
 .value-bar_bar {
-  width: 6rem;
+  width: 3rem;
   border-radius: .5rem;
 
   /* box-shadow: inset 0px 2px 2px 0px #ccc; */
@@ -750,7 +752,6 @@ sdoc-anchor[visible]:hover .anchor_back_links_number {
   overflow: hidden;
 
   height: 0.75rem;
-  margin-top: 0.25rem;
 
   background-color: rgba(255, 255, 255, 0.2);
 }
@@ -771,7 +772,8 @@ sdoc-anchor[visible]:hover .anchor_back_links_number {
 .value-bar_text {
   width: 2.5rem;
   text-align: right;
-  font-size: 0.75em;
+  font-size: 0.75rem;
+  line-height: 1;
   font-weight: 600;
 }
 

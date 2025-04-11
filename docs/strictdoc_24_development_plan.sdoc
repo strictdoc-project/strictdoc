@@ -122,6 +122,10 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
      - HTML2PDF improvements. ReqIF roundtrip for RELATION/ROLE. Consistent automatic escaping of Jinja templates. Passthrough->export command migration.
    * - 2024-Q4
      - Connecting requirements to functions (C, Python) and classes (Python) in source code. Support the linking in both directions independently: from requirements to source using RELATION/File and from source to requirements using @relation markers. LINK to documents.
+   * - 2025-Q1
+     - Connecting requirements to source code – further work. StrictDoc containerized in Docker. JUnit XML report generation.
+   * - 2025-Q2 (planned)
+     - Gcov coverage justification report. SDoc node VERSIONs. External links.
 <<<
 
 [SECTION]

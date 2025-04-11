@@ -2,6 +2,7 @@
 import os
 import tempfile
 from contextlib import ExitStack
+from pathlib import Path
 
 import uvicorn
 
@@ -10,6 +11,7 @@ from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.pickle import pickle_dump
 from strictdoc.server.config import SDocServerEnvVariable
+from strictdoc.server.reload_config import UvicornReloadConfig
 
 
 def print_warning_message():
@@ -40,6 +42,10 @@ def run_strictdoc_server(
 
         project_config.integrate_server_config(server_config)
 
+        reload_config = UvicornReloadConfig.create(
+            project_config, server_config
+        )
+
         # uvicorn.run does not support passing arguments to the main
         # function (strictdoc_production_app). Passing the pickled config
         # through the environmental variables interface.
@@ -49,6 +55,22 @@ def run_strictdoc_server(
         tmp_config_file.flush()
 
         os.environ[SDocServerEnvVariable.PATH_TO_CONFIG] = tmp_config_file.name
+
+        # The uvicorn config code uses this function to additionally resolve
+        # the reload includes and excludes. Unfortunately, it does not work
+        # correctly with the expanded globs that are created by StrictDoc.
+        # Not doing any resolutions seems to work fine with StrictDoc, so using
+        # a 'do nothing' stub and an assert below to make sure that this function
+        # is not removed by uvicorn.
+        def dont_resolve_reload_patterns(arg1, arg2):
+            return arg1, list(map(Path, arg2))
+
+        assert hasattr(uvicorn.config, "resolve_reload_patterns"), (
+            "REGRESSION: The function 'resolve_reload_patterns' is not defined "
+            "in uvicorn.config. Please report this to StrictDoc developers at "
+            "https://github.com/strictdoc-project/strictdoc/issues."
+        )
+        uvicorn.config.resolve_reload_patterns = dont_resolve_reload_patterns
 
         uvicorn.run(
             "strictdoc.server.app:strictdoc_production_app",
@@ -67,55 +89,8 @@ def run_strictdoc_server(
                 if server_config.port is not None
                 else project_config.server_port
             ),
-            reload=server_config.reload,
-            reload_dirs=[
-                os.path.join(
-                    project_config.get_strictdoc_root_path(), "strictdoc"
-                )
-            ],
-            reload_includes=[
-                "*.py",
-                "*.html",
-                "*.jinja",
-                "*.css",
-                "*.js",
-                "*.toml",
-            ],
-            reload_excludes=[
-                # "tests",  # Doesn't work.
-                # "tests/",  # Doesn't work.
-                # "tests/*",  # Doesn't work.
-                # "tests/**",  # Makes the process hang, server doesn't start.
-                # It looks like the regex engine does not support ** globs.
-                # Example:
-                # output/cache/server/html/_source_files/strictdoc/backend/reqif/sdoc_reqif_fields.py.html
-                "output/*/*.*",
-                "output/*/*/*.*",
-                "output/*/*/*/*.*",
-                "output/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*/*/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
-                "output/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
-                "tests/*/*.*",
-                "tests/*/*/*.*",
-                "tests/*/*/*/*.*",
-                "tests/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*/*/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
-                "tests/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*.*",
-            ],
+            reload=reload_config.reload,
+            reload_dirs=reload_config.reload_dirs,
+            reload_includes=reload_config.reload_includes,
+            reload_excludes=reload_config.reload_excludes,
         )

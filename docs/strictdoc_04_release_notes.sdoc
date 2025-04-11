@@ -46,6 +46,14 @@ This release includes the following enhancements.
 5\) The command ``strictdoc server`` command has been extended to support the ``--host`` parameter. A user requested this feature to allow changing the server host which enables running the server within the StrictDoc Docker container.
 
 6\) Minor fixes to the main document view interface.
+
+7\) The long-standing warning from the Uvicorn server has finally been resolved. The warning was harmless and came from Uvicorn's opinionated handling of the reload configuration. The reload feature is used only during StrictDoc development and was never intended for end users, but Uvicorn still issued a warning because some parts of StrictDoc's configuration code weren't fully disabled for end-user environments:
+
+.. code-block::
+
+    WARNING:  Current configuration will not reload as not all conditions are met, please refer to documentation.
+
+Thanks to @MartyLake for pointing it out – it helped us prioritize fixing the issue.
 <<<
 
 [/SECTION]

@@ -356,20 +356,31 @@ class CommandParserBuilder:
     def add_server_command(parent_command_parser):
         command_parser_server = parent_command_parser.add_parser(
             "server",
-            help="Run StrictDoc Web server.",
-            description="Run StrictDoc Web server.",
+            help="Run StrictDoc web server.",
+            description="Run StrictDoc web server.",
             formatter_class=formatter,
         )
         command_parser_server.add_argument("input_path")
         command_parser_server.add_argument("--output-path", type=str)
-        command_parser_server.add_argument(
-            "--reload", default=False, action="store_true"
-        )
-        command_parser_server.add_argument(
-            "--no-reload", dest="reload", action="store_false"
-        )
         command_parser_server.add_argument("--host", type=str)
         command_parser_server.add_argument("--port", type=IntRange(1024, 65000))
+        # The --reload and --no-reload options are currently used only for
+        # StrictDoc's own development. We may want to revisit this for the end
+        # users in the future but for now they are excluded from the help
+        # messages.
+        command_parser_server.add_argument(
+            "--reload",
+            default=False,
+            action="store_true",
+            help=argparse.SUPPRESS,
+        )
+        command_parser_server.add_argument(
+            "--no-reload",
+            dest="reload",
+            action="store_false",
+            help=argparse.SUPPRESS,
+        )
+
         add_config_argument(command_parser_server)
 
     @staticmethod

@@ -12,22 +12,26 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def test_01_():
-    input_string = """\
-@relation(REQ-1, scope=function)
-"""
+def test_01_basic_nominal():
+    input_strings = [
+        "@relation(REQ-1, scope=function)\n",
+        "@relation(REQ_1, scope=function)\n",
+        "@relation(REQ.1, scope=function)\n",
+        "@relation(REQ/1, scope=function)\n",
+    ]
 
-    function_ranges = MarkerParser.parse(input_string, 1, 1, 1, 1)
-    function_range = function_ranges[0]
-    assert isinstance(function_range, FunctionRangeMarker)
-    assert function_range.ng_source_line_begin == 1
-    assert function_range.ng_range_line_begin == 1
-    assert function_range.ng_range_line_end == 1
-    assert function_range.reqs_objs[0].ng_source_line == 1
-    assert function_range.reqs_objs[0].ng_source_column == 11
+    for input_string_ in input_strings:
+        function_ranges = MarkerParser.parse(input_string_, 1, 1, 1, 1)
+        function_range = function_ranges[0]
+        assert isinstance(function_range, FunctionRangeMarker)
+        assert function_range.ng_source_line_begin == 1
+        assert function_range.ng_range_line_begin == 1
+        assert function_range.ng_range_line_end == 1
+        assert function_range.reqs_objs[0].ng_source_line == 1
+        assert function_range.reqs_objs[0].ng_source_column == 11
 
 
-def test_02_():
+def test_10_parses_with_leading_newlines():
     input_string = """\
 
 
@@ -45,7 +49,7 @@ def test_02_():
     assert function_range.reqs_objs[0].ng_source_column == 11
 
 
-def test_03_():
+def test_11_parses_with_leading_whitespace():
     input_string = """\
 
 
@@ -63,7 +67,7 @@ def test_03_():
     assert function_range.reqs_objs[0].ng_source_column == 15
 
 
-def test_04_():
+def test_20_parses_within_doxygen_comment():
     input_string = """\
 /**
  * Some text.
@@ -83,7 +87,7 @@ def test_04_():
     assert function_range.reqs_objs[0].ng_source_column == 14
 
 
-def test_05_():
+def test_21_parses_within_doxygen_comment_two_markers():
     input_string = """\
 /**
  * Some text.
@@ -104,7 +108,7 @@ def test_05_():
     assert function_range.reqs_objs[0].ng_source_column == 14
 
 
-def test_06_():
+def test_22_parses_within_doxygen_comment_curly_braces():
     input_string = """\
 /**
  * Some text.

@@ -10,7 +10,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 )
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 
-REGEX_REQ = r"[A-Za-z][A-Za-z0-9\\-]+"
+REGEX_REQ = r"[A-Za-z][A-Za-z0-9_\/\.\\-]+"
 REGEX_ROLE = r"[A-Za-z][A-Za-z0-9\\-]+"
 # @relation(REQ-1, scope=function) or @relation{REQ-1, scope=function}
 REGEX_MARKER = re.compile(

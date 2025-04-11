@@ -1732,6 +1732,7 @@ The default grammar relations, when a custom grammar is not specified, are ``Par
 
 [SECTION]
 MID: 16ce47f32874421986a5a843c5aeb2bf
+UID: SECTION-UG-Relation-roles
 TITLE: Relation roles
 
 [TEXT]
@@ -1754,6 +1755,10 @@ StrictDoc's custom grammar support the configuration of relation roles. The Pare
         ROLE: Refines
 
 With this grammar, StrictDoc will only allow creating requirements that have Parent relations with the ``ROLE: Refines`` specified. Any other relations will trigger validation errors.
+
+.. note::
+
+    See also [LINK: SECTION-UG-File-relations-roles].
 <<<
 
 [/SECTION]
@@ -2458,6 +2463,49 @@ The linking of requirements to source files is arranged with a special RELATION 
     - TYPE: File
       VALUE: file.py
       CLASS: Foo
+<<<
+
+[/SECTION]
+
+[SECTION]
+MID: 38599400293a4b31a7cb6cb748f3dfe5
+UID: SECTION-UG-File-relations-roles
+TITLE: File relations roles
+
+[TEXT]
+MID: 4f477cb2e0ca42aaac814042f795b982
+STATEMENT: >>>
+StrictDoc supports relation roles for both SDoc nodes with ``TYPE: File`` and the source file markers.
+
+To establish a forward link with a role from an SDoc node to a source file:
+
+.. code-block::
+
+    [REQUIREMENT]
+    UID: REQ-002
+    TITLE: Foo
+    STATEMENT: Bar
+    RELATIONS:
+    - TYPE: File
+      VALUE: file.py
+      ROLE: Test
+
+To establish a backward link from a source file to an SDoc node:
+
+.. code-block::
+
+    /**
+     * Some text.
+     *
+     * @relation(REQ-1, scope=function, role=Implementation)
+     */
+    void hello_world(void) {
+        print("Hello, World\n");
+    }
+
+.. note::
+
+    See [LINK: SECTION-UG-Relation-roles] for a general description of the SDoc relations.
 <<<
 
 [/SECTION]

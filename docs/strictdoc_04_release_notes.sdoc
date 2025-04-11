@@ -33,7 +33,19 @@ TITLE: Unreleased
 [TEXT]
 MID: a7bd074d2dcd40a6af106e91720d90d3
 STATEMENT: >>>
-The command ``strictdoc server`` command has been extended to support the ``--host`` parameter. A user requested this feature to allow changing the server host which enables running the server within the StrictDoc Docker container.
+This release includes the following enhancements.
+
+1\) The source file traceability mechanism now supports specifying roles for relations and markers. A role marker can be empty or specified to a value such as ``Implementation`` or ``Implements``, ``Test`` or ``Verifies``, etc.[@haxtibal]
+
+2\) The Source View screen has undergone a major user interface redesign. Visual highlighting has been improved for traceability to and from entire files, classes (available in Python but not in C), functions, code ranges, and individual lines. Fully detailed but collapsible requirement cells have been added above the relevant functions, ranges, and so on, allowing users to quickly review them without leaving the Source View screen.
+
+3\) A Python source file reader has been extended to support a case when the first docstring is not necessarily the first node of a module [@thseiler]
+
+4\) An initial proof of concept for reading JUnit XML files and tracing test results back to test cases has been implemented. If a test case references a requirement, the test result will also be transitively linked to that requirement through the test case. Thanks to @johanenglund for explaining the use case and creating the first proof of concept examples.
+
+5\) The command ``strictdoc server`` command has been extended to support the ``--host`` parameter. A user requested this feature to allow changing the server host which enables running the server within the StrictDoc Docker container.
+
+6\) Minor fixes to the main document view interface.
 <<<
 
 [/SECTION]

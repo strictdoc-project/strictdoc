@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.free_text import FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocSectionIF
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
@@ -161,6 +162,7 @@ class CreateRequirementTransform:
                     form_object.add_error(field_name_, field_error_)
             return
 
+        parent: Union[SDocDocumentIF, SDocSectionIF]
         if whereto == NodeCreationOrder.CHILD:
             parent = reference_node
             insert_to_idx = len(parent.section_contents)

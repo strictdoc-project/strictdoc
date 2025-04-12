@@ -25,7 +25,7 @@ class SectionContext:
 class SDocSection(SDocSectionIF):
     def __init__(
         self,
-        parent,
+        parent: Union[SDocDocumentIF, SDocSectionIF],
         mid: Optional[str],
         uid: Optional[str],
         custom_level: Optional[str],
@@ -33,7 +33,7 @@ class SDocSection(SDocSectionIF):
         requirement_prefix: Optional[str],
         section_contents: List[SDocSectionContentIF],
     ):
-        self.parent = parent
+        self.parent: Union[SDocDocumentIF, SDocSectionIF] = parent
 
         # TODO: Remove .uid, keep reserved_uid only.
         meaningful_uid: Optional[str] = None

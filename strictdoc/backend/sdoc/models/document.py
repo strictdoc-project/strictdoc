@@ -66,7 +66,9 @@ class SDocDocument(SDocDocumentIF):
         self.context: SDocDocumentContext = SDocDocumentContext()
 
         self.ng_including_document_reference: Optional[DocumentReference] = None
-        self.ng_including_document_from_file: Optional = None  # type: ignore[valid-type]
+        self.ng_including_document_from_file: Optional[
+            SDocDocumentFromFileIF
+        ] = None
 
     @property
     def uid(self) -> Optional[str]:

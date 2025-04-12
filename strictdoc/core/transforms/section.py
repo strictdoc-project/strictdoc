@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Union
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocSectionIF
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.project_config import ProjectConfig
@@ -146,8 +147,9 @@ class CreateSectionCommand:
         reference_mid = self.reference_mid
         traceability_index = self.traceability_index
 
-        reference_node: Union[SDocDocument, SDocSection] = (
-            traceability_index.get_node_by_mid(MID(reference_mid))
+        reference_node: Union[SDocDocumentIF, SDocSectionIF] = assert_cast(
+            traceability_index.get_node_by_mid(MID(reference_mid)),
+            (SDocDocumentIF, SDocSectionIF),
         )
 
         document: SDocDocument
@@ -167,6 +169,11 @@ class CreateSectionCommand:
         elif document_ := reference_node.get_document():
             assert isinstance(document_, SDocDocument)
             document = document_
+
+        else:
+            raise AssertionError(
+                f"Unexpected error: Expected a document node to be available for reference node: {reference_node}."
+            )
 
         if len(form_object.section_title) == 0:
             errors["section_title"].append("Section title must not be empty.")
@@ -189,6 +196,7 @@ class CreateSectionCommand:
         if len(errors) > 0:
             raise validation_error
 
+        parent: Union[SDocDocumentIF, SDocSectionIF]
         if whereto == NodeCreationOrder.CHILD:
             parent = reference_node
             insert_to_idx = len(parent.section_contents)
@@ -202,7 +210,13 @@ class CreateSectionCommand:
                 parent = reference_node.parent
                 insert_to_idx = parent.section_contents.index(reference_node)
             else:
-                parent = reference_node.ng_including_document_from_file.parent
+                parent = assert_cast(
+                    reference_node.ng_including_document_from_file.parent,
+                    (SDocDocument, SDocSection),
+                )
+                assert (
+                    reference_node.ng_including_document_from_file is not None
+                )
                 insert_to_idx = parent.section_contents.index(
                     reference_node.ng_including_document_from_file
                 )

@@ -34,7 +34,10 @@ class Anchor:
         self.mid: MID = MID.create()
         self.reserved_mid: MID = self.mid
 
-    def get_display_title(self) -> str:
+    def get_display_title(
+        self,
+        include_toc_number: bool = True,  # noqa: ARG002
+    ) -> str:
         return self.title
 
     def get_document(self) -> SDocDocumentIF:

@@ -145,7 +145,10 @@ class RSTWriter:
                 # using this syntax: :ref:`Link title <label-name>`.
                 # https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
                 if node_or_none is not None:
-                    output += f":ref:`{node_or_none.get_display_title()} <{part.link}>`"
+                    node_display_title = node_or_none.get_display_title(
+                        include_toc_number=False
+                    )
+                    output += f":ref:`{node_display_title} <{part.link}>`"
                 else:
                     output += f":ref:`{part.link}`"
             elif isinstance(part, Anchor):

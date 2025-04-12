@@ -156,7 +156,10 @@ class SDocDocument(SDocDocumentIF):
             task_list.extend(section_or_requirement.section_contents)
         return False
 
-    def get_display_title(self) -> str:
+    def get_display_title(
+        self,
+        include_toc_number: bool = True,  # noqa: ARG002
+    ) -> str:
         return self.title
 
     @property

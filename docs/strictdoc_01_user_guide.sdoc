@@ -3504,6 +3504,88 @@ This feature is not enabled by default because it has not received enough testin
 [/SECTION]
 
 [SECTION]
+MID: e9c94abacb12425980aec8ed7ee752cb
+TITLE: JUnit XML report integration
+
+[TEXT]
+MID: eba63ebd45624139a8773cf42fe7d670
+STATEMENT: >>>
+StrictDoc can read JUnit XML files as SDoc content which allows establishing traceability between requirements, test cases, and test results.
+
+JUnit XML format is mostly identical between different tools that produce it but there are subtle differences that must be handled case by case. StrictDoc supports several JUnit XML flavors. To be discovered by StrictDoc, the XML files must have one of the following extensions:
+
+.. list-table:: Supported JUnit XML formats
+   :widths: 60 40
+   :header-rows: 1
+
+   * - Tool
+     - Extension
+
+   * - Pytest
+     - ``.pytest.junit.xml``
+   * - CTest
+     - ``.ctest.junit.xml``
+   * - Google Test
+     - ``.gtest.junit.xml``
+   * - LLVM Integrated Tester (LIT)
+     - ``.lit.junit.xml``
+
+.. note::
+
+    After the existing JUnit XML flavors have been implemented, it should be easy to add more tools in case their output differs.
+
+The project must have the following features activated for StrictDoc to provide language-aware parsing of C/C++ and Python. It is recommended to provide a dedicated folder for JUnit XML to not mix human-written SDoc content and auto-generated test reports.
+
+.. code-block::
+
+    [project]
+
+    features = [
+      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+      "SOURCE_FILE_LANGUAGE_PARSERS",
+    ]
+
+    include_doc_paths = [
+      "docs/**",
+      # A dedicated folder where StrictDoc could find JUnit XML.
+      "reports/**",
+    ]
+
+.. warning::
+
+    The JUnit XML feature's status is experimental. The functionality has been implemented and passes basic integration tests but it has not received enough testing by the users. StrictDoc's own documentation is already using this feature and the JUnit XML traceability will be part of StrictDoc's own qualification package. It is expected that the JUnit XML will become a stable feature by no late than 2025 Q4.
+<<<
+
+[SECTION]
+MID: 06d9dbbeca204f5e8d0042e142b615bd
+TITLE: LLVM Integrated Tester JUnit XML specifics
+
+[TEXT]
+MID: fab24f53f02f46e7a4cb49e333dfdc54
+STATEMENT: >>>
+Specifically for LLVM Integrated Tester-produced JUnit XML, an extra config option must be provided because its output XML does not contain precise information about the test root folder.
+
+.. code-block::
+
+    [project]
+
+    features = [
+      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+      "SOURCE_FILE_LANGUAGE_PARSERS",
+    ]
+
+    test_report_root_dict = [
+      { "reports/tests_integration.lit.junit.xml" = "tests/integration" },
+    ]
+
+In this example, the expectation is that a user has generated a JUnit XML with LLVM LIT and the output XML is at ``reports/tests_integration.lit.junit.xml``. The config line tells StrictDoc that this JUnit XML was produced by LIT from the ``tests/integration`` root folder.
+<<<
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
 MID: 66e608bfa6b8448598c0a732a27ddaad
 TITLE: Shadow features
 

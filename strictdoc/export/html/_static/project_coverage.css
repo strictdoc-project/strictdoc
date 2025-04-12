@@ -32,6 +32,10 @@
   border-right: var(--base-border);
 }
 
+.project_coverage td {
+  text-align: right;
+}
+
 .project_coverage th:last-child,
 .project_coverage td:last-child {
   border-right: none;
@@ -118,4 +122,18 @@
 
 .project_coverage-col-func {
   background-color: rgba(175, 0, 255, 0.05) !important;
+}
+
+/* value_extended */
+
+.value_extended[data-ext]::after {
+content: attr(data-ext);
+margin-left: 2px;
+font-size: 0.85em;
+/* color: var(--color-fg-secondary); */
+font-weight: 200;
+}
+
+.value_secondary {
+  color: var(--color-fg-secondary);
 }

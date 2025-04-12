@@ -175,6 +175,7 @@ class P01_ReqIFToSDocConverter:
                     P01_ReqIFToSDocConverter.create_section_from_spec_object(
                         spec_object=spec_object,
                         context=context,
+                        parent_section=current_section_,
                         level=current_hierarchy_.level,
                         reqif_bundle=reqif_bundle,
                     )
@@ -347,6 +348,7 @@ class P01_ReqIFToSDocConverter:
         *,
         spec_object: ReqIFSpecObject,
         context: P01_ReqIFToSDocBuildContext,
+        parent_section: Union[SDocSection, SDocDocument],
         level: int,
         reqif_bundle: ReqIFBundle,
     ) -> SDocSection:
@@ -381,7 +383,7 @@ class P01_ReqIFToSDocConverter:
         section_mid = spec_object.identifier if context.enable_mid else None
 
         section = SDocSection(
-            parent=None,
+            parent=parent_section,
             mid=section_mid,
             uid=None,
             custom_level=None,

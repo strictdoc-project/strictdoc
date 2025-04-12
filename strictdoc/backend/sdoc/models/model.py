@@ -48,6 +48,7 @@ class SDocCompositeNodeIF(SDocNodeIF):
 
 
 class SDocSectionIF(ABC):
+    parent: Union["SDocDocumentIF", "SDocSectionIF"]
     ng_resolved_custom_level: Optional[str]
     section_contents: List["SDocSectionContentIF"]
 
@@ -96,6 +97,7 @@ class SDocDocumentIF(ABC):
 
 
 class SDocDocumentFromFileIF:
+    parent: Union[SDocDocumentIF, SDocSectionIF]
     ng_resolved_custom_level: Optional[str]
 
     @abstractmethod

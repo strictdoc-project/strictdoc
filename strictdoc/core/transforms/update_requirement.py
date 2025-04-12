@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.free_text import FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocSectionIF
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
@@ -211,6 +212,7 @@ class CreateOrUpdateNodeCommand:
             document = traceability_index.get_node_by_mid(
                 MID(form_object.document_mid)
             )
+            parent: Union[SDocDocumentIF, SDocSectionIF]
             if self.node_info.whereto == NodeCreationOrder.CHILD:
                 parent = reference_node
                 insert_to_idx = len(parent.section_contents)
@@ -226,6 +228,10 @@ class CreateOrUpdateNodeCommand:
                     parent = (
                         reference_node.ng_including_document_from_file.parent
                     )
+                    assert (
+                        reference_node.ng_including_document_from_file
+                        is not None
+                    )
                     insert_to_idx = parent.section_contents.index(
                         reference_node.ng_including_document_from_file
                     )
@@ -235,6 +241,7 @@ class CreateOrUpdateNodeCommand:
                     parent = (
                         reference_node.ng_including_document_from_file.parent
                     )
+                    assert reference_node.ng_including_document_from_file
                     insert_to_idx = (
                         parent.section_contents.index(
                             reference_node.ng_including_document_from_file

@@ -36,7 +36,7 @@ class Test(E2ECase):
             form_edit_section.do_form_submit_and_catch_error(
                 "UID uniqueness validation error: "
                 "There is already an existing node with this UID: "
-                "Second section."
+                "2. Second section."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

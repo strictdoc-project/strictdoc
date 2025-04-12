@@ -86,7 +86,9 @@ class SDocSection(SDocSectionIF):
     def is_root_included_document(self):
         return False
 
-    def get_display_title(self) -> str:
+    def get_display_title(self, include_toc_number: bool = True) -> str:
+        if include_toc_number and self.context.title_number_string is not None:
+            return f"{self.context.title_number_string}. {self.title}"
         return self.title
 
     # FIXME: Remove this method, use get_document() instead.

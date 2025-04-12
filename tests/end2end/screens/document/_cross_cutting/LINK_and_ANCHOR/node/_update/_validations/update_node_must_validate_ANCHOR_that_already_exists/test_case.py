@@ -41,7 +41,7 @@ Modified statement.
 """
             )
             form_edit_requirement.do_form_submit_and_catch_error(
-                "Another node contains an anchor with the same UID: AD1. Node: TEXT with no title/UID."
+                'Another node contains an anchor with the same UID: AD1. Node: Text node from document "Document 1".'
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

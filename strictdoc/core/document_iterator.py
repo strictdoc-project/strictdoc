@@ -68,7 +68,11 @@ class DocumentCachingIterator:
         def get_level_string_(
             node_: Union[SDocSection, SDocNode, SDocCompositeNode],
         ) -> str:
-            if isinstance(node_, SDocNode) and node_.node_type == "TEXT":
+            if (
+                isinstance(node_, SDocNode)
+                and node_.node_type == "TEXT"
+                and node_.reserved_title is None
+            ):
                 return ""
 
             if node_.ng_resolved_custom_level == "None":
@@ -100,6 +104,7 @@ class DocumentCachingIterator:
                 if subnode_.ng_resolved_custom_level is None and not (
                     isinstance(subnode_, SDocNode)
                     and subnode_.node_type == "TEXT"
+                    and subnode_.reserved_title is None
                 ):
                     current_number += 1
 

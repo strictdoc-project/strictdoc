@@ -40,7 +40,7 @@ Modified Hello world!
 """
             )
             edit_form.do_form_submit_and_catch_error(
-                "Cannot remove anchor with UID 'AD1' because it has incoming links. Containing node: Node: 'TEXT with no title/UID'."
+                "Cannot remove anchor with UID 'AD1' because it has incoming links. Containing node: Node: 'Text node from document \"Document 1\"'."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

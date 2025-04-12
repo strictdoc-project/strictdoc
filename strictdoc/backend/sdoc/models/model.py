@@ -63,6 +63,10 @@ class SDocSectionIF(ABC):
     def get_debug_info(self) -> str:
         raise NotImplementedError
 
+    @abstractmethod
+    def get_display_title(self, include_toc_number: bool = True) -> str:
+        raise NotImplementedError
+
 
 class SDocDocumentIF(ABC):
     config: DocumentConfig
@@ -84,6 +88,10 @@ class SDocDocumentIF(ABC):
     def iterate_included_documents_depth_first(
         self,
     ) -> Generator["SDocDocumentIF", None, None]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_display_title(self, include_toc_number: bool = True) -> str:
         raise NotImplementedError
 
 

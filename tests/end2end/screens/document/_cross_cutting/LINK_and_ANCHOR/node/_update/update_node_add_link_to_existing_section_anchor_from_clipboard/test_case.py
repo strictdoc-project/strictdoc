@@ -46,5 +46,7 @@ Statement with LINK: [LINK: {copied_text}]
 
             form_edit_requirement.do_form_submit()
 
-            screen_document.assert_text("Statement with LINK: 🔗 First section")
+            screen_document.assert_text(
+                "Statement with LINK: 🔗 1. First section"
+            )
         assert test_setup.compare_sandbox_and_expected_output()

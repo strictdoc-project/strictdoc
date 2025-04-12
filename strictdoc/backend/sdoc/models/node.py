@@ -189,11 +189,19 @@ class SDocNode(SDocNodeIF):
     def get_node_type_string_lower(self) -> Optional[str]:
         return self.node_type.lower()
 
-    def get_display_title(self) -> str:
+    def get_display_title(
+        self,
+        include_toc_number: bool = True,  # noqa: ARG002
+    ) -> str:
         if self.reserved_title is not None:
             return self.reserved_title
         if self.reserved_uid is not None:
             return self.reserved_uid
+        if self.node_type == "TEXT":
+            if isinstance(self.parent, SDocSectionIF):
+                return f'Text node from section "{self.parent.get_display_title()}"'
+            if isinstance(self.parent, SDocDocumentIF):
+                return f'Text node from document "{self.parent.get_display_title()}"'
         return f"{self.node_type} with no title/UID"
 
     @property

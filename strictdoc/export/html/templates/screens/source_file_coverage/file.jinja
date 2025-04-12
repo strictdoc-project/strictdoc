@@ -8,7 +8,7 @@
 {% set func_covered = view_object.get_file_stats_functions_covered(source_file) %}
 {% set func_percent = view_object.get_file_stats_functions_covered_percentage(source_file) %}
 
-<tr class="project_coverage-file">
+<tr class="project_coverage-file {% if lines_covered == '0' %}project_coverage-file_uncovered{% endif %}">
   <td style="padding-left:{{ folder.get_level() }}0px">
     <a
       class="project_coverage-file-link"
@@ -32,10 +32,10 @@
     </a>
   </td>
 
-  <td><span class="value_extended" data-ext="%">{{ lines_percent }}</span></td>
-  <td><span class="value_extended">{{ lines_covered }}</span></td>
+  <td><span class="value_extended {% if lines_covered == '0' %}color-danger{% endif %}" data-ext="%">{{ lines_percent }}</span></td>
+  <td><span class="value_extended {% if lines_covered == '0' %}color-danger{% endif %}">{{ lines_covered }}</span></td>
   <td><span class="value_extended">{{ lines_total }}</span></td>
-  <td><span class="value_extended value_secondary">{{ lines_ }}</span></td>
+  <td><span class="value_extended color-secondary">{{ lines_ }}</span></td>
 
   <td><span class="value_extended" data-ext="%">{{ func_percent }}</span></td>
   <td><span class="value_extended">{{ func_covered }}</span></td>

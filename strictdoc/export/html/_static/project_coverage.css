@@ -41,7 +41,7 @@
   border-right: none;
 }
 
-.project_coverage th:first-child,
+.project_coverage tr:first-child th:first-child, /* tr compensate colspan */
 .project_coverage td:first-child {
   width: auto;
   text-align: left;

@@ -141,6 +141,8 @@ The following diagram contains the work items at the epic and single task levels
    :alt: Development plan diagram
    :class: image
    :width: 100%
+
+The roadmap and other artifacts are maintained at a publicly available draw.io diagram workspace `here <https://drive.google.com/file/d/1pkI0T1eAbcTSyCnqH4wCKKQSOfgWTaxi/view>`_.
 <<<
 
 [/SECTION]
@@ -161,19 +163,85 @@ As of release 0.1.0 (2024-11-01), StrictDoc follows a `semantic versioning <http
 
 [SECTION]
 MID: ef6bde37e1c54f49afdbd3c6785fd01c
-TITLE: Verification
+TITLE: Quality
 
 [TEXT]
 MID: 14d0e79fcadc43f1a1cee2d66ae6b763
 STATEMENT: >>>
+StrictDoc's development incorporates quality measures to ensure a high standard of code quality.
+<<<
+
+[SECTION]
+MID: bc49b1e28fff4386b3bf5788a6686a79
+TITLE: Linting of code
+
+[TEXT]
+MID: f6de78d4a95b4970ab55563e18472a92
+STATEMENT: >>>
+StrictDoc uses `Ruff <https://docs.astral.sh/ruff/formatter/>`_ to ensure consistent code formatting and to check for common issues in Python code.
+<<<
+
+[/SECTION]
+
+[SECTION]
+MID: 38ce17138405490b80e06037b40dc49d
+TITLE: Static analysis
+
+[TEXT]
+MID: ad63541e341d4648ab59b4a0817a7e3c
+STATEMENT: >>>
+StrictDoc uses `mypy <https://github.com/python/mypy>`_ to statically check the robustness of its Python type system.
+<<<
+
+[/SECTION]
+
+[SECTION]
+MID: 2834756354a7420499d0deecfe0ee9c4
+TITLE: Testing
+
+[TEXT]
+MID: ee541e7062704b3f919bcaac2bce2723
+STATEMENT: >>>
 StrictDoc has three groups of tests: unit, integration, end-to-end tests.
 
-The unit tests are based on Pylint.
+The unit tests are based on `pytest <https://docs.pytest.org/en/stable/>`_.
 
 The integration tests are based on the `LLVM Integrated Tester <https://llvm.org/docs/CommandGuide/lit.html>`_ and `FileCheck.py <https://github.com/mull-project/FileCheck.py/blob/main/pyproject.toml>`_. These tools are not very common, refer to `How to test command-line programs with Python tools: LIT and FileCheck <https://stanislaw.github.io/2020-11-20-how-to-test-command-line-programs-with-python.html>`_ for a good description.
 
-The end-to-end web interface tests are based on SeleniumBase test framework.
+The end-to-end web interface tests are based on the `SeleniumBase <https://seleniumbase.io/>`_ test framework.
 <<<
+
+[/SECTION]
+
+[SECTION]
+MID: 2004550abd54486d9aa5f98282eef6e1
+TITLE: Traceability between StrictDoc requirements, code, and tests
+
+[TEXT]
+MID: f829d28d2e3d4bcaa38f44ffb1ac0373
+STATEMENT: >>>
+Most of StrictDoc's implemented features are tested through its own documentation artifacts. In terms of traceability, StrictDoc maintains a growing number of trace links between:
+
+- Documentation and source files
+- Source files and tests
+- Tests, test results, and code coverage data
+
+As of Q2 2025, the goal is to achieve 100% traceability across all artifacts in the StrictDoc codebase.
+<<<
+
+[/SECTION]
+
+[SECTION]
+MID: 30b874ab3eac4d429633537e1e89677f
+TITLE: Continuous integration (CI)
+
+[TEXT]
+MID: 85e3915270f144c7a76ccfa0e088d93d
+STATEMENT: >>>
+Contributions to StrictDoc are made through GitHub pull requests. Each pull request is validated by a series of checks and test jobs run on GitHub Actions CI servers.
+<<<
+
+[/SECTION]
 
 [/SECTION]
 

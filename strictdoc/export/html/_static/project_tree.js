@@ -192,9 +192,32 @@ class ProjectTree {
   }
 
   updateFragmentsAndControl() {
-    this.fragments = this._getFragments();
-    this._updateControl(this.fragments.length);
+    // Update list of fragment elements (files + folders) and toggle visibility
+    const fileFragments = this._getFileFragments();
+    const folderFragments = this._getFoldersWithOnlyFragments();
+
+    // Store both individual file fragments and folders that contain only fragments
+    this.fragments = [...fileFragments, ...folderFragments];
+
+    // Only show number of file fragments (folders are excluded from count)
+    this._updateControl(fileFragments.length);
     this._updateFragmentsVisibility(this.getCurrentFragmentVisibilityBool());
+  }
+
+  _getFileFragments() {
+    // Find all file elements that are marked as included fragments
+    return [...this.mutatingFrame.querySelectorAll(FRAGMENT_SELECTOR)];
+  }
+
+  _getFoldersWithOnlyFragments() {
+    // Find folders that contain only fragment files and no other files
+    const folders = [...this.mutatingFrame.querySelectorAll(FOLDER_SELECTOR)];
+    return folders.filter(folder => {
+      // Consider only those folders if it contains only fragment files
+      const fragCount = folder.querySelectorAll(FRAGMENT_SELECTOR).length;
+      const fileCount = folder.querySelectorAll(FILE_SELECTOR).length;
+      return fragCount > 0 && fragCount === fileCount;
+    });
   }
 
   _getFragments() {

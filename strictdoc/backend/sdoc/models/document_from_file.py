@@ -78,6 +78,8 @@ class DocumentFromFile(SDocDocumentFromFileIF):
             raise AssertionError(including_document_or_section)
 
         resolved_document.ng_including_document_from_file = self
+
+        assert resolved_document.ng_including_document_reference is not None
         resolved_document.ng_including_document_reference.set_document(
             including_document
         )

@@ -212,6 +212,9 @@ class CreateSectionCommand:
             )
             if isinstance(reference_node, SDocDocument):
                 assert reference_node.document_is_included()
+                assert (
+                    reference_node.ng_including_document_from_file is not None
+                )
                 parent = reference_node.ng_including_document_from_file.parent
                 insert_to_idx = (
                     parent.section_contents.index(

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,var-annotated"
+import typing
 from collections import Counter
 from typing import Dict, List
 
@@ -11,7 +11,9 @@ from strictdoc.core.analyzers.document_stats import (
     SinglePrefixRequirements,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import (
     extract_last_numeric_part,
     extract_numeric_uid_prefix_part,
@@ -20,11 +22,18 @@ from strictdoc.helpers.string import (
 
 class DocumentUIDAnalyzer:
     @staticmethod
-    def analyze_document_tree(traceability_index: TraceabilityIndex):
+    def analyze_document_tree(
+        traceability_index: TraceabilityIndex,
+    ) -> DocumentTreeStats:
         global_requirements_per_prefix: Dict[str, SinglePrefixRequirements] = {}
         document_tree_stats: List[DocumentStats] = []
-        section_uids_so_far = Counter()
-        for document in traceability_index.document_tree.document_list:
+        section_uids_so_far: typing.Counter[str] = Counter()
+
+        document_tree: DocumentTree = assert_cast(
+            traceability_index.document_tree, DocumentTree
+        )
+
+        for document in document_tree.document_list:
             document_stats: DocumentStats = (
                 DocumentUIDAnalyzer.analyze_document(document)
             )

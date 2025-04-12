@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg"
+import typing
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Dict, List
@@ -30,7 +31,7 @@ class DocumentTreeStats:
     single_document_stats: List[DocumentStats]
 
     requirements_per_prefix: Dict[str, SinglePrefixRequirements]
-    section_uids_so_far: Counter
+    section_uids_so_far: typing.Counter[str]
 
     def get_next_requirement_uid(self, prefix) -> str:
         next_number = self.get_next_requirement_uid_number(prefix)

@@ -477,9 +477,15 @@ class SDocNode(SDocNodeIF):
     def enumerate_meta_fields(
         self, skip_single_lines: bool = False, skip_multi_lines: bool = False
     ) -> Generator[Tuple[str, SDocNodeField], None, None]:
-        document = assert_cast(self.get_document(), SDocDocumentIF)
+        document: SDocDocumentIF = assert_cast(
+            self.get_document(), SDocDocumentIF
+        )
 
-        element: GrammarElement = document.grammar.elements_by_type[
+        document_grammar: DocumentGrammar = assert_cast(
+            document.grammar, DocumentGrammar
+        )
+
+        element: GrammarElement = document_grammar.elements_by_type[
             self.node_type
         ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
@@ -512,8 +518,13 @@ class SDocNode(SDocNodeIF):
         return field.get_text_value()
 
     def get_field_human_title(self, field_name: str) -> str:
-        document = assert_cast(self.get_document(), SDocDocumentIF)
-        element: GrammarElement = document.grammar.elements_by_type[
+        document: SDocDocumentIF = assert_cast(
+            self.get_document(), SDocDocumentIF
+        )
+        document_grammar: DocumentGrammar = assert_cast(
+            document.grammar, DocumentGrammar
+        )
+        element: GrammarElement = document_grammar.elements_by_type[
             self.node_type
         ]
         field_human_title = element.fields_map[field_name]

@@ -487,6 +487,8 @@ def lint_mypy(context):
     # These checks do not seem to be useful:
     # - import
     # - misc
+    # type-abstract is ignored on purpose because of assert_cast() implementation.
+    # See https://stackoverflow.com/a/74073453/598057.
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
@@ -495,6 +497,7 @@ def lint_mypy(context):
                 --show-error-codes
                 --disable-error-code=import
                 --disable-error-code=misc
+                --disable-error-code=type-abstract
                 --cache-dir=build/mypy
                 --strict
                 --python-version=3.8

@@ -624,8 +624,8 @@ class FileTraceabilityIndex:
         # Sort by node UID alphabetically.
         for path_requirements_ in self.map_paths_to_reqs.values():
 
-            def compare_sdocnode_by_uid(node) -> int:
-                return assert_cast(node.reserved_uid, str)
+            def compare_sdocnode_by_uid(node_) -> str:
+                return assert_cast(node_.reserved_uid, str)
 
             path_requirements_.sort(key=compare_sdocnode_by_uid)
 

@@ -212,7 +212,7 @@ class CreateSectionCommand:
             else:
                 parent = assert_cast(
                     reference_node.ng_including_document_from_file.parent,
-                    (SDocDocument, SDocSection),
+                    (SDocDocumentIF, SDocDocumentIF),
                 )
                 assert (
                     reference_node.ng_including_document_from_file is not None

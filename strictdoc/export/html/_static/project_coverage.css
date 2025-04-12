@@ -50,6 +50,10 @@
   background: rgba(255,255,255,0.3);
 }
 
+.project_coverage tr.project_coverage-folder td {
+  padding-right: 0;
+}
+
 .project_coverage-folder-title {
   font-weight: bold;
   display: flex;

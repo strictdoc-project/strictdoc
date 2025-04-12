@@ -333,7 +333,7 @@ STATEMENT: >>>
 The "Document grammar" feature allows users to extend the default grammar to fit specific project needs, particularly useful for industries with specialized requirements documentation, such as automotive or aerospace. This feature supports defining custom fields like "PRIORITY," "VERIFICATION," or domain-specific tags like "ASIL" for automotive safety standards. Custom grammars are declared at the document level using the ``[GRAMMAR]`` directive, enabling users to specify custom fields and their data types, such as ``String``, ``SingleChoice``, ``MultipleChoice``. These fields can be marked as mandatory, ensuring consistency across requirements documents.
 <<<
 DOCUMENTATION: >>>
-- [LINK: SECTION-CUSTOM-GRAMMARS]
+- [LINK: SECTION-UG-DOCUMENT-GRAMMAR]
 <<<
 
 [/SECTION]

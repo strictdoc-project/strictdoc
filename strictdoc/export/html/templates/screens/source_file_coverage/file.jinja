@@ -1,5 +1,13 @@
 {%- set source_file = view_object.traceability_index.document_tree.source_tree.get_source_for_file(file) -%}
 
+{% set lines_ = view_object.get_file_stats_lines_total(source_file) %}
+{% set lines_total = view_object.get_file_stats_lines_total_non_empty(source_file) %}
+{% set lines_covered = view_object.get_file_stats_non_empty_lines_covered(source_file) %}
+{% set lines_percent = view_object.get_file_stats_non_empty_lines_covered_percentage(source_file) %}
+{% set func_total = view_object.get_file_stats_functions_total(source_file) %}
+{% set func_covered = view_object.get_file_stats_functions_covered(source_file) %}
+{% set func_percent = view_object.get_file_stats_functions_covered_percentage(source_file) %}
+
 <tr class="project_coverage-file">
   <td style="padding-left:{{ folder.get_level() }}0px">
     <a
@@ -24,13 +32,15 @@
     </a>
   </td>
 
-  <td>{{ view_object.get_file_stats_lines_total(source_file) }}</td>
-  <td>{{ view_object.get_file_stats_lines_total_non_empty(source_file) }}</td>
-  <td>{{ view_object.get_file_stats_non_empty_lines_covered(source_file) }}</td>
-  <td>{{ view_object.get_file_stats_functions_total(source_file) }}</td>
-  <td>{{ view_object.get_file_stats_functions_covered(source_file) }}</td>
+  <td>{{ lines_ }}</td>
+  <td>{{ lines_total }}</td>
+  <td>{{ lines_covered }}</td>
+  <td>{{ lines_percent }}</td>
+  <td>{{ func_total }}</td>
+  <td>{{ func_covered }}</td>
+  <td>{{ func_percent }}</td>
 
-  <td>
+  {# <td>
       {%- if source_file.is_referenced -%}
         {%- set range_reqs =
           view_object.traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
@@ -53,5 +63,5 @@
           {% include "screens/source_file_coverage/value_bar.jinja" %}
         {% endwith %}
       {%- endif -%}
-    </td>
+    </td> #}
 </tr>

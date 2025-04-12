@@ -56,6 +56,19 @@ class SourceCoverageViewObject:
 
     def get_file_stats_non_empty_lines_covered(self, source_file: SourceFile) -> str:
         trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
+        return str(trace_info.ng_lines_covered)
+
+    def get_file_stats_non_empty_lines_covered_percentage(self, source_file: SourceFile) -> str:
+        trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
+        covered = trace_info.ng_lines_covered
+        total_non_empty = trace_info.file_stats.lines_non_empty
+        percentage = (
+            (covered / total_non_empty * 100) if total_non_empty > 0 else 0
+        )
+        return f"{percentage:.1f}"
+
+    def get_file_stats_non_empty_lines_covered_preformatted(self, source_file: SourceFile) -> str:
+        trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
         covered = trace_info.ng_lines_covered
         total_non_empty = trace_info.file_stats.lines_non_empty
         percentage = (
@@ -68,6 +81,17 @@ class SourceCoverageViewObject:
         return str(len(trace_info.functions))
 
     def get_file_stats_functions_covered(self, source_file: SourceFile) -> str:
+        trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
+        return str(trace_info.covered_functions)
+
+    def get_file_stats_functions_covered_percentage(self, source_file: SourceFile) -> str:
+        trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
+        covered = trace_info.covered_functions
+        total = len(trace_info.functions)
+        percentage = (covered / total * 100) if total > 0 else 0
+        return f"{percentage:.1f}"
+
+    def get_file_stats_functions_covered_preformatted(self, source_file: SourceFile) -> str:
         trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
         covered = trace_info.covered_functions
         total = len(trace_info.functions)

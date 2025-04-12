@@ -1,22 +1,20 @@
 
 {%- if not view_object.is_empty_tree() -%}
   <div class="tree">
-    {%- for folder_or_file in view_object.iterator_files_first() -%}
-      {%- if folder_or_file.is_folder() %}
-        {%- if view_object.folder_contains_including_documents(folder_or_file) %}
-          {%- if folder_or_file.files|length > 0 %}
-            <div
-              class="tree_folder"
-              data-level="{{ folder_or_file.level }}"
-              data-testid="tree-folder-item"
-            >
-            {#- {% include "_res/svg__separator.jinja.html" %} -#}
-            {# {%- include "_res/svg_ico16_folder.jinja" -%} #}
-            <span class="tree_folder_path">/{{- folder_or_file.rel_path -}}</span>
-            </div>
-          {% endif %}
+    {% for folder_or_file in view_object.iterator_files_first() -%}
+      {% if folder_or_file.is_folder() %}
+        {% if view_object.should_display_folder(folder_or_file) %}
+          <div
+            class="tree_folder"
+            data-level="{{ folder_or_file.level }}"
+            data-testid="tree-folder-item"
+          >
+          {#- {% include "_res/svg__separator.jinja.html" %} -#}
+          {# {%- include "_res/svg_ico16_folder.jinja" -%} #}
+          <span class="tree_folder_path">/{{- folder_or_file.rel_path -}}</span>
+          </div>
         {% endif %}
-      {% elif folder_or_file.has_extension(".sdoc") or folder_or_file.has_extension(".junit.xml") %}
+      {% elif view_object.should_display_file(folder_or_file) %}
         {%- set document_ = view_object.get_document_by_path(folder_or_file.get_full_path()) %}
         {% if not document_.document_is_included() %}
         <a

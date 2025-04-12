@@ -1,4 +1,4 @@
-{% if document.included_documents|length > 0 %}
+{% if view_object.should_display_included_documents_for_document(document) %}
 <ul class="tree_fragments">
 {% for child_document_ in document.included_documents %}
   <li>

@@ -11,7 +11,7 @@
 
   <div class="project_tree-folder-content">
     {% for folder_ in folder.subfolder_trees %}
-      {% if folder_.has_sdoc_content %}
+      {% if view_object.should_display_folder(folder_) %}
         {% with folder = folder_ %}
           {% include "screens/project_index/project_tree_folder.jinja" %}
         {% endwith %}
@@ -19,7 +19,7 @@
     {% endfor %}
 
     {% for file_ in folder.files %}
-      {% if file_.has_extension(".sdoc") or file_.has_extension(".junit.xml") %}
+      {% if view_object.should_display_file(file_) %}
         {% with file = file_ %}
           {% include "screens/project_index/project_tree_file.jinja" %}
         {% endwith %}

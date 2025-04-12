@@ -4,7 +4,10 @@
       {% include "screens/project_index/frame_project_tree.jinja.html" %}
     </div>
     <div class="dashboard-aside">
+      {% if view_object.should_display_fragments_toggle() %}
       <div class="dashboard-block" id="project_tree_controls">{# must to be empty #}</div>
+      {% endif %}
+
       <div class="dashboard-block">
         {# {{ view_object.project_config.project_title }} #}
         {# ⛭ ⚙️ #}

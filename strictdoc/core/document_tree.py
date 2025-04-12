@@ -11,7 +11,7 @@ class DocumentTree:
         self,
         file_tree,
         document_list,
-        map_docs_by_paths,
+        map_docs_by_paths: Dict[str, SDocDocument],
         map_docs_by_rel_paths,
         map_grammars_by_filenames: Dict[str, DocumentGrammar],
     ):
@@ -21,7 +21,7 @@ class DocumentTree:
         assert isinstance(map_docs_by_rel_paths, dict)
         self.file_tree = file_tree
         self.document_list: List[SDocDocument] = document_list
-        self.map_docs_by_paths = map_docs_by_paths
+        self.map_docs_by_paths: Dict[str, SDocDocument] = map_docs_by_paths
         self.map_docs_by_rel_paths: Dict[str, SDocDocument] = (
             map_docs_by_rel_paths
         )
@@ -40,11 +40,11 @@ class DocumentTree:
             f")"
         )
 
-    def get_document_by_path(self, doc_full_path):
+    def get_document_by_path(self, doc_full_path: str) -> SDocDocument:
         document = self.map_docs_by_paths[doc_full_path]
         return document
 
-    def get_document_by_rel_path(self, doc_rel_path: str):
+    def get_document_by_rel_path(self, doc_rel_path: str) -> SDocDocument:
         assert isinstance(doc_rel_path, str), doc_rel_path
         document = self.map_docs_by_rel_paths[doc_rel_path]
         return document

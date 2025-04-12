@@ -1,21 +1,31 @@
 {%- set source_file = view_object.traceability_index.document_tree.source_tree.get_source_for_file(file) -%}
 
-  <a
-    class="project_tree-file"
-    {% if source_file.is_referenced -%}
-      href="{{ view_object.link_renderer.render_source_file_link_from_root_2(source_file) }}"
-    {%- endif -%}
-  >
-    <div class="project_tree-file-icon">
-      {%- include "_res/svg_ico16_file.jinja" -%}
-    </div>
-    <div class="project_tree-file-details">
-      <div class="project_tree-file-title">
-        {{ file.get_file_name() }}
+<tr class="project_coverage-file">
+  <td style="padding-left:{{ folder.get_level() }}0px">
+    <a
+      class="project_coverage-file-link"
+      {% if source_file.is_referenced -%}
+        href="{{ view_object.link_renderer.render_source_file_link_from_root_2(source_file) }}"
+      {%- endif -%}
+    >
+      <div class="project_coverage-file-icon">
+        {%- include "_res/svg_ico16_file.jinja" -%}
       </div>
-    </div>
+      <div class="project_coverage-file-details">
+        <div class="project_coverage-file-title">
+          {{ file.get_file_name() }}
+        </div>
+      </div>
 
-    <div class="project_tree-file-aside">
+    </a>
+  </td>
+
+  <td>data</td>
+  <td>data</td>
+  <td>data</td>
+  <td>data</td>
+
+  <td>
       {%- if source_file.is_referenced -%}
         {%- set range_reqs =
           view_object.traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
@@ -38,5 +48,5 @@
           {% include "screens/source_file_coverage/value_bar.jinja" %}
         {% endwith %}
       {%- endif -%}
-    </div>
-  </a>
+    </td>
+</tr>

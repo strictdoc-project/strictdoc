@@ -1,0 +1,68 @@
+.project_coverage {
+  width: 100%;
+}
+
+.project_coverage td:first-child,
+.project_coverage th:first-child {
+  width: auto;
+}
+
+.project_coverage td:not(:first-child),
+.project_coverage th:not(:first-child) {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.project_coverage td {
+  padding: calc(0.5 * var(--base-rhythm));
+}
+
+.project_coverage tr.project_coverage-file:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.project_coverage-folder-title {
+  font-weight: bold;
+  display: flex;
+  column-gap: calc(0.5 * var(--base-rhythm));
+  font-size: 0.85rem;
+  line-height: 1.2;
+  color: #666;
+  padding: calc(0.5 * var(--base-rhythm));
+  position: relative;
+  background: var(--color-bg-secondary);
+}
+
+.project_coverage-file-link {
+  display: flex;
+  column-gap: var(--base-rhythm);
+  padding: calc(0.5 * var(--base-rhythm));
+  border-radius: calc(0.5 * var(--base-rhythm));
+  transition: background .3s;
+  border: 1px solid rgba(255,255,255,0);
+}
+
+.project_coverage-file-icon {
+  line-height: 0;
+}
+
+.project_coverage-file-title {
+  font-size: 1em;
+  font-weight: 500;
+  line-height: 1.2;
+  transition: color .2s;
+}
+
+.project_coverage-file-link:not([href]):hover  {
+  color: gray;
+}
+
+.project_coverage-file-link[href]:hover .project_coverage-file-icon,
+.project_coverage-file-link[href]:hover .project_coverage-file-title {
+  color: var(--color-fg-accent);
+}
+
+.project_coverage-file-link[href] .project_coverage-file-icon,
+.project_coverage-file-link[href] .project_coverage-file-title {
+  color: var(--color-fg-main);
+}

@@ -1,6 +1,5 @@
-# mypy: disable-error-code="no-untyped-def"
 import re
-from typing import Optional
+from typing import Callable, Match, Optional
 
 REGEX_TRAILING_WHITESPACE_SINGLELINE = re.compile(r"\s{2,}")
 REGEX_TRAILING_WHITESPACE_MULTILINE = re.compile(r" +\n")
@@ -55,7 +54,7 @@ def create_safe_acronym(string: str) -> str:
     return acronym
 
 
-def create_safe_title_string(string):
+def create_safe_title_string(string: str) -> str:
     return re.sub(r"[^\w0-9]+", "-", string).rstrip("-")
 
 
@@ -73,11 +72,11 @@ def extract_numeric_uid_prefix_part(string: str) -> Optional[str]:
     return None
 
 
-def create_safe_requirement_tag_string(string) -> str:
+def create_safe_requirement_tag_string(string: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", string).rstrip("_").upper()
 
 
-def create_safe_document_file_name(string) -> str:
+def create_safe_document_file_name(string: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", string).rstrip("_")
 
 
@@ -85,10 +84,12 @@ def ensure_newline(text: str) -> str:
     return text.rstrip() + "\n"
 
 
-def interpolate_at_pattern_lazy(template: str, value_resolver) -> str:
+def interpolate_at_pattern_lazy(
+    template: str, value_resolver: Callable[[str], str]
+) -> str:
     pattern = r"@(\w+)"
 
-    def replace_variable(match):
+    def replace_variable(match: Match[str]) -> str:
         variable_name = match.group(1)
         return value_resolver(variable_name)
 

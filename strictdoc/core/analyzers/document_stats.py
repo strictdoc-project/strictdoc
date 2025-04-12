@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg"
 import typing
 from collections import Counter
 from dataclasses import dataclass, field
@@ -23,7 +22,7 @@ class DocumentStats:
         default_factory=dict
     )
     sections_without_uid: List[SDocSection] = field(default_factory=list)
-    section_uids_so_far: Counter = field(default_factory=Counter)
+    section_uids_so_far: typing.Counter[str] = field(default_factory=Counter)
 
 
 @dataclass
@@ -33,11 +32,11 @@ class DocumentTreeStats:
     requirements_per_prefix: Dict[str, SinglePrefixRequirements]
     section_uids_so_far: typing.Counter[str]
 
-    def get_next_requirement_uid(self, prefix) -> str:
+    def get_next_requirement_uid(self, prefix: str) -> str:
         next_number = self.get_next_requirement_uid_number(prefix)
         return f"{prefix}{next_number}"
 
-    def get_next_requirement_uid_number(self, prefix) -> int:
+    def get_next_requirement_uid_number(self, prefix: str) -> int:
         if prefix not in self.requirements_per_prefix:
             return 1
 

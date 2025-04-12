@@ -5,7 +5,11 @@ from typing import Dict, List, Optional, Union
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocSectionIF
+from strictdoc.backend.sdoc.models.model import (
+    SDocDocumentIF,
+    SDocNodeIF,
+    SDocSectionIF,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.project_config import ProjectConfig
@@ -147,9 +151,11 @@ class CreateSectionCommand:
         reference_mid = self.reference_mid
         traceability_index = self.traceability_index
 
-        reference_node: Union[SDocDocumentIF, SDocSectionIF] = assert_cast(
-            traceability_index.get_node_by_mid(MID(reference_mid)),
-            (SDocDocumentIF, SDocSectionIF),
+        reference_node: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF] = (
+            assert_cast(
+                traceability_index.get_node_by_mid(MID(reference_mid)),
+                (SDocDocumentIF, SDocSectionIF, SDocNodeIF),
+            )
         )
 
         document: SDocDocument
@@ -212,7 +218,7 @@ class CreateSectionCommand:
             else:
                 parent = assert_cast(
                     reference_node.ng_including_document_from_file.parent,
-                    (SDocDocumentIF, SDocDocumentIF),
+                    (SDocDocumentIF, SDocSectionIF),
                 )
                 assert (
                     reference_node.ng_including_document_from_file is not None

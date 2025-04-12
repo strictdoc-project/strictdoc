@@ -833,7 +833,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         context_document_mid: str = request_dict["context_document_mid"]
         reference_mid: str = request_dict["reference_mid"]
         whereto: str = request_dict["whereto"]
-        basic_free_text: bool = request_dict["basic_free_text"] == "true"
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -850,7 +849,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 request_form_data=request_form_data,
                 document=document,
                 existing_requirement_uid=None,
-                basic_free_text=basic_free_text,
             )
         )
         form_object.validate(
@@ -1071,7 +1069,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 request_form_data=request_form_data,
                 document=document,
                 existing_requirement_uid=requirement.reserved_uid,
-                basic_free_text=requirement.basic_free_text,
             )
         )
         context_document: SDocDocument = (
@@ -1750,7 +1747,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 existing_requirement_uid=None,
                 grammar=grammar,
                 relation_types=[],
-                basic_free_text=False,
             ),
             field=RequirementFormField(
                 field_mid=MID.create(),
@@ -1802,7 +1798,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 existing_requirement_uid=None,
                 grammar=grammar,
                 relation_types=grammar_element_relations,
-                basic_free_text=False,
             ),
             field=RequirementReferenceFormField(
                 field_mid=MID.create(),

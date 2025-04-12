@@ -198,8 +198,6 @@ class CreateOrUpdateNodeCommand:
                 requirement, form_object, map_form_to_requirement_fields
             )
 
-            requirement.basic_free_text = False
-
             # Updating Traceability Index: UID
             traceability_index.update_requirement_uid(
                 requirement=requirement, old_uid=existing_uid

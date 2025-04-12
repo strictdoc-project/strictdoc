@@ -1,20 +1,27 @@
 .project_coverage {
   width: 100%;
+  /* font-size: 0.875rem; */
 }
 
-.project_coverage td:first-child,
-.project_coverage th:first-child {
+.project_coverage th {
+  font-size: 0.875em;
+}
+
+.project_coverage th,
+.project_coverage td {
+  padding: calc(0.5 * var(--base-rhythm)) var(--base-rhythm);
+  border-left: var(--base-border);
+}
+
+.project_coverage th:first-child,
+.project_coverage td:first-child {
   width: auto;
+  border: none;
 }
 
-.project_coverage td:not(:first-child),
-.project_coverage th:not(:first-child) {
+.project_coverage td:not(:first-child) {
   width: 1px;
   white-space: nowrap;
-}
-
-.project_coverage td {
-  padding: calc(0.5 * var(--base-rhythm));
 }
 
 .project_coverage tr.project_coverage-file:hover {
@@ -24,9 +31,10 @@
 .project_coverage-folder-title {
   font-weight: bold;
   display: flex;
+  align-items: flex-end;
   column-gap: calc(0.5 * var(--base-rhythm));
-  font-size: 0.85rem;
-  line-height: 1.2;
+  font-size: 0.75em;
+  line-height: 1;
   color: #666;
   padding: calc(0.5 * var(--base-rhythm));
   position: relative;
@@ -51,6 +59,13 @@
   font-weight: 500;
   line-height: 1.2;
   transition: color .2s;
+}
+
+.project_coverage-file-path {
+  display: none;
+  position: absolute;
+  font-size: 0.75em;
+  color: var(--color-fg-secondary);
 }
 
 .project_coverage-file-link:not([href]):hover  {

@@ -2,6 +2,7 @@
 
 from strictdoc import __version__
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.source_tree import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
@@ -39,6 +40,39 @@ class SourceCoverageViewObject:
 
     def render_local_anchor(self, node):
         return self.link_renderer.render_local_anchor(node)
+
+    # temporary added
+
+    def get_source_file_path(self) -> str:
+        return self.source_file.in_doctree_source_file_rel_path_posix
+
+    def get_file_stats_lines_total(self, source_file: SourceFile) -> str:
+        trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
+        return str(trace_info.file_stats.lines_total)
+
+    def get_file_stats_lines_total_non_empty(self, source_file: SourceFile) -> str:
+        trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
+        return str(trace_info.file_stats.lines_non_empty)
+
+    def get_file_stats_non_empty_lines_covered(self, source_file: SourceFile) -> str:
+        trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
+        covered = trace_info.ng_lines_covered
+        total_non_empty = trace_info.file_stats.lines_non_empty
+        percentage = (
+            (covered / total_non_empty * 100) if total_non_empty > 0 else 0
+        )
+        return f"{covered} / {total_non_empty} ({percentage:.1f}%)"
+
+    def get_file_stats_functions_total(self, source_file: SourceFile) -> str:
+        trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
+        return str(len(trace_info.functions))
+
+    def get_file_stats_functions_covered(self, source_file: SourceFile) -> str:
+        trace_info = self.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix)
+        covered = trace_info.covered_functions
+        total = len(trace_info.functions)
+        percentage = (covered / total * 100) if total > 0 else 0
+        return f"{covered} / {total} ({percentage:.1f}%)"
 
 
 class SourceFileCoverageHTMLGenerator:

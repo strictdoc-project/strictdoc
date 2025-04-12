@@ -4,19 +4,7 @@
   {% if root_tree_.root_folder_or_file.has_content() %}
 
     <table class="project_coverage" js-project_coverage>
-      <thead>
-        <tr>
-          <th>File</th>
-          <th>Lines:</th>
-          <th>Non-empty lines:</th>
-          <th>Non-empty lines covered with requirements:</th>
-          <th>Non-empty lines covered (percent):</th>
-          <th>Functions:</th>
-          <th>Functions covered by requirements:</th>
-          <th>Functions covered (percent):</th>
-          {# <th>(%%)</th> #}
-        </tr>
-      </thead>
+      {% include "screens/source_file_coverage/thead.jinja" %}
       <tbody>
         {% if root_tree_.root_folder_or_file.is_folder() %}
           {% if root_tree_.root_folder_or_file.has_content() %}

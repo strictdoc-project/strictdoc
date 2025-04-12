@@ -51,11 +51,11 @@ Summary of StrictDoc features:
   and Documentation Coverage, can be derived.
 - Requirements to source files traceability (experimental). See
   [LINK: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE].
-- Custom grammar and custom fields support. The StrictDoc's grammar can be
+- Document grammar and custom fields support. The StrictDoc's grammar can be
   extended to support arbitrary special fields, such as "PRIORITY", "OWNER",
   or even more specialized fields, such as
   "Automotive Safety Integrity Level (ASIL)" or "Verification method".
-  See [LINK: SECTION-CUSTOM-GRAMMARS].
+  See [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 - Good performance of the `textX <https://github.com/textX/textX>`_
   parser and parallelized incremental generation of documents: generation of
   document trees with up to 2000–3000 requirements into HTML pages stays within
@@ -1423,54 +1423,9 @@ Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
 [/SECTION]
 
 [SECTION]
-MID: 79b128720cd74a548d291e223b61c4bc
-UID: SECTION-UG-Machine-identifiers-MID
-TITLE: Machine identifiers (MID)
-
-[TEXT]
-MID: 7fe2832d60014259a8d67a09f1db102a
-STATEMENT: >>>
-StrictDoc supports the automatic generation of machine identifiers (MIDs). This optional feature can be enabled individually for each document through the document-level ``ENABLE_MID`` config option:
-
-.. code-block::
-
-    [DOCUMENT]
-    TITLE: Hello World!
-    OPTIONS:
-      ENABLE_MID: True
-
-When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system. On the web server, MIDs are generated automatically when a document, section, or requirement is saved. In the command-line interface, the generation of ``MID`` can be initiated with a ``export`` command. Executing ``strictdoc export --formats sdoc`` on a document with ``ENABLE_MID: True`` results in all nodes having auto-generated MIDs. Implementing the ENABLE_MID option on a per-document basis allows for the integration of MID-enabled documents alongside third-party documents where the MID feature may not be necessary or desired.
-
-Machine identifiers (MIDs) differ from and do not replace unique identifiers (UIDs). A requirement, section, or document node may have both ``MID`` and ``UID`` fields defined. For example:
-
-.. code-block::
-
-    [REQUIREMENT]
-    MID: 06ab121d3c0f4d8c94652323b8f735c6
-    UID: SDOC-SSS-70
-    STATUS: Active
-    TITLE: Move nodes between documents
-    STATEMENT: >>>
-    The Requirements Tool shall allow moving nodes (sections, requirements) between documents.
-    <<<
-
-Advantages of using machine identifiers:
-
-1. Machine identifiers provide a robust means of identifying documents, sections, requirements, or custom nodes. An MID can uniquely identify a given node, independent of other fields like UID or TITLE.
-
-2. The unique identification of nodes via MIDs enhances the effectiveness of StrictDoc's Diff/Changelog functionality. It allows the algorithm to accurately match requirements, sections, or document nodes, even if they are moved, renamed, or undergo metadata changes.
-
-3. MIDs increase the portability of requirements data. Even when UID naming conventions change or nodes are relocated, the MID continues to uniquely identify the original node.
-
-For larger projects, particularly those with extended maintenance cycles, we strongly recommend activating machine identifiers early in the project lifecycle. This proactive approach ensures robust tracking and management of documentation throughout the project's duration.
-<<<
-
-[/SECTION]
-
-[SECTION]
 MID: 0d29071c7f924ecdb11fc32da4ecc5e3
-UID: SECTION-CUSTOM-GRAMMARS
-TITLE: Custom grammars
+UID: SECTION-UG-DOCUMENT-GRAMMAR
+TITLE: Document grammar
 
 [TEXT]
 MID: 4c2244d6affb4653844f730e1de88266
@@ -1481,7 +1436,9 @@ STATEMENT: >>>
     Examples:
     ``ASIL`` in the automotive industry or ``HERITAGE`` field in some of the requirements documents by NASA.
 
-StrictDoc allows declaration of custom grammars with custom fields that are
+    For anything beyond a small project, it's best to define a document grammar early. The default implicit document grammar works for quick tests, but real projects often need extra fields or custom node types. Starting with your own grammar saves time later. The instructions for defining a document grammar follow below.
+
+StrictDoc allows declaration of document grammars with custom fields that are
 specific to a particular document.
 
 First, such fields have to be registered on a document level using the
@@ -1491,7 +1448,7 @@ a grammar with four fields including a custom ``VERIFICATION`` field.
 .. code-block:: text
 
     [DOCUMENT]
-    TITLE: How to declare a custom grammar
+    TITLE: How to declare a document grammar
 
     [GRAMMAR]
     ELEMENTS:
@@ -1546,7 +1503,7 @@ accept single-line and multiline strings.
 
 .. note::
 
-    The order of fields must match the order of their declaration in the grammar.
+    The order of fields in each document node must match the order of their declaration in the grammar.
 <<<
 
 [SECTION]
@@ -1587,7 +1544,7 @@ Example:
 .. code-block:: text
 
     [DOCUMENT]
-    TITLE: How to declare a custom grammar
+    TITLE: How to declare a grammar with different field types
 
     [GRAMMAR]
     ELEMENTS:
@@ -1669,10 +1626,8 @@ is a fixed set of reserved fields that StrictDoc uses for the presentation of th
    * - UID
      - Requirement's UID.
 
-   * - RELATIONS (previously REFS)
-     - StrictDoc relies on this field to link requirements together and build traceability information.
-
-       Note: The ``REFS`` field is deprecated and replaced with ``RELATIONS``.
+   * - LEVEL
+     - Controls whether a node gets an automatic number in TOC or not. See [LINK: SECTION_WITHOUT_A_LEVEL].
 
    * - TITLE
      - Requirement's title. StrictDoc relies on this field to create
@@ -1688,6 +1643,11 @@ is a fixed set of reserved fields that StrictDoc uses for the presentation of th
    * - RATIONALE
      - The rationale for a requirement. Visually presented in the same way as a
        comment.
+
+   * - RELATIONS (previously REFS)
+     - StrictDoc relies on this field to link requirements together and build traceability information. This field must be declared after all other fields of a node.
+
+       Note: The ``REFS`` field is deprecated and replaced with ``RELATIONS``.
 <<<
 
 [/SECTION]
@@ -1881,6 +1841,96 @@ When a ``[GRAMMAR]`` is declared with an ``IMPORT_FROM_FILE`` line, the grammar 
 .. note::
 
     Editing of the grammars defined in ``.sgra`` files can be only done with a text editor, it is not implemented yet in the editable web interface.
+<<<
+
+[/SECTION]
+
+[/SECTION]
+
+[SECTION]
+MID: 79b128720cd74a548d291e223b61c4bc
+UID: SECTION-UG-Machine-identifiers-MID
+TITLE: Machine identifiers (MID)
+
+[TEXT]
+MID: 7fe2832d60014259a8d67a09f1db102a
+STATEMENT: >>>
+StrictDoc supports the automatic generation of machine identifiers (MIDs). This optional feature can be enabled individually for each document through the document-level ``ENABLE_MID`` config option. If the MIDs are enabled, the document must also provide an explicit grammar for its nodes (see [LINK: SECTION-UG-DOCUMENT-GRAMMAR]) because the default grammar does not include the MID identifier for its default TEXT and REQUIREMENT elements. All grammar elements must include the MID field.
+
+.. code-block::
+
+    [DOCUMENT]
+    TITLE: Hello World!
+    OPTIONS:
+      ENABLE_MID: True
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: TEXT
+      FIELDS:
+      - TITLE: MID
+        TYPE: String
+        REQUIRED: True
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+    - TAG: REQUIREMENT
+      FIELDS:
+      - TITLE: MID
+        TYPE: String
+        REQUIRED: True
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: True
+      ... any other single-line fields by a user
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+      ... any other multiline fields by a user
+
+When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system.
+
+With the web server, MIDs are generated automatically when a document, section, or requirement is saved.
+
+With the command-line interface, the generation of ``MID`` can be initiated with a ``export`` command. Executing ``strictdoc export --formats sdoc`` on a document with ``ENABLE_MID: True`` results in all nodes having auto-generated MIDs.
+
+.. note::
+
+    StrictDoc provides the ENABLE_MID option on a per-document basis because this allows for the integration of MID-enabled documents alongside third-party documents where the MID feature may not be necessary or possible.
+<<<
+
+[SECTION]
+MID: 4afebe421fe341b8b609b1c24f47b708
+TITLE: Unique vs machine identifiers (MID vs UID)
+
+[TEXT]
+MID: a5a3d62d90f646aa8fac43795aa8fcbb
+STATEMENT: >>>
+Machine identifiers (MIDs) differ from and do not replace unique identifiers (UIDs). A requirement, section, or document node may have both ``MID`` and ``UID`` fields defined. For example:
+
+.. code-block::
+
+    [REQUIREMENT]
+    MID: 06ab121d3c0f4d8c94652323b8f735c6
+    UID: SDOC-SSS-70
+    STATUS: Active
+    TITLE: Move nodes between documents
+    STATEMENT: >>>
+    The Requirements Tool shall allow moving nodes (sections, requirements) between documents.
+    <<<
+
+Advantages of using machine identifiers:
+
+1. Machine identifiers provide a robust means of identifying documents, sections, requirements, or custom nodes. An MID can uniquely identify a given node, independent of other fields like UID or TITLE.
+
+2. MIDs increase the portability of requirements data. Even when UID naming conventions change or nodes are relocated, the MID continues to uniquely identify the original node.
+
+3. The unique identification of nodes via MIDs allows precise tracking of changes using StrictDoc's Diff/Changelog functionality. It allows the algorithm to accurately match requirements, sections, or document nodes, even if they are moved, renamed, or undergo metadata changes.
+
+For larger projects, particularly those with extended maintenance cycles, we strongly recommend activating machine identifiers early in the project lifecycle. This proactive approach ensures robust tracking and management of documentation throughout the project's duration.
 <<<
 
 [/SECTION]

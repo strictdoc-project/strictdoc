@@ -107,7 +107,6 @@ class SDocNode(SDocNodeIF):
         fields: List[SDocNodeField],
         relations: List[Reference],
         requirements: Optional[List["SDocNode"]] = None,
-        basic_free_text: bool = False,
     ) -> None:
         assert parent
         assert isinstance(node_type, str)
@@ -132,8 +131,6 @@ class SDocNode(SDocNodeIF):
         self.requirements: Optional[List[SDocNode]] = requirements
 
         self.relations: List[Reference] = relations
-
-        self.basic_free_text: bool = basic_free_text
 
         # TODO: Is it worth to move this to dedicated Presenter* classes to
         # keep this class textx-only?

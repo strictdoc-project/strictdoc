@@ -44,13 +44,7 @@ class RSTWriter:
                 )
 
             elif isinstance(content_node, SDocNode):
-                if (
-                    content_node.node_type == "TEXT"
-                    and content_node.basic_free_text
-                ):
-                    output += self._print_text(content_node)
-                else:
-                    output += self._print_requirement_fields(content_node)
+                output += self._print_requirement_fields(content_node)
 
         if output.endswith("\n\n"):
             output = output[:-1]

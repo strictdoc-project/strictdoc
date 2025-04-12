@@ -187,11 +187,10 @@ class LinkRenderer:
     ):
         assert isinstance(requirement_source_path, str), requirement_source_path
 
-        document_or_none: Optional[SDocDocument] = (
-            requirement.ng_document_reference.get_document()
+        assert requirement.ng_document_reference is not None
+        document: SDocDocument = assert_cast(
+            requirement.ng_document_reference.get_document(), SDocDocument
         )
-        assert document_or_none is not None
-        document: SDocDocument = document_or_none
         path_prefix = document.meta.get_root_path_prefix()
         source_file_link = (
             f"{path_prefix}/_source_files/{requirement_source_path}.html"

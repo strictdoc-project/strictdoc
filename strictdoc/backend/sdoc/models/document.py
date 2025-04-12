@@ -4,6 +4,7 @@
 
 from typing import Generator, List, Optional
 
+from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DocumentView
@@ -64,7 +65,7 @@ class SDocDocument(SDocDocumentIF):
         self.included_documents: List[SDocDocumentIF] = []
         self.context: SDocDocumentContext = SDocDocumentContext()
 
-        self.ng_including_document_reference: Optional = None  # type: ignore[valid-type]
+        self.ng_including_document_reference: Optional[DocumentReference] = None
         self.ng_including_document_from_file: Optional = None  # type: ignore[valid-type]
 
     @property
@@ -105,12 +106,14 @@ class SDocDocument(SDocDocumentIF):
         return f"Document({', '.join(debug_components)})"
 
     def document_is_included(self) -> bool:
+        if self.ng_including_document_reference is None:
+            return False
         return self.ng_including_document_reference.get_document() is not None
 
-    def get_including_document(self) -> Optional["SDocDocument"]:
-        # FIXME: Fix no-any-return when the circular references between
-        #        SDocDocument and DocumentReference are fixed.
-        return self.ng_including_document_reference.get_document()  # type: ignore[no-any-return]
+    def get_including_document(self) -> Optional["SDocDocumentIF"]:
+        if self.ng_including_document_reference is None:
+            return None
+        return self.ng_including_document_reference.get_document()
 
     def iterate_included_documents_depth_first(
         self,

@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[TEXT]
+STATEMENT: >>>
+Text
+<<<
+
+[REQUIREMENT]
+STATEMENT: >>>
+Text
+<<<
+
+[REQUIREMENT]
+STATEMENT: >>>
+Text
+<<<
+
+[REQUIREMENT]
+STATEMENT: >>>
+Text
+<<<

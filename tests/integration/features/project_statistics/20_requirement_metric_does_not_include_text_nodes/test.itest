@@ -1,0 +1,20 @@
+# This test ensures that the TEXT nodes DO NOT contribute to the requirements statistics.
+
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/project_statistics.html"
+
+RUN: %cat "%S/Output/html/project_statistics.html" | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Total requirements
+CHECK-HTML: 3
+CHECK-HTML: Requirements with no UID
+CHECK-HTML: 3
+CHECK-HTML: Root-level requirements not connected to by any requirement
+CHECK-HTML: 0
+CHECK-HTML: Requirements with no RATIONALE
+CHECK-HTML: 3
+CHECK-HTML: Requirements with no Status
+CHECK-HTML: 3
+CHECK-HTML: Requirements with status Active
+CHECK-HTML: 0

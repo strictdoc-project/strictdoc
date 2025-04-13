@@ -836,7 +836,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: d64f7a0f6ba54672a62634304c54e2d4
 UID: SDOC-SRS-96
-STATUS: Progress
+STATUS: Active
 TITLE: Auto-generate requirements UIDs
 STATEMENT: >>>
 StrictDoc's Document screen shall provide controls for automatic generation of requirements UIDs.
@@ -847,8 +847,10 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-80
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/core/analyzers/document_uid_analyzer.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/commands/manage_autouid_command.py
 
 [REQUIREMENT]
@@ -1199,7 +1201,7 @@ TITLE: ReqIF
 [REQUIREMENT]
 MID: 2bf94015818e4770b2b1947b5fdbb969
 UID: SDOC-SRS-72
-STATUS: Progress
+STATUS: Active
 TITLE: Export/import from/to ReqIF
 STATEMENT: >>>
 StrictDoc shall support exporting/importing requirements content from/to ReqIF format.
@@ -1208,10 +1210,13 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-58
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/reqif/reqif_export.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/reqif/reqif_import.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/reqif/sdoc_reqif_fields.py
 
 [REQUIREMENT]

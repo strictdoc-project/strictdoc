@@ -28,16 +28,16 @@ This document maintains a record of all changes to StrictDoc since November 2023
 
 [SECTION]
 MID: d64fb5003399496bbb18ffb6e05efaf4
-TITLE: Unreleased
+TITLE: 0.8.0 (2025-04-13)
 
 [TEXT]
 MID: a7bd074d2dcd40a6af106e91720d90d3
 STATEMENT: >>>
 This release includes the following enhancements.
 
-1\) The source file traceability mechanism now supports specifying roles for relations and markers. A role marker can be empty or specified to a value such as ``Implementation`` or ``Implements``, ``Test`` or ``Verifies``, etc.[@haxtibal]
+1\) The source file traceability mechanism now supports specifying roles for relations and markers. A role marker can be skipped or specified to a value such as ``Implementation`` or ``Implements``, ``Test`` or ``Verifies``, etc.[@haxtibal]
 
-2\) The Source View screen has undergone a major user interface redesign. Visual highlighting has been improved for traceability to and from entire files, classes (available in Python but not in C), functions, code ranges, and individual lines. Fully detailed but collapsible requirement cells have been added above the relevant functions, ranges, and so on, allowing users to quickly review them without leaving the Source View screen.
+2\) The Source View screen has undergone a major user interface redesign. Visual highlighting has been improved for traceability to and from entire files, classes (available in Python but not in C), functions, code ranges, and individual lines. Fully detailed but collapsible requirement cells have been added above the relevant functions, ranges, and so on, allowing users to quickly review them without leaving the Source View screen. The Source Coverage screen has also been reworked to match the new look of the Source View screen.
 
 3\) A Python source file reader has been extended to support a case when the first docstring is not necessarily the first node of a module [@thseiler]
 

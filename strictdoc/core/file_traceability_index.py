@@ -176,6 +176,16 @@ class FileTraceabilityIndex:
         )
         return source_file_tr_info
 
+    def get_coverage_info_weak(
+        self, source_file_rel_path: str
+    ) -> Optional[SourceFileTraceabilityInfo]:
+        source_file_tr_info: Optional[SourceFileTraceabilityInfo] = (
+            self.map_paths_to_source_file_traceability_info.get(
+                source_file_rel_path
+            )
+        )
+        return source_file_tr_info
+
     def validate_and_resolve(self, traceability_index):
         """
         This is a method that finalizes/resolves all the source code

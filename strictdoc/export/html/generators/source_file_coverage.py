@@ -1,7 +1,12 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
+from typing import Optional
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+    SourceFileTraceabilityInfo,
+)
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.source_tree import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
@@ -39,6 +44,92 @@ class SourceCoverageViewObject:
 
     def render_local_anchor(self, node):
         return self.link_renderer.render_local_anchor(node)
+
+    def get_file_stats_lines_total(self, source_file: SourceFile) -> str:
+        trace_info: Optional[SourceFileTraceabilityInfo] = (
+            self.traceability_index.get_coverage_info_weak(
+                source_file.in_doctree_source_file_rel_path_posix
+            )
+        )
+        if trace_info is None:
+            return "0"
+        return str(trace_info.file_stats.lines_total)
+
+    def get_file_stats_lines_total_non_empty(
+        self, source_file: SourceFile
+    ) -> str:
+        trace_info: Optional[SourceFileTraceabilityInfo] = (
+            self.traceability_index.get_coverage_info_weak(
+                source_file.in_doctree_source_file_rel_path_posix
+            )
+        )
+        if trace_info is None:
+            return "0"
+        return str(trace_info.file_stats.lines_non_empty)
+
+    def get_file_stats_non_empty_lines_covered(
+        self, source_file: SourceFile
+    ) -> str:
+        trace_info: Optional[SourceFileTraceabilityInfo] = (
+            self.traceability_index.get_coverage_info_weak(
+                source_file.in_doctree_source_file_rel_path_posix
+            )
+        )
+        if trace_info is None:
+            return "0"
+        return str(trace_info.ng_lines_covered)
+
+    def get_file_stats_non_empty_lines_covered_percentage(
+        self, source_file: SourceFile
+    ) -> str:
+        trace_info: Optional[SourceFileTraceabilityInfo] = (
+            self.traceability_index.get_coverage_info_weak(
+                source_file.in_doctree_source_file_rel_path_posix
+            )
+        )
+        if trace_info is None:
+            return f"{0:.1f}"
+        covered = trace_info.ng_lines_covered
+        total_non_empty = trace_info.file_stats.lines_non_empty
+        percentage = (
+            (covered / total_non_empty * 100) if total_non_empty > 0 else 0
+        )
+        return f"{percentage:.1f}"
+
+    def get_file_stats_functions_total(self, source_file: SourceFile) -> str:
+        trace_info: Optional[SourceFileTraceabilityInfo] = (
+            self.traceability_index.get_coverage_info_weak(
+                source_file.in_doctree_source_file_rel_path_posix
+            )
+        )
+        if trace_info is None:
+            return "0"
+        return str(len(trace_info.functions))
+
+    def get_file_stats_functions_covered(self, source_file: SourceFile) -> str:
+        trace_info: Optional[SourceFileTraceabilityInfo] = (
+            self.traceability_index.get_coverage_info_weak(
+                source_file.in_doctree_source_file_rel_path_posix
+            )
+        )
+        if trace_info is None:
+            return "0"
+        return str(trace_info.covered_functions)
+
+    def get_file_stats_functions_covered_percentage(
+        self, source_file: SourceFile
+    ) -> str:
+        trace_info: Optional[SourceFileTraceabilityInfo] = (
+            self.traceability_index.get_coverage_info_weak(
+                source_file.in_doctree_source_file_rel_path_posix
+            )
+        )
+        if trace_info is None:
+            return f"{0:.1f}"
+        covered = trace_info.covered_functions
+        total = len(trace_info.functions)
+        percentage = (covered / total * 100) if total > 0 else 0
+        return f"{percentage:.1f}"
 
 
 class SourceFileCoverageHTMLGenerator:

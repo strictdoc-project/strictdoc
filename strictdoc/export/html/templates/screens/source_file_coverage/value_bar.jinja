@@ -1,0 +1,15 @@
+{%- if coverage_value is not none -%}
+<div class="value-bar">
+  <span class="value-bar_bar" data-value={{ coverage_value }}>
+    <span class="value-bar_filler" style="width:{{ coverage_value }}%"></span>
+  </span>
+  <span class="value-bar_text">{{ coverage_value }}%</span>
+</div>
+{%- else -%}
+<div class="value-bar">
+  <span class="value-bar_bar">
+    <span class="value-bar_filler"></span>
+  </span>
+  <span class="value-bar_text"></span>
+</div>
+{%- endif -%}

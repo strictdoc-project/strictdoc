@@ -20,4 +20,4 @@ CHECK-SOURCE-FILE: 22 - 55 | function longFunctionName()
 CHECK-SOURCE-FILE: 32 - 32 | line
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 100.0%
+CHECK-SOURCE-COVERAGE: 100.0

@@ -16,4 +16,4 @@ CHECK-SOURCE-FILE: 7 - 9 | range
 CHECK-SOURCE-FILE: 11 - 13 | range
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 85.7%
+CHECK-SOURCE-COVERAGE: 85.7

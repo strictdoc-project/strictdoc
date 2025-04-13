@@ -16,4 +16,4 @@ CHECK-SOURCE-FILE: <b>[ 2-4 ]</b>
 CHECK-SOURCE-FILE: file.py, range
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 75.0%
+CHECK-SOURCE-COVERAGE: 75.0

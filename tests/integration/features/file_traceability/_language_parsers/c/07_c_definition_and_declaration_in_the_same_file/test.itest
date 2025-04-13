@@ -34,4 +34,4 @@ CHECK-SOURCE-FILE: file.c, function hello_world_2
 
 FIXME: The coverage will change.
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 96.0%
+CHECK-SOURCE-COVERAGE: 96.0

@@ -2,21 +2,23 @@
   {% set root_tree_ = view_object.traceability_index.document_tree.source_tree.file_tree %}
 
   {% if root_tree_.root_folder_or_file.has_content() %}
-    <div class="project_tree" js-collapsible_tree>
 
-      {% if root_tree_.root_folder_or_file.is_folder() %}
-        {% if root_tree_.root_folder_or_file.has_content() %}
-          {% with folder = root_tree_.root_folder_or_file %}
-            {% include "screens/source_file_coverage/folder.jinja" %}
+    <table class="project_coverage" js-project_coverage>
+      {% include "screens/source_file_coverage/thead.jinja" %}
+      <tbody>
+        {% if root_tree_.root_folder_or_file.is_folder() %}
+          {% if root_tree_.root_folder_or_file.has_content() %}
+            {% with folder = root_tree_.root_folder_or_file %}
+              {% include "screens/source_file_coverage/folder.jinja" %}
+            {% endwith %}
+          {% endif %}
+        {% else %}
+          {% with file = root_tree_.root_folder_or_file %}
+            {% include "screens/source_file_coverage/file.jinja" %}
           {% endwith %}
         {% endif %}
-      {% else %}
-        {% with file = root_tree_.root_folder_or_file %}
-          {% include "screens/source_file_coverage/file.jinja" %}
-        {% endwith %}
-      {% endif %}
-
-    </div>
+      </tbody>
+    </table>
   {%- else -%}
     <span data-testid="document-tree-empty-text">The document tree has no documents yet.</span>
   {%- endif -%}

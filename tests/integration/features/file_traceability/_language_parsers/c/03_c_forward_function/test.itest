@@ -32,4 +32,4 @@ CHECK-SOURCE-FILE: 21 - 28 | function hello_world_3()
 CHECK-SOURCE-FILE: 30 - 38 | function hello_world_4()
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 97.1%
+CHECK-SOURCE-COVERAGE: 97.1

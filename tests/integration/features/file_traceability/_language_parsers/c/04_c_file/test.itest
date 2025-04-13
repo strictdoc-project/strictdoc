@@ -28,4 +28,4 @@ CHECK-SOURCE-FILE: file.c, entire file
 CHECK-SOURCE-FILE: 1 - 11 | entire file
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 100.0%
+CHECK-SOURCE-COVERAGE: 100.0

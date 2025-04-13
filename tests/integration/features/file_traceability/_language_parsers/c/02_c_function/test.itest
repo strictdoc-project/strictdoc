@@ -38,4 +38,4 @@ CHECK-SOURCE-FILE: @relation(REQ-2, scope=function)
 
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 97.1%
+CHECK-SOURCE-COVERAGE: 97.1

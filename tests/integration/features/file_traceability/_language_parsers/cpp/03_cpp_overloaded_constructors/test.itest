@@ -17,5 +17,5 @@ RUN: %cat %S/Output/html/_source_files/file.hpp.html | filecheck %s --dump-input
 CHECK-SOURCE-FILE: href="../{{.*}}/input.html#REQ-1"
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 90.0%
-CHECK-SOURCE-COVERAGE: 60.0%
+CHECK-SOURCE-COVERAGE: 90.0
+CHECK-SOURCE-COVERAGE: 60.0

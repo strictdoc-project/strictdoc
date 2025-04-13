@@ -13,4 +13,4 @@ RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#1#14"
 
 RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 100.0%
+CHECK-SOURCE-COVERAGE: 100.0

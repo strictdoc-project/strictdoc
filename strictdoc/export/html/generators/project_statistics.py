@@ -43,56 +43,59 @@ class ProgressStatisticsGenerator:
                         document_tree_stats.sections_without_text_nodes += 1
 
                 elif isinstance(node, SDocNode):
-                    requirement: SDocNode = assert_cast(node, SDocNode)
-                    if not requirement.is_text_node():
+                    if (
+                        node.is_normative_node()
+                        and node.node_type == "REQUIREMENT"
+                    ):
+                        requirement: SDocNode = assert_cast(node, SDocNode)
                         document_tree_stats.total_requirements += 1
 
-                    if requirement.reserved_uid is None:
-                        document_tree_stats.requirements_no_uid += 1
+                        if requirement.reserved_uid is None:
+                            document_tree_stats.requirements_no_uid += 1
 
-                    if requirement.reserved_status != "Backlog":
-                        if document.config.root:
-                            if (
-                                len(
-                                    traceability_index.get_children_requirements(
-                                        requirement
+                        if requirement.reserved_status != "Backlog":
+                            if document.config.root:
+                                if (
+                                    len(
+                                        traceability_index.get_children_requirements(
+                                            requirement
+                                        )
                                     )
-                                )
-                                == 0
-                            ):
-                                document_tree_stats.requirements_root_no_links += 1
-                        else:
-                            if (
-                                len(
-                                    traceability_index.get_parent_requirements(
-                                        requirement
+                                    == 0
+                                ):
+                                    document_tree_stats.requirements_root_no_links += 1
+                            else:
+                                if (
+                                    len(
+                                        traceability_index.get_parent_requirements(
+                                            requirement
+                                        )
                                     )
-                                )
-                                == 0
-                            ):
-                                document_tree_stats.requirements_no_links += 1
+                                    == 0
+                                ):
+                                    document_tree_stats.requirements_no_links += 1
 
-                    # RATIONALE
-                    if (
-                        requirement.ordered_fields_lookup.get("RATIONALE")
-                        is None
-                    ):
-                        document_tree_stats.requirements_no_rationale += 1
+                        # RATIONALE
+                        if (
+                            requirement.ordered_fields_lookup.get("RATIONALE")
+                            is None
+                        ):
+                            document_tree_stats.requirements_no_rationale += 1
 
-                    # STATUS
-                    if requirement.reserved_status is None:
-                        document_tree_stats.requirements_status_none += 1
-                    else:
-                        if requirement.reserved_status == "Backlog":
-                            document_tree_stats.requirements_status_backlog += 1
-                        elif requirement.reserved_status == "Draft":
-                            document_tree_stats.requirements_status_draft += 1
-                        elif requirement.reserved_status == "Active":
-                            document_tree_stats.requirements_status_active += 1
+                        # STATUS
+                        if requirement.reserved_status is None:
+                            document_tree_stats.requirements_status_none += 1
                         else:
-                            document_tree_stats.requirements_status_other += 1
+                            if requirement.reserved_status == "Backlog":
+                                document_tree_stats.requirements_status_backlog += 1
+                            elif requirement.reserved_status == "Draft":
+                                document_tree_stats.requirements_status_draft += 1
+                            elif requirement.reserved_status == "Active":
+                                document_tree_stats.requirements_status_active += 1
+                            else:
+                                document_tree_stats.requirements_status_other += 1
 
-                    for requirement_field_ in requirement.enumerate_fields():
+                    for requirement_field_ in node.enumerate_fields():
                         field_value = requirement_field_.get_text_value()
                         if field_value is not None:
                             if "TBD" in field_value:

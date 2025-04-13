@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  AUTO_LEVELS: On
+
+[TEXT]
+STATEMENT: >>>
+.. image:: _assets/file.svg
+   :alt: Test image
+   :class: image
+   :width: 100%
+<<<
+
+[DOCUMENT_FROM_FILE]
+FILE: nested/nested.sdoc

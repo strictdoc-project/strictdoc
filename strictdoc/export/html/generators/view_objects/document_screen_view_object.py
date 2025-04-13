@@ -12,10 +12,14 @@ from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
-from strictdoc.core.file_tree import Folder
+from strictdoc.core.file_tree import File, Folder
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.generators.view_objects.helpers import (
+    screen_should_display_file,
+    screen_should_display_folder,
+)
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -234,19 +238,6 @@ class DocumentScreenViewObject:
     def iterator_files_first(self):
         yield from self.document_tree_iterator.iterator_files_first()
 
-    def folder_contains_including_documents(self, folder: Folder):
-        assert isinstance(folder, Folder), folder
-        for file_ in folder.files:
-            if not (
-                file_.has_extension(".sdoc")
-                or file_.has_extension(".junit.xml")
-            ):
-                continue
-            document_ = self.get_document_by_path(file_.get_full_path())
-            if not document_.document_is_included():
-                return True
-        return False
-
     def render_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_url(url))
 
@@ -329,4 +320,28 @@ class DocumentScreenViewObject:
         yield from self.document_iterator.all_content(
             print_fragments=True,
             print_fragments_from_files=False,
+        )
+
+    def should_display_folder(self, folder: Folder) -> bool:
+        return screen_should_display_folder(
+            folder,
+            self.traceability_index,
+            self.project_config,
+            must_only_include_non_included_sdoc=True,
+        )
+
+    def should_display_file(self, file: File) -> bool:
+        return screen_should_display_file(
+            file,
+            self.traceability_index,
+            self.project_config,
+            must_only_include_non_included_sdoc=True,
+        )
+
+    def should_display_included_documents_for_document(
+        self, document: SDocDocument
+    ) -> bool:
+        return (
+            self.project_config.export_included_documents
+            and len(document.included_documents) > 0
         )

@@ -3,8 +3,13 @@ from dataclasses import dataclass
 
 from strictdoc import __version__
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
+from strictdoc.core.file_tree import File, Folder
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.generators.view_objects.helpers import (
+    screen_should_display_file,
+    screen_should_display_folder,
+)
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
@@ -51,3 +56,22 @@ class ProjectTreeViewObject:
 
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()
+
+    def should_display_fragments_toggle(self) -> bool:
+        return self.project_config.export_included_documents
+
+    def should_display_folder(self, folder: Folder) -> bool:
+        return screen_should_display_folder(
+            folder,
+            self.traceability_index,
+            self.project_config,
+            must_only_include_non_included_sdoc=False,
+        )
+
+    def should_display_file(self, file: File) -> bool:
+        return screen_should_display_file(
+            file,
+            self.traceability_index,
+            self.project_config,
+            must_only_include_non_included_sdoc=False,
+        )

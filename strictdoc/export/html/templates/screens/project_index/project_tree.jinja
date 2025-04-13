@@ -3,15 +3,17 @@
     {% for root_tree_ in view_object.document_tree_iterator.document_tree.file_tree %}
 
       {% if root_tree_.root_folder_or_file.is_folder() %}
-        {% if root_tree_.root_folder_or_file.has_sdoc_content %}
+        {% if view_object.should_display_folder(root_tree_.root_folder_or_file) %}
           {% with folder = root_tree_.root_folder_or_file %}
             {% include "screens/project_index/project_tree_folder.jinja" %}
           {% endwith %}
         {% endif %}
       {% else %}
-        {% with file = root_tree_.root_folder_or_file %}
-          {% include "screens/project_index/project_tree_file.jinja" %}
-        {% endwith %}
+        {% if view_object.should_display_file(root_tree_.root_folder_or_file) %}
+          {% with file = root_tree_.root_folder_or_file %}
+            {% include "screens/project_index/project_tree_file.jinja" %}
+          {% endwith %}
+        {% endif %}
       {% endif %}
 
     {% endfor %}

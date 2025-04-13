@@ -1,0 +1,36 @@
+RUN: %strictdoc export %S --included-documents --output-dir Output/ | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/included_documents_option_provided/_assets/file.svg"
+RUN: %check_exists --file "%S/Output/html/included_documents_option_provided/nested/_assets/file.svg"
+RUN: %check_exists --file "%S/Output/html/included_documents_option_provided/nested/subnested/_assets/file.svg"
+
+RUN: %check_exists --file "%S/Output/html/included_documents_option_provided/input.html"
+RUN: %check_exists --file "%S/Output/html/included_documents_option_provided/nested/nested.html"
+RUN: %check_exists --file "%S/Output/html/included_documents_option_provided/nested/subnested/subnested.html"
+
+RUN: %cat %S/Output/html/included_documents_option_provided/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML:data-level="0"
+CHECK-HTML:href="../included_documents_option_provided/input.html"
+CHECK-HTML:href="../included_documents_option_provided/nested/nested.html"
+CHECK-HTML:href="../included_documents_option_provided/nested/subnested/subnested.html"
+
+CHECK-HTML:data-level="1"
+CHECK-HTML:data-level="1.1"
+CHECK-HTML:data-level="1.1.1"
+CHECK-HTML:data-level="1.1.1.1"
+CHECK-HTML:data-level="1.1.1.1.1"
+
+RUN: %cat %S/Output/html/included_documents_option_provided/nested/nested.html | filecheck %s --dump-input=fail --check-prefix CHECK-NESTED-HTML
+
+CHECK-NESTED-HTML:href="../../included_documents_option_provided/input.html"
+CHECK-NESTED-HTML:href="../../included_documents_option_provided/nested/nested.html"
+CHECK-NESTED-HTML:href="../../included_documents_option_provided/nested/subnested/subnested.html"
+
+RUN: %cat %S/Output/html/included_documents_option_provided/nested/subnested/subnested.html | filecheck %s --dump-input=fail --check-prefix CHECK-SUBNESTED-HTML
+
+CHECK-SUBNESTED-HTML:href="../../../included_documents_option_provided/input.html"
+CHECK-SUBNESTED-HTML:href="../../../included_documents_option_provided/nested/nested.html"
+CHECK-SUBNESTED-HTML:href="../../../included_documents_option_provided/nested/subnested/subnested.html"
+

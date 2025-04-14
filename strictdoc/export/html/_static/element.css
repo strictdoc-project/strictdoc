@@ -403,6 +403,35 @@ sdoc-field:hover .copy_to_clipboard-button {
   opacity: 1;
 }
 
+/* ***
+  USED BY copy_stable_link controller
+  inside sdoc-node
+  */
+
+.copy_stable_link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--base-rhythm);
+
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  cursor: pointer;
+  transition: .5s ease-out;
+  opacity: 0;
+}
+
+.copy_stable_link-button:hover {
+  /* color: var(--color-hover); */
+  color: var(--color-action);
+}
+
+sdoc-node:hover .copy_stable_link-button {
+  opacity: 1;
+}
+
 /* ANCHOR */
 
 sdoc-anchor {

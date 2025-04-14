@@ -38,6 +38,12 @@
     data-testid="node-{{ node_type }}"
   >
 
+    {% if view_object.should_display_stable_link(sdoc_entity) %}
+      {% with path = view_object.get_stable_link(sdoc_entity) %}
+        {% include "components/node/copy_stable_link_button.jinja" %}
+      {% endwith %}
+    {%- endif -%}
+
     {# TODO #fragment #}
     {# TEMP #}
     {# {% if is_included %}

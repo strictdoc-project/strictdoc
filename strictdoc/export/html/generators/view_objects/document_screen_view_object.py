@@ -353,4 +353,4 @@ class DocumentScreenViewObject:
 
     def get_stable_link(self, node: Union[SDocDocument, SDocSection, SDocNode]):
         assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
-        return "#TBD"
+        return "#TBD " + node.reserved_uid

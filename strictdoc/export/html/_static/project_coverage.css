@@ -10,7 +10,8 @@
 }
 
 .project_coverage thead th {
-  background: var(--color-bg-main);
+  /* adding a background prevents the th-button background from working */
+  vertical-align: bottom;
   border-bottom: var(--base-border);
   font-size: 0.875em;
 }
@@ -30,6 +31,7 @@
 .project_coverage td {
   padding: calc(0.5 * var(--base-rhythm)) var(--base-rhythm);
   border-right: var(--base-border);
+  position: relative;
 }
 
 .project_coverage td {
@@ -75,33 +77,45 @@
 
 .project_coverage-file-link {
   display: flex;
-  column-gap: var(--base-rhythm);
+  /* column-gap: var(--base-rhythm); */
   padding: calc(0.5 * var(--base-rhythm));
   border-radius: calc(0.5 * var(--base-rhythm));
   transition: background .3s;
   border: 1px solid rgba(255,255,255,0);
 }
 
-.project_coverage-file-icon {
-  line-height: 0;
-}
+.project_coverage-file-icon {}
 
 .project_coverage-file-title {
   font-size: 1em;
   font-weight: 500;
   line-height: 1.2;
   transition: color .2s;
+  display: flex;
+  column-gap: var(--base-rhythm);
 }
 
 .project_coverage-file-path {
-  display: none;
-  position: absolute;
   font-size: 0.75em;
   color: var(--color-fg-secondary);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+}
+
+.project_coverage-file-details {
+  position: relative;
+  flex-grow: 1;
 }
 
 .project_coverage-file-link:not([href]):hover  {
   /* color: gray; */
+  /* all this file have no links -> they are red */
 }
 
 .project_coverage-file_uncovered .project_coverage-file-link,
@@ -130,6 +144,16 @@
   background-color: rgba(175, 0, 255, 0.05) !important;
 }
 
+.sorted_col.project_coverage-col-line,
+th.project_coverage-col-line {
+  background-color: rgba(255, 155, 0, 0.15) !important;
+}
+
+.sorted_col.project_coverage-col-func,
+th.project_coverage-col-func {
+  background-color: rgba(175, 0, 255, 0.15) !important;
+}
+
 /* value_extended */
 
 .value_extended[data-ext]::after {
@@ -139,10 +163,121 @@ font-size: 0.85em;
 font-weight: 200;
 }
 
+/* project_coverage-sort_handler */
+
+.project_coverage-sort_handler {
+  cursor: pointer;
+}
+
+.project_coverage-sort_handler::after {
+  content: '○';
+  display: block;
+}
+
+.project_coverage-sort_handler::before {
+  content: '';
+  cursor: pointer;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.project_coverage-sort_handler:hover {
+  color: var(--color-blue);
+}
+
+.project_coverage-sort_handler:hover::before {
+  border: 3px solid white;
+}
+
+.project_coverage-sort_handler[sorted]::before {
+  border: 3px solid white;
+}
+
+/* ▿ ▵ △ ▽ ▾ ▴ */
+
+.project_coverage-sort_handler:hover::after {
+  /* the first act: desc */
+  content: '▽';
+}
+
+.project_coverage-sort_handler[sorted='asc']::after {
+  content: '▴';
+}
+
+.project_coverage-sort_handler[sorted='dsc']::after {
+  content: '▾';
+}
+
+.project_coverage-sort_handler[sorted='dsc']:hover::after {
+  content: '△';
+}
+
+.project_coverage-sort_handler[sorted='asc']:hover::after {
+  content: '▽';
+}
+
+/* sort_reset */
+
+.project_coverage-sort_reset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-padding);
+}
+
+.project_coverage-sort_reset::after {
+  content: ' ';
+  display: block;
+}
+
+/* sorted sort_reset */
+
+.project_coverage.sorted .project_coverage-sort_reset {
+  cursor: pointer;
+}
+
+.project_coverage.sorted .project_coverage-sort_reset::after {
+  content: 'reset sorting';
+  font-weight: 400;
+  text-align: right;
+  color: var(--color-fg-accent);
+}
+
+.project_coverage.sorted .project_coverage-sort_reset::before {
+  content: '';
+  cursor: pointer;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.project_coverage.sorted .project_coverage-sort_reset:hover::before {
+  background-color: rgb(255 255 255 / 50%);
+}
+
+/* sorted mods */
+
+.project_coverage.sorted .project_coverage-folder,
+.project_coverage.sorted .project_coverage-file-indent {
+  display: none;
+}
+
+.project_coverage.sorted .project_coverage-file-path {
+  display: block;
+}
+
+.project_coverage.sorted .project_coverage-file-details {
+  position: relative;
+  flex-grow: 1;
+  padding: 0 0 var(--base-padding) 0;
+}
+
+/* color */
+
 .color-secondary {
   color: var(--color-fg-secondary);
 }
 
-.color-danger {
+.color-uncovered {
   color: var(--color-danger);
 }

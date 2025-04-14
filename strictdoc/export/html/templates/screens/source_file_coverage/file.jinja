@@ -1,6 +1,6 @@
 {%- set source_file = view_object.traceability_index.document_tree.source_tree.get_source_for_file(file) -%}
 
-{% set lines_ = view_object.get_file_stats_lines_total(source_file) %}
+{% set lines_all = view_object.get_file_stats_lines_total(source_file) %}
 {% set lines_total = view_object.get_file_stats_lines_total_non_empty(source_file) %}
 {% set lines_covered = view_object.get_file_stats_non_empty_lines_covered(source_file) %}
 {% set lines_percent = view_object.get_file_stats_non_empty_lines_covered_percentage(source_file) %}
@@ -9,7 +9,7 @@
 {% set func_percent = view_object.get_file_stats_functions_covered_percentage(source_file) %}
 
 <tr class="project_coverage-file {% if lines_covered == '0' %}project_coverage-file_uncovered{% endif %}">
-  <td style="padding-left:{{ folder.get_level() }}0px">
+  <td>
     <a
       class="project_coverage-file-link"
       {% if source_file.is_referenced -%}
@@ -17,11 +17,12 @@
       {%- endif -%}
       title="{{ source_file.in_doctree_source_file_rel_path_posix }}"
     >
-      <div class="project_coverage-file-icon">
-        {%- include "_res/svg_ico16_file.jinja" -%}
-      </div>
+      <div class="project_coverage-file-indent" style="padding-left:{{ folder.get_level() }}0px"></div>
       <div class="project_coverage-file-details">
         <div class="project_coverage-file-title">
+          <span class="project_coverage-file-icon">
+            {%- include "_res/svg_ico16_file.jinja" -%}
+          </span>
           {{ file.get_file_name() }}
         </div>
         <div class="project_coverage-file-path">
@@ -32,14 +33,20 @@
     </a>
   </td>
 
-  <td><span class="value_extended {% if lines_covered == '0' %}color-danger{% endif %}" data-ext="%">{{ lines_percent }}</span></td>
-  <td><span class="value_extended {% if lines_covered == '0' %}color-danger{% endif %}">{{ lines_covered }}</span></td>
-  <td><span class="value_extended">{{ lines_total }}</span></td>
-  <td><span class="value_extended color-secondary">{{ lines_ }}</span></td>
+  {#
+    * strictdoc/export/html/_static/project_coverage.js
+    Each TD needs:
+    - a data-id corresponding to a `TH > .project_coverage-sort_handler` to sort correctly
+    - data-value, expect a value to be converted to a number
+  #}
 
-  <td><span class="value_extended" data-ext="%">{{ func_percent }}</span></td>
-  <td><span class="value_extended">{{ func_covered }}</span></td>
-  <td><span class="value_extended">{{ func_total }}</span></td>
+  <td data-id="lines_percent" data-value="{{ lines_percent }}"><span class="value_extended {% if lines_covered == '0' %}color-uncovered{% endif %}" data-ext="%">{{ lines_percent }}</span></td>
+  <td data-id="lines_covered" data-value="{{ lines_covered }}"><span class="value_extended {% if lines_covered == '0' %}color-uncovered{% endif %}">{{ lines_covered }}</span></td>
+  <td data-id="lines_total" data-value="{{ lines_total }}"><span class="value_extended">{{ lines_total }}</span></td>
+  <td data-id="lines_all" data-value="{{ lines_all }}"><span class="value_extended color-secondary">{{ lines_all }}</span></td>
+  <td data-id="func_percent" data-value="{{ func_percent }}"><span class="value_extended" data-ext="%">{{ func_percent }}</span></td>
+  <td data-id="func_covered" data-value="{{ func_covered }}"><span class="value_extended">{{ func_covered }}</span></td>
+  <td data-id="func_total" data-value="{{ func_total }}"><span class="value_extended">{{ func_total }}</span></td>
 
   {# <td>
       {%- if source_file.is_referenced -%}

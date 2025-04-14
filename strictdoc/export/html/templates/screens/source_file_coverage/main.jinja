@@ -1,3 +1,18 @@
+{#
+todo: automate thead.jinja and file.jinja th/td generation
+
+  {% set coverage_cols = [
+    {"id": "lines_percent", "ext": "%", "class": "value_extended", "check_uncovered": True},
+    {"id": "lines_covered", "class": "value_extended", "check_uncovered": True},
+    {"id": "lines_total", "class": "value_extended"},
+    {"id": "lines_all", "class": "value_extended color-secondary"},
+    {"id": "func_percent", "ext": "%", "class": "value_extended"},
+    {"id": "func_covered", "class": "value_extended"},
+    {"id": "func_total", "class": "value_extended"},
+  ] %}
+
+#}
+
 <div class="main">
   {% set root_tree_ = view_object.traceability_index.document_tree.source_tree.file_tree %}
 

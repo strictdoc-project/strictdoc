@@ -2530,8 +2530,11 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             MID(document_mid)
         )
 
+        root_path = document.meta.get_root_path_prefix()
+        relative_path = document.meta.output_document_dir_rel_path.relative_path
+
         link_renderer = LinkRenderer(
-            root_path="", static_path=project_config.dir_for_sdoc_assets
+            root_path=root_path, static_path=project_config.dir_for_sdoc_assets
         )
         markup_renderer = MarkupRenderer.create(
             "RST",
@@ -2558,7 +2561,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             )
 
         path_to_output_html = os.path.join(
-            project_config.export_output_html_root, "_temp.html"
+            project_config.export_output_html_root, relative_path, "_temp.html"
         )
         path_to_output_pdf = os.path.join(
             project_config.export_output_html_root, "html", "_temp.pdf"

@@ -1,43 +1,47 @@
-class ModalController extends Stimulus.Controller {
-  initialize() {
-    // this.element is the DOM element to which the controller is connected to.
-    const thisElement = this.element;
+(() => {
 
-    // Cancel button selector: [stimulus-modal-cancel-button]
-    const cancelButton = thisElement.querySelector('[stimulus-modal-cancel-button]');
+  class ModalController extends Stimulus.Controller {
+    initialize() {
+      // this.element is the DOM element to which the controller is connected to.
+      const thisElement = this.element;
 
-    // Clicking on the backdrop in this implementation
-    // does not close the modal window:
-    // const backdrop = thisElement.querySelector('sdoc-backdrop');
+      // Cancel button selector: [stimulus-modal-cancel-button]
+      const cancelButton = thisElement.querySelector('[stimulus-modal-cancel-button]');
 
-    // Removing a modal window code added using Turbo:
-    const removeModal = () => {
-      thisElement.remove()
-    }
+      // Clicking on the backdrop in this implementation
+      // does not close the modal window:
+      // const backdrop = thisElement.querySelector('sdoc-backdrop');
 
-    // Removing the Escape listener:
-    const removeEscapeListener = () => {
-      document.removeEventListener("keydown", listenEscape);
-    }
-
-    // Listening to Escape:
-    const listenEscape = (event) => {
-      if (event.key === 'Escape') {
-        removeModal();
-        removeEscapeListener();
+      // Removing a modal window code added using Turbo:
+      const removeModal = () => {
+        thisElement.remove()
       }
-    };
 
-    // Add Listeners:
+      // Removing the Escape listener:
+      const removeEscapeListener = () => {
+        document.removeEventListener("keydown", listenEscape);
+      }
 
-    document.addEventListener("keydown", listenEscape);
+      // Listening to Escape:
+      const listenEscape = (event) => {
+        if (event.key === 'Escape') {
+          removeModal();
+          removeEscapeListener();
+        }
+      };
 
-    cancelButton.addEventListener("click", function(event){
-      event.preventDefault();
-      removeModal();
-    });
+      // Add Listeners:
 
+      document.addEventListener("keydown", listenEscape);
+
+      cancelButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        removeModal();
+      });
+
+    }
   }
-}
 
-Stimulus.application.register("modal_controller", ModalController);
+  Stimulus.application.register("modal_controller", ModalController);
+
+})();

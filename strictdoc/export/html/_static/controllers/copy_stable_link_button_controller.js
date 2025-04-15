@@ -1,57 +1,61 @@
-class CopyStableLinkController extends Stimulus.Controller {
-  connect() {
-    const button = this.element;
+(() => {
 
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
+  class CopyStableLinkController extends Stimulus.Controller {
+    connect() {
+      const button = this.element;
 
-      const clip = button.dataset.path;
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
 
-      const copyIcon = this.element.querySelector(".copy_to_clipboard-copy_icon");
-      const doneIcon = this.element.querySelector(".copy_to_clipboard-done_icon");
-      _updateClipboard(
-        clip,
-        _confirm(button, copyIcon, doneIcon)
-      )
+        const clip = button.dataset.path;
+
+        const copyIcon = this.element.querySelector(".copy_to_clipboard-copy_icon");
+        const doneIcon = this.element.querySelector(".copy_to_clipboard-done_icon");
+        _updateClipboard(
+          clip,
+          _confirm(button, copyIcon, doneIcon)
+        )
+      });
+    }
+  }
+
+  Stimulus.application.register("copy_stable_link_button", CopyStableLinkController);
+
+  function _updateClipboard(newClip, callback) {
+    navigator.clipboard.writeText(newClip).then(() => {
+      /* clipboard successfully set */
+      () => callback();
+      console.info('clipboard successfully set: ', newClip);
+    }, () => {
+      /* clipboard write failed */
+      console.warn('clipboard write failed');
     });
   }
-}
 
-Stimulus.application.register("copy_stable_link_button", CopyStableLinkController);
+  function _confirm(button, copyIcon, doneIcon) {
+    // initial opacity
+    let op = 1;
 
-function _updateClipboard(newClip, callback) {
-  navigator.clipboard.writeText(newClip).then(() => {
-    /* clipboard successfully set */
-    () => callback();
-    console.info('clipboard successfully set: ', newClip);
-  }, () => {
-    /* clipboard write failed */
-    console.warn('clipboard write failed');
-  });
-}
+    // make button visible
+    button.style.opacity = 1;
 
-function _confirm(button, copyIcon, doneIcon) {
-  // initial opacity
-  let op = 1;
+    // make DONE icon visible (instead of default COPY)
+    copyIcon.style.display = 'none';
+    doneIcon.style.display = 'contents';
 
-  // make button visible
-  button.style.opacity = 1;
+    const fadeTimer = setInterval(() => {
+      if (op <= 0.1) {
+        clearInterval(fadeTimer);
 
-  // make DONE icon visible (instead of default COPY)
-  copyIcon.style.display = 'none';
-  doneIcon.style.display = 'contents';
+        // make button invisible
+        button.style.opacity = '';
 
-  const fadeTimer = setInterval(() => {
-      if (op <= 0.1){
-          clearInterval(fadeTimer);
-
-          // make button invisible
-          button.style.opacity = '';
-
-          // make COPY icon visible back
-          copyIcon.style.display = 'contents';
-          doneIcon.style.display = 'none';
+        // make COPY icon visible back
+        copyIcon.style.display = 'contents';
+        doneIcon.style.display = 'none';
       }
       op -= op * 0.1;
-  }, 30);
-}
+    }, 30);
+  }
+
+})();

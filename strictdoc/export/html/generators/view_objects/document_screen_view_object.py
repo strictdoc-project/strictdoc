@@ -347,10 +347,12 @@ class DocumentScreenViewObject:
             and len(document.included_documents) > 0
         )
 
-    def should_display_stable_link(self, node: Union[SDocDocument, SDocSection, SDocNode]):
+    def should_display_stable_link(
+        self, node: Union[SDocDocument, SDocSection, SDocNode]
+    ):
         assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
         return node.reserved_uid is not None
 
     def get_stable_link(self, node: Union[SDocDocument, SDocSection, SDocNode]):
         assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
-        return "#TBD " + node.reserved_uid
+        return "#TBD"

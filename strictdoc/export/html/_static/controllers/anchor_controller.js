@@ -17,9 +17,7 @@ const checkIconSVG = `
   <path d="M2.5,8.5 C2.5,8.5 3.5,9.5 6,12 C11,7 13.5,4.5 13.5,4.5"/>
 </svg>`;
 
-
-
-Stimulus.register("anchor_controller", class extends Controller {
+class AnchorController extends Stimulus.Controller {
   initialize() {
     // this.element is the DOM element to which the controller is connected to.
 
@@ -111,9 +109,10 @@ Stimulus.register("anchor_controller", class extends Controller {
       });
 
     })
-
   }
-});
+}
+
+Stimulus.application.register("anchor_controller", AnchorController);
 
 function createIcon(iconSVG) {
   const icon = document.createElement('span');

@@ -1,4 +1,4 @@
-Stimulus.register("copy_stable_link_button", class extends Controller {
+class CopyStableLinkController extends Stimulus.Controller {
   connect() {
     const button = this.element;
 
@@ -15,7 +15,9 @@ Stimulus.register("copy_stable_link_button", class extends Controller {
       )
     });
   }
-});
+}
+
+Stimulus.application.register("copy_stable_link_button", CopyStableLinkController);
 
 function _updateClipboard(newClip, callback) {
   navigator.clipboard.writeText(newClip).then(() => {

@@ -5,17 +5,18 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
-  {%- if not view_object.standalone -%}
-  <script type="text/javascript" src="{{ view_object.render_static_url('viewtype_menu.js') }}"></script>
-  {%- endif -%}
-  <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
   <script type="text/javascript" src="{{ view_object.render_static_url('stimulus_umd.min.js') }}"></script>
-
   <script>
     Stimulus.application = Stimulus.Application.start();
   </script>
+
+  {%- if not view_object.standalone -%}
+  <script type="text/javascript" src="{{ view_object.render_static_url('viewtype_menu.js') }}"></script>
+  {%- endif -%}
+
+  <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
 
   <script type="text/javascript" src="{{ view_object.render_static_url('controllers/anchor_controller.js') }}"></script>
   <script type="text/javascript" src="{{ view_object.render_static_url('controllers/copy_stable_link_button_controller.js') }}"></script>

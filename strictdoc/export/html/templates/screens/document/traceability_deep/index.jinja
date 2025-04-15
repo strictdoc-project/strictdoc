@@ -6,6 +6,11 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
+  <script type="text/javascript" src="{{ view_object.render_static_url('stimulus_umd.min.js') }}"></script>
+  <script>
+    Stimulus.application = Stimulus.Application.start();
+  </script>
+
   <script type="text/javascript" src="{{ view_object.render_static_url('viewtype_menu.js') }}"></script>
   <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
   <script type="text/javascript" src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
@@ -14,11 +19,8 @@
   {%- if view_object.project_config.is_running_on_server and not view_object.standalone -%}
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js')}}";
-    import { Application, Controller } from "{{ view_object.render_static_url('stimulus.min.js') }}";
-    window.Stimulus = Application.start();
-    window.Controller = Controller;
   </script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
   {%- endif -%}
 
   {%- if view_object.project_config.is_activated_mathjax() -%}

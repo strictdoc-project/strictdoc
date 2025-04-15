@@ -117,6 +117,7 @@ class RequirementFormField:
             RequirementFieldType.STRING,
             RequirementFieldType.SINGLE_CHOICE,
             RequirementFieldType.MULTIPLE_CHOICE,
+            RequirementFieldType.TAG,
         ):
             field_value = requirement_field.get_text_value()
             return RequirementFormField(

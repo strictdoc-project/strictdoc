@@ -106,7 +106,7 @@ function setDropOption(option) {
 const dropIndicator = createDropIndicator();
 const dragIndicator = createDragIndicator();
 
-Stimulus.register("draggable_list", class extends Controller {
+class DraggableList extends Stimulus.Controller {
   static targets = ["name"];
 
   initialize() {
@@ -141,7 +141,9 @@ Stimulus.register("draggable_list", class extends Controller {
       item.setAttribute('draggable', false);
     })
   }
-})
+}
+
+Stimulus.application.register("draggable_list", DraggableList);
 
 function addStyle (target, css, attr = 'style') {
   const style = document.createElement('style');

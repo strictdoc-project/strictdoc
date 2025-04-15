@@ -10,10 +10,8 @@ const HANDLER_SELECTOR = '[js-dropdown-menu-handler]';
 const LIST_SELECTOR = '[js-dropdown-menu-list]';
 
 let menuList = [];
-// menuList = [...document.querySelectorAll(MENU_SELECTOR)];
-// menuList.forEach
 
-Stimulus.register("dropdown_menu", class extends Controller {
+class DropdownMenu extends Stimulus.Controller {
   static targets = ["name"];
 
   connect() {
@@ -49,4 +47,6 @@ Stimulus.register("dropdown_menu", class extends Controller {
     window.addEventListener('click', handleClosure);
     window.addEventListener('focusin', handleClosure);
   }
-});
+}
+
+Stimulus.application.register("dropdown_menu", DropdownMenu);

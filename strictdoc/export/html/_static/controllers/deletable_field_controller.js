@@ -1,4 +1,4 @@
-Stimulus.register("deletable_field", class extends Controller {
+class DeletableField extends Stimulus.Controller {
   connect() {
     // this.element is the DOM element to which the controller is connected to.
     const thisElement = this.element;
@@ -10,4 +10,6 @@ Stimulus.register("deletable_field", class extends Controller {
         });
     });
   }
-});
+}
+
+Stimulus.application.register("deletable_field", DeletableField);

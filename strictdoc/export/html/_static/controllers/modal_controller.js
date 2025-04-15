@@ -1,4 +1,4 @@
-Stimulus.register("modal_controller", class extends Controller {
+class ModalController extends Stimulus.Controller {
   initialize() {
     // this.element is the DOM element to which the controller is connected to.
     const thisElement = this.element;
@@ -38,4 +38,6 @@ Stimulus.register("modal_controller", class extends Controller {
     });
 
   }
-});
+}
+
+Stimulus.application.register("modal_controller", ModalController);

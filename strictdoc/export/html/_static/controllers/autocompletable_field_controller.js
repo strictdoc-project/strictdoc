@@ -6,7 +6,7 @@
 const optionSelector = "[role='option']:not([aria-disabled])"
 const activeSelector = "[aria-selected='true']"
 
-Stimulus.register("autocompletable", class extends Controller {
+class AutoCompletable extends Stimulus.Controller {
   static targets = ["name"]
   static classes = ["selected"]
   static values = {
@@ -281,11 +281,13 @@ Stimulus.register("autocompletable", class extends Controller {
     return this.hasSelectedClass ? this.selectedClasses : ["autocomplete-active"]
   }
 
-});
+}
+
+Stimulus.application.register("autocompletable", AutoCompletable);
 
 function filterSingleLine(text) {
   return text.replace(/\s/g, ' ').replace(/\s\s+/g, ' ')
-};
+}
 
 const debounce = (fn, delay = 10) => {
   let timeoutId = null

@@ -1,4 +1,4 @@
-Stimulus.register("editablefield", class extends Controller {
+class EditableField extends Stimulus.Controller {
   static targets = ["name"];
 
   connect() {
@@ -39,7 +39,9 @@ Stimulus.register("editablefield", class extends Controller {
       });
     }
   }
-});
+}
+
+Stimulus.application.register("editablefield", EditableField);
 
 function filterSingleLine(text) {
   return text.replace(/\s/g, ' ').replace(/\s\s+/g, ' ')

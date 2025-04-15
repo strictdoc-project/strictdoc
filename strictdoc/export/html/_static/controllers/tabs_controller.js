@@ -1,4 +1,4 @@
-Stimulus.register("tabs", class extends Controller {
+class Tabs extends Stimulus.Controller {
   initialize() {
 
     // ** Tab buttons like this:
@@ -62,4 +62,6 @@ Stimulus.register("tabs", class extends Controller {
     tabs[tabName].element.setAttribute('active', '');
     tabs[tabName].handler.setAttribute('active', '');
   }
-});
+}
+
+Stimulus.application.register("tabs", Tabs);

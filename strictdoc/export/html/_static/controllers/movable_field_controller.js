@@ -36,7 +36,7 @@ function swapNodes(n1, n2) {
   }
 }
 
-Stimulus.register("movable_field", class extends Controller {
+class MovableField extends Stimulus.Controller {
   initialize() {
     // this.element is the DOM element to which the controller is connected to.
     const thisElement = this.element;
@@ -57,4 +57,6 @@ Stimulus.register("movable_field", class extends Controller {
         });
     });
   }
-});
+}
+
+Stimulus.application.register("movable_field", MovableField);

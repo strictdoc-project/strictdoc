@@ -1,4 +1,4 @@
-Stimulus.register("copy_to_clipboard", class extends Controller {
+class CopyToClipboard extends Stimulus.Controller {
   connect() {
     const button = this.element.querySelector(".copy_to_clipboard-button");
 
@@ -16,7 +16,9 @@ Stimulus.register("copy_to_clipboard", class extends Controller {
       )
     });
   }
-});
+}
+
+Stimulus.application.register("copy_to_clipboard", CopyToClipboard);
 
 function _updateClipboard(newClip, callback) {
   navigator.clipboard.writeText(newClip).then(() => {

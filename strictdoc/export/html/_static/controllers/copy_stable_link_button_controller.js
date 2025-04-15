@@ -1,9 +1,7 @@
 Stimulus.register("copy_stable_link_button", class extends Controller {
   connect() {
     const button = this.element;
-    // .querySelector(".copy_stable_link-button");
 
-    // Add event listener
     button.addEventListener("click", (event) => {
       event.preventDefault();
 

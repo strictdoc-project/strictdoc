@@ -8,12 +8,12 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
-  <script type="text/javascript" src="{{ view_object.render_static_url_with_prefix('stimulus_umd.min.js') }}"></script>
+  <script src="{{ view_object.render_static_url_with_prefix('stimulus_umd.min.js') }}"></script>
   <script>
     Stimulus.application = Stimulus.Application.start();
   </script>
 
-  <script type="text/javascript" src="{{ view_object.render_static_url('collapsible_tree.js') }}"></script>
+  <script src="{{ view_object.render_static_url('collapsible_tree.js') }}"></script>
 
   {# FIXME by @mettta:
        Right now, project_tree.js only contains a switch for
@@ -27,8 +27,8 @@
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url_with_prefix('turbo.min.js') }}";
   </script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('controllers/editable_field_controller.js') }}"></script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/editable_field_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
 {%- endif -%}
 {% endblock head_scripts %}
 

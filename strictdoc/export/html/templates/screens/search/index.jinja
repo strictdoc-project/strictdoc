@@ -8,7 +8,7 @@
 {% block head_scripts %}
   {{ super() }}
 
-  <script type="text/javascript" src="{{ view_object.render_static_url_with_prefix('stimulus_umd.min.js') }}"></script>
+  <script src="{{ view_object.render_static_url_with_prefix('stimulus_umd.min.js') }}"></script>
   <script>
     Stimulus.application = Stimulus.Application.start();
   </script>
@@ -17,7 +17,7 @@
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url_with_prefix('turbo.min.js') }}";
   </script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
   {%- endif -%}
 {% endblock head_scripts %}
 

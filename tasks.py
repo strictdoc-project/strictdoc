@@ -631,6 +631,27 @@ def check_dead_links(context):
             python3 tools/link_health.py docs/strictdoc_25_design.sdoc
         """,
     )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py CONTRIBUTING.md
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py NOTICE
+        """,
+    )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            python3 tools/link_health.py README.md
+        """,
+    )
 
 
 @task

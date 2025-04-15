@@ -403,6 +403,34 @@ sdoc-field:hover .copy_to_clipboard-button {
   opacity: 1;
 }
 
+/* ***
+  USED BY copy_stable_link controller
+  inside sdoc-node
+  */
+
+.copy_stable_link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--base-rhythm);
+
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  cursor: pointer;
+  transition: .5s ease-out;
+  opacity: 0;
+}
+
+.copy_stable_link-button:hover {
+  color: var(--color-action);
+}
+
+sdoc-node:hover .copy_stable_link-button {
+  opacity: 1;
+}
+
 /* ANCHOR */
 
 sdoc-anchor {
@@ -421,10 +449,6 @@ sdoc-node > sdoc-anchor {
   top: 0;
   bottom: 0;
   z-index: 0;
-
-  /* for test: */
-  /* width: 10px;
-  background: red; */
 }
 
 sdoc-anchor:target + sdoc-requirement sdoc-requirement-title,
@@ -546,7 +570,6 @@ sdoc-anchor[visible]:hover .anchor_button_text {
 }
 
 sdoc-anchor[visible] .anchor_back_links {
-  /* font-size: var(--font-size-sm); */
   min-width: 300px;
   padding-left: calc(var(--base-rhythm)*4);
   padding-right: var(--base-rhythm);
@@ -844,7 +867,6 @@ svg:hover .svg_icon_not_hover_visible {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  /* column-gap: var(--base-rhythm); */
   column-gap: calc(var(--base-rhythm)/2);
   padding-left: calc(var(--base-rhythm)*2);
   padding-right: var(--base-rhythm);
@@ -1156,18 +1178,6 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   font-weight: 400;
 }
 
-.tree_folder_path::before {
-  position: absolute;
-  /* content: ''; */
-  top: 0;
-  bottom: 0;
-  left: -20px;
-  right: -20px;
-  z-index: -1;
-  border-top: var(--base-border);
-  background-color: var(--color-bg-secondary);
-}
-
 a.tree_item,
 .tree_item {
   display: flex;
@@ -1178,13 +1188,6 @@ a.tree_item,
   min-width: 0;
   line-height: 1.5;
   width: 99%; /* To calculate cite overflow  */
-  /* padding-left: calc(var(--base-rhythm) * 2);
-  padding-right: calc(var(--base-rhythm) * 2); */
-}
-
-a.tree_item:hover {
-  /* color: var(--color-bg-main);
-  fill: var(--color-bg-main); */
 }
 
 .tree_item[active] {
@@ -1226,7 +1229,6 @@ a.tree_item:hover {
 
 .toc li {
   margin: 0;
-  /* margin-left: var(--base-rhythm); */
   padding-left: var(--base-rhythm);
   position: relative;
 }
@@ -1236,14 +1238,12 @@ a.tree_item:hover {
   position: relative;
   padding-top: var(--base-rhythm);
   padding-bottom: var(--base-rhythm);
-  /* padding-left: var(--base-rhythm); */
   padding-right: var(--base-rhythm);
 }
 
 .toc a,
 .toc a:link,
 .toc a:visited {
-  /* line-height: 1; */
   text-decoration: none;
   color: var(--color-fg-secondary);
 }
@@ -1357,7 +1357,6 @@ a.tree_item:hover {
   border: var(--base-border);
   border-radius: calc(var(--base-rhythm)*0.5);
 
-  /* font-size: var(--font-size-sm); */
   margin: var(--base-padding) 0;
   padding: calc(var(--base-rhythm)*0.5);
   gap: 2px;
@@ -1377,7 +1376,6 @@ a.tree_item:hover {
 .sdoc-table_key_value-key {
   grid-column: 1 / 2;
   color: var(--color-fg-main);
-  /* background-color: var(--color-bg-contrast); */
 
   display: flex;
   flex-direction: row;

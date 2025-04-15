@@ -11,6 +11,7 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_tree import File, Folder
 from strictdoc.core.project_config import ProjectConfig
@@ -345,3 +346,13 @@ class DocumentScreenViewObject:
             self.project_config.export_included_documents
             and len(document.included_documents) > 0
         )
+
+    def should_display_stable_link(
+        self, node: Union[SDocDocument, SDocSection, SDocNode]
+    ):
+        assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
+        return node.reserved_uid is not None
+
+    def get_stable_link(self, node: Union[SDocDocument, SDocSection, SDocNode]):
+        assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
+        return "#TBD"

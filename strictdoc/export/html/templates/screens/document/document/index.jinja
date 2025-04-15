@@ -11,6 +11,7 @@
   <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
   <script type="text/javascript" src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
   <script type="text/javascript" src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
+  <script type="text/javascript" src="{{ view_object.render_static_url('copy_stable_link_observer.js') }}"></script>
 
   {%- if view_object.is_running_on_server and not view_object.standalone -%}
   <script type="module">
@@ -20,6 +21,7 @@
     window.Controller = Controller;
   </script>
   <script type="module" src="{{ view_object.render_static_url('controllers/anchor_controller.js') }}"></script>
+  {# <script type="module" src="{{ view_object.render_static_url('controllers/copy_stable_link_button_controller.js') }}"></script> #}
   <script type="module" src="{{ view_object.render_static_url('controllers/autocompletable_field_controller.js') }}"></script>
   {% if not view_object.has_included_document() %}
   <script type="module" src="{{ view_object.render_static_url('controllers/draggable_list_controller.js') }}"></script>

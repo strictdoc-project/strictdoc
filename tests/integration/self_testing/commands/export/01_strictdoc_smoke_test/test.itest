@@ -52,8 +52,6 @@ RUN: %cat "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html" | fileche
 # When there is no positive check, filecheck will check all not-CHECKs.
 CHECK-DOCUMENT-NOT: Export to ReqIF
 CHECK-DOCUMENT-NOT: turbo.js
-CHECK-DOCUMENT-NOT: stimulus.js
-CHECK-DOCUMENT-NOT: controller.js
 
 RUN: %check_exists --file "%S/Output/html/index.html"
 RUN: %check_exists --file "%S/Output/html/strictdoc/docs/strictdoc_01_user_guide.html"

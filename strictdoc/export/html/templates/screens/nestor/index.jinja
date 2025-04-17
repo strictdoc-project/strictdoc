@@ -8,7 +8,7 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
-  <script type="text/javascript" src="{{ view_object.render_static_url('nestor/bundle.umd.js') }}"></script>
+  <script src="{{ view_object.render_static_url('nestor/bundle.umd.js') }}"></script>
   <script>
     var graphNestor = new GraphNestor();
     graphNestor.render('{{ view_object.path_to_json }}');

@@ -12,7 +12,7 @@
   ! Enabling this option for PDF is highly not recommended.
  #}
 
-{%- if copy_to_clipboard is defined and view_object.project_config.is_running_on_server and not view_object.standalone -%}
+{%- if copy_to_clipboard is defined -%}
 <sdoc-field data-controller="copy_to_clipboard">
   <sdoc-field-content>
     <sdoc-autogen>{{ field_content }}</sdoc-autogen>

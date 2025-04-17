@@ -1,8 +1,10 @@
-const DL_SELECTOR = 'js-draggable_list';
-const DL_ITEM_SELECTOR = 'li';
-const DL_ZONE_CHILD = 32;
+(() => {
 
-const CSS = `
+  const DL_SELECTOR = 'js-draggable_list';
+  const DL_ITEM_SELECTOR = 'li';
+  const DL_ZONE_CHILD = 32;
+
+  const CSS = `
 ${DL_ITEM_SELECTOR}[draggable="true"] {
 }
 ${DL_ITEM_SELECTOR}[draggable="true"]:hover {
@@ -81,248 +83,252 @@ ${DL_ITEM_SELECTOR}[draggable="true"] .dragIndicator::before {
 
 `;
 
-const dragState = {
-  item: null,
-  reference: null,
-  option: null,
-}
-
-function resetDragState() {
-  dragState.item = null;
-  dragState.reference = null;
-  dragState.option = null;
-}
-
-function setDragItem(item) {
-  dragState.item = item;
-}
-function setDropReference(reference) {
-  dragState.reference = reference;
-}
-function setDropOption(option) {
-  dragState.option = option;
-}
-
-const dropIndicator = createDropIndicator();
-const dragIndicator = createDragIndicator();
-
-Stimulus.register("draggable_list", class extends Controller {
-  static targets = ["name"];
-
-  initialize() {
-    // this.element.style.paddingRight = '10px';
-
-    const last_moved_node_id = this.element.dataset.last_moved_node_id;
-
-    addStyle(this.element, CSS, 'style');
-
-    // Add event listeners.
-    const draggableList = [...this.element.querySelectorAll(DL_ITEM_SELECTOR)];
-    draggableList.forEach((item) => {
-      item.addEventListener('dragstart', dragStart);
-      item.addEventListener('dragend', dragEnd);
-      item.addEventListener('dragover', dragOver);
-      item.addEventListener('dragenter', dragEnter);
-      item.addEventListener('dragleave', dragLeave);
-      item.addEventListener('drop', dragDrop);
-
-      item.addEventListener("mouseover", mouseOver);
-      item.addEventListener("mouseleave", mouseLeave);
-
-      last_moved_node_id
-      && (item.dataset.nodeid === last_moved_node_id)
-      && (item.dataset.last_moved = 'true');
-
-      item.setAttribute('draggable', true);
-    });
-
-    // Prevent drag for links inside the list.
-    [...this.element.querySelectorAll('a')].forEach((item) => {
-      item.setAttribute('draggable', false);
-    })
+  const dragState = {
+    item: null,
+    reference: null,
+    option: null,
   }
-})
 
-function addStyle (target, css, attr = 'style') {
-  const style = document.createElement('style');
-  style.setAttribute(`${DL_SELECTOR}-${attr}`, '');
-  style.textContent = css;
-  target.parentNode.insertBefore(style, target);
-}
-
-function createDropIndicator() {
-  const dropIndicator = document.createElement('div');
-  dropIndicator.className = 'dropIndicator';
-  return dropIndicator
-}
-
-function createDragIndicator() {
-  const dragIndicator = document.createElement('div');
-  dragIndicator.className = 'dragIndicator';
-  return dragIndicator
-}
-
-function dragStart(event) {
-  event.stopImmediatePropagation();
-  event.dataTransfer.dropEffect = "move";
-  event.dataTransfer.effectAllowed = 'move';
-
-  setDragItem(this);
-
-  setTimeout(() => {
-    this.dataset.dragging = true;
-  }, 0);
-}
-
-function dragEnd(event) {
-  updateDropIndication();
-  resetDragState();
-  this.dataset.dragging = false;
-}
-
-function updateDropIndication(target, option) {
-  setDropOption(option);
-  switch (option) {
-    case 'child':
-      target.append(dropIndicator);
-      dropIndicator.style.paddingLeft = `${DL_ZONE_CHILD}px`;
-      dropIndicator.style.top = '';
-      dropIndicator.style.bottom = 0;
-      break;
-    case 'after':
-      target.append(dropIndicator);
-      dropIndicator.style.paddingLeft = '';
-      dropIndicator.style.top = '';
-      dropIndicator.style.bottom = 0;
-      break;
-    case 'before':
-      target.append(dropIndicator);
-      dropIndicator.style.paddingLeft = '';
-      dropIndicator.style.top = 0;
-      dropIndicator.style.bottom = '';
-      break;
-    default:
-      // dropIndicator is declared in the global scope,
-      // so this case works if there are no parameters:
-      dropIndicator.remove();
+  function resetDragState() {
+    dragState.item = null;
+    dragState.reference = null;
+    dragState.option = null;
   }
-}
 
-function isDropMatter() {
-  return
-}
+  function setDragItem(item) {
+    dragState.item = item;
+  }
+  function setDropReference(reference) {
+    dragState.reference = reference;
+  }
+  function setDropOption(option) {
+    dragState.option = option;
+  }
 
-function dragOver(event) {
-  event.preventDefault();
-  event.stopImmediatePropagation();
-  event.dataTransfer.dropEffect = "move";
+  const dropIndicator = createDropIndicator();
+  const dragIndicator = createDragIndicator();
 
-  setDropReference(this);
+  class DraggableList extends Stimulus.Controller {
+    static targets = ["name"];
 
-  // https://developer.mozilla.org/en-US/docs/Web/API/Node/contains
-  // A node is contained inside itself,
-  // so (dragState.item !== dragState.reference)
-  // is the same as (dragState.item.contains(dragState.reference)).
+    initialize() {
+      // this.element.style.paddingRight = '10px';
 
-  if (dragState.item.contains(dragState.reference)) {
-    // We do not process the case when the item does not actually displace.
+      const last_moved_node_id = this.element.dataset.last_moved_node_id;
+
+      addStyle(this.element, CSS, 'style');
+
+      // Add event listeners.
+      const draggableList = [...this.element.querySelectorAll(DL_ITEM_SELECTOR)];
+      draggableList.forEach((item) => {
+        item.addEventListener('dragstart', dragStart);
+        item.addEventListener('dragend', dragEnd);
+        item.addEventListener('dragover', dragOver);
+        item.addEventListener('dragenter', dragEnter);
+        item.addEventListener('dragleave', dragLeave);
+        item.addEventListener('drop', dragDrop);
+
+        item.addEventListener("mouseover", mouseOver);
+        item.addEventListener("mouseleave", mouseLeave);
+
+        last_moved_node_id
+          && (item.dataset.nodeid === last_moved_node_id)
+          && (item.dataset.last_moved = 'true');
+
+        item.setAttribute('draggable', true);
+      });
+
+      // Prevent drag for links inside the list.
+      [...this.element.querySelectorAll('a')].forEach((item) => {
+        item.setAttribute('draggable', false);
+      })
+    }
+  }
+
+  Stimulus.application.register("draggable_list", DraggableList);
+
+  function addStyle(target, css, attr = 'style') {
+    const style = document.createElement('style');
+    style.setAttribute(`${DL_SELECTOR}-${attr}`, '');
+    style.textContent = css;
+    target.parentNode.insertBefore(style, target);
+  }
+
+  function createDropIndicator() {
+    const dropIndicator = document.createElement('div');
+    dropIndicator.className = 'dropIndicator';
+    return dropIndicator
+  }
+
+  function createDragIndicator() {
+    const dragIndicator = document.createElement('div');
+    dragIndicator.className = 'dragIndicator';
+    return dragIndicator
+  }
+
+  function dragStart(event) {
+    event.stopImmediatePropagation();
+    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer.effectAllowed = 'move';
+
+    setDragItem(this);
+
+    setTimeout(() => {
+      this.dataset.dragging = true;
+    }, 0);
+  }
+
+  function dragEnd(event) {
     updateDropIndication();
-  } else {
+    resetDragState();
+    this.dataset.dragging = false;
+  }
 
-    const bounding = this.getBoundingClientRect();
+  function updateDropIndication(target, option) {
+    setDropOption(option);
+    switch (option) {
+      case 'child':
+        target.append(dropIndicator);
+        dropIndicator.style.paddingLeft = `${DL_ZONE_CHILD}px`;
+        dropIndicator.style.top = '';
+        dropIndicator.style.bottom = 0;
+        break;
+      case 'after':
+        target.append(dropIndicator);
+        dropIndicator.style.paddingLeft = '';
+        dropIndicator.style.top = '';
+        dropIndicator.style.bottom = 0;
+        break;
+      case 'before':
+        target.append(dropIndicator);
+        dropIndicator.style.paddingLeft = '';
+        dropIndicator.style.top = 0;
+        dropIndicator.style.bottom = '';
+        break;
+      default:
+        // dropIndicator is declared in the global scope,
+        // so this case works if there are no parameters:
+        dropIndicator.remove();
+    }
+  }
 
-    // We do not process the case when the item
-    // does not actually displace.
+  function isDropMatter() {
+    return
+  }
 
-    if (event.clientY < bounding.top + (bounding.bottom - bounding.top) * 0.5) {
-      // * BEFORE
-      // The mouse is in the top half of the Reference.
+  function dragOver(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    event.dataTransfer.dropEffect = "move";
 
-      if (dragState.item.nextElementSibling === dragState.reference) {
-        // We do not process the case when the item
-        // does not actually displace.
-        updateDropIndication();
-      } else {
-        updateDropIndication(this, 'before');
-      }
+    setDropReference(this);
 
+    // https://developer.mozilla.org/en-US/docs/Web/API/Node/contains
+    // A node is contained inside itself,
+    // so (dragState.item !== dragState.reference)
+    // is the same as (dragState.item.contains(dragState.reference)).
+
+    if (dragState.item.contains(dragState.reference)) {
+      // We do not process the case when the item does not actually displace.
+      updateDropIndication();
     } else {
-      // * AFTER
-      // The mouse is in the bottom half of the Reference.
-      // The dragged element can become a child or just the next one.
 
-      if (event.clientX > bounding.left + DL_ZONE_CHILD) {
-        // * AFTER / child
-        // The mouse is shifted to the right of the boundary,
-        // which indicates the intention to insert the item as a child.
+      const bounding = this.getBoundingClientRect();
 
-        updateDropIndication(this, 'child');
+      // We do not process the case when the item
+      // does not actually displace.
 
-      } else {
-        // * AFTER / just the next item
-        // The mouse is to the left of the DL_ZONE_CHILD boundary, which points
-        // to the intention to insert just the next one in the list.
+      if (event.clientY < bounding.top + (bounding.bottom - bounding.top) * 0.5) {
+        // * BEFORE
+        // The mouse is in the top half of the Reference.
 
-        if (dragState.item.previousElementSibling === dragState.reference) {
+        if (dragState.item.nextElementSibling === dragState.reference) {
           // We do not process the case when the item
           // does not actually displace.
           updateDropIndication();
         } else {
-          updateDropIndication(this, 'after');
+          updateDropIndication(this, 'before');
+        }
+
+      } else {
+        // * AFTER
+        // The mouse is in the bottom half of the Reference.
+        // The dragged element can become a child or just the next one.
+
+        if (event.clientX > bounding.left + DL_ZONE_CHILD) {
+          // * AFTER / child
+          // The mouse is shifted to the right of the boundary,
+          // which indicates the intention to insert the item as a child.
+
+          updateDropIndication(this, 'child');
+
+        } else {
+          // * AFTER / just the next item
+          // The mouse is to the left of the DL_ZONE_CHILD boundary, which points
+          // to the intention to insert just the next one in the list.
+
+          if (dragState.item.previousElementSibling === dragState.reference) {
+            // We do not process the case when the item
+            // does not actually displace.
+            updateDropIndication();
+          } else {
+            updateDropIndication(this, 'after');
+          }
         }
       }
     }
   }
-}
 
-function dragEnter() {}
-function dragLeave() {}
+  function dragEnter() { }
+  function dragLeave() { }
 
-function dragDrop(event) {
-  event.preventDefault();
-  event.stopImmediatePropagation();
-  dragState.option && fetchDroppedItemData(dragState.item, dragState.reference, dragState.option);
-}
-
-function mouseOver(event) {
-  event.preventDefault();
-  event.stopImmediatePropagation();
-  if (event.target === this) {
-    event.target.append(dragIndicator);
+  function dragDrop(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    dragState.option && fetchDroppedItemData(dragState.item, dragState.reference, dragState.option);
   }
-}
-function mouseLeave(event) {
-  event.preventDefault();
-  event.stopImmediatePropagation();
-  if (event.target === this) {
-    dragIndicator.remove();
+
+  function mouseOver(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (event.target === this) {
+      event.target.append(dragIndicator);
+    }
   }
-}
-
-function fetchDroppedItemData(dragItem, dropReference, whereto) {
-  console.assert(['before', 'after', 'child'].includes(whereto), 'whereto is', whereto)
-  if (dragItem !== dropReference) {
-    // Build formData object.
-    let formData = new FormData();
-    formData.append('moved_node_mid', dragItem.dataset.nodeid);
-    formData.append('target_mid', dropReference.dataset.nodeid);
-    formData.append('whereto', whereto);
-
-    fetch("/actions/document/move_node",
-    {
-        body: formData,
-        method: "post",
-        headers: {
-          "Accept": "text/vnd.turbo-stream.html",
-      },
-    }).then(r => r.text())
-    .then(html => Turbo.renderStreamMessage(html));
+  function mouseLeave(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (event.target === this) {
+      dragIndicator.remove();
+    }
   }
-}
 
-function moveNodeBefore(dragItem, dropReference) {
-  // The real insertion of the moved node is done by the server,
-  // so this functionality is not implemented.
-  //// dropReference.parentNode.insertBefore(dragItem, dropReference);
-  //// dragItem.dataset.last_moved = 'true';
-}
+  function fetchDroppedItemData(dragItem, dropReference, whereto) {
+    console.assert(['before', 'after', 'child'].includes(whereto), 'whereto is', whereto)
+    if (dragItem !== dropReference) {
+      // Build formData object.
+      let formData = new FormData();
+      formData.append('moved_node_mid', dragItem.dataset.nodeid);
+      formData.append('target_mid', dropReference.dataset.nodeid);
+      formData.append('whereto', whereto);
+
+      fetch("/actions/document/move_node",
+        {
+          body: formData,
+          method: "post",
+          headers: {
+            "Accept": "text/vnd.turbo-stream.html",
+          },
+        }).then(r => r.text())
+        .then(html => Turbo.renderStreamMessage(html));
+    }
+  }
+
+  function moveNodeBefore(dragItem, dropReference) {
+    // The real insertion of the moved node is done by the server,
+    // so this functionality is not implemented.
+    //// dropReference.parentNode.insertBefore(dragItem, dropReference);
+    //// dragItem.dataset.last_moved = 'true';
+  }
+
+})();

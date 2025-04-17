@@ -5,42 +5,46 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
+  <script src="{{ view_object.render_static_url('stimulus_umd.min.js') }}"></script>
+  <script>
+    Stimulus.application = Stimulus.Application.start();
+  </script>
+
   {%- if not view_object.standalone -%}
-  <script type="text/javascript" src="{{ view_object.render_static_url('viewtype_menu.js') }}"></script>
+  <script src="{{ view_object.render_static_url('viewtype_menu.js') }}"></script>
   {%- endif -%}
-  <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('copy_stable_link_observer.js') }}"></script>
+
+  <script src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
+  <script src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
+  <script src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
+
+  <script src="{{ view_object.render_static_url('controllers/anchor_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/copy_stable_link_button_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/copy_to_clipboard_controller.js') }}"></script>
 
   {%- if view_object.is_running_on_server and not view_object.standalone -%}
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js') }}";
-    import { Application, Controller } from "{{ view_object.render_static_url('stimulus.min.js') }}";
-    window.Stimulus = Application.start();
-    window.Controller = Controller;
   </script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/anchor_controller.js') }}"></script>
-  {# <script type="module" src="{{ view_object.render_static_url('controllers/copy_stable_link_button_controller.js') }}"></script> #}
-  <script type="module" src="{{ view_object.render_static_url('controllers/autocompletable_field_controller.js') }}"></script>
+
+  <script src="{{ view_object.render_static_url('controllers/autocompletable_field_controller.js') }}"></script>
   {% if not view_object.has_included_document() %}
-  <script type="module" src="{{ view_object.render_static_url('controllers/draggable_list_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/draggable_list_controller.js') }}"></script>
   {% endif %}
-  <script type="module" src="{{ view_object.render_static_url('controllers/dropdown_menu_controller.js') }}"></script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/editable_field_controller.js') }}"></script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/deletable_field_controller.js') }}"></script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/movable_field_controller.js') }}"></script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/scroll_into_view_controller.js') }}"></script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/tabs_controller.js') }}"></script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/copy_to_clipboard_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/dropdown_menu_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/editable_field_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/deletable_field_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/movable_field_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/scroll_into_view_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/tabs_controller.js') }}"></script>
   {%- endif -%}
 
   {%- if view_object.project_config.is_activated_mathjax() -%}
   <script id="MathJax-script" async src="{{ view_object.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- endif -%}
   {%- if view_object.project_config.is_activated_rapidoc() -%}
-  <script type="text/javascript" src="{{ view_object.render_static_url('rapidoc/rapidoc-min.js') }}"></script>
+  <script src="{{ view_object.render_static_url('rapidoc/rapidoc-min.js') }}"></script>
   {%- endif -%}
   {%- if view_object.project_config.is_activated_mermaid() -%}
     <script src="{{ view_object.render_static_url('mermaid/mermaid.min.js') }}"></script>

@@ -1,5 +1,11 @@
-Stimulus.register("scroll_into_view", class extends Controller {
-  connect() {
-    this.element.scrollIntoView()
+(() => {
+
+  class ScrollIntoView extends Stimulus.Controller {
+    connect() {
+      this.element.scrollIntoView()
+    }
   }
-});
+
+  Stimulus.application.register("scroll_into_view", ScrollIntoView);
+
+})();

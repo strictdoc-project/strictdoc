@@ -8,14 +8,16 @@
 {% block head_scripts %}
   {{ super() }}
 
+  <script src="{{ view_object.render_static_url_with_prefix('stimulus_umd.min.js') }}"></script>
+  <script>
+    Stimulus.application = Stimulus.Application.start();
+  </script>
+
   {%- if view_object.project_config.is_running_on_server and not view_object.standalone -%}
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url_with_prefix('turbo.min.js') }}";
-    import { Application, Controller } from "{{ view_object.render_static_url_with_prefix('stimulus.min.js') }}";
-    window.Stimulus = Application.start();
-    window.Controller = Controller;
   </script>
-  <script type="module" src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
   {%- endif -%}
 {% endblock head_scripts %}
 

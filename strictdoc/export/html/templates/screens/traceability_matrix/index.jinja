@@ -9,9 +9,9 @@
 
 {% block head_scripts %}
   {{ super() }}
-  <script type="text/javascript" src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('pan_with_space.js') }}"></script>
-  <script type="text/javascript" src="{{ view_object.render_static_url('requirements-coverage.js') }}"></script>
+  <script src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
+  <script src="{{ view_object.render_static_url('pan_with_space.js') }}"></script>
+  <script src="{{ view_object.render_static_url('requirements-coverage.js') }}"></script>
 {% endblock head_scripts %}
 
 {% block title %}

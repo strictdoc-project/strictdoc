@@ -152,6 +152,8 @@ The JavaScript framework used by StrictDoc is minimized to Turbo.js/Stimulus.js 
 The Hotwire approach helps to reduce the differences between the static HTML produced by the StrictDoc command-line application and the StrictDoc web application. In both cases, the core content of StrictDoc is a statically generated website with documents. The web application extends the static HTML content with Turbo/Stimulus to turn it into a dynamic website.
 
 Currently, the web server renders the HTML documents using the same generators that are used by the static HTML export, so the static HTML documentation and the web application interface look identical. The web interface adds the action buttons and other additional UI elements for editing the content.
+
+To ensure that certain Stimulus-based interactive features work not only in the web application but also in the static HTML output, StrictDoc uses the UMD build of Stimulus instead of the default ES module version. This allows the browser to execute Stimulus controllers in environments where module loading is not available, preserving interactivity in static documentation pages.
 <<<
 
 [/SECTION]

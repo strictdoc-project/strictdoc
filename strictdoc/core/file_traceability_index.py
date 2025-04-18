@@ -711,11 +711,8 @@ class FileTraceabilityIndex:
             parent=None, reqs_objs=reqs, scope=marker_type.value
         )
         function_marker.ng_source_line_begin = function.line_begin
-        function_marker.ng_source_column_begin = 1
         function_marker.ng_range_line_begin = function.line_begin
         function_marker.ng_range_line_end = function.line_end
-        function_marker.ng_marker_line = function.line_begin
-        function_marker.ng_marker_column = 1
         function_marker.role = role
         if description is not None:
             function_marker.set_description(description)

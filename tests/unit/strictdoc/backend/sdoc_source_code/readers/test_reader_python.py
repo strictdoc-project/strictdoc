@@ -1,3 +1,5 @@
+# The tests in this file has strings with whitespace that must not be linted.
+# ruff: noqa: W291,W293
 import sys
 from typing import List
 
@@ -128,7 +130,7 @@ def hello_3():
 
 
 def test_001_one_range_marker():
-    source_input = b"""
+    source_input = b"""\
 # @relation(REQ-001, REQ-002, REQ-003, scope=range_start)
 print("Hello world")
 # @relation(REQ-001, REQ-002, REQ-003, scope=range_end)
@@ -142,8 +144,16 @@ print("Hello world")
     assert markers[0].reqs == ["REQ-001", "REQ-002", "REQ-003"]
     assert markers[0].begin_or_end == "["
     assert markers[0].ng_source_line_begin == 1
+    assert markers[0].ng_source_column_begin == 3
     assert markers[0].ng_range_line_begin == 1
     assert markers[0].ng_range_line_end == 3
+
+    assert markers[1].reqs == ["REQ-001", "REQ-002", "REQ-003"]
+    assert markers[1].begin_or_end == "[/"
+    assert markers[1].ng_source_line_begin == 3
+    assert markers[1].ng_source_column_begin == 3
+    assert markers[1].ng_range_line_begin == 1
+    assert markers[1].ng_range_line_end == 3
 
 
 def test_002_two_range_markers():
@@ -183,6 +193,35 @@ CONTENT 6
     assert marker_2.ng_range_line_begin == 1
     assert marker_3.ng_range_line_begin == 6
     assert marker_4.ng_range_line_begin == 6
+
+
+def test_003_one_range_marker_with_offset():
+    source_input = b"""\
+
+
+    #
+    # @relation(REQ-001, REQ-002, REQ-003, scope=range_start)
+    print("Hello world")
+    # @relation(REQ-001, REQ-002, REQ-003, scope=range_end)
+    #
+"""
+
+    reader = SourceFileTraceabilityReader_Python()
+
+    info: SourceFileTraceabilityInfo = reader.read(source_input)
+    markers = info.markers
+
+    assert markers[0].reqs == ["REQ-001", "REQ-002", "REQ-003"]
+    assert markers[0].begin_or_end == "["
+    assert markers[0].ng_source_line_begin == 4
+    assert markers[0].ng_range_line_begin == 4
+    assert markers[0].ng_range_line_end == 6
+
+    assert markers[1].reqs == ["REQ-001", "REQ-002", "REQ-003"]
+    assert markers[1].begin_or_end == "[/"
+    assert markers[1].ng_source_line_begin == 6
+    assert markers[1].ng_range_line_begin == 4
+    assert markers[1].ng_range_line_end == 6
 
 
 def test_008_three_nested_range_markers():
@@ -375,6 +414,74 @@ CONTENT 3
     assert markers[2].ng_range_line_end == 5
 
 
+def test_070_function_marker():
+    source_input = b"""\
+# Some offset...
+# Some offset...
+def function_1():
+    \"\"\"
+    @relation(REQ-001, scope=function)
+    \"\"\"
+    pass
+"""
+
+    reader = SourceFileTraceabilityReader_Python()
+
+    document = reader.read(source_input)
+    markers = document.markers
+    assert markers[0].reqs == ["REQ-001"]
+    assert markers[0].ng_source_line_begin == 5
+    assert markers[0].ng_range_line_begin == 3
+    assert markers[0].ng_range_line_end == 7
+    assert markers[0].reqs_objs[0].ng_source_line == 5
+    assert markers[0].reqs_objs[0].ng_source_column == 15
+
+
+def test_071_function_marker_multiline():
+    source_input = b"""\
+# Some offset...
+# Some offset...
+def function_1():
+    \"\"\"
+    @relation(
+        REQ-1A,
+        REQ-1B,
+        scope=function
+    )
+    @relation(
+        REQ-2A,
+        REQ-2B,
+        scope=function
+    )    
+    \"\"\"
+    pass
+"""
+
+    reader = SourceFileTraceabilityReader_Python()
+
+    document = reader.read(source_input)
+    markers = document.markers
+    marker = markers[0]
+    assert marker.reqs == ["REQ-1A", "REQ-1B"]
+    assert marker.ng_source_line_begin == 5
+    assert marker.ng_range_line_begin == 3
+    assert marker.ng_range_line_end == 16
+    assert marker.reqs_objs[0].ng_source_line == 6
+    assert marker.reqs_objs[0].ng_source_column == 9
+    assert marker.reqs_objs[1].ng_source_line == 7
+    assert marker.reqs_objs[1].ng_source_column == 9
+
+    marker = markers[1]
+    assert marker.reqs == ["REQ-2A", "REQ-2B"]
+    assert marker.ng_source_line_begin == 10
+    assert marker.ng_range_line_begin == 3
+    assert marker.ng_range_line_end == 16
+    assert marker.reqs_objs[0].ng_source_line == 11
+    assert marker.reqs_objs[0].ng_source_column == 9
+    assert marker.reqs_objs[1].ng_source_line == 12
+    assert marker.reqs_objs[1].ng_source_column == 9
+
+
 def test_validation_01_one_range_marker_begin_req_not_equal_to_end_req():
     source_input = b"""
 # @relation(REQ-001, scope=range_start)
@@ -434,5 +541,5 @@ CONTENT 3
     )
     assert (
         exc_info.value.args[1]
-        == "The @sdoc keywords are also unmatched on lines: [(2, 13)]."
+        == "The @sdoc keywords are also unmatched on lines: [(2, 3)]."
     )

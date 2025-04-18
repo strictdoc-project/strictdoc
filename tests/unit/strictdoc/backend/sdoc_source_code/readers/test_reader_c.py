@@ -73,14 +73,61 @@ void hello_world_2(void) {
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.markers) == 2
-    assert info.markers[0].ng_source_line_begin == 3
+    assert info.markers[0].ng_source_line_begin == 6
     assert info.markers[0].ng_range_line_begin == 3
     assert info.markers[0].ng_range_line_end == 10
     assert info.markers[0].reqs_objs[0].ng_source_line == 6
     assert info.markers[0].reqs_objs[0].ng_source_column == 14
 
-    assert info.markers[1].ng_source_line_begin == 12
+    assert info.markers[1].ng_source_line_begin == 15
     assert info.markers[1].ng_range_line_begin == 12
     assert info.markers[1].ng_range_line_end == 19
     assert info.markers[1].reqs_objs[0].ng_source_line == 15
+    assert info.markers[1].reqs_objs[0].ng_source_column == 14
+
+
+def test_03_functions_multiline():
+    input_string = b"""\
+#include <stdio.h>
+
+/**
+ * Some text.
+ *
+ * @relation(
+ *   REQ-1, scope=function
+ * )
+ */
+void hello_world(void) {
+    print("hello world\\n");
+}
+
+/**
+ * Some text.
+ *
+ * @relation(REQ-2,
+ * scope=function)
+ */
+void hello_world_2(void) {
+    print("hello world\\n");
+}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 2
+    assert info.markers[0].ng_source_line_begin == 6
+    assert info.markers[0].ng_range_line_begin == 3
+    assert info.markers[0].ng_range_line_end == 12
+    assert info.markers[0].reqs_objs[0].ng_source_line == 7
+    assert info.markers[0].reqs_objs[0].ng_source_column == 6
+
+    assert info.markers[1].ng_source_line_begin == 17
+    assert info.markers[1].ng_range_line_begin == 14
+    assert info.markers[1].ng_range_line_end == 22
+    assert info.markers[1].reqs_objs[0].ng_source_line == 17
     assert info.markers[1].reqs_objs[0].ng_source_column == 14

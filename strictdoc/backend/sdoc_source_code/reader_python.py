@@ -106,7 +106,6 @@ class SourceFileTraceabilityReader_Python:
                             if input_buffer[-1] == 10
                             else node_.end_point[0] + 1,
                             string_content.start_point[0] + 1,
-                            string_content.start_point[1] + 1,
                         )
                         for marker_ in markers:
                             if isinstance(marker_, FunctionRangeMarker) and (
@@ -165,7 +164,6 @@ class SourceFileTraceabilityReader_Python:
                                 node_.start_point[0] + 1,
                                 node_.end_point[0] + 1,
                                 string_content.start_point[0] + 1,
-                                string_content.start_point[1] + 1,
                                 function_name,
                             )
                             for marker_ in markers:
@@ -230,7 +228,6 @@ class SourceFileTraceabilityReader_Python:
                     node_.start_point[0] + 1,
                     node_.end_point[0] + 1,
                     node_.start_point[0] + 1,
-                    node_.start_point[1] + 1,
                     None,
                 )
                 for marker_ in markers:

@@ -1,5 +1,5 @@
 """
-Link Health checker
+Link Health checker.
 
 Known issues:
 

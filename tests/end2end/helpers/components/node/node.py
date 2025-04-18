@@ -30,7 +30,8 @@ class Node:  # pylint: disable=invalid-name
         return Node(test_case=test_case, node_xpath=xpath)
 
     def assert_node_is_editable(self) -> None:
-        """It makes sense for section & requirements nodes.
+        """
+        It makes sense for section & requirements nodes.
         Should have the attribute and the menu button (may be invisible).
 
         The root node has its own method from DocumentRoot(Node):
@@ -50,7 +51,8 @@ class Node:  # pylint: disable=invalid-name
         )
 
     def assert_node_is_not_editable(self) -> None:
-        """It makes sense for section & requirements nodes (due to 'testid').
+        """
+        It makes sense for section & requirements nodes (due to 'testid').
         Should not have the menu button (might be invisible).
         """
         self.test_case.assert_element_not_present(
@@ -59,7 +61,8 @@ class Node:  # pylint: disable=invalid-name
         )
 
     def assert_node_is_deletable(self) -> None:
-        """It makes sense for section & requirements nodes.
+        """
+        It makes sense for section & requirements nodes.
         Should have the menu delete button (may be invisible).
         """
         self.test_case.assert_element_present(
@@ -68,7 +71,8 @@ class Node:  # pylint: disable=invalid-name
         )
 
     def assert_node_is_not_deletable(self) -> None:
-        """It makes sense for all nodes.
+        """
+        It makes sense for all nodes.
         Should not have the menu delete button (may be invisible).
         """
         self.test_case.assert_element_not_present(
@@ -77,7 +81,8 @@ class Node:  # pylint: disable=invalid-name
         )
 
     def assert_node_has_menu(self) -> None:
-        """It makes sense for all nodes.
+        """
+        It makes sense for all nodes.
         Should have the menu add button (may be invisible).
         """
         self.test_case.assert_element_present(
@@ -86,7 +91,8 @@ class Node:  # pylint: disable=invalid-name
         )
 
     def assert_node_has_not_menu(self) -> None:
-        """It makes sense for all nodes.
+        """
+        It makes sense for all nodes.
         Should not have the menu add button (may be invisible).
         """
         self.test_case.assert_element_not_present(
@@ -103,7 +109,8 @@ class Node:  # pylint: disable=invalid-name
     # Node delete
 
     def _get_node_delete_confirm(self) -> Confirm:
-        """Need to be confirmed. For full confirmed action, use do_delete_node.
+        """
+        Need to be confirmed. For full confirmed action, use do_delete_node.
 
         Returns:
             Confirm.
@@ -167,14 +174,17 @@ class Node:  # pylint: disable=invalid-name
         self._do_node_edit()
         return Form_EditIncludedDocument(self.test_case)
 
-    # title string pattern
-
+    #
+    # Title string pattern.
+    #
     def create_node_title_string(
         self,
         node_title: str,
         node_level: str = "",
     ) -> str:
-        """title pattern: "1.2.3.&nbsp:Title".
+        """
+        Title pattern: "1.2.3.&nbsp:Title".
+
         To check in numbered nodes: sections and requirements.
 
         Args:

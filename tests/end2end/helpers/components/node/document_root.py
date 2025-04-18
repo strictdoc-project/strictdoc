@@ -20,9 +20,12 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
         )
 
     def assert_root_node_is_editable(self) -> None:
-        """For the root node.
+        """
+        For the root node.
+
         Should have the attribute and the menu button (may be invisible).
         """
+
         # should have the attribute
         self.test_case.assert_attribute(
             f"{self.node_xpath}",
@@ -30,14 +33,16 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
             "on",
             by=By.XPATH,
         )
+
         # should have the menu button (may be invisible)
         self.test_case.assert_element_present(
             f"{self.node_xpath}//*[@data-testid='document-edit-config-action']",
             by=By.XPATH,
         )
 
-    # Assert fields content: named methods
-
+    #
+    # Assert fields content: named methods.
+    #
     def assert_document_title_contains(self, text: str) -> None:
         assert isinstance(text, str)
         self.test_case.assert_element(

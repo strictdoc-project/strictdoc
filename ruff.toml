@@ -14,7 +14,8 @@ select = [
   # Not clear if this check is useful. Too many commas everywhere.
   # "COM",
 
-  # "D",
+  "D",
+
   # "DTZ",
   # "E",
   "EXE",
@@ -54,7 +55,61 @@ ignore = [
     # X is too complex
     "C901",
 
-    "E501",  # (line length violations).
+    # FIXME: Would be great to enable these at some point.
+    # Missing docstring in public module
+    "D100",
+    # Missing docstring in public class
+    "D101",
+    # Missing docstring in public method
+    "D102",
+    # Missing docstring in public function
+    "D103",
+    # Missing docstring in public package
+    "D104",
+    # Missing docstring in magic method
+    "D105",
+    # Missing docstring in public nested class
+    "D106",
+    # Missing docstring in `__init__`
+    "D107",
+
+    # One-line docstring should fit on one line
+    "D200",
+
+    # No blank lines allowed after function docstring (found {num_lines})
+    "D202",
+
+    # 1 blank line required before class docstring
+    "D203",
+
+    # FIXME: 1 blank line required between summary line and description
+    "D205",
+
+    # Multi-line docstring summary should start at the first line
+    "D212",
+
+    # FIXME: This is nice to enable but some test fixtures will need to be fixed.
+    # First line should end with a period
+    "D400",
+
+    # FIXME: First line of docstring should be in imperative mood: "Some text."
+    "D401",
+
+    # FIXME: Enable at some point: First word of the docstring should not be "This"
+    "D404",
+
+    # No blank lines allowed between a section header and its content
+    "D412",
+
+    # Missing blank line after last section ("Examples")
+    "D413",
+
+    # FIXME: This is nice to enable but some test fixtures will need to be fixed.
+    # First line should end with a period, question mark, or exclamation point
+    "D415",
+
+    # Line length violations. This is handled by Ruff format.
+    "E501",
 
     # A warning by ruff format:
     # warning: The following rules may cause conflicts when used with the formatter: `ISC001`.
@@ -75,7 +130,7 @@ ignore = [
     # Too many statements
     "PLR0915",
 
-    # TBD: Enable: Use `sys.exit()` instead of `exit`
+    # FIXME: Enable: Use `sys.exit()` instead of `exit`
     "PLR1722",
 
     # Magic value used in comparison

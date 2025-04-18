@@ -48,11 +48,14 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    # requirement style
-
+    #
+    # Requirement style.
+    #
     def assert_requirement_style_simple(self) -> None:
-        """Make sure that the normal (not table-based) requirement
-        is rendered."""
+        """
+        Make sure that the normal (not table-based) requirement
+        is rendered.
+        """
         self.test_case.assert_element(
             f"{self.node_xpath}"
             '//sdoc-requirement[@data-testid="requirement-style-simple"]',

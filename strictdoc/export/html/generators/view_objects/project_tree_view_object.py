@@ -1,5 +1,6 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
 from dataclasses import dataclass
+
+from markupsafe import Markup
 
 from strictdoc import __version__
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
@@ -40,18 +41,23 @@ class ProjectTreeViewObject:
             traceability_index.contains_included_documents
         )
 
-    def render_screen(self, jinja_environment: JinjaEnvironment):
+    def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
             "screens/project_index/index.jinja", view_object=self
         )
 
-    def render_static_url(self, url: str):
+    def render_map(self, jinja_environment: JinjaEnvironment) -> Markup:
+        return jinja_environment.render_template_as_markup(
+            "screens/project_index/project_map.jinja.js", view_object=self
+        )
+
+    def render_static_url(self, url: str) -> str:
         return self.link_renderer.render_static_url(url)
 
-    def render_url(self, url: str):
+    def render_url(self, url: str) -> str:
         return self.link_renderer.render_url(url)
 
-    def render_static_url_with_prefix(self, url: str):
+    def render_static_url_with_prefix(self, url: str) -> str:
         return self.link_renderer.render_static_url_with_prefix(url)
 
     def is_empty_tree(self) -> bool:

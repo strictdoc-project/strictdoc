@@ -5,6 +5,11 @@
   <meta charset="UTF-8"/>
   <meta name="keywords" content="strictdoc, documentation, documentation-tool, requirements-management, requirements, documentation-generator, requirement-specifications, requirements-engineering, technical-documentation, requirements-specification"/>
   <meta name="description" content="strictdoc. Software for technical documentation and requirements management."/>
+  {%- if view_object.project_config.is_running_on_server %}
+  <meta name="strictdoc-export-type" content="webserver">
+  {%- else -%}
+  <meta name="strictdoc-export-type" content="static">
+  {%- endif -%}
 
   <link rel="shortcut icon" href="{{ view_object.render_static_url('favicon.ico') }}" type="image/x-icon"/>
 

@@ -1,0 +1,57 @@
+[DOCUMENT]
+TITLE: Stable URI Test with custom grammar
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[FEATURE]
+UID: ROOT-1
+TITLE: Custom Grammar Node in root
+STATEMENT: lorem ipsum
+
+[SECTION]
+TITLE: Section without UID containing a Custom Grammar Node
+
+[FEATURE]
+UID: FEATURE-WITHIN-SECTION-THAT-HAS-NO-UID
+TITLE: Custom Grammar Node within a Section
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-1
+TITLE: Section that has an UID
+
+[TEXT]
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-2
+TITLE: Section with UID containing a Custom Grammar Node
+
+[FEATURE]
+UID: FEATURE-WITHIN-SECTION-2
+TITLE: Custom Grammar Node within a Section that has a UID
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+UID: SECTION-3
+TITLE: Nested Sections Test
+
+[SECTION]
+UID: SECTION-3-1
+TITLE: Subsection for the nexted section test
+
+[FEATURE]
+UID: FEATURE-WITHIN-SECTION-3-1
+TITLE: Custom Grammar Node within a nested Section
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[/SECTION]

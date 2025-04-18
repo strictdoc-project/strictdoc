@@ -1,0 +1,53 @@
+# This test ensures that:
+# - The project_map.js correctly generates the UID lookups.
+# - The URLs generated on the button (chain icon) that generates stable links
+#   are produced correctly .
+
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Stable URI Test
+
+RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Stable URI Test
+CHECK-HTML: index.sdoc
+
+RUN: %cat %S/Output/html/_static/project_map.js | filecheck %s --dump-input=fail --check-prefix CHECK-MAP
+CHECK-MAP: "01_basic/subfolder/file_in_subfolder.html": [
+CHECK-MAP: "UID":"SUB-DOC-UID"
+CHECK-MAP: "UID":"SUB-ROOT-1"
+CHECK-MAP: "UID":"SUB-REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
+CHECK-MAP: "UID":"SUB-SECTION-1"
+CHECK-MAP: "UID":"SUB-SECTION-2"
+CHECK-MAP: "UID":"SUB-REQ-WITHIN-SECTION-2"
+CHECK-MAP: "UID":"SUB-SECTION-3"
+CHECK-MAP: "UID":"SUB-SECTION-3-1"
+CHECK-MAP: "UID":"SUB-REQ-WITHIN-SECTION-3-1"
+CHECK-MAP: "01_basic/index.html": [
+CHECK-MAP: "UID":"DOC-UID"
+CHECK-MAP: "UID":"ROOT-1"
+CHECK-MAP: "UID":"REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
+CHECK-MAP: "UID":"SECTION-1"
+CHECK-MAP: "UID":"SECTION-2"
+CHECK-MAP: "UID":"REQ-WITHIN-SECTION-2"
+CHECK-MAP: "UID":"SECTION-3"
+CHECK-MAP: "UID":"SECTION-3-1"
+CHECK-MAP: "UID":"REQ-WITHIN-SECTION-3-1"
+
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-BUTTON
+CHECK-BUTTON: data-path="../#ROOT-1"
+CHECK-BUTTON: data-path="../#REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
+CHECK-BUTTON: data-path="../#SECTION-1"
+CHECK-BUTTON: data-path="../#SECTION-2"
+CHECK-BUTTON: data-path="../#REQ-WITHIN-SECTION-2"
+CHECK-BUTTON: data-path="../#SECTION-3"
+CHECK-BUTTON: data-path="../#SECTION-3-1"
+CHECK-BUTTON: data-path="../#REQ-WITHIN-SECTION-3-1"
+
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/subfolder/file_in_subfolder.html | filecheck %s --dump-input=fail --check-prefix CHECK-SUB-BUTTON
+CHECK-SUB-BUTTON: data-path="../../#SUB-ROOT-1"
+CHECK-SUB-BUTTON: data-path="../../#SUB-REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
+CHECK-SUB-BUTTON: data-path="../../#SUB-SECTION-1"
+CHECK-SUB-BUTTON: data-path="../../#SUB-SECTION-2"
+CHECK-SUB-BUTTON: data-path="../../#SUB-REQ-WITHIN-SECTION-2"
+CHECK-SUB-BUTTON: data-path="../../#SUB-SECTION-3"
+CHECK-SUB-BUTTON: data-path="../../#SUB-SECTION-3-1"
+CHECK-SUB-BUTTON: data-path="../../#SUB-REQ-WITHIN-SECTION-3-1"

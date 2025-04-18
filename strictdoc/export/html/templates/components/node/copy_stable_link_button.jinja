@@ -1,16 +1,12 @@
 {#
-  Requires: copy_stable_link_observer.js (uses MutationObserver).
-
-  To return to using Stimulus:
-  use copy_stable_link_button_controller.js in index.jinja
-  and uncomment [data-controller] below.
+  Requires: copy_stable_link_button_controller.js in index.jinja
 #}
 {%- if path is defined -%}
   <div
     data-controller="copy_stable_link_button"
     data-path="{{ path }}"
     class="copy_stable_link-button"
-    title="Click to copy stable link to the node"
+    title="Click to copy a stable node link to the clipboard"
   >
     <span style="display: contents;" class="copy_to_clipboard-copy_icon">
       {% include "_res/svg_ico16_link.jinja" %}

@@ -1,0 +1,57 @@
+[DOCUMENT]
+TITLE: File In Subfolder
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[FEATURE]
+UID: SUB-ROOT-1
+TITLE: Custom Grammar Node in root
+STATEMENT: lorem ipsum
+
+[SECTION]
+TITLE: Section without UID containing a requirement
+
+[FEATURE]
+UID: SUB-FEATURE-WITHIN-SECTION-THAT-HAS-NO-UID
+TITLE: Custom Grammar Node within a Section
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+UID: SUB-SECTION-1
+TITLE: Section that has an UID
+
+[TEXT]
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+UID: SUB-SECTION-2
+TITLE: Section with UID containing a requirement
+
+[FEATURE]
+UID: SUB-FEATURE-WITHIN-SECTION-2
+TITLE: Custom Grammar Node within a Section that has a UID
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[SECTION]
+UID: SUB-SECTION-3
+TITLE: Nested Sections Test
+
+[SECTION]
+UID: SUB-SECTION-3-1
+TITLE: Subsection for the nexted section test
+
+[FEATURE]
+UID: SUB-FEATURE-WITHIN-SECTION-3-1
+TITLE: Custom Grammar Node within a nested Section
+STATEMENT: lorem ipsum
+
+[/SECTION]
+
+[/SECTION]

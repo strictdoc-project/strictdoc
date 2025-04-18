@@ -40,26 +40,15 @@
 
     {% if view_object.should_display_stable_link(sdoc_entity) %}
       {% with path = view_object.get_stable_link(sdoc_entity) %}
-        {# FIXME: Uncomment together with resolving https://github.com/strictdoc-project/strictdoc/pull/2143 #}
-        {# {% include "components/node/copy_stable_link_button.jinja" %} #}
+        {% include "components/node/copy_stable_link_button.jinja" %}
       {% endwith %}
     {%- endif -%}
-
-    {# TODO #fragment #}
-    {# TEMP #}
-    {# {% if is_included %}
-      <div style="color:green">My home doc is <b>"{{ sdoc_entity.document.title }}"</b>.</div>
-      <div style="color:blue">My including doc is <b>"{{ sdoc_entity.parent_or_including_document.title }}"</b>.</div>
-    {% else %}
-      <div style="color:rgb(255, 200, 0)">I'm just a simple node!</div>
-    {% endif %} #}
-    {# // TEMP #}
 
     {# anchor #}
     {% include "components/anchor/index.jinja" %}
 
     {#
-      copy_to_clipboard must be defined befor sdoc_entity block,
+      copy_to_clipboard must be defined before sdoc_entity block,
       and define them in node components that have editing options:
       node & root
     #}

@@ -1,0 +1,7 @@
+{%- set document = view_object.traceability_index.document_tree.get_document_by_path(file.get_full_path()) %}
+{%- if not document.document_is_included() %}
+ "{{ document.meta.get_html_doc_link() }}": [
+{% with section = document -%}
+  {%- include "screens/project_index/project_map_section.jinja" %}  
+{%- endwith %} ],
+{%- endif -%}

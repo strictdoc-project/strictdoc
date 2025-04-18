@@ -2131,6 +2131,34 @@ StrictDoc does not detect .sdoc files in the output folder. This is based on the
 <<<
 
 [SECTION]
+MID: dcc6a2bc11424cf2b114b25a7f65530d
+UID: SECTION-UG-Inbound-Links
+TITLE: Inbound Links
+
+[TEXT]
+MID: 742831d32ca54791b53c1dbbbd070b55
+STATEMENT: >>>
+To enable integration of StrictDoc with external tools such as bug trackers, project management systems, or wikis, StrictDoc supports stable inbound links to any node that has a ``UID``.
+
+To create a stable link, click the "Copy Stable Link" button located in the top-left corner of a requirement or section block:
+
+.. image:: _assets/Feature_Copy_Stable_Link.png
+   :alt: copy a stable link
+   :class: image
+   :width: 400
+
+The stable links have the form of a URL pointing to the project's main index page, followed by the UID (or MID) as an anchor. For example:
+
+``http://your-strictdoc-site/#SDOC_UG_HELLO_WORLD``
+
+``http://your-strictdoc-site/#742831d32ca54791b53c1dbbbd070b55``
+
+When such a link is opened, StrictDoc automatically resolves the UID (or MID) and forwards the user to the appropriate page and position within the project. This allows requirements to be moved between sections or files without breaking external references.
+<<<
+
+[/SECTION]
+
+[SECTION]
 MID: 1b41e7c036cf4e3282fa3d4e687bf95d
 TITLE: Standalone HTML pages
 

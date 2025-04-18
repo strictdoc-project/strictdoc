@@ -1,10 +1,12 @@
 class Foo:
     """@relation(REQ-001, scope=class, role=Implementation)"""
+
     pass
 
 
 def foo():
     """@relation(REQ-001, scope=function, role=Implementation)"""
+
     pass
 
 

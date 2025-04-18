@@ -35,7 +35,7 @@ class ExcelSheetProxy:
 
     @property
     def name(self) -> str:
-        """returns the name of the first sheet"""
+        """Returns the name of the first sheet"""
         if self.lib == ExcelLibType.OPENPYXL:
             return str(self.sheet.title)
         elif self.lib == ExcelLibType.XLRD:
@@ -44,7 +44,7 @@ class ExcelSheetProxy:
 
     @property
     def ncols(self) -> int:
-        """the number of columns"""
+        """The number of columns"""
         ncols: int = 0
         if self.lib == ExcelLibType.OPENPYXL:
             ncols = self.sheet.max_column
@@ -54,7 +54,7 @@ class ExcelSheetProxy:
 
     @property
     def nrows(self) -> int:
-        """the number of rows"""
+        """The number of rows"""
         nrows: int = 0
         if self.lib == ExcelLibType.OPENPYXL:
             nrows = self.sheet.max_row
@@ -63,7 +63,7 @@ class ExcelSheetProxy:
         return nrows
 
     def get_cell_value(self, row: int, col: int) -> str:
-        """returns the value at row/col as string"""
+        """Returns the value at row/col as string"""
         cell_value: str = ""
         if self.lib == ExcelLibType.OPENPYXL:
             cell_value = (
@@ -74,7 +74,7 @@ class ExcelSheetProxy:
         return cell_value
 
     def row_values(self, row: int) -> List[str]:
-        """returns a full row as list"""
+        """Returns a full row as list"""
         row_values: List[str] = []
         if self.lib == ExcelLibType.OPENPYXL:
             row_values = [(cell.value or "") for cell in self.sheet[row + 1]]

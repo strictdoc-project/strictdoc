@@ -88,13 +88,16 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
         return self.get_node(node_order)
 
     def get_node(self, node_order: int = 1) -> Requirement:
-        """Based on "//sdoc-node[@data-testid='node-requirement']" """
+        """
+        Based on "//sdoc-node[@data-testid='node-requirement']"
+        """
         requirement = Requirement.with_node(self.test_case, node_order)
         requirement.assert_is_requirement()
         return requirement
 
     def get_requirement_modal(self, node_order: int = -1) -> Requirement:
-        """Based on "//sdoc-requirement". Searches for an <sdoc-requirement>
+        """
+        Based on "//sdoc-requirement". Searches for an <sdoc-requirement>
         without taking the node <sdoc-node> into account.
 
         Args:
@@ -110,7 +113,9 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
         requirement.assert_is_requirement()
         return requirement
 
+    #
     # TOC
+    #
     def get_toc(self) -> TOC:
         TOC(self.test_case).assert_is_toc()
         return TOC(self.test_case)
@@ -121,7 +126,9 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
     def assert_toc_contains_not(self, string: str) -> None:
         TOC(self.test_case).assert_toc_contains_not(string)
 
+    #
     # CollapsibleList
+    #
     def get_collapsible_list(self) -> CollapsibleList:
         CollapsibleList(self.test_case).assert_is_collapsible()
         return CollapsibleList(self.test_case)

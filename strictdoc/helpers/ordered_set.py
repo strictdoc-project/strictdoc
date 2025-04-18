@@ -6,7 +6,8 @@ T = t.TypeVar("T")
 
 
 class OrderedSet(t.MutableSet[T]):
-    """A set that preserves insertion order by internally using a dict.
+    """
+    A set that preserves insertion order by internally using a dict.
 
     >>> OrderedSet([1, 2, "foo"])
 

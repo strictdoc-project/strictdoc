@@ -356,6 +356,13 @@ class DocumentScreenViewObject:
     def get_stable_link(
         self, node: Union[SDocDocument, SDocSection, SDocNode]
     ) -> str:
+        """
+        An example of a link produced: ../../#SDOC_UG_CONTACT
+        The copy_stable_link_button_controller.js consumes this link and
+        transforms it into a link like:
+        http://127.0.0.1:5111/#SDOC_UG_CONTACT
+        """
+
         assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
         base_url = self.link_renderer.render_url("")
         if node.reserved_uid is not None:

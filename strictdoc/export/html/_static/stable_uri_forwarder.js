@@ -1,12 +1,12 @@
 // stable_uri_forwarder.js
 //
-// this script is included from the project's index.html page (in static html export)
+// This script is included from the project's index.html page (in static HTML export)
 // It checks for a known MID or UID in the #anchor, and then
 // redirects to the referenced section or node within the project.
 // 
 // Example: 
-//  http://strictdoc.company.com/#SDOC_UG will redirect to 
-//  http://strictdoc.company.com/strictdoc/docs/strictdoc_01_user_guide.html#SDOC_UG 
+//   http://strictdoc.company.com/#SDOC_UG will redirect to
+//   http://strictdoc.company.com/strictdoc/docs/strictdoc_01_user_guide.html#SDOC_UG
 //
 // Thanks to this mechanism, it becomes possible to export stable links to
 // nodes/requirements/sections for integration with external tools.
@@ -14,7 +14,7 @@
 // within the project.
 
 
-// resolve the MID / UID to the correct page / anchor using the projectMap
+// Resolve the MID / UID to the correct page / anchor using the projectMap.
 function resolveStableUriRedirectUsingProjectMap(anchor) {
     const anchorIsMID = /^[a-fA-F0-9]{32}$/.test(anchor);
     for (const [page, nodes] of Object.entries(projectMap)) {
@@ -31,10 +31,10 @@ function resolveStableUriRedirectUsingProjectMap(anchor) {
     }
 }
 
-// dynamically load the projectMap an resolve MID / UID
+// Dynamically load the projectMap an resolve MID / UID.
 function loadProjectMapAndResolveStableUriRedirect(anchor) {
     
-    // projectMap is loaded, no need to load it again
+    // ProjectMap is loaded, no need to load it again.
     if (typeof projectMap !== 'undefined') {
         resolveStableUriRedirectUsingProjectMap(anchor);
         return;
@@ -58,17 +58,17 @@ function processStableUriRedirect(anchor)
 {
     const exportType = document.querySelector('meta[name="strictdoc-export-type"]')?.content;
 
-    if (exportType === 'devserver') {
-        // for the devserver, we let the main_router.py dynamically forward UID to node 
+    if (exportType === 'webserver') {
+        // For the web server, we let the main_router.py dynamically forward UID to node.
         window.location.replace("/UID/" + anchor);
     } else if (exportType === 'static') {
-        // for static exports, we use the project_map.js
+        // For static exports, we use the project_map.js.
         loadProjectMapAndResolveStableUriRedirect(anchor)
     }
 }
 
 
-// in case an anchor is present at content load time
+// In case an anchor is present at content load time.
 document.addEventListener("DOMContentLoaded", () => {
     const anchor = window.location.hash.substring(1);
     if (anchor) {
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// in case an anchor is added manually afterwards (eases testing)
+// In case an anchor is added manually afterwards (eases testing).
 window.addEventListener("hashchange", () => {
     const anchor = window.location.hash.substring(1);
     if (anchor) {

@@ -42,7 +42,7 @@ class SDocTestHTMLExporter:
         )
         self.exit_stack = ExitStack()
 
-    def __enter__(self) -> None:
+    def __enter__(self) -> "SDocTestHTMLExporter":
         self.run()
         return self
 

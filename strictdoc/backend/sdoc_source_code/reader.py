@@ -205,10 +205,6 @@ def line_marker_processor(line_marker: LineMarker, parse_context: ParseContext):
 def function_range_marker_processor(
     function_range_marker: FunctionRangeMarker, parse_context: ParseContext
 ):
-    location = get_location(function_range_marker)
-    line = location["line"]
-    column = location["col"]
-
     if (
         len(parse_context.marker_stack) > 0
         and parse_context.marker_stack[-1].ng_is_nodoc
@@ -222,8 +218,6 @@ def function_range_marker_processor(
     function_range_marker.ng_range_line_end = (
         parse_context.file_stats.lines_total
     )
-    function_range_marker.ng_marker_line = line
-    function_range_marker.ng_marker_column = column
 
     for req in function_range_marker.reqs:
         markers = parse_context.map_reqs_to_markers.setdefault(req, [])

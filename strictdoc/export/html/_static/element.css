@@ -1225,6 +1225,7 @@ a.tree_item,
   padding-left: calc(var(--base-rhythm) * 2);
   font-size: var(--font-size-sm);
   line-height: 1.2;
+  padding-bottom: var(--base-gap);
 }
 
 .toc li {

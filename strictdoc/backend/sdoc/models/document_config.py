@@ -95,6 +95,8 @@ class DocumentConfig:
             "Simple",
         ):
             return "simple"
+        if self.requirement_style == "Narrative":
+            return "narrative"
         if self.requirement_style == "Table":
             return "table"
         if self.requirement_style == "Zebra":

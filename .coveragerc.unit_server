@@ -1,0 +1,10 @@
+[run]
+branch = True
+omit =
+    build/
+
+[report]
+fail_under = 60.0
+precision = 2
+skip_covered = true
+show_missing = true

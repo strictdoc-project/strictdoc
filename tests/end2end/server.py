@@ -9,13 +9,15 @@ https://stackoverflow.com/a/68564737/598057
 import datetime
 import os
 import shutil
+import signal
 import socket
 import subprocess
+import sys
 from contextlib import ExitStack, closing
 from queue import Empty, Queue
 from threading import Thread
 from time import sleep
-from typing import List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import psutil
 from psutil import NoSuchProcess
@@ -144,25 +146,7 @@ class SDocTestServer:
             raise reason_exception from None
 
     def run(self):
-        args = [
-            "python",
-            "strictdoc/cli/main.py",
-            "server",
-            "--no-reload",
-            "--port",
-            str(self.server_port),
-            self.path_to_tdoc_folder,
-        ]
-        if self.config_path:
-            args.extend(["--config", self.config_path])
-        if self.output_path is not None:
-            args.extend(
-                [
-                    "--output-path",
-                    self.output_path,
-                ]
-            )
-
+        strictdoc_args, strictdoc_env = self._get_strictdoc_command()
         self.log_file_out = open(  # pylint: disable=consider-using-with
             self.path_to_out_log, "wb"
         )
@@ -173,10 +157,11 @@ class SDocTestServer:
         self.exit_stack.enter_context(self.log_file_err)
 
         process = subprocess.Popen(  # pylint: disable=consider-using-with
-            args,
+            strictdoc_args,
             stdout=self.log_file_out.fileno(),
             stderr=subprocess.PIPE,
             shell=False,
+            env=strictdoc_env,
         )
         self.process = process
 
@@ -258,10 +243,25 @@ class SDocTestServer:
             "stopping server and worker processes: "
             f"{parent.pid} -> {child_processes_ids}"
         )
+
+        #
+        # Sending SIGTERM to StrictDoc's FastAPI which subscribes to SIGTERM to
+        # save the current code coverage when the process is being terminated.
+        #
+        self.process.send_signal(signal.SIGTERM)
+        self.process.wait(timeout=1)
         self.process.terminate()
+
         for process in child_processes:
             if process.is_running():
-                process.terminate()
+                process.send_signal(signal.SIGTERM)
+
+        for process in child_processes:
+            try:
+                if process.is_running():
+                    process.terminate()
+            except psutil.NoSuchProcess:
+                continue
 
         start_time = datetime.datetime.now()
         while True:
@@ -282,6 +282,60 @@ class SDocTestServer:
 
     def get_host_and_port(self):
         return f"http://localhost:{self.server_port}"
+
+    def _get_strictdoc_command(self) -> Tuple[List[str], Dict[str, str]]:
+        should_collect_coverage = test_environment.coverage
+        strictdoc_args = [
+            sys.executable,
+        ]
+        if should_collect_coverage:
+            strictdoc_args.extend(
+                [
+                    "-m",
+                    "coverage",
+                    "run",
+                    "--append",
+                    "--rcfile=.coveragerc.end2end",
+                    f"--data-file={os.getcwd()}/build/coverage/end2end_strictdoc/.coverage",
+                ]
+            )
+
+        strictdoc_args.extend(
+            [
+                "strictdoc/cli/main.py",
+                "server",
+                "--no-reload",
+                "--port",
+                str(self.server_port),
+                self.path_to_tdoc_folder,
+            ]
+        )
+
+        if self.config_path:
+            strictdoc_args.extend(["--config", self.config_path])
+        if self.output_path is not None:
+            strictdoc_args.extend(
+                [
+                    "--output-path",
+                    self.output_path,
+                ]
+            )
+
+        # It is important that the current environment is passed along with the
+        # server command, otherwise the Python packages will not be discovered.
+        strictdoc_env: Dict[str, str] = dict(os.environ)
+
+        if should_collect_coverage:
+            strictdoc_env.update(
+                {
+                    # This is not used by coverage itself but StrictDoc uses it as
+                    # a condition to activate the exit hooks for preserving coverage.
+                    # See strictdoc/server/app.py#register_code_coverage_hook().
+                    "COVERAGE_PROCESS_START": ".coveragerc.end2end",
+                }
+            )
+
+        return strictdoc_args, strictdoc_env
 
     @staticmethod
     def _get_test_server_port() -> int:

@@ -1,13 +1,15 @@
-# mypy: disable-error-code="no-untyped-def"
 import os
 import sys
 import time
+from typing import Awaitable, Callable
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
+from starlette.responses import Response
 
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.helpers.coverage import register_code_coverage_hook
 from strictdoc.helpers.pickle import pickle_load
 from strictdoc.server.config import SDocServerEnvVariable
 from strictdoc.server.routers.main_router import create_main_router
@@ -20,7 +22,7 @@ else:
     O_TEMPORARY = 0
 
 
-def create_app(*, project_config: ProjectConfig):
+def create_app(*, project_config: ProjectConfig) -> FastAPI:
     app = FastAPI()
 
     origins = [
@@ -32,10 +34,10 @@ def create_app(*, project_config: ProjectConfig):
     # Uncomment this to enable performance measurements.
     @app.middleware("http")
     async def add_process_time_header(  # pylint: disable=unused-variable
-        request: Request, call_next
-    ):
+        request: Request, call_next: Callable[[Request], Awaitable[Response]]
+    ) -> Response:
         start_time = time.time()
-        response = await call_next(request)
+        response: Response = await call_next(request)
         time_passed = round(time.time() - start_time, 3)
 
         request_path = request.url.path
@@ -61,11 +63,13 @@ def create_app(*, project_config: ProjectConfig):
     return app
 
 
-def strictdoc_production_app():
+def strictdoc_production_app() -> FastAPI:
+    register_code_coverage_hook()
+
     # This is a work-around to allow opening a file created with
     # NamedTemporaryFile on Windows.
     # See https://stackoverflow.com/a/15235559
-    def temp_opener(name, flag, mode=0o777):
+    def temp_opener(name: str, flag: int, mode: int = 0o777) -> int:
         try:
             flag |= O_TEMPORARY
         except AttributeError:

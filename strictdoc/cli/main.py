@@ -33,12 +33,15 @@ from strictdoc.commands.version_command import VersionCommand
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.actions.import_action import ImportAction
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
+from strictdoc.helpers.coverage import register_code_coverage_hook
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.server.server import run_strictdoc_server
 
 
 def _main(parallelizer: Parallelizer) -> None:
+    register_code_coverage_hook()
+
     parser = create_sdoc_args_parser()
 
     project_config: ProjectConfig

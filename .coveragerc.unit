@@ -1,8 +1,7 @@
-# .coveragerc to control coverage.py
 [run]
 branch = True
 omit =
-    */.venv/*
+    build/
 
 [report]
 fail_under = 60.0

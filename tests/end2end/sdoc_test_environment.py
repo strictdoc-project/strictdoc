@@ -15,6 +15,7 @@ class SDocTestEnvironment:
         warm_up_interval_seconds: int,
         download_file_timeout_seconds: int,
         server_term_timeout_seconds: int,
+        coverage: bool,
     ):
         self.is_parallel_execution = is_parallel_execution
         self.wait_timeout_seconds: int = wait_timeout_seconds
@@ -26,6 +27,7 @@ class SDocTestEnvironment:
         self.download_file_timeout_seconds: int = download_file_timeout_seconds
 
         self.server_term_timeout: int = server_term_timeout_seconds
+        self.coverage: bool = coverage
 
     @staticmethod
     def create_default():
@@ -36,6 +38,7 @@ class SDocTestEnvironment:
             warm_up_interval_seconds=WARMUP_INTERVAL,
             download_file_timeout_seconds=DOWNLOAD_FILE_TIMEOUT,
             server_term_timeout_seconds=SERVER_TERM_TIMEOUT,
+            coverage=False,
         )
 
     def switch_to_long_timeouts(self):

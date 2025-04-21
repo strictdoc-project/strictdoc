@@ -120,6 +120,10 @@ body {
 
 * { box-sizing: border-box; }
 
+sdoc-scope {
+  display: contents;
+}
+
 /* scrollbar */
 
 * {

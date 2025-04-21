@@ -56,7 +56,7 @@ MID: 2ba0c8fa79604b708927ffed2ef94664
 STATEMENT: >>>
 Talks:
 
-- `Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project <https://mirrors.dotsrc.org/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_. This presentation introduces the SPDX Safety Profile and details its application within the context of the Zephyr Project. There is also a presentation of the Zephyr project's methodology for capturing requirements using StrictDoc and a discussion of the upcoming plans for the integration of SPDX into StrictDoc.
+- `Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project <https://ftp.fau.de/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_. This presentation introduces the SPDX Safety Profile and details its application within the context of the Zephyr Project. There is also a presentation of the Zephyr project's methodology for capturing requirements using StrictDoc and a discussion of the upcoming plans for the integration of SPDX into StrictDoc.
 
 Blog posts:
 

@@ -21,12 +21,18 @@
   {% set title_number = true %}
   {% set truncated_statement = false %}
   {% include "components/node_field/title/index.jinja" %}
+  <sdoc-scope class="requirement_fields_group-secondary">
   {% include "components/node_field/meta/index.jinja" %}
+  </sdoc-scope>
+  <sdoc-scope class="requirement_fields_group-primary">
   {% include "components/node_field/statement/index.jinja" %}
   {% include "components/node_field/rationale/index.jinja" %}
   {% include "components/node_field/comments/index.jinja" %}
   {% include "components/node_field/multiline/index.jinja" %}
+  </sdoc-scope>
+  <sdoc-scope class="requirement_fields_group-secondary">
   {% include "components/node_field/links/index.jinja" %}
   {% include "components/node_field/files/index.jinja" %}
+  </sdoc-scope>
 
 </sdoc-requirement>

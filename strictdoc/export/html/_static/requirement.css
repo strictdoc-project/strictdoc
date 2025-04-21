@@ -241,6 +241,92 @@ sdoc-requirement-field-label {
   padding-bottom: 0;
 }
 
+/* requirement-view="narrative" */
+
+sdoc-requirement[requirement-view="narrative"] {
+  display: flex;
+  flex-direction: column;
+  background: none;
+  background-color: transparent;
+  border: none;
+}
+
+[requirement-view="narrative"] sdoc-requirement-title {
+  border: none;
+  outline: none;
+  background: none;
+  background-color: transparent;
+  padding: 0;
+  margin-bottom: var(--base-padding);
+  grid-column: 1 / -1;
+}
+
+[requirement-view="narrative"] sdoc-requirement-field {
+  padding: 0;
+}
+
+[requirement-view="narrative"] sdoc-requirement-field[data-field-type="singleline"] {
+  /* to make it a single FLEX line */
+  display: flex;
+  font-size: var(--font-size-sm);
+  line-height: calc(var(--font-size-sm) * 1.5);
+}
+
+[requirement-view="narrative"] sdoc-requirement-field-label {
+  /* show them as pseudo-elements: sdoc-requirement-field::before */
+  display: none;
+}
+
+[requirement-view="narrative"] sdoc-requirement-field::before {
+  flex-grow: 1;
+  content: attr(data-field-label) ':';
+  font-family: var(--code-font-family);
+  font-weight: 500;
+  font-size: var(--font-size-xsm);
+  line-height: inherit;
+  text-transform: uppercase;
+  font-variant: small-caps;
+  color: var(--requirement-label-color);
+  word-break: normal;
+  display: flex;
+  padding-right: var(--base-rhythm);
+  /*
+    affects field 'pseudo' labels in all fields;
+    make them lighter:
+  */
+  opacity: 0.8;
+}
+
+[requirement-view="narrative"] .requirement_fields_group-secondary sdoc-requirement-field > * {
+  /*
+    affects field content in the secondary scope only;
+    make them lighter:
+  */
+  opacity: 0.6;
+}
+
+[requirement-view="narrative"] .requirement__parent-uid,
+[requirement-view="narrative"] .requirement__child-uid {
+  /*
+    affects UID in links;
+    make them lighter:
+  */
+  font-weight: normal;
+}
+
+[requirement-view="narrative"] .requirement_fields_group-primary {
+  display: block;
+  order: 99; /* to push to the end */
+  margin-top: var(--base-rhythm);
+  border-top: var(--base-border);
+  padding-top: var(--base-padding);
+}
+
+[requirement-view="narrative"] .requirement_fields_group-primary sdoc-requirement-field {
+  margin-bottom: var(--base-padding);
+  color: var(--color-fg-contrast);
+}
+
 /* section */
 
 sdoc-section,

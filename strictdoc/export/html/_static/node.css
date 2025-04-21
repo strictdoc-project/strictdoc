@@ -12,14 +12,11 @@ sdoc-node[show-node-type-name] sdoc-requirement {
 }
 
 sdoc-node[show-node-type-name]::before {
-  /* content: '[' attr(show-node-type-name) ']'; */
   content: attr(show-node-type-name);
   position: absolute;
   top: calc(2 * var(--base-rhythm));
   right: calc(4 * var(--base-rhythm));
-  z-index: -1;
 
-  /* font-size: var(--font-size-xxsm); */
   font-size: 10px;
   font-family: var(--code-font-family);
   font-weight: 600;
@@ -31,11 +28,14 @@ sdoc-node[show-node-type-name]::before {
   border: var(--requirement-border-width, 1px) solid var(--requirement-border-color, #bfbfbf);
 
   color: var(--requirement-label-color);
-  /* background-color: var(--requirement-bg-dark-color); */
   background-color: var(--color-bg-contrast);
+}
 
-  /* color: var(--color-bg-contrast);
-  background-color: var(--requirement-border-color); */
+sdoc-node[node-view="narrative"][show-node-type-name]::before {
+  top: calc(1 * var(--base-rhythm));
+  right: calc(1 * var(--base-rhythm));
+  padding: calc(0.5 * var(--base-rhythm));
+  border: var(--base-border);
 }
 
 /* sdoc-node */

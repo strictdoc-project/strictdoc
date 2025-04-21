@@ -21,6 +21,12 @@
   {% set title_number = true %}
   {% set truncated_statement = false %}
   {% include "components/node_field/title/index.jinja" %}
+  {# FIXME: Task #1229 / Uncomment example when validation logic is implemented: #}
+  {#
+    {% with issue_field_name = 'title' %}
+      {% include "components/issue/index.jinja" %}
+    {% endwith %}
+  #}
   <sdoc-scope class="requirement_fields_group-secondary">
   {% include "components/node_field/meta/index.jinja" %}
   </sdoc-scope>

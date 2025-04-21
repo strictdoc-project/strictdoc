@@ -1,0 +1,26 @@
+{% set issues_number = 2 %}
+
+<div class="document_issues-banner">
+  <details class="document_issues-banner_details">
+    <summary class="document_issues-banner_summary">
+      <div class="document_issues-banner_title">Document has
+        {% if issues_number is defined and issues_number != "0" and issues_number != 0 %}
+        {{ issues_number }}
+        {% endif %}
+      issues
+      </div>
+    </summary>
+    <div class="document_issues-banner_content">
+      <ul class="simple">
+        <li>
+          <a href="#field_issue_ID">Some issue</a>
+        </li>
+        <li>
+          <a href="#field_issue_ID">Other issue</a>
+        </li>
+      </ul>
+    </div>
+  </details>
+  {# todo JS: #}
+  <a href="#" class="document_issues-toggler"><b>Hide</b> issues in the document ▾</a>
+</div>

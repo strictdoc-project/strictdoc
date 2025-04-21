@@ -1,0 +1,12 @@
+{# For use: insert after field #}
+{#
+  {% with issue_field_name = 'field_name' %}
+    {% include "components/issue/index.jinja" %}
+  {% endwith %}
+#}
+
+<div id="field_issue_ID" class="field_issue">
+  <div class="field_issue-ribbon">
+    <b>Warning:</b> '{{ issue_field_name }}' field has issue: description in details
+  </div>
+</div>

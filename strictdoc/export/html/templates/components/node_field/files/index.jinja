@@ -3,7 +3,7 @@
     {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(sdoc_entity) %}
     {%- if requirement_file_links %}
       <sdoc-requirement-field-label>file relations:</sdoc-requirement-field-label>
-      <sdoc-requirement-field data-field-label="files">
+      <sdoc-requirement-field data-field-label="file relations">
         <ul class="requirement__link">
           {%- for link, markers in requirement_file_links %}
             {%- for marker in markers %}

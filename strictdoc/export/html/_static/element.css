@@ -1549,3 +1549,99 @@ sdoc-tabs.in_aside_panel sdoc-tab:hover {
 sdoc-tabs.in_aside_panel sdoc-tab[active] {
   background-color: var(--color-bg-main);
 }
+
+/* document_issues */
+
+.document_issues-banner {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: var(--base-gap);
+  font-size: var(--font-size-sm);
+}
+
+.document_issues-toggler {
+  text-align: right;
+}
+
+.document_issues-banner_details {
+  display: block;
+  overflow: hidden;
+  color: var(--color-danger);
+  border: 1px solid;
+  border-radius: var(--requirement-border-radius);
+}
+
+.document_issues-banner_summary {
+  font-weight: 600;
+  position: relative;
+  color: var(--color-danger);
+  padding-inline: calc(2 * var(--base-rhythm));
+  padding-block: var(--base-rhythm);
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+}
+
+.document_issues-banner_summary::before {
+  content: '▸';
+  margin-right: var(--base-rhythm);
+}
+
+[open] > .document_issues-banner_summary::before {
+  content: '▾';
+}
+
+.document_issues-banner_summary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+  opacity: 0.1;
+}
+
+.document_issues-banner_content {
+  position: relative;
+  color: var(--color-fg-contrast);
+  padding-inline: calc(2 * var(--base-rhythm));
+  padding-block: calc(1 * var(--base-rhythm));
+}
+
+.document_issues-banner ul {
+  margin: 0;
+  padding-inline-start: 20px;
+}
+
+.field_issue {
+  grid-column: 1 / -1;
+  position: relative;
+  color: var(--color-danger);
+  padding: var(--base-rhythm);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.field_issue-ribbon {
+  position: relative;
+  padding: calc(.5 * var(--base-rhythm)) var(--base-rhythm);
+  border-radius: calc(.5 * var(--base-rhythm));
+  border: 2px solid;
+}
+
+.field_issue-ribbon::before {
+  position: absolute;
+  content: '';
+  bottom: 100%;
+  left: var(--base-rhythm);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid currentColor;
+}
+
+.field_issue-ribbon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}

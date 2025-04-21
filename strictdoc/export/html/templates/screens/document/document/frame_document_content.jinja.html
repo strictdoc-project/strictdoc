@@ -3,6 +3,9 @@
         class="content"
         data-controller="anchor_controller"
       >
+        {# FIXME: Task #1229 / Uncomment when validation logic is implemented: #}
+        {# {% include "screens/document/document/frame_document_issues.jinja" %} #}
+
         {% include "screens/document/document/frame_document_config.jinja.html" %}
 
         {%- for node in view_object.document_content_iterator() %}

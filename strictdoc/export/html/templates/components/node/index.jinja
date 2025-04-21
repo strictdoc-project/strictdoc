@@ -31,6 +31,9 @@
       {%- endif %}
     {%- endif %}
     node-role="{{ node_type }}"
+    {% if sdoc_entity.is_requirement %}
+      node-view="{{ sdoc_entity.get_requirement_style_mode() }}"
+    {%- endif -%}
     {%- if node_type_string is not none and node_type_string != 'TEXT' %}
       show-node-type-name="{{ node_type_string }}"
     {%- endif %}

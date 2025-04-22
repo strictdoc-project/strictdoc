@@ -2672,7 +2672,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/autocomplete/uid", response_class=Response)
-    def get_autocomplete_results(
+    def get_autocomplete_uid_results(
         q: Optional[str] = None, exclude_requirement_mid: Optional[str] = None
     ):
         """
@@ -2719,6 +2719,54 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             output = env().render_template_as_markup(
                 "autocomplete/uid/stream_autocomplete_uid.jinja.html",
                 nodes=resulting_nodes,
+            )
+
+        return Response(
+            content=output,
+            status_code=200,
+        )
+
+    @router.get("/autocomplete/field", response_class=Response)
+    def get_autocomplete_field_results(
+        q: Optional[str] = None,
+        document_mid: Optional[str] = None,
+        element_type: Optional[str] = None,
+        field_name: Optional[str] = None,
+    ):
+        """
+        Returns matches of possible SingleChoice values of a field.
+        The field is identified by the document_mid, the element_type, and the field_name.
+        """
+        output = ""
+        if (
+            q is not None
+            and document_mid is not None
+            and element_type is not None
+        ):
+            query_words = q.lower().split()
+            resulting_values = []
+
+            document: SDocDocument = (
+                export_action.traceability_index.get_node_by_mid(
+                    MID(document_mid)
+                )
+            )
+            if document:
+                all_options = document.get_options_for_singlechoice(
+                    element_type, field_name
+                )
+
+                for option_ in all_options:
+                    words_ = option_.strip().lower()
+
+                    if all(word_ in words_ for word_ in query_words):
+                        resulting_values.append(option_)
+                    if len(resulting_values) >= AUTOCOMPLETE_LIMIT:
+                        break
+
+            output = env().render_template_as_markup(
+                "autocomplete/field/stream_autocomplete_field.jinja.html",
+                values=resulting_values,
             )
 
         return Response(

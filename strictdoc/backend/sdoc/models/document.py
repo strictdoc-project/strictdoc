@@ -6,7 +6,10 @@ from typing import Generator, List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
-from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.document_grammar import (
+    DocumentGrammar,
+    GrammarElement,
+)
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentContentIF,
@@ -15,8 +18,12 @@ from strictdoc.backend.sdoc.models.model import (
     SDocNodeIF,
     SDocSectionIF,
 )
+from strictdoc.backend.sdoc.models.type_system import (
+    GrammarElementFieldSingleChoice,
+)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 
 
@@ -193,3 +200,21 @@ class SDocDocument(SDocDocumentIF):
         yield from self.grammar.elements[
             0
         ].enumerate_custom_content_field_titles()
+
+    def get_options_for_singlechoice(
+        self, element_type: str, field_name: str
+    ) -> List[str]:
+        """
+        Returns the list of valid options for a SingleChoice field in this document.
+        """
+        assert self.grammar is not None
+        grammar: DocumentGrammar = self.grammar
+        element: GrammarElement = grammar.elements_by_type[element_type]
+
+        field = element.fields_map[field_name]
+
+        choice_grammar_element_field: GrammarElementFieldSingleChoice = (
+            assert_cast(field, GrammarElementFieldSingleChoice)
+        )
+
+        return choice_grammar_element_field.options

@@ -165,7 +165,6 @@ sdoc-form-row-main {
   display: flex;
   flex-direction: column;
   position: relative;
-  z-index: 2;
 }
 
 sdoc-form-row-aside {
@@ -322,15 +321,12 @@ sdoc-autocompletable[contenteditable="false"] {
 
 .autocomplete-items {
   position: absolute;
-  border: 1px solid #d4d4d4;
+  border: 1px solid var(--color-action);
   background-color: var(--color-bg-contrast);
-  border-bottom: none;
-  border-top: none;
-  z-index: 99;
   top: 100%;
   left: 0;
   right: 0;
-  width: 40vw;
+  width: 33vw;
   max-height: 60vh;
   overflow-y: auto;
   z-index: 999;
@@ -433,7 +429,8 @@ sdoc-form-field select::-ms-expand {
   color: rgba(242, 100, 42,.2);
 }
 
-sdoc-contenteditable[data-field-suffix]:not(:empty)::after {
+sdoc-contenteditable[data-field-suffix]:not(:empty)::after,
+sdoc-autocompletable[data-field-suffix]:not(:empty)::after {
   content: attr(data-field-suffix);
   color: var(--color-fg-accent);
   margin-left: 4px;
@@ -563,8 +560,10 @@ sdoc-form-error + sdoc-form-field-group {
 
 sdoc-form-field-group[errors]::before, /* Grammar -> label for group of fields */
 sdoc-contenteditable[errors]::before, /* inside contenteditable errors block does not affected */
+sdoc-autocompletable[errors]::before,
 sdoc-form-error + sdoc-form-field > label, /* Grammar -> relation field ; File filed */
-sdoc-form-error + sdoc-form-field > sdoc-contenteditable::before {
+sdoc-form-error + sdoc-form-field > sdoc-contenteditable::before,
+sdoc-form-error + sdoc-form-field > sdoc-autocompletable::before {
   color: var(--color-danger);
 }
 

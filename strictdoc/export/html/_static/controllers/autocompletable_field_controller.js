@@ -26,6 +26,7 @@
       this.autocompletable = autocompletable
       this.hidden = autocompletable.nextElementSibling
       this.results = this.hidden.nextElementSibling
+      this.abortController = null;
 
       this.close()
 
@@ -44,6 +45,19 @@
       autocompletable.addEventListener("blur", (event) => {
         if (this.mouseDown) return
         this.close()
+      });
+
+      autocompletable.addEventListener("click", (event) => {      
+        /* Toggle between showing / hiding results. */
+        if (this.resultsShown) {
+          this.hideAndRemoveOptions();
+        } else {
+          /* If minLengthValue is 0, we want to get all possible options (i.e. for SingleChoice).
+             Otherwise, we want narrow-down-as-you-type behavior, and filter on remainig options.
+           */
+          const query = this.minLengthValue == 0 ? "" : this.autocompletable.innerText.trim();
+          this.fetchResults(query);
+        }
       });
 
       autocompletable.addEventListener("input", (event) => {
@@ -78,7 +92,6 @@
     }
 
     sibling(next) {
-      console.group(this.options)
       const options = this.options
       const selected = this.selectedOption
       const index = options.indexOf(selected)
@@ -100,6 +113,18 @@
       target.scrollIntoView({ behavior: "auto", block: "nearest" })
     }
 
+    selectText(text) {
+      const normalizedText = text.trim().toLowerCase();
+      const match = this.options.find(option => {
+        const label = option.getAttribute("data-autocompletable-label") || option.textContent;
+        return label.trim().toLowerCase() === normalizedText;
+      });
+    
+      if (match) {
+        this.select(match);
+      }
+    }
+
     onEscapeKeydown = (event) => {
       if (!this.resultsShown) return
 
@@ -109,20 +134,28 @@
     }
 
     onArrowDownKeydown = (event) => {
+      if (!this.resultsShown) return
+
       const item = this.sibling(true)
       if (item) this.select(item)
       event.preventDefault()
     }
 
     onArrowUpKeydown = (event) => {
+      if (!this.resultsShown) return
+
       const item = this.sibling(false)
       if (item) this.select(item)
       event.preventDefault()
     }
 
     onTabKeydown = (event) => {
-      const selected = this.selectedOption
-      if (selected) this.commit(selected)
+      if (!this.resultsShown) return
+
+      /* Either use the selected options, or else select the first result. */
+      const selected = this.selectedOption || this.sibling(true)
+      this.commit(selected)
+      event.preventDefault();
     }
 
     onEnterKeydown = (event) => {
@@ -194,14 +227,26 @@
     fetchResults = async (query) => {
       if (!this.hasUrlValue) return
 
+      /* Abort the previous request as we are about to send a new one. */
+      if (this.abortController) {
+        this.abortController.abort();
+      }
+      this.abortController = new AbortController();
+      const signal = this.abortController.signal;
+
       const url = this.buildURL(query)
       try {
         this.element.dispatchEvent(new CustomEvent("loadstart"))
-        const html = await this.doFetch(url)
+        const html = await this.doFetch(url, signal)
         this.replaceResults(html)
+        /* Check if an entry matches the current text and select it. */
+        this.selectText(this.autocompletable.innerText.trim());
         this.element.dispatchEvent(new CustomEvent("load"))
         this.element.dispatchEvent(new CustomEvent("loadend"))
       } catch (error) {
+        if (error.name === 'AbortError') {
+          return;
+        }
         this.element.dispatchEvent(new CustomEvent("error"))
         this.element.dispatchEvent(new CustomEvent("loadend"))
         throw error
@@ -217,8 +262,8 @@
       return url.toString()
     }
 
-    doFetch = async (url) => {
-      const response = await fetch(url)
+    doFetch = async (url, signal) => {
+      const response = await fetch(url, {signal})
 
       if (!response.ok) {
         throw new Error(`Server responded with status ${response.status}`)
@@ -301,3 +346,4 @@
   }
 
 })();
+

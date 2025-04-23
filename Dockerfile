@@ -1,37 +1,63 @@
 # Usage:
 #
-# /strictdoc$ docker build . -t strictdoc:latest
-# /strictdoc$ docker run --name strictdoc --rm -v "$(pwd):/data" -i -t strictdoc:latest
-# bash-5.1# strictdoc export .
-# bash-5.1# exit
-# strictdoc$ firefox docs/output/html/index.html
+# /strictdoc$ docker build \
+#                 ./ \
+#                 --build-arg STRICTDOC_SOURCE=pypi \
+#                 --tag strictdoc:latest
+# /strictdoc$ docker run \
+#                 --rm \
+#                 --volume="$(pwd):/data/" \
+#                 --user=$(id -u):$(id -g) \
+#                 --userns=host \
+#                 --network=host \
+#                 --hostname="strictdoc" \
+#                 --name="strictdoc" \
+#                 --init \
+#                 --tty \
+#                 strictdoc:latest \
+#                     export ./
+# /strictdoc$ firefox ./output/html/index.html
 
 FROM ubuntu:24.04
 
+# Workaround: Newly introduced `ubuntu` user in ubuntu:24.04 causes UID/GID
+# mapping issues when adding custom user.
+RUN touch /var/mail/ubuntu && \
+    chown ubuntu /var/mail/ubuntu && \
+    userdel --remove ubuntu
+
+# Main "payload" software
+ARG PAYLOAD=strictdoc
+
+# Docker image labels
+LABEL maintainer="StrictDoc Project"
+LABEL name="${PAYLOAD}"
+LABEL description="Software for technical documentation and requirements management."
+
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    gosu \
-    python3 \
-    python3-pip \
-    python3-venv \
-    sudo \
-    vim \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install --assume-yes --no-install-recommends \
+        curl \
+        git \
+        python3 \
+        python3-pip \
+        python3-venv \
+        vim \
+        wget \
+    && \
+    rm --recursive --force /var/lib/apt/lists/*
 
 # Download and install Google Chrome
-RUN wget -q -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && apt-get update \
-    && apt-get install -y ./google-chrome.deb \
-    && rm google-chrome.deb
+RUN wget --quiet --output-document=google-chrome.deb \
+        https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get update && \
+    apt-get install --assume-yes --no-install-recommends ./google-chrome.deb && \
+    rm --recursive --force /var/lib/apt/lists/* && \
+    rm --force google-chrome.deb
 
-# Create a virtual environment in the user's home directory.
-RUN python3 -m venv /opt/venv
-
-# Ensure the virtual environment is used by modifying the PATH.
-ENV PATH="/opt/venv/bin:$PATH"
+# Create a virtual environment and ensure it is used by modifying the PATH.
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv ${VIRTUAL_ENV}
+ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
 
 # Install StrictDoc. Set default StrictDoc installation from PyPI but allow
 # overriding it with an environment variable.
@@ -44,17 +70,16 @@ RUN if [ "$STRICTDOC_SOURCE" = "pypi" ]; then \
     else \
       pip install --no-cache-dir --upgrade pip && \
       pip install --no-cache-dir git+https://github.com/strictdoc-project/strictdoc.git@${STRICTDOC_SOURCE}; \
-    fi; \
-    chmod -R 777 /opt/venv;
+    fi;
 
-# Remove the default 'ubuntu' user.
-RUN userdel -r ubuntu 2>/dev/null || true
+# Switch to non-root user
+RUN groupadd ${PAYLOAD} && \
+    useradd --no-log-init --gid ${PAYLOAD} ${PAYLOAD}
+USER ${PAYLOAD}
 
-# Allow updating the UID/GID dynamically at runtime
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Set up working directory.
+WORKDIR /data/
 
-# Set the working directory to the user's home directory.
-WORKDIR /data
-
-ENTRYPOINT ["/entrypoint.sh"]
+# Execute StrictDoc by default
+ENTRYPOINT ["strictdoc"]
+CMD ["--help"]

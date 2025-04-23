@@ -969,11 +969,13 @@ def build_docker(
     run_invoke(
         context,
         f"""
-        docker build .
+        docker build
+            ./
             --build-arg STRICTDOC_SOURCE={source}
-            -t {image}
+            --tag {image}
             {no_cache_argument}
         """,
+        pty=True,
     )
 
 
@@ -981,21 +983,23 @@ def build_docker(
 def run_docker(
     context, image: str = "strictdoc:latest", command: Optional[str] = None
 ):
-    command_argument = (
-        f'/bin/bash -c "{command}"' if command is not None else ""
-    )
+    command_argument = f"{command}" if command is not None else ""
 
     run_invoke(
         context,
         f"""
         docker run
-            --name strictdoc
             --rm
-            -it
-            -e HOST_UID=$(id -u) -e HOST_GID=$(id -g)
-            -v "$(pwd):/data"
+            --volume="$(pwd):/data/"
+            --user=$(id -u):$(id -g)
+            --userns=host
+            --network=host
+            --hostname="strictdoc"
+            --name="strictdoc"
+            --init
+            --tty
             {image}
-            {command_argument}
+                {command_argument}
         """,
         pty=True,
     )
@@ -1012,7 +1016,7 @@ def test_docker(context, image: str = "strictdoc:latest"):
     run_docker(
         context,
         image=image,
-        command="strictdoc export --formats=html,html2pdf .",
+        command="export --formats=html,html2pdf ./",
     )
 
     def check_file_owner(filepath):

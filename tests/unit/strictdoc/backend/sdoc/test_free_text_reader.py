@@ -3,7 +3,7 @@ from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.anchor import Anchor
-from strictdoc.backend.sdoc.models.free_text import FreeText
+from strictdoc.backend.sdoc.models.free_text import FreeTextContainer
 
 
 def test_001_anchor_without_space():
@@ -118,7 +118,7 @@ Hello world
     reader = SDFreeTextReader()
 
     document = reader.read(free_text_input)
-    assert isinstance(document, FreeText)
+    assert isinstance(document, FreeTextContainer)
 
     assert document.parts[0] == "Hello world\n\n"
     assert document.parts[1].value == "AD1"
@@ -134,7 +134,7 @@ Hello world [LINK: FOO] Part
     reader = SDFreeTextReader()
 
     document = reader.read(free_text_input)
-    assert isinstance(document, FreeText)
+    assert isinstance(document, FreeTextContainer)
 
     assert document.parts[0] == "Hello world "
     assert document.parts[1].link == "FOO"

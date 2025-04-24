@@ -23,7 +23,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
     create_default_relations,
 )
-from strictdoc.backend.sdoc.models.free_text import FreeText
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
@@ -208,7 +207,7 @@ class P01_ReqIFToSDocConverter:
                     spec_object_type_identifier_
                 )
             )
-            if spec_object_type.long_name in ("SECTION", "FREETEXT"):
+            if spec_object_type.long_name == "SECTION":
                 continue
             grammar_element = (
                 context.map_spec_object_type_identifier_to_grammar_node_tags[
@@ -604,15 +603,3 @@ class P01_ReqIFToSDocConverter:
             if len(parent_refs) > 0:
                 requirement.relations = parent_refs
         return requirement
-
-    @staticmethod
-    def create_free_text_from_spec_object(
-        spec_object: ReqIFSpecObject,
-    ) -> FreeText:
-        free_text = unescape(
-            spec_object.attribute_map[ReqIFChapterField.TEXT].value
-        )
-        return FreeText(
-            parent=None,
-            parts=[free_text],
-        )

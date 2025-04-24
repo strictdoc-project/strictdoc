@@ -4,13 +4,10 @@ import os.path
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
-from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.free_text import FreeText
-from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -309,30 +306,6 @@ class JSONGenerator:
             "TYPE": RequirementFieldType.STRING,
         }
         return grammar_field_dict
-
-    @classmethod
-    def _write_free_text_content(cls, free_text) -> str:
-        assert isinstance(free_text, FreeText)
-        output = ""
-
-        for _, part in enumerate(free_text.parts):
-            if isinstance(part, str):
-                output += part
-            elif isinstance(part, InlineLink):
-                output += "[LINK: "
-                output += part.link
-                output += "]"
-            elif isinstance(part, Anchor):
-                output += "[ANCHOR: "
-                output += part.value
-                if part.has_title:
-                    output += ", "
-                    output += part.title
-                output += "]"
-                output += "\n"
-            else:
-                raise NotImplementedError(part)
-        return output
 
     @staticmethod
     def _write_requirement_relations(node: SDocNode) -> List:

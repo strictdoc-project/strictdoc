@@ -1,0 +1,14 @@
+[run]
+branch = True
+parallel = true
+omit =
+    build/
+    tests/
+    **/output/cache/*
+    **/Output/cache/*
+
+[report]
+fail_under = 60.0
+precision = 2
+skip_covered = true
+show_missing = true

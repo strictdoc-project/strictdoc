@@ -3,6 +3,7 @@
 import inspect
 import os
 import re
+import shutil
 import sys
 import tempfile
 from enum import Enum
@@ -193,36 +194,25 @@ def docs(context):
     )
 
 
-@task(aliases=["tu"])
-def test_unit(context, focus=None):
-    focus_argument = f"-k {focus}" if focus is not None else ""
-
-    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
-
-    run_invoke_with_tox(
-        context,
-        ToxEnvironment.CHECK,
-        f"""
-            pytest tests/unit/
-                {focus_argument}
-                --junit-xml={TEST_REPORTS_DIR}/tests_unit.pytest.junit.xml
-                -o junit_suite_name="StrictDoc Unit Tests"
-                -o cache_dir=build/pytest_unit
-        """,
-    )
-
-
-@task
+@task(aliases=["tue"])
 def test_unit_server(context, focus=None):
     focus_argument = f"-k {focus}" if focus is not None else ""
 
     Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
 
+    cwd = os.getcwd()
+
+    path_to_coverage_file = f"{cwd}/build/coverage/unit_server/.coverage"
+
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
         f"""
-            pytest tests/unit_server/
+            coverage run
+            --rcfile=.coveragerc.unit_server
+            --data-file={path_to_coverage_file}
+            -m pytest
+            tests/unit_server/
                 {focus_argument}
                 --junit-xml={TEST_REPORTS_DIR}/tests_unit_server.pytest.junit.xml
                 -o junit_suite_name="StrictDoc Web Server Unit Tests"
@@ -234,6 +224,7 @@ def test_unit_server(context, focus=None):
 @task(aliases=["te"])
 def test_end2end(
     context,
+    *,
     focus=None,
     exit_first=False,
     parallelize=False,
@@ -241,7 +232,28 @@ def test_end2end(
     headless=False,
     shard=None,
     test_path=None,
+    coverage: bool = False,
 ):
+    environment = {}
+
+    coverage_command_or_none = ""
+    coverage_argument_or_none = ""
+
+    if coverage:
+        cwd = os.getcwd()
+        coverage_file_dir = f"{cwd}/build/coverage/end2end/"
+        coverage_file_dir2 = f"{cwd}/build/coverage/end2end_strictdoc/"
+        coverage_file = os.path.join(coverage_file_dir, ".coverage")
+        shutil.rmtree(coverage_file_dir, ignore_errors=True)
+        shutil.rmtree(coverage_file_dir2, ignore_errors=True)
+        coverage_command_or_none = f"""
+            coverage run
+                --rcfile=.coveragerc.end2end
+                --data-file={coverage_file}
+                -m
+        """
+        coverage_argument_or_none = "--strictdoc-coverage"
+
     long_timeouts_argument = (
         "--strictdoc-long-timeouts" if long_timeouts else ""
     )
@@ -263,14 +275,15 @@ def test_end2end(
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
     headless_argument = "--headless2" if headless else ""
-
     test_command = f"""
-        pytest
+            {coverage_command_or_none}
+            pytest
             --failed-first
             --capture=no
             --reuse-session
             {parallelize_argument}
             {shard_argument}
+            {coverage_argument_or_none}
             {focus_argument}
             {exit_first_argument}
             {long_timeouts_argument}
@@ -299,20 +312,24 @@ def test_end2end(
         context,
         ToxEnvironment.CHECK,
         test_command,
+        environment=environment,
     )
 
 
-@task
-def test_unit_coverage(context):
+@task(aliases=["tu"])
+def test_unit(context):
     Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+
+    cwd = os.getcwd()
+
+    path_to_coverage_file = f"{cwd}/build/coverage/unit/.coverage"
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
         f"""
             coverage run
-            --rcfile=.coveragerc
-            --branch
-            --omit=.venv*/*
+            --rcfile=.coveragerc.unit
+            --data-file={path_to_coverage_file}
             -m pytest
             --junit-xml={TEST_REPORTS_DIR}/tests_unit.pytest.junit.xml
             -o cache_dir=build/pytest_unit_with_coverage
@@ -323,14 +340,17 @@ def test_unit_coverage(context):
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
-        """
-            coverage report --sort=cover
+        f"""
+            coverage report
+                --sort=cover
+                --rcfile=.coveragerc.unit
+                --data-file={path_to_coverage_file}
         """,
     )
 
 
-@task(test_unit_coverage)
-def test_coverage_report(context):
+@task(test_unit)
+def test_unit_report(context):
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
@@ -347,6 +367,7 @@ def test_integration(
     debug=False,
     no_parallelization=False,
     fail_first=False,
+    coverage=False,
     strictdoc=None,
     html2pdf=False,
     environment=ToxEnvironment.CHECK,
@@ -362,6 +383,17 @@ def test_integration(
         strictdoc_exec = f'python3 \\"{cwd}/strictdoc/cli/main.py\\"'
     else:
         strictdoc_exec = strictdoc
+
+    coverage_path_argument = ""
+    if coverage:
+        strictdoc_exec = f'coverage run --rcfile={cwd}/.coveragerc.integration \\"{cwd}/strictdoc/cli/main.py\\"'
+        if html2pdf:
+            path_to_coverage_dir = f"{cwd}/build/coverage/integration_html2pdf/"
+        else:
+            path_to_coverage_dir = f"{cwd}/build/coverage/integration/"
+        path_to_coverage = os.path.join(path_to_coverage_dir, ".coverage")
+        shutil.rmtree(path_to_coverage_dir, ignore_errors=True)
+        coverage_path_argument = f'--param COVERAGE_FILE="{path_to_coverage}"'
 
     debug_opts = "-vv --show-all" if debug else ""
     focus_or_none = f"--filter {focus}" if focus else ""
@@ -398,6 +430,7 @@ def test_integration(
         --param STRICTDOC_TMP_DIR="{STRICTDOC_TMP_DIR}"
         --timeout 180
         {junit_xml_report_argument}
+        {coverage_path_argument}
         {html2pdf_param}
         {chromedriver_param}
         -v
@@ -421,6 +454,24 @@ def test_integration(
         environment,
         itest_command,
         environment={"STRICTDOC_CACHE_DIR": "Output/cache"},
+    )
+
+
+@task
+def coverage_combine(context):
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            coverage combine
+                --data-file build/coverage/.coverage.combined
+                --keep
+                build/coverage/end2end_strictdoc/.coverage
+                build/coverage/integration/.coverage.*
+                build/coverage/integration_html2pdf/.coverage.*
+                build/coverage/unit/.coverage
+                build/coverage/unit_server/.coverage
+        """,
     )
 
 
@@ -517,10 +568,19 @@ def lint(context):
 
 @task(aliases=["t"])
 def test(context):
-    test_unit_coverage(context)
+    test_unit(context)
     test_unit_server(context)
     test_integration(context)
     test_integration(context, html2pdf=True)
+
+
+@task(aliases=["ta"])
+def test_all(context, coverage=False):
+    test_unit(context)
+    test_unit_server(context)
+    test_integration(context, coverage=coverage)
+    test_integration(context, coverage=coverage, html2pdf=True)
+    test_end2end(context, coverage=coverage)
 
 
 @task(aliases=["c"])
@@ -956,3 +1016,9 @@ def test_docker(context, image: str = "strictdoc:latest"):
     assert check_file_owner(
         "output/html2pdf/pdf/docs/strictdoc_01_user_guide.pdf"
     )
+
+
+@task()
+def qualification(context):
+    test_all(context, coverage=True)
+    coverage_combine(context)

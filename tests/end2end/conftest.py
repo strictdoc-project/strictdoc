@@ -52,12 +52,14 @@ def pytest_addoption(parser):
     parser.addoption(
         "--strictdoc-parallelize", action="store_true", default=False
     )
+    parser.addoption("--strictdoc-coverage", action="store_true", default=False)
     parser.addoption("--strictdoc-shard", type=str, default=None)
 
 
 def pytest_configure(config):
     long_timeouts = config.getoption("--strictdoc-long-timeouts")
     parallelize = config.getoption("--strictdoc-parallelize")
+    coverage = config.getoption("--strictdoc-coverage")
 
     if long_timeouts:
         # Selenium timeout settings.
@@ -76,6 +78,9 @@ def pytest_configure(config):
 
     if parallelize:
         test_environment.is_parallel_execution = True
+
+    if coverage:
+        test_environment.coverage = True
 
 
 class GlobalTestCounter:

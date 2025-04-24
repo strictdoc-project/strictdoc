@@ -20,6 +20,9 @@ class PDFPrintDriver:
             # Using sys.executable instead of "python" is important because
             # venv subprocess call to python resolves to wrong interpreter,
             # https://github.com/python/cpython/issues/86207
+            # Switching back to calling html2print directly because the
+            # python -m doesn't work well with PyInstaller.
+            # sys.executable, "-m"
             "html2print",
             "print",
             "--cache-dir",

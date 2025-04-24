@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from typing import Any
 
 from strictdoc.helpers.auto_described import auto_described

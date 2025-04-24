@@ -938,14 +938,11 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         #    that case, we need to check if these anchors are used by any LINKs,
         #    raising a validation if they do.
         existing_node_anchor_uids = set()
-        if isinstance(node, SDocNode):
-            for node_anchor_ in node.get_anchors():
-                existing_node_anchor_uids.add(node_anchor_.value)
-        else:
-            if len(node.free_texts) > 0:
-                for part in node.free_texts[0].parts:
-                    if isinstance(part, Anchor):
-                        existing_node_anchor_uids.add(part.value)
+
+        # FIXME: No test reaches this for Section or Document.
+        assert isinstance(node, SDocNode)
+        for node_anchor_ in node.get_anchors():
+            existing_node_anchor_uids.add(node_anchor_.value)
 
         """
         Validation 1: Assert all UIDs are either:

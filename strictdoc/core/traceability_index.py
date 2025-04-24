@@ -416,32 +416,31 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def create_inline_link(self, new_link: InlineLink):
         assert isinstance(new_link, InlineLink)
+
         # InlineLink points to a section, node or to anchor.
-        # FIXME: De-nest this code by returning early.
-        if self.graph_database.has_link(
+        assert self.graph_database.has_link(
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=new_link.link
-        ):
-            node_or_anchor: Union[
-                SDocDocument, SDocNode, SDocSection, Anchor
-            ] = assert_cast(
+        )
+
+        node_or_anchor: Union[SDocDocument, SDocNode, SDocSection, Anchor] = (
+            assert_cast(
                 self.graph_database.get_link_value(
                     link_type=GraphLinkType.UID_TO_NODE,
                     lhs_node=new_link.link,
                 ),
                 (SDocDocument, SDocNode, SDocSection, Anchor),
             )
-            self.graph_database.create_link(
-                link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
-                lhs_node=node_or_anchor.reserved_mid,
-                rhs_node=new_link,
-            )
-            self.graph_database.create_link(
-                link_type=GraphLinkType.MID_TO_NODE,
-                lhs_node=new_link.reserved_mid,
-                rhs_node=new_link,
-            )
-        else:
-            raise NotImplementedError
+        )
+        self.graph_database.create_link(
+            link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
+            lhs_node=node_or_anchor.reserved_mid,
+            rhs_node=new_link,
+        )
+        self.graph_database.create_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=new_link.reserved_mid,
+            rhs_node=new_link,
+        )
 
     def update_last_updated(self) -> None:
         """

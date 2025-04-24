@@ -99,9 +99,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if not isinstance(requirement.reserved_uid, str):
             return False
 
-        if len(requirement.reserved_uid) == 0:
-            return False
-
         parent_requirements = self.graph_database.get_link_values(
             link_type=GraphLinkType.NODE_TO_PARENT_NODES,
             lhs_node=requirement,
@@ -112,9 +109,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def has_children_requirements(self, requirement: SDocNode):
         assert isinstance(requirement, SDocNode)
         if not isinstance(requirement.reserved_uid, str):
-            return False
-
-        if len(requirement.reserved_uid) == 0:
             return False
 
         children_requirements = self.graph_database.get_link_values(
@@ -159,9 +153,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         if not isinstance(requirement.reserved_uid, str):
             return []
 
-        if len(requirement.reserved_uid) == 0:
-            return []
-
         return list(
             self.graph_database.get_link_values(
                 link_type=GraphLinkType.NODE_TO_PARENT_NODES,
@@ -172,10 +163,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def get_parent_relations_with_roles(self, requirement: SDocNode):
         assert isinstance(requirement, SDocNode)
-        if (
-            requirement.reserved_uid is None
-            or len(requirement.reserved_uid) == 0
-        ):
+        if requirement.reserved_uid is None:
             return
 
         return list(
@@ -190,10 +178,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self, requirement: SDocNode, role: Optional[str]
     ) -> List[Any]:  # FIXME: Make Any->SDocNode
         assert isinstance(requirement, SDocNode)
-        if (
-            requirement.reserved_uid is None
-            or len(requirement.reserved_uid) == 0
-        ):
+        if requirement.reserved_uid is None:
             return []
 
         return list(
@@ -208,10 +193,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self, requirement: SDocNode
     ) -> List[Any]:  # FIXME: Make Any->SDocNode
         assert isinstance(requirement, SDocNode)
-        if (
-            requirement.reserved_uid is None
-            or len(requirement.reserved_uid) == 0
-        ):
+        if requirement.reserved_uid is None:
             return []
 
         return list(
@@ -226,10 +208,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self, requirement: SDocNode, role: Optional[str]
     ) -> List[Any]:  # FIXME: Make Any->SDocNode
         assert isinstance(requirement, SDocNode)
-        if (
-            requirement.reserved_uid is None
-            or len(requirement.reserved_uid) == 0
-        ):
+        if requirement.reserved_uid is None:
             return []
 
         return list(
@@ -245,9 +224,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     ) -> List[SDocNode]:
         assert isinstance(requirement, SDocNode)
         if not isinstance(requirement.reserved_uid, str):
-            return []
-
-        if len(requirement.reserved_uid) == 0:
             return []
 
         return list(
@@ -271,8 +247,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             link_type=GraphLinkType.DOCUMENT_TO_TAGS,
             lhs_node=document.reserved_mid,
         )
-        if document_tags_or_none is None:
-            return
         document_tags: Dict = assert_cast(document_tags_or_none, dict)
 
         tags = sorted(document_tags.keys(), key=alphanumeric_sort)

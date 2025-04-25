@@ -214,7 +214,9 @@ class P01_SDocToReqIFObjectConverter:
                         data_types.append(data_type)
                         data_types_lookup[field.title] = data_type.identifier
                     else:
-                        raise NotImplementedError(field) from None
+                        raise NotImplementedError(  # pragma: no cover
+                            field
+                        ) from None
 
             document_spec_types = cls._convert_document_grammar_to_spec_types(
                 grammar=assert_cast(document.grammar, DocumentGrammar),
@@ -566,7 +568,9 @@ class P01_SDocToReqIFObjectConverter:
                     value=field_value,
                 )
             else:
-                raise NotImplementedError(grammar_field) from None
+                raise NotImplementedError(
+                    grammar_field
+                ) from None  # pragma: no cover
             attributes.append(attribute)
 
         if requirement.reserved_uid is not None:
@@ -654,7 +658,9 @@ class P01_SDocToReqIFObjectConverter:
                         multi_valued=True,
                     )
                 else:
-                    raise NotImplementedError(field) from None
+                    raise NotImplementedError(  # pragma: no cover
+                        field
+                    ) from None
                 attribute_definitions.append(attribute)
 
             # Extra chapter name attribute.

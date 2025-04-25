@@ -10,8 +10,7 @@ import sys
 strictdoc_root_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..")
 )
-if not os.path.isdir(strictdoc_root_path):
-    raise FileNotFoundError
+assert os.path.isdir(strictdoc_root_path)
 sys.path.append(strictdoc_root_path)
 
 from strictdoc import environment
@@ -159,7 +158,7 @@ def _main(parallelizer: Parallelizer) -> None:
         )
 
     else:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 def main() -> None:

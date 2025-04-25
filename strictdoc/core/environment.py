@@ -40,13 +40,11 @@ class SDocRuntimeEnvironment:
             self.path_to_strictdoc = os.path.abspath(
                 os.path.join(path_to_init, "..", "..")
             )
-        if not os.path.isdir(self.path_to_strictdoc):
-            raise FileNotFoundError(self.path_to_strictdoc)
-        if not os.path.isabs(self.path_to_strictdoc):
-            raise OSError(
-                "Path to strictdoc's package path must be an absolute path: "
-                f"{self.path_to_strictdoc}"
-            )
+        assert os.path.isdir(self.path_to_strictdoc), self.path_to_strictdoc
+        assert os.path.isabs(self.path_to_strictdoc), (
+            "Path to strictdoc's package path must be an absolute path: "
+            f"{self.path_to_strictdoc}"
+        )
 
     def get_static_files_path(self):
         if self.is_binary_dist:
@@ -96,10 +94,3 @@ class SDocRuntimeEnvironment:
         assert os.path.isdir(path_to_html_templates), path_to_html_templates
         assert os.path.isabs(path_to_html_templates), path_to_html_templates
         return path_to_html_templates
-
-    def get_path_to_export_html(self):
-        if self.is_nuitka or self.is_py_installer:
-            return self.path_to_strictdoc
-        return os.path.join(
-            self.path_to_strictdoc, "strictdoc", "export", "html"
-        )

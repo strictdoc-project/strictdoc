@@ -326,7 +326,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                     if node.reserved_uid == uid:
                         return node
                 else:
-                    raise NotImplementedError
+                    raise NotImplementedError  # pragma: no cover
         return None
 
     def get_linkable_node_by_uid_weak(

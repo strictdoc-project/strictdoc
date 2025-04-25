@@ -1018,7 +1018,7 @@ def test_docker(context, image: str = "strictdoc:latest"):
     )
 
 
-@task()
+@task(aliases=["q"])
 def qualification(context):
     test_all(context, coverage=True)
     coverage_combine(context)

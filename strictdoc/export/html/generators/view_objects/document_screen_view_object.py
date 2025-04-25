@@ -101,7 +101,7 @@ class DocumentScreenViewObject:
                 "screens/document/pdf/index.jinja", view_object=self
             )
         else:
-            raise NotImplementedError(self.document_type)
+            raise NotImplementedError(self.document_type)  # pragma: no cover
 
     def render_table_screen(
         self, jinja_environment: JinjaEnvironment
@@ -152,7 +152,7 @@ class DocumentScreenViewObject:
                 else:
                     template_folder = "requirement"
             else:
-                raise NotImplementedError
+                raise NotImplementedError  # pragma: no cover
             content = jinja_environment.render_template_as_markup(
                 f"components/{template_folder}/index_extends_node.jinja",
                 view_object=self,
@@ -263,8 +263,8 @@ class DocumentScreenViewObject:
     def render_standalone_document_link(
         document: SDocDocument, context_document: SDocDocument
     ):
-        if context_document is not None:
-            raise NotImplementedError
+        # FIXME: Check if the context_document can be removed.
+        assert context_document is None
         root_prefix = document.meta.get_root_path_prefix()
         document_link = document.meta.get_html_standalone_document_link()
         return (

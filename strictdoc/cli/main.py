@@ -166,7 +166,7 @@ def main() -> None:
     # Ensure that multiprocessing.freeze_support() is called in a frozen
     # application
     # https://github.com/pyinstaller/pyinstaller/issues/7438
-    if getattr(sys, "frozen", False):
+    if getattr(sys, "frozen", False):  # pragma: no cover
         multiprocessing.freeze_support()
 
     # This is crucial for a good performance on macOS. Linux uses 'fork' by default.
@@ -201,3 +201,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+else:  # pragma: no cover
+    pass

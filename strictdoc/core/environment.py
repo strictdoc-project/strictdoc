@@ -21,7 +21,7 @@ class SDocRuntimeEnvironment:
             getattr(sys, "frozen", False) or self.is_nuitka
         )
 
-        if self.is_binary_dist:
+        if self.is_binary_dist:  # pragma: no cover
             # When it is a binary distribution, we don't have a Python package
             # file structure but only a binary with surrounding libraries and
             # data files (Jinja HTML files, CSS, JS, ...).
@@ -40,30 +40,28 @@ class SDocRuntimeEnvironment:
             self.path_to_strictdoc = os.path.abspath(
                 os.path.join(path_to_init, "..", "..")
             )
-        if not os.path.isdir(self.path_to_strictdoc):
-            raise FileNotFoundError(self.path_to_strictdoc)
-        if not os.path.isabs(self.path_to_strictdoc):
-            raise OSError(
-                "Path to strictdoc's package path must be an absolute path: "
-                f"{self.path_to_strictdoc}"
-            )
+        assert os.path.isdir(self.path_to_strictdoc), self.path_to_strictdoc
+        assert os.path.isabs(self.path_to_strictdoc), (
+            "Path to strictdoc's package path must be an absolute path: "
+            f"{self.path_to_strictdoc}"
+        )
 
     def get_static_files_path(self):
-        if self.is_binary_dist:
+        if self.is_binary_dist:  # pragma: no cover
             return os.path.join(self.path_to_strictdoc, "_static")
         return os.path.join(
             self.path_to_strictdoc, "strictdoc/export/html/_static"
         )
 
     def get_extra_static_files_path(self):
-        if self.is_binary_dist:
+        if self.is_binary_dist:  # pragma: no cover
             return os.path.join(self.path_to_strictdoc, "_static_extra")
         return os.path.join(
             self.path_to_strictdoc, "strictdoc/export/html/_static_extra"
         )
 
     def get_path_to_rst_templates(self):
-        if self.is_py_installer:
+        if self.is_py_installer:  # pragma: no cover
             # If the application is run as a bundle, the PyInstaller bootloader
             # extends the sys module by a flag frozen=True and sets the app
             # path into variable _MEIPASS'.
@@ -71,7 +69,7 @@ class SDocRuntimeEnvironment:
                 sys._MEIPASS  # pylint: disable=protected-access, no-member
             )
             return os.path.join(bundle_dir, "templates/rst")
-        if self.is_nuitka:
+        if self.is_nuitka:  # pragma: no cover
             return os.path.join(self.path_to_strictdoc, "templates/rst")
         # Normal Python
         return os.path.join(
@@ -79,7 +77,7 @@ class SDocRuntimeEnvironment:
         )
 
     def get_path_to_html_templates(self):
-        if self.is_py_installer:
+        if self.is_py_installer:  # pragma: no cover
             # If the application is run as a bundle, the PyInstaller bootloader
             # extends the sys module by a flag frozen=True and sets the app
             # path into variable _MEIPASS'.
@@ -87,7 +85,7 @@ class SDocRuntimeEnvironment:
                 sys._MEIPASS  # pylint: disable=protected-access, no-member
             )
             return os.path.join(bundle_dir, "templates/html")
-        if self.is_nuitka:
+        if self.is_nuitka:  # pragma: no cover
             return os.path.join(self.path_to_strictdoc, "templates/html")
         # Normal Python
         path_to_html_templates = os.path.join(
@@ -96,10 +94,3 @@ class SDocRuntimeEnvironment:
         assert os.path.isdir(path_to_html_templates), path_to_html_templates
         assert os.path.isabs(path_to_html_templates), path_to_html_templates
         return path_to_html_templates
-
-    def get_path_to_export_html(self):
-        if self.is_nuitka or self.is_py_installer:
-            return self.path_to_strictdoc
-        return os.path.join(
-            self.path_to_strictdoc, "strictdoc", "export", "html"
-        )

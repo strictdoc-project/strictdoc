@@ -8,9 +8,6 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 from strictdoc.backend.sdoc_source_code.reader_c import (
     SourceFileTraceabilityReader_C,
 )
-from strictdoc.backend.sdoc_source_code.reader_python import (
-    SourceFileTraceabilityReader_Python,
-)
 
 pytestmark = pytest.mark.skipif(
     sys.version_info < (3, 9), reason="Requires Python 3.9 or higher"
@@ -20,7 +17,7 @@ pytestmark = pytest.mark.skipif(
 def test_00_empty_file():
     input_string = b""""""
 
-    reader = SourceFileTraceabilityReader_Python()
+    reader = SourceFileTraceabilityReader_C()
 
     info = reader.read(input_string)
 

@@ -3,12 +3,14 @@
 # for simplicity.
 __version__ = "0.0.1"
 
+from typing import Any, Optional
+
 
 # Maybe there is a better way to generate __str__ and __repr__.
 # But for now, this solution works good enough:
 # https://stackoverflow.com/a/33800620/598057
 # https://stackoverflow.com/a/24617244/598057
-def auto_described(cls=None, str_and_repr=True):
+def auto_described(cls: Optional[Any] = None, str_and_repr: bool = True):
     def configure_class(clz):
         def __str__(self):
             return auto_str(self)

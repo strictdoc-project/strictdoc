@@ -312,8 +312,9 @@ class SourceFileTraceabilityReader_C:
                         function_name
                     ] = new_function
             elif node_.type == "comment":
-                if node_.text is None:
-                    raise NotImplementedError("Comment without a text")
+                assert node_.text is not None, (
+                    f"Comment without a text: {node_}"
+                )
 
                 node_text_string = node_.text.decode("utf8")
 
@@ -335,7 +336,7 @@ class SourceFileTraceabilityReader_C:
                     ):
                         line_marker_processor(line_marker_, parse_context)
                     else:
-                        continue
+                        pass
             else:
                 pass
 

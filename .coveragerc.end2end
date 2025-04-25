@@ -11,3 +11,8 @@ fail_under = 60.0
 precision = 2
 skip_covered = true
 show_missing = true
+exclude_also =
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    @(abc\.)?abstractmethod

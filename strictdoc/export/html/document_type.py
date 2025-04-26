@@ -57,9 +57,6 @@ class DocumentType:
     def is_pdf(self):
         return self.document_type == DocumentType.PDF
 
-    def get_string(self) -> str:
-        return self.document_type
-
     def get_page_title(self) -> str:
         if self.document_type == DocumentType.DOCUMENT:
             return "Document"

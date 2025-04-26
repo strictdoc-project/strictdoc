@@ -45,7 +45,7 @@ def _set_value_by_key_path(obj, parts, value):
                 assert isinstance(cursor, dict)
                 cursor[part] = value
             else:
-                raise NotImplementedError from None
+                raise NotImplementedError from None  # pragma: no cover
 
 
 FIELD_NAME = "[A-Za-z0-9_]*"

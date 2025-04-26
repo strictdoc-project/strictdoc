@@ -104,7 +104,7 @@ class SectionChange:
             assert lhs_section is None, lhs_section
             change_type = ChangeType.SECTION_ADDED
         else:
-            raise AssertionError("Must not reach here.")
+            raise AssertionError("Must not reach here.")  # pragma: no cover
         self.change_type = change_type
 
     def is_paired_change(self) -> bool:
@@ -186,7 +186,7 @@ class RequirementChange:
         elif rhs_requirement is not None:
             change_type = ChangeType.REQUIREMENT_ADDED
         else:
-            raise AssertionError("Must not reach here.")
+            raise AssertionError("Must not reach here.")  # pragma: no cover
         self.change_type = change_type
 
     def is_paired_change(self) -> bool:

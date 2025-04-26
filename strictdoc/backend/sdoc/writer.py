@@ -1,6 +1,5 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr,type-arg"
 import os.path
-from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
@@ -24,7 +23,6 @@ from strictdoc.backend.sdoc.models.reference import (
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
-    FileEntry,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
@@ -36,12 +34,6 @@ from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import ensure_newline
-
-
-class TAG(Enum):
-    SECTION = 1
-    REQUIREMENT = 2
-    COMPOSITE_REQUIREMENT = 3
 
 
 class SDWriter:
@@ -405,37 +397,22 @@ class SDWriter:
             fields = section_content.ordered_fields_lookup[field_name]
             for field in fields:
                 field_value = field.get_text_value()
+                assert len(field_value) > 0
+
                 if field.is_multiline():
                     output += f"{field_name}: >>>"
                     output += "\n"
-                    if len(field_value) > 0:
-                        if field_value != "\n":
-                            output += ensure_newline(field_value)
+                    if field_value != "\n":
+                        output += ensure_newline(field_value)
                     output += "<<<"
                     output += "\n"
                 else:
-                    if len(field_value) > 0:
-                        output += f"{field_name}: "
-                        output += field_value
-                    else:
-                        output += f"{field_name}:"
+                    output += f"{field_name}: "
+                    output += field_value
                     output += "\n"
 
         output += SDWriter._print_requirement_relations(section_content)
 
-        return output
-
-    @staticmethod
-    def _print_closing_tag(closing_tag):
-        output = ""
-        if closing_tag == TAG.SECTION:
-            output += "\n"
-            output += "[/SECTION]"
-            output += "\n"
-        if closing_tag == TAG.COMPOSITE_REQUIREMENT:
-            output += "\n"
-            output += "[/COMPOSITE_REQUIREMENT]"
-            output += "\n"
         return output
 
     @staticmethod
@@ -465,29 +442,12 @@ class SDWriter:
         elif isinstance(grammar_field, GrammarElementFieldTag):
             output += RequirementFieldType.TAG
         else:
-            raise NotImplementedError from None
+            raise NotImplementedError from None  # pragma: no cover
 
         output += "\n"
         output += "    REQUIRED: "
         output += "True" if grammar_field.required else "False"
         output += "\n"
-        return output
-
-    @staticmethod
-    def _print_file_entry(row_separator, file_entry: FileEntry) -> str:
-        output = ""
-        if row_separator:
-            output += "- "
-        else:
-            output += "  "
-        if file_entry.g_file_format:
-            output += "FORMAT: "
-            output += file_entry.g_file_format
-            output += "\n  "
-        output += "VALUE: "
-        output += file_entry.g_file_path
-        output += "\n"
-
         return output
 
     @classmethod
@@ -541,5 +501,5 @@ class SDWriter:
                     output += child_reference.role
                     output += "\n"
             else:
-                raise AssertionError("Must not reach here.")
+                raise AssertionError("Must not reach here.")  # pragma: no cover
         return output

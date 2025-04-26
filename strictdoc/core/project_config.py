@@ -370,7 +370,7 @@ class ProjectConfigLoader:
                 f"{exception}."
             ) from None
         except Exception as exception:
-            raise NotImplementedError from exception
+            raise NotImplementedError from exception  # pragma: no cover
 
         config_last_update = get_file_modification_time(path_to_config)
 

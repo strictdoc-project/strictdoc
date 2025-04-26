@@ -477,7 +477,9 @@ def coverage_combine(context):
         context,
         ToxEnvironment.CHECK,
         """
-            coverage html --data-file build/coverage/.coverage.combined
+            coverage html
+                --rcfile .coveragerc.combined
+                --data-file build/coverage/.coverage.combined
         """,
     )
 

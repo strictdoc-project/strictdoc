@@ -9,34 +9,34 @@ F = TypeVar("F")
 
 
 @overload
-def assert_cast(node: Any, node_type: Type[A]) -> A: ...
+def assert_cast(node: Any, node_type: Type[A]) -> A: ...  # pragma: no cover
 
 
 @overload
-def assert_cast(
+def assert_cast(  # pragma: no cover
     node: Any, node_type: Tuple[Type[B], Type[C]]
 ) -> Union[B, C]: ...
 
 
 @overload
-def assert_cast(
+def assert_cast(  # pragma: no cover
     node: Any, node_type: Tuple[Type[B], Type[C], Type[D]]
 ) -> Union[B, C, D]: ...
 
 
 @overload
-def assert_cast(
+def assert_cast(  # pragma: no cover
     node: Any, node_type: Tuple[Type[B], Type[C], Type[D], Type[E]]
 ) -> Union[B, C, D, E]: ...
 
 
 @overload
-def assert_cast(
+def assert_cast(  # pragma: no cover
     node: Any, node_type: Tuple[Type[B], Type[C], Type[D], Type[E], Type[F]]
 ) -> Union[B, C, D, E, F]: ...
 
 
-def assert_cast(
+def assert_cast(  # pragma: no cover
     node: Any, node_type: Union[Type[Any], Tuple[Type[Any], ...]]
 ) -> Any:
     assert isinstance(node, node_type), (node, node_type)
@@ -44,57 +44,61 @@ def assert_cast(
 
 
 @overload
-def assert_optional_cast(node: None, node_type: Type[A]) -> None: ...
+def assert_optional_cast(  # pragma: no cover
+    node: None, node_type: Type[A]
+) -> None: ...
 
 
 @overload
-def assert_optional_cast(node: Any, node_type: Type[A]) -> A: ...
+def assert_optional_cast(  # pragma: no cover
+    node: Any, node_type: Type[A]
+) -> A: ...
 
 
 @overload
-def assert_optional_cast(
+def assert_optional_cast(  # pragma: no cover
     node: None, node_type: Tuple[Type[B], Type[C]]
 ) -> None: ...
 
 
 @overload
-def assert_optional_cast(
+def assert_optional_cast(  # pragma: no cover
     node: Any, node_type: Tuple[Type[B], Type[C]]
 ) -> Union[B, C]: ...
 
 
 @overload
-def assert_optional_cast(
+def assert_optional_cast(  # pragma: no cover
     node: None, node_type: Tuple[Type[B], Type[C], Type[D]]
 ) -> None: ...
 
 
 @overload
-def assert_optional_cast(
+def assert_optional_cast(  # pragma: no cover
     node: Any, node_type: Tuple[Type[B], Type[C], Type[D]]
 ) -> Union[B, C, D]: ...
 
 
 @overload
-def assert_optional_cast(
+def assert_optional_cast(  # pragma: no cover
     node: None, node_type: Tuple[Type[B], Type[C], Type[D], Type[E]]
 ) -> None: ...
 
 
 @overload
-def assert_optional_cast(
+def assert_optional_cast(  # pragma: no cover
     node: Any, node_type: Tuple[Type[B], Type[C], Type[D], Type[E]]
 ) -> Union[B, C, D, E]: ...
 
 
 @overload
-def assert_optional_cast(
+def assert_optional_cast(  # pragma: no cover
     node: None, node_type: Tuple[Type[B], Type[C], Type[D], Type[E], Type[F]]
 ) -> None: ...
 
 
 @overload
-def assert_optional_cast(
+def assert_optional_cast(  # pragma: no cover
     node: Any, node_type: Tuple[Type[B], Type[C], Type[D], Type[E], Type[F]]
 ) -> Union[B, C, D, E, F]: ...
 

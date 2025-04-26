@@ -6,9 +6,6 @@ class ErrorObject:
     def any_errors(self):
         return len(self.errors)
 
-    def has_errors(self, field_name):
-        return field_name in self.errors
-
     def get_errors(self, field_name):
         if field_name not in self.errors:
             return []

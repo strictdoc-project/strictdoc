@@ -345,7 +345,7 @@ class JSONGenerator:
                 if child_reference.role is not None:
                     relation_dict["ROLE"] = child_reference.role
             else:
-                raise AssertionError("Must not reach here.")
+                raise AssertionError("Must not reach here.")  # pragma: no cover
 
             relations_list.append(relation_dict)
 

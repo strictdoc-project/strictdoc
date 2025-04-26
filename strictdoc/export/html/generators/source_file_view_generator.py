@@ -272,7 +272,7 @@ class SourceFileViewHTMLGenerator:
                 source_marker_tuple.markers.append(marker)
                 continue
 
-            raise NotImplementedError(marker)
+            raise NotImplementedError(marker)  # pragma: no cover
 
         pygments_styles = (
             f"/* Lexer: {lexer.name} */\n"

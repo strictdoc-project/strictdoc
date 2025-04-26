@@ -213,7 +213,7 @@ class GrammarElementRelationParent:
 
     def __eq__(self, other):
         if not isinstance(other, GrammarElementRelationParent):
-            raise NotImplementedError(self, other)
+            raise AssertionError(self, other)  # pragma: no cover
         return (
             self.mid == other.mid
             and self.relation_type == other.relation_type

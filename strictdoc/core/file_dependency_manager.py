@@ -52,8 +52,8 @@ class FileDependencyManager:
             unpickled_content.dependencies_now.clear()
             return unpickled_content
 
-        return FileDependencyManager(
-            path_to_cache_dir, path_to_cache, {}, {}, set()
+        raise AssertionError(  # pragma: no cover
+            f"Problem reading the file dependency cache file: {path_to_cache}"
         )
 
     def must_generate(self, path_to_input_file: str) -> bool:

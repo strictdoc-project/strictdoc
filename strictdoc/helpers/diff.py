@@ -1,17 +1,21 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import difflib
 from difflib import SequenceMatcher
+from typing import Callable
 
 from markupsafe import Markup, escape
 
 
-def similar(a, b):
+def similar(a: str, b: str) -> float:
     return SequenceMatcher(None, a, b).ratio()
 
 
-red = lambda text: f'<span class="lambda_red">{escape(text)}</span>'
-green = lambda text: f'<span class="lambda_green">{escape(text)}</span>'
-white = lambda text: f"<span>{escape(text)}</span>"
+red: Callable[[str], str] = (
+    lambda text: f'<span class="lambda_red">{escape(text)}</span>'
+)
+green: Callable[[str], str] = (
+    lambda text: f'<span class="lambda_green">{escape(text)}</span>'
+)
+white: Callable[[str], str] = lambda text: f"<span>{escape(text)}</span>"
 
 
 def get_colored_html_diff_string(old: str, new: str, flag: str) -> Markup:
@@ -35,4 +39,6 @@ def get_colored_html_diff_string(old: str, new: str, flag: str) -> Markup:
                 result += red(old[code[1] : code[2]])
             else:
                 result += green(new[code[3] : code[4]])
+        else:
+            raise NotImplementedError(code)  # pragma: no cover
     return Markup(result)

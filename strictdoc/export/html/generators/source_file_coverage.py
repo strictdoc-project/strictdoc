@@ -39,12 +39,6 @@ class SourceCoverageViewObject:
     def render_url(self, url: str):
         return self.link_renderer.render_url(url)
 
-    def render_static_url_with_prefix(self, url: str):
-        return self.link_renderer.render_static_url_with_prefix(url)
-
-    def render_local_anchor(self, node):
-        return self.link_renderer.render_local_anchor(node)
-
     def get_file_stats_lines_total(self, source_file: SourceFile) -> str:
         trace_info: Optional[SourceFileTraceabilityInfo] = (
             self.traceability_index.get_coverage_info_weak(

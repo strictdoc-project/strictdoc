@@ -17,7 +17,7 @@ class Parallelizer(ABC):
     @property
     @abstractmethod
     def parallelization_enabled(self) -> bool:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def run_parallel(
@@ -25,11 +25,11 @@ class Parallelizer(ABC):
         contents: Iterable[Any],
         processing_func: MultiprocessingLambdaType,
     ) -> Iterable[Any]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def shutdown(self) -> None:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class MultiprocessingParallelizer(Parallelizer):

@@ -8,50 +8,50 @@ ALL_EDGES = ".all"
 class AbstractBucket(ABC):
     @abstractmethod
     def has_link(self, *, lhs_node: Any) -> bool:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_count(self) -> Any:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_link_value(
         self, *, lhs_node: Any, edge: Optional[str] = None
     ) -> Any:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_link_value_weak(self, *, lhs_node: Any) -> Optional[Any]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def get_link_values(
         self, *, lhs_node: Any, edge: Optional[str] = None
     ) -> Any:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def get_link_values_with_edges(
         self, *, lhs_node: Any, edge: Optional[str] = None
     ) -> List[Tuple[Any, Optional[str]]]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def get_link_values_reverse(self, *, rhs_node: Any) -> Any:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def create_link(
         self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
     ):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def create_link_weak(self, *, lhs_node: Any, rhs_node: Any):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def delete_link(
         self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
     ):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def delete_link_weak(
         self,
@@ -59,11 +59,11 @@ class AbstractBucket(ABC):
         lhs_node: Any,
         rhs_node: Any,
     ):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def delete_all_links(
         self,
         *,
         lhs_node: Any,
     ):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover

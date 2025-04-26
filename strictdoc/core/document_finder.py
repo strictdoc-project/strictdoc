@@ -87,7 +87,7 @@ class DocumentFinder:
                 )
                 assert isinstance(document_or_grammar, SDocDocument)
             else:
-                raise NotImplementedError
+                raise NotImplementedError  # pragma: no cover
         drop_textx_meta(document_or_grammar)
 
         return doc_file, file_tree_mount_folder, document_or_grammar

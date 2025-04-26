@@ -568,9 +568,9 @@ class P01_SDocToReqIFObjectConverter:
                     value=field_value,
                 )
             else:
-                raise NotImplementedError(
+                raise NotImplementedError(  # pragma: no cover
                     grammar_field
-                ) from None  # pragma: no cover
+                ) from None
             attributes.append(attribute)
 
         if requirement.reserved_uid is not None:

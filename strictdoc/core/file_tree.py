@@ -11,16 +11,16 @@ from strictdoc.helpers.sorting import alphanumeric_sort
 
 class FileOrFolderEntry:
     def get_full_path(self):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def get_level(self):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def is_folder(self):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def mount_folder(self):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class File(FileOrFolderEntry):

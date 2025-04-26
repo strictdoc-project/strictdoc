@@ -239,7 +239,7 @@ class JSONGenerator:
             return subnode_dict
 
         else:
-            raise NotImplementedError
+            raise NotImplementedError  # pragma: no cover
 
     @classmethod
     def _write_section(

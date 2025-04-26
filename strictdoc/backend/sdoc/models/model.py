@@ -16,27 +16,27 @@ class SDocNodeIF(ABC):
 
     @abstractmethod
     def is_normative_node(self) -> bool:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def is_text_node(self) -> bool:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_debug_info(self) -> str:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_document(self) -> Optional["SDocDocumentIF"]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_including_document(self) -> Optional["SDocDocumentIF"]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_parent_or_including_document(self) -> "SDocDocumentIF":
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class SDocCompositeNodeIF(SDocNodeIF):
@@ -44,7 +44,7 @@ class SDocCompositeNodeIF(SDocNodeIF):
 
     @abstractmethod
     def get_requirement_prefix(self) -> str:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class SDocSectionIF(ABC):
@@ -54,19 +54,19 @@ class SDocSectionIF(ABC):
 
     @abstractmethod
     def get_document(self) -> Optional["SDocDocumentIF"]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_requirement_prefix(self) -> str:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_debug_info(self) -> str:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_display_title(self, include_toc_number: bool = True) -> str:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class SDocDocumentIF(ABC):
@@ -79,21 +79,21 @@ class SDocDocumentIF(ABC):
 
     @abstractmethod
     def get_requirement_prefix(self) -> str:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_debug_info(self) -> str:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def iterate_included_documents_depth_first(
         self,
     ) -> Generator["SDocDocumentIF", None, None]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def get_display_title(self, include_toc_number: bool = True) -> str:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 class SDocDocumentFromFileIF:
@@ -102,11 +102,11 @@ class SDocDocumentFromFileIF:
 
     @abstractmethod
     def has_any_requirements(self) -> bool:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     @property
     def section_contents(self) -> List[SDocDocumentIF]:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 SDocSectionContentIF = Union[

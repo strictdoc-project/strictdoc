@@ -57,7 +57,7 @@ class ExcelToSDocConverter:
                 header_row_idx = i
                 break
         else:
-            raise NotImplementedError
+            raise NotImplementedError  # pragma: no cover
 
         header_row = sheet.row_values(header_row_idx)
         safe_header_row = [safe_name(x) for x in header_row]

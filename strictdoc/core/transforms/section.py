@@ -248,7 +248,7 @@ class CreateSectionCommand:
                     parent.section_contents.index(reference_node) + 1
                 )
         else:
-            raise NotImplementedError
+            raise NotImplementedError  # pragma: no cover
 
         section = SDocSection(
             parent=parent,

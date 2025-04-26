@@ -306,9 +306,9 @@ class P01_ReqIFToSDocConverter:
                 # fields.
                 pass
             else:
-                raise NotImplementedError(
+                raise NotImplementedError(  # pragma: no cover
                     attribute
-                ) from None  # pragma: no cover
+                ) from None
 
         requirement_element = GrammarElement(
             parent=None,
@@ -371,9 +371,9 @@ class P01_ReqIFToSDocConverter:
                 section_title = attribute.value
                 break
         else:
-            raise NotImplementedError(
+            raise NotImplementedError(  # pragma: no cover
                 spec_object, attribute_map
-            )  # pragma: no cover
+            )
 
         # Sanitize the title. Titles can also come from XHTML attributes with
         # custom newlines such as:

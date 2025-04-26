@@ -106,7 +106,9 @@ class SDocNode(SDocNodeIF):
         node_type: str,
         fields: List[SDocNodeField],
         relations: List[Reference],
+        is_composite: bool = False,
         requirements: Optional[List["SDocNode"]] = None,
+        node_type_close: Optional[str] = None,
     ) -> None:
         assert parent
         assert isinstance(node_type, str)
@@ -117,6 +119,12 @@ class SDocNode(SDocNodeIF):
         ] = parent
 
         self.node_type: str = node_type
+        # FIXME: MERGE NODES
+        if node_type_close is not None and len(node_type_close) > 0:
+            assert node_type == node_type_close
+            assert is_composite
+
+        self.is_composite: bool = is_composite
 
         ordered_fields_lookup: OrderedDict[str, List[SDocNodeField]] = (
             OrderedDict()
@@ -174,7 +182,9 @@ class SDocNode(SDocNodeIF):
             self.custom_level = level
 
         # This is always true, unless the node is filtered out with --filter-requirements.
-        self.ng_whitelisted = True
+        self.ng_whitelisted: bool = True
+
+        self.ng_has_requirements: bool = False
 
     @staticmethod
     def get_type_string() -> str:
@@ -646,9 +656,6 @@ class SDocCompositeNode(SDocNode, SDocCompositeNodeIF):
         **fields: Any,
     ) -> None:
         super().__init__(parent, **fields)
-        self.ng_document_reference: Optional[DocumentReference] = None
-        self.ng_including_document_reference: Optional[DocumentReference] = None
-        self.ng_has_requirements = False
 
     @property
     def is_composite_requirement(self) -> bool:
@@ -661,9 +668,12 @@ class SDocCompositeNode(SDocNode, SDocCompositeNodeIF):
         assert document is not None
         return document
 
-    def document_is_included(self) -> bool:
-        assert self.ng_including_document_reference is not None
-        return self.ng_including_document_reference.get_document() is not None
 
-    def get_requirement_prefix(self) -> str:
-        return self.parent.get_requirement_prefix()
+@auto_described
+class SDocCompositeNodeNew(SDocNode):
+    def __init__(
+        self,
+        parent: Union[SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF],
+        **fields: Any,
+    ) -> None:
+        super().__init__(parent, **fields, is_composite=True)

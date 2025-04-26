@@ -94,7 +94,7 @@ class SDocNodeField:
                 text += "]"
                 text += "\n"
             else:
-                raise NotImplementedError(part)
+                raise NotImplementedError(part)  # pragma: no cover
         return text
 
 
@@ -182,9 +182,6 @@ class SDocNode(SDocNodeIF):
 
     def get_node_type_string(self) -> Optional[str]:
         return self.node_type
-
-    def get_node_type_string_lower(self) -> Optional[str]:
-        return self.node_type.lower()
 
     def get_display_title(
         self,
@@ -383,14 +380,6 @@ class SDocNode(SDocNodeIF):
             return []
         return self.ordered_fields_lookup[RequirementFieldName.COMMENT]
 
-    def has_requirement_references(self, ref_type: str) -> bool:
-        if len(self.relations) == 0:
-            return False
-        for reference in self.relations:
-            if reference.ref_type == ref_type:
-                return True
-        return False
-
     def get_requirement_references(self, ref_type: str) -> List[Reference]:
         if len(self.relations) == 0:
             return []
@@ -430,36 +419,6 @@ class SDocNode(SDocNodeIF):
                         child_reference.role,
                     )
                 )
-        return references
-
-    def get_parent_requirement_reference_uids(
-        self,
-    ) -> List[Tuple[str, Optional[str]]]:
-        if not self.relations or len(self.relations) == 0:
-            return []
-        references: List[Tuple[str, Optional[str]]] = []
-        for reference in self.relations:
-            if reference.ref_type != ReferenceType.PARENT:
-                continue
-            parent_reference: ParentReqReference = assert_cast(
-                reference, ParentReqReference
-            )
-            references.append((parent_reference.ref_uid, parent_reference.role))
-        return references
-
-    def get_child_requirement_reference_uids(
-        self,
-    ) -> List[Tuple[str, Optional[str]]]:
-        if not self.relations or len(self.relations) == 0:
-            return []
-        references: List[Tuple[str, Optional[str]]] = []
-        for reference in self.relations:
-            if reference.ref_type != ReferenceType.CHILD:
-                continue
-            child_reference: ChildReqReference = assert_cast(
-                reference, ChildReqReference
-            )
-            references.append((child_reference.ref_uid, child_reference.role))
         return references
 
     def enumerate_fields(self) -> Generator[SDocNodeField, None, None]:

@@ -473,6 +473,13 @@ def coverage_combine(context):
                 build/coverage/unit_server/.coverage
         """,
     )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            coverage html --data-file build/coverage/.coverage.combined
+        """,
+    )
 
 
 @task

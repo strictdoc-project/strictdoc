@@ -306,7 +306,9 @@ class P01_ReqIFToSDocConverter:
                 # fields.
                 pass
             else:
-                raise NotImplementedError(attribute) from None
+                raise NotImplementedError(  # pragma: no cover
+                    attribute
+                ) from None
 
         requirement_element = GrammarElement(
             parent=None,
@@ -363,13 +365,15 @@ class P01_ReqIFToSDocConverter:
                 attribute.definition_ref
             ].long_name
             if field_name_or_none is None:
-                raise NotImplementedError
+                raise NotImplementedError  # pragma: no cover
             field_name: str = field_name_or_none
             if field_name == ReqIFChapterField.CHAPTER_NAME:
                 section_title = attribute.value
                 break
         else:
-            raise NotImplementedError(spec_object, attribute_map)
+            raise NotImplementedError(  # pragma: no cover
+                spec_object, attribute_map
+            )
 
         # Sanitize the title. Titles can also come from XHTML attributes with
         # custom newlines such as:
@@ -435,7 +439,7 @@ class P01_ReqIFToSDocConverter:
                 attribute.definition_ref
             ].long_name
             if long_name_or_none is None:
-                raise NotImplementedError
+                raise NotImplementedError  # pragma: no cover
             field_name: str = long_name_or_none
             if attribute.attribute_type == SpecObjectAttributeType.ENUMERATION:
                 sdoc_field_name = P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
@@ -467,7 +471,7 @@ class P01_ReqIFToSDocConverter:
 
                         break
                 else:
-                    raise NotImplementedError
+                    raise NotImplementedError  # pragma: no cover
 
                 enum_values = ", ".join(enum_values_resolved)
                 fields.append(

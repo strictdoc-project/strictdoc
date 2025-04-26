@@ -78,7 +78,7 @@ def get_spdx_ref(node: Union[SDocDocument, SDocNode, str]) -> str:
         return "SDocDocument-" + identifier
     if isinstance(node, SDocNode):
         return "SDocRequirement-" + identifier
-    raise NotImplementedError
+    raise NotImplementedError  # pragma: no cover
 
 
 class SDocToSPDXConverter:

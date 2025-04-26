@@ -290,7 +290,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         elif whereto == "after":
             replace_action = "after"
         else:
-            raise NotImplementedError
+            raise NotImplementedError  # pragma: no cover
 
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
@@ -717,7 +717,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         elif whereto == NodeCreationOrder.AFTER:
             replace_action = "after"
         else:
-            raise NotImplementedError
+            raise NotImplementedError  # pragma: no cover
 
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
@@ -1022,10 +1022,8 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             next_uid: str = document_tree_stats.get_auto_section_uid(
                 document_acronym, reference_node
             )
-        elif reference_node is None:
-            raise NotImplementedError(reference_node)
         else:
-            raise NotImplementedError
+            raise NotImplementedError(reference_node)  # pragma: no cover
 
         uid_form_field: RequirementFormField = RequirementFormField(
             field_mid=MID.create(),
@@ -1516,7 +1514,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             )
             moved_node.parent = target_node.parent
         else:
-            raise NotImplementedError
+            raise NotImplementedError  # pragma: no cover
 
         # Saving new content to .SDoc file.
         SDWriter(project_config).write_to_file(moved_node.document)

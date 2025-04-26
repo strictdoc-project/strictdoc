@@ -88,4 +88,4 @@ class DocumentView:
         for view_element_ in self.views:
             if view_element_.view_id == view_id:
                 return view_element_
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover

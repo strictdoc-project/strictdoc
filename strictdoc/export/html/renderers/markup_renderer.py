@@ -149,7 +149,7 @@ class MarkupRenderer:
                     document_type=DocumentType.document(),
                 )
             else:
-                raise NotImplementedError
+                raise NotImplementedError  # pragma: no cover
             prev_part = part
 
         output = self.fragment_writer.write(parts_output)

@@ -71,4 +71,4 @@ class DocumentType:
             return "Deep Traceability"
         if self.document_type == DocumentType.PDF:
             return "PDF"
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover

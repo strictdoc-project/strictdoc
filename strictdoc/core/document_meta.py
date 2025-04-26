@@ -191,7 +191,7 @@ class DocumentMeta:
         elif document_type_type == DocumentType.PDF:
             document_link = self.get_html_pdf_link()
         else:
-            raise NotImplementedError
+            raise NotImplementedError  # pragma: no cover
         # We reach here the document is a bundle document.
         if len(path_prefix) == 0:
             return document_link

@@ -203,7 +203,7 @@ def range_marker_processor(
         except IndexError:
             raise create_end_without_begin_error("FIXME", 1, 1) from None
     else:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 def line_marker_processor(

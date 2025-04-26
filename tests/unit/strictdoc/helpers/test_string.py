@@ -74,3 +74,6 @@ def test_interpolate_at_pattern_lazy():
 
     result = interpolate_at_pattern_lazy("@GIT_VERSION, @GIT_BRANCH", resolver)
     assert result == "abcd123, main"
+
+    result = interpolate_at_pattern_lazy("foo, bar", resolver)
+    assert result == "foo, bar"

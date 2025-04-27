@@ -214,7 +214,17 @@ class SDWriter:
                 for element in document_grammar.elements:
                     output += "- TAG: "
                     output += element.tag
-                    output += "\n  FIELDS:\n"
+                    output += "\n"
+
+                    if element.property_is_composite is not None:
+                        output += "  PROPERTIES:\n"
+                        output += "    IS_COMPOSITE: "
+                        output += (
+                            "True" if element.property_is_composite else "False"
+                        )
+                        output += "\n"
+
+                    output += "  FIELDS:\n"
                     for grammar_field in element.fields:
                         output += SDWriter._print_grammar_field_type(
                             grammar_field
@@ -282,7 +292,10 @@ class SDWriter:
         elif isinstance(root_node, SDocNode):
             output = ""
 
-            if isinstance(root_node, SDocCompositeNodeNew):
+            if (
+                isinstance(root_node, SDocCompositeNodeNew)
+                or root_node.is_composite
+            ):
                 output += "[["
                 output += root_node.node_type
                 output += "]]\n"
@@ -300,15 +313,31 @@ class SDWriter:
             )
             output += "\n"
 
-            if isinstance(root_node, (SDocCompositeNode, SDocCompositeNodeNew)):
-                for node_ in root_node.requirements:
-                    if not node_.ng_whitelisted:
-                        continue
-                    output += self._print_node(
-                        node_, document, document_iterator=document_iterator
-                    )
+            if (
+                isinstance(root_node, (SDocCompositeNode, SDocCompositeNodeNew))
+                or root_node.is_composite
+            ):
+                # FIXME: Remove the legacy .requirements.
+                if root_node.requirements is not None:
+                    for node_ in root_node.requirements:
+                        if not node_.ng_whitelisted:
+                            continue
+                        output += self._print_node(
+                            node_, document, document_iterator=document_iterator
+                        )
 
-                if isinstance(root_node, SDocCompositeNodeNew):
+                if root_node.section_contents is not None:
+                    for node_ in root_node.section_contents:
+                        if not node_.ng_whitelisted:
+                            continue
+                        output += self._print_node(
+                            node_, document, document_iterator=document_iterator
+                        )
+
+                if (
+                    isinstance(root_node, SDocCompositeNodeNew)
+                    or root_node.is_composite
+                ):
                     output += "[[/"
                     output += root_node.node_type
                     output += "]]\n"

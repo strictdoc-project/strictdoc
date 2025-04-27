@@ -185,7 +185,7 @@ SDocCompositeNodeNew[noskipws]:
     (relations += Reference)
   )?
 
-  requirements *= SpaceThenRequirement
+  section_contents *= SpaceThenRequirement
 
   '\n'
   '[[/' node_type_close = RequirementType ']]' '\n'

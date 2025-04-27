@@ -15,6 +15,10 @@ DocumentGrammar[noskipws]:
 
 GrammarElement[noskipws]:
   '- TAG: ' tag = RequirementType '\n'
+  (
+    '  PROPERTIES:' '\n'
+    '    IS_COMPOSITE: ' property_is_composite=/(True|False)/ '\n'
+  )?
   '  FIELDS:' '\n'
   fields += GrammarElementField
   (

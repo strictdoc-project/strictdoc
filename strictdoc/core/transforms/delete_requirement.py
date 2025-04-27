@@ -23,6 +23,10 @@ class DeleteRequirementCommand:
         self.traceability_index: TraceabilityIndex = traceability_index
 
     def validate(self) -> None:
+        # FIXME:
+        # 1) For composite requirements, also validate that all child nodes recursively.
+        # 2) Double-check the case when removing a node, when there are other nodes
+        #    pointing to it with child/parent relations.
         nodes_with_incoming_links = [
             self.requirement
         ] + self.requirement.get_anchors()

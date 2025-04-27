@@ -16,6 +16,7 @@ from strictdoc.backend.sdoc.models.model import (
     SDocCompositeNodeIF,
     SDocDocumentIF,
     SDocNodeIF,
+    SDocSectionContentIF,
     SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.reference import (
@@ -108,6 +109,7 @@ class SDocNode(SDocNodeIF):
         relations: List[Reference],
         is_composite: bool = False,
         requirements: Optional[List["SDocNode"]] = None,
+        section_contents: Optional[List[SDocSectionContentIF]] = None,
         node_type_close: Optional[str] = None,
     ) -> None:
         assert parent
@@ -137,6 +139,9 @@ class SDocNode(SDocNodeIF):
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
         self.requirements: Optional[List[SDocNode]] = requirements
+        self.section_contents: List[SDocSectionContentIF] = (
+            section_contents if section_contents is not None else []
+        )
 
         self.relations: List[Reference] = relations
 
@@ -511,11 +516,11 @@ class SDocNode(SDocNodeIF):
         return field_human_title.get_field_human_name()
 
     def get_requirement_prefix(self) -> str:
-        parent: Union[SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF] = (
-            assert_cast(
-                self.parent,
-                (SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF),
-            )
+        parent: Union[
+            SDocDocumentIF, SDocSectionIF, SDocNodeIF, SDocCompositeNodeIF
+        ] = assert_cast(
+            self.parent,
+            (SDocDocumentIF, SDocSectionIF, SDocNodeIF, SDocCompositeNodeIF),
         )
         return parent.get_requirement_prefix()
 

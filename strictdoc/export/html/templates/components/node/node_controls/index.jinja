@@ -257,8 +257,10 @@
             <li class="viewtype__menu_header">{{ element_.tag }}:</li>
 
             {# There should be 3 places for the buttons: #}
-            <li>{# 1 • Requirement -> add Requirement #}</li>
-            <li>{# 2 • Requirement -> add Requirement #}
+            {% if not element_.property_is_composite %}
+              <li></li>
+            {% endif %}
+            <li>{# 1 • Requirement -> add Requirement #}
               <a
                 href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
@@ -267,6 +269,17 @@
                 data-testid="node-add-{{ element_.get_tag_lower() }}-above-action"
               >{% include "_res/svg_ico16_add_above.jinja" %}</a>
             </li>
+            {% if element_.property_is_composite %}
+            <li>{# 2 • Requirement -> add Requirement #}
+              <a
+                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
+                data-turbo-action="replace"
+                data-turbo="true"
+                title="Add child {{ element_.tag }}"
+                data-testid="node-add-{{ element_.get_tag_lower() }}-child-action"
+              >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+            </li>
+            {% endif %}
             <li>{# 3 • Requirement -> add Requirement #}
               <a
                 href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"

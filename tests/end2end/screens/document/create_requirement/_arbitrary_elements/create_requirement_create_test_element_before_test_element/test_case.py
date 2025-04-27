@@ -28,10 +28,10 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            """
-            Create a test case after the existing test case.
-            """
-            test_case_node = screen_document.get_requirement(1)
+            #
+            # Create a test case after the existing test case.
+            #
+            test_case_node = screen_document.get_node(1)
 
             test_case_menu = test_case_node.do_open_node_menu()
 
@@ -45,12 +45,12 @@ class Test(E2ECase):
             )
             form_edit_requirement.do_form_submit()
 
-            node_1 = screen_document.get_requirement(node_order=1)
+            node_1 = screen_document.get_node(node_order=1)
 
             node_1.assert_requirement_title("Unit test 2 ABC", "1")
             screen_document.assert_toc_contains("Unit test 2 ABC")
 
-            node_2 = screen_document.get_requirement(node_order=2)
+            node_2 = screen_document.get_node(node_order=2)
             node_2.assert_requirement_title("Unit test 1 ABC", "2")
             screen_document.assert_toc_contains("Unit test 1 ABC")
 

@@ -11,6 +11,7 @@ from strictdoc.backend.sdoc.error_handling import get_textx_syntax_error_message
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.free_text import FreeTextContainer
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocSectionIF
@@ -272,6 +273,13 @@ class CreateOrUpdateNodeCommand:
             if document.config.enable_mid:
                 requirement.mid_permanent = True
 
+            grammar_element: GrammarElement = document.grammar.elements_by_type[
+                form_object.element_type
+            ]
+
+            requirement.is_composite = (
+                grammar_element.property_is_composite is True
+            )
             requirement.ng_document_reference = DocumentReference()
             requirement.ng_document_reference.set_document(document)
             requirement.ng_including_document_reference = (

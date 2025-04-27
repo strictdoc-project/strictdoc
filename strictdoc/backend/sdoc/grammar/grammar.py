@@ -151,7 +151,7 @@ SDocSection[noskipws]:
 ;
 
 SectionOrRequirement[noskipws]:
-  '\n' (SDocSection | SDocNode | SDocCompositeNode | DocumentFromFile)
+  '\n' (SDocSection | SDocCompositeNodeNew | SDocNode | SDocCompositeNode | DocumentFromFile)
 ;
 
 DocumentFromFile[noskipws]:
@@ -174,6 +174,21 @@ SDocNode[noskipws]:
     'RELATIONS:' '\n'
     (relations += Reference)
   )?
+;
+
+SDocCompositeNodeNew[noskipws]:
+  '[[' node_type = RequirementType ']]' '\n'
+
+  fields *= SDocNodeField
+  (
+    'RELATIONS:' '\n'
+    (relations += Reference)
+  )?
+
+  requirements *= SpaceThenRequirement
+
+  '\n'
+  '[[/' node_type_close = RequirementType ']]' '\n'
 ;
 
 SDocCompositeNodeTagName[noskipws]:

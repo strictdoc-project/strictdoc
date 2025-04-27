@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.document_view import (
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
+    SDocCompositeNodeNew,
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.reference import (
@@ -37,10 +38,10 @@ from strictdoc.helpers.string import ensure_newline
 
 
 class SDWriter:
-    def __init__(self, project_config: ProjectConfig):
+    def __init__(self, project_config: ProjectConfig) -> None:
         self.project_config: ProjectConfig = project_config
 
-    def write_to_file(self, document: SDocDocument):
+    def write_to_file(self, document: SDocDocument) -> None:
         document_content, fragments_dict = self.write_with_fragments(document)
 
         document_meta: DocumentMeta = assert_cast(document.meta, DocumentMeta)
@@ -62,7 +63,7 @@ class SDWriter:
             with open(path_to_output_fragment, "w", encoding="utf8") as file_:
                 file_.write(fragment_content_)
 
-    def write(self, document: SDocDocument):
+    def write(self, document: SDocDocument) -> str:
         document_output, _ = self.write_with_fragments(document)
         return document_output
 
@@ -281,7 +282,11 @@ class SDWriter:
         elif isinstance(root_node, SDocNode):
             output = ""
 
-            if isinstance(root_node, SDocCompositeNode):
+            if isinstance(root_node, SDocCompositeNodeNew):
+                output += "[["
+                output += root_node.node_type
+                output += "]]\n"
+            elif isinstance(root_node, SDocCompositeNode):
                 output += "[COMPOSITE_"
                 output += root_node.node_type
                 output += "]\n"
@@ -295,7 +300,7 @@ class SDWriter:
             )
             output += "\n"
 
-            if isinstance(root_node, SDocCompositeNode):
+            if isinstance(root_node, (SDocCompositeNode, SDocCompositeNodeNew)):
                 for node_ in root_node.requirements:
                     if not node_.ng_whitelisted:
                         continue
@@ -303,16 +308,23 @@ class SDWriter:
                         node_, document, document_iterator=document_iterator
                     )
 
-                output += "[/COMPOSITE_"
-                output += root_node.node_type
-                output += "]\n"
-                output += "\n"
+                if isinstance(root_node, SDocCompositeNodeNew):
+                    output += "[[/"
+                    output += root_node.node_type
+                    output += "]]\n"
+                    output += "\n"
+                else:
+                    output += "[/COMPOSITE_"
+                    output += root_node.node_type
+                    output += "]\n"
+                    output += "\n"
 
             return output
 
-        raise AssertionError("Must not reach here")
+        raise AssertionError("Must not reach here")  # pragma: no cover
 
-    def _print_document_from_file(self, document_from_file: DocumentFromFile):
+    @staticmethod
+    def _print_document_from_file(document_from_file: DocumentFromFile):
         assert isinstance(document_from_file, DocumentFromFile)
         output = ""
         output += "[DOCUMENT_FROM_FILE]"

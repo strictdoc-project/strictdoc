@@ -1,7 +1,10 @@
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.reader import SDReader
+from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.backend.sdoc.writer import SDWriter
+from strictdoc.helpers.cast import assert_cast
+from tests.unit.helpers.fake_document_meta import create_fake_document_meta
 
 
 def test_150_grammar_minimal_doc(default_project_config):
@@ -112,7 +115,7 @@ SINGLE_CHOICE_FIELD: A
 
 
 def test_152_grammar_multiple_choice(default_project_config):
-    input_sdoc = """
+    input_sdoc = """\
 [DOCUMENT]
 TITLE: Test Doc
 
@@ -128,29 +131,8 @@ ELEMENTS:
   - TITLE: MULTIPLE_CHOICE_FIELD
     TYPE: MultipleChoice(A, B, C)
     REQUIRED: True
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-MULTIPLE_CHOICE_FIELD: A, C
-""".lstrip()
-
-    expected_sdoc = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: TEXT
-  FIELDS:
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: True
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: MULTIPLE_CHOICE_FIELD
-    TYPE: MultipleChoice(A, B, C)
+  - TITLE: MULTIPLE_CHOICE_FIELD_2
+    TYPE: MultipleChoice(Review, Test/Hardware)
     REQUIRED: True
   - TITLE: STATEMENT
     TYPE: String
@@ -158,17 +140,30 @@ ELEMENTS:
 
 [LOW_LEVEL_REQUIREMENT]
 MULTIPLE_CHOICE_FIELD: A, C
-""".lstrip()
+MULTIPLE_CHOICE_FIELD_2: Review, Test/Hardware
+"""
 
     reader = SDReader()
 
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
+    document.meta = create_fake_document_meta()
+    try:
+        SDocValidator.validate_document(document)
+        SDocValidator.validate_node(
+            assert_cast(document.section_contents[0], SDocNode),
+            document.grammar,
+            "fake.path.sdoc",
+            auto_uid_mode=False,
+        )
+    except Exception as exc_:
+        raise exc_
+
     writer = SDWriter(default_project_config)
     output = writer.write(document)
 
-    assert expected_sdoc == output
+    assert input_sdoc == output
 
 
 def test_153_grammar_tag(default_project_config):

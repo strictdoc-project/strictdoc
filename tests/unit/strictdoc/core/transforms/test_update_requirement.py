@@ -16,7 +16,7 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementReferenceFormField,
 )
 from strictdoc.helpers.mid import MID
-from tests.unit.helpers.test_document_builder import DocumentBuilder
+from tests.unit.helpers.document_builder import DocumentBuilder
 
 
 def test_01_single_document_add_first_parent_relation_with_no_role():

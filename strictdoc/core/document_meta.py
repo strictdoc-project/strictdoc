@@ -12,16 +12,16 @@ class DocumentMeta:
     def __init__(
         self,
         level: int,
-        file_tree_mount_folder,
+        file_tree_mount_folder: str,
         document_filename: str,
-        document_filename_base,
-        input_doc_full_path,
+        document_filename_base: str,
+        input_doc_full_path: str,
         input_doc_rel_path: SDocRelativePath,
         input_doc_dir_rel_path: SDocRelativePath,
         input_doc_assets_dir_rel_path: SDocRelativePath,
         output_document_dir_full_path: str,
         output_document_dir_rel_path: SDocRelativePath,
-    ):
+    ) -> None:
         """
         Example explaining meta data stored by this class:
 

@@ -1,4 +1,4 @@
-REGEX_UID = r"([\w]+[\w()\-. ]*)"
+REGEX_UID = r"([\w]+[\w()\-\/. ]*)"
 
 NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
 NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
@@ -44,7 +44,7 @@ MultiLineString[noskipws]:
 ;
 
 FieldName[noskipws]:
-  /{NEGATIVE_UID}{NEGATIVE_RELATIONS}[A-Z]+[A-Z_]*/
+  /{NEGATIVE_UID}{NEGATIVE_RELATIONS}[A-Z]+[A-Z_0-9]*/
 ;
 """
 

@@ -60,6 +60,37 @@ TITLE: Hello
     assert input_sdoc == output
 
 
+def test_005_requirement_UID_supports_special_characters(
+    default_project_config,
+):
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+UID: FOO-1
+TITLE: Hello
+
+[REQUIREMENT]
+UID: FOO.1
+TITLE: Hello
+
+[REQUIREMENT]
+UID: FOO/1
+TITLE: Hello
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter(default_project_config)
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_003_comments_01_several_comments(default_project_config):
     input_sdoc = """
 [DOCUMENT]
@@ -980,9 +1011,9 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected '([\\w]+[\\w()\\-. ]*)'" in exc_info.value.args[0].decode(
-        "utf-8"
-    )
+    assert "Expected '([\\w]+[\\w()\\-\\/. ]*)'" in exc_info.value.args[
+        0
+    ].decode("utf-8")
 
 
 def test_edge_case_04_uid_present_but_empty_with_two_space_characters():
@@ -1001,9 +1032,9 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected '([\\w]+[\\w()\\-. ]*)'" in exc_info.value.args[0].decode(
-        "utf-8"
-    )
+    assert "Expected '([\\w]+[\\w()\\-\\/. ]*)'" in exc_info.value.args[
+        0
+    ].decode("utf-8")
 
 
 def test_edge_case_10_empty_multiline_field():
@@ -1025,8 +1056,8 @@ COMMENT: >>>
     assert (
         "Expected '^\\[ANCHOR: ' or '[LINK: ' or "
         "'(?ms)(?!^<<<)(?!\\[LINK: "
-        "([\\w]+[\\w()\\-. ]*))(?!^\\[ANCHOR: "
-        "([\\w]+[\\w()\\-. ]*)).'" in exc_info.value.args[0].decode("utf-8")
+        "([\\w]+[\\w()\\-\\/. ]*))(?!^\\[ANCHOR: "
+        "([\\w]+[\\w()\\-\\/. ]*)).'" in exc_info.value.args[0].decode("utf-8")
     )
 
 

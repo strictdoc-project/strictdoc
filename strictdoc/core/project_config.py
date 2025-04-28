@@ -173,6 +173,18 @@ class ProjectConfig:
         self.reqif_enable_mid: bool = reqif_enable_mid
         self.reqif_import_markup: Optional[str] = reqif_import_markup
 
+        #
+        # auto_uid_mode: default is False. The True-case is used by the
+        # manage/auto_uid command: the SDocNodeValidator will
+        # not raise an exception if it sees a node with a missing UID.
+        # Important for a special case:
+        # The Manage UID command auto-generates the UID, so the field presence
+        # validation has to be relaxed.
+        # The GitHub issue report:
+        # manage auto-uid: UID field REQUIRED True leads to an error
+        # https://github.com/strictdoc-project/strictdoc/issues/1896
+        #
+        self.auto_uid_mode = False
         self.autouuid_include_sections: bool = False
 
         self.config_last_update: Optional[datetime.datetime] = (

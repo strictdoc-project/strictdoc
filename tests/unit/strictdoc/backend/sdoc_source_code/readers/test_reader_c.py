@@ -128,3 +128,52 @@ void hello_world_2(void) {
     assert info.markers[1].ng_range_line_end == 22
     assert info.markers[1].reqs_objs[0].ng_source_line == 17
     assert info.markers[1].reqs_objs[0].ng_source_column == 14
+
+
+def test_04_multiline_markers_with_underscores():
+    """
+    Bug: requirements UID not detected in source code when there's an EOL #2130
+    https://github.com/strictdoc-project/strictdoc/issues/2130
+    """
+
+    input_string = b"""\
+#include <stdio.h>
+
+/**
+ * @brief some text
+ * @return some text.
+ * @param[in] void
+ * @param[out] void
+ * @param[in, out] void
+ * @pre
+ * @post
+ * @relation{INT_STP_016_0000, INT_STP_016_0001, INT_STP_016_0002,
+ * scope=function}
+ * @note Reference:
+ */
+stilib_result_t stilib_smu_start_state_check(void);
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 1
+    assert info.markers[0].reqs == [
+        "INT_STP_016_0000",
+        "INT_STP_016_0001",
+        "INT_STP_016_0002",
+    ]
+
+    assert info.markers[0].ng_source_line_begin == 11
+    assert info.markers[0].ng_range_line_begin == 3
+    assert info.markers[0].ng_range_line_end == 15
+    assert info.markers[0].reqs_objs[0].ng_source_line == 11
+    assert info.markers[0].reqs_objs[0].ng_source_column == 14
+    assert info.markers[0].reqs_objs[1].ng_source_line == 11
+    assert info.markers[0].reqs_objs[1].ng_source_column == 32
+    assert info.markers[0].reqs_objs[2].ng_source_line == 11
+    assert info.markers[0].reqs_objs[2].ng_source_column == 50

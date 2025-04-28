@@ -19,7 +19,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldName,
 )
 
-MULTIPLE_CHOICE_FIELD_KW = r"[a-zA-Z0-9\/_]+"
+MULTIPLE_CHOICE_FIELD_KW = r"[a-zA-Z0-9\/\-_ ]+"
 MULTIPLE_CHOICE_FIELD_REGEX = re.compile(
     rf"^{MULTIPLE_CHOICE_FIELD_KW}(, {MULTIPLE_CHOICE_FIELD_KW})*$"
 )

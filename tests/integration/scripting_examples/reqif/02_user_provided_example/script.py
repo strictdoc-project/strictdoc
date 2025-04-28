@@ -353,7 +353,11 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             else:
                 raise NotImplementedError(attribute) from None
         requirement_element = GrammarElement(
-            parent=None, tag="REQUIREMENT", fields=fields, relations=[]
+            parent=None,
+            tag="REQUIREMENT",
+            property_is_composite="",
+            fields=fields,
+            relations=[]
         )
         return requirement_element
 

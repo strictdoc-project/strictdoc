@@ -170,6 +170,24 @@ class DocumentCachingIterator:
 
             yield node
 
+            current_number = 0
+            if node.section_contents is not None:
+                for subnode_ in node.section_contents:
+                    if subnode_.ng_resolved_custom_level is None and not (
+                        isinstance(subnode_, SDocNode)
+                        and subnode_.node_type == "TEXT"
+                    ):
+                        current_number += 1
+
+                    yield from self._all_content(
+                        subnode_,
+                        print_fragments=print_fragments,
+                        print_fragments_from_files=print_fragments_from_files,
+                        level_stack=level_stack + (current_number,),
+                        custom_level=custom_level
+                        or subnode_.ng_resolved_custom_level is not None,
+                    )
+
         elif isinstance(node, SDocDocument):
             if (
                 print_fragments

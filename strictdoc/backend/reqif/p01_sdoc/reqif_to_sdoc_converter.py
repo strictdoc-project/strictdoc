@@ -313,6 +313,9 @@ class P01_ReqIFToSDocConverter:
         requirement_element = GrammarElement(
             parent=None,
             tag=create_safe_requirement_tag_string(spec_object_type.long_name),
+            # FIXME: MERGE NODES
+            #        When the migration is done, make the nodes to be always recursive.
+            property_is_composite="",
             fields=fields,
             relations=[],
         )

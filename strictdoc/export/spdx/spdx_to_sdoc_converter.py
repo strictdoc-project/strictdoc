@@ -382,6 +382,7 @@ class SPDXToSDocConverter:
         document_element = GrammarElement(
             parent=None,
             tag="SPDX_DOCUMENT",
+            property_is_composite="",
             fields=fields,
             relations=[
                 GrammarElementRelationChild(
@@ -438,6 +439,7 @@ class SPDXToSDocConverter:
         package_element = GrammarElement(
             parent=None,
             tag="SPDX_PACKAGE",
+            property_is_composite="",
             fields=fields,
             relations=[
                 GrammarElementRelationChild(
@@ -494,6 +496,7 @@ class SPDXToSDocConverter:
         file_element = GrammarElement(
             parent=None,
             tag="SPDX_FILE",
+            property_is_composite="",
             fields=fields,
             relations=[
                 GrammarElementRelationChild(
@@ -556,6 +559,7 @@ class SPDXToSDocConverter:
             GrammarElement(
                 parent=None,
                 tag="SPDX_SNIPPET",
+                property_is_composite="",
                 fields=fields,
                 relations=[
                     GrammarElementRelationParent(

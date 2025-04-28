@@ -79,6 +79,7 @@ class SDocParsingProcessor:
 
     def process_document_grammar(self, document_grammar: DocumentGrammar):
         preserve_source_location_data(document_grammar)
+        # FIXME: It would be great to move forward and remove this.
         if not document_grammar.has_text_element():
             document_grammar.add_element_first(
                 DocumentGrammar.create_default_text_element(document_grammar)

@@ -1,0 +1,55 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  PROPERTIES:
+    IS_COMPOSITE: False
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+- TAG: REQUIREMENT
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[[REQUIREMENT]]
+UID: REQ-1
+TITLE: Req_1
+STATEMENT: >>>
+...
+<<<
+
+[[REQUIREMENT]]
+UID: REQ-2
+TITLE: Req_1_1
+STATEMENT: >>>
+...
+<<<
+
+[[REQUIREMENT]]
+UID: REQ-3
+TITLE: Req_1_1_1
+STATEMENT: >>>
+...
+<<<
+
+[[/REQUIREMENT]]
+
+[[/REQUIREMENT]]
+
+[[/REQUIREMENT]]

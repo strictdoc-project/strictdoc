@@ -149,7 +149,11 @@ class ExcelToSDocConverter:
             )
 
         requirements_element = GrammarElement(
-            parent=None, tag="REQUIREMENT", fields=fields, relations=[]
+            parent=None,
+            tag="REQUIREMENT",
+            property_is_composite="",
+            fields=fields,
+            relations=[],
         )
         elements = [requirements_element]
         grammar = DocumentGrammar(parent=document, elements=elements)

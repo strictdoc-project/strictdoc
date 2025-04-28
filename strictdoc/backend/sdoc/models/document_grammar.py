@@ -46,6 +46,7 @@ class GrammarElement:
         self,
         parent,
         tag: str,
+        property_is_composite: str,
         fields: List[
             Union[
                 GrammarElementFieldString,
@@ -57,6 +58,13 @@ class GrammarElement:
     ):
         self.parent = parent
         self.tag: str = tag
+
+        assert property_is_composite in ("", "True", "False")
+        self.property_is_composite: Optional[bool] = (
+            None
+            if property_is_composite == ""
+            else (property_is_composite == "True")
+        )
         self.fields: List[
             Union[
                 GrammarElementFieldString,
@@ -102,6 +110,7 @@ class GrammarElement:
         return GrammarElement(
             parent=None,
             tag=tag,
+            property_is_composite="",
             fields=[
                 GrammarElementFieldString(
                     parent=None,
@@ -271,7 +280,11 @@ class DocumentGrammar:
             ),
         ]
         requirement_element = GrammarElement(
-            parent=None, tag="REQUIREMENT", fields=fields, relations=[]
+            parent=None,
+            tag="REQUIREMENT",
+            property_is_composite="",
+            fields=fields,
+            relations=[],
         )
         # @relation(SDOC-SRS-132, scope=range_end)
 
@@ -346,7 +359,11 @@ class DocumentGrammar:
             ),
         ]
         requirement_element = GrammarElement(
-            parent=None, tag="TEST_RESULT", fields=fields, relations=[]
+            parent=None,
+            tag="TEST_RESULT",
+            property_is_composite="",
+            fields=fields,
+            relations=[],
         )
 
         requirement_element.relations = create_default_relations(
@@ -440,7 +457,11 @@ class DocumentGrammar:
             ),
         ]
         text_element = GrammarElement(
-            parent=parent, tag="TEXT", fields=fields, relations=[]
+            parent=parent,
+            tag="TEXT",
+            property_is_composite="",
+            fields=fields,
+            relations=[],
         )
         return text_element
 

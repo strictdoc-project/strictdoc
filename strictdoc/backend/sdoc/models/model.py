@@ -13,6 +13,7 @@ class SDocNodeFieldIF(ABC):
 class SDocNodeIF(ABC):
     node_type: str
     ng_resolved_custom_level: Optional[str]
+    section_contents: List["SDocSectionContentIF"]
 
     @abstractmethod
     def is_normative_node(self) -> bool:
@@ -38,13 +39,13 @@ class SDocNodeIF(ABC):
     def get_parent_or_including_document(self) -> "SDocDocumentIF":
         raise NotImplementedError  # pragma: no cover
 
-
-class SDocCompositeNodeIF(SDocNodeIF):
-    section_contents: List["SDocSectionContentIF"]
-
     @abstractmethod
     def get_requirement_prefix(self) -> str:
         raise NotImplementedError  # pragma: no cover
+
+
+class SDocCompositeNodeIF(SDocNodeIF, ABC):
+    pass
 
 
 class SDocSectionIF(ABC):

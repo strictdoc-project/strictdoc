@@ -1,0 +1,65 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: SingleChoice(tbd, draft, reviewed, rejected, on hold, accepted, baseline)
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: OWNER
+    TYPE: SingleChoice(Abigail ACCURACY, Basil BOUNDARY, Clarence COMPLIANCE, Daphne DESIGN, Fiona FRAMEWORK, Felix FUNCTIONAL, Gloria GOVERNANCE, Gertrude GUIDELINE, Hugo HARMONY, Harvey HIERARCHY, Lydia LOGIC, Olivia OBJECTIVE, Mildred METADATA, Nigel NORMATIVE, Penelope PROCEDURE, Rachel RATIONALE, Eleanor RIGOR, Samuel SPECIFICATION, Sylvia STANDARD, Theodore TRACEABILITY, Victor VALIDATION, Walter WORKFLOW)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+- TAG: TEST_CASE
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
+[REQUIREMENT]
+UID: TEST-1
+TITLE: Unit test ABC
+STATEMENT: >>>
+Shall test foo.
+<<<
+
+[REQUIREMENT]
+UID: TEST-2
+TITLE: Unit Test XZY
+STATEMENT: >>>
+Shall test bar.
+<<<

@@ -9,8 +9,9 @@
 {%- assert field_placeholder is not none, "field_placeholder is not none" -%}
 {%- assert field_value is defined, "field_value is defined" -%}
 {%- assert mid is defined, "mid is defined" -%}
-{%- assert requirement_mid is defined, "requirement_mid is defined" -%}
 {%- assert testid_postfix is defined, "testid_postfix is defined" -%}
+{%- assert autocomplete_url is defined, "autocomplete_url is defined" -%}
+{%- assert autocomplete_len is defined, "autocomplete_len is defined" -%}
 
 {% if field_required is not defined -%}
 {% set field_required=false -%}
@@ -50,7 +51,8 @@
     {%- endif -%}
     data-testid="form-field-{{ testid_postfix }}"
     data-autocompletable-target="input"
-    data-autocompletable-url-value="/autocomplete/uid?exclude_requirement_mid={{ requirement_mid }}"
+    data-autocompletable-url-value="{{ autocomplete_url }}"
+    data-autocompletable-min-length-value="{{ autocomplete_len }}"
   >
     {{- field_value -}}
   </sdoc-autocompletable>

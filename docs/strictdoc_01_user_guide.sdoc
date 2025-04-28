@@ -1519,7 +1519,7 @@ The supported field types are:
    :widths: 20 80
    :header-rows: 1
 
-   * - **Field Type**
+   * - **Field type**
      - **Description**
 
    * - ``String``
@@ -1538,6 +1538,10 @@ The supported field types are:
 
    * - ``Reference``
      - **DEPRECATED:** comma-separated list with allowed reference types: ``ParentReqReference``, ``FileReference``. In the newer versions of StrictDoc (0.0.45+), a separate ``RELATIONS:`` section is used to configure the available relations.
+
+.. note::
+
+    The **field type** also influences how the field is presented in the web editor UI. A ``SingleChoice`` field enables an auto-completion function, which is useful in cases where the same values are entered repeatedly (such as requirement owners, test case types, or status fields).
 
 Example:
 

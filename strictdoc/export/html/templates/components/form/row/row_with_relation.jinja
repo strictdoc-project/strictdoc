@@ -1,5 +1,4 @@
 {% assert relation_row_context is defined, "row_with_relation: relation_row_context must be defined." %}
-
 {% assert relation_row_context.errors is defined, "row_with_relation: errors must be defined." %}
 {% assert relation_row_context.field is defined, "row_with_relation: field must be defined." %}
 {% assert relation_row_context.relation_types is defined, "row_with_relation: relation_types must be defined." %}
@@ -56,6 +55,8 @@
     field_type = "singleline",
     field_value = relation_row_context.field.field_value,
     mid = relation_row_context.field.field_mid,
+    autocomplete_url = "/autocomplete/uid?exclude_requirement_mid="~requirement_mid,
+    autocomplete_len = "2",
     testid_postfix = "relation-uid"
   %}
   {%- include "components/form/field/autocompletable/index.jinja" %}

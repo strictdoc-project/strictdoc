@@ -58,18 +58,23 @@ class RequirementFormField:
         field_name: str,
         field_type: RequirementFormFieldType,
         field_value: str,
+        field_is_autocompletable: bool = False,
     ):
         assert isinstance(field_value, str)
         self.field_mid: str = field_mid
         self.field_name: str = field_name
         self.field_value: str = field_value
         self.field_type = field_type
+        self.field_is_autocompletable = field_is_autocompletable
 
-    def is_singleline(self):
+    def is_singleline(self) -> bool:
         return self.field_type == RequirementFormFieldType.SINGLELINE
 
-    def is_multiline(self):
+    def is_multiline(self) -> bool:
         return self.field_type == RequirementFormFieldType.MULTILINE
+
+    def is_autocompletable(self) -> bool:
+        return self.field_is_autocompletable
 
     def get_input_field_name(self):
         return f"requirement[fields][{self.field_mid}][value]"
@@ -104,6 +109,9 @@ class RequirementFormField:
                     else RequirementFormFieldType.SINGLELINE
                 ),
                 field_value=value,
+                field_is_autocompletable=(
+                    grammar_field.gef_type == RequirementFieldType.SINGLE_CHOICE
+                ),
             )
         raise NotImplementedError(grammar_field)
 
@@ -129,6 +137,9 @@ class RequirementFormField:
                     else RequirementFormFieldType.SINGLELINE
                 ),
                 field_value=field_value,
+                field_is_autocompletable=(
+                    grammar_field.gef_type == RequirementFieldType.SINGLE_CHOICE
+                ),
             )
         raise NotImplementedError(grammar_field)
 

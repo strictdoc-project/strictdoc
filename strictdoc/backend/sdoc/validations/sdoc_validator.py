@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-redef,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 import re
 from typing import Iterator, Optional, Set
 
@@ -19,11 +19,20 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldName,
 )
 
+MULTIPLE_CHOICE_FIELD_KW = r"[a-zA-Z0-9\/_]+"
+MULTIPLE_CHOICE_FIELD_REGEX = re.compile(
+    rf"^{MULTIPLE_CHOICE_FIELD_KW}(, {MULTIPLE_CHOICE_FIELD_KW})*$"
+)
 
-def multi_choice_regex_match(value):
-    keyword = "[a-zA-Z0-9_]+"
-    regex = re.compile(rf"^{keyword}(, {keyword})*$")
-    match = regex.match(value)
+
+def multi_choice_regex_match(value: str) -> bool:
+    """
+    Validate MultipleChoice field value.
+    Bug: Forward slashes in field values cause errors #2197,
+    https://github.com/strictdoc-project/strictdoc/issues/2197
+    """
+
+    match = MULTIPLE_CHOICE_FIELD_REGEX.match(value)
     return match is not None
 
 
@@ -37,7 +46,7 @@ class SDocValidator:
     """
 
     @staticmethod
-    def validate_document(document: SDocDocument):
+    def validate_document(document: SDocDocument) -> None:
         assert isinstance(document, SDocDocument), document
         SDocValidator._validate_document_config(document)
         SDocValidator._validate_document_view(document)
@@ -46,14 +55,16 @@ class SDocValidator:
     @staticmethod
     def validate_grammar_from_file(
         path_to_grammar: str, grammar_from_file: DocumentGrammar
-    ):
+    ) -> None:
         for grammar_element_ in grammar_from_file.elements:
             SDocValidator.validate_grammar_element(
                 path_to_grammar, grammar_element_
             )
 
     @staticmethod
-    def _validate_grammar(document: SDocDocument):
+    def _validate_grammar(document: SDocDocument) -> None:
+        assert document.meta is not None
+        assert document.grammar is not None
         for grammar_element_ in document.grammar.elements:
             SDocValidator.validate_grammar_element(
                 document.meta.input_doc_full_path, grammar_element_
@@ -61,8 +72,8 @@ class SDocValidator:
 
     @staticmethod
     def validate_grammar_element(
-        path_to_grammar, grammar_element: GrammarElement
-    ):
+        path_to_grammar: str, grammar_element: GrammarElement
+    ) -> None:
         if grammar_element.content_field[0] not in grammar_element.fields_map:
             raise StrictDocSemanticError.grammar_missing_reserved_statement(
                 grammar_element,
@@ -101,7 +112,7 @@ class SDocValidator:
             )
 
     @staticmethod
-    def _validate_document_config(document: SDocDocument):
+    def _validate_document_config(document: SDocDocument) -> None:
         document_config: DocumentConfig = document.config
         if document_config.default_view is not None:
             if document.view is None:
@@ -122,7 +133,7 @@ class SDocValidator:
                     )
 
     @staticmethod
-    def _validate_document_view(document: SDocDocument):
+    def _validate_document_view(document: SDocDocument) -> None:
         document_view: Optional[DocumentView] = document.view
         if document_view is not None:
             for view in document_view.views:
@@ -156,14 +167,14 @@ class SDocValidator:
         requirement: SDocNode,
         document_grammar: DocumentGrammar,
         path_to_sdoc_file: str,
-        auto_uid_mode: bool = True,
-    ):
+        auto_uid_mode: bool = False,
+    ) -> None:
         if requirement.node_type not in document_grammar.registered_elements:
             raise StrictDocSemanticError.unknown_node_type(
                 requirement, path_to_sdoc_file
             )
 
-        grammar_element = document_grammar.elements_by_type[
+        grammar_element: GrammarElement = document_grammar.elements_by_type[
             requirement.node_type
         ]
         registered_fields: Set[str] = set(grammar_element.get_field_titles())
@@ -177,9 +188,6 @@ class SDocValidator:
                     path_to_sdoc_file=path_to_sdoc_file,
                 )
 
-        grammar_element: GrammarElement = document_grammar.elements_by_type[
-            requirement.node_type
-        ]
         grammar_fields_iterator: Iterator[GrammarElementField] = iter(
             grammar_element.fields
         )
@@ -250,6 +258,9 @@ class SDocValidator:
         path_to_sdoc_file: str,
         auto_uid_mode: bool = True,
     ) -> bool:
+        """
+        Validate a single node field using its grammar element field definition.
+        """
         if grammar_field is None:
             if requirement_field is None:
                 # Both grammar and requirements fields are over.
@@ -282,11 +293,6 @@ class SDocValidator:
                     grammar_field.title
                     not in requirement.ordered_fields_lookup.keys()
                 ):
-                    # A special case: The Manage UID command auto-generates the UID,
-                    # so the field presence validation has to be relaxed.
-                    # The GitHub issue report:
-                    # manage auto-uid: UID field REQUIRED True leads to an error
-                    # https://github.com/strictdoc-project/strictdoc/issues/1896
                     if grammar_field.title == "UID" and auto_uid_mode:
                         return False
 

@@ -129,6 +129,7 @@ def _main(parallelizer: Parallelizer) -> None:
         # FIXME: This must be improved.
         project_config.input_paths = [manage_config.input_path]
         # FIXME: This must be improved.
+        project_config.auto_uid_mode = True
         project_config.autouuid_include_sections = (
             manage_config.include_sections
         )

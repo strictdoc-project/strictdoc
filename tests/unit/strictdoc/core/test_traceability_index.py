@@ -2,7 +2,7 @@ from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.helpers.mid import MID
-from tests.unit.helpers.test_document_builder import DocumentBuilder
+from tests.unit.helpers.document_builder import DocumentBuilder
 
 
 def test_valid_01_one_document_with_1req():

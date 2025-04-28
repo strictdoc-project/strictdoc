@@ -235,8 +235,8 @@ class SPDXGenerator:
         lookup_file_name_to_spdx_file: Dict[str, File] = {}
 
         for document_ in traceability_index.document_tree.document_list:
-            with open(document_.meta.input_doc_full_path, "rb") as file_:
-                document_bytes = file_.read()
+            with open(document_.meta.input_doc_full_path, "rb") as input_file_:
+                document_bytes = input_file_.read()
 
             """
             Create SPDX File from SDoc Document.
@@ -318,8 +318,8 @@ class SPDXGenerator:
                         if node_link_path_ in lookup_file_name_to_spdx_file:
                             continue
 
-                        with open(node_link_path_, "rb") as file_:
-                            file_bytes = file_.read()
+                        with open(node_link_path_, "rb") as node_link_file_:
+                            file_bytes = node_link_file_.read()
 
                         source_spdx_file = (
                             sdoc_spdx_converter.convert_file_to_file(
@@ -435,10 +435,10 @@ class SPDXGenerator:
         if True:
             sdoc_document = SPDXToSDocConverter.convert(spdx_container)
 
-            sdoc_output = SDWriter(project_config).write(sdoc_document)
+            sdoc_output: str = SDWriter(project_config).write(sdoc_document)
 
             sdoc_output_path = os.path.join(
                 output_spdx_root, "output.spdx.sdoc"
             )
-            with open(sdoc_output_path, "w", encoding="utf8") as file_:
-                file_.write(sdoc_output)
+            with open(sdoc_output_path, "w", encoding="utf8") as output_file_:
+                output_file_.write(sdoc_output)

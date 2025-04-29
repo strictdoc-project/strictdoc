@@ -78,6 +78,18 @@ TITLE: Hello
 [REQUIREMENT]
 UID: FOO/1
 TITLE: Hello
+
+[REQUIREMENT]
+UID: FOO_1
+TITLE: Hello
+
+[REQUIREMENT]
+UID: FOO 1
+TITLE: Hello
+
+[REQUIREMENT]
+UID: FOO::1
+TITLE: Hello
 """.lstrip()
 
     reader = SDReader()
@@ -1011,7 +1023,7 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected '([\\w]+[\\w()\\-\\/. ]*)'" in exc_info.value.args[
+    assert "Expected '([\\w]+[\\w()\\-\\/.: ]*)'" in exc_info.value.args[
         0
     ].decode("utf-8")
 
@@ -1032,7 +1044,7 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected '([\\w]+[\\w()\\-\\/. ]*)'" in exc_info.value.args[
+    assert "Expected '([\\w]+[\\w()\\-\\/.: ]*)'" in exc_info.value.args[
         0
     ].decode("utf-8")
 
@@ -1056,8 +1068,8 @@ COMMENT: >>>
     assert (
         "Expected '^\\[ANCHOR: ' or '[LINK: ' or "
         "'(?ms)(?!^<<<)(?!\\[LINK: "
-        "([\\w]+[\\w()\\-\\/. ]*))(?!^\\[ANCHOR: "
-        "([\\w]+[\\w()\\-\\/. ]*)).'" in exc_info.value.args[0].decode("utf-8")
+        "([\\w]+[\\w()\\-\\/.: ]*))(?!^\\[ANCHOR: "
+        "([\\w]+[\\w()\\-\\/.: ]*)).'" in exc_info.value.args[0].decode("utf-8")
     )
 
 

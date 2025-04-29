@@ -71,29 +71,11 @@ ELEMENTS:
   - TITLE: SINGLE_CHOICE_FIELD
     TYPE: SingleChoice(A, B, C)
     REQUIRED: True
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
-
-[LOW_LEVEL_REQUIREMENT]
-SINGLE_CHOICE_FIELD: A
-""".lstrip()
-
-    expected_sdoc = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: TEXT
-  FIELDS:
-  - TITLE: STATEMENT
-    TYPE: String
+  - TITLE: SINGLE_CHOICE_FIELD_2
+    TYPE: SingleChoice(Test/Hardware, Test/Software)
     REQUIRED: True
-- TAG: LOW_LEVEL_REQUIREMENT
-  FIELDS:
-  - TITLE: SINGLE_CHOICE_FIELD
-    TYPE: SingleChoice(A, B, C)
+  - TITLE: SINGLE_CHOICE_FIELD_3
+    TYPE: SingleChoice(Hardware test, Software test)
     REQUIRED: True
   - TITLE: STATEMENT
     TYPE: String
@@ -101,6 +83,8 @@ ELEMENTS:
 
 [LOW_LEVEL_REQUIREMENT]
 SINGLE_CHOICE_FIELD: A
+SINGLE_CHOICE_FIELD: Test/Hardware
+SINGLE_CHOICE_FIELD: Hardware test
 """.lstrip()
 
     reader = SDReader()
@@ -111,7 +95,7 @@ SINGLE_CHOICE_FIELD: A
     writer = SDWriter(default_project_config)
     output = writer.write(document)
 
-    assert expected_sdoc == output
+    assert input_sdoc == output
 
 
 def test_152_grammar_multiple_choice(default_project_config):
@@ -134,6 +118,15 @@ ELEMENTS:
   - TITLE: MULTIPLE_CHOICE_FIELD_2
     TYPE: MultipleChoice(Review, Test/Hardware)
     REQUIRED: True
+  - TITLE: MULTIPLE_CHOICE_FIELD_3
+    TYPE: MultipleChoice(Review of design, Hardware test)
+    REQUIRED: True
+  - TITLE: MULTIPLE_CHOICE_FIELD_4
+    TYPE: MultipleChoice(review_of_design, hardware_test)
+    REQUIRED: True
+  - TITLE: MULTIPLE_CHOICE_FIELD_5
+    TYPE: MultipleChoice(review-of-design, hardware-test)
+    REQUIRED: True
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
@@ -141,6 +134,9 @@ ELEMENTS:
 [LOW_LEVEL_REQUIREMENT]
 MULTIPLE_CHOICE_FIELD: A, C
 MULTIPLE_CHOICE_FIELD_2: Review, Test/Hardware
+MULTIPLE_CHOICE_FIELD_3: Review of design, Hardware test
+MULTIPLE_CHOICE_FIELD_4: review_of_design, hardware_test
+MULTIPLE_CHOICE_FIELD_5: review-of-design, hardware-test
 """
 
     reader = SDReader()

@@ -57,6 +57,7 @@ class UvicornReloadConfig:
                 + cls.expand_folder("dist", max_depth=3)
                 + cls.expand_folder("tests", max_depth=15)
                 + cls.expand_folder("output", max_depth=15)
+                + cls.expand_folder("Output", max_depth=15)
             )
 
             # Changing typical StrictDoc's own source code files should trigger

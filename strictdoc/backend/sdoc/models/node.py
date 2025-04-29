@@ -31,6 +31,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import ensure_newline
 
@@ -121,10 +122,17 @@ class SDocNode(SDocNodeIF):
         ] = parent
 
         self.node_type: str = node_type
-        # FIXME: MERGE NODES
+
         if node_type_close is not None and len(node_type_close) > 0:
-            assert node_type == node_type_close
+            if node_type != node_type_close:
+                raise StrictDocException(
+                    "[[NODE]] syntax error: "
+                    "Opening and closing tags must match: "
+                    f"opening: {node_type}, closing: {node_type_close}."
+                )
             assert is_composite
+        else:
+            assert not is_composite
 
         self.is_composite: bool = is_composite
 

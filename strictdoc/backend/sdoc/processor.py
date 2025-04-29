@@ -64,6 +64,7 @@ class SDocParsingProcessor:
             "SDocSection": self.process_section,
             "DocumentFromFile": self.process_document_from_file,
             "SDocCompositeNode": self.process_composite_requirement,
+            "SDocCompositeNodeNew": self.process_requirement,
             "SDocNode": self.process_requirement,
             "SDocNodeField": self.process_node_field,
         }

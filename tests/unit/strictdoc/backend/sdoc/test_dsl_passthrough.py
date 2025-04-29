@@ -15,6 +15,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
+from strictdoc.helpers.exception import StrictDocException
 
 
 def test_001_minimal_doc(default_project_config):
@@ -962,6 +963,30 @@ OPTIONS:
     output = writer.write(document)
 
     assert input_sdoc == output
+
+
+def test__validation__30__composite_node_start_end_tags_do_not_match():
+    input_sdoc = """\
+[DOCUMENT]
+TITLE: Test Doc
+
+[[REQUIREMENT]]
+UID: TITLE
+
+[[/FOOBAR]]
+""".lstrip()
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(input_sdoc)
+
+    assert exc_info.type is StrictDocException
+    assert exc_info.value.args[0] == (
+        "[[NODE]] syntax error: "
+        "Opening and closing tags must match: "
+        "opening: REQUIREMENT, closing: FOOBAR."
+    )
 
 
 def test_edge_case_01_minimal_requirement(default_project_config):

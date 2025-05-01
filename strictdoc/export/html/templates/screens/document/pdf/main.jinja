@@ -30,7 +30,7 @@
           {%- if node.is_text_node() %}
             {% include "components/text_node/pdf.jinja" %}
           {% else %}
-            {% include "components/requirement/pdf.jinja" %}
+            {% include "components/node_content/pdf.jinja" %}
           {% endif %}
 
         {%- elif node.is_section %}

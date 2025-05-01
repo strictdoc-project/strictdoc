@@ -3,7 +3,7 @@
   sdoc_entity = requirement
 #}
 
-<sdoc-requirement
+<sdoc-node-content
   requirement-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
   data-level="{{ sdoc_entity.context.title_number_string }}"
   {%- if sdoc_entity.reserved_status %}
@@ -16,4 +16,4 @@
   {% include "components/node_field/title/index.jinja" %}
   {% include "components/node_field/uid/index.jinja" %}
   {% include "components/node_field/statement/index.jinja" %}
-</sdoc-requirement>
+</sdoc-node-content>

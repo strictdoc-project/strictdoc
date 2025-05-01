@@ -21,11 +21,13 @@ def convert_function_name_to_gtest_macro(input_str: str) -> List[str]:
         input_str = input_str_parts[1]
 
     if "." not in input_str:
-        raise ValueError("Input string must contain a dot.")
+        raise ValueError(f"Input string must contain a dot: '{input_str}'.")
 
     parts = input_str.split(".")
     if len(parts) != 2:
-        raise ValueError("Input string must contain exactly one dot.")
+        raise ValueError(
+            f"Input string must contain exactly one dot: '{input_str}'."
+        )
 
     if is_pattern_function:
         return [

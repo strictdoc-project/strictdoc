@@ -230,7 +230,19 @@ class SDocNode(SDocNodeIF):
         document = assert_cast(self.get_document(), SDocDocumentIF)
         return document.config.root is True
 
+    def has_multiline_fields(self) -> bool:
+        """
+        FIXME: It should be possible to avoid calculating this every time.
+        """
+        for fields_ in self.ordered_fields_lookup.values():
+            for field_ in fields_:
+                if field_.multiline:
+                    return True
+        return False
+
+    #
     # Reserved fields
+    #
 
     @property
     def reserved_uid(self) -> Optional[str]:

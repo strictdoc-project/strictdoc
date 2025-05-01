@@ -1,9 +1,10 @@
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir Output | filecheck %s
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%S/Output/html/project_statistics.html"
 
-RUN: %cat "%S/Output/html/project_statistics.html" | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat "%S/Output/html/project_statistics.html" | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: Test project
 CHECK-HTML: Total documents
 CHECK-HTML: Total requirements
+CHECK-HTML-NOT: Requirements status breakdown

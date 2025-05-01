@@ -55,3 +55,7 @@ class ProjectStatisticsViewObject:
 
     def get_datetime(self) -> str:
         return datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+
+    def document_status_have_status(self) -> bool:
+        statuses = self.document_tree_stats.requirements_status_breakdown.keys()
+        return any(key is not None for key in statuses)

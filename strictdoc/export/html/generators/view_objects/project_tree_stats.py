@@ -1,6 +1,6 @@
-# mypy: disable-error-code="arg-type"
+from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.node import SDocNode
 
@@ -30,13 +30,15 @@ class DocumentTreeStats:
     requirements_no_rationale: int = 0
 
     # STATUS
-    requirements_status_none: int = 0
-    requirements_status_draft: int = 0
-    requirements_status_backlog: int = 0
-    requirements_status_active: int = 0
-    requirements_status_other: int = 0
-
-    # Document-level stats.
-    document_level_stats: List[DocumentStats] = field(
-        default_factory=DocumentStats
+    requirements_status_breakdown: Dict[Optional[str], int] = field(
+        default_factory=lambda: defaultdict(int)
     )
+
+    def sort_requirements_status_breakdown(self) -> None:
+        self.requirements_status_breakdown = dict(
+            sorted(
+                self.requirements_status_breakdown.items(),
+                key=lambda item: (item[0] is not None, item[1]),
+                reverse=True,
+            )
+        )

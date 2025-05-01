@@ -17,17 +17,17 @@
         {%- elif section_or_requirement.is_requirement and not section_or_requirement.is_text_node() %}
           <section class="content_section">
             <div class="content_item" data-role="parents">
-              {%- with requirement=section_or_requirement, node_controls = True, requirement_partial="components/requirement/tiny_extends_card.jinja" -%}
+              {%- with requirement=section_or_requirement, node_controls = True, requirement_partial="components/node_content/tiny_extends_card.jinja" -%}
                 {% include "_shared/requirement_tree_left.jinja.html" %}
               {%- endwith -%}
             </div>
             <div class="content_item" data-role="current">
               {%- with requirement = section_or_requirement, node_controls = True -%}
-                {%- include "components/requirement/tiny_extends_card.jinja" -%}
+                {%- include "components/node_content/tiny_extends_card.jinja" -%}
               {%- endwith -%}
             </div>
             <div class="content_item" data-role="children">
-              {%- with requirement=section_or_requirement, node_controls = True, requirement_partial="components/requirement/tiny_extends_card.jinja" -%}
+              {%- with requirement=section_or_requirement, node_controls = True, requirement_partial="components/node_content/tiny_extends_card.jinja" -%}
                 {%- include "_shared/requirement_tree_right.jinja.html" -%}
               {%- endwith -%}
             </div>

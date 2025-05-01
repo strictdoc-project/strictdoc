@@ -1,0 +1,12 @@
+#
+# This test verifies that the manage auto_uid command will not overwrite the
+# JUnit XML files with SDoc content.
+# The scope of the auto_uid is only SDoc files. All other extensions must be ignored.
+#
+
+RUN: cp %S/*.xml %S/Output/
+RUN: %strictdoc manage auto-uid %S/Output | filecheck %s --dump-input=fail
+
+CHECK: Step 'Build traceability graph' took
+
+RUN: %diff %S/tests_unit.gtest.junit.xml %S/Output/tests_unit.gtest.junit.xml

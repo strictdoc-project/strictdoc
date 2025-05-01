@@ -70,6 +70,11 @@ class ManageAutoUIDCommand:
                 next_number += 1
 
         for document in traceability_index.document_tree.document_list:
+            # Most recently, we parse JUnit XML or Gcov JSON files.
+            # These must not be written back.
+            if not document.meta.document_filename.endswith(".sdoc"):
+                continue
+
             document_content = SDWriter(project_config).write(document)
             document_meta = document.meta
             with open(

@@ -75,7 +75,11 @@ class SDocValidator:
     def validate_grammar_element(
         path_to_grammar: str, grammar_element: GrammarElement
     ) -> None:
-        if grammar_element.content_field[0] not in grammar_element.fields_map:
+        if (
+            not grammar_element.property_is_composite
+            and grammar_element.content_field[0]
+            not in grammar_element.fields_map
+        ):
             raise StrictDocSemanticError.grammar_missing_reserved_statement(
                 grammar_element,
                 path_to_grammar,

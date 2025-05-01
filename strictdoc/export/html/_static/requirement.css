@@ -129,27 +129,27 @@ sdoc-node-field > ul:last-child {
   margin-bottom: 0;
 }
 
-/* requirement-view="table" */
+/* node-view="table" */
 
-sdoc-node-content[requirement-view="table"] {
+sdoc-node-content[node-view="table"] {
   /* grid: */
   grid-template-columns: minmax(80px, min-content) minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
   /* border: */
   background-color: var(--requirement-border-color);
 }
 
-sdoc-node-content[requirement-view="table"]
+sdoc-node-content[node-view="table"]
   sdoc-node-title {
     grid-column: 1 / 3;
   }
 
-sdoc-node-content[requirement-view="table"]
+sdoc-node-content[node-view="table"]
   sdoc-node-field-label {
     grid-column: 1 / 2;
     background-color: var(--requirement-bg-dark-color);
   }
 
-sdoc-node-content[requirement-view="table"]
+sdoc-node-content[node-view="table"]
   sdoc-node-field {
     grid-column: 2 / 3;
     background-color: var(--requirement-bg-light-color);
@@ -171,18 +171,18 @@ sdoc-node:not([node-style="card"]) {
 /* calc(var(--card-width) + calc(var(--base-padding)*4)) */
 /* 300 + 16*4 = 364 */
 @container node (width < 400px) {
-  sdoc-node-content[requirement-view="table"] {
+  sdoc-node-content[node-view="table"] {
     /* removes columns: */
     grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
     /* removes inner border: */
     background-color: var(--requirement-bg-light-color);
   }
 
-  sdoc-node-content[requirement-view="table"]
+  sdoc-node-content[node-view="table"]
     sdoc-node-title,
-  sdoc-node-content[requirement-view="table"]
+  sdoc-node-content[node-view="table"]
     sdoc-node-field-label,
-  sdoc-node-content[requirement-view="table"]
+  sdoc-node-content[node-view="table"]
     sdoc-node-field {
       /* removes columns: */
       grid-column: unset;
@@ -194,18 +194,18 @@ sdoc-node:not([node-style="card"]) {
   @media (max-width: 888px) {
     /* Do the same as if there was a container support */
 
-    sdoc-node-content[requirement-view="table"] {
+    sdoc-node-content[node-view="table"] {
       /* removes columns: */
       grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
       /* removes inner border: */
       background-color: var(--requirement-bg-light-color);
     }
 
-    sdoc-node-content[requirement-view="table"]
+    sdoc-node-content[node-view="table"]
       sdoc-node-title,
-    sdoc-node-content[requirement-view="table"]
+    sdoc-node-content[node-view="table"]
       sdoc-node-field-label,
-    sdoc-node-content[requirement-view="table"]
+    sdoc-node-content[node-view="table"]
       sdoc-node-field {
         /* removes columns: */
         grid-column: unset;
@@ -213,37 +213,37 @@ sdoc-node:not([node-style="card"]) {
   }
 }
 
-/* requirement-view="zebra" */
+/* node-view="zebra" */
 
-sdoc-node-content[requirement-view="zebra"] {
+sdoc-node-content[node-view="zebra"] {
   grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
 }
 
-sdoc-node-content[requirement-view="zebra"]
+sdoc-node-content[node-view="zebra"]
   sdoc-node-field-label {
     background-color: var(--requirement-bg-dark-color);
   }
 
-sdoc-node-content[requirement-view="zebra"]
+sdoc-node-content[node-view="zebra"]
   sdoc-node-field {
     background-color: var(--requirement-bg-light-color);
   }
 
-/* requirement-view="simple" */
+/* node-view="simple" */
 
-sdoc-node-content[requirement-view="simple"] {
+sdoc-node-content[node-view="simple"] {
   grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
 }
 
-sdoc-node-content[requirement-view="simple"]
+sdoc-node-content[node-view="simple"]
 sdoc-node-field-label {
   background-color: #fff;
   padding-bottom: 0;
 }
 
-/* requirement-view="narrative" */
+/* node-view="narrative" */
 
-sdoc-node-content[requirement-view="narrative"] {
+sdoc-node-content[node-view="narrative"] {
   display: flex;
   flex-direction: column;
   background: none;
@@ -251,7 +251,7 @@ sdoc-node-content[requirement-view="narrative"] {
   border: none;
 }
 
-[requirement-view="narrative"] sdoc-node-title {
+[node-view="narrative"] sdoc-node-title {
   border: none;
   outline: none;
   background: none;
@@ -261,23 +261,23 @@ sdoc-node-content[requirement-view="narrative"] {
   grid-column: 1 / -1;
 }
 
-[requirement-view="narrative"] sdoc-node-field {
+[node-view="narrative"] sdoc-node-field {
   padding: 0;
 }
 
-[requirement-view="narrative"] sdoc-node-field[data-field-type="singleline"] {
+[node-view="narrative"] sdoc-node-field[data-field-type="singleline"] {
   /* to make it a single FLEX line */
   display: flex;
   font-size: var(--font-size-sm);
   line-height: calc(var(--font-size-sm) * 1.5);
 }
 
-[requirement-view="narrative"] sdoc-node-field-label {
+[node-view="narrative"] sdoc-node-field-label {
   /* show them as pseudo-elements: sdoc-node-field::before */
   display: none;
 }
 
-[requirement-view="narrative"] sdoc-node-field::before {
+[node-view="narrative"] sdoc-node-field::before {
   flex-grow: 1;
   content: attr(data-field-label) ':';
   font-family: var(--code-font-family);
@@ -297,7 +297,7 @@ sdoc-node-content[requirement-view="narrative"] {
   opacity: 0.8;
 }
 
-[requirement-view="narrative"] .requirement_fields_group-secondary sdoc-node-field > * {
+[node-view="narrative"] .requirement_fields_group-secondary sdoc-node-field > * {
   /*
     affects field content in the secondary scope only;
     make them lighter:
@@ -305,8 +305,8 @@ sdoc-node-content[requirement-view="narrative"] {
   opacity: 0.6;
 }
 
-[requirement-view="narrative"] .requirement__parent-uid,
-[requirement-view="narrative"] .requirement__child-uid {
+[node-view="narrative"] .requirement__parent-uid,
+[node-view="narrative"] .requirement__child-uid {
   /*
     affects UID in links;
     make them lighter:
@@ -314,7 +314,7 @@ sdoc-node-content[requirement-view="narrative"] {
   font-weight: normal;
 }
 
-[requirement-view="narrative"] .requirement_fields_group-primary {
+[node-view="narrative"] .requirement_fields_group-primary {
   display: block;
   order: 99; /* to push to the end */
   margin-top: var(--base-rhythm);
@@ -322,7 +322,7 @@ sdoc-node-content[requirement-view="narrative"] {
   padding-top: var(--base-padding);
 }
 
-[requirement-view="narrative"] .requirement_fields_group-primary sdoc-node-field {
+[node-view="narrative"] .requirement_fields_group-primary sdoc-node-field {
   margin-bottom: var(--base-padding);
   color: var(--color-fg-contrast);
 }

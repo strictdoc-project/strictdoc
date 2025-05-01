@@ -4,7 +4,7 @@
 #}
 
 <sdoc-node-content
-  requirement-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
+  node-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
   data-level="{{ sdoc_entity.context.title_number_string }}"
   {%- if sdoc_entity.reserved_status %}
     data-status='{{ sdoc_entity.reserved_status.lower() }}'

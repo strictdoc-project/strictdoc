@@ -22,9 +22,6 @@ ELEMENTS:
   - TITLE: TITLE
     TYPE: String
     REQUIRED: True
-  - TITLE: STATEMENT
-    TYPE: String
-    REQUIRED: False
 - TAG: TEXT
   FIELDS:
   - TITLE: MID

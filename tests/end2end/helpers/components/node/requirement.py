@@ -34,7 +34,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
         assert isinstance(test_case, BaseCase)
         assert isinstance(node_order, int)
 
-        xpath = f"(//sdoc-requirement)[{node_order}]"
+        xpath = f"(//sdoc-node-content)[{node_order}]"
 
         return Requirement(
             test_case=test_case, node_xpath=xpath, node_order=node_order
@@ -58,7 +58,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
         """
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            '//sdoc-requirement[@data-testid="requirement-style-simple"]',
+            '//sdoc-node-content[@data-testid="requirement-style-simple"]',
             by=By.XPATH,
         )
 
@@ -66,7 +66,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
         """Make sure that the table-based requirement is rendered."""
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            '//sdoc-requirement[@data-testid="requirement-style-table"]',
+            '//sdoc-node-content[@data-testid="requirement-style-table"]',
             by=By.XPATH,
         )
 
@@ -80,23 +80,23 @@ class Requirement(Node):  # pylint: disable=invalid-name
         title = super().create_node_title_string(node_title, node_level)
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            f"//sdoc-requirement-title//*[contains(text(), '{title}')]",
+            f"//sdoc-node-title//*[contains(text(), '{title}')]",
             by=By.XPATH,
         )
 
     def assert_requirement_has_mid(self) -> None:
-        """Use it with full requirement. <sdoc-requirement-field ...>"""
+        """Use it with full requirement. <sdoc-node-field ...>"""
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='MID']",
+            "//sdoc-node-field[@data-field-label='MID']",
             by=By.XPATH,
         )
 
     def assert_requirement_has_no_uid(self) -> None:
-        """Use it with full requirement. <sdoc-requirement-field ...>"""
+        """Use it with full requirement. <sdoc-node-field ...>"""
         self.test_case.assert_element_not_present(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='UID']",
+            "//sdoc-node-field[@data-field-label='UID']",
             by=By.XPATH,
         )
 
@@ -107,7 +107,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            f"//sdoc-requirement-field[@data-field-label='{field_name}']"
+            f"//sdoc-node-field[@data-field-label='{field_name}']"
             f"//*[contains(text(), '{field_value}')]",
             by=By.XPATH,
         )
@@ -116,10 +116,10 @@ class Requirement(Node):  # pylint: disable=invalid-name
         self,
         uid: str,
     ) -> None:
-        """Use it with full requirement. <sdoc-requirement-field ...>"""
+        """Use it with full requirement. <sdoc-node-field ...>"""
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='UID']"
+            "//sdoc-node-field[@data-field-label='UID']"
             f"//*[contains(text(), '{uid}')]",
             by=By.XPATH,
         )
@@ -128,9 +128,9 @@ class Requirement(Node):  # pylint: disable=invalid-name
         self,
         uid: str,
     ) -> None:
-        """Use it on card. <sdoc-requirement-uid>"""
+        """Use it on card. <sdoc-node-uid>"""
         self.test_case.assert_element(
-            f"{self.node_xpath}//sdoc-requirement-uid//*[contains(., '{uid}')]",
+            f"{self.node_xpath}//sdoc-node-uid//*[contains(., '{uid}')]",
             by=By.XPATH,
         )
 
@@ -140,7 +140,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='statement']"
+            "//sdoc-node-field[@data-field-label='statement']"
             f"//*[contains(., '{text}')]",
             by=By.XPATH,
         )
@@ -151,7 +151,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='rationale']"
+            "//sdoc-node-field[@data-field-label='rationale']"
             f"//*[contains(., '{text}')]",
             by=By.XPATH,
         )
@@ -162,7 +162,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='child relations']"
+            "//sdoc-node-field[@data-field-label='child relations']"
             f"[contains(., '{child_uid}')]",
             by=By.XPATH,
         )
@@ -173,7 +173,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='parent relations']"
+            "//sdoc-node-field[@data-field-label='parent relations']"
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
         )
@@ -184,7 +184,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element_not_present(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='child relations']"
+            "//sdoc-node-field[@data-field-label='child relations']"
             f"[contains(., '{child_uid}')]",
             by=By.XPATH,
         )
@@ -195,7 +195,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
     ) -> None:
         self.test_case.assert_element_not_present(
             f"{self.node_xpath}"
-            "//sdoc-requirement-field[@data-field-label='parent relations']"
+            "//sdoc-node-field[@data-field-label='parent relations']"
             f"[contains(., '{parent_uid}')]",
             by=By.XPATH,
         )
@@ -233,7 +233,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
         modal.assert_not_modal()
         self._hover_and_click_to_open_modal_requirement()
         modal.assert_modal()
-        modal.assert_in_modal("//sdoc-requirement")
+        modal.assert_in_modal("//sdoc-node-content")
         return modal
 
     def do_go_to_this_requirement_in_document_view(self):

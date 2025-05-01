@@ -7,7 +7,7 @@ sdoc-node {
   position: relative;
 }
 
-sdoc-node[show-node-type-name] sdoc-requirement {
+sdoc-node[show-node-type-name] sdoc-node-content {
   margin-top: calc(2 * var(--base-rhythm));
 }
 
@@ -129,7 +129,7 @@ sdoc-node.nouid {
   /* background-color: rgb(240, 220, 220); */
 }
 
-.nouid sdoc-requirement-title,
+.nouid sdoc-node-title,
 .nouid .requirement__title {
   color: #502222;
 }

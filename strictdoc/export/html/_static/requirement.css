@@ -11,9 +11,9 @@
   --requirement-base-rhythm: var(--base-rhythm, 8px);
 }
 
-/* sdoc-requirement */
+/* sdoc-node-content */
 
-sdoc-requirement {
+sdoc-node-content {
   display: grid;
   grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
   place-items: stretch stretch;
@@ -36,7 +36,7 @@ sdoc-requirement {
   overflow-x: auto;
 }
 
-sdoc-requirement-title {
+sdoc-node-title {
   display: block;
 
   font-size: 1.125em;
@@ -58,11 +58,11 @@ sdoc-requirement-title {
   overflow-wrap: break-word;
 }
 
-[node-style="card"] sdoc-requirement-title {
+[node-style="card"] sdoc-node-title {
   font-size: 1em;
 }
 
-sdoc-requirement-uid {
+sdoc-node-uid {
   display: block;
   padding-left: calc(var(--requirement-base-rhythm)*2);
   padding-right: calc(var(--requirement-base-rhythm)*2);
@@ -79,7 +79,7 @@ sdoc-requirement-uid {
   overflow-wrap: break-word;
 }
 
-sdoc-requirement-field-label {
+sdoc-node-field-label {
   display: flex;
   align-items:flex-start;
 
@@ -102,7 +102,7 @@ sdoc-requirement-field-label {
   overflow-wrap: break-word;
 }
 
-sdoc-requirement-field {
+sdoc-node-field {
   display: block;
   position: relative;
 
@@ -115,42 +115,42 @@ sdoc-requirement-field {
   overflow-wrap: break-word;
 }
 
-[data-viewtype="html2pdf"] sdoc-requirement-field-label {
+[data-viewtype="html2pdf"] sdoc-node-field-label {
   word-break: normal;
 }
 
 /* for relations in requirement */
-sdoc-requirement-field > ol:first-child,
-sdoc-requirement-field > ul:first-child {
+sdoc-node-field > ol:first-child,
+sdoc-node-field > ul:first-child {
   margin-top: 0;
 }
-sdoc-requirement-field > ol:last-child,
-sdoc-requirement-field > ul:last-child {
+sdoc-node-field > ol:last-child,
+sdoc-node-field > ul:last-child {
   margin-bottom: 0;
 }
 
 /* requirement-view="table" */
 
-sdoc-requirement[requirement-view="table"] {
+sdoc-node-content[requirement-view="table"] {
   /* grid: */
   grid-template-columns: minmax(80px, min-content) minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
   /* border: */
   background-color: var(--requirement-border-color);
 }
 
-sdoc-requirement[requirement-view="table"]
-  sdoc-requirement-title {
+sdoc-node-content[requirement-view="table"]
+  sdoc-node-title {
     grid-column: 1 / 3;
   }
 
-sdoc-requirement[requirement-view="table"]
-  sdoc-requirement-field-label {
+sdoc-node-content[requirement-view="table"]
+  sdoc-node-field-label {
     grid-column: 1 / 2;
     background-color: var(--requirement-bg-dark-color);
   }
 
-sdoc-requirement[requirement-view="table"]
-  sdoc-requirement-field {
+sdoc-node-content[requirement-view="table"]
+  sdoc-node-field {
     grid-column: 2 / 3;
     background-color: var(--requirement-bg-light-color);
   }
@@ -171,19 +171,19 @@ sdoc-node:not([node-style="card"]) {
 /* calc(var(--card-width) + calc(var(--base-padding)*4)) */
 /* 300 + 16*4 = 364 */
 @container node (width < 400px) {
-  sdoc-requirement[requirement-view="table"] {
+  sdoc-node-content[requirement-view="table"] {
     /* removes columns: */
     grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
     /* removes inner border: */
     background-color: var(--requirement-bg-light-color);
   }
 
-  sdoc-requirement[requirement-view="table"]
-    sdoc-requirement-title,
-  sdoc-requirement[requirement-view="table"]
-    sdoc-requirement-field-label,
-  sdoc-requirement[requirement-view="table"]
-    sdoc-requirement-field {
+  sdoc-node-content[requirement-view="table"]
+    sdoc-node-title,
+  sdoc-node-content[requirement-view="table"]
+    sdoc-node-field-label,
+  sdoc-node-content[requirement-view="table"]
+    sdoc-node-field {
       /* removes columns: */
       grid-column: unset;
     }
@@ -194,19 +194,19 @@ sdoc-node:not([node-style="card"]) {
   @media (max-width: 888px) {
     /* Do the same as if there was a container support */
 
-    sdoc-requirement[requirement-view="table"] {
+    sdoc-node-content[requirement-view="table"] {
       /* removes columns: */
       grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
       /* removes inner border: */
       background-color: var(--requirement-bg-light-color);
     }
 
-    sdoc-requirement[requirement-view="table"]
-      sdoc-requirement-title,
-    sdoc-requirement[requirement-view="table"]
-      sdoc-requirement-field-label,
-    sdoc-requirement[requirement-view="table"]
-      sdoc-requirement-field {
+    sdoc-node-content[requirement-view="table"]
+      sdoc-node-title,
+    sdoc-node-content[requirement-view="table"]
+      sdoc-node-field-label,
+    sdoc-node-content[requirement-view="table"]
+      sdoc-node-field {
         /* removes columns: */
         grid-column: unset;
       }
@@ -215,35 +215,35 @@ sdoc-node:not([node-style="card"]) {
 
 /* requirement-view="zebra" */
 
-sdoc-requirement[requirement-view="zebra"] {
+sdoc-node-content[requirement-view="zebra"] {
   grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
 }
 
-sdoc-requirement[requirement-view="zebra"]
-  sdoc-requirement-field-label {
+sdoc-node-content[requirement-view="zebra"]
+  sdoc-node-field-label {
     background-color: var(--requirement-bg-dark-color);
   }
 
-sdoc-requirement[requirement-view="zebra"]
-  sdoc-requirement-field {
+sdoc-node-content[requirement-view="zebra"]
+  sdoc-node-field {
     background-color: var(--requirement-bg-light-color);
   }
 
 /* requirement-view="simple" */
 
-sdoc-requirement[requirement-view="simple"] {
+sdoc-node-content[requirement-view="simple"] {
   grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
 }
 
-sdoc-requirement[requirement-view="simple"]
-sdoc-requirement-field-label {
+sdoc-node-content[requirement-view="simple"]
+sdoc-node-field-label {
   background-color: #fff;
   padding-bottom: 0;
 }
 
 /* requirement-view="narrative" */
 
-sdoc-requirement[requirement-view="narrative"] {
+sdoc-node-content[requirement-view="narrative"] {
   display: flex;
   flex-direction: column;
   background: none;
@@ -251,7 +251,7 @@ sdoc-requirement[requirement-view="narrative"] {
   border: none;
 }
 
-[requirement-view="narrative"] sdoc-requirement-title {
+[requirement-view="narrative"] sdoc-node-title {
   border: none;
   outline: none;
   background: none;
@@ -261,23 +261,23 @@ sdoc-requirement[requirement-view="narrative"] {
   grid-column: 1 / -1;
 }
 
-[requirement-view="narrative"] sdoc-requirement-field {
+[requirement-view="narrative"] sdoc-node-field {
   padding: 0;
 }
 
-[requirement-view="narrative"] sdoc-requirement-field[data-field-type="singleline"] {
+[requirement-view="narrative"] sdoc-node-field[data-field-type="singleline"] {
   /* to make it a single FLEX line */
   display: flex;
   font-size: var(--font-size-sm);
   line-height: calc(var(--font-size-sm) * 1.5);
 }
 
-[requirement-view="narrative"] sdoc-requirement-field-label {
-  /* show them as pseudo-elements: sdoc-requirement-field::before */
+[requirement-view="narrative"] sdoc-node-field-label {
+  /* show them as pseudo-elements: sdoc-node-field::before */
   display: none;
 }
 
-[requirement-view="narrative"] sdoc-requirement-field::before {
+[requirement-view="narrative"] sdoc-node-field::before {
   flex-grow: 1;
   content: attr(data-field-label) ':';
   font-family: var(--code-font-family);
@@ -297,7 +297,7 @@ sdoc-requirement[requirement-view="narrative"] {
   opacity: 0.8;
 }
 
-[requirement-view="narrative"] .requirement_fields_group-secondary sdoc-requirement-field > * {
+[requirement-view="narrative"] .requirement_fields_group-secondary sdoc-node-field > * {
   /*
     affects field content in the secondary scope only;
     make them lighter:
@@ -322,7 +322,7 @@ sdoc-requirement[requirement-view="narrative"] {
   padding-top: var(--base-padding);
 }
 
-[requirement-view="narrative"] .requirement_fields_group-primary sdoc-requirement-field {
+[requirement-view="narrative"] .requirement_fields_group-primary sdoc-node-field {
   margin-bottom: var(--base-padding);
   color: var(--color-fg-contrast);
 }
@@ -430,16 +430,16 @@ sdoc-meta-section {
 /* There is no sdoc-node wrapper, so such neighbours and nesting is possible. */
 sdoc-text + sdoc-text,
 sdoc-text + sdoc-section,
-sdoc-text + sdoc-requirement,
+sdoc-text + sdoc-node-content,
 sdoc-text + sdoc-section-title,
 sdoc-section + sdoc-text,
 sdoc-section + sdoc-section,
-sdoc-section + sdoc-requirement,
+sdoc-section + sdoc-node-content,
 sdoc-section + sdoc-section sdoc-section-title,
-sdoc-requirement + sdoc-text,
-sdoc-requirement + sdoc-requirement,
-sdoc-requirement + sdoc-section,
-sdoc-requirement + sdoc-section sdoc-section-title {
+sdoc-node-content + sdoc-text,
+sdoc-node-content + sdoc-node-content,
+sdoc-node-content + sdoc-section,
+sdoc-node-content + sdoc-section sdoc-section-title {
   margin-top: calc(var(--base-rhythm)*4);
 }
 

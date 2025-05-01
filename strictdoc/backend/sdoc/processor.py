@@ -201,7 +201,7 @@ class SDocParsingProcessor:
         ) and self.parse_context.document_config.auto_levels:
             composite_requirement.ng_resolved_custom_level = "None"
 
-    def process_requirement(self, requirement: SDocNode):
+    def process_requirement(self, requirement: SDocNode) -> None:
         self.parse_context.document_has_requirements = True
 
         if self.parse_context.document_config.auto_levels:

@@ -16,7 +16,7 @@
           {%- if node.is_text_node() %}
             {% include "components/text_node/index_extends_node.jinja" %}
           {% else %}
-            {% include "components/requirement/index_extends_node.jinja" %}
+            {% include "components/node_content/index_extends_node.jinja" %}
           {% endif %}
         {%- else %}
           {% assert false, "Must not reach here." %}

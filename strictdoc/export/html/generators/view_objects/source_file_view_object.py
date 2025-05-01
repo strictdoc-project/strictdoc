@@ -95,7 +95,7 @@ class SourceFileViewObject:
     def render_detailed_node_for_banner(self, node_uid: str) -> Markup:
         node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
         return self.jinja_environment.render_template_as_markup(
-            "components/requirement/index_extends_readonly.jinja",
+            "components/node_content/index_extends_readonly.jinja",
             node=node,
             view_object=self,
             requirement_style="table",

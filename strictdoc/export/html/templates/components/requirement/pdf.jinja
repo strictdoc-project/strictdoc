@@ -4,14 +4,14 @@
 #}
 
 {#  sdoc-node-content:
-    attribute requirement-view can be either of: [simple, table, zebra].
+    attribute node-view can be either of: [simple, table, zebra].
     Without this attribute sdoc-node-content will look like a 'simple' view.
     If the container becomes smaller than the set parameter (300px default),
     the 'columns' view degrades to 'zebra'.
 #}
 
 <sdoc-node-content
-  requirement-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
+  node-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
   data-level="{{ sdoc_entity.context.title_number_string }}"
   {%- if sdoc_entity.reserved_status %}
     data-status='{{ sdoc_entity.reserved_status.lower() }}'

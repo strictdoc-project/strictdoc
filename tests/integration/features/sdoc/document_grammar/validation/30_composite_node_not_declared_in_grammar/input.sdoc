@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: User Guide
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
+[[SECTION]]
+TITLE: Introduction
+
+[[/SECTION]]

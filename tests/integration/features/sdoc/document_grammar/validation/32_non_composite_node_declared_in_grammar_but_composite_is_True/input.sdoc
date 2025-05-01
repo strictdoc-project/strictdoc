@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: User Guide
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+TITLE: Introduction

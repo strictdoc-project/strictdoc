@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="attr-defined,union-attr"
 from typing import Optional, Union
 
 from textx import TextXSyntaxError
@@ -30,7 +30,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 )
 
 
-def get_textx_syntax_error_message(exception: TextXSyntaxError):
+def get_textx_syntax_error_message(exception: TextXSyntaxError) -> str:
     return f"SDoc markup error: {exception.context}."
 
 
@@ -43,7 +43,7 @@ class StrictDocSemanticError(Exception):
         line: Optional[int] = None,
         col: Optional[int] = None,
         filename: Optional[str] = None,
-    ):
+    ) -> None:
         super().__init__(title, hint, line, col, filename)
         self.title = title
         self.hint = hint
@@ -53,11 +53,62 @@ class StrictDocSemanticError(Exception):
         self.file_path = filename
 
     @staticmethod
-    def unknown_node_type(node: SDocNode, path_to_sdoc_file: str):
+    def unknown_node_type(
+        node: SDocNode, path_to_sdoc_file: str
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=f"Invalid node type: {node.node_type}.",
             hint=None,
             example=None,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
+    def composite_node_and_non_composite_element_mismatch(
+        node: SDocNode, path_to_sdoc_file: str
+    ) -> "StrictDocSemanticError":
+        return StrictDocSemanticError(
+            title=f"The composite node's grammar element is declared as non-composite: [[{node.node_type}]].",
+            hint=(
+                "The composite node grammar element declaration must "
+                "have a 'PROPERTIES/IS_COMPOSITE: True' declaration."
+            ),
+            example="""\
+[GRAMMAR]
+ELEMENTS:
+- TAG: NODE
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  ...
+""",
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
+    def non_composite_node_and_composite_element_composite(
+        node: SDocNode, path_to_sdoc_file: str
+    ) -> "StrictDocSemanticError":
+        return StrictDocSemanticError(
+            title=f"The non-composite node's grammar element is declared as composite: [[{node.node_type}]].",
+            hint=(
+                "The composite node grammar element declaration must "
+                "have a 'PROPERTIES/IS_COMPOSITE: False' declaration or the "
+                "PROPERTIES/IS_COMPOSITE can be simply omitted."
+            ),
+            example="""\
+[GRAMMAR]
+ELEMENTS:
+- TAG: NODE
+  PROPERTIES:
+    IS_COMPOSITE: False
+  FIELDS:
+  ...
+""",
             line=node.ng_line_start,
             col=node.ng_col_start,
             filename=path_to_sdoc_file,
@@ -70,7 +121,7 @@ class StrictDocSemanticError(Exception):
         requirement: SDocNode,
         document_grammar: DocumentGrammar,
         path_to_sdoc_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         grammar_dump = document_grammar.dump_fields(requirement.node_type)
         return StrictDocSemanticError(
             title=f"Invalid requirement field: {field_name}",
@@ -90,7 +141,7 @@ class StrictDocSemanticError(Exception):
         grammar_field: GrammarElementField,
         document_grammar: DocumentGrammar,
         path_to_sdoc_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         grammar_fields = document_grammar.dump_fields(node.node_type)
         return StrictDocSemanticError(
             title=(
@@ -113,7 +164,7 @@ class StrictDocSemanticError(Exception):
         requirement_field: SDocNodeField,
         document_grammar: DocumentGrammar,
         path_to_sdoc_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         grammar_fields = document_grammar.dump_fields(node.node_type)
         return StrictDocSemanticError(
             title=(
@@ -136,7 +187,7 @@ class StrictDocSemanticError(Exception):
         document_grammar: DocumentGrammar,
         problematic_field: SDocNodeField,
         path_to_sdoc_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         assert isinstance(problematic_field, SDocNodeField), (
             f"{problematic_field}"
         )
@@ -161,7 +212,7 @@ class StrictDocSemanticError(Exception):
         document_grammar: DocumentGrammar,
         requirement_field: SDocNodeField,
         path_to_sdoc_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=(
                 f"Requirement field has an invalid SingleChoice value: "
@@ -187,7 +238,7 @@ class StrictDocSemanticError(Exception):
         document_grammar: DocumentGrammar,
         requirement_field: SDocNodeField,
         path_to_sdoc_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=(
                 f"Requirement field has an invalid MultipleChoice value: "
@@ -211,8 +262,8 @@ class StrictDocSemanticError(Exception):
     def not_comma_separated_choices(
         node: SDocNode,
         requirement_field: SDocNodeField,
-        path_to_sdoc_file,
-    ):
+        path_to_sdoc_file: str,
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=(
                 f"Requirement field of type MultipleChoice is invalid: "
@@ -230,7 +281,7 @@ class StrictDocSemanticError(Exception):
         node: SDocNode,
         requirement_field: SDocNodeField,
         path_to_sdoc_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=(
                 f"Requirement field of type Tag is invalid: "
@@ -248,7 +299,7 @@ class StrictDocSemanticError(Exception):
         node: SDocNode,
         reference_item: Reference,
         path_to_sdoc_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         role_and_type = (
             f"{reference_item.ref_type} / {reference_item.role}"
             if reference_item.role is not None
@@ -277,7 +328,7 @@ class StrictDocSemanticError(Exception):
             ForwardRangeMarker,
         ],
         path_to_src_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         role_and_type = marker.role if marker.role is not None else "Any"
         return StrictDocSemanticError(
             title=(f"File marker role is not registered: {role_and_type}."),
@@ -294,7 +345,7 @@ class StrictDocSemanticError(Exception):
         path_to_sdoc_file: str,
         line: int,
         column: int,
-    ):
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=(
                 f"Grammar element '{grammar_element.tag}' is missing a reserved"
@@ -318,7 +369,7 @@ class StrictDocSemanticError(Exception):
         path_to_sdoc_file: str,
         line: int,
         column: int,
-    ):
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=(
                 f"Grammar element '{grammar_element.tag}'s {field_title} field "
@@ -339,7 +390,7 @@ class StrictDocSemanticError(Exception):
     def grammar_element_has_no_mid_field(
         grammar_element: GrammarElement,
         path_to_sdoc_file: str,
-    ):
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=(
                 f"Grammar element '{grammar_element.tag}' is missing the MID field "
@@ -360,7 +411,7 @@ class StrictDocSemanticError(Exception):
         document_view: DocumentView,
         view_element: ViewElement,
         object_type: str,
-    ):
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=(
                 f"View element '{view_element.view_id}' references a non-existing"
@@ -383,7 +434,7 @@ class StrictDocSemanticError(Exception):
         view_element: ViewElement,
         object_type: str,
         field_name: str,
-    ):
+    ) -> "StrictDocSemanticError":
         return StrictDocSemanticError(
             title=(
                 f"View element '{view_element.view_id}' references a non-existing"
@@ -404,7 +455,7 @@ class StrictDocSemanticError(Exception):
         document: SDocDocument,
         document_config: DocumentConfig,
         default_view: str,
-    ):
+    ) -> "StrictDocSemanticError":
         filename = document.meta.input_doc_full_path
 
         return StrictDocSemanticError(

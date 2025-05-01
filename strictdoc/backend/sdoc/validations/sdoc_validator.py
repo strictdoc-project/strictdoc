@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,union-attr"
 import re
 from typing import Iterator, Optional, Set
 
@@ -177,6 +177,18 @@ class SDocValidator:
         grammar_element: GrammarElement = document_grammar.elements_by_type[
             requirement.node_type
         ]
+
+        if requirement.is_composite:
+            if not grammar_element.property_is_composite:
+                raise StrictDocSemanticError.composite_node_and_non_composite_element_mismatch(
+                    requirement, path_to_sdoc_file
+                )
+        else:
+            if grammar_element.property_is_composite:
+                raise StrictDocSemanticError.non_composite_node_and_composite_element_composite(
+                    requirement, path_to_sdoc_file
+                )
+
         registered_fields: Set[str] = set(grammar_element.get_field_titles())
 
         for field_name in requirement.ordered_fields_lookup:

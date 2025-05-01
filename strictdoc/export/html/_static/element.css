@@ -451,7 +451,7 @@ sdoc-node > sdoc-anchor {
   z-index: 0;
 }
 
-sdoc-anchor:target + sdoc-requirement sdoc-requirement-title,
+sdoc-anchor:target + sdoc-node-content sdoc-node-title,
 sdoc-anchor:target + sdoc-section sdoc-section-title,
 sdoc-anchor:target + .requirement__title {
   background-color: var(--color-highlight);

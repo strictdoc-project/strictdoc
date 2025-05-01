@@ -1,6 +1,6 @@
 {# needs sdoc_entity, see README.txt #}
 {%- if sdoc_entity.reserved_title %}
-  <sdoc-requirement-title
+  <sdoc-node-title
     id="{{ view_object.render_local_anchor(sdoc_entity) }}"
   >
     {# title number #}
@@ -14,5 +14,5 @@
     {%- if title is not none -%}
       {{ title }}
     {%- endif -%}
-  </sdoc-requirement-title>
+  </sdoc-node-title>
 {%- endif %}

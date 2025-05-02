@@ -28,11 +28,11 @@ class Test(E2ECase):
             4,
         ),
         ("search-requirements-with-no-rationale", 4),
-        ("search-requirements-with-no-status", 1),
+        ("search-requirements-with-status-none", 1),
         ("search-requirements-with-status-active", 1),
         ("search-requirements-with-status-draft", 1),
         ("search-requirements-with-status-backlog", 1),
-        ("search-requirements-with-all-other-statuses", 1),
+        ("search-requirements-with-status-other", 1),
         ("search-total-tbd", 2),
         ("search-total-tbc", 1),
     ]

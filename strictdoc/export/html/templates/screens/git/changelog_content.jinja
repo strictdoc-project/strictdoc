@@ -20,36 +20,73 @@
     {% set _requirements_modified = "No requirements were modified." %}
   {% endif %}
 
-  {%- with table_key_value = [
-    {"Section":"Compared revisions"},
-    {
-      "Key":"Left",
-      "Value": view_object.left_revision,
-    },
-    {
-      "Key":"Right",
-      "Value": view_object.right_revision,
-    },
-    {"Section":"Summary of the changes"},
-    {
-      "Key":"Nodes modified",
-      "Value": view_object.change_container.change_stats.get_total_changes(),
-    },
-    {
-      "Key":"Documents modified",
-      "Value": _documents_modified,
-    },
-    {
-      "Key":"Sections modified",
-      "Value": _sections_modified,
-    },
-    {
-      "Key":"Requirements modified",
-      "Value": _requirements_modified,
-    },
-  ]	-%}
-    {% include "components/table_key_value/index.jinja" %}
-  {%- endwith -%}
+  <div class="sdoc-table_key_value">
+    {% with key_value_pair =
+      {"Section":"Compared revisions"}
+    %}
+      {% include "components/table_key_value/index.jinja" %}
+    {% endwith %}
+
+    {% with key_value_pair =
+        {
+          "Key":"Left",
+          "Value": view_object.left_revision,
+        }
+    %}
+      {% include "components/table_key_value/index.jinja" %}
+    {% endwith %}
+
+    {% with key_value_pair =
+        {
+          "Key":"Right",
+          "Value": view_object.right_revision,
+        }
+    %}
+      {% include "components/table_key_value/index.jinja" %}
+    {% endwith %}
+
+    {% with key_value_pair =
+        {"Section":"Summary of the changes"}
+    %}
+      {% include "components/table_key_value/index.jinja" %}
+    {% endwith %}
+
+    {% with key_value_pair =
+        {
+          "Key":"Nodes modified",
+          "Value": view_object.change_container.change_stats.get_total_changes(),
+        }
+    %}
+      {% include "components/table_key_value/index.jinja" %}
+    {% endwith %}
+
+    {% with key_value_pair =
+        {
+          "Key":"Documents modified",
+          "Value": _documents_modified,
+        }
+    %}
+      {% include "components/table_key_value/index.jinja" %}
+    {% endwith %}
+
+    {% with key_value_pair =
+        {
+          "Key":"Sections modified",
+          "Value": _sections_modified,
+        }
+    %}
+      {% include "components/table_key_value/index.jinja" %}
+    {% endwith %}
+
+    {% with key_value_pair =
+        {
+          "Key":"Requirements modified",
+          "Value": _requirements_modified,
+        }
+    %}
+      {% include "components/table_key_value/index.jinja" %}
+    {% endwith %}
+  </div>{# / .sdoc-table_key_value #}
 
   <div class="changelog_changes">
     {% for change in view_object.change_container.change_stats.changes %}

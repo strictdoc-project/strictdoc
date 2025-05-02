@@ -123,8 +123,8 @@ HEADERS = {
     "(KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
 }
 
-CONNECT_TIMEOUT = 5
-READ_TIMEOUT = 5
+CONNECT_TIMEOUT = 10
+READ_TIMEOUT = 10
 
 
 class Status(str, Enum):

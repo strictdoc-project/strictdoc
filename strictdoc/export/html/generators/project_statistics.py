@@ -84,16 +84,13 @@ class ProgressStatisticsGenerator:
 
                         # STATUS
                         if requirement.reserved_status is None:
-                            document_tree_stats.requirements_status_none += 1
+                            document_tree_stats.requirements_status_breakdown[
+                                None
+                            ] += 1
                         else:
-                            if requirement.reserved_status == "Backlog":
-                                document_tree_stats.requirements_status_backlog += 1
-                            elif requirement.reserved_status == "Draft":
-                                document_tree_stats.requirements_status_draft += 1
-                            elif requirement.reserved_status == "Active":
-                                document_tree_stats.requirements_status_active += 1
-                            else:
-                                document_tree_stats.requirements_status_other += 1
+                            document_tree_stats.requirements_status_breakdown[
+                                requirement.reserved_status
+                            ] += 1
 
                     for requirement_field_ in node.enumerate_fields():
                         field_value = requirement_field_.get_text_value()
@@ -101,6 +98,8 @@ class ProgressStatisticsGenerator:
                             document_tree_stats.total_tbd += 1
                         if "TBC" in field_value:
                             document_tree_stats.total_tbc += 1
+
+        document_tree_stats.sort_requirements_status_breakdown()
 
         view_object = ProjectStatisticsViewObject(
             document_tree_stats=document_tree_stats,

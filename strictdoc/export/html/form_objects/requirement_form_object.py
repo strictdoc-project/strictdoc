@@ -596,6 +596,19 @@ class RequirementFormObject(ErrorObject):
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(context_document, SDocDocument)
 
+        #
+        # Ensure that at least one field must be non-empty.
+        #
+        for field_fields_ in self.fields.values():
+            for field_ in field_fields_:
+                if len(field_.field_value) > 0:
+                    break
+        else:
+            self.add_error(
+                "_GENERAL_",
+                (f"At least one node field must be non-empty."),
+            )
+
         """
         MID uniqueness check.
         FIXME: MID uniqueness if a node is updated.
@@ -675,28 +688,36 @@ class RequirementFormObject(ErrorObject):
         - Must be not empty.
         - Must be valid RST.
         """
+
         requirement_element = self.grammar.elements_by_type[self.element_type]
-        statement_field_name = requirement_element.content_field[0]
-        requirement_statement = self.fields[statement_field_name][0].field_value
-        if requirement_statement is None or len(requirement_statement) == 0:
-            self.add_error(
-                statement_field_name,
-                f"Node {statement_field_name.lower()} must not be empty.",
-            )
-        else:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter(
-                project_config=config,
-                context_document=context_document,
-            ).write_with_validation(requirement_statement)
-            if parsed_html is None:
-                self.add_error(statement_field_name, rst_error)
+        statement_field_name: Optional[str] = None
+        if requirement_element.has_required_content_field():
+            statement_field_name = requirement_element.content_field[0]
+            requirement_statement = self.fields[statement_field_name][
+                0
+            ].field_value
+            if requirement_statement is None or len(requirement_statement) == 0:
+                self.add_error(
+                    statement_field_name,
+                    f"Node {statement_field_name.lower()} must not be empty.",
+                )
+            else:
+                (
+                    parsed_html,
+                    rst_error,
+                ) = RstToHtmlFragmentWriter(
+                    project_config=config,
+                    context_document=context_document,
+                ).write_with_validation(requirement_statement)
+                if parsed_html is None:
+                    self.add_error(statement_field_name, rst_error)
 
         for grammar_element_field_ in requirement_element.fields:
             # STATEMENT/DESCRIPTION/CONTENT field has already been validated. Skip.
-            if grammar_element_field_.title == statement_field_name:
+            if (
+                statement_field_name is not None
+                and grammar_element_field_.title == statement_field_name
+            ):
                 continue
             if (
                 grammar_element_field_.gef_type == RequirementFieldType.STRING

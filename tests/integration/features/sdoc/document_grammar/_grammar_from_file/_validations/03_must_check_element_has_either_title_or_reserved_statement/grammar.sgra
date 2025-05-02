@@ -2,9 +2,6 @@
 ELEMENTS:
 - TAG: REQUIREMENT
   FIELDS:
-  - TITLE: TITLE
+  - TITLE: FOO
     TYPE: String
     REQUIRED: True
-  - TITLE: DESCRIPTION
-    TYPE: String
-    REQUIRED: False

@@ -103,7 +103,9 @@ def pytest_runtestloop(session):
 def run_around_tests():
     test_counter.total_run += 1
 
-    print_line = f"-> Test {test_counter.total_run}/{test_counter.total}"
+    print_line = (
+        f"-> Starting Test {test_counter.total_run}/{test_counter.total}"
+    )
     if test_counter.total_failed > 0:
         print_line += f" ({test_counter.total_failed} failed)"
 

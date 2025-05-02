@@ -150,7 +150,7 @@ class DocumentScreenViewObject:
                 if node_.is_text_node():
                     template_folder = "text_node"
                 else:
-                    template_folder = "requirement"
+                    template_folder = "node_content"
             else:
                 raise NotImplementedError  # pragma: no cover
             content = jinja_environment.render_template_as_markup(

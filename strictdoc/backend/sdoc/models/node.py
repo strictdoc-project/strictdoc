@@ -234,9 +234,14 @@ class SDocNode(SDocNodeIF):
         """
         FIXME: It should be possible to avoid calculating this every time.
         """
+
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
+
         for fields_ in self.ordered_fields_lookup.values():
             for field_ in fields_:
-                if field_.multiline:
+                if element.is_field_multiline(field_.field_name):
                     return True
         return False
 
@@ -329,7 +334,7 @@ class SDocNode(SDocNodeIF):
         return self.get_document()
 
     def get_document(self) -> Optional[SDocDocumentIF]:
-        assert self.ng_document_reference is not None
+        assert self.ng_document_reference is not None, self
         return self.ng_document_reference.get_document()
 
     def get_including_document(self) -> Optional[SDocDocumentIF]:
@@ -484,13 +489,7 @@ class SDocNode(SDocNodeIF):
         ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
 
-        # Some nodes have the content field, e.g., STATEMENT or DESCRIPTION,
-        # some don't. For those that don't, use TITLE as a boundary between
-        # the single-line and multiline.
-        reference_field_index: int = element.content_field[1]
-        if reference_field_index == -1:
-            reference_field_index = grammar_field_titles.index("TITLE")
-            assert reference_field_index != -1
+        reference_field_index: int = element.get_multiline_field_index()
 
         for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
@@ -553,6 +552,9 @@ class SDocNode(SDocNodeIF):
         return parent.get_requirement_prefix()
 
     def dump_fields_as_parsed(self) -> str:
+        # FIXME:
+        # - The name of the method can be improved (used in error messages).
+        # - fields can diverge from fields_as_parsed.
         return ", ".join(
             list(
                 map(
@@ -617,8 +619,7 @@ class SDocNode(SDocNodeIF):
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
         field_index = grammar_field_titles.index(field_name)
 
-        # FIXME
-        multiline = field_index >= element.content_field[1]
+        multiline = field_index >= element.get_multiline_field_index()
         if multiline and isinstance(value, str):
             value = ensure_newline(value)
 

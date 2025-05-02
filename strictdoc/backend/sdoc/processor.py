@@ -201,6 +201,8 @@ class SDocParsingProcessor:
         ) and self.parse_context.document_config.auto_levels:
             composite_requirement.ng_resolved_custom_level = "None"
 
+        preserve_source_location_data(composite_requirement)
+
     def process_requirement(self, requirement: SDocNode) -> None:
         self.parse_context.document_has_requirements = True
 

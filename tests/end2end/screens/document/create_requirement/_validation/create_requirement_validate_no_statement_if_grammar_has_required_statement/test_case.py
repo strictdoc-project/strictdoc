@@ -28,13 +28,25 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            requirement = screen_document.get_node()
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
-                requirement.do_open_form_edit_requirement()
+                root_node_menu.do_node_add_requirement_first()
             )
-            form_edit_requirement.do_clear_field("DESCRIPTION")
+
+            form_edit_requirement.do_fill_in_field_title("Requirement title")
+
+            # Nothing is entered into the STATEMENT field.
+
             form_edit_requirement.do_form_submit_and_catch_error(
-                "Node description must not be empty."
+                "Node's STATEMENT must not be empty. "
+                "If there is no appropriate value for this field yet, "
+                "enter TBD (to be done) or TBC (to be confirmed)."
+            )
+            self.assert_text(
+                "Node's STATEMENT2 must not be empty. "
+                "If there is no appropriate value for this field yet, "
+                "enter TBD (to be done) or TBC (to be confirmed)."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

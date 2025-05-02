@@ -41,7 +41,24 @@ sdoc-node-title {
 
   font-size: 1.125em;
   font-weight: 700;
+}
 
+sdoc-node-title:last-child {
+  margin-bottom: 0;
+}
+
+sdoc-node-title * {
+  /* affect H inside title, if applicable */
+  margin: 0;
+}
+
+[node-style="card"] sdoc-node-title {
+  font-size: 1em;
+}
+
+sdoc-node-content[node-view="simple"] sdoc-node-title,
+sdoc-node-content[node-view="table"] sdoc-node-title,
+sdoc-node-content[node-view="zebra"] sdoc-node-title {
   padding-left: calc(var(--requirement-base-rhythm)*2);
   padding-right: calc(var(--requirement-base-rhythm)*2);
   padding-top: calc(var(--requirement-base-rhythm)*1);
@@ -56,10 +73,6 @@ sdoc-node-title {
 
   word-break: break-word;
   overflow-wrap: break-word;
-}
-
-[node-style="card"] sdoc-node-title {
-  font-size: 1em;
 }
 
 sdoc-node-uid {

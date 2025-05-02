@@ -297,7 +297,7 @@ sdoc-node-content[node-view="narrative"] {
   opacity: 0.8;
 }
 
-[node-view="narrative"] .requirement_fields_group-secondary sdoc-node-field > * {
+[node-view="narrative"] .node_fields_group-secondary sdoc-node-field > * {
   /*
     affects field content in the secondary scope only;
     make them lighter:
@@ -314,7 +314,7 @@ sdoc-node-content[node-view="narrative"] {
   font-weight: normal;
 }
 
-[node-view="narrative"] .requirement_fields_group-primary {
+[node-view="narrative"] .node_fields_group-primary {
   display: block;
   order: 99; /* to push to the end */
   margin-top: var(--base-rhythm);
@@ -322,7 +322,7 @@ sdoc-node-content[node-view="narrative"] {
   padding-top: var(--base-padding);
 }
 
-[node-view="narrative"] .requirement_fields_group-primary sdoc-node-field {
+[node-view="narrative"] .node_fields_group-primary sdoc-node-field {
   margin-bottom: var(--base-padding);
   color: var(--color-fg-contrast);
 }

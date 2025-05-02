@@ -483,7 +483,15 @@ class SDocNode(SDocNodeIF):
             self.node_type
         ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
-        statement_field_index: int = element.content_field[1]
+
+        # Some nodes have the content field, e.g., STATEMENT or DESCRIPTION,
+        # some don't. For those that don't, use TITLE as a boundary between
+        # the single-line and multiline.
+        reference_field_index: int = element.content_field[1]
+        if reference_field_index == -1:
+            reference_field_index = grammar_field_titles.index("TITLE")
+            assert reference_field_index != -1
+
         for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
@@ -491,7 +499,7 @@ class SDocNode(SDocNodeIF):
 
             # A field is considered singleline if it goes before the STATEMENT
             # field and vice versa.
-            if field_index > statement_field_index:
+            if field_index > reference_field_index:
                 is_single_line_field = False
             else:
                 is_single_line_field = True
@@ -609,6 +617,7 @@ class SDocNode(SDocNodeIF):
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
         field_index = grammar_field_titles.index(field_name)
 
+        # FIXME
         multiline = field_index >= element.content_field[1]
         if multiline and isinstance(value, str):
             value = ensure_newline(value)

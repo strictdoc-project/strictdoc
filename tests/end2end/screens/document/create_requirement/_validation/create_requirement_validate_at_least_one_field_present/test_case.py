@@ -28,14 +28,17 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            requirement = screen_document.get_node()
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
+
             form_edit_requirement: Form_EditRequirement = (
-                requirement.do_open_form_edit_requirement()
+                root_node_menu.do_node_add_requirement_first()
             )
-            form_edit_requirement.do_fill_in_field_title("Modified title")
-            form_edit_requirement.do_clear_field("STATEMENT")
+
+            # Nothing is entered into any field.
+
             form_edit_requirement.do_form_submit_and_catch_error(
-                "Node statement must not be empty."
+                "At least one node field must be non-empty."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

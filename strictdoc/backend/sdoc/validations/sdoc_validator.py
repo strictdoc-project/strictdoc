@@ -75,18 +75,6 @@ class SDocValidator:
     def validate_grammar_element(
         path_to_grammar: str, grammar_element: GrammarElement
     ) -> None:
-        if (
-            not grammar_element.property_is_composite
-            and grammar_element.content_field[0]
-            not in grammar_element.fields_map
-        ):
-            raise StrictDocSemanticError.grammar_missing_reserved_statement(
-                grammar_element,
-                path_to_grammar,
-                grammar_element.ng_line_start,
-                grammar_element.ng_col_start,
-            )
-
         # GrammarFromFile doesn't have a parent document.
         document: Optional[SDocDocument] = assert_optional_cast(
             grammar_element.parent.parent, SDocDocument
@@ -99,29 +87,6 @@ class SDocValidator:
                 raise StrictDocSemanticError.grammar_element_has_no_mid_field(
                     grammar_element,
                     path_to_grammar,
-                )
-
-        # FIXME: [[NODE]]
-        if grammar_element.content_field[1] != -1:
-            content_field: GrammarElementField = grammar_element.fields_map[
-                grammar_element.content_field[0]
-            ]
-            # FIXME: Enable for STATEMENT as well. For now, don't want to break
-            #        backward compatibility.
-            if (
-                content_field.title
-                in (
-                    RequirementFieldName.DESCRIPTION,
-                    RequirementFieldName.CONTENT,
-                )
-                and not content_field.required
-            ):
-                raise StrictDocSemanticError.grammar_reserved_statement_must_be_required(
-                    grammar_element,
-                    content_field.title,
-                    path_to_grammar,
-                    grammar_element.ng_line_start,
-                    grammar_element.ng_col_start,
                 )
 
     @staticmethod

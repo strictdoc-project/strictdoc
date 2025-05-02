@@ -11,9 +11,11 @@ TITLE: Nested Doc Section
 
 [COMPOSITE_REQUIREMENT]
 TITLE: Nested Doc Section Composite requirement
+STATEMENT: ...
 
 [REQUIREMENT]
 TITLE: Nested Doc Section Requirement
+STATEMENT: ...
 
 [/COMPOSITE_REQUIREMENT]
 

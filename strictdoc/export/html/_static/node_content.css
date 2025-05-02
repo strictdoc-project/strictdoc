@@ -251,7 +251,7 @@ sdoc-node-content[node-view="narrative"] {
   border: none;
 }
 
-[node-view="narrative"] sdoc-node-title {
+sdoc-node-content[node-view="narrative"] sdoc-node-title {
   border: none;
   outline: none;
   background: none;
@@ -261,23 +261,23 @@ sdoc-node-content[node-view="narrative"] {
   grid-column: 1 / -1;
 }
 
-[node-view="narrative"] sdoc-node-field {
+sdoc-node-content[node-view="narrative"] sdoc-node-field {
   padding: 0;
 }
 
-[node-view="narrative"] sdoc-node-field[data-field-type="singleline"] {
+sdoc-node-content[node-view="narrative"] sdoc-node-field[data-field-type="singleline"] {
   /* to make it a single FLEX line */
   display: flex;
   font-size: var(--font-size-sm);
   line-height: calc(var(--font-size-sm) * 1.5);
 }
 
-[node-view="narrative"] sdoc-node-field-label {
+sdoc-node-content[node-view="narrative"] sdoc-node-field-label {
   /* show them as pseudo-elements: sdoc-node-field::before */
   display: none;
 }
 
-[node-view="narrative"] sdoc-node-field::before {
+sdoc-node-content[node-view="narrative"] sdoc-node-field::before {
   flex-grow: 1;
   content: attr(data-field-label) ':';
   font-family: var(--code-font-family);
@@ -297,7 +297,7 @@ sdoc-node-content[node-view="narrative"] {
   opacity: 0.8;
 }
 
-[node-view="narrative"] .node_fields_group-secondary sdoc-node-field > * {
+sdoc-node-content[node-view="narrative"] .node_fields_group-secondary sdoc-node-field > * {
   /*
     affects field content in the secondary scope only;
     make them lighter:
@@ -305,8 +305,8 @@ sdoc-node-content[node-view="narrative"] {
   opacity: 0.6;
 }
 
-[node-view="narrative"] .requirement__parent-uid,
-[node-view="narrative"] .requirement__child-uid {
+sdoc-node-content[node-view="narrative"] .requirement__parent-uid,
+sdoc-node-content[node-view="narrative"] .requirement__child-uid {
   /*
     affects UID in links;
     make them lighter:
@@ -314,7 +314,7 @@ sdoc-node-content[node-view="narrative"] {
   font-weight: normal;
 }
 
-[node-view="narrative"] .node_fields_group-primary {
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary {
   display: block;
   order: 99; /* to push to the end */
   margin-top: var(--base-rhythm);
@@ -322,7 +322,7 @@ sdoc-node-content[node-view="narrative"] {
   padding-top: var(--base-padding);
 }
 
-[node-view="narrative"] .node_fields_group-primary sdoc-node-field {
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary sdoc-node-field {
   margin-bottom: var(--base-padding);
   color: var(--color-fg-contrast);
 }

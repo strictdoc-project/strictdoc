@@ -218,9 +218,10 @@ class RequirementFormObject(ErrorObject):
         self.requirement_mid: str = requirement_mid
         self.document_mid: str = document_mid
         self.context_document_mid: str = context_document_mid
-        fields_dict: dict = defaultdict(list)
+        fields_dict: dict = {}
         for field in fields:
-            fields_dict[field.field_name].append(field)
+            fields_dict.setdefault(field.field_name, []).append(field)
+
         self.fields: Dict[str, List[RequirementFormField]] = fields_dict
         self.reference_fields: List[RequirementReferenceFormField] = (
             reference_fields
@@ -556,8 +557,14 @@ class RequirementFormObject(ErrorObject):
         return references
 
     def enumerate_fields(self, multiline: bool):
-        for _, field in self.fields.items():
-            requirement_field: RequirementFormField = field[0]
+        for field_name_, field in self.fields.items():
+            try:
+                requirement_field: RequirementFormField = field[0]
+            except IndexError as index_error_:
+                raise AssertionError(
+                    f"Expected field name to correspond to an existing field: {field_name_}."
+                ) from index_error_
+
             if multiline:
                 if not requirement_field.is_multiline():
                     continue
@@ -597,9 +604,26 @@ class RequirementFormObject(ErrorObject):
         assert isinstance(context_document, SDocDocument)
 
         #
+        # Ensure that at least one field must be non-empty.
+        #
+        at_least_one_non_empty_field_present = False
+        for field_fields_ in self.fields.values():
+            for field_ in field_fields_:
+                if len(field_.field_value) > 0:
+                    at_least_one_non_empty_field_present = True
+                    break
+            if at_least_one_non_empty_field_present:
+                break
+        if not at_least_one_non_empty_field_present:
+            self.add_error(
+                "_GENERAL_",
+                "At least one node field must be non-empty.",
+            )
+
+        #
         # MID uniqueness check.
         # FIXME: MID uniqueness if a node is updated.
-        #
+        # """
         if self.is_new and "MID" in self.fields:
             new_node_mid = self.fields["MID"][0].field_value
             if len(new_node_mid) > 0:
@@ -670,51 +694,43 @@ class RequirementFormObject(ErrorObject):
                         ),
                     )
 
-        #
-        # STATEMENT or another content field (DESCRIPTION, CONTENT) checks:
-        # - Must be not empty.
-        # - Must be valid RST.
-        #
         requirement_element = self.grammar.elements_by_type[self.element_type]
-        statement_field_name = requirement_element.content_field[0]
-        requirement_statement = self.fields[statement_field_name][0].field_value
-        if requirement_statement is None or len(requirement_statement) == 0:
-            self.add_error(
-                statement_field_name,
-                f"Node {statement_field_name.lower()} must not be empty.",
-            )
-        else:
-            (
-                parsed_html,
-                rst_error,
-            ) = RstToHtmlFragmentWriter(
-                project_config=config,
-                context_document=context_document,
-            ).write_with_validation(requirement_statement)
-            if parsed_html is None:
-                self.add_error(statement_field_name, rst_error)
 
         for grammar_element_field_ in requirement_element.fields:
-            # STATEMENT/DESCRIPTION/CONTENT field has already been validated. Skip.
-            if grammar_element_field_.title == statement_field_name:
-                continue
-            if (
-                grammar_element_field_.gef_type == RequirementFieldType.STRING
-                and grammar_element_field_.required
-            ):
+            if grammar_element_field_.gef_type == RequirementFieldType.STRING:
+                if grammar_element_field_.title not in self.fields:
+                    continue
+
                 for form_field_ in self.fields[grammar_element_field_.title]:
                     field_value = form_field_.field_value
-                    if field_value is None or len(field_value) == 0:
-                        self.add_error(
-                            grammar_element_field_.title,
-                            (
-                                f"Node's {grammar_element_field_.title} must not be empty. "
-                                f"If there is no appropriate value for this field yet, "
-                                f"enter TBD (to be done) or TBC (to be confirmed)."
-                            ),
-                        )
 
-            if grammar_element_field_.gef_type in (
+                    # If field not empty, validate its RST syntax.
+                    if len(field_value) > 0:
+                        (
+                            parsed_html,
+                            rst_error,
+                        ) = RstToHtmlFragmentWriter(
+                            project_config=config,
+                            context_document=context_document,
+                        ).write_with_validation(field_value)
+                        if parsed_html is None:
+                            self.add_error(
+                                grammar_element_field_.title, rst_error
+                            )
+                    # If field is empty, check if required and validate for emptiness.
+                    else:
+                        if grammar_element_field_.required:
+                            self.add_error(
+                                grammar_element_field_.title,
+                                (
+                                    f"Node's {grammar_element_field_.title} must not be empty. "
+                                    f"If there is no appropriate value for this field yet, "
+                                    f"enter TBD (to be done) or TBC (to be confirmed)."
+                                ),
+                            )
+                        continue
+
+            elif grammar_element_field_.gef_type in (
                 RequirementFieldType.SINGLE_CHOICE,
                 RequirementFieldType.MULTIPLE_CHOICE,
             ):

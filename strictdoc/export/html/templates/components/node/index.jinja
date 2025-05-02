@@ -59,7 +59,8 @@
 
     {# sdoc_entity #}
     {% block sdoc_entity %}
-    {% include "components/"~node_type~"/index.jinja" %}
+      {# FIXME: This is not reachable from anywhere right now. #}
+      {% assert 0, "Must not reach here!" %}
     {% endblock sdoc_entity %}
 
     {# node_controls #}

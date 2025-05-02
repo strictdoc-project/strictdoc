@@ -76,9 +76,31 @@ class GrammarElement:
             else:
                 pass
         self.fields_map: Dict[str, GrammarElementField] = fields_map
+
+        self.field_titles: List[str] = list(
+            map(lambda field__: field__.title, self.fields)
+        )
+
         self.content_field: Tuple[str, int] = (
             statement_field or description_field or content_field or ("", -1)
         )
+
+        # Some nodes have the content field, e.g., STATEMENT or DESCRIPTION,
+        # some don't. For those that don't, use TITLE as a boundary between
+        # the single-line and multiline.
+        multiline_field_index = self.content_field[1]
+        if multiline_field_index == -1:
+            try:
+                multiline_field_index = self.get_field_titles().index("TITLE")
+            except ValueError as value_error_:
+                raise RuntimeError(
+                    (
+                        f"The grammar element {self.tag} must have at least one of the "
+                        f"following fields: TITLE, STATEMENT, DESCRIPTION, CONTENT."
+                    ),
+                ) from value_error_
+        self.multiline_field_index: int = multiline_field_index
+
         self.mid: MID = MID.create()
         self.ng_line_start: Optional[int] = None
         self.ng_col_start: Optional[int] = None
@@ -135,10 +157,12 @@ class GrammarElement:
             ),
         ]
 
+    def is_field_multiline(self, field_name: str) -> bool:
+        field_index = self.field_titles.index(field_name)
+        return field_index >= self.content_field[1]
+
     def get_multiline_field_index(self) -> int:
-        multiline_field_index = self.content_field[1]
-        assert multiline_field_index != -1
-        return multiline_field_index
+        return self.multiline_field_index
 
     def get_relation_types(self) -> List[str]:
         return list(
@@ -146,7 +170,7 @@ class GrammarElement:
         )
 
     def get_field_titles(self) -> List[str]:
-        return list(map(lambda field_: field_.title, self.fields))
+        return self.field_titles
 
     def get_tag_lower(self) -> str:
         return self.tag.lower()
@@ -344,13 +368,13 @@ class DocumentGrammar(SDocGrammarIF):
                 parent=None,
                 title=RequirementFieldName.STATUS,
                 human_title=None,
-                required="False",
+                required="True",
             ),
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.TITLE,
                 human_title=None,
-                required="False",
+                required="True",
             ),
             GrammarElementFieldString(
                 parent=None,

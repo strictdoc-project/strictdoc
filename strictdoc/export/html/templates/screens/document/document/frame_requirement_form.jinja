@@ -29,6 +29,20 @@
   {% set document_mid = form_object.document_mid %}
   {% set element_type = form_object.element_type %}
 
+  {#
+   # The _GENERAL_ is a collector for all validation errors that are node-specific
+   # and not related to each individual field.
+   #}
+  {%- for error_ in form_object.get_errors("_GENERAL_") -%}
+  <sdoc-form-row>
+    <sdoc-form-row-main>
+      <sdoc-form-error>
+        {{ error_ }}
+      </sdoc-form-error>
+    </sdoc-form-row-main>
+  </sdoc-form-row>
+  {%- endfor -%}
+
   {# Single-line #}
   {%- for field_values_ in form_object.enumerate_fields(multiline=False) -%}
     {%- for field_ in field_values_ -%}

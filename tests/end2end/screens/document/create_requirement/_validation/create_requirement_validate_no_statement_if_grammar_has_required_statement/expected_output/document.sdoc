@@ -7,13 +7,10 @@ ELEMENTS:
   FIELDS:
   - TITLE: TITLE
     TYPE: String
-    REQUIRED: True
-  - TITLE: DESCRIPTION
+    REQUIRED: False
+  - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True
-
-[REQUIREMENT]
-TITLE: Requirement title
-DESCRIPTION: >>>
-Requirement statement.
-<<<
+  - TITLE: STATEMENT2
+    TYPE: String
+    REQUIRED: True

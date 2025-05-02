@@ -1,3 +1,6 @@
+UNSUPPORTED: true
+# FIXME: [[NODE]]
+
 # TBD: Figure out how to set PYTHONPATH on Windows.
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 

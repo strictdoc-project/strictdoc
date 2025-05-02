@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Test document
+TITLE: Document 1
 
 [GRAMMAR]
 ELEMENTS:
@@ -7,10 +7,7 @@ ELEMENTS:
   FIELDS:
   - TITLE: TITLE
     TYPE: String
-    REQUIRED: True
-  - TITLE: DESCRIPTION
+    REQUIRED: False
+  - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
-
-[REQUIREMENT]
-TITLE: Hello

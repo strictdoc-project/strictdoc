@@ -9,7 +9,7 @@
         if sdoc_entity.ng_level < 6
         else 6 -%}
 
-    {% if node.is_composite %}<h{{ h_level }}>{% endif %}
+    {% if sdoc_entity.is_composite %}<h{{ h_level }}>{% endif %}
 
     {#- initiate the accumulating variable -#}
     {%- set field_content_ = "" -%}
@@ -32,6 +32,6 @@
       {%- include "components/field/index.jinja" -%}
     {%- endwith -%}
 
-    {% if node.is_composite %}</h{{ h_level }}>{% endif %}
+    {% if sdoc_entity.is_composite %}</h{{ h_level }}>{% endif %}
   </sdoc-node-title>
 {%- endif %}

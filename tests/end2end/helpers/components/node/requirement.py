@@ -87,16 +87,14 @@ class Requirement(Node):  # pylint: disable=invalid-name
     def assert_requirement_has_mid(self) -> None:
         """Use it with full requirement. <sdoc-node-field ...>"""
         self.test_case.assert_element(
-            f"{self.node_xpath}"
-            "//sdoc-node-field[@data-field-label='MID']",
+            f"{self.node_xpath}//sdoc-node-field[@data-field-label='MID']",
             by=By.XPATH,
         )
 
     def assert_requirement_has_no_uid(self) -> None:
         """Use it with full requirement. <sdoc-node-field ...>"""
         self.test_case.assert_element_not_present(
-            f"{self.node_xpath}"
-            "//sdoc-node-field[@data-field-label='UID']",
+            f"{self.node_xpath}//sdoc-node-field[@data-field-label='UID']",
             by=By.XPATH,
         )
 

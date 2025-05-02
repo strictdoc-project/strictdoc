@@ -1,0 +1,25 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: DESCRIPTION
+    TYPE: String
+    REQUIRED: True
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement STATEMENT.
+<<<
+DESCRIPTION: >>>
+Requirement DESCRIPTION.
+<<<

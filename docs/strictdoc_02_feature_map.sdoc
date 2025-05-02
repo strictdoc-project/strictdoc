@@ -35,7 +35,7 @@ ELEMENTS:
     REQUIRED: False
   - TITLE: STATEMENT
     TYPE: String
-    REQUIRED: False
+    REQUIRED: True
   - TITLE: RATIONALE
     TYPE: String
     REQUIRED: False

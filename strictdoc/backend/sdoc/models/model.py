@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from typing import Generator, List, Optional, Union
 
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
-from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.core.document_meta import DocumentMeta
 
 
@@ -70,9 +69,13 @@ class SDocSectionIF(ABC):
         raise NotImplementedError  # pragma: no cover
 
 
+class SDocGrammarIF:
+    pass
+
+
 class SDocDocumentIF(ABC):
     config: DocumentConfig
-    grammar: Optional[DocumentGrammar]
+    grammar: Optional[SDocGrammarIF]
     meta: Optional[DocumentMeta]
     section_contents: List["SDocSectionContentIF"]
     included_documents: List["SDocDocumentIF"]

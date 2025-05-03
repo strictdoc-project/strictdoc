@@ -2411,7 +2411,7 @@ MID: 07bfe045a4934dd29d97fdb8ac567b7c
 STATEMENT: >>>
 For parsing source code and calculating traceability to requirements, StrictDoc uses a general parser that is agnostic of specific programming languages and their constructs, such as classes or functions. However, for languages with these constructs, establishing traceability to them can simplify the tracing process.
 
-As an experimental option, StrictDoc supports parsing source files of selected programming languages (currently Python and C) to recognize language syntax, primarily enabling traceability of functions (in Python, C, and others) and classes (in Python, C++, and others) to requirements.
+As an experimental option, StrictDoc supports parsing source files of selected programming languages to recognize language syntax, primarily enabling traceability of functions (in Python, C, and others), classes (in Python, C++, and others) and tests (Python, C++, Robot Framework) to requirements.
 
 To activate language-aware traceability, configure the project with the following features:
 
@@ -2424,7 +2424,7 @@ To activate language-aware traceability, configure the project with the followin
       "SOURCE_FILE_LANGUAGE_PARSERS"
     ]
 
-Currently, only Python and C/C++ parsers are implemented. Upcoming implementations include parsers for Rust, Bash, and more.
+Currently, Python, C/C++ and Robot Framework parsers are implemented. Upcoming implementations include parsers for Rust, Bash, and more.
 <<<
 
 [[/SECTION]]

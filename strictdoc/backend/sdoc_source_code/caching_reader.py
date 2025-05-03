@@ -13,6 +13,9 @@ from strictdoc.backend.sdoc_source_code.reader_c import (
 from strictdoc.backend.sdoc_source_code.reader_python import (
     SourceFileTraceabilityReader_Python,
 )
+from strictdoc.backend.sdoc_source_code.reader_robot import (
+    SourceFileTraceabilityReader_Robot,
+)
 from strictdoc.core.project_config import ProjectConfig
 
 
@@ -59,6 +62,7 @@ class SourceFileTraceabilityCachingReader:
         SourceFileTraceabilityReader,
         SourceFileTraceabilityReader_Python,
         SourceFileTraceabilityReader_C,
+        SourceFileTraceabilityReader_Robot,
     ]:
         if project_config.is_activated_source_file_language_parsers():
             if path_to_file.endswith(".py"):
@@ -72,4 +76,6 @@ class SourceFileTraceabilityCachingReader:
                 or path_to_file.endswith(".cpp")
             ):
                 return SourceFileTraceabilityReader_C()
+            if path_to_file.endswith(".robot"):
+                return SourceFileTraceabilityReader_Robot()
         return SourceFileTraceabilityReader()

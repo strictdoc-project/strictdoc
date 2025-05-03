@@ -30,6 +30,7 @@ class MarkerParser:
         line_end: int,
         comment_line_start: int,
         entity_name: Optional[str] = None,
+        col_offset: int = 0,
     ) -> List[Union[FunctionRangeMarker, RangeMarker, LineMarker]]:
         """
         Parse relation markers from source file comments.
@@ -72,8 +73,8 @@ class MarkerParser:
             )
 
             marker_start_column = (
-                marker_start_index - marker_line_start_index
-            ) + 1
+                (marker_start_index - marker_line_start_index) + col_offset + 1
+            )
 
             all_reqs_start_index = match_.start(1)
 

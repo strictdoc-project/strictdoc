@@ -1,0 +1,42 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.robot.html"
+
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#5#8">
+CHECK-HTML: file.robot, <i>lines: 5-8</i>, function My Test()
+CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#10#12">
+CHECK-HTML: file.robot, <i>lines: 10-12</i>, function My Other Test()
+CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-2#14#16">
+CHECK-HTML: file.robot, <i>lines: 14-16</i>, function Yet Another Test()
+
+RUN: %cat %S/Output/html/_source_files/file.robot.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+# Left panel.
+CHECK-SOURCE-FILE: href="../_source_files/file.robot.html#REQ-1#5#8"
+CHECK-SOURCE-FILE: <b>[ 5-8 ]</b>
+CHECK-SOURCE-FILE: file.robot, function My Test
+CHECK-SOURCE-FILE: href="../_source_files/file.robot.html#REQ-1#10#12"
+CHECK-SOURCE-FILE: <b>[ 10-12 ]</b>
+CHECK-SOURCE-FILE: file.robot, function My Other Test
+CHECK-SOURCE-FILE: href="../_source_files/file.robot.html#REQ-2#14#16"
+CHECK-SOURCE-FILE: <b>[ 14-16 ]</b>
+CHECK-SOURCE-FILE: file.robot, function Yet Another Test
+
+# Main source view.
+CHECK-SOURCE-FILE:<div data-line="4"
+CHECK-SOURCE-FILE: Requirement Title
+CHECK-SOURCE-FILE: My Test
+CHECK-SOURCE-FILE: @relation(REQ-1, scope=function)
+CHECK-SOURCE-FILE:<div data-line="9"
+CHECK-SOURCE-FILE: Requirement Title
+CHECK-SOURCE-FILE: Requirement Title #2
+CHECK-SOURCE-FILE: My Other Test
+CHECK-SOURCE-FILE: @relation(REQ-1, REQ-2, scope=function)
+CHECK-SOURCE-FILE:<div data-line="13"
+CHECK-SOURCE-FILE: Requirement Title #2
+CHECK-SOURCE-FILE: Yet Another Test
+CHECK-SOURCE-FILE: @relation(REQ-2, scope=function)
+
+RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 76.9

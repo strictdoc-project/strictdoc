@@ -21,7 +21,6 @@ from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
-    create_default_relations,
 )
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
@@ -215,8 +214,8 @@ class P01_ReqIFToSDocConverter:
                 ]
             )
             if len(grammar_element.relations) == 0:
-                grammar_element.relations = create_default_relations(
-                    grammar_element
+                grammar_element.relations = (
+                    GrammarElement.create_default_relations(grammar_element)
                 )
 
             elements.append(grammar_element)

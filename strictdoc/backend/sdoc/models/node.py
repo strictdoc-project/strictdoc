@@ -590,10 +590,9 @@ class SDocNode(SDocNodeIF):
         document: SDocDocumentIF = assert_cast(
             self.get_document(), SDocDocumentIF
         )
-        grammar_or_none: Optional[DocumentGrammar] = document.grammar
-        assert grammar_or_none is not None
-        grammar: DocumentGrammar = grammar_or_none
-
+        grammar: DocumentGrammar = assert_cast(
+            document.grammar, DocumentGrammar
+        )
         element: GrammarElement = grammar.elements_by_type[self.node_type]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
         field_index = grammar_field_titles.index(field_name)

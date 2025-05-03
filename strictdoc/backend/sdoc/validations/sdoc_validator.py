@@ -18,6 +18,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldTag,
     RequirementFieldName,
 )
+from strictdoc.helpers.cast import assert_optional_cast
 
 MULTIPLE_CHOICE_FIELD_KW = r"[a-zA-Z0-9\/\-_ ]+"
 MULTIPLE_CHOICE_FIELD_REGEX = re.compile(
@@ -83,7 +84,9 @@ class SDocValidator:
             )
 
         # GrammarFromFile doesn't have a parent document.
-        document: Optional[SDocDocument] = grammar_element.parent.parent
+        document: Optional[SDocDocument] = assert_optional_cast(
+            grammar_element.parent.parent, SDocDocument
+        )
         if document is not None and document.config.enable_mid:
             if (
                 grammar_element.tag != "TEXT"

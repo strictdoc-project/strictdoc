@@ -1,7 +1,8 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="no-untyped-call,union-attr,type-arg"
 from collections import OrderedDict
 from typing import Dict, Generator, List, Optional, Set, Tuple, Union
 
+from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocGrammarIF
 from strictdoc.backend.sdoc.models.type_system import (
     RESERVED_NON_META_FIELDS,
     GrammarElementField,
@@ -17,34 +18,11 @@ from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
 
 
-def create_default_relations(
-    parent,
-) -> List[
-    Union[
-        GrammarElementRelationParent,
-        GrammarElementRelationChild,
-        GrammarElementRelationFile,
-    ]
-]:
-    return [
-        GrammarElementRelationParent(
-            parent=parent,
-            relation_type="Parent",
-            relation_role=None,
-        ),
-        GrammarElementRelationFile(
-            parent=parent,
-            relation_type="File",
-            relation_role=None,
-        ),
-    ]
-
-
 @auto_described()
 class GrammarElement:
     def __init__(
         self,
-        parent,
+        parent: Optional["DocumentGrammar"],
         tag: str,
         property_is_composite: str,
         fields: List[
@@ -55,8 +33,8 @@ class GrammarElement:
             ]
         ],
         relations: List,
-    ):
-        self.parent = parent
+    ) -> None:
+        self.parent: Optional[DocumentGrammar] = parent
         self.tag: str = tag
 
         assert property_is_composite in ("", "True", "False")
@@ -106,7 +84,7 @@ class GrammarElement:
         self.ng_col_start: Optional[int] = None
 
     @staticmethod
-    def create_default(tag: str):
+    def create_default(tag: str) -> "GrammarElement":
         return GrammarElement(
             parent=None,
             tag=tag,
@@ -134,6 +112,29 @@ class GrammarElement:
             relations=[],
         )
 
+    @staticmethod
+    def create_default_relations(
+        parent: "GrammarElement",
+    ) -> List[
+        Union[
+            GrammarElementRelationParent,
+            GrammarElementRelationChild,
+            GrammarElementRelationFile,
+        ]
+    ]:
+        return [
+            GrammarElementRelationParent(
+                parent=parent,
+                relation_type="Parent",
+                relation_role=None,
+            ),
+            GrammarElementRelationFile(
+                parent=parent,
+                relation_type="File",
+                relation_role=None,
+            ),
+        ]
+
     def get_multiline_field_index(self) -> int:
         multiline_field_index = self.content_field[1]
         assert multiline_field_index != -1
@@ -152,7 +153,7 @@ class GrammarElement:
 
     def has_relation_type_role(
         self, relation_type: str, relation_role: Optional[str]
-    ):
+    ) -> bool:
         assert relation_role is None or len(relation_role) > 0
         for relation_ in self.relations:
             if (
@@ -190,14 +191,14 @@ class GrammarElement:
             yield field.title
 
 
-class DocumentGrammar:
+class DocumentGrammar(SDocGrammarIF):
     def __init__(
         self,
-        parent,
+        parent: Optional[SDocDocumentIF],
         elements: List[GrammarElement],
         import_from_file: Optional[str] = None,
     ) -> None:
-        self.parent = parent
+        self.parent: Optional[SDocDocumentIF] = parent
         self.elements: List[GrammarElement] = elements
 
         self.registered_elements: Set[str] = set()
@@ -217,7 +218,7 @@ class DocumentGrammar:
         self.ng_col_start: Optional[int] = None
 
     @staticmethod
-    def create_default(parent) -> "DocumentGrammar":
+    def create_default(parent: Optional[SDocDocumentIF]) -> "DocumentGrammar":
         text_element: GrammarElement = (
             DocumentGrammar.create_default_text_element()
         )
@@ -288,7 +289,7 @@ class DocumentGrammar:
         )
         # @relation(SDOC-SRS-132, scope=range_end)
 
-        requirement_element.relations = create_default_relations(
+        requirement_element.relations = GrammarElement.create_default_relations(
             requirement_element
         )
 
@@ -303,7 +304,7 @@ class DocumentGrammar:
         return grammar
 
     @staticmethod
-    def create_for_test_report(parent) -> "DocumentGrammar":
+    def create_for_test_report(parent: SDocDocumentIF) -> "DocumentGrammar":
         text_element: GrammarElement = (
             DocumentGrammar.create_default_text_element()
         )
@@ -366,7 +367,7 @@ class DocumentGrammar:
             relations=[],
         )
 
-        requirement_element.relations = create_default_relations(
+        requirement_element.relations = GrammarElement.create_default_relations(
             requirement_element
         )
 
@@ -380,7 +381,7 @@ class DocumentGrammar:
 
         return grammar
 
-    def get_element_by_mid(self, element_mid: str):
+    def get_element_by_mid(self, element_mid: str) -> GrammarElement:
         for element_ in self.elements:
             if element_.mid == element_mid:
                 return element_
@@ -388,7 +389,7 @@ class DocumentGrammar:
             f"Could not find a grammar element with MID: {element_mid}"
         )
 
-    def dump_fields(self, node_type) -> str:
+    def dump_fields(self, node_type: str) -> str:
         return ", ".join(
             list(
                 map(
@@ -404,7 +405,7 @@ class DocumentGrammar:
                 return True
         return False
 
-    def add_element_first(self, element: GrammarElement):
+    def add_element_first(self, element: GrammarElement) -> None:
         self.elements.insert(0, element)
         self.elements_by_type[element.tag] = element
         self.registered_elements.add(element.tag)
@@ -412,13 +413,13 @@ class DocumentGrammar:
 
     def update_element(
         self, existing_element: GrammarElement, updated_element: GrammarElement
-    ):
+    ) -> None:
         element_index = self.elements.index(existing_element)
         self.elements[element_index] = updated_element
         self.elements_by_type[updated_element.tag] = updated_element
         self.is_default = False
 
-    def update_with_elements(self, elements: List[GrammarElement]):
+    def update_with_elements(self, elements: List[GrammarElement]) -> None:
         # When elements are created by code, not by textX, it is convenient
         # if their .parent is set here automatically.
         for element_ in elements:
@@ -435,7 +436,9 @@ class DocumentGrammar:
         self.elements_by_type = elements_by_type
 
     @staticmethod
-    def create_default_text_element(parent=None) -> GrammarElement:
+    def create_default_text_element(
+        parent: Optional["DocumentGrammar"] = None,
+    ) -> GrammarElement:
         fields: List[
             Union[
                 GrammarElementFieldString,

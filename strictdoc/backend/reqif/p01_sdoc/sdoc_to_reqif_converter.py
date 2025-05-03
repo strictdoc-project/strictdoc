@@ -604,6 +604,10 @@ class P01_SDocToReqIFObjectConverter:
     ):
         spec_object_types: List = []
 
+        grammar_document: SDocDocument = assert_cast(
+            grammar.parent, SDocDocument
+        )
+
         for element in grammar.elements:
             fields_names = element.get_field_titles()
             statement_field_idx = fields_names.index("STATEMENT")
@@ -681,7 +685,7 @@ class P01_SDocToReqIFObjectConverter:
                 attribute_definitions=attribute_definitions,
             )
             spec_object_types.append(spec_object_type)
-            context.map_grammar_node_tags_to_spec_object_type[grammar.parent][
+            context.map_grammar_node_tags_to_spec_object_type[grammar_document][
                 element.tag
             ] = spec_object_type
 
@@ -689,7 +693,7 @@ class P01_SDocToReqIFObjectConverter:
         section_spec_type = (
             P01_SDocToReqIFObjectConverter._create_section_spec_object_type()
         )
-        context.map_grammar_node_tags_to_spec_object_type[grammar.parent][
+        context.map_grammar_node_tags_to_spec_object_type[grammar_document][
             "SECTION"
         ] = section_spec_type
         spec_object_types.append(section_spec_type)

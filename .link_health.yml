@@ -7,3 +7,23 @@ exceptions:
   # FIXME
   - url: https://strictdoc.readthedocs.io/en/latest/sphinx
   - url: https://strictdoc.readthedocs.io/en/latest/sphinx/
+  # FIXME: Not sure why these are failing now with GitHub.
+  - url: https://github.com/strictdoc-project/strictdoc/blob/93486a0e9fb30b141187587eae9e995cd86c6cbf/strictdoc/backend/dsl/grammar.py
+  - url: https://github.com/NASA-SW-VnV/fret/blob/master/PUBLICATIONS.md
+  - url: https://github.com/mull-project/FileCheck.py/blob/main/pyproject.toml
+  - url: https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc
+  - url: https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py
+  - url: https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/backend/sdoc/grammar/grammar.py
+  - url: https://github.com/textX/textX/blob/master/LICENSE.txt
+  - url: https://github.com/sphinx-doc/sphinx/blob/master/LICENSE.rst
+  - url: https://github.com/strictdoc-project/reqif/blob/main/LICENSE
+  - url: https://github.com/lxml/lxml/blob/master/doc/licenses/BSD.txt
+  - url: https://github.com/hotwired/turbo/blob/main/MIT-LICENSE
+  - url: https://github.com/hotwired/stimulus/blob/main/LICENSE.md
+  - url: https://github.com/pallets/jinja/blob/main/LICENSE.txt
+  - url: https://github.com/pygments/pygments/blob/master/LICENSE
+  - url: https://github.com/jmcnamara/XlsxWriter/blob/main/LICENSE.txt
+  - url: https://github.com/python-excel/xlrd/blob/master/LICENSE
+  - url: https://github.com/fcurella/python-datauri/blob/master/LICENSE
+  - url: https://github.com/tree-sitter/tree-sitter/blob/master/LICENSE
+  - url: https://github.com/doorstop-dev/doorstop/blob/804153c67c7c5466ee94e9553118cc3df03a56f9/reqs/REQ001.yml

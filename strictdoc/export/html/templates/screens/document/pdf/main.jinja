@@ -27,11 +27,11 @@
 
         {%- if node.is_requirement %}
           {%- set sdoc_entity = node -%}
-          {%- if node.is_text_node() %}
+          {# {%- if node.is_text_node() %}
             {% include "components/text_node/pdf.jinja" %}
-          {% else %}
+          {% else %} #}
             {% include "components/node_content/pdf.jinja" %}
-          {% endif %}
+          {# {% endif %} #}
 
         {%- elif node.is_section %}
           {# needed for self.local_anchor_cache: #}

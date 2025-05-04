@@ -381,9 +381,9 @@ def test_012_marker_not_first_line():
     assert markers[1].ng_range_line_end == 8
 
 
-"""
-LINE markers.
-"""
+#
+# LINE markers.
+#
 
 
 def test_050_line_marker():

@@ -29,12 +29,11 @@ class SourceFileTraceabilityInfo:
         self.source_file: Optional[SourceFile] = None
         self.functions: List[Function] = []
 
-        """
-        {
-         "REQ-001": [RangeMarker(...), ...],
-         "REQ-002": [RangeMarker(...), ...],
-        }
-        """
+        #
+        # {                                              # noqa: ERA001
+        #  "REQ-001": [RangeMarker(...), ...],           # noqa: ERA001
+        #  "REQ-002": [RangeMarker(...), ...],           # noqa: ERA001
+        # }                                              # noqa: ERA001
         self.ng_map_reqs_to_markers = {}
 
         self.ng_map_names_to_markers: Dict[str, List] = {}

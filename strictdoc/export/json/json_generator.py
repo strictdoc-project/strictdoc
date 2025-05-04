@@ -142,9 +142,9 @@ class JSONGenerator:
                         default_view
                     )
 
-        """
-        Grammar.
-        """
+        #
+        # Grammar.
+        #
         assert document.grammar is not None
         document_grammar: DocumentGrammar = document.grammar
 

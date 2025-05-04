@@ -30,15 +30,15 @@ class Test(E2ECase):
 
             node = screen_document.get_node()
 
-            """
-            Make sure there is the reference to the child in Requirement 1:
-            """
+            #
+            # Make sure there is the reference to the child in Requirement 1:
+            #
             node.assert_requirement_uid_contains("RUL-1")
             node.assert_requirement_has_parent_relation("OBJ-1")
 
-            """
-            Remove the relation.
-            """
+            #
+            # Remove the relation.
+            #
             form_edit_node: Form_EditRequirement = (
                 node.do_open_form_edit_requirement()
             )

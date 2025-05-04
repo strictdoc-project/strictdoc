@@ -315,17 +315,17 @@ class ChangeStats:
         assert side in ("left", "right")
 
         for document in index.document_tree.document_list:
-            """
-            The included documents are ignored. All their information should
-            be contained in the including documents at this point.
-            """
+            #
+            # The included documents are ignored. All their information should
+            # be contained in the including documents at this point.
+            #
             if document.document_is_included():
                 continue
 
-            """
-            First, take care of the document node itself. Check if the document
-            root-level free text (abstract) has changed.
-            """
+            #
+            # First, take care of the document node itself. Check if the document
+            # root-level free text (abstract) has changed.
+            #
             if document not in change_stats.map_nodes_to_changes:
                 other_document_or_none: Optional[SDocDocument]
 
@@ -409,13 +409,13 @@ class ChangeStats:
 
             document_iterator = DocumentCachingIterator(document)
 
-            """
-            Now iterate over all nodes and collect the diff information.
-
-            Note that document nodes appear when a document is included to
-            another document. We treat a document node as as a section node
-            because they both have FREETEXT.
-            """
+            #
+            # Now iterate over all nodes and collect the diff information.
+            #
+            # Note that document nodes appear when a document is included to
+            # another document. We treat a document node as as a section node
+            # because they both have FREETEXT.
+            #
             for node in document_iterator.all_content(
                 print_fragments=True, print_fragments_from_files=False
             ):
@@ -497,10 +497,10 @@ class ChangeStats:
                         else:
                             title_modified = True
 
-                        """
-                        Step: Create a section token that is used by JS to match
-                        the LHS nodes with RHS nodes.
-                        """
+                        #
+                        # Step: Create a section token that is used by JS to match
+                        # the LHS nodes with RHS nodes.
+                        #
                         section_token: Optional[str] = None
                         if other_section_or_none is not None:
                             section_token = MID.create()
@@ -534,11 +534,11 @@ class ChangeStats:
                         change_stats.add_change(section_change)
 
                 if isinstance(node, SDocNode):
-                    """
-                    Step: We check if a requirement was modified at all, or if
-                    it has already been checked before. Skipping the requirement
-                    if there is nothing to do.
-                    """
+                    #
+                    # Step: We check if a requirement was modified at all, or if
+                    # it has already been checked before. Skipping the requirement
+                    # if there is nothing to do.
+                    #
                     # FIXME: Is this 100% valid?
 
                     if node in change_stats.map_nodes_to_changes:
@@ -585,23 +585,23 @@ class ChangeStats:
                         change_stats.add_change(requirement_change)
                         continue
 
-                    """
-                    Step: Starting from here, we will be looking at the
-                    difference between this and the other requirement.
-                    """
+                    #
+                    # Step: Starting from here, we will be looking at the
+                    # difference between this and the other requirement.
+                    #
                     other_requirement: SDocNode = other_requirement_or_none
 
                     field_changes: List[RequirementFieldChange] = []
 
-                    """
-                    Step: Create a requirement token that is used by JS to match
-                    the LHS nodes with RHS nodes.
-                    """
+                    #
+                    # Step: Create a requirement token that is used by JS to match
+                    # the LHS nodes with RHS nodes.
+                    #
                     requirement_token: str = MID.create()
 
-                    """
-                    Iterate over requirement fields.
-                    """
+                    #
+                    # Iterate over requirement fields.
+                    #
                     requirement_fields_iter = iter(
                         requirement.enumerate_all_fields()
                     )

@@ -203,9 +203,9 @@ class SPDXGenerator:
         sdoc_spdx_converter: SDocToSPDXConverter = SDocToSPDXConverter()
         spdx_container: SPDXSDocContainer = SPDXSDocContainer()
 
-        """
-        SPDX Document and SPDX Package
-        """
+        #
+        # SPDX Document and SPDX Package
+        #
         spdx_document = sdoc_spdx_converter.create_document(project_config)
         spdx_container.document = spdx_document
 
@@ -238,9 +238,9 @@ class SPDXGenerator:
             with open(document_.meta.input_doc_full_path, "rb") as input_file_:
                 document_bytes = input_file_.read()
 
-            """
-            Create SPDX File from SDoc Document.
-            """
+            #
+            # Create SPDX File from SDoc Document.
+            #
             spdx_file = sdoc_spdx_converter.create_document_to_file(
                 document_, document_bytes
             )
@@ -275,9 +275,9 @@ class SPDXGenerator:
                         "The current implementation only supports requirements with a title."
                     )
 
-                    """
-                    Create SPDX Snippet from SDoc Requirement.
-                    """
+                    #
+                    # Create SPDX Snippet from SDoc Requirement.
+                    #
                     spdx_snippet: Snippet = (
                         sdoc_spdx_converter.convert_requirement_to_snippet(
                             node, document_bytes, spdx_file
@@ -351,9 +351,9 @@ class SPDXGenerator:
                             )
                         )
 
-        """
-        Now iterate over requirement nodes again
-        """
+        #
+        # Now iterate over requirement nodes again.
+        #
         for document_ in traceability_index.document_tree.document_list:
             document_iterator: DocumentCachingIterator = (
                 traceability_index.get_document_iterator(document_)
@@ -394,7 +394,9 @@ class SPDXGenerator:
                             )
                         )
 
-        """Output SPDX to a file"""
+        #
+        # Output SPDX to a file.
+        #
 
         output_path = os.path.join(output_spdx_root, "output.spdx")
         with open(output_path, "w", encoding="utf8") as file:

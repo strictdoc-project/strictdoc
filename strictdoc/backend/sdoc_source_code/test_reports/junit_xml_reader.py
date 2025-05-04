@@ -168,9 +168,9 @@ class JUnitXMLReader:
             )
             test_suite_section.section_contents.append(testcase_node)
 
-            """
-            Parse individual <testcase> elements.
-            """
+            #
+            # Parse individual <testcase> elements.
+            #
 
             xml_testcase_list: List[Any] = xml_testsuite_.find_all(
                 "testcase", recursive=False
@@ -216,16 +216,16 @@ class JUnitXMLReader:
                 elif xml_skipped_or_none is not None:
                     test_case_node_status = "SKIPPED"
 
-                """
-                Different tools produce different outputs when it comes to how
-                the test names and paths are stored. Each tool's output is
-                handled separately below.
-                """
+                #
+                # Different tools produce different outputs when it comes to how
+                # the test names and paths are stored. Each tool's output is
+                # handled separately below.
+                #
                 if xml_format == JUnitXMLFormat.LLVM_LIT:
-                    """
-                    Example produced by LLVM LIT:
-                    <testcase classname="StrictDoc integration tests.tests/integration" name="test.ignored.itest" time="5.50"/>
-                    """
+                    #
+                    # Example produced by LLVM LIT:
+                    # <testcase classname="StrictDoc integration tests.tests/integration" name="test.ignored.itest" time="5.50"/>
+                    #
 
                     rel_path_to_test_suite = (
                         project_config.test_report_root_dict.get(

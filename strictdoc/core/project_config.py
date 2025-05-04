@@ -145,7 +145,7 @@ class ProjectConfig:
 
         # Settings derived from the command-line parameters.
 
-        # Common settings
+        # Common settings.
         self.input_paths: Optional[List[str]] = None
         self.output_dir: str = "output"
 

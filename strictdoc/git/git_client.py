@@ -72,9 +72,9 @@ class GitClient:
             return git_client
 
     def is_clean_branch(self) -> bool:
-        """
-        https://unix.stackexchange.com/a/155077/77389
-        """
+        #
+        # https://unix.stackexchange.com/a/155077/77389
+        #
         result = subprocess.run(
             ["git", "status", "--porcelain"],
             cwd=self.path_to_git_root,

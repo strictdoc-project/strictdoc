@@ -596,10 +596,10 @@ class RequirementFormObject(ErrorObject):
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(context_document, SDocDocument)
 
-        """
-        MID uniqueness check.
-        FIXME: MID uniqueness if a node is updated.
-        """
+        #
+        # MID uniqueness check.
+        # FIXME: MID uniqueness if a node is updated.
+        #
         if self.is_new and "MID" in self.fields:
             new_node_mid = self.fields["MID"][0].field_value
             if len(new_node_mid) > 0:
@@ -616,9 +616,9 @@ class RequirementFormObject(ErrorObject):
                         ),
                     )
 
-        """
-        UID uniqueness check.
-        """
+        #
+        # UID uniqueness check.
+        #
         new_node_uid_or_none: Optional[str] = None
         if "UID" in self.fields:
             new_node_uid = self.fields["UID"][0].field_value
@@ -641,10 +641,10 @@ class RequirementFormObject(ErrorObject):
                     ),
                 )
 
-        """
-        Ensure that UID doesn't have any incoming links if it is going to be
-        renamed or removed.
-        """
+        #
+        # Ensure that UID doesn't have any incoming links if it is going to be
+        # renamed or removed.
+        #
         if self.existing_requirement_uid is not None:
             if (
                 new_node_uid_or_none is None
@@ -670,11 +670,11 @@ class RequirementFormObject(ErrorObject):
                         ),
                     )
 
-        """
-        STATEMENT or another content field (DESCRIPTION, CONTENT) checks:
-        - Must be not empty.
-        - Must be valid RST.
-        """
+        #
+        # STATEMENT or another content field (DESCRIPTION, CONTENT) checks:
+        # - Must be not empty.
+        # - Must be valid RST.
+        #
         requirement_element = self.grammar.elements_by_type[self.element_type]
         statement_field_name = requirement_element.content_field[0]
         requirement_statement = self.fields[statement_field_name][0].field_value

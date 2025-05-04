@@ -188,10 +188,10 @@ class TraceabilityIndexBuilder:
 
             traceability_index.document_tree.attach_source_tree(source_tree)
 
-        """
-        Resolve all modification dates to support the incremental generation of
-        all artifacts.
-        """
+        #
+        # Resolve all modification dates to support the incremental generation of
+        # all artifacts.
+        #
 
         file_dependency_manager = traceability_index.file_dependency_manager
 
@@ -303,9 +303,9 @@ class TraceabilityIndexBuilder:
 
         document: SDocDocument
         for document in document_tree.document_list:
-            """
-            First, resolve all grammars that are imported from grammar files.
-            """
+            #
+            # First, resolve all grammars that are imported from grammar files.
+            #
             if document.grammar.import_from_file is not None:
                 document_grammar: Optional[DocumentGrammar] = (
                     document_tree.get_grammar_by_filename(
@@ -491,11 +491,11 @@ class TraceabilityIndexBuilder:
 
                 requirement: SDocNode = node
 
-                """
-                At this point, we resolve LINKs, and the expectation is that
-                all UIDs or ANCHORS (they also have UIDs) are registered at the
-                previous pass.
-                """
+                #
+                # At this point, we resolve LINKs, and the expectation is that
+                # all UIDs or ANCHORS (they also have UIDs) are registered at the
+                # previous pass.
+                #
                 for node_field_ in node.enumerate_fields():
                     for part in node_field_.parts:
                         if isinstance(part, InlineLink):

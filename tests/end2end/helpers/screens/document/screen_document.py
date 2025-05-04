@@ -15,7 +15,9 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         assert isinstance(test_case, BaseCase)
         super().__init__(test_case)
 
-    # overridden for Screen_Document
+    #
+    # Overridden for Screen_Document.
+    #
 
     def assert_on_screen_document(self) -> None:
         super().assert_on_screen("document")
@@ -32,7 +34,9 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         targeted_anchor = f"sdoc-anchor[id='{anchor}']:target"
         self.test_case.assert_element_present(targeted_anchor)
 
-    # Actions on the page
+    #
+    # Actions on the page.
+    #
 
     def do_export_reqif(self) -> None:
         self.test_case.click_xpath(
@@ -44,7 +48,9 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             '(//*[@data-testid="document-export-html2pdf-action"])'
         )
 
-    # Open forms
+    #
+    # Open forms.
+    #
 
     def do_open_modal_form_edit_grammar(self) -> Form_EditGrammarElements:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
@@ -71,13 +77,13 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             xpath_first_toc_node, xpath_second_toc_node
         )
 
-        """
-        Drag and drop action takes some time before server/Turbo sends
-        an updated AJAX HTML template back. Sometimes a
-        StaleElementReferenceException is thrown by Selenium because it still
-        finds an old element as it is being moved. To solve this, set a timeout
-        to wait some time until the new TOC is rendered.
-        """
+        #
+        # Drag and drop action takes some time before server/Turbo sends
+        # an updated AJAX HTML template back. Sometimes a
+        # StaleElementReferenceException is thrown by Selenium because it still
+        # finds an old element as it is being moved. To solve this, set a timeout
+        # to wait some time until the new TOC is rendered.
+        #
         start_time = datetime.now()
         while True:
             new_root_node = self.test_case.find_element(

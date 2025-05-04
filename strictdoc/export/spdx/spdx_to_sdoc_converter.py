@@ -48,9 +48,9 @@ class SPDXToSDocConverter:
         document.grammar = SPDXToSDocConverter.create_grammar_for_spdx()
         document.grammar.parent = document
 
-        """
-        Document
-        """
+        #
+        # Document.
+        #
         document_requirement: SDocNode = SPDXToSDocConverter._convert_document(
             spdx_container.document,
             sdoc_document=document,
@@ -58,9 +58,9 @@ class SPDXToSDocConverter:
         )
         document.section_contents.append(document_requirement)
 
-        """
-        Package
-        """
+        #
+        # Package.
+        #
         package_requirement = SPDXToSDocConverter._convert_package(
             spdx_container.package,
             sdoc_document=document,
@@ -68,9 +68,9 @@ class SPDXToSDocConverter:
         )
         document.section_contents.append(package_requirement)
 
-        """
-        Files.
-        """
+        #
+        # Files.
+        #
 
         file_section = SDocSection(
             parent=document,
@@ -91,9 +91,9 @@ class SPDXToSDocConverter:
             file_section.section_contents.append(requirement)
             map_spdxref_to_sdoc[file_.spdx_id] = requirement
 
-        """
-        Snippets.
-        """
+        #
+        # Snippets.
+        #
 
         snippets_section = SDocSection(
             parent=document,
@@ -349,9 +349,9 @@ class SPDXToSDocConverter:
     def create_grammar_for_spdx():
         elements = []
 
-        """
-        SPDX Document
-        """
+        #
+        # SPDX Document
+        #
         fields = [
             GrammarElementFieldString(
                 parent=None,
@@ -394,9 +394,9 @@ class SPDXToSDocConverter:
         )
         elements.append(document_element)
 
-        """
-        SPDX Package
-        """
+        #
+        # SPDX Package
+        #
         fields = [
             GrammarElementFieldString(
                 parent=None,
@@ -451,9 +451,9 @@ class SPDXToSDocConverter:
         )
         elements.append(package_element)
 
-        """
-        SPDX File.
-        """
+        #
+        # SPDX File.
+        #
         fields = [
             GrammarElementFieldString(
                 parent=None,
@@ -513,9 +513,9 @@ class SPDXToSDocConverter:
         )
         elements.append(file_element)
 
-        """
-        SPDX Snippet
-        """
+        #
+        # SPDX Snippet
+        #
         fields = [
             GrammarElementFieldString(
                 parent=None,
@@ -576,8 +576,8 @@ class SPDXToSDocConverter:
             )
         )
 
-        """
-        Create Grammar.
-        """
+        #
+        # Create Grammar.
+        #
         grammar = DocumentGrammar(parent=None, elements=elements)
         return grammar

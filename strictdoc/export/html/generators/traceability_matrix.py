@@ -48,17 +48,17 @@ class TraceabilityMatrixHTMLGenerator:
             if relation_type_ not in discovered_relation_types:
                 del known_relations[relation_type_]
 
-        """
-        Validate that all config-provided relation tuples are actually present
-        in the existing documents.
-        A typical config entry may look like this:
-        [
-            ("Parent", None),
-            ("Parent", "Refines"),
-            ("Parent", "REQUIREMENT_FOR"),
-            ("File", None)
-        ]
-        """
+        #
+        # Validate that all config-provided relation tuples are actually present
+        # in the existing documents.
+        # A typical config entry may look like this:
+        # [                                                   # noqa: ERA001
+        #     ("Parent", None),                               # noqa: ERA001
+        #     ("Parent", "Refines"),                          # noqa: ERA001
+        #     ("Parent", "REQUIREMENT_FOR"),                  # noqa: ERA001
+        #     ("File", None)                                  # noqa: ERA001
+        # ]                                                   # noqa: ERA001
+        #
         config_relation_tuples = (
             project_config.traceability_matrix_relation_columns
             if project_config.traceability_matrix_relation_columns is not None
@@ -69,11 +69,11 @@ class TraceabilityMatrixHTMLGenerator:
             bucket = known_relations[config_relation_tuple_[0]]
             assert config_relation_tuple_[1] in bucket
 
-        """
-        After the config values have been validated, merge both the
-        config-provided list of relation tuples with the list that was
-        discovered from the existing documents.
-        """
+        #
+        # After the config values have been validated, merge both the
+        # config-provided list of relation tuples with the list that was
+        # discovered from the existing documents.
+        #
         known_relations_list = list(config_relation_tuples)
         for relation_type_, bucket_ in known_relations.items():
             for relation_role_, _ in bucket_.items():

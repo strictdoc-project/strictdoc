@@ -49,16 +49,16 @@ class UpdateGrammarElementCommand:
             if field.field_name != existing_field.title:
                 renamed_fields_lookup[field.field_name] = existing_field.title
 
-        """
-        Convert the form object to an updated grammar element.
-        """
+        #
+        # Convert the form object to an updated grammar element.
+        #
         updated_element: GrammarElement = (
             form_object.convert_to_grammar_element(document.grammar)
         )
 
-        """
-        Compare if anything was changed in the new grammar.
-        """
+        #
+        # Compare if anything was changed in the new grammar.
+        #
         document_grammar_field_names = updated_element.get_field_titles()
 
         existing_document_grammar_field_names = (

@@ -33,9 +33,18 @@ sdoc-node[show-node-type-name]::before {
 
 sdoc-node[node-view="narrative"][show-node-type-name]::before {
   top: calc(1 * var(--base-rhythm));
-  right: calc(1 * var(--base-rhythm));
+  right: calc(4 * var(--base-rhythm));
   padding: calc(0.5 * var(--base-rhythm));
   border: var(--base-border);
+}
+
+sdoc-node[node-view="narrative"][show-node-type-name]::after {
+  content: '';
+  top: calc(.5 * var(--base-rhythm));
+  right: calc(4 * var(--base-rhythm));
+  left: calc(4 * var(--base-rhythm));
+  border-top: var(--base-border);
+  position: absolute;
 }
 
 /* sdoc-node */

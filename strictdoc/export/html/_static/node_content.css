@@ -262,6 +262,20 @@ sdoc-node-content[node-view="narrative"] {
   background: none;
   background-color: transparent;
   border: none;
+
+  /* margin-top: calc(2 * var(--base-rhythm)); */
+  margin-bottom: calc(2 * var(--base-rhythm));
+}
+
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary,
+sdoc-node-content[node-view="narrative"] .node_fields_group-secondary {
+  display: flex;
+  flex-direction: column;
+}
+
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary {
+  order: 99; /* to push to the end */
+  padding-top: var(--base-padding);
 }
 
 sdoc-node-content[node-view="narrative"] sdoc-node-title {
@@ -291,7 +305,9 @@ sdoc-node-content[node-view="narrative"] sdoc-node-field-label {
 }
 
 sdoc-node-content[node-view="narrative"] sdoc-node-field::before {
-  flex-grow: 1;
+  /* FIXME: conflict with PDF layout, requires checking if this parameter can be removed: */
+  /* flex-grow: 1; */
+
   content: attr(data-field-label) ':';
   font-family: var(--code-font-family);
   font-weight: 500;
@@ -325,14 +341,6 @@ sdoc-node-content[node-view="narrative"] .requirement__child-uid {
     make them lighter:
   */
   font-weight: normal;
-}
-
-sdoc-node-content[node-view="narrative"] .node_fields_group-primary {
-  display: block;
-  order: 99; /* to push to the end */
-  margin-top: var(--base-rhythm);
-  border-top: var(--base-border);
-  padding-top: var(--base-padding);
 }
 
 sdoc-node-content[node-view="narrative"] .node_fields_group-primary sdoc-node-field {

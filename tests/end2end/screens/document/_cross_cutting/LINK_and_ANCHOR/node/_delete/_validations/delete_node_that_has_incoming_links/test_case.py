@@ -24,7 +24,7 @@ class Test(E2ECase):
 
             screen_document.assert_on_screen_document()
 
-            section = screen_document.get_requirement(2)
+            section = screen_document.get_node(2)
             section.assert_requirement_title("Linked-to requirement")
             section.do_delete_node(proceed_with_confirm=False)
 

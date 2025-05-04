@@ -32,7 +32,7 @@ class Test(E2ECase):
             section_without_uid = screen_document.get_section(1)
             section_with_uid = screen_document.get_section(2)
             # Requirement #1 has not a title and doesn't go in the TOC
-            requirement_with_title = screen_document.get_requirement(2)
+            requirement_with_title = screen_document.get_node(2)
 
             section_without_uid.assert_section_title("Section without UID")
             section_with_uid.assert_section_title("Section with UID")

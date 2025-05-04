@@ -29,7 +29,7 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
 
             # Requirement 1
-            requirement_1 = screen_document.get_requirement(1)
+            requirement_1 = screen_document.get_node(1)
             assert requirement_1 is not None
             requirement_1.assert_requirement_uid_contains("ZEP-1")
 
@@ -52,7 +52,7 @@ class Test(E2ECase):
             # Expected for Requirement 2:
             screen_document.assert_toc_contains("Requirement title #1.2")
 
-            requirement_2 = screen_document.get_requirement(2)
+            requirement_2 = screen_document.get_node(2)
             requirement_2.assert_requirement_title(
                 "Requirement title #1.2", "2"
             )

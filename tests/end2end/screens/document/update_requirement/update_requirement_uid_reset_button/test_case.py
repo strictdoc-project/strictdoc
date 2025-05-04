@@ -30,7 +30,7 @@ class Test(E2ECase):
 
             # Requirement 1 has UID.
             # It shouldn't have a reset button.
-            requirement1 = screen_document.get_requirement(1)
+            requirement1 = screen_document.get_node(1)
             requirement1.assert_requirement_uid_contains("REQ-1")
             form_edit_requirement1: Form_EditRequirement = (
                 requirement1.do_open_form_edit_requirement()
@@ -53,7 +53,7 @@ class Test(E2ECase):
 
             # Requirement 2 has UID.
             # It shouldn't have a reset button.
-            requirement2 = screen_document.get_requirement(2)
+            requirement2 = screen_document.get_node(2)
             requirement2.assert_requirement_has_no_uid()
             form_edit_requirement2: Form_EditRequirement = (
                 requirement2.do_open_form_edit_requirement()

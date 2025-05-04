@@ -29,7 +29,7 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
 
             # Existing Requirement 2:
-            requirement2 = screen_document.get_requirement(2)
+            requirement2 = screen_document.get_node(2)
             screen_document.assert_toc_contains("Requirement title #2")
 
             # Edit Requirement 2: add one relation

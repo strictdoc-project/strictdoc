@@ -32,7 +32,7 @@ class Test(E2ECase):
             added_requirement_1_level = "1"
             added_requirement_1_position = 1
 
-            requirement1 = screen_document.get_requirement(
+            requirement1 = screen_document.get_node(
                 added_requirement_1_position
             )
 
@@ -46,7 +46,7 @@ class Test(E2ECase):
             added_requirement_2_level = "2"
             added_requirement_2_position = 2
 
-            requirement2 = screen_document.get_requirement(
+            requirement2 = screen_document.get_node(
                 added_requirement_2_position
             )
 

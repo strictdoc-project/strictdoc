@@ -30,7 +30,7 @@ class Test(E2ECase):
 
             # Check Requirement
 
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_node()
             requirement.assert_requirement_title("Requirement title", "1")
 
             # Create Section after

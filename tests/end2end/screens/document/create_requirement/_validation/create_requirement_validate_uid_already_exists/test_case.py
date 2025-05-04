@@ -39,7 +39,7 @@ class Test(E2ECase):
 
             screen_document.assert_text("Hello world!")
 
-            requirement_node = screen_document.get_requirement(1)
+            requirement_node = screen_document.get_node(1)
             root_node_menu = requirement_node.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
                 root_node_menu.do_node_add_requirement_below()

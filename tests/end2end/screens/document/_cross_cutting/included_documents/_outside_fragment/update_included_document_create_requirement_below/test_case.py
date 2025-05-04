@@ -45,7 +45,7 @@ class Test(E2ECase):
 
             form_edit_section.do_form_submit()
 
-            requirement: Requirement = screen_document.get_requirement(1)
+            requirement: Requirement = screen_document.get_node(1)
 
             requirement.assert_requirement_title("Requirement title")
 

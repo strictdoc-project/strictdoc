@@ -50,7 +50,7 @@ class Test(E2ECase):
             """
             Delete requirement.
             """
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_node()
             requirement.assert_requirement_title("Requirement title")
             requirement.do_delete_node()  # confirm is inside
 

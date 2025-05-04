@@ -52,7 +52,7 @@ class Test(E2ECase):
             Expected for Requirement.
             """
 
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_node()
 
             requirement.assert_requirement_title("Unit test ABC", "1.1")
             screen_document.assert_toc_contains("Unit test ABC")

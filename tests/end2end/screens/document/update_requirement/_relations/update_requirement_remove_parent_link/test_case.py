@@ -28,8 +28,8 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            requirement1 = screen_document.get_requirement(1)
-            requirement2 = screen_document.get_requirement(2)
+            requirement1 = screen_document.get_node(1)
+            requirement2 = screen_document.get_node(2)
 
             # Make sure there is the reference to the child in Requirement 1:
             requirement1.assert_requirement_uid_contains("REQ-001")

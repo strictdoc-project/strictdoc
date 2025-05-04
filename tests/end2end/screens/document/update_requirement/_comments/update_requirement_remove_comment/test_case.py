@@ -30,7 +30,7 @@ class Test(E2ECase):
 
             screen_document.assert_text("Comment #1")
 
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_node()
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()
             )

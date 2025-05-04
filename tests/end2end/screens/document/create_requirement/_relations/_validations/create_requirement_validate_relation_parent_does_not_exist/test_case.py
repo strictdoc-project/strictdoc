@@ -29,7 +29,7 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
 
             # Requirement 1
-            node_requirement1 = screen_document.get_requirement(1)
+            node_requirement1 = screen_document.get_node(1)
             node_menu_requirement1 = node_requirement1.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
                 node_menu_requirement1.do_node_add_requirement_below()

@@ -46,7 +46,7 @@ class Test(E2ECase):
 
             # Expected for Requirement:
 
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_node()
             requirement.assert_requirement_title("Requirement title", "2")
             screen_document.assert_toc_contains("Requirement title")
 

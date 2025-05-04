@@ -45,7 +45,7 @@ class Test(E2ECase):
             )
             form_edit_requirement.do_form_submit()
 
-            node_2 = screen_document.get_requirement(node_order=2)
+            node_2 = screen_document.get_node(node_order=2)
 
             node_2.assert_requirement_title("Unit test 2 ABC", "2")
             screen_document.assert_toc_contains("Unit test 2 ABC")

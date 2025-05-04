@@ -16,6 +16,7 @@
   {%- if sdoc_entity.reserved_status %}
     data-status='{{ sdoc_entity.reserved_status.lower() }}'
   {%- endif %}
+  show-node-type-name="{{ sdoc_entity.get_node_type_string() }}"
   data-testid="requirement-style-{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
 >
   {% set title_number = true %}

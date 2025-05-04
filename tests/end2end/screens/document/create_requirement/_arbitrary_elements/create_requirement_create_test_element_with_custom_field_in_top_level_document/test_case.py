@@ -45,7 +45,7 @@ class Test(E2ECase):
             form_edit_requirement.do_fill_in("CUSTOM_FIELD", "New content.")
             form_edit_requirement.do_form_submit()
 
-            node_2 = screen_document.get_requirement(node_order=1)
+            node_2 = screen_document.get_node(node_order=1)
 
             node_2.assert_field_contains("CUSTOM_FIELD", "New content.")
 

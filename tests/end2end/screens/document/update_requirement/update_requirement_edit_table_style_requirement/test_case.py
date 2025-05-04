@@ -25,7 +25,7 @@ class Test(E2ECase):
 
             screen_document = screen_project_index.do_click_on_first_document()
 
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_node()
             # Make sure that the table-based requirement is rendered.
             requirement.assert_requirement_style_table()
 

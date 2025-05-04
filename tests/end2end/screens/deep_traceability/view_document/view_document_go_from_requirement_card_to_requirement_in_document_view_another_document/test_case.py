@@ -40,7 +40,7 @@ class Test(E2ECase):
             )
             screen_deep_traceability.assert_on_screen_deep_traceability()
 
-            requirement = screen_deep_traceability.get_requirement(2)
+            requirement = screen_deep_traceability.get_node(2)
             requirement.assert_requirement_uid("REQ-002")
 
             screen_document_ = (

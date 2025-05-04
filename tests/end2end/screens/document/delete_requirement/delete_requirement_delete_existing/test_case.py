@@ -25,7 +25,7 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_node()
             requirement.assert_requirement_title("Requirement title")
             requirement.do_delete_node()  # confirm is inside
 

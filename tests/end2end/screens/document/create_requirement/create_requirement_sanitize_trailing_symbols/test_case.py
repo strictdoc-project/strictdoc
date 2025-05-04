@@ -43,7 +43,7 @@ class Test(E2ECase):
             form_edit_requirement.do_form_submit()
 
             # Check the resulting TOC.
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_node()
             requirement.assert_requirement_title("Requirement title #1", "1")
             screen_document.assert_toc_contains("Requirement title #1")
 

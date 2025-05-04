@@ -46,7 +46,7 @@ class Test(E2ECase):
 
             # Expected for Requirement 1:
 
-            requirement_1 = screen_document.get_requirement()
+            requirement_1 = screen_document.get_node()
 
             requirement_1.assert_requirement_title("Requirement title #1", "1")
             screen_document.assert_toc_contains("Requirement title #1")
@@ -68,7 +68,7 @@ class Test(E2ECase):
 
             # Expected for Requirement 2:
 
-            requirement_2 = screen_document.get_requirement(2)
+            requirement_2 = screen_document.get_node(2)
             requirement_2.assert_requirement_title("Requirement title #2", "2")
             screen_document.assert_toc_contains("Requirement title #2")
 
@@ -89,7 +89,7 @@ class Test(E2ECase):
 
             # Expected for Requirement 3:
 
-            requirement_3 = screen_document.get_requirement(3)
+            requirement_3 = screen_document.get_node(3)
 
             requirement_3.assert_requirement_title("Requirement title #3", "3")
             screen_document.assert_toc_contains("Requirement title #3")

@@ -29,7 +29,7 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
 
             # Open form and add 1 field:
-            requirement = screen_document.get_requirement()
+            requirement = screen_document.get_node()
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()
             )

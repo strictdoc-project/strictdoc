@@ -44,7 +44,7 @@ class Test(E2ECase):
             )
             form_edit_requirement.do_form_submit()
 
-            requirement: Requirement = screen_document.get_requirement()
+            requirement: Requirement = screen_document.get_node()
 
             requirement.assert_requirement_title("Requirement title")
             requirement.assert_requirement_statement_contains(

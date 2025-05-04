@@ -28,7 +28,7 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            requirement3 = screen_document.get_requirement(3)
+            requirement3 = screen_document.get_node(3)
 
             form_edit_requirement: Form_EditRequirement = (
                 requirement3.do_open_form_edit_requirement()

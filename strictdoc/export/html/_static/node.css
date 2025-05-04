@@ -40,7 +40,7 @@ sdoc-node[node-view="narrative"][show-node-type-name]::before {
 
 sdoc-node[node-view="narrative"][show-node-type-name]::after {
   content: '';
-  top: calc(.5 * var(--base-rhythm));
+  top: 0;
   right: calc(4 * var(--base-rhythm));
   left: calc(4 * var(--base-rhythm));
   border-top: var(--base-border);

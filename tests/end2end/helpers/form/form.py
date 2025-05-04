@@ -14,7 +14,9 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(test_case, E2ECase)
         self.test_case: E2ECase = test_case
 
-    # Base
+    #
+    # Base.
+    #
 
     def assert_on_form(self) -> None:
         self.test_case.assert_element(
@@ -28,7 +30,9 @@ class Form:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    # Assert field content
+    #
+    # Assert field content.
+    #
 
     def assert_error(self, message: str) -> None:
         self.test_case.assert_element(
@@ -50,7 +54,9 @@ class Form:  # pylint: disable=invalid-name
             f"//*[@{testid}][contains(., '{text}')]", by=By.XPATH
         )
 
-    # Open TAB
+    #
+    # Open TAB.
+    #
 
     def do_open_tab(self, tab_name: str = "") -> None:
         assert isinstance(tab_name, str)
@@ -73,7 +79,9 @@ class Form:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    # Work with fields containers
+    #
+    # Work with fields containers.
+    #
 
     # TODO: update with mid
     def do_delete_field(self, field_name: str, field_order: int = 1) -> None:
@@ -83,7 +91,9 @@ class Form:  # pylint: disable=invalid-name
             f"[{field_order}]"
         )
 
-    # MOVE fields
+    #
+    # MOVE fields.
+    #
 
     def do_move_field_up(self, mid: MID, test_id: str) -> None:
         assert isinstance(mid, MID)
@@ -97,7 +107,9 @@ class Form:  # pylint: disable=invalid-name
             f"(//*[@data-testid='form-move-down-{field_name}-field-action'])"
         )
 
-    # Work with fields content
+    #
+    # Work with fields content.
+    #
 
     def do_fill_in(
         self, field_name: str, field_value: str, field_order: int = 1
@@ -199,9 +211,9 @@ class Form:  # pylint: disable=invalid-name
         this_field.send_keys(Keys.BACKSPACE)
         this_field.send_keys(Keys.BACKSPACE)
 
-    """
-    Save/Cancel
-    """
+    #
+    # Save/Cancel.
+    #
 
     def do_form_cancel(self) -> None:
         self.test_case.click_xpath('//*[@data-testid="form-cancel-action"]')

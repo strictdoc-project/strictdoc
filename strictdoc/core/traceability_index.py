@@ -918,12 +918,12 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         for node_anchor_ in node.get_anchors():
             existing_node_anchor_uids.add(node_anchor_.value)
 
-        """
-        Validation 1: Assert all UIDs are either:
-        a) new
-        b) exist in this node
-        c) raise a duplication error.
-        """
+        #
+        # Validation 1: Assert all UIDs are either:
+        # a) new
+        # b) exist in this node
+        # c) raise a duplication error.
+        #
         for anchor_uid in new_anchor_uids:
             if (
                 self.graph_database.has_link(
@@ -943,10 +943,10 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                     f"{node_with_duplicate_anchor.get_display_title()}."
                 )
 
-        """
-        Validation 2: Check that removed anchors do not have any incoming
-        links.
-        """
+        #
+        # Validation 2: Check that removed anchors do not have any incoming
+        # links.
+        #
         to_be_removed_anchor_uids = existing_node_anchor_uids - new_anchor_uids
         for to_be_removed_anchor_uid_ in to_be_removed_anchor_uids:
             to_be_removed_anchor: Anchor = self.graph_database.get_link_value(

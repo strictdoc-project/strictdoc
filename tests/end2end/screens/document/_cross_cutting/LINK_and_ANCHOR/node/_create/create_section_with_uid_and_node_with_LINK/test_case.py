@@ -34,7 +34,9 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            # Creating Section 1
+            #
+            # Creating Section 1.
+            #
 
             root_node = screen_document.get_root_node()
             root_node_menu = root_node.do_open_node_menu()
@@ -51,9 +53,9 @@ class Test(E2ECase):
             section_1.assert_section_title("First title", "1")
             screen_document.assert_toc_contains("First title")
 
-            """
-            Create requirement with a LINK.
-            """
+            #
+            # Create requirement with a LINK.
+            #
 
             section_1_node_menu = section_1.do_open_node_menu()
 

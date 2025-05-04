@@ -52,10 +52,10 @@ class Test(E2ECase):
                 "Document 1"
             )
 
-            """
-            A basic extra test that ensures that the section has a right
-            document parent (encountered this regression during implementation).
-            """
+            #
+            # A basic extra test that ensures that the section has a right
+            # document parent (encountered this regression during implementation).
+            #
             form_edit_section = section.do_open_form_edit_section()
             form_edit_section.do_form_submit()
 

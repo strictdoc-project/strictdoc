@@ -445,10 +445,10 @@ class P01_SDocToReqIFObjectConverter:
         )
         attributes.append(title_attribute)
 
-        """
-        If MIDs is enabled and this section has an MID, use it for
-        SPEC-OBJECT IDENTIFIER.
-        """
+        #
+        # If MIDs is enabled and this section has an MID, use it for
+        # SPEC-OBJECT IDENTIFIER.
+        #
         enable_mid = context.enable_mid and parent_document.config.enable_mid
         section_identifier: str
         if enable_mid and section.reserved_mid is not None:

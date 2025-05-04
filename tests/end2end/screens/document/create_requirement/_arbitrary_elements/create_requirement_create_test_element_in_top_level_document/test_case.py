@@ -28,9 +28,9 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            """
-            Create a test case after the existing test case.
-            """
+            #
+            # Create a test case after the existing test case.
+            #
 
             root_node_menu = screen_document.get_root_node().do_open_node_menu()
 

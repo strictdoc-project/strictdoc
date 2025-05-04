@@ -28,16 +28,16 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            """
-            Section exists.
-            """
+            #
+            # Section exists.
+            #
 
             section = screen_document.get_section()
             section.assert_section_title("First title", "1")
 
-            """
-            Requirement is added as a child of the Section
-            """
+            #
+            # Requirement is added as a child of the Section.
+            #
 
             section_menu = section.do_open_node_menu()
             form_edit_requirement: Form_EditRequirement = (
@@ -48,9 +48,9 @@ class Test(E2ECase):
             form_edit_requirement.do_fill_in_field_statement("Shall test foo.")
             form_edit_requirement.do_form_submit()
 
-            """
-            Expected for Requirement.
-            """
+            #
+            # Expected for Requirement.
+            #
 
             requirement = screen_document.get_node()
 

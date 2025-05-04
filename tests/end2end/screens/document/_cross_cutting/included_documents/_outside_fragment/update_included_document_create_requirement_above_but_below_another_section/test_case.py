@@ -55,10 +55,10 @@ class Test(E2ECase):
                 "Document 1"
             )
 
-            """
-            A basic extra test that ensures that the requirement has a right
-            document parent (encountered this regression during implementation).
-            """
+            #
+            # A basic extra test that ensures that the requirement has a right
+            # document parent (encountered this regression during implementation).
+            #
             form_edit_requirement = requirement.do_open_form_edit_requirement()
             form_edit_requirement.do_form_submit()
 

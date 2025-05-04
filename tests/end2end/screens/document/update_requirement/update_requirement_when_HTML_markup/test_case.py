@@ -34,9 +34,9 @@ class Test(E2ECase):
                 "This text will be rendered directly as HTML!"
             )
 
-            """
-            ACT
-            """
+            #
+            # ACT
+            #
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()
             )
@@ -47,9 +47,9 @@ class Test(E2ECase):
             )
             form_edit_requirement.do_form_submit()
 
-            """
-            ASSERT
-            """
+            #
+            # ASSERT
+            #
             requirement.assert_requirement_statement_contains(
                 "UPDATED: "
                 "This text will be rendered directly as HTML!. "

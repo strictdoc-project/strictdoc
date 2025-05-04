@@ -28,9 +28,9 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            """
-            Create requirement.
-            """
+            #
+            # Create requirement.
+            #
 
             root_node = screen_document.get_root_node()
             root_node_menu = root_node.do_open_node_menu()
@@ -47,9 +47,9 @@ class Test(E2ECase):
             )
             form_edit_requirement.do_form_submit()
 
-            """
-            Delete requirement.
-            """
+            #
+            # Delete requirement.
+            #
             requirement = screen_document.get_node()
             requirement.assert_requirement_title("Requirement title")
             requirement.do_delete_node()  # confirm is inside

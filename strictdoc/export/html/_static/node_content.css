@@ -264,6 +264,13 @@ sdoc-node-content[node-view="narrative"] {
   border: none;
 }
 
+sdoc-node-content[node-view="narrative"][has-no-title]::before {
+  content: '';
+  border-top: 2px dotted var(--color-placeholder);
+  padding-top: var(--base-rhythm);
+  width: 25%;
+}
+
 sdoc-node-content[node-view="narrative"] sdoc-node-title {
   border: none;
   outline: none;

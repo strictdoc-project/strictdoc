@@ -363,6 +363,10 @@ sdoc-section-text {
   margin: 0;
 }
 
+[node-style="card"] sdoc-text {
+  padding: var(--base-padding);
+}
+
 sdoc-section-text {
   margin-top: var(--base-padding);
 }

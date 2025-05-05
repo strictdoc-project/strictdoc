@@ -422,6 +422,9 @@ def test_integration(
             #       the exists() check works.
             assert os.path.exists(chromedriver_path), chromedriver_path
             chromedriver_param = f"--param CHROMEDRIVER={os.path.join(chromedriver_path, 'chromedriver')}"
+            if os.name == "nt":
+                # On Windows, its chromdriver.exe
+                chromedriver_param = chromedriver_param + ".exe"
         test_folder = f"{cwd}/tests/integration/features/html2pdf"
 
     itest_command = f"""

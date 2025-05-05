@@ -44,6 +44,13 @@ jobs:
       run: |
         pip install -r requirements.check.txt
 
+    - name: " Windows specific: Install Tidy via Chocolatey, and add it to $PATH"
+      shell: pwsh
+      run: |
+        choco install html-tidy -y
+        $tidyPath = (Get-ChildItem "C:\ProgramData\chocolatey\lib\html-tidy" -Recurse -Filter tidy.exe | Select-Object -First 1).DirectoryName
+        echo "$tidyPath" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
+
     - name: Run Lint tasks
       run: |
         invoke lint

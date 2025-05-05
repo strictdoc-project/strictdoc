@@ -262,20 +262,6 @@ sdoc-node-content[node-view="narrative"] {
   background: none;
   background-color: transparent;
   border: none;
-
-  /* margin-top: calc(2 * var(--base-rhythm)); */
-  margin-bottom: calc(2 * var(--base-rhythm));
-}
-
-sdoc-node-content[node-view="narrative"] .node_fields_group-primary,
-sdoc-node-content[node-view="narrative"] .node_fields_group-secondary {
-  display: flex;
-  flex-direction: column;
-}
-
-sdoc-node-content[node-view="narrative"] .node_fields_group-primary {
-  order: 99; /* to push to the end */
-  padding-top: var(--base-padding);
 }
 
 sdoc-node-content[node-view="narrative"] sdoc-node-title {
@@ -292,45 +278,33 @@ sdoc-node-content[node-view="narrative"] sdoc-node-field {
   padding: 0;
 }
 
-sdoc-node-content[node-view="narrative"] sdoc-node-field[data-field-type="singleline"] {
-  /* to make it a single FLEX line */
-  display: flex;
+sdoc-node-content[node-view="narrative"] sdoc-node-field-label {
+  opacity: 0.8;
   font-size: var(--font-size-sm);
   line-height: calc(var(--font-size-sm) * 1.5);
+  padding: 0;
 }
 
-sdoc-node-content[node-view="narrative"] sdoc-node-field-label {
-  /* show them as pseudo-elements: sdoc-node-field::before */
-  display: none;
-}
-
-sdoc-node-content[node-view="narrative"] sdoc-node-field::before {
-  /* FIXME: conflict with PDF layout, requires checking if this parameter can be removed: */
-  /* flex-grow: 1; */
-
-  content: attr(data-field-label) ':';
-  font-family: var(--code-font-family);
-  font-weight: 500;
-  font-size: var(--font-size-xsm);
-  line-height: inherit;
-  text-transform: uppercase;
-  font-variant: small-caps;
-  color: var(--requirement-label-color);
-  word-break: normal;
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary {
   display: flex;
-  padding-right: var(--base-rhythm);
-  /*
-    affects field 'pseudo' labels in all fields;
-    make them lighter:
-  */
-  opacity: 0.8;
+  flex-direction: column;
+  padding-top: var(--base-padding);
 }
 
-sdoc-node-content[node-view="narrative"] .node_fields_group-secondary sdoc-node-field > * {
-  /*
-    affects field content in the secondary scope only;
-    make them lighter:
-  */
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary sdoc-node-field {
+  margin-bottom: var(--base-padding);
+  color: var(--color-fg-contrast);
+}
+
+sdoc-node-content[node-view="narrative"] .node_fields_group-secondary {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: calc(.5 * var(--base-rhythm));
+}
+
+sdoc-node-content[node-view="narrative"] .node_fields_group-secondary sdoc-node-field {
+  font-size: var(--font-size-sm);
+  line-height: calc(var(--font-size-sm) * 1.5);
   opacity: 0.6;
 }
 
@@ -341,11 +315,6 @@ sdoc-node-content[node-view="narrative"] .requirement__child-uid {
     make them lighter:
   */
   font-weight: normal;
-}
-
-sdoc-node-content[node-view="narrative"] .node_fields_group-primary sdoc-node-field {
-  margin-bottom: var(--base-padding);
-  color: var(--color-fg-contrast);
 }
 
 /* section */

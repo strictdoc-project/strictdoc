@@ -10,6 +10,13 @@
     the 'columns' view degrades to 'zebra'.
 #}
 
+{#  user_requirement_style:
+    refers to the parameter set in the grammar;
+    can be overridden when calling a template,
+    e.g. cards only use a 'simple' node-view.
+#}
+{% set user_requirement_style = sdoc_entity.get_requirement_style_mode() %}
+
 <sdoc-node-content
   node-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
   data-level="{{ sdoc_entity.context.title_number_string }}"
@@ -28,20 +35,27 @@
       {% include "components/issue/index.jinja" %}
     {% endwith %}
   #}
-  <sdoc-scope class="node_fields_group-secondary">
-  {% include "components/node_field/meta/index.jinja" %}
-  </sdoc-scope>
-  {% if sdoc_entity.has_multiline_fields() %}
-  <sdoc-scope class="node_fields_group-primary">
-  {% include "components/node_field/statement/index.jinja" %}
-  {% include "components/node_field/rationale/index.jinja" %}
-  {% include "components/node_field/comments/index.jinja" %}
-  {% include "components/node_field/multiline/index.jinja" %}
-  </sdoc-scope>
+
+  {% if user_requirement_style == 'narrative' %}
+    <sdoc-scope class="node_fields_group-secondary">
+      {% include "components/node_field/meta/index.jinja" %}
+      {% include "components/node_field/links/index.jinja" %}
+      {% include "components/node_field/files/index.jinja" %}
+    </sdoc-scope>
+    <sdoc-scope class="node_fields_group-primary">
+      {% include "components/node_field/statement/index.jinja" %}
+      {% include "components/node_field/rationale/index.jinja" %}
+      {% include "components/node_field/comments/index.jinja" %}
+      {% include "components/node_field/multiline/index.jinja" %}
+    </sdoc-scope>
+  {% else %}
+    {% include "components/node_field/meta/index.jinja" %}
+    {% include "components/node_field/statement/index.jinja" %}
+    {% include "components/node_field/rationale/index.jinja" %}
+    {% include "components/node_field/comments/index.jinja" %}
+    {% include "components/node_field/multiline/index.jinja" %}
+    {% include "components/node_field/links/index.jinja" %}
+    {% include "components/node_field/files/index.jinja" %}
   {% endif %}
-  <sdoc-scope class="node_fields_group-secondary">
-  {% include "components/node_field/links/index.jinja" %}
-  {% include "components/node_field/files/index.jinja" %}
-  </sdoc-scope>
 
 </sdoc-node-content>

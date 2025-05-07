@@ -1,1 +1,190 @@
-CUSTOM TEMPLATE HERE
+{# This is an example template for customizing the HTML2PDF export of your StrictDoc documents.
+
+Notes:
+
+- This template is interpreted in a environment without loader, therefore it is not possible
+  to use jinja extend or include directives. The template must be fully self-contained.
+
+- To use Images, place them in the same folder as this template file. They will be included in the
+  HTML export under "/_static/html2pdf_template/. As the user can constomize the static asset path,
+  it is necessary to use the link renderer's to get the full URL to an image. 
+  
+  For example:
+  
+    <img src="{{ view_object.render_static_url('html2pdf_template/logo_top_page.png') }}">
+
+#}
+
+{# customize the front page ---------------------------------------------------------------------------- #}
+
+<style html2pdf-frontpage-style>
+.html2pdf-frontpage-grid {
+  display: grid;
+  height: 100%;
+}
+.html2pdf-frontpage-grid-middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.html2pdf-frontpage-grid-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+</style>
+<template html2pdf-frontpage>
+  {#- add here frontpage html -#}
+  <div class="html2pdf-frontpage-grid">
+  <div class="html2pdf-frontpage-grid-top">  </div>
+  <div class="html2pdf-frontpage-grid-middle">
+    <h1 data-testid="document-title">
+        <img src="{{ view_object.render_static_url('html2pdf_template/logo_top_page.png') }}"
+      alt="Company Logo"
+      style="width: 80%" />   
+      <br>
+      <br>
+    {{ view_object.document.title }}</h1>
+  </div>
+  <div class="html2pdf-frontpage-grid-bottom">
+{%- if view_object.document.config.has_meta() -%}
+  <sdoc-meta>
+    {%- if view_object.document.config.uid -%}
+    <sdoc-meta-label data-testid="document-config-uid-label">UID:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-uid-field">
+      {%- with field_content = view_object.document.config.uid %}
+        <sdoc-autogen>{{ field_content }}</sdoc-autogen>
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {%- endif -%}
+
+    {% set document_version_ = view_object.render_document_version() %}
+    {%- if document_version_ is not none -%}
+    <sdoc-meta-label data-testid="document-config-version-label">VERSION:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-version-field">
+      {%- with field_content = document_version_ %}
+        <sdoc-autogen>{{ field_content }}</sdoc-autogen>
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {# FIXME: Task #1229 / Uncomment example when validation logic is implemented: #}
+    {#
+      {% with issue_field_name = 'meta' %}
+        <div id="field_issue_ID" class="field_issue">
+        <div class="field_issue-ribbon">
+          <b>Warning:</b> '{{ issue_field_name }}' field has issue: description in details
+        </div>
+        </div>
+      {% endwith %}
+    #}
+    {%- endif -%}
+
+    {% set document_date_ = view_object.render_document_date() %}
+    {%- if document_date_ is not none -%}
+    <sdoc-meta-label data-testid="document-config-version-label">DATE:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-version-field">
+      {%- with field_content = document_date_ %}
+        <sdoc-autogen>{{ field_content }}</sdoc-autogen>
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {%- endif -%}
+
+    {%- if view_object.document.config.classification -%}
+    <sdoc-meta-label data-testid="document-config-classification-label">CLASSIFICATION:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-classification-field">
+      {%- with field_content = view_object.document.config.classification %}
+        <sdoc-autogen>{{ field_content }}</sdoc-autogen>
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {%- endif -%}
+  </sdoc-meta>
+{%- endif -%}
+  </div>
+  </div>
+</template>
+
+
+{# customize the page header ---------------------------------------------------------------------------- #}
+
+<style html2pdf-header-style>
+html2pdf-header {
+  padding-top: 0;
+}
+.html2pdf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  column-gap: 32px;
+  font-size: small;
+  line-height: 1;
+  color: rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(0,0,0,0.25);
+  padding-bottom: 8px;
+}
+.html2pdf-header-left {
+  text-align: left;
+  flex-shrink: 0;
+}
+.html2pdf-header-right {
+  text-align: right;
+  font-weight: bold;
+}
+</style>
+<template html2pdf-header>
+  {#- uncomment html2pdf-page-number to print page numbers: -#}
+  {#- <div html2pdf-page-number>
+    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
+  </div> -#}
+
+  {#- add here header html: -#}
+  <div class="html2pdf-header">
+    <div class="html2pdf-header-left">{{ view_object.document.title }}</div>
+    <div class="html2pdf-header-right">
+      <img src="{{ view_object.render_static_url('html2pdf_template/logo_top_page.png') }}"
+         alt="Company Logo"
+         style="height: 20px;" />
+    </div>
+  </div>
+</template>
+
+
+{# customize the page footer ---------------------------------------------------------------------------- #}
+
+<style html2pdf-footer-style>
+html2pdf-footer {
+  padding-bottom: 0;
+}
+.html2pdf-footer {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 16px;
+  font-size: small;
+  line-height: 1;
+  color: rgba(0,0,0,0.5);
+  border-top: 1px solid rgba(0,0,0,0.25);
+  padding-top: 8px;
+}
+.html2pdf-footer-left {
+  text-align: left;
+}
+.html2pdf-footer-right {
+  text-align: right;
+}
+.html2pdf-header-page_placeholder {
+  width: 54px; /* max for pattern 888/888 */
+  flex-shrink: 0;
+  text-indent: -10000px;
+}
+</style>
+<template html2pdf-footer>
+  {#- uncomment html2pdf-page-number to print page numbers: -#}
+  <div html2pdf-page-number>
+    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
+  </div>  
+  {#- add here footer html -#}
+  <div class="html2pdf-footer">
+    <div class="html2pdf-footer-left">{{ view_object.date_today() }}</div>
+    <div class="html2pdf-footer-right">ACME Laboratories Inc. {{view_object.document.config.classification}}</div>
+    <div class="html2pdf-header-page_placeholder">{#- must be left empty! -#}</div>
+  </div>
+</template>

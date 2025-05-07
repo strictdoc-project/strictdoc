@@ -246,6 +246,21 @@ class HTMLGenerator:
                 message="Copying HTML2PDF.js",
             )
 
+        # Export custom html2pdf template
+        if project_config.html2pdf_template is not None:
+            output_custom_html2pdf_template = os.path.join(
+                export_output_html_root,
+                project_config.dir_for_sdoc_assets,
+                "html2pdf_template",
+            )
+            sync_dir(
+                os.path.abspath(
+                    os.path.dirname(project_config.html2pdf_template)
+                ),
+                output_custom_html2pdf_template,
+                message="Copying Custom HTML2PDF template assets",
+            )
+
         # Export project's assets.
 
         redundant_assets: Dict[str, List[SDocRelativePath]] = {}

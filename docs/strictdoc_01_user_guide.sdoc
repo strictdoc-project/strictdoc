@@ -2915,6 +2915,35 @@ The ``source_root_path`` option supports relative paths, e.g. ``../source_root/`
 [/SECTION]
 
 [SECTION]
+MID: 499fa0144cbd48c687ba0d5f9f7cb846
+TITLE: Path to custom HTML2PDF template
+
+[TEXT]
+MID: 225dc4d22c084a67ae049fca1098bc1a
+STATEMENT: >>>
+StrictDoc uses an internal default template when exporting documents in PDF format.
+
+If the front page, header, or footer needs to be customised, it is possible to provide a custom template with the `html2pdf_template` option.
+
+.. code-block::
+
+    [project]
+    html2pdf_template = "assets/template/index.jinja"
+
+    features = [
+       "HTML2PDF",
+    ]
+
+When specified, the provided template will override the internal default template. The path can be absolute or relative to the project root.
+
+.. note ::
+
+   An example template can be found `here <https://github.com/strictdoc-project/strictdoc/tree/main/tests/end2end/screens/pdf/view_pdf_document_custom_template/html2pdf_template>`__
+<<<
+
+[/SECTION]
+
+[SECTION]
 MID: 593a2abbdaa5470988103c70e87c4cfc
 TITLE: Include/exclude document paths
 

@@ -2923,7 +2923,7 @@ MID: 225dc4d22c084a67ae049fca1098bc1a
 STATEMENT: >>>
 StrictDoc uses an internal default template when exporting documents in PDF format.
 
-If the front page, header, or footer needs to be customised, it is possible to provide a custo template wiht the the `html2pdf_template` option.
+If the front page, header, or footer needs to be customised, it is possible to provide a custom template with the `html2pdf_template` option.
 
 .. code-block::
 

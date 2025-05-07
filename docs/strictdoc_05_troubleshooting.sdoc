@@ -6,9 +6,23 @@ VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
 DATE: @GIT_COMMIT_DATETIME
 OPTIONS:
   ENABLE_MID: True
+  REQUIREMENT_STYLE: Narrative
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
 - TAG: TEXT
   FIELDS:
   - TITLE: MID
@@ -27,7 +41,7 @@ STATEMENT: >>>
 This document summarizes solutions to the most common issues reported by StrictDoc users.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: 17152ac7de9f4c138b85e2956091206f
 TITLE: Caching issues
 
@@ -43,4 +57,4 @@ StrictDoc caches many artifacts on disk. Some artifacts are cached using Pythonâ
 The pickle module serializes Python objects to disk. The issue with this approach is that when StrictDoc changes the schema of its objects (e.g., when SDocNode or SDocDocument objects gain a new property or a property type changes), an outdated object may be read from the cache after upgrading to a new StrictDoc version. While a more systematic solution might be implemented in the future, the current workaround is to manually delete the StrictDoc cache folder.
 <<<
 
-[/SECTION]
+[[/SECTION]]

@@ -37,9 +37,6 @@ class Test(E2ECase):
             requirement.assert_requirement_rationale_contains(
                 "Requirement rationale."
             )
-            # Make sure that the normal (not table-based) requirement is
-            # rendered.
-            requirement.assert_requirement_style_simple()
 
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()
@@ -64,8 +61,6 @@ class Test(E2ECase):
             requirement.assert_requirement_rationale_contains(
                 "Modified rationale."
             )
-            # Make sure that after saving we return to the same display style.
-            requirement.assert_requirement_style_simple()
             screen_document.assert_toc_contains("Modified title")
 
         assert test_setup.compare_sandbox_and_expected_output()

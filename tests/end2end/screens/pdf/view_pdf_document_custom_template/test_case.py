@@ -36,4 +36,4 @@ class Test(E2ECase):
             screen_pdf.assert_on_pdf_document()
             screen_pdf.assert_not_empty_view()
 
-            screen_pdf.assert_text("CUSTOM TEMPLATE HERE")
+            screen_pdf.assert_text("ACME Laboratories Inc.")

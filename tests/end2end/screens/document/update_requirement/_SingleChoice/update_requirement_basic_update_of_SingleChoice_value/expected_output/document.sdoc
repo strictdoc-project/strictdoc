@@ -1,0 +1,35 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: CUSTOM_FIELD
+    TYPE: SingleChoice(Nonchanged, Changed)
+    REQUIRED: False
+  - TITLE: CUSTOM_FIELD_WITH_SPACES
+    TYPE: SingleChoice(Not changed, Now changed)
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
+[REQUIREMENT]
+CUSTOM_FIELD: Changed
+CUSTOM_FIELD_WITH_SPACES: Now changed
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<

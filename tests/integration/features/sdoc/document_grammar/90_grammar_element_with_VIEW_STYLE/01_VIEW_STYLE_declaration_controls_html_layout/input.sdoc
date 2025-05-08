@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: User Guide
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  PROPERTIES:
+    VIEW_STYLE: Zebra
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
+[TEXT]
+STATEMENT: Introduction

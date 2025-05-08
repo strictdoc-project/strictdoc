@@ -25,6 +25,7 @@ class GrammarElement:
         parent: Optional["DocumentGrammar"],
         tag: str,
         property_is_composite: str,
+        property_view_style: str,
         fields: List[
             Union[
                 GrammarElementFieldString,
@@ -43,6 +44,19 @@ class GrammarElement:
             if property_is_composite == ""
             else (property_is_composite == "True")
         )
+
+        assert property_view_style in (
+            "",
+            "Narrative",
+            "Simple",
+            "Inline",
+            "Table",
+            "Zebra",
+        )
+        self.property_view_style: Optional[str] = (
+            property_view_style if property_view_style != "" else None
+        )
+
         self.fields: List[
             Union[
                 GrammarElementFieldString,
@@ -111,6 +125,7 @@ class GrammarElement:
             parent=None,
             tag=tag,
             property_is_composite="",
+            property_view_style="",
             fields=[
                 GrammarElementFieldString(
                     parent=None,
@@ -163,6 +178,9 @@ class GrammarElement:
 
     def get_multiline_field_index(self) -> int:
         return self.multiline_field_index
+
+    def get_view_style(self) -> Optional[str]:
+        return self.property_view_style
 
     def get_relation_types(self) -> List[str]:
         return list(
@@ -308,6 +326,7 @@ class DocumentGrammar(SDocGrammarIF):
             parent=None,
             tag="REQUIREMENT",
             property_is_composite="",
+            property_view_style="",
             fields=fields,
             relations=[],
         )
@@ -387,6 +406,7 @@ class DocumentGrammar(SDocGrammarIF):
             parent=None,
             tag="TEST_RESULT",
             property_is_composite="",
+            property_view_style="",
             fields=fields,
             relations=[],
         )
@@ -487,6 +507,7 @@ class DocumentGrammar(SDocGrammarIF):
             parent=parent,
             tag="TEXT",
             property_is_composite="",
+            property_view_style="",
             fields=fields,
             relations=[],
         )

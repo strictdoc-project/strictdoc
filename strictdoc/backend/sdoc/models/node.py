@@ -388,6 +388,10 @@ class SDocNode(SDocNodeIF):
         document: SDocDocumentIF = assert_cast(
             self.get_document(), SDocDocumentIF
         )
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
+        if node_style := element.get_view_style():
+            return node_style
         return document.config.get_requirement_style_mode()
 
     def get_content_field_name(self) -> str:

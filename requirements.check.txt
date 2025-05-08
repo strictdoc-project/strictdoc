@@ -12,6 +12,8 @@ pyfakefs>=4.5.5
 coverage>=5.4
 # httpx is needed for running server-related unit tests.
 httpx
+# This is needed for converting Gcov coverage files to a human-readable JSON format.
+gcovr
 
 # Integration tests
 lit>=0.11.0.post1

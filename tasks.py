@@ -485,6 +485,17 @@ def coverage_combine(context):
                 --data-file build/coverage/.coverage.combined
         """,
     )
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            coverage json
+                --rcfile .coveragerc.combined
+                --data-file build/coverage/.coverage.combined
+                --pretty-print
+                --output build/coverage/coverage.combined.json
+        """,
+    )
 
 
 @task

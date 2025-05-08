@@ -7,6 +7,9 @@ from strictdoc.backend.sdoc.grammar_reader import SDocGrammarReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.reader import SDReader
+from strictdoc.backend.sdoc_source_code.coverage_reports.gcov import (
+    GCovJSONReader,
+)
 from strictdoc.backend.sdoc_source_code.test_reports.junit_xml_reader import (
     JUnitXMLReader,
 )
@@ -83,6 +86,12 @@ class DocumentFinder:
             elif doc_full_path.endswith(".junit.xml"):
                 junit_xml_reader = JUnitXMLReader()
                 document_or_grammar = junit_xml_reader.read_from_file(
+                    doc_file, project_config
+                )
+                assert isinstance(document_or_grammar, SDocDocument)
+            elif doc_full_path.endswith(".gcov.json"):
+                gcov_json_reader = GCovJSONReader()
+                document_or_grammar = gcov_json_reader.read_from_file(
                     doc_file, project_config
                 )
                 assert isinstance(document_or_grammar, SDocDocument)
@@ -260,7 +269,7 @@ class DocumentFinder:
                 file_tree_structure = FileFinder.find_files_with_extensions(
                     root_path=path_to_doc_root,
                     ignored_dirs=[project_config.output_dir],
-                    extensions=[".sdoc", ".sgra", ".junit.xml"],
+                    extensions=[".sdoc", ".sgra", ".junit.xml", ".gcov.json"],
                     include_paths=project_config.include_doc_paths,
                     exclude_paths=project_config.exclude_doc_paths,
                 )

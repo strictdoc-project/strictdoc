@@ -3,7 +3,7 @@
     {% include "_shared/tags.jinja.html" %}
       <div class="content">
         {%- for node in view_object.document_content_iterator() %}
-          {%- if node.is_section %}
+          {%- if node.is_section() %}
             <section class="content_section">
               <div class="content_item" data-role="parents"></div>
               <div class="content_item" data-role="current">
@@ -12,7 +12,7 @@
               </div>
               <div class="content_item" data-role="children"></div>
             </section>
-          {%- elif node.is_requirement %}
+          {%- elif node.is_requirement() %}
             {%- if node.is_text_node() %}
               <section class="content_section">
                 <div class="content_item" data-role="parents"></div>

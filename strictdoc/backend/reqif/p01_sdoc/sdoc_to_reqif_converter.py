@@ -249,13 +249,13 @@ class P01_SDocToReqIFObjectConverter:
             for node_ in document_iterator.all_content(
                 print_fragments=False, print_fragments_from_files=False
             ):
-                if node_.is_composite_requirement:
+                if node_.is_composite_requirement():
                     raise NotImplementedError(
                         "Exporting composite requirements is not "
                         "supported yet.",
                         node_,
                     )
-                if node_.is_section:
+                if node_.is_section():
                     section: SDocSection = assert_cast(node_, SDocSection)
                     # fmt: off
                     spec_object = (
@@ -294,7 +294,7 @@ class P01_SDocToReqIFObjectConverter:
                         parents[hierarchy] = current_hierarchy_parent
                     current_hierarchy = hierarchy
 
-                elif node_.is_requirement:
+                elif node_.is_requirement():
                     requirement = assert_cast(node_, SDocNode)
                     spec_object = cls._convert_requirement_to_spec_object(
                         requirement=requirement,

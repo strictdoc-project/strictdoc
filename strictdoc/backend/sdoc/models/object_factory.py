@@ -134,7 +134,9 @@ class SDocObjectFactory:
         if isinstance(parent, SDocDocument):
             requirement.ng_document_reference.set_document(parent)
         else:
-            requirement.ng_document_reference.set_document(parent.document)
+            requirement.ng_document_reference.set_document(
+                parent.get_document()
+            )
         return requirement
 
     @staticmethod

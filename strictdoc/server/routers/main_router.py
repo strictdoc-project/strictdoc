@@ -224,19 +224,22 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(reference_mid)
         )
+        document: SDocDocument = assert_cast(
+            section.get_document(), SDocDocument
+        )
         link_renderer = LinkRenderer(
-            root_path=section.document.meta.get_root_path_prefix(),
+            root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup=section.document.config.get_markup(),
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
             config=project_config,
-            context_document=section.document,
+            context_document=document,
         )
-        current_view: ViewElement = section.document.view.get_current_view(
+        current_view: ViewElement = document.view.get_current_view(
             project_config.view
         )
         output = env().render_template_as_markup(
@@ -245,7 +248,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             section=section,
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
-            document=section.document,
+            document=document,
             document_type=DocumentType.document(),
             project_config=project_config,
             current_view=current_view,
@@ -278,7 +281,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document = (
             reference_node
             if isinstance(reference_node, SDocDocument)
-            else reference_node.document
+            else reference_node.get_document()
         )
 
         target_node_mid = reference_mid
@@ -345,7 +348,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document = (
             reference_node
             if isinstance(reference_node, SDocDocument)
-            else reference_node.document
+            else reference_node.get_document()
         )
 
         context_document = export_action.traceability_index.get_node_by_mid(
@@ -399,7 +402,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         section: SDocSection = create_command.get_created_section()
 
         # Saving new content to .SDoc file.
-        SDWriter(project_config).write_to_file(section.document)
+        SDWriter(project_config).write_to_file(section.get_document())
 
         # Update the index because other documents might reference this
         # document's sections. These documents will be regenerated on demand,
@@ -455,17 +458,20 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         form_object = SectionFormObject.create_from_section(
             section=section, context_document_mid=context_document_mid
         )
+        document: SDocDocument = assert_cast(
+            section.get_document(), SDocDocument
+        )
         link_renderer = LinkRenderer(
-            root_path=section.document.meta.get_root_path_prefix(),
+            root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup=section.document.config.get_markup(),
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
             config=project_config,
-            context_document=section.document,
+            context_document=document,
         )
         output = env().render_template_as_markup(
             "actions/document/edit_section/stream_edit_section.jinja.html",
@@ -492,6 +498,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(section_mid)
         )
+        document: SDocDocument = assert_cast(
+            section.get_document(), SDocDocument
+        )
 
         assert isinstance(section_mid, str) and len(section_mid) > 0, (
             f"{section_mid}"
@@ -515,16 +524,16 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 for error in errors:
                     form_object.add_error(error_key, error)
             link_renderer = LinkRenderer(
-                root_path=section.document.meta.get_root_path_prefix(),
+                root_path=document.meta.get_root_path_prefix(),
                 static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
-                markup=section.document.config.get_markup(),
+                markup=document.config.get_markup(),
                 traceability_index=export_action.traceability_index,
                 link_renderer=link_renderer,
                 html_templates=html_generator.html_templates,
                 config=project_config,
-                context_document=section.document,
+                context_document=document,
             )
             output = env().render_template_as_markup(
                 "actions/document/edit_section/stream_edit_section.jinja.html",
@@ -548,7 +557,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             )
 
         # Saving new content to .SDoc file.
-        SDWriter(project_config).write_to_file(section.document)
+        SDWriter(project_config).write_to_file(document)
 
         # Update the index because other documents might reference this
         # document's sections. These documents will be regenerated on demand,
@@ -563,16 +572,16 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
         # Rendering back the Turbo template.
         link_renderer = LinkRenderer(
-            root_path=section.document.meta.get_root_path_prefix(),
+            root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup=section.document.config.get_markup(),
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
             config=project_config,
-            context_document=section.document,
+            context_document=document,
         )
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
@@ -623,21 +632,24 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(section_mid)
         )
+        document: SDocDocument = assert_cast(
+            section.get_document(), SDocDocument
+        )
         link_renderer = LinkRenderer(
-            root_path=section.document.meta.get_root_path_prefix(),
+            root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup=section.document.config.get_markup(),
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
             config=project_config,
-            context_document=section.document,
+            context_document=document,
         )
         view_object: DocumentScreenViewObject = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            document=section.document,
+            document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             link_renderer=link_renderer,
@@ -689,7 +701,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             else:
                 document = context_document
         else:
-            document = reference_node.document
+            document = reference_node.get_document()
 
         next_uid: Optional[str] = None
         if element_type != "TEXT":
@@ -762,10 +774,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             MID(reference_mid)
         )
         reference_requirement: SDocNode = assert_cast(reference_node, SDocNode)
-        document = (
+        document: Optional[SDocDocument] = (
             reference_node
             if isinstance(reference_node, SDocDocument)
-            else reference_node.document
+            else reference_node.get_document()
         )
         document_tree_stats: DocumentTreeStats = (
             DocumentUIDAnalyzer.analyze_document_tree(
@@ -967,7 +979,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 context_document_mid=context_document_mid,
             )
         )
-        document = requirement.document
+        document = requirement.get_document()
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1016,9 +1028,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 reference_node.get_requirement_prefix()
             )
         elif isinstance(reference_node, SDocSection):
-            document_acronym = create_safe_acronym(
-                reference_node.document.title
+            document: SDocDocument = assert_cast(
+                reference_node.get_document(), SDocDocument
             )
+            document_acronym = create_safe_acronym(document.title)
             next_uid: str = document_tree_stats.get_auto_section_uid(
                 document_acronym, reference_node
             )
@@ -1055,7 +1068,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 MID(requirement_mid)
             )
         )
-        document = requirement.document
+        document = requirement.get_document()
 
         assert isinstance(requirement_mid, str) and len(requirement_mid) > 0, (
             f"{requirement_mid}"
@@ -1213,7 +1226,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 MID(requirement_mid)
             )
         )
-        document = requirement.document
+        document = requirement.get_document()
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1255,6 +1268,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         section: SDocSection = assert_cast(
             export_action.traceability_index.get_node_by_mid(MID(node_id)),
             SDocSection,
+        )
+        document: SDocDocument = assert_cast(
+            section.get_document(), SDocDocument
         )
         assert (
             isinstance(context_document_mid, str)
@@ -1316,20 +1332,20 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
         # Saving new content to .SDoc file.
-        SDWriter(project_config).write_to_file(section.document)
+        SDWriter(project_config).write_to_file(document)
 
         # Rendering back the Turbo template.
         link_renderer = LinkRenderer(
-            root_path=section.document.meta.get_root_path_prefix(),
+            root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup=section.document.config.get_markup(),
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
             config=project_config,
-            context_document=section.document,
+            context_document=document,
         )
         view_object: DocumentScreenViewObject = DocumentScreenViewObject(
             document_type=DocumentType.document(),
@@ -1366,6 +1382,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     ):
         requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(MID(node_id))
+        )
+        document: SDocDocument = assert_cast(
+            requirement.get_document(), SDocDocument
         )
         if not confirmed:
             errors: List[str]
@@ -1410,7 +1429,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             )
 
         # Saving new content to .SDoc file.
-        SDWriter(project_config).write_to_file(requirement.document)
+        SDWriter(project_config).write_to_file(document)
 
         context_document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(
@@ -1420,16 +1439,16 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
         # Rendering back the Turbo template.
         link_renderer = LinkRenderer(
-            root_path=requirement.document.meta.get_root_path_prefix(),
+            root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup=requirement.document.config.get_markup(),
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
             config=project_config,
-            context_document=requirement.document,
+            context_document=document,
         )
         view_object: DocumentScreenViewObject = DocumentScreenViewObject(
             document_type=DocumentType.document(),
@@ -1471,6 +1490,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
         moved_node = export_action.traceability_index.get_node_by_mid(
             MID(moved_node_mid)
+        )
+        document: SDocDocument = assert_cast(
+            moved_node.get_document(), SDocDocument
         )
         target_node = export_action.traceability_index.get_node_by_mid(
             MID(target_mid)
@@ -1517,7 +1539,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             raise NotImplementedError  # pragma: no cover
 
         # Saving new content to .SDoc file.
-        SDWriter(project_config).write_to_file(moved_node.document)
+        SDWriter(project_config).write_to_file(document)
 
         # Update the index because other documents might reference this
         # document's sections. These documents will be regenerated on demand,
@@ -1525,20 +1547,20 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         export_action.traceability_index.update_last_updated()
 
         link_renderer = LinkRenderer(
-            root_path=moved_node.document.meta.get_root_path_prefix(),
+            root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            markup=moved_node.document.config.get_markup(),
+            markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
             link_renderer=link_renderer,
             html_templates=html_generator.html_templates,
             config=project_config,
-            context_document=moved_node.document,
+            context_document=document,
         )
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.document(),
-            document=moved_node.document,
+            document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             link_renderer=link_renderer,
@@ -2693,7 +2715,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 for node_ in document_iterator.all_content(
                     print_fragments=False, print_fragments_from_files=False
                 ):
-                    if node_.is_section:
+                    if node_.is_section():
                         continue
 
                     if (

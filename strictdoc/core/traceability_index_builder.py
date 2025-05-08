@@ -452,7 +452,7 @@ class TraceabilityIndexBuilder:
                         rhs_node=node,
                     )
 
-                if node.is_requirement:
+                if node.is_requirement():
                     requirement: SDocNode = assert_cast(node, SDocNode)
                     if requirement.reserved_tags is not None:
                         for tag in requirement.reserved_tags:
@@ -486,7 +486,7 @@ class TraceabilityIndexBuilder:
                 print_fragments=False,
                 print_fragments_from_files=False,
             ):
-                if not node.is_requirement:
+                if not node.is_requirement():
                     continue
 
                 requirement: SDocNode = node
@@ -628,7 +628,7 @@ class TraceabilityIndexBuilder:
                 print_fragments=False,
                 print_fragments_from_files=False,
             ):
-                if not node.is_requirement:
+                if not node.is_requirement():
                     continue
                 requirement: Union[SDocNode, SDocCompositeNode] = assert_cast(
                     node, (SDocNode, SDocCompositeNode)
@@ -803,7 +803,7 @@ class TraceabilityIndexBuilder:
                                     node.parent.blacklist_if_needed()
 
                         elif (
-                            node.is_requirement
+                            node.is_requirement()
                             and not requirements_query_object.evaluate(node)
                         ):
                             node.ng_whitelisted = False
@@ -816,7 +816,7 @@ class TraceabilityIndexBuilder:
                                 ]
                                 == node
                             ):
-                                if node.parent.is_section:
+                                if node.parent.is_section():
                                     node.parent.blacklist_if_needed()
 
             except (AttributeError, NameError, TypeError) as attribute_error_:

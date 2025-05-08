@@ -25,7 +25,7 @@
 
         {%- for node in view_object.document_content_iterator() %}
 
-        {%- if node.is_requirement %}
+        {%- if node.is_requirement() %}
           {%- set sdoc_entity = node -%}
           {# {%- if node.is_text_node() %}
             {% include "components/text_node/pdf.jinja" %}
@@ -33,7 +33,7 @@
             {% include "components/node_content/index_extends_readonly.jinja" %}
           {# {% endif %} #}
 
-        {%- elif node.is_section %}
+        {%- elif node.is_section() %}
           {# needed for self.local_anchor_cache: #}
           {%- set section = node %}
           {# needed for template: #}

@@ -10,7 +10,7 @@
     >
     {%- for section in view_object.table_of_contents() -%}
       <li data-nodeid="{{ section.reserved_mid.get_string_value() }}">
-        {%- if section.is_section -%}
+        {%- if section.is_section() -%}
         {# if section not requirement #}
           {%- if not section.ng_has_requirements and view_object.is_deeptrace() -%}
             <span class="toc-title-no-link" title="Section has no requirements">

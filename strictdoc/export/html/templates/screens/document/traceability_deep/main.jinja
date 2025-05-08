@@ -6,7 +6,7 @@
     {% include "_shared/tags.jinja.html" %}
     <div class="content">
       {%- for section_or_requirement in view_object.document_content_iterator() %}
-        {%- if section_or_requirement.is_section and section_or_requirement.ng_has_requirements %}
+        {%- if section_or_requirement.is_section() and section_or_requirement.ng_has_requirements %}
           <section class="content_section">
             <div class="content_item" data-role="current">
               {%- with section = section_or_requirement, node_controls = True -%}
@@ -14,7 +14,7 @@
               {%- endwith -%}
             </div>
           </section>
-        {%- elif section_or_requirement.is_requirement and not section_or_requirement.is_text_node() %}
+        {%- elif section_or_requirement.is_requirement() and not section_or_requirement.is_text_node() %}
           <section class="content_section">
             <div class="content_item" data-role="parents">
               {%- with requirement=section_or_requirement, node_controls = True, requirement_partial="components/node_content/tiny_extends_card.jinja" -%}

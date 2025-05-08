@@ -612,8 +612,10 @@ class FileTraceabilityIndex:
 
                 # validate here, SDocNode.relations doesn't track marker roles
                 node = traceability_index.get_node_by_uid(req_uid_)
-                assert node.document and node.document.grammar
-                grammar_element = node.document.grammar.elements_by_type[
+                document = node.get_document()
+                assert document is not None
+                assert document.grammar is not None
+                grammar_element = document.grammar.elements_by_type[
                     node.node_type
                 ]
                 for marker in markers_:

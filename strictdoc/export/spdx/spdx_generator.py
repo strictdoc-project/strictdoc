@@ -267,7 +267,7 @@ class SPDXGenerator:
             )
 
             for node in document_iterator.all_content():
-                if node.is_requirement:
+                if node.is_requirement():
                     if node.reserved_uid is None:
                         continue
 
@@ -359,7 +359,7 @@ class SPDXGenerator:
                 traceability_index.get_document_iterator(document_)
             )
             for node in document_iterator.all_content():
-                if node.is_requirement:
+                if node.is_requirement():
                     if node.reserved_uid is None:
                         continue
 

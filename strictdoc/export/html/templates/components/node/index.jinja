@@ -26,12 +26,12 @@
   <sdoc-node
     {%- if is_not_standalone %}
       data-editable_node="on"
-      {%- if sdoc_entity.is_section %}
+      {%- if sdoc_entity.is_section() %}
       data-controller="anchor_controller"
       {%- endif %}
     {%- endif %}
     node-role="{{ node_type }}"
-    {% if sdoc_entity.is_requirement %}
+    {% if sdoc_entity.is_requirement() %}
       node-view="{{ sdoc_entity.get_requirement_style_mode() }}"
     {%- endif -%}
     {%- if node_type_string is not none %}{# and node_type_string != 'TEXT' #}

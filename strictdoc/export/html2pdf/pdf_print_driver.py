@@ -13,20 +13,20 @@ class PDFPrintDriver:
         paths_to_print: List[Tuple[str, str]],
     ) -> None:
         assert isinstance(paths_to_print, list), paths_to_print
-        path_to_html2print_cache = os.path.join(
+        path_to_html2pdf4doc_cache = os.path.join(
             project_config.get_path_to_cache_dir(), "html2pdf"
         )
         cmd: List[str] = [
             # Using sys.executable instead of "python" is important because
             # venv subprocess call to python resolves to wrong interpreter,
             # https://github.com/python/cpython/issues/86207
-            # Switching back to calling html2print directly because the
+            # Switching back to calling html2pdf4doc directly because the
             # python -m doesn't work well with PyInstaller.
             # sys.executable, "-m"
-            "html2print",
+            "html2pdf4doc",
             "print",
             "--cache-dir",
-            path_to_html2print_cache,
+            path_to_html2pdf4doc_cache,
         ]
         if project_config.chromedriver is not None:
             cmd.extend(

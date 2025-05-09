@@ -83,6 +83,7 @@ DocumentConfig[noskipws]:
     )?
     ('  DEFAULT_VIEW: ' default_view = SingleLineString '\n')?
   )?
+  ('METADATA:' '\n' custom_metadata = DocumentCustomMetadata)?
 ;
 
 DocumentView[noskipws]:
@@ -133,6 +134,17 @@ AutoLevelsChoice[noskipws]:
 LayoutChoice[noskipws]:
   'Default' | 'Website'
 ;
+
+DocumentCustomMetadata[noskipws]:
+  (entries+=DocumentCustomMetadataKeyValuePair)*
+;
+
+DocumentCustomMetadataKeyValuePair[noskipws]:
+  '  ' key=DocumentCustomMetadataKey ': ' value=SingleLineString '\n'
+;
+
+DocumentCustomMetadataKey: /[a-zA-Z_][a-zA-Z0-9_-]*/;
+
 """
 
 SECTION_GRAMMAR = rf"""

@@ -48,7 +48,8 @@ Notes:
     {{ view_object.document.title }}</h1>
   </div>
   <div class="html2pdf-frontpage-grid-bottom">
-{%- if view_object.document.config.has_meta() -%}
+{%- set document_config = view_object.document.config -%}
+{%- if document_config.has_meta() or document_config.has_custom_meta() -%}
   <sdoc-meta>
     {%- if view_object.document.config.uid -%}
     <sdoc-meta-label data-testid="document-config-uid-label">UID:</sdoc-meta-label>
@@ -97,6 +98,24 @@ Notes:
       {%- endwith -%}
     </sdoc-meta-field>
     {%- endif -%}
+    
+    {% if document_config.has_custom_meta %}
+    {% set custom_metadata = document_config.get_custom_meta() %}
+    {% for key, value in custom_metadata.items() %}
+    <sdoc-meta-label data-testid="document-config-version-label">{{key}}:</sdoc-meta-label>
+
+    {# We make the custom metadata fields higher with a min-height style directive.
+       We do this to support the review/release workflows at ACME laboratories inc.,
+       which involve placing "electronic signatures" on the front page of the PDF. 
+    #}
+    <sdoc-meta-field data-testid="document-config-version-field" style="min-height: 60px;">
+      {%- with field_content = value %}
+        <sdoc-autogen>{{ field_content }}</sdoc-autogen>
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {% endfor %}
+    {% endif %}
+
   </sdoc-meta>
 {%- endif -%}
   </div>

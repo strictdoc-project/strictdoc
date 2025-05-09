@@ -678,6 +678,31 @@ REQ_PREFIX: DOC-
     assert input_sdoc == output
 
 
+def test_074_document_config_metadata(default_project_config):
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+UID: SDOC-01
+VERSION: 0.0.1
+METADATA:
+  AUTHOR: James T. Kirk
+  CHECKED-BY: Chuck Norris
+  APPROVED-BY: Wile E. Coyote
+
+[REQUIREMENT]
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter(default_project_config)
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_090_document_config_all_fields(default_project_config):
     input_sdoc = """
 [DOCUMENT]

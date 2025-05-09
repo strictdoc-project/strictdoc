@@ -1,13 +1,38 @@
-# mypy: disable-error-code="no-untyped-def"
-from typing import Optional
+from typing import Dict, List, Optional
 
 from strictdoc.helpers.auto_described import auto_described
 
 
 @auto_described
+class DocumentCustomMetadataKeyValuePair:
+    def __init__(
+        self,
+        *,
+        parent: Optional["DocumentCustomMetadata"] = None,
+        key: Optional[str],
+        value: Optional[str],
+    ) -> None:
+        _ = parent
+        self.key = key
+        self.value = value
+
+
+@auto_described
+class DocumentCustomMetadata:
+    def __init__(
+        self,
+        *,
+        parent: Optional["DocumentConfig"] = None,
+        entries: Optional[List[DocumentCustomMetadataKeyValuePair]],
+    ) -> None:
+        _ = parent
+        self.entries = entries
+
+
+@auto_described
 class DocumentConfig:
     @staticmethod
-    def default_config(document) -> "DocumentConfig":
+    def default_config(document) -> "DocumentConfig":  # type: ignore[no-untyped-def]
         return DocumentConfig(
             parent=document,
             version=None,
@@ -23,9 +48,10 @@ class DocumentConfig:
             requirement_style=None,
             requirement_in_toc=None,
             default_view=None,
+            custom_metadata=None,
         )
 
-    def __init__(
+    def __init__(  # type: ignore[no-untyped-def]
         self,
         *,
         parent,
@@ -42,6 +68,7 @@ class DocumentConfig:
         requirement_style: Optional[str],
         requirement_in_toc: Optional[str],
         default_view: Optional[str],
+        custom_metadata: Optional[DocumentCustomMetadata],
     ) -> None:
         self.parent = parent
         self.version: Optional[str] = version
@@ -84,6 +111,8 @@ class DocumentConfig:
         self.ng_line_start: int = 0
         self.ng_col_start: int = 0
 
+        self.custom_metadata: Optional[DocumentCustomMetadata] = custom_metadata
+
     def get_markup(self) -> str:
         if self.markup is None:
             return "RST"
@@ -113,7 +142,7 @@ class DocumentConfig:
             return self.requirement_prefix
         return "REQ-"
 
-    def has_meta(self):
+    def has_meta(self) -> bool:
         # TODO: When OPTIONS are not provided to a document, the self.number and
         # self.version are both None. Otherwise, they become empty strings "".
         # This issue might deserve a bug report to TextX.
@@ -124,3 +153,21 @@ class DocumentConfig:
                 self.classification is not None and len(self.classification) > 0
             )
         )
+
+    def has_custom_meta(self) -> bool:
+        return (
+            self.custom_metadata is not None
+            and self.custom_metadata.entries is not None
+        )
+
+    def get_custom_meta(self) -> Optional[Dict[str, str]]:
+        if (
+            self.custom_metadata is not None
+            and self.custom_metadata.entries is not None
+        ):
+            return {
+                entry.key: entry.value
+                for entry in self.custom_metadata.entries
+                if entry.key is not None and entry.value is not None
+            }
+        return {}

@@ -36,4 +36,12 @@ class Test(E2ECase):
             screen_pdf.assert_on_pdf_document()
             screen_pdf.assert_not_empty_view()
 
+            #
+            # Check that text from the custom template is there
+            #
             screen_pdf.assert_text("ACME Laboratories Inc.")
+
+            #
+            # Check that metadata from the document is there
+            #
+            screen_pdf.assert_text("Wile E. Coyote")

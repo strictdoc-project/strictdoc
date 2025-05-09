@@ -812,6 +812,35 @@ Default is ``True``.
 
 [/SECTION]
 
+[SECTION]
+MID: 726b6a1a2f854e82a7670cb8480b887e
+TITLE: Additional Metadata
+
+[TEXT]
+MID: f86d45b7ad1a48ec919b43a695ca9126
+STATEMENT: >>>
+StrictDoc allows additional metadata to be added in the [DOCUMENT] element. The ``METADATA:`` field accepts any number of entries, each consisting of a key-value pair on a separate line. Keys must begin with a letter and end with a colon, but are not otherwise constrained.
+
+.. code-block:: text
+
+    [DOCUMENT]
+    TITLE: Hello world
+    OPTIONS:
+      REQUIREMENT_IN_TOC: True
+    METADATA:
+      KEY: Value
+      ...
+
+The additional metadata is also included on the front page of the exported PDF. This is useful for displaying document-specific information, such as the author's name or project identifiers.
+
+.. note ::
+
+    The front page can be further customised using the ``html2pdf_template``
+    directive in strictoc.toml
+<<<
+
+[/SECTION]
+
 [/SECTION]
 
 [SECTION]
@@ -3516,7 +3545,7 @@ To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc.t
       "HTML2PDF"
     ]
 
-This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to how the SDoc HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked out. One feature which is still missing is the ability to generate user-specific front pages with custom meta information.
+This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to how the SDoc HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked out. One feature which is still missing is the ability to edit custom front page metadata through the web UI.
 <<<
 
 [/SECTION]

@@ -1,7 +1,8 @@
 REQUIRES: TEST_HTML2PDF
 
 RUN: %strictdoc export %S --formats=html2pdf --output-dir Output | filecheck %s --dump-input=fail
-CHECK: html2print: JS logs from the print session
+CHECK: html2pdf4doc: ChromeDriver available at path: {{.*}}
+CHECK: html2pdf4doc: JS logs from the print session
 
 RUN: %check_exists --file %S/Output/html2pdf/pdf/input.pdf
 

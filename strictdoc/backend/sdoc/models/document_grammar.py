@@ -54,7 +54,7 @@ class GrammarElement:
             "Zebra",
         )
         self.property_view_style: Optional[str] = (
-            property_view_style if property_view_style != "" else None
+            property_view_style.lower() if property_view_style != "" else None
         )
 
         self.fields: List[

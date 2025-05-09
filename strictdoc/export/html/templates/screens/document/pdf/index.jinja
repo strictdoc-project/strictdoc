@@ -2,6 +2,7 @@
 
 {% block head_css %}
   {{ super() }}
+  <link rel="stylesheet" href="{{ view_object.render_static_url('html2pdf4doc.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}

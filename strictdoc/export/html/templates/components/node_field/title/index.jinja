@@ -1,8 +1,11 @@
 {# needs sdoc_entity, see README.txt #}
-{# title // required field for node #}
 {%- if sdoc_entity.reserved_title %}
   <sdoc-node-title
     data-level="{{ sdoc_entity.context.title_number_string }}"
+    {%- if view_object.document_type.is_pdf() -%}
+      {# to make anchor: #}
+      id="{{ view_object.render_local_anchor(sdoc_entity) }}"
+    {%- endif -%}
   >
 
     {%- set h_level = sdoc_entity.ng_level + 1

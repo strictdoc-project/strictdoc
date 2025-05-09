@@ -174,6 +174,12 @@ class GrammarElement:
 
     def is_field_multiline(self, field_name: str) -> bool:
         field_index = self.field_titles.index(field_name)
+        try:
+            title_field_index = self.field_titles.index("TITLE")
+            if field_index <= title_field_index:
+                return False
+        except ValueError:
+            pass
         return field_index >= self.content_field[1]
 
     def get_multiline_field_index(self) -> int:

@@ -1,0 +1,4 @@
+html2pdf-print-forced-page-break + sdoc-node-content[node-view="narrative"],
+html2pdf-page + sdoc-node-content[node-view="narrative"] {
+  border-top: none;
+}

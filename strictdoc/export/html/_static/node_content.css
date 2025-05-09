@@ -303,6 +303,10 @@ sdoc-node-content[node-view="narrative"] .node_fields_group-primary sdoc-node-fi
   color: var(--color-fg-contrast);
 }
 
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary sdoc-node-field:last-child {
+  margin-bottom: 0;
+}
+
 sdoc-node-content[node-view="narrative"] .node_fields_group-secondary {
   display: grid;
   grid-template-columns: max-content 1fr;

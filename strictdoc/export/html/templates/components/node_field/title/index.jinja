@@ -2,7 +2,8 @@
 {%- if sdoc_entity.reserved_title %}
   <sdoc-node-title
     data-level="{{ sdoc_entity.context.title_number_string }}"
-    {%- if view_object.document_type.is_pdf() -%}
+    {# FIXME: Find a better way than checking the presence of document type. #}
+    {%- if view_object.document_type is defined and view_object.document_type.is_pdf() -%}
       {# to make anchor: #}
       id="{{ view_object.render_local_anchor(sdoc_entity) }}"
     {%- endif -%}

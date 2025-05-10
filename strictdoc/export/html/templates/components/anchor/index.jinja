@@ -5,9 +5,7 @@
   data-uid="{{ sdoc_entity.reserved_uid }}"
   {%- endif -%}
 >
-{%- if sdoc_entity.is_section -%}
-{%- set section = sdoc_entity %}
-{%- set incoming_links = view_object.traceability_index.get_incoming_links(section) %}
+{%- set incoming_links = view_object.traceability_index.get_incoming_links(sdoc_entity) %}
 {%- if incoming_links is not none and incoming_links|length > 0 -%}
 <template>
   Incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
@@ -19,6 +17,5 @@
   </a>
   {% endfor -%}
 </template>
-{%- endif -%}
 {%- endif -%}
 </sdoc-anchor>

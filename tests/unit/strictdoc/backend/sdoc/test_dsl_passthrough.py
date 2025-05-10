@@ -1029,7 +1029,7 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected ': '" == exc_info.value.args[0].decode("utf-8")
+    assert "Expected ': '" == exc_info.value.args[0]
 
 
 def test_edge_case_03_uid_present_but_empty_with_space_character():
@@ -1048,9 +1048,7 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected '([\\w]+[\\w()\\-\\/.: ]*)'" in exc_info.value.args[
-        0
-    ].decode("utf-8")
+    assert "Expected '([\\w]+[\\w()\\-\\/.: ]*)'" in exc_info.value.args[0]
 
 
 def test_edge_case_04_uid_present_but_empty_with_two_space_characters():
@@ -1069,9 +1067,7 @@ UID:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected '([\\w]+[\\w()\\-\\/.: ]*)'" in exc_info.value.args[
-        0
-    ].decode("utf-8")
+    assert "Expected '([\\w]+[\\w()\\-\\/.: ]*)'" in exc_info.value.args[0]
 
 
 def test_edge_case_10_empty_multiline_field():
@@ -1094,7 +1090,7 @@ COMMENT: >>>
         "Expected '^\\[ANCHOR: ' or '[LINK: ' or "
         "'(?ms)(?!^<<<)(?!\\[LINK: "
         "([\\w]+[\\w()\\-\\/.: ]*))(?!^\\[ANCHOR: "
-        "([\\w]+[\\w()\\-\\/.: ]*)).'" in exc_info.value.args[0].decode("utf-8")
+        "([\\w]+[\\w()\\-\\/.: ]*)).'" in exc_info.value.args[0]
     )
 
 
@@ -1115,9 +1111,7 @@ COMMENT: >>>
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Node statement cannot be empty." == exc_info.value.args[0].decode(
-        "utf-8"
-    )
+    assert "Node statement cannot be empty." == exc_info.value.args[0]
 
 
 def test_edge_case_19_empty_section_title():
@@ -1139,7 +1133,7 @@ TITLE:
     assert exc_info.type is TextXSyntaxError
     assert (
         "Expected 'MID: ' or 'UID: ' or 'LEVEL: ' or 'TITLE: '"
-        == exc_info.value.args[0].decode("utf-8")
+        == exc_info.value.args[0]
     )
 
 
@@ -1160,7 +1154,7 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected SingleLineString" == exc_info.value.args[0].decode("utf-8")
+    assert "Expected SingleLineString" == exc_info.value.args[0]
 
 
 def test_edge_case_21_section_title_with_empty_space():
@@ -1181,7 +1175,7 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected SingleLineString" in exc_info.value.args[0].decode("utf-8")
+    assert "Expected SingleLineString" in exc_info.value.args[0]
 
 
 def test_edge_case_22_section_title_with_two_empty_spaces():
@@ -1202,7 +1196,7 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is TextXSyntaxError
-    assert "Expected SingleLineString" in exc_info.value.args[0].decode("utf-8")
+    assert "Expected SingleLineString" == exc_info.value.args[0]
 
 
 def test_edge_case_23_leading_spaces_do_not_imply_empy_field(

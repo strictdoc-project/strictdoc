@@ -317,8 +317,10 @@ def test_end2end(
 
 
 @task(aliases=["tu"])
-def test_unit(context):
+def test_unit(context, focus=None):
     Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+
+    focus_argument = f"-k {focus}" if focus is not None else ""
 
     cwd = os.getcwd()
 
@@ -331,22 +333,24 @@ def test_unit(context):
             --rcfile=.coveragerc.unit
             --data-file={path_to_coverage_file}
             -m pytest
+            {focus_argument}
             --junit-xml={TEST_REPORTS_DIR}/tests_unit.pytest.junit.xml
             -o cache_dir=build/pytest_unit_with_coverage
             -o junit_suite_name="StrictDoc Unit Tests"
             tests/unit/
         """,
     )
-    run_invoke_with_tox(
-        context,
-        ToxEnvironment.CHECK,
-        f"""
-            coverage report
-                --sort=cover
-                --rcfile=.coveragerc.unit
-                --data-file={path_to_coverage_file}
-        """,
-    )
+    if not focus:
+        run_invoke_with_tox(
+            context,
+            ToxEnvironment.CHECK,
+            f"""
+                coverage report
+                    --sort=cover
+                    --rcfile=.coveragerc.unit
+                    --data-file={path_to_coverage_file}
+            """,
+        )
 
 
 @task(test_unit)

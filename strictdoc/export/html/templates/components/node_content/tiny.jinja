@@ -1,0 +1,19 @@
+{#
+  In this template:
+  sdoc_entity = requirement
+#}
+
+<sdoc-node-content
+  node-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
+  data-level="{{ sdoc_entity.context.title_number_string }}"
+  {%- if sdoc_entity.reserved_status %}
+    data-status='{{ sdoc_entity.reserved_status.lower() }}'
+  {%- endif %}
+  data-testid="requirement-style-{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
+>
+  {% set title_number = false %}
+  {% set truncated_statement = true %}
+  {% include "components/node_field/title/index.jinja" %}
+  {% include "components/node_field/uid/index.jinja" %}
+  {% include "components/node_field/statement/index.jinja" %}
+</sdoc-node-content>

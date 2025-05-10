@@ -152,6 +152,7 @@ class ExcelToSDocConverter:
             parent=None,
             tag="REQUIREMENT",
             property_is_composite="",
+            property_view_style="",
             fields=fields,
             relations=[],
         )

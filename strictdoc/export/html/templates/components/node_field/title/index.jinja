@@ -1,6 +1,19 @@
 {# needs sdoc_entity, see README.txt #}
 {%- if sdoc_entity.reserved_title %}
-  <sdoc-requirement-title>
+  <sdoc-node-title
+    data-level="{{ sdoc_entity.context.title_number_string }}"
+    {# FIXME: Find a better way than checking the presence of document type. #}
+    {%- if view_object.document_type is defined and view_object.document_type.is_pdf() -%}
+      {# to make anchor: #}
+      id="{{ view_object.render_local_anchor(sdoc_entity) }}"
+    {%- endif -%}
+  >
+
+    {%- set h_level = sdoc_entity.ng_level + 1
+        if sdoc_entity.ng_level < 6
+        else 6 -%}
+
+    {% if sdoc_entity.is_composite %}<h{{ h_level }}>{% endif %}
 
     {#- initiate the accumulating variable -#}
     {%- set field_content_ = "" -%}
@@ -22,5 +35,7 @@
     {%- with field_content = field_content_ %}
       {%- include "components/field/index.jinja" -%}
     {%- endwith -%}
-  </sdoc-requirement-title>
+
+    {% if sdoc_entity.is_composite %}</h{{ h_level }}>{% endif %}
+  </sdoc-node-title>
 {%- endif %}

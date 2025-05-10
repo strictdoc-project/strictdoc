@@ -24,10 +24,13 @@ def test_001_minimal_doc(default_project_config):
 TITLE: Test Doc
 
 [REQUIREMENT]
+STATEMENT: ...
 
 [REQUIREMENT]
+STATEMENT: ...
 
 [REQUIREMENT]
+STATEMENT: ...
 """
 
     reader = SDReader()
@@ -557,6 +560,7 @@ def test_060_file_ref(default_project_config):
 TITLE: Test Doc
 
 [REQUIREMENT]
+STATEMENT: ...
 RELATIONS:
 - TYPE: File
   VALUE: /tmp/sample.cpp
@@ -589,6 +593,7 @@ TITLE: Test Doc
 VERSION: 0.0.1
 
 [REQUIREMENT]
+STATEMENT: ...
 """.lstrip()
 
     reader = SDReader()
@@ -612,6 +617,7 @@ TITLE: Test Doc
 UID: SDOC-01
 
 [REQUIREMENT]
+STATEMENT: ...
 """.lstrip()
 
     reader = SDReader()
@@ -637,6 +643,7 @@ VERSION: 0.0.1
 CLASSIFICATION: Restricted
 
 [REQUIREMENT]
+STATEMENT: ...
 """.lstrip()
 
     reader = SDReader()
@@ -662,6 +669,7 @@ VERSION: 0.0.1
 REQ_PREFIX: DOC-
 
 [REQUIREMENT]
+STATEMENT: ...
 """.lstrip()
 
     reader = SDReader()
@@ -815,6 +823,7 @@ TITLE: Test Doc
 VERSION: 0.0.1
 
 [REQUIREMENT]
+TITLE: ...
 """.lstrip()
 
     reader = SDReader()
@@ -841,6 +850,7 @@ OPTIONS:
   MARKUP: Text
 
 [REQUIREMENT]
+STATEMENT: ...
 """.lstrip()
 
     reader = SDReader()
@@ -1020,6 +1030,7 @@ def test_edge_case_01_minimal_requirement(default_project_config):
 TITLE: Test Doc
 
 [REQUIREMENT]
+STATEMENT: ...
 """.lstrip()
 
     reader = SDReader()
@@ -1030,7 +1041,7 @@ TITLE: Test Doc
     requirement: SDocNode = document.section_contents[0]
     assert requirement.reserved_uid is None
     assert requirement.reserved_title is None
-    assert requirement.reserved_statement is None
+    assert requirement.reserved_statement == "..."
 
     writer = SDWriter(default_project_config)
     output = writer.write(document)

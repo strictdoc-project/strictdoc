@@ -230,7 +230,24 @@ class SDocNode(SDocNodeIF):
         document = assert_cast(self.get_document(), SDocDocumentIF)
         return document.config.root is True
 
+    def has_multiline_fields(self) -> bool:
+        """
+        FIXME: It should be possible to avoid calculating this every time.
+        """
+
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
+
+        for fields_ in self.ordered_fields_lookup.values():
+            for field_ in fields_:
+                if element.is_field_multiline(field_.field_name):
+                    return True
+        return False
+
+    #
     # Reserved fields
+    #
 
     @property
     def reserved_uid(self) -> Optional[str]:
@@ -317,7 +334,7 @@ class SDocNode(SDocNodeIF):
         return self.get_document()
 
     def get_document(self) -> Optional[SDocDocumentIF]:
-        assert self.ng_document_reference is not None
+        assert self.ng_document_reference is not None, self
         return self.ng_document_reference.get_document()
 
     def get_including_document(self) -> Optional[SDocDocumentIF]:
@@ -371,6 +388,10 @@ class SDocNode(SDocNodeIF):
         document: SDocDocumentIF = assert_cast(
             self.get_document(), SDocDocumentIF
         )
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
+        if node_style := element.get_view_style():
+            return node_style
         return document.config.get_requirement_style_mode()
 
     def get_content_field_name(self) -> str:
@@ -471,7 +492,9 @@ class SDocNode(SDocNodeIF):
             self.node_type
         ]
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
-        statement_field_index: int = element.content_field[1]
+
+        reference_field_index: int = element.get_multiline_field_index()
+
         for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
@@ -479,7 +502,7 @@ class SDocNode(SDocNodeIF):
 
             # A field is considered singleline if it goes before the STATEMENT
             # field and vice versa.
-            if field_index > statement_field_index:
+            if field_index > reference_field_index:
                 is_single_line_field = False
             else:
                 is_single_line_field = True
@@ -533,6 +556,9 @@ class SDocNode(SDocNodeIF):
         return parent.get_requirement_prefix()
 
     def dump_fields_as_parsed(self) -> str:
+        # FIXME:
+        # - The name of the method can be improved (used in error messages).
+        # - fields can diverge from fields_as_parsed.
         return ", ".join(
             list(
                 map(
@@ -597,7 +623,7 @@ class SDocNode(SDocNodeIF):
         grammar_field_titles = list(map(lambda f: f.title, element.fields))
         field_index = grammar_field_titles.index(field_name)
 
-        multiline = field_index >= element.content_field[1]
+        multiline = field_index >= element.get_multiline_field_index()
         if multiline and isinstance(value, str):
             value = ensure_newline(value)
 

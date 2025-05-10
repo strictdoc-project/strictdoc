@@ -1,6 +1,6 @@
 RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
 
 CHECK:error: could not parse file: {{.*}}input.sdoc.
-CHECK:Semantic error: Requirement is missing a field that is required by grammar: TWO.
+CHECK:Semantic error: Node is missing a field that is required by grammar: TWO.
 CHECK:Location: {{.*}}input.sdoc:18:1
-CHECK:Hint: Requirement fields: [ONE], grammar fields: [ONE, TWO, STATEMENT].
+CHECK:Hint: Node fields: [ONE], grammar fields: [ONE, TWO, STATEMENT].

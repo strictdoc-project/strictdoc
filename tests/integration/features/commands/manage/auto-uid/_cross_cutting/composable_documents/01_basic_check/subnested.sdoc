@@ -8,9 +8,11 @@ TITLE: Subnested Doc Section
 
 [COMPOSITE_REQUIREMENT]
 TITLE: Subnested Doc Section Composite requirement
+STATEMENT: ...
 
 [REQUIREMENT]
 TITLE: Subnested Doc Section Requirement
+STATEMENT: ...
 
 [/COMPOSITE_REQUIREMENT]
 

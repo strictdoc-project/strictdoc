@@ -7,14 +7,14 @@ sdoc-node {
   position: relative;
 }
 
-sdoc-node[show-node-type-name] sdoc-requirement {
+/* sdoc-node[show-node-type-name] sdoc-node-content {
   margin-top: calc(2 * var(--base-rhythm));
-}
+} */
 
 sdoc-node[show-node-type-name]::before {
   content: attr(show-node-type-name);
   position: absolute;
-  top: calc(2 * var(--base-rhythm));
+  top: calc(1 * var(--base-rhythm));
   right: calc(4 * var(--base-rhythm));
 
   font-size: 10px;
@@ -31,13 +31,6 @@ sdoc-node[show-node-type-name]::before {
   background-color: var(--color-bg-contrast);
 }
 
-sdoc-node[node-view="narrative"][show-node-type-name]::before {
-  top: calc(1 * var(--base-rhythm));
-  right: calc(1 * var(--base-rhythm));
-  padding: calc(0.5 * var(--base-rhythm));
-  border: var(--base-border);
-}
-
 /* sdoc-node */
 
 sdoc-node {
@@ -46,7 +39,7 @@ sdoc-node {
 
   /* padding: calc(3 * var(--base-rhythm)) calc(4 * var(--base-rhythm)); */
   padding-inline: calc(4 * var(--base-rhythm));
-  padding-block: calc(2 * var(--base-rhythm));
+  padding-block: calc(3 * var(--base-rhythm));
 }
 
 sdoc-node[node-role="root"] {
@@ -129,7 +122,7 @@ sdoc-node.nouid {
   /* background-color: rgb(240, 220, 220); */
 }
 
-.nouid sdoc-requirement-title,
+.nouid sdoc-node-title,
 .nouid .requirement__title {
   color: #502222;
 }

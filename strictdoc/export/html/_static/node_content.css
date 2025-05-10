@@ -429,16 +429,10 @@ sdoc-meta-section {
 /* There is no sdoc-node wrapper, so such neighbours and nesting is possible. */
 sdoc-text + sdoc-text,
 sdoc-text + sdoc-section,
-sdoc-text + sdoc-node-content,
 sdoc-text + sdoc-section-title,
 sdoc-section + sdoc-text,
 sdoc-section + sdoc-section,
-sdoc-section + sdoc-node-content,
-sdoc-section + sdoc-section sdoc-section-title,
-sdoc-node-content + sdoc-text,
-sdoc-node-content + sdoc-node-content,
-sdoc-node-content + sdoc-section,
-sdoc-node-content + sdoc-section sdoc-section-title {
+sdoc-section + sdoc-section sdoc-section-title {
   margin-top: calc(var(--base-rhythm)*4);
 }
 

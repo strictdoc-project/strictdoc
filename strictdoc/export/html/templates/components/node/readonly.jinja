@@ -1,8 +1,13 @@
 {# needs sdoc_entity #}
 
+{% set node_type_string = sdoc_entity.get_node_type_string() %}
+
   <sdoc-node
     node-style="readonly"
     node-role="{{ sdoc_entity.get_type_string() }}"
+    {%- if node_type_string is not none %}
+      show-node-type-name="{{ node_type_string }}"
+    {%- endif %}
     data-testid="node-{{ sdoc_entity.get_type_string() }}"
   >
 

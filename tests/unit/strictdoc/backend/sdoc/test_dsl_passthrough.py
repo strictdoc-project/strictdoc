@@ -698,6 +698,7 @@ METADATA:
   APPROVED-BY: Wile E. Coyote
 
 [REQUIREMENT]
+UID: FOO
 """.lstrip()
 
     reader = SDReader()

@@ -55,7 +55,18 @@ sdoc-node-title * {
   font-size: 1em;
 }
 
-sdoc-node-content[node-view="simple"] sdoc-node-title,
+/* synonym to [node-view="inline"] */
+sdoc-node-content[node-view="simple"] sdoc-node-title {
+  padding-left: calc(var(--base-rhythm)*2);
+  padding-right: calc(var(--base-rhythm)*2);
+  padding-top: calc(var(--base-rhythm)*1);
+  padding-bottom: calc(var(--base-rhythm)*1);
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* sdoc-node-content[node-view="simple"] sdoc-node-title, */
 sdoc-node-content[node-view="table"] sdoc-node-title,
 sdoc-node-content[node-view="zebra"] sdoc-node-title {
   padding-left: calc(var(--base-rhythm)*2);
@@ -242,6 +253,7 @@ sdoc-node-content[node-view="zebra"]
   }
 
 /* node-view="simple" */
+/* synonym to "inline" */
 
 sdoc-node-content[node-view="simple"] {
   grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */

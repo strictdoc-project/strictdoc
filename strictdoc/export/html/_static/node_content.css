@@ -1,7 +1,6 @@
 :root {
   --requirement-container-limit: 500px;
-  /* --requirement-border-color: rgb(191,191,191); */
-  --requirement-border-color: var(--color-border);
+  --requirement-border-color: rgb(230, 230, 230); /* = var(--color-border) on white without opacity */
   --requirement-border-width: 1px;
   --requirement-border-radius: 4px;
   --requirement-inner-borders-width: 1px;
@@ -20,13 +19,14 @@ sdoc-node-content {
   gap: var(--requirement-inner-borders-width);
 
   position: relative;
+  background-color: var(--color-bg-contrast); /* affects the color of the space between cells */
   border:
     var(--requirement-border-width, 1px)
     solid
-    var(--requirement-border-color, #bfbfbf);
+    var(--requirement-border-color);
 
   border-radius: var(--requirement-border-radius);
-  background-color: var(--color-bg-contrast);
+
 
   min-width: 300px;
 
@@ -384,7 +384,7 @@ sdoc-meta {
   border:
     var(--requirement-border-width, 1px)
     solid
-    var(--requirement-border-color, #bfbfbf);
+    var(--requirement-border-color);
   border-radius: var(--requirement-border-radius);
 
   font-size: var(--font-size-sm);

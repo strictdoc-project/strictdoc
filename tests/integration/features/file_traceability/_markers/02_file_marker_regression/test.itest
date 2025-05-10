@@ -1,0 +1,15 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+# This test ensures that the entire file marker is correctly displayed as
+# covering the file from its first line and until the last line.
+# It fixes this issue:
+# Bug: Source View screen: Entire file marker is one line off #2237
+# https://github.com/strictdoc-project/strictdoc/issues/2237
+
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+
+RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <span class="source__range-definition">1 - 9 | entire file</span>

@@ -232,9 +232,12 @@ class SourceFileViewHTMLGenerator:
         )
 
         for marker in coverage_info.markers:
-            marker_line = marker.ng_source_line_begin
+            marker_line = (
+                marker.ng_range_line_begin
+                if marker.is_begin()
+                else marker.ng_range_line_end
+            )
             assert isinstance(marker_line, int)
-
             source_marker_tuple: SourceMarkerTuple
             if isinstance(
                 pygmented_source_file_lines[marker_line - 1], SourceMarkerTuple

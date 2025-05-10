@@ -482,6 +482,35 @@ def function_1():
     assert marker.reqs_objs[1].ng_source_column == 9
 
 
+def test_080_file_marker():
+    """
+    Test a basic file range relation marker.
+    """
+
+    source_input = b"""\
+\"\"\"
+@relation(REQ-1, scope=file)
+\"\"\"
+
+@auto_described
+class SDocDocumentContext:
+    def __init__(self) -> None:
+        self.title_number_string: Optional[str] = None
+"""
+
+    reader = SourceFileTraceabilityReader_Python()
+
+    document = reader.read(source_input)
+    markers = document.markers
+    marker = markers[0]
+    assert marker.reqs == ["REQ-1"]
+    assert marker.ng_source_line_begin == 2
+    assert marker.ng_range_line_begin == 1
+    assert marker.ng_range_line_end == 8
+    assert marker.reqs_objs[0].ng_source_line == 2
+    assert marker.reqs_objs[0].ng_source_column == 11
+
+
 def test_validation_01_one_range_marker_begin_req_not_equal_to_end_req():
     source_input = b"""
 # @relation(REQ-001, scope=range_start)

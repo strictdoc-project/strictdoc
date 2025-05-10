@@ -42,7 +42,7 @@
       {% include "components/node_field/links/index.jinja" %}
       {% include "components/node_field/files/index.jinja" %}
     </sdoc-scope>
-    {% if node.has_multiline_fields() %}
+    {% if sdoc_entity.has_multiline_fields() %}
     <sdoc-scope class="node_fields_group-primary">
       {% include "components/node_field/statement/index.jinja" %}
       {% include "components/node_field/rationale/index.jinja" %}

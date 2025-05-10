@@ -1,2 +1,11 @@
 [DOCUMENT]
 TITLE: Empty Document
+VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
+DATE: @GIT_COMMIT_DATETIME
+CLASSIFICATION: Confidential
+OPTIONS:
+  REQUIREMENT_STYLE: Inline
+METADATA:
+  AUTHOR: James T. Kirk
+  CHECKED-BY: Chuck Norris
+  APPROVED-BY: Wile E. Coyote

@@ -175,6 +175,24 @@ class SDWriter:
                     output += default_view
                     output += "\n"
 
+            custom_metadata = document_config.custom_metadata
+            if custom_metadata is not None:
+                output += "METADATA:"
+                output += "\n"
+
+                for keyvalue_pair in custom_metadata.entries:
+                    if (
+                        keyvalue_pair.key is not None
+                        and keyvalue_pair.value is not None
+                    ):
+                        output += (
+                            "  "
+                            + keyvalue_pair.key
+                            + ": "
+                            + keyvalue_pair.value
+                        )
+                        output += "\n"
+
         document_view = document.view
         assert len(document_view.views) > 0
         if not isinstance(document_view.views[0], DefaultViewElement):

@@ -1,5 +1,8 @@
-{%- if view_object.document.config.has_meta() -%}
+{%- set document_config = view_object.document.config -%}
+
+{%- if document_config.has_meta() or document_config.has_custom_meta() -%}
   <sdoc-meta>
+    {% if document_config.has_custom_meta %}
     {%- if view_object.document.config.uid -%}
     <sdoc-meta-label data-testid="document-config-uid-label">UID:</sdoc-meta-label>
     <sdoc-meta-field data-testid="document-config-uid-field">
@@ -43,6 +46,17 @@
       {%- endwith -%}
     </sdoc-meta-field>
     {%- endif -%}
+
+    {% set custom_metadata = document_config.get_custom_meta() %}
+    {% for key, value in custom_metadata.items() %}
+    <sdoc-meta-label data-testid="document-config-version-label">{{key}}:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-version-field">
+      {%- with field_content = value %}
+        <sdoc-autogen>{{ field_content }}</sdoc-autogen>
+      {%- endwith -%}
+    </sdoc-meta-field>
+    {% endfor %}
+    {% endif %}
 
   </sdoc-meta>
 {%- endif -%}

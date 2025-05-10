@@ -105,6 +105,7 @@ class DocumentBuilder:
             requirement_style=None,
             requirement_in_toc=None,
             default_view=None,
+            custom_metadata=None,
         )
         section_contents = []
         document = SDocDocument(

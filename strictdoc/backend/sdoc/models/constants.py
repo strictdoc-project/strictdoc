@@ -1,6 +1,10 @@
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_config import (
+    DocumentConfig,
+    DocumentCustomMetadata,
+    DocumentCustomMetadataKeyValuePair,
+)
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
@@ -68,6 +72,8 @@ GRAMMAR_MODELS = [
 
 DOCUMENT_MODELS = [
     DocumentConfig,
+    DocumentCustomMetadata,
+    DocumentCustomMetadataKeyValuePair,
     SDocDocument,
     DocumentView,
     ViewElement,

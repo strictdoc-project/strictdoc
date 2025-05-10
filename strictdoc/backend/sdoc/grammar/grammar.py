@@ -120,7 +120,7 @@ MarkupChoice[noskipws]:
 ;
 
 RequirementStyleChoice[noskipws]:
-  'Inline' | 'Simple' | 'Narrative' | 'Table' | 'Zebra'
+  'Plain' | 'Inline' | 'Simple' | 'Narrative' | 'Table' | 'Zebra'
 ;
 
 RequirementHasTitleChoice[noskipws]:

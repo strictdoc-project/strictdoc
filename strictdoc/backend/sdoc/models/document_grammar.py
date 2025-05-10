@@ -47,6 +47,7 @@ class GrammarElement:
 
         assert property_view_style in (
             "",
+            "Plain",
             "Narrative",
             "Simple",
             "Inline",

@@ -50,6 +50,11 @@
       {% include "components/node_field/multiline/index.jinja" %}
     </sdoc-scope>
     {% endif %}
+  {% elif user_requirement_style == 'plain' %}
+    {% include "components/node_field/statement/index.jinja" %}
+    {% include "components/node_field/rationale/index.jinja" %}
+    {% include "components/node_field/comments/index.jinja" %}
+    {% include "components/node_field/multiline/index.jinja" %}
   {% else %}
     {% include "components/node_field/meta/index.jinja" %}
     {% include "components/node_field/statement/index.jinja" %}

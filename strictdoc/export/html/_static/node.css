@@ -23,7 +23,10 @@ sdoc-node[show-node-type-name]::before {
   line-height: 1;
   text-transform: uppercase;
 
-  padding: calc(0.25 * var(--base-rhythm)) calc(0.75 * var(--base-rhythm)) var(--base-rhythm);
+  padding-top: calc(0.25 * var(--base-rhythm));
+  padding-bottom: calc(0.5 * var(--base-rhythm));
+  padding-left: calc(0.75 * var(--base-rhythm));
+  padding-right: calc(0.75 * var(--base-rhythm));
   border-radius: 3px;
   border: var(--requirement-border-width, 1px) solid var(--requirement-border-color, #bfbfbf);
 
@@ -58,6 +61,10 @@ sdoc-node[node-style="readonly"][node-role="requirement"] {
 
 sdoc-node[show-node-type-name][node-style="readonly"]::before {
   right: 0;
+}
+
+sdoc-node[show-node-type-name][node-view="plain"]::before {
+  content: none;
 }
 
 /* editable_node */

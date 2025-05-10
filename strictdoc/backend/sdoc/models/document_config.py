@@ -124,6 +124,8 @@ class DocumentConfig:
             or self.requirement_style == "Narrative"
         ):
             return "narrative"
+        if self.requirement_style == "Plain":
+            return "plain"
         if self.requirement_style in (
             "Inline",
             "Simple",

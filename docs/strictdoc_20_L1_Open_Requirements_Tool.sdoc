@@ -19,6 +19,8 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
 - TAG: REQUIREMENT
+  PROPERTIES:
+    VIEW_STYLE: Table
   FIELDS:
   - TITLE: MID
     TYPE: String

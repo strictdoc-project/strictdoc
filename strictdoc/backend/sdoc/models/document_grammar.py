@@ -55,6 +55,9 @@ class GrammarElement:
             "Zebra",
         )
         self.property_view_style: Optional[str] = (
+            property_view_style if property_view_style != "" else None
+        )
+        self.property_view_style_lower: Optional[str] = (
             property_view_style.lower() if property_view_style != "" else None
         )
 
@@ -187,7 +190,15 @@ class GrammarElement:
         return self.multiline_field_index
 
     def get_view_style(self) -> Optional[str]:
-        return self.property_view_style
+        if self.property_view_style_lower is not None:
+            return self.property_view_style_lower
+        # For backward compatibility with older versions that didn't have the
+        # [[NODE]] syntax and didn't enter the corresponding template migration,
+        # keep the TEXT nodes to have a "plain" style unless their type is
+        # specified by the grammar.
+        if self.tag == "TEXT":
+            return "plain"
+        return None
 
     def get_relation_types(self) -> List[str]:
         return list(

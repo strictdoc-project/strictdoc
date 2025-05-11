@@ -11,7 +11,23 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
 - TAG: TEXT
+  PROPERTIES:
+    VIEW_STYLE: Narrative
   FIELDS:
   - TITLE: MID
     TYPE: String
@@ -31,7 +47,7 @@ This document is a list of questions that people ask about StrictDoc.
 Missing a question or an answer? Ask it here: [LINK: SDOC_UG_CONTACT].
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: e972c79015524961863e095280a81aab
 TITLE: What is StrictDoc?
 
@@ -45,9 +61,9 @@ StrictDoc is a spare-time open-source project developed by Stanislav Pankevich (
 The project exists since mid-2019.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 86827c92ec3a493d8a2382b75b5277a8
 TITLE: Resources about StrictDoc
 
@@ -71,9 +87,9 @@ Screencasts/tutorials:
   by Lukasz Juranek.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 74235945ec4a4116aecbc883ffba54b7
 TITLE: Which web server is recommended for StrictDoc documentation?
 
@@ -91,9 +107,9 @@ A very good alternative to GitHub pages is `Read the Docs <https://readthedocs.o
 If the project is private, you could use any server that reads HTML files from a folder. For example, Python has an embedded Web Server, see `this for example <https://pythonbasics.org/webserver>`_. Also you could try any web server based on Node.JS.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2e911dedb13348bf827f078bbbca44f4
 TITLE: Is StrictDoc compatible with Sphinx?
 
@@ -114,9 +130,9 @@ There are users of StrictDoc who use both StrictDoc and Sphinx. The following wo
 There is a GitHub issue `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_ where a closer bridging between StrictDoc and Sphinx was discussed with no specific and actionable outcome. This comment is `especially relevant <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1505108384>`_ as well as the one about `possible implementation <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1545599711>`_.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 235122d2c10748918c7c6ff736e39d18
 UID: SECTION-FAQ-How-did-the-SDoc-text-language-become-what-it-is
 TITLE: How did the SDoc text language become what it is?
@@ -127,9 +143,9 @@ STATEMENT: >>>
 See [LINK: SECTION-FM-SDoc-text-markup] for a description of the SDoc feature.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 1d4220cc9a5444a5bdbaee91c8c50670
 TITLE: How StrictDoc compares to other tools?
 
@@ -139,7 +155,7 @@ STATEMENT: >>>
 This section offers a comparison of several requirements tools similar to StrictDoc.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: a4533ae81bfe446295242add9156198e
 TITLE: Doorstop
 
@@ -195,9 +211,9 @@ The roadmap of StrictDoc contains a work item for supporting the export/import
 to/from Doorstop format.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 5012af516d18447caa3a2dbce97d3e4a
 TITLE: Sphinx
 
@@ -223,9 +239,9 @@ The
 `StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 515bcae39d1f48eda0b72562871ab15a
 TITLE: Sphinx-Needs
 
@@ -286,9 +302,9 @@ The difference between Sphinx-Needs and StrictDoc:
   <https://sphinxcontrib-needs.readthedocs.io/en/latest/index.html>`_.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 4a77366154d74cf7ab34044bed1cd542
 TITLE: FRET
 
@@ -311,9 +327,9 @@ FRET has an impressive list of
 FRET's user interface is built with Electron.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 723731c256fc43dfb315a300f6429945
 TITLE: Other tools
 
@@ -323,11 +339,11 @@ STATEMENT: >>>
 See also this GitHub gist for an overview of more tools available on GitHub: https://gist.github.com/stanislaw/aa40eb7de9f522ad482e5d239c435ff8.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: ff143a18e98144bd86e10e29616c187b
 TITLE: How long has the StrictDoc project been around?
 
@@ -366,9 +382,9 @@ The FastAPI/Turbo/Stimulus-based Web interface prototype was created to compleme
 See also: [LINK: SECTION-DP-Project-milestones].
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 6e5ed6bb36634220a0c583d21c96295f
 TITLE: Which StrictDoc statistics are available?
 
@@ -383,4 +399,4 @@ The `pip trends <https://piptrends.com>`_ helps to visualize the Pip package dow
 `strictdoc vs reqif <https://piptrends.com/compare/strictdoc-vs-reqif>`_.
 <<<
 
-[/SECTION]
+[[/SECTION]]

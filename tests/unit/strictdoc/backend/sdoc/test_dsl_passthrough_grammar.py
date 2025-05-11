@@ -390,7 +390,7 @@ Yes
         assert value.get_text_value() is not None
 
 
-def test_190_element_property_is_composite(default_project_config):
+def test_190_element_properties(default_project_config):
     input_sdoc = """\
 [DOCUMENT]
 TITLE: Test Document
@@ -400,6 +400,7 @@ ELEMENTS:
 - TAG: TEXT
   PROPERTIES:
     IS_COMPOSITE: False
+    VIEW_STYLE: Plain
   FIELDS:
   - TITLE: UID
     TYPE: String

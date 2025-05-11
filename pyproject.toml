@@ -88,7 +88,7 @@ dependencies = [
     "WebSockets",
 
     # HTML2PDF dependencies
-    "html2pdf4doc >= 0.0.17",
+    "html2pdf4doc >= 0.0.18",
 ]
 # @sdoc[/SDOC-SRS-89]
 

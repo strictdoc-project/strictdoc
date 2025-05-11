@@ -11,6 +11,20 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
 - TAG: TEXT
   FIELDS:
   - TITLE: UID
@@ -53,12 +67,12 @@ STATEMENT: >>>
 This document provides a comprehensive overview of all available features in StrictDoc from the user's perspective. It includes descriptions and relevant screenshots to illustrate each feature's functionality. Each entry is linked to additional documentation, such as the [LINK: SDOC_UG], offering further details, usage instructions, and examples to help users understand and effectively utilize StrictDoc’s capabilities.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: 01c07ca347a24181a92a5be6c8431094
 UID: SECTION-FM-SDoc-text-markup
 TITLE: SDoc text markup
 
-[SECTION]
+[[SECTION]]
 MID: dfd4d2d77c7247819e476f360ffff639
 TITLE: Definition
 
@@ -74,9 +88,9 @@ DOCUMENTATION: >>>
 - [LINK: SECTION-UG-SDoc-syntax]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 3f422abd9abe4717a995ae4150df12e3
 TITLE: Use case
 
@@ -92,9 +106,9 @@ The main use case for SDoc is to model a structure of a technical document that 
 The SDoc markup has been pretty stable since its inception but the flexibility of the TextX parser allows easy modifications of the language in case of future evolutions. Any feedback to the current design of the markup language is appreciated.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: fa7b37153def4eb4a6e9dcee079cba2a
 TITLE: Inspirations
 
@@ -139,17 +153,17 @@ From HTML, the idea of opening and closing tags is taken to avoid any nesting th
 
 .. code-block::
 
-    [SECTION]
+    [[SECTION]]
     TITLE: Section 1
 
-    [SECTION]
+    [[SECTION]]
     TITLE: Section 1.1
 
     ...
 
-    [/SECTION]
+    [[/SECTION]]
 
-    [/SECTION]
+    [[/SECTION]]
 
 Taking HTML or XML as-is didn't seem like a good option because of the heavy visual noise that is produced around the actual content by the surrounding tags.
 
@@ -171,9 +185,9 @@ The support of multiline strings is arranged by a custom solution which helps to
 Taking TOML or YAML as-is didn't seem like a good option because these formats are designed to be used for configuration files or data serialization and not for large documents with hundreds of requirements. The most obvious problems for reusing either of TOML or YAML directly would have been with encoding the deeply nested documents and supporting readable and non-nested multiline strings.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 87b1538be72a4ff7945b5bb95f856471
 TITLE: Screenshots
 
@@ -185,15 +199,15 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 27bb9f0875d84d79bb882f6ca98ee1fa
 TITLE: HTML export
 
-[SECTION]
+[[SECTION]]
 MID: 4a0844b5938a488a89ac4b379fc7d956
 TITLE: Definition
 
@@ -212,9 +226,9 @@ DOCUMENTATION: >>>
 - [LINK: SECTION-UG-Static-HTML-export]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 4e46063e2031418298b55a1861179900
 TITLE: Screenshots
 
@@ -226,15 +240,15 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 3ef4254efd8547a8adaf37e100f22724
 TITLE: Web-based graphical user interface
 
-[SECTION]
+[[SECTION]]
 MID: bd3e1273cb244616956bddfc22c05638
 TITLE: Definition
 
@@ -251,9 +265,9 @@ DOCUMENTATION: >>>
 - [LINK: SDOC_UG_LIMIT_WEB]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 6b5989db0e984c42b12440993c885987
 TITLE: Screenshots
 
@@ -270,15 +284,15 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 5ac3e3c690494371bd9de04be5eae0b0
 TITLE: Traceability between requirements and source code
 
-[SECTION]
+[[SECTION]]
 MID: 538d26fae4644debbc8f244709b8be7b
 TITLE: Definition
 
@@ -293,9 +307,9 @@ DOCUMENTATION: >>>
 - [LINK: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: ceec313d9ec040b9bcaaf64967ed6af8
 TITLE: Screenshots
 
@@ -312,15 +326,15 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: a436d31c5f324eb0bb6b35f0a6ce598d
 TITLE: Document grammar
 
-[SECTION]
+[[SECTION]]
 MID: f20223cddcb14e40b45f99045e2d3a3a
 TITLE: Definition
 
@@ -335,9 +349,9 @@ DOCUMENTATION: >>>
 - [LINK: SECTION-UG-DOCUMENT-GRAMMAR]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: f4763b00f9624cfd8b44f8e571f2aec6
 TITLE: Screenshots
 
@@ -349,15 +363,15 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 5b511eac439c4e0a8aa2c60499be88d0
 TITLE: Composable documents
 
-[SECTION]
+[[SECTION]]
 MID: ab4bc7b948154dbfbd4956d41cda8b75
 TITLE: Definition
 
@@ -372,15 +386,15 @@ DOCUMENTATION: >>>
 - [LINK: UG_COMPOSABLE_DOCUMENTS]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: dd4d9c0d593b46f8a0abfb3fd91356ae
 TITLE: Export to RST
 
-[SECTION]
+[[SECTION]]
 MID: ab0e4d27b6334b44bd4b46425842cdbe
 TITLE: Definition
 
@@ -398,9 +412,9 @@ DOCUMENTATION: >>>
 - [LINK: SDOC_UG_LIMIT_RST]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: f0a7041347444f3a822129120faf0fcd
 TITLE: Screenshots
 
@@ -414,15 +428,15 @@ STATEMENT: >>>
     :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2e8e39a2198e4f8aa18a470a892e4d25
 TITLE: Export to PDF
 
-[SECTION]
+[[SECTION]]
 MID: 381ebcd10ee241aaaa9fe3654870961c
 TITLE: Definition
 
@@ -440,21 +454,21 @@ DOCUMENTATION: >>>
 - [LINK: SECTION-UG-HTML2PDF-document-generator]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2d8b04efe57d4c0aa543ed974ace868e
 TITLE: Screenshots
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 15d6e791674c4c0ab54afb6a781f35c9
 TITLE: Query engine and search screen
 
-[SECTION]
+[[SECTION]]
 MID: 91177d3444d9437e87032875ac8fcd7d
 TITLE: Definition
 
@@ -470,9 +484,9 @@ DOCUMENTATION: >>>
 - [LINK: SECTION-UG-Search-and-filtering]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 631f1620053342c8a398a1a5d458f873
 TITLE: Screenshots
 
@@ -484,15 +498,15 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 3475f60f31b5488aab981fd2b7b12d4c
 TITLE: Project statistics
 
-[SECTION]
+[[SECTION]]
 MID: 9bbcc02a46194852b9616ea4437ce976
 TITLE: Definition
 
@@ -508,9 +522,9 @@ DOCUMENTATION: >>>
 - [LINK: SECTION-UG-Project-statistics-screen]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 7d215ba517fc4aee9dfb381279297cc7
 TITLE: Screenshots
 
@@ -528,15 +542,15 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 0b3d7fad0ee643ef83617745c51e8e72
 TITLE: Documentation diff/changelog
 
-[SECTION]
+[[SECTION]]
 MID: 9cdf4d3af1014aea923f77b112e6b1e3
 TITLE: Definition
 
@@ -552,9 +566,9 @@ DOCUMENTATION: >>>
 - [LINK: SECTION-UG-Diff-changelog-screen]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: c60c6fab5740469aa251bfa3a805f21f
 TITLE: Screenshots
 
@@ -571,15 +585,15 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: f655f9a2bde044489233fa03d2891de1
 TITLE: ReqIF support
 
-[SECTION]
+[[SECTION]]
 MID: 1627a126e1184c5e9050206f2f1ab725
 TITLE: Definition
 
@@ -599,15 +613,15 @@ DOCUMENTATION: >>>
 - [LINK: SECTION-UG-ReqIF-support]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: e1109c5b3b1c4068a0eace811684f0c0
 TITLE: Project configuration
 
-[SECTION]
+[[SECTION]]
 MID: 3c2a1a37e11c425184042d6dab3f050a
 TITLE: Definition
 
@@ -630,9 +644,9 @@ DOCUMENTATION: >>>
 - [LINK: SDOC_UG_OPTIONS_PROJECT_LEVEL]
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 275658296e5342acab72102589096f15
 TITLE: Screenshots
 
@@ -644,6 +658,6 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]

@@ -234,13 +234,23 @@ class SDWriter:
                     output += element.tag
                     output += "\n"
 
-                    if element.property_is_composite is not None:
+                    if (
+                        element.property_is_composite is not None
+                        or element.property_view_style is not None
+                    ):
                         output += "  PROPERTIES:\n"
-                        output += "    IS_COMPOSITE: "
-                        output += (
-                            "True" if element.property_is_composite else "False"
-                        )
-                        output += "\n"
+                        if element.property_is_composite is not None:
+                            output += "    IS_COMPOSITE: "
+                            output += (
+                                "True"
+                                if element.property_is_composite
+                                else "False"
+                            )
+                            output += "\n"
+                        if element.property_view_style is not None:
+                            output += "    VIEW_STYLE: "
+                            output += element.property_view_style
+                            output += "\n"
 
                     output += "  FIELDS:\n"
                     for grammar_field in element.fields:

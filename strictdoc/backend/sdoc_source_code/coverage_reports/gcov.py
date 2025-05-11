@@ -154,6 +154,19 @@ class GCovJSONReader:
                         multiline__=None,
                     ),
                 )
+                # FIXME: Remove?
+                testcase_node.set_field_value(
+                    field_name="STATUS",
+                    form_field_index=0,
+                    value=SDocNodeField(
+                        parent=testcase_node,
+                        field_name="STATUS",
+                        parts=[
+                            "Covered" if is_function_covered else "Non-covered"
+                        ],
+                        multiline__=None,
+                    ),
+                )
 
                 path = "src/main.c"
                 gcov_path_hash = hashlib.md5(path.encode("utf-8")).hexdigest()

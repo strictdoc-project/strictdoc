@@ -1,0 +1,5 @@
+RUN: %strictdoc export %S --output-dir Output/
+
+RUN: cat Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s
+
+CHECK: node-view="zebra"

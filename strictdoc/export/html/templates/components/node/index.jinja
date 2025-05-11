@@ -34,7 +34,7 @@
     {% if sdoc_entity.is_requirement %}
       node-view="{{ sdoc_entity.get_requirement_style_mode() }}"
     {%- endif -%}
-    {%- if node_type_string is not none and node_type_string != 'TEXT' %}
+    {%- if node_type_string is not none %}{# and node_type_string != 'TEXT' #}
       show-node-type-name="{{ node_type_string }}"
     {%- endif %}
     data-included-document="{{ is_included }}"
@@ -59,7 +59,8 @@
 
     {# sdoc_entity #}
     {% block sdoc_entity %}
-    {% include "components/"~node_type~"/index.jinja" %}
+      {# FIXME: This is not reachable from anywhere right now. #}
+      {% assert 0, "Must not reach here!" %}
     {% endblock sdoc_entity %}
 
     {# node_controls #}

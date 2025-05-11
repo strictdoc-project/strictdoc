@@ -7,14 +7,14 @@ sdoc-node {
   position: relative;
 }
 
-sdoc-node[show-node-type-name] sdoc-requirement {
+/* sdoc-node[show-node-type-name] sdoc-node-content {
   margin-top: calc(2 * var(--base-rhythm));
-}
+} */
 
 sdoc-node[show-node-type-name]::before {
   content: attr(show-node-type-name);
   position: absolute;
-  top: calc(2 * var(--base-rhythm));
+  top: calc(1 * var(--base-rhythm));
   right: calc(4 * var(--base-rhythm));
 
   font-size: 10px;
@@ -23,19 +23,15 @@ sdoc-node[show-node-type-name]::before {
   line-height: 1;
   text-transform: uppercase;
 
-  padding: calc(0.25 * var(--base-rhythm)) calc(0.75 * var(--base-rhythm)) var(--base-rhythm);
+  padding-top: calc(0.25 * var(--base-rhythm));
+  padding-bottom: calc(0.5 * var(--base-rhythm));
+  padding-left: calc(0.75 * var(--base-rhythm));
+  padding-right: calc(0.75 * var(--base-rhythm));
   border-radius: 3px;
   border: var(--requirement-border-width, 1px) solid var(--requirement-border-color, #bfbfbf);
 
   color: var(--requirement-label-color);
   background-color: var(--color-bg-contrast);
-}
-
-sdoc-node[node-view="narrative"][show-node-type-name]::before {
-  top: calc(1 * var(--base-rhythm));
-  right: calc(1 * var(--base-rhythm));
-  padding: calc(0.5 * var(--base-rhythm));
-  border: var(--base-border);
 }
 
 /* sdoc-node */
@@ -46,7 +42,7 @@ sdoc-node {
 
   /* padding: calc(3 * var(--base-rhythm)) calc(4 * var(--base-rhythm)); */
   padding-inline: calc(4 * var(--base-rhythm));
-  padding-block: calc(2 * var(--base-rhythm));
+  padding-block: calc(3 * var(--base-rhythm));
 }
 
 sdoc-node[node-role="root"] {
@@ -57,8 +53,18 @@ sdoc-node[node-style="readonly"][node-role="requirement"] {
   background: none;
   background-color: transparent;
   outline: none;
-  padding: calc(1 * var(--base-rhythm));
-  margin: 4px 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  margin: 0;
+}
+
+sdoc-node[show-node-type-name][node-style="readonly"]::before {
+  right: 0;
+}
+
+sdoc-node[show-node-type-name][node-view="plain"]::before {
+  content: none;
 }
 
 /* editable_node */
@@ -129,7 +135,7 @@ sdoc-node.nouid {
   /* background-color: rgb(240, 220, 220); */
 }
 
-.nouid sdoc-requirement-title,
+.nouid sdoc-node-title,
 .nouid .requirement__title {
   color: #502222;
 }

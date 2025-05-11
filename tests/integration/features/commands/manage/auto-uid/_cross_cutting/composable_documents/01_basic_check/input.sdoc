@@ -11,9 +11,11 @@ TITLE: Doc Section
 
 [COMPOSITE_REQUIREMENT]
 TITLE: Doc Section Composite requirement
+STATEMENT: ...
 
 [REQUIREMENT]
 TITLE: Doc Section Requirement
+STATEMENT: ...
 
 [/COMPOSITE_REQUIREMENT]
 

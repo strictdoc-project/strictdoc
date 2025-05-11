@@ -25,16 +25,16 @@
             {% else %}
               <section class="content_section">
                 <div class="content_item" data-role="parents">
-                  {%- with requirement=node, requirement_partial="components/requirement/card_extends_card.jinja" -%}
+                  {%- with requirement=node, requirement_partial="components/node_content/card_extends_card.jinja" -%}
                     {% include "_shared/requirement_tree_left.jinja.html" %}
                   {%- endwith -%}
                 </div>
                 <div class="content_item" data-role="current">
                   {%- set requirement = node %}
-                  {% include "components/requirement/card_extends_card.jinja" %}
+                  {% include "components/node_content/card_extends_card.jinja" %}
                 </div>
                 <div class="content_item" data-role="children">
-                  {%- with requirement=node, requirement_partial="components/requirement/card_extends_card.jinja" -%}
+                  {%- with requirement=node, requirement_partial="components/node_content/card_extends_card.jinja" -%}
                     {% include "_shared/requirement_tree_right.jinja.html" %}
                   {%- endwith -%}
                 </div>

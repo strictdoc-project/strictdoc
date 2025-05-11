@@ -17,7 +17,8 @@ GrammarElement[noskipws]:
   '- TAG: ' tag = RequirementType '\n'
   (
     '  PROPERTIES:' '\n'
-    '    IS_COMPOSITE: ' property_is_composite=/(True|False)/ '\n'
+    ('    IS_COMPOSITE: ' property_is_composite=/(True|False)/ '\n' )?
+    ('    VIEW_STYLE: ' property_view_style=/(Plain|Simple|Inline|Narrative|Table|Zebra)/ '\n')?
   )?
   '  FIELDS:' '\n'
   fields += GrammarElementField

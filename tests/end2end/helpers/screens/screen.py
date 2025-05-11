@@ -97,7 +97,7 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
 
     def get_requirement_modal(self, node_order: int = -1) -> Requirement:
         """
-        Based on "//sdoc-requirement". Searches for an <sdoc-requirement>
+        Based on "//sdoc-node-content". Searches for an <sdoc-node-content>
         without taking the node <sdoc-node> into account.
 
         Args:

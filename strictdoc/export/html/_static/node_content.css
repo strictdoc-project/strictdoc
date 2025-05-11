@@ -1,0 +1,478 @@
+:root {
+  --requirement-container-limit: 500px;
+  --requirement-border-color: rgb(230, 230, 230); /* = var(--color-border) on white without opacity */
+  --requirement-border-width: 1px;
+  --requirement-border-radius: 4px;
+  --requirement-inner-borders-width: 1px;
+  --requirement-label-color: var(--color-fg-secondary, #808080);
+  --requirement-bg-dark-color: var(--color-bg-main, #F2F5F9);
+  --requirement-bg-light-color: var(--color-bg-contrast, #FFFFFF);
+}
+
+/* sdoc-node-content */
+
+sdoc-node-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+  gap: var(--requirement-inner-borders-width);
+
+  position: relative;
+  background-color: var(--color-bg-contrast); /* affects the color of the space between cells */
+  border:
+    var(--requirement-border-width, 1px)
+    solid
+    var(--requirement-border-color);
+
+  border-radius: var(--requirement-border-radius);
+
+
+  min-width: 300px;
+
+  /* and use overflow-wrap: break-word; in the field */
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+sdoc-node-title {
+  display: block;
+
+  font-size: 1.125em;
+  font-weight: 700;
+}
+
+sdoc-node-title:last-child {
+  margin-bottom: 0;
+}
+
+sdoc-node-title * {
+  /* affect H inside title, if applicable */
+  margin: 0;
+}
+
+[node-style="card"] sdoc-node-title {
+  font-size: 1em;
+}
+
+/* synonym to [node-view="inline"] */
+sdoc-node-content[node-view="simple"] sdoc-node-title {
+  padding-left: calc(var(--base-rhythm)*2);
+  padding-right: calc(var(--base-rhythm)*2);
+  padding-top: calc(var(--base-rhythm)*1);
+  padding-bottom: calc(var(--base-rhythm)*1);
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* sdoc-node-content[node-view="simple"] sdoc-node-title, */
+sdoc-node-content[node-view="table"] sdoc-node-title,
+sdoc-node-content[node-view="zebra"] sdoc-node-title {
+  padding-left: calc(var(--base-rhythm)*2);
+  padding-right: calc(var(--base-rhythm)*2);
+  padding-top: calc(var(--base-rhythm)*1);
+  padding-bottom: calc(var(--base-rhythm)*1);
+
+  border-top-right-radius: var(--requirement-border-radius);
+  border-top-left-radius: var(--requirement-border-radius);
+
+  background-color: var(--requirement-bg-dark-color);
+  /* border-bottom: */
+  outline: 1px solid var(--requirement-border-color);
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+sdoc-node-uid {
+  display: block;
+  padding-left: calc(var(--base-rhythm)*2);
+  padding-right: calc(var(--base-rhythm)*2);
+  padding-top: calc(var(--base-rhythm)*1);
+  padding-bottom: calc(var(--base-rhythm)*1);
+  font-size: var(--font-size-sm);
+  font-family: var(--code-font-family);
+  font-weight: 700;
+
+  text-transform: uppercase;
+  color: var(--requirement-label-color);
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+sdoc-node-field-label {
+  display: flex;
+  align-items:flex-start;
+
+  padding-left: calc(var(--base-rhythm)*2);
+  padding-right: calc(var(--base-rhythm)*2);
+  padding-top: calc(var(--base-rhythm)*1.75);
+  padding-bottom: calc(var(--base-rhythm)*1);
+
+  font-size: var(--font-size-sm);
+  font-family: var(--code-font-family);
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--requirement-label-color);
+
+  /* @mettta and @stanislaw are commenting this out because the REQUIREMENT's field names
+     were split apart, even though there was enough screen width
+    word-break: break-word;
+  */
+  overflow-wrap: break-word;
+}
+
+sdoc-node-field {
+  display: block;
+  position: relative;
+
+  padding-left: calc(var(--base-rhythm)*2);
+  padding-right: calc(var(--base-rhythm)*2);
+  padding-top: calc(var(--base-rhythm)*1);
+  padding-bottom: calc(var(--base-rhythm)*1);
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+[data-viewtype="html2pdf"] sdoc-node-field-label {
+  word-break: normal;
+}
+
+/* for relations in requirement */
+sdoc-node-field > ol:first-child,
+sdoc-node-field > ul:first-child {
+  margin-top: 0;
+}
+sdoc-node-field > ol:last-child,
+sdoc-node-field > ul:last-child {
+  margin-bottom: 0;
+}
+
+/* node-view="plain" */
+
+sdoc-node-content[node-view="plain"] {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-padding);
+}
+
+sdoc-node-content[node-view="plain"] sdoc-node-field-label {
+  display: none;
+}
+
+sdoc-node-content[node-view="plain"] sdoc-node-field {
+  padding: 0;
+}
+
+/* node-view="table" */
+
+sdoc-node-content[node-view="table"] {
+  /* grid: */
+  grid-template-columns: minmax(80px, min-content) minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+  /* border: */
+  background-color: var(--requirement-border-color);
+}
+
+sdoc-node-content[node-view="table"]
+  sdoc-node-title {
+    grid-column: 1 / 3;
+  }
+
+sdoc-node-content[node-view="table"]
+  sdoc-node-field-label {
+    grid-column: 1 / 2;
+    background-color: var(--requirement-bg-dark-color);
+  }
+
+sdoc-node-content[node-view="table"]
+  sdoc-node-field {
+    grid-column: 2 / 3;
+    background-color: var(--requirement-bg-light-color);
+  }
+
+sdoc-node:not([node-style="card"]) {
+  /* Making the node a container for the requirement: */
+  container: node / inline-size;
+  /*
+  HACK: [sdoc-node outline hack]
+    Buggy behavior for @container CSS feature:
+    after window resize, the 1px vertically space
+    appears randomly between nodes.
+  */
+  outline: 1px solid #fff;
+  margin: 1px 0;
+}
+
+/* calc(var(--card-width) + calc(var(--base-padding)*4)) */
+/* 300 + 16*4 = 364 */
+@container node (width < 400px) {
+  sdoc-node-content[node-view="table"] {
+    /* removes columns: */
+    grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+    /* removes inner border: */
+    background-color: var(--requirement-bg-light-color);
+  }
+
+  sdoc-node-content[node-view="table"]
+    sdoc-node-title,
+  sdoc-node-content[node-view="table"]
+    sdoc-node-field-label,
+  sdoc-node-content[node-view="table"]
+    sdoc-node-field {
+      /* removes columns: */
+      grid-column: unset;
+    }
+}
+
+@supports not (container-type: inline-size) {
+  /* TODO test 888px */
+  @media (max-width: 888px) {
+    /* Do the same as if there was a container support */
+
+    sdoc-node-content[node-view="table"] {
+      /* removes columns: */
+      grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+      /* removes inner border: */
+      background-color: var(--requirement-bg-light-color);
+    }
+
+    sdoc-node-content[node-view="table"]
+      sdoc-node-title,
+    sdoc-node-content[node-view="table"]
+      sdoc-node-field-label,
+    sdoc-node-content[node-view="table"]
+      sdoc-node-field {
+        /* removes columns: */
+        grid-column: unset;
+      }
+  }
+}
+
+/* node-view="zebra" */
+
+sdoc-node-content[node-view="zebra"] {
+  grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+}
+
+sdoc-node-content[node-view="zebra"]
+  sdoc-node-field-label {
+    background-color: var(--requirement-bg-dark-color);
+  }
+
+sdoc-node-content[node-view="zebra"]
+  sdoc-node-field {
+    background-color: var(--requirement-bg-light-color);
+  }
+
+/* node-view="simple" */
+/* synonym to "inline" */
+
+sdoc-node-content[node-view="simple"] {
+  grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+}
+
+sdoc-node-content[node-view="simple"]
+sdoc-node-field-label {
+  background-color: #fff;
+  padding-bottom: 0;
+}
+
+/* node-view="narrative" */
+
+sdoc-node-content[node-view="narrative"] {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--base-rhythm);
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+sdoc-node-content[node-view="narrative"] sdoc-node-title {
+  border: none;
+  outline: none;
+  background: none;
+  background-color: transparent;
+  padding: 0;
+  margin-bottom: var(--base-padding);
+  grid-column: 1 / -1;
+}
+
+sdoc-node-content[node-view="narrative"] sdoc-node-field {
+  padding: 0;
+}
+
+sdoc-node-content[node-view="narrative"] sdoc-node-field-label {
+  opacity: 0.8;
+  font-size: var(--font-size-sm);
+  line-height: calc(var(--font-size-sm) * 1.5);
+  padding: 0;
+}
+
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--base-padding);
+}
+
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary sdoc-node-field {
+  margin-bottom: var(--base-padding);
+  color: var(--color-fg-contrast);
+}
+
+sdoc-node-content[node-view="narrative"] .node_fields_group-primary sdoc-node-field:last-child {
+  margin-bottom: 0;
+}
+
+sdoc-node-content[node-view="narrative"] .node_fields_group-secondary {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: calc(.5 * var(--base-rhythm));
+}
+
+sdoc-node-content[node-view="narrative"] .node_fields_group-secondary sdoc-node-field {
+  font-size: var(--font-size-sm);
+  line-height: calc(var(--font-size-sm) * 1.5);
+  opacity: 0.6;
+}
+
+sdoc-node-content[node-view="narrative"] .requirement__parent-uid,
+sdoc-node-content[node-view="narrative"] .requirement__child-uid {
+  /*
+    affects UID in links;
+    make them lighter:
+  */
+  font-weight: normal;
+}
+
+/* section */
+
+sdoc-section,
+sdoc-section-title {
+  display: block;
+  margin: 0;
+}
+
+sdoc-section-title {
+  font-weight: 700;
+}
+
+sdoc-section-title {
+  margin-bottom: var(--base-padding);
+}
+
+sdoc-section-title:last-child {
+  margin-bottom: 0;
+}
+
+sdoc-section-title * {
+  margin: 0;
+
+  /* This rule, when the element starts the page when printed,
+     creates illegal margins,
+     which breaks the rhythm of HTML2PDF4DOC
+     and generates blank pages:
+  */
+  /* display: inline; */
+}
+
+/* TEXT node */
+
+sdoc-text,
+sdoc-section-text {
+  display: block;
+  margin: 0;
+}
+
+[node-style="card"] sdoc-text {
+  padding: var(--base-padding);
+}
+
+sdoc-section-text {
+  margin-top: var(--base-padding);
+}
+
+sdoc-section-text:first-child {
+  margin-top: 0;
+}
+
+/* meta */
+
+sdoc-meta {
+  display: grid;
+  grid-template-columns: minmax(min-content, max-content) minmax(min-content, 1fr);
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+  position: relative;
+  border:
+    var(--requirement-border-width, 1px)
+    solid
+    var(--requirement-border-color);
+  border-radius: var(--requirement-border-radius);
+
+  font-size: var(--font-size-sm);
+  line-height: 24px; /* to keep the copy button from expanding out of the content line */
+  /* margin: var(--base-padding) 0; */
+  margin: 0;
+  padding: calc(var(--base-rhythm)*0.5);
+  row-gap: 2px;
+
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+sdoc-meta-section,
+sdoc-meta-label,
+sdoc-meta-field {
+  display: flex;
+  align-items: flex-start;
+  padding: calc(var(--base-rhythm)*0.25) var(--base-rhythm);
+  background-color: var(--color-bg-contrast);
+}
+
+sdoc-meta-label {
+  grid-column: 1 / 2;
+  font-family: var(--code-font-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--requirement-label-color);
+  background-color: var(--color-bg-secondary);
+}
+
+sdoc-meta-field {
+  grid-column: 2 / 3;
+}
+
+sdoc-meta-section {
+  grid-column: 1 / -1;
+}
+
+/* PDF */
+/* There is no sdoc-node wrapper, so such neighbours and nesting is possible. */
+sdoc-text + sdoc-text,
+sdoc-text + sdoc-section,
+sdoc-text + sdoc-section-title,
+sdoc-section + sdoc-text,
+sdoc-section + sdoc-section,
+sdoc-section + sdoc-section sdoc-section-title {
+  margin-top: calc(var(--base-rhythm)*4);
+}
+
+/* requirement type tag */
+
+.requirement__type-tag {
+  /* font-size: var(--font-size-sm);
+  font-family: var(--code-font-family);
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase; */
+  color: var(--requirement-label-color);
+  white-space: nowrap;
+}

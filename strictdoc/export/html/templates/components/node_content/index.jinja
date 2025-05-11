@@ -1,0 +1,68 @@
+{#
+  In this template:
+  sdoc_entity = requirement
+#}
+
+{#  sdoc-node-content:
+    attribute node-view can be either of: [simple, table, zebra].
+    Without this attribute sdoc-node-content will look like a 'simple' view.
+    If the container becomes smaller than the set parameter (300px default),
+    the 'columns' view degrades to 'zebra'.
+#}
+
+{#  user_requirement_style:
+    refers to the parameter set in the grammar;
+    can be overridden when calling a template,
+    e.g. cards only use a 'simple' node-view.
+#}
+{% set user_requirement_style = sdoc_entity.get_requirement_style_mode() %}
+
+<sdoc-node-content
+  node-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
+  data-level="{{ sdoc_entity.context.title_number_string }}"
+  {%- if sdoc_entity.reserved_status %}
+    data-status='{{ sdoc_entity.reserved_status.lower() }}'
+  {%- endif %}
+  show-node-type-name="{{ sdoc_entity.get_node_type_string() }}"
+  data-testid="requirement-style-{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
+>
+  {% set title_number = true %}
+  {% set truncated_statement = false %}
+  {% include "components/node_field/title/index.jinja" %}
+  {# FIXME: Task #1229 / Uncomment example when validation logic is implemented: #}
+  {#
+    {% with issue_field_name = 'title' %}
+      {% include "components/issue/index.jinja" %}
+    {% endwith %}
+  #}
+
+  {% if user_requirement_style == 'narrative' %}
+    <sdoc-scope class="node_fields_group-secondary">
+      {% include "components/node_field/meta/index.jinja" %}
+      {% include "components/node_field/links/index.jinja" %}
+      {% include "components/node_field/files/index.jinja" %}
+    </sdoc-scope>
+    {% if sdoc_entity.has_multiline_fields() %}
+    <sdoc-scope class="node_fields_group-primary">
+      {% include "components/node_field/statement/index.jinja" %}
+      {% include "components/node_field/rationale/index.jinja" %}
+      {% include "components/node_field/comments/index.jinja" %}
+      {% include "components/node_field/multiline/index.jinja" %}
+    </sdoc-scope>
+    {% endif %}
+  {% elif user_requirement_style == 'plain' %}
+    {% include "components/node_field/statement/index.jinja" %}
+    {% include "components/node_field/rationale/index.jinja" %}
+    {% include "components/node_field/comments/index.jinja" %}
+    {% include "components/node_field/multiline/index.jinja" %}
+  {% else %}
+    {% include "components/node_field/meta/index.jinja" %}
+    {% include "components/node_field/statement/index.jinja" %}
+    {% include "components/node_field/rationale/index.jinja" %}
+    {% include "components/node_field/comments/index.jinja" %}
+    {% include "components/node_field/multiline/index.jinja" %}
+    {% include "components/node_field/links/index.jinja" %}
+    {% include "components/node_field/files/index.jinja" %}
+  {% endif %}
+
+</sdoc-node-content>

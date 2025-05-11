@@ -134,6 +134,10 @@ class P01_ReqIFToSDocConverter:
             if not isinstance(spec_object_type_, ReqIFSpecObjectType):
                 continue
 
+            # FIXME: [[NODE]]
+            if spec_object_type_.long_name == "SECTION":
+                continue
+
             grammar_element: GrammarElement = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
                 spec_object_type=spec_object_type_,
                 reqif_bundle=reqif_bundle,
@@ -315,6 +319,7 @@ class P01_ReqIFToSDocConverter:
             # FIXME: MERGE NODES
             #        When the migration is done, make the nodes to be always recursive.
             property_is_composite="",
+            property_view_style="",
             fields=fields,
             relations=[],
         )

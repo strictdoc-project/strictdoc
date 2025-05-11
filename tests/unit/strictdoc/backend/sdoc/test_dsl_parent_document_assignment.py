@@ -11,6 +11,7 @@ def test_001_level_1_req():
 TITLE: Test Doc
 
 [REQUIREMENT]
+STATEMENT: ...
 """.lstrip()
 
     reader = SDReader()
@@ -32,6 +33,7 @@ TITLE: Test Doc
 TITLE: Section 1
 
 [REQUIREMENT]
+STATEMENT: ...
 
 [/SECTION]
 """.lstrip()

@@ -302,9 +302,9 @@ ul.source__range-titles-list {
   cursor: help;
 }
 
-/* sdoc-requirement */
+/* sdoc-node-content */
 
-.source__range-banner sdoc-requirement[requirement-view="table"] sdoc-requirement-field-label {
+.source__range-banner sdoc-node-content[node-view="table"] sdoc-node-field-label {
   background-color: var(--requirement-bg-light-color);
 }
 

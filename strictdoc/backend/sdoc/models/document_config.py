@@ -119,13 +119,18 @@ class DocumentConfig:
         return self.markup
 
     def get_requirement_style_mode(self) -> str:
-        if self.requirement_style is None or self.requirement_style in (
+        if (
+            self.requirement_style is None
+            or self.requirement_style == "Narrative"
+        ):
+            return "narrative"
+        if self.requirement_style == "Plain":
+            return "plain"
+        if self.requirement_style in (
             "Inline",
             "Simple",
         ):
             return "simple"
-        if self.requirement_style == "Narrative":
-            return "narrative"
         if self.requirement_style == "Table":
             return "table"
         if self.requirement_style == "Zebra":

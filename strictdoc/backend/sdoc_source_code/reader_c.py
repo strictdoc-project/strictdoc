@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,type-arg,var-annotated"
+# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,type-arg"
 import sys
 import traceback
 from typing import List, Optional, Sequence, Union

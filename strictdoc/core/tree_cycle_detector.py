@@ -1,7 +1,9 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,var-annotated"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from collections import deque
+from typing import Deque, Tuple
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
+from strictdoc.backend.sdoc.models.model import SDocNodeIF
 
 BEFORE = 1
 AFTER = 2
@@ -11,10 +13,10 @@ class TreeCycleDetector:
     def __init__(self):
         self.checked = set()
 
-    def check_node(self, node, links_function):
+    def check_node(self, node: SDocNodeIF, links_function):
         if node in self.checked:
             return
-        stack = deque()
+        stack: Deque[Tuple[SDocNodeIF, int]] = deque()
         stack.append((node, BEFORE))
         visited = set()
         while stack:
@@ -46,7 +48,7 @@ class SingleShotTreeCycleDetector:
     def check_node(self, new_uid, node, links_function):
         checked = set()
 
-        stack = deque()
+        stack: Deque[Tuple[SDocNodeIF, int]] = deque()
         stack.append((node, BEFORE))
         visited = {new_uid}
         while stack:

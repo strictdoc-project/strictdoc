@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call,no-untyped-def,var-annotated,type-arg"
+# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call,no-untyped-def,type-arg"
 import datetime
 import os
 import re
@@ -210,7 +210,7 @@ class ProjectConfig:
             source_root_path=None,
             include_source_paths=[],
             exclude_source_paths=[],
-            test_report_root_dict=[],
+            test_report_root_dict={},
             html2pdf_template=None,
             bundle_document_version=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION,
             bundle_document_date=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE,
@@ -424,12 +424,12 @@ class ProjectConfigLoader:
         project_features = ProjectConfig.DEFAULT_FEATURES
         server_host = ProjectConfig.DEFAULT_SERVER_HOST
         server_port = ProjectConfig.DEFAULT_SERVER_PORT
-        include_doc_paths = []
-        exclude_doc_paths = []
+        include_doc_paths: List[str] = []
+        exclude_doc_paths: List[str] = []
         source_root_path = None
-        include_source_paths = []
-        exclude_source_paths = []
-        test_report_root_dict = {}
+        include_source_paths: List[str] = []
+        exclude_source_paths: List[str] = []
+        test_report_root_dict: Dict[str, str] = {}
         html2pdf_template: Optional[str] = None
         bundle_document_version = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION
         bundle_document_date = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE

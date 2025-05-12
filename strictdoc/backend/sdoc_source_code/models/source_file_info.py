@@ -1,5 +1,7 @@
-# mypy: disable-error-code="no-untyped-def,type-arg,var-annotated"
-from typing import Dict, List, Optional, Union
+# mypy: disable-error-code="no-untyped-def,type-arg"
+from typing import Dict, List, Optional, Sequence, Union
+
+from typing_extensions import TypeAlias
 
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -13,6 +15,10 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.file_stats import SourceFileStats
+
+RelationMarkerType: TypeAlias = Union[
+    FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
+]
 
 
 @auto_described
@@ -34,9 +40,13 @@ class SourceFileTraceabilityInfo:
         #  "REQ-001": [RangeMarker(...), ...],           # noqa: ERA001
         #  "REQ-002": [RangeMarker(...), ...],           # noqa: ERA001
         # }                                              # noqa: ERA001
-        self.ng_map_reqs_to_markers = {}
+        self.ng_map_reqs_to_markers: Dict[
+            str, Sequence[RelationMarkerType]
+        ] = {}
 
-        self.ng_map_names_to_markers: Dict[str, List] = {}
+        self.ng_map_names_to_markers: Dict[
+            str, Sequence[RelationMarkerType]
+        ] = {}
         self.ng_map_names_to_definition_functions: Dict[str, Function] = {}
 
         #
@@ -53,11 +63,7 @@ class SourceFileTraceabilityInfo:
         self._coverage: float = 0
         self.covered_functions: int = 0
 
-        self.markers: List[
-            Union[
-                FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
-            ]
-        ] = []
+        self.markers: List[RelationMarkerType] = []
 
     def get_coverage(self):
         return self._coverage

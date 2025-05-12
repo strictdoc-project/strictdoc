@@ -1,6 +1,6 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,var-annotated"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 import html
-from typing import Optional, Union
+from typing import Dict, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -24,8 +24,11 @@ class LinkRenderer:
             if len(root_path) > 0
             else f"{static_path}"
         )
-        self.local_anchor_cache = {}
-        self.req_link_cache = {}
+        self.local_anchor_cache: Dict[str, str] = {}
+        self.req_link_cache: Dict[
+            Tuple[DocumentType, int],
+            Dict[Union[SDocDocument, SDocNode, SDocSection, Anchor], str],
+        ] = {}
 
     def render_url(self, url: str) -> str:
         url = html.escape(url)
@@ -165,7 +168,7 @@ class LinkRenderer:
         assert isinstance(node, SDocNode)
         assert isinstance(source_file, SourceFile)
         local_link = self.render_local_anchor(node)
-        link_cache_key = ("document", source_file.level)
+        link_cache_key = (DocumentType.document(), source_file.level)
         if link_cache_key in self.req_link_cache:
             document_type_cache = self.req_link_cache[link_cache_key]
             if node in document_type_cache:

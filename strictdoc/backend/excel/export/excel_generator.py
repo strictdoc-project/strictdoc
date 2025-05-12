@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-def,type-arg,union-attr,var-annotated"
+# mypy: disable-error-code="arg-type,no-untyped-def,type-arg,union-attr"
 import os
 from pathlib import Path
 from typing import Dict, List
@@ -239,7 +239,7 @@ class ExcelGenerator:
 
     @staticmethod
     def _init_columns_width(fields: List[str]):
-        columns = {}
+        columns: Dict[str, Dict[str, int]] = {}
 
         for field in fields:
             columns[field] = {}

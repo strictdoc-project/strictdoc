@@ -1,5 +1,5 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,var-annotated,union-attr"
-from typing import Union
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+from typing import List, Union
 
 from spdx_tools.spdx3.model import RelationshipType, SpdxDocument
 from spdx_tools.spdx3.model.software import File, Package, Snippet
@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
+    SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -243,7 +244,7 @@ class SPDXToSDocConverter:
         sdoc_document: SDocDocument,
         sdoc_parent: Union[SDocSection, SDocDocument],
     ) -> SDocNode:
-        fields = []
+        fields: List[SDocNodeField] = []
         requirement = SDocNode(
             parent=sdoc_parent,
             node_type="SPDX_FILE",
@@ -295,7 +296,7 @@ class SPDXToSDocConverter:
         sdoc_parent: Union[SDocSection, SDocDocument],
         spdx_container: SPDXSDocContainer,
     ) -> SDocNode:
-        fields = []
+        fields: List[SDocNodeField] = []
         requirement = SDocNode(
             parent=sdoc_parent,
             node_type="SPDX_SNIPPET",

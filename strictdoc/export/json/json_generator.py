@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def,type-arg,var-annotated,union-attr,operator"
+# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def,type-arg,union-attr,operator"
 import json
 import os.path
 from enum import Enum
@@ -219,7 +219,7 @@ class JSONGenerator:
             return subnode_dict
 
         elif isinstance(node, SDocDocument):
-            node_dict = {JSONKey.NODES: []}
+            node_dict: Dict[str, List[Dict]] = {JSONKey.NODES: []}
 
             current_number = 0
             for subnode_ in node.section_contents:

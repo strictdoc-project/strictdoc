@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def,var-annotated"
+# mypy: disable-error-code="no-untyped-def"
 import os
 from enum import Enum
 from typing import Dict, List, Sequence
@@ -21,7 +21,7 @@ class SourceFileType(Enum):
     RST = [".rst"]
     SDOC = [".sdoc"]
 
-    UNKNOWN = []
+    UNKNOWN: List[str] = []
 
     @classmethod
     def create_from_path(cls, path_to_file: str) -> "SourceFileType":
@@ -54,7 +54,7 @@ class SourceFileType(Enum):
 
     @staticmethod
     def all() -> List[str]:  # noqa: A003
-        all_extensions = []
+        all_extensions: List[str] = []
         for enum_value in SourceFileType:
             all_extensions += enum_value.value
         return all_extensions

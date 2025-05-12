@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def,var-annotated"
+# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
 import collections
 import functools
 import os
@@ -35,7 +35,7 @@ class File(FileOrFolderEntry):
         self.rel_path: SDocRelativePath = rel_path
         self.file_name = os.path.basename(self.full_path)
         self.files = [self]
-        self.subfolder_trees = []
+        self.subfolder_trees: List[Folder] = []
 
     def __repr__(self):
         return f"File: {self.full_path}"

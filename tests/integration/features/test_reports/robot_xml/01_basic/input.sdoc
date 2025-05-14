@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-A
+TITLE: Feature A
+STATEMENT: The system shall do A.
+
+[REQUIREMENT]
+UID: REQ-B
+TITLE: Feature B
+STATEMENT: The system shall do B.

@@ -3773,7 +3773,7 @@ To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc.t
       "HTML2PDF"
     ]
 
-This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to how the SDoc HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked out. One feature which is still missing is the ability to edit custom front page metadata through the web UI.
+This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to how the SDoc HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked out.
 <<<
 
 [[/SECTION]]

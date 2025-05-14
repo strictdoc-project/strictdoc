@@ -1,0 +1,89 @@
+{% assert custom_metadata_row_context is defined, "row_with_metadata: metadata_row_context must be defined." %}
+{% assert custom_metadata_row_context.field is defined, "row_with_metadata: field must be defined." %}
+{% assert custom_metadata_row_context.errors is defined, "row_with_metadata: errors must be defined." %}
+{% assert custom_metadata_row_context.form_object is defined, "row_with_metadata: form_object must be defined." %}
+
+{# FIXME: Recreate context #}
+{%- set row_context = custom_metadata_row_context -%}
+{# FIXME: Rewrite everything to just form_object. #}
+{%- set form_object = custom_metadata_row_context -%}
+
+{%- extends "components/form/row/index.jinja" %}
+
+{% block row_form_attributes %}
+  data-controller="deletable_field movable_field"
+  data-testid="document-config-form-metadata-row"
+  mid="{{ custom_metadata_row_context.field.field_mid }}"
+{% endblock row_form_attributes %}
+
+{% block row_left %}
+  {%- set action_button_context = namespace() %}
+  {%- set action_button_context.field_actions = {"move_down": true} %}
+  {%- set action_button_context.field_name = custom_metadata_row_context.field.field_name %}
+  {%- set action_button_context.field_input_name = custom_metadata_row_context.field.get_input_field_name() %}
+  {%- set action_button_context.mid = custom_metadata_row_context.field.field_mid %}
+  {%- set action_button_context.testid_postfix = "custom-field" %}
+  {%- include "components/form/field_action_button/index.jinja" -%}
+
+  {%- set action_button_context = namespace() %}
+  {%- set action_button_context.field_actions = {"move_up": true} %}
+  {%- set action_button_context.field_name = custom_metadata_row_context.field.field_name %}
+  {%- set action_button_context.field_input_name = custom_metadata_row_context.field.get_input_field_name() %}
+  {%- set action_button_context.mid = custom_metadata_row_context.field.field_mid %}
+  {%- set action_button_context.testid_postfix = "custom-field" %}
+  {%- include "components/form/field_action_button/index.jinja" -%}
+{% endblock row_left %}
+
+{% block row_content scoped %}
+
+<sdoc-form-field-group
+  data-field-label="Metadata"
+  {% if custom_metadata_row_context.errors|length -%}
+    errors="true"
+  {%- endif -%}
+>
+  {%- with
+    field_class_name = "monospace",
+    field_editable = true,
+    field_required = true,
+    field_input_name= form_object.field.get_input_field_name(),
+    field_label = "Name",
+    field_placeholder = "Enter name...",
+    field_type = "singleline",
+    field_value = form_object.field.field_name,
+    mid = form_object.field.field_mid,
+    testid_postfix = form_object.field.get_input_field_name(),
+    errors = custom_metadata_row_context.errors
+  %}
+    {%- include "components/form/field/contenteditable/index.jinja" %}
+  {%- endwith -%}
+
+  {%- with
+    field_class_name = "monospace",
+    field_editable = true,
+    field_required = false,
+    field_input_name = form_object.field.get_input_field_value(),
+    field_label = "Value",
+    field_placeholder = "Enter value...",
+    field_type = "singleline",
+    field_value = form_object.field.field_value,
+    mid = form_object.field.field_mid,
+    testid_postfix = form_object.field.get_input_field_value(),
+    errors = []
+  %}
+    {%- include "components/form/field/contenteditable/index.jinja" %}
+  {%- endwith -%}
+
+</sdoc-form-field-group>
+{% endblock row_content %}
+
+{% block row_right %}
+
+  {%- set action_button_context = namespace() %}
+  {%- set action_button_context.field_actions = {"delete": true} %}
+  {%- set action_button_context.field_name = "metadata" %}
+  {%- set action_button_context.mid = custom_metadata_row_context.field.field_mid %}
+  {%- set action_button_context.testid_postfix = "form-field-metadata" %}
+  {%- include "components/form/field_action_button/index.jinja" -%}
+
+{% endblock row_right %}

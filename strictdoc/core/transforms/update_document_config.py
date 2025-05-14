@@ -1,8 +1,12 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from collections import defaultdict
 from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_config import (
+    DocumentCustomMetadata,
+    DocumentCustomMetadataKeyValuePair,
+)
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
@@ -39,20 +43,41 @@ class UpdateDocumentConfigTransform:
         document.title = form_object.document_title
         document.config.version = (
             form_object.document_version
-            if len(form_object.document_version) > 0
+            if form_object.document_version is not None
+            and len(form_object.document_version) > 0
             else None
         )
         document.config.classification = (
             form_object.document_classification
-            if len(form_object.document_classification) > 0
+            if form_object.document_classification is not None
+            and len(form_object.document_classification) > 0
             else None
         )
+        document.config.requirement_prefix = (
+            form_object.document_requirement_prefix
+            if form_object.document_requirement_prefix is not None
+            and len(form_object.document_requirement_prefix) > 0
+            else None
+        )
+        if len(form_object.custom_metadata_fields):
+            entries = [
+                DocumentCustomMetadataKeyValuePair(
+                    key=field.field_name, value=field.field_value
+                )
+                for field in form_object.custom_metadata_fields
+            ]
+            document.config.custom_metadata = DocumentCustomMetadata(
+                entries=entries
+            )
+        else:
+            document.config.custom_metadata = None
 
         self.traceability_index.delete_document(document)
 
         document.config.uid = (
             form_object.document_uid
-            if len(form_object.document_uid) > 0
+            if form_object.document_uid is not None
+            and len(form_object.document_uid) > 0
             else None
         )
 
@@ -89,6 +114,20 @@ class UpdateDocumentConfigTransform:
                             "Please delete all incoming links first."
                         ),
                     )
+
+        for metadata_field in form_object.custom_metadata_fields:
+            if len(metadata_field.field_name) == 0:
+                errors[f"METADATA[{metadata_field.field_mid}]"].append(
+                    "Key must not be empty."
+                )
+            if not metadata_field.field_name[0].isalpha():
+                errors[f"METADATA[{metadata_field.field_mid}]"].append(
+                    "Key must begin with a letter."
+                )
+            if " " in metadata_field.field_name[0]:
+                errors[f"METADATA[{metadata_field.field_mid}]"].append(
+                    "Key must not contain spaces."
+                )
 
         if len(errors):
             raise MultipleValidationError(

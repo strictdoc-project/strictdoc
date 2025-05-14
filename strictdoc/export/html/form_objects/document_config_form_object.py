@@ -1,14 +1,41 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
-import re
-from collections import defaultdict
 from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.form_data import ParsedFormData, parse_form_data
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
+
+
+@auto_described
+class DocumentMetadataFormField:
+    def __init__(
+        self,
+        field_mid: str,
+        field_name: str,
+        field_value: str,
+    ):
+        assert isinstance(field_value, str)
+        self.field_mid: str = field_mid
+        self.field_name: str = field_name
+        self.field_value: str = field_value
+
+    @staticmethod
+    def create_from_document(name: str, value: str):
+        return DocumentMetadataFormField(
+            field_mid=MID.create(), field_name=name, field_value=value
+        )
+
+    def get_input_field_name(self):
+        return f"metadata[{self.field_mid}][name]"
+
+    def get_input_field_value(self):
+        return f"metadata[{self.field_mid}][value]"
 
 
 @auto_described
@@ -21,6 +48,8 @@ class DocumentConfigFormObject(ErrorObject):
         document_uid: Optional[str],
         document_version: Optional[str],
         document_classification: Optional[str],
+        document_requirement_prefix: Optional[str],
+        document_custom_metadata_fields: List[DocumentMetadataFormField],
     ):
         assert isinstance(document_mid, str), document_mid
         assert isinstance(document_title, str), document_title
@@ -38,18 +67,39 @@ class DocumentConfigFormObject(ErrorObject):
             if document_classification is not None
             else ""
         )
+        self.document_requirement_prefix: Optional[str] = (
+            document_requirement_prefix
+            if document_requirement_prefix is not None
+            else ""
+        )
+        self.custom_metadata_fields: List[DocumentMetadataFormField] = (
+            document_custom_metadata_fields
+        )
 
     @staticmethod
     def create_from_request(
         *, document_mid: str, request_form_data: FormData
     ) -> "DocumentConfigFormObject":
-        config_fields: Dict[str, List[str]] = defaultdict(list)
-        for field_name, field_value in request_form_data.multi_items():
-            result = re.search(r"^document\[(.*)]$", field_name)
-            if result is not None:
-                config_fields[result.group(1)].append(field_value)
+        request_form_data_as_list = [
+            (field_name, field_value)
+            for field_name, field_value in request_form_data.multi_items()
+        ]
+        request_form_dict: ParsedFormData = assert_cast(
+            parse_form_data(request_form_data_as_list), dict
+        )
+
+        config_fields: Dict[str, str] = assert_cast(
+            request_form_dict["document"], dict
+        )
+
+        metadata_fields: Dict[str, Dict[str, str]] = (
+            assert_cast(request_form_dict["metadata"], dict)
+            if "metadata" in request_form_dict
+            else {}
+        )
+
         document_title: str = (
-            config_fields["TITLE"][0] if "TITLE" in config_fields else ""
+            config_fields["TITLE"] if "TITLE" in config_fields else ""
         )
         document_title = sanitize_html_form_field(
             document_title, multiline=False
@@ -58,23 +108,46 @@ class DocumentConfigFormObject(ErrorObject):
 
         document_uid: str = ""
         if "UID" in config_fields:
-            document_uid = config_fields["UID"][0]
+            document_uid = config_fields["UID"]
             document_uid = sanitize_html_form_field(
                 document_uid, multiline=False
             )
 
         document_version: str = ""
         if "VERSION" in config_fields:
-            document_version = config_fields["VERSION"][0]
+            document_version = config_fields["VERSION"]
             document_version = sanitize_html_form_field(
                 document_version, multiline=False
             )
 
         document_classification: str = ""
         if "CLASSIFICATION" in config_fields:
-            document_classification = config_fields["CLASSIFICATION"][0]
+            document_classification = config_fields["CLASSIFICATION"]
             document_classification = sanitize_html_form_field(
                 document_classification, multiline=False
+            )
+
+        document_requirement_prefix: str = ""
+        if "REQ_PREFIX" in config_fields:
+            document_requirement_prefix = config_fields["REQ_PREFIX"]
+            document_requirement_prefix = sanitize_html_form_field(
+                document_requirement_prefix, multiline=False
+            )
+
+        document_custom_metadata_fields: List[DocumentMetadataFormField] = []
+        for field_mid, field_dict in metadata_fields.items():
+            assert isinstance(field_dict, dict), type(field_dict)
+
+            field_name = field_dict["name"].strip()
+            field_value = field_dict["value"].strip()
+
+            document_custom_metadata_field = DocumentMetadataFormField(
+                field_mid=field_mid,
+                field_name=field_name,
+                field_value=field_value,
+            )
+            document_custom_metadata_fields.append(
+                document_custom_metadata_field
             )
 
         form_object = DocumentConfigFormObject(
@@ -83,6 +156,8 @@ class DocumentConfigFormObject(ErrorObject):
             document_uid=document_uid,
             document_version=document_version,
             document_classification=document_classification,
+            document_requirement_prefix=document_requirement_prefix,
+            document_custom_metadata_fields=document_custom_metadata_fields,
         )
         return form_object
 
@@ -93,10 +168,23 @@ class DocumentConfigFormObject(ErrorObject):
     ) -> "DocumentConfigFormObject":
         assert isinstance(document, SDocDocument)
 
+        document_custom_metadata_fields: List[DocumentMetadataFormField] = []
+        for name, value in document.config.get_custom_metadata():
+            document_custom_metadata_field = (
+                DocumentMetadataFormField.create_from_document(
+                    name=name, value=value
+                )
+            )
+            document_custom_metadata_fields.append(
+                document_custom_metadata_field
+            )
+
         return DocumentConfigFormObject(
             document_mid=document.reserved_mid,
             document_title=document.title,
             document_uid=document.config.uid,
             document_version=document.config.version,
             document_classification=document.config.classification,
+            document_requirement_prefix=document.config.requirement_prefix,
+            document_custom_metadata_fields=document_custom_metadata_fields,
         )

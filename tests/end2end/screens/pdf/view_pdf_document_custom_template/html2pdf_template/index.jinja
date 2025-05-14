@@ -49,7 +49,7 @@ Notes:
   </div>
   <div class="html2pdf-frontpage-grid-bottom">
 {%- set document_config = view_object.document.config -%}
-{%- if document_config.has_meta() or document_config.has_custom_meta() -%}
+{%- if document_config.has_meta() or document_config.has_custom_metadata() -%}
   <sdoc-meta>
     {%- if view_object.document.config.uid -%}
     <sdoc-meta-label data-testid="document-config-uid-label">UID:</sdoc-meta-label>
@@ -82,8 +82,8 @@ Notes:
 
     {% set document_date_ = view_object.render_document_date() %}
     {%- if document_date_ is not none -%}
-    <sdoc-meta-label data-testid="document-config-version-label">DATE:</sdoc-meta-label>
-    <sdoc-meta-field data-testid="document-config-version-field">
+    <sdoc-meta-label data-testid="document-config-date-label">DATE:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-date-field">
       {%- with field_content = document_date_ %}
         <sdoc-autogen>{{ field_content }}</sdoc-autogen>
       {%- endwith -%}
@@ -99,19 +99,16 @@ Notes:
     </sdoc-meta-field>
     {%- endif -%}
     
-    {% if document_config.has_custom_meta %}
-    {% set custom_metadata = document_config.get_custom_meta() %}
-    {% for key, value in custom_metadata.items() %}
-    <sdoc-meta-label data-testid="document-config-version-label">{{key}}:</sdoc-meta-label>
+    {% if document_config.has_custom_metadata %}
+    {% for key, value in document_config.get_custom_metadata() %}
+    <sdoc-meta-label data-testid="document-config-metadata-label">{{key}}:</sdoc-meta-label>
 
     {# We make the custom metadata fields higher with a min-height style directive.
        We do this to support the review/release workflows at ACME laboratories inc.,
        which involve placing "electronic signatures" on the front page of the PDF. 
     #}
-    <sdoc-meta-field data-testid="document-config-version-field" style="min-height: 60px;">
-      {%- with field_content = value %}
-        <sdoc-autogen>{{ field_content }}</sdoc-autogen>
-      {%- endwith -%}
+    <sdoc-meta-field data-testid="document-config-metadata-field" style="min-height: 60px;">
+      <sdoc-autogen>{{ value }}</sdoc-autogen>
     </sdoc-meta-field>
     {% endfor %}
     {% endif %}

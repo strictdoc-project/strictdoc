@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import List, Optional, Tuple
 
 from strictdoc.helpers.auto_described import auto_described
 
@@ -165,20 +165,20 @@ class DocumentConfig:
             )
         )
 
-    def has_custom_meta(self) -> bool:
+    def has_custom_metadata(self) -> bool:
         return (
             self.custom_metadata is not None
             and self.custom_metadata.entries is not None
         )
 
-    def get_custom_meta(self) -> Optional[Dict[str, str]]:
+    def get_custom_metadata(self) -> List[Tuple[str, str]]:
         if (
             self.custom_metadata is not None
             and self.custom_metadata.entries is not None
         ):
-            return {
-                entry.key: entry.value
+            return [
+                (entry.key, entry.value)
                 for entry in self.custom_metadata.entries
                 if entry.key is not None and entry.value is not None
-            }
-        return {}
+            ]
+        return []

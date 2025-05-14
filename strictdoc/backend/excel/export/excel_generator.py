@@ -90,7 +90,7 @@ class ExcelGenerator:
                 ).all_content(
                     print_fragments=False, print_fragments_from_files=False
                 ):
-                    if not node.is_requirement or not node.reserved_uid:
+                    if not node.is_requirement() or not node.reserved_uid:
                         # only export the requirements with uid
                         continue
 

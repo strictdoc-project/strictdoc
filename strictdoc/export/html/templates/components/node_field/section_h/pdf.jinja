@@ -13,7 +13,7 @@
     {%- if sdoc_entity.context.title_number_string -%}
       {{ sdoc_entity.context.title_number_string }}.&nbsp;
     {%- endif -%}
-    {%- set title = sdoc_entity.reserved_title if sdoc_entity.is_requirement else sdoc_entity.title -%}
+    {%- set title = sdoc_entity.reserved_title if sdoc_entity.is_requirement() else sdoc_entity.title -%}
     {%- if title is not none -%}
       {{ title }}
     {%- endif -%}

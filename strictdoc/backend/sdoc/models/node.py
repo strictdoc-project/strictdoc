@@ -301,9 +301,6 @@ class SDocNode(SDocNodeIF):
             RequirementFieldName.RATIONALE, singleline_only=False
         )
 
-    # Other properties
-    # FIXME: Remove @property.
-    @property
     def is_requirement(self) -> bool:
         return True
 
@@ -313,25 +310,14 @@ class SDocNode(SDocNodeIF):
     def is_text_node(self) -> bool:
         return self.node_type == "TEXT"
 
-    # FIXME: Remove @property.
-    @property
     def is_section(self) -> bool:
         return False
 
-    # FIXME: Remove @property.
-    @property
     def is_document(self) -> bool:
         return False
 
-    # FIXME: Remove @property.
-    @property
     def is_composite_requirement(self) -> bool:
         return False
-
-    # FIXME: Remove this, use get_document().
-    @property
-    def document(self) -> Optional[SDocDocumentIF]:
-        return self.get_document()
 
     def get_document(self) -> Optional[SDocDocumentIF]:
         assert self.ng_document_reference is not None, self
@@ -695,7 +681,6 @@ class SDocCompositeNode(SDocNode, SDocCompositeNodeIF):
     ) -> None:
         super().__init__(parent, **fields)
 
-    @property
     def is_composite_requirement(self) -> bool:
         return True
 

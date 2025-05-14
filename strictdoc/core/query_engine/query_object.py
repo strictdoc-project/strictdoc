@@ -200,7 +200,7 @@ class QueryObject:
         self, node, expression: NodeFieldExpression
     ) -> Optional[str]:
         field_name = expression.field_name
-        if node.is_requirement and node.node_type == "REQUIREMENT":
+        if node.is_requirement() and node.node_type == "REQUIREMENT":
             requirement: SDocNode = assert_cast(node, SDocNode)
             requirement_document: SDocDocument = assert_cast(
                 requirement.get_document(), SDocDocument
@@ -217,7 +217,7 @@ class QueryObject:
             if field_value is not None:
                 return field_value
             return None
-        elif node.is_section:
+        elif node.is_section():
             section: SDocSection = assert_cast(node, SDocSection)
             if field_name == "UID":
                 return section.reserved_uid

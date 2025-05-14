@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.model import (
     SDocSectionIF,
 )
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 
 
@@ -76,10 +77,9 @@ class SDocSection(SDocSectionIF):
 
     def get_debug_info(self) -> str:
         debug_components: List[str] = [f"TITLE = '{self.title}'"]
-        if self.document is not None:
-            debug_components.append(
-                f"document = {self.document.get_debug_info()}"
-            )
+        document: Optional[SDocDocumentIF] = self.get_document()
+        if document is not None:
+            debug_components.append(f"document = {document.get_debug_info()}")
         return f"Section({', '.join(debug_components)})"
 
     @property
@@ -90,11 +90,6 @@ class SDocSection(SDocSectionIF):
         if include_toc_number and self.context.title_number_string is not None:
             return f"{self.context.title_number_string}. {self.title}"
         return self.title
-
-    # FIXME: Remove this method, use get_document() instead.
-    @property
-    def document(self) -> Optional[SDocDocumentIF]:
-        return self.ng_document_reference.get_document()
 
     def get_document(self) -> Optional[SDocDocumentIF]:
         return self.ng_document_reference.get_document()
@@ -121,15 +116,12 @@ class SDocSection(SDocSectionIF):
     def document_is_included(self):
         return self.ng_including_document_reference.get_document() is not None
 
-    @property
     def is_requirement(self):
         return False
 
-    @property
     def is_composite_requirement(self):
         return False
 
-    @property
     def is_section(self):
         return True
 
@@ -141,7 +133,10 @@ class SDocSection(SDocSectionIF):
 
     @property
     def is_root(self) -> bool:
-        return self.document.config.root is True
+        document: SDocDocumentIF = assert_cast(
+            self.get_document(), SDocDocumentIF
+        )
+        return document.config.root is True
 
     def get_requirement_prefix(self) -> str:
         if self.requirement_prefix is not None:

@@ -13,6 +13,9 @@ from strictdoc.backend.sdoc_source_code.coverage_reports.gcov import (
 from strictdoc.backend.sdoc_source_code.test_reports.junit_xml_reader import (
     JUnitXMLReader,
 )
+from strictdoc.backend.sdoc_source_code.test_reports.robot_xml_reader import (
+    RobotOutputXMLReader,
+)
 from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
@@ -95,6 +98,11 @@ class DocumentFinder:
                     doc_file, project_config
                 )
                 assert isinstance(document_or_grammar, SDocDocument)
+            elif doc_full_path.endswith(".robot.xml"):
+                robot_reader = RobotOutputXMLReader()
+                document_or_grammar = robot_reader.read_from_file(
+                    doc_file, project_config
+                )
             else:
                 raise NotImplementedError  # pragma: no cover
         drop_textx_meta(document_or_grammar)
@@ -269,7 +277,13 @@ class DocumentFinder:
                 file_tree_structure = FileFinder.find_files_with_extensions(
                     root_path=path_to_doc_root,
                     ignored_dirs=[project_config.output_dir],
-                    extensions=[".sdoc", ".sgra", ".junit.xml", ".gcov.json"],
+                    extensions=[
+                        ".sdoc",
+                        ".sgra",
+                        ".junit.xml",
+                        ".gcov.json",
+                        ".robot.xml",
+                    ],
                     include_paths=project_config.include_doc_paths,
                     exclude_paths=project_config.exclude_doc_paths,
                 )

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.2.2 (Python 3.11.2 on linux)" generated="2025-05-15T22:23:03.446474" rpa="false" schemaversion="5">
+<suite id="s1" name="System Test" source="/home/user/strictdoc/tests/integration/features/test_reports/robot_xml/01_basic/tests">
+<suite id="s1-s1" name="Feature1A" source="/home/user/strictdoc/tests/integration/features/test_reports/robot_xml/01_basic/tests/feature1a.robot">
+<test id="s1-s1-t1" name="Foo Feature 1a" line="3">
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Let it pass</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2025-05-15T22:23:03.464943" elapsed="0.000157"/>
+</kw>
+<doc>Test following requirements
+@relation(REQ-A, scope=function)</doc>
+<status status="PASS" start="2025-05-15T22:23:03.464352" elapsed="0.000884"/>
+</test>
+<test id="s1-s1-t2" name="Bar Feature 1a" line="8">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2025-05-15T22:23:03.465856" level="FAIL">Let it fail</msg>
+<arg>Let it fail</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2025-05-15T22:23:03.465656" elapsed="0.000405">Let it fail</status>
+</kw>
+<doc>Test following requirements
+@relation(REQ-A, scope=function)</doc>
+<status status="FAIL" start="2025-05-15T22:23:03.465393" elapsed="0.000835">Let it fail</status>
+</test>
+<status status="FAIL" start="2025-05-15T22:23:03.463504" elapsed="0.003037"/>
+</suite>
+<suite id="s1-s2" name="Feature1B" source="/home/user/strictdoc/tests/integration/features/test_reports/robot_xml/01_basic/tests/feature1b.robot">
+<test id="s1-s2-t1" name="Foo Feature 1b" line="3">
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Let it pass</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2025-05-15T22:23:03.467857" elapsed="0.000128"/>
+</kw>
+<doc>Test following requirements
+@relation(REQ-A, scope=function)</doc>
+<status status="PASS" start="2025-05-15T22:23:03.467588" elapsed="0.000502"/>
+</test>
+<test id="s1-s2-t2" name="Bar Feature 1b" line="8">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2025-05-15T22:23:03.468645" level="FAIL">Let it fail</msg>
+<arg>Let it fail</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2025-05-15T22:23:03.468476" elapsed="0.000236">Let it fail</status>
+</kw>
+<doc>Test following requirements
+@relation(REQ-A, scope=function)</doc>
+<status status="FAIL" start="2025-05-15T22:23:03.468227" elapsed="0.000635">Let it fail</status>
+</test>
+<status status="FAIL" start="2025-05-15T22:23:03.466827" elapsed="0.002240"/>
+</suite>
+<suite id="s1-s3" name="Feature2" source="/home/user/strictdoc/tests/integration/features/test_reports/robot_xml/01_basic/tests/feature2">
+<suite id="s1-s3-s1" name="Feature2" source="/home/user/strictdoc/tests/integration/features/test_reports/robot_xml/01_basic/tests/feature2/feature2.robot">
+<test id="s1-s3-s1-t1" name="Foo Feature B" line="3">
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Let it pass</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2025-05-15T22:23:03.471051" elapsed="0.000120"/>
+</kw>
+<doc>Test following requirements
+@relation(REQ-B, scope=function)</doc>
+<status status="PASS" start="2025-05-15T22:23:03.470792" elapsed="0.000486"/>
+</test>
+<test id="s1-s3-s1-t2" name="Bar Feature B" line="8">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2025-05-15T22:23:03.471813" level="FAIL">Let it fail</msg>
+<arg>Let it fail</arg>
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2025-05-15T22:23:03.471645" elapsed="0.000236">Let it fail</status>
+</kw>
+<doc>Test following requirements
+@relation(REQ-B, scope=function)</doc>
+<status status="FAIL" start="2025-05-15T22:23:03.471412" elapsed="0.000618">Let it fail</status>
+</test>
+<status status="FAIL" start="2025-05-15T22:23:03.470110" elapsed="0.002121"/>
+</suite>
+<status status="FAIL" start="2025-05-15T22:23:03.469337" elapsed="0.003219"/>
+</suite>
+<status status="FAIL" start="2025-05-15T22:23:03.447306" elapsed="0.025562"/>
+</suite>
+<statistics>
+<total>
+<stat pass="3" fail="3" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="System Test" id="s1" pass="3" fail="3" skip="0">System Test</stat>
+<stat name="Feature1A" id="s1-s1" pass="1" fail="1" skip="0">System Test.Feature1A</stat>
+<stat name="Feature1B" id="s1-s2" pass="1" fail="1" skip="0">System Test.Feature1B</stat>
+<stat name="Feature2" id="s1-s3" pass="1" fail="1" skip="0">System Test.Feature2</stat>
+<stat name="Feature2" id="s1-s3-s1" pass="1" fail="1" skip="0">System Test.Feature2.Feature2</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

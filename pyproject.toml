@@ -89,6 +89,9 @@ dependencies = [
 
     # HTML2PDF dependencies
     "html2pdf4doc >= 0.0.18",
+
+    # Robot Framework dependencies
+    "robotframework >= 4.0.0",
 ]
 # @sdoc[/SDOC-SRS-89]
 

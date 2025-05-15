@@ -3,8 +3,13 @@ REQUIRES: PYTHON_39_OR_HIGHER
 # invalid_file.* was created with echo "00 08 00 00" | xxd -r -p > file.bin
 RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
 CHECK: warning: Skip tracing binary file {{.*}}invalid_file.bin
+CHECK: Reading source: {{.*}}invalid_file.bin
 CHECK: warning: Skip tracing binary file {{.*}}invalid_file.c
+CHECK: Reading source: {{.*}}invalid_file.c
 CHECK: warning: Skip tracing binary file {{.*}}invalid_file.py
+CHECK: Reading source: {{.*}}invalid_file.py
+# skip warning check since robotframework doesn't raises unicode error on windows
+CHECK: Reading source: {{.*}}invalid_file.robot
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"

@@ -29,7 +29,8 @@ class Test(E2ECase):
             section.do_delete_node(proceed_with_confirm=False)
 
             screen_document.assert_text(
-                "This node cannot be removed because it contains incoming links."
+                "Cannot remove node 'REQ-001' with incoming LINKs from: "
+                "'REQUIREMENT with no title/UID' -> 'REQ-001'."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

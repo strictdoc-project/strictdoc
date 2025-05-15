@@ -1,16 +1,19 @@
-from typing import Union
+from typing import List, Union
 
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.model import (
     SDocCompositeNodeIF,
     SDocDocumentIF,
     SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
+from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.transforms.validation_error import (
     MultipleValidationErrorAsList,
     SingleValidationError,
 )
+from strictdoc.helpers.cast import assert_cast
 
 
 class DeleteRequirementCommand:
@@ -23,23 +26,28 @@ class DeleteRequirementCommand:
         self.traceability_index: TraceabilityIndex = traceability_index
 
     def validate(self) -> None:
-        # FIXME:
-        # 1) For composite requirements, also validate that all child nodes recursively.
-        # 2) Double-check the case when removing a node, when there are other nodes
-        #    pointing to it with child/parent relations.
-        nodes_with_incoming_links = [
-            self.requirement
-        ] + self.requirement.get_anchors()
-        for node_ in nodes_with_incoming_links:
-            try:
-                self.traceability_index.validate_node_can_remove_uid(node=node_)
-            except SingleValidationError as exception_:
-                raise MultipleValidationErrorAsList(
-                    "NOT_RELEVANT",
-                    errors=[
-                        "This node cannot be removed because it contains incoming links."
-                    ],
-                ) from exception_
+        errors: List[str] = []
+        document: SDocDocument = assert_cast(
+            self.requirement.get_document(), SDocDocument
+        )
+        document_iterator = DocumentCachingIterator(document=document)
+        for document_node_ in document_iterator.all_node_content(
+            self.requirement,
+            print_fragments=True,
+            print_fragments_from_files=True,
+        ):
+            if not isinstance(document_node_, SDocNode):
+                continue
+            nodes_with_incoming_links = [
+                document_node_
+            ] + document_node_.get_anchors()
+            for node_ in nodes_with_incoming_links:
+                try:
+                    self.traceability_index.validate_can_remove_node(node=node_)
+                except SingleValidationError as exception_:
+                    errors.append(exception_.args[0])
+        if len(errors) > 0:
+            raise MultipleValidationErrorAsList("NOT_RELEVANT", errors)
 
     def perform(self) -> None:
         self.validate()

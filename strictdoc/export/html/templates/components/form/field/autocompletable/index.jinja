@@ -12,6 +12,7 @@
 {%- assert testid_postfix is defined, "testid_postfix is defined" -%}
 {%- assert autocomplete_url is defined, "autocomplete_url is defined" -%}
 {%- assert autocomplete_len is defined, "autocomplete_len is defined" -%}
+{%- assert autocomplete_multiplechoice is defined, "autocomplete_multiplechoice is defined" -%}
 
 {% if field_required is not defined -%}
 {% set field_required=false -%}
@@ -49,6 +50,9 @@
     {%- if field_class_name is not none -%}
       class="{{ field_class_name }}"
     {%- endif -%}
+    {%- if autocomplete_multiplechoice -%}
+    data-autocompletable-multiple-choice-value="true"
+    {%- endif-%}
     data-testid="form-field-{{ testid_postfix }}"
     data-autocompletable-target="input"
     data-autocompletable-url-value="{{ autocomplete_url }}"

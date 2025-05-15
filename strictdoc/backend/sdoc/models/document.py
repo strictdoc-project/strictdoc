@@ -19,11 +19,12 @@ from strictdoc.backend.sdoc.models.model import (
     SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.type_system import (
+    GrammarElementField,
+    GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
 )
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
-from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 
 
@@ -210,20 +211,30 @@ class SDocDocument(SDocDocumentIF):
             0
         ].enumerate_custom_content_field_titles()
 
-    def get_options_for_singlechoice(
+    def get_grammar_element_field_for(
         self, element_type: str, field_name: str
-    ) -> List[str]:
+    ) -> GrammarElementField:
         """
-        Returns the list of valid options for a SingleChoice field in this document.
+        Returns the GrammarElementField for a field of a [element_type] in this document.
         """
         assert self.grammar is not None
         grammar: DocumentGrammar = self.grammar
         element: GrammarElement = grammar.elements_by_type[element_type]
+        field: GrammarElementField = element.fields_map[field_name]
+        return field
 
-        field = element.fields_map[field_name]
-
-        choice_grammar_element_field: GrammarElementFieldSingleChoice = (
-            assert_cast(field, GrammarElementFieldSingleChoice)
+    def get_options_for_choice(
+        self, element_type: str, field_name: str
+    ) -> List[str]:
+        """
+        Returns the list of valid options for a Single/MultiChoice field in this document.
+        """
+        field: GrammarElementField = self.get_grammar_element_field_for(
+            element_type, field_name
         )
 
-        return choice_grammar_element_field.options
+        if isinstance(field, GrammarElementFieldSingleChoice) or isinstance(
+            field, GrammarElementFieldMultipleChoice
+        ):
+            return field.options
+        return []

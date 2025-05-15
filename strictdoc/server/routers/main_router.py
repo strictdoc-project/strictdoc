@@ -34,6 +34,10 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
+from strictdoc.backend.sdoc.models.type_system import (
+    GrammarElementField,
+    RequirementFieldType,
+)
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.analyzers.document_stats import DocumentTreeStats
@@ -2764,7 +2768,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         field_name: Optional[str] = None,
     ):
         """
-        Returns matches of possible SingleChoice values of a field.
+        Returns matches of possible values of a SingleChoice or MultiChoice field.
         The field is identified by the document_mid, the element_type, and the field_name.
         """
         output = ""
@@ -2773,20 +2777,47 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             and document_mid is not None
             and element_type is not None
         ):
-            query_words = q.lower().split()
-            resulting_values = []
-
             document: SDocDocument = (
                 export_action.traceability_index.get_node_by_mid(
                     MID(document_mid)
                 )
             )
             if document:
-                all_options = document.get_options_for_singlechoice(
+                all_options = document.get_options_for_choice(
                     element_type, field_name
                 )
+                field: GrammarElementField = (
+                    document.get_grammar_element_field_for(
+                        element_type, field_name
+                    )
+                )
 
-                for option_ in all_options:
+                if field.gef_type == RequirementFieldType.MULTIPLE_CHOICE:
+                    # MultipleChoice: Split the query into parts
+                    parts = q.lower().split(",")
+
+                    # only use the last_part for lookup
+                    last_part = parts[-1].strip()
+                    query_words = last_part.split()
+
+                    # and pre-filter: don't suggest choices that were already selected / present in the query
+                    already_selected = [
+                        p.strip() for p in parts[:-1] if p.strip()
+                    ]
+                    filtered_options = [
+                        choice
+                        for choice in all_options
+                        if choice.lower() not in already_selected
+                    ]
+                else:
+                    # SingleChoice: use all available options
+                    query_words = q.lower().split()
+                    filtered_options = all_options
+
+                resulting_values = []
+
+                # now filter the remainig options for those that macht all words in query_words
+                for option_ in filtered_options:
                     words_ = option_.strip().lower()
 
                     if all(word_ in words_ for word_ in query_words):

@@ -184,7 +184,6 @@ class SDocNode(SDocNodeIF):
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
         self.mid_permanent: bool = mid is not None
 
-        # HEF4
         self.ng_resolved_custom_level: Optional[str] = None
         self.custom_level: Optional[str] = None
         if RequirementFieldName.LEVEL in ordered_fields_lookup:

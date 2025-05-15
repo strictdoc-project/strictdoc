@@ -278,7 +278,9 @@ class DocumentGrammar(SDocGrammarIF):
         self.ng_col_start: Optional[int] = None
 
     @staticmethod
-    def create_default(parent: Optional[SDocDocumentIF]) -> "DocumentGrammar":
+    def create_default(
+        parent: Optional[SDocDocumentIF], create_section_element: bool = False
+    ) -> "DocumentGrammar":
         text_element: GrammarElement = (
             DocumentGrammar.create_default_text_element()
         )
@@ -354,7 +356,17 @@ class DocumentGrammar(SDocGrammarIF):
             requirement_element
         )
 
-        elements: List[GrammarElement] = [text_element, requirement_element]
+        elements: List[GrammarElement] = []
+
+        if create_section_element:
+            section_element: GrammarElement = (
+                DocumentGrammar.create_default_section_element()
+            )
+            elements.append(section_element)
+
+        elements.append(text_element)
+        elements.append(requirement_element)
+
         grammar = DocumentGrammar(
             parent=parent, elements=elements, import_from_file=None
         )
@@ -530,6 +542,52 @@ class DocumentGrammar(SDocGrammarIF):
             relations=[],
         )
         return text_element
+
+    @staticmethod
+    def create_default_section_element(
+        parent: Optional["DocumentGrammar"] = None, enable_mid: bool = False
+    ) -> GrammarElement:
+        fields: List[
+            Union[
+                GrammarElementFieldString,
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldMultipleChoice,
+            ]
+        ] = []
+        if enable_mid:
+            fields.append(
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.MID,
+                    human_title=None,
+                    required="True",
+                )
+            )
+        fields.append(
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.UID,
+                human_title=None,
+                required="False",
+            )
+        )
+        fields.append(
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.TITLE,
+                human_title=None,
+                required="True",
+            ),
+        )
+        section_element = GrammarElement(
+            parent=parent,
+            tag="SECTION",
+            property_is_composite="True",
+            property_view_style="",
+            fields=fields,
+            relations=[],
+        )
+        return section_element
 
 
 class DocumentGrammarWrapper:

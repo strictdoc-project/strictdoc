@@ -1,6 +1,7 @@
 # mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
 import sys
 import traceback
+from copy import copy
 from typing import Tuple
 
 from textx import metamodel_from_str
@@ -9,6 +10,9 @@ from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
 from strictdoc.core.project_config import ProjectConfig
@@ -41,15 +45,24 @@ class SDReader:
         return document, parse_context
 
     @staticmethod
-    def read(input_string, file_path=None) -> SDocDocument:
-        document, _ = SDReader.read_with_parse_context(input_string, file_path)
+    def read(
+        input_string, file_path=None, migrate_sections: bool = False
+    ) -> SDocDocument:
+        document, _ = SDReader.read_with_parse_context(
+            input_string, file_path, migrate_sections=migrate_sections
+        )
         return document
 
     @staticmethod
     def read_with_parse_context(
-        input_string, file_path=None
+        input_string, file_path=None, migrate_sections: bool = False
     ) -> Tuple[SDocDocument, ParseContext]:
         document, parse_context = SDReader._read(input_string, file_path)
+
+        if migrate_sections:
+            SDReader.migrate_sections(document)
+            SDReader.migration_sections_grammar(document)
+
         return document, parse_context
 
     def read_from_file(
@@ -102,3 +115,74 @@ class SDReader:
             # TODO: when --debug is provided
             traceback.print_exc()
             sys.exit(1)
+
+    @staticmethod
+    def convert(section: SDocSection) -> SDocNode:
+        """
+        FIXME: Handle LEVEL, REQ_PREFIX
+        """
+        fields = []
+
+        if section.mid_permanent:
+            fields.append(
+                SDocNodeField.create_from_string(
+                    None,
+                    field_name="MID",
+                    field_value=section.reserved_mid,
+                    multiline=False,
+                )
+            )
+        if section.reserved_uid is not None:
+            fields.append(
+                SDocNodeField.create_from_string(
+                    None,
+                    field_name="UID",
+                    field_value=section.reserved_uid,
+                    multiline=False,
+                )
+            )
+        fields.append(
+            SDocNodeField.create_from_string(
+                None,
+                field_name="TITLE",
+                field_value=section.reserved_title,
+                multiline=False,
+            )
+        )
+        node: SDocNode = SDocNode(
+            parent=section,
+            node_type="SECTION",
+            fields=fields,
+            relations=[],
+            is_composite=True,
+            section_contents=section.section_contents,
+            node_type_close="SECTION",
+        )
+        for field_ in fields:
+            field_.parent = node
+        return node
+
+    @staticmethod
+    def migrate_sections(sdoc):
+        for node_idx_, node_ in enumerate(copy(sdoc.section_contents)):
+            if isinstance(node_, SDocSection):
+                SDReader.migrate_sections(node_)
+
+                new_node = SDReader.convert(node_)
+                sdoc.section_contents[node_idx_] = new_node
+
+    @staticmethod
+    def migration_sections_grammar(sdoc: SDocDocument):
+        grammar: DocumentGrammar = assert_cast(sdoc.grammar, DocumentGrammar)
+        section_element_exists = any(
+            element_.tag == "SECTION" for element_ in grammar.elements
+        )
+        if not section_element_exists:
+            grammar.update_with_elements(
+                [
+                    DocumentGrammar.create_default_section_element(
+                        grammar, enable_mid=sdoc.config.enable_mid or False
+                    )
+                ]
+                + grammar.elements
+            )

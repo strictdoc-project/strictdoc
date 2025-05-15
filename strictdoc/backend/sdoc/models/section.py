@@ -49,7 +49,6 @@ class SDocSection(SDocSectionIF):
 
         self.section_contents = section_contents
 
-        # HEF4
         self.custom_level: Optional[str] = custom_level
         self.ng_resolved_custom_level: Optional[str] = custom_level
 

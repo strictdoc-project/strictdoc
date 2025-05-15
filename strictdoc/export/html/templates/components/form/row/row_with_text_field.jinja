@@ -47,7 +47,8 @@
       {%- with
         autocomplete_url = "/autocomplete/field?document_mid="~document_mid~"&element_type="~element_type~"&field_name="~field_label,
         result_class_name = "requirement__link",
-        autocomplete_len = "0"
+        autocomplete_len = "0",
+        autocomplete_multiplechoice = text_field_row_context.field.is_multiplechoice()
       %}
         {%- include "components/form/field/autocompletable/index.jinja" %}
       {%- endwith -%}

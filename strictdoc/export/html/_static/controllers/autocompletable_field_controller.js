@@ -17,6 +17,7 @@
       minLength: Number,
       delay: { type: Number, default: 300 },
       queryParam: { type: String, default: "q" },
+      multipleChoice: Boolean,
     }
     static uniqOptionId = 0
 
@@ -177,10 +178,30 @@
       }
 
       const textValue = selected.getAttribute("data-autocompletable-label") || selected.textContent.trim()
-      const value = selected.getAttribute("data-autocompletable-value") || textValue
-      this.autocompletable.innerText = value
+      let   suggestion = selected.getAttribute("data-autocompletable-value") || textValue
+    
+      if (this.multipleChoiceValue) {
+        // Get the current text content
+        const text = this.autocompletable.innerText || "";
+        const parts = text.split(",");
 
-      this.hidden.value = value
+        // Replace the last incomplete token with the suggestion
+        parts[parts.length - 1] = " " + suggestion;
+        suggestion = parts.map(p => p.trim()).join(", ")
+      } 
+
+      this.autocompletable.innerText = suggestion
+      this.hidden.value = suggestion
+
+      // some shenanigans to move the cursor to the end
+      this.autocompletable.focus();
+      const range = document.createRange();
+      range.selectNodeContents(this.autocompletable);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+
       this.hidden.dispatchEvent(new Event("input"))
       this.hidden.dispatchEvent(new Event("change"))
 
@@ -190,7 +211,7 @@
       this.element.dispatchEvent(
         new CustomEvent("autocompletable.change", {
           bubbles: true,
-          detail: { value: value, textValue: textValue, selected: selected }
+          detail: { value: suggestion, textValue: textValue, selected: selected }
         })
       )
     }

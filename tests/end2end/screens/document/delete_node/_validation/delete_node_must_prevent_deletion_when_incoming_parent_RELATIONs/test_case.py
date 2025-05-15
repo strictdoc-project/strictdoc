@@ -23,13 +23,15 @@ class Test(E2ECase):
             screen_document = screen_project_index.do_click_on_first_document()
 
             screen_document.assert_on_screen_document()
+            screen_document.assert_header_document_title("Document 1")
 
-            section = screen_document.get_node(2)
-            section.assert_requirement_title("Linked-to requirement")
-            section.do_delete_node(proceed_with_confirm=False)
+            requirement = screen_document.get_node()
+            requirement.assert_requirement_title("Requirement title #1")
+            requirement.do_delete_node(proceed_with_confirm=False)
 
             screen_document.assert_text(
-                "This node cannot be removed because it contains incoming links."
+                "Cannot remove node 'Requirement title #1' with incoming relations from: "
+                "'Requirement title #2', 'Requirement title #3'."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

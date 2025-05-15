@@ -49,7 +49,7 @@ class DocumentCachingIterator:
     ) -> Iterator[SDocElementIF]:
         root_node = self.document
 
-        yield from self._all_content(
+        yield from self.all_node_content(
             root_node,
             print_fragments=print_fragments,
             print_fragments_from_files=print_fragments_from_files,
@@ -57,7 +57,7 @@ class DocumentCachingIterator:
             custom_level=not root_node.config.auto_levels,
         )
 
-    def _all_content(
+    def all_node_content(
         self,
         node: Union[SDocElementIF, DocumentFromFile],
         print_fragments: bool = False,
@@ -108,7 +108,7 @@ class DocumentCachingIterator:
                 ):
                     current_number += 1
 
-                yield from self._all_content(
+                yield from self.all_node_content(
                     assert_cast(
                         subnode_,
                         (
@@ -148,7 +148,7 @@ class DocumentCachingIterator:
                     ):
                         current_number += 1
 
-                    yield from self._all_content(
+                    yield from self.all_node_content(
                         subnode_,
                         print_fragments=print_fragments,
                         print_fragments_from_files=print_fragments_from_files,
@@ -179,7 +179,7 @@ class DocumentCachingIterator:
                     ):
                         current_number += 1
 
-                    yield from self._all_content(
+                    yield from self.all_node_content(
                         subnode_,
                         print_fragments=print_fragments,
                         print_fragments_from_files=print_fragments_from_files,
@@ -208,7 +208,7 @@ class DocumentCachingIterator:
                     and subnode_.node_type == "TEXT"
                 ):
                     current_number += 1
-                yield from self._all_content(
+                yield from self.all_node_content(
                     assert_cast(
                         subnode_,
                         (
@@ -234,7 +234,7 @@ class DocumentCachingIterator:
 
             assert node.resolved_document is not None
 
-            yield from self._all_content(
+            yield from self.all_node_content(
                 node.resolved_document,
                 print_fragments=print_fragments,
                 print_fragments_from_files=print_fragments_from_files,

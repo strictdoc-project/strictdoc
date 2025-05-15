@@ -968,13 +968,31 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                     f"'{incoming_link_parent_node.get_display_title()}'."
                 )
 
-    def validate_node_can_remove_uid(self, *, node: Union[SDocNode, Anchor]):
+    def validate_can_remove_node(
+        self, *, node: Union[SDocNode, Anchor]
+    ) -> None:
         incoming_links: Optional[List[InlineLink]] = self.get_incoming_links(
             node
         )
-        if incoming_links is None or len(incoming_links) == 0:
-            return
-        raise SingleValidationError("Cannot remove UID with incoming links.")
+        if incoming_links is not None and len(incoming_links) > 0:
+            link_list_message = ", ".join(
+                map(
+                    lambda l_: f"'{l_.parent_node().get_display_title()}' -> '{l_.link}'",
+                    incoming_links,
+                )
+            )
+            raise SingleValidationError(
+                f"Cannot remove node '{node.get_display_title()}' with incoming LINKs from: {link_list_message}."
+            )
+        child_nodes: List[SDocNode] = self.get_children_requirements(node)
+        if child_nodes is not None and len(child_nodes) > 0:
+            nodes_list_message = ", ".join(
+                map(lambda n_: "'" + n_.get_display_title() + "'", child_nodes)
+            )
+            raise SingleValidationError(
+                f"Cannot remove node '{node.get_display_title()}' "
+                f"with incoming relations from:\n{nodes_list_message}."
+            )
 
     def validate_section_can_remove_uid(self, *, section: SDocSection):
         section_incoming_links: Optional[List[InlineLink]] = (

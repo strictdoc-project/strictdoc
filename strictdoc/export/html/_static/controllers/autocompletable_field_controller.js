@@ -185,7 +185,7 @@
         const text = this.autocompletable.innerText || "";
         const parts = text.split(",");
 
-        // Replace the last incomplete token with the suggestion
+        // Replace the last incomplete token with the suggestion.
         parts[parts.length - 1] = " " + suggestion;
         suggestion = parts.map(p => p.trim()).join(", ")
       } 

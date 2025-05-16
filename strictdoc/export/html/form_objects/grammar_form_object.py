@@ -1,6 +1,7 @@
-# mypy: disable-error-code="arg-type,no-any-return,no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg"
 from typing import Dict, List, Optional, Set
 
+from markupsafe import Markup
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -189,7 +190,7 @@ class GrammarFormObject(ErrorObject):
 
     def render_row_with_grammar_element(
         self, field: GrammarElementFormField
-    ) -> str:
+    ) -> Markup:
         form_object = RowWithGrammarElementFormObject(
             field=field,
             errors=self.errors,

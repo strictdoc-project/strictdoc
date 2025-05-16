@@ -46,14 +46,14 @@ class SDocRuntimeEnvironment:
             f"{self.path_to_strictdoc}"
         )
 
-    def get_static_files_path(self):
+    def get_static_files_path(self) -> str:
         if self.is_binary_dist:  # pragma: no cover
             return os.path.join(self.path_to_strictdoc, "_static")
         return os.path.join(
             self.path_to_strictdoc, "strictdoc/export/html/_static"
         )
 
-    def get_extra_static_files_path(self):
+    def get_extra_static_files_path(self) -> str:
         if self.is_binary_dist:  # pragma: no cover
             return os.path.join(self.path_to_strictdoc, "_static_extra")
         return os.path.join(

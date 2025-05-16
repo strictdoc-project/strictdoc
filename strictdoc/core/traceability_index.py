@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call,no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr,type-arg"
 import datetime
 from copy import deepcopy
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
@@ -64,7 +64,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
 
     @property
-    def document_iterators(self):
+    def document_iterators(self) -> Dict[SDocDocument, DocumentCachingIterator]:
         return self._document_iterators
 
     def is_small_project(self):
@@ -106,7 +106,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         )
         return len(parent_requirements) > 0
 
-    def has_children_requirements(self, requirement: SDocNode):
+    def has_children_requirements(self, requirement: SDocNode) -> bool:
         assert isinstance(requirement, SDocNode)
         if not isinstance(requirement.reserved_uid, str):
             return False

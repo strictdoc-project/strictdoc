@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-any-return,no-untyped-call,no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,type-arg"
 from typing import Dict, List, Optional, Tuple
 
 from strictdoc import __version__

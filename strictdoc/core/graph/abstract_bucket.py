@@ -2,6 +2,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Tuple
 
+from strictdoc.helpers.ordered_set import OrderedSet
+
 ALL_EDGES = ".all"
 
 
@@ -26,7 +28,7 @@ class AbstractBucket(ABC):
 
     def get_link_values(
         self, *, lhs_node: Any, edge: Optional[str] = None
-    ) -> Any:
+    ) -> OrderedSet[Any]:
         raise NotImplementedError  # pragma: no cover
 
     def get_link_values_with_edges(

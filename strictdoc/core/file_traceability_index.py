@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-def"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-def"
 from copy import copy
 from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 

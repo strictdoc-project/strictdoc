@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,type-arg"
 import datetime
 import os
 import re
@@ -195,7 +195,7 @@ class ProjectConfig:
         self.chromedriver: Optional[str] = chromedriver
 
     @staticmethod
-    def default_config(environment: SDocRuntimeEnvironment):
+    def default_config(environment: SDocRuntimeEnvironment) -> "ProjectConfig":
         assert isinstance(environment, SDocRuntimeEnvironment)
         return ProjectConfig(
             environment=environment,

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-redef,no-untyped-call,no-untyped-def,type-arg,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg,union-attr"
 import hashlib
 import statistics
 from dataclasses import dataclass, field
@@ -462,10 +462,10 @@ class ChangeStats:
                             matched_uid = None
                             matched_mid = None
 
-                        uid_modified: bool = False
-                        title_modified: bool = False
-                        lhs_colored_title_diff: Optional[Markup] = None
-                        rhs_colored_title_diff: Optional[Markup] = None
+                        uid_modified = False
+                        title_modified = False
+                        lhs_colored_title_diff = None
+                        rhs_colored_title_diff = None
 
                         # If there is another section and the UIDs are not the
                         # same, consider the UID modified.
@@ -563,6 +563,8 @@ class ChangeStats:
                         )
                     )
 
+                    requirement_change: RequirementChange
+
                     # If there is no other requirement to compare with,
                     # we simply record this as a trivial change where everything
                     # is tracked as "deleted" or "new".
@@ -574,13 +576,11 @@ class ChangeStats:
                             lhs_requirement = None
                             rhs_requirement = requirement
 
-                        requirement_change: RequirementChange = (
-                            RequirementChange(
-                                requirement_token=None,
-                                field_changes=[],
-                                lhs_requirement=lhs_requirement,
-                                rhs_requirement=rhs_requirement,
-                            )
+                        requirement_change = RequirementChange(
+                            requirement_token=None,
+                            field_changes=[],
+                            lhs_requirement=lhs_requirement,
+                            rhs_requirement=rhs_requirement,
                         )
                         change_stats.map_nodes_to_changes[node] = (
                             requirement_change
@@ -721,7 +721,7 @@ class ChangeStats:
                         lhs_requirement = other_requirement
                         rhs_requirement = requirement
 
-                    requirement_change: RequirementChange = RequirementChange(
+                    requirement_change = RequirementChange(
                         requirement_token=requirement_token,
                         field_changes=field_changes,
                         lhs_requirement=lhs_requirement,

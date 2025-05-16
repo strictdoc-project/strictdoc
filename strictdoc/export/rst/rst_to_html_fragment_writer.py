@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 import hashlib
 import io
 import os
@@ -31,6 +31,7 @@ class RstToHtmlFragmentWriter:
         project_config: ProjectConfig,
         context_document: Optional[SDocDocument],
     ):
+        self.source_path: str
         path_to_output_dir_md5: str = hashlib.md5(
             project_config.output_dir.encode("utf-8")
         ).hexdigest()
@@ -55,12 +56,12 @@ class RstToHtmlFragmentWriter:
             # because this RST-to-HTML writer resolves path to CSV assets
             # that are copied to that output folder by StrictDoc.
             # See CSVTable().get_csv_data() where the source_path is used.
-            self.source_path: str = os.path.join(
+            self.source_path = os.path.join(
                 context_document.meta.output_document_dir_full_path,
                 "STRICTDOC-FRAGMENT.rst",
             )
         else:
-            self.source_path: str = "<string>"
+            self.source_path = "<string>"
         self.context_document: Optional[SDocDocument] = context_document
 
     def write(self, rst_fragment: str, use_cache: bool = True) -> Markup:

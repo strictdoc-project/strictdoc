@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg"
 import sys
 import traceback
 from functools import partial
@@ -127,14 +127,13 @@ def range_marker_processor(marker: RangeMarker, parse_context: ParseContext):
     location = get_location(marker)
     line = location["line"]
 
+    current_top_marker: RangeMarker
     if marker.ng_is_nodoc:
         if marker.is_begin():
             parse_context.marker_stack.append(marker)
         elif marker.is_end():
             try:
-                current_top_marker: RangeMarker = (
-                    parse_context.marker_stack.pop()
-                )
+                current_top_marker = parse_context.marker_stack.pop()
                 if (
                     not current_top_marker.ng_is_nodoc
                     or current_top_marker.is_end()
@@ -165,7 +164,7 @@ def range_marker_processor(marker: RangeMarker, parse_context: ParseContext):
 
     elif marker.is_end():
         try:
-            current_top_marker: RangeMarker = parse_context.marker_stack.pop()
+            current_top_marker = parse_context.marker_stack.pop()
             if marker.reqs != current_top_marker.reqs:
                 raise create_begin_end_range_reqs_mismatch_error(
                     location, current_top_marker.reqs, marker.reqs

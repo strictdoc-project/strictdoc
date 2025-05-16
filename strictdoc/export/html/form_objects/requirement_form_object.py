@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-redef,no-untyped-call,no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr,type-arg"
 from collections import defaultdict
 from enum import Enum
 from typing import Dict, Iterable, List, Optional, Set, Union
@@ -463,21 +463,21 @@ class RequirementFormObject(ErrorObject):
                 )
                 form_refs_fields.append(form_ref_field)
             elif isinstance(reference_value, ChildReqReference):
-                child_reference: ChildReqReference = reference_value
+                child_req_reference: ChildReqReference = reference_value
                 form_ref_field = RequirementReferenceFormField(
-                    field_mid=child_reference.mid,
+                    field_mid=child_req_reference.mid,
                     field_type=RequirementReferenceFormField.FieldType.CHILD,
-                    field_value=child_reference.ref_uid,
-                    field_role=child_reference.role,
+                    field_value=child_req_reference.ref_uid,
+                    field_role=child_req_reference.role,
                 )
                 form_refs_fields.append(form_ref_field)
             elif isinstance(reference_value, FileReference):
-                child_reference: FileReference = reference_value
+                child_file_reference: FileReference = reference_value
                 form_ref_field = RequirementReferenceFormField(
-                    field_mid=child_reference.mid,
+                    field_mid=child_file_reference.mid,
                     field_type=RequirementReferenceFormField.FieldType.FILE,
-                    field_value=child_reference.get_posix_path(),
-                    field_role=child_reference.role,
+                    field_value=child_file_reference.get_posix_path(),
+                    field_role=child_file_reference.role,
                 )
                 form_refs_fields.append(form_ref_field)
         return RequirementFormObject(

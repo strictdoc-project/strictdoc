@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional, Union
@@ -63,8 +63,6 @@ class DocumentScreenViewObject:
         )
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
-
-        self.custom_html2pdf_template = None
 
         self.custom_html2pdf_template: Optional[Template] = None
         if project_config.html2pdf_template is not None:

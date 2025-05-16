@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-redef,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 import os.path
 import re
 from datetime import datetime
@@ -355,8 +355,8 @@ class SPDXGenerator:
         # Now iterate over requirement nodes again.
         #
         for document_ in traceability_index.document_tree.document_list:
-            document_iterator: DocumentCachingIterator = (
-                traceability_index.get_document_iterator(document_)
+            document_iterator = traceability_index.get_document_iterator(
+                document_
             )
             for node in document_iterator.all_content():
                 if node.is_requirement():

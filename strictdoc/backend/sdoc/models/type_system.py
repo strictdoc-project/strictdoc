@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from typing import List, Optional, Tuple
 
 from strictdoc.helpers.auto_described import auto_described
@@ -83,7 +83,7 @@ class FileEntry:
         if g_line_range is not None:
             range_components_str = g_line_range.split(", ")
             assert len(range_components_str) == 2, range_components_str
-            self.line_range: Tuple[int, int] = (
+            self.line_range = (
                 int(range_components_str[0]),
                 int(range_components_str[1]),
             )

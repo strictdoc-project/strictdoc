@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg"
 import sys
 import traceback
 from itertools import islice
@@ -60,6 +60,7 @@ class SourceFileTraceabilityReader_Python:
 
         nodes = traverse_tree(tree)
         map_function_to_node = {}
+        markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]]
         for node_ in nodes:
             if node_.type == "module":
                 function = Function(
@@ -222,9 +223,7 @@ class SourceFileTraceabilityReader_Python:
 
                 node_text_string = node_.text.decode("utf8")
 
-                markers: List[
-                    Union[FunctionRangeMarker, RangeMarker, LineMarker]
-                ] = MarkerParser.parse(
+                markers = MarkerParser.parse(
                     node_text_string,
                     node_.start_point[0] + 1,
                     node_.end_point[0] + 1,

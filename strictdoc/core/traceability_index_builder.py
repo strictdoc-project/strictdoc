@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-redef,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
 import datetime
 import glob
 import os
@@ -479,9 +479,9 @@ class TraceabilityIndexBuilder:
                     )
 
                 if node.is_requirement():
-                    requirement: SDocNode = assert_cast(node, SDocNode)
-                    if requirement.reserved_tags is not None:
-                        for tag in requirement.reserved_tags:
+                    requirement_node: SDocNode = assert_cast(node, SDocNode)
+                    if requirement_node.reserved_tags is not None:
+                        for tag in requirement_node.reserved_tags:
                             document_tags.setdefault(tag, 0)
                             document_tags[tag] += 1
                     for node_field_ in node.enumerate_fields():
@@ -505,6 +505,8 @@ class TraceabilityIndexBuilder:
 
         # Now iterate over the requirements again to build an in-depth map of
         # parents and children.
+        requirement: SDocNode
+
         for document in document_tree.document_list:
             document_iterator = d_01_document_iterators[document]
 
@@ -515,7 +517,7 @@ class TraceabilityIndexBuilder:
                 if not node.is_requirement():
                     continue
 
-                requirement: SDocNode = node
+                requirement = assert_cast(node, SDocNode)
 
                 #
                 # At this point, we resolve LINKs, and the expectation is that
@@ -657,7 +659,7 @@ class TraceabilityIndexBuilder:
                 # FIXME: is_requirement() typing issue.
                 if not node.is_requirement():
                     continue
-                requirement: Union[SDocNode] = assert_cast(node, SDocNode)
+                requirement = assert_cast(node, SDocNode)
                 if requirement.reserved_uid is None:
                     continue
 

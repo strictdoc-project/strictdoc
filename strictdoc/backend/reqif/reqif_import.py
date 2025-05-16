@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-def"
+# mypy: disable-error-code="no-untyped-def"
 import os.path
 from typing import List
 
@@ -25,12 +25,13 @@ class ReqIFImport:
             import_config.input_path
         )
 
+        documents: List[SDocDocument]
         if import_config.input_path.endswith(".reqifz"):
             reqifz_bundle: ReqIFZBundle = ReqIFZParser.parse(
                 import_config.input_path
             )
             assert len(reqifz_bundle.reqif_bundles) > 0
-            documents: List[SDocDocument] = converter.convert_reqif_bundle(
+            documents = converter.convert_reqif_bundle(
                 next(iter(reqifz_bundle.reqif_bundles.values())),
                 enable_mid=import_config.reqif_enable_mid
                 or project_config.reqif_enable_mid,
@@ -42,7 +43,7 @@ class ReqIFImport:
             reqif_bundle: ReqIFBundle = ReqIFParser.parse(
                 import_config.input_path
             )
-            documents: List[SDocDocument] = converter.convert_reqif_bundle(
+            documents = converter.convert_reqif_bundle(
                 reqif_bundle,
                 enable_mid=import_config.reqif_enable_mid
                 or project_config.reqif_enable_mid,

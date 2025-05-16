@@ -2793,14 +2793,14 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 )
 
                 if field.gef_type == RequirementFieldType.MULTIPLE_CHOICE:
-                    # MultipleChoice: Split the query into parts
+                    # MultipleChoice: Split the query into parts.
                     parts = q.lower().split(",")
 
                     # only use the last_part for lookup
                     last_part = parts[-1].strip()
                     query_words = last_part.split()
 
-                    # and pre-filter: don't suggest choices that were already selected / present in the query
+                    # Pre-filter: don't suggest choices that were already selected / present in the query.
                     already_selected = [
                         p.strip() for p in parts[:-1] if p.strip()
                     ]
@@ -2810,13 +2810,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                         if choice.lower() not in already_selected
                     ]
                 else:
-                    # SingleChoice: use all available options
+                    # SingleChoice: use all available options.
                     query_words = q.lower().split()
                     filtered_options = all_options
 
                 resulting_values = []
 
-                # now filter the remainig options for those that macht all words in query_words
+                # Now filter the remaining options for those that match all words in query_words.
                 for option_ in filtered_options:
                     words_ = option_.strip().lower()
 

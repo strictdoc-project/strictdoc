@@ -25,6 +25,7 @@ from strictdoc.backend.sdoc.models.type_system import (
 )
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 
 
@@ -217,8 +218,7 @@ class SDocDocument(SDocDocumentIF):
         """
         Returns the GrammarElementField for a field of a [element_type] in this document.
         """
-        assert self.grammar is not None
-        grammar: DocumentGrammar = self.grammar
+        grammar: DocumentGrammar = assert_cast(self.grammar, DocumentGrammar)
         element: GrammarElement = grammar.elements_by_type[element_type]
         field: GrammarElementField = element.fields_map[field_name]
         return field

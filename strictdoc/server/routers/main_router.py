@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-any-return,no-redef,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,attr-defined,no-redef,no-untyped-call,no-untyped-def,union-attr"
 import copy
 import datetime
 import os
@@ -150,7 +150,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     is_small_project = export_action.traceability_index.is_small_project()
 
-    html_templates = HTMLTemplates.create(
+    html_templates: HTMLTemplates = HTMLTemplates.create(
         project_config=project_config,
         enable_caching=not is_small_project,
         strictdoc_last_update=export_action.traceability_index.strictdoc_last_update,

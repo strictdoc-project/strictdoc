@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import sys
 import traceback
 from copy import copy

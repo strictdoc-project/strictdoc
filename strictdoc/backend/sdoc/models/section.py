@@ -115,16 +115,16 @@ class SDocSection(SDocSectionIF):
     def document_is_included(self):
         return self.ng_including_document_reference.get_document() is not None
 
-    def is_requirement(self):
+    def is_requirement(self) -> bool:
         return False
 
-    def is_composite_requirement(self):
+    def is_composite_requirement(self) -> bool:
         return False
 
-    def is_section(self):
+    def is_section(self) -> bool:
         return True
 
-    def has_any_text_nodes(self):
+    def has_any_text_nodes(self) -> bool:
         return any(
             node_.__class__.__name__ == "SDocNode" and node_.node_type == "TEXT"
             for node_ in self.section_contents

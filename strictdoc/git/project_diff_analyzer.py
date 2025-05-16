@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-any-return,no-redef,no-untyped-call,no-untyped-def,type-arg,union-attr"
+# mypy: disable-error-code="arg-type,no-redef,no-untyped-call,no-untyped-def,type-arg,union-attr"
 import hashlib
 import statistics
 from dataclasses import dataclass, field
@@ -156,7 +156,10 @@ class ProjectTreeDiffStats:
             requirement.mid_permanent
             and requirement.reserved_mid in self.map_mid_to_nodes
         ):
-            return self.map_mid_to_nodes[requirement.reserved_mid]
+            node: SDocNode = assert_cast(
+                self.map_mid_to_nodes[requirement.reserved_mid], SDocNode
+            )
+            return node
         elif (
             requirement.reserved_uid is None
             or requirement.reserved_uid not in self.map_uid_to_nodes

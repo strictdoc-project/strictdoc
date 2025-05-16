@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import collections
 import functools
 import os
@@ -24,16 +24,16 @@ class FileOrFolderEntry:
 
 
 class File(FileOrFolderEntry):
-    def __init__(self, level, full_path, rel_path: SDocRelativePath):
+    def __init__(self, level: int, full_path: str, rel_path: SDocRelativePath):
         assert os.path.isfile(full_path)
         assert os.path.isabs(full_path)
         assert isinstance(rel_path, SDocRelativePath)
 
-        self.level = level
-        self.full_path = full_path
-        self.root_path = full_path
+        self.level: int = level
+        self.full_path: str = full_path
+        self.root_path: str = full_path
         self.rel_path: SDocRelativePath = rel_path
-        self.file_name = os.path.basename(self.full_path)
+        self.file_name: str = os.path.basename(self.full_path)
         self.files = [self]
         self.subfolder_trees: List[Folder] = []
 

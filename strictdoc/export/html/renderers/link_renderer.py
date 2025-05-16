@@ -46,12 +46,13 @@ class LinkRenderer:
         static_url = "/" + self.static_path + "/" + url
         return static_url
 
-    def render_local_anchor(self, node):
+    def render_local_anchor(self, node) -> str:
         if node in self.local_anchor_cache:
             return self.local_anchor_cache[node]
         if isinstance(node, Anchor):
             return f"{self._string_to_link(node.value)}"
 
+        local_anchor: str = ""
         if node.reserved_uid is not None and len(node.reserved_uid) > 0:
             # UID is unique enough.
             local_anchor = self._string_to_link(node.reserved_uid)
@@ -85,7 +86,7 @@ class LinkRenderer:
         context_document: Optional[SDocDocument],
         document_type: DocumentType,
         allow_local: bool = True,
-    ):
+    ) -> str:
         """
         allow_local:     used on the DTR screen where we want to ensure that only
                          full paths are used when jumping to the DOC screen.

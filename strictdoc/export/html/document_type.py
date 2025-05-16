@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-any-return,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 # FIXME: Migrate this to a proper Enum.
 class DocumentType:
     DOCUMENT = "document"
@@ -41,20 +41,20 @@ class DocumentType:
         return DocumentType(DocumentType.PDF)
 
     @property
-    def is_document(self):
+    def is_document(self) -> bool:
         return self.document_type == DocumentType.DOCUMENT
 
-    def is_table(self):
+    def is_table(self) -> bool:
         return self.document_type == DocumentType.TABLE
 
-    def is_trace(self):
+    def is_trace(self) -> bool:
         return self.document_type == DocumentType.TRACE
 
     @property
-    def is_deeptrace(self):
+    def is_deeptrace(self) -> bool:
         return self.document_type == DocumentType.DEEPTRACE
 
-    def is_pdf(self):
+    def is_pdf(self) -> bool:
         return self.document_type == DocumentType.PDF
 
     def get_page_title(self) -> str:

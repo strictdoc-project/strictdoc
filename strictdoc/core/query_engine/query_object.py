@@ -227,7 +227,7 @@ class QueryObject:
         else:
             raise NotImplementedError  # pragma: no cover
 
-    def _evaluate_node_has_parent_requirements(self, node):
+    def _evaluate_node_has_parent_requirements(self, node) -> bool:
         if not isinstance(node, SDocNode):
             raise TypeError(
                 f"node.has_parent_requirements can be only called on "
@@ -236,7 +236,7 @@ class QueryObject:
             )
         return self.traceability_index.has_parent_requirements(node)
 
-    def _evaluate_node_has_child_requirements(self, node):
+    def _evaluate_node_has_child_requirements(self, node) -> bool:
         if not isinstance(node, SDocNode):
             raise TypeError(
                 f"node.has_child_requirements can be only called on "
@@ -262,7 +262,7 @@ class QueryObject:
             return False
         raise NotImplementedError  # pragma: no cover
 
-    def _evaluate_node_contains_any_text(self, node):
+    def _evaluate_node_contains_any_text(self, node) -> bool:
         if not isinstance(node, SDocSection):
             raise TypeError(
                 f"node.contains_any_text can be only called on "

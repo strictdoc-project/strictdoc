@@ -8,6 +8,7 @@ from strictdoc.helpers.mid import MID
 class RequirementFieldName:
     MID = "MID"
     UID = "UID"
+    PREFIX = "PREFIX"
     LEVEL = "LEVEL"
     STATUS = "STATUS"
     TAGS = "TAGS"

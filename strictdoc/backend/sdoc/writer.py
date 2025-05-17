@@ -236,6 +236,7 @@ class SDWriter:
 
                     if (
                         element.property_is_composite is not None
+                        or element.property_prefix is not None
                         or element.property_view_style is not None
                     ):
                         output += "  PROPERTIES:\n"
@@ -246,6 +247,10 @@ class SDWriter:
                                 if element.property_is_composite
                                 else "False"
                             )
+                            output += "\n"
+                        if element.property_prefix is not None:
+                            output += "    PREFIX: "
+                            output += element.property_prefix
                             output += "\n"
                         if element.property_view_style is not None:
                             output += "    VIEW_STYLE: "

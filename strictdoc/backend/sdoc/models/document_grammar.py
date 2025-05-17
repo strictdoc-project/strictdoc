@@ -25,6 +25,7 @@ class GrammarElement:
         parent: Optional["DocumentGrammar"],
         tag: str,
         property_is_composite: str,
+        property_prefix: str,
         property_view_style: str,
         fields: List[
             Union[
@@ -43,6 +44,10 @@ class GrammarElement:
             None
             if property_is_composite == ""
             else (property_is_composite == "True")
+        )
+
+        self.property_prefix: Optional[str] = (
+            property_prefix if property_prefix not in (None, "") else None
         )
 
         assert property_view_style in (
@@ -129,6 +134,7 @@ class GrammarElement:
             parent=None,
             tag=tag,
             property_is_composite="",
+            property_prefix="",
             property_view_style="",
             fields=[
                 GrammarElementFieldString(
@@ -346,6 +352,7 @@ class DocumentGrammar(SDocGrammarIF):
             parent=None,
             tag="REQUIREMENT",
             property_is_composite="",
+            property_prefix="",
             property_view_style="",
             fields=fields,
             relations=[],
@@ -436,6 +443,7 @@ class DocumentGrammar(SDocGrammarIF):
             parent=None,
             tag="TEST_RESULT",
             property_is_composite="",
+            property_prefix="",
             property_view_style="",
             fields=fields,
             relations=[],
@@ -537,6 +545,7 @@ class DocumentGrammar(SDocGrammarIF):
             parent=parent,
             tag="TEXT",
             property_is_composite="",
+            property_prefix="",
             property_view_style="",
             fields=fields,
             relations=[],
@@ -583,6 +592,7 @@ class DocumentGrammar(SDocGrammarIF):
             parent=parent,
             tag="SECTION",
             property_is_composite="True",
+            property_prefix="",
             property_view_style="",
             fields=fields,
             relations=[],

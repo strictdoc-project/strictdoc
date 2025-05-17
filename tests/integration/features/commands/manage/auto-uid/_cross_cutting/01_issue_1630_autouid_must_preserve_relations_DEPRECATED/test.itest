@@ -1,0 +1,14 @@
+RUN: cp %S/input.sdoc %S/Output/
+RUN: %strictdoc manage auto-uid %S/Output/
+
+RUN: %cat %S/Output/input.sdoc | filecheck %s
+
+NOTE: This regression test ensures that the RELATIONS field of a requirement that got
+      an auto-generated UID are NOT modified.
+      The issue was reported here:
+      "auto-uid strips RELATIONS if the REQUIREMENT has no UID/MID.",
+      https://github.com/strictdoc-project/strictdoc/issues/1630
+CHECK:UID: SECT-3
+CHECK:RELATIONS:
+CHECK:- TYPE: Parent
+CHECK:  VALUE: SECT-1

@@ -81,22 +81,17 @@ class DocumentUIDAnalyzer:
             if node.node_type == "TEXT":
                 continue
             requirement: SDocNode = node
-            requirement_parent_prefix: str = (
-                requirement.get_requirement_prefix()
-            )
+            node_prefix: typing.Optional[str] = requirement.get_prefix()
+            if node_prefix is None:
+                continue
 
-            if (
-                requirement_parent_prefix
-                not in this_document_stats.requirements_per_prefix
-            ):
-                this_document_stats.requirements_per_prefix[
-                    requirement_parent_prefix
-                ] = SinglePrefixRequirements()
+            if node_prefix not in this_document_stats.requirements_per_prefix:
+                this_document_stats.requirements_per_prefix[node_prefix] = (
+                    SinglePrefixRequirements()
+                )
 
             prefix_requirements: SinglePrefixRequirements = (
-                this_document_stats.requirements_per_prefix[
-                    requirement_parent_prefix
-                ]
+                this_document_stats.requirements_per_prefix[node_prefix]
             )
             if requirement.reserved_uid is None:
                 prefix_requirements.requirements_no_uid.append(requirement)
@@ -108,7 +103,7 @@ class DocumentUIDAnalyzer:
                 # If the requirement has a prefix which is different to that of
                 # the parent section/document's prefix, we ignore this node as
                 # incredible for contributing to the next UID calculation.
-                if requirement_prefix != requirement_parent_prefix:
+                if requirement_prefix != node_prefix:
                     continue
 
                 requirement_uid_numeric_part = extract_last_numeric_part(

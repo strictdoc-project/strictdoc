@@ -1,0 +1,50 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  PROPERTIES:
+    PREFIX: None
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+TITLE: Requirement title #1
+STATEMENT: >>>
+Requirement statement #1.
+<<<
+RATIONALE: >>>
+Requirement rationale #1.
+<<<
+
+[REQUIREMENT]
+TITLE: Requirement title #2
+STATEMENT: >>>
+Requirement statement #2.
+<<<
+RATIONALE: >>>
+Requirement rationale #2.
+<<<

@@ -6,6 +6,10 @@
 from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
+from strictdoc.backend.sdoc.models.document_grammar import (
+    DocumentGrammar,
+    GrammarElement,
+)
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
     SDocSectionContentIF,
@@ -137,11 +141,28 @@ class SDocSection(SDocSectionIF):
         )
         return document.config.root is True
 
-    def get_requirement_prefix(self) -> str:
+    def get_prefix(self) -> str:
         if self.requirement_prefix is not None:
             return self.requirement_prefix
         parent: Union[SDocSectionIF, SDocDocumentIF] = self.parent
-        return parent.get_requirement_prefix()
+        return parent.get_prefix()
+
+    def get_prefix_for_new_node(self, node_type: str) -> Optional[str]:
+        assert isinstance(node_type, str) and len(node_type), node_type
+
+        document: SDocDocumentIF = assert_cast(
+            self.get_document(), SDocDocumentIF
+        )
+        grammar: DocumentGrammar = assert_cast(
+            document.grammar, DocumentGrammar
+        )
+        element: GrammarElement = grammar.elements_by_type[node_type]
+        if (element_prefix := element.property_prefix) is not None:
+            if element_prefix == "None":
+                return None
+            return element_prefix
+
+        return self.get_prefix()
 
     def blacklist_if_needed(self) -> None:
         for node_ in self.section_contents:

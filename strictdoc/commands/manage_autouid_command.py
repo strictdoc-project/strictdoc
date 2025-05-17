@@ -60,7 +60,7 @@ class ManageAutoUIDCommand:
             )
 
             for requirement in prefix_requirements.requirements_no_uid:
-                requirement_prefix = requirement.get_requirement_prefix()
+                requirement_prefix = requirement.get_prefix()
                 requirement_uid = f"{requirement_prefix}{next_number}"
                 requirement.set_field_value(
                     field_name="UID",

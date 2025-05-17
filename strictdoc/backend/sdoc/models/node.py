@@ -531,14 +531,52 @@ class SDocNode(SDocNodeIF):
         field_human_title = element.fields_map[element.content_field[0]]
         return field_human_title.get_field_human_name()
 
-    def get_requirement_prefix(self) -> str:
+    def get_prefix(self) -> Optional[str]:
+        if (
+            own_prefix := self._get_cached_field(
+                RequirementFieldName.PREFIX, singleline_only=True
+            )
+        ) is not None:
+            if own_prefix == "None":
+                return None
+            return own_prefix
+
+        document: SDocDocumentIF = assert_cast(
+            self.get_document(), SDocDocumentIF
+        )
+        grammar: DocumentGrammar = assert_cast(
+            document.grammar, DocumentGrammar
+        )
+        element: GrammarElement = grammar.elements_by_type[self.node_type]
+        if (element_prefix := element.property_prefix) is not None:
+            if element_prefix == "None":
+                return None
+            return element_prefix
+
         parent: Union[
             SDocDocumentIF, SDocSectionIF, SDocNodeIF, SDocCompositeNodeIF
         ] = assert_cast(
             self.parent,
             (SDocDocumentIF, SDocSectionIF, SDocNodeIF, SDocCompositeNodeIF),
         )
-        return parent.get_requirement_prefix()
+        return parent.get_prefix()
+
+    def get_prefix_for_new_node(self, node_type: str) -> Optional[str]:
+        assert isinstance(node_type, str) and len(node_type), node_type
+
+        document: SDocDocumentIF = assert_cast(
+            self.get_document(), SDocDocumentIF
+        )
+        grammar: DocumentGrammar = assert_cast(
+            document.grammar, DocumentGrammar
+        )
+        element: GrammarElement = grammar.elements_by_type[node_type]
+        if (element_prefix := element.property_prefix) is not None:
+            if element_prefix == "None":
+                return None
+            return element_prefix
+
+        return self.get_prefix()
 
     def dump_fields_as_parsed(self) -> str:
         # FIXME:

@@ -319,6 +319,7 @@ class P01_ReqIFToSDocConverter:
             # FIXME: MERGE NODES
             #        When the migration is done, make the nodes to be always recursive.
             property_is_composite="",
+            property_prefix="",
             property_view_style="",
             fields=fields,
             relations=[],

@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Hello world doc
+TITLE: Document 1
 
 [GRAMMAR]
 ELEMENTS:
@@ -11,9 +11,10 @@ ELEMENTS:
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True
-- TAG: COMPOSITE_REQUIREMENT
+- TAG: SECTION
   PROPERTIES:
     IS_COMPOSITE: True
+    PREFIX: FOO-
   FIELDS:
   - TITLE: MID
     TYPE: String
@@ -21,7 +22,7 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
-  - TITLE: STATEMENT
+  - TITLE: TITLE
     TYPE: String
     REQUIRED: False
 - TAG: REQUIREMENT
@@ -32,30 +33,17 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
 
-[[COMPOSITE_REQUIREMENT]]
-STATEMENT: System shall do 1.
+[[SECTION]]
+TITLE: Section
 
-[REQUIREMENT]
-STATEMENT: System shall do 1.
-
-[[/COMPOSITE_REQUIREMENT]]
-
-[[COMPOSITE_REQUIREMENT]]
-STATEMENT: System shall do 2.
-
-[REQUIREMENT]
-STATEMENT: System shall do 2.
-
-[[/COMPOSITE_REQUIREMENT]]
-
-[[COMPOSITE_REQUIREMENT]]
-STATEMENT: System shall do 3.
-
-[REQUIREMENT]
-STATEMENT: System shall do 3.
-
-[[/COMPOSITE_REQUIREMENT]]
+[[/SECTION]]

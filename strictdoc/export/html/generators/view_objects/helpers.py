@@ -60,6 +60,9 @@ def screen_should_display_file(
     if file.has_extension(".junit.xml") or file.has_extension(".gcov.json"):
         return True
 
+    if file.has_extension("output.xml"):
+        return True
+
     if file.has_extension(".sdoc"):
         document = traceability_index.document_tree.get_document_by_path(
             file.get_full_path()

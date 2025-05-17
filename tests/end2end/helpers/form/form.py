@@ -173,6 +173,35 @@ class Form:  # pylint: disable=invalid-name
                 f"'{field_value}'."
             )
 
+    def do_append_command_and_use_autocomplete_result_again(
+        self, test_id: str, field_value: str
+    ) -> None:
+        assert isinstance(test_id, str)
+        assert isinstance(field_value, str)
+
+        field_xpath = f"(//*[@data-testid='{test_id}'])"
+        element = self.test_case.find_element(field_xpath)
+
+        for _ in range(3):
+            element.send_keys(f",{field_value}")
+            element.send_keys(Keys.ARROW_DOWN)
+            element.send_keys(Keys.RETURN)
+
+            try:
+                WebDriverWait(self.test_case.driver, timeout=3).until(
+                    lambda _: field_value.lower()
+                    in element.text.lower().split()[-1]
+                )
+                break
+            except Exception:
+                pass
+
+        else:
+            raise AssertionError(
+                f"The text field could not be filled with the value: "
+                f"'{field_value}'."
+            )
+
     def do_use_first_autocomplete_result_mid(
         self, mid: MID, test_id: str, field_value: str
     ) -> None:

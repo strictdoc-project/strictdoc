@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Hello world doc 3
+TITLE: Hello world doc 2
 OPTIONS:
   AUTO_LEVELS: On
 
@@ -56,15 +56,18 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
 
+[DOCUMENT_FROM_FILE]
+FILE: subnested.sdoc
+
 [[SECTION]]
-TITLE: Section 1.2.3
+TITLE: Nested Doc Section
 
 [[COMPOSITE_REQUIREMENT]]
-TITLE: Composite requirement 4.5.6
+TITLE: Nested Doc Section Composite requirement
 STATEMENT: ...
 
 [REQUIREMENT]
-TITLE: Requirement 7.8.9
+TITLE: Nested Doc Section Requirement
 STATEMENT: ...
 
 [[/COMPOSITE_REQUIREMENT]]

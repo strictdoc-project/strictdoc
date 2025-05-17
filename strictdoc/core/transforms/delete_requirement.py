@@ -2,11 +2,11 @@ from typing import List, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.model import (
-    SDocCompositeNodeIF,
     SDocDocumentIF,
+    SDocNodeIF,
     SDocSectionIF,
 )
-from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.transforms.validation_error import (
@@ -54,17 +54,10 @@ class DeleteRequirementCommand:
 
         self.traceability_index.delete_requirement(self.requirement)
 
-        requirement_parent: Union[
-            SDocSectionIF, SDocDocumentIF, SDocCompositeNodeIF
-        ] = self.requirement.parent
+        requirement_parent: Union[SDocSectionIF, SDocDocumentIF, SDocNodeIF] = (
+            self.requirement.parent
+        )
 
-        if isinstance(requirement_parent, SDocCompositeNode):
-            assert (
-                requirement_parent.requirements is not None
-                and len(requirement_parent.requirements) > 0
-            ), requirement_parent.requirements
-            requirement_parent.requirements.remove(self.requirement)
-        else:
-            requirement_parent.section_contents.remove(self.requirement)
+        requirement_parent.section_contents.remove(self.requirement)
 
         self.traceability_index.update_last_updated()

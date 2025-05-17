@@ -15,7 +15,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.model import SDocDocumentFromFileIF
 from strictdoc.backend.sdoc.models.node import (
-    SDocCompositeNode,
     SDocNode,
     SDocNodeField,
 )
@@ -63,8 +62,7 @@ class SDocParsingProcessor:
             "DocumentView": self.process_document_view,
             "SDocSection": self.process_section,
             "DocumentFromFile": self.process_document_from_file,
-            "SDocCompositeNode": self.process_composite_requirement,
-            "SDocCompositeNodeNew": self.process_requirement,
+            "SDocCompositeNode": self.process_requirement,
             "SDocNode": self.process_requirement,
             "SDocNodeField": self.process_node_field,
         }
@@ -158,69 +156,24 @@ class SDocParsingProcessor:
         self.parse_context.current_include_parent = document_from_file.parent
         self.parse_context.fragments_from_files.append(document_from_file)
 
-    def process_composite_requirement(
-        self, composite_requirement: SDocCompositeNode
-    ):
-        self.parse_context.document_has_requirements = True
-
-        if self.parse_context.document_config.auto_levels:
-            if composite_requirement.ng_resolved_custom_level:
-                raise StrictDocException(
-                    "[COMPOSITE_REQUIREMENT].LEVEL field is provided. "
-                    "This contradicts to the option "
-                    "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
-                    f"Composite requirement: {composite_requirement}."
-                )
-        else:
-            if not composite_requirement.ng_resolved_custom_level:
-                raise StrictDocException(
-                    "[COMPOSITE_REQUIREMENT].LEVEL field is not "
-                    "provided. This contradicts to the option "
-                    "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
-                    f"Composite requirement: {composite_requirement}."
-                )
-
-        composite_requirement.ng_document_reference = (
-            self.parse_context.document_reference
-        )
-        composite_requirement.ng_including_document_reference = (
-            self.parse_context.context_document_reference
-        )
-
-        cursor = composite_requirement.parent
-        while (
-            not isinstance(cursor, SDocDocument)
-            and not cursor.ng_has_requirements
-        ):
-            cursor.ng_has_requirements = True
-            cursor = cursor.parent
-
-        if (
-            composite_requirement.reserved_title is None
-            or not self.parse_context.document_config.is_requirement_in_toc()
-        ) and self.parse_context.document_config.auto_levels:
-            composite_requirement.ng_resolved_custom_level = "None"
-
-        preserve_source_location_data(composite_requirement)
-
     def process_requirement(self, requirement: SDocNode) -> None:
         self.parse_context.document_has_requirements = True
 
         if self.parse_context.document_config.auto_levels:
             if requirement.ng_resolved_custom_level:
                 raise StrictDocException(
-                    "[REQUIREMENT].LEVEL field is provided. "
+                    f"{requirement.get_display_node_type_string()}.LEVEL field is provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
-                    f"Requirement: {requirement}."
+                    f"Node: {requirement}."
                 )
         else:
             if not requirement.ng_resolved_custom_level:
                 raise StrictDocException(
-                    "[REQUIREMENT].LEVEL field is not provided. "
+                    f"{requirement.get_display_node_type_string()}.LEVEL field is not provided. "
                     "This contradicts to the option "
                     "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
-                    f"Requirement: {requirement}."
+                    f"Node: {requirement}."
                 )
 
         requirement.ng_document_reference = (

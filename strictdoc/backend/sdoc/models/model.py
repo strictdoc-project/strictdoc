@@ -43,10 +43,6 @@ class SDocNodeIF(ABC):
         raise NotImplementedError  # pragma: no cover
 
 
-class SDocCompositeNodeIF(SDocNodeIF, ABC):
-    pass
-
-
 class SDocSectionIF(ABC):
     parent: Union["SDocDocumentIF", "SDocSectionIF"]
     ng_resolved_custom_level: Optional[str]
@@ -114,7 +110,6 @@ class SDocDocumentFromFileIF:
 
 
 SDocSectionContentIF = Union[
-    SDocCompositeNodeIF,
     SDocNodeIF,
     SDocSectionIF,
     SDocDocumentFromFileIF,
@@ -122,7 +117,6 @@ SDocSectionContentIF = Union[
 
 
 SDocDocumentContentIF = Union[
-    SDocCompositeNodeIF,
     SDocDocumentFromFileIF,
     SDocNodeIF,
     SDocSectionIF,
@@ -131,7 +125,6 @@ SDocDocumentContentIF = Union[
 
 SDocElementIF = Union[
     SDocNodeIF,
-    SDocCompositeNodeIF,
     SDocSectionIF,
     SDocDocumentIF,
     SDocDocumentFromFileIF,

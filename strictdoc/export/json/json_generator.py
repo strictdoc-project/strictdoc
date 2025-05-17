@@ -8,7 +8,7 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
@@ -208,9 +208,8 @@ class JSONGenerator:
             return section_dict
 
         elif isinstance(node, SDocNode):
-            if isinstance(node, SDocCompositeNode):
-                return {}
-
+            # FIXME: Print composite nodes.
+            # https://github.com/strictdoc-project/strictdoc/issues/2180
             subnode_dict = cls._write_requirement(
                 node=node,
                 document=document,

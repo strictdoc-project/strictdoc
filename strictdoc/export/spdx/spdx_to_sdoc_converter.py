@@ -180,7 +180,6 @@ class SPDXToSDocConverter:
             node_type="SPDX_PACKAGE",
             fields=[],
             relations=[],
-            requirements=None,
         )
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(sdoc_document)
@@ -210,7 +209,6 @@ class SPDXToSDocConverter:
             node_type="SPDX_PACKAGE",
             fields=[],
             relations=[],
-            requirements=None,
         )
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(sdoc_document)
@@ -250,7 +248,6 @@ class SPDXToSDocConverter:
             node_type="SPDX_FILE",
             fields=fields,
             relations=[],
-            requirements=None,
         )
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(sdoc_document)
@@ -302,7 +299,6 @@ class SPDXToSDocConverter:
             node_type="SPDX_SNIPPET",
             fields=fields,
             relations=[],
-            requirements=None,
         )
         requirement.ng_document_reference = DocumentReference()
         requirement.ng_document_reference.set_document(sdoc_document)

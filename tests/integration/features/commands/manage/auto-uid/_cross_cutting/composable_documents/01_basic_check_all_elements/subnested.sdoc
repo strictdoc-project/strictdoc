@@ -57,14 +57,14 @@ ELEMENTS:
     REQUIRED: False
 
 [[SECTION]]
-TITLE: Section 1.2.3
+TITLE: Subnested Doc Section
 
 [[COMPOSITE_REQUIREMENT]]
-TITLE: Composite requirement 4.5.6
+TITLE: Subnested Doc Section Composite requirement
 STATEMENT: ...
 
 [REQUIREMENT]
-TITLE: Requirement 7.8.9
+TITLE: Subnested Doc Section Requirement
 STATEMENT: ...
 
 [[/COMPOSITE_REQUIREMENT]]

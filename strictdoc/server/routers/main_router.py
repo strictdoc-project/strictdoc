@@ -710,9 +710,14 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     export_action.traceability_index
                 )
             )
-            next_uid = document_tree_stats.get_next_requirement_uid(
-                reference_node.get_requirement_prefix()
-            )
+            if (
+                node_prefix := reference_node.get_prefix_for_new_node(
+                    element_type
+                )
+            ) is not None:
+                next_uid = document_tree_stats.get_next_requirement_uid(
+                    node_prefix
+                )
         form_object = RequirementFormObject.create_new(
             document=document,
             context_document_mid=context_document_mid,
@@ -784,9 +789,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 export_action.traceability_index
             )
         )
-        next_uid: str = document_tree_stats.get_next_requirement_uid(
-            reference_node.get_requirement_prefix()
-        )
+        next_uid: str = ""
+        if (node_prefix := reference_node.get_prefix()) is not None:
+            next_uid = document_tree_stats.get_next_requirement_uid(node_prefix)
+
         form_object: RequirementFormObject = (
             RequirementFormObject.clone_from_requirement(
                 requirement=reference_requirement,
@@ -1023,16 +1029,18 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         reference_node = export_action.traceability_index.get_node_by_mid_weak(
             MID(reference_mid)
         )
+        next_uid: str = ""
         if isinstance(reference_node, SDocNode):
-            next_uid: str = document_tree_stats.get_next_requirement_uid(
-                reference_node.get_requirement_prefix()
-            )
+            if (node_prefix := reference_node.get_prefix()) is not None:
+                next_uid = document_tree_stats.get_next_requirement_uid(
+                    node_prefix
+                )
         elif isinstance(reference_node, SDocSection):
             document: SDocDocument = assert_cast(
                 reference_node.get_document(), SDocDocument
             )
             document_acronym = create_safe_acronym(document.title)
-            next_uid: str = document_tree_stats.get_auto_section_uid(
+            next_uid = document_tree_stats.get_auto_section_uid(
                 document_acronym, reference_node
             )
         else:

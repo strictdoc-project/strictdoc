@@ -384,6 +384,7 @@ class SPDXToSDocConverter:
             parent=None,
             tag="SPDX_DOCUMENT",
             property_is_composite="",
+            property_prefix="",
             property_view_style="",
             fields=fields,
             relations=[
@@ -442,6 +443,7 @@ class SPDXToSDocConverter:
             parent=None,
             tag="SPDX_PACKAGE",
             property_is_composite="",
+            property_prefix="",
             property_view_style="",
             fields=fields,
             relations=[
@@ -500,6 +502,7 @@ class SPDXToSDocConverter:
             parent=None,
             tag="SPDX_FILE",
             property_is_composite="",
+            property_prefix="",
             property_view_style="",
             fields=fields,
             relations=[
@@ -564,6 +567,7 @@ class SPDXToSDocConverter:
                 parent=None,
                 tag="SPDX_SNIPPET",
                 property_is_composite="",
+                property_prefix="",
                 property_view_style="",
                 fields=fields,
                 relations=[

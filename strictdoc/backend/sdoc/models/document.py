@@ -177,10 +177,22 @@ class SDocDocument(SDocDocumentIF):
 
     @property
     def requirement_prefix(self) -> str:
-        return self.get_requirement_prefix()
+        return self.get_prefix()
 
-    def get_requirement_prefix(self) -> str:
-        return self.config.get_requirement_prefix()
+    def get_prefix(self) -> str:
+        return self.config.get_prefix()
+
+    def get_prefix_for_new_node(self, node_type: str) -> Optional[str]:
+        assert isinstance(node_type, str) and len(node_type), node_type
+
+        grammar: DocumentGrammar = assert_cast(self.grammar, DocumentGrammar)
+        element: GrammarElement = grammar.elements_by_type[node_type]
+        if (element_prefix := element.property_prefix) is not None:
+            if element_prefix == "None":
+                return None
+            return element_prefix
+
+        return self.get_prefix()
 
     def enumerate_meta_field_titles(self) -> Generator[str, None, None]:
         assert self.grammar is not None

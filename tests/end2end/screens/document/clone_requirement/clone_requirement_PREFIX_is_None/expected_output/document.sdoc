@@ -1,5 +1,5 @@
 [DOCUMENT]
-TITLE: Hello world doc
+TITLE: Document 1
 
 [GRAMMAR]
 ELEMENTS:
@@ -11,7 +11,7 @@ ELEMENTS:
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True
-- TAG: COMPOSITE_REQUIREMENT
+- TAG: SECTION
   PROPERTIES:
     IS_COMPOSITE: True
   FIELDS:
@@ -21,10 +21,12 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
-  - TITLE: STATEMENT
+  - TITLE: TITLE
     TYPE: String
     REQUIRED: False
 - TAG: REQUIREMENT
+  PROPERTIES:
+    PREFIX: None
   FIELDS:
   - TITLE: MID
     TYPE: String
@@ -32,30 +34,37 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
 
-[[COMPOSITE_REQUIREMENT]]
-STATEMENT: System shall do 1.
+[[SECTION]]
+UID: S-01
+TITLE: First section
 
-[REQUIREMENT]
-STATEMENT: System shall do 1.
-
-[[/COMPOSITE_REQUIREMENT]]
-
-[[COMPOSITE_REQUIREMENT]]
-STATEMENT: System shall do 2.
+[[/SECTION]]
 
 [REQUIREMENT]
-STATEMENT: System shall do 2.
-
-[[/COMPOSITE_REQUIREMENT]]
-
-[[COMPOSITE_REQUIREMENT]]
-STATEMENT: System shall do 3.
+UID: REQ-1
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<
+RATIONALE: >>>
+Requirement rationale.
+<<<
 
 [REQUIREMENT]
-STATEMENT: System shall do 3.
-
-[[/COMPOSITE_REQUIREMENT]]
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<
+RATIONALE: >>>
+Requirement rationale.
+<<<

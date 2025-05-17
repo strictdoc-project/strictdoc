@@ -18,6 +18,7 @@ GrammarElement[noskipws]:
   (
     '  PROPERTIES:' '\n'
     ('    IS_COMPOSITE: ' property_is_composite=/(True|False)/ '\n' )?
+    ('    PREFIX: ' property_prefix=/.*/ '\n' )?
     ('    VIEW_STYLE: ' property_view_style=/(Plain|Simple|Inline|Narrative|Table|Zebra)/ '\n')?
   )?
   '  FIELDS:' '\n'

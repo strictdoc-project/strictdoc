@@ -39,7 +39,7 @@ class SDocNodeIF(ABC):
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    def get_requirement_prefix(self) -> str:
+    def get_prefix(self) -> Optional[str]:
         raise NotImplementedError  # pragma: no cover
 
 
@@ -57,7 +57,7 @@ class SDocSectionIF(ABC):
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    def get_requirement_prefix(self) -> str:
+    def get_prefix(self) -> str:
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
@@ -82,7 +82,7 @@ class SDocDocumentIF(ABC):
     is_bundle_document: bool
 
     @abstractmethod
-    def get_requirement_prefix(self) -> str:
+    def get_prefix(self) -> str:
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod

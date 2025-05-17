@@ -28,8 +28,10 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
+            #
             # Requirement 1 has UID.
             # It shouldn't have a reset button.
+            #
             requirement1 = screen_document.get_node(1)
             requirement1.assert_requirement_uid_contains("REQ-1")
             form_edit_requirement1: Form_EditRequirement = (
@@ -40,19 +42,23 @@ class Test(E2ECase):
             form_edit_requirement1.assert_uid_field_has_not_reset_button()
             form_edit_requirement1.do_form_cancel()
 
+            #
             # New requirement form shouldn't have a reset button,
             # but must have the correct UID entered into the field.
+            #
             node_menu = requirement1.do_open_node_menu()
             form_add_requirement: Form_EditRequirement = (
                 node_menu.do_node_add_requirement_above()
             )
             form_add_requirement.assert_on_form()
-            form_add_requirement.assert_uid_field_has_not_reset_button()
-            form_add_requirement.assert_uid_field_contains("REQ-2")
+            form_add_requirement.assert_uid_field_has_reset_button()
+            form_add_requirement.assert_uid_field_does_not_contain("REQ-")
             form_add_requirement.do_form_cancel()
 
+            #
             # Requirement 2 has UID.
             # It shouldn't have a reset button.
+            #
             requirement2 = screen_document.get_node(2)
             requirement2.assert_requirement_has_no_uid()
             form_edit_requirement2: Form_EditRequirement = (
@@ -63,10 +69,7 @@ class Test(E2ECase):
             form_edit_requirement2.assert_uid_field_does_not_contain("REQ-2")
             # Use the reset button.
             form_edit_requirement2.do_reset_uid_field()
-            form_edit_requirement2.assert_uid_field_contains("REQ-2")
+            form_edit_requirement2.assert_uid_field_does_not_contain("REQ-2")
             form_edit_requirement2.do_form_submit()
-
-            # Checking the success of the button.
-            requirement2.assert_requirement_uid_contains("REQ-2")
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -5,19 +5,19 @@ TITLE: Document 1
 ELEMENTS:
 - TAG: REQUIREMENT
   FIELDS:
-  - TITLE: TITLE
-    TYPE: String
-    REQUIRED: False
   - TITLE: CUSTOM_FIELD
     TYPE: MultipleChoice(A, B, C)
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
     REQUIRED: False
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True
 
 [REQUIREMENT]
-TITLE: Requirement title
 CUSTOM_FIELD: A
+TITLE: Requirement title
 STATEMENT: >>>
 Requirement statement.
 <<<

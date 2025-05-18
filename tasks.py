@@ -353,13 +353,19 @@ def test_unit(context, focus=None):
         )
 
 
-@task(test_unit)
+@task(test_unit, aliases=["tuc"])
 def test_unit_report(context):
+    cwd = os.getcwd()
+
+    path_to_coverage_file = f"{cwd}/build/coverage/unit/.coverage"
+
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
-        """
+        f"""
             coverage html
+                --rcfile=.coveragerc.unit
+                --data-file={path_to_coverage_file}
         """,
     )
 

@@ -1507,11 +1507,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
         current_parent_node = moved_node.parent
 
-        # Currently UI allows a child-like drag-and-drop on a requirement node.
-        # In that case, we make it add a node **after** the target requirement
-        # node (not as its child because that's not possible).
-        if whereto == NodeCreationOrder.CHILD and isinstance(
-            target_node, SDocNode
+        # Currently UI allows a child-like drag-and-drop on a leaf (non-composite) node.
+        # In that case, we make it add a node **after** the target node
+        # (not as its child because that's not possible).
+        if (
+            whereto == NodeCreationOrder.CHILD
+            and isinstance(target_node, SDocNode)
+            and not target_node.is_composite
         ):
             whereto = NodeCreationOrder.AFTER
 

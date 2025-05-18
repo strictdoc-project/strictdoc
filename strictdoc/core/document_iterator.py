@@ -4,7 +4,6 @@ from typing import Iterator, Tuple, Union
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.model import (
-    SDocCompositeNodeIF,
     SDocDocumentFromFileIF,
     SDocDocumentIF,
     SDocElementIF,
@@ -12,7 +11,6 @@ from strictdoc.backend.sdoc.models.model import (
     SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import (
-    SDocCompositeNode,
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
@@ -66,7 +64,7 @@ class DocumentCachingIterator:
         custom_level: bool = False,
     ) -> Iterator[SDocElementIF]:
         def get_level_string_(
-            node_: Union[SDocSection, SDocNode, SDocCompositeNode],
+            node_: Union[SDocSection, SDocNode],
         ) -> str:
             if (
                 isinstance(node_, SDocNode)
@@ -113,7 +111,6 @@ class DocumentCachingIterator:
                         subnode_,
                         (
                             SDocNodeIF,
-                            SDocCompositeNodeIF,
                             SDocSectionIF,
                             SDocDocumentIF,
                             SDocDocumentFromFileIF,
@@ -125,37 +122,6 @@ class DocumentCachingIterator:
                     custom_level=custom_level
                     or subnode_.ng_resolved_custom_level is not None,
                 )
-
-        elif isinstance(node, SDocCompositeNode):
-            # If node is not whitelisted, we ignore it. Also, note that due to
-            # this early return, all child nodes of this node are ignored
-            # as well because they are not added to the iteration queue.
-            if not node.ng_whitelisted:
-                return
-
-            # FIXME: This will be changed.
-            node.context.title_number_string = get_level_string_(node)
-            node.ng_level = len(level_stack)
-
-            yield node
-
-            current_number = 0
-            if node.requirements is not None:
-                for subnode_ in node.requirements:
-                    if subnode_.ng_resolved_custom_level is None and not (
-                        isinstance(subnode_, SDocNode)
-                        and subnode_.node_type == "TEXT"
-                    ):
-                        current_number += 1
-
-                    yield from self.all_node_content(
-                        subnode_,
-                        print_fragments=print_fragments,
-                        print_fragments_from_files=print_fragments_from_files,
-                        level_stack=level_stack + (current_number,),
-                        custom_level=custom_level
-                        or subnode_.ng_resolved_custom_level is not None,
-                    )
 
         elif isinstance(node, SDocNode):
             # If node is not whitelisted, we ignore it. Also, note that due to
@@ -213,7 +179,6 @@ class DocumentCachingIterator:
                         subnode_,
                         (
                             SDocNodeIF,
-                            SDocCompositeNodeIF,
                             SDocSectionIF,
                             SDocDocumentIF,
                             SDocDocumentFromFileIF,

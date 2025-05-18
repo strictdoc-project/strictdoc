@@ -13,7 +13,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import (
-    SDocCompositeNodeIF,
     SDocDocumentIF,
     SDocNodeIF,
     SDocSectionContentIF,
@@ -104,12 +103,11 @@ class SDocNodeField:
 class SDocNode(SDocNodeIF):
     def __init__(
         self,
-        parent: Union[SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF],
+        parent: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF],
         node_type: str,
         fields: List[SDocNodeField],
         relations: List[Reference],
         is_composite: bool = False,
-        requirements: Optional[List["SDocNode"]] = None,
         section_contents: Optional[List[SDocSectionContentIF]] = None,
         node_type_close: Optional[str] = None,
     ) -> None:
@@ -117,9 +115,7 @@ class SDocNode(SDocNodeIF):
         assert isinstance(node_type, str)
         assert isinstance(relations, list), relations
 
-        self.parent: Union[
-            SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF
-        ] = parent
+        self.parent: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF] = parent
 
         self.node_type: str = node_type
 
@@ -146,7 +142,6 @@ class SDocNode(SDocNodeIF):
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        self.requirements: Optional[List[SDocNode]] = requirements
         self.section_contents: List[SDocSectionContentIF] = (
             section_contents if section_contents is not None else []
         )
@@ -204,6 +199,11 @@ class SDocNode(SDocNodeIF):
 
     def get_node_type_string(self) -> Optional[str]:
         return self.node_type
+
+    def get_display_node_type_string(self) -> Optional[str]:
+        if self.is_composite:
+            return f"[[{self.node_type}]]"
+        return f"[{self.node_type}]"
 
     def get_display_title(
         self,
@@ -553,13 +553,16 @@ class SDocNode(SDocNodeIF):
                 return None
             return element_prefix
 
-        parent: Union[
-            SDocDocumentIF, SDocSectionIF, SDocNodeIF, SDocCompositeNodeIF
-        ] = assert_cast(
-            self.parent,
-            (SDocDocumentIF, SDocSectionIF, SDocNodeIF, SDocCompositeNodeIF),
-        )
-        return parent.get_prefix()
+        # FIXME: Is this a reasonable behavior?
+        if (
+            isinstance(self.parent, SDocNode)
+            and self.parent.node_type == "SECTION"
+        ):
+            if (parent_prefix := self.parent.get_prefix()) is not None:
+                return parent_prefix
+            return document.get_prefix()
+
+        return self.parent.get_prefix()
 
     def get_prefix_for_new_node(self, node_type: str) -> Optional[str]:
         assert isinstance(node_type, str) and len(node_type), node_type
@@ -710,30 +713,10 @@ class SDocNode(SDocNodeIF):
 
 
 @auto_described
-class SDocCompositeNode(SDocNode, SDocCompositeNodeIF):
+class SDocCompositeNode(SDocNode):
     def __init__(
         self,
-        parent: Union[SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF],
-        **fields: Any,
-    ) -> None:
-        super().__init__(parent, **fields)
-
-    def is_composite_requirement(self) -> bool:
-        return True
-
-    @property
-    def document(self) -> SDocDocumentIF:
-        assert self.ng_document_reference is not None
-        document = self.ng_document_reference.get_document()
-        assert document is not None
-        return document
-
-
-@auto_described
-class SDocCompositeNodeNew(SDocNode):
-    def __init__(
-        self,
-        parent: Union[SDocDocumentIF, SDocSectionIF, SDocCompositeNodeIF],
+        parent: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF],
         **fields: Any,
     ) -> None:
         super().__init__(parent, **fields, is_composite=True)

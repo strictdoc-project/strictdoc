@@ -13,7 +13,6 @@ from strictdoc.backend.sdoc.models.document_view import (
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
-    SDocCompositeNodeNew,
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.reference import (
@@ -326,16 +325,12 @@ class SDWriter:
             output = ""
 
             if (
-                isinstance(root_node, SDocCompositeNodeNew)
+                isinstance(root_node, SDocCompositeNode)
                 or root_node.is_composite
             ):
                 output += "[["
                 output += root_node.node_type
                 output += "]]\n"
-            elif isinstance(root_node, SDocCompositeNode):
-                output += "[COMPOSITE_"
-                output += root_node.node_type
-                output += "]\n"
             else:
                 output += "["
                 output += root_node.node_type
@@ -347,18 +342,9 @@ class SDWriter:
             output += "\n"
 
             if (
-                isinstance(root_node, (SDocCompositeNode, SDocCompositeNodeNew))
+                isinstance(root_node, SDocCompositeNode)
                 or root_node.is_composite
             ):
-                # FIXME: Remove the legacy .requirements.
-                if root_node.requirements is not None:
-                    for node_ in root_node.requirements:
-                        if not node_.ng_whitelisted:
-                            continue
-                        output += self._print_node(
-                            node_, document, document_iterator=document_iterator
-                        )
-
                 if root_node.section_contents is not None:
                     for node_ in root_node.section_contents:
                         if not node_.ng_whitelisted:
@@ -368,17 +354,12 @@ class SDWriter:
                         )
 
                 if (
-                    isinstance(root_node, SDocCompositeNodeNew)
+                    isinstance(root_node, SDocCompositeNode)
                     or root_node.is_composite
                 ):
                     output += "[[/"
                     output += root_node.node_type
                     output += "]]\n"
-                    output += "\n"
-                else:
-                    output += "[/COMPOSITE_"
-                    output += root_node.node_type
-                    output += "]\n"
                     output += "\n"
 
             return output

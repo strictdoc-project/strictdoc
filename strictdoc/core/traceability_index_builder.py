@@ -14,7 +14,7 @@ from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import SDocDocumentFromFileIF
-from strictdoc.backend.sdoc.models.node import SDocCompositeNode, SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
@@ -628,11 +628,10 @@ class TraceabilityIndexBuilder:
                 print_fragments=False,
                 print_fragments_from_files=False,
             ):
+                # FIXME: is_requirement() typing issue.
                 if not node.is_requirement():
                     continue
-                requirement: Union[SDocNode, SDocCompositeNode] = assert_cast(
-                    node, (SDocNode, SDocCompositeNode)
-                )
+                requirement: Union[SDocNode] = assert_cast(node, SDocNode)
                 if requirement.reserved_uid is None:
                     continue
 

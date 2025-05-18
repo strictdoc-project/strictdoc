@@ -163,7 +163,7 @@ SDocSection[noskipws]:
 ;
 
 SectionOrRequirement[noskipws]:
-  '\n' (SDocSection | SDocCompositeNodeNew | SDocNode | SDocCompositeNode | DocumentFromFile)
+  '\n' (SDocSection | SDocCompositeNode | SDocNode | DocumentFromFile)
 ;
 
 DocumentFromFile[noskipws]:
@@ -171,16 +171,12 @@ DocumentFromFile[noskipws]:
   'FILE: ' file = /.+$/ '\n'
 ;
 
-SpaceThenRequirement[noskipws]:
-  '\n' (SDocNode | SDocCompositeNode)
-;
-
 ReservedKeyword[noskipws]:
   'DOCUMENT' | 'GRAMMAR' | 'SECTION' | 'DOCUMENT_FROM_FILE'
 ;
 
 SDocNode[noskipws]:
-  '[' !'SECTION' !SDocCompositeNodeTagName node_type = RequirementType ']' '\n'
+  '[' !'SECTION' node_type = RequirementType ']' '\n'
   fields += SDocNodeField
   (
     'RELATIONS:' '\n'
@@ -188,7 +184,7 @@ SDocNode[noskipws]:
   )?
 ;
 
-SDocCompositeNodeNew[noskipws]:
+SDocCompositeNode[noskipws]:
   '[[' node_type = RequirementType ']]' '\n'
 
   fields += SDocNodeField
@@ -201,10 +197,6 @@ SDocCompositeNodeNew[noskipws]:
 
   '\n'
   '[[/' node_type_close = RequirementType ']]' '\n'
-;
-
-SDocCompositeNodeTagName[noskipws]:
-  'COMPOSITE_'
 ;
 
 SDocNodeField[noskipws]:
@@ -228,21 +220,6 @@ SDocNodeField[noskipws]:
         )
     )
   )
-;
-
-SDocCompositeNode[noskipws]:
-  '[COMPOSITE_' node_type = RequirementType ']' '\n'
-
-  fields *= SDocNodeField
-  (
-    'RELATIONS:' '\n'
-    (relations += Reference)
-  )?
-
-  requirements *= SpaceThenRequirement
-
-  '\n'
-  '[/COMPOSITE_REQUIREMENT]' '\n'
 ;
 
 RequirementStatus[noskipws]:

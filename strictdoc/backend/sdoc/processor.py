@@ -24,7 +24,9 @@ from strictdoc.helpers.textx import preserve_source_location_data
 
 
 class ParseContext:
-    def __init__(self, path_to_sdoc_file: Optional[str]):
+    def __init__(
+        self, path_to_sdoc_file: Optional[str], migrate_sections: bool = False
+    ):
         self.path_to_sdoc_file: Optional[str] = path_to_sdoc_file
         self.path_to_sdoc_dir: Optional[str] = None
         if path_to_sdoc_file is not None:
@@ -37,6 +39,7 @@ class ParseContext:
         self.document_has_requirements = False
 
         self.fragments_from_files: List[SDocDocumentFromFileIF] = []
+        self.migrate_sections: bool = migrate_sections
 
 
 class SDocParsingProcessor:
@@ -46,7 +49,10 @@ class SDocParsingProcessor:
     def process_document(self, document: SDocDocument):
         document.grammar = (
             self.parse_context.document_grammar
-            or DocumentGrammar.create_default(document)
+            or DocumentGrammar.create_default(
+                document,
+                create_section_element=self.parse_context.migrate_sections,
+            )
         )
         self.parse_context.document = document
         document.ng_including_document_reference = (

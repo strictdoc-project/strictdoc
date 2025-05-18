@@ -29,8 +29,10 @@ class SDReader:
     )
 
     @staticmethod
-    def _read(input_string, file_path=None):
-        parse_context = ParseContext(path_to_sdoc_file=file_path)
+    def _read(input_string, file_path=None, migrate_sections: bool = False):
+        parse_context = ParseContext(
+            path_to_sdoc_file=file_path, migrate_sections=migrate_sections
+        )
         processor = SDocParsingProcessor(parse_context=parse_context)
         SDReader.meta_model.register_obj_processors(
             processor.get_default_processors()
@@ -84,7 +86,9 @@ class SDReader:
 
         try:
             sdoc, parse_context = self.read_with_parse_context(
-                sdoc_content, file_path=file_path
+                sdoc_content,
+                file_path=file_path,
+                migrate_sections=project_config.is_new_section_behavior(),
             )
 
             sdoc.fragments_from_files = parse_context.fragments_from_files
@@ -118,9 +122,6 @@ class SDReader:
 
     @staticmethod
     def convert(section: SDocSection) -> SDocNode:
-        """
-        FIXME: Handle LEVEL, REQ_PREFIX
-        """
         fields = []
 
         if section.mid_permanent:
@@ -138,6 +139,27 @@ class SDReader:
                     None,
                     field_name="UID",
                     field_value=section.reserved_uid,
+                    multiline=False,
+                )
+            )
+        if section.ng_resolved_custom_level is not None:
+            fields.append(
+                SDocNodeField.create_from_string(
+                    None,
+                    field_name="LEVEL",
+                    field_value=section.ng_resolved_custom_level,
+                    multiline=False,
+                )
+            )
+        if (
+            section.requirement_prefix is not None
+            and len(section.requirement_prefix) > 0
+        ):
+            fields.append(
+                SDocNodeField.create_from_string(
+                    None,
+                    field_name="PREFIX",
+                    field_value=section.requirement_prefix,
                     multiline=False,
                 )
             )
@@ -160,6 +182,14 @@ class SDReader:
         )
         for field_ in fields:
             field_.parent = node
+
+        node.ng_including_document_reference = (
+            section.ng_including_document_reference
+        )
+        node.ng_document_reference = section.ng_document_reference
+        node.ng_level = section.ng_level
+        node.ng_resolved_custom_level = section.ng_resolved_custom_level
+
         return node
 
     @staticmethod

@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Hello world doc 2
+OPTIONS:
+  AUTO_LEVELS: On
+
+[DOCUMENT_FROM_FILE]
+FILE: subnested.sdoc

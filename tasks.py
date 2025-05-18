@@ -107,7 +107,7 @@ def clean_itest_artifacts(context):
     run_invoke(
         context,
         """
-        git clean -dfX tests/integration/
+        git clean -dX --force --quiet tests/integration/
         """,
         warn=True,
     )

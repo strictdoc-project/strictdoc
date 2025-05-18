@@ -584,6 +584,22 @@ class DocumentGrammar(SDocGrammarIF):
         fields.append(
             GrammarElementFieldString(
                 parent=None,
+                title=RequirementFieldName.LEVEL,
+                human_title=None,
+                required="False",
+            )
+        )
+        fields.append(
+            GrammarElementFieldString(
+                parent=None,
+                title=RequirementFieldName.PREFIX,
+                human_title=None,
+                required="False",
+            )
+        )
+        fields.append(
+            GrammarElementFieldString(
+                parent=None,
                 title=RequirementFieldName.TITLE,
                 human_title=None,
                 required="True",

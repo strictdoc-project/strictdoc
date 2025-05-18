@@ -570,7 +570,7 @@ Example of a composite node:
 
     [[/SECTION]]
 
-The document elements are described below.
+The document elements are described further below, see [LINK: SECTION-UG-DOCUMENT-ELEMENTS].
 <<<
 
 [[/SECTION]]
@@ -667,7 +667,8 @@ The Project Statistics screen provides metrics for counting the number of TBDs (
 
 [[SECTION]]
 MID: b4ceeb12bdf1448cb97b7974d4980189
-TITLE: Grammar elements
+UID: SECTION-UG-DOCUMENT-ELEMENTS
+TITLE: Document elements
 
 [[SECTION]]
 MID: db088d5977934056a851a24988e9266c
@@ -888,13 +889,17 @@ The additional metadata is also included on the front page of the exported PDF. 
 [[/SECTION]]
 
 [[SECTION]]
+MID: 93085eee6a214a0a85aa94472f0a0a6c
+TITLE: Leaf nodes
+
+[[SECTION]]
 MID: 23cbc84e92294aa0aeb0bb279d914480
 TITLE: Text
 
 [TEXT]
 MID: 4474709783b74b1ca31fa754c712344e
 STATEMENT: >>>
-A text node is the most basic document node which is used for normal document text.
+A text node is the most basic document node which is used for normal document text. The ``[TEXT]`` is one of the default leaf elements declared in StrictDoc's default grammar. See [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 
 .. code-block:: text
 
@@ -922,7 +927,9 @@ TITLE: Requirement
 [TEXT]
 MID: f221cd0c72f846b385ec2f0a9ddd15d5
 STATEMENT: >>>
-The REQUIREMENT element is used for creating requirements, for example technical requirements or project requirements.
+The ``REQUIREMENT`` is used for creating requirements, for example technical requirements or project requirements.
+
+Similar to ``TEXT``, the ``REQUIREMENT`` is a default leaf element declared in StrictDoc's default grammar. See [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 
 .. code-block:: text
 
@@ -968,7 +975,7 @@ The following ``REQUIREMENT`` fields are supported:
         Note: Multiple comment fields are possible.
 
    * - ``RELATIONS``
-     - List of requirement relations. Note: Before StrictDoc v0.0.45, this field was called ``REFS``.
+     - List of requirement relations.
 
 Currently, all ``[REQUIREMENT]``'s fields are optional but most of the time at
 least the ``STATEMENT`` field as well as the ``TITLE`` field should be
@@ -1052,7 +1059,7 @@ supported.
 [[SECTION]]
 MID: f10fd08172054423be7c00fcd16e61e9
 UID: SDOC_UG_REQUIREMENT_RELATIONS
-TITLE: Relations (previously REFS)
+TITLE: Relations
 
 [TEXT]
 MID: c0c9c15d57e742ed80f12b8895f01de0
@@ -1248,6 +1255,59 @@ comments can be single-line or multiline.
 
 [[/SECTION]]
 
+[[/SECTION]]
+
+[[SECTION]]
+MID: a1ad4861e5bc442baf38383b29c901a1
+UID: UG_COMPOSITE_NODE
+TITLE: Composite nodes
+
+[TEXT]
+MID: ce69fe89236a4bcfa104a640def4b64a
+STATEMENT: >>>
+A composite node is similar to a regular leaf node, but it can also nest other nodes.
+
+This element can be useful in lower-level specification documents where a given section must describe a single feature, and the description requires one or more levels of nesting. In such cases, it may be natural to use a composite node that is tightly connected to several related sub-nodes.
+
+The ``[[SECTION]]`` element is a reserved composite node in StrictDoc's default grammar, used to represent nested document sections or chapters. Users can also define custom composite nodes by registering them in the document grammar as follows:
+
+.. code-block:: text
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: COMPOSITE_REQUIREMENT
+      PROPERTIES:
+        IS_COMPOSITE: True
+      FIELDS:
+      - TITLE: MID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+
+    [[COMPOSITE_REQUIREMENT]]
+    STATEMENT: Statement
+
+    [REQUIREMENT]
+    STATEMENT: Substatement #1
+
+    [REQUIREMENT]
+    STATEMENT: Substatement #2
+
+    [REQUIREMENT]
+    STATEMENT: Substatement #3
+
+    [[/COMPOSITE_REQUIREMENT]]
+
+.. note::
+
+    Composite requirements should not be used in every document. In most cases, a simple combination of nested ``[[SECTION]]`` and ``[[REQUIREMENT]]`` elements is sufficient. See also [LINK: UG_PORTABILITY_CONSIDERATIONS].
+<<<
+
 [[SECTION]]
 MID: c8c15acf52a24c99922bdae6711f5120
 UID: ELEMENT_SECTION
@@ -1364,6 +1424,50 @@ are set to ``LEVEL: None`` by StrictDoc automatically.
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: 0f52cfb294af480e806f0434d0a07757
+TITLE: Section grammar definition
+
+[TEXT]
+MID: 7f2967ea1a41426ba15c0bdde2664920
+STATEMENT: >>>
+The ``[[SECTION]]`` element is registered by default in StrictDoc's grammar, but users can override this declaration by defining it manually in the grammar specification. See [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
+
+Default ``[[SECTION]]`` grammar is equivalent to the following manual definition:
+
+.. code-block::
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: SECTION
+      PROPERTIES:
+        IS_COMPOSITE: True
+        PREFIX: None
+        VIEW_STYLE: Narrative
+      FIELDS:
+      - TITLE: MID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: LEVEL
+        TYPE: String
+        REQUIRED: True
+      - TITLE: PREFIX
+        TYPE: String
+        REQUIRED: True
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+
+A user can add any custom field to the grammar declaration. However, the default set of fields typically covers most use cases.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]
@@ -1450,53 +1554,6 @@ Which will resolve to the following document after inclusion:
 
 [[/SECTION]]
 
-[[SECTION]]
-MID: a1ad4861e5bc442baf38383b29c901a1
-UID: UG_COMPOSITE_REQUIREMENT
-TITLE: Composite requirement
-
-[TEXT]
-MID: ce69fe89236a4bcfa104a640def4b64a
-STATEMENT: >>>
-.. note::
-    The composite requirements feature shows promise, but it has not yet attracted significant demand from both the core developers of StrictDoc and its users. While the use of composite requirements via the command line is implemented and supported, the web interface does not currently offer this support. Experience has shown that composite requirements can often be represented as a combination of sections and standard requirements. If there is a compelling use case for full support of composite requirements, please reach out to the developers.
-
-A ``[COMPOSITE_REQUIREMENT]`` is a requirement that combines requirement
-properties of a ``[REQUIREMENT]`` element and grouping features of a ``[SECTION]``
-element. This element can be useful in lower-level specifications documents
-where a given section of a document has to describe a single feature and the
-description requires a one or more levels of nesting. In this case, it might be
-natural to use a composite requirement that is tightly connected to a few
-related sub-requirements.
-
-.. code-block:: text
-
-    [COMPOSITE_REQUIREMENT]
-    STATEMENT: Statement
-
-    [REQUIREMENT]
-    STATEMENT: Substatement #1
-
-    [REQUIREMENT]
-    STATEMENT: Substatement #2
-
-    [REQUIREMENT]
-    STATEMENT: Substatement #3
-
-    [/COMPOSITE_REQUIREMENT]
-
-Special feature of ``[COMPOSITE_REQUIREMENT]``: like ``[SECTION]`` element, the
-``[COMPOSITE_REQUIREMENT]`` elements can be nested within each other. However,
-``[COMPOSITE_REQUIREMENT]`` cannot nest sections.
-
-.. note::
-
-    Composite requirements should not be used in every document.
-    Most often, a more basic combination of nested ``[SECTION]`` and ``[REQUIREMENT]`` elements should do the job.
-<<<
-
-[[/SECTION]]
-
 [[/SECTION]]
 
 [[SECTION]]
@@ -1529,6 +1586,27 @@ a grammar with four fields including a custom ``VERIFICATION`` field.
 
     [GRAMMAR]
     ELEMENTS:
+    - TAG: SECTION
+      PROPERTIES:
+        IS_COMPOSITE: True
+        PREFIX: None
+        VIEW_STYLE: Narrative
+      FIELDS:
+      - TITLE: MID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: LEVEL
+        TYPE: String
+        REQUIRED: True
+      - TITLE: PREFIX
+        TYPE: String
+        REQUIRED: True
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
     - TAG: TEXT
       FIELDS:
       - TITLE: UID
@@ -1612,9 +1690,6 @@ The supported field types are:
 
    * - ``Tag``
      - comma-separated list of tags/key words. Only Alphanumeric tags (a-z, A-Z, 0-9 and underscore) are supported.
-
-   * - ``Reference``
-     - **DEPRECATED:** comma-separated list with allowed reference types: ``ParentReqReference``, ``FileReference``. In the newer versions of StrictDoc (0.0.45+), a separate ``RELATIONS:`` section is used to configure the available relations.
 
 .. note::
 
@@ -3314,7 +3389,7 @@ The portability of documentation, particularly when it involves requirements, sh
 The following is a list of features that are considered less portable when it comes to interfacing with other tools through the existing export/import interfaces:
 
 - [LINK: UG_COMPOSABLE_DOCUMENTS]. Composing documents from other documents is a useful feature but it may not be directly supported by other tools. When exporting to JSON or ReqIF, StrictDoc by default does not export included documents but only the including documents.
-- [LINK: UG_COMPOSITE_REQUIREMENT]. A Composite Requirement is a useful concept which is partially supported by StrictDoc but it may be supported less by other tools.
+- [LINK: UG_COMPOSITE_NODE]. A Composite Requirement is a useful concept which is natively supported by StrictDoc but it may be supported less by other tools.
 - [LINK: SECTION_WITHOUT_A_LEVEL]. Table of contents hierarchy where some nodes do not have TOC levels (or have custom TOC levels) can cause problems when exporting/importing documentation content if an interfacing tool does not support custom TOC nodes.
 
 .. note::
@@ -3884,7 +3959,7 @@ TITLE: Appendices
 [[SECTION]]
 MID: 2ed20461aeb4462b812432c08aa006be
 UID: SECTION-UG-NODE-MIGRATION
-TITLE: [[NODE]] migration
+TITLE: [[NODE]] migration (2025 Q2-Q3)
 
 [TEXT]
 MID: 9d55b69bf789487e814210da06fc4164

@@ -1287,7 +1287,7 @@ Which will resolve to the following document after inclusion:
 
     The Composable Documents feature belongs to the list of features that may be less portable when it comes to interfacing with other tools. See :ref:`Portability considerations <UG_PORTABILITY_CONSIDERATIONS>`.
 
-.. _UG_COMPOSITE_REQUIREMENT:
+.. _UG_COMPOSITE_NODE:
 
 Composite requirement
 ~~~~~~~~~~~~~~~~~~~~~
@@ -2971,7 +2971,7 @@ The portability of documentation, particularly when it involves requirements, sh
 The following is a list of features that are considered less portable when it comes to interfacing with other tools through the existing export/import interfaces:
 
 - :ref:`Composing documents from other documents <UG_COMPOSABLE_DOCUMENTS>`. Composing documents from other documents is a useful feature but it may not be directly supported by other tools. When exporting to JSON or ReqIF, StrictDoc by default does not export included documents but only the including documents.
-- :ref:`Composite requirement <UG_COMPOSITE_REQUIREMENT>`. A Composite Requirement is a useful concept which is partially supported by StrictDoc but it may be supported less by other tools.
+- :ref:`Composite requirement <UG_COMPOSITE_NODE>`. A Composite Requirement is a useful concept which is partially supported by StrictDoc but it may be supported less by other tools.
 - :ref:`Section without a level <SECTION_WITHOUT_A_LEVEL>`. Table of contents hierarchy where some nodes do not have TOC levels (or have custom TOC levels) can cause problems when exporting/importing documentation content if an interfacing tool does not support custom TOC nodes.
 
 .. note::

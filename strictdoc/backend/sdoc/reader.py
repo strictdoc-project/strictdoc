@@ -11,7 +11,11 @@ from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.node import (
+    SDocCompositeNode,
+    SDocNode,
+    SDocNodeField,
+)
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
@@ -200,6 +204,9 @@ class SDReader:
 
                 new_node = SDReader.convert(node_)
                 sdoc.section_contents[node_idx_] = new_node
+
+            elif isinstance(node_, SDocCompositeNode):
+                SDReader.migration_sections_grammar(sdoc)
 
     @staticmethod
     def migration_sections_grammar(sdoc: SDocDocument):

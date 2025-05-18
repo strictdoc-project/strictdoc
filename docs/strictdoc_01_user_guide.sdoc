@@ -3610,14 +3610,39 @@ This feature is not enabled by default because it has not received enough testin
 [[/SECTION]]
 
 [[SECTION]]
+MID: 74291dc6cfae47d2bae33066024f3807
+TITLE: Test report integration
+
+[TEXT]
+MID: 07e78a4847554fbd87c44d7b11133f68
+STATEMENT: >>>
+StrictDoc can read test report files from several testing tools as SDoc content which allows establishing traceability between requirements, test cases, and test results.
+
+The project must have the following features activated for StrictDoc to provide language-aware parsing of C/C++, Python or Robot Framework. It is recommended to provide a dedicated folder for test report XML files to not mix human-written SDoc content and auto-generated test reports.
+
+.. code-block::
+
+    [project]
+
+    features = [
+      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+      "SOURCE_FILE_LANGUAGE_PARSERS",
+    ]
+
+    include_doc_paths = [
+      "docs/**",
+      # A dedicated folder where StrictDoc could find JUnit XML.
+      "reports/**",
+    ]
+<<<
+
+[[SECTION]]
 MID: e9c94abacb12425980aec8ed7ee752cb
-TITLE: JUnit XML report integration
+TITLE: JUnit XML
 
 [TEXT]
 MID: eba63ebd45624139a8773cf42fe7d670
 STATEMENT: >>>
-StrictDoc can read JUnit XML files as SDoc content which allows establishing traceability between requirements, test cases, and test results.
-
 JUnit XML format is mostly identical between different tools that produce it but there are subtle differences that must be handled case by case. StrictDoc supports several JUnit XML flavors. To be discovered by StrictDoc, the XML files must have one of the following extensions:
 
 .. list-table:: Supported JUnit XML formats
@@ -3640,27 +3665,12 @@ JUnit XML format is mostly identical between different tools that produce it but
 
     After the existing JUnit XML flavors have been implemented, it should be easy to add more tools in case their output differs.
 
-The project must have the following features activated for StrictDoc to provide language-aware parsing of C/C++ and Python. It is recommended to provide a dedicated folder for JUnit XML to not mix human-written SDoc content and auto-generated test reports.
-
-.. code-block::
-
-    [project]
-
-    features = [
-      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-      "SOURCE_FILE_LANGUAGE_PARSERS",
-    ]
-
-    include_doc_paths = [
-      "docs/**",
-      # A dedicated folder where StrictDoc could find JUnit XML.
-      "reports/**",
-    ]
-
 .. warning::
 
     The JUnit XML feature's status is experimental. The functionality has been implemented and passes basic integration tests but it has not received enough testing by the users. StrictDoc's own documentation is already using this feature and the JUnit XML traceability will be part of StrictDoc's own qualification package. It is expected that the JUnit XML will become a stable feature by no late than 2025 Q4.
 <<<
+
+[[/SECTION]]
 
 [[SECTION]]
 MID: 06d9dbbeca204f5e8d0042e142b615bd
@@ -3685,6 +3695,22 @@ Specifically for LLVM Integrated Tester-produced JUnit XML, an extra config opti
     ]
 
 In this example, the expectation is that a user has generated a JUnit XML with LLVM LIT and the output XML is at ``reports/tests_integration.lit.junit.xml``. The config line tells StrictDoc that this JUnit XML was produced by LIT from the ``tests/integration`` root folder.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: c7f5451905bf4fdb9a3a7dc97bb0e853
+TITLE: Robot Framework XML
+
+[TEXT]
+MID: 6c3d98ca65cc40d585953237693ff2c6
+STATEMENT: >>>
+Robot Framework has its own native XML test report schema, sometimes referred to as ``output.xml``. Files must end with ``.robot.xml`` to be recognized as such.
+
+.. warning::
+
+    The Robot Framework test report feature's status is experimental.
 <<<
 
 [[/SECTION]]

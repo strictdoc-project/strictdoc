@@ -1,0 +1,10 @@
+[project]
+
+include_source_paths = [
+  "tests/**.robot",
+]
+
+features = [
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+  "SOURCE_FILE_LANGUAGE_PARSERS",
+]

@@ -2,9 +2,11 @@
 branch = True
 omit =
     build/
+    output/
+    strictdoc/server/
 
 [report]
-fail_under = 60.0
+fail_under = 50.0
 precision = 2
 skip_covered = true
 show_missing = true

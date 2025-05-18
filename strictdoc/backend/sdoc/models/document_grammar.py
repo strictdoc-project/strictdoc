@@ -15,6 +15,7 @@ from strictdoc.backend.sdoc.models.type_system import (
     RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.mid import MID
 
 
@@ -108,20 +109,20 @@ class GrammarElement:
             statement_field or description_field or content_field or ("", -1)
         )
 
-        # Some nodes have the content field, e.g., STATEMENT or DESCRIPTION,
-        # some don't. For those that don't, use TITLE as a boundary between
-        # the single-line and multiline.
-        multiline_field_index = self.content_field[1]
-        if multiline_field_index == -1:
-            try:
-                multiline_field_index = self.get_field_titles().index("TITLE")
-            except ValueError as value_error_:
-                raise RuntimeError(
+        # Use TITLE as a boundary between the single-line and multiline, if
+        # TITLE exists. For nodes without a TITLE, use the content field, e.g.,
+        # STATEMENT or DESCRIPTION.
+        try:
+            multiline_field_index = self.get_field_titles().index("TITLE") + 1
+        except ValueError:
+            multiline_field_index = self.content_field[1]
+            if multiline_field_index == -1:
+                raise StrictDocException(
                     (
                         f"The grammar element {self.tag} must have at least one of the "
                         f"following fields: TITLE, STATEMENT, DESCRIPTION, CONTENT."
                     ),
-                ) from value_error_
+                ) from None
         self.multiline_field_index: int = multiline_field_index
 
         self.mid: MID = MID.create()

@@ -25,11 +25,11 @@ ELEMENTS:
   - TITLE: TAGS
     TYPE: String
     REQUIRED: False
-  - TITLE: TITLE
-    TYPE: String
-    REQUIRED: False
   - TITLE: OWNER
     TYPE: SingleChoice(Abigail ACCURACY, Basil BOUNDARY, Clarence COMPLIANCE, Daphne DESIGN, Fiona FRAMEWORK, Felix FUNCTIONAL, Gloria GOVERNANCE, Gertrude GUIDELINE, Hugo HARMONY, Harvey HIERARCHY, Lydia LOGIC, Olivia OBJECTIVE, Mildred METADATA, Nigel NORMATIVE, Penelope PROCEDURE, Rachel RATIONALE, Eleanor RIGOR, Samuel SPECIFICATION, Sylvia STANDARD, Theodore TRACEABILITY, Victor VALIDATION, Walter WORKFLOW)
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
     REQUIRED: False
   - TITLE: STATEMENT
     TYPE: String
@@ -61,8 +61,8 @@ ELEMENTS:
 [REQUIREMENT]
 UID: TEST-1
 STATUS: accepted
-TITLE: Unit test ABC
 OWNER: Abigail ACCURACY
+TITLE: Unit test ABC
 STATEMENT: >>>
 Shall test foo.
 <<<

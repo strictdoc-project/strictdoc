@@ -37,7 +37,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name
     def assert_node_has_action_add_section_above(self) -> None:
         self.test_case.assert_element_present(
             f"{self.node_xpath}"
-            '//*[@data-testid="node-add-section-above-action"]'
+            '//*[@data-testid="node-add-section-DEPRECATED-above-action"]'
         )
 
     def assert_node_has_action_add_requirement_below(self) -> None:
@@ -49,7 +49,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name
     def assert_node_has_action_add_section_below(self) -> None:
         self.test_case.assert_element_present(
             f"{self.node_xpath}"
-            '//*[@data-testid="node-add-section-below-action"]'
+            '//*[@data-testid="node-add-section-DEPRECATED-below-action"]'
         )
 
     def assert_node_has_action_add_requirement_child(self) -> None:
@@ -71,7 +71,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name
         self.test_case.click(
             selector=(
                 '//*[@data-testid="node-root"]'
-                '//*[@data-testid="node-add-section-first-action"]'
+                '//*[@data-testid="node-add-section-DEPRECATED-first-action"]'
             ),
             by=By.XPATH,
         )
@@ -82,7 +82,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name
         self.test_case.click(
             selector=(
                 f"{self.node_xpath}"
-                '//*[@data-testid="node-add-section-above-action"]'
+                '//*[@data-testid="node-add-section-DEPRECATED-above-action"]'
             ),
             by=By.XPATH,
         )
@@ -92,7 +92,7 @@ class AddNode_Menu:  # pylint: disable=invalid-name
         self.test_case.click(
             selector=(
                 f"{self.node_xpath}"
-                '//*[@data-testid="node-add-section-below-action"]'
+                '//*[@data-testid="node-add-section-DEPRECATED-below-action"]'
             ),
             by=By.XPATH,
         )

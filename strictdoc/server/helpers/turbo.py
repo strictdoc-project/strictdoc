@@ -1,7 +1,6 @@
 from markupsafe import Markup
 
 
-# mypy: disable-error-code="no-untyped-def"
 def render_turbo_stream(content: str, action: str, target: str) -> Markup:
     assert action in ("append", "replace", "update")
 

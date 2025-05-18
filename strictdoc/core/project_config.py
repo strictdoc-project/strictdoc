@@ -79,6 +79,7 @@ class ProjectConfig:
     DEFAULT_SERVER_PORT = 5111
     DEFAULT_BUNDLE_DOCUMENT_VERSION = "@GIT_VERSION (Git branch: @GIT_BRANCH)"
     DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE = "@GIT_COMMIT_DATETIME"
+    DEFAULT_SECTION_BEHAVIOR = "[SECTION]"
 
     def __init__(
         self,
@@ -107,6 +108,7 @@ class ProjectConfig:
         reqif_import_markup: Optional[str],
         config_last_update: Optional[datetime.datetime],
         chromedriver: Optional[str],
+        section_behavior: Optional[str],
     ):
         assert isinstance(environment, SDocRuntimeEnvironment)
         if source_root_path is not None:
@@ -193,6 +195,7 @@ class ProjectConfig:
         self.is_running_on_server: bool = False
         self.view: Optional[str] = None
         self.chromedriver: Optional[str] = chromedriver
+        self.section_behavior: Optional[str] = section_behavior
 
     @staticmethod
     def default_config(environment: SDocRuntimeEnvironment) -> "ProjectConfig":
@@ -221,6 +224,7 @@ class ProjectConfig:
             reqif_import_markup=None,
             config_last_update=None,
             chromedriver=None,
+            section_behavior=ProjectConfig.DEFAULT_SECTION_BEHAVIOR,
         )
 
     # Some server command settings can override the project config settings.
@@ -347,6 +351,9 @@ class ProjectConfig:
             ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS in self.project_features
         )
 
+    def is_new_section_behavior(self):
+        return self.section_behavior == "[[SECTION]]"
+
     def get_strictdoc_root_path(self) -> str:
         return self.environment.path_to_strictdoc
 
@@ -440,6 +447,8 @@ class ProjectConfigLoader:
         reqif_enable_mid = False
         reqif_import_markup: Optional[str] = None
         chromedriver: Optional[str] = None
+
+        section_behavior: str = ProjectConfig.DEFAULT_SECTION_BEHAVIOR
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -610,6 +619,11 @@ class ProjectConfigLoader:
                     assert isinstance(test_report_root_entry_, dict)
                     test_report_root_dict.update(test_report_root_entry_)
 
+            section_behavior = project_content.get(
+                "section_behavior", section_behavior
+            )
+            assert section_behavior in ("[SECTION]", "[[SECTION]]")
+
         if "server" in config_dict:
             server_content = config_dict["server"]
             server_host = server_content.get("host", server_host)
@@ -673,4 +687,5 @@ class ProjectConfigLoader:
             reqif_import_markup=reqif_import_markup,
             config_last_update=config_last_update,
             chromedriver=chromedriver,
+            section_behavior=section_behavior,
         )

@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  AUTO_LEVELS: On
+
+[DOCUMENT_FROM_FILE]
+FILE: nested.sdoc

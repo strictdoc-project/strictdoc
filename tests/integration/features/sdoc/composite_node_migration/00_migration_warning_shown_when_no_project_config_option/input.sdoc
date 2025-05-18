@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[SECTION]
+TITLE: Foo
+
+[/SECTION]
+
+[SECTION]
+UID: BAR-UID
+LEVEL: None
+TITLE: Bar
+REQ_PREFIX: BAR-
+
+[/SECTION]

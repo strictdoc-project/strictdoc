@@ -3,6 +3,7 @@ import datetime
 import glob
 import os
 import sys
+from time import sleep
 from typing import Dict, Iterator, List, Optional, Set, Union
 
 from textx import TextXSyntaxError
@@ -268,6 +269,8 @@ class TraceabilityIndexBuilder:
             file_dependency_manager=file_dependency_manager,
         )
 
+        found_deprecated_section: bool = False
+
         # It seems to be impossible to accomplish everything in just one for
         # loop. One particular problem that requires two passes: it is not
         # possible to know after one iteration which of the requirements
@@ -377,6 +380,29 @@ class TraceabilityIndexBuilder:
                 print_fragments=False,
                 print_fragments_from_files=False,
             ):
+                if (
+                    isinstance(node, SDocSection)
+                    and not found_deprecated_section
+                ):
+                    found_deprecated_section = True
+
+                    def print_line(text: str):
+                        print(f"\x1b[7;90m{text}\x1b[0m", flush=True)  # noqa: T201
+
+                    print_line(
+                        "WARNING: At least one document in this documentation tree "
+                        "uses a deprecated [SECTION] element. "
+                        "All [SECTION] elements must be renamed to [[SECTION]], "
+                        "and the SECTION element must be registered in the "
+                        "document grammar. "
+                        "See the migration guide for more details:\n"
+                        "https://strictdoc.readthedocs.io/en/latest/latest/docs/strictdoc_01_user_guide.html#SECTION-UG-NODE-MIGRATION\n"
+                        "This warning will become an error in 2025 Q3. "
+                        "Sleeping for 5 seconds..."
+                    )
+
+                    sleep(5)
+
                 if isinstance(node, SDocNode):
                     try:
                         SDocValidator.validate_node(

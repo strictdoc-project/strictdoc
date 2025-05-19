@@ -58,14 +58,14 @@ class RequirementFormField:
         field_name: str,
         field_type: RequirementFormFieldType,
         field_value: str,
-        field_is_autocompletable: bool = False,
+        field_gef_type: str = RequirementFieldType.STRING,
     ):
         assert isinstance(field_value, str)
         self.field_mid: str = field_mid
         self.field_name: str = field_name
         self.field_value: str = field_value
         self.field_type = field_type
-        self.field_is_autocompletable = field_is_autocompletable
+        self.field_gef_type: str = field_gef_type
 
     def is_singleline(self) -> bool:
         return self.field_type == RequirementFormFieldType.SINGLELINE
@@ -74,7 +74,13 @@ class RequirementFormField:
         return self.field_type == RequirementFormFieldType.MULTILINE
 
     def is_autocompletable(self) -> bool:
-        return self.field_is_autocompletable
+        return self.field_gef_type in (
+            RequirementFieldType.SINGLE_CHOICE,
+            RequirementFieldType.MULTIPLE_CHOICE,
+        )
+
+    def is_multiplechoice(self) -> bool:
+        return self.field_gef_type == RequirementFieldType.MULTIPLE_CHOICE
 
     def get_input_field_name(self):
         return f"requirement[fields][{self.field_mid}][value]"
@@ -109,9 +115,7 @@ class RequirementFormField:
                     else RequirementFormFieldType.SINGLELINE
                 ),
                 field_value=value,
-                field_is_autocompletable=(
-                    grammar_field.gef_type == RequirementFieldType.SINGLE_CHOICE
-                ),
+                field_gef_type=grammar_field.gef_type,
             )
         raise NotImplementedError(grammar_field)
 
@@ -137,9 +141,7 @@ class RequirementFormField:
                     else RequirementFormFieldType.SINGLELINE
                 ),
                 field_value=field_value,
-                field_is_autocompletable=(
-                    grammar_field.gef_type == RequirementFieldType.SINGLE_CHOICE
-                ),
+                field_gef_type=grammar_field.gef_type,
             )
         raise NotImplementedError(grammar_field)
 
@@ -150,6 +152,7 @@ class RequirementFormField:
             field_name="MID",
             field_type=RequirementFormFieldType.SINGLELINE,
             field_value=mid,
+            field_gef_type=RequirementFieldType.STRING,
         )
 
 

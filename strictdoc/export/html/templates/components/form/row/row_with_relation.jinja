@@ -57,6 +57,7 @@
     mid = relation_row_context.field.field_mid,
     autocomplete_url = "/autocomplete/uid?exclude_requirement_mid="~requirement_mid,
     autocomplete_len = "2",
+    autocomplete_multiplechoice = False,
     testid_postfix = "relation-uid"
   %}
   {%- include "components/form/field/autocompletable/index.jinja" %}

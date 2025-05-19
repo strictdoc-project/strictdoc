@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg"
 import sys
 import traceback
 from typing import List, Optional, Sequence, Union
@@ -63,6 +63,10 @@ class SourceFileTraceabilityReader_C:
 
         nodes = traverse_tree(tree)
         for node_ in nodes:
+            function_name: str
+            function_markers: List[FunctionRangeMarker]
+            function_comment_node: Optional[Node]
+            markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]]
             if node_.type == "translation_unit":
                 if (
                     len(node_.children) > 0
@@ -138,9 +142,7 @@ class SourceFileTraceabilityReader_C:
                 )
 
                 assert function_declarator_node.text is not None, node_.text
-                function_name: str = function_declarator_node.text.decode(
-                    "utf8"
-                )
+                function_name = function_declarator_node.text.decode("utf8")
                 assert function_name is not None, node_.text
 
                 parent_names = self.get_node_ns(node_)
@@ -159,8 +161,8 @@ class SourceFileTraceabilityReader_C:
                     if specifier_node_.text == b"static":
                         function_attributes.add(FunctionAttribute.STATIC)
 
-                function_markers: List[FunctionRangeMarker] = []
-                function_comment_node: Optional[Node] = None
+                function_markers = []
+                function_comment_node = None
                 if (
                     node_.prev_sibling is not None
                     and node_.prev_sibling.type == "comment"
@@ -208,7 +210,7 @@ class SourceFileTraceabilityReader_C:
                 traceability_info.functions.append(new_function)
 
             elif node_.type == "function_definition":
-                function_name: str = ""
+                function_name = ""
 
                 function_declarator_node = ts_find_child_node_by_type(
                     node_, "function_declarator"
@@ -256,8 +258,8 @@ class SourceFileTraceabilityReader_C:
                 if function_name.startswith("TEST"):
                     function_display_name = function_name
 
-                function_markers: List[FunctionRangeMarker] = []
-                function_comment_node: Optional[Node] = None
+                function_markers = []
+                function_comment_node = None
                 function_comment_text = None
                 if (
                     node_.prev_sibling is not None
@@ -318,9 +320,7 @@ class SourceFileTraceabilityReader_C:
 
                 node_text_string = node_.text.decode("utf8")
 
-                markers: List[
-                    Union[FunctionRangeMarker, RangeMarker, LineMarker]
-                ] = MarkerParser.parse(
+                markers = MarkerParser.parse(
                     node_text_string,
                     node_.start_point[0] + 1,
                     node_.end_point[0] + 1,

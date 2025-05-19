@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-redef,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-def"
 import os
 from pathlib import Path
 
@@ -35,17 +35,14 @@ class ReqIFExport:
                 f"{project_config.reqif_profile}."
             )
 
+        output_file_path: str
         if not reqifz:
-            output_file_path: str = os.path.join(
-                output_reqif_root, "output.reqif"
-            )
+            output_file_path = os.path.join(output_reqif_root, "output.reqif")
             reqif_content: str = ReqIFUnparser.unparse(reqif_bundle)
             with open(output_file_path, "w", encoding="utf8") as output_file:
                 output_file.write(reqif_content)
         else:
-            output_file_path: str = os.path.join(
-                output_reqif_root, "output.reqifz"
-            )
+            output_file_path = os.path.join(output_reqif_root, "output.reqifz")
             reqifz_bundle = ReqIFZBundle(
                 reqif_bundles={"document_tree.reqif": reqif_bundle},
                 attachments={},

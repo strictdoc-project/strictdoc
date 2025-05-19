@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-redef,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import os
 from typing import Union
 
@@ -30,6 +30,7 @@ class EmbeddableTag:
 
     @staticmethod
     def recognize_from_soup_tag(tag: bs4.element.Tag):
+        rel_value: str
         if tag.name == "link":
             if "rel" in tag.attrs:
                 if len(tag.attrs["rel"]) == 1:
@@ -56,7 +57,7 @@ class EmbeddableTag:
                     return EmbeddableTag(EmbeddableTag.JS, tag.attrs["src"])
         elif tag.name == "img":
             if "src" in tag.attrs:
-                rel_value: str = tag.attrs["src"]
+                rel_value = str(tag.attrs["src"])
                 if rel_value.lower().endswith(".png"):
                     return EmbeddableTag(
                         EmbeddableTag.IMAGE_PNG, tag.attrs["src"]

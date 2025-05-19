@@ -2,7 +2,7 @@
 import sys
 import traceback
 from copy import copy
-from typing import Tuple
+from typing import Any, Tuple
 
 from textx import metamodel_from_str
 
@@ -65,9 +65,11 @@ class SDReader:
     ) -> Tuple[SDocDocument, ParseContext]:
         document, parse_context = SDReader._read(input_string, file_path)
 
+        # FIXME: When the [SECTION] is gone, remove this.
         if migrate_sections:
             SDReader.migrate_sections(document)
             SDReader.migration_sections_grammar(document)
+        SDReader.fixup_composite_requirements(document)
 
         return document, parse_context
 
@@ -197,7 +199,14 @@ class SDReader:
         return node
 
     @staticmethod
-    def migrate_sections(sdoc):
+    def fixup_composite_requirements(sdoc: SDocDocument) -> None:
+        for _, node_ in enumerate(copy(sdoc.section_contents)):
+            if isinstance(node_, SDocCompositeNode):
+                SDReader.migration_sections_grammar(sdoc)
+                break
+
+    @staticmethod
+    def migrate_sections(sdoc: Any) -> None:
         for node_idx_, node_ in enumerate(copy(sdoc.section_contents)):
             if isinstance(node_, SDocSection):
                 SDReader.migrate_sections(node_)
@@ -205,12 +214,11 @@ class SDReader:
                 new_node = SDReader.convert(node_)
                 sdoc.section_contents[node_idx_] = new_node
 
-            elif isinstance(node_, SDocCompositeNode):
-                SDReader.migration_sections_grammar(sdoc)
-
     @staticmethod
-    def migration_sections_grammar(sdoc: SDocDocument):
+    def migration_sections_grammar(sdoc: SDocDocument) -> None:
         grammar: DocumentGrammar = assert_cast(sdoc.grammar, DocumentGrammar)
+        if not grammar.is_default:
+            return
         section_element_exists = any(
             element_.tag == "SECTION" for element_ in grammar.elements
         )

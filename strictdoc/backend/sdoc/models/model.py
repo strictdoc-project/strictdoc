@@ -96,7 +96,7 @@ class SDocDocumentIF(ABC):
         raise NotImplementedError  # pragma: no cover
 
 
-class SDocDocumentFromFileIF:
+class SDocDocumentFromFileIF(ABC):
     parent: Union[SDocDocumentIF, SDocSectionIF]
     ng_resolved_custom_level: Optional[str]
 

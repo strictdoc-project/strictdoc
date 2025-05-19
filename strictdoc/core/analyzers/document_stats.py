@@ -21,7 +21,9 @@ class DocumentStats:
     requirements_per_prefix: Dict[str, SinglePrefixRequirements] = field(
         default_factory=dict
     )
-    sections_without_uid: List[SDocSection] = field(default_factory=list)
+    sections_without_uid: List[typing.Union[SDocNode, SDocSection]] = field(
+        default_factory=list
+    )
     section_uids_so_far: typing.Counter[str] = field(default_factory=Counter)
 
 
@@ -53,9 +55,14 @@ class DocumentTreeStats:
         return next_number
 
     def get_auto_section_uid(
-        self, document_acronym: str, section: SDocSection
+        self,
+        document_acronym: str,
+        section: typing.Union[SDocNode, SDocSection],
     ) -> str:
-        section_title = create_safe_title_string(section.title)
+        if section.reserved_title is None:
+            return ""
+
+        section_title = create_safe_title_string(section.reserved_title)
         auto_uid = f"SECTION-{document_acronym}-{section_title}"
 
         count_so_far = self.section_uids_so_far[auto_uid]

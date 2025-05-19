@@ -15,7 +15,7 @@
       ready: Boolean,
       url: String,
       minLength: Number,
-      delay: { type: Number, default: 300 },
+      delay: { type: Number, default: 10 },
       queryParam: { type: String, default: "q" },
       multipleChoice: Boolean,
     }
@@ -38,6 +38,8 @@
 
       this.onInputChange = debounce(this.onInputChange, this.delayValue)
 
+      this.autocompletable.addEventListener("input", this.onInputChange)
+
       autocompletable.addEventListener("keydown", (event) => {
         const handler = this[`on${event.key}Keydown`]
         if (handler) handler(event)
@@ -59,18 +61,6 @@
           const query = this.minLengthValue == 0 ? "" : this.autocompletable.innerText.trim();
           this.fetchResults(query);
         }
-      });
-
-      autocompletable.addEventListener("input", (event) => {
-        const query = autocompletable.innerText.trim()
-        if (query && query.length >= this.minLengthValue) {
-          this.fetchResults(query)
-        } else {
-          this.hideAndRemoveOptions()
-        }
-
-        const text = filterSingleLine(this.autocompletable.innerText)
-        this.hidden.value = text
       });
 
       this.results.addEventListener("mousedown", this.onResultsMouseDown)
@@ -193,7 +183,7 @@
       this.autocompletable.innerText = suggestion
       this.hidden.value = suggestion
 
-      // some shenanigans to move the cursor to the end
+      // Move the cursor to the end of the input. 
       this.autocompletable.focus();
       const range = document.createRange();
       range.selectNodeContents(this.autocompletable);
@@ -232,6 +222,18 @@
       this.results.addEventListener("mouseup", () => {
         this.mouseDown = false
       }, { once: true })
+    }
+
+    onInputChange = ()  => {
+      const query = this.autocompletable.innerText.trim()
+      if (query && query.length >= this.minLengthValue) {
+        this.fetchResults(query)
+      } else {
+        this.hideAndRemoveOptions()
+      }
+
+      const text = filterSingleLine(this.autocompletable.innerText)
+      this.hidden.value = text
     }
 
     identifyOptions() {

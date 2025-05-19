@@ -1,7 +1,6 @@
 # pylint: disable=invalid-name
-
-
 from selenium.webdriver import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -153,25 +152,36 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
+        hidden_input = element.find_element(
+            By.XPATH, 'following-sibling::input[@type="hidden"]'
+        )
+        results_ul = hidden_input.find_element(
+            By.XPATH, "following-sibling::ul[1]"
+        )
 
-        for _ in range(3):
-            self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
-            element.send_keys(Keys.ARROW_DOWN)
-            element.send_keys(Keys.RETURN)
+        # We simulate a user typing the supplied field_value.
+        self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
 
-            try:
-                WebDriverWait(self.test_case.driver, timeout=3).until(
-                    lambda _: field_value.lower() in element.text.lower()
-                )
-                break
-            except Exception:
-                pass
+        # We wait until the results <ul> is displayed.
+        WebDriverWait(self.test_case.driver, 3).until(
+            lambda _: results_ul.is_displayed()
+        )
 
-        else:
-            raise AssertionError(
-                f"The text field could not be filled with the value: "
-                f"'{field_value}'."
-            )
+        # We send Arrow-Down and Enter select the first match.
+        # The stimulus.js controller uses a debounce of 10ms, we are
+        # careful to use an larger interval inbetween key presses.
+        len_before_autocomplete = len(element.text.lower().strip())
+        select_first_match_action = ActionChains(self.test_case.driver)
+        select_first_match_action.send_keys(Keys.ARROW_DOWN).pause(
+            0.1
+        ).send_keys(Keys.RETURN).perform()
+
+        # Now wait for the length of the field to increase, this means
+        # the autocomplete did happen.
+        WebDriverWait(self.test_case.driver, timeout=3).until(
+            lambda _: len(element.text.lower().strip())
+            > len_before_autocomplete
+        )
 
     def do_append_command_and_use_autocomplete_result_again(
         self, test_id: str, field_value: str
@@ -181,26 +191,36 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
+        hidden_input = element.find_element(
+            By.XPATH, 'following-sibling::input[@type="hidden"]'
+        )
+        results_ul = hidden_input.find_element(
+            By.XPATH, "following-sibling::ul[1]"
+        )
 
-        for _ in range(3):
-            element.send_keys(f",{field_value}")
-            element.send_keys(Keys.ARROW_DOWN)
-            element.send_keys(Keys.RETURN)
+        # We simulate a user typing a comma, and the supplied field_value.
+        element.send_keys(f",{field_value}")
 
-            try:
-                WebDriverWait(self.test_case.driver, timeout=3).until(
-                    lambda _: field_value.lower()
-                    in element.text.lower().split()[-1]
-                )
-                break
-            except Exception:
-                pass
+        # We wait until the results <ul> is displayed.
+        WebDriverWait(self.test_case.driver, 3).until(
+            lambda _: results_ul.is_displayed()
+        )
 
-        else:
-            raise AssertionError(
-                f"The text field could not be filled with the value: "
-                f"'{field_value}'."
-            )
+        # We send Arrow-Down and Enter select the first match.
+        # The stimulus.js controller uses a debounce of 50ms, we are
+        # careful to use an larger interval inbetween key presses.
+        len_before_autocomplete = len(element.text.lower().strip())
+        select_first_match_action = ActionChains(self.test_case.driver)
+        select_first_match_action.send_keys(Keys.ARROW_DOWN).pause(
+            0.1
+        ).send_keys(Keys.RETURN).perform()
+
+        # Now wait for the length of the field to increase, this means
+        # the autocomplete did happen.
+        WebDriverWait(self.test_case.driver, timeout=3).until(
+            lambda _: len(element.text.lower().strip())
+            > len_before_autocomplete
+        )
 
     def do_use_first_autocomplete_result_mid(
         self, mid: MID, test_id: str, field_value: str

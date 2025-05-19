@@ -2793,14 +2793,26 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 )
 
                 if field.gef_type == RequirementFieldType.MULTIPLE_CHOICE:
-                    # MultipleChoice: Split the query into parts.
+                    # MultipleChoice: We split the query into its parts:
+                    #
+                    # Example User input: "Some Value, Another Value, Yet ano|".
+                    # parts = ['some value', 'another value', 'yet ano']                # noqa: ERA001
                     parts = q.lower().split(",")
 
-                    # only use the last_part for lookup
+                    # For the lookup, we want to use the only the last, still
+                    # incomplete part, not the full query:
+                    #
+                    # last_part = "yet ano"                                             # noqa: ERA001
+                    # query_words = ['yet', 'ano']                                      # noqa: ERA001
                     last_part = parts[-1].strip()
                     query_words = last_part.split()
 
-                    # Pre-filter: don't suggest choices that were already selected / present in the query.
+                    # We also filter the already selected choices from the
+                    # options we are going to be send to the user,
+                    # as MultipleChoices is a Set, so options shall be
+                    # selectable at most once.
+                    #
+                    # In the example, we would remove 'some value' and 'another value'.
                     already_selected = [
                         p.strip() for p in parts[:-1] if p.strip()
                     ]
@@ -2810,7 +2822,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                         if choice.lower() not in already_selected
                     ]
                 else:
-                    # SingleChoice: use all available options.
+                    # SingleChoice: we use the full query and all available options.
                     query_words = q.lower().split()
                     filtered_options = all_options
 

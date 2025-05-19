@@ -237,4 +237,4 @@ class SDocDocument(SDocDocumentIF):
             field, GrammarElementFieldMultipleChoice
         ):
             return field.options
-        return []
+        raise AssertionError(f"Must not reach here: {field}")

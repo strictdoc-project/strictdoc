@@ -1034,12 +1034,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             MID(reference_mid)
         )
         next_uid: str = ""
-        if isinstance(reference_node, SDocNode):
-            if (node_prefix := reference_node.get_prefix()) is not None:
-                next_uid = document_tree_stats.get_next_requirement_uid(
-                    node_prefix
-                )
-        elif isinstance(reference_node, SDocSection):
+        if isinstance(reference_node, SDocSection) or (
+            isinstance(reference_node, SDocNode)
+            and reference_node.node_type == "SECTION"
+        ):
             document: SDocDocument = assert_cast(
                 reference_node.get_document(), SDocDocument
             )
@@ -1047,6 +1045,11 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             next_uid = document_tree_stats.get_auto_section_uid(
                 document_acronym, reference_node
             )
+        elif isinstance(reference_node, SDocNode):
+            if (node_prefix := reference_node.get_prefix()) is not None:
+                next_uid = document_tree_stats.get_next_requirement_uid(
+                    node_prefix
+                )
         else:
             raise NotImplementedError(reference_node)  # pragma: no cover
 

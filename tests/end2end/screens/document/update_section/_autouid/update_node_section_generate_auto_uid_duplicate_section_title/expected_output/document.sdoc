@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[[SECTION]]
+UID: SECTION-D-First-section
+TITLE: First section
+
+[[/SECTION]]
+
+[[SECTION]]
+UID: SECTION-D-First-section-2
+TITLE: First section
+
+[[/SECTION]]

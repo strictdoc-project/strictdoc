@@ -400,6 +400,16 @@ TITLE: Test Document
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
 - TAG: TEXT
   PROPERTIES:
     IS_COMPOSITE: False

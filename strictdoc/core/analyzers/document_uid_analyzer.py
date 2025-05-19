@@ -68,7 +68,9 @@ class DocumentUIDAnalyzer:
         this_document_stats = DocumentStats(document)
         document_iterator = DocumentCachingIterator(document)
         for node in document_iterator.all_content():
-            if isinstance(node, SDocSection):
+            if isinstance(node, SDocSection) or (
+                isinstance(node, SDocNode) and node.node_type == "SECTION"
+            ):
                 if node.reserved_uid is not None:
                     this_document_stats.section_uids_so_far[
                         node.reserved_uid
@@ -78,7 +80,7 @@ class DocumentUIDAnalyzer:
                 continue
             if not isinstance(node, SDocNode):
                 continue
-            if node.node_type == "TEXT":
+            if node.node_type in ("TEXT", "SECTION"):
                 continue
             requirement: SDocNode = node
             node_prefix: typing.Optional[str] = requirement.get_prefix()

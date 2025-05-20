@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg,union-attr"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 import datetime
 import uuid
 from collections import defaultdict
@@ -102,11 +102,11 @@ class P01_SDocToReqIFObjectConverter:
             multiline_is_xhtml=multiline_is_xhtml, enable_mid=enable_mid
         )
 
-        spec_types: List = []
+        spec_types: List[ReqIFSpecificationType] = []
         spec_objects: List[ReqIFSpecObject] = []
         spec_relations: List[ReqIFSpecRelation] = []
         specifications: List[ReqIFSpecification] = []
-        data_types: List = []
+        data_types: List[ReqIFDataTypeDefinitionString] = []
         data_types_lookup = {}
 
         specification_type = ReqIFSpecificationType(
@@ -478,7 +478,7 @@ class P01_SDocToReqIFObjectConverter:
         requirement: SDocNode,
         grammar: DocumentGrammar,
         context: P01_SDocToReqIFBuildContext,
-        data_types: List,
+        data_types: List[ReqIFDataTypeDefinitionString],
         data_types_lookup: Dict[str, str],
     ) -> ReqIFSpecObject:
         node_document = assert_cast(requirement.get_document(), SDocDocument)
@@ -602,7 +602,7 @@ class P01_SDocToReqIFObjectConverter:
         data_types_lookup,
         context: P01_SDocToReqIFBuildContext,
     ):
-        spec_object_types: List = []
+        spec_object_types: List[ReqIFSpecificationType] = []
 
         grammar_document: SDocDocument = assert_cast(
             grammar.parent, SDocDocument
@@ -699,14 +699,16 @@ class P01_SDocToReqIFObjectConverter:
         spec_object_types.append(section_spec_type)
 
         # Using dict as an ordered set.
-        spec_relation_tuples: OrderedSet = OrderedSet()
+        spec_relation_tuples: OrderedSet[Tuple[str, Optional[str]]] = (
+            OrderedSet()
+        )
         for element_ in grammar.elements:
             for relation_ in element_.relations:
                 spec_relation_tuples.add(
                     (relation_.relation_type, relation_.relation_role)
                 )
 
-        spec_relation_types: List = []
+        spec_relation_types: List[ReqIFSpecRelationType] = []
         for spec_relation_tuple_ in spec_relation_tuples:
             spec_relation_type_name = (
                 spec_relation_tuple_[1]

@@ -1,12 +1,12 @@
 from copy import copy
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Type
 
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES, AbstractBucket
 from strictdoc.helpers.ordered_set import OrderedSet
 
 
 class ManyToManySet(AbstractBucket):
-    def __init__(self, lhs_type: type, rhs_type: type) -> None:
+    def __init__(self, lhs_type: Type[Any], rhs_type: Type[Any]) -> None:
         self._links: Dict[Any, Dict[Optional[str], OrderedSet[Any]]] = {}
         self._links_reverse: Dict[
             Any, Dict[Optional[str], OrderedSet[Any]]

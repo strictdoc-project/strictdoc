@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="no-untyped-def,union-attr"
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
@@ -10,7 +10,7 @@ from strictdoc.export.html.html_templates import JinjaEnvironment
 @dataclass
 class RowWithGrammarElementFormObject:
     field: Any
-    errors: Dict[str, List]
+    errors: Dict[str, List[str]]
     jinja_environment: JinjaEnvironment
 
     def __post_init__(self):
@@ -33,5 +33,5 @@ class RowWithGrammarElementFormObject:
             )
             return rendered_template
 
-    def get_errors(self, field_name) -> List:
+    def get_errors(self, field_name) -> List[str]:
         return self.errors.get(field_name, [])

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 from typing import Dict, List, Optional, Tuple
 
 from strictdoc import __version__
@@ -20,13 +20,15 @@ class TraceabilityMatrixViewObject:
         project_config: ProjectConfig,
         link_renderer: LinkRenderer,
         markup_renderer: MarkupRenderer,
-        known_relations_list: List[Tuple],
+        known_relations_list: List[Tuple[str, Optional[str]]],
     ):
         self.traceability_index: TraceabilityIndex = traceability_index
         self.project_config: ProjectConfig = project_config
         self.link_renderer: LinkRenderer = link_renderer
         self.markup_renderer: MarkupRenderer = markup_renderer
-        self.known_relations_list: List[Tuple] = known_relations_list
+        self.known_relations_list: List[Tuple[str, Optional[str]]] = (
+            known_relations_list
+        )
         self.standalone: bool = False
         self.document_tree_iterator: DocumentTreeIterator = (
             DocumentTreeIterator(traceability_index.document_tree)

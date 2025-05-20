@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 import hashlib
 import statistics
 from dataclasses import dataclass, field
@@ -61,7 +61,7 @@ class ProjectTreeDiffStats:
     map_nodes_to_hashes: Dict[Any, str] = field(default_factory=dict)
     map_mid_to_nodes: Dict[MID, Any] = field(default_factory=dict)
     map_uid_to_nodes: Dict[str, Any] = field(default_factory=dict)
-    map_titles_to_nodes: Dict[str, List] = field(default_factory=dict)
+    map_titles_to_nodes: Dict[str, List[SDocNode]] = field(default_factory=dict)
     map_statements_to_nodes: Dict[str, Any] = field(default_factory=dict)
     map_rel_paths_to_docs: Dict[str, SDocDocument] = field(default_factory=dict)
 
@@ -798,10 +798,10 @@ class ChangeStats:
 
         changes = []
 
-        changed_fields: Dict = dict.fromkeys(
+        changed_fields: Dict[SDocNodeField, None] = dict.fromkeys(
             requirement.ordered_fields_lookup.get("COMMENT", []), 1
         )
-        changed_other_fields: Dict = dict.fromkeys(
+        changed_other_fields: Dict[SDocNodeField, None] = dict.fromkeys(
             other_requirement.ordered_fields_lookup.get("COMMENT", []), 1
         )
 

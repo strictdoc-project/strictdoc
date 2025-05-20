@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
 import os.path
 from pathlib import Path
 from typing import Dict, List, Tuple, Union
@@ -27,6 +27,9 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementFieldTag,
+    GrammarElementRelationChild,
+    GrammarElementRelationFile,
+    GrammarElementRelationParent,
     RequirementFieldType,
 )
 from strictdoc.core.document_iterator import DocumentCachingIterator
@@ -262,7 +265,13 @@ class SDWriter:
                             grammar_field
                         )
 
-                    relations: List = element.relations
+                    relations: List[
+                        Union[
+                            GrammarElementRelationParent,
+                            GrammarElementRelationChild,
+                            GrammarElementRelationFile,
+                        ]
+                    ] = element.relations
                     if len(relations) > 0:
                         output += "  RELATIONS:\n"
 

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import sys
 import traceback
 from itertools import islice

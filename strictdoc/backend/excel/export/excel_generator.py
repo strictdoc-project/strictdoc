@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-def,type-arg,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-def,union-attr"
 import os
 from pathlib import Path
 from typing import Dict, List
@@ -8,6 +8,7 @@ from xlsxwriter.workbook import Workbook
 from xlsxwriter.worksheet import Worksheet
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.model import SDocElementIF
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
@@ -224,7 +225,7 @@ class ExcelGenerator:
             os.unlink(document_out_file)
 
     @staticmethod
-    def _lookup_refs(document_contents: List) -> Dict[str, int]:
+    def _lookup_refs(document_contents: List[SDocElementIF]) -> Dict[str, int]:
         refs: Dict[str, int] = {}
         row = 1
 
@@ -260,8 +261,8 @@ class ExcelGenerator:
                 worksheet.set_column(idx, idx, columns[field][MAX_WIDTH_KEY])
 
     @staticmethod
-    def _init_headers(fields: List[str]) -> List:
-        headers: List = []
+    def _init_headers(fields: List[str]) -> List[str]:
+        headers: List[str] = []
 
         for field in fields:
             headers.append({"header": field.upper()})

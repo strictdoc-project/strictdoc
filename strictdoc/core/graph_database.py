@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def,type-arg"
+# mypy: disable-error-code="no-untyped-def"
 from typing import Any, Dict, Hashable, List, Optional, Tuple
 
 from strictdoc.core.graph.abstract_bucket import AbstractBucket
@@ -40,7 +40,7 @@ class GraphDatabase:
 
     def get_link_values(
         self, *, link_type: Hashable, lhs_node: Any, edge: Optional[str] = None
-    ) -> OrderedSet:
+    ) -> OrderedSet[Any]:
         return self._id_to_bucket[link_type].get_link_values(
             lhs_node=lhs_node, edge=edge
         )

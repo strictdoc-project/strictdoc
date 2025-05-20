@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
 import re
 from collections import defaultdict
 from typing import Dict, List, Optional
@@ -9,7 +9,7 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.form_data import parse_form_data
+from strictdoc.helpers.form_data import ParsedFormData, parse_form_data
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
 from strictdoc.server.helpers.turbo import render_turbo_stream
@@ -42,11 +42,13 @@ class IncludedDocumentFormObject(ErrorObject):
             (field_name, field_value)
             for field_name, field_value in request_form_data.multi_items()
         ]
-        request_form_dict: Dict = assert_cast(
+        request_form_dict: ParsedFormData = assert_cast(
             parse_form_data(request_form_data_as_list), dict
         )
-        document_mid: str = request_form_dict["document_mid"]
-        context_document_mid: str = request_form_dict["context_document_mid"]
+        document_mid: str = assert_cast(request_form_dict["document_mid"], str)
+        context_document_mid: str = assert_cast(
+            request_form_dict["context_document_mid"], str
+        )
 
         # FIXME: Rewrite the legacy way of parsing by also use data from
         #        request_form_dict above.

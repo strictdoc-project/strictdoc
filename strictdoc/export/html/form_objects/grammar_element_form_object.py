@@ -1,5 +1,5 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr,type-arg"
-from typing import Dict, List, Optional, Set, Tuple, Union
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+from typing import List, Optional, Set, Tuple, Union
 
 from jinja2 import Template
 from starlette.datastructures import FormData
@@ -26,7 +26,7 @@ from strictdoc.export.html.form_objects.form_object import (
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.form_data import parse_form_data
+from strictdoc.helpers.form_data import ParsedFormData, parse_form_data
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import is_uppercase_underscore_string
 from strictdoc.server.error_object import ErrorObject
@@ -135,15 +135,20 @@ class GrammarElementFormObject(ErrorObject):
             (field_name, field_value)
             for field_name, field_value in request_form_data.multi_items()
         ]
-        request_form_dict: Dict = assert_cast(
+        request_form_dict: ParsedFormData = assert_cast(
             parse_form_data(request_form_data_as_list), dict
         )
 
         element_mid = request_form_dict["element_mid"]
 
+        #
         # Grammar fields.
+        #
         document_grammar_fields = request_form_dict["document_grammar_field"]
         for field_mid, field_dict in document_grammar_fields.items():
+            if not isinstance(field_dict, dict):
+                raise TypeError(f"Expected a dict, but got {type(field_dict)}")
+
             field_name = field_dict["field_name"]
             field_human_title = field_dict.get("field_human_title")
             if field_human_title is not None:
@@ -159,13 +164,19 @@ class GrammarElementFormObject(ErrorObject):
             )
             form_object_fields.append(form_object_field)
 
+        #
         # Grammar relations.
+        #
         document_grammar_relations = request_form_dict.get(
             "document_grammar_relation", {}
         )
         for field_mid, field_dict in document_grammar_relations.items():
+            if not isinstance(field_dict, dict):
+                raise TypeError(f"Expected a dict, but got {type(field_dict)}")
+
             field_type = field_dict["type"]
             field_role = field_dict["role"].strip()
+
             form_object_relation = GrammarFormRelation(
                 relation_mid=field_mid,
                 relation_type=field_type,

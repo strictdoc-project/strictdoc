@@ -3,6 +3,7 @@ toml
 # Lint
 mypy>=0.910
 ruff>=0.9
+fixit
 
 # Unit tests
 pytest>=6.2.2

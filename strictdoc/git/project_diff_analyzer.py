@@ -229,7 +229,7 @@ class ChangeStats:
 
     def get_changes_sections_stats_string(self) -> str:
         """
-        Example: 2 removed, 1 modified, 2 added
+        Example: 2 removed, 1 modified, 2 added.
         """
         change_components = []
         removed = self._change_counters.get(ChangeType.SECTION_REMOVED)
@@ -246,7 +246,7 @@ class ChangeStats:
 
     def get_changes_requirements_stats_string(self) -> str:
         """
-        Example: 2 removed, 1 modified, 2 added
+        Example: 2 removed, 1 modified, 2 added.
         """
         change_components = []
         removed = self._change_counters.get(ChangeType.REQUIREMENT_REMOVED)

@@ -66,6 +66,7 @@ def run_invoke_with_tox(
     environment_type: ToxEnvironment,
     command: str,
     environment: Optional[Dict] = None,
+    pty: bool = False,
 ) -> invoke.runners.Result:
     assert isinstance(environment_type, ToxEnvironment)
     assert isinstance(command, str)
@@ -80,6 +81,7 @@ def run_invoke_with_tox(
                 {command}
         """,
         environment=environment,
+        pty=pty,
     )
 
 
@@ -590,6 +592,27 @@ def lint_mypy(context):
 
 
 # # @sdoc[/SDOC-SRS-43]
+
+
+@task(aliases=["lf"])
+def lint_fixit(context, fix=False):
+    if fix:
+        run_invoke_with_tox(
+            context,
+            ToxEnvironment.CHECK,
+            """
+                fixit fix strictdoc/
+            """,
+            pty=True,
+        )
+    else:
+        run_invoke_with_tox(
+            context,
+            ToxEnvironment.CHECK,
+            """
+                fixit lint --diff strictdoc/
+            """,
+        )
 
 
 @task(aliases=["l"])

@@ -280,7 +280,9 @@ class SourceFileTraceabilityReader_Python:
 
     @staticmethod
     def get_node_ns(node: Node) -> Sequence[str]:
-        """Walk up the tree and find parent classes"""
+        """
+        Walk up the tree and find parent classes.
+        """
         parent_scopes = []
         cursor: Optional[Node] = node
         while cursor:

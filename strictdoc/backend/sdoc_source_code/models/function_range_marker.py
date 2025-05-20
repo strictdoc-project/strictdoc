@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def,type-arg"
+# mypy: disable-error-code="no-untyped-def"
 from copy import copy
 from enum import Enum
 from typing import List, Optional

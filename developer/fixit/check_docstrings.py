@@ -1,7 +1,7 @@
 from typing import Optional
 
 from fixit import LintRule
-from libcst import SimpleString, Expr
+from libcst import Expr, SimpleString
 from libcst.metadata import ParentNodeProvider, PositionProvider
 
 RESERVED_STRINGS = ["@relation", "FIXME"]

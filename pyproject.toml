@@ -122,3 +122,13 @@ addopts = "--import-mode=importlib"
 pythonpath = [
   "."
 ]
+
+[tool.fixit]
+enable = [
+    ".developer.fixit.check_docstrings",
+]
+
+# FIXME: Remove disable.
+disable = [
+    "fixit.rules"
+]

@@ -14,7 +14,9 @@ class ExcelLibType(Enum):
 
 @auto_described
 class ExcelSheetProxy:
-    """This proxy class allows to open either xls(xlrd) or xlsx(openpyxl) with the same interface"""
+    """
+    This proxy class allows to open either xls(xlrd) or xlsx(openpyxl) with the same interface.
+    """
 
     def __init__(self, file: str):
         self.file = file
@@ -35,7 +37,9 @@ class ExcelSheetProxy:
 
     @property
     def name(self) -> str:
-        """Returns the name of the first sheet"""
+        """
+        Returns the name of the first sheet.
+        """
         if self.lib == ExcelLibType.OPENPYXL:
             return str(self.sheet.title)
         elif self.lib == ExcelLibType.XLRD:
@@ -44,7 +48,9 @@ class ExcelSheetProxy:
 
     @property
     def ncols(self) -> int:
-        """The number of columns"""
+        """
+        The number of columns.
+        """
         ncols: int = 0
         if self.lib == ExcelLibType.OPENPYXL:
             ncols = self.sheet.max_column
@@ -54,7 +60,9 @@ class ExcelSheetProxy:
 
     @property
     def nrows(self) -> int:
-        """The number of rows"""
+        """
+        The number of rows.
+        """
         nrows: int = 0
         if self.lib == ExcelLibType.OPENPYXL:
             nrows = self.sheet.max_row
@@ -63,7 +71,9 @@ class ExcelSheetProxy:
         return nrows
 
     def get_cell_value(self, row: int, col: int) -> str:
-        """Returns the value at row/col as string"""
+        """
+        Returns the value at row/col as string.
+        """
         cell_value: str = ""
         if self.lib == ExcelLibType.OPENPYXL:
             cell_value = (
@@ -74,7 +84,9 @@ class ExcelSheetProxy:
         return cell_value
 
     def row_values(self, row: int) -> List[str]:
-        """Returns a full row as list"""
+        """
+        Returns a full row as list.
+        """
         row_values: List[str] = []
         if self.lib == ExcelLibType.OPENPYXL:
             row_values = [(cell.value or "") for cell in self.sheet[row + 1]]

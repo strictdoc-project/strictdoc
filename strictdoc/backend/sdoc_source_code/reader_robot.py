@@ -59,19 +59,27 @@ class SdocRelationVisitor(ModelVisitor):
         self.parse_context = parse_context
 
     def visit_Comment(self, node: Comment) -> None:
-        """Create non-function Marker from Comment outside TestCases."""
+        """
+        Create non-function Marker from Comment outside TestCases.
+        """
         self._visit_possibly_marked_node(node)
 
     def visit_Documentation(self, node: Documentation) -> None:
-        """Create non-function Marker from Documentation outside TestCases."""
+        """
+        Create non-function Marker from Documentation outside TestCases.
+        """
         self._visit_possibly_marked_node(node)
 
     def visit_Tags(self, node: Tags) -> None:
-        """Create non-function Marker from Tags outside TestCases."""
+        """
+        Create non-function Marker from Tags outside TestCases.
+        """
         self._visit_possibly_marked_node(node)
 
     def visit_TestCase(self, node: TestCase) -> None:
-        """Create function and non-function Marker from TestCases."""
+        """
+        Create function and non-function Marker from TestCases.
+        """
         trailing_empty_lines = 0
         tc_markers = []
         for stmt in node.body:

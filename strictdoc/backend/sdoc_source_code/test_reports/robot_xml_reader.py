@@ -22,7 +22,9 @@ class SdocVisitor(ResultVisitor):
         self.document: Optional[SDocDocument] = None
 
     def visit_suite(self, suite: robot.result.TestSuite) -> None:
-        """Create document for top level suite and sections for nested suites."""
+        """
+        Create document for top level suite and sections for nested suites.
+        """
         assert suite.full_name not in self.suites
 
         if suite.parent is None:
@@ -67,7 +69,9 @@ class SdocVisitor(ResultVisitor):
         super().visit_suite(suite)
 
     def visit_test(self, test: robot.result.TestCase) -> None:
-        """Create TEST_RESULT node for each test case."""
+        """
+        Create TEST_RESULT node for each test case.
+        """
         assert self.document
         assert test.parent and test.parent.full_name in self.suites, (
             "depth-first traversal expected"

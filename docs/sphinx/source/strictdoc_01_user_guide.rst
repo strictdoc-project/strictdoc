@@ -680,7 +680,7 @@ The available options are: ``On`` /  ``Off``. Default is ``On``.
 
 In case of ``On``, the ``[SECTION].LEVEL`` fields must be absent or may only
 contain ``None`` to exclude that section from StrictDoc's automatic section
-numbering. See also :ref:`Section without a level <SECTION_WITHOUT_A_LEVEL>`.
+numbering. See also :ref:`Section without a level <UG_NODE_WITHOUT_A_LEVEL>`.
 
 In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
 
@@ -1159,7 +1159,7 @@ StrictDoc creates section numbers automatically. In the example above, the
 sections will have their titles numbered accordingly: ``1 Chapter`` and
 ``1.1 Subchapter``.
 
-.. _SECTION_WITHOUT_A_LEVEL:
+.. _UG_NODE_WITHOUT_A_LEVEL:
 
 Section without a level
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -2972,7 +2972,7 @@ The following is a list of features that are considered less portable when it co
 
 - :ref:`Composing documents from other documents <UG_COMPOSABLE_DOCUMENTS>`. Composing documents from other documents is a useful feature but it may not be directly supported by other tools. When exporting to JSON or ReqIF, StrictDoc by default does not export included documents but only the including documents.
 - :ref:`Composite requirement <UG_COMPOSITE_NODE>`. A Composite Requirement is a useful concept which is partially supported by StrictDoc but it may be supported less by other tools.
-- :ref:`Section without a level <SECTION_WITHOUT_A_LEVEL>`. Table of contents hierarchy where some nodes do not have TOC levels (or have custom TOC levels) can cause problems when exporting/importing documentation content if an interfacing tool does not support custom TOC nodes.
+- :ref:`Section without a level <UG_NODE_WITHOUT_A_LEVEL>`. Table of contents hierarchy where some nodes do not have TOC levels (or have custom TOC levels) can cause problems when exporting/importing documentation content if an interfacing tool does not support custom TOC nodes.
 
 .. note::
 

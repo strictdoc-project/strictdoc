@@ -125,6 +125,7 @@ pythonpath = [
 
 [tool.fixit]
 enable = [
+    ".developer.fixit.check_comments",
     ".developer.fixit.check_docstrings",
 ]
 

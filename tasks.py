@@ -595,13 +595,14 @@ def lint_mypy(context):
 
 
 @task(aliases=["lf"])
-def lint_fixit(context, fix=False):
+def lint_fixit(context, fix=False, auto=False, path="strictdoc/"):
     if fix:
+        auto_argument = "--automatic" if auto else ""
         run_invoke_with_tox(
             context,
             ToxEnvironment.CHECK,
-            """
-                fixit fix strictdoc/
+            f"""
+                fixit fix {path} {auto_argument}
             """,
             pty=True,
         )
@@ -609,8 +610,8 @@ def lint_fixit(context, fix=False):
         run_invoke_with_tox(
             context,
             ToxEnvironment.CHECK,
-            """
-                fixit lint --diff strictdoc/
+            f"""
+                fixit lint --diff {path}
             """,
         )
 

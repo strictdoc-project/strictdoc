@@ -1,5 +1,5 @@
-# mypy: disable-error-code="no-untyped-def,type-arg"
-from typing import Dict, List, Optional, Sequence, Union
+# mypy: disable-error-code="no-untyped-def"
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 from typing_extensions import TypeAlias
 
@@ -23,15 +23,20 @@ RelationMarkerType: TypeAlias = Union[
 
 @auto_described
 class SourceFileTraceabilityInfo:
-    def __init__(self, g_parts: List):
+    def __init__(self, g_parts: List[Any]):  # noqa: ARG002
         """
         At the init time, only the backward RangeMarkers are available from
         a source file. At runtime, the ForwardRangeMarkers are mixed in
         from the Requirement/FileReference links. This is why the .markers
         is a union.
+
+        Note that g_parts is only used by the textX grammar to allow the
+        definition of the child grammar elements. All other instance variables
+        of this class are not using or based on g_parts. Instead, they are
+        populated during the textX processing step, e.g., via
+        general_language_marker_processors.py.
         """
 
-        self.g_parts: List = g_parts
         self.source_file: Optional[SourceFile] = None
         self.functions: List[Function] = []
 

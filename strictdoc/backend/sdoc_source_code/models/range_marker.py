@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def,type-arg"
 from typing import Any, List, Optional
 
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
@@ -14,7 +13,7 @@ class RangeMarker:
         reqs_objs: List[Req],
         scope: str = "",
         role: Optional[str] = None,
-    ):
+    ) -> None:
         assert isinstance(reqs_objs, list)
         self.parent: Any = parent
         assert len(begin_or_end) > 0 or scope is not None
@@ -115,12 +114,15 @@ class LineMarker:
 @auto_described
 class ForwardRangeMarker:
     def __init__(
-        self, start_or_end: bool, reqs_objs: List, role: Optional[str] = None
-    ):
+        self,
+        start_or_end: bool,
+        reqs_objs: List[Req],
+        role: Optional[str] = None,
+    ) -> None:
         assert len(reqs_objs) > 0
         self.start_or_end: bool = start_or_end
 
-        self.reqs_objs: List[str] = reqs_objs
+        self.reqs_objs: List[Req] = reqs_objs
         self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
 
         self.role: Optional[str] = (
@@ -156,7 +158,9 @@ class ForwardRangeMarker:
 
 @auto_described
 class ForwardFileMarker(ForwardRangeMarker):
-    def __init__(self, reqs_objs: List, role: Optional[str] = None):
+    def __init__(
+        self, reqs_objs: List[Req], role: Optional[str] = None
+    ) -> None:
         super().__init__(True, reqs_objs, role)
 
     def get_description(self) -> Optional[str]:

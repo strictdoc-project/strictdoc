@@ -1,8 +1,8 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import sys
 import traceback
 from functools import partial
-from typing import List, Optional
+from typing import List, Optional, TypedDict
 
 from textx import get_location, metamodel_from_str
 
@@ -22,6 +22,12 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
 from strictdoc.helpers.file_stats import SourceFileStats
 from strictdoc.helpers.textx import drop_textx_meta
+
+
+class TextXLocation(TypedDict):
+    line: int
+    col: int
+    filename: str
 
 
 def req_processor(req: Req):
@@ -95,7 +101,7 @@ Content...
 def create_unmatch_range_error(unmatched_ranges: List[RangeMarker]):
     assert isinstance(unmatched_ranges, list)
     assert len(unmatched_ranges) > 0
-    range_locations: List = []
+    range_locations: List[TextXLocation] = []
     for unmatched_range in unmatched_ranges:
         location = get_location(unmatched_range)
         range_locations.append(location)

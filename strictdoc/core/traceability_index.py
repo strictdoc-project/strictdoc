@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
 import datetime
 from copy import deepcopy
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
@@ -247,7 +247,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             link_type=GraphLinkType.DOCUMENT_TO_TAGS,
             lhs_node=document.reserved_mid,
         )
-        document_tags: Dict = assert_cast(document_tags_or_none, dict)
+        document_tags: Dict[str, int] = assert_cast(document_tags_or_none, dict)
 
         tags = sorted(document_tags.keys(), key=alphanumeric_sort)
         for tag in tags:

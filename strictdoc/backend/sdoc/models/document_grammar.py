@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,union-attr,type-arg"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 from collections import OrderedDict
 from typing import Dict, Generator, List, Optional, Set, Tuple, Union
 
@@ -35,7 +35,13 @@ class GrammarElement:
                 GrammarElementFieldSingleChoice,
             ]
         ],
-        relations: List,
+        relations: List[
+            Union[
+                GrammarElementRelationParent,
+                GrammarElementRelationChild,
+                GrammarElementRelationFile,
+            ]
+        ],
     ) -> None:
         self.parent: Optional[DocumentGrammar] = parent
         self.tag: str = tag
@@ -81,7 +87,7 @@ class GrammarElement:
                 GrammarElementRelationFile,
             ]
         ] = relations if relations is not None and len(relations) > 0 else []
-        fields_map: OrderedDict = OrderedDict()
+        fields_map: OrderedDict[str, GrammarElementField] = OrderedDict()
 
         statement_field: Optional[Tuple[str, int]] = None
         description_field: Optional[Tuple[str, int]] = None

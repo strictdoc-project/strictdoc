@@ -1,11 +1,11 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def"
 import datetime
 import os
 import re
 import sys
 import tempfile
 from enum import Enum
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import toml
 
@@ -24,7 +24,7 @@ from strictdoc.helpers.net import is_valid_host
 from strictdoc.helpers.path_filter import validate_mask
 
 
-def parse_relation_tuple(column_name: str) -> Optional[Tuple]:
+def parse_relation_tuple(column_name: str) -> Optional[Tuple[str, str]]:
     match_result = re.search(
         r"^((Parent|Child|File)?)(\[(.{1,32})])?$", column_name
     )
@@ -415,7 +415,7 @@ class ProjectConfigLoader:
     @staticmethod
     def _load_from_dictionary(
         *,
-        config_dict: dict,
+        config_dict: Dict[str, Any],
         environment: SDocRuntimeEnvironment,
         config_last_update: Optional[datetime.datetime],
         path_to_config: Optional[str],
@@ -441,7 +441,9 @@ class ProjectConfigLoader:
         bundle_document_version = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION
         bundle_document_date = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE
 
-        traceability_matrix_relation_columns: Optional[List[Tuple]] = None
+        traceability_matrix_relation_columns: Optional[
+            List[Tuple[str, str]]
+        ] = None
         reqif_profile = ReqIFProfile.P01_SDOC
         reqif_multiline_is_xhtml = False
         reqif_enable_mid = False
@@ -581,7 +583,7 @@ class ProjectConfigLoader:
                 "bundle_document_date", bundle_document_date
             )
 
-            traceability_matrix_relation_columns_config: Optional[List] = (
+            traceability_matrix_relation_columns_config: Optional[List[str]] = (
                 project_content.get(
                     "traceability_matrix_relation_columns", None
                 )

@@ -1,14 +1,18 @@
-# mypy: disable-error-code="no-untyped-def,type-arg"
+# mypy: disable-error-code="no-untyped-def"
 from typing import Any, Dict, Optional, Tuple, Type, Union
 
 from strictdoc.core.graph.abstract_bucket import AbstractBucket
 
 
 class OneToOneDictionary(AbstractBucket):
-    def __init__(self, lhs_type: Type, rhs_type: Union[Type, Tuple]):
-        self._dict: Dict = {}
-        self._lhs_type: Type = lhs_type
-        self._rhs_type: Union[Type, Tuple] = rhs_type
+    def __init__(
+        self,
+        lhs_type: Type[Any],
+        rhs_type: Union[Type[Any], Tuple[Type[Any], ...]],
+    ):
+        self._dict: Dict[Any, Any] = {}
+        self._lhs_type: Type[Any] = lhs_type
+        self._rhs_type: Union[Type[Any], Tuple[Type[Any], ...]] = rhs_type
 
     def has_link(self, *, lhs_node: Any) -> bool:
         assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)

@@ -14,7 +14,7 @@ RUN: %check_exists --file "%S/Output/html/_source_files/tests/test1.cpp.html"
 
 # Ensure that the test report document has the right content.
 RUN: %cat "%S/Output/html/%THIS_TEST_FOLDER/reports/tests_unit.gtest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
-CHECK-TEST-REPORT:href="../../_source_files/tests/test1.cpp.html#TestCaseVc.TestCase#15#21">
-CHECK-TEST-REPORT: tests/test1.cpp, <i>lines: 15-21</i>, function TEST(TestCaseVc, TestCase)
+CHECK-TEST-REPORT:href="../../_source_files/tests/test1.cpp.html#TestCaseVc.TestCase#17#21">
+CHECK-TEST-REPORT: tests/test1.cpp, <i>lines: 17-21</i>, function TEST(TestCaseVc, TestCase)
 CHECK-TEST-REPORT:href="../../_source_files/tests/test1.cpp.html#TestCaseVc.Steering1#23#27">
 CHECK-TEST-REPORT: tests/test1.cpp, <i>lines: 23-27</i>, function TEST(TestCaseVc, Steering1)

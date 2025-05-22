@@ -1,13 +1,13 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-def,type-arg,union-attr,operator"
 import json
 import os.path
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.model import SDocElementIF
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -17,10 +17,13 @@ from strictdoc.backend.sdoc.models.reference import (
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
+    GrammarElementField,
     RequirementFieldType,
 )
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.helpers.cast import assert_cast
 
 
 class TAG(Enum):
@@ -42,15 +45,18 @@ class JSONGenerator:
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
         output_json_root: str,
-    ):
-        project_tree_dict = {
+    ) -> None:
+        project_tree_dict: Dict[str, Any] = {
             "_COMMENT": (
                 "Fields with _ are metadata. "
                 "Fields without _ are the actual document/section/requirement/other content."
             ),
             "DOCUMENTS": [],
         }
-        for document_ in traceability_index.document_tree.document_list:
+        document_tree: DocumentTree = assert_cast(
+            traceability_index.document_tree, DocumentTree
+        )
+        for document_ in document_tree.document_list:
             if not project_config.export_included_documents:
                 if document_.document_is_included():
                     continue
@@ -65,7 +71,7 @@ class JSONGenerator:
             output_json_file.write(project_tree_json)
 
     @classmethod
-    def _write_document(cls, document: SDocDocument) -> Dict:
+    def _write_document(cls, document: SDocDocument) -> Dict[str, Any]:
         document_dict: Dict[str, Any] = {
             "TITLE": document.title,
             "REQ_PREFIX": None,
@@ -149,7 +155,7 @@ class JSONGenerator:
         document_grammar: DocumentGrammar = document.grammar
 
         for element_ in document_grammar.elements:
-            element_dict = {
+            element_dict: Dict[str, Any] = {
                 "NODE_TYPE": element_.tag,
                 "FIELDS": [],
                 "RELATIONS": [],
@@ -160,10 +166,9 @@ class JSONGenerator:
                     cls._write_grammar_field_type(grammar_field)
                 )
 
-            relations: List = element_.relations
-            if len(relations) > 0:
-                for element_relation_ in relations:
-                    relation_dict = {
+            if len(element_.relations) > 0:
+                for element_relation_ in element_.relations:
+                    relation_dict: Dict[str, str] = {
                         "TYPE": element_relation_.relation_type,
                     }
                     if element_relation_.relation_role is not None:
@@ -178,8 +183,15 @@ class JSONGenerator:
         return document_dict
 
     @classmethod
-    def _write_node(cls, node, document, level_stack: Optional[Tuple]) -> Dict:
-        def get_level_string_(node_) -> str:
+    def _write_node(
+        cls,
+        node: SDocElementIF,
+        document: SDocDocument,
+        level_stack: Tuple[int, ...],
+    ) -> Dict[str, Any]:
+        def get_level_string_(
+            node_: Union[SDocNode, SDocSection, SDocDocument],
+        ) -> str:
             return (
                 ""
                 if node_.ng_resolved_custom_level == "None"
@@ -190,8 +202,8 @@ class JSONGenerator:
                 )
             )
 
-        if isinstance(node, (SDocSection, SDocDocument)):
-            section_dict = cls._write_section(
+        if isinstance(node, SDocSection):
+            section_dict: Dict[str, Any] = cls._write_section(
                 node, document, get_level_string_(node)
             )
 
@@ -200,10 +212,10 @@ class JSONGenerator:
                 if subnode_.ng_resolved_custom_level is None:
                     current_number += 1
 
-                subnode_dict = cls._write_node(
+                section_subnode_dict: Dict[str, Any] = cls._write_node(
                     subnode_, document, level_stack + (current_number,)
                 )
-                section_dict[JSONKey.NODES].append(subnode_dict)
+                section_dict[JSONKey.NODES].append(section_subnode_dict)
 
             return section_dict
 
@@ -218,22 +230,27 @@ class JSONGenerator:
             return subnode_dict
 
         elif isinstance(node, SDocDocument):
-            node_dict: Dict[str, List[Dict]] = {JSONKey.NODES: []}
+            node_dict: Dict[str, Any] = cls._write_included_document(
+                node, get_level_string_(node)
+            )
 
             current_number = 0
             for subnode_ in node.section_contents:
                 if subnode_.ng_resolved_custom_level is None:
                     current_number += 1
-                subnode_dict = cls._write_node(
+                document_subnode_dict: Dict[str, Any] = cls._write_node(
                     subnode_, document, level_stack + (current_number,)
                 )
-                node_dict[JSONKey.NODES].append(subnode_dict)
+                node_dict[JSONKey.NODES].append(document_subnode_dict)
 
             return node_dict
 
         elif isinstance(node, DocumentFromFile):
+            resolved_document = assert_cast(
+                node.resolved_document, SDocDocument
+            )
             subnode_dict = cls._write_node(
-                node.resolved_document, document, level_stack
+                resolved_document, document, level_stack
             )
             return subnode_dict
 
@@ -241,9 +258,21 @@ class JSONGenerator:
             raise NotImplementedError  # pragma: no cover
 
     @classmethod
+    def _write_included_document(
+        cls, node: SDocDocument, level_string: str
+    ) -> Dict[str, Any]:
+        node_dict: Dict[str, Any] = {
+            "_TOC": level_string,
+            "TYPE": "SECTION",
+            "TITLE": node.reserved_title,
+            JSONKey.NODES: [],
+        }
+        return node_dict
+
+    @classmethod
     def _write_section(
         cls, section: SDocSection, document: SDocDocument, level_string: str
-    ) -> Dict:
+    ) -> Dict[str, Any]:
         assert isinstance(section, (SDocSection, SDocDocument))
         node_dict: Dict[str, Any] = {
             "_TOC": level_string,
@@ -272,7 +301,7 @@ class JSONGenerator:
     @classmethod
     def _write_requirement(
         cls, node: SDocNode, document: SDocDocument, level_string: str
-    ) -> Dict:
+    ) -> Dict[str, Any]:
         node_dict: Dict[str, Any] = {
             "_TOC": level_string,
             "TYPE": node.node_type,
@@ -281,7 +310,8 @@ class JSONGenerator:
         if node.mid_permanent or document.config.enable_mid:
             node_dict["MID"] = node.reserved_mid
 
-        element = document.grammar.elements_by_type[node.node_type]
+        document_grammar = assert_cast(document.grammar, DocumentGrammar)
+        element = document_grammar.elements_by_type[node.node_type]
 
         for element_field in element.fields:
             field_name = element_field.title
@@ -297,17 +327,19 @@ class JSONGenerator:
         return node_dict
 
     @classmethod
-    def _write_grammar_field_type(cls, grammar_field) -> Dict:
+    def _write_grammar_field_type(
+        cls, grammar_field: GrammarElementField
+    ) -> Dict[str, str]:
         grammar_field_dict = {
             "TITLE": grammar_field.title,
-            "REQUIRED": True if grammar_field.required else False,
+            "REQUIRED": "True" if grammar_field.required else "False",
             # FIXME: Support more grammar types.
             "TYPE": RequirementFieldType.STRING,
         }
         return grammar_field_dict
 
     @staticmethod
-    def _write_requirement_relations(node: SDocNode) -> List:
+    def _write_requirement_relations(node: SDocNode) -> List[Dict[str, str]]:
         relations_list = []
 
         reference: Reference

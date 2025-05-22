@@ -1,6 +1,5 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
 from collections import defaultdict
-from typing import Dict
 
 from starlette.datastructures import FormData
 
@@ -11,7 +10,7 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.form_data import parse_form_data
+from strictdoc.helpers.form_data import ParsedFormData, parse_form_data
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
@@ -99,15 +98,18 @@ class SectionFormObject(ErrorObject):
             (field_name, field_value)
             for field_name, field_value in request_form_data.multi_items()
         ]
-        request_form_dict: Dict = assert_cast(
+        request_form_dict: ParsedFormData = assert_cast(
             parse_form_data(request_form_data_as_list), dict
         )
         context_document_mid = request_form_dict["context_document_mid"]
-        requirement_dict = request_form_dict["requirement"]
-        requirement_fields_dict = requirement_dict["fields"]
+        requirement_dict = assert_cast(request_form_dict["requirement"], dict)
+        requirement_fields_dict = assert_cast(requirement_dict["fields"], dict)
 
         requirement_fields = defaultdict(list)
         for _, field_dict in requirement_fields_dict.items():
+            if not isinstance(field_dict, dict):
+                raise TypeError(f"Expected a dict, but got {type(field_dict)}")
+
             field_name = field_dict["name"]
             field_value = field_dict["value"]
             requirement_fields[field_name].append(field_value)

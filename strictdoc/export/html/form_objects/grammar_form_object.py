@@ -1,5 +1,5 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,type-arg"
-from typing import Dict, List, Optional, Set
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+from typing import List, Optional, Set
 
 from markupsafe import Markup
 from starlette.datastructures import FormData
@@ -16,7 +16,10 @@ from strictdoc.export.html.form_objects.rows.row_with_grammar_element_form_objec
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.form_data import parse_form_data
+from strictdoc.helpers.form_data import (
+    ParsedFormData,
+    parse_form_data,
+)
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import is_uppercase_underscore_string
 from strictdoc.server.error_object import ErrorObject
@@ -93,14 +96,23 @@ class GrammarFormObject(ErrorObject):
             (field_name, field_value)
             for field_name, field_value in request_form_data.multi_items()
         ]
-        request_form_dict: Dict = assert_cast(
+        request_form_dict: ParsedFormData = assert_cast(
             parse_form_data(request_form_data_as_list), dict
         )
 
         document_grammar_fields = request_form_dict[
             "document_grammar_element_field"
         ]
+
+        if not isinstance(document_grammar_fields, dict):
+            raise TypeError(
+                f"Expected a dict, but got {type(document_grammar_fields)}"
+            )
+
         for field_mid, field_dict in document_grammar_fields.items():
+            if not isinstance(field_dict, dict):
+                raise TypeError(f"Expected a dict, but got {type(field_dict)}")
+
             is_new = field_dict["is_new"] == "true"
             field_name = field_dict["field_name"]
 

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr,type-arg"
+# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
 from collections import defaultdict
 from enum import Enum
 from typing import Dict, Iterable, List, Optional, Set, Union
@@ -39,7 +39,7 @@ from strictdoc.export.rst.rst_to_html_fragment_writer import (
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.form_data import parse_form_data
+from strictdoc.helpers.form_data import ParsedFormData, parse_form_data
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import sanitize_html_form_field
 from strictdoc.server.error_object import ErrorObject
@@ -221,7 +221,7 @@ class RequirementFormObject(ErrorObject):
         self.requirement_mid: str = requirement_mid
         self.document_mid: str = document_mid
         self.context_document_mid: str = context_document_mid
-        fields_dict: dict = {}
+        fields_dict: Dict[str, List[RequirementFormField]] = {}
         for field in fields:
             fields_dict.setdefault(field.field_name, []).append(field)
 
@@ -246,18 +246,21 @@ class RequirementFormObject(ErrorObject):
             (field_name, field_value)
             for field_name, field_value in request_form_data.multi_items()
         ]
-        request_form_dict: Dict = assert_cast(
+        request_form_dict: ParsedFormData = assert_cast(
             parse_form_data(request_form_data_as_list), dict
         )
         requirement_fields = defaultdict(list)
         form_ref_fields: List[RequirementReferenceFormField] = []
 
         context_document_mid = request_form_dict["context_document_mid"]
-        requirement_dict = request_form_dict["requirement"]
+        requirement_dict = assert_cast(request_form_dict["requirement"], dict)
 
-        element_type = request_form_dict["element_type"]
-        requirement_fields_dict = requirement_dict["fields"]
+        element_type = assert_cast(request_form_dict["element_type"], str)
+        requirement_fields_dict = assert_cast(requirement_dict["fields"], dict)
         for _, field_dict in requirement_fields_dict.items():
+            if not isinstance(field_dict, dict):
+                raise TypeError(f"Expected a dict, but got {type(field_dict)}")
+
             field_name = field_dict["name"]
             field_value = field_dict["value"]
             requirement_fields[field_name].append(field_value)

@@ -1,11 +1,18 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,type-arg,union-attr"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 import re
 from typing import Dict, List, Tuple, Union
 
 from typing_extensions import TypeAlias
 
-FormDataDictType: TypeAlias = Union[
-    Dict[str, "FormDataDictType"], List["FormDataDictType"]
+ParsedFormDataLeaf: TypeAlias = str
+
+ParsedFormDataContainer: TypeAlias = Union[
+    Dict[str, Union[ParsedFormDataLeaf, "ParsedFormDataContainer"]],
+    List[Union[ParsedFormDataLeaf, "ParsedFormDataContainer"]],
+]
+
+ParsedFormData: TypeAlias = Dict[
+    str, Union[ParsedFormDataLeaf, ParsedFormDataContainer]
 ]
 
 
@@ -57,8 +64,10 @@ def _set_value_by_key_path(obj, parts, value):
 FIELD_NAME = "[A-Za-z0-9_]*"
 
 
-def parse_form_data(form_data: List[Tuple]) -> Dict[str, FormDataDictType]:
-    result_dict: Dict[str, FormDataDictType] = {}
+def parse_form_data(
+    form_data: List[Tuple[str, str]],
+) -> ParsedFormData:
+    result_dict: ParsedFormData = {}
 
     for key, value in form_data:
         first_match = re.match(rf"({FIELD_NAME})", key)

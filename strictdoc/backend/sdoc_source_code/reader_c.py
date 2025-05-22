@@ -261,9 +261,15 @@ class SourceFileTraceabilityReader_C:
                 function_markers = []
                 function_comment_node = None
                 function_comment_text = None
+
+                # In the condition below, it is important that the comment is
+                # considered a function comment only if it there are no empty
+                # lines between the comment and function.
                 if (
                     node_.prev_sibling is not None
                     and node_.prev_sibling.type == "comment"
+                    and (node_.prev_sibling.end_point[0] + 1)
+                    == node_.start_point[0]
                 ):
                     function_comment_node = node_.prev_sibling
                     assert function_comment_node.text is not None, node_.text

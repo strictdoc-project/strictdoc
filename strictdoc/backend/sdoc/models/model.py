@@ -101,7 +101,10 @@ class SDocDocumentFromFileIF(ABC):
     ng_resolved_custom_level: Optional[str]
 
     @abstractmethod
-    def has_any_requirements(self) -> bool:
+    def iterate_nodes(
+        self,
+        element_type: Optional[str] = None,
+    ) -> Generator[SDocNodeIF, None, None]:
         raise NotImplementedError  # pragma: no cover
 
     @property

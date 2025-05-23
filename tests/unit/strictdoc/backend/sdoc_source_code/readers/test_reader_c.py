@@ -177,3 +177,37 @@ stilib_result_t stilib_smu_start_state_check(void);
     assert info.markers[0].reqs_objs[1].ng_source_column == 32
     assert info.markers[0].reqs_objs[2].ng_source_line == 11
     assert info.markers[0].reqs_objs[2].ng_source_column == 50
+
+
+def test_20_node_fields():
+    input_string = b"""\
+#include <stdio.h>
+
+/**
+ * Some text.
+ *
+ * INTENTION: This
+ *            is
+ *            the
+ *            intention.
+ *
+ * @relation(REQ-1, scope=function)
+ */
+void hello_world(void) {
+    print("hello world\\n");
+}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 1
+    assert info.markers[0].ng_source_line_begin == 11
+    assert info.markers[0].ng_range_line_begin == 3
+    assert info.markers[0].ng_range_line_end == 15
+    assert info.markers[0].reqs_objs[0].ng_source_line == 11
+    assert info.markers[0].reqs_objs[0].ng_source_column == 14

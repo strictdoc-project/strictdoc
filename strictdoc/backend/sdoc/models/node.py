@@ -487,7 +487,7 @@ class SDocNode(SDocNodeIF):
 
             # A field is considered singleline if it goes before the STATEMENT
             # field and vice versa.
-            if field_index > reference_field_index:
+            if field_index >= reference_field_index:
                 is_single_line_field = False
             else:
                 is_single_line_field = True

@@ -29,7 +29,7 @@ void longFunctionName() {
   // boo
   // boo
   // boo
-  // boo // @relation(REQ-1, scope=line)
+  someFunc(); // @relation(REQ-1, scope=line)
   // boo
   // boo
   // @relation(REQ-4, scope=range_end)

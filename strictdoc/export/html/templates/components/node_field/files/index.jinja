@@ -1,7 +1,7 @@
 {# needs sdoc_entity, see README.txt #}
   {%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
     {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(sdoc_entity) %}
-    {%- if requirement_file_links %}
+    {%- if requirement_file_links is not none and requirement_file_links|length > 0 %}
       <sdoc-node-field-label>file relations:</sdoc-node-field-label>
       <sdoc-node-field data-field-label="file relations">
         <ul class="requirement__link">

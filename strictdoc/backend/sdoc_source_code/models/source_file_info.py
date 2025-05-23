@@ -1,5 +1,5 @@
 # mypy: disable-error-code="no-untyped-def"
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import Any, Dict, List, Optional, Union
 
 from typing_extensions import TypeAlias
 
@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
     LineMarker,
     RangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.file_stats import SourceFileStats
@@ -38,6 +39,7 @@ class SourceFileTraceabilityInfo:
         """
 
         self.source_file: Optional[SourceFile] = None
+        self.source_nodes: List[SourceNode] = []
         self.functions: List[Function] = []
 
         #
@@ -45,13 +47,9 @@ class SourceFileTraceabilityInfo:
         #  "REQ-001": [RangeMarker(...), ...],           # noqa: ERA001
         #  "REQ-002": [RangeMarker(...), ...],           # noqa: ERA001
         # }                                              # noqa: ERA001
-        self.ng_map_reqs_to_markers: Dict[
-            str, Sequence[RelationMarkerType]
-        ] = {}
+        self.ng_map_reqs_to_markers: Dict[str, List[RelationMarkerType]] = {}
 
-        self.ng_map_names_to_markers: Dict[
-            str, Sequence[RelationMarkerType]
-        ] = {}
+        self.ng_map_names_to_markers: Dict[str, List[RelationMarkerType]] = {}
         self.ng_map_names_to_definition_functions: Dict[str, Function] = {}
 
         #

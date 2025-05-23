@@ -1,7 +1,7 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import sys
 import traceback
-from typing import List, Optional, Sequence, Union
+from typing import List, Optional, Sequence
 
 import tree_sitter_cpp
 from tree_sitter import Language, Node, Parser
@@ -33,6 +33,7 @@ from strictdoc.backend.sdoc_source_code.tree_sitter_helpers import (
     ts_find_child_node_by_type,
     ts_find_child_nodes_by_type,
 )
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_stats import SourceFileStats
 
 
@@ -66,7 +67,6 @@ class SourceFileTraceabilityReader_C:
             function_name: str
             function_markers: List[FunctionRangeMarker]
             function_comment_node: Optional[Node]
-            markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]]
             if node_.type == "translation_unit":
                 if (
                     len(node_.children) > 0
@@ -75,7 +75,7 @@ class SourceFileTraceabilityReader_C:
                 ):
                     if comment_node.text is not None:
                         comment_text = comment_node.text.decode("utf-8")
-                        markers = MarkerParser.parse(
+                        source_node = MarkerParser.parse(
                             comment_text,
                             node_.start_point[0] + 1,
                             # It is important that +1 is not present here because
@@ -85,7 +85,7 @@ class SourceFileTraceabilityReader_C:
                             else node_.end_point[0] + 1,
                             node_.start_point[0] + 1,
                         )
-                        for marker_ in markers:
+                        for marker_ in source_node.markers:
                             if not isinstance(marker_, FunctionRangeMarker):
                                 continue
                             # At the top level, only accept the scope=file markers.
@@ -175,14 +175,14 @@ class SourceFileTraceabilityReader_C:
 
                     function_last_line = node_.end_point[0] + 1
 
-                    markers = MarkerParser.parse(
+                    source_node = MarkerParser.parse(
                         function_comment_text,
                         function_comment_node.start_point[0] + 1,
                         function_last_line,
                         function_comment_node.start_point[0] + 1,
                         entity_name=function_display_name,
                     )
-                    for marker_ in markers:
+                    for marker_ in source_node.markers:
                         if isinstance(marker_, FunctionRangeMarker) and (
                             function_range_marker_ := marker_
                         ):
@@ -279,23 +279,20 @@ class SourceFileTraceabilityReader_C:
 
                     function_last_line = node_.end_point[0] + 1
 
-                    markers = MarkerParser.parse(
+                    source_node = MarkerParser.parse(
                         function_comment_text,
                         function_comment_node.start_point[0] + 1,
                         function_last_line,
                         function_comment_node.start_point[0] + 1,
                         entity_name=function_display_name,
                     )
-                    for marker_ in markers:
-                        if isinstance(marker_, FunctionRangeMarker) and (
-                            function_range_marker_ := marker_
-                        ):
+                    traceability_info.source_nodes.append(source_node)
+                    for marker_ in source_node.markers:
+                        if isinstance(marker_, FunctionRangeMarker):
                             function_range_marker_processor(
-                                function_range_marker_, parse_context
+                                marker_, parse_context
                             )
-                            traceability_info.markers.append(
-                                function_range_marker_
-                            )
+                            traceability_info.markers.append(marker_)
                             function_markers.append(marker_)
 
                 # The function range includes the top comment if it exists.
@@ -314,25 +311,36 @@ class SourceFileTraceabilityReader_C:
                 traceability_info.functions.append(new_function)
                 if len(function_markers) > 0:
                     traceability_info.ng_map_names_to_markers[function_name] = (
-                        function_markers
+                        # FIXME: Cannot win the fight with mypy without assert_cast.
+                        assert_cast(function_markers, list)
                     )
                     traceability_info.ng_map_names_to_definition_functions[
                         function_name
                     ] = new_function
             elif node_.type == "comment":
+                #
+                # FIXME: Here parsing of function comments can happen as well
+                #        but this time the focus is ONLY on range and line markers.
+                #        The case which is handled here is when a user adds a
+                #        range_start marker in a function comment.
+                #        It is not good that parsing of function comments
+                #        happens twice.
+                #
+
                 assert node_.text is not None, (
                     f"Comment without a text: {node_}"
                 )
 
                 node_text_string = node_.text.decode("utf8")
 
-                markers = MarkerParser.parse(
+                source_node = MarkerParser.parse(
                     node_text_string,
                     node_.start_point[0] + 1,
                     node_.end_point[0] + 1,
                     node_.start_point[0] + 1,
                 )
-                for marker_ in markers:
+
+                for marker_ in source_node.markers:
                     if isinstance(marker_, RangeMarker) and (
                         range_marker_ := marker_
                     ):

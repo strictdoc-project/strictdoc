@@ -277,15 +277,32 @@ class JUnitXMLReader:
                     test_case_node_duration = xml_testcase_time
                     test_case_node_test_function = "#GTEST#" + google_test_name
                 elif xml_format == JUnitXMLFormat.PYTEST:
+                    xml_testcase_path_parts = xml_testcase_classname
+                    xml_testcase_class = ""
+                    # Heuristic: if last part of the classname attribute starts with "Test" and is
+                    # in CamelCase, then we assume it is the test class name:
+                    # - Remove it from the path.
+                    # - Prepend it to the function name.
+                    parts = xml_testcase_classname.split(".")
+                    if (
+                        parts
+                        and parts[-1].startswith("Test")
+                        and parts[-1][1:].lower() != parts[-1][1:]
+                    ):
+                        xml_testcase_path_parts = ".".join(parts[:-1])
+                        xml_testcase_class = parts[-1] + "."
                     test_case_node_uid = (
                         xml_testcase_classname + "." + xml_testcase_name
                     )
                     test_case_node_duration = xml_testcase_time
                     test_case_node_test_path = (
-                        xml_testcase_classname.replace(".", os.path.sep) + ".py"
+                        xml_testcase_path_parts.replace(".", os.path.sep)
+                        + ".py"
                     )
                     test_case_node_title = xml_testcase_classname
-                    test_case_node_test_function = xml_testcase_name
+                    test_case_node_test_function = (
+                        xml_testcase_class + xml_testcase_name
+                    )
                 else:
                     raise NotImplementedError("Unsupported JUnit XML format")
 

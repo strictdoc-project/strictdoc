@@ -76,8 +76,8 @@ class SourceFileTraceabilityReader_Python:
                 functions_stack.append(function)
                 map_function_to_node[function] = node_
                 if len(node_.children) > 0:
-                    # look for the docstring within the first 30 children (arbitrary chosen limit)
-                    # so that we dont miss it if the file starts with comments (#!, encoding marker, etc...)
+                    # Look for the docstring within the first 30 children (arbitrary chosen limit)
+                    # so that we dont miss it if the file starts with comments (#!, encoding marker, etc...).
                     first_match = next(
                         (
                             child
@@ -92,7 +92,7 @@ class SourceFileTraceabilityReader_Python:
                     if first_match is not None:
                         block_comment = first_match.children[0]
 
-                        # string contains of three parts:
+                        # String contains of three parts:
                         # string_start string_content string_end
                         string_content = block_comment.children[1]
                         assert string_content.text is not None
@@ -152,7 +152,7 @@ class SourceFileTraceabilityReader_Python:
                             block_comment = function_block.children[0].children[
                                 0
                             ]
-                            # string contains of three parts:
+                            # String contains of three parts:
                             # string_start string_content string_end
                             string_content = block_comment.children[1]
                             assert string_content.text is not None
@@ -277,29 +277,27 @@ class SourceFileTraceabilityReader_Python:
     @staticmethod
     def get_node_ns(node: Node) -> Sequence[str]:
         """
-        Walk up the tree and find parent classes.
+        Walk up the tree to collect enclosing function and class names (identifier) for full qualification.
+        Handles nested functions, methods, and classes.
         """
-        parent_scopes = []
+        parent_scopes: List[str] = []
         cursor: Optional[Node] = node
-        while cursor:
-            if (block_node := cursor.parent) is not None and (
-                class_node_or_node := block_node.parent
-            ) is not None:
-                cursor = class_node_or_node
-                if (
-                    class_node_or_node.type == "class_definition"
-                    and len(class_node_or_node.children) > 1
-                ):
-                    second_node_or_none = class_node_or_node.children[1]
-                    if (
-                        second_node_or_none.type == "identifier"
-                        and second_node_or_none.text is not None
-                    ):
-                        parent_class_name = second_node_or_none.text.decode(
-                            "utf8"
-                        )
-                        parent_scopes.append(parent_class_name)
-            else:
-                cursor = None
-        parent_scopes.reverse()
-        return parent_scopes
+
+        while cursor is not None:
+            if cursor.type in ("class_definition", "function_definition"):
+                # Look for the identifier child (i.e., the name).
+                name_node = next(
+                    (
+                        child
+                        for child in cursor.children
+                        if child.type == "identifier"
+                    ),
+                    None,
+                )
+                if name_node and name_node.text:
+                    parent_scopes.insert(0, name_node.text.decode("utf-8"))
+            cursor = cursor.parent
+
+        # The array now contains the "fully qualified" node name,
+        # we want to return the namespace, so don't return the last part.
+        return parent_scopes[:-1]

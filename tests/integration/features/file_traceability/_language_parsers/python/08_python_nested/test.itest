@@ -1,0 +1,33 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#4#18">
+
+RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-1#4#18"
+CHECK-SOURCE-FILE: <b>[ 4-18 ]</b>
+CHECK-SOURCE-FILE: file.py, function Foo.hello_world
+
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-2#12#16"
+CHECK-SOURCE-FILE: <b>[ 12-16 ]</b>
+CHECK-SOURCE-FILE: file.py, function Foo.hello_world.nested_function
+
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-3#20#34"
+CHECK-SOURCE-FILE: <b>[ 20-34 ]</b>
+CHECK-SOURCE-FILE: file.py, function hello_world_2
+
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-4#28#32"
+CHECK-SOURCE-FILE: <b>[ 28-32 ]</b>
+CHECK-SOURCE-FILE: file.py, function hello_world_2.nested_function
+
+CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-5#38#42"
+CHECK-SOURCE-FILE: <b>[ 38-42 ]</b>
+CHECK-SOURCE-FILE: file.py, function Outer.Inner.hello_world
+
+RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 62.5

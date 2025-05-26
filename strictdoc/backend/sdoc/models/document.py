@@ -15,18 +15,22 @@ from strictdoc.backend.sdoc.models.model import (
     SDocDocumentContentIF,
     SDocDocumentFromFileIF,
     SDocDocumentIF,
+    SDocElementIF,
     SDocNodeIF,
     SDocSectionIF,
 )
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
+    GrammarElementFieldTag,
 )
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
+from strictdoc.helpers.ordered_set import OrderedSet
 
 
 @auto_described
@@ -78,6 +82,55 @@ class SDocDocument(SDocDocumentIF):
         self.ng_including_document_from_file: Optional[
             SDocDocumentFromFileIF
         ] = None
+
+    def iterate_nodes(
+        self, element_type: Optional[str] = None
+    ) -> Generator[SDocNodeIF, None, None]:
+        """
+        Iterates over all non-[TEXT] nodes in the document. If element_type
+        is given, then only nodes of type `element_type` are returned.
+        Otherwise, all element types are returned.
+        """
+        task_list: List[SDocElementIF] = list(self.section_contents)
+        while task_list:
+            node = task_list.pop(0)
+
+            if isinstance(node, SDocDocumentFromFileIF):
+                yield from node.iterate_nodes(element_type)
+
+            if isinstance(node, SDocNodeIF):
+                if node.node_type != "TEXT":
+                    if element_type is None or node.node_type == element_type:
+                        yield node
+
+            task_list.extend(node.section_contents)
+
+    def has_any_requirements(self) -> bool:
+        return any(True for _ in self.iterate_nodes())
+
+    def collect_options_for_tag(
+        self, element_type: str, field_name: str
+    ) -> List[str]:
+        """
+        Returns the list of existing options for a tag field in this document.
+        """
+        option_set: OrderedSet[str] = OrderedSet()
+
+        for nodeif in self.iterate_nodes(element_type):
+            node = assert_cast(nodeif, SDocNode)
+            if field_name in node.ordered_fields_lookup:
+                node_field = node.ordered_fields_lookup[field_name][0]
+                field_value = node_field.get_text_value()
+                if field_value:
+                    options = [
+                        option.strip()
+                        for option in field_value.split(",")
+                        if option.strip()
+                    ]
+                    for option in options:
+                        option_set.add(option)
+
+        return list(option_set)
 
     @property
     def uid(self) -> Optional[str]:
@@ -152,21 +205,6 @@ class SDocDocument(SDocDocumentIF):
             return True
         return False
 
-    def has_any_requirements(self) -> bool:
-        task_list: List[SDocDocumentContentIF] = list(self.section_contents)
-        while len(task_list) > 0:
-            section_or_requirement = task_list.pop(0)
-            if isinstance(section_or_requirement, SDocDocumentFromFileIF):
-                if section_or_requirement.has_any_requirements():
-                    return True
-                continue
-            if isinstance(section_or_requirement, SDocNodeIF):
-                if section_or_requirement.node_type == "TEXT":
-                    continue
-                return True
-            task_list.extend(section_or_requirement.section_contents)
-        return False
-
     def get_display_title(
         self,
         include_toc_number: bool = True,  # noqa: ARG002
@@ -223,7 +261,7 @@ class SDocDocument(SDocDocumentIF):
         field: GrammarElementField = element.fields_map[field_name]
         return field
 
-    def get_options_for_choice(
+    def get_options_for_field(
         self, element_type: str, field_name: str
     ) -> List[str]:
         """
@@ -237,4 +275,8 @@ class SDocDocument(SDocDocumentIF):
             field, GrammarElementFieldMultipleChoice
         ):
             return field.options
+
+        if isinstance(field, GrammarElementFieldTag):
+            return self.collect_options_for_tag(element_type, field_name)
+
         raise AssertionError(f"Must not reach here: {field}")

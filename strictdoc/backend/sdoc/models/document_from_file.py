@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-109, scope=file)
 """
 
-from typing import List, Optional, Union
+from typing import Generator, List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -34,21 +34,32 @@ class DocumentFromFile(SDocDocumentFromFileIF):
         self.resolved_full_path_to_document_file: Optional[str] = None
         self.resolved_document: Optional[SDocDocumentIF] = None
 
-    def has_any_requirements(self) -> bool:
+    def iterate_nodes(
+        self, element_type: Optional[str] = None
+    ) -> Generator[SDocNodeIF, None, None]:
+        """
+        Iterates over all non-[TEXT] nodes in the document. If element_type
+        is given, then only nodes of type `element_type` are returned.
+        Otherwise, all element types are returned.
+        """
+
         task_list: List[SDocElementIF] = list(self.section_contents)
-        while len(task_list) > 0:
-            element = task_list.pop(0)
-            if isinstance(element, SDocNodeIF):
-                if element.is_normative_node():
-                    return True
-                continue
+        while task_list:
+            node = task_list.pop(0)
 
-            if isinstance(element, SDocDocumentFromFileIF):
-                if element.has_any_requirements():
-                    return True
+            if isinstance(node, SDocDocumentFromFileIF):
+                yield from node.iterate_nodes(element_type)
 
-            task_list.extend(element.section_contents)
-        return False
+            if isinstance(node, SDocNodeIF):
+                if node.node_type == "TEXT":
+                    continue
+                if element_type is None or node.node_type == element_type:
+                    yield node
+
+            task_list.extend(node.section_contents)
+
+    def has_any_requirements(self) -> bool:
+        return any(True for _ in self.iterate_nodes())
 
     @property
     def section_contents(self) -> List[SDocDocumentIF]:

@@ -1,0 +1,54 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: Tag
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Unit test ABC
+STATEMENT: >>>
+Shall do foo.
+<<<
+
+[REQUIREMENT]
+UID: REQ-2
+TAGS: Tag1
+TITLE: Unit Test XZY
+STATEMENT: >>>
+Shall do bar.
+<<<
+
+[REQUIREMENT]
+UID: REQ-3
+TAGS: Tag2
+TITLE: Unit Test XZY
+STATEMENT: >>>
+Shall do foobar.
+<<<

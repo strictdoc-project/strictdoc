@@ -77,10 +77,14 @@ class RequirementFormField:
         return self.field_gef_type in (
             RequirementFieldType.SINGLE_CHOICE,
             RequirementFieldType.MULTIPLE_CHOICE,
+            RequirementFieldType.TAG,
         )
 
     def is_multiplechoice(self) -> bool:
-        return self.field_gef_type == RequirementFieldType.MULTIPLE_CHOICE
+        return self.field_gef_type in (
+            RequirementFieldType.MULTIPLE_CHOICE,
+            RequirementFieldType.TAG,
+        )
 
     def get_input_field_name(self):
         return f"requirement[fields][{self.field_mid}][value]"

@@ -2772,7 +2772,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         field_name: Optional[str] = None,
     ):
         """
-        Returns matches of possible values of a SingleChoice or MultiChoice field.
+        Returns matches of possible values of a SingleChoice, MultiChoice or tag field.
         The field is identified by the document_mid, the element_type, and the field_name.
         """
         output = ""
@@ -2787,7 +2787,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 )
             )
             if document:
-                all_options = document.get_options_for_choice(
+                all_options = document.get_options_for_field(
                     element_type, field_name
                 )
                 field: GrammarElementField = (
@@ -2796,8 +2796,11 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     )
                 )
 
-                if field.gef_type == RequirementFieldType.MULTIPLE_CHOICE:
-                    # MultipleChoice: We split the query into its parts:
+                if field.gef_type in (
+                    RequirementFieldType.MULTIPLE_CHOICE,
+                    RequirementFieldType.TAG,
+                ):
+                    # MultipleChoice/Tag: We split the query into its parts:
                     #
                     # Example User input: "Some Value, Another Value, Yet ano|".
                     # parts = ['some value', 'another value', 'yet ano']                # noqa: ERA001

@@ -37,7 +37,9 @@ class ProgressStatisticsGenerator:
             for node in document_iterator.all_content(
                 print_fragments=False, print_fragments_from_files=False
             ):
-                if isinstance(node, SDocSection):
+                if isinstance(node, SDocSection) or (
+                    isinstance(node, SDocNode) and node.node_type == "SECTION"
+                ):
                     document_tree_stats.total_sections += 1
                     if not node.has_any_text_nodes():
                         document_tree_stats.sections_without_text_nodes += 1

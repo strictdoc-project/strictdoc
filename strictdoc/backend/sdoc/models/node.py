@@ -244,6 +244,15 @@ class SDocNode(SDocNodeIF):
                     return True
         return False
 
+    def has_any_text_nodes(self) -> bool:
+        # The workaround: hasattr(...) makes mypy happy.
+        return any(
+            node_.__class__.__name__ == "SDocNode"
+            and hasattr(node_, "node_type")
+            and node_.node_type == "TEXT"
+            for node_ in self.section_contents
+        )
+
     #
     # Reserved fields
     #

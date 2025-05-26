@@ -153,7 +153,9 @@ class QueryObject:
                 isinstance(node, SDocNode) and node.node_type == "REQUIREMENT"
             )
         if isinstance(expression, NodeIsSectionExpression):
-            return isinstance(node, SDocSection)
+            return (
+                isinstance(node, SDocNode) and node.node_type == "SECTION"
+            ) or isinstance(node, SDocSection)
         if isinstance(expression, NodeIsRootExpression):
             if isinstance(node, SDocNode):
                 return node.is_root
@@ -295,10 +297,12 @@ class QueryObject:
         raise NotImplementedError  # pragma: no cover
 
     def _evaluate_node_contains_any_text(self, node: SDocElementIF) -> bool:
-        if not isinstance(node, SDocSection):
+        if not isinstance(node, SDocSection) and not (
+            isinstance(node, SDocNode) and node.node_type == "SECTION"
+        ):
             raise TypeError(
                 f"node.contains_any_text can be only called on "
-                f"Section objects, got: {node.__class__.__name__}. To fix "
+                f"SECTION objects, got: {node.__class__.__name__}. To fix "
                 f"the error, prepend your query with node.is_section."
             )
         return node.has_any_text_nodes()

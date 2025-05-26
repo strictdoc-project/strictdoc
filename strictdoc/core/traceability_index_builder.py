@@ -3,7 +3,6 @@ import datetime
 import glob
 import os
 import sys
-from time import sleep
 from typing import Dict, Iterator, List, Optional, Set, Union
 
 from textx import TextXSyntaxError
@@ -399,11 +398,8 @@ class TraceabilityIndexBuilder:
                         "document grammar. "
                         "See the migration guide for more details:\n"
                         "https://strictdoc.readthedocs.io/en/latest/latest/docs/strictdoc_01_user_guide.html#SECTION-UG-NODE-MIGRATION\n"
-                        "This warning will become an error in 2025 Q3. "
-                        "Sleeping for 5 seconds..."
+                        "This warning will become an error in 2025 Q3."
                     )
-
-                    sleep(5)
 
                 if isinstance(node, SDocNode):
                     try:

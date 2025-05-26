@@ -15,8 +15,8 @@ path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 class Test(E2ECase):
     expected_search_results = [
-        ("search-total-sections", 1),
-        ("search-sections-without-any-text", 1),
+        ("search-total-sections", 2),
+        ("search-sections-without-any-text", 2),
         ("search-total-requirements", 5),
         ("search-requirements-with-no-uid", 2),
         (

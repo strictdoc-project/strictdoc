@@ -14,13 +14,12 @@ def test_001_doxygen_slashes_and_stars():
 
     preprocessed_comment = preprocess_source_code_comment(source_input)
 
-    # Note: There are invisible characters.
     assert (
         preprocessed_comment
         == """\
-   
+
    @relation(REQ-1, scope=function)
-   
+
 """
     )
 
@@ -34,13 +33,12 @@ def test_001_doxygen_three_slashes():
 
     preprocessed_comment = preprocess_source_code_comment(source_input)
 
-    # Note: There are invisible characters.
     assert (
         preprocessed_comment
         == """\
-   
+
     @relation(REQ-1, scope=function)
-   
+
 """
     )
 
@@ -58,9 +56,9 @@ def test_003_doxygen_two_slashes():
     assert (
         preprocessed_comment
         == """\
-  
+
    @relation(REQ-1, scope=function)
-  
+
 """
     )
 
@@ -74,12 +72,11 @@ def test_004_python():
 
     preprocessed_comment = preprocess_source_code_comment(source_input)
 
-    # Note: There are invisible characters.
     assert (
         preprocessed_comment
         == """\
- 
+
   @relation(REQ-1, scope=function)
- 
+
 """
     )

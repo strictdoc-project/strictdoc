@@ -2,7 +2,7 @@
 import sys
 import traceback
 from itertools import islice
-from typing import List, Optional, Sequence, Union
+from typing import List, Optional, Sequence
 
 import tree_sitter_python
 from tree_sitter import Language, Node, Parser
@@ -18,6 +18,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+    RelationMarkerType,
     SourceFileTraceabilityInfo,
 )
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
@@ -60,7 +61,6 @@ class SourceFileTraceabilityReader_Python:
 
         nodes = traverse_tree(tree)
         map_function_to_node = {}
-        markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]]
         for node_ in nodes:
             if node_.type == "module":
                 function = Function(
@@ -98,7 +98,7 @@ class SourceFileTraceabilityReader_Python:
                         assert string_content.text is not None
 
                         block_comment_text = string_content.text.decode("utf-8")
-                        markers = MarkerParser.parse(
+                        source_node = MarkerParser.parse(
                             block_comment_text,
                             node_.start_point[0] + 1,
                             # It is important that +1 is not present here because
@@ -108,7 +108,7 @@ class SourceFileTraceabilityReader_Python:
                             else node_.end_point[0] + 1,
                             string_content.start_point[0] + 1,
                         )
-                        for marker_ in markers:
+                        for marker_ in source_node.markers:
                             if isinstance(marker_, FunctionRangeMarker) and (
                                 function_range_marker_ := marker_
                             ):
@@ -136,7 +136,7 @@ class SourceFileTraceabilityReader_Python:
                 if parent_names:
                     function_name = f"{'.'.join(parent_names)}.{function_name}"
 
-                function_markers = []
+                function_markers: List[RelationMarkerType] = []
                 block_comment = None
                 if (
                     function_block is not None
@@ -160,23 +160,19 @@ class SourceFileTraceabilityReader_Python:
                             block_comment_text = string_content.text.decode(
                                 "utf-8"
                             )
-                            markers = MarkerParser.parse(
+                            source_node = MarkerParser.parse(
                                 block_comment_text,
                                 node_.start_point[0] + 1,
                                 node_.end_point[0] + 1,
                                 string_content.start_point[0] + 1,
                                 function_name,
                             )
-                            for marker_ in markers:
-                                if isinstance(
-                                    marker_, FunctionRangeMarker
-                                ) and (function_range_marker_ := marker_):
+                            for marker_ in source_node.markers:
+                                if isinstance(marker_, FunctionRangeMarker):
                                     function_range_marker_processor(
-                                        function_range_marker_, parse_context
+                                        marker_, parse_context
                                     )
-                                    traceability_info.markers.append(
-                                        function_range_marker_
-                                    )
+                                    traceability_info.markers.append(marker_)
                                     function_markers.append(marker_)
 
                 # FIXME: This look more complex than needed but can't make mypy happy.
@@ -223,14 +219,14 @@ class SourceFileTraceabilityReader_Python:
 
                 node_text_string = node_.text.decode("utf8")
 
-                markers = MarkerParser.parse(
+                source_node = MarkerParser.parse(
                     node_text_string,
                     node_.start_point[0] + 1,
                     node_.end_point[0] + 1,
                     node_.start_point[0] + 1,
                     None,
                 )
-                for marker_ in markers:
+                for marker_ in source_node.markers:
                     if isinstance(marker_, RangeMarker) and (
                         range_marker := marker_
                     ):

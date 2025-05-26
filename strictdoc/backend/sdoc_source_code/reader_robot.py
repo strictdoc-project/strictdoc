@@ -1,5 +1,5 @@
 import sys
-from typing import List, Union
+from typing import Union
 
 from robot.api.parsing import (
     Comment,
@@ -91,9 +91,7 @@ class SdocRelationVisitor(ModelVisitor):
 
             if isinstance(stmt, (Comment, Tags, Documentation)):
                 for token in filter(self._token_filter, stmt.tokens):
-                    markers: List[
-                        Union[FunctionRangeMarker, RangeMarker, LineMarker]
-                    ] = MarkerParser.parse(
+                    source_node = MarkerParser.parse(
                         token.value,
                         token.lineno,
                         token.lineno,
@@ -101,7 +99,7 @@ class SdocRelationVisitor(ModelVisitor):
                         node.name,
                         token.col_offset,
                     )
-                    tc_markers.extend(markers)
+                    tc_markers.extend(source_node.markers)
 
         function_markers = []
         for marker_ in tc_markers:
@@ -134,9 +132,7 @@ class SdocRelationVisitor(ModelVisitor):
         self, node: Union[Comment, Documentation, Tags]
     ) -> None:
         for token in filter(self._token_filter, node.tokens):
-            markers: List[
-                Union[FunctionRangeMarker, RangeMarker, LineMarker]
-            ] = MarkerParser.parse(
+            source_node = MarkerParser.parse(
                 token.value,
                 node.lineno,
                 node.lineno,
@@ -144,7 +140,7 @@ class SdocRelationVisitor(ModelVisitor):
                 None,
                 token.col_offset,
             )
-            for marker_ in markers:
+            for marker_ in source_node.markers:
                 if (
                     isinstance(marker_, FunctionRangeMarker)
                     and marker_.scope is RangeMarkerType.FILE

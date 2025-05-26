@@ -2,7 +2,10 @@
 from copy import copy
 from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 
+from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocNodeIF
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference
 from strictdoc.backend.sdoc.models.type_system import FileEntry
@@ -24,6 +27,7 @@ from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.constants import GraphLinkType
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
@@ -106,7 +110,7 @@ class FileTraceabilityIndex:
             markers = source_file_traceability_info.ng_map_reqs_to_markers.get(
                 requirement.reserved_uid
             )
-            if not markers:
+            if markers is None or len(markers) == 0:
                 matching_links_with_markers.append(
                     (requirement_source_path_, [])
                 )
@@ -186,7 +190,9 @@ class FileTraceabilityIndex:
         )
         return source_file_tr_info
 
-    def validate_and_resolve(self, traceability_index):
+    def validate_and_resolve(
+        self, traceability_index, project_config: ProjectConfig
+    ):
         """
         This is a method that finalizes/resolves all the source code
         traceability collected as the traceability index was built.
@@ -640,6 +646,144 @@ class FileTraceabilityIndex:
                 return assert_cast(node_.reserved_uid, str)
 
             path_requirements_.sort(key=compare_sdocnode_by_uid)
+
+        #
+        # STEP: Create auto-generated documents created from source file comments.
+        #       Register these documents with the main traceability index.
+        #
+        def create_folder_section(
+            parent__: Union[SDocDocumentIF, SDocNodeIF],
+            document__: SDocDocument,
+            path__: str,
+        ) -> SDocNode:
+            section_node = SDocNode(
+                parent=parent__,
+                node_type="SECTION",
+                fields=[],
+                relations=[],
+                is_composite=True,
+                node_type_close="SECTION",
+            )
+            section_node.ng_document_reference = DocumentReference()
+            section_node.ng_document_reference.set_document(document__)
+            section_node.ng_including_document_reference = DocumentReference()
+            section_node.set_field_value(
+                field_name="TITLE",
+                form_field_index=0,
+                value=path__,
+            )
+            return section_node
+
+        section_cache = {}
+        source_nodes_config: List[Dict[str, str]] = project_config.source_nodes
+        for (
+            path_to_source_file_,
+            traceability_info_,
+        ) in self.map_paths_to_source_file_traceability_info.items():
+            if len(traceability_info_.source_nodes) == 0:
+                continue
+
+            if len(source_nodes_config) == 0:
+                continue
+
+            for config_entry_ in source_nodes_config:
+                if path_to_source_file_.startswith(config_entry_["path"]):
+                    relevant_source_node_entry = config_entry_
+                    break
+            else:
+                continue
+
+            document_uid = relevant_source_node_entry["uid"]
+            document = traceability_index.get_node_by_uid(document_uid)
+
+            current_top_node = document
+            path_components = path_to_source_file_.split("/")
+            for path_component_idx_, path_component_ in enumerate(
+                path_components
+            ):
+                if path_component_ not in section_cache:
+                    path_component_title = (
+                        path_component_ + "/"
+                        if path_component_idx_ < (len(path_components) - 1)
+                        else path_component_
+                    )
+                    current_section = create_folder_section(
+                        current_top_node, document, path_component_title
+                    )
+                    current_top_node.section_contents.append(current_section)
+                    section_cache[path_component_] = current_section
+                current_top_node = section_cache[path_component_]
+
+            for source_node_ in traceability_info_.source_nodes:
+                source_sdoc_node = SDocNode(
+                    parent=document,
+                    node_type=relevant_source_node_entry["node_type"],
+                    fields=[],
+                    relations=[],
+                )
+                assert source_node_.entity_name is not None
+                source_sdoc_node_uid = f"{document_uid}/{path_to_source_file_}/{source_node_.entity_name}"
+                source_sdoc_node.ng_document_reference = DocumentReference()
+                source_sdoc_node.ng_document_reference.set_document(document)
+                source_sdoc_node.ng_including_document_reference = (
+                    DocumentReference()
+                )
+
+                source_sdoc_node.set_field_value(
+                    field_name="UID",
+                    form_field_index=0,
+                    value=source_sdoc_node_uid,
+                )
+                source_sdoc_node.set_field_value(
+                    field_name="TITLE",
+                    form_field_index=0,
+                    value=source_node_.entity_name,
+                )
+
+                for node_name_, node_value_ in source_node_.fields.items():
+                    source_sdoc_node.set_field_value(
+                        field_name=node_name_,
+                        form_field_index=0,
+                        value=node_value_,
+                    )
+                current_top_node.section_contents.append(source_sdoc_node)
+
+                traceability_index.graph_database.create_link(
+                    link_type=GraphLinkType.UID_TO_NODE,
+                    lhs_node=source_sdoc_node_uid,
+                    rhs_node=source_sdoc_node,
+                )
+
+                #
+                # This connects:
+                # - Source nodes and auto-generated requirements.
+                # - Source nodes-related requirements and auto-generated requirements.
+                #
+                for marker_ in source_node_.markers:
+                    if not isinstance(marker_, FunctionRangeMarker):
+                        continue
+                    traceability_info_.ng_map_reqs_to_markers.setdefault(
+                        source_sdoc_node_uid, []
+                    ).append(marker_)
+                    self.map_reqs_uids_to_paths.setdefault(
+                        source_sdoc_node_uid, OrderedSet()
+                    ).add(path_to_source_file_)
+                    self.map_paths_to_reqs.setdefault(
+                        path_to_source_file_, OrderedSet()
+                    ).add(source_sdoc_node)
+
+                    for req_ in marker_.reqs:
+                        node = traceability_index.get_node_by_uid_weak2(req_)
+                        traceability_index.graph_database.create_link(
+                            link_type=GraphLinkType.NODE_TO_PARENT_NODES,
+                            lhs_node=source_sdoc_node,
+                            rhs_node=node,
+                        )
+                        traceability_index.graph_database.create_link(
+                            link_type=GraphLinkType.NODE_TO_CHILD_NODES,
+                            lhs_node=node,
+                            rhs_node=source_sdoc_node,
+                        )
 
     def create_requirement_with_forward_source_links(
         self, requirement: SDocNode

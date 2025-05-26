@@ -96,6 +96,7 @@ class ProjectConfig:
         include_source_paths: List[str],
         exclude_source_paths: List[str],
         test_report_root_dict: Dict[str, str],
+        source_nodes: List[Dict[str, str]],
         html2pdf_template: Optional[str],
         bundle_document_version: Optional[str],
         bundle_document_date: Optional[str],
@@ -144,6 +145,7 @@ class ProjectConfig:
         self.include_source_paths: List[str] = include_source_paths
         self.exclude_source_paths: List[str] = exclude_source_paths
         self.test_report_root_dict: Dict[str, str] = test_report_root_dict
+        self.source_nodes: List[Dict[str, str]] = source_nodes
 
         # Settings derived from the command-line parameters.
 
@@ -214,6 +216,7 @@ class ProjectConfig:
             include_source_paths=[],
             exclude_source_paths=[],
             test_report_root_dict={},
+            source_nodes=[],
             html2pdf_template=None,
             bundle_document_version=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION,
             bundle_document_date=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE,
@@ -437,6 +440,7 @@ class ProjectConfigLoader:
         include_source_paths: List[str] = []
         exclude_source_paths: List[str] = []
         test_report_root_dict: Dict[str, str] = {}
+        source_nodes: List[Dict[str, str]] = []
         html2pdf_template: Optional[str] = None
         bundle_document_version = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION
         bundle_document_date = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE
@@ -626,6 +630,21 @@ class ProjectConfigLoader:
             )
             assert section_behavior in ("[SECTION]", "[[SECTION]]")
 
+            if "source_nodes" in project_content:
+                source_nodes_config = project_content["source_nodes"]
+                assert isinstance(source_nodes_config, list)
+                for item_ in source_nodes_config:
+                    source_node_path = next(iter(item_))
+                    source_node_uid = item_[source_node_path]["uid"]
+                    source_node_node_type = item_[source_node_path]["node_type"]
+                    source_nodes.append(
+                        {
+                            "path": source_node_path,
+                            "uid": source_node_uid,
+                            "node_type": source_node_node_type,
+                        }
+                    )
+
         if "server" in config_dict:
             server_content = config_dict["server"]
             server_host = server_content.get("host", server_host)
@@ -679,6 +698,7 @@ class ProjectConfigLoader:
             include_source_paths=include_source_paths,
             exclude_source_paths=exclude_source_paths,
             test_report_root_dict=test_report_root_dict,
+            source_nodes=source_nodes,
             html2pdf_template=html2pdf_template,
             bundle_document_version=bundle_document_version,
             bundle_document_date=bundle_document_date,

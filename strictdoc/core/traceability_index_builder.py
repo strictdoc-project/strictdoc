@@ -150,7 +150,9 @@ class TraceabilityIndexBuilder:
                     if len(traceability_info.markers) > 0:
                         source_file.is_referenced = True
 
-            file_tracability_index.validate_and_resolve(traceability_index)
+            file_tracability_index.validate_and_resolve(
+                traceability_index, project_config
+            )
 
             # Iterate again to resolve if the file is referenced.
             # FIXME: Not great to iterate two times.

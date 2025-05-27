@@ -90,12 +90,12 @@ def hello_3():
 
     function_1_1 = function_1.child_functions[0]
     assert isinstance(function_1_1, Function)
-    assert function_1_1.name == "hello_1_1"
+    assert function_1_1.name == "hello_1.hello_1_1"
     assert len(function_1_1.child_functions) == 1
 
     function_1_1_1 = function_1_1.child_functions[0]
     assert isinstance(function_1_1_1, Function)
-    assert function_1_1_1.name == "hello_1_1_1"
+    assert function_1_1_1.name == "hello_1.hello_1_1.hello_1_1_1"
     assert len(function_1_1_1.child_functions) == 0
 
     function_2 = info.functions[3]
@@ -105,12 +105,12 @@ def hello_3():
 
     function_2_1 = function_2.child_functions[0]
     assert isinstance(function_2_1, Function)
-    assert function_2_1.name == "hello_2_1"
+    assert function_2_1.name == "hello_2.hello_2_1"
     assert len(function_2_1.child_functions) == 1
 
     function_2_1_1 = function_2_1.child_functions[0]
     assert isinstance(function_2_1_1, Function)
-    assert function_2_1_1.name == "hello_2_1_1"
+    assert function_2_1_1.name == "hello_2.hello_2_1.hello_2_1_1"
     assert len(function_2_1_1.child_functions) == 0
 
     function_3 = info.functions[6]
@@ -120,12 +120,12 @@ def hello_3():
 
     function_3_1 = function_3.child_functions[0]
     assert isinstance(function_3_1, Function)
-    assert function_3_1.name == "hello_3_1"
+    assert function_3_1.name == "hello_3.hello_3_1"
     assert len(function_3_1.child_functions) == 1
 
     function_3_1_1 = function_3_1.child_functions[0]
     assert isinstance(function_3_1_1, Function)
-    assert function_3_1_1.name == "hello_3_1_1"
+    assert function_3_1_1.name == "hello_3.hello_3_1.hello_3_1_1"
     assert len(function_3_1_1.child_functions) == 0
 
 

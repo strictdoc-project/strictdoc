@@ -22,6 +22,7 @@ from typing import Dict, List, Optional, Tuple
 import psutil
 from psutil import NoSuchProcess
 
+from strictdoc import environment
 from strictdoc.helpers.file_system import get_portable_temp_dir
 from tests.end2end.conftest import test_environment
 
@@ -86,12 +87,16 @@ class SDocTestServer:
         config_path: Optional[str] = None,
         port: Optional[int] = None,
         expectations: Optional[List] = None,
+        cwd: Optional[str] = None,
     ):
         is_parallel_execution = test_environment.is_parallel_execution
 
         assert os.path.isdir(input_path)
         if config_path is not None:
-            assert os.path.exists(config_path)
+            assert os.path.exists(config_path), config_path
+        if cwd is not None:
+            assert os.path.isdir(cwd), cwd
+
         self.path_to_tdoc_folder = input_path
         self.output_path: Optional[str] = output_path
         self.config_path: Optional[str] = config_path
@@ -121,6 +126,11 @@ class SDocTestServer:
             expectations
             if expectations is not None
             else ["INFO:     Application startup complete."]
+        )
+
+        self.cwd: str = cwd if cwd is not None else input_path
+        self.path_to_strictdoc: str = os.path.join(
+            environment.path_to_strictdoc, "strictdoc/cli/main.py"
         )
 
         # All of these below become initialized/used starting from run()
@@ -161,6 +171,7 @@ class SDocTestServer:
             stdout=self.log_file_out.fileno(),
             stderr=subprocess.PIPE,
             shell=False,
+            cwd=self.cwd,
             env=strictdoc_env,
         )
         self.process = process
@@ -285,9 +296,7 @@ class SDocTestServer:
 
     def _get_strictdoc_command(self) -> Tuple[List[str], Dict[str, str]]:
         should_collect_coverage = test_environment.coverage
-        strictdoc_args = [
-            sys.executable,
-        ]
+        strictdoc_args: List[str] = [sys.executable]
         if should_collect_coverage:
             strictdoc_args.extend(
                 [
@@ -302,7 +311,7 @@ class SDocTestServer:
 
         strictdoc_args.extend(
             [
-                "strictdoc/cli/main.py",
+                self.path_to_strictdoc,
                 "server",
                 "--no-reload",
                 "--port",

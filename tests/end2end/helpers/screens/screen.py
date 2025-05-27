@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 from seleniumbase import BaseCase
 from typing_extensions import deprecated
 
@@ -132,3 +133,13 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
     def get_collapsible_list(self) -> CollapsibleList:
         CollapsibleList(self.test_case).assert_is_collapsible()
         return CollapsibleList(self.test_case)
+
+    def do_fill_in_field_value(
+        self, field_xpath: str, field_value: str
+    ) -> None:
+        self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
+
+        WebDriverWait(self.test_case.driver, timeout=3).until(
+            lambda _: self.test_case.get_value(field_xpath, by=By.XPATH)
+            == field_value
+        )

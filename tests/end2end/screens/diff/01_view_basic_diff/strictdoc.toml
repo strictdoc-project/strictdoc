@@ -1,0 +1,7 @@
+[project]
+
+cache_dir = "./output/cache"
+
+features = [
+  "DIFF"
+]

@@ -42,10 +42,10 @@
       {%- if section_change.is_paired_change() -%}
         <div class="sdoc_pre_content">{{ section_change.get_colored_title_diff(side) }}</div>
       {%- else -%}
-        <div class="sdoc_pre_content">{{ section.title }}</div>
+        <div class="sdoc_pre_content">{{ section.reserved_title }}</div>
       {%- endif -%}
     {% else %}
-    <div class="sdoc_pre_content">{{ section.title }}</div>
+    <div class="sdoc_pre_content">{{ section.reserved_title }}</div>
     {% endif %}
   </div>
 

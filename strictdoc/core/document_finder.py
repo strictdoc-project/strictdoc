@@ -27,6 +27,7 @@ from strictdoc.core.file_tree import (
     PathFinder,
 )
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.textx import drop_textx_meta
@@ -43,13 +44,11 @@ class DocumentFinder:
         for paths_to_files_or_doc in project_config.input_paths:
             if not os.path.exists(paths_to_files_or_doc):
                 sys.stdout.flush()
-                err = (
+                raise StrictDocException(
                     "error: "
                     "Provided path is neither a single file or a folder: "
                     f"'{paths_to_files_or_doc}'"
                 )
-                print(err)  # noqa: T201
-                sys.exit(1)
 
         with measure_performance("Completed finding SDoc and assets"):
             file_tree, asset_manager = DocumentFinder._build_file_tree(

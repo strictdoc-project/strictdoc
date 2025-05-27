@@ -95,8 +95,14 @@ class SectionChange:
 
         if matched_mid is not None or matched_uid is not None:
             change_type = ChangeType.SECTION_MODIFIED
-            assert isinstance(lhs_section, SDocSection), lhs_section
-            assert isinstance(rhs_section, SDocSection), rhs_section
+            assert isinstance(lhs_section, SDocSection) or (
+                isinstance(lhs_section, SDocNode)
+                and lhs_section.node_type == "SECTION"
+            ), lhs_section
+            assert isinstance(rhs_section, SDocSection) or (
+                isinstance(rhs_section, SDocNode)
+                and rhs_section.node_type == "SECTION"
+            ), rhs_section
         elif lhs_section is not None:
             assert rhs_section is None, rhs_section
             change_type = ChangeType.SECTION_REMOVED

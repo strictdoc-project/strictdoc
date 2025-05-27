@@ -13,7 +13,7 @@
     <span>
       {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;"|safe * (section.ng_level * 2 - 1) }}
     </span>
-    <span>{{ section.title }}</span>
+    <span>{{ section.reserved_title }}</span>
     {%- if tab == "diff" -%}
       {%- if section_change is not none -%}
         {%- if section_change.section_token is not none -%}

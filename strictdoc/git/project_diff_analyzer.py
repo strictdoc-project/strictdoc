@@ -422,7 +422,9 @@ class ChangeStats:
             for node in document_iterator.all_content(
                 print_fragments=True, print_fragments_from_files=False
             ):
-                if isinstance(node, (SDocSection, SDocDocument)):
+                if isinstance(node, (SDocSection, SDocDocument)) or (
+                    isinstance(node, SDocNode) and node.node_type == "SECTION"
+                ):
                     if node in change_stats.map_nodes_to_changes:
                         continue
 
@@ -455,8 +457,12 @@ class ChangeStats:
                                 )
                         # FIXME: This is when a Requirement becomes
                         # a Section with the same UID preserved.
-                        if other_section_or_none is not None and not isinstance(
-                            other_section_or_none, SDocSection
+                        if other_section_or_none is not None and not (
+                            isinstance(other_section_or_none, SDocSection)
+                            or (
+                                isinstance(other_section_or_none, SDocNode)
+                                and other_section_or_none.node_type == "SECTION"
+                            )
                         ):
                             other_section_or_none = None
                             matched_uid = None
@@ -481,19 +487,22 @@ class ChangeStats:
                             uid_modified = True
 
                         if other_section_or_none is not None:
-                            if node.title != other_section_or_none.title:
+                            if (
+                                node.reserved_title
+                                != other_section_or_none.reserved_title
+                            ):
                                 title_modified = True
                                 lhs_colored_title_diff = (
                                     get_colored_html_diff_string(
-                                        node.title,
-                                        other_section_or_none.title,
+                                        node.reserved_title,
+                                        other_section_or_none.reserved_title,
                                         "left",
                                     )
                                 )
                                 rhs_colored_title_diff = (
                                     get_colored_html_diff_string(
-                                        node.title,
-                                        other_section_or_none.title,
+                                        node.reserved_title,
+                                        other_section_or_none.reserved_title,
                                         "right",
                                     )
                                 )
@@ -508,8 +517,12 @@ class ChangeStats:
                         if other_section_or_none is not None:
                             section_token = MID.create()
 
-                        lhs_section: Optional[Union[SDocSection, SDocDocument]]
-                        rhs_section: Optional[Union[SDocSection, SDocDocument]]
+                        lhs_section: Optional[
+                            Union[SDocSection, SDocDocument, SDocNode]
+                        ]
+                        rhs_section: Optional[
+                            Union[SDocSection, SDocDocument, SDocNode]
+                        ]
                         if side == "left":
                             lhs_section = node
                             rhs_section = other_section_or_none
@@ -536,7 +549,7 @@ class ChangeStats:
                             ] = section_change
                         change_stats.add_change(section_change)
 
-                if isinstance(node, SDocNode):
+                if isinstance(node, SDocNode) and node.node_type != "SECTION":
                     #
                     # Step: We check if a requirement was modified at all, or if
                     # it has already been checked before. Skipping the requirement

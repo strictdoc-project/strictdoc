@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.screens.diff.diff import Screen_Diff
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
 )
@@ -91,6 +92,12 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_link_to_diff_screen_present(self) -> None:
+        self.test_case.assert_element(
+            '//a[@data-testid="project-tree-link-diff"]',
+            by=By.XPATH,
+        )
+
     def do_click_on_first_document(self) -> Screen_Document:
         self.test_case.click_xpath('//*[@data-testid="tree-file-link"]')
         return Screen_Document(self.test_case)
@@ -124,6 +131,14 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             '//a[@data-testid="project-tree-link-search"]',
         )
         return Screen_Search(self.test_case)
+
+    def do_click_on_diff_screen_link(
+        self,
+    ) -> Screen_Diff:
+        self.test_case.click_xpath(
+            '//a[@data-testid="project-tree-link-diff"]',
+        )
+        return Screen_Diff(self.test_case)
 
     def do_click_on_the_document(self, doc_order: int = 1) -> Screen_Document:
         self.test_case.click_xpath(

@@ -382,6 +382,7 @@ def test_integration(
     coverage=False,
     strictdoc=None,
     html2pdf=False,
+    shard=None,
     environment=ToxEnvironment.CHECK,
 ):
     clean_itest_artifacts(context)
@@ -416,10 +417,20 @@ def test_integration(
         else "--xunit-xml-output build/test_reports/tests_integration.lit.junit.xml"
     )
 
+    # Allow partitioning of integration and html2pdf tests
+    partition_opts = ""
+    if shard is not None:
+        match = re.match(r"([1-9][0-9]*)/([1-9][0-9]*)", shard)
+        assert match, f"--shard argument has an incorrect format: {shard}."
+        run_shard = int(match.group(1))
+        num_shards = int(match.group(2))
+        partition_opts = f"--num-shards={num_shards} --run-shard={run_shard}"
+
     # HTML2PDF tests are running Chrome Driver which does not seem to be
     # parallelizable, or at least not in the way StrictDoc uses it.
     # If HTML2PDF option is provided, do not parallelize and only run the
     # HTML2PDF-specific tests.
+    # HTML2PDF tests can be safely partitioned.
     chromedriver_param = ""
     if not html2pdf:
         parallelize_opts = "" if not no_parallelization else "--threads 1"
@@ -453,6 +464,7 @@ def test_integration(
         {focus_or_none}
         {fail_first_argument}
         {parallelize_opts}
+        {partition_opts}
         {test_folder}
     """
 
@@ -624,11 +636,11 @@ def lint(context):
 
 
 @task(aliases=["t"])
-def test(context):
+def test(context, shard=None):
     test_unit(context)
     test_unit_server(context)
-    test_integration(context)
-    test_integration(context, html2pdf=True)
+    test_integration(context, shard=shard)
+    test_integration(context, shard=shard, html2pdf=True)
 
 
 @task(aliases=["ta"])

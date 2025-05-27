@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"]
+        shard: ["1/2", "2/2"]
 
     steps:
     - uses: actions/checkout@v3
@@ -53,4 +54,4 @@ jobs:
 
     - name: Run tests (Powershell)
       run: |
-        invoke test
+        invoke test --shard=${{ matrix.shard }}

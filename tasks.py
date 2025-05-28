@@ -246,11 +246,12 @@ def test_end2end(
         coverage_file_dir = f"{cwd}/build/coverage/end2end/"
         coverage_file_dir2 = f"{cwd}/build/coverage/end2end_strictdoc/"
         coverage_file = os.path.join(coverage_file_dir, ".coverage")
+        coverage_rc = os.path.join(cwd, ".coveragerc.end2end")
         shutil.rmtree(coverage_file_dir, ignore_errors=True)
         shutil.rmtree(coverage_file_dir2, ignore_errors=True)
         coverage_command_or_none = f"""
             coverage run
-                --rcfile=.coveragerc.end2end
+                --rcfile={coverage_rc}
                 --data-file={coverage_file}
                 -m
         """
@@ -517,7 +518,7 @@ def coverage_combine(context):
                 --rcfile .coveragerc.combined
                 --data-file build/coverage/.coverage.combined
                 --pretty-print
-                --output build/coverage/coverage.combined.json
+                -o build/coverage/coverage.combined.json
         """,
     )
 
@@ -644,12 +645,12 @@ def test(context, shard=None):
 
 
 @task(aliases=["ta"])
-def test_all(context, coverage=False):
+def test_all(context, coverage=False, headless=False):
     test_unit(context)
     test_unit_server(context)
     test_integration(context, coverage=coverage)
     test_integration(context, coverage=coverage, html2pdf=True)
-    test_end2end(context, coverage=coverage)
+    test_end2end(context, coverage=coverage, headless=headless)
 
 
 @task(aliases=["c"])
@@ -1089,5 +1090,5 @@ def test_docker(context, image: str = "strictdoc:latest"):
 
 @task(aliases=["q"])
 def qualification(context):
-    test_all(context, coverage=True)
+    test_all(context, coverage=True, headless=True)
     coverage_combine(context)

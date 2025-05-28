@@ -12,5 +12,5 @@
   {% else %}
     <div class="sdoc-table_key_value-key">{{ key_value_pair["Key"] }}</div>
   {% endif %}
-  <div class="sdoc-table_key_value-value">{{ key_value_pair["Value"] }}</div>
+  <div class="sdoc-table_key_value-value" data-testid="table-row-value-{{ key_value_pair["Key"].lower().replace(" ", "-") }}">{{ key_value_pair["Value"] }}</div>
 {% endif %}

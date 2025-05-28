@@ -86,36 +86,6 @@ class GitClient:
             return False
         return result.stdout == ""
 
-    def add_file(self, path_to_file: str) -> None:
-        result = subprocess.run(
-            ["git", "add", path_to_file],
-            cwd=self.path_to_git_root,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        assert result.returncode == 0, result
-
-    def add_all(self) -> None:
-        result = subprocess.run(
-            ["git", "add", "."],
-            cwd=self.path_to_git_root,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        assert result.returncode == 0, result
-
-    def commit(self, message: str) -> None:
-        result = subprocess.run(
-            ["git", "commit", "-m", message],
-            cwd=self.path_to_git_root,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        assert result.returncode == 0, result
-
     def check_revision(self, revision: str) -> str:
         assert isinstance(revision, str)
         assert len(revision) > 0
@@ -129,44 +99,6 @@ class GitClient:
         if result.returncode == 0:
             return result.stdout.strip()
         raise LookupError(f"Non-existing revision: {revision}.")
-
-    def commit_all(self, message: str) -> None:
-        result = subprocess.run(
-            ["git", "commit", "-a", "-m", message],
-            cwd=self.path_to_git_root,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        assert result.returncode == 0, result
-
-    def rebase_from_main(self) -> None:
-        result = subprocess.run(
-            ["git", "fetch", "origin"],
-            cwd=self.path_to_git_root,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        assert result.returncode == 0, result
-        result = subprocess.run(
-            ["git", "rebase", "origin/main"],
-            cwd=self.path_to_git_root,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        assert result.returncode == 0, result
-
-    def push(self) -> None:
-        result = subprocess.run(
-            ["git", "push", "origin"],
-            cwd=self.path_to_git_root,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        assert result.returncode == 0, result
 
     def hard_reset(self, revision: Optional[str] = None) -> None:
         reset_args = ["git", "reset", "--hard"]

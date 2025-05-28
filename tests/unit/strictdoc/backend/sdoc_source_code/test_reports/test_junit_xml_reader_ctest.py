@@ -1,6 +1,8 @@
 import os
 import tempfile
 
+import pytest
+
 from strictdoc import environment
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -58,3 +60,27 @@ def test_01_ctest():
             test_result_node.get_meta_field_value_by_title("TEST_FUNCTION")
             == "#GTEST#TestPrtMath.TransitionDistance"
         )
+
+
+def test__90__error_handling__empty_xml():
+    source_input = ""
+
+    project_config: ProjectConfig = ProjectConfig.default_config(
+        environment=environment
+    )
+
+    with tempfile.NamedTemporaryFile(
+        mode="w+", delete=True, suffix=".ctest.junit.xml"
+    ) as temp_file:
+        doc_file: File = File(
+            0,
+            temp_file.name,
+            SDocRelativePath(os.path.basename(temp_file.name)),
+        )
+        with pytest.raises(RuntimeError) as exc_info:
+            _ = JUnitXMLReader.read_from_string(
+                source_input, doc_file, project_config
+            )
+        assert """\
+Document is empty, line 1, column 1 (<string>, line 1)\
+""" == str(exc_info.value)

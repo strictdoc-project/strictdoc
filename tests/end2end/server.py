@@ -298,13 +298,16 @@ class SDocTestServer:
         should_collect_coverage = test_environment.coverage
         strictdoc_args: List[str] = [sys.executable]
         if should_collect_coverage:
+            path_to_coverage_rc = os.path.join(
+                environment.path_to_strictdoc, ".coveragerc.end2end"
+            )
             strictdoc_args.extend(
                 [
                     "-m",
                     "coverage",
                     "run",
                     "--append",
-                    "--rcfile=.coveragerc.end2end",
+                    f"--rcfile={path_to_coverage_rc}",
                     f"--data-file={os.getcwd()}/build/coverage/end2end_strictdoc/.coverage",
                 ]
             )

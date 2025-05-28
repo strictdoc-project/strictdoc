@@ -101,28 +101,6 @@ class ManyToManySet(AbstractBucket):
         assert lhs_node not in rhs_node_links_for_edge
         rhs_node_links_for_edge.add(lhs_node)
 
-    def create_link_weak(
-        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
-    ) -> None:
-        assert edge != ALL_EDGES
-        if not isinstance(lhs_node, self._lhs_type):
-            raise TypeError(
-                f"LHS type mismatch: {type(lhs_node)} is not of {self._lhs_type}"
-            )
-        if not isinstance(rhs_node, self._rhs_type):
-            raise TypeError(
-                f"RHS type mismatch: {type(rhs_node)} is not of {self._rhs_type}"
-            )
-        assert lhs_node != rhs_node, (lhs_node, rhs_node)
-
-        lhs_node_links = self._links.setdefault(lhs_node, {})
-        lhs_node_links_for_edge = lhs_node_links.setdefault(edge, OrderedSet())
-        lhs_node_links_for_edge.add(rhs_node)
-
-        rhs_node_links = self._links_reverse.setdefault(rhs_node, {})
-        rhs_node_links_for_edge = rhs_node_links.setdefault(edge, OrderedSet())
-        rhs_node_links_for_edge.add(lhs_node)
-
     def delete_link(
         self,
         *,

@@ -101,20 +101,6 @@ class DocumentScreenViewObject:
         else:
             raise NotImplementedError(self.document_type)  # pragma: no cover
 
-    def render_table_screen(
-        self, jinja_environment: JinjaEnvironment
-    ) -> Markup:
-        return jinja_environment.render_template_as_markup(
-            "screens/document/table/index.jinja", view_object=self
-        )
-
-    def render_trace_screen(
-        self, jinja_environment: JinjaEnvironment
-    ) -> Markup:
-        return jinja_environment.render_template_as_markup(
-            "screens/document/traceability/index.jinja", view_object=self
-        )
-
     def render_updated_screen(
         self, jinja_environment: JinjaEnvironment
     ) -> Markup:

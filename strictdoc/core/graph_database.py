@@ -73,15 +73,6 @@ class GraphDatabase:
             lhs_node=lhs_node, rhs_node=rhs_node, edge=edge
         )
 
-    def create_link_weak(
-        self, *, link_type: Hashable, lhs_node: Any, rhs_node: Any
-    ):
-        assert lhs_node is not None, lhs_node
-        assert rhs_node is not None, rhs_node
-        self._id_to_bucket[link_type].create_link_weak(
-            lhs_node=lhs_node, rhs_node=rhs_node
-        )
-
     def delete_link(
         self,
         *,

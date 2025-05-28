@@ -81,27 +81,6 @@ class ProjectTreeDiffStats:
     def contains_document_md5(self, document_md5: str) -> bool:
         return document_md5 in self.document_md5_hashes
 
-    def contains_requirement_field(
-        self, requirement: SDocNode, field_name: str, field_value: str
-    ):
-        assert isinstance(field_value, str)
-        other_requirement: Optional[SDocNode] = self.find_requirement(
-            requirement
-        )
-        if other_requirement is None:
-            return False
-
-        if field_name not in other_requirement.ordered_fields_lookup:
-            return False
-
-        other_requirement_fields = other_requirement.ordered_fields_lookup[
-            field_name
-        ]
-        for field_ in other_requirement_fields:
-            if field_.get_text_value() == field_value:
-                return True
-        return False
-
     def get_identical_requirement_field(
         self, requirement: SDocNode, field_name: str, field_value: str
     ) -> Optional[SDocNodeField]:

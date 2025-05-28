@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 from queue import Empty
 from typing import Any, Callable, Iterable, Tuple
 
+from strictdoc.helpers.coverage import register_code_coverage_hook
+
 MultiprocessingLambdaType = Callable[[Any], Any]
 
 
@@ -115,6 +117,8 @@ class MultiprocessingParallelizer(Parallelizer):
         input_queue: "multiprocessing.Queue[Tuple[int, Any, MultiprocessingLambdaType]]",
         output_queue: "multiprocessing.Queue[Tuple[int, Any]]",
     ) -> None:
+        register_code_coverage_hook()
+
         while True:
             try:
                 content_idx, content, processing_func = input_queue.get(

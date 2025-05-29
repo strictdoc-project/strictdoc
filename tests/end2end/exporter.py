@@ -89,7 +89,7 @@ class SDocTestHTMLExporter:
         sleep(test_environment.warm_up_interval_seconds)
         print(  # noqa: T201
             f"SDocTestHTMLExporter: "
-            f"Static HTML sucessfully exported to : {self.output_path}."
+            f"Static HTML successfully exported to : {self.output_path}."
         )
 
     def get_output_path_as_uri(self) -> str:

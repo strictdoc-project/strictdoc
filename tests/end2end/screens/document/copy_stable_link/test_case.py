@@ -32,6 +32,8 @@ class Test(E2ECase):
             screen_document = Screen_Document(self)
             screen_document.assert_on_screen("document")
 
+            self.wait_for_ready_state_complete()
+
             # move mouse to hover over target, so that button becomes visible
             screen_document.test_case.hover_on_element(
                 f'//sdoc-field-content[sdoc-autogen[text()="{target}"]]'

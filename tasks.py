@@ -400,14 +400,18 @@ def test_integration(
 
     coverage_path_argument = ""
     if coverage:
-        strictdoc_exec = f'coverage run --rcfile={cwd}/.coveragerc.integration \\"{cwd}/strictdoc/cli/main.py\\"'
+        path_to_coverage_rc = f"{cwd}/.coveragerc.integration"
+        strictdoc_exec = f'coverage run --rcfile={path_to_coverage_rc} \\"{cwd}/strictdoc/cli/main.py\\"'
         if html2pdf:
             path_to_coverage_dir = f"{cwd}/build/coverage/integration_html2pdf/"
         else:
             path_to_coverage_dir = f"{cwd}/build/coverage/integration/"
         path_to_coverage = os.path.join(path_to_coverage_dir, ".coverage")
         shutil.rmtree(path_to_coverage_dir, ignore_errors=True)
-        coverage_path_argument = f'--param COVERAGE_FILE="{path_to_coverage}"'
+        coverage_path_argument = (
+            f'--param COVERAGE_FILE="{path_to_coverage}" '
+            f'--param COVERAGE_PROCESS_START="{path_to_coverage_rc}"'
+        )
 
     debug_opts = "-vv --show-all" if debug else ""
     focus_or_none = f"--filter {focus}" if focus else ""

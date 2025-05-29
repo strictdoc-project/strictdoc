@@ -1,36 +1,24 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
-# Custom argparse type representing a bounded int
+# Custom argparse type representing a bounded integer range.
+#
 # https://stackoverflow.com/a/61411431/598057
 import argparse
+from typing import Any, Union
 
 
 class IntRange:
-    def __init__(self, imin=None, imax=None):
-        self.imin = imin
-        self.imax = imax
+    def __init__(self, imin: int, imax: int) -> None:
+        self.imin: int = imin
+        self.imax: int = imax
 
-    def __call__(self, arg):
+    def __call__(self, arg: Any) -> Union[int, argparse.ArgumentTypeError]:
         try:
             value = int(arg)
-        except ValueError as exc:
-            raise self.exception() from exc
-        if (self.imin is not None and value < self.imin) or (
-            self.imax is not None and value > self.imax
-        ):
-            raise self.exception()
-        return value
+        except ValueError:
+            raise argparse.ArgumentTypeError("Must be an integer") from None
 
-    def exception(self):
-        if self.imin is not None and self.imax is not None:
-            return argparse.ArgumentTypeError(
-                f"Must be an integer in the range [{self.imin}, {self.imax}]"
-            )
-        if self.imin is not None:
-            return argparse.ArgumentTypeError(
-                f"Must be an integer >= {self.imin}"
-            )
-        if self.imax is not None:
-            return argparse.ArgumentTypeError(
-                f"Must be an integer <= {self.imax}"
-            )
-        return argparse.ArgumentTypeError("Must be an integer")
+        if self.imin <= value <= self.imax:
+            return value
+
+        raise argparse.ArgumentTypeError(
+            f"Must be an integer in the range [{self.imin}, {self.imax}]"
+        )

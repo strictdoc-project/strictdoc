@@ -1,3 +1,23 @@
+"""
+Run StrictDoc child tasks as separate processes.
+
+The current implementation is based on a combination of APIs:
+- The child processes are created using multiprocessing.Process. Each process
+  is started with daemon=True which ensures that it is killed in case the parent
+  process itself terminates due to an unexpected error or exception.
+- The parent communicates with the child processes using multiprocessing.Queue().
+
+The previous implementation did not work because it did not handle the following
+cases correctly:
+
+- When a child process exists unexpectedly.
+- When a child process raises exception.
+
+def map_does_not_work(self, contents, processing_func):
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        return executor.map(processing_func, contents)
+"""
+
 import multiprocessing
 import sys
 from abc import ABC, abstractmethod
@@ -63,9 +83,6 @@ class MultiprocessingParallelizer(Parallelizer):
             ) from None
         # @sdoc[/SDOC_IMPL_2]
 
-    def __del__(self) -> None:
-        self.shutdown()
-
     def shutdown(self) -> None:
         # @sdoc[SDOC_IMPL_2]
         # macOS edge case: If the __init__ fails to initialize itself, we may
@@ -79,6 +96,20 @@ class MultiprocessingParallelizer(Parallelizer):
         if was_fully_initialized:
             for process_ in self.processes:
                 process_.join()
+
+        child_failed: bool = False
+        for process_ in self.processes:
+            if process_.exitcode != 0:
+                print(  # noqa: T201
+                    "error: Parallelizer: One of the child processes "
+                    f"has exited with a non-successful exit code: "
+                    f"PID: {process_.pid}, exit code: {process_.exitcode}.",
+                    flush=True,
+                )
+                child_failed = True
+
+        if child_failed:
+            sys.exit(1)
 
     @property
     def parallelization_enabled(self) -> bool:
@@ -108,13 +139,6 @@ class MultiprocessingParallelizer(Parallelizer):
                     self.shutdown()
                     sys.exit(1)
         return map(lambda r: r[1], sorted(results, key=lambda r: r[0]))
-
-    # This version doesn't handle the following cases properly:
-    # - when a child process exists unexpectedly
-    # - when a child process raises exception
-    # def map_does_not_work(self, contents, processing_func):
-    #     with concurrent.futures.ProcessPoolExecutor() as executor:
-    #         return executor.map(processing_func, contents)  # noqa: ERA001
 
     @staticmethod
     def _run(

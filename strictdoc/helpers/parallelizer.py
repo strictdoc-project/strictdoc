@@ -2,7 +2,7 @@ import multiprocessing
 import sys
 from abc import ABC, abstractmethod
 from queue import Empty
-from typing import Any, Callable, Iterable, Tuple
+from typing import Any, Callable, Iterable, Tuple, Union
 
 from strictdoc.helpers.coverage import register_code_coverage_hook
 
@@ -39,7 +39,7 @@ class MultiprocessingParallelizer(Parallelizer):
         # @sdoc[SDOC_IMPL_2]
         try:
             self.input_queue: multiprocessing.Queue[
-                Tuple[int, Any, MultiprocessingLambdaType]
+                Union[Tuple[int, Any, MultiprocessingLambdaType], None]
             ] = multiprocessing.Queue()
             self.output_queue: multiprocessing.Queue[Tuple[int, Any]] = (
                 multiprocessing.Queue()
@@ -49,6 +49,7 @@ class MultiprocessingParallelizer(Parallelizer):
                 multiprocessing.Process(
                     target=MultiprocessingParallelizer._run,
                     args=(self.input_queue, self.output_queue),
+                    daemon=True,
                 )
                 for _ in range(0, multiprocessing.cpu_count())
             ]
@@ -72,9 +73,12 @@ class MultiprocessingParallelizer(Parallelizer):
         was_fully_initialized = hasattr(self, "processes")
         # @sdoc[/SDOC_IMPL_2]
 
+        for _ in self.processes:
+            self.input_queue.put(None)
+
         if was_fully_initialized:
-            for process in self.processes:
-                process.terminate()
+            for process_ in self.processes:
+                process_.join()
 
     @property
     def parallelization_enabled(self) -> bool:
@@ -121,9 +125,12 @@ class MultiprocessingParallelizer(Parallelizer):
 
         while True:
             try:
-                content_idx, content, processing_func = input_queue.get(
-                    block=True
-                )
+                item = input_queue.get(block=True)
+                if item is None:
+                    sys.stdout.flush()
+                    sys.stderr.flush()
+                    break
+                content_idx, content, processing_func = item
                 result = processing_func(content)
                 sys.stdout.flush()
                 sys.stderr.flush()

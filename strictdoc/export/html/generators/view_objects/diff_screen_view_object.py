@@ -1,6 +1,5 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from dataclasses import dataclass
-from datetime import datetime
 
 from markupsafe import Markup
 
@@ -54,6 +53,3 @@ class DiffScreenViewObject:
 
     def render_static_url_with_prefix(self, url: str) -> str:
         return self.link_renderer.render_static_url_with_prefix(url)
-
-    def date_today(self) -> str:
-        return datetime.today().strftime("%Y-%m-%d")

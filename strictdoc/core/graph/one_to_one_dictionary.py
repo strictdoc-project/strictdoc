@@ -43,11 +43,6 @@ class OneToOneDictionary(AbstractBucket):
         )
         self._dict[lhs_node] = rhs_node
 
-    def create_link_weak(self, *, lhs_node: Any, rhs_node: Any):
-        assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
-        assert isinstance(rhs_node, self._rhs_type), (rhs_node, self._rhs_type)
-        self._dict[lhs_node] = rhs_node
-
     def delete_link(
         self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
     ):

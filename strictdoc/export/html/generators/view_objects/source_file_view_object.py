@@ -1,12 +1,10 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Any, List, Optional, Union
 
 from markupsafe import Markup
 
 from strictdoc import __version__
-from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import NullViewElement
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -148,9 +146,6 @@ class SourceFileViewObject:
             DocumentType.document(), node_field
         )
 
-    def is_empty_tree(self) -> bool:
-        return self.document_tree_iterator.is_empty_tree()
-
     def render_url(self, url: str):
         return self.link_renderer.render_url(url)
 
@@ -172,14 +167,6 @@ class SourceFileViewObject:
 
     def render_local_anchor(self, node):
         return self.link_renderer.render_local_anchor(node)
-
-    def date_today(self):
-        return datetime.today().strftime("%Y-%m-%d")
-
-    def get_document_by_path(self, full_path: str) -> SDocDocument:
-        return self.traceability_index.document_tree.get_document_by_path(
-            full_path
-        )
 
     def get_source_file_path(self) -> str:
         return self.source_file.in_doctree_source_file_rel_path_posix

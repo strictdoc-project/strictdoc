@@ -88,12 +88,6 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             <= 10
         )
 
-    def has_requirements(self) -> bool:
-        for document_ in self.document_tree.document_list:
-            if document_.has_any_requirements():
-                return True
-        return False
-
     def has_parent_requirements(self, requirement: SDocNode) -> bool:
         assert isinstance(requirement, SDocNode)
         if not isinstance(requirement.reserved_uid, str):

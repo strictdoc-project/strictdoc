@@ -46,10 +46,6 @@ class AbstractBucket(ABC):
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    def create_link_weak(self, *, lhs_node: Any, rhs_node: Any):
-        raise NotImplementedError  # pragma: no cover
-
-    @abstractmethod
     def delete_link(
         self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
     ):

@@ -1,6 +1,5 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 from dataclasses import dataclass
-from datetime import datetime
 from typing import List, Optional
 
 from strictdoc import __version__
@@ -92,11 +91,3 @@ class SearchScreenViewObject:
 
     def render_local_anchor(self, node):
         return self.link_renderer.render_local_anchor(node)
-
-    def date_today(self):
-        return datetime.today().strftime("%Y-%m-%d")
-
-    def get_document_by_path(self, full_path: str):
-        return self.traceability_index.document_tree.get_document_by_path(
-            full_path
-        )

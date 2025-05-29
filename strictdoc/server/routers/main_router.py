@@ -17,7 +17,6 @@ from starlette.requests import Request
 from starlette.responses import FileResponse, HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
-from strictdoc import __version__
 from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
     P01_ReqIFToSDocConverter,
 )
@@ -29,7 +28,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
-from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
@@ -176,10 +174,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     def get_root(request: Request):
         return get_incoming_request(request, "index.html")
 
-    @router.get("/ping")
-    def get_ping():
-        return f"StrictDoc v{__version__}"
-
     @router.get("/actions/show_full_requirement", response_class=Response)
     def requirement__show_full(reference_mid: str):
         requirement: SDocNode = (
@@ -214,48 +208,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             "actions/node/show_full_node/stream_show_full_requirement.jinja",
             view_object=view_object,
             requirement=requirement,
-        )
-        return HTMLResponse(
-            content=output,
-            status_code=200,
-            headers={
-                "Content-Type": "text/vnd.turbo-stream.html",
-            },
-        )
-
-    @router.get("/actions/show_full_section", response_class=Response)
-    def section__show_full(reference_mid: str):
-        section: SDocSection = export_action.traceability_index.get_node_by_mid(
-            MID(reference_mid)
-        )
-        document: SDocDocument = assert_cast(
-            section.get_document(), SDocDocument
-        )
-        link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix(),
-            static_path=project_config.dir_for_sdoc_assets,
-        )
-        markup_renderer = MarkupRenderer.create(
-            markup=document.config.get_markup(),
-            traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
-            html_templates=html_generator.html_templates,
-            config=project_config,
-            context_document=document,
-        )
-        current_view: ViewElement = document.view.get_current_view(
-            project_config.view
-        )
-        output = env().render_template_as_markup(
-            "actions/node/show_full_node/stream_show_full_section.jinja",
-            renderer=markup_renderer,
-            section=section,
-            traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
-            document=document,
-            document_type=DocumentType.document(),
-            project_config=project_config,
-            current_view=current_view,
         )
         return HTMLResponse(
             content=output,

@@ -52,13 +52,6 @@ class SourceFileType(Enum):
 
         return cls.UNKNOWN
 
-    @staticmethod
-    def all() -> List[str]:  # noqa: A003
-        all_extensions: List[str] = []
-        for enum_value in SourceFileType:
-            all_extensions += enum_value.value
-        return all_extensions
-
 
 @auto_described
 class SourceFile:

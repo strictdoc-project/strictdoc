@@ -5,6 +5,10 @@
     <filename>html/01_basic_export/input1.html#REQ-1</filename>
   </compound>
   <compound kind="file">
+    <name>SECT-2</name>
+    <filename>html/01_basic_export/folder/input2.html#SECT-2</filename>
+  </compound>
+  <compound kind="file">
     <name>REQ-2</name>
     <filename>html/01_basic_export/folder/input2.html#REQ-2</filename>
   </compound>

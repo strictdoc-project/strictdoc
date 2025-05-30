@@ -33,10 +33,10 @@ class ExportAction:
         assert parallelizer
         self.project_config: ProjectConfig = project_config
         self.parallelizer = parallelizer
-        self.traceability_index: Optional[TraceabilityIndex] = None
+        self.traceability_index: TraceabilityIndex = self.build_index()
 
     @timing_decorator("Parse SDoc project tree")
-    def build_index(self) -> None:
+    def build_index(self) -> TraceabilityIndex:
         try:
             traceability_index: TraceabilityIndex = (
                 TraceabilityIndexBuilder.create(
@@ -48,6 +48,7 @@ class ExportAction:
             print(exc.to_print_message())  # noqa: T201
             sys.exit(1)
         self.traceability_index = traceability_index
+        return traceability_index
 
     @timing_decorator("Export SDoc")
     def export(self) -> None:

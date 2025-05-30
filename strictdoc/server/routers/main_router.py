@@ -148,7 +148,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         project_config=project_config,
         parallelizer=parallelizer,
     )
-    export_action.build_index()
 
     is_small_project = export_action.traceability_index.is_small_project()
 

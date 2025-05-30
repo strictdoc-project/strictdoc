@@ -1,0 +1,3 @@
+RUN: %expect_exit 2 %strictdoc server --port foobar . | filecheck %s
+
+CHECK: strictdoc server: error: argument --port: Must be an integer in the range [1024, 65000]

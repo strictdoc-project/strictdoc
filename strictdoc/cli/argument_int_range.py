@@ -2,7 +2,7 @@
 #
 # https://stackoverflow.com/a/61411431/598057
 import argparse
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 
 class IntRange:
@@ -11,12 +11,13 @@ class IntRange:
         self.imax: int = imax
 
     def __call__(self, arg: Any) -> Union[int, argparse.ArgumentTypeError]:
+        value: Optional[int]
         try:
             value = int(arg)
         except ValueError:
-            raise argparse.ArgumentTypeError("Must be an integer") from None
+            value = None
 
-        if self.imin <= value <= self.imax:
+        if value is not None and self.imin <= value <= self.imax:
             return value
 
         raise argparse.ArgumentTypeError(

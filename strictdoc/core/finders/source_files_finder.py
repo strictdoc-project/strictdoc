@@ -44,10 +44,10 @@ class SourceFilesFinder:
         file: File
         for _, file, _ in file_tree.iterate():
             in_doctree_source_file_rel_path = os.path.relpath(
-                file.root_path, doctree_root_abs_path
+                file.full_path, doctree_root_abs_path
             )
             last_folder_in_path: str = os.path.relpath(
-                file.get_folder_path(), doctree_root_abs_path
+                file.folder_path, doctree_root_abs_path
             )
             output_dir_full_path: str = os.path.join(
                 project_config.export_output_html_root,
@@ -56,16 +56,16 @@ class SourceFilesFinder:
             )
             Path(output_dir_full_path).mkdir(parents=True, exist_ok=True)
 
-            output_file_name = f"{file.get_file_name()}.html"
+            output_file_name = f"{file.file_name}.html"
             output_file_full_path = os.path.join(
                 output_dir_full_path, output_file_name
             )
 
-            level = file.get_folder_path().count(os.sep) - root_level
+            level = file.folder_path.count(os.sep) - root_level
 
             source_file = SourceFile(
                 level,
-                file.root_path,
+                file.full_path,
                 in_doctree_source_file_rel_path,
                 output_dir_full_path,
                 output_file_full_path,

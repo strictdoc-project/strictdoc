@@ -1,29 +1,17 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
-import collections
 import functools
 import os
 from typing import Dict, Iterator, List, Optional, Tuple, Union
+
+from typing_extensions import TypeAlias
 
 from strictdoc.helpers.path_filter import PathFilter
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.sorting import alphanumeric_sort
 
-
-class FileOrFolderEntry:
-    def get_full_path(self):
-        raise NotImplementedError  # pragma: no cover
-
-    def get_level(self):
-        raise NotImplementedError  # pragma: no cover
-
-    def is_folder(self):
-        raise NotImplementedError  # pragma: no cover
-
-    def mount_folder(self):
-        raise NotImplementedError  # pragma: no cover
+FileOrFolderEntry: TypeAlias = Union["File", "Folder"]
 
 
-class File(FileOrFolderEntry):
+class File:
     def __init__(self, level: int, full_path: str, rel_path: SDocRelativePath):
         assert os.path.isfile(full_path)
         assert os.path.isabs(full_path)
@@ -31,56 +19,40 @@ class File(FileOrFolderEntry):
 
         self.level: int = level
         self.full_path: str = full_path
-        self.root_path: str = full_path
         self.rel_path: SDocRelativePath = rel_path
+        self.folder_path: str = os.path.dirname(self.full_path)
+        self.mount_folder: str = os.path.basename(self.folder_path)
         self.file_name: str = os.path.basename(self.full_path)
         self.files = [self]
         self.subfolder_trees: List[Folder] = []
 
-    def __repr__(self):
-        return f"File: {self.full_path}"
-
-    def is_folder(self):
+    def is_folder(self) -> bool:
         return False
 
-    def has_extension(self, extension: str):
+    def has_extension(self, extension: str) -> bool:
         return self.full_path.endswith(extension)
 
-    def get_full_path(self) -> str:
-        return self.full_path
 
-    def get_level(self) -> int:
-        return self.level
-
-    def get_file_name(self) -> str:
-        return self.file_name
-
-    def get_folder_path(self) -> str:
-        return os.path.dirname(self.full_path)
-
-    def mount_folder(self) -> str:
-        return os.path.basename(os.path.dirname(self.root_path))
-
-
-class Folder(FileOrFolderEntry):
-    def __init__(self, root_path: str, rel_path: str, level):
-        assert os.path.isdir(root_path)
-        assert os.path.isabs(root_path)
+class Folder:
+    def __init__(self, full_path: str, rel_path: str, level: int) -> None:
+        assert os.path.isdir(full_path)
+        assert os.path.isabs(full_path)
         assert isinstance(rel_path, str)
 
-        self.root_path: str = root_path
+        self.full_path: str = full_path
         self.rel_path: str = rel_path if rel_path != "." else ""
-        self.folder_name: str = os.path.basename(os.path.normpath(root_path))
-        self.level = level
+        self.folder_name: str = os.path.basename(os.path.normpath(full_path))
+        self.mount_folder: str = os.path.basename(self.full_path)
+        self.level: int = level
         self.files: List[File] = []
         self.subfolder_trees: List[Folder] = []
         self.parent_folder: Optional[Folder] = None
         self.has_sdoc_content = False
 
-    def __repr__(self):
-        return f"Folder: (root_path: {self.root_path}, files: {self.files})"
+    def __repr__(self) -> str:
+        return f"Folder: (root_path: {self.full_path}, files: {self.files})"
 
-    def is_folder(self):
+    def is_folder(self) -> bool:
         return True
 
     def has_content(self) -> bool:
@@ -91,35 +63,26 @@ class Folder(FileOrFolderEntry):
                 return True
         return False
 
-    def get_full_path(self):
-        return self.root_path
-
-    def get_level(self):
-        return self.level
-
-    def mount_folder(self):
-        return os.path.basename(self.root_path)
-
-    def add_subfolder_tree(self, subfolder_tree):
+    def add_subfolder_tree(self, subfolder_tree: "Folder") -> None:
         assert isinstance(subfolder_tree, Folder)
         self.subfolder_trees.append(subfolder_tree)
 
-    def set_parent_folder(self, parent_folder):
+    def set_parent_folder(self, parent_folder: "Folder") -> None:
         assert isinstance(parent_folder, Folder)
         self.parent_folder = parent_folder
 
 
 class FileTree:
-    def __init__(self, *, root_folder_or_file):
-        self.root_folder_or_file: Union[Folder, File] = root_folder_or_file
+    def __init__(self, *, root_folder_or_file: FileOrFolderEntry) -> None:
+        self.root_folder_or_file: FileOrFolderEntry = root_folder_or_file
 
     @staticmethod
-    def create_single_file_tree(root_path) -> "FileTree":
+    def create_single_file_tree(root_path: str) -> "FileTree":
         single_file = File(1, root_path, SDocRelativePath(""))
         return FileTree(root_folder_or_file=single_file)
 
     def iterate(self) -> Iterator[Tuple[Union[Folder, File], File, str]]:
-        file_tree_mount_folder = self.root_folder_or_file.mount_folder()
+        file_tree_mount_folder = self.root_folder_or_file.mount_folder
 
         task_list = [self.root_folder_or_file]
         while len(task_list) > 0:
@@ -129,31 +92,6 @@ class FileTree:
                 yield self.root_folder_or_file, doc_file, file_tree_mount_folder
 
             task_list.extend(current_tree.subfolder_trees)
-
-    def iterate_directories(self):
-        task_list = collections.deque([self.root_folder_or_file])
-        while task_list:
-            file_tree_or_file = task_list.popleft()
-            if isinstance(file_tree_or_file, File):
-                yield file_tree_or_file
-            elif isinstance(file_tree_or_file, Folder):
-                if not file_tree_or_file.has_sdoc_content:
-                    continue
-                yield file_tree_or_file
-                task_list.extendleft(reversed(file_tree_or_file.files))
-                task_list.extendleft(
-                    reversed(file_tree_or_file.subfolder_trees)
-                )
-
-    def __str__(self):
-        dump = ""
-        for file_or_tree in self.iterate():
-            dump += str(file_or_tree)
-            dump += "\n"
-        return dump
-
-    def __repr__(self):
-        return self.__str__()
 
 
 class FileFinder:
@@ -165,7 +103,7 @@ class FileFinder:
         extensions: Optional[List[str]],
         include_paths: List[str],
         exclude_paths: List[str],
-    ):
+    ) -> FileTree:
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path), root_path
         assert not root_path.endswith("/"), root_path
@@ -242,7 +180,7 @@ class FileFinder:
                         )
                     )
 
-            def file_path_sort_key(lhs: File, rhs: File):
+            def file_path_sort_key(lhs: File, rhs: File) -> int:
                 return (rhs.file_name < lhs.file_name) - (
                     lhs.file_name < rhs.file_name
                 )
@@ -286,7 +224,10 @@ class FileFinder:
 class PathFinder:
     @staticmethod
     def find_directories(
-        root_path, directory, include_paths: List[str], exclude_paths: List[str]
+        root_path: str,
+        directory: str,
+        include_paths: List[str],
+        exclude_paths: List[str],
     ) -> List[str]:
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)

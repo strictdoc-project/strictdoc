@@ -66,7 +66,7 @@ def screen_should_display_file(
 
     if file.has_extension(".sdoc"):
         document = traceability_index.document_tree.get_document_by_path(
-            file.get_full_path()
+            file.full_path
         )
         if not document.document_is_included():
             return True

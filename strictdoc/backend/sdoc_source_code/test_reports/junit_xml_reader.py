@@ -42,7 +42,7 @@ class JUnitXMLReader:
     def read_from_file(
         cls: "JUnitXMLReader", doc_file: File, project_config: ProjectConfig
     ) -> SDocDocument:
-        with open(doc_file.get_full_path(), encoding="UTF-8") as file:
+        with open(doc_file.full_path, encoding="UTF-8") as file:
             content = file.read()
         return cls.read_from_string(content, doc_file, project_config)
 
@@ -63,7 +63,7 @@ class JUnitXMLReader:
         except Exception as exception:  # pylint: disable=broad-except
             raise RuntimeError(str(exception)) from None
 
-        xml_format = JUnitXMLFormat.create_from_path(doc_file.get_full_path())
+        xml_format = JUnitXMLFormat.create_from_path(doc_file.full_path)
 
         document = SDocDocument(
             mid=None,

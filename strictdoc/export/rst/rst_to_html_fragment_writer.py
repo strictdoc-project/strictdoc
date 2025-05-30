@@ -67,8 +67,8 @@ class RstToHtmlFragmentWriter:
     def write(self, rst_fragment: str, use_cache: bool = True) -> Markup:
         assert isinstance(rst_fragment, str), rst_fragment
 
-        # FIXME: This is broken.
-        if len(rst_fragment) < 0:
+        # Do not try to cache very small fragments.
+        if len(rst_fragment) < 40:
             return Markup(self._write_no_cache(rst_fragment))
 
         path_to_rst_fragment_bucket_dir = os.path.join(

@@ -7,7 +7,8 @@ from typing import Optional
 
 def register_code_coverage_hook() -> None:
     if not "COVERAGE_PROCESS_START" in os.environ:
-        return
+        # This branch will never be checked by the coverage.
+        return  # pragma: no cover
 
     import coverage
 

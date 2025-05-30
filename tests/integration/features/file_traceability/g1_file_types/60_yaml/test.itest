@@ -1,0 +1,10 @@
+RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+CHECK: Published: Example: Traceability between requirements and source files
+
+RUN: %check_exists --file "%S/Output/html/_source_files/file.yaml.html"
+
+RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/example.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.yaml.html#REQ-001#1#5">
+
+RUN: %cat %S/Output/html/_source_files/file.yaml.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: href="../60_yaml/example.html#REQ-001"

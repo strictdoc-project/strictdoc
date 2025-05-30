@@ -17,18 +17,11 @@ def unescape(string: str) -> str:
 
 def sanitize_html_form_field(field: str, multiline: bool) -> str:
     assert isinstance(field, str)
-    if len(field) > 0:
-        sanitized_field: str = field.strip()
-        if len(sanitized_field) > 0:
-            if multiline:
-                return REGEX_TRAILING_WHITESPACE_MULTILINE.sub(
-                    "\n", sanitized_field
-                )
-            sanitized_field = sanitized_field.replace("\r\n", "")
-            return REGEX_TRAILING_WHITESPACE_SINGLELINE.sub(
-                " ", sanitized_field
-            )
-    return ""
+    sanitized_field: str = field.strip()
+    if multiline:
+        return REGEX_TRAILING_WHITESPACE_MULTILINE.sub("\n", sanitized_field)
+    sanitized_field = sanitized_field.replace("\r\n", "")
+    return REGEX_TRAILING_WHITESPACE_SINGLELINE.sub(" ", sanitized_field)
 
 
 def is_uppercase_underscore_string(string: str) -> bool:

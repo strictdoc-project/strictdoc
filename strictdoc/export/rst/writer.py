@@ -124,20 +124,15 @@ class RSTWriter:
                 else:
                     output += part
             elif isinstance(part, InlineLink):
-                node_or_none = self.index.get_linkable_node_by_uid_weak(
-                    part.link
-                )
-                # Labels that aren’t placed before a section title can still be
+                node_or_none = self.index.get_linkable_node_by_uid(part.link)
+                # Labels that aren't placed before a section title can still be
                 # referenced, but you must give the link an explicit title,
                 # using this syntax: :ref:`Link title <label-name>`.
                 # https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
-                if node_or_none is not None:
-                    node_display_title = node_or_none.get_display_title(
-                        include_toc_number=False
-                    )
-                    output += f":ref:`{node_display_title} <{part.link}>`"
-                else:
-                    output += f":ref:`{part.link}`"
+                node_display_title = node_or_none.get_display_title(
+                    include_toc_number=False
+                )
+                output += f":ref:`{node_display_title} <{part.link}>`"
             elif isinstance(part, Anchor):
                 output += f".. _{part.value}:\n"
             else:

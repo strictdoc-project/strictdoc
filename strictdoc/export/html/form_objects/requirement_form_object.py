@@ -262,8 +262,7 @@ class RequirementFormObject(ErrorObject):
         element_type = assert_cast(request_form_dict["element_type"], str)
         requirement_fields_dict = assert_cast(requirement_dict["fields"], dict)
         for _, field_dict in requirement_fields_dict.items():
-            if not isinstance(field_dict, dict):
-                raise TypeError(f"Expected a dict, but got {type(field_dict)}")
+            assert isinstance(field_dict, dict), type(field_dict)
 
             field_name = field_dict["name"]
             field_value = field_dict["value"]

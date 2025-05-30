@@ -56,9 +56,6 @@ class QueryParsingProcessor:
     def get_default_processors(self):
         return {}
 
-    def process_document(self, query: Query):
-        pass
-
 
 class QueryReader:
     def __init__(self, path_to_output_root: str = "NOT_RELEVANT"):

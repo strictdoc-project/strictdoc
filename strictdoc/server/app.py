@@ -17,7 +17,7 @@ from strictdoc.server.routers.other_router import create_other_router
 
 # Define O_TEMPORARY for Windows only
 if sys.platform == "win32":
-    O_TEMPORARY = os.O_TEMPORARY
+    O_TEMPORARY = os.O_TEMPORARY  # pragma: no cover
 else:
     O_TEMPORARY = 0
 

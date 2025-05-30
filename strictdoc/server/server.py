@@ -62,8 +62,8 @@ def run_strictdoc_server(
         # Not doing any resolutions seems to work fine with StrictDoc, so using
         # a 'do nothing' stub and an assert below to make sure that this function
         # is not removed by uvicorn.
-        def dont_resolve_reload_patterns(arg1, arg2):
-            return arg1, list(map(Path, arg2))
+        def dont_resolve_reload_patterns(arg1, arg2):  # pragma: no cover
+            return arg1, list(map(Path, arg2))  # pragma: no cover
 
         assert hasattr(uvicorn.config, "resolve_reload_patterns"), (
             "REGRESSION: The function 'resolve_reload_patterns' is not defined "

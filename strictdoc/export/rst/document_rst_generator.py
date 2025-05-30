@@ -7,11 +7,6 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.writer import RSTWriter
 
 
-def get_path_components(folder_path):
-    path = os.path.normpath(folder_path)
-    return path.split(os.sep)
-
-
 class DocumentRSTGenerator:
     @staticmethod
     def export_tree(traceability_index: TraceabilityIndex, output_rst_root):

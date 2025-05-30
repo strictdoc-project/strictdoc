@@ -114,14 +114,7 @@ class RSTWriter:
         )
         return output
 
-    def _print_text(self, text: SDocNode):
-        assert isinstance(text, SDocNode)
-        return self._print_node_field(text.get_content_field()) + "\n"
-
     def _print_node_field(self, object_with_parts: SDocNodeField):
-        if len(object_with_parts.parts) == 0:
-            return ""
-
         output = ""
         prev_part = None
         for part in object_with_parts.parts:

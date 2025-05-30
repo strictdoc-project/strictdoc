@@ -44,6 +44,7 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
             f'//body[@data-viewtype="{viewtype}"]',
             by=By.XPATH,
         )
+        self.test_case.wait_for_ready_state_complete()
 
     # Header.
     # Document title (all views)

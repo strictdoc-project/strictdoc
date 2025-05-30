@@ -20,6 +20,7 @@ class Screen_ProjectStatistics:  # pylint: disable=invalid-name
             '//body[@data-viewtype="project-statistics"]',
             by=By.XPATH,
         )
+        self.test_case.wait_for_ready_state_complete()
         self.assert_no_js_and_404_errors()
 
     def assert_no_js_and_404_errors(self) -> None:

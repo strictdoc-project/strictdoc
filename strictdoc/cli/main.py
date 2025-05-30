@@ -178,6 +178,8 @@ def main() -> None:
     #             anything serious appears against using it.
     if sys.platform != "win32":
         multiprocessing.set_start_method("fork", force=True)
+    else:
+        pass  # pragma: no cover
 
     # How to make python 3 print() utf8
     # https://stackoverflow.com/a/3597849/598057
@@ -193,8 +195,6 @@ def main() -> None:
     except StrictDocException as exception:
         print(f"error: {exception.args[0]}")  # noqa: T201
         sys.exit(1)
-    except Exception as exc:
-        raise exc
     finally:
         parallelizer.shutdown()
 

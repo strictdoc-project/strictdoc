@@ -61,4 +61,4 @@ class ImportAction:
             ) as output_file:
                 output_file.write(document_content)
         else:
-            raise NotImplementedError()
+            raise NotImplementedError()  # pragma: no cover

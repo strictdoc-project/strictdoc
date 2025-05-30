@@ -148,16 +148,13 @@ MULTIPLE_CHOICE_FIELD_5: review-of-design, hardware-test
     assert isinstance(document, SDocDocument)
 
     document.meta = create_fake_document_meta()
-    try:
-        SDocValidator.validate_document(document)
-        SDocValidator.validate_node(
-            assert_cast(document.section_contents[0], SDocNode),
-            document.grammar,
-            "fake.path.sdoc",
-            auto_uid_mode=False,
-        )
-    except Exception as exc_:
-        raise exc_
+    SDocValidator.validate_document(document)
+    SDocValidator.validate_node(
+        assert_cast(document.section_contents[0], SDocNode),
+        document.grammar,
+        "fake.path.sdoc",
+        auto_uid_mode=False,
+    )
 
     writer = SDWriter(default_project_config)
     output = writer.write(document)

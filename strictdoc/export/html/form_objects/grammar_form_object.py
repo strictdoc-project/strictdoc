@@ -110,8 +110,7 @@ class GrammarFormObject(ErrorObject):
             )
 
         for field_mid, field_dict in document_grammar_fields.items():
-            if not isinstance(field_dict, dict):
-                raise TypeError(f"Expected a dict, but got {type(field_dict)}")
+            assert isinstance(field_dict, dict), type(field_dict)
 
             is_new = field_dict["is_new"] == "true"
             field_name = field_dict["field_name"]

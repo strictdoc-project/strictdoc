@@ -1,0 +1,5 @@
+foo:
+# @sdoc[REQ-002, REQ-003]
+  bar:
+    baz: 1
+# @sdoc[/REQ-002, REQ-003]

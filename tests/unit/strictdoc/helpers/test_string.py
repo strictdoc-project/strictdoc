@@ -5,6 +5,15 @@ from strictdoc.helpers.string import (
 )
 
 
+def test_sanitize_00_does_nothing_on_empty_string():
+    field = ""
+    sanitized_field = sanitize_html_form_field(field, multiline=False)
+    assert sanitized_field == ""
+
+    sanitized_field = sanitize_html_form_field(field, multiline=True)
+    assert sanitized_field == ""
+
+
 def test_sanitize_01_trims_all_fields_in_initializer_spaces():
     field = """
         Hello world!        
@@ -27,6 +36,16 @@ def test_sanitize_02_trims_all_fields_in_initializer_newlines():
     assert sanitized_field == "Hello world!"
 
 
+def test_sanitize_04_single_line_removes_all_newlines():
+    field = """
+        Hello world!        
+        Hello world!
+        Hello world!
+    """  # noqa: W291
+    sanitized_field = sanitize_html_form_field(field, multiline=False)
+    assert sanitized_field == "Hello world! Hello world! Hello world!"
+
+
 def test_sanitize_10_removes_all_trailing_whitespace_in_initializer():
     # section statement below contains newlines:
     field = """
@@ -38,16 +57,6 @@ Hello world!
     """  # noqa: W291
     sanitized_field = sanitize_html_form_field(field, multiline=True)
     assert sanitized_field == "Hello world!\n\nHello world!\n\nHello world!"
-
-
-def test_sanitize_04_single_line_removes_all_newlines():
-    field = """
-        Hello world!        
-        Hello world!
-        Hello world!
-    """  # noqa: W291
-    sanitized_field = sanitize_html_form_field(field, multiline=False)
-    assert sanitized_field == "Hello world! Hello world! Hello world!"
 
 
 def test_is_safe_alphanumeric_string():

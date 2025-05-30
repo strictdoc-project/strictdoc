@@ -146,8 +146,7 @@ class GrammarElementFormObject(ErrorObject):
         #
         document_grammar_fields = request_form_dict["document_grammar_field"]
         for field_mid, field_dict in document_grammar_fields.items():
-            if not isinstance(field_dict, dict):
-                raise TypeError(f"Expected a dict, but got {type(field_dict)}")
+            assert isinstance(field_dict, dict), type(field_dict)
 
             field_name = field_dict["field_name"]
             field_human_title = field_dict.get("field_human_title")
@@ -171,8 +170,7 @@ class GrammarElementFormObject(ErrorObject):
             "document_grammar_relation", {}
         )
         for field_mid, field_dict in document_grammar_relations.items():
-            if not isinstance(field_dict, dict):
-                raise TypeError(f"Expected a dict, but got {type(field_dict)}")
+            assert isinstance(field_dict, dict), type(field_dict)
 
             field_type = field_dict["type"]
             field_role = field_dict["role"].strip()

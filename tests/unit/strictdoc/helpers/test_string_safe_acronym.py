@@ -29,3 +29,9 @@ def test_05():
     input_string = "F.A.Q"
     result = create_safe_acronym(input_string)
     assert result == "FAQ"
+
+
+def test_06():
+    input_string = "Specification - Subsystem A"
+    result = create_safe_acronym(input_string)
+    assert result == "SSA"

@@ -127,9 +127,6 @@ class SourceFileViewObject:
             range_end=range_end,
         )
 
-    def render_node_title(self, node: SDocNode) -> Markup:
-        return Markup(node.get_display_title())
-
     def render_node_statement(self, node: SDocNode) -> Markup:
         return self.markup_renderer.render_node_statement(
             DocumentType.document(), node

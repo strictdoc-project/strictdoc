@@ -11,7 +11,7 @@
           >{% include "_res/svg__separator.jinja.html" %}{{ folder_or_file.rel_path }}</div>
         {% endif %}
       {% elif folder_or_file.has_extension(".sdoc") %}
-        {%- set document = document_tree.get_document_by_path(folder_or_file.get_full_path()) %}
+        {%- set document = document_tree.get_document_by_path(folder_or_file.full_path) %}
         {% if not document.document_is_included() %}
         {% set document_md5 = self_stats.get_md5_by_node(document) %}
         {% set document_modified = not other_stats.contains_document_md5(document_md5) %}

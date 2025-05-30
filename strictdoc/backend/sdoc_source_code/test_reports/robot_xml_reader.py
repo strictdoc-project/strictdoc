@@ -226,11 +226,11 @@ class RobotOutputXMLReader:
         doc_file: File,
         project_config: ProjectConfig,
     ) -> SDocDocument:
-        execution_result = ExecutionResult(doc_file.get_full_path())
+        execution_result = ExecutionResult(doc_file.full_path)
         sdoc_visitor = SdocVisitor(project_config)
         execution_result.visit(sdoc_visitor)
         if sdoc_visitor.document is None:
             raise RuntimeError(
-                f"No test suite could be parsed from {doc_file.get_full_path()}"
+                f"No test suite could be parsed from {doc_file.full_path}"
             )
         return sdoc_visitor.document

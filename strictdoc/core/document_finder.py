@@ -67,7 +67,7 @@ class DocumentFinder:
         project_config: ProjectConfig,
     ) -> Tuple[File, str, Union[SDocDocument, DocumentGrammar]]:
         _, doc_file, file_tree_mount_folder = document_triple
-        doc_full_path = doc_file.get_full_path()
+        doc_full_path = doc_file.full_path
 
         with measure_performance(
             f"Reading SDOC: {os.path.basename(doc_full_path)}"
@@ -148,7 +148,7 @@ class DocumentFinder:
                 map_grammars_by_filenames[doc_file.file_name] = document
                 continue
 
-            input_doc_full_path: str = doc_file.get_full_path()
+            input_doc_full_path: str = doc_file.full_path
             map_docs_by_paths[input_doc_full_path] = document
             document_list.append(document)
 

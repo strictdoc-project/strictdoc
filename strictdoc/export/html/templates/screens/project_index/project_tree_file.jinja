@@ -1,4 +1,4 @@
-{%- set document = view_object.traceability_index.document_tree.get_document_by_path(file.get_full_path()) %}
+{%- set document = view_object.traceability_index.document_tree.get_document_by_path(file.full_path) %}
 {%- set is_included = document.document_is_included() %}
 
 <a
@@ -22,7 +22,7 @@
       {{ document.title }}
     </div>
     <div class="project_tree-file-name">
-      {{ file.get_file_name() }}
+      {{ file.file_name }}
     </div>
     {%- if is_included -%}
       <div class="project_tree-file-name">

@@ -26,20 +26,20 @@ def test_01():
         assert isinstance(file_tree.root_folder_or_file, Folder)
 
         folder: Folder = file_tree.root_folder_or_file
-        assert folder.root_path == tmp_dir
+        assert folder.full_path == tmp_dir
         assert len(folder.files) == 3
 
         found_file1 = folder.files[0]
         assert isinstance(found_file1, File)
-        assert found_file1.root_path == path_to_file1
+        assert found_file1.full_path == path_to_file1
 
         found_file2 = folder.files[1]
         assert isinstance(found_file2, File)
-        assert found_file2.root_path == path_to_file2
+        assert found_file2.full_path == path_to_file2
 
         found_file3 = folder.files[2]
         assert isinstance(found_file3, File)
-        assert found_file3.root_path == path_to_file3
+        assert found_file3.full_path == path_to_file3
 
 
 def test_50_include_paths():
@@ -63,12 +63,12 @@ def test_50_include_paths():
         assert isinstance(file_tree.root_folder_or_file, Folder)
 
         folder: Folder = file_tree.root_folder_or_file
-        assert folder.root_path == tmp_dir
+        assert folder.full_path == tmp_dir
         assert len(folder.files) == 1
 
         found_file1 = folder.files[0]
         assert isinstance(found_file1, File)
-        assert found_file1.root_path == path_to_file1
+        assert found_file1.full_path == path_to_file1
 
 
 def test_52_exclude_paths():
@@ -92,16 +92,16 @@ def test_52_exclude_paths():
         assert isinstance(file_tree.root_folder_or_file, Folder)
 
         folder: Folder = file_tree.root_folder_or_file
-        assert folder.root_path == tmp_dir
+        assert folder.full_path == tmp_dir
         assert len(folder.files) == 2
 
         found_file1 = folder.files[0]
         assert isinstance(found_file1, File)
-        assert found_file1.root_path == path_to_file1
+        assert found_file1.full_path == path_to_file1
 
         found_file2 = folder.files[1]
         assert isinstance(found_file2, File)
-        assert found_file2.root_path == path_to_file2
+        assert found_file2.full_path == path_to_file2
 
 
 def test_53_both_include_and_exclude_paths():
@@ -125,13 +125,13 @@ def test_53_both_include_and_exclude_paths():
         assert isinstance(file_tree.root_folder_or_file, Folder)
 
         folder: Folder = file_tree.root_folder_or_file
-        assert folder.root_path == tmp_dir
+        assert folder.full_path == tmp_dir
         assert len(folder.files) == 2
 
         found_file1 = folder.files[0]
         assert isinstance(found_file1, File)
-        assert found_file1.root_path == path_to_file1
+        assert found_file1.full_path == path_to_file1
 
         found_file2 = folder.files[1]
         assert isinstance(found_file2, File)
-        assert found_file2.root_path == path_to_file2
+        assert found_file2.full_path == path_to_file2

@@ -17,13 +17,13 @@
       {%- endif -%}
       title="{{ source_file.in_doctree_source_file_rel_path_posix }}"
     >
-      <div class="project_coverage-file-indent" style="padding-left:{{ folder.get_level() }}0px"></div>
+      <div class="project_coverage-file-indent" style="padding-left:{{ folder.level }}0px"></div>
       <div class="project_coverage-file-details">
         <div class="project_coverage-file-title">
           <span class="project_coverage-file-icon">
             {%- include "_res/svg_ico16_file.jinja" -%}
           </span>
-          {{ file.get_file_name() }}
+          {{ file.file_name }}
         </div>
         <div class="project_coverage-file-path">
           {{ source_file.in_doctree_source_file_rel_path_posix }}

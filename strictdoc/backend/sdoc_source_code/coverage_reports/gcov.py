@@ -31,7 +31,7 @@ class GCovJSONReader:
     def read_from_file(
         cls: "GCovJSONReader", doc_file: File, project_config: ProjectConfig
     ) -> SDocDocument:
-        with open(doc_file.get_full_path(), encoding="UTF-8") as file:
+        with open(doc_file.full_path, encoding="UTF-8") as file:
             content = file.read()
         return cls.read_from_string(content, doc_file, project_config)
 

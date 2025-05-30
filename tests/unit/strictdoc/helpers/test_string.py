@@ -66,11 +66,8 @@ def test_is_safe_alphanumeric_string():
 
 def test_interpolate_at_pattern_lazy():
     def resolver(variable_name):
-        if variable_name == "GIT_VERSION":
-            return "abcd123"
-        elif variable_name == "GIT_BRANCH":
-            return "main"
-        return variable_name
+        replacements = {"GIT_VERSION": "abcd123", "GIT_BRANCH": "main"}
+        return replacements[variable_name]
 
     result = interpolate_at_pattern_lazy("@GIT_VERSION, @GIT_BRANCH", resolver)
     assert result == "abcd123, main"

@@ -13,9 +13,10 @@ import signal
 import socket
 import subprocess
 import sys
+import time
 from contextlib import ExitStack, closing
 from queue import Empty, Queue
-from threading import Thread
+from threading import Event, Thread
 from time import sleep
 from typing import Dict, List, Optional, Tuple
 
@@ -35,7 +36,7 @@ class ReadTimeout(Exception):
 
 class ServerStderrReadThread(Thread):
     def __init__(self, server: "SDocTestServer", process_stderr):
-        super().__init__()
+        super().__init__(daemon=True)
         self.server: SDocTestServer = server
         self.process_stderr = process_stderr
 
@@ -50,11 +51,11 @@ class TestStderrLogThread(Thread):
         super().__init__()
         self.server: SDocTestServer = server
         self.stderr_queue = server.stderr_queue
-        self.done = False
+        self.stop_event = Event()
 
     def run(self):
         stderr_log_file = self.server.log_file_err
-        while not self.done:
+        while not self.stop_event.is_set():
             try:
                 line_bytes = self.stderr_queue.get(
                     timeout=test_environment.poll_timeout_seconds
@@ -111,7 +112,7 @@ class SDocTestServer:
             "127.0.0.1", self.server_port
         ):
             raise OSError(
-                "TestSDocServer: Cannot start a server because there is another"
+                "SDocTestServer: Cannot start a server because there is another"
                 f"server already running at the port: {self.server_port}."
             )
         path_to_tmp_dir = get_portable_temp_dir()
@@ -193,27 +194,116 @@ class SDocTestServer:
 
         sleep(test_environment.warm_up_interval_seconds)
         print(  # noqa: T201
-            f"TestSDocServer: "
+            f"SDocTestServer: "
             f"Server is up and running on port: {self.server_port}."
         )
 
     def close(self, *, exit_due_exception: Optional[Exception]) -> None:
+        if self.process is not None:
+            try:
+                parent = psutil.Process(self.process.pid)
+            except NoSuchProcess:
+                print(  # noqa: T201
+                    "SDocTestServer: "
+                    "no need to stop the server process because it is not running: "
+                    f"{self.process.pid}.",
+                    flush=True,
+                )
+                return
+
+            if not parent.is_running():
+                return
+
+            child_processes = parent.children(recursive=True)
+            child_processes_ids = list(
+                map(lambda p: p.pid, parent.children(recursive=True))
+            )
+            print(  # noqa: T201
+                "SDocTestServer: "
+                "stopping server and worker processes: "
+                f"{parent.pid} -> {child_processes_ids}"
+            )
+
+            #
+            # Sending SIGTERM to StrictDoc's FastAPI.
+            # When running with code coverage, the FastAPI server subscribes to
+            # SIGTERM in order to save the current code coverage when the
+            # process is being terminated.
+            #
+            self.process.send_signal(signal.SIGTERM)
+            self.process.wait(timeout=1)
+            self.process.terminate()
+
+            for process_ in child_processes:
+                if process_.is_running():
+                    process_.send_signal(signal.SIGTERM)
+
+            #
+            # Wait for all processes to exit gracefully.
+            #
+            start_time = time.monotonic()
+            timeout = 5
+            while True:
+                alive = [p for p in child_processes if p.is_running()]
+                if len(alive) == 0:
+                    print(  # noqa: T201
+                        "SDocTestServer: "
+                        "server and worker processes were terminated "
+                        "successfully: "
+                        f"{parent.pid} -> {child_processes_ids}"
+                    )
+                    break
+
+                if (time.monotonic() - start_time) > timeout:
+                    print(  # noqa: T201
+                        "SDocTestServer: "
+                        "Timeout reached. Some StrictDoc server child processes "
+                        "did not terminate: "
+                        f"{alive}."
+                    )
+                    for process in child_processes:
+                        try:
+                            if process.is_running():
+                                process.kill()
+                        except psutil.NoSuchProcess:
+                            continue
+                    break
+
+                time.sleep(0.1)
+
+            start_time = datetime.datetime.now()
+            while True:
+                if not SDocTestServer.check_existing_connection(
+                    "127.0.0.1", self.server_port
+                ):
+                    break
+
+                check_time = datetime.datetime.now()
+                diff_time = (check_time - start_time).total_seconds()
+                if diff_time > float(test_environment.server_term_timeout):
+                    raise OSError(
+                        "SDocTestServer: Sent SIGTERM to a server but could not"
+                        "wait until the server port is released: "
+                        f"{self.server_port}."
+                    )
+                sleep(0.1)
+
         assert isinstance(
             self.server_stderr_capture_thread, ServerStderrReadThread
         ), self.server_stderr_capture_thread
 
         if self.test_stderr_log_thread is not None:
-            self.test_stderr_log_thread.done = True
+            self.test_stderr_log_thread.stop_event.set()
             self.test_stderr_log_thread.join()
+
+        if self.server_stderr_capture_thread is not None:
+            self.server_stderr_capture_thread.join()
 
         self.exit_stack.close()
 
-        if self.process is None:
-            return
-
         if exit_due_exception is not None:
             print(  # noqa: T201
-                "\nTestSDocServer: exiting due to an exception.\n"
+                "\nSDocTestServer: exiting due to an exception.\n"
             )
             print(f"--- Exception ---\n {exit_due_exception}")  # noqa: T201
             last_lines_number = 25
@@ -230,66 +320,6 @@ class SDocTestServer:
 
             with open(self.path_to_err_log, encoding="utf8") as err_temp_file:
                 print(err_temp_file.read())  # noqa: T201
-
-        try:
-            parent = psutil.Process(self.process.pid)
-        except NoSuchProcess:
-            print(  # noqa: T201
-                "TestSDocServer: "
-                "no need to stop the server process because it is not running: "
-                f"{self.process.pid}.",
-                flush=True,
-            )
-            return
-
-        if not parent.is_running():
-            return
-
-        child_processes = parent.children(recursive=True)
-        child_processes_ids = list(
-            map(lambda p: p.pid, parent.children(recursive=True))
-        )
-        print(  # noqa: T201
-            "TestSDocServer: "
-            "stopping server and worker processes: "
-            f"{parent.pid} -> {child_processes_ids}"
-        )
-
-        #
-        # Sending SIGTERM to StrictDoc's FastAPI which subscribes to SIGTERM to
-        # save the current code coverage when the process is being terminated.
-        #
-        self.process.send_signal(signal.SIGTERM)
-        self.process.wait(timeout=1)
-        self.process.terminate()
-
-        for process in child_processes:
-            if process.is_running():
-                process.send_signal(signal.SIGTERM)
-
-        for process in child_processes:
-            try:
-                if process.is_running():
-                    process.terminate()
-            except psutil.NoSuchProcess:
-                continue
-
-        start_time = datetime.datetime.now()
-        while True:
-            if not SDocTestServer.check_existing_connection(
-                "127.0.0.1", self.server_port
-            ):
-                break
-
-            check_time = datetime.datetime.now()
-            diff_time = (check_time - start_time).total_seconds()
-            if diff_time > float(test_environment.server_term_timeout):
-                raise OSError(
-                    "TestSDocServer: Sent SIGTERM to a server but could not"
-                    "wait until the server port is released: "
-                    f"{self.server_port}."
-                )
-            sleep(0.1)
 
     def get_host_and_port(self):
         return f"http://localhost:{self.server_port}"

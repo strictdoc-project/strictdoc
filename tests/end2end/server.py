@@ -315,7 +315,6 @@ class SDocTestServer:
                     "-m",
                     "coverage",
                     "run",
-                    "--append",
                     f"--rcfile={path_to_coverage_rc}",
                     f"--data-file={path_to_coverage}",
                 ]

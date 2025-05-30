@@ -498,7 +498,7 @@ def coverage_combine(context):
             coverage combine
                 --data-file build/coverage/.coverage.combined
                 --keep
-                build/coverage/end2end_strictdoc/.coverage
+                build/coverage/end2end_strictdoc/.coverage.*
                 build/coverage/integration/.coverage.*
                 build/coverage/integration_html2pdf/.coverage.*
                 build/coverage/unit/.coverage

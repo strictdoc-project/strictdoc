@@ -178,7 +178,7 @@ def main() -> None:
     #             anything serious appears against using it.
     if sys.platform != "win32":
         multiprocessing.set_start_method("fork", force=True)
-    else:
+    else:  # pragma: no cover
         pass  # pragma: no cover
 
     # How to make python 3 print() utf8

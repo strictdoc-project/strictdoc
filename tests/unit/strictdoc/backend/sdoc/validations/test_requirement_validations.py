@@ -53,7 +53,7 @@ RELATIONS:
     document = reader.read(input_sdoc)
 
     document_iterator = DocumentCachingIterator(document)
-    with pytest.raises(Exception) as exc_info:
+    with pytest.raises(StrictDocSemanticError) as exc_info:
         for node_ in document_iterator.all_content(
             print_fragments=False, print_fragments_from_files=False
         ):
@@ -62,6 +62,7 @@ RELATIONS:
                 document_grammar=document.grammar,
                 path_to_sdoc_file="test.sdoc",
             )
+        raise AssertionError  # pragma: no cover
 
     exception: StrictDocSemanticError = exc_info.value
     assert exception.title == (
@@ -90,7 +91,7 @@ RELATIONS:
     document = reader.read(input_sdoc)
 
     document_iterator = DocumentCachingIterator(document)
-    with pytest.raises(Exception) as exc_info:
+    with pytest.raises(StrictDocSemanticError) as exc_info:
         for node_ in document_iterator.all_content(
             print_fragments=False, print_fragments_from_files=False
         ):
@@ -99,6 +100,7 @@ RELATIONS:
                 document_grammar=document.grammar,
                 path_to_sdoc_file="test.sdoc",
             )
+        raise AssertionError  # pragma: no cover
 
     exception: StrictDocSemanticError = exc_info.value
     assert exception.title == (

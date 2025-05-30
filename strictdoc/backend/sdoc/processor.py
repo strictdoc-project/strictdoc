@@ -141,14 +141,14 @@ class SDocParsingProcessor:
                 self.parse_context.path_to_sdoc_dir, document_from_file.file
             )
         )
-        if not os.path.isfile(resolved_path_to_fragment_file):
-            raise StrictDocException(
-                "[DOCUMENT_FROM_FILE]: Path to a document file does not exist: "
-                f"{document_from_file.file}."
-            )
         if not resolved_path_to_fragment_file.endswith(".sdoc"):
             raise StrictDocException(
                 '[DOCUMENT_FROM_FILE]: A document file name must have ".sdoc" extension: '
+                f"{document_from_file.file}."
+            )
+        if not os.path.isfile(resolved_path_to_fragment_file):
+            raise StrictDocException(
+                "[DOCUMENT_FROM_FILE]: Path to a document file does not exist: "
                 f"{document_from_file.file}."
             )
 

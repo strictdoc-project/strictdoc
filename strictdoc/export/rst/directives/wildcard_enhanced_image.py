@@ -35,34 +35,35 @@ class WildcardEnhancedImage(Image):
         # """,
         # the self.arguments looks like this:
         # ['some_picture.*']  # noqa: ERA001
-        if len(self.arguments) > 0:
-            rel_path_to_image = self.arguments[0]
-            if rel_path_to_image.endswith(".*"):
-                rel_path_to_image_no_wc = rel_path_to_image[:-2]
-                for extension in WildcardEnhancedImage.WILDCARD_EXTENSIONS:
-                    rel_path_to_image_with_extension = (
-                        rel_path_to_image_no_wc + "." + extension
+        assert len(self.arguments) > 0
+        rel_path_to_image = self.arguments[0]
+        if rel_path_to_image.endswith(".*"):
+            rel_path_to_image_no_wc = rel_path_to_image[:-2]
+            for extension in WildcardEnhancedImage.WILDCARD_EXTENSIONS:
+                rel_path_to_image_with_extension = (
+                    rel_path_to_image_no_wc + "." + extension
+                )
+                full_path_to_image_with_extension = os.path.join(
+                    WildcardEnhancedImage.current_reference_path,
+                    rel_path_to_image_with_extension,
+                )
+                if os.path.exists(full_path_to_image_with_extension):
+                    # We have found a matching file, let's use it.
+                    self.arguments[0] = os.path.join(
+                        rel_path_to_image_with_extension
                     )
-                    full_path_to_image_with_extension = os.path.join(
-                        WildcardEnhancedImage.current_reference_path,
-                        rel_path_to_image_with_extension,
-                    )
-                    if os.path.exists(full_path_to_image_with_extension):
-                        # We have found a matching file, let's use it.
-                        self.arguments[0] = os.path.join(
-                            rel_path_to_image_with_extension
-                        )
-                        break
-                else:
-                    # If the argument is not provided, raise an error
-                    error_message = (
-                        f"No image could be found to match the wildcard: "
-                        f"{rel_path_to_image}"
-                    )
-                    self.state_machine.reporter.error(
-                        error_message, line=self.lineno
-                    )
-                    # Return an empty list of nodes to stop the rendering
-                    # process.
-                    return []
+                    break
+            else:
+                # If the argument is not provided, raise an error
+                error_message = (
+                    f"No image could be found to match the wildcard: "
+                    f"{rel_path_to_image}"
+                )
+                self.state_machine.reporter.error(
+                    error_message, line=self.lineno
+                )
+                # Return an empty list of nodes to stop the rendering
+                # process.
+                return []
+
         return super().run()

@@ -25,6 +25,7 @@ from queue import Empty
 from typing import Any, Callable, Iterable, Tuple, Union
 
 from strictdoc.helpers.coverage import register_code_coverage_hook
+from strictdoc.helpers.exception import StrictDocException
 
 MultiprocessingLambdaType = Callable[[Any], Any]
 
@@ -35,11 +36,6 @@ class Parallelizer(ABC):
         if parallelize:
             return MultiprocessingParallelizer()
         return NullParallelizer()
-
-    @property
-    @abstractmethod
-    def parallelization_enabled(self) -> bool:
-        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def run_parallel(
@@ -76,7 +72,7 @@ class MultiprocessingParallelizer(Parallelizer):
 
             for process in self.processes:
                 process.start()
-        except OSError as exception:
+        except OSError as exception:  # pragma: no cover
             raise OSError(
                 "OSError when initializing the Parallelizer. "
                 f"Underlying exception: {exception}"
@@ -96,13 +92,14 @@ class MultiprocessingParallelizer(Parallelizer):
         if was_fully_initialized:
             for process_ in self.processes:
                 process_.join()
+        else:  # pragma: no cover
+            pass
 
         child_failed: bool = False
         for process_ in self.processes:
             if process_.exitcode != 0:
                 print(  # noqa: T201
-                    "error: Parallelizer: One of the child processes "
-                    f"has exited with a non-successful exit code: "
+                    "error: Parallelizer: Failed child process: "
                     f"PID: {process_.pid}, exit code: {process_.exitcode}.",
                     flush=True,
                 )
@@ -110,10 +107,6 @@ class MultiprocessingParallelizer(Parallelizer):
 
         if child_failed:
             sys.exit(1)
-
-    @property
-    def parallelization_enabled(self) -> bool:
-        return True
 
     def run_parallel(
         self,
@@ -132,12 +125,10 @@ class MultiprocessingParallelizer(Parallelizer):
                 size -= 1
             except Empty:
                 if any(process.exitcode for process in self.processes):
-                    print(  # noqa: T201
-                        "error: Parallelizer: One of the child processes "
+                    raise StrictDocException(
+                        "Parallelizer: One of the child processes "
                         "has exited prematurely."
-                    )
-                    self.shutdown()
-                    sys.exit(1)
+                    ) from None
         return map(lambda r: r[1], sorted(results, key=lambda r: r[0]))
 
     @staticmethod
@@ -159,7 +150,7 @@ class MultiprocessingParallelizer(Parallelizer):
                 sys.stdout.flush()
                 sys.stderr.flush()
                 output_queue.put((content_idx, result))
-            except KeyboardInterrupt:
+            except KeyboardInterrupt:  # pragma: no cover
                 sys.stdout.flush()
                 sys.stderr.flush()
 
@@ -177,7 +168,3 @@ class NullParallelizer(Parallelizer):
 
     def shutdown(self) -> None:
         pass
-
-    @property
-    def parallelization_enabled(self) -> bool:
-        return False

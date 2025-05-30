@@ -295,11 +295,20 @@ class SDocTestServer:
         return f"http://localhost:{self.server_port}"
 
     def _get_strictdoc_command(self) -> Tuple[List[str], Dict[str, str]]:
+        # It is important that the current environment is passed along with the
+        # server command, otherwise the Python packages will not be discovered.
+        strictdoc_env: Dict[str, str] = dict(os.environ)
+
         should_collect_coverage = test_environment.coverage
         strictdoc_args: List[str] = [sys.executable]
         if should_collect_coverage:
             path_to_coverage_rc = os.path.join(
                 environment.path_to_strictdoc, ".coveragerc.end2end"
+            )
+            path_to_coverage = os.path.join(
+                environment.path_to_strictdoc,
+                "build/coverage/end2end_strictdoc",
+                ".coverage",
             )
             strictdoc_args.extend(
                 [
@@ -308,8 +317,16 @@ class SDocTestServer:
                     "run",
                     "--append",
                     f"--rcfile={path_to_coverage_rc}",
-                    f"--data-file={os.getcwd()}/build/coverage/end2end_strictdoc/.coverage",
+                    f"--data-file={path_to_coverage}",
                 ]
+            )
+            strictdoc_env.update(
+                {
+                    # This is not used by coverage itself but StrictDoc uses it as
+                    # a condition to activate the exit hooks for preserving coverage.
+                    # See strictdoc.helpers.coverage.register_code_coverage_hook.
+                    "COVERAGE_PROCESS_START": path_to_coverage_rc,
+                }
             )
 
         strictdoc_args.extend(
@@ -331,20 +348,6 @@ class SDocTestServer:
                     "--output-path",
                     self.output_path,
                 ]
-            )
-
-        # It is important that the current environment is passed along with the
-        # server command, otherwise the Python packages will not be discovered.
-        strictdoc_env: Dict[str, str] = dict(os.environ)
-
-        if should_collect_coverage:
-            strictdoc_env.update(
-                {
-                    # This is not used by coverage itself but StrictDoc uses it as
-                    # a condition to activate the exit hooks for preserving coverage.
-                    # See strictdoc/server/app.py#register_code_coverage_hook().
-                    "COVERAGE_PROCESS_START": ".coveragerc.end2end",
-                }
             )
 
         return strictdoc_args, strictdoc_env

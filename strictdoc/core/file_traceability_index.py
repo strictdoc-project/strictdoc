@@ -1,6 +1,6 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-def"
 from copy import copy
-from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
+from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
@@ -125,12 +125,6 @@ class FileTraceabilityIndex:
         for _, sfti in self.map_paths_to_source_file_traceability_info.items():
             if sfti.source_file is not None:
                 yield sfti.source_file
-
-    def get_source_file_markers(self, source_file_rel_path: str) -> List[Any]:
-        trace_info = self.map_paths_to_source_file_traceability_info[
-            source_file_rel_path
-        ]
-        return trace_info.markers
 
     def get_source_file_reqs(
         self, source_file_rel_path: str

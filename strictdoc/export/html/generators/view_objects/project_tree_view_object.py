@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from markupsafe import Markup
 
 from strictdoc import __version__
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_tree import File, Folder
 from strictdoc.core.project_config import ProjectConfig
@@ -13,6 +14,7 @@ from strictdoc.export.html.generators.view_objects.helpers import (
 )
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.helpers.cast import assert_cast
 
 
 @dataclass
@@ -32,7 +34,9 @@ class ProjectTreeViewObject:
         self.link_renderer: LinkRenderer = link_renderer
 
         self.document_tree_iterator: DocumentTreeIterator = (
-            DocumentTreeIterator(traceability_index.document_tree)
+            DocumentTreeIterator(
+                assert_cast(traceability_index.document_tree, DocumentTree)
+            )
         )
         self.standalone: bool = False
         self.is_running_on_server: bool = project_config.is_running_on_server

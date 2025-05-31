@@ -18,6 +18,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.source_tree import SourceFile
@@ -26,6 +27,7 @@ from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.helpers.cast import assert_cast
 
 
 @dataclass
@@ -80,7 +82,9 @@ class SourceFileViewObject:
         self.current_view = NullViewElement()
         self.standalone: bool = False
         self.document_tree_iterator: DocumentTreeIterator = (
-            DocumentTreeIterator(traceability_index.document_tree)
+            DocumentTreeIterator(
+                assert_cast(traceability_index.document_tree, DocumentTree)
+            )
         )
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__

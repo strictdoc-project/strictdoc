@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.section import SDocSection
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_tree import File, Folder
 from strictdoc.core.project_config import ProjectConfig
@@ -24,6 +25,7 @@ from strictdoc.export.html.generators.view_objects.helpers import (
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.string import interpolate_at_pattern_lazy
 from strictdoc.server.helpers.turbo import render_turbo_stream
@@ -56,7 +58,9 @@ class DocumentScreenViewObject:
             self.document
         )
         self.document_tree_iterator: DocumentTreeIterator = (
-            DocumentTreeIterator(traceability_index.document_tree)
+            DocumentTreeIterator(
+                assert_cast(traceability_index.document_tree, DocumentTree)
+            )
         )
         self.current_view: ViewElement = document.view.get_current_view(
             project_config.view

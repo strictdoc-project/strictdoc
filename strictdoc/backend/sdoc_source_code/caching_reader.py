@@ -38,15 +38,13 @@ class SourceFileTraceabilityCachingReader:
             path_to_file, project_config
         )
         try:
-            if (
-                traceability_info := reader.read_from_file(path_to_file)
-            ) is not None:
-                PickleCache.save_to_cache(
-                    traceability_info,
-                    path_to_file,
-                    project_config,
-                    "source_file",
-                )
+            traceability_info = reader.read_from_file(path_to_file)
+            PickleCache.save_to_cache(
+                traceability_info,
+                path_to_file,
+                project_config,
+                "source_file",
+            )
         except UnicodeDecodeError:
             print(  # noqa: T201
                 f"warning: Skip tracing binary file {path_to_file}."

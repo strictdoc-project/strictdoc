@@ -47,6 +47,25 @@ def test_02():
     assert "<li>First item is a bullet point.</li>" in html_output
 
 
+def test_image_01():
+    rst_input = """
+.. image:: _assets/picture.svg
+""".lstrip()
+
+    project_config = ProjectConfig.default_config(environment=environment)
+    html_output = RstToHtmlFragmentWriter(
+        context_document=None, project_config=project_config
+    ).write(rst_input)
+    assert (
+        str(html_output)
+        == """\
+<div class="document">
+<object data="_assets/picture.svg" type="image/svg+xml">_assets/picture.svg</object>
+</div>
+"""
+    )
+
+
 def test_with_validation_01_tables():
     rst_input = """
 .. list-table:: Title

@@ -51,11 +51,5 @@ class TraceabilityMatrixViewObject:
     def render_url(self, url: str):
         return self.link_renderer.render_url(url)
 
-    def render_static_url_with_prefix(self, url: str):
-        return self.link_renderer.render_static_url_with_prefix(url)
-
     def render_local_anchor(self, node):
         return self.link_renderer.render_local_anchor(node)
-
-    def is_empty_tree(self) -> bool:
-        return self.document_tree_iterator.is_empty_tree()

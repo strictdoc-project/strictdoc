@@ -47,12 +47,6 @@ class ProjectStatisticsViewObject:
     def render_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_url(url))
 
-    def render_static_url_with_prefix(self, url: str) -> Markup:
-        return Markup(self.link_renderer.render_static_url_with_prefix(url))
-
-    def is_empty_tree(self) -> bool:
-        return self.document_tree_iterator.is_empty_tree()
-
     def get_datetime(self) -> str:
         return datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 

@@ -70,11 +70,7 @@ def strictdoc_production_app() -> FastAPI:
     # NamedTemporaryFile on Windows.
     # See https://stackoverflow.com/a/15235559
     def temp_opener(name: str, flag: int, mode: int = 0o777) -> int:
-        try:
-            flag |= O_TEMPORARY
-        except AttributeError:
-            pass  # Only Windows has this flag
-
+        flag |= O_TEMPORARY
         return os.open(name, flag, mode)
 
     path_to_tmp_config = os.environ[SDocServerEnvVariable.PATH_TO_CONFIG]

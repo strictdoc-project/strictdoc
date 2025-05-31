@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -8,6 +9,7 @@ from strictdoc.git.project_diff_analyzer import (
     ProjectDiffAnalyzer,
     ProjectTreeDiffStats,
 )
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.parallelizer import NullParallelizer
 
 
@@ -72,10 +74,10 @@ class ChangeGenerator:
         )
 
         documents_iterator_lhs = DocumentTreeIterator(
-            traceability_index_lhs.document_tree
+            assert_cast(traceability_index_lhs.document_tree, DocumentTree)
         )
         documents_iterator_rhs = DocumentTreeIterator(
-            traceability_index_rhs.document_tree
+            assert_cast(traceability_index_rhs.document_tree, DocumentTree)
         )
 
         return ChangeContainer(

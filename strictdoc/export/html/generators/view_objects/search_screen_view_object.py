@@ -6,6 +6,7 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.model import SDocElementIF
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -13,6 +14,7 @@ from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.helpers.cast import assert_cast
 
 
 @dataclass
@@ -50,7 +52,9 @@ class SearchScreenViewObject:
         self.markup_renderer: MarkupRenderer = markup_renderer
         self.standalone: bool = False
         self.document_tree_iterator: DocumentTreeIterator = (
-            DocumentTreeIterator(traceability_index.document_tree)
+            DocumentTreeIterator(
+                assert_cast(traceability_index.document_tree, DocumentTree)
+            )
         )
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__

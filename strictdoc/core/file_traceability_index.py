@@ -1,6 +1,6 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-def"
 from copy import copy
-from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
+from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError

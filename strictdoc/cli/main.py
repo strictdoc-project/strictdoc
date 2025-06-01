@@ -73,7 +73,6 @@ def _main(parallelizer: Parallelizer) -> None:
             project_config=project_config,
             parallelizer=parallelizer,
         )
-        export_action.build_index()
         export_action.export()
 
     elif parser.is_server_command:

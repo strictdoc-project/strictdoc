@@ -20,7 +20,7 @@ from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
 from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.export.spdx.spdx_generator import SPDXGenerator
-from strictdoc.helpers.parallelizer import NullParallelizer
+from strictdoc.helpers.parallelizer import NullParallelizer, Parallelizer
 from strictdoc.helpers.timing import timing_decorator
 
 
@@ -28,27 +28,38 @@ class ExportAction:
     def __init__(
         self,
         project_config: ProjectConfig,
-        parallelizer,
-    ):
-        assert parallelizer
+        parallelizer: Parallelizer,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        assert isinstance(project_config, ProjectConfig)
+        assert isinstance(parallelizer, Parallelizer)
+        assert isinstance(traceability_index, TraceabilityIndex)
         self.project_config: ProjectConfig = project_config
-        self.parallelizer = parallelizer
-        self.traceability_index: TraceabilityIndex = self.build_index()
+        self.parallelizer: Parallelizer = parallelizer
+        self.traceability_index: TraceabilityIndex = traceability_index
 
-    @timing_decorator("Parse SDoc project tree")
-    def build_index(self) -> TraceabilityIndex:
+    @classmethod
+    def create_with_new_traceability_index(
+        cls,
+        project_config: ProjectConfig,
+        parallelizer: Parallelizer,
+    ) -> "ExportAction":
         try:
             traceability_index: TraceabilityIndex = (
                 TraceabilityIndexBuilder.create(
-                    project_config=self.project_config,
-                    parallelizer=self.parallelizer,
+                    project_config=project_config,
+                    parallelizer=parallelizer,
                 )
             )
         except DocumentTreeError as exc:
             print(exc.to_print_message())  # noqa: T201
             sys.exit(1)
-        self.traceability_index = traceability_index
-        return traceability_index
+
+        return ExportAction(
+            project_config,
+            parallelizer,
+            traceability_index,
+        )
 
     @timing_decorator("Export SDoc")
     def export(self) -> None:

@@ -144,7 +144,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     project_config.is_running_on_server = True
 
-    export_action = ExportAction(
+    # FIXME: Create traceability index outside of ExportAction here,
+    #        remove ExportAction.
+    export_action = ExportAction.create_with_new_traceability_index(
         project_config=project_config,
         parallelizer=parallelizer,
     )

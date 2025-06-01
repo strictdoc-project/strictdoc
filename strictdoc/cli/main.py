@@ -69,7 +69,7 @@ def _main(parallelizer: Parallelizer) -> None:
         print(  # noqa: T201
             f"Parallelization: {parallelization_value}", flush=True
         )
-        export_action = ExportAction(
+        export_action = ExportAction.create_with_new_traceability_index(
             project_config=project_config,
             parallelizer=parallelizer,
         )

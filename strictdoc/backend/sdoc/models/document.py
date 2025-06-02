@@ -17,7 +17,6 @@ from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
     SDocElementIF,
     SDocNodeIF,
-    SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.type_system import (
@@ -193,17 +192,6 @@ class SDocDocument(SDocDocumentIF):
 
     def has_any_nodes(self) -> bool:
         return len(self.section_contents) > 0
-
-    def has_any_toc_nodes(self) -> bool:
-        for node_ in self.section_contents:
-            # Skip nodes without a TOC level.
-            if (
-                isinstance(node_, SDocSectionIF)
-                and node_.ng_resolved_custom_level == "None"
-            ):
-                continue
-            return True
-        return False
 
     def get_display_title(
         self,

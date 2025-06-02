@@ -6,8 +6,8 @@ VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
 DATE: @GIT_COMMIT_DATETIME
 OPTIONS:
   ENABLE_MID: True
-  REQUIREMENT_STYLE: Inline
-  REQUIREMENT_IN_TOC: True
+  VIEW_STYLE: Inline
+  NODE_IN_TOC: True
 
 [GRAMMAR]
 ELEMENTS:
@@ -665,10 +665,10 @@ The ``OPTIONS`` field may have the following attribute fields:
    * - ``AUTO_LEVELS``
      - ``On`` (default), ``Off``
 
-   * - ``REQUIREMENT_STYLE``
+   * - ``VIEW_STYLE``
      - ``Inline`` (default), ``Table``, ``Zebra``
 
-   * - ``REQUIREMENT_IN_TOC``
+   * - ``NODE_IN_TOC``
      - ``True`` (default), ``False``
 <<<
 
@@ -720,12 +720,12 @@ In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
 
 [[SECTION]]
 MID: 8cde71c0f4d448c2a8939f9a81af7ac7
-TITLE: REQUIREMENT_STYLE
+TITLE: VIEW_STYLE
 
 [TEXT]
 MID: 538a721c42824ad6b94a2f54780887ea
 STATEMENT: >>>
-The ``REQUIREMENT_STYLE`` option controls whether requirement's elements are
+The ``VIEW_STYLE`` option controls whether requirement's elements are
 displayed inline or as table blocks. The available options are:
 
 - ``Inline``
@@ -739,19 +739,19 @@ Default is ``Inline``.
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_STYLE: Inline
+      VIEW_STYLE: Inline
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
 MID: bdf01de0fc414b70a6a07118396b23b0
-TITLE: REQUIREMENT_IN_TOC
+TITLE: NODE_IN_TOC
 
 [TEXT]
 MID: e9e7522f3a094f5ea809f7bae93384d7
 STATEMENT: >>>
-The ``REQUIREMENT_IN_TOC`` option controls whether requirement's title appear
+The ``NODE_IN_TOC`` option controls whether requirement's title appear
 in the table of contents (TOC). The available options are: ``True`` / ``False``.
 Default is ``True``.
 
@@ -760,7 +760,7 @@ Default is ``True``.
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_IN_TOC: True
+      NODE_IN_TOC: True
 <<<
 
 [[/SECTION]]
@@ -781,7 +781,7 @@ StrictDoc allows additional metadata to be added in the [DOCUMENT] element. The 
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_IN_TOC: True
+      NODE_IN_TOC: True
     METADATA:
       KEY: Value
       ...

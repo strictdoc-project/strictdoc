@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Document title
 OPTIONS:
-  REQUIREMENT_STYLE: Table
+  VIEW_STYLE: Table
 
 [SECTION]
 UID: SEC_UID

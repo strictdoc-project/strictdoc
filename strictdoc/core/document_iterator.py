@@ -24,20 +24,18 @@ class DocumentCachingIterator:
         self.document: SDocDocument = document
 
     def table_of_contents(self) -> Iterator[SDocElementIF]:
-        nodes_to_skip = (
-            (SDocNode,)
-            if not self.document.config.is_requirement_in_toc()
-            else ()
-        )
-
         for node in self.all_content(
             print_fragments=True,
             print_fragments_from_files=False,
         ):
-            if isinstance(node, nodes_to_skip):
-                continue
-            if isinstance(node, SDocNode) and node.reserved_title is None:
-                continue
+            if isinstance(node, SDocNode):
+                if node.reserved_title is None:
+                    continue
+                if (
+                    not self.document.config.is_requirement_in_toc()
+                    and node.node_type != "SECTION"
+                ):
+                    continue
             yield node
 
     def all_content(

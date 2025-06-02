@@ -134,12 +134,12 @@ class JSONGenerator:
                     )
 
                 if requirement_style is not None:
-                    document_dict[JSONKey.OPTIONS]["REQUIREMENT_STYLE"] = (
+                    document_dict[JSONKey.OPTIONS]["VIEW_STYLE"] = (
                         requirement_style
                     )
 
                 if requirement_in_toc is not None:
-                    document_dict[JSONKey.OPTIONS]["REQUIREMENT_IN_TOC"] = (
+                    document_dict[JSONKey.OPTIONS]["NODE_IN_TOC"] = (
                         requirement_in_toc
                     )
 

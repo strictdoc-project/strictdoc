@@ -69,6 +69,8 @@ class DocumentConfig:
         requirement_in_toc: Optional[str],
         default_view: Optional[str],
         custom_metadata: Optional[DocumentCustomMetadata],
+        view_style_tag: Optional[str] = None,
+        node_in_toc_tag: Optional[str] = None,
     ) -> None:
         self.parent = parent
         self.version: Optional[str] = version
@@ -104,7 +106,11 @@ class DocumentConfig:
         # Possible requirement styles:
         # Simple, Table, Rows
         self.requirement_style: Optional[str] = requirement_style
+        self.view_style_tag: Optional[str] = view_style_tag
+
         self.requirement_in_toc: Optional[str] = requirement_in_toc
+        self.node_in_toc_tag: Optional[str] = node_in_toc_tag
+
         self.default_view: Optional[str] = default_view
         self.ng_auto_levels_specified = auto_levels is not None
 

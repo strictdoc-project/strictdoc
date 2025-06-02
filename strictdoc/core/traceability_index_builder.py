@@ -51,6 +51,7 @@ from strictdoc.core.traceability_index import (
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.deprecation_engine import DEPRECATION_ENGINE
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import (
     get_file_modification_time,
@@ -307,6 +308,17 @@ class TraceabilityIndexBuilder:
 
         document: SDocDocument
         for document in document_tree.document_list:
+            if document.config.view_style_tag == "REQUIREMENT_STYLE":
+                DEPRECATION_ENGINE.add_message(
+                    "DEPRECATED_REQUIREMENT_STYLE",
+                    "WARNING: REQUIREMENT_STYLE is deprecated. Replace it to VIEW_STYLE.",
+                )
+            if document.config.node_in_toc_tag == "REQUIREMENT_IN_TOC":
+                DEPRECATION_ENGINE.add_message(
+                    "DEPRECATED_REQUIREMENT_IN_TOC",
+                    "WARNING: REQUIREMENT_IN_TOC is deprecated. Replace it to NODE_IN_TOC.",
+                )
+
             #
             # First, resolve all grammars that are imported from grammar files.
             #
@@ -387,10 +399,8 @@ class TraceabilityIndexBuilder:
                 ):
                     found_deprecated_section = True
 
-                    def print_line(text: str):
-                        print(f"\x1b[7;90m{text}\x1b[0m", flush=True)  # noqa: T201
-
-                    print_line(
+                    DEPRECATION_ENGINE.add_message(
+                        "DEPRECATED_SECTION",
                         "WARNING: At least one document in this documentation tree "
                         "uses a deprecated [SECTION] element. "
                         "All [SECTION] elements must be renamed to [[SECTION]], "
@@ -398,7 +408,7 @@ class TraceabilityIndexBuilder:
                         "document grammar. "
                         "See the migration guide for more details:\n"
                         "https://strictdoc.readthedocs.io/en/latest/latest/docs/strictdoc_01_user_guide.html#SECTION-UG-NODE-MIGRATION\n"
-                        "This warning will become an error in 2025 Q3."
+                        "This warning will become an error in 2025 Q3.",
                     )
 
                 if isinstance(node, SDocNode):

@@ -163,12 +163,12 @@ class SDWriter:
                     output += "\n"
 
                 if requirement_style is not None:
-                    output += "  REQUIREMENT_STYLE: "
+                    output += "  VIEW_STYLE: "
                     output += requirement_style
                     output += "\n"
 
                 if requirement_in_toc is not None:
-                    output += "  REQUIREMENT_IN_TOC: "
+                    output += "  NODE_IN_TOC: "
                     output += requirement_in_toc
                     output += "\n"
 

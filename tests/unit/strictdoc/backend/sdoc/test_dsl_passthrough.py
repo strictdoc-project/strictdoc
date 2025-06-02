@@ -593,7 +593,7 @@ OPTIONS:
   AUTO_LEVELS: Off
   LAYOUT: Website
   VIEW_STYLE: Table
-  REQUIREMENT_IN_TOC: True
+  NODE_IN_TOC: True
 
 [SECTION]
 LEVEL: 123
@@ -829,7 +829,7 @@ def test_087_options_requirement_in_toc(default_project_config):
 TITLE: Test Doc
 VERSION: 0.0.1
 OPTIONS:
-  REQUIREMENT_IN_TOC: True
+  NODE_IN_TOC: True
 """.lstrip()
 
     reader = SDReader()

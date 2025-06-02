@@ -7,7 +7,7 @@ DATE: @GIT_COMMIT_DATETIME
 OPTIONS:
   ENABLE_MID: True
   VIEW_STYLE: Inline
-  REQUIREMENT_IN_TOC: True
+  NODE_IN_TOC: True
 
 [GRAMMAR]
 ELEMENTS:
@@ -668,7 +668,7 @@ The ``OPTIONS`` field may have the following attribute fields:
    * - ``VIEW_STYLE``
      - ``Inline`` (default), ``Table``, ``Zebra``
 
-   * - ``REQUIREMENT_IN_TOC``
+   * - ``NODE_IN_TOC``
      - ``True`` (default), ``False``
 <<<
 
@@ -746,12 +746,12 @@ Default is ``Inline``.
 
 [[SECTION]]
 MID: bdf01de0fc414b70a6a07118396b23b0
-TITLE: REQUIREMENT_IN_TOC
+TITLE: NODE_IN_TOC
 
 [TEXT]
 MID: e9e7522f3a094f5ea809f7bae93384d7
 STATEMENT: >>>
-The ``REQUIREMENT_IN_TOC`` option controls whether requirement's title appear
+The ``NODE_IN_TOC`` option controls whether requirement's title appear
 in the table of contents (TOC). The available options are: ``True`` / ``False``.
 Default is ``True``.
 
@@ -760,7 +760,7 @@ Default is ``True``.
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_IN_TOC: True
+      NODE_IN_TOC: True
 <<<
 
 [[/SECTION]]
@@ -781,7 +781,7 @@ StrictDoc allows additional metadata to be added in the [DOCUMENT] element. The 
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_IN_TOC: True
+      NODE_IN_TOC: True
     METADATA:
       KEY: Value
       ...

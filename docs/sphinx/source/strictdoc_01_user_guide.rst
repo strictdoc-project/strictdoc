@@ -635,7 +635,7 @@ The ``OPTIONS`` field may have the following attribute fields:
    * - ``VIEW_STYLE``
      - ``Inline`` (default), ``Table``, ``Zebra``
 
-   * - ``REQUIREMENT_IN_TOC``
+   * - ``NODE_IN_TOC``
      - ``True`` (default), ``False``
 
 ENABLE_MID
@@ -710,7 +710,7 @@ Default is ``Inline``.
     OPTIONS:
       VIEW_STYLE: Inline
 
-REQUIREMENT_IN_TOC
+NODE_IN_TOC
 """"""""""""""""""
 
 .. list-table::
@@ -720,7 +720,7 @@ REQUIREMENT_IN_TOC
     * - **MID:**
       - e9e7522f3a094f5ea809f7bae93384d7
 
-The ``REQUIREMENT_IN_TOC`` option controls whether requirement's title appear
+The ``NODE_IN_TOC`` option controls whether requirement's title appear
 in the table of contents (TOC). The available options are: ``True`` / ``False``.
 Default is ``True``.
 
@@ -729,7 +729,7 @@ Default is ``True``.
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_IN_TOC: True
+      NODE_IN_TOC: True
 
 Text
 ~~~~

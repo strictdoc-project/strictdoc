@@ -78,7 +78,7 @@ DocumentConfig[noskipws]:
     ('  AUTO_LEVELS: ' (auto_levels = AutoLevelsChoice) '\n')?
     ('  LAYOUT: ' (layout = LayoutChoice) '\n')?
     (/  (VIEW_STYLE|REQUIREMENT_STYLE): / (requirement_style = RequirementStyleChoice) '\n')?
-    ('  REQUIREMENT_IN_TOC: '
+    (/  (NODE_IN_TOC|REQUIREMENT_IN_TOC): /
         (requirement_in_toc = RequirementHasTitleChoice) '\n'
     )?
     ('  DEFAULT_VIEW: ' default_view = SingleLineString '\n')?

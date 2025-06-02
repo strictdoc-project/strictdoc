@@ -139,7 +139,7 @@ class JSONGenerator:
                     )
 
                 if requirement_in_toc is not None:
-                    document_dict[JSONKey.OPTIONS]["REQUIREMENT_IN_TOC"] = (
+                    document_dict[JSONKey.OPTIONS]["NODE_IN_TOC"] = (
                         requirement_in_toc
                     )
 

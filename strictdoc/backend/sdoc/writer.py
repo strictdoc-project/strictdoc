@@ -163,7 +163,7 @@ class SDWriter:
                     output += "\n"
 
                 if requirement_style is not None:
-                    output += "  REQUIREMENT_STYLE: "
+                    output += "  VIEW_STYLE: "
                     output += requirement_style
                     output += "\n"
 

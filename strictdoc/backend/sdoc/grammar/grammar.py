@@ -77,7 +77,7 @@ DocumentConfig[noskipws]:
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?
     ('  AUTO_LEVELS: ' (auto_levels = AutoLevelsChoice) '\n')?
     ('  LAYOUT: ' (layout = LayoutChoice) '\n')?
-    ('  REQUIREMENT_STYLE: ' (requirement_style = RequirementStyleChoice) '\n')?
+    (/  (VIEW_STYLE|REQUIREMENT_STYLE): / (requirement_style = RequirementStyleChoice) '\n')?
     ('  REQUIREMENT_IN_TOC: '
         (requirement_in_toc = RequirementHasTitleChoice) '\n'
     )?

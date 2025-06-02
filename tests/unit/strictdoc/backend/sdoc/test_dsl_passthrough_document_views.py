@@ -8,7 +8,7 @@ def test_01_integrated_example(default_project_config):
 [DOCUMENT]
 TITLE: Test Doc
 OPTIONS:
-  REQUIREMENT_STYLE: Inline
+  VIEW_STYLE: Inline
   DEFAULT_VIEW: PRINT_VIEW
 VIEWS:
 - ID: PRINT_VIEW

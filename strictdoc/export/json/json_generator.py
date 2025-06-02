@@ -134,7 +134,7 @@ class JSONGenerator:
                     )
 
                 if requirement_style is not None:
-                    document_dict[JSONKey.OPTIONS]["REQUIREMENT_STYLE"] = (
+                    document_dict[JSONKey.OPTIONS]["VIEW_STYLE"] = (
                         requirement_style
                     )
 

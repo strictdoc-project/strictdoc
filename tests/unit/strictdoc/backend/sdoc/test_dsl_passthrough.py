@@ -592,7 +592,7 @@ OPTIONS:
   MARKUP: Text
   AUTO_LEVELS: Off
   LAYOUT: Website
-  REQUIREMENT_STYLE: Table
+  VIEW_STYLE: Table
   REQUIREMENT_IN_TOC: True
 
 [SECTION]
@@ -806,7 +806,7 @@ def test_085_options_requirement_style(default_project_config):
 TITLE: Test Doc
 VERSION: 0.0.1
 OPTIONS:
-  REQUIREMENT_STYLE: Table
+  VIEW_STYLE: Table
 """.lstrip()
 
     reader = SDReader()

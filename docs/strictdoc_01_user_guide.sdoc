@@ -6,7 +6,7 @@ VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
 DATE: @GIT_COMMIT_DATETIME
 OPTIONS:
   ENABLE_MID: True
-  REQUIREMENT_STYLE: Inline
+  VIEW_STYLE: Inline
   REQUIREMENT_IN_TOC: True
 
 [GRAMMAR]
@@ -665,7 +665,7 @@ The ``OPTIONS`` field may have the following attribute fields:
    * - ``AUTO_LEVELS``
      - ``On`` (default), ``Off``
 
-   * - ``REQUIREMENT_STYLE``
+   * - ``VIEW_STYLE``
      - ``Inline`` (default), ``Table``, ``Zebra``
 
    * - ``REQUIREMENT_IN_TOC``
@@ -720,12 +720,12 @@ In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
 
 [[SECTION]]
 MID: 8cde71c0f4d448c2a8939f9a81af7ac7
-TITLE: REQUIREMENT_STYLE
+TITLE: VIEW_STYLE
 
 [TEXT]
 MID: 538a721c42824ad6b94a2f54780887ea
 STATEMENT: >>>
-The ``REQUIREMENT_STYLE`` option controls whether requirement's elements are
+The ``VIEW_STYLE`` option controls whether requirement's elements are
 displayed inline or as table blocks. The available options are:
 
 - ``Inline``
@@ -739,7 +739,7 @@ Default is ``Inline``.
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_STYLE: Inline
+      VIEW_STYLE: Inline
 <<<
 
 [[/SECTION]]

@@ -632,7 +632,7 @@ The ``OPTIONS`` field may have the following attribute fields:
    * - ``AUTO_LEVELS``
      - ``On`` (default), ``Off``
 
-   * - ``REQUIREMENT_STYLE``
+   * - ``VIEW_STYLE``
      - ``Inline`` (default), ``Table``, ``Zebra``
 
    * - ``REQUIREMENT_IN_TOC``
@@ -684,7 +684,7 @@ numbering. See also :ref:`Section without a level <UG_NODE_WITHOUT_A_LEVEL>`.
 
 In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
 
-REQUIREMENT_STYLE
+VIEW_STYLE
 """""""""""""""""
 
 .. list-table::
@@ -694,7 +694,7 @@ REQUIREMENT_STYLE
     * - **MID:**
       - 538a721c42824ad6b94a2f54780887ea
 
-The ``REQUIREMENT_STYLE`` option controls whether requirement's elements are
+The ``VIEW_STYLE`` option controls whether requirement's elements are
 displayed inline or as table blocks. The available options are:
 
 - ``Inline``
@@ -708,7 +708,7 @@ Default is ``Inline``.
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      REQUIREMENT_STYLE: Inline
+      VIEW_STYLE: Inline
 
 REQUIREMENT_IN_TOC
 """"""""""""""""""

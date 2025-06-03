@@ -1,7 +1,7 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Iterator, List, Optional, Union
 
 from jinja2 import Template
 from markupsafe import Markup
@@ -10,6 +10,7 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import GrammarElement
 from strictdoc.backend.sdoc.models.document_view import ViewElement
+from strictdoc.backend.sdoc.models.model import SDocElementIF
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_tree import DocumentTree
@@ -302,8 +303,11 @@ class DocumentScreenViewObject:
     def get_grammar_elements(self) -> List[GrammarElement]:
         return self.document.grammar.elements
 
-    def table_of_contents(self):
+    def table_of_contents(self) -> Iterator[SDocElementIF]:
         yield from self.document_iterator.table_of_contents()
+
+    def document_has_any_toc_nodes(self) -> bool:
+        return any(self.table_of_contents())
 
     def document_content_iterator(self):
         yield from self.document_iterator.all_content(

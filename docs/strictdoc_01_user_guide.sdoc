@@ -720,6 +720,7 @@ In case of ``Off``, all ``[SECTION].LEVEL`` fields must be populated.
 
 [[SECTION]]
 MID: 8cde71c0f4d448c2a8939f9a81af7ac7
+UID: SECTION-UG-VIEW_STYLE
 TITLE: VIEW_STYLE
 
 [TEXT]
@@ -728,18 +729,28 @@ STATEMENT: >>>
 The ``VIEW_STYLE`` option controls whether requirement's elements are
 displayed inline or as table blocks. The available options are:
 
+- ``Narrative``
 - ``Inline``
 - ``Table``
 - ``Zebra``
+- ``Plain``
 
-Default is ``Inline``.
+The default style is Narrative. This style displays meta information and prints node fields without surrounding tables, making it most suitable for documents where nodes contain descriptive content (i.e., paragraphs of text).
+
+The Inline, Table, and Zebra styles are all variations of a table-based format designed for requirement-like nodes.
+
+The Plain style is the simplest option, showing only the content of the node fields without any meta information.
 
 .. code-block:: text
 
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
-      VIEW_STYLE: Inline
+      VIEW_STYLE: Narrative
+
+.. note::
+
+    The ``VIEW_STYLE`` option can be also specified individually for each grammar element, see [LINK: SECTION-UG-VIEW_STYLE-2].
 <<<
 
 [[/SECTION]]
@@ -800,6 +811,7 @@ The additional metadata is also included on the front page of the exported PDF. 
 
 [[SECTION]]
 MID: 93085eee6a214a0a85aa94472f0a0a6c
+UID: SECTION-UG-Leaf-nodes
 TITLE: Leaf nodes
 
 [[SECTION]]
@@ -1617,8 +1629,7 @@ StrictDoc allows declaration of document grammars with custom fields that are
 specific to a particular document.
 
 First, such fields have to be registered on a document level using the
-``[GRAMMAR]`` field. The following example demonstrates a declaration of
-a grammar with four fields including a custom ``VERIFICATION`` field.
+``[GRAMMAR]`` field. The following example defines a grammar with three elements: ``SECTION``, ``TEXT``, and ``REQUIREMENT``, where the REQUIREMENT element includes several custom fields, such as the ``VERIFICATION`` field.
 
 .. code-block:: text
 
@@ -1800,6 +1811,105 @@ Example:
     - TYPE: File
       VALUE: /full/path/file.py
 <<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 3b9af7a4f6444664aa9e76343b477236
+TITLE: Grammar element properties
+
+[[SECTION]]
+MID: e1e5bda619f549188d8d7ae158aeaa44
+TITLE: IS_COMPOSITE
+
+[TEXT]
+MID: 5396d4571b4c4204b093a44980a489ed
+STATEMENT: >>>
+The ``IS_COMPOSITE`` property controls whether a document node will be treated as a leaf node, e.g., ``[NODE]``, or a composite node, e.g., ``[[NODE]]``.
+
+.. code-block::
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: NODE
+      PROPERTIES:
+        IS_COMPOSITE: False
+      FIELDS:
+        ...
+    - TAG: NODE2
+      PROPERTIES:
+        IS_COMPOSITE: True
+      FIELDS:
+        ...
+
+    [NODE]
+    TITLE: Leaf node
+    ...
+
+    [[NODE2]]
+    TITLE: Composite node
+
+    ...
+
+    [[/NODE]]
+
+.. note::
+
+    See [LINK: SECTION-UG-Leaf-nodes] and [LINK: UG_COMPOSITE_NODE] for a general description of leaf vs composite nodes.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: f2c8342dd6f5432c95ef6f80cf5e87ba
+TITLE: PREFIX
+
+[TEXT]
+MID: 19d4dcbf0cd24f84996bcddb778e348c
+STATEMENT: >>>
+The ``PREFIX`` property declared for a grammar element determines the prefix that will be automatically added to a UID when creating a new requirement via the StrictDoc web interface or the manage auto-uuid command.
+
+.. code-block::
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: REQUIREMENT
+      PROPERTIES:
+        PREFIX: REQ-
+      FIELDS:
+      ...
+
+See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID].
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 61df1b83c27e43909ad5640cf0d78962
+UID: SECTION-UG-VIEW_STYLE-2
+TITLE: VIEW_STYLE
+
+[TEXT]
+MID: 4678706b4c864f459d1b478cd703fcc1
+STATEMENT: >>>
+The ``VIEW_STYLE`` property controls which template should be used for rendering a given node.
+
+.. code-block::
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: REQUIREMENT
+      PROPERTIES:
+        VIEW_STYLE: Narrative
+      FIELDS:
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+
+If ``VIEW_STYLE`` is not specified at the grammar element level, StrictDoc will look up the view style from the ``VIEW_STYLE`` document-level declaration, see [LINK: SECTION-UG-VIEW_STYLE].
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 

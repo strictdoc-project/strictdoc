@@ -1,14 +1,12 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
-UID: SECT-1
+[[SECTION]]
 TITLE: New section
 
 [TEXT]
-UID: TEXT-1
 STATEMENT: >>>
 Hello world!
 <<<
 
-[/SECTION]
+[[/SECTION]]

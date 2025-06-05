@@ -103,7 +103,13 @@ class Test(E2ECase):
 
                 diff_screen.do_switch_tab_to_changelog()
                 diff_screen.assert_documents_modified("1")
-                diff_screen.assert_sections_modified("1 (1 modified)")
-                diff_screen.assert_requirements_modified(
-                    "2 (1 modified, 1 added)"
+                diff_screen.assert_sections_modified(
+                    "No sections were modified."
+                )
+                diff_screen.assert_nodes_modified("SECTION", "1 (1 modified)")
+                diff_screen.assert_nodes_modified(
+                    "TEXT", "No nodes were modified."
+                )
+                diff_screen.assert_nodes_modified(
+                    "REQUIREMENT", "2 (1 modified, 1 added)"
                 )

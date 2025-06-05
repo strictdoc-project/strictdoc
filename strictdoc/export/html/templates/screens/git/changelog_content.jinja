@@ -13,13 +13,6 @@
     {% set _sections_modified = "No sections were modified." %}
   {% endif %}
 
-  {% set requirements_modified = view_object.change_container.change_stats.get_changes_requirements_changed() %}
-  {% if requirements_modified is not none %}
-    {% set _requirements_modified = requirements_modified~" ("~view_object.change_container.change_stats.get_changes_requirements_stats_string()~")" %}
-  {% else %}
-    {% set _requirements_modified = "No requirements were modified." %}
-  {% endif %}
-
   <div class="sdoc-table_key_value">
     {% with key_value_pair =
       {"Section":"Compared revisions"}
@@ -78,14 +71,23 @@
       {% include "components/table_key_value/index.jinja" %}
     {% endwith %}
 
-    {% with key_value_pair =
-        {
-          "Key":"Requirements modified",
-          "Value": _requirements_modified,
-        }
-    %}
-      {% include "components/table_key_value/index.jinja" %}
-    {% endwith %}
+    {% for node_type_ in view_object.get_node_types() %}
+      {% set requirements_modified = view_object.change_container.change_stats.get_changes_requirements_changed(node_type_) %}
+      {% if requirements_modified is not none %}
+        {% set _requirements_modified = requirements_modified~" ("~view_object.change_container.change_stats.get_changes_requirements_stats_string(node_type_)~")" %}
+      {% else %}
+        {% set _requirements_modified = "No nodes were modified." %}
+      {% endif %}
+
+      {% with key_value_pair =
+          {
+            "Key":node_type_~" nodes",
+            "Value": _requirements_modified,
+          }
+      %}
+        {% include "components/table_key_value/index.jinja" %}
+      {% endwith %}
+    {% endfor %}
   </div>{# / .sdoc-table_key_value #}
 
   <div class="changelog_changes">

@@ -66,6 +66,9 @@ class DiffCommand:
             strictdoc_last_update=datetime.today(),
         )
 
+        assert change_container.traceability_index_lhs.document_tree is not None
+        assert change_container.traceability_index_rhs.document_tree is not None
+
         view_object = DiffScreenResultsViewObject(
             project_config=project_config,
             change_container=change_container,

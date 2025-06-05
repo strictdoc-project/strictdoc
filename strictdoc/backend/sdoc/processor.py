@@ -52,6 +52,7 @@ class SDocParsingProcessor:
             or DocumentGrammar.create_default(
                 document,
                 create_section_element=self.parse_context.migrate_sections,
+                enable_mid=document.config.enable_mid,
             )
         )
         self.parse_context.document = document

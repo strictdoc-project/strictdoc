@@ -11,7 +11,10 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No documents were 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No sections were modified.</div>
 
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">TEXT nodes</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No nodes were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">REQUIREMENT nodes</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1 (1 modified)</div>
 
 CHECK-CHANGELOG:ABCD0123

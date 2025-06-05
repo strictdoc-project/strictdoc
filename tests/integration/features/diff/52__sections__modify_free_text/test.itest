@@ -1,6 +1,3 @@
-# FIXME
-UNSUPPORTED: true
-
 RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
 
 RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
@@ -14,11 +11,10 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No documents were modified.</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No sections were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">TEXT nodes</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1 (1 modified)</div>
 
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No requirements were modified.</div>
-
-NOTE: This ensures that red-green diff is explained correctly.
-CHECK-CHANGELOG:<div class="sdoc_pre_content"><span class="lambda_red">H</span><span>e</span><span class="lambda_red">llo</span><span> </span><span class="lambda_red">wo</span><span>r</span><span class="lambda_red">ld</span><span>!
-CHECK-CHANGELOG:</span></div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">REQUIREMENT nodes</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No nodes were modified.</div>

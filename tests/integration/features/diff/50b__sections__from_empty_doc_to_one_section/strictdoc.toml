@@ -1,0 +1,6 @@
+[project]
+title = "Test Project"
+
+features = [
+  "DIFF",
+]

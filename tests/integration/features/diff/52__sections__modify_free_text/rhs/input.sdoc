@@ -6,6 +6,7 @@ UID: SECT-1
 TITLE: New section
 
 [TEXT]
+UID: TEXT-1
 STATEMENT: >>>
 Changed free text!
 <<<

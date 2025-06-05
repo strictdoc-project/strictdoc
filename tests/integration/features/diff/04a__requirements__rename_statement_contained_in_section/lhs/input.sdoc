@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  ENABLE_MID: True
+
+[[SECTION]]
+MID: sectabcd1234
+TITLE: Containing section
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement #1
+STATEMENT: System A shall do 1.
+
+[[/SECTION]]

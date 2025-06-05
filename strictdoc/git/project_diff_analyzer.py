@@ -187,86 +187,116 @@ class ProjectTreeDiffStats:
 
 @dataclass
 class ChangeStats:
-    _changes: List[ChangeUnionType] = field(default_factory=list)
-    _change_counters: Dict[ChangeType, int] = field(default_factory=dict)
+    changes: List[ChangeUnionType] = field(default_factory=list)
+    _node_counter: Dict[str, Dict[ChangeType, int]] = field(
+        default_factory=dict
+    )
+    _section_counter: Dict[ChangeType, int] = field(default_factory=dict)
+    _document_counter: Dict[ChangeType, int] = field(default_factory=dict)
+
     map_nodes_to_changes: Dict[Any, ChangeUnionType] = field(
         default_factory=dict
     )
-
-    @property
-    def changes(self):
-        return self._changes
 
     def find_change(self, node: Any):
         return self.map_nodes_to_changes.get(node)
 
     def get_total_changes(self) -> int:
-        return len(self._changes)
+        return len(self.changes)
 
-    def get_changes_requirements_changed(self) -> Optional[int]:
-        return self._change_counters.get(ChangeType.REQUIREMENT)
+    def get_changes_requirements_changed(self, node_type: str) -> Optional[int]:
+        all_node_changes_bucket = self._node_counter.get(node_type)
+        if all_node_changes_bucket is None:
+            return None
+        this_node_type_changes_bucket = all_node_changes_bucket.get(
+            ChangeType.REQUIREMENT
+        )
+        return this_node_type_changes_bucket
 
     def get_changes_sections_stats_string(self) -> str:
         """
         Example: 2 removed, 1 modified, 2 added.
         """
         change_components = []
-        removed = self._change_counters.get(ChangeType.SECTION_REMOVED)
+        removed = self._section_counter.get(ChangeType.SECTION_REMOVED)
         if removed is not None:
             change_components.append(f"{removed} removed")
-        modified = self._change_counters.get(ChangeType.SECTION_MODIFIED)
+        modified = self._section_counter.get(ChangeType.SECTION_MODIFIED)
         if modified is not None:
             change_components.append(f"{modified} modified")
-        added = self._change_counters.get(ChangeType.SECTION_ADDED)
+        added = self._section_counter.get(ChangeType.SECTION_ADDED)
         if added is not None:
             change_components.append(f"{added} added")
         assert len(change_components) > 0
         return ", ".join(change_components)
 
-    def get_changes_requirements_stats_string(self) -> str:
+    def get_changes_requirements_stats_string(self, node_type: str) -> str:
         """
         Example: 2 removed, 1 modified, 2 added.
         """
         change_components = []
-        removed = self._change_counters.get(ChangeType.REQUIREMENT_REMOVED)
-        if removed is not None:
-            change_components.append(f"{removed} removed")
-        modified = self._change_counters.get(ChangeType.REQUIREMENT_MODIFIED)
-        if modified is not None:
-            change_components.append(f"{modified} modified")
-        added = self._change_counters.get(ChangeType.REQUIREMENT_ADDED)
-        if added is not None:
-            change_components.append(f"{added} added")
+
+        removed_counter = self._node_counter.get(node_type)
+        if removed_counter is not None:
+            removed = removed_counter.get(ChangeType.REQUIREMENT_REMOVED)
+            if removed is not None:
+                change_components.append(f"{removed} removed")
+
+        modified_counter = self._node_counter.get(node_type)
+        if modified_counter is not None:
+            modified = modified_counter.get(ChangeType.REQUIREMENT_MODIFIED)
+            if modified is not None:
+                change_components.append(f"{modified} modified")
+
+        added_counter = self._node_counter.get(node_type)
+        if added_counter is not None:
+            added = added_counter.get(ChangeType.REQUIREMENT_ADDED)
+            if added is not None:
+                change_components.append(f"{added} added")
         assert len(change_components) > 0
         return ", ".join(change_components)
 
     def get_changes_documents_modified(self) -> Optional[int]:
-        return self._change_counters.get(ChangeType.DOCUMENT)
+        return self._document_counter.get(ChangeType.DOCUMENT)
 
     def get_changes_sections_modified(self) -> Optional[int]:
-        return self._change_counters.get(ChangeType.SECTION)
+        return self._section_counter.get(ChangeType.SECTION)
 
-    def add_change(self, change: ChangeUnionType):
-        self._changes.append(change)
-        self._change_counters.setdefault(change.change_type, 0)
-        self._change_counters[change.change_type] += 1
+    def add_change(
+        self, change: ChangeUnionType, node_type: Optional[str] = None
+    ):
+        self.changes.append(change)
         if change.change_type in (
             ChangeType.REQUIREMENT_REMOVED,
             ChangeType.REQUIREMENT_MODIFIED,
             ChangeType.REQUIREMENT_ADDED,
         ):
-            self._change_counters.setdefault(ChangeType.REQUIREMENT, 0)
-            self._change_counters[ChangeType.REQUIREMENT] += 1
+            assert isinstance(node_type, str), node_type
+            node_type_counter = self._node_counter.setdefault(node_type, {})
+            node_type_counter.setdefault(change.change_type, 0)
+            node_type_counter[change.change_type] += 1
+
+            node_type_counter.setdefault(ChangeType.REQUIREMENT, 0)
+            node_type_counter[ChangeType.REQUIREMENT] += 1
         elif change.change_type in (
             ChangeType.SECTION_REMOVED,
             ChangeType.SECTION_MODIFIED,
             ChangeType.SECTION_ADDED,
         ):
-            self._change_counters.setdefault(ChangeType.SECTION, 0)
-            self._change_counters[ChangeType.SECTION] += 1
+            self._section_counter.setdefault(change.change_type, 0)
+            self._section_counter[change.change_type] += 1
+
+            self._section_counter.setdefault(ChangeType.SECTION, 0)
+            self._section_counter[ChangeType.SECTION] += 1
         elif change.change_type in (ChangeType.DOCUMENT_MODIFIED,):
-            self._change_counters.setdefault(ChangeType.DOCUMENT, 0)
-            self._change_counters[ChangeType.DOCUMENT] += 1
+            self._document_counter.setdefault(change.change_type, 0)
+            self._document_counter[change.change_type] += 1
+
+            self._document_counter.setdefault(ChangeType.DOCUMENT, 0)
+            self._document_counter[ChangeType.DOCUMENT] += 1
+
+        else:  # pragma: no cover
+            raise AssertionError  # pragma: no cover
 
     @staticmethod
     def create_from_two_indexes(
@@ -395,15 +425,13 @@ class ChangeStats:
             # Now iterate over all nodes and collect the diff information.
             #
             # Note that document nodes appear when a document is included to
-            # another document. We treat a document node as as a section node
+            # another document. We treat a document node as a section node
             # because they both have FREETEXT.
             #
             for node in document_iterator.all_content(
                 print_fragments=True, print_fragments_from_files=False
             ):
-                if isinstance(node, (SDocSection, SDocDocument)) or (
-                    isinstance(node, SDocNode) and node.node_type == "SECTION"
-                ):
+                if isinstance(node, (SDocSection, SDocDocument)):
                     if node in change_stats.map_nodes_to_changes:
                         continue
 
@@ -528,7 +556,7 @@ class ChangeStats:
                             ] = section_change
                         change_stats.add_change(section_change)
 
-                if isinstance(node, SDocNode) and node.node_type != "SECTION":
+                if isinstance(node, SDocNode):
                     #
                     # Step: We check if a requirement was modified at all, or if
                     # it has already been checked before. Skipping the requirement
@@ -577,7 +605,10 @@ class ChangeStats:
                         change_stats.map_nodes_to_changes[node] = (
                             requirement_change
                         )
-                        change_stats.add_change(requirement_change)
+
+                        change_stats.add_change(
+                            requirement_change, node.node_type
+                        )
                         continue
 
                     #
@@ -725,7 +756,7 @@ class ChangeStats:
                         change_stats.map_nodes_to_changes[
                             other_requirement_or_none
                         ] = requirement_change
-                    change_stats.add_change(requirement_change)
+                    change_stats.add_change(requirement_change, node.node_type)
 
     @staticmethod
     def create_field_change(
@@ -997,28 +1028,6 @@ class ProjectDiffAnalyzer:
                 map_nodes_to_hashers[node] = hasher
             else:
                 raise AssertionError(node)
-
-        def recurse(node):
-            assert isinstance(node, (SDocSection, SDocDocument))
-            for sub_node_ in node.section_contents:
-                if isinstance(sub_node_, SDocSection):
-                    map_nodes_to_hashers[node].update(recurse(sub_node_))
-                elif isinstance(sub_node_, SDocNode):
-                    node_md5 = (
-                        map_nodes_to_hashers[sub_node_]
-                        .hexdigest()
-                        .encode("utf-8")
-                    )
-                    map_nodes_to_hashers[node].update(node_md5)
-                else:
-                    raise NotImplementedError(sub_node_)
-            return map_nodes_to_hashers[node].hexdigest().encode("utf-8")
-
-        # Keeping this code in case we will need to include child node hashes
-        # to parent node hashes recursively. This was the original
-        # implementation which we discarded. Now, each node's hash is
-        # self-contained.
-        # recurse(document)  # noqa: ERA001
 
         for node_ in document_iterator.all_content(
             print_fragments=True, print_fragments_from_files=False

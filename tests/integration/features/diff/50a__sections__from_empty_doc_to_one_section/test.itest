@@ -1,6 +1,10 @@
 RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
 
 RUN: cat %S/Output/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
+NOTE: This ensures that the output HTML indeed contains a green diff line
+      produced from comparing the old and the modified requirement statement.
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-section">Summary of the changes</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>2</div>
@@ -9,14 +13,20 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No documents were modified.</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No sections were modified.</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1 (1 added)</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">TEXT nodes</div>
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>2 (1 removed, 1 added)</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1 (1 added)</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">REQUIREMENT nodes</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No nodes were modified.</div>
 
-NOTE: This ensures that red-green diff is explained correctly.
-CHECK-CHANGELOG:<span class="sdoc_pre_content">This is a free text.
-CHECK-CHANGELOG:<span class="sdoc_pre_content">It is a MODIFIED free text.
+# SECTION
+CHECK-CHANGELOG:class="diff_node_field"
+CHECK-CHANGELOG:modified="right"
+CHECK-CHANGELOG:New section
+
+# TEXT
+CHECK-CHANGELOG:class="diff_node_field"
+CHECK-CHANGELOG:modified="right"
+CHECK-CHANGELOG:Hello world!

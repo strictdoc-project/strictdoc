@@ -292,10 +292,12 @@ class DocumentGrammar(SDocGrammarIF):
 
     @staticmethod
     def create_default(
-        parent: Optional[SDocDocumentIF], create_section_element: bool = False
+        parent: Optional[SDocDocumentIF],
+        create_section_element: bool = False,
+        enable_mid: bool = False,
     ) -> "DocumentGrammar":
         text_element: GrammarElement = (
-            DocumentGrammar.create_default_text_element()
+            DocumentGrammar.create_default_text_element(enable_mid=enable_mid)
         )
 
         # @relation(SDOC-SRS-132, scope=range_start)
@@ -305,56 +307,71 @@ class DocumentGrammar(SDocGrammarIF):
                 GrammarElementFieldSingleChoice,
                 GrammarElementFieldMultipleChoice,
             ]
-        ] = [
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.UID,
-                human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.LEVEL,
-                human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.STATUS,
-                human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.TAGS,
-                human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.TITLE,
-                human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.STATEMENT,
-                human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.RATIONALE,
-                human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.COMMENT,
-                human_title=None,
-                required="False",
-            ),
-        ]
+        ] = []
+
+        if enable_mid:
+            fields.append(
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.MID,
+                    human_title=None,
+                    required="False",
+                )
+            )
+
+        fields.extend(
+            [
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.UID,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.LEVEL,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.STATUS,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.TAGS,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.TITLE,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.STATEMENT,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.RATIONALE,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.COMMENT,
+                    human_title=None,
+                    required="False",
+                ),
+            ]
+        )
+
         requirement_element = GrammarElement(
             parent=None,
             tag="REQUIREMENT",
@@ -374,7 +391,9 @@ class DocumentGrammar(SDocGrammarIF):
 
         if create_section_element:
             section_element: GrammarElement = (
-                DocumentGrammar.create_default_section_element()
+                DocumentGrammar.create_default_section_element(
+                    enable_mid=enable_mid
+                )
             )
             elements.append(section_element)
 
@@ -527,6 +546,7 @@ class DocumentGrammar(SDocGrammarIF):
     @staticmethod
     def create_default_text_element(
         parent: Optional["DocumentGrammar"] = None,
+        enable_mid: bool = False,
     ) -> GrammarElement:
         fields: List[
             Union[
@@ -534,20 +554,32 @@ class DocumentGrammar(SDocGrammarIF):
                 GrammarElementFieldSingleChoice,
                 GrammarElementFieldMultipleChoice,
             ]
-        ] = [
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.UID,
-                human_title=None,
-                required="False",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.STATEMENT,
-                human_title=None,
-                required="True",
-            ),
-        ]
+        ] = []
+        if enable_mid:
+            fields.append(
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.MID,
+                    human_title=None,
+                    required="False",
+                )
+            )
+        fields.extend(
+            [
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.UID,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.STATEMENT,
+                    human_title=None,
+                    required="True",
+                ),
+            ]
+        )
         text_element = GrammarElement(
             parent=parent,
             tag="TEXT",

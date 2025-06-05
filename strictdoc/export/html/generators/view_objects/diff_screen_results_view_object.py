@@ -1,14 +1,18 @@
 # mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def"
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional, Set
 
 from markupsafe import Markup
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.git.change_generator import ChangeContainer
+from strictdoc.helpers.cast import assert_cast
 
 
 @dataclass
@@ -18,8 +22,8 @@ class DiffScreenResultsViewObject:
         *,
         project_config: ProjectConfig,
         change_container: ChangeContainer,
-        document_tree_lhs,
-        document_tree_rhs,
+        document_tree_lhs: DocumentTree,
+        document_tree_rhs: DocumentTree,
         documents_iterator_lhs,
         documents_iterator_rhs,
         left_revision: str,
@@ -35,8 +39,8 @@ class DiffScreenResultsViewObject:
     ):
         self.project_config: ProjectConfig = project_config
         self.change_container: ChangeContainer = change_container
-        self.document_tree_lhs = document_tree_lhs
-        self.document_tree_rhs = document_tree_rhs
+        self.document_tree_lhs: DocumentTree = document_tree_lhs
+        self.document_tree_rhs: DocumentTree = document_tree_rhs
         self.documents_iterator_lhs = documents_iterator_lhs
         self.documents_iterator_rhs = documents_iterator_rhs
         self.left_revision: str = left_revision
@@ -72,3 +76,22 @@ class DiffScreenResultsViewObject:
 
     def render_static_url_with_prefix(self, url: str) -> str:
         return self.link_renderer.render_static_url_with_prefix(url)
+
+    def get_node_types(self) -> List[str]:
+        node_types: Set[str] = set()
+
+        document_: SDocDocument
+        for document_ in self.document_tree_lhs.document_list:
+            document_grammar = assert_cast(document_.grammar, DocumentGrammar)
+
+            for node_type_ in document_grammar.elements_by_type.keys():
+                node_types.add(node_type_)
+
+        for document_ in self.document_tree_rhs.document_list:
+            document_grammar = assert_cast(document_.grammar, DocumentGrammar)
+
+            for node_type_ in document_grammar.elements_by_type.keys():
+                node_types.add(node_type_)
+
+        priority_order = {"SECTION": 0, "TEXT": 1, "REQUIREMENT": 2}
+        return sorted(node_types, key=lambda x: (priority_order.get(x, 100), x))

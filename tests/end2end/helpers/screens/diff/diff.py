@@ -28,6 +28,7 @@ class Screen_Diff(Screen):  # pylint: disable=invalid-name
         xpath = '//*[@data-testid="table-row-value-sections-modified"]'
         self.assert_xpath_contains(xpath, stats)
 
-    def assert_requirements_modified(self, stats: str) -> None:
-        xpath = '//*[@data-testid="table-row-value-requirements-modified"]'
+    def assert_nodes_modified(self, node_type: str, stats: str) -> None:
+        node_type_string = node_type.lower() + "-nodes"
+        xpath = f'//*[@data-testid="table-row-value-{node_type_string}"]'
         self.assert_xpath_contains(xpath, stats)

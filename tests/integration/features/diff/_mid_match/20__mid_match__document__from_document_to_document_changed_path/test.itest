@@ -11,8 +11,11 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No sections were modified.</div>
 
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Requirements modified</div>
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No requirements were modified.</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">TEXT nodes</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No nodes were modified.</div>
+
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">REQUIREMENT nodes</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No nodes were modified.</div>
 
 CHECK-CHANGELOG:ABCD0123
 CHECK-CHANGELOG:span class="lambda_red">H</span><span>e</span><span class="lambda_red">llo worl</span><span>d doc</span>

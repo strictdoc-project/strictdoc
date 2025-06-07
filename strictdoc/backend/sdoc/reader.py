@@ -195,7 +195,12 @@ class SDReader:
         node.ng_document_reference = section.ng_document_reference
         node.ng_level = section.ng_level
         node.ng_resolved_custom_level = section.ng_resolved_custom_level
-
+        node.ng_line_start = section.ng_line_start
+        node.ng_line_end = section.ng_line_end
+        node.ng_col_start = section.ng_col_start
+        node.ng_col_end = section.ng_col_end
+        node.ng_byte_start = section.ng_byte_start
+        node.ng_byte_end = section.ng_byte_end
         return node
 
     @staticmethod
@@ -217,8 +222,6 @@ class SDReader:
     @staticmethod
     def migration_sections_grammar(sdoc: SDocDocument) -> None:
         grammar: DocumentGrammar = assert_cast(sdoc.grammar, DocumentGrammar)
-        if not grammar.is_default:
-            return
         section_element_exists = any(
             element_.tag == "SECTION" for element_ in grammar.elements
         )

@@ -4225,6 +4225,13 @@ To perform the migration, run the export command:
     strictdoc export . --formats=sdoc
 
 The resulting files will have all ``[SECTION]`` nodes replaced with ``[[SECTION]]``.
+
+Additionally, when the section behavior is specified to ``[[SECTION]]``, the UI will mark the old section node as Deprecated.
+
+.. image:: _assets/StrictDoc_NodeMigration_DeprecatedSection.png
+   :alt: UI: The deprecated SECTION
+   :class: image
+   :width: 100%
 <<<
 
 [[/SECTION]]

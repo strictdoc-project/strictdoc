@@ -178,7 +178,7 @@ class SDReader:
             )
         )
         node: SDocNode = SDocNode(
-            parent=section,
+            parent=section.parent,
             node_type="SECTION",
             fields=fields,
             relations=[],

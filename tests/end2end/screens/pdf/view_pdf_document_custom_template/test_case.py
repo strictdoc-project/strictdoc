@@ -23,7 +23,11 @@ class Test(E2ECase):
             screen_project_index.assert_on_screen()
             screen_project_index.assert_contains_document("Empty Document")
 
-            screen_document = screen_project_index.do_click_on_first_document()
+            screen_document = (
+                screen_project_index.do_click_on_the_document_with_title(
+                    "Empty Document"
+                )
+            )
 
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Empty Document")

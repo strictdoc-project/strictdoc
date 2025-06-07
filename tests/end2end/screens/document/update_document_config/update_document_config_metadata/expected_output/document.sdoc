@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document 1
+METADATA:
+  AUTHOR: Wile E. Coyote
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<

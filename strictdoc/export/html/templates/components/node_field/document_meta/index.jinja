@@ -1,8 +1,7 @@
 {%- set document_config = view_object.document.config -%}
 
-{%- if document_config.has_meta() or document_config.has_custom_meta() -%}
+{%- if document_config.has_meta() or document_config.has_custom_metadata() -%}
   <sdoc-meta>
-    {% if document_config.has_custom_meta %}
     {%- if view_object.document.config.uid -%}
     <sdoc-meta-label data-testid="document-config-uid-label">UID:</sdoc-meta-label>
     <sdoc-meta-field data-testid="document-config-uid-field">
@@ -30,8 +29,8 @@
 
     {% set document_date_ = view_object.render_document_date() %}
     {%- if document_date_ is not none -%}
-    <sdoc-meta-label data-testid="document-config-version-label">DATE:</sdoc-meta-label>
-    <sdoc-meta-field data-testid="document-config-version-field">
+    <sdoc-meta-label data-testid="document-config-date-label">DATE:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-date-field">
       {%- with field_content = document_date_ %}
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
@@ -47,13 +46,11 @@
     </sdoc-meta-field>
     {%- endif -%}
 
-    {% set custom_metadata = document_config.get_custom_meta() %}
-    {% for key, value in custom_metadata.items() %}
-    <sdoc-meta-label data-testid="document-config-version-label">{{key}}:</sdoc-meta-label>
-    <sdoc-meta-field data-testid="document-config-version-field">
-      {%- with field_content = value %}
-        <sdoc-autogen>{{ field_content }}</sdoc-autogen>
-      {%- endwith -%}
+    {%- if document_config.has_custom_metadata() -%}
+    {% for key, value in document_config.get_custom_metadata() %}
+    <sdoc-meta-label data-testid="document-config-metadata-label">{{key}}:</sdoc-meta-label>
+    <sdoc-meta-field data-testid="document-config-metadata-field">
+      <sdoc-autogen>{{ value }}</sdoc-autogen>
     </sdoc-meta-field>
     {% endfor %}
     {% endif %}

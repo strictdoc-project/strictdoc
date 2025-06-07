@@ -94,6 +94,22 @@ class DocumentRoot(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_document_metadata_contains(self, key: str, value: str) -> None:
+        assert isinstance(key, str)
+        assert isinstance(value, str)
+        self.test_case.assert_element(
+            f"{self.node_xpath}"
+            "//*[@data-testid='document-config-metadata-label']"
+            f"[contains(., '{key}')]",
+            by=By.XPATH,
+        )
+        self.test_case.assert_element(
+            f"{self.node_xpath}"
+            "//*[@data-testid='document-config-metadata-field']"
+            f"[contains(., '{value}')]",
+            by=By.XPATH,
+        )
+
     def assert_document_abstract_contains(self, text: str) -> None:
         assert isinstance(text, str)
         self.test_case.assert_element(

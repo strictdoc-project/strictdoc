@@ -76,6 +76,7 @@ from strictdoc.core.transforms.validation_error import (
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_config_form_object import (
     DocumentConfigFormObject,
+    DocumentMetadataFormField,
 )
 from strictdoc.export.html.form_objects.grammar_element_form_object import (
     GrammarElementFormObject,
@@ -1822,6 +1823,39 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             "stream_edit_document_config.jinja.html",
             form_object=form_object,
             document=document,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @router.get("/actions/document/new_metadata", response_class=Response)
+    def document__add_metadata(
+        document_mid: str,
+    ):
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
+        )
+        assert document.grammar is not None
+
+        form_object = DocumentConfigFormObject.create_from_document(
+            document=document
+        )
+
+        output = env().render_template_as_markup(
+            "actions/"
+            "document/"
+            "add_document_metadata/"
+            "stream_add_document_metadata.jinja.html",
+            form_object=form_object,
+            field=DocumentMetadataFormField(
+                field_mid=MID.create(),
+                field_name="",
+                field_value="",
+            ),
         )
         return HTMLResponse(
             content=output,

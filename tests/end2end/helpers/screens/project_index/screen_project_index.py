@@ -147,6 +147,14 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
         )
         return Screen_Document(self.test_case)
 
+    def do_click_on_the_document_with_title(
+        self, document_title: str
+    ) -> Screen_Document:
+        self.test_case.click_xpath(
+            f"//a[@data-testid='tree-file-link'][.//div[@class='project_tree-file-title' and normalize-space(text())='{document_title}']]"
+        )
+        return Screen_Document(self.test_case)
+
     # Add new document
 
     def do_open_modal_form_add_document(self) -> Form_AddDocument:

@@ -70,7 +70,7 @@ DocumentConfig[noskipws]:
   ('VERSION: ' version = SingleLineString '\n')?
   ('DATE: ' date = SingleLineString '\n')?
   ('CLASSIFICATION: ' classification = SingleLineString '\n')?
-  ('REQ_PREFIX: ' requirement_prefix = SingleLineString '\n')?
+  (/(REQ_)?PREFIX/ ': ' requirement_prefix = SingleLineString '\n')?
   ('ROOT: ' (root = BooleanChoice) '\n')?
   ('OPTIONS:' '\n'
     ('  ENABLE_MID: ' (enable_mid = BooleanChoice) '\n')?
@@ -156,7 +156,7 @@ SDocSection[noskipws]:
   ('UID: ' uid = /{REGEX_UID}/ '\n')?
   ('LEVEL: ' custom_level = SingleLineString '\n')?
   'TITLE: ' title = SingleLineString '\n'
-  ('REQ_PREFIX: ' requirement_prefix = SingleLineString '\n')?
+  (/(REQ_)?PREFIX/ ': ' requirement_prefix = SingleLineString '\n')?
   section_contents *= SectionOrRequirement
   '\n'
   '[/SECTION]'

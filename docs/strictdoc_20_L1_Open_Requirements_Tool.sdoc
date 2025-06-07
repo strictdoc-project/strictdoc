@@ -3,7 +3,7 @@ MID: b7bcca934cd148c3855beb4c85723bc5
 TITLE: Requirements Tool Specification (L1)
 VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
 DATE: @GIT_COMMIT_DATETIME
-REQ_PREFIX: SDOC-SSS-
+PREFIX: SDOC-SSS-
 ROOT: True
 OPTIONS:
   ENABLE_MID: True

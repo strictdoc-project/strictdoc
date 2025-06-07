@@ -74,7 +74,7 @@ class JSONGenerator:
     def _write_document(cls, document: SDocDocument) -> Dict[str, Any]:
         document_dict: Dict[str, Any] = {
             "TITLE": document.title,
-            "REQ_PREFIX": None,
+            "PREFIX": None,
             JSONKey.GRAMMAR: {"ELEMENTS": []},
             JSONKey.OPTIONS: {},
             JSONKey.NODES: [],
@@ -99,7 +99,7 @@ class JSONGenerator:
 
             requirement_prefix = document_config.requirement_prefix
             if requirement_prefix is not None:
-                document_dict["REQ_PREFIX"] = requirement_prefix
+                document_dict["PREFIX"] = requirement_prefix
 
             root = document_config.root
             if root is not None:
@@ -294,7 +294,7 @@ class JSONGenerator:
             node_dict["LEVEL"] = section.custom_level
 
         if section.requirement_prefix is not None:
-            node_dict["REQ_PREFIX"] = section.requirement_prefix
+            node_dict["PREFIX"] = section.requirement_prefix
 
         return node_dict
 

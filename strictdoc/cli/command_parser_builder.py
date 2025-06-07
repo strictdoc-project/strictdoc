@@ -515,8 +515,8 @@ class CommandParserBuilder:
             description=(
                 "This command generates missing requirement UID automatically. "
                 "The UIDs are generated based on the nearest section "
-                "REQ_PREFIX (if provided) or the document's "
-                'REQ_PREFIX (if provided or "REQ-" by default).'
+                "PREFIX (if provided) or the document's "
+                'PREFIX (if provided or "REQ-" by default).'
             ),
             formatter_class=formatter,
         )

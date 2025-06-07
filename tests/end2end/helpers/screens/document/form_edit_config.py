@@ -62,7 +62,7 @@ class Form_EditConfig(Form):  # pylint: disable=invalid-name
         self, field_value: str, field_order: int = 1
     ) -> None:
         assert isinstance(field_value, str)
-        super().do_fill_in("document[REQ_PREFIX]", field_value, field_order)
+        super().do_fill_in("document[PREFIX]", field_value, field_order)
 
     def do_fill_in_document_abstract(
         self, field_value: str, field_order: int = 1

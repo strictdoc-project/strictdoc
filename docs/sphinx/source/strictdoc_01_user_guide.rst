@@ -588,7 +588,7 @@ The following ``DOCUMENT`` fields are allowed:
    * - ``CLASSIFICATION``
      - Security classification of the document, e.g. Public, Internal, Restricted, Confidential
 
-   * - ``REQ_PREFIX``
+   * - ``PREFIX``
      - Requirement prefix that should be used for automatic generation of UIDs. See :ref:`Automatic assignment of requirements UID <SECTION-UG-Automatic-assignment-of-requirements-UID>`.
 
    * - ``ROOT``
@@ -2116,7 +2116,7 @@ A document-level requirement mask:
 
     [DOCUMENT]
     TITLE: Hello world doc
-    REQ_PREFIX: MYDOC-
+    PREFIX: MYDOC-
 
 A section-level requirement mask:
 
@@ -2124,7 +2124,7 @@ A section-level requirement mask:
 
     [SECTION]
     TITLE: Section 2.
-    REQ_PREFIX: LEVEL2-REQ-
+    PREFIX: LEVEL2-REQ-
 
 .. _SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE:
 

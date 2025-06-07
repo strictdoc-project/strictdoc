@@ -1,6 +1,6 @@
 [DOCUMENT]
 TITLE: Hello world doc 1
-REQ_PREFIX: ZEP-
+PREFIX: ZEP-
 
 [REQUIREMENT]
 STATEMENT: System 1 shall do 1.

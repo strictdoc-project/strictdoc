@@ -219,8 +219,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
         self.test_case.hover_and_click(
             hover_selector=f"{self.node_xpath}",
             click_selector=(
-                f"{self.node_xpath}"
-                "//*[@data-testid='requirement-show-more-action']"
+                f"{self.node_xpath}//*[@data-testid='node-show-more-action']"
             ),
             hover_by=By.XPATH,
             click_by=By.XPATH,

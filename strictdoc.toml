@@ -4,6 +4,8 @@ title = "StrictDoc Documentation"
 html_assets_strictdoc_dir = "assets"
 cache_dir = "./output/cache"
 
+section_behavior = "[[SECTION]]"
+
 features = [
   # Stable features.
   "TABLE_SCREEN",

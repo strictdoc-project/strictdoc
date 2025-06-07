@@ -21,12 +21,12 @@
   >{% include "_res/svg_ico16_go_to_doc.jinja" %}</a>
   <turbo-frame>
     <a
-      href="/actions/show_full_{{ sdoc_entity.get_type_string() }}?reference_mid={{ sdoc_entity.reserved_mid }}"
+      href="/actions/show_full_node?reference_mid={{ sdoc_entity.reserved_mid }}"
       class="action_button"
       data-turbo="true"
       data-turbo-action="replace"
       title="Show in full in modal"
-      data-testid="{{ sdoc_entity.get_type_string() }}-show-more-action"
+      data-testid="node-show-more-action"
     >{% include "_res/svg_ico16_maximize.jinja" %}</a>
   </turbo-frame>
 </sdoc-node-controls>

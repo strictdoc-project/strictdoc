@@ -345,6 +345,9 @@ class DocumentScreenViewObject:
         assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
         return node.reserved_uid is not None
 
+    def should_display_old_section_as_deprecated(self) -> bool:
+        return self.project_config.is_new_section_behavior()
+
     def get_stable_link(
         self, node: Union[SDocDocument, SDocSection, SDocNode]
     ) -> str:

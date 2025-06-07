@@ -621,8 +621,8 @@ The following ``DOCUMENT`` fields are allowed:
    * - ``CLASSIFICATION``
      - Security classification of the document, e.g. Public, Internal, Restricted, Confidential
 
-   * - ``PREFIX``
-     - Requirement prefix that should be used for automatic generation of UIDs. See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID].
+   * - ``PREFIX (formerly REQ_PREFIX)``
+     - Requirement prefix that should be used for automatic generation of UIDs. See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID]. This field used to be called ``REQ_PREFIX`` but it was deprecated as of 2025-Q2. The ``REQ_PREFIX`` alias will be removed from the codebase in 2025-Q3.
 
    * - ``ROOT``
      - Defines whether a document is a root object in a traceability graph. A root document is assumed to not have any parent requirements. The project statistics calculation will skip all root document's requirements when calculating the metric ``Non-root-level requirements not connected to any parent requirement``.
@@ -650,7 +650,7 @@ STATEMENT: >>>
 The ``OPTIONS`` field may have the following attribute fields:
 
 .. list-table:: SDoc grammar ``DOCUMENT``-``OPTIONS`` fields
-   :widths: 20 80
+   :widths: 25 85
    :header-rows: 1
 
    * - **Field**
@@ -4192,6 +4192,8 @@ Using the new syntax, it is now possible to declare any custom composite element
 2\) The previously used ``[SECTION]`` syntax with one square bracket around the SECTION is now DEPRECATED, but the old behavior is still supported. The users are encouraged to migrate all ``[SECTION]`` elements to the new ``[[SECTION]]`` syntax. To support the new behavior, the grammar must include a declaration for a composite SECTION element similar to the example provided above.
 
 3\) The ``[COMPOSITE_REQUIREMENT]`` node has been removed from the codebase. This is a backward-incompatible change, but it is assumed that no users should be affected since this feature has never been developed enough to be useful.
+
+4\) The document-level ``REQ_PREFIX`` has been renamed/aliased to ``PREFIX``. The REQ_PREFIX form will still be recognized but writing SDoc files back to disk will result in the new PREFIX field to be written.
 <<<
 
 [[SECTION]]

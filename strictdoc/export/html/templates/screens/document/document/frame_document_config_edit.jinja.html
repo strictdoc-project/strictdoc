@@ -55,10 +55,10 @@
 
       {%- with
         field_type="singleline",
-        field_name="REQ_PREFIX",
-        field_input_name="document[REQ_PREFIX]",
+        field_name="PREFIX",
+        field_input_name="document[PREFIX]",
         field_value=form_object.document_requirement_prefix,
-        errors=form_object.get_errors("REQ_PREFIX")
+        errors=form_object.get_errors("PREFIX")
       -%}
         {% include "components/form/field/text/index.jinja" %}
       {%- endwith -%}

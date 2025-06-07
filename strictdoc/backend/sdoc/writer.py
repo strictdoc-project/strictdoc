@@ -113,7 +113,7 @@ class SDWriter:
 
             requirement_prefix = document_config.requirement_prefix
             if requirement_prefix is not None:
-                output += f"REQ_PREFIX: {requirement_prefix}"
+                output += f"PREFIX: {requirement_prefix}"
                 output += "\n"
 
             root = document_config.root
@@ -418,7 +418,7 @@ class SDWriter:
         output += str(section.title)
         output += "\n"
         if section.requirement_prefix is not None:
-            output += "REQ_PREFIX: "
+            output += "PREFIX: "
             output += section.requirement_prefix
             output += "\n"
 

@@ -128,8 +128,8 @@ class DocumentConfigFormObject(ErrorObject):
             )
 
         document_requirement_prefix: str = ""
-        if "REQ_PREFIX" in config_fields:
-            document_requirement_prefix = config_fields["REQ_PREFIX"]
+        if "PREFIX" in config_fields:
+            document_requirement_prefix = config_fields["PREFIX"]
             document_requirement_prefix = sanitize_html_form_field(
                 document_requirement_prefix, multiline=False
             )

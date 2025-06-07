@@ -1,6 +1,6 @@
 [DOCUMENT]
 TITLE: Hello world doc
-REQ_PREFIX: DOC-
+PREFIX: DOC-
 
 [GRAMMAR]
 ELEMENTS:

@@ -1,6 +1,6 @@
 [DOCUMENT]
 TITLE: Document 1
-REQ_PREFIX: PREFIX-
+PREFIX: PREFIX-
 
 [REQUIREMENT]
 TITLE: Requirement title

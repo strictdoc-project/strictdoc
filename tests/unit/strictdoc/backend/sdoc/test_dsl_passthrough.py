@@ -534,7 +534,7 @@ def test_073_document_config_requirement_prefix(default_project_config):
 TITLE: Test Doc
 UID: SDOC-01
 VERSION: 0.0.1
-REQ_PREFIX: DOC-
+PREFIX: DOC-
 
 [REQUIREMENT]
 STATEMENT: ...

@@ -174,13 +174,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     def get_root(request: Request):
         return get_incoming_request(request, "index.html")
 
-    @router.get("/actions/show_full_requirement", response_class=Response)
-    def requirement__show_full(reference_mid: str):
-        requirement: SDocNode = (
+    @router.get("/actions/show_full_node", response_class=Response)
+    def node__show_full(reference_mid: str):
+        node: Union[SDocNode, SDocSection] = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         )
         requirement_document: SDocDocument = assert_cast(
-            requirement.get_document(), SDocDocument
+            node.get_document(), SDocDocument
         )
         link_renderer = LinkRenderer(
             root_path=requirement_document.meta.get_root_path_prefix(),
@@ -204,11 +204,18 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             git_client=html_generator.git_client,
             standalone=False,
         )
-        output = env().render_template_as_markup(
-            "actions/node/show_full_node/stream_show_full_requirement.jinja",
-            view_object=view_object,
-            requirement=requirement,
-        )
+        if isinstance(node, SDocNode):
+            output = env().render_template_as_markup(
+                "actions/node/show_full_node/stream_show_full_node.jinja",
+                view_object=view_object,
+                requirement=node,
+            )
+        else:
+            output = env().render_template_as_markup(
+                "actions/node/show_full_node/stream_show_full_node.jinja",
+                view_object=view_object,
+                section=node,
+            )
         return HTMLResponse(
             content=output,
             status_code=200,

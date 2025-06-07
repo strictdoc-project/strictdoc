@@ -4062,91 +4062,6 @@ MID: b55c23b113d54802b5717f7a82a45bd2
 TITLE: Appendices
 
 [[SECTION]]
-MID: 2ed20461aeb4462b812432c08aa006be
-UID: SECTION-UG-NODE-MIGRATION
-TITLE: [[NODE]] migration (2025 Q2-Q3)
-
-[TEXT]
-MID: 9d55b69bf789487e814210da06fc4164
-STATEMENT: >>>
-As of 2025 Q2, the following changes are made to StrictDoc's grammar in a partially backward-incompatible manner. The relevant GitHub issue related to the migration:
-
-`Migration: SDoc model: Merge Section, Node, Composite Node into just Node #2193 <https://github.com/strictdoc-project/strictdoc/issues/2193>`_
-
-1\) The ``[[CUSTOM_NODE]]`` syntax with two square brackets around the element name has been introduced for composite nodes.
-
-Example of declaring a composite node in a grammar and using it in a document:
-
-.. code-block::
-
-    [GRAMMAR]
-    ELEMENTS:
-    - TAG: SECTION
-      PROPERTIES:
-        IS_COMPOSITE: True
-        PREFIX: None
-        VIEW_STYLE: Narrative
-      FIELDS:
-      - TITLE: MID
-        TYPE: String
-        REQUIRED: False
-      - TITLE: UID
-        TYPE: String
-        REQUIRED: False
-      - TITLE: TITLE
-        TYPE: String
-        REQUIRED: True
-
-     [[SECTION]]
-     TITLE: Section #1
-
-     [[/SECTION]]
-
-Using the new syntax, it is now possible to declare any custom composite element, such as what ``[COMPOSITE_REQUIREMENT]`` used to provide before.
-
-2\) The previously used ``[SECTION]`` syntax with one square bracket around the SECTION is now DEPRECATED, but the old behavior is still supported. The users are encouraged to migrate all ``[SECTION]`` elements to the new ``[[SECTION]]`` syntax. To support the new behavior, the grammar must include a declaration for a composite SECTION element similar to the example provided above.
-
-3\) The ``[COMPOSITE_REQUIREMENT]`` node has been removed from the codebase. This is a backward-incompatible change, but it is assumed that no users should be affected since this feature has never been developed enough to be useful.
-<<<
-
-[[SECTION]]
-MID: 6f15ef6876ba48598d5560aaf4664ec9
-TITLE: How to migrate from [SECTION] to [[SECTION]]
-
-[TEXT]
-MID: 19fe5099aa034eddb960cc88953ace0e
-STATEMENT: >>>
-The migration from ``[SECTION]`` to the new composite ``[[SECTION]]`` syntax is mostly straightforward and can be done manually. However, StrictDoc also provides a dedicated configuration option to assist with this migration.
-
-1\) **Manual approach**
-
-Update all instances of ``[SECTION]`` to ``[[SECTION]]`` manually, or use a combination of ``find`` and ``sed``. Additionally, make sure to update all document grammar declarations to include the new composite ``[[SECTION]]`` element.
-
-2\) **Semi-automated approach (experimental)**
-
-StrictDoc can automatically migrate SDoc files if the project configuration option ``section_behavior`` is set as follows:
-
-.. code-block::
-
-    [project]
-    section_behavior = "[[SECTION]]"
-
-With this option enabled, StrictDoc's ``export`` command will convert all ``[SECTION]`` nodes to ``[[SECTION]]`` when writing SDoc files.
-
-To perform the migration, run the export command:
-
-.. code-block::
-
-    strictdoc export . --formats=sdoc
-
-The resulting files will have all ``[SECTION]`` nodes replaced with ``[[SECTION]]``.
-<<<
-
-[[/SECTION]]
-
-[[/SECTION]]
-
-[[SECTION]]
 MID: a72ae310493a42ba8ecdc7de2c42d4f2
 UID: SECTION-UG-FREETEXT-TEXT
 TITLE: FREETEXT-TEXT migration (June 2024)
@@ -4225,6 +4140,91 @@ The ``TEXT`` node is now included to a default StrictDoc grammar by default. If 
     ... Optionally other elements definitions.
 
 The ``strictdoc export --formats sdoc --free-text-to-text ...`` command can be used for converting all FREETEXT nodes to TEXT nodes automatically. See ``strictdoc export --help`` for more details.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 2ed20461aeb4462b812432c08aa006be
+UID: SECTION-UG-NODE-MIGRATION
+TITLE: [[NODE]] migration (2025 Q2-Q3)
+
+[TEXT]
+MID: 9d55b69bf789487e814210da06fc4164
+STATEMENT: >>>
+As of 2025 Q2, the following changes are made to StrictDoc's grammar in a partially backward-incompatible manner. The relevant GitHub issue related to the migration:
+
+`Migration: SDoc model: Merge Section, Node, Composite Node into just Node #2193 <https://github.com/strictdoc-project/strictdoc/issues/2193>`_
+
+1\) The ``[[CUSTOM_NODE]]`` syntax with two square brackets around the element name has been introduced for composite nodes.
+
+Example of declaring a composite node in a grammar and using it in a document:
+
+.. code-block::
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: SECTION
+      PROPERTIES:
+        IS_COMPOSITE: True
+        PREFIX: None
+        VIEW_STYLE: Narrative
+      FIELDS:
+      - TITLE: MID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+
+     [[SECTION]]
+     TITLE: Section #1
+
+     [[/SECTION]]
+
+Using the new syntax, it is now possible to declare any custom composite element, such as what ``[COMPOSITE_REQUIREMENT]`` used to provide before.
+
+2\) The previously used ``[SECTION]`` syntax with one square bracket around the SECTION is now DEPRECATED, but the old behavior is still supported. The users are encouraged to migrate all ``[SECTION]`` elements to the new ``[[SECTION]]`` syntax. To support the new behavior, the grammar must include a declaration for a composite SECTION element similar to the example provided above.
+
+3\) The ``[COMPOSITE_REQUIREMENT]`` node has been removed from the codebase. This is a backward-incompatible change, but it is assumed that no users should be affected since this feature has never been developed enough to be useful.
+<<<
+
+[[SECTION]]
+MID: 6f15ef6876ba48598d5560aaf4664ec9
+TITLE: How to migrate from [SECTION] to [[SECTION]]
+
+[TEXT]
+MID: 19fe5099aa034eddb960cc88953ace0e
+STATEMENT: >>>
+The migration from ``[SECTION]`` to the new composite ``[[SECTION]]`` syntax is mostly straightforward and can be done manually. However, StrictDoc also provides a dedicated configuration option to assist with this migration.
+
+1\) **Manual approach**
+
+Update all instances of ``[SECTION]`` to ``[[SECTION]]`` manually, or use a combination of ``find`` and ``sed``. Additionally, make sure to update all document grammar declarations to include the new composite ``[[SECTION]]`` element.
+
+2\) **Semi-automated approach (experimental)**
+
+StrictDoc can automatically migrate SDoc files if the project configuration option ``section_behavior`` is set as follows:
+
+.. code-block::
+
+    [project]
+    section_behavior = "[[SECTION]]"
+
+With this option enabled, StrictDoc's ``export`` command will convert all ``[SECTION]`` nodes to ``[[SECTION]]`` when writing SDoc files.
+
+To perform the migration, run the export command:
+
+.. code-block::
+
+    strictdoc export . --formats=sdoc
+
+The resulting files will have all ``[SECTION]`` nodes replaced with ``[[SECTION]]``.
 <<<
 
 [[/SECTION]]

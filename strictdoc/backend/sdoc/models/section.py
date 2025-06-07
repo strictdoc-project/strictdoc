@@ -67,6 +67,12 @@ class SDocSection(SDocSectionIF):
 
         # This is always true, unless the node is filtered out with --filter-requirements.
         self.ng_whitelisted = True
+        self.ng_line_start: Optional[int] = None
+        self.ng_line_end: Optional[int] = None
+        self.ng_col_start: Optional[int] = None
+        self.ng_col_end: Optional[int] = None
+        self.ng_byte_start: Optional[int] = None
+        self.ng_byte_end: Optional[int] = None
 
     @staticmethod
     def get_type_string() -> str:

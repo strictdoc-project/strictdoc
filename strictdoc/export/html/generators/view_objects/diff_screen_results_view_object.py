@@ -95,3 +95,6 @@ class DiffScreenResultsViewObject:
 
         priority_order = {"SECTION": 0, "TEXT": 1, "REQUIREMENT": 2}
         return sorted(node_types, key=lambda x: (priority_order.get(x, 100), x))
+
+    def should_display_old_section_as_deprecated(self) -> bool:
+        return self.project_config.is_new_section_behavior()

@@ -62,14 +62,16 @@
       {% include "components/table_key_value/index.jinja" %}
     {% endwith %}
 
-    {% with key_value_pair =
-        {
-          "Key":"Sections modified",
-          "Value": _sections_modified,
-        }
-    %}
-      {% include "components/table_key_value/index.jinja" %}
-    {% endwith %}
+    {% if not view_object.should_display_old_section_as_deprecated() %}
+      {% with key_value_pair =
+          {
+            "Key":"Sections modified",
+            "Value": _sections_modified,
+          }
+      %}
+        {% include "components/table_key_value/index.jinja" %}
+      {% endwith %}
+    {% endif %}
 
     {% for node_type_ in view_object.get_node_types() %}
       {% set requirements_modified = view_object.change_container.change_stats.get_changes_requirements_changed(node_type_) %}

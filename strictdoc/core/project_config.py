@@ -110,7 +110,7 @@ class ProjectConfig:
         config_last_update: Optional[datetime.datetime],
         chromedriver: Optional[str],
         section_behavior: Optional[str],
-    ):
+    ) -> None:
         assert isinstance(environment, SDocRuntimeEnvironment)
         if source_root_path is not None:
             assert os.path.isdir(source_root_path), source_root_path
@@ -231,7 +231,9 @@ class ProjectConfig:
         )
 
     # Some server command settings can override the project config settings.
-    def integrate_server_config(self, server_config: ServerCommandConfig):
+    def integrate_server_config(
+        self, server_config: ServerCommandConfig
+    ) -> None:
         self.is_running_on_server = True
         if (server_host_ := server_config.host) is not None:
             self.server_host = server_host_
@@ -254,7 +256,9 @@ class ProjectConfig:
         self.generate_bundle_document = False
         self.export_included_documents = True
 
-    def integrate_export_config(self, export_config: ExportCommandConfig):
+    def integrate_export_config(
+        self, export_config: ExportCommandConfig
+    ) -> None:
         if export_config.project_title is not None:
             self.project_title = export_config.project_title
 
@@ -354,7 +358,7 @@ class ProjectConfig:
             ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS in self.project_features
         )
 
-    def is_new_section_behavior(self):
+    def is_new_section_behavior(self) -> bool:
         return self.section_behavior == "[[SECTION]]"
 
     def get_strictdoc_root_path(self) -> str:

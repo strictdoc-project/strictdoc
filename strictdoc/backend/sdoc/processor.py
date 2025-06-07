@@ -110,7 +110,7 @@ class SDocParsingProcessor:
         section.ng_including_document_reference = (
             self.parse_context.context_document_reference
         )
-
+        preserve_source_location_data(section)
         if self.parse_context.document_config.auto_levels:
             if (
                 section.ng_resolved_custom_level

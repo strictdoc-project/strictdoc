@@ -70,6 +70,8 @@ class MultiprocessingParallelizer(Parallelizer):
                 for _ in range(0, multiprocessing.cpu_count())
             ]
 
+            self.at_least_one_child_process_failed: bool = False
+
             for process in self.processes:
                 process.start()
         except OSError as exception:  # pragma: no cover
@@ -95,7 +97,7 @@ class MultiprocessingParallelizer(Parallelizer):
         else:  # pragma: no cover
             pass
 
-        child_failed: bool = False
+        bad_child_exit_code: bool = False
         for process_ in self.processes:
             if process_.exitcode != 0:
                 print(  # noqa: T201
@@ -103,9 +105,15 @@ class MultiprocessingParallelizer(Parallelizer):
                     f"PID: {process_.pid}, exit code: {process_.exitcode}.",
                     flush=True,
                 )
-                child_failed = True
+                bad_child_exit_code = True
 
-        if child_failed:
+        # On Windows GitHub CI, there is sometimes a strange random edge case where
+        # no child process has failed prematurely but there is at least one
+        # child process that is reported with a non-realistic exit code:
+        # error: Parallelizer: Failed child process: PID: 6624, exit code: 3221356611.
+        # Exiting with 1 only it is known that a child process has failed and
+        # ignoring the bad exit codes otherwise.
+        if bad_child_exit_code and self.at_least_one_child_process_failed:
             sys.exit(1)
 
     def run_parallel(
@@ -125,6 +133,7 @@ class MultiprocessingParallelizer(Parallelizer):
                 size -= 1
             except Empty:
                 if any(process.exitcode for process in self.processes):
+                    self.at_least_one_child_process_failed = True
                     raise StrictDocException(
                         "Parallelizer: One of the child processes "
                         "has exited prematurely."

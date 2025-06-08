@@ -25,7 +25,7 @@
               {%- endfor -%}
             </tr>
           </thead>
-          {%- for node in view_object.document_content_iterator() %}
+          {%- for node, _ in view_object.document_content_iterator() %}
             {%- if node.is_requirement() %}
               {%- set requirement = node %}
               <tr>

@@ -5,7 +5,7 @@
   >
     {% include "_shared/tags.jinja.html" %}
     <div class="content">
-      {%- for section_or_requirement in view_object.document_content_iterator() %}
+      {%- for section_or_requirement, _ in view_object.document_content_iterator() %}
         {%- if section_or_requirement.is_section() and section_or_requirement.ng_has_requirements %}
           <section class="content_section">
             <div class="content_item" data-role="current">

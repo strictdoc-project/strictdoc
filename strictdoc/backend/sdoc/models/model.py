@@ -95,6 +95,10 @@ class SDocDocumentIF(ABC):
     def get_display_title(self, include_toc_number: bool = True) -> str:
         raise NotImplementedError  # pragma: no cover
 
+    @property
+    def ng_resolved_custom_level(self) -> Optional[str]:
+        raise NotImplementedError  # pragma: no cover
+
 
 class SDocDocumentFromFileIF(ABC):
     parent: Union[SDocDocumentIF, SDocSectionIF]

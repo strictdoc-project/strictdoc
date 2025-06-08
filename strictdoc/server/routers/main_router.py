@@ -2677,7 +2677,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                             document
                         )
                     )
-                    for node in document_iterator.all_content(
+                    for node, _ in document_iterator.all_content(
                         print_fragments=False, print_fragments_from_files=False
                     ):
                         if node_query.evaluate(node):
@@ -2722,7 +2722,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                         document
                     )
                 )
-                for node_ in document_iterator.all_content(
+                for node_, _ in document_iterator.all_content(
                     print_fragments=False, print_fragments_from_files=False
                 ):
                     if node_.is_section():

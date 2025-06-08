@@ -67,7 +67,7 @@ class DocumentUIDAnalyzer:
     ) -> DocumentStats:
         this_document_stats = DocumentStats(document)
         document_iterator = DocumentCachingIterator(document)
-        for node in document_iterator.all_content():
+        for node, _ in document_iterator.all_content():
             if isinstance(node, SDocSection) or (
                 isinstance(node, SDocNode) and node.node_type == "SECTION"
             ):

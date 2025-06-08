@@ -31,7 +31,7 @@ class DeleteRequirementCommand:
             self.requirement.get_document(), SDocDocument
         )
         document_iterator = DocumentCachingIterator(document=document)
-        for document_node_ in document_iterator.all_node_content(
+        for document_node_, _ in document_iterator.all_node_content(
             self.requirement,
             print_fragments=True,
             print_fragments_from_files=True,

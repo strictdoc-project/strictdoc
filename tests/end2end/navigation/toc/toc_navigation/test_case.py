@@ -50,7 +50,7 @@ class Test(E2ECase):
             # * in requirement:
             # f"{unique_prefix}-{self._string_to_link(node.reserved_uid)}" # noqa: ERA001
             # f"{unique_prefix}-{self._string_to_link(node.reserved_title)}" # noqa: ERA001
-            # *** where unique_prefix = node.context.title_number_string
+            # *** where unique_prefix = context.get_title_number_string()
 
             toc_section_without_uid_anchor = "1-Section-without-UID"
             toc_section_with_uid_anchor = "SECTION_01"

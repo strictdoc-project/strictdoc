@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Iterator, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -16,32 +17,63 @@ from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.cast import assert_cast
 
 
+@dataclass
+class DocumentIterationContext:
+    node: SDocElementIF
+    level_stack: Tuple[int, ...]
+    custom_level: bool = False
+
+    def get_level(self) -> int:
+        return len(self.level_stack)
+
+    def get_level_string(self) -> str:
+        if (
+            isinstance(self.node, SDocNode)
+            and self.node.node_type == "TEXT"
+            and self.node.reserved_title is None
+        ):
+            return ""
+
+        if self.node.ng_resolved_custom_level == "None":
+            return ""
+
+        if self.node.ng_resolved_custom_level is not None:
+            return self.node.ng_resolved_custom_level
+
+        if self.custom_level:
+            return ""
+
+        return ".".join(map(str, self.level_stack))
+
+
 class DocumentCachingIterator:
     def __init__(self, document: SDocDocument) -> None:
         assert isinstance(document, SDocDocument), document
 
         self.document: SDocDocument = document
 
-    def table_of_contents(self) -> Iterator[SDocElementIF]:
-        for node in self.all_content(
+    def table_of_contents(
+        self,
+    ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
+        for node_, context_ in self.all_content(
             print_fragments=True,
             print_fragments_from_files=False,
         ):
-            if isinstance(node, SDocNode):
-                if node.reserved_title is None:
+            if isinstance(node_, SDocNode):
+                if node_.reserved_title is None:
                     continue
                 if (
                     not self.document.config.is_requirement_in_toc()
-                    and node.node_type != "SECTION"
+                    and node_.node_type != "SECTION"
                 ):
                     continue
-            yield node
+            yield node_, context_
 
     def all_content(
         self,
         print_fragments: bool = False,
         print_fragments_from_files: bool = False,
-    ) -> Iterator[SDocElementIF]:
+    ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
         root_node = self.document
 
         yield from self.all_node_content(
@@ -59,28 +91,7 @@ class DocumentCachingIterator:
         print_fragments_from_files: bool = False,
         level_stack: Tuple[int, ...] = (),
         custom_level: bool = False,
-    ) -> Iterator[SDocElementIF]:
-        def get_level_string_(
-            node_: Union[SDocSection, SDocNode],
-        ) -> str:
-            if (
-                isinstance(node_, SDocNode)
-                and node_.node_type == "TEXT"
-                and node_.reserved_title is None
-            ):
-                return ""
-
-            if node_.ng_resolved_custom_level == "None":
-                return ""
-
-            if node_.ng_resolved_custom_level is not None:
-                return node_.ng_resolved_custom_level
-
-            if custom_level:
-                return ""
-
-            return ".".join(map(str, level_stack))
-
+    ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
         if isinstance(node, SDocSection):
             # If node is not whitelisted, we ignore it. Also, note that due to
             # this early return, all child nodes of this node are ignored
@@ -88,11 +99,14 @@ class DocumentCachingIterator:
             if not node.ng_whitelisted:
                 return
 
-            # FIXME: This will be changed.
-            node.context.title_number_string = get_level_string_(node)
-            node.ng_level = len(level_stack)
+            # FIXME: This will be changed to yield only context.
+            context = DocumentIterationContext(
+                node, level_stack, custom_level=custom_level
+            )
+            node.context.title_number_string = context.get_level_string()
+            node.ng_level = context.get_level()
 
-            yield node
+            yield node, context
 
             current_number = 0
             for subnode_ in node.section_contents:
@@ -127,11 +141,14 @@ class DocumentCachingIterator:
             if not node.ng_whitelisted:
                 return
 
-            # FIXME: This will be changed.
-            node.context.title_number_string = get_level_string_(node)
-            node.ng_level = len(level_stack)
+            # FIXME: This will be changed to yield only context.
+            context = DocumentIterationContext(
+                node, level_stack, custom_level=custom_level
+            )
+            node.context.title_number_string = context.get_level_string()
+            node.ng_level = context.get_level()
 
-            yield node
+            yield node, context
 
             current_number = 0
             if node.section_contents is not None:
@@ -157,12 +174,13 @@ class DocumentCachingIterator:
                 and node.document_is_included()
                 and self.document != node
             ):
-                node.context.title_number_string = ".".join(
-                    map(str, level_stack)
+                context = DocumentIterationContext(
+                    node, level_stack, custom_level=custom_level
                 )
-                node.ng_level = len(level_stack)
+                node.context.title_number_string = context.get_level_string()
+                node.ng_level = context.get_level()
 
-                yield node
+                yield node, context
 
             current_number = 0
             for subnode_ in node.section_contents:
@@ -191,7 +209,13 @@ class DocumentCachingIterator:
         elif isinstance(node, DocumentFromFile):
             if not print_fragments:
                 if print_fragments_from_files:
-                    yield node
+                    yield (
+                        node,
+                        DocumentIterationContext(
+                            node, level_stack, custom_level=custom_level
+                        ),
+                    )
+
                 return
 
             assert node.resolved_document is not None

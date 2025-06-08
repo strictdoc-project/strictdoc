@@ -196,7 +196,7 @@ def docs(context):
     )
 
 
-@task(aliases=["tue"])
+@task(aliases=["tus"])
 def test_unit_server(context, focus=None):
     focus_argument = f"-k {focus}" if focus is not None else ""
 

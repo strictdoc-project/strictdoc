@@ -389,7 +389,7 @@ class TraceabilityIndexBuilder:
             document_iterator = DocumentCachingIterator(document)
             d_01_document_iterators[document] = document_iterator
 
-            for node in document_iterator.all_content(
+            for node, _ in document_iterator.all_content(
                 print_fragments=False,
                 print_fragments_from_files=False,
             ):
@@ -518,7 +518,7 @@ class TraceabilityIndexBuilder:
         for document in document_tree.document_list:
             document_iterator = d_01_document_iterators[document]
 
-            for node in document_iterator.all_content(
+            for node, _ in document_iterator.all_content(
                 print_fragments=False,
                 print_fragments_from_files=False,
             ):
@@ -660,7 +660,7 @@ class TraceabilityIndexBuilder:
         for document in document_tree.document_list:
             document_iterator = d_01_document_iterators[document]
 
-            for node in document_iterator.all_content(
+            for node, _ in document_iterator.all_content(
                 print_fragments=False,
                 print_fragments_from_files=False,
             ):
@@ -819,7 +819,7 @@ class TraceabilityIndexBuilder:
                     document_iterator = (
                         traceability_index.get_document_iterator(document)
                     )
-                    for node in document_iterator.all_content():
+                    for node, _ in document_iterator.all_content():
                         if (
                             node.is_section
                             and not sections_query_object.evaluate(node)

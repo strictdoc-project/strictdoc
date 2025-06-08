@@ -54,7 +54,7 @@ RELATIONS:
 
     document_iterator = DocumentCachingIterator(document)
     with pytest.raises(StrictDocSemanticError) as exc_info:
-        for node_ in document_iterator.all_content(
+        for node_, _ in document_iterator.all_content(
             print_fragments=False, print_fragments_from_files=False
         ):
             SDocValidator.validate_node(
@@ -92,7 +92,7 @@ RELATIONS:
 
     document_iterator = DocumentCachingIterator(document)
     with pytest.raises(StrictDocSemanticError) as exc_info:
-        for node_ in document_iterator.all_content(
+        for node_, _ in document_iterator.all_content(
             print_fragments=False, print_fragments_from_files=False
         ):
             SDocValidator.validate_node(

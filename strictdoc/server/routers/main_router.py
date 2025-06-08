@@ -667,7 +667,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             document = reference_node.get_document()
 
         next_uid: Optional[str] = None
-        if element_type != "TEXT":
+        if element_type not in ("TEXT", "SECTION"):
             document_tree_stats: DocumentTreeStats = (
                 DocumentUIDAnalyzer.analyze_document_tree(
                     export_action.traceability_index

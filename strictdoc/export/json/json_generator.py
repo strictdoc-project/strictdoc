@@ -68,16 +68,12 @@ class JSONGenerator:
         path_output_json_file = os.path.join(output_json_root, "index.json")
         project_tree_json = json.dumps(project_tree_dict, indent=4)
         with open(path_output_json_file, "w") as output_json_file:
-            output_json_file.write(project_tree_json)
+            output_json_file.write(project_tree_json + "\n")
 
     @classmethod
     def _write_document(cls, document: SDocDocument) -> Dict[str, Any]:
         document_dict: Dict[str, Any] = {
-            "TITLE": document.title,
-            "PREFIX": None,
-            JSONKey.GRAMMAR: {"ELEMENTS": []},
-            JSONKey.OPTIONS: {},
-            JSONKey.NODES: [],
+            "_NODE_TYPE": "DOCUMENT",
         }
 
         if document.mid_permanent or document.config.enable_mid:
@@ -120,6 +116,8 @@ class JSONGenerator:
                 or requirement_in_toc is not None
                 or default_view is not None
             ):
+                document_dict[JSONKey.OPTIONS] = {}
+
                 if enable_mid is not None:
                     document_dict[JSONKey.OPTIONS]["ENABLE_MID"] = (
                         True if enable_mid else False
@@ -148,9 +146,14 @@ class JSONGenerator:
                         default_view
                     )
 
+        document_dict["TITLE"] = document.title
+
         #
         # Grammar.
         #
+
+        document_dict[JSONKey.GRAMMAR] = {"ELEMENTS": []}
+
         assert document.grammar is not None
         document_grammar: DocumentGrammar = document.grammar
 
@@ -189,49 +192,24 @@ class JSONGenerator:
         document: SDocDocument,
         level_stack: Tuple[int, ...],
     ) -> Dict[str, Any]:
-        def get_level_string_(
-            node_: Union[SDocNode, SDocSection, SDocDocument],
-        ) -> str:
-            return (
-                ""
-                if node_.ng_resolved_custom_level == "None"
-                else (
-                    node_.ng_resolved_custom_level
-                    if node_.ng_resolved_custom_level is not None
-                    else ".".join(map(str, level_stack))
-                )
-            )
-
         if isinstance(node, SDocSection):
             section_dict: Dict[str, Any] = cls._write_section(
-                node, document, get_level_string_(node)
+                node, document, level_stack
             )
-
-            current_number = 0
-            for subnode_ in node.section_contents:
-                if subnode_.ng_resolved_custom_level is None:
-                    current_number += 1
-
-                section_subnode_dict: Dict[str, Any] = cls._write_node(
-                    subnode_, document, level_stack + (current_number,)
-                )
-                section_dict[JSONKey.NODES].append(section_subnode_dict)
-
             return section_dict
 
         elif isinstance(node, SDocNode):
-            # FIXME: Print composite nodes.
-            # https://github.com/strictdoc-project/strictdoc/issues/2180
             subnode_dict = cls._write_requirement(
                 node=node,
                 document=document,
-                level_string=get_level_string_(node),
+                level_stack=level_stack,
             )
             return subnode_dict
 
         elif isinstance(node, SDocDocument):
             node_dict: Dict[str, Any] = cls._write_included_document(
-                node, get_level_string_(node)
+                node,
+                level_stack=level_stack,
             )
 
             current_number = 0
@@ -259,11 +237,13 @@ class JSONGenerator:
 
     @classmethod
     def _write_included_document(
-        cls, node: SDocDocument, level_string: str
+        cls,
+        node: SDocDocument,
+        level_stack: Tuple[int, ...],
     ) -> Dict[str, Any]:
         node_dict: Dict[str, Any] = {
-            "_TOC": level_string,
-            "TYPE": "SECTION",
+            "_TOC": cls._get_level_string(node, level_stack=level_stack),
+            "_NODE_TYPE": "SECTION",
             "TITLE": node.reserved_title,
             JSONKey.NODES: [],
         }
@@ -271,20 +251,21 @@ class JSONGenerator:
 
     @classmethod
     def _write_section(
-        cls, section: SDocSection, document: SDocDocument, level_string: str
+        cls,
+        section: SDocSection,
+        document: SDocDocument,
+        level_stack: Tuple[int, ...],
     ) -> Dict[str, Any]:
         assert isinstance(section, (SDocSection, SDocDocument))
         node_dict: Dict[str, Any] = {
-            "_TOC": level_string,
-            "TYPE": "SECTION",
-            "TITLE": str(section.title),
-            JSONKey.NODES: [],
+            "_TOC": cls._get_level_string(section, level_stack),
+            "_NODE_TYPE": "SECTION",
         }
 
         if section.mid_permanent or document.config.enable_mid:
             node_dict["MID"] = section.reserved_mid
 
-        if section.uid:
+        if section.reserved_uid is not None:
             node_dict["UID"] = section.uid
 
         if (
@@ -296,15 +277,31 @@ class JSONGenerator:
         if section.requirement_prefix is not None:
             node_dict["PREFIX"] = section.requirement_prefix
 
+        node_dict["TITLE"] = str(section.title)
+        node_dict[JSONKey.NODES] = []
+
+        current_number = 0
+        for subnode_ in section.section_contents:
+            if subnode_.ng_resolved_custom_level is None:
+                current_number += 1
+
+            section_subnode_dict: Dict[str, Any] = cls._write_node(
+                subnode_, document, level_stack + (current_number,)
+            )
+            node_dict[JSONKey.NODES].append(section_subnode_dict)
+
         return node_dict
 
     @classmethod
     def _write_requirement(
-        cls, node: SDocNode, document: SDocDocument, level_string: str
+        cls,
+        node: SDocNode,
+        document: SDocDocument,
+        level_stack: Tuple[int, ...],
     ) -> Dict[str, Any]:
         node_dict: Dict[str, Any] = {
-            "_TOC": level_string,
-            "TYPE": node.node_type,
+            "_TOC": cls._get_level_string(node, level_stack),
+            "_NODE_TYPE": node.node_type,
         }
 
         if node.mid_permanent or document.config.enable_mid:
@@ -323,6 +320,19 @@ class JSONGenerator:
 
         if len(node.relations) > 0:
             node_dict["RELATIONS"] = cls._write_requirement_relations(node)
+
+        if node.is_composite:
+            node_dict[JSONKey.NODES] = []
+
+            current_number = 0
+            for subnode_ in node.section_contents:
+                if subnode_.ng_resolved_custom_level is None:
+                    current_number += 1
+
+                section_subnode_dict: Dict[str, Any] = cls._write_node(
+                    subnode_, document, level_stack + (current_number,)
+                )
+                node_dict[JSONKey.NODES].append(section_subnode_dict)
 
         return node_dict
 
@@ -381,3 +391,19 @@ class JSONGenerator:
             relations_list.append(relation_dict)
 
         return relations_list
+
+    @classmethod
+    def _get_level_string(
+        cls,
+        node_: Union[SDocNode, SDocSection, SDocDocument],
+        level_stack: Tuple[int, ...],
+    ) -> str:
+        return (
+            ""
+            if node_.ng_resolved_custom_level == "None"
+            else (
+                node_.ng_resolved_custom_level
+                if node_.ng_resolved_custom_level is not None
+                else ".".join(map(str, level_stack))
+            )
+        )

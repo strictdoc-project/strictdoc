@@ -324,9 +324,6 @@ class SDocNode(SDocNodeIF):
     def is_document(self) -> bool:
         return False
 
-    def is_composite_requirement(self) -> bool:
-        return False
-
     def get_document(self) -> Optional[SDocDocumentIF]:
         assert self.ng_document_reference is not None, self
         return self.ng_document_reference.get_document()

@@ -145,9 +145,6 @@ class SDocDocument(SDocDocumentIF):
     def is_requirement(self) -> bool:
         return False
 
-    def is_composite_requirement(self) -> bool:
-        return False
-
     def get_display_node_type(self) -> str:
         return "Document"
 

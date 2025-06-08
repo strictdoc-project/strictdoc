@@ -128,9 +128,6 @@ class SDocSection(SDocSectionIF):
     def is_requirement(self) -> bool:
         return False
 
-    def is_composite_requirement(self) -> bool:
-        return False
-
     def is_section(self) -> bool:
         return True
 

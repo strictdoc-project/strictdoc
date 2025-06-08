@@ -26,13 +26,11 @@
             </tr>
           </thead>
           {%- for node in view_object.document_content_iterator() %}
-            {%- if node.is_composite_requirement() or node.is_requirement() %}
+            {%- if node.is_requirement() %}
               {%- set requirement = node %}
               <tr>
                 <td class="content-view-td content-view-td-type">
-                  {%- if node.is_composite_requirement() %}
-                    Composite requirement
-                  {%- elif node.is_text_node() %}
+                  {%- if node.is_text_node() %}
                     Text
                   {%- else %}
                     Requirement

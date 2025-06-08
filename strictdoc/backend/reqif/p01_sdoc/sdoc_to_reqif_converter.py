@@ -249,12 +249,6 @@ class P01_SDocToReqIFObjectConverter:
             for node_ in document_iterator.all_content(
                 print_fragments=False, print_fragments_from_files=False
             ):
-                if node_.is_composite_requirement():
-                    raise NotImplementedError(
-                        "Exporting composite requirements is not "
-                        "supported yet.",
-                        node_,
-                    )
                 if node_.is_section():
                     section: SDocSection = assert_cast(node_, SDocSection)
                     # fmt: off

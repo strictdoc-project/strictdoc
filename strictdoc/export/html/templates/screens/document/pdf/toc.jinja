@@ -5,7 +5,7 @@
     <span class="pdf-toc-cell" style="text-align: center;font-weight: bold;">Table of contents</span>
     <span class="pdf-toc-cell"></span>
     </div>
-    {%- for item in view_object.document_iterator.table_of_contents() -%}
+    {%- for item, _ in view_object.document_iterator.table_of_contents() -%}
 
       <div class="pdf-toc-row" data-nodeid="{{ item.reserved_mid }}">
 

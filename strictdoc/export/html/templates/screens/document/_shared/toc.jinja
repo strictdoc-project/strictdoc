@@ -8,7 +8,7 @@
       data-last_moved_node_id="{{ last_moved_node_id.get_string_value() }}"
       {% endif -%}
     >
-    {%- for section in view_object.table_of_contents() -%}
+    {%- for section, _ in view_object.table_of_contents() -%}
       <li data-nodeid="{{ section.reserved_mid.get_string_value() }}">
         {%- if section.is_section() -%}
         {# if section not requirement #}
@@ -58,11 +58,11 @@
         {%- endif -%}
 
       {%- if not loop.last -%}
-        {%- if loop.nextitem.ng_level > section.ng_level -%}
+        {%- if loop.nextitem[0].ng_level > section.ng_level -%}
           <ul>
-        {%- elif loop.nextitem.ng_level < section.ng_level -%}
+        {%- elif loop.nextitem[0].ng_level < section.ng_level -%}
             </li>
-          {%- for x in range(0, section.ng_level - loop.nextitem.ng_level) -%}
+          {%- for x in range(0, section.ng_level - loop.nextitem[0].ng_level) -%}
             </ul>
             </li>
           {%- endfor -%}

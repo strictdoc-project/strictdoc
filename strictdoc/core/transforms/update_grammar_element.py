@@ -83,7 +83,7 @@ class UpdateGrammarElementCommand:
 
         document_iterator = self.traceability_index.document_iterators[document]
 
-        for node in document_iterator.all_content():
+        for node, _ in document_iterator.all_content():
             if not node.is_requirement():
                 continue
 

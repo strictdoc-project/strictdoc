@@ -79,14 +79,21 @@ class ExcelGenerator:
             # TODO: Check if all fields are defined by the DocumentGrammar
             columns = ExcelGenerator._init_columns_width(fields)
 
-            req_uid_rows = ExcelGenerator._lookup_refs(
-                traceability_index.get_document_iterator(document).all_content(
-                    print_fragments=False, print_fragments_from_files=False
+            document_iterator = traceability_index.get_document_iterator(
+                document
+            )
+            all_nodes = list(
+                map(
+                    lambda node_with_context_: node_with_context_[0],
+                    document_iterator.all_content(
+                        print_fragments=False, print_fragments_from_files=False
+                    ),
                 )
             )
+            req_uid_rows = ExcelGenerator._lookup_refs(all_nodes)
 
             if len(req_uid_rows):
-                for node in traceability_index.get_document_iterator(
+                for node, _ in traceability_index.get_document_iterator(
                     document
                 ).all_content(
                     print_fragments=False, print_fragments_from_files=False

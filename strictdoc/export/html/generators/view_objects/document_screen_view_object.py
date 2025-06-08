@@ -1,7 +1,7 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Iterator, List, Optional, Union
+from typing import Iterator, List, Optional, Tuple, Union
 
 from jinja2 import Template
 from markupsafe import Markup
@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.model import SDocElementIF
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.section import SDocSection
+from strictdoc.core.document_iterator import DocumentIterationContext
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_tree import File, Folder
@@ -303,13 +304,17 @@ class DocumentScreenViewObject:
     def get_grammar_elements(self) -> List[GrammarElement]:
         return self.document.grammar.elements
 
-    def table_of_contents(self) -> Iterator[SDocElementIF]:
+    def table_of_contents(
+        self,
+    ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
         yield from self.document_iterator.table_of_contents()
 
     def document_has_any_toc_nodes(self) -> bool:
         return any(self.table_of_contents())
 
-    def document_content_iterator(self):
+    def document_content_iterator(
+        self,
+    ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
         yield from self.document_iterator.all_content(
             print_fragments=True,
             print_fragments_from_files=False,

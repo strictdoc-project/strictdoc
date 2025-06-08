@@ -1,4 +1,3 @@
-# mypy: disable-error-code="attr-defined"
 from typing import Iterator, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument

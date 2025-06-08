@@ -4207,7 +4207,21 @@ The migration from ``[SECTION]`` to the new composite ``[[SECTION]]`` syntax is 
 
 1\) **Manual approach**
 
-Update all instances of ``[SECTION]`` to ``[[SECTION]]`` manually, or use a combination of ``find`` and ``sed``. Additionally, make sure to update all document grammar declarations to include the new composite ``[[SECTION]]`` element.
+Update all instances of ``[SECTION]`` to ``[[SECTION]]`` manually, or use a combination of ``find`` and ``sed``. Additionally, make sure to update all document grammar declarations to include the new composite ``[[SECTION]]`` element like described in the previous section.
+
+.. note::
+
+    StrictDoc can automatically create the ``[[SECTION]]`` element even if it is not explicitly defined in the document grammar. However, as of 2025 Q2, it is recommended that users always define explicit grammars with the SECTION element included.
+
+Examples of a sed command for Linux and macOS:
+
+.. code-block::
+
+    # Linux
+    find . -type f -name '*.sdoc' -exec sed -i -e 's/^\[SECTION\]/[[SECTION]]/g' -e 's/^\[\/SECTION\]/[[\/SECTION]]/g' {} +
+
+    # macOS
+    find . -type f -name '*.sdoc' -exec sed -i '' -e 's/^\[SECTION\]/[[SECTION]]/g' -e 's/^\[\/SECTION\]/[[\/SECTION]]/g' {} +
 
 2\) **Semi-automated approach (experimental)**
 

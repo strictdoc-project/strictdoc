@@ -1,5 +1,0 @@
-UNSUPPORTED: true
-# https://github.com/strictdoc-project/strictdoc/issues/1788
-
-RUN: %expect_exit 1 %strictdoc export --formats=reqif-sdoc %S/sample.sdoc | filecheck %s
-CHECK: Exporting composite requirements is not supported yet.

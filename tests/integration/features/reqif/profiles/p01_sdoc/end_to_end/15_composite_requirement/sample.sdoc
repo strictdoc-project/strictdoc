@@ -1,28 +1,22 @@
 [DOCUMENT]
-TITLE: Document 1
+TITLE: sample
 
 [GRAMMAR]
 ELEMENTS:
-- TAG: SECTION
+- TAG: COMPOSITE_REQUIREMENT
   PROPERTIES:
     IS_COMPOSITE: True
   FIELDS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
-  - TITLE: LEVEL
-    TYPE: String
-    REQUIRED: False
-  - TITLE: PREFIX
-    TYPE: String
-    REQUIRED: False
-  - TITLE: TITLE
+  - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
-- TAG: TEXT
+- TAG: REQUIREMENT
   FIELDS:
   - TITLE: STATEMENT
     TYPE: String
@@ -31,17 +25,15 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
-[TEXT]
+[[COMPOSITE_REQUIREMENT]]
+UID: REQ-1.1.1
 STATEMENT: >>>
-Document 1 free text.
+The mapping function shall map requirement_ID to UID.
 <<<
 
-[[SECTION]]
-TITLE: Document 1 section
-
-[TEXT]
+[REQUIREMENT]
 STATEMENT: >>>
-Document 1 statement.
+Shall statement.
 <<<
 
-[[/SECTION]]
+[[/COMPOSITE_REQUIREMENT]]

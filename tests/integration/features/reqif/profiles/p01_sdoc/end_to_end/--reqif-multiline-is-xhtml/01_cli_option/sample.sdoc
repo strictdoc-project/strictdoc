@@ -3,6 +3,28 @@ TITLE: sample
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PREFIX
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 - TAG: TEXT
   FIELDS:
   - TITLE: UID
@@ -49,7 +71,7 @@ STATEMENT: >>>
 Document free text.
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: Section
 
 [TEXT]
@@ -66,4 +88,4 @@ Statement line #2
 Statement line #3
 <<<
 
-[/SECTION]
+[[/SECTION]]

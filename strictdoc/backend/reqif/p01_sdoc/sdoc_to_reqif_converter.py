@@ -3,7 +3,7 @@ import datetime
 import uuid
 from collections import defaultdict
 from enum import Enum
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 from reqif.models.reqif_core_content import ReqIFCoreContent
 from reqif.models.reqif_data_type import (
@@ -123,13 +123,14 @@ class P01_SDocToReqIFObjectConverter:
         document: SDocDocument
         for document in document_tree.document_list:
             for element in document.grammar.elements:
-                fields_names = element.get_field_titles()
-                statement_field_idx = fields_names.index("STATEMENT")
-                for field_idx_, field in enumerate(element.fields):
-                    multiline = field_idx_ >= statement_field_idx
+                for field in element.fields:
+                    multiline = element.is_field_multiline(field.title)
 
                     if isinstance(field, GrammarElementFieldString):
-                        data_type: ReqIFDataTypeDefinitionString
+                        data_type: Union[
+                            ReqIFDataTypeDefinitionString,
+                            ReqIFDataTypeDefinitionXHTML,
+                        ]
                         if multiline:
                             if (
                                 StrictDocReqIFTypes.MULTI_LINE_STRING.value
@@ -227,8 +228,6 @@ class P01_SDocToReqIFObjectConverter:
 
             document_iterator = DocumentCachingIterator(document)
 
-            parents: Dict[ReqIFSpecHierarchy, ReqIFSpecHierarchy] = {}
-
             # TODO: This is a throw-away object. It gets discarded when the
             # iteration is over. Find a way to do without it.
             root_hierarchy = ReqIFSpecHierarchy(
@@ -243,80 +242,48 @@ class P01_SDocToReqIFObjectConverter:
                 level=0,
             )
 
-            current_hierarchy = root_hierarchy
+            node_stack: List[ReqIFSpecHierarchy] = [root_hierarchy]
 
             # FIXME: ReqIF must export complete documents including fragments.
             for node_, _ in document_iterator.all_content(
                 print_fragments=False, print_fragments_from_files=False
             ):
-                if node_.is_section():
-                    section: SDocSection = assert_cast(node_, SDocSection)
-                    # fmt: off
-                    spec_object = (
-                        P01_SDocToReqIFObjectConverter
-                        ._convert_section_to_spec_object(
-                            section=section,
-                            context=context,
-                        )
+                if isinstance(node_, SDocSection):
+                    raise AssertionError(
+                        "[SECTION] tags are deprecated when using ReqIF export/import. "
+                        "Use [[SECTION]] tags instead."
                     )
-                    # fmt: on
-                    spec_objects.append(spec_object)
-                    hierarchy = ReqIFSpecHierarchy(
-                        xml_node=None,
-                        is_self_closed=False,
-                        identifier=generate_unique_identifier("SPEC-HIERARCHY"),
-                        last_change=None,
-                        long_name=None,
-                        spec_object=spec_object.identifier,
-                        children=[],
-                        ref_then_children_order=True,
-                        level=section.ng_level,
-                    )
-                    if section.ng_level > current_hierarchy.level:
-                        parents[hierarchy] = current_hierarchy
-                        current_hierarchy.add_child(hierarchy)
-                    elif section.ng_level < current_hierarchy.level:
-                        for _ in range(
-                            0, (current_hierarchy.level - section.ng_level + 1)
-                        ):
-                            current_hierarchy = parents[current_hierarchy]
-                        current_hierarchy.add_child(hierarchy)
-                        parents[hierarchy] = current_hierarchy
-                    else:
-                        current_hierarchy_parent = parents[current_hierarchy]
-                        current_hierarchy_parent.add_child(hierarchy)
-                        parents[hierarchy] = current_hierarchy_parent
-                    current_hierarchy = hierarchy
 
-                elif node_.is_requirement():
-                    requirement = assert_cast(node_, SDocNode)
-                    spec_object = cls._convert_requirement_to_spec_object(
-                        requirement=requirement,
-                        grammar=assert_cast(document.grammar, DocumentGrammar),
-                        context=context,
-                        data_types=data_types,
-                        data_types_lookup=data_types_lookup,
-                    )
-                    spec_objects.append(spec_object)
-                    hierarchy = ReqIFSpecHierarchy(
-                        xml_node=None,
-                        is_self_closed=False,
-                        identifier=generate_unique_identifier(
-                            "SPEC-IDENTIFIER"
-                        ),
-                        last_change=None,
-                        long_name=None,
-                        spec_object=spec_object.identifier,
-                        children=None,
-                        ref_then_children_order=True,
-                        level=requirement.ng_level,
-                    )
-                    for _ in range(
-                        0, (current_hierarchy.level - requirement.ng_level + 1)
-                    ):
-                        current_hierarchy = parents[current_hierarchy]
-                    parents[hierarchy] = current_hierarchy
-                    current_hierarchy.add_child(hierarchy)
+                if not isinstance(node_, SDocNode):
+                    continue
+                leaf_or_composite_node = assert_cast(node_, SDocNode)
+                while len(node_stack) > assert_cast(node_.ng_level, int):
+                    node_stack.pop()
+
+                current_hierarchy = node_stack[-1]
+
+                spec_object = cls._convert_requirement_to_spec_object(
+                    requirement=leaf_or_composite_node,
+                    grammar=assert_cast(document.grammar, DocumentGrammar),
+                    context=context,
+                    data_types=data_types,
+                    data_types_lookup=data_types_lookup,
+                )
+                spec_objects.append(spec_object)
+                hierarchy = ReqIFSpecHierarchy(
+                    xml_node=None,
+                    is_self_closed=False,
+                    identifier=generate_unique_identifier("SPEC-IDENTIFIER"),
+                    last_change=None,
+                    long_name=None,
+                    spec_object=spec_object.identifier,
+                    children=None,
+                    ref_then_children_order=True,
+                    level=leaf_or_composite_node.ng_level,
+                )
+                current_hierarchy.add_child(hierarchy)
+                if leaf_or_composite_node.is_composite:
+                    node_stack.append(hierarchy)
 
             specification_identifier: str
             if context.enable_mid and document.reserved_mid is not None:
@@ -483,7 +450,9 @@ class P01_SDocToReqIFObjectConverter:
         if enable_mid and requirement.reserved_mid is not None:
             requirement_identifier = requirement.reserved_mid
         else:
-            requirement_identifier = generate_unique_identifier("REQUIREMENT")
+            requirement_identifier = generate_unique_identifier(
+                requirement.node_type
+            )
 
         grammar_element = grammar.elements_by_type[requirement.node_type]
 
@@ -603,14 +572,11 @@ class P01_SDocToReqIFObjectConverter:
         )
 
         for element in grammar.elements:
-            fields_names = element.get_field_titles()
-            statement_field_idx = fields_names.index("STATEMENT")
-
             attribute_definitions = []
 
             field: GrammarElementField
-            for field_idx_, field in enumerate(element.fields):
-                multiline = field_idx_ >= statement_field_idx
+            for field in element.fields:
+                multiline = element.is_field_multiline(field.title)
 
                 if isinstance(field, GrammarElementFieldString):
                     field_title = field.title
@@ -684,13 +650,6 @@ class P01_SDocToReqIFObjectConverter:
             ] = spec_object_type
 
         assert grammar.parent is not None
-        section_spec_type = (
-            P01_SDocToReqIFObjectConverter._create_section_spec_object_type()
-        )
-        context.map_grammar_node_tags_to_spec_object_type[grammar_document][
-            "SECTION"
-        ] = section_spec_type
-        spec_object_types.append(section_spec_type)
 
         # Using dict as an ordered set.
         spec_relation_tuples: OrderedSet[Tuple[str, Optional[str]]] = (
@@ -719,24 +678,3 @@ class P01_SDocToReqIFObjectConverter:
             ] = spec_relation_type
 
         return spec_object_types + spec_relation_types
-
-    @classmethod
-    def _create_section_spec_object_type(
-        cls,
-    ):
-        attribute_definitions = []
-        chapter_name_attribute = SpecAttributeDefinition.create(
-            attribute_type=SpecObjectAttributeType.STRING,
-            identifier="ReqIF.ChapterName",
-            datatype_definition=StrictDocReqIFTypes.SINGLE_LINE_STRING.value,
-            long_name="ReqIF.ChapterName",
-        )
-        attribute_definitions.append(chapter_name_attribute)
-
-        spec_object_type_identifier = "SECTION_" + uuid.uuid4().hex
-        spec_object_type = ReqIFSpecObjectType.create(
-            identifier=spec_object_type_identifier,
-            long_name="SECTION",
-            attribute_definitions=attribute_definitions,
-        )
-        return spec_object_type

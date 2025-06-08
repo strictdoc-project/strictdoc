@@ -5,6 +5,28 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PREFIX
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: UID
@@ -34,7 +56,7 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
 
-[SECTION]
+[[SECTION]]
 TITLE: Section #1
 
 [REQUIREMENT]
@@ -48,4 +70,4 @@ RELATIONS:
 - TYPE: Parent
   VALUE: REQ-001
 
-[/SECTION]
+[[/SECTION]]

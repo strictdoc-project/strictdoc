@@ -11,6 +11,7 @@ class SDocNodeFieldIF(ABC):
 
 class SDocNodeIF(ABC):
     node_type: str
+    ng_level: Optional[int]
     ng_resolved_custom_level: Optional[str]
     section_contents: List["SDocSectionContentIF"]
 
@@ -45,6 +46,7 @@ class SDocNodeIF(ABC):
 
 class SDocSectionIF(ABC):
     parent: Union["SDocDocumentIF", "SDocSectionIF"]
+    ng_level: Optional[int]
     ng_resolved_custom_level: Optional[str]
     section_contents: List["SDocSectionContentIF"]
 
@@ -76,6 +78,7 @@ class SDocDocumentIF(ABC):
     section_contents: List["SDocSectionContentIF"]
     included_documents: List["SDocDocumentIF"]
     is_bundle_document: bool
+    ng_level: Optional[int]
 
     @abstractmethod
     def get_prefix(self) -> str:

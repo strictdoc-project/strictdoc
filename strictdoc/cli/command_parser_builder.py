@@ -136,7 +136,7 @@ class CommandParserBuilder:
 
     @staticmethod
     def add_export_command(parent_command_parser):
-        # Command – Export
+        # Command – Export.
         command_parser_export = parent_command_parser.add_parser(
             "export",
             help="Export document tree.",
@@ -266,7 +266,7 @@ class CommandParserBuilder:
         )
         command_parser_import_subparsers.required = True
 
-        # Command: Import -> ReqIF
+        # Command: Import -> ReqIF.
         command_parser_import_reqif = (
             command_parser_import_subparsers.add_parser(
                 "reqif",
@@ -315,7 +315,7 @@ class CommandParserBuilder:
             ),
         )
 
-        # Command: Import -> Excel
+        # Command: Import -> Excel.
         command_parser_import_excel = (
             command_parser_import_subparsers.add_parser(
                 "excel",
@@ -393,7 +393,7 @@ class CommandParserBuilder:
 
     @staticmethod
     def add_passthrough_command(parent_command_parser):
-        # passthrough command is kept for backwards compatibility. It will
+        # Passthrough command is kept for backwards compatibility. It will
         # internally be handled as export --formats sdoc.
         command_parser_passthrough = parent_command_parser.add_parser(
             "passthrough",

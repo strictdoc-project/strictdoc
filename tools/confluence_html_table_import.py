@@ -1,3 +1,4 @@
+# pragma: no cover
 import argparse
 import os
 import sys

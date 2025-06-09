@@ -32,7 +32,6 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
@@ -339,79 +338,6 @@ class P01_ReqIFToSDocConverter:
 
         document.grammar = DocumentGrammar.create_default(document)
         return document
-
-    @staticmethod
-    def create_section_from_spec_object(
-        *,
-        spec_object: ReqIFSpecObject,
-        context: P01_ReqIFToSDocBuildContext,
-        parent_section: Union[SDocSection, SDocDocument],
-        level: int,
-        reqif_bundle: ReqIFBundle,
-    ) -> SDocSection:
-        spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
-            spec_object.spec_object_type
-        )
-        attribute_map: Dict[str, SpecAttributeDefinition] = (
-            spec_object_type.attribute_map
-        )
-        assert attribute_map is not None
-        for attribute in spec_object.attributes:
-            field_name_or_none: Optional[str] = attribute_map[
-                attribute.definition_ref
-            ].long_name
-            if field_name_or_none is None:
-                raise NotImplementedError  # pragma: no cover
-            field_name: str = field_name_or_none
-            if field_name == ReqIFChapterField.CHAPTER_NAME:
-                section_title = attribute.value
-                break
-        else:
-            raise NotImplementedError(  # pragma: no cover
-                spec_object, attribute_map
-            )
-
-        # Sanitize the title. Titles can also come from XHTML attributes with
-        # custom newlines such as:
-        #             <ATTRIBUTE-VALUE-XHTML>
-        #               <THE-VALUE>
-        #                 Some value
-        #               </THE-VALUE>
-        section_title = section_title.strip().replace("\n", " ")
-
-        section_mid = spec_object.identifier if context.enable_mid else None
-
-        section = SDocSection(
-            parent=parent_section,
-            mid=section_mid,
-            uid=None,
-            custom_level=None,
-            title=section_title,
-            requirement_prefix=None,
-            section_contents=[],
-        )
-        section.ng_level = level
-
-        if ReqIFChapterField.TEXT in spec_object.attribute_map:
-            free_text = unescape(
-                spec_object.attribute_map[ReqIFChapterField.TEXT].value
-            )
-            node_field = SDocNodeField.create_from_string(
-                None,
-                field_name="STATEMENT",
-                field_value=free_text,
-                multiline=True,
-            )
-            node: SDocNode = SDocNode(
-                parent=section,
-                node_type="TEXT",
-                fields=[node_field],
-                relations=[],
-            )
-            node_field.parent = node
-            section.section_contents.append(node)
-
-        return section
 
     @staticmethod
     def create_requirement_from_spec_object(

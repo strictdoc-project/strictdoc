@@ -215,7 +215,7 @@ class RequirementFormObject(ErrorObject):
         reference_fields: List[RequirementReferenceFormField],
         existing_requirement_uid: Optional[str],
         grammar: DocumentGrammar,
-        # FIXME: Better name
+        # FIXME: Better name.
         relation_types: List[str],
     ):
         super().__init__()
@@ -281,7 +281,7 @@ class RequirementFormObject(ErrorObject):
                 relation_type = relation_typerole_parts[0]
                 relation_role = None
             else:
-                raise AssertionError("Must not reach here")
+                raise AssertionError("Must not reach here")  # pragma: no cover
             field_type = (
                 RequirementReferenceFormField.FieldType.PARENT
                 if relation_type == "Parent"

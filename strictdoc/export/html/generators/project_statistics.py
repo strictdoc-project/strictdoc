@@ -77,14 +77,14 @@ class ProgressStatisticsGenerator:
                                 ):
                                     document_tree_stats.requirements_no_links += 1
 
-                        # RATIONALE
+                        # RATIONALE.
                         if (
                             requirement.ordered_fields_lookup.get("RATIONALE")
                             is None
                         ):
                             document_tree_stats.requirements_no_rationale += 1
 
-                        # STATUS
+                        # STATUS.
                         if requirement.reserved_status is None:
                             document_tree_stats.requirements_status_breakdown[
                                 None

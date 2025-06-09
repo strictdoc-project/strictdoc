@@ -106,7 +106,7 @@ class HTMLGenerator:
         # FIXME: It is important that this export is **after** the parallelized
         # export of single documents. It turns out that Jinja does not play
         # well with the multiprocessing's processed-based parallelization.
-        # _pickle.PicklingError: Can't pickle <function sync_do_first at 0x1077bdf80>: it's not the same object as jinja2.filters.sync_do_first
+        # _pickle.PicklingError: Can't pickle <function sync_do_first at 0x1077bdf80>: it's not the same object as jinja2.filters.sync_do_first.
         self.export_project_tree_screen(traceability_index=traceability_index)
 
         # Export JavaScript map of the document tree (project map)
@@ -170,7 +170,7 @@ class HTMLGenerator:
             message="Copying StrictDoc's assets",
         )
 
-        # Export MathJax
+        # Export MathJax.
         if project_config.is_feature_activated(ProjectFeature.MATHJAX):
             output_html_mathjax = os.path.join(
                 export_output_html_root,
@@ -187,7 +187,7 @@ class HTMLGenerator:
                 message="Copying MathJax assets",
             )
 
-        # Export Mermaid
+        # Export Mermaid.
         if project_config.is_feature_activated(ProjectFeature.MERMAID):
             output_html_mathjax = os.path.join(
                 export_output_html_root,
@@ -204,7 +204,7 @@ class HTMLGenerator:
                 message="Copying Mermaid assets",
             )
 
-        # Export Rapidoc
+        # Export Rapidoc.
         if project_config.is_feature_activated(ProjectFeature.RAPIDOC):
             output_html_rapidoc = os.path.join(
                 export_output_html_root,
@@ -221,7 +221,7 @@ class HTMLGenerator:
                 message="Copying Rapidoc assets",
             )
 
-        # Export NESTOR
+        # Export NESTOR.
         if project_config.is_feature_activated(ProjectFeature.NESTOR):
             output_html_nestor = os.path.join(
                 export_output_html_root,
@@ -238,7 +238,7 @@ class HTMLGenerator:
                 message="Copying Nestor assets",
             )
 
-        # Export HTML2PDF
+        # Export HTML2PDF.
         if project_config.is_feature_activated(ProjectFeature.HTML2PDF):
             sync_dir(
                 os.path.dirname(PATH_TO_HTML2PDF4DOC_JS),
@@ -246,7 +246,7 @@ class HTMLGenerator:
                 message="Copying HTML2PDF.js",
             )
 
-        # Export custom html2pdf template
+        # Export custom html2pdf template.
         if project_config.html2pdf_template is not None:
             output_custom_html2pdf_template = os.path.join(
                 export_output_html_root,
@@ -371,7 +371,7 @@ class HTMLGenerator:
         )
 
         if DocumentType.DOCUMENT in specific_documents:
-            # Single Document pages
+            # Single Document pages.
             document_content = DocumentHTMLGenerator.export(
                 self.project_config,
                 document,
@@ -386,7 +386,7 @@ class HTMLGenerator:
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
-        # Single Document Table pages
+        # Single Document Table pages.
         if (
             self.project_config.is_feature_activated(
                 ProjectFeature.TABLE_SCREEN
@@ -406,7 +406,7 @@ class HTMLGenerator:
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
-        # Single Document Traceability pages
+        # Single Document Traceability pages.
         if (
             self.project_config.is_feature_activated(
                 ProjectFeature.TRACEABILITY_SCREEN
@@ -426,7 +426,7 @@ class HTMLGenerator:
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
-        # Single Document Deep Traceability pages
+        # Single Document Deep Traceability pages.
         if (
             self.project_config.is_feature_activated(
                 ProjectFeature.DEEP_TRACEABILITY_SCREEN
@@ -446,7 +446,7 @@ class HTMLGenerator:
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
 
-        # Single Document PDF pages
+        # Single Document PDF pages.
         if (
             self.project_config.is_feature_activated(ProjectFeature.HTML2PDF)
             and DocumentType.PDF in specific_documents

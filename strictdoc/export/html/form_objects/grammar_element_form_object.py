@@ -367,7 +367,7 @@ class GrammarElementFormObject(ErrorObject):
         requirement_element = GrammarElement(
             parent=None,
             tag=existing_element.tag,
-            # FIXME: MERGE NODES
+            # FIXME: MERGE NODES.
             property_is_composite="",
             property_prefix="",
             property_view_style="",

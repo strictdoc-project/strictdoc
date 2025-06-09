@@ -254,8 +254,9 @@ class FileTraceabilityIndex:
                                 break
                         else:
                             raise RuntimeError(
-                                f"Could not find a matching Google Test function: {possible_gtest_functions}"
-                            )
+                                "Could not find a matching Google Test function: "
+                                f"{possible_gtest_functions}"
+                            )  # pragma: no cover
                         forward_requirement_.set_field_value(
                             field_name="TEST_FUNCTION",
                             form_field_index=0,
@@ -610,7 +611,7 @@ class FileTraceabilityIndex:
 
                 markers_.sort(key=marker_comparator)
 
-                # validate here, SDocNode.relations doesn't track marker roles.
+                # Validate here, SDocNode.relations doesn't track marker roles.
                 node = traceability_index.get_node_by_uid(req_uid_)
                 document = node.get_document()
                 assert document is not None

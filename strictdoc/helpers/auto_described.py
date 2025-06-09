@@ -49,7 +49,7 @@ def auto_str(obj: object) -> str:
                 item = f"{prop} = {{}}"
             else:
                 item = f"{prop} = {{{len(value)} elements}}"
-        elif isinstance(value, (list, dict, set)):
+        elif isinstance(value, set):
             item = f"{prop} = {value.__class__.__name__}({len(value)} elements)"
         elif isinstance(value, str):
             item = f'{prop} = "{value}"'

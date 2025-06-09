@@ -14,6 +14,8 @@ def test_01_basic():
     many2many_set.create_link(lhs_node=1, rhs_node=3)
     many2many_set.create_link(lhs_node=1, rhs_node=4)
 
+    assert many2many_set.has_link(lhs_node=1)
+
     assert many2many_set.get_link_values(lhs_node=1) == {2, 3, 4}
     assert many2many_set.get_link_values_reverse(rhs_node=2) == {1}
 
@@ -28,6 +30,8 @@ def test_01_basic():
     assert many2many_set.get_link_values_reverse(rhs_node=2) == OrderedSet()
     assert many2many_set.get_link_values_reverse(rhs_node=3) == OrderedSet()
     assert many2many_set.get_link_values_reverse(rhs_node=4) == OrderedSet()
+
+    assert not many2many_set.has_link(lhs_node=1)
 
 
 def test_02_basic():

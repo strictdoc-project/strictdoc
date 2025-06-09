@@ -32,7 +32,6 @@ from reqif.reqif_bundle import ReqIFBundle
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
     SDOC_SPECIFICATION_TYPE_SINGLETON,
     SDOC_TO_REQIF_FIELD_MAP,
-    ReqIFChapterField,
     SDocRequirementReservedField,
 )
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -384,54 +383,6 @@ class P01_SDocToReqIFObjectConverter:
             exceptions=[],
         )
         return reqif_bundle
-
-    @classmethod
-    def _convert_section_to_spec_object(
-        cls,
-        *,
-        section: SDocSection,
-        context: P01_SDocToReqIFBuildContext,
-    ) -> ReqIFSpecObject:
-        assert isinstance(section, SDocSection)
-        parent_document: SDocDocument = assert_cast(
-            section.get_document(), SDocDocument
-        )
-
-        attributes = []
-        title_attribute = SpecObjectAttribute(
-            xml_node=None,
-            attribute_type=SpecObjectAttributeType.STRING,
-            definition_ref=ReqIFChapterField.CHAPTER_NAME,
-            value=section.title,
-        )
-        attributes.append(title_attribute)
-
-        #
-        # If MIDs is enabled and this section has an MID, use it for
-        # SPEC-OBJECT IDENTIFIER.
-        #
-        enable_mid = context.enable_mid and parent_document.config.enable_mid
-        section_identifier: str
-        if enable_mid and section.reserved_mid is not None:
-            section_identifier = section.reserved_mid
-        else:
-            section_identifier = generate_unique_identifier("SECTION")
-
-        spec_object_type: ReqIFSpecObjectType = (
-            context.map_grammar_node_tags_to_spec_object_type[parent_document][
-                "SECTION"
-            ]
-        )
-        spec_object = ReqIFSpecObject(
-            xml_node=None,
-            description=None,
-            identifier=section_identifier,
-            last_change=None,
-            long_name=None,
-            spec_object_type=spec_object_type.identifier,
-            attributes=attributes,
-        )
-        return spec_object
 
     @classmethod
     def _convert_requirement_to_spec_object(

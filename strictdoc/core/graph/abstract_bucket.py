@@ -13,7 +13,7 @@ class AbstractBucket(ABC):
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    def get_count(self) -> Any:
+    def get_count(self) -> int:
         raise NotImplementedError  # pragma: no cover
 
     @abstractmethod

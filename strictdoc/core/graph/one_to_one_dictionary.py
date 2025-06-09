@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def"
 from typing import Any, Dict, Optional, Tuple, Type, Union
 
 from strictdoc.core.graph.abstract_bucket import AbstractBucket
@@ -18,7 +17,7 @@ class OneToOneDictionary(AbstractBucket):
         assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
         return lhs_node in self._dict
 
-    def get_count(self) -> Any:
+    def get_count(self) -> int:
         return len(self._dict)
 
     def get_link_value(
@@ -34,7 +33,7 @@ class OneToOneDictionary(AbstractBucket):
 
     def create_link(
         self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
-    ):
+    ) -> None:
         assert edge is None
         assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
         assert isinstance(rhs_node, self._rhs_type), (rhs_node, self._rhs_type)
@@ -45,7 +44,7 @@ class OneToOneDictionary(AbstractBucket):
 
     def delete_link(
         self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
-    ):
+    ) -> None:
         assert edge is None
         assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
         assert isinstance(rhs_node, self._rhs_type), (rhs_node, self._rhs_type)

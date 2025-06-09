@@ -16,7 +16,7 @@ class ManyToManySet(AbstractBucket):
 
     def has_link(self, *, lhs_node: Any) -> bool:
         assert isinstance(lhs_node, self._lhs_type), lhs_node
-        return lhs_node in self._links
+        return lhs_node in self._links and len(self._links[lhs_node]) > 0
 
     def get_count(self, edge: Optional[str] = None) -> int:
         total_count = 0

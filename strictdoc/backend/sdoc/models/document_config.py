@@ -104,7 +104,7 @@ class DocumentConfig:
         self.layout: Optional[str] = layout
 
         # Possible requirement styles:
-        # Simple, Table, Rows
+        # Simple, Table, Rows.
         self.requirement_style: Optional[str] = requirement_style
         self.view_style_tag: Optional[str] = view_style_tag
 

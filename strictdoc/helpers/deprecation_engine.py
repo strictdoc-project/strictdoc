@@ -18,7 +18,16 @@ class DeprecationEngine:
 
         self.deprecations[deprecation_key] = deprecation_message
 
-    def print_all_messages(self) -> None:
+    def print_all_messages(self) -> None:  # pragma: no cover
+        """
+        Print all deprecation messages collected so far.
+
+        It is assumed that this function is at least called during the program
+        termination, so that a user can see the deprecation messages. During
+        the termination, the code coverage is normally already stopped, so the
+        function is excluded from code coverage.
+        """
+
         if len(self.deprecations) == 0:
             return
 

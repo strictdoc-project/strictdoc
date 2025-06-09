@@ -60,6 +60,6 @@ class Anchor:
         return self.parent_node().get_including_document()
 
     def parent_node(self) -> SDocNodeIF:
-        # Anchor -> SDocField -> SDocNode
+        # Anchor -> SDocField -> SDocNode.
         parent_node: SDocNodeIF = assert_cast(self.parent.parent, SDocNodeIF)
         return parent_node

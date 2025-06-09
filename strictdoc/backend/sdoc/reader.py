@@ -122,7 +122,7 @@ class SDReader:
                 f"error: could not parse file: "
                 f"{file_path}.\n{exc.__class__.__name__}: {exc}"
             )
-            # TODO: when --debug is provided
+            # TODO: when --debug is provided.
             traceback.print_exc()
             sys.exit(1)
 

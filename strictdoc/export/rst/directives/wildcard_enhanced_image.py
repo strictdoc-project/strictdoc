@@ -54,7 +54,7 @@ class WildcardEnhancedImage(Image):
                     )
                     break
             else:
-                # If the argument is not provided, raise an error
+                # If the argument is not provided, raise an error.
                 error_message = (
                     f"No image could be found to match the wildcard: "
                     f"{rel_path_to_image}"

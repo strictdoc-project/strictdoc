@@ -92,7 +92,7 @@ def get_etag(file_path):
     if not stat.S_ISREG(mode):
         raise RuntimeError(f"File at path {file_path} is not a file.")
 
-    # calculate the etag based on file size and last modification time
+    # calculate the etag based on file size and last modification time.
     etag_base = str(stat_result.st_mtime) + "-" + str(stat_result.st_size)
     etag = hashlib.md5(etag_base.encode()).hexdigest()
     return etag

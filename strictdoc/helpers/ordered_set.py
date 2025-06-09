@@ -11,7 +11,7 @@ class OrderedSet(t.MutableSet[T]):
 
     >>> OrderedSet([1, 2, "foo"])
 
-    Source: https://github.com/bustawin/ordered-set-37
+    Source: https://github.com/bustawin/ordered-set-37.
     """
 
     __slots__ = ("_d",)

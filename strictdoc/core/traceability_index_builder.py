@@ -104,7 +104,7 @@ class TraceabilityIndexBuilder:
         # - traceability index itself
         # - document tree
         # - assets
-        # - runtime configuration
+        # - runtime configuration.
         traceability_index: TraceabilityIndex = (
             TraceabilityIndexBuilder.create_from_document_tree(
                 document_tree,
@@ -119,7 +119,9 @@ class TraceabilityIndexBuilder:
             project_config=project_config, traceability_index=traceability_index
         )
 
-        # File traceability
+        #
+        # File traceability-related calculations.
+        #
         if not skip_source_files and project_config.is_feature_activated(
             ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
         ):

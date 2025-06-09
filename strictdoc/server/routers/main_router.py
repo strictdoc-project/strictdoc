@@ -1555,7 +1555,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    # Generic routes
     @router.get("/actions/project_index/new_document", response_class=Response)
     def get_new_document():
         output = env().render_template_as_markup(
@@ -2848,7 +2847,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.get("/UID/{uid_or_mid}", response_class=RedirectResponse)
     def redirect_to_uid(uid_or_mid: str):
-        # resolve UID or MID
+        # Resolve UID or MID.
         mid_pattern = r"^[a-fA-F0-9]{32}$"
         if re.search(mid_pattern, uid_or_mid):
             linkable_node = (
@@ -2863,7 +2862,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 )
             )
 
-        # if found, send a 302 redirect response to guide the user to the
+        # If found, send a 302 redirect response to guide the user to the
         # correct URL (page + #anchor)
         if linkable_node:
             link_renderer = LinkRenderer(

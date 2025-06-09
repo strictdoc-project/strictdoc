@@ -70,7 +70,6 @@ class DocumentMeta:
             self.get_html_doc_path(),
         )
 
-    # Paths
     def get_html_doc_path(self):
         return (
             f"{self.output_document_dir_full_path}"

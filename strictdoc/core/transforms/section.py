@@ -52,7 +52,7 @@ class UpdateSectionCommand:
         if len(form_object.section_title) == 0:
             errors["section_title"].append("Section title must not be empty.")
 
-        # Validate UID
+        # Validate UID.
         if section.reserved_uid is not None:
             # This is case where an existing section UID is being removed.
             # We have to check if this UID has incoming links to it, and if so,

@@ -22,6 +22,11 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
+from strictdoc.backend.sdoc.models.model import (
+    SDocDocumentIF,
+    SDocNodeIF,
+    SDocSectionIF,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
@@ -98,19 +103,6 @@ class P01_ReqIFToSDocConverter:
         return documents
 
     @staticmethod
-    def is_spec_object_requirement(_):
-        return True
-
-    @staticmethod
-    def is_spec_object_section(
-        spec_object: ReqIFSpecObject, reqif_bundle: ReqIFBundle
-    ):
-        spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
-            spec_object.spec_object_type
-        )
-        return spec_object_type.long_name == "SECTION"
-
-    @staticmethod
     def convert_requirement_field_from_reqif(field_name: str) -> str:
         if field_name in ReqIFRequirementReservedField.SET:
             return REQIF_MAP_TO_SDOC_FIELD_MAP[field_name]
@@ -123,29 +115,6 @@ class P01_ReqIFToSDocConverter:
         reqif_bundle: ReqIFBundle,
         context: P01_ReqIFToSDocBuildContext,
     ):
-        document = P01_ReqIFToSDocConverter.create_document(
-            specification=specification, context=context
-        )
-        document.section_contents = []
-
-        for (
-            spec_object_type_
-        ) in reqif_bundle.core_content.req_if_content.spec_types:
-            if not isinstance(spec_object_type_, ReqIFSpecObjectType):
-                continue
-
-            # FIXME: [[NODE]]
-            if spec_object_type_.long_name == "SECTION":
-                continue
-
-            grammar_element: GrammarElement = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
-                spec_object_type=spec_object_type_,
-                reqif_bundle=reqif_bundle,
-            )
-            context.map_spec_object_type_identifier_to_grammar_node_tags[
-                spec_object_type_.identifier
-            ] = grammar_element
-
         # This lookup object is used to first collect the spec object type identifiers
         # that are actually used by this document. This is needed to ensure that a
         # StrictDoc document is not created with irrelevant grammar elements that
@@ -154,64 +123,80 @@ class P01_ReqIFToSDocConverter:
         spec_object_type_identifiers_used_by_this_document: OrderedSet[str] = (
             OrderedSet()
         )
-
-        def node_converter_lambda(
-            current_hierarchy_,
-            current_section_,
+        section_spec_types = set()
+        for hierarchy_ in reqif_bundle.iterate_specification_hierarchy(
+            specification,
         ):
             spec_object = reqif_bundle.get_spec_object_by_ref(
-                current_hierarchy_.spec_object
+                hierarchy_.spec_object
             )
             spec_object_type_identifiers_used_by_this_document.add(
                 spec_object.spec_object_type
             )
+            if hierarchy_.children is not None:
+                section_spec_types.add(spec_object.spec_object_type)
 
-            is_section = P01_ReqIFToSDocConverter.is_spec_object_section(
-                spec_object,
+        for (
+            spec_object_type_
+        ) in reqif_bundle.core_content.req_if_content.spec_types:
+            if not isinstance(spec_object_type_, ReqIFSpecObjectType):
+                continue
+
+            grammar_element: GrammarElement = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
+                spec_object_type=spec_object_type_,
                 reqif_bundle=reqif_bundle,
+                is_composite=spec_object_type_.identifier in section_spec_types,
             )
+            context.map_spec_object_type_identifier_to_grammar_node_tags[
+                spec_object_type_.identifier
+            ] = grammar_element
 
-            converted_node: Union[SDocSection, SDocNode]
-            if is_section:
-                converted_node = (
-                    P01_ReqIFToSDocConverter.create_section_from_spec_object(
-                        spec_object=spec_object,
-                        context=context,
-                        parent_section=current_section_,
-                        level=current_hierarchy_.level,
-                        reqif_bundle=reqif_bundle,
-                    )
-                )
-            else:
-                converted_node = P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
+        document = P01_ReqIFToSDocConverter.create_document(
+            specification=specification, context=context
+        )
+        document.section_contents = []
+
+        node_stack: List[Union[SDocDocumentIF, SDocNodeIF]] = [document]
+
+        for hierarchy_ in reqif_bundle.iterate_specification_hierarchy(
+            specification,
+        ):
+            while len(node_stack) > hierarchy_.level:
+                node_stack.pop()
+
+            parent_node = node_stack[-1]
+
+            spec_object = reqif_bundle.get_spec_object_by_ref(
+                hierarchy_.spec_object
+            )
+            converted_node: SDocNode = (
+                P01_ReqIFToSDocConverter.create_requirement_from_spec_object(
                     spec_object=spec_object,
                     context=context,
-                    parent_section=current_section_,
+                    parent_section=parent_node,
                     reqif_bundle=reqif_bundle,
-                    level=current_hierarchy_.level,
+                    level=hierarchy_.level,
                 )
-            current_section_.section_contents.append(converted_node)
+            )
+            parent_node.section_contents.append(converted_node)
 
-            return converted_node, is_section
-
-        reqif_bundle.iterate_specification_hierarchy_for_conversion(
-            specification,
-            document,
-            lambda s: s.ng_level,
-            node_converter_lambda,
-        )
+            if spec_object.spec_object_type in section_spec_types:
+                node_stack.append(converted_node)
 
         elements: List[GrammarElement] = []
         for (
-            spec_object_type_identifier_
-        ) in spec_object_type_identifiers_used_by_this_document:
-            spec_object_type: ReqIFSpecObjectType = (
-                reqif_bundle.lookup.get_spec_type_by_ref(
-                    spec_object_type_identifier_
-                )
-            )
-            if spec_object_type.long_name == "SECTION":
+            spec_object_type_
+        ) in reqif_bundle.core_content.req_if_content.spec_types:
+            if not isinstance(spec_object_type_, ReqIFSpecObjectType):
                 continue
+
+            spec_object_type_identifier_ = spec_object_type_.identifier
+            if (
+                spec_object_type_identifier_
+                not in spec_object_type_identifiers_used_by_this_document
+            ):
+                continue
+
             grammar_element = (
                 context.map_spec_object_type_identifier_to_grammar_node_tags[
                     spec_object_type_identifier_
@@ -229,7 +214,10 @@ class P01_ReqIFToSDocConverter:
             grammar = DocumentGrammar(parent=document, elements=elements)
             grammar.is_default = False
         else:
+            # This case is mainly a placeholder for simple edge cases such as
+            # an empty [DOCUMENT] where there are no grammar or nodes declared.
             grammar = DocumentGrammar.create_default(parent=document)
+
         document.grammar = grammar
 
         return document
@@ -239,6 +227,7 @@ class P01_ReqIFToSDocConverter:
         *,
         spec_object_type: ReqIFSpecObjectType,
         reqif_bundle: ReqIFBundle,
+        is_composite: bool,
     ):
         fields: List[
             Union[
@@ -247,6 +236,7 @@ class P01_ReqIFToSDocConverter:
                 GrammarElementFieldSingleChoice,
             ]
         ] = []
+
         for attribute in spec_object_type.attribute_definitions:
             field_name = (
                 P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
@@ -316,9 +306,7 @@ class P01_ReqIFToSDocConverter:
         requirement_element = GrammarElement(
             parent=None,
             tag=create_safe_requirement_tag_string(spec_object_type.long_name),
-            # FIXME: MERGE NODES
-            #        When the migration is done, make the nodes to be always recursive.
-            property_is_composite="",
+            property_is_composite="True" if is_composite else "",
             property_prefix="",
             property_view_style="",
             fields=fields,
@@ -429,9 +417,9 @@ class P01_ReqIFToSDocConverter:
     def create_requirement_from_spec_object(
         spec_object: ReqIFSpecObject,
         context: P01_ReqIFToSDocBuildContext,
-        parent_section: Union[SDocSection, SDocDocument],
+        parent_section: Union[SDocSectionIF, SDocDocumentIF, SDocNodeIF],
         reqif_bundle: ReqIFBundle,
-        level,
+        level: int,
     ) -> SDocNode:
         fields = []
         spec_object_type = reqif_bundle.lookup.get_spec_type_by_ref(
@@ -548,6 +536,10 @@ class P01_ReqIFToSDocConverter:
             node_type=grammar_element.tag,
             fields=fields,
             relations=[],
+            is_composite=grammar_element.property_is_composite is True,
+            node_type_close=grammar_element.tag
+            if grammar_element.property_is_composite
+            else None,
         )
         requirement.ng_level = level
         for field_ in fields:

@@ -15,7 +15,7 @@ path_to_expected_downloaded_file = os.path.join(
 )
 
 
-class Test_UC56_T01_ExportTreeToReqIF(E2ECase):
+class Test(E2ECase):
     def test(self):
         shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)
 

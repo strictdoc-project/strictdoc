@@ -29,7 +29,7 @@ class DocumentTree:
             map_grammars_by_filenames
         )
 
-        self.source_tree: Optional[SourceTree] = None  # attached later.
+        self.source_tree: Optional[SourceTree] = None  # Attached later.
 
     def __repr__(self):
         return (

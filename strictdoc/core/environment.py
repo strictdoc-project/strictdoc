@@ -28,7 +28,7 @@ class SDocRuntimeEnvironment:
             path_to_main = os.path.abspath(sys.argv[0])
             path_to_main_dir = os.path.dirname(os.path.abspath(path_to_main))
 
-            # Nuitka
+            # Nuitka.
             if self.is_nuitka:
                 self.path_to_strictdoc = path_to_main_dir
             # PyInstaller
@@ -93,7 +93,7 @@ class SDocRuntimeEnvironment:
             return os.path.join(bundle_dir, "templates/html")
         if self.is_nuitka:  # pragma: no cover
             return os.path.join(self.path_to_strictdoc, "templates/html")
-        # Normal Python
+        # Normal Python.
         path_to_html_templates = os.path.join(
             self.path_to_strictdoc, "strictdoc", "export", "html", "templates"
         )

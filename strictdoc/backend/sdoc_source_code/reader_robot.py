@@ -84,7 +84,7 @@ class SdocRelationVisitor(ModelVisitor):
         tc_markers = []
         for stmt in node.body:
             if isinstance(stmt, EmptyLine):
-                # trim trailing newlines from test case range
+                # Trim trailing newlines from test case range.
                 trailing_empty_lines += 1
             else:
                 trailing_empty_lines = 0

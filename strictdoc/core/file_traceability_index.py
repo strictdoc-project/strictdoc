@@ -43,7 +43,7 @@ class FileTraceabilityIndex:
         # "REQ-001" -> {"file.py", ...}
         self.map_reqs_uids_to_paths: Dict[str, OrderedSet[str]] = {}
 
-        # "file.py" -> SourceFileTraceabilityInfo
+        # "file.py" -> SourceFileTraceabilityInfo.
         self.map_paths_to_source_file_traceability_info: Dict[
             str, SourceFileTraceabilityInfo
         ] = {}
@@ -610,7 +610,7 @@ class FileTraceabilityIndex:
 
                 markers_.sort(key=marker_comparator)
 
-                # validate here, SDocNode.relations doesn't track marker roles
+                # validate here, SDocNode.relations doesn't track marker roles.
                 node = traceability_index.get_node_by_uid(req_uid_)
                 document = node.get_document()
                 assert document is not None

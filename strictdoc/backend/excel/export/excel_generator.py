@@ -74,9 +74,12 @@ class ExcelGenerator:
                 }
             )
 
-            row = 1  # Header-Row
+            # Header row.
+            row = 1
+
             fields = project_config.excel_export_fields
-            # TODO: Check if all fields are defined by the DocumentGrammar
+
+            # FIXME: Check if all fields are defined by the DocumentGrammar.
             columns = ExcelGenerator._init_columns_width(fields)
 
             document_iterator = traceability_index.get_document_iterator(
@@ -99,13 +102,13 @@ class ExcelGenerator:
                     print_fragments=False, print_fragments_from_files=False
                 ):
                     if not node.is_requirement() or not node.reserved_uid:
-                        # only export the requirements with uid
+                        # Only export the requirements with UID.
                         continue
 
                     for idx, field in enumerate(fields, start=0):
                         field_uc = field.upper()
 
-                        # Special treatment for ParentReqReference and Comments
+                        # Special treatment for ParentReqReference and Comments.
                         if field_uc in (
                             "RELATIONS:PARENT",
                             "PARENT",
@@ -115,7 +118,7 @@ class ExcelGenerator:
                                 ReferenceType.PARENT
                             )
                             if len(parent_refs) > 0:
-                                # TODO Allow multiple parent refs
+                                # FIXME: Allow multiple parent refs.
                                 ref = parent_refs[0]
                                 columns[field][MAX_WIDTH_KEY] = max(
                                     len(ref.ref_uid),
@@ -136,7 +139,7 @@ class ExcelGenerator:
                                     worksheet.write(row, idx, ref.ref_uid)
                         elif field_uc in ("COMMENT", "COMMENTS"):
                             # Using a transition marker to separate multiple
-                            # comments
+                            # comments.
                             comment_fields = node.get_comment_fields()
                             if len(comment_fields) > 0:
                                 comment_row_value: str = ""
@@ -159,7 +162,7 @@ class ExcelGenerator:
                             if len(node.relations) > 0:
                                 relations_components = []
                                 # Using a transition marker to separate
-                                # multiple references
+                                # multiple references.
                                 for ref in node.relations:
                                     if isinstance(ref, ParentReqReference):
                                         relations_components.append(
@@ -208,8 +211,8 @@ class ExcelGenerator:
 
                     row += 1
 
-                # add a table around all this data, allowing filtering and
-                # ordering in Excel
+                # Add a table around all this data, allowing filtering and
+                # ordering in Excel.
                 worksheet.add_table(
                     0,
                     0,
@@ -218,12 +221,12 @@ class ExcelGenerator:
                     {"columns": ExcelGenerator._init_headers(fields)},
                 )
 
-                # enforce columns width
+                # Enforce columns width.
                 ExcelGenerator._set_columns_width(
                     workbook, worksheet, columns, fields
                 )
             else:
-                # no requirement with UID
+                # No requirement with UID.
                 print(  # noqa: T201
                     "No requirement with UID, nothing to export into excel"
                 )
@@ -239,7 +242,7 @@ class ExcelGenerator:
         for content_node in document_contents:
             if isinstance(content_node, SDocNode):
                 if content_node.reserved_uid:
-                    # only export the requirements with uid, allowing tracking
+                    # Only export the requirements with uid, allowing tracking.
                     row += 1
                     refs[content_node.reserved_uid] = row
 

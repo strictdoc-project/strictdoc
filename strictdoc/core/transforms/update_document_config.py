@@ -95,7 +95,7 @@ class UpdateDocumentConfigTransform:
             errors["TITLE"].append("Document title must not be empty.")
 
         # Ensure that UID doesn't have any incoming links if it is going to be
-        # renamed or removed
+        # renamed or removed.
         existing_uid = document.reserved_uid
         new_uid = form_object.document_uid
         if existing_uid is not None:

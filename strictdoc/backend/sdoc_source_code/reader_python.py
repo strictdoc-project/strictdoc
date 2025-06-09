@@ -93,7 +93,7 @@ class SourceFileTraceabilityReader_Python:
                         block_comment = first_match.children[0]
 
                         # String contains of three parts:
-                        # string_start string_content string_end
+                        # (string_start string_content string_end)
                         string_content = block_comment.children[1]
                         assert string_content.text is not None
 
@@ -153,7 +153,7 @@ class SourceFileTraceabilityReader_Python:
                                 0
                             ]
                             # String contains of three parts:
-                            # string_start string_content string_end
+                            # (string_start string_content string_end)
                             string_content = block_comment.children[1]
                             assert string_content.text is not None
 

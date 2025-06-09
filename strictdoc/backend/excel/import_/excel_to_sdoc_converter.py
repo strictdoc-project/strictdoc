@@ -40,10 +40,14 @@ def safe_name(dangerous_name):
 
 class ExcelToSDocConverter:
     @staticmethod
-    # optional argument title is present for external scripts to assign a title
     def convert(
         excel_file: str, title: Union[str, None] = None
     ) -> SDocDocument:
+        """
+        Convert a provided Excel file to an SDoc document.
+
+        Optional argument title is present for external scripts to assign a title.
+        """
         sheet = ExcelSheetProxy(excel_file)
 
         excel_file_name = os.path.basename(excel_file)
@@ -52,7 +56,8 @@ class ExcelToSDocConverter:
 
         all_header_columns = list(range(sheet.ncols))
 
-        for i in range(16):  # the first 16 rows should do ¯\_(ツ)_/¯
+        # The first 16 rows should do ¯\_(ツ)_/¯.
+        for i in range(16):
             if sheet.row_values(i)[0].strip() != "":
                 header_row_idx = i
                 break

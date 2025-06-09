@@ -200,7 +200,7 @@ class CreateOrUpdateNodeCommand:
                 requirement, form_object, map_form_to_requirement_fields
             )
 
-            # Updating Traceability Index: UID
+            # Updating Traceability Index: UID.
             traceability_index.update_requirement_uid(
                 requirement=requirement, old_uid=existing_uid
             )
@@ -315,7 +315,7 @@ class CreateOrUpdateNodeCommand:
                 document_.meta.input_doc_full_path, datetime.datetime.today()
             )
 
-        # Updating Traceability Index: Links
+        # Updating Traceability Index: Links.
         for reference_field in form_object.reference_fields:
             ref_uid = reference_field.field_value
             ref_role: Optional[str] = (

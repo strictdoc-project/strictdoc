@@ -196,7 +196,7 @@ class FileFinder:
 
             current_parent_path = os.path.dirname(current_root_path)
 
-            # top-down search assumes we have seen the parent before.
+            # Top-down search assumes we have seen the parent before.
             assert current_parent_path in folder_map, (
                 current_parent_path,
                 folder_map,

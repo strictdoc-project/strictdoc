@@ -12,13 +12,14 @@ RESERVED_STRINGS = [
     "pragma",
     "pylint",
     "@relation",
+    "@sdoc",
     "type:",
 ]
 
 
 def find_first_significant_char_index(text: str) -> Optional[int]:
     for i, char in enumerate(text):
-        if char not in {'"', " ", "\t", "#", "\n"}:
+        if char not in {" ", "\t", "#", "\n"}:
             return i
     return None
 
@@ -95,7 +96,7 @@ class StrictDoc_CheckCommentsRule(LintRule):
     def _patch_last_comment_sentence_if_needed(self, comment: Comment):
         last_index = find_last_significant_char_index(comment.value)
         if last_index is not None and should_check_string(comment.value):
-            if comment.value[last_index] != ".":
+            if comment.value[last_index] not in (".", ":", "?", ")", "]", "}"):
                 patched_node_value = (
                     comment.value[:last_index]
                     + comment.value[last_index]

@@ -24,6 +24,7 @@ from abc import ABC, abstractmethod
 from queue import Empty
 from typing import Any, Callable, Iterable, Tuple, Union
 
+from strictdoc import environment
 from strictdoc.helpers.coverage import register_code_coverage_hook
 from strictdoc.helpers.exception import StrictDocException
 
@@ -61,13 +62,31 @@ class MultiprocessingParallelizer(Parallelizer):
                 multiprocessing.Queue()
             )
 
+            #
+            # FIXME: Debugging:
+            #        Bug: Process parallelization has become flaky on Windows (rarely) #2121
+            #        https://github.com/strictdoc-project/strictdoc/issues/2121
+            #        Move this to a dedicated --processes argument.
+            #
+            process_number: int = multiprocessing.cpu_count()
+
+            if environment.is_github_ci_windows():
+                fixed_process_number = 2
+                print(  # noqa: T201
+                    f"Parallelizer: "
+                    f"Running on GitHub CI Windows with only "
+                    f"{fixed_process_number} parallel processes instead of "
+                    f"{process_number}."
+                )
+                process_number = fixed_process_number
+
             self.processes = [
                 multiprocessing.Process(
                     target=MultiprocessingParallelizer._run,
                     args=(self.input_queue, self.output_queue),
                     daemon=True,
                 )
-                for _ in range(0, multiprocessing.cpu_count())
+                for _ in range(0, process_number)
             ]
 
             self.at_least_one_child_process_failed: bool = False

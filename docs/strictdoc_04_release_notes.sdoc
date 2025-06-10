@@ -47,14 +47,14 @@ This document maintains a record of all changes to StrictDoc since November 2023
 
 [[SECTION]]
 MID: 71b0ec45b5644c5083085c83ef6be95e
-TITLE: Unreleased
+TITLE: 0.9.0 (2025-06-10)
 
 [TEXT]
 MID: 72d1a7e4b54d44e38778d87c74075dc8
 STATEMENT: >>>
 This release introduces a major migration and several new features.
 
-1\) A new syntax has been introduced for composite nodes: ``[[NODE]]``. It is now possible to register composite nodes in the document grammar by setting the property ``IS_COMPOSITE: True``. The long-standing core grammar element [SECTION] has been deprecated in favor of ``[[SECTION]]``, making sections proper composite nodes like any other grammar element. See [LINK: SECTION-UG-NODE-MIGRATION] for migration details.
+1\) A new syntax has been introduced for composite nodes: ``[[NODE]]``. It is now possible to register composite nodes in the document grammar by setting the property ``IS_COMPOSITE: True``. The long-standing core grammar element ``[SECTION]`` has been deprecated in favor of ``[[SECTION]]``, making sections proper composite nodes like any other grammar element. See [LINK: SECTION-UG-NODE-MIGRATION] for migration details.
 
 2\) The JUnit XML test report support has been extended to handle results produced by Pytest's unittest-style class-based tests. [@thseiler]
 
@@ -64,7 +64,7 @@ This release introduces a major migration and several new features.
 
 5\) The web interface has been added for the existing TAG grammar field type. The interface now includes autocompletion for both multi-choice and tag fields. [@thseiler]
 
-6\) Source code parsing now includes initial support for extracting SDoc nodes directly from source files. Additionally, the source comment parser can now handle multiline \@relation markers.
+6\) Source code parsing now includes initial support for extracting SDoc nodes directly from source files. Additionally, the source comment parser can now handle multiline \@relation markers. This feature is not yet documented and will be further refined as part of https://github.com/strictdoc-project/strictdoc/issues/2231.
 
 7\) Support for reading Robot Framework source files and test reports has been added. ``.robot`` files can now be parsed natively by StrictDoc and integrated into the traceability graph. [@haxtibal]
 

@@ -250,7 +250,9 @@ class P01_SDocToReqIFObjectConverter:
                 if isinstance(node_, SDocSection):
                     raise AssertionError(
                         "[SECTION] tags are deprecated when using ReqIF export/import. "
-                        "Use [[SECTION]] tags instead."
+                        "Use [[SECTION]] tags instead. "
+                        "See the migration guide for more details: "
+                        "https://strictdoc.readthedocs.io/en/latest/latest/docs/strictdoc_01_user_guide.html#SECTION-UG-NODE-MIGRATION"
                     )
 
                 if not isinstance(node_, SDocNode):

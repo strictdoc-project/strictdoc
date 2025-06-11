@@ -10,6 +10,8 @@ from strictdoc.backend.sdoc_source_code.reader import (
 from strictdoc.backend.sdoc_source_code.reader_c import (
     SourceFileTraceabilityReader_C,
 )
+from strictdoc.backend.sdoc_source_code.reader_gherkin import \
+    SourceFileTraceabilityReader_Gherkin
 from strictdoc.backend.sdoc_source_code.reader_python import (
     SourceFileTraceabilityReader_Python,
 )
@@ -60,6 +62,7 @@ class SourceFileTraceabilityCachingReader:
         SourceFileTraceabilityReader,
         SourceFileTraceabilityReader_Python,
         SourceFileTraceabilityReader_C,
+        SourceFileTraceabilityReader_Gherkin,
         SourceFileTraceabilityReader_Robot,
     ]:
         if project_config.is_activated_source_file_language_parsers():
@@ -76,4 +79,6 @@ class SourceFileTraceabilityCachingReader:
                 return SourceFileTraceabilityReader_C()
             if path_to_file.endswith(".robot"):
                 return SourceFileTraceabilityReader_Robot()
+            if path_to_file.endswith(".feature"):
+                return SourceFileTraceabilityReader_Gherkin()
         return SourceFileTraceabilityReader()

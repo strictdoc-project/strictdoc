@@ -92,6 +92,7 @@ dependencies = [
 
     # Robot Framework dependencies
     "robotframework >= 4.0.0",
+    "gherkin-official >= 32.1.2",
 ]
 # @sdoc[/SDOC-SRS-89]
 

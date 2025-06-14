@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import os
 from typing import Optional
 
@@ -70,42 +69,42 @@ class DocumentMeta:
             self.get_html_doc_path(),
         )
 
-    def get_html_doc_path(self):
+    def get_html_doc_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}.html"
         )
 
-    def get_html_doc_standalone_path(self):
+    def get_html_doc_standalone_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}.standalone.html"
         )
 
-    def get_html_table_path(self):
+    def get_html_table_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}-TABLE.html"
         )
 
-    def get_html_traceability_path(self):
+    def get_html_traceability_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}-TRACE.html"
         )
 
-    def get_html_deep_traceability_path(self):
+    def get_html_deep_traceability_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}-DEEP-TRACE.html"
         )
 
-    def get_html_pdf_path(self):
+    def get_html_pdf_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
@@ -196,8 +195,10 @@ class DocumentMeta:
             return document_link
         return f"{path_prefix}/{document_link}"
 
-    def get_root_path_prefix(self, other_doc_level=None) -> str:
+    def get_root_path_prefix(
+        self, other_doc_level: Optional[int] = None
+    ) -> str:
         level: int = self.level if not other_doc_level else other_doc_level
         if level == 0:
             return ""
-        return ("../" * level)[:-1]  # mypy: disable=no-any-return
+        return ("../" * level)[:-1]

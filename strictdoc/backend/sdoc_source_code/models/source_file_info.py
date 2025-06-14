@@ -24,20 +24,22 @@ RelationMarkerType: TypeAlias = Union[
 
 @auto_described
 class SourceFileTraceabilityInfo:
+    """
+    Class that keeps all traceability info related to a single source file.
+
+    At the init time, only the backward RangeMarkers are available from
+    a source file. At runtime, the ForwardRangeMarkers are mixed in
+    from the Requirement/FileReference links. This is why the .markers
+    is a union.
+
+    Note that g_parts is only used by the textX grammar to allow the
+    definition of the child grammar elements. All other instance variables
+    of this class are not using or based on g_parts. Instead, they are
+    populated during the textX processing step, e.g., via
+    general_language_marker_processors.py.
+    """
+
     def __init__(self, g_parts: List[Any]):  # noqa: ARG002
-        """
-        At the init time, only the backward RangeMarkers are available from
-        a source file. At runtime, the ForwardRangeMarkers are mixed in
-        from the Requirement/FileReference links. This is why the .markers
-        is a union.
-
-        Note that g_parts is only used by the textX grammar to allow the
-        definition of the child grammar elements. All other instance variables
-        of this class are not using or based on g_parts. Instead, they are
-        populated during the textX processing step, e.g., via
-        general_language_marker_processors.py.
-        """
-
         self.source_file: Optional[SourceFile] = None
         self.source_nodes: List[SourceNode] = []
         self.functions: List[Function] = []

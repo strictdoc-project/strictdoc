@@ -77,8 +77,7 @@ class SDReader:
         self, file_path: str, project_config: ProjectConfig
     ) -> SDocDocument:
         """
-        This function parses the provided .sdoc file and returns a Document
-        object.
+        Parse a provided .sdoc file and convert it into a Document object.
         """
 
         unpickled_content = PickleCache.read_from_cache(

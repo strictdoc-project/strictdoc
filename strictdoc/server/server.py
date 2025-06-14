@@ -46,8 +46,8 @@ def run_strictdoc_server(
             project_config, server_config
         )
 
-        # uvicorn.run does not support passing arguments to the main
-        # function (strictdoc_production_app). Passing the pickled config
+        # The server's uvicorn.run does not support passing arguments to the
+        # main function (strictdoc_production_app). Passing the pickled config
         # through the environmental variables interface.
         tmp_config_file = stack.enter_context(tempfile.NamedTemporaryFile())
         config_dump = pickle_dump(project_config)

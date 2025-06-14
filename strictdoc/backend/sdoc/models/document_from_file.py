@@ -38,9 +38,10 @@ class DocumentFromFile(SDocDocumentFromFileIF):
         self, element_type: Optional[str] = None
     ) -> Generator[SDocNodeIF, None, None]:
         """
-        Iterates over all non-[TEXT] nodes in the document. If element_type
-        is given, then only nodes of type `element_type` are returned.
-        Otherwise, all element types are returned.
+        Iterate over all non-[TEXT] nodes in the document.
+
+        If element_type is given, then only nodes of type `element_type` are
+        returned. Otherwise, all element types are returned.
         """
 
         task_list: List[SDocElementIF] = list(self.section_contents)

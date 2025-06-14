@@ -1,3 +1,22 @@
+"""
+Class container that stores document meta information.
+
+Example explaining metadata stored by this class:.
+
+DocumentMeta(
+    level = 1,
+    file_tree_mount_folder = "doc_project",
+    document_filename = "sample.sdoc",
+    document_filename_base = "sample",
+    input_doc_full_path = "/tmp/doc_project/child.sdoc",
+    input_doc_rel_path = "child.sdoc",
+    input_doc_dir_rel_path = "",
+    input_doc_assets_dir_rel_path = "doc_project/_assets",
+    output_document_dir_full_path = "/tmp/doc_project/output/html/doc_project",
+    output_document_dir_rel_path = "doc_project"
+)
+"""
+
 import os
 from typing import Optional
 
@@ -21,22 +40,6 @@ class DocumentMeta:
         output_document_dir_full_path: str,
         output_document_dir_rel_path: SDocRelativePath,
     ) -> None:
-        """
-        Example explaining meta data stored by this class:
-
-        DocumentMeta(
-            level = 1,
-            file_tree_mount_folder = "doc_project",
-            document_filename = "sample.sdoc",
-            document_filename_base = "sample",
-            input_doc_full_path = "/tmp/doc_project/child.sdoc",
-            input_doc_rel_path = "child.sdoc",
-            input_doc_dir_rel_path = "",
-            input_doc_assets_dir_rel_path = "doc_project/_assets",
-            output_document_dir_full_path = "/tmp/doc_project/output/html/doc_project",
-            output_document_dir_rel_path = "doc_project"
-        )
-        """
         assert isinstance(input_doc_rel_path, SDocRelativePath), (
             input_doc_rel_path
         )

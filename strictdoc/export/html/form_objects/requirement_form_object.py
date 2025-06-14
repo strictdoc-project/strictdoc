@@ -196,6 +196,8 @@ class RequirementReferenceFormField:
 @auto_described
 class RequirementFormObject(ErrorObject):
     """
+    Class for managing node fields in the StrictDoc web editor.
+
     context_document_mid: The MID of the document where the requirement is edited.
                           Normally, this is the requirement's own document but can
                           also be the parent document if requirement's own document
@@ -351,6 +353,8 @@ class RequirementFormObject(ErrorObject):
         element_type: str,
     ) -> "RequirementFormObject":
         """
+        Create a new node form object.
+
         For now, the next_uid cannot be non-None for TEXT nodes. This will likely
         change in the future.
         """

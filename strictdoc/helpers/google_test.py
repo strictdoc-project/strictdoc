@@ -3,6 +3,8 @@ from typing import List
 
 def convert_function_name_to_gtest_macro(input_str: str) -> List[str]:
     """
+    Convert a Google Test name from the JUnit XML format to a C++ macro definition.
+
     Converts a Google Test-produced test name from JUnit XML as follows:
     TestPrtMath.TransitionDistance -> TEST_F(TestPrtMath, TransitionDistance)
     The TEST_F... format is how tree-sitter-cpp parses this macro from C++ code,

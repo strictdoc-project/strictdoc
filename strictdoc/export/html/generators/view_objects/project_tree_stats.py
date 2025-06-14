@@ -20,16 +20,16 @@ class DocumentTreeStats:
     total_tbc: int = 0
     git_commit_hash: Optional[str] = None
 
-    # Section
+    # Section.
     sections_without_text_nodes: int = 0
 
-    # UID
+    # UID.
     requirements_no_uid: int = 0
     requirements_no_links: int = 0
     requirements_root_no_links: int = 0
     requirements_no_rationale: int = 0
 
-    # STATUS
+    # STATUS.
     requirements_status_breakdown: Dict[Optional[str], int] = field(
         default_factory=lambda: defaultdict(int)
     )

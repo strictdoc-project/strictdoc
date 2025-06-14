@@ -11,5 +11,5 @@ class MID(str):
     def create() -> "MID":
         return MID(uuid.uuid4().hex)
 
-    def get_string_value(self):
+    def get_string_value(self) -> str:
         return str(self)

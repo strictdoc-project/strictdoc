@@ -5,7 +5,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 from docutils.core import publish_parts
 from docutils.parsers.rst import directives, roles
@@ -145,7 +145,9 @@ class RstToHtmlFragmentWriter:
 
         return html
 
-    def write_with_validation(self, rst_fragment):
+    def write_with_validation(
+        self, rst_fragment
+    ) -> Tuple[Optional[str], Optional[str]]:
         # How do I convert a docutils document tree into an HTML string?
         # https://stackoverflow.com/a/32168938/598057
         # Use a io.StringIO as the warning stream to prevent warnings from

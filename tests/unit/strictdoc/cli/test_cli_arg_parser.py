@@ -1,5 +1,3 @@
-import os
-
 from strictdoc.cli.cli_arg_parser import (
     CommandParserBuilder,
     create_sdoc_args_parser,
@@ -38,7 +36,7 @@ def test_export_01_minimal():
     # the input path.
     assert export_config.get_path_to_config() == "docs"
     assert export_config.no_parallelization == args.no_parallelization
-    assert export_config.output_dir == os.path.join(os.getcwd(), "output")
+    assert export_config.output_dir is None
 
 
 def test_export_02_output_dir():
@@ -63,9 +61,7 @@ def test_export_02_output_dir():
     assert export_config.formats == args.formats
     assert export_config.input_paths == args.input_paths
     assert export_config.no_parallelization == args.no_parallelization
-    assert export_config.output_dir == os.path.join(
-        os.getcwd(), "custom-output-dir"
-    )
+    assert export_config.output_dir == "custom-output-dir"
 
 
 def test_export_03_parallelization():

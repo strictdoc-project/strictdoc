@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import toml
 
-from strictdoc import SDocRuntimeEnvironment
+from strictdoc import SDocRuntimeEnvironment, __version__
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.cli.cli_arg_parser import (
@@ -67,7 +67,7 @@ class ProjectFeature(str, Enum):
 class ProjectConfig:
     DEFAULT_PROJECT_TITLE = "Untitled Project"
     DEFAULT_DIR_FOR_SDOC_ASSETS = "_static"
-    DEFAULT_DIR_FOR_SDOC_CACHE = "$TMPDIR"
+    DEFAULT_DIR_FOR_SDOC_CACHE = "output/_cache"
 
     DEFAULT_FEATURES: List[str] = [
         ProjectFeature.TABLE_SCREEN,
@@ -125,7 +125,7 @@ class ProjectConfig:
         if env_cache_dir := os.environ.get("STRICTDOC_CACHE_DIR"):
             # The only use case for STRICTDOC_CACHE_DIR is to make the cache
             # local to an itest folder.
-            assert env_cache_dir == "Output/cache", env_cache_dir
+            assert env_cache_dir == "Output/_cache", env_cache_dir
             dir_for_sdoc_cache = env_cache_dir
         elif dir_for_sdoc_cache == "$TMPDIR":
             dir_for_sdoc_cache = os.path.join(
@@ -133,6 +133,12 @@ class ProjectConfig:
                 "strictdoc_cache",
                 get_md5(os.getcwd()),
             )
+
+        # Adding a __version__ part to the cache directory improves traceability
+        # by indicating which StrictDoc version the cache belongs to.
+        # This helps prevent issues when switching between versions that may use
+        # incompatible cache schemas.
+        dir_for_sdoc_cache = os.path.join(dir_for_sdoc_cache, __version__)
 
         self.dir_for_sdoc_cache: str = dir_for_sdoc_cache
 
@@ -251,6 +257,14 @@ class ProjectConfig:
         if (output_dir_ := server_config.output_path) is not None:
             self.output_dir = output_dir_
             self.export_output_html_root = os.path.join(output_dir_, "html")
+            # If a custom cache folder is not specified in the config, adjust the
+            # cache folder to be located in the output folder.
+            if self.dir_for_sdoc_cache.startswith(
+                ProjectConfig.DEFAULT_DIR_FOR_SDOC_CACHE
+            ):
+                self.dir_for_sdoc_cache = os.path.join(
+                    output_dir_, "_cache", __version__
+                )
 
         self.export_formats = ["html"]
         self.generate_bundle_document = False
@@ -270,8 +284,27 @@ class ProjectConfig:
             source_root_path = source_root_path.rstrip("/")
             self.source_root_path = source_root_path
 
-        self.output_dir = export_config.output_dir
-        self.export_output_html_root = export_config.output_html_root
+        #
+        # Adjust the default output dir to the user-provided dir if needed.
+        #
+        output_dir = self.output_dir
+        if export_config.output_dir is not None:
+            output_dir = export_config.output_dir
+        if not os.path.isabs(output_dir):
+            cwd = os.getcwd()
+            output_dir = os.path.join(cwd, output_dir)
+        self.output_dir = output_dir
+
+        # If a custom cache folder is not specified in the config, adjust the
+        # cache folder to be located in the output folder.
+        if self.dir_for_sdoc_cache.startswith(
+            ProjectConfig.DEFAULT_DIR_FOR_SDOC_CACHE
+        ):
+            self.dir_for_sdoc_cache = os.path.join(
+                output_dir, "_cache", __version__
+            )
+
+        self.export_output_html_root = os.path.join(self.output_dir, "html")
         self.export_formats = export_config.formats
         self.export_included_documents = export_config.included_documents
         self.generate_bundle_document = export_config.generate_bundle_document

@@ -135,7 +135,7 @@ def server(context, input_path=".", config=None):
             python -m strictdoc.cli.main
                 server {input_path} {config_argument}
                     --host 127.0.0.1
-                    --output-path ./output/cache/server
+                    --output-path ./output/server
                     --reload
         """,
     )
@@ -485,7 +485,7 @@ def test_integration(
         context,
         environment,
         itest_command,
-        environment={"STRICTDOC_CACHE_DIR": "Output/cache"},
+        environment={"STRICTDOC_CACHE_DIR": "Output/_cache"},
     )
 
 

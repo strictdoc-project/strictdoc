@@ -2,7 +2,7 @@
 title = "StrictDoc Documentation"
 
 html_assets_strictdoc_dir = "assets"
-cache_dir = "./output/cache"
+cache_dir = "./output/_cache"
 
 section_behavior = "[[SECTION]]"
 

@@ -122,7 +122,7 @@ class ExportCommandConfig:
     def __init__(
         self,
         input_paths,
-        output_dir: str,
+        output_dir: Optional[str],
         config_path: Optional[str],
         project_title: Optional[str],
         formats,
@@ -141,7 +141,7 @@ class ExportCommandConfig:
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.input_paths: List[str] = input_paths
-        self.output_dir: str = output_dir
+        self.output_dir: Optional[str] = output_dir
         self._config_path: Optional[str] = config_path
         self.project_title: Optional[str] = project_title
         self.formats = formats
@@ -156,7 +156,6 @@ class ExportCommandConfig:
         self.reqif_multiline_is_xhtml: bool = reqif_multiline_is_xhtml
         self.reqif_enable_mid: bool = reqif_enable_mid
         self.view: Optional[str] = view
-        self.output_html_root: str = os.path.join(output_dir, "html")
         self.chromedriver: Optional[str] = chromedriver
 
     def get_path_to_config(self) -> str:
@@ -259,14 +258,9 @@ class SDocArgsParser:
     def get_export_config(self) -> ExportCommandConfig:
         project_title: Optional[str] = self.args.project_title
 
-        output_dir = self.args.output_dir if self.args.output_dir else "output"
-        if not os.path.isabs(output_dir):
-            cwd = os.getcwd()
-            output_dir = os.path.join(cwd, output_dir)
-
         return ExportCommandConfig(
             self.args.input_paths,
-            output_dir,
+            self.args.output_dir,
             self.args.config,
             project_title,
             self.args.formats,

@@ -1,7 +1,6 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
 from collections import defaultdict
 from enum import Enum
-from typing import Dict, Iterable, List, Optional, Set, Union
+from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from starlette.datastructures import FormData
 
@@ -27,10 +26,10 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementFieldSingleChoice,
     RequirementFieldType,
 )
+from strictdoc.core.constants import GraphLinkType
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import (
-    GraphLinkType,
     TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import SingleShotTreeCycleDetector
@@ -59,7 +58,7 @@ class RequirementFormField:
         field_type: RequirementFormFieldType,
         field_value: str,
         field_gef_type: str = RequirementFieldType.STRING,
-    ):
+    ) -> None:
         assert isinstance(field_value, str)
         self.field_mid: str = field_mid
         self.field_name: str = field_name
@@ -86,10 +85,10 @@ class RequirementFormField:
             RequirementFieldType.TAG,
         )
 
-    def get_input_field_name(self):
+    def get_input_field_name(self) -> str:
         return f"requirement[fields][{self.field_mid}][value]"
 
-    def get_input_field_type_name(self):
+    def get_input_field_type_name(self) -> str:
         return f"requirement[fields][{self.field_mid}][name]"
 
     @staticmethod
@@ -173,7 +172,7 @@ class RequirementReferenceFormField:
         field_type: FieldType,
         field_value: str,
         field_role: Optional[str],
-    ):
+    ) -> None:
         assert isinstance(field_mid, str), field_mid
         assert isinstance(field_value, str), field_value
         self.field_mid: str = field_mid
@@ -184,13 +183,13 @@ class RequirementReferenceFormField:
         )
         self.validation_messages: List[str] = []
 
-    def get_input_field_name(self):
+    def get_input_field_name(self) -> str:
         return "requirement_relation"
 
-    def get_value_field_name(self):
+    def get_value_field_name(self) -> str:
         return f"requirement[relations][{self.field_mid}][value]"
 
-    def get_type_field_name(self):
+    def get_type_field_name(self) -> str:
         return f"requirement[relations][{self.field_mid}][typerole]"
 
 
@@ -217,7 +216,7 @@ class RequirementFormObject(ErrorObject):
         grammar: DocumentGrammar,
         # FIXME: Better name.
         relation_types: List[str],
-    ):
+    ) -> None:
         super().__init__()
         assert isinstance(element_type, str), element_type
         self.is_new: bool = is_new
@@ -256,7 +255,9 @@ class RequirementFormObject(ErrorObject):
         requirement_fields = defaultdict(list)
         form_ref_fields: List[RequirementReferenceFormField] = []
 
-        context_document_mid = request_form_dict["context_document_mid"]
+        context_document_mid = assert_cast(
+            request_form_dict["context_document_mid"], str
+        )
         requirement_dict = assert_cast(request_form_dict["requirement"], dict)
 
         element_type = assert_cast(request_form_dict["element_type"], str)
@@ -282,24 +283,13 @@ class RequirementFormObject(ErrorObject):
                 relation_role = None
             else:
                 raise AssertionError("Must not reach here")  # pragma: no cover
-            field_type = (
-                RequirementReferenceFormField.FieldType.PARENT
-                if relation_type == "Parent"
-                else (
-                    RequirementReferenceFormField.FieldType.CHILD
-                    if relation_type == "Child"
-                    else (
-                        RequirementReferenceFormField.FieldType.FILE
-                        if relation_type == "File"
-                        else ""
-                    )
-                )
-            )
-            assert field_type in (
-                RequirementReferenceFormField.FieldType.PARENT,
-                RequirementReferenceFormField.FieldType.CHILD,
-                RequirementReferenceFormField.FieldType.FILE,
-            )
+
+            field_type = {
+                "Parent": RequirementReferenceFormField.FieldType.PARENT,
+                "Child": RequirementReferenceFormField.FieldType.CHILD,
+                "File": RequirementReferenceFormField.FieldType.FILE,
+            }[relation_type]
+
             relation_value = relation_dict["value"].strip()
 
             form_ref_fields.append(
@@ -517,7 +507,7 @@ class RequirementFormObject(ErrorObject):
 
         return form_object
 
-    def any_errors(self):
+    def any_errors(self) -> bool:
         if super().any_errors():
             return True
         for reference_field in self.reference_fields:
@@ -565,7 +555,9 @@ class RequirementFormObject(ErrorObject):
                 raise NotImplementedError(ref_type)
         return references
 
-    def enumerate_fields(self, multiline: bool):
+    def enumerate_fields(
+        self, multiline: bool
+    ) -> Iterator[List[RequirementFormField]]:
         for field_name_, field in self.fields.items():
             try:
                 requirement_field: RequirementFormField = field[0]
@@ -582,12 +574,14 @@ class RequirementFormObject(ErrorObject):
                     continue
             yield field
 
-    def enumerate_reference_fields(self):
+    def enumerate_reference_fields(
+        self,
+    ) -> Iterator[List[RequirementReferenceFormField]]:
         yield from self.reference_fields
 
     def enumerate_relation_roles(
         self, relation_field: RequirementReferenceFormField
-    ):
+    ) -> Iterator[Tuple[str, Optional[str], bool]]:
         requirement_element = self.grammar.elements_by_type[self.element_type]
         for relation_ in requirement_element.relations:
             is_current = (
@@ -608,7 +602,7 @@ class RequirementFormObject(ErrorObject):
         traceability_index: TraceabilityIndex,
         context_document: SDocDocument,
         config: ProjectConfig,
-    ):
+    ) -> None:
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(context_document, SDocDocument)
 
@@ -723,6 +717,7 @@ class RequirementFormObject(ErrorObject):
                             context_document=context_document,
                         ).write_with_validation(field_value)
                         if parsed_html is None:
+                            assert rst_error is not None
                             self.add_error(
                                 grammar_element_field_.title, rst_error
                             )
@@ -834,60 +829,75 @@ class RequirementFormObject(ErrorObject):
                         reference_field.field_type, field_role_or_none
                     )
 
-                    # Check if the relation forms a cycle.
-                    ref_uid = reference_field.field_value
-
-                    def parent_lambda(node_id):
-                        node = traceability_index.graph_database.get_link_value(
-                            link_type=GraphLinkType.UID_TO_NODE,
-                            lhs_node=node_id,
-                        )
-                        return list(
-                            map(
-                                lambda node_: node_.reserved_uid,
-                                traceability_index.graph_database.get_link_values(
-                                    link_type=GraphLinkType.NODE_TO_PARENT_NODES,
-                                    lhs_node=node,
-                                    edge=ALL_EDGES,
-                                ),
-                            )
-                        )
-
-                    def child_lambda(node_id) -> Iterable[str]:
-                        node = traceability_index.graph_database.get_link_value(
-                            link_type=GraphLinkType.UID_TO_NODE,
-                            lhs_node=node_id,
-                        )
-                        return list(
-                            map(
-                                lambda node_: node_.reserved_uid,
-                                traceability_index.graph_database.get_link_values(
-                                    link_type=GraphLinkType.NODE_TO_CHILD_NODES,
-                                    lhs_node=node,
-                                    edge=ALL_EDGES,
-                                ),
-                            )
-                        )
-
-                    relations_lambda = (
-                        parent_lambda
-                        if reference_field.field_type == "Parent"
-                        else child_lambda
+                    self._validate_no_cycle_by_new_node(
+                        traceability_index, reference_field, requirement_uid
                     )
 
-                    cycle_detector = SingleShotTreeCycleDetector()
-                    try:
-                        cycle_detector.check_node(
-                            requirement_uid,
-                            ref_uid,
-                            relations_lambda,
-                        )
-                    except DocumentTreeError as error_:
-                        reference_field.validation_messages.append(
-                            error_.to_validation_message()
-                        )
+    @staticmethod
+    def _validate_no_cycle_by_new_node(
+        traceability_index: TraceabilityIndex,
+        reference_field: RequirementReferenceFormField,
+        requirement_uid: str,
+    ) -> None:
+        """
+        Check if a relation being added by a new node would form a cycle.
+        """
 
-    def _validate_choice(self, grammar_element_field: GrammarElementField):
+        ref_uid = reference_field.field_value
+
+        def parent_lambda(node_id: str) -> List[str]:
+            node = traceability_index.graph_database.get_link_value(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=node_id,
+            )
+            return list(
+                map(
+                    lambda node_: node_.reserved_uid,
+                    traceability_index.graph_database.get_link_values(
+                        link_type=GraphLinkType.NODE_TO_PARENT_NODES,
+                        lhs_node=node,
+                        edge=ALL_EDGES,
+                    ),
+                )
+            )
+
+        def child_lambda(node_id: str) -> List[str]:
+            node = traceability_index.graph_database.get_link_value(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=node_id,
+            )
+            return list(
+                map(
+                    lambda node_: node_.reserved_uid,
+                    traceability_index.graph_database.get_link_values(
+                        link_type=GraphLinkType.NODE_TO_CHILD_NODES,
+                        lhs_node=node,
+                        edge=ALL_EDGES,
+                    ),
+                )
+            )
+
+        relations_lambda = (
+            parent_lambda
+            if reference_field.field_type == "Parent"
+            else child_lambda
+        )
+
+        cycle_detector = SingleShotTreeCycleDetector()
+        try:
+            cycle_detector.check_node(
+                requirement_uid,
+                ref_uid,
+                relations_lambda,
+            )
+        except DocumentTreeError as error_:
+            reference_field.validation_messages.append(
+                error_.to_validation_message()
+            )
+
+    def _validate_choice(
+        self, grammar_element_field: GrammarElementField
+    ) -> None:
         field_0 = self.fields[grammar_element_field.title][0]
         if len(field_0.field_value) == 0 and not grammar_element_field.required:
             # The empty choice fields are allowed if the field is not REQUIRED.

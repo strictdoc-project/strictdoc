@@ -121,6 +121,7 @@ class CreateOrUpdateNodeCommand:
                     context_document=self.context_document,
                 ).write_with_validation(field_.field_value)
                 if parsed_html is None:
+                    assert rst_error is not None
                     form_object.add_error(field_.field_name, rst_error)
                 else:
                     try:

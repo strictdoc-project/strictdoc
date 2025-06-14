@@ -1,15 +1,19 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+from typing import List
+
+
 class DocumentTreeError(Exception):
-    def __init__(self, problem_uid, cycled_uids):
+    def __init__(self, problem_uid: str, cycled_uids: List[str]) -> None:
         super().__init__()
-        self.problem_uid = problem_uid
-        self.cycled_uids = cycled_uids
+        self.problem_uid: str = problem_uid
+        self.cycled_uids: List[str] = cycled_uids
 
     @staticmethod
-    def cycle_error(problem_uid, cycled_uids):
+    def cycle_error(
+        problem_uid: str, cycled_uids: List[str]
+    ) -> "DocumentTreeError":
         return DocumentTreeError(problem_uid, cycled_uids)
 
-    def to_print_message(self):
+    def to_print_message(self) -> str:
         cycled_uids = ", ".join(self.cycled_uids)
         message = (
             "error: document tree: "
@@ -19,7 +23,7 @@ class DocumentTreeError(Exception):
         )
         return message
 
-    def to_validation_message(self):
+    def to_validation_message(self) -> str:
         return (
             "A cycle detected: requirements in the document tree must not "
             "reference each other. "

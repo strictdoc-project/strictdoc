@@ -204,7 +204,7 @@ class GrammarElementRelationParent:
     ):
         assert relation_type == "Parent"
         self.parent = parent
-        self.relation_type = relation_type
+        self.relation_type: str = relation_type
         self.relation_role: Optional[str] = (
             relation_role
             if relation_role is not None and len(relation_role) > 0

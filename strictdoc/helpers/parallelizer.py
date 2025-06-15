@@ -18,6 +18,7 @@ def map_does_not_work(self, contents, processing_func):
         return executor.map(processing_func, contents)
 """
 
+import atexit
 import multiprocessing
 import sys
 import traceback
@@ -85,7 +86,7 @@ class MultiprocessingParallelizer(Parallelizer):
                 multiprocessing.Process(
                     target=MultiprocessingParallelizer._run,
                     args=(self.input_queue, self.output_queue),
-                    daemon=True,
+                    daemon=False,
                 )
                 for _ in range(0, process_number)
             ]
@@ -127,6 +128,13 @@ class MultiprocessingParallelizer(Parallelizer):
                 )
                 bad_child_exit_code = True
 
+        # It is important that these queue methods are called otherwise the
+        # process can get stuck without termination on Windows. This issue
+        # caused many flaky test runs on GitHub CI Actions.
+        # https://github.com/strictdoc-project/strictdoc/issues/2083
+        self.input_queue.cancel_join_thread()
+        self.output_queue.cancel_join_thread()
+
         # On Windows GitHub CI, there is sometimes a strange random edge case where
         # no child process has failed prematurely but there is at least one
         # child process that is reported with a non-realistic exit code:
@@ -166,6 +174,16 @@ class MultiprocessingParallelizer(Parallelizer):
         output_queue: "multiprocessing.Queue[Tuple[int, Any]]",
     ) -> None:
         register_code_coverage_hook()
+
+        def close_queues() -> None:
+            # It is important that these queue methods are called otherwise the
+            # process can get stuck without termination on Windows. This issue
+            # caused many flaky test runs on GitHub CI Actions.
+            # https://github.com/strictdoc-project/strictdoc/issues/2083
+            input_queue.cancel_join_thread()
+            output_queue.cancel_join_thread()
+
+        atexit.register(close_queues)
 
         while True:
             content_idx = -1

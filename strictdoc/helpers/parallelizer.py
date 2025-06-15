@@ -20,6 +20,7 @@ def map_does_not_work(self, contents, processing_func):
 
 import multiprocessing
 import sys
+import traceback
 from abc import ABC, abstractmethod
 from queue import Empty
 from typing import Any, Callable, Iterable, Tuple, Union
@@ -167,18 +168,22 @@ class MultiprocessingParallelizer(Parallelizer):
         register_code_coverage_hook()
 
         while True:
+            content_idx = -1
             try:
                 item = input_queue.get(block=True)
                 if item is None:
-                    sys.stdout.flush()
-                    sys.stderr.flush()
                     break
                 content_idx, content, processing_func = item
                 result = processing_func(content)
-                sys.stdout.flush()
-                sys.stderr.flush()
                 output_queue.put((content_idx, result))
-            except KeyboardInterrupt:  # pragma: no cover
+            except Exception as exception_:
+                output_queue.put((content_idx, None))
+                if not isinstance(
+                    exception_, KeyboardInterrupt
+                ):  # pragma: no cover
+                    traceback.print_exc()
+                sys.exit(1)
+            finally:
                 sys.stdout.flush()
                 sys.stderr.flush()
 

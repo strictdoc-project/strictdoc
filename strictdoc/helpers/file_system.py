@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def"
 import hashlib
 import os
 import platform
@@ -9,7 +8,7 @@ from pathlib import Path
 from typing import Optional
 
 
-def sync_dir(src_dir, dst_dir, message: Optional[str]):
+def sync_dir(src_dir: str, dst_dir: str, message: Optional[str]) -> None:
     assert os.path.isabs(src_dir), f"Expected {src_dir} to be an absolute path"
     assert os.path.isdir(src_dir), f"Expected {src_dir} to be a directory"
 
@@ -72,14 +71,16 @@ def sync_dir(src_dir, dst_dir, message: Optional[str]):
             print(".", flush=True)  # noqa: T201
 
 
-def get_portable_temp_dir():
+def get_portable_temp_dir() -> Path:
     return Path(
         "/tmp" if platform.system() == "Darwin" else tempfile.gettempdir()
     )
 
 
-def get_etag(file_path):
+def get_etag(file_path: str) -> str:
     """
+    Get an HTTP ETag value for a given file path.
+
     This implementation is taken from StackOverflow. The implementation itself
     is taken from Starlette.
     https://stackoverflow.com/a/76263874/598057
@@ -92,7 +93,7 @@ def get_etag(file_path):
     if not stat.S_ISREG(mode):
         raise RuntimeError(f"File at path {file_path} is not a file.")
 
-    # calculate the etag based on file size and last modification time.
+    # Calculate the etag based on file size and last modification time.
     etag_base = str(stat_result.st_mtime) + "-" + str(stat_result.st_size)
     etag = hashlib.md5(etag_base.encode()).hexdigest()
     return etag

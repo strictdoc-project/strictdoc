@@ -624,6 +624,8 @@ class SDocNode(SDocNodeIF):
         value: Optional[Union[str, SDocNodeField]],
     ) -> None:
         """
+        Create or update a field by name with the given value.
+
         The purpose of this purpose is to provide a single-method API for
         updating any field of a requirement. A requirement might use only some
         fields of a document grammar, so an extra exercise done by the method is

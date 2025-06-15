@@ -188,8 +188,7 @@ class FileTraceabilityIndex:
         self, traceability_index, project_config: ProjectConfig
     ):
         """
-        This is a method that finalizes/resolves all the source code
-        traceability collected as the traceability index was built.
+        Resolve all source code traceability after the index is fully built.
         """
 
         #

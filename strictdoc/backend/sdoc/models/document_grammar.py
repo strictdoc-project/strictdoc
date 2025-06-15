@@ -279,8 +279,8 @@ class DocumentGrammar(SDocGrammarIF):
 
         self.update_with_elements(elements)
 
-        # textX passes an empty string instead of None when import_from_file is
-        # not provided in input.
+        # The textX parser passes an empty string instead of None when
+        # import_from_file is not provided in input.
         if import_from_file is not None and len(import_from_file) == 0:
             import_from_file = None
         self.import_from_file: Optional[str] = import_from_file

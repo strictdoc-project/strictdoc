@@ -9,6 +9,8 @@ from strictdoc.core.project_config import ProjectConfig
 @dataclass
 class UvicornReloadConfig:
     """
+    Class that encapsulate the Uvicorn server configuration details.
+
     Uvicorn has an opinionated system for configuring the reloading of a server
     when the specified files are changed on the file system. This class
     centralized the reload configuration details in one place.
@@ -80,6 +82,8 @@ class UvicornReloadConfig:
     @classmethod
     def expand_folder(cls, folder: str, max_depth: int) -> List[str]:
         """
+        Create a list of wildcard-based paths for a given folder.
+
         It looks like the regex engine of the uvicorn file watching library
         does not support proper ** globs.
 

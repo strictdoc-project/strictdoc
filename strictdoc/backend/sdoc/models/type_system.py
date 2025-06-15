@@ -70,8 +70,8 @@ class FileEntry:
         file_path_posix = g_file_path.replace("\\", "/")
         self.file_path_posix = file_path_posix
 
-        # textX passes an empty string even if there is no LINE_RANGE provided
-        # in the SDoc source.
+        # The textX parser passes an empty string even if there is no LINE_RANGE
+        # provided in the SDoc source.
         g_line_range = (
             g_line_range
             if g_line_range is not None and len(g_line_range) > 0
@@ -88,7 +88,8 @@ class FileEntry:
                 int(range_components_str[1]),
             )
 
-        # textX parses an optional element as an empty string. We make it to None ourselves.
+        # The textX parser parses an optional element as an empty string. We
+        # make it to None ourselves.
         self.function: Optional[str] = (
             function if function is not None and len(function) > 0 else None
         )

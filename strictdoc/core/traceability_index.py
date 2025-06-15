@@ -69,6 +69,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def is_small_project(self):
         """
+        Check if project is small to control feature availability.
+
         This method helps to decide if StrictDoc will precompile Jinja templates
         to Python files or not. Precompilation may take half a second time, so
         it is only worth doing it when a project is relatively large.
@@ -407,6 +409,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
 
     def update_last_updated(self) -> None:
         """
+        Update the index's last updated date to the current time.
+
         This is a rather broad way of signalling that all documents of the index
         need to be re-generated when they are opened next time. Several UI
         actions use this method to ensure a complete re-generation of all
@@ -1034,6 +1038,8 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         self, project_config: ProjectConfig
     ) -> Tuple["TraceabilityIndex", SDocDocument]:
         """
+        Clone this traceability index and create a new bundle document.
+
         The only use case for this method is the generation of a bundle document.
         Since the bundle document does not exist on file system, some parameters
         are set artificially:

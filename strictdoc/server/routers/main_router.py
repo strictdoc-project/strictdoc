@@ -2705,9 +2705,12 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         q: Optional[str] = None, exclude_requirement_mid: Optional[str] = None
     ):
         """
-        @relation(SDOC-SRS-120, scope=function)
-        the UID of the node identified by the optional parameter "exclude_requirement_mid" is excluded,
+        Returns matches of possible node UID values when creating a node relation.
+
+        The UID of the node identified by the optional parameter "exclude_requirement_mid" is excluded,
         so that a node cannot be linked to itself.
+
+        @relation(SDOC-SRS-120, scope=function)
         """
         output = ""
         if q is not None:
@@ -2763,7 +2766,8 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         field_name: Optional[str] = None,
     ):
         """
-        Returns matches of possible values of a SingleChoice, MultiChoice or tag field.
+        Returns matches of possible values of a SingleChoice, MultiChoice or Tag field.
+
         The field is identified by the document_mid, the element_type, and the field_name.
         """
         output = ""

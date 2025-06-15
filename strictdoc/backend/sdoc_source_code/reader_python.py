@@ -277,7 +277,8 @@ class SourceFileTraceabilityReader_Python:
     @staticmethod
     def get_node_ns(node: Node) -> Sequence[str]:
         """
-        Walk up the tree to collect enclosing function and class names (identifier) for full qualification.
+        Walk up from node to find enclosing class and function names.
+
         Handles nested functions, methods, and classes.
         """
         parent_scopes: List[str] = []

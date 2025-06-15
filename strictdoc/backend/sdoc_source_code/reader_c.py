@@ -109,7 +109,7 @@ class SourceFileTraceabilityReader_C:
 
                 # C++ reference declaration wrap the function declaration one time.
                 if function_declarator_node is None:
-                    # Example: TrkVertex& operator-=(const TrkVertex& c);
+                    # Example: "TrkVertex& operator-=(const TrkVertex& c);".
                     reference_declarator_node = ts_find_child_node_by_type(
                         node_, "reference_declarator"
                     )

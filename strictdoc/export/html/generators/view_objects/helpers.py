@@ -10,6 +10,8 @@ def screen_should_display_folder(
     must_only_include_non_included_sdoc: bool,
 ) -> bool:
     """
+    Control if a folder appears on Project Index or Document screen.
+
     must_only_include_non_included_sdoc:
         see screen_should_display_file() for a description of the purpose.
     """
@@ -47,6 +49,8 @@ def screen_should_display_file(
     must_only_include_non_included_sdoc: bool,
 ) -> bool:
     """
+    Control if a file appears on Project Index or Document screen.
+
     must_only_include_non_included_sdoc:
         the argument controls whether to only display non-included SDoc
         documents or also included (fragment) documents. The Project Tree screen

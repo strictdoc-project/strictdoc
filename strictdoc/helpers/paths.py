@@ -7,6 +7,11 @@ def path_to_posix_path(path: str) -> str:
 
 class SDocRelativePath:
     """
+    Class to encapsulate a path as both a native OS path and a POSIX path.
+
+    A native OS path can be with forward slashes on Linux and macOS and with
+    backward slashes on Windows. The POSIX path is always with forward slashes.
+
     This rel path will be used for lookups of URL pages that are
     always "/"-based, even on Windows.
     """

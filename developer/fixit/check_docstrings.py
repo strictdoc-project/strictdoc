@@ -4,7 +4,7 @@ from fixit import LintRule
 from libcst import Expr, SimpleString
 from libcst.metadata import ParentNodeProvider, PositionProvider
 
-RESERVED_STRINGS = ["@relation", "FIXME"]
+RESERVED_STRINGS = ["@relation", "FIXME", "http"]
 
 
 def find_first_significant_char_index(text: str) -> Optional[int]:
@@ -80,7 +80,11 @@ class StrictDoc_CheckDocStringsRule(LintRule):
             if len(node_strings) > 3 and should_check_string(node_strings[-2]):
                 last_index = find_last_significant_char_index(node_strings[-2])
                 if last_index is not None:
-                    if node_strings[-2].rstrip()[last_index] != ".":
+                    if node_strings[-2].rstrip()[last_index] not in (
+                        ".",
+                        ")",
+                        "]",
+                    ):
                         node_strings[-2] = (
                             node_strings[-2][:last_index]
                             + node_strings[-2][last_index]

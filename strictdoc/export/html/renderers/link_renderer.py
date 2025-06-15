@@ -88,6 +88,8 @@ class LinkRenderer:
         allow_local: bool = True,
     ) -> str:
         """
+        Create an HTML URL for a given node.
+
         allow_local:     used on the DTR screen where we want to ensure that only
                          full paths are used when jumping to the DOC screen.
         """
@@ -153,6 +155,8 @@ class LinkRenderer:
         node: Union[SDocDocument, SDocNode, SDocSection, Anchor],
     ):
         """
+        Create a Doxygen link for a given node.
+
         allow_local:     used on the DTR screen where we want to ensure that only
                          full paths are used when jumping to the DOC screen.
         """

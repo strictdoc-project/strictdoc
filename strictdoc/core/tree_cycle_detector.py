@@ -52,8 +52,7 @@ class SingleShotTreeCycleDetector:
         links_function: Callable[[str], List[str]],
     ) -> None:
         """
-        Detect if a newly added node would cause a link/relation cycle in the
-        traceability index.
+        Detect if a new node creates a cycle in the traceability index.
 
         FIXME: Both cycle detector classes are very similar. Find a way to merge
                them. The added value of this 'single shot' detector is that it

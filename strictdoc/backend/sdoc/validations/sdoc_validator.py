@@ -29,6 +29,7 @@ MULTIPLE_CHOICE_FIELD_REGEX = re.compile(
 def multi_choice_regex_match(value: str) -> bool:
     """
     Validate MultipleChoice field value.
+
     Bug: Forward slashes in field values cause errors #2197,
     https://github.com/strictdoc-project/strictdoc/issues/2197
     """
@@ -39,8 +40,8 @@ def multi_choice_regex_match(value: str) -> bool:
 
 class SDocValidator:
     """
-    This helper class is used for validating SDoc documents right after the
-    textX parsing and processing steps have finished.
+    Class that validates SDoc after textX parsing and processing steps.
+
     FIXME: In the future, all processing validation steps could be moved to this
            class as well. This would remove the need in the ParseContext class
            and simplify several other implementation details.

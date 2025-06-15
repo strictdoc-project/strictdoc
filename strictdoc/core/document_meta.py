@@ -1,4 +1,22 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+"""
+Class container that stores document meta information.
+
+Example explaining metadata stored by this class:.
+
+DocumentMeta(
+    level = 1,
+    file_tree_mount_folder = "doc_project",
+    document_filename = "sample.sdoc",
+    document_filename_base = "sample",
+    input_doc_full_path = "/tmp/doc_project/child.sdoc",
+    input_doc_rel_path = "child.sdoc",
+    input_doc_dir_rel_path = "",
+    input_doc_assets_dir_rel_path = "doc_project/_assets",
+    output_document_dir_full_path = "/tmp/doc_project/output/html/doc_project",
+    output_document_dir_rel_path = "doc_project"
+)
+"""
+
 import os
 from typing import Optional
 
@@ -22,22 +40,6 @@ class DocumentMeta:
         output_document_dir_full_path: str,
         output_document_dir_rel_path: SDocRelativePath,
     ) -> None:
-        """
-        Example explaining meta data stored by this class:
-
-        DocumentMeta(
-            level = 1,
-            file_tree_mount_folder = "doc_project",
-            document_filename = "sample.sdoc",
-            document_filename_base = "sample",
-            input_doc_full_path = "/tmp/doc_project/child.sdoc",
-            input_doc_rel_path = "child.sdoc",
-            input_doc_dir_rel_path = "",
-            input_doc_assets_dir_rel_path = "doc_project/_assets",
-            output_document_dir_full_path = "/tmp/doc_project/output/html/doc_project",
-            output_document_dir_rel_path = "doc_project"
-        )
-        """
         assert isinstance(input_doc_rel_path, SDocRelativePath), (
             input_doc_rel_path
         )
@@ -70,42 +72,42 @@ class DocumentMeta:
             self.get_html_doc_path(),
         )
 
-    def get_html_doc_path(self):
+    def get_html_doc_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}.html"
         )
 
-    def get_html_doc_standalone_path(self):
+    def get_html_doc_standalone_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}.standalone.html"
         )
 
-    def get_html_table_path(self):
+    def get_html_table_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}-TABLE.html"
         )
 
-    def get_html_traceability_path(self):
+    def get_html_traceability_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}-TRACE.html"
         )
 
-    def get_html_deep_traceability_path(self):
+    def get_html_deep_traceability_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
             f"{self.document_filename_base}-DEEP-TRACE.html"
         )
 
-    def get_html_pdf_path(self):
+    def get_html_pdf_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
@@ -196,8 +198,10 @@ class DocumentMeta:
             return document_link
         return f"{path_prefix}/{document_link}"
 
-    def get_root_path_prefix(self, other_doc_level=None) -> str:
+    def get_root_path_prefix(
+        self, other_doc_level: Optional[int] = None
+    ) -> str:
         level: int = self.level if not other_doc_level else other_doc_level
         if level == 0:
             return ""
-        return ("../" * level)[:-1]  # mypy: disable=no-any-return
+        return ("../" * level)[:-1]

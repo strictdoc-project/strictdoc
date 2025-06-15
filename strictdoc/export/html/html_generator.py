@@ -148,8 +148,7 @@ class HTMLGenerator:
         flat_assets: bool = False,
     ):
         """
-        This is the primary method for copying all assets to the destination/output
-        folder during HTML and HTML2PDF exports.
+        Copy all assets to output dir during HTML/PDF generation.
 
         :param bool flat_assets: This parameter is always set to False except when
                                  exporting a "bundle document" with HTML2PDF.

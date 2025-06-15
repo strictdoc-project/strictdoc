@@ -66,7 +66,7 @@ class P01_ReqIFToSDocConverter:
     def convert_reqif_bundle(
         reqif_bundle: ReqIFBundle,
         enable_mid: bool,
-        import_markup: str,
+        import_markup: Optional[str],
     ) -> List[SDocDocument]:
         context = P01_ReqIFToSDocBuildContext(
             enable_mid=enable_mid, import_markup=import_markup

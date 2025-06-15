@@ -1,7 +1,7 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Iterator, List, Optional, Tuple, Union
+from typing import Iterator, List, Optional, Sequence, Tuple, Union
 
 from jinja2 import Template
 from markupsafe import Markup
@@ -48,7 +48,7 @@ class DocumentScreenViewObject:
         standalone: bool,
     ):
         self.document_type: DocumentType = document_type
-        self.link_document_type: DocumentType = DocumentType.document()
+        self.link_document_type: DocumentType = DocumentType.DOCUMENT
         self.document: SDocDocument = document
         self.traceability_index: TraceabilityIndex = traceability_index
         self.project_config: ProjectConfig = project_config
@@ -79,7 +79,7 @@ class DocumentScreenViewObject:
         return len(self.document.included_documents) > 0
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
-        if self.document_type.is_document:
+        if self.document_type.is_document():
             if self.document.config.layout == "Website":
                 return jinja_environment.render_template_as_markup(
                     "website/document/index.jinja", view_object=self
@@ -95,7 +95,7 @@ class DocumentScreenViewObject:
             return jinja_environment.render_template_as_markup(
                 "screens/document/traceability/index.jinja", view_object=self
             )
-        elif self.document_type.is_deeptrace:
+        elif self.document_type.is_deeptrace():
             return jinja_environment.render_template_as_markup(
                 "screens/document/traceability_deep/index.jinja",
                 view_object=self,
@@ -127,7 +127,7 @@ class DocumentScreenViewObject:
 
     def render_updated_nodes_and_toc(
         self,
-        nodes: List[Union[SDocDocument, SDocNode]],
+        nodes: Sequence[Union[SDocDocument, SDocNode]],
         jinja_environment: JinjaEnvironment,
     ) -> str:
         output: str = ""
@@ -221,7 +221,7 @@ class DocumentScreenViewObject:
         return self.document_tree_iterator.is_empty_tree()
 
     def is_deeptrace(self) -> bool:
-        return self.document_type.is_deeptrace
+        return self.document_type.is_deeptrace()
 
     def has_any_nodes(self) -> bool:
         return self.document.has_any_nodes()

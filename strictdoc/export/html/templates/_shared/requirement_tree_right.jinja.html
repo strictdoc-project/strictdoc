@@ -11,7 +11,7 @@
       {% include requirement_partial %}
     </div>
 
-    {%- if view_object.document_type.is_deeptrace -%}
+    {%- if view_object.document_type.is_deeptrace() -%}
     {% include "_shared/requirement_tree_right.jinja.html" %}
     {%- endif %}
 

@@ -21,7 +21,7 @@ class DocumentTraceHTMLGenerator:
         html_templates: HTMLTemplates,
     ):
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.trace(),
+            document_type=DocumentType.TRACE,
             document=document,
             traceability_index=traceability_index,
             project_config=project_config,

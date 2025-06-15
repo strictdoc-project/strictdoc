@@ -23,7 +23,7 @@ class DocumentHTMLGenerator:
         html_templates: HTMLTemplates,
     ):
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=traceability_index,
             project_config=project_config,

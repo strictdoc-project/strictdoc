@@ -4,9 +4,9 @@
 # The scope of the auto_uid is only SDoc files. All other extensions must be ignored.
 #
 
-RUN: cp %S/*.xml %S/Output/
-RUN: %strictdoc manage auto-uid %S/Output | filecheck %s --dump-input=fail
+RUN: cp %S/*.xml %T/
+RUN: %strictdoc manage auto-uid %T | filecheck %s --dump-input=fail
 
 CHECK: Step 'Build traceability graph' took
 
-RUN: %diff %S/tests_unit.gtest.junit.xml %S/Output/tests_unit.gtest.junit.xml
+RUN: %diff %S/tests_unit.gtest.junit.xml %T/tests_unit.gtest.junit.xml

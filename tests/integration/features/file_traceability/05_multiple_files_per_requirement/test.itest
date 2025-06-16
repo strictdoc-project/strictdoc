@@ -1,12 +1,12 @@
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
-RUN: %cat %S/Output/html/05_multiple_files_per_requirement/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/05_multiple_files_per_requirement/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#1#2">
 CHECK-HTML: <a{{.*}}href="../_source_files/file2.py.html#REQ-001#1#2">
 
-RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-RUN: %cat %S/Output/html/_source_files/file2.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %T/html/_source_files/file2.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 CHECK-SOURCE-FILE: href="../05_multiple_files_per_requirement/input.html#REQ-001"

@@ -1,4 +1,4 @@
-RUN: %mkdir %S/output/
+RUN: %mkdir %T/
 RUN: %strictdoc version | filecheck %s --dump-input=fail
 RUN: %strictdoc -v | filecheck %s --dump-input=fail
 RUN: %strictdoc --version | filecheck %s --dump-input=fail

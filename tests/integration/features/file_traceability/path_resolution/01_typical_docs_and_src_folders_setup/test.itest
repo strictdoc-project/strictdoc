@@ -4,13 +4,13 @@
 # src/ folder contains source files.
 # the .sdoc document references files in the src/ folder.
 
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: TEST DOCUMENT
 
-RUN: %check_exists --file "%S/Output/html/_source_files/src/file1.py.html"
-RUN: %check_exists --file "%S/Output/html/_source_files/src/file2.py.html"
+RUN: %check_exists --file "%T/html/_source_files/src/file1.py.html"
+RUN: %check_exists --file "%T/html/_source_files/src/file2.py.html"
 
-RUN: %cat %S/Output/html/_source_files/src/file1.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %T/html/_source_files/src/file1.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 CHECK-SOURCE-FILE:data-begin="5"
 CHECK-SOURCE-FILE:data-end="7"
 CHECK-SOURCE-FILE:data-traceability-file-type="this_file"

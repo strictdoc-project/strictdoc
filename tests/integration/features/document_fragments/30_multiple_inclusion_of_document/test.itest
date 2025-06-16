@@ -1,8 +1,8 @@
-RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %cat %S/Output/html/30_multiple_inclusion_of_document/input1.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-1
-RUN: %cat %S/Output/html/30_multiple_inclusion_of_document/input2.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-2
+RUN: %cat %T/html/30_multiple_inclusion_of_document/input1.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-1
+RUN: %cat %T/html/30_multiple_inclusion_of_document/input2.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-2
 
 CHECK-HTML-1:Hello world doc 1
 CHECK-HTML-1:Glossary...

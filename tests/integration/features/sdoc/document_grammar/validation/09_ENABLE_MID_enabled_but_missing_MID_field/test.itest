@@ -2,4 +2,4 @@
 # default implicit grammar and no validation is triggered about the
 # missing MID grammar element field declaration.
 
-RUN: %expect_exit 0 %strictdoc export %S --output-dir Output/
+RUN: %expect_exit 0 %strictdoc export %S --output-dir %T

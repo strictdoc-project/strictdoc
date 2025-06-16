@@ -1,13 +1,13 @@
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#5#7">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#9#11">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-2#5#7">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-2#9#11">
 
-RUN: %cat %S/Output/html/_source_files/file.robot.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %T/html/_source_files/file.robot.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
 # Left panel.
 CHECK-SOURCE-FILE: href="../_source_files/file.robot.html#REQ-1#5#7"
 CHECK-SOURCE-FILE: <b>[ 5-7 ]</b>
@@ -28,5 +28,5 @@ CHECK-SOURCE-FILE: 9 - 11 | function My Other Test()
 CHECK-SOURCE-FILE: 5 - 7 | function My Test()
 CHECK-SOURCE-FILE: 9 - 11 | function My Other Test()
 
-RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: 66.7

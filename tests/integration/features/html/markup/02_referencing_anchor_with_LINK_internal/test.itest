@@ -1,7 +1,7 @@
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %cat %S/Output/html/02_referencing_anchor_with_LINK_internal/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+RUN: %cat %T/html/02_referencing_anchor_with_LINK_internal/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
 CHECK-HTML-DOC: <p>Anchors start.</p>
 CHECK-HTML-DOC: <sdoc-anchor id="AD1"{{.*}}
 CHECK-HTML-DOC: <li>AD1. Software user manual.</li>

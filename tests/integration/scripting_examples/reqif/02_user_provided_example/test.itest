@@ -4,11 +4,11 @@ UNSUPPORTED: true
 # TBD: Figure out how to set PYTHONPATH on Windows.
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
-RUN: %mkdir %S/output
-RUN: PYTHONPATH=%strictdoc_root python %S/script.py %S/sample.reqif %S/output/output.sdoc
+RUN: %mkdir %T
+RUN: PYTHONPATH=%strictdoc_root python %S/script.py %S/sample.reqif %T/output.sdoc
 
 # TBD
-UN: %cat %S/output/output.sdoc | filecheck %s
+UN: %cat %T/output.sdoc | filecheck %s
 
 CHECK: [REQUIREMENT]
 CHECK: UID: Anonymized-194ac1eb-d718-b59b-5d2a-c2b0ac0381ef
@@ -19,6 +19,6 @@ CHECK: COMMENT: >>>
 CHECK: Anonymized-6e95e816-6fc9-0fe1-8b1f-66340311da94
 CHECK: <<<
 
-UN: %strictdoc export --formats=reqif-sdoc %S/output/output.sdoc
-UN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/output_step2.sdoc
-UN: %diff %S/output/output.sdoc %S/output/output_step2.sdoc
+UN: %strictdoc export --formats=reqif-sdoc %T/output.sdoc
+UN: %strictdoc import reqif sdoc %T/reqif/output.reqif %T/output_step2.sdoc
+UN: %diff %T/output.sdoc %T/output_step2.sdoc

@@ -1,4 +1,4 @@
-RUN: %expect_exit 1 %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+RUN: %expect_exit 1 %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 
 CHECK:error: could not parse file: {{.*}}input.sdoc.
 CHECK:Semantic error: Node is missing a field that is required by grammar: TWO.

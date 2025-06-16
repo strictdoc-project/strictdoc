@@ -1,12 +1,12 @@
 REQUIRES: PYTHON_39_OR_HIGHER
 
-RUN: %strictdoc export %S --output-dir Output | filecheck %s
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
 
 CHECK: Published: Hello world doc
 
-RUN: %check_exists --file "%S/Output/html/_source_files/tests/file.c.html"
+RUN: %check_exists --file "%T/html/_source_files/tests/file.c.html"
 
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: Test specification
 CHECK-HTML: TEST_DOC/tests/file.c/test_case_1
 CHECK-HTML: TEST_DOC/tests/file2.c/test_case_1
@@ -15,10 +15,10 @@ CHECK-HTML: tests/file.c, <i>lines: 3-20</i>, function test_case_1()
 CHECK-HTML: tests/file2.c, <i>lines: 3-20</i>, function test_case_1()
 CHECK-HTML: tests/subfolder/file3.c, <i>lines: 3-20</i>, function test_case_1()
 
-RUN: %cat %S/Output/html/_source_files/tests/file.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %T/html/_source_files/tests/file.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
 
 CHECK-SOURCE-FILE: TEST_DOC/tests/file.c/test_case_1
 CHECK-SOURCE-FILE: TEST_DOC/tests/file.c/test_case_2
 
-RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: 97.3

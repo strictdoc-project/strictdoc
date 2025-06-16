@@ -1,7 +1,7 @@
-RUN: %strictdoc export %S --formats=html,rst --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --formats=html,rst --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Test
 
-RUN: %cat %S/Output/html/20_csv_table/path1/test.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+RUN: %cat %T/html/20_csv_table/path1/test.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
 
 # csv-table directive gets expanded to CSV table.
 CHECK-HTML-FILE: <td>a</td>

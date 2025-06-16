@@ -10,7 +10,7 @@ def register_code_coverage_hook() -> None:
         # This branch will never be checked by the coverage.
         return  # pragma: no cover
 
-    import coverage
+    import coverage  # noqa: PLC0415
 
     current_coverage = coverage.Coverage.current()
 

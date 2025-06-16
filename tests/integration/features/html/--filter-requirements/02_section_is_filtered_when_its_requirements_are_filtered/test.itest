@@ -1,11 +1,11 @@
-RUN: %strictdoc export %S --output-dir Output --filter-requirements='("1" in node["TITLE"] or "2" in node["TITLE"])' | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T --filter-requirements='("1" in node["TITLE"] or "2" in node["TITLE"])' | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 
-RUN: %cat %S/Output/html/02_section_is_filtered_when_its_requirements_are_filtered/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+RUN: %cat %T/html/02_section_is_filtered_when_its_requirements_are_filtered/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
 CHECK-HTML-DOC: Title #1
 CHECK-HTML-DOC: Title #2
 CHECK-HTML-DOC-NOT: Title #3

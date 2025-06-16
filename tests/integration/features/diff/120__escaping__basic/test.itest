@@ -1,6 +1,6 @@
-RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
+RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
 
-RUN: cat %S/Output/diff.html | filecheck %s --dump-input=fail --check-prefix=CHECK-DIFF
+RUN: cat %T/diff.html | filecheck %s --dump-input=fail --check-prefix=CHECK-DIFF
 
 CHECK-DIFF:<span class="document_title">Doc Title with special characters &lt;&gt;</span>
 CHECK-DIFF:<span>Doc Title with</span><span> special characters &lt;&gt;</span></div>

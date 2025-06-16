@@ -1,6 +1,6 @@
-RUN: %mkdir %S/output/
-RUN: %strictdoc dump-grammar %S/output/output.tx
-RUN %cat %S/output/output.tx | filecheck %s --dump-input=fail
+RUN: %mkdir %T/
+RUN: %strictdoc dump-grammar %T/output.tx
+RUN %cat %T/output.tx | filecheck %s --dump-input=fail
 
 CHECK:   '[DOCUMENT]' '\n'
 CHECK:MultiLineStringEnd[noskipws]:

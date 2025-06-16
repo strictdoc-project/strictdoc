@@ -12,6 +12,9 @@ lit_config: Any
 config.name = "StrictDoc integration tests"
 config.test_format = lit.formats.ShTest("0")
 
+# Where to output test temporary files.
+config.test_exec_root = "build/tests_integration"
+
 current_dir = os.getcwd()
 
 strictdoc_exec = lit_config.params["STRICTDOC_EXEC"]

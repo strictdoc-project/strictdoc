@@ -1,9 +1,9 @@
-RUN: %expect_exit 1 %strictdoc passthrough %S/input.sdoc --output-dir %S/Output/ | filecheck %s
+RUN: %expect_exit 1 %strictdoc passthrough %S/input.sdoc --output-dir %T/ | filecheck %s
 
 # The same validation message should be produced even if the auto-uid command is executed.
 # https://github.com/strictdoc-project/strictdoc/issues/1896
-RUN: cp %S/input.sdoc %S/Output/
-RUN: %expect_exit 1 %strictdoc manage auto-uid %S/Output/
+RUN: cp %S/input.sdoc %T/
+RUN: %expect_exit 1 %strictdoc manage auto-uid %T/
 
 CHECK: error: could not parse file: {{.*}}/input.sdoc.
 CHECK: Semantic error: Wrong field order for requirement: [STATEMENT, UID].

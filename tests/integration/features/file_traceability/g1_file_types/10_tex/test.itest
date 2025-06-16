@@ -1,10 +1,10 @@
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Example: Traceability between requirements and source files
 
-RUN: %check_exists --file "%S/Output/html/_source_files/file.tex.html"
+RUN: %check_exists --file "%T/html/_source_files/file.tex.html"
 
-RUN: %cat %S/Output/html/10_tex/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/10_tex/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.tex.html#REQ-001#1#48">
 
-RUN: %cat %S/Output/html/_source_files/file.tex.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %T/html/_source_files/file.tex.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 CHECK-SOURCE-FILE: href="../10_tex/example.html#REQ-001"

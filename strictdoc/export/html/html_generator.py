@@ -313,7 +313,7 @@ class HTMLGenerator:
         self,
         document: SDocDocument,
         traceability_index: TraceabilityIndex,
-        specific_documents: Optional[Tuple[DocumentType]] = None,
+        specific_documents: Optional[Tuple[DocumentType, ...]] = None,
     ):
         if specific_documents is None:
             specific_documents = DocumentType.all()
@@ -341,7 +341,7 @@ class HTMLGenerator:
         self,
         document: SDocDocument,
         traceability_index,
-        specific_documents: Optional[Tuple[str]] = None,
+        specific_documents: Optional[Tuple[DocumentType, ...]] = None,
     ):
         if document.config.layout == "Website":
             specific_documents = (DocumentType.DOCUMENT,)

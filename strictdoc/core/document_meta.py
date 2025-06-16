@@ -179,17 +179,16 @@ class DocumentMeta:
     ) -> str:
         assert isinstance(document_type, DocumentType)
 
-        document_type_type = document_type.document_type
         path_prefix: str = self.get_root_path_prefix(other_doc_level)
-        if document_type_type == DocumentType.DOCUMENT:
+        if document_type == DocumentType.DOCUMENT:
             document_link = self.get_html_doc_link()
-        elif document_type_type == DocumentType.TABLE:
+        elif document_type == DocumentType.TABLE:
             document_link = self.get_html_table_link()
-        elif document_type_type == DocumentType.TRACE:
+        elif document_type == DocumentType.TRACE:
             document_link = self.get_html_traceability_link()
-        elif document_type_type == DocumentType.DEEPTRACE:
+        elif document_type == DocumentType.DEEPTRACE:
             document_link = self.get_html_deep_traceability_link()
-        elif document_type_type == DocumentType.PDF:
+        elif document_type == DocumentType.PDF:
             document_link = self.get_html_pdf_link()
         else:
             raise NotImplementedError  # pragma: no cover

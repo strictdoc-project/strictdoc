@@ -21,7 +21,7 @@ class DocumentTableHTMLGenerator:
         html_templates: HTMLTemplates,
     ):
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.table(),
+            document_type=DocumentType.TABLE,
             document=document,
             traceability_index=traceability_index,
             project_config=project_config,

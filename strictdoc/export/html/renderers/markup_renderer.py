@@ -146,7 +146,7 @@ class MarkupRenderer:
                     anchor=part,
                     traceability_index=self.traceability_index,
                     link_renderer=self.link_renderer,
-                    document_type=DocumentType.document(),
+                    document_type=DocumentType.DOCUMENT,
                 )
             else:
                 raise NotImplementedError  # pragma: no cover

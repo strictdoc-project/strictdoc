@@ -21,7 +21,7 @@
         data-viewtype_link="document"
         class="viewtype__menu_item"
         title="Go to Document view"
-        href="{{ view_object.render_document_link(view_object.document, none, "document") }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "DOCUMENT") }}">
       Document</a>
     </li>
     {%- if view_object.project_config.is_activated_table_screen() -%}
@@ -30,7 +30,7 @@
         data-viewtype_link="table"
         class="viewtype__menu_item"
         title="Go to Table view"
-        href="{{ view_object.render_document_link(view_object.document, none, "table") }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "TABLE") }}">
       Table</a>
     </li>
     {%- endif -%}
@@ -40,7 +40,7 @@
         data-viewtype_link="traceability"
         class="viewtype__menu_item"
         title="Go to Traceability view"
-        href="{{ view_object.render_document_link(view_object.document, none, "trace") }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "TRACE") }}">
       Traceability</a>
     </li>
     {%- endif -%}
@@ -50,7 +50,7 @@
         data-viewtype_link="deep_traceability"
         class="viewtype__menu_item"
         title="Go to Deep Traceability view"
-        href="{{ view_object.render_document_link(view_object.document, none, "deeptrace") }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "DEEPTRACE") }}">
       Deep Traceability</a>
     </li>
     {%- endif -%}
@@ -70,7 +70,7 @@
         data-viewtype_link="html2pdf"
         class="viewtype__menu_item"
         title="Go to PDF view"
-        href="{{ view_object.render_document_link(view_object.document, none, "pdf") }}">
+        href="{{ view_object.render_document_link(view_object.document, none, "PDF") }}">
       PDF</a>
     </li>
     {%- endif -%}

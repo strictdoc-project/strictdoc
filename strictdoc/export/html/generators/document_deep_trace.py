@@ -21,7 +21,7 @@ class DocumentDeepTraceHTMLGenerator:
         html_templates: HTMLTemplates,
     ):
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.deeptrace(),
+            document_type=DocumentType.DEEPTRACE,
             document=document,
             traceability_index=traceability_index,
             project_config=project_config,

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 import copy
 import datetime
 import os
@@ -54,7 +54,6 @@ from strictdoc.core.transforms.section import (
     UpdateSectionCommand,
 )
 from strictdoc.core.transforms.update_document_config import (
-    MultipleValidationError,
     UpdateDocumentConfigTransform,
 )
 from strictdoc.core.transforms.update_grammar import UpdateGrammarCommand
@@ -71,6 +70,7 @@ from strictdoc.core.transforms.update_requirement import (
     UpdateNodeInfo,
 )
 from strictdoc.core.transforms.validation_error import (
+    MultipleValidationError,
     MultipleValidationErrorAsList,
 )
 from strictdoc.export.html.document_type import DocumentType
@@ -195,7 +195,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=requirement_document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=requirement_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -241,10 +241,11 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         reference_node: Union[SDocDocument, SDocSection] = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         )
-        document = (
+        document = assert_cast(
             reference_node
             if isinstance(reference_node, SDocDocument)
-            else reference_node.get_document()
+            else reference_node.get_document(),
+            SDocDocument,
         )
 
         target_node_mid = reference_mid
@@ -276,7 +277,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             form_object=section_form_object,
             reference_mid=reference_mid,
             target_node_mid=target_node_mid,
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             is_new_section=True,
             replace_action=replace_action,
             whereto=whereto,
@@ -349,7 +350,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 form_object=form_object,
                 reference_mid=reference_mid,
                 target_node_mid=form_object.section_mid,
-                document_type=DocumentType.document(),
+                document_type=DocumentType.DOCUMENT,
                 is_new_section=True,
                 replace_action="replace",
                 whereto=whereto,
@@ -365,7 +366,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         section: SDocSection = create_command.get_created_section()
 
         # Saving new content to .SDoc file.
-        SDWriter(project_config).write_to_file(section.get_document())
+        section_document: SDocDocument = assert_cast(
+            section.get_document(), SDocDocument
+        )
+        SDWriter(project_config).write_to_file(section_document)
 
         # Update the index because other documents might reference this
         # document's sections. These documents will be regenerated on demand,
@@ -385,7 +389,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=context_document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -440,7 +444,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             "actions/document/edit_section/stream_edit_section.jinja.html",
             renderer=markup_renderer,
             form_object=form_object,
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             is_new_section=False,
             section_mid=section.reserved_mid,
         )
@@ -504,7 +508,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 link_renderer=link_renderer,
                 form_object=form_object,
                 target_node_mid=section.reserved_mid,
-                document_type=DocumentType.document(),
+                document_type=DocumentType.DOCUMENT,
                 is_new_section=False,
                 replace_action="replace",
                 reference_mid="NOT_RELEVANT",
@@ -547,7 +551,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -611,7 +615,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object: DocumentScreenViewObject = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -721,7 +725,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             form_object=form_object,
             reference_mid=reference_mid,
             target_node_mid=target_node_mid,
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             whereto=whereto,
             replace_action=replace_action,
         )
@@ -791,7 +795,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             form_object=form_object,
             reference_mid=reference_mid,
             target_node_mid=target_node_mid,
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             whereto=whereto,
             replace_action=replace_action,
         )
@@ -876,7 +880,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 form_object=form_object,
                 reference_mid=reference_mid,
                 target_node_mid=requirement_mid,
-                document_type=DocumentType.document(),
+                document_type=DocumentType.DOCUMENT,
                 whereto=whereto,
                 replace_action="replace",
                 standalone=False,
@@ -917,7 +921,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -948,7 +952,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 context_document_mid=context_document_mid,
             )
         )
-        document = requirement.get_document()
+        document: SDocDocument = assert_cast(
+            requirement.get_document(), SDocDocument
+        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -969,7 +975,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             is_new_requirement=False,
             renderer=markup_renderer,
             form_object=form_object,
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
         )
         return HTMLResponse(
             content=output,
@@ -1042,7 +1048,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 MID(requirement_mid)
             )
         )
-        document = requirement.get_document()
+        document = assert_cast(requirement.get_document(), SDocDocument)
 
         assert isinstance(requirement_mid, str) and len(requirement_mid) > 0, (
             f"{requirement_mid}"
@@ -1106,7 +1112,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 is_new_requirement=False,
                 renderer=markup_renderer,
                 requirement=requirement,
-                document_type=DocumentType.document(),
+                document_type=DocumentType.DOCUMENT,
                 standalone=False,
                 form_object=form_object,
             )
@@ -1150,7 +1156,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -1202,7 +1208,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 MID(requirement_mid)
             )
         )
-        document = requirement.get_document()
+        document: SDocDocument = assert_cast(
+            requirement.get_document(), SDocDocument
+        )
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1216,7 +1224,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -1324,7 +1332,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object: DocumentScreenViewObject = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -1427,7 +1435,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object: DocumentScreenViewObject = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -1537,7 +1545,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -1680,9 +1688,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         # FIXME: Fill in the document meta correctly.
         document.meta = DocumentMeta(
             level=0,
-            file_tree_mount_folder=None,
+            file_tree_mount_folder="NOT_RELEVANT",
             document_filename=document_file_name,
-            document_filename_base=None,
+            document_filename_base="NOT_RELEVANT",
             input_doc_full_path=doc_full_path,
             input_doc_rel_path=SDocRelativePath(document_path),
             input_doc_dir_rel_path=SDocRelativePath(input_doc_dir_rel_path),
@@ -1955,7 +1963,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -2040,7 +2048,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -2077,7 +2085,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -2123,7 +2131,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -2232,7 +2240,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -2372,7 +2380,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             context_document=document,
         )
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.document(),
+            document_type=DocumentType.DOCUMENT,
             document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
@@ -2513,9 +2521,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             # FIXME: Fill in the meta information correctly.
             document.meta = DocumentMeta(
                 level=0,
-                file_tree_mount_folder=None,
+                file_tree_mount_folder="NOT_RELEVANT",
                 document_filename=document_path,
-                document_filename_base=None,
+                document_filename_base="NOT_RELEVANT",
                 input_doc_full_path=doc_full_path,
                 input_doc_rel_path=SDocRelativePath(document_path),
                 input_doc_dir_rel_path=SDocRelativePath(""),
@@ -2630,6 +2638,8 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.get("/reqif/export_tree", response_class=Response)
     def get_reqif_export_tree():
+        assert export_action.traceability_index.document_tree is not None
+
         reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
             document_tree=export_action.traceability_index.document_tree,
             multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,
@@ -2782,6 +2792,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 )
             )
             if document:
+                assert field_name is not None
                 all_options = document.get_options_for_field(
                     element_type, field_name
                 )
@@ -2873,7 +2884,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 root_path="", static_path=project_config.dir_for_sdoc_assets
             )
             href = link_renderer.render_node_link(
-                linkable_node, None, document_type=DocumentType.document()
+                linkable_node, None, document_type=DocumentType.DOCUMENT
             )
             return RedirectResponse(url=href, status_code=302)
         raise HTTPException(status_code=404, detail="UID or MID was not found")
@@ -2992,6 +3003,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     traceability_index=export_action.traceability_index,
                 )
             else:
+                document_type_to_generate: DocumentType
                 if document_relative_path.relative_path.endswith("-TABLE.html"):
                     base_document_url = (
                         document_relative_path.relative_path.replace(

@@ -23,7 +23,7 @@ class DocumentHTML2PDFGenerator:
         html_templates: HTMLTemplates,
     ):
         view_object = DocumentScreenViewObject(
-            document_type=DocumentType.pdf(),
+            document_type=DocumentType.PDF,
             document=document,
             traceability_index=traceability_index,
             project_config=project_config,

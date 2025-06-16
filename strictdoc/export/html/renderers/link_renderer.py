@@ -173,7 +173,7 @@ class LinkRenderer:
         assert isinstance(node, SDocNode)
         assert isinstance(source_file, SourceFile)
         local_link = self.render_local_anchor(node)
-        link_cache_key = (DocumentType.document(), source_file.level)
+        link_cache_key = (DocumentType.DOCUMENT, source_file.level)
         if link_cache_key in self.req_link_cache:
             document_type_cache = self.req_link_cache[link_cache_key]
             if node in document_type_cache:
@@ -183,7 +183,7 @@ class LinkRenderer:
 
         document = assert_cast(node.get_document(), SDocDocument)
         document_link = document.meta.get_html_link(
-            DocumentType.document(), source_file.level + 1
+            DocumentType.DOCUMENT, source_file.level + 1
         )
         requirement_link = f"{document_link}#{local_link}"
         self.req_link_cache[link_cache_key][node] = requirement_link

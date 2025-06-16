@@ -1,17 +1,16 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
-# FIXME: Migrate this to a proper Enum.
-class DocumentType:
-    DOCUMENT = "document"
-    TABLE = "table"
-    TRACE = "trace"
-    DEEPTRACE = "deeptrace"
-    PDF = "pdf"
+from enum import Enum
+from typing import Tuple
 
-    def __init__(self, document_type: str):
-        self.document_type: str = document_type
+
+class DocumentType(str, Enum):
+    DOCUMENT = "DOCUMENT"
+    TABLE = "TABLE"
+    TRACE = "TRACE"
+    DEEPTRACE = "DEEPTRACE"
+    PDF = "PDF"
 
     @staticmethod
-    def all():  # noqa: A003
+    def all() -> Tuple["DocumentType", ...]:  # noqa: A003
         return (
             DocumentType.DOCUMENT,
             DocumentType.TABLE,
@@ -20,52 +19,30 @@ class DocumentType:
             DocumentType.PDF,
         )
 
-    @staticmethod
-    def document() -> "DocumentType":
-        return DocumentType(DocumentType.DOCUMENT)
-
-    @staticmethod
-    def table():
-        return DocumentType(DocumentType.TABLE)
-
-    @staticmethod
-    def trace():
-        return DocumentType(DocumentType.TRACE)
-
-    @staticmethod
-    def deeptrace():
-        return DocumentType(DocumentType.DEEPTRACE)
-
-    @staticmethod
-    def pdf():
-        return DocumentType(DocumentType.PDF)
-
-    @property
     def is_document(self) -> bool:
-        return self.document_type == DocumentType.DOCUMENT
+        return self == DocumentType.DOCUMENT
 
     def is_table(self) -> bool:
-        return self.document_type == DocumentType.TABLE
+        return self == DocumentType.TABLE
 
     def is_trace(self) -> bool:
-        return self.document_type == DocumentType.TRACE
+        return self == DocumentType.TRACE
 
-    @property
     def is_deeptrace(self) -> bool:
-        return self.document_type == DocumentType.DEEPTRACE
+        return self == DocumentType.DEEPTRACE
 
     def is_pdf(self) -> bool:
-        return self.document_type == DocumentType.PDF
+        return self == DocumentType.PDF
 
     def get_page_title(self) -> str:
-        if self.document_type == DocumentType.DOCUMENT:
+        if self == DocumentType.DOCUMENT:
             return "Document"
-        if self.document_type == DocumentType.TABLE:
+        if self == DocumentType.TABLE:
             return "Table"
-        if self.document_type == DocumentType.TRACE:
+        if self == DocumentType.TRACE:
             return "Traceability"
-        if self.document_type == DocumentType.DEEPTRACE:
+        if self == DocumentType.DEEPTRACE:
             return "Deep Traceability"
-        if self.document_type == DocumentType.PDF:
+        if self == DocumentType.PDF:
             return "PDF"
         raise NotImplementedError  # pragma: no cover

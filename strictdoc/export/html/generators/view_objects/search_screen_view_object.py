@@ -59,8 +59,8 @@ class SearchScreenViewObject:
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
         self.current_view = DocumentView.create_default(None).views[0]
-        self.document_type: DocumentType = DocumentType.document()
-        self.link_document_type: DocumentType = DocumentType.document()
+        self.document_type: DocumentType = DocumentType.DOCUMENT
+        self.link_document_type: DocumentType = DocumentType.DOCUMENT
         self.document: Optional[SDocDocument] = None
 
     def render_truncated_node_statement(self, node):
@@ -87,7 +87,7 @@ class SearchScreenViewObject:
 
     def render_node_link(self, incoming_link):
         return self.link_renderer.render_node_link(
-            incoming_link, None, DocumentType.document()
+            incoming_link, None, DocumentType.DOCUMENT
         )
 
     def render_static_url(self, url: str):

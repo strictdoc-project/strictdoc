@@ -1,4 +1,4 @@
-RUN: %strictdoc export %S --output-dir Output/
+RUN: %strictdoc export %S --output-dir %T/
 
 RUN: cat Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s
 

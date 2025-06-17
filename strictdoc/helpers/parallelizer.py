@@ -103,35 +103,46 @@ class MultiprocessingParallelizer(Parallelizer):
         # @sdoc[/SDOC_IMPL_2]
 
     def shutdown(self) -> None:
+        bad_child_exit_code: bool = False
+
         # @sdoc[SDOC_IMPL_2]
         # macOS edge case: If the __init__ fails to initialize itself, we may
         # end up having no self.processes attribute at all.
         was_fully_initialized = hasattr(self, "processes")
         # @sdoc[/SDOC_IMPL_2]
 
-        for _ in self.processes:
-            self.input_queue.put(None)
-
         if was_fully_initialized:
+            for _ in self.processes:
+                self.input_queue.put(None)
+
             for process_ in self.processes:
-                process_.join()
+                process_.join(timeout=5)
+                if process_.is_alive():
+                    print(  # noqa: T201
+                        f"error: Parallelizer: Process PID {process_.pid} "
+                        f"failed to join within timeout.",
+                        flush=True,
+                    )
+                    process_.terminate()
+                    process_.join()
+
+            for process_ in self.processes:
+                if process_.exitcode != 0:
+                    print(  # noqa: T201
+                        "error: Parallelizer: Failed child process: "
+                        f"PID: {process_.pid}, exit code: {process_.exitcode}.",
+                        flush=True,
+                    )
+                    bad_child_exit_code = True
         else:  # pragma: no cover
             pass
-
-        bad_child_exit_code: bool = False
-        for process_ in self.processes:
-            if process_.exitcode != 0:
-                print(  # noqa: T201
-                    "error: Parallelizer: Failed child process: "
-                    f"PID: {process_.pid}, exit code: {process_.exitcode}.",
-                    flush=True,
-                )
-                bad_child_exit_code = True
 
         # It is important that these queue methods are called otherwise the
         # process can get stuck without termination on Windows. This issue
         # caused many flaky test runs on GitHub CI Actions.
         # https://github.com/strictdoc-project/strictdoc/issues/2083
+        self.input_queue.close()
+        self.output_queue.close()
         self.input_queue.cancel_join_thread()
         self.output_queue.cancel_join_thread()
 
@@ -180,6 +191,8 @@ class MultiprocessingParallelizer(Parallelizer):
             # process can get stuck without termination on Windows. This issue
             # caused many flaky test runs on GitHub CI Actions.
             # https://github.com/strictdoc-project/strictdoc/issues/2083
+            input_queue.close()
+            output_queue.close()
             input_queue.cancel_join_thread()
             output_queue.cancel_join_thread()
 

@@ -199,7 +199,7 @@ class GrammarElementFieldTag(GrammarElementField):
 
 
 @auto_described
-class GrammarElementRelationParent:
+class GrammarElementRelationParent:  # noqa: PLW1641
     def __init__(
         self, parent, relation_type: str, relation_role: Optional[str]
     ):

@@ -1,11 +1,11 @@
-RUN: %strictdoc export %S --included-documents --output-dir Output/ | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --included-documents --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %check_exists --file "%S/Output/html/20_included_documents_in_nested_folders/_assets/file.svg"
-RUN: %check_exists --file "%S/Output/html/20_included_documents_in_nested_folders/nested/_assets/file.svg"
-RUN: %check_exists --file "%S/Output/html/20_included_documents_in_nested_folders/nested/subnested/_assets/file.svg"
+RUN: %check_exists --file "%T/html/20_included_documents_in_nested_folders/_assets/file.svg"
+RUN: %check_exists --file "%T/html/20_included_documents_in_nested_folders/nested/_assets/file.svg"
+RUN: %check_exists --file "%T/html/20_included_documents_in_nested_folders/nested/subnested/_assets/file.svg"
 
-RUN: %cat %S/Output/html/20_included_documents_in_nested_folders/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/20_included_documents_in_nested_folders/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML:data-level="0"
 CHECK-HTML:href="../20_included_documents_in_nested_folders/input.html"
@@ -18,13 +18,13 @@ CHECK-HTML:data-level="1.1.1"
 CHECK-HTML:data-level="1.1.1.1"
 CHECK-HTML:data-level="1.1.1.1.1"
 
-RUN: %cat %S/Output/html/20_included_documents_in_nested_folders/nested/nested.html | filecheck %s --dump-input=fail --check-prefix CHECK-NESTED-HTML
+RUN: %cat %T/html/20_included_documents_in_nested_folders/nested/nested.html | filecheck %s --dump-input=fail --check-prefix CHECK-NESTED-HTML
 
 CHECK-NESTED-HTML:href="../../20_included_documents_in_nested_folders/input.html"
 CHECK-NESTED-HTML:href="../../20_included_documents_in_nested_folders/nested/nested.html"
 CHECK-NESTED-HTML:href="../../20_included_documents_in_nested_folders/nested/subnested/subnested.html"
 
-RUN: %cat %S/Output/html/20_included_documents_in_nested_folders/nested/subnested/subnested.html | filecheck %s --dump-input=fail --check-prefix CHECK-SUBNESTED-HTML
+RUN: %cat %T/html/20_included_documents_in_nested_folders/nested/subnested/subnested.html | filecheck %s --dump-input=fail --check-prefix CHECK-SUBNESTED-HTML
 
 CHECK-SUBNESTED-HTML:href="../../../20_included_documents_in_nested_folders/input.html"
 CHECK-SUBNESTED-HTML:href="../../../20_included_documents_in_nested_folders/nested/nested.html"

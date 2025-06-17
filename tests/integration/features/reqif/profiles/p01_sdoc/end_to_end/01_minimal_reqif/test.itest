@@ -1,6 +1,6 @@
-RUN: %strictdoc export --formats=reqif-sdoc %S/sample.sdoc
-RUN: %strictdoc import reqif sdoc %S/output/reqif/output.reqif %S/output/
-RUN: %diff %S/sample.sdoc %S/output/sample.sdoc
+RUN: %strictdoc export --formats=reqif-sdoc %S/sample.sdoc --output-dir %T
+RUN: %strictdoc import reqif sdoc %T/reqif/output.reqif %T/
+RUN: %diff %S/sample.sdoc %T/sample.sdoc
 
-RUN: %cat %S/output/reqif/output.reqif | filecheck %s
+RUN: %cat %T/reqif/output.reqif | filecheck %s
 CHECK: <REQ-IF xmlns="http://www.omg.org/spec/ReqIF/20110401/reqif.xsd" xmlns:xhtml="http://www.w3.org/1999/xhtml">

@@ -1,6 +1,6 @@
-RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
+RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
 
-RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
+RUN: cat %T/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-section">Summary of the changes</div>
 

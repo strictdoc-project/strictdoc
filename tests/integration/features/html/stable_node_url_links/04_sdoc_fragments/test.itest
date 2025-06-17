@@ -1,11 +1,11 @@
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Stable URI Test
 
-RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Stable URI Test
 CHECK-HTML: index.sdoc
 
-RUN: %cat %S/Output/html/_static/project_map.js | filecheck %s --dump-input=fail --check-prefix CHECK-MAP
+RUN: %cat %T/html/_static/project_map.js | filecheck %s --dump-input=fail --check-prefix CHECK-MAP
 CHECK-MAP: "04_sdoc_fragments/subfolder/file_in_subfolder.html": [
 CHECK-MAP: "UID":"SUB-ROOT-1"
 CHECK-MAP: "UID":"SUB-REQ-WITHIN-SECTION-THAT-HAS-NO-UID"

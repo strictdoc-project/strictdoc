@@ -243,7 +243,7 @@ class Requirement(Node):  # pylint: disable=invalid-name
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
-        from tests.end2end.helpers.screens.document.screen_document import (
+        from tests.end2end.helpers.screens.document.screen_document import (  # noqa: PLC0415
             Screen_Document,
         )
 

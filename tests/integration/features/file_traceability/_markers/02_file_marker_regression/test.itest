@@ -6,10 +6,10 @@ REQUIRES: PYTHON_39_OR_HIGHER
 # Bug: Source View screen: Entire file marker is one line off #2237
 # https://github.com/strictdoc-project/strictdoc/issues/2237
 
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
-RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 CHECK-SOURCE-FILE: <span class="source__range-definition">1 - 9 | entire file</span>

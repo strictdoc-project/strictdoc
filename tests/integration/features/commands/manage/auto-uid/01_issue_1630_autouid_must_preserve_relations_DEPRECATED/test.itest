@@ -1,7 +1,7 @@
-RUN: cp %S/input.sdoc %S/Output/
-RUN: %strictdoc manage auto-uid %S/Output/
+RUN: cp %S/input.sdoc %T/
+RUN: %strictdoc manage auto-uid %T/
 
-RUN: %cat %S/Output/input.sdoc | filecheck %s
+RUN: %cat %T/input.sdoc | filecheck %s
 
 NOTE: This regression test ensures that the RELATIONS field of a requirement that got
       an auto-generated UID are NOT modified.

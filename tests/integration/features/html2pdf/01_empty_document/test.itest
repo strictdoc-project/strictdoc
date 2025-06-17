@@ -1,11 +1,11 @@
 REQUIRES: TEST_HTML2PDF
 
-RUN: %strictdoc export %S --formats=html2pdf --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --formats=html2pdf --output-dir %T | filecheck %s --dump-input=fail
 CHECK: html2pdf4doc: ChromeDriver available at path: {{.*}}
 CHECK: html2pdf4doc: JS logs from the print session
 
-RUN: %check_exists --file %S/Output/html2pdf/pdf/input.pdf
+RUN: %check_exists --file %T/html2pdf/pdf/input.pdf
 
-RUN: %check_exists --file %S/Output/html2pdf/html/01_empty_document/input.html
+RUN: %check_exists --file %T/html2pdf/html/01_empty_document/input.html
 
 RUN: python %S/test_pdf.py

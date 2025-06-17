@@ -1,7 +1,7 @@
-RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %cat %S/Output/html/04_nested_fragments/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/04_nested_fragments/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML:data-level="1"
 CHECK-HTML:data-level="1.1"

@@ -1,18 +1,18 @@
 REQUIRES: PYTHON_39_OR_HIGHER
 
-RUN: %strictdoc export %S --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#16">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#16">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#11#16">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#13#13">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-2#4#5">
 
-RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 
 CHECK-SOURCE-FILE: <b>[ 7-16 ]</b>
 CHECK-SOURCE-FILE: file.py, function Foo.hello_world
@@ -29,5 +29,5 @@ CHECK-SOURCE-FILE: file.py, line
 CHECK-SOURCE-FILE: <b>[ 4-5 ]</b>
 CHECK-SOURCE-FILE: file.py, function Foo.Bar.Baz.hello_world
 
-RUN: %cat %S/Output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+RUN: %cat %T/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: 70.6

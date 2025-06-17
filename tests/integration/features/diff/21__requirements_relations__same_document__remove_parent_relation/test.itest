@@ -1,6 +1,6 @@
-RUN: %strictdoc diff %S/lhs %S/rhs --output-dir Output
+RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
 
-RUN: cat %S/Output/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
+RUN: cat %T/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1</div>
@@ -30,7 +30,7 @@ CHECK-CHANGELOG:REQ-2
 CHECK-CHANGELOG:Requirement #2
 CHECK-CHANGELOG:System shall do 2.
 
-RUN: cat %S/Output/diff.html | filecheck %s --check-prefix=CHECK-DIFF
+RUN: cat %T/diff.html | filecheck %s --check-prefix=CHECK-DIFF
 
 CHECK-DIFF:<span class="badge" text="UID"></span><span class="sdoc_pre_content">REQ-1</span>
 CHECK-DIFF:<span class="badge" text="child-relation"></span><div class="sdoc_pre_content"><b>REQ-2</b>

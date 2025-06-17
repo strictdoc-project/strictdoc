@@ -109,7 +109,7 @@ def clean_itest_artifacts(context):
     run_invoke(
         context,
         """
-        git clean -dX --force --quiet tests/integration/
+        rm -rf build/tests_integration/
         """,
         warn=True,
     )
@@ -460,6 +460,7 @@ def test_integration(
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         --param STRICTDOC_TMP_DIR="{STRICTDOC_TMP_DIR}"
         --timeout 180
+        --order smart
         {junit_xml_report_argument}
         {coverage_path_argument}
         {html2pdf_param}
@@ -1081,7 +1082,7 @@ def test_docker(context, image: str = "strictdoc:latest"):
     )
 
     def check_file_owner(filepath):
-        import pwd
+        import pwd  # noqa: PLC0415
 
         file_owner = pwd.getpwuid(os.stat(filepath).st_uid).pw_name
         current_user = os.environ.get("USER", "")

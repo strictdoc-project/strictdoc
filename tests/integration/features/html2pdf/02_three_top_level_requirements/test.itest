@@ -1,14 +1,14 @@
 REQUIRES: TEST_HTML2PDF
 
-RUN: %strictdoc export %S --formats=html2pdf --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --formats=html2pdf --output-dir %T | filecheck %s --dump-input=fail
 CHECK: html2pdf4doc: JS logs from the print session
 
-RUN: %check_exists --file %S/Output/html2pdf/pdf/input.pdf
-RUN: %check_exists --file %S/Output/html2pdf/pdf/nested/input2.pdf
-RUN: %check_exists --file %S/Output/html2pdf/pdf/nested/subnested/input3.pdf
+RUN: %check_exists --file %T/html2pdf/pdf/input.pdf
+RUN: %check_exists --file %T/html2pdf/pdf/nested/input2.pdf
+RUN: %check_exists --file %T/html2pdf/pdf/nested/subnested/input3.pdf
 
-RUN: %check_exists --file %S/Output/html2pdf/html/02_three_top_level_requirements/input.html
-RUN: %check_exists --file %S/Output/html2pdf/html/02_three_top_level_requirements/nested/input2.html
-RUN: %check_exists --file %S/Output/html2pdf/html/02_three_top_level_requirements/nested/subnested/input3.html
+RUN: %check_exists --file %T/html2pdf/html/02_three_top_level_requirements/input.html
+RUN: %check_exists --file %T/html2pdf/html/02_three_top_level_requirements/nested/input2.html
+RUN: %check_exists --file %T/html2pdf/html/02_three_top_level_requirements/nested/subnested/input3.html
 
 RUN: python %S/test_pdf.py

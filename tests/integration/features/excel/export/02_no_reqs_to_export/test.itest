@@ -1,3 +1,3 @@
-RUN: %strictdoc export --formats=excel --output-dir Output "%S/input.sdoc" | filecheck %s
+RUN: %strictdoc export --formats=excel --output-dir %T "%S/input.sdoc" | filecheck %s
 
 CHECK: No requirement with UID, nothing to export into excel

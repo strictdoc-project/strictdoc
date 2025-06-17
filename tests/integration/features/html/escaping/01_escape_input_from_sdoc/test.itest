@@ -1,16 +1,16 @@
-RUN: %strictdoc export %S --output-dir Output/ | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
+RUN: %strictdoc export %S --output-dir %T/ | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
 CHECK-EXPORT: Published: <b>"escaping"&nbsp;'document title'</b>
 
-RUN: %cat %S/Output/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-INDEX
-RUN: %cat %S/Output/html/traceability_matrix.html | filecheck %s --dump-input=fail --check-prefix CHECK-TRACEABILITY-MATRIX
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-INPUT
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-DTR
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-TABLE
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-TRACE
+RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-INDEX
+RUN: %cat %T/html/traceability_matrix.html | filecheck %s --dump-input=fail --check-prefix CHECK-TRACEABILITY-MATRIX
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-INPUT
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-DTR
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix CHECK-TABLE
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-ALL
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-TRACE
 
 # Project index: Document title.
 CHECK-INDEX: &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;

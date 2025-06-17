@@ -1,4 +1,4 @@
-RUN: %strictdoc export %S/nested --formats=html --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S/nested --formats=html --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: cat Output/html/nested/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML

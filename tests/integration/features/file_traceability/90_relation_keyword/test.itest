@@ -1,13 +1,13 @@
-RUN: %strictdoc export . --output-dir Output | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
-RUN: %check_exists --file "%S/Output/html/_source_files/file.py.html"
+RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
-RUN: %cat %S/Output/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
 CHECK-HTML: href="../_source_files/file.py.html#REQ-001#2#4"
 
-RUN: %cat %S/Output/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 
 CHECK-SOURCE-FILE: href="../90_relation_keyword/input.html#REQ-001"
 

@@ -191,7 +191,7 @@ class GrammarFormObject(ErrorObject):
 
         return len(self.errors) == 0
 
-    def render(self):
+    def render(self) -> Markup:
         rendered_template = self.jinja_environment.render_template_as_markup(
             "components/grammar_form/index.jinja", form_object=self
         )

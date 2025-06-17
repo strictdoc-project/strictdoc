@@ -67,7 +67,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
     def document_iterators(self) -> Dict[SDocDocument, DocumentCachingIterator]:
         return self._document_iterators
 
-    def is_small_project(self):
+    def is_small_project(self) -> bool:
         """
         Check if project is small to control feature availability.
 

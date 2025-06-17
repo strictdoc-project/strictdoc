@@ -34,12 +34,12 @@ class UpdateSectionCommand:
         form_object: SectionFormObject,
         section: SDocSection,
         traceability_index: TraceabilityIndex,
-    ):
+    ) -> None:
         self.form_object: SectionFormObject = form_object
         self.section: SDocSection = section
         self.traceability_index: TraceabilityIndex = traceability_index
 
-    def perform(self):
+    def perform(self) -> None:
         errors: Dict[str, List[str]] = defaultdict(list)
         validation_error = MultipleValidationError(
             "Section form has not passed validation.", errors
@@ -140,7 +140,7 @@ class CreateSectionCommand:
         assert isinstance(self._created_section, SDocSection)
         return self._created_section
 
-    def perform(self):
+    def perform(self) -> None:
         errors: Dict[str, List[str]] = defaultdict(list)
         validation_error = MultipleValidationError(
             "Section form has not passed validation.", errors

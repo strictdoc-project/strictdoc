@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-def,union-attr"
 import copy
 import datetime
 import os
@@ -2637,7 +2637,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         return get_reqif_export_tree()
 
     @router.get("/reqif/export_tree", response_class=Response)
-    def get_reqif_export_tree():
+    def get_reqif_export_tree() -> Response:
         assert export_action.traceability_index.document_tree is not None
 
         reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
@@ -3119,14 +3119,14 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     # Websockets solution based on:
     # https://fastapi.tiangolo.com/advanced/websockets/
     class ConnectionManager:
-        def __init__(self):
+        def __init__(self) -> None:
             self.active_connections: List[WebSocket] = []
 
-        async def connect(self, websocket: WebSocket):
+        async def connect(self, websocket: WebSocket) -> None:
             await websocket.accept()
             self.active_connections.append(websocket)
 
-        def disconnect(self, websocket: WebSocket):
+        def disconnect(self, websocket: WebSocket) -> None:
             self.active_connections.remove(websocket)
 
         @staticmethod

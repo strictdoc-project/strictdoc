@@ -1,11 +1,10 @@
-# mypy: disable-error-code="no-untyped-def"
 class NodeCreationOrder:
     BEFORE = "before"
     CHILD = "child"
     AFTER = "after"
 
     @staticmethod
-    def is_valid(order):
+    def is_valid(order: str) -> bool:
         return order in (
             NodeCreationOrder.BEFORE,
             NodeCreationOrder.CHILD,

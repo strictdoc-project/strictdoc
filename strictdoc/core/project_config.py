@@ -331,38 +331,38 @@ class ProjectConfig:
         if not self.reqif_enable_mid:
             self.reqif_enable_mid = export_config.reqif_enable_mid
 
-    def is_feature_activated(self, feature: ProjectFeature):
+    def is_feature_activated(self, feature: ProjectFeature) -> bool:
         return feature in self.project_features
 
-    def is_activated_table_screen(self):
+    def is_activated_table_screen(self) -> bool:
         return ProjectFeature.TABLE_SCREEN in self.project_features
 
     def is_activated_trace_screen(self):
         return ProjectFeature.TRACEABILITY_SCREEN in self.project_features
 
-    def is_activated_deep_trace_screen(self):
+    def is_activated_deep_trace_screen(self) -> bool:
         return ProjectFeature.DEEP_TRACEABILITY_SCREEN in self.project_features
 
-    def is_activated_project_statistics(self):
+    def is_activated_project_statistics(self) -> bool:
         return ProjectFeature.PROJECT_STATISTICS_SCREEN in self.project_features
 
-    def is_activated_requirements_to_source_traceability(self):
+    def is_activated_requirements_to_source_traceability(self) -> bool:
         return (
             ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
             in self.project_features
         )
 
-    def is_activated_requirements_coverage(self):
+    def is_activated_requirements_coverage(self) -> bool:
         return (
             ProjectFeature.TRACEABILITY_MATRIX_SCREEN in self.project_features
         )
 
-    def is_activated_standalone_document(self):
+    def is_activated_standalone_document(self) -> bool:
         return (
             ProjectFeature.STANDALONE_DOCUMENT_SCREEN in self.project_features
         )
 
-    def is_activated_search(self):
+    def is_activated_search(self) -> bool:
         return (
             self.is_running_on_server
             and ProjectFeature.SEARCH in self.project_features

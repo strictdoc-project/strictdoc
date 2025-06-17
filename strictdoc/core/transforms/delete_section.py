@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from typing import Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -17,11 +16,11 @@ class DeleteSectionCommand:
         self,
         section: SDocSection,
         traceability_index: TraceabilityIndex,
-    ):
+    ) -> None:
         self.section: SDocSection = section
         self.traceability_index: TraceabilityIndex = traceability_index
 
-    def validate(self):
+    def validate(self) -> None:
         incoming_links = self.traceability_index.get_incoming_links(
             self.section
         )
@@ -33,7 +32,7 @@ class DeleteSectionCommand:
                 ],
             )
 
-    def perform(self):
+    def perform(self) -> None:
         self.validate()
 
         section: SDocSection = self.section

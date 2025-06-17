@@ -2,6 +2,7 @@
 from typing import List, Optional, Set, Tuple, Union
 
 from jinja2 import Template
+from markupsafe import Markup
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -376,7 +377,7 @@ class GrammarElementFormObject(ErrorObject):
         )
         return requirement_element
 
-    def render(self):
+    def render(self) -> Markup:
         template: Template = self.jinja_environment.get_template(
             "components/grammar_form_element/index.jinja"
         )
@@ -385,7 +386,7 @@ class GrammarElementFormObject(ErrorObject):
             content=rendered_template, action="update", target="modal"
         )
 
-    def render_after_validation(self):
+    def render_after_validation(self) -> Markup:
         rendered_template = self.jinja_environment.render_template_as_markup(
             "components/grammar_form_element/index.jinja", form_object=self
         )

@@ -3,6 +3,7 @@ from typing import Generator, List, Optional, Union
 
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.helpers.mid import MID
 
 
 class SDocNodeFieldIF(ABC):
@@ -10,10 +11,20 @@ class SDocNodeFieldIF(ABC):
 
 
 class SDocNodeIF(ABC):
+    reserved_mid: MID
     node_type: str
     ng_level: Optional[int]
     ng_resolved_custom_level: Optional[str]
     section_contents: List["SDocSectionContentIF"]
+
+    # FIXME: Get rid of @property everywhere.
+    @property
+    def reserved_uid(self) -> Optional[str]:
+        raise NotImplementedError  # pragma: no cover
+
+    @property
+    def reserved_title(self) -> Optional[str]:
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def is_normative_node(self) -> bool:

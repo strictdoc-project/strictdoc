@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def,union-attr"
 import copy
 import datetime
 import os
@@ -28,6 +27,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
+from strictdoc.backend.sdoc.models.model import SDocNodeIF
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
@@ -41,6 +41,7 @@ from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.analyzers.document_stats import DocumentTreeStats
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.query_engine.query_object import Query, QueryObject
 from strictdoc.core.query_engine.query_reader import QueryReader
@@ -171,17 +172,18 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     router = APIRouter()
 
     @router.get("/")
-    def get_root(request: Request):
+    def get_root(request: Request) -> Response:
         return get_incoming_request(request, "index.html")
 
     @router.get("/actions/show_full_node", response_class=Response)
-    def node__show_full(reference_mid: str):
+    def node__show_full(reference_mid: str) -> Response:
         node: Union[SDocNode, SDocSection] = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
         )
         requirement_document: SDocDocument = assert_cast(
             node.get_document(), SDocDocument
         )
+        assert requirement_document.meta is not None
         link_renderer = LinkRenderer(
             root_path=requirement_document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -227,7 +229,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get("/actions/document/new_section", response_class=Response)
     def get_new_section(
         reference_mid: str, whereto: str, context_document_mid: str
-    ):
+    ) -> Response:
         assert isinstance(whereto, str), whereto
         assert NodeCreationOrder.is_valid(whereto), whereto
 
@@ -259,6 +261,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         else:
             raise NotImplementedError  # pragma: no cover
 
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -291,7 +294,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.post("/actions/document/create_section", response_class=Response)
-    async def create_section(request: Request):
+    async def create_section(request: Request) -> Response:
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         section_mid: str = request_dict["section_mid"]
@@ -332,10 +335,12 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
+            assert context_document.meta is not None
             link_renderer = LinkRenderer(
                 root_path=context_document.meta.get_root_path_prefix(),
                 static_path=project_config.dir_for_sdoc_assets,
             )
+            assert document is not None
             markup_renderer = MarkupRenderer.create(
                 markup=document.config.get_markup(),
                 traceability_index=export_action.traceability_index,
@@ -376,10 +381,12 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         # when they are opened next time.
         export_action.traceability_index.update_last_updated()
 
+        assert context_document.meta is not None
         link_renderer = LinkRenderer(
             root_path=context_document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
         )
+        assert document is not None
         markup_renderer = MarkupRenderer.create(
             markup=document.config.get_markup(),
             traceability_index=export_action.traceability_index,
@@ -418,7 +425,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/actions/document/edit_section", response_class=Response)
-    def get_edit_section(node_id: str, context_document_mid: str):
+    def get_edit_section(node_id: str, context_document_mid: str) -> Response:
         section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(node_id)
         )
@@ -428,6 +435,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document: SDocDocument = assert_cast(
             section.get_document(), SDocDocument
         )
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -457,7 +465,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.post("/actions/document/update_section", response_class=Response)
-    async def put_update_section(request: Request):
+    async def put_update_section(request: Request) -> Response:
         request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         section_mid = request_dict["section_mid"]
@@ -490,6 +498,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
+            assert document.meta is not None
             link_renderer = LinkRenderer(
                 root_path=document.meta.get_root_path_prefix(),
                 static_path=project_config.dir_for_sdoc_assets,
@@ -538,6 +547,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
         # Rendering back the Turbo template.
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -577,7 +587,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/actions/document/cancel_new_section", response_class=Response)
-    def cancel_new_section(section_mid: str):
+    def cancel_new_section(section_mid: str) -> Response:
         output = env().render_template_as_markup(
             "actions/"
             "document/"
@@ -595,13 +605,14 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get(
         "/actions/document/cancel_edit_section", response_class=Response
     )
-    def cancel_edit_section(section_mid: str):
+    def cancel_edit_section(section_mid: str) -> Response:
         section: SDocSection = export_action.traceability_index.get_node_by_mid(
             MID(section_mid)
         )
         document: SDocDocument = assert_cast(
             section.get_document(), SDocDocument
         )
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -643,7 +654,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         whereto: str,
         element_type: str,
         context_document_mid: str,
-    ):
+    ) -> Response:
         assert isinstance(reference_mid, str), reference_mid
         assert isinstance(whereto, str), whereto
         assert isinstance(element_type, str), element_type
@@ -703,6 +714,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         else:
             raise NotImplementedError  # pragma: no cover
 
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -739,7 +751,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/actions/document/clone_requirement", response_class=Response)
-    def get_clone_requirement(reference_mid: str, context_document_mid: str):
+    def get_clone_requirement(
+        reference_mid: str, context_document_mid: str
+    ) -> Response:
         assert isinstance(reference_mid, str), reference_mid
 
         reference_node = export_action.traceability_index.get_node_by_mid(
@@ -773,6 +787,8 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         whereto = NodeCreationOrder.AFTER
         replace_action = "after"
 
+        assert document is not None
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -811,7 +827,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.post(
         "/actions/document/create_requirement", response_class=Response
     )
-    async def create_requirement(request: Request):
+    async def create_requirement(request: Request) -> Response:
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         requirement_mid: str = request_dict["requirement_mid"]
@@ -858,6 +874,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             command.perform()
 
         if form_object.any_errors():
+            assert document.meta is not None
             link_renderer = LinkRenderer(
                 root_path=document.meta.get_root_path_prefix(),
                 static_path=project_config.dir_for_sdoc_assets,
@@ -907,6 +924,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             specific_documents=(DocumentType.DOCUMENT,),
         )
 
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -942,7 +960,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/actions/document/edit_requirement", response_class=Response)
-    def get_edit_requirement(node_id: str, context_document_mid: str):
+    def get_edit_requirement(
+        node_id: str, context_document_mid: str
+    ) -> Response:
         requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(MID(node_id))
         )
@@ -955,6 +975,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document: SDocDocument = assert_cast(
             requirement.get_document(), SDocDocument
         )
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -989,7 +1010,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         "/reset_uid",
         response_class=Response,
     )
-    def reset_uid(reference_mid: str):
+    def reset_uid(reference_mid: str) -> Response:
         document_tree_stats: DocumentTreeStats = (
             DocumentUIDAnalyzer.analyze_document_tree(
                 export_action.traceability_index
@@ -1039,7 +1060,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.post("/actions/document/update_requirement")
-    async def document__update_requirement(request: Request):
+    async def document__update_requirement(request: Request) -> Response:
         request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         requirement_mid = request_dict["requirement_mid"]
@@ -1091,6 +1112,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
         link_renderer: LinkRenderer
         markup_renderer: MarkupRenderer
+        assert document.meta is not None
         if form_object.any_errors():
             link_renderer = LinkRenderer(
                 root_path=document.meta.get_root_path_prefix(),
@@ -1180,7 +1202,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get(
         "/actions/document/cancel_new_requirement", response_class=Response
     )
-    def cancel_new_requirement(requirement_mid: str):
+    def cancel_new_requirement(requirement_mid: str) -> Response:
         output = env().render_template_as_markup(
             "actions/"
             "document/"
@@ -1199,7 +1221,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get(
         "/actions/document/cancel_edit_requirement", response_class=Response
     )
-    def cancel_edit_requirement(requirement_mid: str):
+    def cancel_edit_requirement(requirement_mid: str) -> Response:
         assert isinstance(requirement_mid, str) and len(requirement_mid) > 0, (
             f"{requirement_mid}"
         )
@@ -1211,6 +1233,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document: SDocDocument = assert_cast(
             requirement.get_document(), SDocDocument
         )
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1248,7 +1271,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     )
     def delete_section(
         node_id: str, context_document_mid: str, confirmed: bool = False
-    ):
+    ) -> Response:
         section: SDocSection = assert_cast(
             export_action.traceability_index.get_node_by_mid(MID(node_id)),
             SDocSection,
@@ -1319,6 +1342,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         SDWriter(project_config).write_to_file(document)
 
         # Rendering back the Turbo template.
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1363,7 +1387,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     )
     def delete_requirement(
         node_id: str, context_document_mid: str, confirmed: bool = False
-    ):
+    ) -> Response:
         requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(MID(node_id))
         )
@@ -1422,6 +1446,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
         # Rendering back the Turbo template.
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1463,7 +1488,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.post("/actions/document/move_node", response_class=Response)
-    async def move_node(request: Request):
+    async def move_node(request: Request) -> Response:
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         moved_node_mid: str = request_dict["moved_node_mid"]
@@ -1532,6 +1557,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         # when they are opened next time.
         export_action.traceability_index.update_last_updated()
 
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1564,7 +1590,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/actions/project_index/new_document", response_class=Response)
-    def get_new_document():
+    def get_new_document() -> Response:
         output = env().render_template_as_markup(
             "actions/project_index/stream_new_document.jinja.html",
             error_object=ErrorObject(),
@@ -1584,7 +1610,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     def document_tree__create_document(
         document_title: str = Form(""),
         document_path: str = Form(""),
-    ):
+    ) -> Response:
         error_object = ErrorObject()
         if document_title is None or len(document_title) == 0:
             error_object.add_error(
@@ -1728,7 +1754,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document_mid: str,
         context_document_mid: str,
         element_type: str,
-    ):
+    ) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1775,7 +1801,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document_mid: str,
         context_document_mid: str,
         element_type: str,
-    ):
+    ) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1822,7 +1848,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/actions/document/edit_config", response_class=Response)
-    def document__edit_config(document_mid: str):
+    def document__edit_config(document_mid: str) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1849,7 +1875,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get("/actions/document/new_metadata", response_class=Response)
     def document__add_metadata(
         document_mid: str,
-    ):
+    ) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1884,7 +1910,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     )
     def document__edit_included_document(
         document_mid: str, context_document_mid: str
-    ):
+    ) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1902,7 +1928,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.post("/actions/document/save_config", response_class=Response)
-    async def document__save_edit_config(request: Request):
+    async def document__save_edit_config(request: Request) -> Response:
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
@@ -1950,6 +1976,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         # when they are opened next time.
         export_action.traceability_index.update_last_updated()
 
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -1990,7 +2017,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.post(
         "/actions/document/save_included_document", response_class=Response
     )
-    async def document__save_included_document(request: Request):
+    async def document__save_included_document(request: Request) -> Response:
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
@@ -2035,6 +2062,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         # when they are opened next time.
         export_action.traceability_index.update_last_updated()
 
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -2068,10 +2096,11 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/actions/document/cancel_edit_config", response_class=Response)
-    def document__cancel_edit_config(document_mid: str):
+    def document__cancel_edit_config(document_mid: str) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -2114,10 +2143,11 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         "/actions/document/cancel_edit_included_document",
         response_class=Response,
     )
-    def document__cancel_edit_included_document(document_mid: str):
+    def document__cancel_edit_included_document(document_mid: str) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -2155,7 +2185,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/actions/document/edit_grammar", response_class=Response)
-    def document__edit_grammar(document_mid: str):
+    def document__edit_grammar(document_mid: str) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -2173,7 +2203,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.post("/actions/document/save_grammar", response_class=Response)
-    async def document__save_grammar(request: Request):
+    async def document__save_grammar(request: Request) -> Response:
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
@@ -2227,6 +2257,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             traceability_index=export_action.traceability_index,
         )
 
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -2267,7 +2298,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get(
         "/actions/document/add_grammar_element", response_class=Response
     )
-    def document__add_grammar_element(document_mid: str):
+    def document__add_grammar_element(document_mid: str) -> Response:
         form_object: GrammarFormObject = GrammarFormObject(
             document_mid=document_mid,
             fields=[],  # Not used in this limited partial template.
@@ -2286,7 +2317,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get(
         "/actions/document/edit_grammar_element", response_class=Response
     )
-    def document__edit_grammar_element(document_mid: str, element_mid: str):
+    def document__edit_grammar_element(
+        document_mid: str, element_mid: str
+    ) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -2310,7 +2343,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.post(
         "/actions/document/save_grammar_element", response_class=Response
     )
-    async def document__save_grammar_element(request: Request):
+    async def document__save_grammar_element(request: Request) -> Response:
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
@@ -2367,6 +2400,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             traceability_index=export_action.traceability_index,
         )
 
+        assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
             static_path=project_config.dir_for_sdoc_assets,
@@ -2405,7 +2439,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/actions/document/add_grammar_field", response_class=Response)
-    def document__add_grammar_field(document_mid: str):
+    def document__add_grammar_field(document_mid: str) -> Response:
         form_object: GrammarElementFormObject = GrammarElementFormObject(
             document_mid=document_mid,
             element_mid="NOT_RELEVANT",
@@ -2426,7 +2460,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get(
         "/actions/document/add_grammar_relation", response_class=Response
     )
-    def document__add_grammar_relation(document_mid: str):
+    def document__add_grammar_relation(document_mid: str) -> Response:
         form_object = GrammarElementFormObject(
             document_mid=document_mid,
             element_mid="NOT_RELEVANT",
@@ -2448,7 +2482,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         "/actions/project_index/import_reqif_document_form",
         response_class=Response,
     )
-    def get_import_reqif_document_form():
+    def get_import_reqif_document_form() -> Response:
         output = env().render_template_as_markup(
             "actions/project_index/import_reqif_document/"
             "stream_form_import_reqif_document.jinja.html",
@@ -2465,7 +2499,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.post(
         "/actions/project_index/import_document_reqif", response_class=Response
     )
-    async def import_document_reqif(reqif_file: UploadFile):
+    async def import_document_reqif(reqif_file: UploadFile) -> Response:
         contents = reqif_file.file.read().decode()
 
         error_object = ErrorObject()
@@ -2557,7 +2591,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/export_html2pdf/{document_mid}", response_class=Response)
-    def get_export_html2pdf(document_mid: str):  # noqa: ARG001
+    def get_export_html2pdf(document_mid: str) -> Response:  # noqa: ARG001
         if not project_config.is_activated_html2pdf():
             return Response(
                 content="The HTML2PDF feature is not activated in the project config.",
@@ -2632,7 +2666,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get(
         "/reqif/export_document/{document_mid}", response_class=Response
     )
-    def get_reqif_export_document(document_mid: str):  # noqa: ARG001
+    def get_reqif_export_document(document_mid: str) -> Response:  # noqa: ARG001
         # TODO: Export single document, not the whole tree.
         return get_reqif_export_tree()
 
@@ -2656,7 +2690,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/search", response_class=Response)
-    def get_search(q: Optional[str] = None):
+    def get_search(q: Optional[str] = None) -> Response:
         if not project_config.is_activated_search():
             return Response(
                 content="The Search feature is not activated in the project config.",
@@ -2678,9 +2712,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         if node_query is not None:
             result = []
             try:
-                for document in (
-                    export_action.traceability_index.document_tree.document_list
-                ):
+                document_tree = assert_cast(
+                    export_action.traceability_index.document_tree, DocumentTree
+                )
+                for document in document_tree.document_list:
                     document_iterator = (
                         export_action.traceability_index.get_document_iterator(
                             document
@@ -2713,7 +2748,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.get("/autocomplete/uid", response_class=Response)
     def get_autocomplete_uid_results(
         q: Optional[str] = None, exclude_requirement_mid: Optional[str] = None
-    ):
+    ) -> Response:
         """
         Returns matches of possible node UID values when creating a node relation.
 
@@ -2726,9 +2761,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         if q is not None:
             query_words = q.lower().split()
             resulting_nodes = []
-            for (
-                document
-            ) in export_action.traceability_index.document_tree.document_list:
+            document_tree = assert_cast(
+                export_action.traceability_index.document_tree, DocumentTree
+            )
+            for document in document_tree.document_list:
                 document_iterator = (
                     export_action.traceability_index.get_document_iterator(
                         document
@@ -2737,7 +2773,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 for node_, _ in document_iterator.all_content(
                     print_fragments=False, print_fragments_from_files=False
                 ):
-                    if node_.is_section():
+                    if not isinstance(node_, SDocNodeIF):
+                        continue
+
+                    if node_.node_type == "SECTION":
                         continue
 
                     if (
@@ -2774,7 +2813,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document_mid: Optional[str] = None,
         element_type: Optional[str] = None,
         field_name: Optional[str] = None,
-    ):
+    ) -> Response:
         """
         Returns matches of possible values of a SingleChoice, MultiChoice or Tag field.
 
@@ -2861,7 +2900,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/UID/{uid_or_mid}", response_class=RedirectResponse)
-    def redirect_to_uid(uid_or_mid: str):
+    def redirect_to_uid(uid_or_mid: str) -> Response:
         # Resolve UID or MID.
         mid_pattern = r"^[a-fA-F0-9]{32}$"
         if re.search(mid_pattern, uid_or_mid):
@@ -2890,7 +2929,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         raise HTTPException(status_code=404, detail="UID or MID was not found")
 
     @router.get("/nestor", response_class=Response)
-    def get_nestor():
+    def get_nestor() -> Response:
         output_json_root = os.path.join(project_config.output_dir, "html")
         Path(output_json_root).mkdir(parents=True, exist_ok=True)
         JSONGenerator().export_tree(
@@ -2911,7 +2950,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @router.get("/{full_path:path}", response_class=Response)
-    def get_incoming_request(request: Request, full_path: str):
+    def get_incoming_request(request: Request, full_path: str) -> Response:
         # FIXME: This seems to be quite un-sanitized.
         _, file_extension = os.path.splitext(full_path)
         if file_extension == ".html":
@@ -2919,7 +2958,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         else:
             return get_asset(request, full_path)
 
-    def get_document(request: Request, url_to_document: str):
+    def get_document(request: Request, url_to_document: str) -> Response:
         document_relative_path: SDocRelativePath = SDocRelativePath.from_url(
             url_to_document
         )
@@ -3057,7 +3096,11 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     # Either this is a normal document, or the path is broken.
                     base_document_url = document_relative_path.relative_path
                     document_type_to_generate = DocumentType.DOCUMENT
-                document = export_action.traceability_index.document_tree.map_docs_by_rel_paths.get(
+
+                document_tree = assert_cast(
+                    export_action.traceability_index.document_tree, DocumentTree
+                )
+                document = document_tree.map_docs_by_rel_paths.get(
                     base_document_url
                 )
                 if document is None:
@@ -3065,6 +3108,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                         content=f"Not Found: {url_to_document}", status_code=404
                     )
 
+                assert document.meta is not None
                 set_file_modification_time(
                     document.meta.input_doc_full_path, datetime.datetime.today()
                 )
@@ -3089,7 +3133,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    def get_asset(request: Request, url_to_asset: str):
+    def get_asset(request: Request, url_to_asset: str) -> Response:
         project_output_path = project_config.export_output_html_root
 
         static_file = os.path.join(project_output_path, url_to_asset)
@@ -3130,17 +3174,19 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             self.active_connections.remove(websocket)
 
         @staticmethod
-        async def send_personal_message(message: str, websocket: WebSocket):
+        async def send_personal_message(
+            message: str, websocket: WebSocket
+        ) -> None:
             await websocket.send_text(message)
 
-        async def broadcast(self, message: str):
+        async def broadcast(self, message: str) -> None:
             for connection in self.active_connections:
                 await connection.send_text(message)
 
     manager = ConnectionManager()
 
     @router.websocket("/ws/{client_id}")
-    async def websocket_endpoint(websocket: WebSocket, client_id: int):
+    async def websocket_endpoint(websocket: WebSocket, client_id: int) -> None:
         await manager.connect(websocket)
         try:
             while True:

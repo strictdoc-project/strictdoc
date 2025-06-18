@@ -5,8 +5,8 @@ RUN: cd %T && gcc --coverage -g -O0 -o main %S/src/main.c
 RUN: cd %T && ./main | filecheck %s --check-prefix CHECK-C
 CHECK-C: This function is covered
 
-RUN: cd %T && gcovr --object-directory ./ --root ../ --html --html-details -o coverage.html
-RUN: cd %T && gcovr --object-directory ./ --root ../ --json --json-pretty -o coverage.gcov.json
+RUN: cd %T && gcovr --object-directory ./ --root %S --html --html-details -o coverage.html
+RUN: cd %T && gcovr --object-directory ./ --root %S --json --json-pretty -o coverage.gcov.json
 RUN: cd %T && mkdir docs/ && cp coverage.gcov.json docs/
 RUN: cp %S/strictdoc.toml %T/docs/
 RUN: cp -r %S/src %T/docs/

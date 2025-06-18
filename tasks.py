@@ -102,26 +102,6 @@ def clean(context):
     run_invoke(context, clean_command)
 
 
-@task
-def clean_itest_artifacts(context):
-    # The command sometimes exits with 1 even if the files are deleted.
-    # warn=True ensures that the execution continues.
-    run_invoke(
-        context,
-        """
-        rm -rf build/tests_integration/
-        """,
-        warn=True,
-    )
-
-    run_invoke(
-        context,
-        f"""
-        rm -rf {STRICTDOC_TMP_DIR}
-        """,
-    )
-
-
 @task(aliases=["s"])
 def server(context, input_path=".", config=None):
     assert os.path.isdir(input_path), input_path
@@ -386,11 +366,6 @@ def test_integration(
     shard=None,
     environment=ToxEnvironment.CHECK,
 ):
-    clean_itest_artifacts(context)
-
-    Path(STRICTDOC_TMP_DIR).mkdir(exist_ok=True)
-    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
-
     cwd = os.getcwd()
 
     if strictdoc is None:
@@ -441,6 +416,7 @@ def test_integration(
         parallelize_opts = "" if not no_parallelization else "--threads 1"
         html2pdf_param = ""
         test_folder = f"{cwd}/tests/integration"
+        test_output_dir = "build/tests_integration"
     else:
         parallelize_opts = "--threads 1"
         html2pdf_param = "--param TEST_HTML2PDF=1"
@@ -454,11 +430,33 @@ def test_integration(
                 # On Windows, its chromdriver.exe
                 chromedriver_param = chromedriver_param + ".exe"
         test_folder = f"{cwd}/tests/integration/features/html2pdf"
+        test_output_dir = "build/tests_integration_html2pdf"
+
+    # The command sometimes exits with 1 even if the files are deleted.
+    # warn=True ensures that the execution continues.
+    run_invoke(
+        context,
+        f"""
+        rm -rf {test_output_dir}
+        """,
+        warn=True,
+    )
+
+    run_invoke(
+        context,
+        f"""
+        rm -rf {STRICTDOC_TMP_DIR}
+        """,
+    )
+
+    Path(STRICTDOC_TMP_DIR).mkdir(exist_ok=True)
+    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
 
     itest_command = f"""
         lit
         --param STRICTDOC_EXEC="{strictdoc_exec}"
         --param STRICTDOC_TMP_DIR="{STRICTDOC_TMP_DIR}"
+        --param TEST_OUTPUT_DIR="{test_output_dir}"
         --timeout 180
         --order smart
         {junit_xml_report_argument}

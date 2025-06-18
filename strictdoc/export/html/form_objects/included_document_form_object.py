@@ -3,6 +3,7 @@ import re
 from collections import defaultdict
 from typing import Dict, List, Optional
 
+from markupsafe import Markup
 from starlette.datastructures import FormData
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -24,7 +25,7 @@ class IncludedDocumentFormObject(ErrorObject):
         context_document_mid: str,
         document_title: str,
         jinja_environment: JinjaEnvironment,
-    ):
+    ) -> None:
         assert isinstance(document_mid, str), document_mid
         assert isinstance(context_document_mid, str), context_document_mid
         assert isinstance(document_title, str), document_title
@@ -89,7 +90,7 @@ class IncludedDocumentFormObject(ErrorObject):
             jinja_environment=jinja_environment,
         )
 
-    def render_edit_form(self):
+    def render_edit_form(self) -> Markup:
         rendered_template = self.jinja_environment.render_template_as_markup(
             "components/included_document_form/index.jinja", form_object=self
         )

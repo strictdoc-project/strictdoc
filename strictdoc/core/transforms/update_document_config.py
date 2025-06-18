@@ -25,12 +25,12 @@ class UpdateDocumentConfigTransform:
         form_object: DocumentConfigFormObject,
         document: SDocDocument,
         traceability_index: TraceabilityIndex,
-    ):
+    ) -> None:
         self.form_object: DocumentConfigFormObject = form_object
         self.document: SDocDocument = document
         self.traceability_index: TraceabilityIndex = traceability_index
 
-    def perform(self):
+    def perform(self) -> None:
         form_object = self.form_object
         document = self.document
 
@@ -87,7 +87,7 @@ class UpdateDocumentConfigTransform:
         self,
         form_object: DocumentConfigFormObject,
         document: SDocDocument,
-    ):
+    ) -> None:
         errors: Dict[str, List[str]] = defaultdict(list)
         assert isinstance(document, SDocDocument)
 

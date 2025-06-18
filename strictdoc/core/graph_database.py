@@ -21,7 +21,7 @@ class GraphDatabase:
     def has_link(self, *, link_type: Hashable, lhs_node: Any) -> bool:
         return self._id_to_bucket[link_type].has_link(lhs_node=lhs_node)
 
-    def get_count(self, *, link_type: Hashable) -> Any:
+    def get_count(self, *, link_type: Hashable) -> int:
         return self._id_to_bucket[link_type].get_count()
 
     def get_link_value_weak(

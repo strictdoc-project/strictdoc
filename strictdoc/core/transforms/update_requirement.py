@@ -87,14 +87,14 @@ class CreateOrUpdateNodeCommand:
         context_document: SDocDocument,
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
-    ):
+    ) -> None:
         self.form_object: RequirementFormObject = form_object
         self.node_info: Union[CreateNodeInfo, UpdateNodeInfo] = node_info
         self.context_document: SDocDocument = context_document
         self.traceability_index: TraceabilityIndex = traceability_index
         self.project_config: ProjectConfig = project_config
 
-    def perform(self):
+    def perform(self) -> Optional[CreateOrUpdateNodeResult]:
         form_object: RequirementFormObject = self.form_object
         node_to_update_or_none: Optional[SDocNode] = (
             self.node_info.node_to_update

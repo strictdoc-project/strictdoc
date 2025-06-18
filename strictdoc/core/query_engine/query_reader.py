@@ -1,4 +1,6 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
+from typing import Tuple
+
 from textx import metamodel_from_str
 
 from strictdoc.core.query_engine.grammar import QUERY_GRAMMAR
@@ -62,7 +64,7 @@ class QueryReader:
         self.path_to_output_root = path_to_output_root
 
     @staticmethod
-    def _read(input_string, file_path=None):
+    def _read(input_string, file_path=None) -> Tuple[Query, QueryParseContext]:
         meta_model = metamodel_from_str(
             QUERY_GRAMMAR,
             classes=QUERY_MODELS,
@@ -80,6 +82,6 @@ class QueryReader:
         return query, parse_context
 
     @staticmethod
-    def read(input_string, file_path=None):
+    def read(input_string, file_path=None) -> Query:
         document, _ = QueryReader._read(input_string, file_path)
         return document

@@ -5,8 +5,7 @@ concurrency = multiprocessing
 omit =
     build/
     tests/
-    **/output/cache/*
-    **/Output/cache/*
+    **/_cache/**
 
 [report]
 fail_under = 60.0

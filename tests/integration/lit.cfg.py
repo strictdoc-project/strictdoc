@@ -12,13 +12,16 @@ lit_config: Any
 config.name = "StrictDoc integration tests"
 config.test_format = lit.formats.ShTest("0")
 
-# Where to output test temporary files.
-config.test_exec_root = "build/tests_integration"
-
 current_dir = os.getcwd()
 
 strictdoc_exec = lit_config.params["STRICTDOC_EXEC"]
-assert strictdoc_exec
+assert strictdoc_exec is not None
+
+test_output_dir = lit_config.params["TEST_OUTPUT_DIR"]
+assert test_output_dir is not None
+
+# Where to output test temporary files.
+config.test_exec_root = test_output_dir
 
 config.substitutions.append(
     ("%STRICTDOC_TMP_DIR", lit_config.params["STRICTDOC_TMP_DIR"])
@@ -83,6 +86,7 @@ if not lit_config.isWindows:
 
 if "TEST_HTML2PDF" in lit_config.params:
     config.name = "StrictDoc HTML2PDF integration tests"
+
     # In Linux CI, $HOME is required for Chrome as it needs to access things in ~/.local
     config.environment["HOME"] = os.environ.get("HOME", "/tmp")
 

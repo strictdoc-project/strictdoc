@@ -212,9 +212,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 view_object=view_object,
                 requirement=node,
             )
-        else:
+        # FIXME: This branch will go away soon. Marking with no coverage.
+        else:  # pragma: no cover
             output = env().render_template_as_markup(
-                "actions/node/show_full_node/stream_show_full_node.jinja",
+                "actions/node/show_full_node/stream_show_full_section.jinja",
                 view_object=view_object,
                 section=node,
             )
@@ -2928,8 +2929,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             return RedirectResponse(url=href, status_code=302)
         raise HTTPException(status_code=404, detail="UID or MID was not found")
 
-    @router.get("/nestor", response_class=Response)
-    def get_nestor() -> Response:
+    # Nestor is a highly experimental feature that is unlikely to make it to the
+    # stable feature set. Excluding it from code coverage.
+    @router.get("/__nestor", response_class=Response)  # pragma: no cover
+    def get_nestor() -> Response:  # pragma: no cover
         output_json_root = os.path.join(project_config.output_dir, "html")
         Path(output_json_root).mkdir(parents=True, exist_ok=True)
         JSONGenerator().export_tree(
@@ -3172,12 +3175,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
         def disconnect(self, websocket: WebSocket) -> None:
             self.active_connections.remove(websocket)
-
-        @staticmethod
-        async def send_personal_message(
-            message: str, websocket: WebSocket
-        ) -> None:
-            await websocket.send_text(message)
 
         async def broadcast(self, message: str) -> None:
             for connection in self.active_connections:

@@ -142,7 +142,7 @@ class DocumentScreenViewObject:
                 else:
                     template_folder = "node_content"
             else:
-                raise NotImplementedError  # pragma: no cover
+                raise NotImplementedError
             content = jinja_environment.render_template_as_markup(
                 f"components/{template_folder}/index_extends_node.jinja",
                 view_object=self,

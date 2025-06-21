@@ -158,7 +158,7 @@ def _main(parallelizer: Parallelizer) -> None:
         )
 
     else:
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
 
 def main() -> None:

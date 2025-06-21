@@ -29,10 +29,10 @@ class ManyToManySet(AbstractBucket):
     def get_link_value(
         self, *, lhs_node: Any, edge: Optional[str] = None
     ) -> Any:
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
     def get_link_value_weak(self, *, lhs_node: Any) -> Any:
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
     def get_link_values(
         self, *, lhs_node: Any, edge: Optional[str] = ALL_EDGES

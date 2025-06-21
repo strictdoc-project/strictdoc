@@ -34,4 +34,4 @@ class DocumentTreeIterator:
                 )
                 task_list.extendleft(reversed(file_tree_or_file.files))
             else:  # pragma: no cover
-                raise AssertionError  # pragma: no cover
+                raise AssertionError

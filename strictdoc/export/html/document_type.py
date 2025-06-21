@@ -45,4 +45,4 @@ class DocumentType(str, Enum):
             return "Deep Traceability"
         if self == DocumentType.PDF:
             return "PDF"
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError

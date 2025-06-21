@@ -361,7 +361,7 @@ class P01_ReqIFToSDocConverter:
                 attribute.definition_ref
             ].long_name
             if long_name_or_none is None:
-                raise NotImplementedError  # pragma: no cover
+                raise NotImplementedError
             field_name: str = long_name_or_none
             if attribute.attribute_type == SpecObjectAttributeType.ENUMERATION:
                 sdoc_field_name = P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
@@ -393,7 +393,7 @@ class P01_ReqIFToSDocConverter:
 
                         break
                 else:
-                    raise NotImplementedError  # pragma: no cover
+                    raise NotImplementedError
 
                 enum_values = ", ".join(enum_values_resolved)
                 fields.append(

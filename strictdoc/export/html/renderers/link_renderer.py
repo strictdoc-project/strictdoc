@@ -76,7 +76,7 @@ class LinkRenderer:
                     # TODO: This is not reliable
                     local_anchor = str(id(node))
             else:
-                raise NotImplementedError  # pragma: no cover
+                raise NotImplementedError
         self.local_anchor_cache[node] = local_anchor
         return local_anchor
 

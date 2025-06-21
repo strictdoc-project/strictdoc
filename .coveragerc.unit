@@ -10,3 +10,7 @@ fail_under = 50.0
 precision = 2
 skip_covered = true
 show_missing = true
+
+exclude_lines =
+    raise AssertionError.*
+    raise NotImplementedError.*

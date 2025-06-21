@@ -296,7 +296,7 @@ class ChangeStats:
             self._document_counter[ChangeType.DOCUMENT] += 1
 
         else:  # pragma: no cover
-            raise AssertionError  # pragma: no cover
+            raise AssertionError
 
     @staticmethod
     def create_from_two_indexes(

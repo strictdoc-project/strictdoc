@@ -109,12 +109,12 @@ class HTMLTemplates:
         return NormalHTMLTemplates()
 
     def jinja_environment(self) -> JinjaEnvironment:
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
     def reset_jinja_environment_if_outdated(
         self, strictdoc_last_update
     ) -> None:
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
 
 class NormalHTMLTemplates(HTMLTemplates):

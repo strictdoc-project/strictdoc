@@ -103,7 +103,7 @@ class DocumentFinder:
                     doc_file, project_config
                 )
             else:
-                raise NotImplementedError  # pragma: no cover
+                raise NotImplementedError
         drop_textx_meta(document_or_grammar)
 
         return doc_file, file_tree_mount_folder, document_or_grammar

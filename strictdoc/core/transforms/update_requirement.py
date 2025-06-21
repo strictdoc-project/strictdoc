@@ -256,7 +256,7 @@ class CreateOrUpdateNodeCommand:
                         parent.section_contents.index(reference_node) + 1
                     )
             else:
-                raise NotImplementedError  # pragma: no cover
+                raise NotImplementedError
 
             # Reset the 'needs generation' flag on all documents.
             for document_ in traceability_index.document_tree.document_list:

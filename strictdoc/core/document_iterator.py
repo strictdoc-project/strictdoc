@@ -228,4 +228,4 @@ class DocumentCachingIterator:
             )
 
         else:
-            raise NotImplementedError  # pragma: no cover
+            raise NotImplementedError

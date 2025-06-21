@@ -253,7 +253,7 @@ class QueryObject:
                 return section.title
             raise AttributeError(f"No such section field: {field_name}.")
         else:
-            raise NotImplementedError  # pragma: no cover
+            raise NotImplementedError
 
     def _evaluate_node_has_parent_requirements(
         self, node: SDocElementIF
@@ -294,7 +294,7 @@ class QueryObject:
             if expression.string in section.title:
                 return True
             return False
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
     def _evaluate_node_contains_any_text(self, node: SDocElementIF) -> bool:
         if not isinstance(node, SDocSection) and not (

@@ -1,4 +1,4 @@
-# pragma: no cover
+# pragma: no cover file
 import argparse
 import os
 import sys

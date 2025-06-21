@@ -260,7 +260,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         elif whereto == "after":
             replace_action = "after"
         else:
-            raise NotImplementedError  # pragma: no cover
+            raise NotImplementedError
 
         assert document.meta is not None
         link_renderer = LinkRenderer(
@@ -713,7 +713,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         elif whereto == NodeCreationOrder.AFTER:
             replace_action = "after"
         else:
-            raise NotImplementedError  # pragma: no cover
+            raise NotImplementedError
 
         assert document.meta is not None
         link_renderer = LinkRenderer(
@@ -1548,7 +1548,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             )
             moved_node.parent = target_node.parent
         else:
-            raise NotImplementedError  # pragma: no cover
+            raise NotImplementedError
 
         # Saving new content to .SDoc file.
         SDWriter(project_config).write_to_file(document)

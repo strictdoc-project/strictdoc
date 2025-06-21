@@ -29,7 +29,7 @@ class SDocRelativePath:
         return len(self.relative_path)
 
     def __str__(self) -> str:
-        raise AssertionError("Must not be used")  # pragma: no cover
+        raise AssertionError("Must not be used")
 
     def __repr__(self) -> str:
-        raise AssertionError("Must not be used")  # pragma: no cover
+        raise AssertionError("Must not be used")

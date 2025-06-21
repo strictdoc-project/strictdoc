@@ -233,7 +233,7 @@ class JSONGenerator:
             return subnode_dict
 
         else:
-            raise NotImplementedError  # pragma: no cover
+            raise NotImplementedError
 
     @classmethod
     def _write_included_document(

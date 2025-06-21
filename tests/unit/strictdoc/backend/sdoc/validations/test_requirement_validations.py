@@ -62,7 +62,7 @@ RELATIONS:
                 document_grammar=document.grammar,
                 path_to_sdoc_file="test.sdoc",
             )
-        raise AssertionError  # pragma: no cover
+        raise AssertionError
 
     exception: StrictDocSemanticError = exc_info.value
     assert exception.title == (
@@ -100,7 +100,7 @@ RELATIONS:
                 document_grammar=document.grammar,
                 path_to_sdoc_file="test.sdoc",
             )
-        raise AssertionError  # pragma: no cover
+        raise AssertionError
 
     exception: StrictDocSemanticError = exc_info.value
     assert exception.title == (

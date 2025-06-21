@@ -46,11 +46,11 @@ class Parallelizer(ABC):
         contents: Iterable[Any],
         processing_func: MultiprocessingLambdaType,
     ) -> Iterable[Any]:
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
     @abstractmethod
     def shutdown(self) -> None:
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
 
 class MultiprocessingParallelizer(Parallelizer):

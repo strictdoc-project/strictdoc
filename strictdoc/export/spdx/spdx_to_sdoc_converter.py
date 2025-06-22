@@ -1,3 +1,10 @@
+"""
+Experimental code to generate SPDX.
+
+This code is excluded from code coverage calculation because the feature is
+highly experimental and most of this code will be removed.
+"""
+
 # mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 from typing import List, Union
 

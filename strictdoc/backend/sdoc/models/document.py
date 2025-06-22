@@ -12,7 +12,6 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.model import (
-    SDocDocumentContentIF,
     SDocDocumentFromFileIF,
     SDocDocumentIF,
     SDocElementIF,
@@ -47,7 +46,7 @@ class SDocDocument(SDocDocumentIF):
         config: Optional[DocumentConfig],
         view: Optional[DocumentView],
         grammar: Optional[DocumentGrammar],
-        section_contents: List[SDocDocumentContentIF],
+        section_contents: List[SDocElementIF],
         is_bundle_document: bool = False,
     ) -> None:
         self.title: str = title
@@ -61,7 +60,7 @@ class SDocDocument(SDocDocumentIF):
             view if view is not None else DocumentView.create_default(self)
         )
         self.grammar: Optional[DocumentGrammar] = grammar
-        self.section_contents: List[SDocDocumentContentIF] = section_contents
+        self.section_contents: List[SDocElementIF] = section_contents
 
         self.is_bundle_document: bool = is_bundle_document
 

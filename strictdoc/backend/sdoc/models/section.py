@@ -12,7 +12,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
-    SDocSectionContentIF,
+    SDocElementIF,
     SDocSectionIF,
 )
 from strictdoc.helpers.auto_described import auto_described
@@ -36,7 +36,7 @@ class SDocSection(SDocSectionIF):
         custom_level: Optional[str],
         title: str,
         requirement_prefix: Optional[str],
-        section_contents: List[SDocSectionContentIF],
+        section_contents: List[SDocElementIF],
     ):
         self.parent: Union[SDocDocumentIF, SDocSectionIF] = parent
 

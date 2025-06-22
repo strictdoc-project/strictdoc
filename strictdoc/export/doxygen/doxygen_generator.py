@@ -45,7 +45,6 @@ class DoxygenGenerator:
 
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
-                print_fragments_from_files=False,
             ):
                 if isinstance(node, SDocNode) and node.reserved_uid is not None:
                     path_to_html = link_renderer.render_node_doxygen_link(node)

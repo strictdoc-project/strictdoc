@@ -317,7 +317,6 @@ class DocumentScreenViewObject:
     ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
         yield from self.document_iterator.all_content(
             print_fragments=True,
-            print_fragments_from_files=False,
         )
 
     def should_display_folder(self, folder: Folder) -> bool:

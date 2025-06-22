@@ -34,7 +34,6 @@ class DeleteRequirementCommand:
         for document_node_, _ in document_iterator.all_node_content(
             self.requirement,
             print_fragments=True,
-            print_fragments_from_files=True,
         ):
             if not isinstance(document_node_, SDocNode):
                 continue

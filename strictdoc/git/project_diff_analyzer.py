@@ -428,9 +428,7 @@ class ChangeStats:
             # another document. We treat a document node as a section node
             # because they both have FREETEXT.
             #
-            for node, _ in document_iterator.all_content(
-                print_fragments=True, print_fragments_from_files=False
-            ):
+            for node, _ in document_iterator.all_content(print_fragments=True):
                 if isinstance(node, (SDocSection, SDocDocument)):
                     if node in change_stats.map_nodes_to_changes:
                         continue
@@ -964,9 +962,7 @@ class ProjectDiffAnalyzer:
 
         map_nodes_to_hashers[document].update(document.title.encode("utf-8"))
 
-        for node, _ in document_iterator.all_content(
-            print_fragments=True, print_fragments_from_files=False
-        ):
+        for node, _ in document_iterator.all_content(print_fragments=True):
             if node.mid_permanent:
                 document_tree_stats.map_mid_to_nodes[node.reserved_mid] = node
 
@@ -1029,9 +1025,7 @@ class ProjectDiffAnalyzer:
             else:
                 raise AssertionError(node)
 
-        for node_, _ in document_iterator.all_content(
-            print_fragments=True, print_fragments_from_files=False
-        ):
+        for node_, _ in document_iterator.all_content(print_fragments=True):
             node_md5 = map_nodes_to_hashers[node_].hexdigest().encode("utf-8")
             map_nodes_to_hashers[document].update(node_md5)
 

@@ -2723,7 +2723,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                         )
                     )
                     for node, _ in document_iterator.all_content(
-                        print_fragments=False, print_fragments_from_files=False
+                        print_fragments=False
                     ):
                         if node_query.evaluate(node):
                             result.append(node)
@@ -2772,7 +2772,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     )
                 )
                 for node_, _ in document_iterator.all_content(
-                    print_fragments=False, print_fragments_from_files=False
+                    print_fragments=False
                 ):
                     if not isinstance(node_, SDocNodeIF):
                         continue

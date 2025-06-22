@@ -36,7 +36,7 @@ from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
-class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes
+class TraceabilityIndex:
     def __init__(
         self,
         document_iterators: Dict[SDocDocument, DocumentCachingIterator],

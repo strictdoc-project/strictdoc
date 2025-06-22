@@ -35,7 +35,6 @@ from strictdoc.core.finders.source_files_finder import (
 )
 from strictdoc.core.graph.many_to_many_set import ManyToManySet
 from strictdoc.core.graph.one_to_one_dictionary import OneToOneDictionary
-from strictdoc.core.graph.validations import RemoveNodeValidation
 from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.query_engine.query_object import (
@@ -258,7 +257,6 @@ class TraceabilityIndexBuilder:
                 ),
             ]
         )
-        graph_database.remove_node_validation = RemoveNodeValidation()
 
         file_dependency_manager: FileDependencyManager = (
             FileDependencyManager.create_from_cache(

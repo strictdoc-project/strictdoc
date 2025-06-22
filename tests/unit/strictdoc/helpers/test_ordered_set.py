@@ -1,3 +1,5 @@
+import pytest
+
 from strictdoc.helpers.ordered_set import OrderedSet
 
 
@@ -17,3 +19,6 @@ def test_basic():
 
     ordered_set.clear()
     assert len(ordered_set) == 0
+
+    with pytest.raises(IndexError):
+        ordered_set.__getitem__(0)

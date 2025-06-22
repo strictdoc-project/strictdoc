@@ -9,7 +9,6 @@ from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocNodeIF
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import FileReference
 from strictdoc.backend.sdoc.models.type_system import FileEntry
-from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     ForwardFunctionRangeMarker,
@@ -205,11 +204,10 @@ class FileTraceabilityIndex:
             ] = trace_info_
 
             for function_ in trace_info_.functions:
-                if FunctionAttribute.DEFINITION in function_.attributes:
-                    if function_.is_public():
-                        self.map_all_function_names_to_definition_functions.setdefault(
-                            function_.name, []
-                        ).append(function_)
+                if function_.is_definition() and function_.is_public():
+                    self.map_all_function_names_to_definition_functions.setdefault(
+                        function_.name, []
+                    ).append(function_)
 
         #
         # STEP: Resolve requirements that have forward links.
@@ -484,7 +482,7 @@ class FileTraceabilityIndex:
         ) in self.map_paths_to_source_file_traceability_info.values():
             for function_ in traceability_info_.functions:
                 if (
-                    FunctionAttribute.DECLARATION in function_.attributes
+                    function_.is_declaration()
                     and function_.name
                     in self.map_all_function_names_to_definition_functions
                 ):

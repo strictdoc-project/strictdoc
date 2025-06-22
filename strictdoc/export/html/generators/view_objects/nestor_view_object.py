@@ -1,3 +1,4 @@
+# pragma: no cover file
 from dataclasses import dataclass
 from typing import Optional
 

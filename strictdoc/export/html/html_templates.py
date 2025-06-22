@@ -5,7 +5,7 @@ import hashlib
 import os.path
 import shutil
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from jinja2 import (
     Environment,
@@ -13,14 +13,12 @@ from jinja2 import (
     ModuleLoader,
     StrictUndefined,
     Template,
-    TemplateRuntimeError,
-    nodes,
 )
-from jinja2.ext import Extension
 from markupsafe import Markup
 
 from strictdoc import environment
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.export.html.jinja.assert_extension import AssertExtension
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import measure_performance
 
@@ -40,54 +38,6 @@ class JinjaEnvironment:
         return Markup(
             self.environment.get_template(template).render(*args, **kwargs)
         )
-
-
-# https://stackoverflow.com/questions/21778252/how-to-raise-an-exception-in-a-jinja2-macro
-class AssertExtension(Extension):
-    # This is our keyword(s):
-    tags = {"assert"}
-
-    def __init__(self, environment):  # pylint: disable=redefined-outer-name
-        super().__init__(environment)
-        self.current_line = None
-        self.current_file = None
-
-    def parse(self, parser):
-        lineno = next(parser.stream).lineno
-        self.current_line = lineno
-        self.current_file = parser.filename
-
-        condition_node = parser.parse_expression()
-        if parser.stream.skip_if("comma"):
-            context_node = parser.parse_expression()
-        else:
-            context_node = nodes.Const(None)
-
-        return nodes.CallBlock(
-            self.call_method(
-                "_assert", [condition_node, context_node], lineno=lineno
-            ),
-            [],
-            [],
-            [],
-            lineno=lineno,
-        )
-
-    def _assert(
-        self,
-        condition: bool,
-        context_or_none: Optional[Any],
-        caller,  # noqa: ARG002
-    ):  # pylint: disable=unused-argument
-        if not condition:
-            error_message = (
-                f"Assertion error in the Jinja template: "
-                f"{self.current_file}:{self.current_line}."
-            )
-            if context_or_none:
-                error_message += f" Message: {context_or_none}"
-            raise TemplateRuntimeError(error_message)
-        return ""
 
 
 class HTMLTemplates:
@@ -111,11 +61,6 @@ class HTMLTemplates:
     def jinja_environment(self) -> JinjaEnvironment:
         raise NotImplementedError
 
-    def reset_jinja_environment_if_outdated(
-        self, strictdoc_last_update
-    ) -> None:
-        raise NotImplementedError
-
 
 class NormalHTMLTemplates(HTMLTemplates):
     def __init__(self):
@@ -132,12 +77,6 @@ class NormalHTMLTemplates(HTMLTemplates):
 
     def jinja_environment(self) -> JinjaEnvironment:
         return self._jinja_environment
-
-    def reset_jinja_environment_if_outdated(
-        self, strictdoc_last_update
-    ) -> None:
-        # There is nothing to do for the non-cachable template implementation.
-        pass
 
 
 class CompiledHTMLTemplates(HTMLTemplates):
@@ -209,9 +148,6 @@ class CompiledHTMLTemplates(HTMLTemplates):
                     recursive=True,
                 )
             )
-            if len(jinja_cache_files) == 0:
-                shutil.rmtree(self.path_to_jinja_cache_bucket_dir)
-                return
 
             jinja_cache_mtime = get_file_modification_time(jinja_cache_files[0])
 

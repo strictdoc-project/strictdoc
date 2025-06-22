@@ -245,7 +245,7 @@ class P01_SDocToReqIFObjectConverter:
 
             # FIXME: ReqIF must export complete documents including fragments.
             for node_, _ in document_iterator.all_content(
-                print_fragments=False, print_fragments_from_files=False
+                print_fragments=False
             ):
                 if isinstance(node_, SDocSection):
                     raise AssertionError(

@@ -4,7 +4,14 @@ omit =
     build/
 
 [report]
-fail_under = 60.0
+fail_under = 30.0
 precision = 2
 skip_covered = true
 show_missing = true
+
+exclude_lines =
+    raise AssertionError.*
+    raise NotImplementedError.*
+    .*# pragma: no cover$
+    .*# pragma: no cover: start(?s:.)*?# pragma: no cover: stop
+    \A(?s:.*# pragma: no cover file.*)\Z

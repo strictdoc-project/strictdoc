@@ -136,7 +136,7 @@ class RSTWriter:
             elif isinstance(part, Anchor):
                 output += f".. _{part.value}:\n"
             else:
-                raise NotImplementedError  # pragma: no cover
+                raise NotImplementedError
             prev_part = part
 
         return output

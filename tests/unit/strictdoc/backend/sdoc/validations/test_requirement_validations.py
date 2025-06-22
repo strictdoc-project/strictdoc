@@ -54,15 +54,13 @@ RELATIONS:
 
     document_iterator = DocumentCachingIterator(document)
     with pytest.raises(StrictDocSemanticError) as exc_info:
-        for node_, _ in document_iterator.all_content(
-            print_fragments=False, print_fragments_from_files=False
-        ):
+        for node_, _ in document_iterator.all_content(print_fragments=False):
             SDocValidator.validate_node(
                 node_,
                 document_grammar=document.grammar,
                 path_to_sdoc_file="test.sdoc",
             )
-        raise AssertionError  # pragma: no cover
+        raise AssertionError
 
     exception: StrictDocSemanticError = exc_info.value
     assert exception.title == (
@@ -92,15 +90,13 @@ RELATIONS:
 
     document_iterator = DocumentCachingIterator(document)
     with pytest.raises(StrictDocSemanticError) as exc_info:
-        for node_, _ in document_iterator.all_content(
-            print_fragments=False, print_fragments_from_files=False
-        ):
+        for node_, _ in document_iterator.all_content(print_fragments=False):
             SDocValidator.validate_node(
                 node_,
                 document_grammar=document.grammar,
                 path_to_sdoc_file="test.sdoc",
             )
-        raise AssertionError  # pragma: no cover
+        raise AssertionError
 
     exception: StrictDocSemanticError = exc_info.value
     assert exception.title == (

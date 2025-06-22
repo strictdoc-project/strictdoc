@@ -393,7 +393,6 @@ class TraceabilityIndexBuilder:
 
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
-                print_fragments_from_files=False,
             ):
                 if (
                     isinstance(node, SDocSection)
@@ -522,7 +521,6 @@ class TraceabilityIndexBuilder:
 
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
-                print_fragments_from_files=False,
             ):
                 if not node.is_requirement():
                     continue
@@ -664,7 +662,6 @@ class TraceabilityIndexBuilder:
 
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
-                print_fragments_from_files=False,
             ):
                 # FIXME: is_requirement() typing issue.
                 if not node.is_requirement():

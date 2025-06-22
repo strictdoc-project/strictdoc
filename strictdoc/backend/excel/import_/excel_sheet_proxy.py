@@ -5,6 +5,7 @@ import openpyxl
 import xlrd
 
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
 
 
 class ExcelLibType(Enum):
@@ -15,7 +16,7 @@ class ExcelLibType(Enum):
 @auto_described
 class ExcelSheetProxy:
     """
-    This proxy class allows to open either xls(xlrd) or xlsx(openpyxl) with the same interface.
+    An adapter class to open xls(xlrd) or xlsx(openpyxl) with the same interface.
     """
 
     def __init__(self, file: str):
@@ -23,7 +24,7 @@ class ExcelSheetProxy:
         if file.endswith(".xlsx"):
             self.workbook = openpyxl.load_workbook(file)
             self.sheet = self.workbook.active
-            if self.sheet is None:
+            if self.sheet is None:  # pragma: no cover
                 raise RuntimeError(
                     "Couldn't open the first sheet of the workbook"
                 )
@@ -32,8 +33,8 @@ class ExcelSheetProxy:
             self.workbook = xlrd.open_workbook(file, on_demand=True)
             self.sheet = self.workbook.sheet_by_index(0)
             self.lib = ExcelLibType.XLRD
-        else:
-            raise ValueError("Unsupported file format")
+        else:  # pragma: no cover
+            raise AssertionError("Unsupported file format")
 
     @property
     def name(self) -> str:
@@ -44,52 +45,46 @@ class ExcelSheetProxy:
             return str(self.sheet.title)
         elif self.lib == ExcelLibType.XLRD:
             return str(self.sheet.name)
-        return ""
+        raise AssertionError
 
     @property
     def ncols(self) -> int:
         """
         The number of columns.
         """
-        ncols: int = 0
         if self.lib == ExcelLibType.OPENPYXL:
-            ncols = self.sheet.max_column
+            return assert_cast(self.sheet.max_column, int)
         elif self.lib == ExcelLibType.XLRD:
-            ncols = self.sheet.ncols
-        return ncols
+            return assert_cast(self.sheet.ncols, int)
+        raise AssertionError
 
     @property
     def nrows(self) -> int:
         """
         The number of rows.
         """
-        nrows: int = 0
         if self.lib == ExcelLibType.OPENPYXL:
-            nrows = self.sheet.max_row
+            return assert_cast(self.sheet.max_row, int)
         elif self.lib == ExcelLibType.XLRD:
-            nrows = self.sheet.nrows
-        return nrows
+            return assert_cast(self.sheet.nrows, int)
+        raise AssertionError
 
     def get_cell_value(self, row: int, col: int) -> str:
         """
         Returns the value at row/col as string.
         """
-        cell_value: str = ""
         if self.lib == ExcelLibType.OPENPYXL:
-            cell_value = (
-                self.sheet.cell(row=row + 1, column=col + 1).value or ""
-            )
+            return self.sheet.cell(row=row + 1, column=col + 1).value or ""
         elif self.lib == ExcelLibType.XLRD:
-            cell_value = self.sheet.cell_value(row, col)
-        return cell_value
+            return assert_cast(self.sheet.cell_value(row, col), str)
+        raise AssertionError
 
     def row_values(self, row: int) -> List[str]:
         """
         Returns a full row as list.
         """
-        row_values: List[str] = []
         if self.lib == ExcelLibType.OPENPYXL:
-            row_values = [(cell.value or "") for cell in self.sheet[row + 1]]
+            return [(cell.value or "") for cell in self.sheet[row + 1]]
         elif self.lib == ExcelLibType.XLRD:
-            row_values = self.sheet.row_values(row)
-        return row_values
+            return assert_cast(self.sheet.row_values(row), list)
+        raise AssertionError

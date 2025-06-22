@@ -88,9 +88,7 @@ class ExcelGenerator:
             all_nodes = list(
                 map(
                     lambda node_with_context_: node_with_context_[0],
-                    document_iterator.all_content(
-                        print_fragments=False, print_fragments_from_files=False
-                    ),
+                    document_iterator.all_content(print_fragments=False),
                 )
             )
             req_uid_rows = ExcelGenerator._lookup_refs(all_nodes)
@@ -98,9 +96,7 @@ class ExcelGenerator:
             if len(req_uid_rows):
                 for node, _ in traceability_index.get_document_iterator(
                     document
-                ).all_content(
-                    print_fragments=False, print_fragments_from_files=False
-                ):
+                ).all_content(print_fragments=False):
                     if not node.is_requirement() or not node.reserved_uid:
                         # Only export the requirements with UID.
                         continue

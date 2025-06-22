@@ -203,6 +203,23 @@ def test_unit_server(context, focus=None):
     )
 
 
+@task(test_unit_server, aliases=["tusc"])
+def test_unit_server_report(context):
+    cwd = os.getcwd()
+
+    path_to_coverage_file = f"{cwd}/build/coverage/unit_server/.coverage"
+
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        f"""
+            coverage html
+                --rcfile=.coveragerc.unit_server
+                --data-file={path_to_coverage_file}
+        """,
+    )
+
+
 @task(aliases=["te"])
 def test_end2end(
     context,

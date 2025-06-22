@@ -304,9 +304,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert isinstance(uid, str), uid
         for document in self.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
-            for node, _ in document_iterator.all_content(
-                print_fragments=False, print_fragments_from_files=False
-            ):
+            for node, _ in document_iterator.all_content(print_fragments=False):
                 if isinstance(node, SDocDocument):
                     if node.config.uid == uid:
                         return node
@@ -317,7 +315,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
                     if node.reserved_uid == uid:
                         return node
                 else:
-                    raise NotImplementedError  # pragma: no cover
+                    raise NotImplementedError
         return None
 
     def get_linkable_node_by_uid_weak(
@@ -639,7 +637,7 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
         assert document != other_document
 
         for node, _ in self.document_iterators[document].all_content(
-            print_fragments=False, print_fragments_from_files=False
+            print_fragments=False
         ):
             if not isinstance(node, SDocNode):
                 continue

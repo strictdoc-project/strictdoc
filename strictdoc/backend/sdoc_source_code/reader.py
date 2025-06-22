@@ -183,7 +183,7 @@ def range_marker_processor(marker: RangeMarker, parse_context: ParseContext):
         except IndexError:
             raise create_end_without_begin_error(location) from None
     else:
-        raise NotImplementedError  # pragma: no cover
+        raise NotImplementedError
 
 
 def line_marker_processor(line_marker: LineMarker, parse_context: ParseContext):

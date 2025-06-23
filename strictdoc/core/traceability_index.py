@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,union-attr"
 import datetime
 from copy import deepcopy
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
@@ -36,7 +36,7 @@ from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 
-class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-instance-attributes
+class TraceabilityIndex:
     def __init__(
         self,
         document_iterators: Dict[SDocDocument, DocumentCachingIterator],
@@ -975,15 +975,19 @@ class TraceabilityIndex:  # pylint: disable=too-many-public-methods, too-many-in
             raise SingleValidationError(
                 f"Cannot remove node '{node.get_display_title()}' with incoming LINKs from: {link_list_message}."
             )
-        child_nodes: List[SDocNode] = self.get_children_requirements(node)
-        if child_nodes is not None and len(child_nodes) > 0:
-            nodes_list_message = ", ".join(
-                map(lambda n_: "'" + n_.get_display_title() + "'", child_nodes)
-            )
-            raise SingleValidationError(
-                f"Cannot remove node '{node.get_display_title()}' "
-                f"with incoming relations from:\n{nodes_list_message}."
-            )
+        if isinstance(node, SDocNode):
+            child_nodes: List[SDocNode] = self.get_children_requirements(node)
+            if child_nodes is not None and len(child_nodes) > 0:
+                nodes_list_message = ", ".join(
+                    map(
+                        lambda n_: "'" + n_.get_display_title() + "'",
+                        child_nodes,
+                    )
+                )
+                raise SingleValidationError(
+                    f"Cannot remove node '{node.get_display_title()}' "
+                    f"with incoming relations from:\n{nodes_list_message}."
+                )
 
     def validate_section_can_remove_uid(self, *, section: SDocSection):
         section_incoming_links: Optional[List[InlineLink]] = (

@@ -40,6 +40,4 @@ class Function:
         return FunctionAttribute.DEFINITION in self.attributes
 
     def is_public(self) -> bool:
-        if FunctionAttribute.STATIC in self.attributes:
-            return False
-        return True
+        return FunctionAttribute.STATIC not in self.attributes

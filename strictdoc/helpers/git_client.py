@@ -1,7 +1,6 @@
-# mypy: disable-error-code="no-untyped-def"
 import os
 import subprocess
-from typing import Optional
+from typing import List, Optional
 
 
 class GitClient:
@@ -14,78 +13,51 @@ class GitClient:
     def get_commit_hash(self) -> Optional[str]:
         if self._commit_hash is not None:
             return self._commit_hash
-        try:
-            process_result = subprocess.run(
-                ["git", "describe", "--always", "--tags"],
-                cwd=os.getcwd(),
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            if process_result.returncode != 0:
-                return "N/A"
-            commit_hash = process_result.stdout
-        except subprocess.CalledProcessError:
-            commit_hash = "N/A"
-        except FileNotFoundError:
-            commit_hash = "Git not available"
+        commit_hash = self._run_git_command(
+            ["git", "describe", "--always", "--tags"],
+        )
         self._commit_hash = commit_hash.strip()
         return self._commit_hash
 
     def get_commit_date(self) -> Optional[str]:
         if self._commit_date is not None:
             return self._commit_date
-        try:
-            process_result = subprocess.run(
-                ["git", "log", "-1", "--format=%cd", "--date=format:%Y-%m-%d"],
-                cwd=os.getcwd(),
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            if process_result.returncode != 0:
-                return "N/A"
-            commit_date = process_result.stdout
-        except subprocess.CalledProcessError:
-            commit_date = "N/A"
-        except FileNotFoundError:
-            commit_date = "Git not available"
+        commit_date = self._run_git_command(
+            ["git", "log", "-1", "--format=%cd", "--date=format:%Y-%m-%d"]
+        )
         self._commit_date = commit_date.strip()
         return self._commit_date
 
     def get_commit_datetime(self) -> Optional[str]:
         if self._commit_datetime is not None:
             return self._commit_datetime
-        try:
-            process_result = subprocess.run(
-                [
-                    "git",
-                    "log",
-                    "-1",
-                    "--format=%cd",
-                    "--date=format:%Y-%m-%d %H:%M:%S",
-                ],
-                cwd=os.getcwd(),
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-            if process_result.returncode != 0:
-                return "N/A"
-            commit_datetime = process_result.stdout
-        except subprocess.CalledProcessError:
-            commit_datetime = "N/A"
-        except FileNotFoundError:
-            commit_datetime = "Git not available"
+        commit_datetime = self._run_git_command(
+            [
+                "git",
+                "log",
+                "-1",
+                "--format=%cd",
+                "--date=format:%Y-%m-%d %H:%M:%S",
+            ],
+        )
         self._commit_datetime = commit_datetime.strip()
         return self._commit_datetime
 
     def get_branch(self) -> Optional[str]:
         if self._branch is not None:
             return self._branch
+        branch = self._run_git_command(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        )
+        self._branch = branch.strip()
+        return self._branch
+
+    @staticmethod
+    def _run_git_command(args: List[str]) -> str:
+        result: str
         try:
             process_result = subprocess.run(
-                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                args,
                 cwd=os.getcwd(),
                 capture_output=True,
                 text=True,
@@ -93,10 +65,9 @@ class GitClient:
             )
             if process_result.returncode != 0:
                 return "N/A"
-            branch = process_result.stdout
+            result = process_result.stdout
         except subprocess.CalledProcessError:
-            branch = "N/A"
+            result = "N/A"
         except FileNotFoundError:
-            branch = "Git not available"
-        self._branch = branch.strip()
-        return self._branch
+            result = "Git not available"
+        return result

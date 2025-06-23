@@ -51,7 +51,7 @@ class MarkerLexer:
             #        fields and normal strings.
             #        See also test: test_31_single_node_field.
             tree: ParseTree = parser.parse(source_input.rstrip() + "\n")
-        except UnexpectedToken as exception_:
+        except UnexpectedToken as exception_:  # pragma: no cover
             print(  # noqa: T201
                 "error: could not parse source comment:\n" + source_input
             )

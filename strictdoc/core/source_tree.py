@@ -110,9 +110,6 @@ class SourceFile:
     def is_rst_file(self):
         return self.file_type == SourceFileType.RST
 
-    def is_sdoc_file(self):
-        return self.file_type == SourceFileType.SDOC
-
 
 class SourceTree:
     def __init__(

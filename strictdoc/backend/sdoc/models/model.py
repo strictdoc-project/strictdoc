@@ -15,7 +15,7 @@ class SDocNodeIF(ABC):
     node_type: str
     ng_level: Optional[int]
     ng_resolved_custom_level: Optional[str]
-    section_contents: List["SDocSectionContentIF"]
+    section_contents: List["SDocElementIF"]
 
     # FIXME: Get rid of @property everywhere.
     @property
@@ -59,7 +59,7 @@ class SDocSectionIF(ABC):
     parent: Union["SDocDocumentIF", "SDocSectionIF"]
     ng_level: Optional[int]
     ng_resolved_custom_level: Optional[str]
-    section_contents: List["SDocSectionContentIF"]
+    section_contents: List["SDocElementIF"]
 
     @abstractmethod
     def get_document(self) -> Optional["SDocDocumentIF"]:
@@ -86,7 +86,7 @@ class SDocDocumentIF(ABC):
     config: DocumentConfig
     grammar: Optional[SDocGrammarIF]
     meta: Optional[DocumentMeta]
-    section_contents: List["SDocSectionContentIF"]
+    section_contents: List["SDocElementIF"]
     included_documents: List["SDocDocumentIF"]
     is_bundle_document: bool
     ng_level: Optional[int]
@@ -128,20 +128,6 @@ class SDocDocumentFromFileIF(ABC):
     @property
     def section_contents(self) -> List[SDocDocumentIF]:
         raise NotImplementedError
-
-
-SDocSectionContentIF = Union[
-    SDocNodeIF,
-    SDocSectionIF,
-    SDocDocumentFromFileIF,
-]
-
-
-SDocDocumentContentIF = Union[
-    SDocDocumentFromFileIF,
-    SDocNodeIF,
-    SDocSectionIF,
-]
 
 
 SDocElementIF = Union[

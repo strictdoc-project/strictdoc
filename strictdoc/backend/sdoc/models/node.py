@@ -14,8 +14,8 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
+    SDocElementIF,
     SDocNodeIF,
-    SDocSectionContentIF,
     SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.reference import (
@@ -108,7 +108,7 @@ class SDocNode(SDocNodeIF):
         fields: List[SDocNodeField],
         relations: List[Reference],
         is_composite: bool = False,
-        section_contents: Optional[List[SDocSectionContentIF]] = None,
+        section_contents: Optional[List[SDocElementIF]] = None,
         node_type_close: Optional[str] = None,
     ) -> None:
         assert parent
@@ -142,7 +142,7 @@ class SDocNode(SDocNodeIF):
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
-        self.section_contents: List[SDocSectionContentIF] = (
+        self.section_contents: List[SDocElementIF] = (
             section_contents if section_contents is not None else []
         )
 

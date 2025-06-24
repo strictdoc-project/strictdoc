@@ -211,3 +211,44 @@ void hello_world(void) {
     assert info.markers[0].ng_range_line_end == 15
     assert info.markers[0].reqs_objs[0].ng_source_line == 11
     assert info.markers[0].reqs_objs[0].ng_source_column == 14
+
+
+def test_90_edge_case_capitalized_field_with_colon_and_colon():
+    """
+    Ensure that there is no missing grammar token for a case reported by a user.
+
+    Previously, StrictDoc would raise an exception related to Lark not finding
+    a grammar token when parsing "L:LABEL: ..." kind of string (see below).
+    This test makes sure that the parser works with no issues.
+
+    https://github.com/strictdoc-project/strictdoc/issues/2342
+    """
+
+    input_string = b"""\
+EFI_DEVICE_PATH *FileDevicePathFromConfig(EFI_HANDLE device,
+					  CHAR16 *payloadpath)
+{
+    UINTN prefixlen = 0;
+	   EFI_DEVICE_PATH *devpath = NULL;
+
+	   LABELMODE lm = NOLABEL;
+	   /* Check if payload path contains a
+     * L:LABEL: item to specify a FAT partition or a
+	    * C:LABEL: to specify a custom labeled FAT partition */
+    if (StrnCmp(payloadpath, L"L:", 2) == 0) {
+        lm = DOSFSLABEL;
+    } else if (StrnCmp(payloadpath, L"C:", 2) == 0) {
+		      lm = CUSTOMLABEL;
+	   }
+	   // ... truncated ...
+}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0

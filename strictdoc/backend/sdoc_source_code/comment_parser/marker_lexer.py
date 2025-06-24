@@ -19,7 +19,7 @@ node_name: /(?!({RESERVED_KEYWORDS}))[A-Z_]+/
 node_multiline_value: (NORMAL_STRING_VALUE _NL)+
 NORMAL_STRING_VALUE.2: /[ ]*(?!\\s*@relation)(?![A-Z_]+:)[^\n\r]+/x
 
-NORMAL_STRING: /(?!\\s*@relation)((?![A-Z_]+:)|({RESERVED_KEYWORDS})).+/
+NORMAL_STRING: /(?!\\s*@relation)((?![A-Z_]+: )|({RESERVED_KEYWORDS})).+/
 _NORMAL_STRING: NORMAL_STRING
 
 _BRACE_LEFT: /[\\(\\{{]/

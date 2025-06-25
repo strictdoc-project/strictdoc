@@ -252,3 +252,136 @@ EFI_DEVICE_PATH *FileDevicePathFromConfig(EFI_HANDLE device,
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.markers) == 0
+
+
+def test_91_edge_case_capitalized_field_with_relation_marker():
+    """
+    Ensures that "@relation:" is not treated as an incomplete StrictDoc marker.
+
+    Reduced fragment from this source file:
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/cpufreq/cpufreq-nforce2.c#n241
+
+    https://github.com/strictdoc-project/strictdoc/issues/2342
+    """
+
+    input_string = b"""\
+/**
+ * nforce2_target - set a new CPUFreq policy
+ * @policy: new policy
+ * @target_freq: the target frequency
+ * @relation: how that frequency relates to achieved frequency
+ *  (CPUFREQ_RELATION_L or CPUFREQ_RELATION_H)
+ *
+ * Sets a new CPUFreq policy.
+ */
+static int nforce2_target(struct cpufreq_policy *policy,
+			  unsigned int target_freq, unsigned int relation)
+{
+}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+
+
+def test_92_edge_case_capitalized_letters():
+    """
+    Ensure that fragments such as "IP_VS_SCTP_S_COOKIE_REPLIED: C:COOKIE-ECHO"
+    do not trigger parsing errors.
+
+    Reduced fragment from this source file:
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/net/netfilter/ipvs/ip_vs_proto_sctp.c#n247
+
+    https://github.com/strictdoc-project/strictdoc/issues/2342
+    """
+
+    input_string = b"""\
+/*
+ * IP_VS_SCTP_S_COOKIE_REPLIED: C:COOKIE-ECHO sent, wait for S:COOKIE-ACK
+ */
+void foobar(void) {}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+
+
+def test_93_edge_case_capitalized_letters():
+    """
+    Ensure that fragments like "A: VMRUN:" do not trigger parsing errors.
+
+    Reduced fragment from this source file:
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kvm/svm/sev.c#n4532
+
+    https://github.com/strictdoc-project/strictdoc/issues/2342
+    """
+
+    input_string = b"""\
+void sev_es_prepare_switch_to_guest(struct vcpu_svm *svm, struct sev_es_save_area *hostsa)
+{
+    struct kvm *kvm = svm->vcpu.kvm;
+
+    /*
+     * All host state for SEV-ES guests is categorized into three swap types
+     * based on how it is handled by hardware during a world switch:
+     *
+     * A: VMRUN:   Host state saved in host save area
+     */
+}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+
+
+def test_94_edge_case_field_name_then_newline_then_field_value():
+    r"""
+    Ensure that fragments with <field name>\n<field value...> do not trigger
+    parsing errors.
+
+    Reduced fragment from this source file:
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/video/fbdev/i810/i810_gtf.c#n115
+
+    https://github.com/strictdoc-project/strictdoc/issues/2342
+    """
+
+    input_string = b"""\
+/**
+ * i810fb_encode_registers - encode @var to hardware register values
+ * @var: pointer to var structure
+ * @par: pointer to hardware par structure
+ *
+ * DESCRIPTION:
+ * Timing values in @var will be converted to appropriate
+ * register values of @par.
+ */
+void foobar(void) {}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert len(info.source_nodes) == 1

@@ -143,8 +143,12 @@ class MultiprocessingParallelizer(Parallelizer):
         # https://github.com/strictdoc-project/strictdoc/issues/2083
         self.input_queue.close()
         self.output_queue.close()
-        self.input_queue.cancel_join_thread()
-        self.output_queue.cancel_join_thread()
+        if environment.is_windows():
+            self.input_queue.cancel_join_thread()
+            self.output_queue.cancel_join_thread()
+        else:
+            self.input_queue.join_thread()
+            self.output_queue.join_thread()
 
         # On Windows GitHub CI, there is sometimes a strange random edge case where
         # no child process has failed prematurely but there is at least one
@@ -193,8 +197,12 @@ class MultiprocessingParallelizer(Parallelizer):
             # https://github.com/strictdoc-project/strictdoc/issues/2083
             input_queue.close()
             output_queue.close()
-            input_queue.cancel_join_thread()
-            output_queue.cancel_join_thread()
+            if environment.is_windows():
+                input_queue.cancel_join_thread()
+                output_queue.cancel_join_thread()
+            else:
+                input_queue.join_thread()
+                output_queue.join_thread()
 
         atexit.register(close_queues)
 

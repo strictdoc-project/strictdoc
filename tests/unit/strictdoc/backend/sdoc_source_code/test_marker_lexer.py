@@ -348,6 +348,31 @@ def test_32_two_single_line_fields():
     )
 
 
+def test_32B_two_single_line_fields_consecutive():
+    """
+    Ensure that two consecutive fields can be parsed.
+    """
+
+    input_string = """
+        STATEMENT: This can likely replace _weak below with no problem.
+        STATEMENTT: This can likely replace _weak below with no problem.
+    """
+
+    tree = MarkerLexer.parse(input_string)
+
+    assert tree.data == "start"
+
+    assert len(tree.children) == 2
+    assert tree.children[0].data == "node_field"
+    assert tree.children[0].children[0].data == "node_name"
+    assert tree.children[0].children[0].children[0].value == "STATEMENT"
+    assert tree.children[0].children[1].data == "node_multiline_value"
+    assert (
+        tree.children[0].children[1].children[0].value
+        == "This can likely replace _weak below with no problem."
+    )
+
+
 def test_33_multiline_and_multiparagraph_fields():
     input_string = """\
 FOOBAR

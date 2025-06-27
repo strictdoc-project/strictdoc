@@ -15,7 +15,7 @@ class GrammarTemplate(Template):
 RELATION_MARKER_START = r"@relation[\(\{]"
 
 GRAMMAR = GrammarTemplate("""
-start: (relation_marker | node_field | _NORMAL_STRING | _WS)*
+start: ##START
 
 relation_marker: _RELATION_MARKER_START _WS? (relation_node_uid _SEP _WS)+ "scope=" relation_scope ("," _WS "role=" relation_role)? _WS? _BRACE_RIGHT
 
@@ -26,13 +26,14 @@ relation_role: ALPHANUMERIC_WORD
 
 node_field: node_name ":" node_multiline_value
 node_name: /(?!(##RESERVED_KEYWORDS))[A-Z_]+/
-node_multiline_value: (_WS_INLINE | _NL) (NORMAL_FIRST_STRING_VALUE _NL) (NORMAL_STRING_VALUE _NL)*
+node_multiline_value: (_WS_INLINE | _NL) (NODE_FIRST_STRING_VALUE _NL) (NODE_STRING_VALUE _NL)*
 
-NORMAL_FIRST_STRING_VALUE.2: /\\s*[^\n\r]+/x
-NORMAL_STRING_VALUE.2: /(?![ ]*##RELATION_MARKER_START)(?!\\s*[A-Z_]+: )[^\n\r]+/x
+NODE_FIRST_STRING_VALUE.2: /\\s*[^\n\r]+/x
+NODE_STRING_VALUE.2: /(?![ ]*##RELATION_MARKER_START)(?!\\s*[A-Z_]+: )[^\n\r]+/x
 
-NORMAL_STRING: /(?!\\s*##RELATION_MARKER_START)((?!\\s*[A-Z_]+: )|(##RESERVED_KEYWORDS)).+/
-_NORMAL_STRING: NORMAL_STRING
+_NORMAL_STRING_NO_MARKER_NO_NODE: /(?!\\s*##RELATION_MARKER_START)((?!\\s*[A-Z_]+: )|(##RESERVED_KEYWORDS)).+/
+
+_NORMAL_STRING_NO_MARKER: /(?!\\s*##RELATION_MARKER_START).+/
 
 _BRACE_LEFT: /[\\(\\{{]/
 _BRACE_RIGHT: /[\\)\\}}]/
@@ -51,18 +52,25 @@ ALPHANUMERIC_WORD: /[a-zA-Z0-9_]+/
 %import common.LF -> LF
 %import common.WS_INLINE -> WS_INLINE
 %import common.NEWLINE -> NEWLINE
-""").substitute(
-    RELATION_MARKER_START=RELATION_MARKER_START,
-    RESERVED_KEYWORDS=RESERVED_KEYWORDS,
-    REGEX_REQ=REGEX_REQ,
-)
+""")
 
 
 class MarkerLexer:
     @staticmethod
-    def parse(source_input: str) -> ParseTree:
+    def parse(source_input: str, parse_nodes: bool = False) -> ParseTree:
+        if parse_nodes:
+            start = "(relation_marker | node_field | _NORMAL_STRING_NO_MARKER_NO_NODE | _WS)*"
+        else:
+            start = "(relation_marker | _NORMAL_STRING_NO_MARKER | _WS)*"
+
+        grammar = GRAMMAR.substitute(
+            RELATION_MARKER_START=RELATION_MARKER_START,
+            RESERVED_KEYWORDS=RESERVED_KEYWORDS,
+            REGEX_REQ=REGEX_REQ,
+            START=start,
+        )
         parser: Lark = Lark(
-            GRAMMAR, parser="lalr", cache=True, propagate_positions=True
+            grammar, parser="lalr", cache=True, propagate_positions=True
         )
 
         try:

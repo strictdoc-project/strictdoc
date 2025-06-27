@@ -174,7 +174,7 @@ STATEMENT: When 1, The system 2 shall do 3
 FOOBAR
 """
 
-    tree = MarkerLexer.parse(input_string)
+    tree = MarkerLexer.parse(input_string, parse_nodes=True)
     assert tree.data == "start"
 
     assert len(tree.children) == 5
@@ -239,7 +239,7 @@ def test_31_single_node_field():
         STATEMENT: This can likely replace _weak below with no problem.
     """
 
-    tree = MarkerLexer.parse(input_string)
+    tree = MarkerLexer.parse(input_string, parse_nodes=True)
     assert tree.data == "start"
 
     assert len(tree.children) == 1
@@ -274,7 +274,7 @@ def test_31B_single_node_field():
   
     """  # noqa: W293
 
-    tree = MarkerLexer.parse(input_string)
+    tree = MarkerLexer.parse(input_string, parse_nodes=True)
     assert tree.data == "start"
 
     assert len(tree.children) == 1
@@ -309,7 +309,7 @@ void hello_world(void) {
 }
 """  # noqa: W293
 
-    tree = MarkerLexer.parse(input_string)
+    tree = MarkerLexer.parse(input_string, parse_nodes=True)
     assert tree.data == "start"
 
     assert len(tree.children) == 2
@@ -334,7 +334,7 @@ def test_32_two_single_line_fields():
         STATEMENT: This can likely replace _weak below with no problem.
     """
 
-    tree = MarkerLexer.parse(input_string)
+    tree = MarkerLexer.parse(input_string, parse_nodes=True)
     assert tree.data == "start"
 
     assert len(tree.children) == 2
@@ -358,7 +358,7 @@ def test_32B_two_single_line_fields_consecutive():
         STATEMENTT: This can likely replace _weak below with no problem.
     """
 
-    tree = MarkerLexer.parse(input_string)
+    tree = MarkerLexer.parse(input_string, parse_nodes=True)
 
     assert tree.data == "start"
 
@@ -386,7 +386,7 @@ STATEMENT: This
 FOOBAR
 """
 
-    tree = MarkerLexer.parse(input_string)
+    tree = MarkerLexer.parse(input_string, parse_nodes=True)
     assert tree.data == "start"
 
     assert len(tree.children) == 1

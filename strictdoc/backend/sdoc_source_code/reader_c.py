@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import sys
 import traceback
 from typing import List, Optional, Sequence
@@ -38,8 +37,13 @@ from strictdoc.helpers.file_stats import SourceFileStats
 
 
 class SourceFileTraceabilityReader_C:
+    def __init__(self, parse_nodes: bool = False) -> None:
+        self.parse_nodes: bool = parse_nodes
+
     def read(
-        self, input_buffer: bytes, file_path=None
+        self,
+        input_buffer: bytes,
+        file_path: str,
     ) -> SourceFileTraceabilityInfo:
         assert isinstance(input_buffer, bytes)
 
@@ -84,6 +88,7 @@ class SourceFileTraceabilityReader_C:
                             if input_buffer[-1] == 10
                             else node_.end_point[0] + 1,
                             node_.start_point[0] + 1,
+                            parse_nodes=self.parse_nodes,
                         )
                         for marker_ in source_node.markers:
                             if not isinstance(marker_, FunctionRangeMarker):
@@ -181,6 +186,7 @@ class SourceFileTraceabilityReader_C:
                         function_last_line,
                         function_comment_node.start_point[0] + 1,
                         entity_name=function_display_name,
+                        parse_nodes=self.parse_nodes,
                     )
                     for marker_ in source_node.markers:
                         if isinstance(marker_, FunctionRangeMarker) and (
@@ -285,6 +291,7 @@ class SourceFileTraceabilityReader_C:
                         function_last_line,
                         function_comment_node.start_point[0] + 1,
                         entity_name=function_display_name,
+                        parse_nodes=self.parse_nodes,
                     )
                     traceability_info.source_nodes.append(source_node)
                     for marker_ in source_node.markers:
@@ -338,6 +345,7 @@ class SourceFileTraceabilityReader_C:
                     node_.start_point[0] + 1,
                     node_.end_point[0] + 1,
                     node_.start_point[0] + 1,
+                    parse_nodes=False,
                 )
 
                 for marker_ in source_node.markers:
@@ -387,7 +395,9 @@ class SourceFileTraceabilityReader_C:
             sys.exit(1)
 
     @staticmethod
-    def _get_function_name_node(function_declarator_node: Node):
+    def _get_function_name_node(
+        function_declarator_node: Node,
+    ) -> Optional[Node]:
         assert function_declarator_node.type == "function_declarator"
         function_identifier_node = ts_find_child_node_by_type(
             function_declarator_node,

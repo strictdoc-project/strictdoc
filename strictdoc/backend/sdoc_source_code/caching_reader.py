@@ -73,7 +73,8 @@ class SourceFileTraceabilityCachingReader:
                 or path_to_file.endswith(".hpp")
                 or path_to_file.endswith(".cpp")
             ):
-                return SourceFileTraceabilityReader_C()
+                parse_nodes = project_config.shall_parse_nodes(path_to_file)
+                return SourceFileTraceabilityReader_C(parse_nodes=parse_nodes)
             if path_to_file.endswith(".robot"):
                 return SourceFileTraceabilityReader_Robot()
         return SourceFileTraceabilityReader()

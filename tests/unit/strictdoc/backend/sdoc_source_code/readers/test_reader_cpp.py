@@ -32,7 +32,7 @@ class Foo
 
     reader = SourceFileTraceabilityReader_C()
 
-    info = reader.read(input_string)
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.functions) == 1
@@ -64,7 +64,7 @@ class Bar {
 
     reader = SourceFileTraceabilityReader_C()
 
-    info = reader.read(input_string)
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.functions) == 1
@@ -93,7 +93,7 @@ bool Foo::Bar::CanSend(const CanFrame &frame) {
 
     reader = SourceFileTraceabilityReader_C()
 
-    info = reader.read(input_string)
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.functions) == 1
@@ -127,7 +127,7 @@ class TrkVertex
 
     reader = SourceFileTraceabilityReader_C()
 
-    info = reader.read(input_string)
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.functions) == 1
@@ -168,7 +168,7 @@ class TrkVertex
 
     reader = SourceFileTraceabilityReader_C()
 
-    info = reader.read(input_string)
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.functions) == 3
@@ -229,7 +229,7 @@ class TrkVertex
 
     reader = SourceFileTraceabilityReader_C()
 
-    info = reader.read(input_string)
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.functions) == 3
@@ -292,7 +292,7 @@ Foo& Foo::operator+(const Foo& c) { return *this; }
 
     reader = SourceFileTraceabilityReader_C()
 
-    info = reader.read(input_string)
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.functions) == 4

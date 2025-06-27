@@ -1,0 +1,10 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/tests/file.c.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/description.html | filecheck %s --check-prefix CHECK-SPEC
+CHECK-SPEC: The document is empty.

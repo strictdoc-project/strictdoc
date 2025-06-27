@@ -406,6 +406,20 @@ class ProjectConfig:
     def get_extra_static_files_path(self) -> str:
         return self.environment.get_extra_static_files_path()
 
+    def shall_parse_nodes(self, path_to_file: str) -> bool:
+        for sdoc_source_config_entry_ in self.source_nodes:
+            # FIXME: Move the setting of full paths to .finalize() of this config
+            #        class when it is implemented.
+            full_path = sdoc_source_config_entry_.setdefault(
+                "full_path",
+                os.path.join(
+                    self.source_root_path, sdoc_source_config_entry_["path"]
+                ),
+            )
+            if path_to_file.startswith(full_path):
+                return True
+        return False
+
 
 class ProjectConfigLoader:
     @staticmethod

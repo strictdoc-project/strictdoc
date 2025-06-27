@@ -19,7 +19,7 @@ def test_00_empty_file():
 
     reader = SourceFileTraceabilityReader_C()
 
-    info = reader.read(input_string)
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.markers) == 0
@@ -32,7 +32,7 @@ def test_01_single_string():
 
     reader = SourceFileTraceabilityReader_C()
 
-    info = reader.read(input_string)
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
 
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.functions) == 0

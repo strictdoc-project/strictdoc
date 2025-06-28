@@ -2849,6 +2849,63 @@ To establish a backward link from a source file to an SDoc node:
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: c9da7df725564208971e7ee058ad8d73
+UID: SECTION-UG-Parsing-SDoc-source-nodes
+TITLE: Parsing SDoc nodes from source code comments (experimental, for C/C++ only)
+
+[TEXT]
+MID: 72fe8c3f618042578850cfdf01868b6c
+STATEMENT: >>>
+.. note::
+
+    Insight: It is often practical to avoid maintaining test specifications and similar documents separately from the source code, since the information is closely related anyway.
+
+In addition to recognizing the ``@relation(...)`` markers described above, StrictDoc can also read SDoc node fields when they are defined in source code comments.
+
+.. code-block::
+
+    /**
+     * Some text.
+     *
+     * @relation(REQ-1, scope=function)
+     *
+     * INTENTION: Intention...
+     *
+     * INPUT: This
+     *        is
+     *        a statement
+     *        \n\n
+     *        And this is the same statement's another paragraph.
+     *
+     * EXPECTED_RESULTS: This is a comment.
+     */
+    void test_case_1(void) {
+        print("hello world\n");
+    }
+
+To enable SDoc node parsing, the corresponding source file must be registered in the ``strictdoc.toml`` configuration as follows:
+
+.. code-block::
+
+    source_nodes = [
+        { "tests/" = { uid = "TEST_DOC", node_type = "TEST_SPEC" } }
+    ]
+
+With the above declaration, StrictDoc will locate the document with the specified UID and automatically populate it with parsed descriptions. This allows the user to start with a basic template of their choice, knowing that it will be filled with content extracted from the source files.
+
+A document template example:
+
+.. code-block::
+
+    [DOCUMENT]
+    MID: c2d4542d5f1741c88dfcb4f68ad7dcbd
+    TITLE: Test specification
+    UID: TEST_DOC
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

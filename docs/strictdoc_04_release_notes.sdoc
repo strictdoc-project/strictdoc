@@ -46,6 +46,37 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 6665c867a01f49f59968ae83d2e928fe
+TITLE: Unreleased notes
+
+[TEXT]
+MID: d56dfede85b84e07bd5ecddc82a576fc
+STATEMENT: >>>
+This update fixes two important problems:
+
+**Problem 1: StrictDoc crashing or hanging on Windows (infrequently)**
+
+StrictDoc used to get stuck when running on Windows where a child process would be left handing and never terminate. We fixed this by changing how the program shuts down:
+
+- On Linux and Mac: We now close the multiprocessing queues and join their threads.
+- On Windows: We also close the multiprocessing queues but and cancel their threads instead of joining them.
+
+After testing the fix thoroughly, it appears to solve the crashing problems. The fix addresses these two reported issues:
+
+- `Bug: Process parallelization has become flaky on Windows (rarely) #2121 <https://github.com/strictdoc-project/strictdoc/issues/2121>`_
+- `Bug: Parallellization edge case on Windows #2083 <https://github.com/strictdoc-project/strictdoc/issues/2083>`_
+
+**Problem 2: Conflicts when reading Linux code files**
+
+In version 0.9.0, we added a new feature that reads comments from C/C++ code files as SDoc nodes, see
+`Feature: Support for parsing C/C++ test descriptions #2231 <https://github.com/strictdoc-project/strictdoc/issues/2231>`_, but this caused problems when running StrictDoc against the Linux kernel source code. The program would crash because it got confused by text that _almost_ looked like our special comment format.
+
+We fixed this by making the parser better at handling the difference between the relation markers, SDoc node declarations, and regular comments and turning off this feature by default. From now on, if you want to use this feature, you need to add ``source_nodes`` to your strictdoc.toml settings file. See [LINK: SECTION-UG-Parsing-SDoc-source-nodes] for the feature description.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: a5ab3ca7210f4c18a465e7686e71c15f
 TITLE: 0.9.1 (2025-06-14)
 

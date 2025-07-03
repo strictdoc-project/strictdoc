@@ -46,6 +46,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: eca2ad204c8246a8b0f29a5eb8d7f799
+TITLE: 0.9.3 (2025-07-03)
+
+[TEXT]
+MID: 64706a3d4d9c4beda3597ffa9d92921a
+STATEMENT: >>>
+This release includes a single change: the licensing update of the ``html2pdf4doc`` component. Its license has been finalized as Apache 2.0, replacing the previous combined Apache 2.0/TBD licensing. From now on, html2pdf4doc is fully licensed under Apache 2.0, without any restrictions, for use both within and outside of StrictDoc.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 6665c867a01f49f59968ae83d2e928fe
 TITLE: 0.9.2 (2025-06-28)
 

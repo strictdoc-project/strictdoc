@@ -1,0 +1,34 @@
+[DOCUMENT]
+TITLE: Hello math! 
+
+[TEXT]
+STATEMENT: >>>
+When the ``MATHJAX`` feature is disabled, the inline math role uses the docutils fallback renderer.
+
+.. code-block ::
+
+    Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
+
+
+Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
+
+<<<
+
+[TEXT]
+STATEMENT: >>>
+When the ``MATHJAX`` feature is disabled, the math directive uses the docutils fallback renderer. 
+
+.. code-block ::
+
+  .. math::
+
+     (a + b)^2 = a^2 + 2ab + b^2
+
+     (a - b)^2 = a^2 - 2ab + b^2
+
+.. math::
+
+   (a + b)^2 = a^2 + 2ab + b^2
+
+   (a - b)^2 = a^2 - 2ab + b^2
+<<<

@@ -1,0 +1,13 @@
+RUN: %strictdoc export %S --enable-mathjax --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Hello math!
+
+RUN: %check_exists --file "%T/html/_static/mathjax/tex-mml-chtml.js"
+RUN: %check_exists --file "%T/html/_static/mathjax/output/chtml/fonts/tex.js"
+
+RUN: %cat %T/html/03_mathjax_enabled_math_block/input.html | filecheck %s --check-prefix CHECK-HTML
+
+CHECK-HTML: <span class="math notranslate nohighlight">\( a^2 + b^2 = c^2 \)</span>
+CHECK-HTML: <div class="math notranslate nohighlight">\[\begin{align}\begin{aligned}(a + b)^2 = a^2 + 2ab + b^2 \\ (a - b)^2 = a^2 - 2ab + b^2\end{aligned}\end{align}\]</div></div>
+CHECK-HTML: <a id="euler"></a><div class="math notranslate nohighlight"><span class="eqno">(1)</span>\[e^{i\pi} + 1 = 0\]</div>
+CHECK-HTML: <a href="#euler">(1)</a>
+CHECK-HTML: <div class="math notranslate nohighlight">\begin{eqnarray}

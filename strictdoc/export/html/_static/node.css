@@ -228,3 +228,19 @@ sdoc-node-controls[data-direction~="row"] sdoc-menu,
 sdoc-node-controls[data-direction~="row"] sdoc-menu-handler {
   flex-direction: row;
 }
+
+/* math equation numbering support */
+div.math {
+  position: relative;
+  text-align: center;
+  padding-right: 3em;  /* reserve space for eqno */
+  overflow: hidden;    /* prevents scrollbars */
+}
+
+.math .eqno {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 90%;
+  white-space: nowrap;
+}

@@ -2339,7 +2339,7 @@ StrictDoc can include the `MathJax <https://www.mathjax.org/>`_ Javascript libra
       "MATHJAX"
     ]
 
-Example of using MathJax:
+Examples of using MathJax:
 
 .. code-block:: text
 
@@ -2354,6 +2354,22 @@ Example of using MathJax:
         \mathbf{\underline{j}}_{\text{a}}
         $$
     <<<
+
+Sphinx-style syntax is also supported:
+
+.. code-block:: text
+
+    [TEXT]
+    STATEMENT: >>>
+    The following formula :math:`a^2 + b^2 = c^2` is rendered inline with the text.
+  
+    When using the math directive, the enclosing $$ are not required.
+
+    .. math::
+        \mathbf{\underline{k}}_{\text{a}} =
+        \mathbf{\underline{i}}_{\text{a}} \times
+        \mathbf{\underline{j}}_{\text{a}}
+    >>>
 
 See [LINK: SDOC_UG_CONFIG_FEATURES] for the description of other features.
 <<<

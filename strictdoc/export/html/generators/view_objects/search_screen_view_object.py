@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
+from markupsafe import Markup
+
 from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import DocumentView
@@ -79,8 +81,8 @@ class SearchScreenViewObject:
     def iterator_files_first(self):
         yield from self.document_tree_iterator.iterator_files_first()
 
-    def render_url(self, url: str):
-        return self.link_renderer.render_url(url)
+    def render_url(self, url: str) -> Markup:
+        return Markup(self.link_renderer.render_url(url))
 
     def render_static_url_with_prefix(self, url: str) -> str:
         return self.link_renderer.render_static_url_with_prefix(url)

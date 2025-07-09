@@ -14,7 +14,7 @@ path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
 class Test(E2ECase):
-    def test_search_links(self):
+    def test_01_search_links(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder
         ) as test_server:
@@ -32,13 +32,19 @@ class Test(E2ECase):
                 screen_search.do_click_on_search_requirements()
             )
             screen_search_results.assert_text("Requirement statement.")
-
             self.go_back()
 
             screen_search_results = screen_search.do_click_on_search_sections()
             screen_search_results.assert_text("Section title")
+            self.go_back()
 
-    def test_empty_search(self):
+            screen_search_results = (
+                screen_search.do_click_on_search_node_with_system_title()
+            )
+            screen_search_results.assert_nr_results(0)
+            self.go_back()
+
+    def test_02_empty_search(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder
         ) as test_server:
@@ -51,12 +57,12 @@ class Test(E2ECase):
                 screen_project_index.do_click_on_search_screen_link()
             )
             screen_search_results = screen_search.do_search(
-                """(node.is_requirement and node["STATEMENT"] == "NONE")"""
+                """(node.is_requirement and node["STATEMENT"] == "BOGUS_STATEMENT")"""
             )
 
             screen_search_results.assert_nr_results(0)
 
-    def test_invalid_search(self):
+    def test_03_invalid_search(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder
         ) as test_server:

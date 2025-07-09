@@ -39,6 +39,12 @@ class Screen_Search(Screen):  # pylint: disable=invalid-name
         )
         return Screen_SearchResults(self.test_case)
 
+    def do_click_on_search_node_with_system_title(self) -> Screen_SearchResults:
+        self.test_case.click_xpath(
+            '//a[@data-testid="node_is_title_system"]',
+        )
+        return Screen_SearchResults(self.test_case)
+
     def do_search(self, query) -> Screen_SearchResults:
         textBox = self.test_case.driver.find_element(
             By.XPATH, "//input[@id='q']"

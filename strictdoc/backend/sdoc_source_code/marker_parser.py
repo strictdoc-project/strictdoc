@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-34, SDOC-SRS-141, scope=file)
+"""
+
 from typing import Dict, List, Optional, Tuple, Union
 
 from lark import ParseTree, Token, Tree
@@ -11,8 +15,8 @@ from strictdoc.backend.sdoc_source_code.helpers.comment_preprocessor import (
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
-    LineMarker,
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req

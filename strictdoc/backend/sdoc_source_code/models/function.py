@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-142, scope=file)
+"""
+
 from typing import Any, List, Set
 
 from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute

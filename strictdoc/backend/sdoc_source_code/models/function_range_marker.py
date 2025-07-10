@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-137, SDOC-SRS-140, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-def"
 from copy import copy
 from enum import Enum

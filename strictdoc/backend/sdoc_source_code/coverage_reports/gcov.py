@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-144, scope=file)
+"""
+
 import hashlib
 import json
 from dataclasses import dataclass

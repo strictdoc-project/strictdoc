@@ -5,3 +5,7 @@ features = [
   "SOURCE_FILE_LANGUAGE_PARSERS",
   "PROJECT_STATISTICS_SCREEN"
 ]
+
+exclude_source_paths = [
+  "test.itest",
+]

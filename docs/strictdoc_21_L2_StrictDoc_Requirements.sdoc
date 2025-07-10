@@ -60,7 +60,7 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
-[SECTION]
+[[SECTION]]
 MID: bd8a7931c1e04df9bf08d291488c67aa
 TITLE: SDoc data model
 
@@ -247,9 +247,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-8
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: cbc7f72c6e0b4c858817bf17357105a5
 TITLE: SDoc text markup
 
@@ -510,9 +510,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-94
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 34b4abc6bb4649de9e56af31c229b0d1
 UID: SECTION-SRS-Graph-database
 TITLE: Graph database
@@ -613,9 +613,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-48
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 4dce611287954289b1c2a6a15c413611
 TITLE: Documentation tree
 
@@ -638,14 +638,14 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/core/document_finder.py
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: fcbf717009ce4cb2a8def7eb7b377654
 UID: SECTION-SRS-Web-HTML-frontend
 TITLE: Web/HTML frontend
 
-[SECTION]
+[[SECTION]]
 MID: a3603184d571449792f5cd752c978686
 UID: SECTION-SRS-General-export-requirements-2
 TITLE: General export requirements
@@ -715,9 +715,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-80
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: b99ebebdadb94fec968785429cef9002
 UID: SECTION-SRS-Screen-Project-tree
 TITLE: Screen: Project tree
@@ -764,9 +764,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-3
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 185cfc2d1ed4429ebaf0689f70a8cb0a
 UID: SECTION-SRS-Screen-Document-DOC
 TITLE: Screen: Document (DOC)
@@ -902,9 +902,9 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/export/html/_static/controllers/copy_to_clipboard_controller.js
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2b5d74dafd6d43f4bab4c05ed4da6f0d
 UID: SECTION-SRS-Screen-Table-TBL
 TITLE: Screen: Table (TBL)
@@ -923,9 +923,9 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/export/html/generators/document_table.py
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 3c589969eb6a41c19b1dd246dabadbc8
 UID: SECTION-SRS-Screen-Traceability-TR
 TITLE: Screen: Traceability (TR)
@@ -944,9 +944,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-28
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 9d337068b6a940b7a98d40697ea200a8
 UID: SECTION-SRS-Screen-Deep-traceability-DTR
 TITLE: Screen: Deep traceability (DTR)
@@ -963,9 +963,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: DO178-12
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: ddf15b3113a54107979752ec192e2ded
 TITLE: Screen: Project statistics
 
@@ -998,9 +998,9 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/export/html/generators/project_statistics.py
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 14ad600308434e6baaeef02d3e90b720
 TITLE: Screen: Traceability matrix
 
@@ -1022,9 +1022,9 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/export/html/generators/traceability_matrix.py
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 544f8ffed8604e63a269a3f953681163
 TITLE: Screen: Project tree diff
 
@@ -1048,11 +1048,11 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/git/project_diff_analyzer.py
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2d4dc6fc901f4b28aaf414fcfbdfabca
 UID: SECTION-SRS-Requirements-to-source-traceability
 TITLE: Requirements-to-source traceability
@@ -1069,48 +1069,248 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
 
+[[SECTION]]
+MID: 2f63252320d546d88462849b521f45ba
+TITLE: Language-aware parsing of source code
+
+[REQUIREMENT]
+MID: 79a8080f6e41485f9835ccda067b34bc
+UID: SDOC-SRS-142
+TITLE: Language-aware parsing of source code
+STATEMENT: >>>
+StrictDoc shall support parsing the most commonly used formats and programming languages to the Abstract Syntax Tree (AST) level.
+
+The format examples: C, C++, Python, Rust, Ada, Robot, Gherkin, etc.
+<<<
+RATIONALE: >>>
+StrictDoc must be capable of traversing the AST of common formats and programming languages to identify and extract function and class markers.
+<<<
+
+[REQUIREMENT]
+MID: 85a8080f8441485f9111ccda063b34bc
+UID: SDOC-SRS-146
+STATUS: Active
+TITLE: Language-aware parsing of C/C++ code
+STATEMENT: >>>
+StrictDoc shall support parsing the C and C++ source files which includes:
+
+- Recognizing functions and their Doxygen comments.
+- Recognizing function declarations and function definitions.
+<<<
+RATIONALE: >>>
+C and C++ languages are common languages for embedded and general systems programming. These languages have to be handled with a dedicated parser because of these languages' specifics.
+<<<
+
+[REQUIREMENT]
+MID: 3456080f1358485f9bacdcda063b34bc
+UID: SDOC-SRS-147
+STATUS: Active
+TITLE: Language-aware parsing of Python code
+STATEMENT: >>>
+StrictDoc shall support parsing the Python source files which includes:
+
+- Recognizing Python functions, including nested functions.
+- Recognizing Python classes, including nested classes.
+- Recognizing decorated functions.
+<<<
+RATIONALE: >>>
+Python language has to be handled with a dedicated parser because of this language's specifics.
+<<<
+
+[REQUIREMENT]
+MID: 9183080f1358485f9bacdcda0635109
+UID: SDOC-SRS-148
+STATUS: Active
+TITLE: Language-aware parsing of Robot framework code
+STATEMENT: >>>
+StrictDoc shall support parsing the Robot framework test files.
+<<<
+RATIONALE: >>>
+Robot framework's markup has to be handled with a dedicated parser because of this language's specifics.
+<<<
+
+[[/SECTION]]
+
+[REQUIREMENT]
+MID: bdeda4b89d82446281e2c7c2eae46708
+UID: SDOC-SRS-143
+STATUS: Active
+TITLE: Link requirements with test files and test reports
+STATEMENT: >>>
+StrictDoc shall support bi-directional linking between requirements, test files, and test reports.
+<<<
+RATIONALE: >>>
+Tracing requirements to not just test files but also the test report information closes the verification cycle more completely.
+<<<
+
+[REQUIREMENT]
+MID: aefeb5b89d82446281e2c7c2eae12345
+UID: SDOC-SRS-144
+STATUS: Draft
+TITLE: Link requirements with code coverage information
+STATEMENT: >>>
+StrictDoc shall support linking between requirements, source files, and code coverage information.
+<<<
+RATIONALE: >>>
+Tracing requirements to not just test files but also to the code coverage information closes the verification cycle more completely.
+<<<
+
+[[SECTION]]
+MID: 5fedbaba39d24da79d074501198ff654
+TITLE: Forward linking from requirements to source code
+
+[REQUIREMENT]
+MID: 21637d9bec434d32bb6b97ba5a4e70e6
+UID: SDOC-SRS-145
+TITLE: SDoc markup's forward relations
+STATEMENT: >>>
+StrictDoc shall support forward linking from SDoc nodes to source files.
+<<<
+RATIONALE: >>>
+There are cases when it is not possible to modify source code directly. The forward linking enables to refer to the files or their parts from SDoc nodes. Depending on a project structure, the forward linking from requirements to source files can replace the backward linking from source code back to requirements, or both approaches can co-exist.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 9c1dd6cbabd44ac680985c403cf710a7
+TITLE: Source code markup – Relations
+
 [REQUIREMENT]
 MID: b9144222a7f3454da2989f494cd9647c
 UID: SDOC-SRS-34
 STATUS: Active
-TITLE: Annotate source file
+TITLE: Relation markers syntax
 STATEMENT: >>>
-StrictDoc shall support a dedicated markup language for annotating source code with links referencing the requirements.
+StrictDoc shall support annotating source code with links that reference the requirements.
 <<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/sdoc_source_code/grammar.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/sdoc_source_code/reader.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/sdoc_source_code/models/range_marker.py
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/backend/sdoc_source_code/models/source_file_info.py
 
 [REQUIREMENT]
 MID: 61c25cab106e4283b2c6d64bf1db96b2
 UID: SDOC-SRS-124
 STATUS: Active
-TITLE: Single-line code marker
+TITLE: Line marker
 STATEMENT: >>>
-StrictDoc's source file marker syntax shall support single-line markers.
+StrictDoc's shall support line markers that can be attached to single source code lines.
 
 NOTE: A single-line marker points to a single line in a source file.
 <<<
 RATIONALE: >>>
-The advantage of a single-line marker compared to a range marker is that a single-line marker is not intrusive and does not clutter source code. Such a single-marker can be kept in a comment to a function (e.g., Doxygen), not in the function body.
+Sometimes a requirement can influence only a single line in the source code. The advantage of a single-line marker compared to a range marker is that a single-line marker is not intrusive and does not clutter source code.
 <<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
 
 [REQUIREMENT]
+MID: 61c23c1b106e4583b2c6d64bf1d296ba
+UID: SDOC-SRS-137
+STATUS: Active
+TITLE: Function marker
+STATEMENT: >>>
+StrictDoc shall support relation markers that can be attached to individual source code functions.
+<<<
+RATIONALE: >>>
+A function is a basic building block of most programming language. It is straightforward to match a source code function to one or more related requirements.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
+
+[REQUIREMENT]
+MID: 86e23c1b106e4adeb2c6d64bf1d29aaa
+UID: SDOC-SRS-140
+STATUS: Active
+TITLE: Class marker
+STATEMENT: >>>
+StrictDoc shall support relation markers that can be attached to source code classes.
+<<<
+RATIONALE: >>>
+A class is a basic building block of most programming language. Some requirements can be naturally attached to the whole classes.
+<<<
+COMMENT: >>>
+Not all programming languages support classes, e.g., C. For these languages and non-code text files, the class markers will have no effect.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
+
+[REQUIREMENT]
+MID: 82345cab106e4283b2c7774bf1db96b1
+UID: SDOC-SRS-139
+STATUS: Active
+TITLE: File marker
+STATEMENT: >>>
+StrictDoc's shall support file markers that can be attached to entire source files.
+
+NOTE: A single-line marker points to a single line in a source file.
+<<<
+RATIONALE: >>>
+There are cases when a requirement can be attached to an entire file.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
+
+[REQUIREMENT]
+MID: 11c23c1b105e4583b2c6d64bf1d296cc
+UID: SDOC-SRS-138
+STATUS: Active
+TITLE: Range marker
+STATEMENT: >>>
+StrictDoc shall support relation markers that can be attached to source code ranges.
+
+NOTE: Compared to other marker types, to indicate a range, two markers are needed: one to start a range and one to end a range.
+<<<
+RATIONALE: >>>
+There are cases when a requirement implementation results in the requirement affecting only a range/block of source code.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 5ce2ea410dd94927807a258f482483a5
+TITLE: Source code markup – Nodes
+
+[REQUIREMENT]
+MID: f44df3c6a84f4b4e9201a61023446d9c
+UID: SDOC-SRS-141
+STATUS: Active
+TITLE: Parse nodes from source code
+STATEMENT: >>>
+StrictDoc shall support parsing nodes from source code.
+<<<
+RATIONALE: >>>
+It can be practical to define the requirement and other nodes directly in source comments and then let a requirements tool generate documents from these nodes' content automatically.
+
+A reference example: Generating test specifications from the TEST_SPEC nodes which are defined directly in source code comments.
+<<<
+
+[[/SECTION]]
+
+[REQUIREMENT]
 MID: 3aeb1eea0dba4041a9161a1a8d291999
 UID: SDOC-SRS-35
 STATUS: Active
-TITLE: Generate source coverage
+TITLE: Generate project source code coverage
 STATEMENT: >>>
 StrictDoc shall generate project source code coverage information.
 
@@ -1122,13 +1322,14 @@ RELATIONS:
 - TYPE: Parent
   VALUE: DO178-13
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/export/html/generators/source_file_coverage.py
 
 [REQUIREMENT]
 MID: 56ecfb19152e45b09c0e55de2d1d5f05
 UID: SDOC-SRS-36
 STATUS: Active
-TITLE: Generate source file traceability
+TITLE: Generate single source file coverage
 STATEMENT: >>>
 StrictDoc shall generate single file traceability information.
 <<<
@@ -1139,16 +1340,17 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
 - TYPE: File
+  FORMAT: Sourcecode
   VALUE: strictdoc/export/html/generators/source_file_view_generator.py
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 1acdd6ddf9d24dbaa320230402152226
 UID: SECTION-SRS-Export-import-formats
 TITLE: Export/import formats
 
-[SECTION]
+[[SECTION]]
 MID: ce1d174a4d794250931a5ba519583be6
 UID: SECTION-SRS-RST
 TITLE: RST
@@ -1207,9 +1409,9 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/export/rst/rst_to_html_fragment_writer.py
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: a906dfb776334b8985f778f0fe1b79e4
 UID: SECTION-SRS-ReqIF
 TITLE: ReqIF
@@ -1250,9 +1452,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-90
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 0ffda51372b641f6ba460bf5ac8b3627
 UID: SECTION-SRS-Excel
 TITLE: Excel and CSV
@@ -1291,16 +1493,16 @@ RELATIONS:
 - TYPE: File
   VALUE: tests/integration/features/excel/export/03_custom_fields_to_export/test.itest
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 53cfa6296eec45479544e6c5165d7fb9
 UID: SECTION-SRS-Command-line-interface
 TITLE: Command-line interface
 
-[SECTION]
+[[SECTION]]
 MID: 63373c3875404f1c820add84ea057c73
 TITLE: General CLI requirements
 
@@ -1325,14 +1527,14 @@ RELATIONS:
   FORMAT: Sourcecode
   VALUE: strictdoc/cli/cli_arg_parser.py
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 7c6a0efe76b84dcd842ef371796e787e
 UID: SECTION-SRS-Command-Manage
 TITLE: Command: Manage
 
-[SECTION]
+[[SECTION]]
 MID: bea76afe9bf241eaaf5984b54e00ff76
 UID: SECTION-SRS-Command-Auto-UID
 TITLE: Command: Auto UID
@@ -1349,13 +1551,13 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-6
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: a0ed7cdd06ec4f0ab6d3ba56cced8c7e
 TITLE: Python API
 
@@ -1380,9 +1582,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-87
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 590121ded2074757aa1720b4d8013426
 TITLE: Web server
 
@@ -1401,13 +1603,13 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-83
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 44eb09d0e5b542d5984d234167e6f337
 TITLE: User experience
 
-[SECTION]
+[[SECTION]]
 MID: 821c01118a9643a188a4ecc5b0cec6a5
 UID: SECTION-SSRS-Strict-mode-by-default
 TITLE: Strict mode by default
@@ -1424,11 +1626,11 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-78
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 40e7bd8aabdf4cb889e9d7b01b8729e6
 UID: SECTION-SRS-Configurability
 TITLE: Configurability
@@ -1472,9 +1674,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: DO178-8
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: bb14fb2c46f34cf1a82b417b57e95853
 UID: SECTION-SSRS-Performance
 TITLE: Performance
@@ -1582,14 +1784,14 @@ RELATIONS:
   FORMAT: Sourcecode
   VALUE: strictdoc/export/html/html_templates.py
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: de3a4de44f474784bf233ea7610eac6c
 UID: SECTION-SRS-Quality-requirements
 TITLE: Development process requirements
 
-[SECTION]
+[[SECTION]]
 MID: cbee3d3e8a9d440abaa58387c342602c
 TITLE: General process
 
@@ -1608,9 +1810,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-78
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 47cec130eb3d4583825355f2635e7011
 UID: SECTION-SRS-Requirements-engineering
 TITLE: Requirements engineering
@@ -1643,14 +1845,14 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-78
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: dfbaabc0529f4cc987358ae0563910e9
 UID: SECTION-SRS-Implementation-requirements
 TITLE: Implementation requirements
 
-[SECTION]
+[[SECTION]]
 MID: 5eb734a4b8944531aa75f0b71ef22d52
 UID: SECTION-SRS-Programming-languages
 TITLE: Programming languages
@@ -1670,9 +1872,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-69
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 131af6457a9f43299306e6dc9fce65a7
 UID: SECTION-SRS-Cross-platform-availability
 TITLE: Cross-platform availability
@@ -1713,11 +1915,11 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-67
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 852396c217184ba98a0d26b92f36fd04
 UID: SECTION-SRS-Implementation-constraints
 TITLE: Implementation constraints
@@ -1822,9 +2024,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-82
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: e4e5b9934e074cdb9567fa197db20a4a
 UID: SECTION-SRS-Coding-constraints
 TITLE: Coding constraints
@@ -1855,9 +2057,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-78
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 61e87567580045378d970b327d218cac
 UID: SECTION-SRS-Linting
 TITLE: Linting
@@ -1874,9 +2076,9 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-90
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 3029f97a1276499dbbd5d7c71691908e
 UID: SECTION-SRS-Static-analysis
 TITLE: Static analysis
@@ -1895,9 +2097,9 @@ RELATIONS:
 - TYPE: File
   VALUE: tasks.py
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 3aba8ca86d404ba9a063ce125489f35b
 UID: SECTION-SRS-Testing
 TITLE: Testing
@@ -1967,15 +2169,15 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-78
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 83bdb9731e78431cb48d584d279443b4
 TITLE: Code hosting and distribution
 
-[SECTION]
+[[SECTION]]
 MID: dbd186fae9624fd6af8aeb55edfaa43b
 UID: SECTION-SRS-Code-hosting
 TITLE: Code hosting
@@ -1994,7 +2196,7 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-82
 
-[/SECTION]
+[[/SECTION]]
 
 [REQUIREMENT]
 MID: bd949cbbe07c4cb29492ea0c8e5c1eec
@@ -2008,4 +2210,4 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-40
 
-[/SECTION]
+[[/SECTION]]

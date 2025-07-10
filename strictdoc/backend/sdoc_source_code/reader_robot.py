@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-142, scope=file)
+"""
+
 import sys
 from typing import Union
 
@@ -20,8 +24,8 @@ from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
     RangeMarkerType,
 )
+from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
-    LineMarker,
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (

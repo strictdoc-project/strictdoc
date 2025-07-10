@@ -5,3 +5,7 @@ features = [
 ]
 
 source_root_path = "source_root/"
+
+exclude_source_paths = [
+  "test.itest",
+]

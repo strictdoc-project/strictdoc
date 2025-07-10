@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-33, scope=file)
+"""
+
 from enum import Enum
 
 REGEX_REQ = r"(?!scope=)[A-Za-z][A-Za-z0-9_\/\.\\-]+"

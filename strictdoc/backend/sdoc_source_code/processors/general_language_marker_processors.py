@@ -1,11 +1,15 @@
+"""
+@relation(SDOC-SRS-33, scope=file)
+"""
+
 from typing import List, Optional, Tuple
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
-    LineMarker,
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (

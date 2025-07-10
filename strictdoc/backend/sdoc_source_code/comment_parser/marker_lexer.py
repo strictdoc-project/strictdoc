@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-34, SDOC-SRS-141, scope=file)
+"""
+
 from string import Template
 
 from lark import Lark, ParseTree, UnexpectedToken

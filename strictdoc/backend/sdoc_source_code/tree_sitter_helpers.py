@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-142, scope=file)
+"""
+
 from typing import Generator, Optional, Tuple, Union
 
 from tree_sitter import Node, Tree

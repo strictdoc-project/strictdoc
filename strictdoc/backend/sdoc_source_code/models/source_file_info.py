@@ -7,9 +7,9 @@ from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
-    LineMarker,
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode

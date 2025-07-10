@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-142, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import sys
 import traceback
@@ -11,8 +15,8 @@ from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
-    LineMarker,
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req

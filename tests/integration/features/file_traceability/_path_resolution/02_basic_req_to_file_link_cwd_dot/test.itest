@@ -1,4 +1,7 @@
-RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+# @relation(SDOC-SRS-145, scope=file)
+
+RUN: cd %S
+RUN: %strictdoc export . --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"

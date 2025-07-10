@@ -1,3 +1,5 @@
+// @relation(SDOC-SRS-35, scope=file)
+
 document.addEventListener("DOMContentLoaded", () => {
   const table = document.querySelector(".project_coverage");
   const tbody = table.querySelector("tbody");

@@ -3,12 +3,12 @@
 
 {% block head_css %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ view_object.render_static_url('project_coverage.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('source_coverage_screen.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
   {{ super() }}
-  <script src="{{ view_object.render_static_url('project_coverage.js') }}"></script>
+  <script src="{{ view_object.render_static_url('source_coverage_screen.js') }}"></script>
 {% endblock head_scripts %}
 
 {% block title %}

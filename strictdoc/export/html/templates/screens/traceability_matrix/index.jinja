@@ -4,14 +4,14 @@
 {% block head_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{ view_object.render_static_url('requirement-tree.css') }}"/>
-  <link rel="stylesheet" href="{{ view_object.render_static_url('traceability_matrix.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('traceability_matrix_screen.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
   {{ super() }}
   <script src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
   <script src="{{ view_object.render_static_url('pan_with_space.js') }}"></script>
-  <script src="{{ view_object.render_static_url('requirements-coverage.js') }}"></script>
+  <script src="{{ view_object.render_static_url('traceability_matrix_screen.js') }}"></script>
 {% endblock head_scripts %}
 
 {% block title %}

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-34, SDOC-SRS-141, scope=file)
+"""
+
 from strictdoc.backend.sdoc_source_code.comment_parser.marker_lexer import (
     MarkerLexer,
 )

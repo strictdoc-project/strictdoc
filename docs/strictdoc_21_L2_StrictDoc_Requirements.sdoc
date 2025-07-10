@@ -167,6 +167,26 @@ RELATIONS:
   VALUE: SDOC-SSS-75
 
 [REQUIREMENT]
+MID: abcced8724d743c1b9b1dcbe91a22863
+UID: SDOC-SRS-151
+STATUS: Active
+TITLE: Document configuration
+STATEMENT: >>>
+StrictDoc's data model shall support configuring the document options:
+
+- Enable/disable MID
+- Markup choice, e.g., RST, HTML, etc.
+- Levels (automatic or manual)
+- Node style
+- Default presentation view.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-53
+- TYPE: Parent
+  VALUE: SDOC-SSS-75
+
+[REQUIREMENT]
 MID: 63821c507d584cf985f05904710b9779
 UID: SDOC-SRS-99
 STATUS: Active
@@ -898,7 +918,7 @@ RELATIONS:
 [REQUIREMENT]
 MID: 956371b6a7824d0b91caa5603faeeae2
 UID: SDOC-SRS-120
-STATUS: Backlog
+STATUS: Active
 TITLE: Auto-completion for requirements UIDs
 STATEMENT: >>>
 StrictDoc's Document screen shall provide controls for automatic completion of requirements UIDs.

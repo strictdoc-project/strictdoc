@@ -1,5 +1,5 @@
 """
-@relation(SDOC-SRS-33, scope=file)
+@relation(SDOC-SRS-28, SDOC-SRS-33, scope=file)
 """
 
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-def"
@@ -11,7 +11,7 @@ from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocNodeIF
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.reference import FileReference, FileEntry
+from strictdoc.backend.sdoc.models.reference import FileEntry, FileReference
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     ForwardFunctionRangeMarker,

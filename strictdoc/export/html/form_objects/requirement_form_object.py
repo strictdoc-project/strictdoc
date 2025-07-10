@@ -14,13 +14,13 @@ from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
+    FileEntry,
+    FileEntryFormat,
     FileReference,
     ParentReqReference,
     Reference,
 )
 from strictdoc.backend.sdoc.models.type_system import (
-    FileEntry,
-    FileEntryFormat,
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,

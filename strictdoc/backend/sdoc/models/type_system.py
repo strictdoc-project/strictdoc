@@ -1,38 +1,8 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
-
-
-class RequirementFieldName:
-    MID = "MID"
-    UID = "UID"
-    PREFIX = "PREFIX"
-    LEVEL = "LEVEL"
-    STATUS = "STATUS"
-    TAGS = "TAGS"
-    TITLE = "TITLE"
-
-    # {STATEMENT, DESCRIPTION, CONTENT} are aliases.
-    # It is assumed that either field is provided for each node.
-    STATEMENT = "STATEMENT"
-    DESCRIPTION = "DESCRIPTION"
-    CONTENT = "CONTENT"
-
-    RATIONALE = "RATIONALE"
-    COMMENT = "COMMENT"
-
-
-RESERVED_NON_META_FIELDS = [
-    RequirementFieldName.TITLE,
-    RequirementFieldName.STATEMENT,
-    RequirementFieldName.DESCRIPTION,
-    RequirementFieldName.CONTENT,
-    RequirementFieldName.COMMENT,
-    RequirementFieldName.RATIONALE,
-    RequirementFieldName.LEVEL,
-]
 
 
 class RequirementFieldType:
@@ -47,60 +17,6 @@ class GrammarReferenceType:
     PARENT_REQ_REFERENCE = "ParentReqReference"
     CHILD_REQ_REFERENCE = "ChildReqReference"
     FILE_REFERENCE = "FileReference"
-
-
-@auto_described
-class FileEntry:
-    def __init__(
-        self,
-        parent,
-        g_file_format: Optional[str],
-        g_file_path: str,
-        g_line_range: Optional[str],
-        function: Optional[str],
-        clazz: Optional[str],
-    ):
-        self.parent = parent
-
-        # Default: FileEntryFormat.SOURCECODE  # noqa: ERA001
-        self.g_file_format: Optional[str] = g_file_format
-
-        # TODO: Might be worth to prohibit the use of Windows paths altogether.
-        self.g_file_path: str = g_file_path
-        file_path_posix = g_file_path.replace("\\", "/")
-        self.file_path_posix = file_path_posix
-
-        # The textX parser passes an empty string even if there is no LINE_RANGE
-        # provided in the SDoc source.
-        g_line_range = (
-            g_line_range
-            if g_line_range is not None and len(g_line_range) > 0
-            else None
-        )
-
-        self.g_line_range: Optional[str] = g_line_range
-        self.line_range: Optional[Tuple[int, int]] = None
-        if g_line_range is not None:
-            range_components_str = g_line_range.split(", ")
-            assert len(range_components_str) == 2, range_components_str
-            self.line_range = (
-                int(range_components_str[0]),
-                int(range_components_str[1]),
-            )
-
-        # The textX parser parses an optional element as an empty string. We
-        # make it to None ourselves.
-        self.function: Optional[str] = (
-            function if function is not None and len(function) > 0 else None
-        )
-        self.clazz: Optional[str] = (
-            clazz if clazz is not None and len(clazz) > 0 else None
-        )
-
-
-class FileEntryFormat:
-    SOURCECODE = "Sourcecode"
-    PYTHON = "Python"
 
 
 class ReferenceType:

@@ -13,6 +13,8 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import (
+    RESERVED_NON_META_FIELDS,
+    RequirementFieldName,
     SDocDocumentIF,
     SDocElementIF,
     SDocNodeIF,
@@ -24,9 +26,7 @@ from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
 from strictdoc.backend.sdoc.models.type_system import (
-    RESERVED_NON_META_FIELDS,
     ReferenceType,
-    RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast

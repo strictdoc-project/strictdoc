@@ -5,9 +5,41 @@
 from abc import ABC, abstractmethod
 from typing import Generator, List, Optional, Union
 
-from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.document_config import (
+    DocumentConfig,
+)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.mid import MID
+
+
+class RequirementFieldName:
+    MID = "MID"
+    UID = "UID"
+    PREFIX = "PREFIX"
+    LEVEL = "LEVEL"
+    STATUS = "STATUS"
+    TAGS = "TAGS"
+    TITLE = "TITLE"
+
+    # {STATEMENT, DESCRIPTION, CONTENT} are aliases.
+    # It is assumed that either field is provided for each node.
+    STATEMENT = "STATEMENT"
+    DESCRIPTION = "DESCRIPTION"
+    CONTENT = "CONTENT"
+
+    RATIONALE = "RATIONALE"
+    COMMENT = "COMMENT"
+
+
+RESERVED_NON_META_FIELDS = [
+    RequirementFieldName.TITLE,
+    RequirementFieldName.STATEMENT,
+    RequirementFieldName.DESCRIPTION,
+    RequirementFieldName.CONTENT,
+    RequirementFieldName.COMMENT,
+    RequirementFieldName.RATIONALE,
+    RequirementFieldName.LEVEL,
+]
 
 
 class SDocNodeFieldIF(ABC):

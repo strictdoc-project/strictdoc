@@ -11,9 +11,12 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.reference import FileReference
+from strictdoc.backend.sdoc.models.reference import (
+    FileEntry,
+    FileEntryFormat,
+    FileReference,
+)
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import FileEntry, FileEntryFormat
 from strictdoc.core.file_tree import File
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.paths import path_to_posix_path

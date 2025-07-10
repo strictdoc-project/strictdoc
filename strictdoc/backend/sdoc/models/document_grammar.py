@@ -2,9 +2,13 @@
 from collections import OrderedDict
 from typing import Dict, Generator, List, Optional, Set, Tuple, Union
 
-from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocGrammarIF
-from strictdoc.backend.sdoc.models.type_system import (
+from strictdoc.backend.sdoc.models.model import (
     RESERVED_NON_META_FIELDS,
+    RequirementFieldName,
+    SDocDocumentIF,
+    SDocGrammarIF,
+)
+from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
@@ -12,7 +16,6 @@ from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
-    RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.exception import StrictDocException

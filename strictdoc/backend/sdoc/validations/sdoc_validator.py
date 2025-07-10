@@ -10,13 +10,13 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     GrammarElement,
 )
 from strictdoc.backend.sdoc.models.document_view import DocumentView
+from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldTag,
-    RequirementFieldName,
 )
 from strictdoc.helpers.cast import assert_optional_cast
 

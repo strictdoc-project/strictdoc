@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-18, scope=file)
+"""
+
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import (
@@ -22,13 +26,13 @@ from strictdoc.backend.sdoc.models.node import (
 )
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
+    FileEntry,
     FileReference,
     ParentReqReference,
     Reference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
-    FileEntry,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-110, scope=file)
+"""
+
 from typing import List, Optional, Tuple
 
 from strictdoc.helpers.auto_described import auto_described

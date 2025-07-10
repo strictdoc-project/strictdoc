@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-55, scope=file)
+"""
+
 from collections import defaultdict
 from enum import Enum
 from typing import Dict, Iterator, List, Optional, Set, Tuple, Union

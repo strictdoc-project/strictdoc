@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-28, scope=file)
+"""
+
 # mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,union-attr"
 import datetime
 from copy import deepcopy

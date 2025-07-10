@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-51, scope=file)
+"""
+
 import os.path
 from subprocess import CompletedProcess, TimeoutExpired, run
 from typing import List, Tuple

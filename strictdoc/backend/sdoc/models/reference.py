@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-31, SDOC-SRS-101, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from typing import Optional
 

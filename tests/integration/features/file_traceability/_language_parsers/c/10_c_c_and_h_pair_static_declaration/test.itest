@@ -1,3 +1,5 @@
+# @relation(SDOC-SRS-146, SDOC-SRS-137, scope=file)
+
 REQUIRES: PYTHON_39_OR_HIGHER
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail

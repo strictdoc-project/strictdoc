@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-33, scope=file)
+"""
+
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-def"
 from copy import copy
 from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
@@ -15,10 +19,10 @@ from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
     RangeMarkerType,
 )
+from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardFileMarker,
     ForwardRangeMarker,
-    LineMarker,
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req

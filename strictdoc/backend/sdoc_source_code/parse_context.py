@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-33, scope=file)
+"""
+
 from typing import Any, Dict, List
 
 from strictdoc.backend.sdoc_source_code.models.range_marker import RangeMarker

@@ -1,3 +1,5 @@
+# @relation(SDOC-SRS-138, scope=file)
+
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 

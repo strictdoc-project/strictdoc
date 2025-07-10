@@ -1,3 +1,5 @@
+# @relation(SDOC-SRS-139, scope=file)
+
 REQUIRES: PYTHON_39_OR_HIGHER
 
 # This test ensures that the entire file marker is correctly displayed as

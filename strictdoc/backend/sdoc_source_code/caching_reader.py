@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-33, SDOC-SRS-142, scope=file)
+"""
+
 from typing import Optional, Union
 
 from strictdoc.backend.sdoc.pickle_cache import PickleCache

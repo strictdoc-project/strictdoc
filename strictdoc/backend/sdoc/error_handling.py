@@ -7,12 +7,14 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
-    GrammarElement,
-    GrammarElementField,
 )
 from strictdoc.backend.sdoc.models.document_view import (
     DocumentView,
     ViewElement,
+)
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElement,
+    GrammarElementField,
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,

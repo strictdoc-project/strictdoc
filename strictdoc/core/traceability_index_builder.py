@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import SDocDocumentFromFileIF
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -20,7 +21,6 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.backend.sdoc_source_code.caching_reader import (
     SourceFileTraceabilityCachingReader,

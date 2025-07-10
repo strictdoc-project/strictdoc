@@ -25,17 +25,17 @@ from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
+)
+from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
+    GrammarElementField,
+    RequirementFieldType,
 )
 from strictdoc.backend.sdoc.models.model import SDocNodeIF
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementField,
-    RequirementFieldType,
-)
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.analyzers.document_stats import DocumentTreeStats

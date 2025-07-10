@@ -7,8 +7,8 @@ from starlette.datastructures import FormData
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
-    GrammarElement,
 )
+from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.form_objects.rows.row_with_grammar_element_form_object import (
     RowWithGrammarElementFormObject,

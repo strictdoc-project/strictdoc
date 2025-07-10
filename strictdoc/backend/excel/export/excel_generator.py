@@ -12,13 +12,13 @@ from xlsxwriter.workbook import Workbook
 from xlsxwriter.worksheet import Worksheet
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
 from strictdoc.backend.sdoc.models.model import SDocElementIF
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.type_system import ReferenceType
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 

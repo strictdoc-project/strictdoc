@@ -1,9 +1,11 @@
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElementFieldString,
+)
 from strictdoc.backend.sdoc.models.node import SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
-from strictdoc.backend.sdoc.models.type_system import GrammarElementFieldString
 
 
 def test_01_empty_requirement_as_starting_point():

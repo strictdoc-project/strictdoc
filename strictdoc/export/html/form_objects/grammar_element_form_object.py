@@ -8,16 +8,16 @@ from starlette.datastructures import FormData
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
-    GrammarElement,
 )
-from strictdoc.backend.sdoc.models.model import RequirementFieldName
-from strictdoc.backend.sdoc.models.type_system import (
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElement,
     GrammarElementField,
     GrammarElementFieldString,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
 )
+from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.form_objects.form_object import (
     RowWithCustomFieldFormObject,

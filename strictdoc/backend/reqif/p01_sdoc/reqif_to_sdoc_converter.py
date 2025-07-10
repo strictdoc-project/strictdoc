@@ -24,7 +24,13 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
+)
+from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldString,
+    GrammarElementRelationParent,
 )
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
@@ -35,12 +41,6 @@ from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
-)
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldSingleChoice,
-    GrammarElementFieldString,
-    GrammarElementRelationParent,
 )
 from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.string import (

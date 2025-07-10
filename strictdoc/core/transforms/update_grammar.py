@@ -4,8 +4,8 @@ from typing import Dict, List
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
-    GrammarElement,
 )
+from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )

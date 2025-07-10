@@ -7,6 +7,10 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElementField,
+    RequirementFieldType,
+)
 from strictdoc.backend.sdoc.models.model import SDocElementIF
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
@@ -16,10 +20,6 @@ from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementField,
-    RequirementFieldType,
-)
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex

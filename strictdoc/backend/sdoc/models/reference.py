@@ -5,9 +5,7 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from typing import Optional, Tuple
 
-from strictdoc.backend.sdoc.models.type_system import (
-    ReferenceType,
-)
+from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.mid import MID
 

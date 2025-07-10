@@ -9,7 +9,10 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
+)
+from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
+    ReferenceType,
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import (
@@ -24,9 +27,6 @@ from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
     Reference,
-)
-from strictdoc.backend.sdoc.models.type_system import (
-    ReferenceType,
 )
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast

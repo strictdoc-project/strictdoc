@@ -23,12 +23,12 @@ from strictdoc.backend.sdoc.models.node import (
 )
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
+    FileEntry,
     FileReference,
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.models.type_system import (
-    FileEntry,
     GrammarElementFieldString,
     GrammarElementRelationChild,
     GrammarElementRelationFile,

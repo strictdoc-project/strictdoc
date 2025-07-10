@@ -3,8 +3,8 @@ from typing import List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.type_system import RequirementFieldName
 
 
 class SDocObjectFactory:

@@ -10,13 +10,13 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
     GrammarElement,
 )
+from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.backend.sdoc.models.type_system import (
     GrammarElementField,
     GrammarElementFieldString,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
-    RequirementFieldName,
 )
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.form_objects.form_object import (

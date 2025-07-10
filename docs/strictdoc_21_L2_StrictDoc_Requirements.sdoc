@@ -1473,15 +1473,6 @@ StrictDoc shall support exporting/importing requirements content from/to ReqIF f
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-58
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/backend/reqif/reqif_export.py
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/backend/reqif/reqif_import.py
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/backend/reqif/sdoc_reqif_fields.py
 
 [REQUIREMENT]
 MID: bb52b698d7a544aca420d606e4e51356
@@ -1524,6 +1515,24 @@ RELATIONS:
   VALUE: tests/integration/features/excel/export/20_excel_export_multiple_docs/test.itest
 
 [REQUIREMENT]
+MID: 97b587f66dda402dbd58768e2740742f
+UID: SDOC-SRS-152
+STATUS: Active
+TITLE: Import from Excel
+STATEMENT: >>>
+StrictDoc shall allow importing Excel documents to SDoc documents, one Excel sheet per document.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-60
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: strictdoc/backend/excel/export/excel_generator.py
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: tests/integration/features/excel/export/20_excel_export_multiple_docs/test.itest
+
+[REQUIREMENT]
 MID: 5aa75848972249d5bec8a40812b99d86
 UID: SDOC-SRS-134
 STATUS: Active
@@ -1534,8 +1543,6 @@ StrictDoc Excel export shall allow exporting SDoc documents to Excel with only s
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-60
-- TYPE: File
-  VALUE: strictdoc/backend/excel/export/excel_generator.py
 - TYPE: File
   VALUE: tests/integration/features/excel/export/03_custom_fields_to_export/test.itest
 

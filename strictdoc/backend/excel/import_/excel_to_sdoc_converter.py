@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-152, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import os
 from typing import List, NamedTuple, Optional, Tuple, Union

@@ -1,3 +1,8 @@
+"""
+@relation(SDOC-SRS-72, scope=file)
+"""
+
+
 class ReqIFProfile:
     P01_SDOC = "p01_sdoc"
 

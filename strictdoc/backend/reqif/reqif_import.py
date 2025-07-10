@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-72, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-def"
 import os.path
 from typing import List

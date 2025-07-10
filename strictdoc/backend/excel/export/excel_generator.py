@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-134, scope=file)
+"""
+
 # mypy: disable-error-code="arg-type,no-untyped-def,union-attr"
 import os
 from pathlib import Path

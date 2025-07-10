@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-72, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 import datetime
 import uuid

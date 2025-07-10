@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-72, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-def,union-attr,operator"
 from typing import Any, Dict, List, Optional, Tuple, Union
 

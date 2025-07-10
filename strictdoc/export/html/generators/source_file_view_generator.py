@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-36, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,operator"
 import os
 from pathlib import Path

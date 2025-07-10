@@ -1,4 +1,9 @@
-# mypy: disable-error-code="no-untyped-def"
+"""
+@relation(SDOC-SRS-53, scope=file)
+"""
+
+from markupsafe import Markup
+
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.generators.view_objects.project_tree_view_object import (
@@ -13,7 +18,7 @@ class DocumentTreeHTMLGenerator:
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
-    ):
+    ) -> Markup:
         assert isinstance(html_templates, HTMLTemplates)
 
         view_object = ProjectTreeViewObject(

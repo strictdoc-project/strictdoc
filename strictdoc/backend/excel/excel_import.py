@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-152, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-def"
 from strictdoc.backend.excel.import_.excel_to_sdoc_converter import (
     ExcelToSDocConverter,

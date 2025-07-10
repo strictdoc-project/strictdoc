@@ -12,7 +12,13 @@ from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
+)
+from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
+    GrammarElementField,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    RequirementFieldType,
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
@@ -23,12 +29,6 @@ from strictdoc.backend.sdoc.models.reference import (
     FileReference,
     ParentReqReference,
     Reference,
-)
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementField,
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldSingleChoice,
-    RequirementFieldType,
 )
 from strictdoc.core.constants import GraphLinkType
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES

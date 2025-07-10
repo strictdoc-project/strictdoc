@@ -15,7 +15,13 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
+)
+from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
+    GrammarElementFieldString,
+    GrammarElementRelationChild,
+    GrammarElementRelationFile,
+    GrammarElementRelationParent,
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
@@ -28,12 +34,6 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldString,
-    GrammarElementRelationChild,
-    GrammarElementRelationFile,
-    GrammarElementRelationParent,
-)
 from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
 
 

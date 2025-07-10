@@ -12,11 +12,23 @@ from strictdoc.backend.sdoc.models.document_config import (
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
-    GrammarElement,
 )
 from strictdoc.backend.sdoc.models.document_view import (
     DocumentView,
     ViewElement,
+    ViewElementField,
+    ViewElementHiddenTag,
+    ViewElementTags,
+)
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElement,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldString,
+    GrammarElementFieldTag,
+    GrammarElementRelationChild,
+    GrammarElementRelationFile,
+    GrammarElementRelationParent,
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
@@ -32,18 +44,6 @@ from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldSingleChoice,
-    GrammarElementFieldString,
-    GrammarElementFieldTag,
-    GrammarElementRelationChild,
-    GrammarElementRelationFile,
-    GrammarElementRelationParent,
-    ViewElementField,
-    ViewElementHiddenTag,
-    ViewElementTags,
-)
 
 SECTION_MODELS = [
     SDocSection,

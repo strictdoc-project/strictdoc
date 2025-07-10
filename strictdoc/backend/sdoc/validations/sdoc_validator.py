@@ -7,17 +7,17 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
-    GrammarElement,
 )
 from strictdoc.backend.sdoc.models.document_view import DocumentView
-from strictdoc.backend.sdoc.models.model import RequirementFieldName
-from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.type_system import (
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElement,
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldTag,
 )
+from strictdoc.backend.sdoc.models.model import RequirementFieldName
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.helpers.cast import assert_optional_cast
 
 MULTIPLE_CHOICE_FIELD_KW = r"[a-zA-Z0-9\/\-_ ]+"

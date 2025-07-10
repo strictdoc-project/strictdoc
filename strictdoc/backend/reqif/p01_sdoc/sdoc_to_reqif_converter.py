@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-72, scope=file)
+"""
+
 # mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 import datetime
 import uuid
@@ -36,6 +40,12 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
 )
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElementField,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldString,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -43,12 +53,6 @@ from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementField,
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldSingleChoice,
-    GrammarElementFieldString,
-)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.cast import assert_cast

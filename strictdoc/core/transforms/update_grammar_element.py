@@ -3,11 +3,11 @@ from collections import OrderedDict
 from typing import Dict, List, Optional, Set, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.document_grammar import (
+from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
+    GrammarElementField,
 )
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.type_system import GrammarElementField
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )

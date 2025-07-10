@@ -1,12 +1,32 @@
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from typing import List, Optional
 
-from strictdoc.backend.sdoc.models.type_system import (
-    ViewElementField,
-    ViewElementHiddenTag,
-    ViewElementTags,
-)
 from strictdoc.helpers.auto_described import auto_described
+
+
+@auto_described
+class ViewElementField:
+    def __init__(self, parent, name: str, placement: Optional[str]):
+        self.parent = parent
+        self.name: str = name
+        self.placement: Optional[str] = placement
+
+
+@auto_described
+class ViewElementTags:
+    def __init__(
+        self, parent, object_type: str, visible_fields: List[ViewElementField]
+    ):
+        self.parent = parent
+        self.object_type: str = object_type
+        self.visible_fields: List[ViewElementField] = visible_fields
+
+
+@auto_described
+class ViewElementHiddenTag:
+    def __init__(self, parent, hidden_tag: str):
+        self.parent = parent
+        self.hidden_tag: str = hidden_tag
 
 
 class NullViewElement:

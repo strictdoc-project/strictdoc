@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-152, scope=file)
+"""
+
 from enum import Enum
 from typing import List
 

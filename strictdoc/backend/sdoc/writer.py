@@ -11,6 +11,16 @@ from strictdoc.backend.sdoc.models.document_view import (
     DefaultViewElement,
     ViewElement,
 )
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldString,
+    GrammarElementFieldTag,
+    GrammarElementRelationChild,
+    GrammarElementRelationFile,
+    GrammarElementRelationParent,
+    RequirementFieldType,
+)
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
     SDocNode,
@@ -22,16 +32,6 @@ from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldSingleChoice,
-    GrammarElementFieldString,
-    GrammarElementFieldTag,
-    GrammarElementRelationChild,
-    GrammarElementRelationFile,
-    GrammarElementRelationParent,
-    RequirementFieldType,
-)
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig

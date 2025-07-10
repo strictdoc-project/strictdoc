@@ -8,9 +8,15 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
-    GrammarElement,
 )
 from strictdoc.backend.sdoc.models.document_view import DocumentView
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElement,
+    GrammarElementField,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldTag,
+)
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentFromFileIF,
     SDocDocumentIF,
@@ -18,12 +24,6 @@ from strictdoc.backend.sdoc.models.model import (
     SDocNodeIF,
 )
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.type_system import (
-    GrammarElementField,
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldSingleChoice,
-    GrammarElementFieldTag,
-)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast

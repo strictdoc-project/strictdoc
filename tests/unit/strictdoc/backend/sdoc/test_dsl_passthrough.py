@@ -2,6 +2,7 @@ import pytest
 from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
@@ -9,9 +10,6 @@ from strictdoc.backend.sdoc.models.reference import (
     FileReference,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc.models.type_system import (
-    ReferenceType,
-)
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.helpers.exception import StrictDocException

@@ -1,5 +1,5 @@
 from strictdoc import environment
-from strictdoc.backend.sdoc.models.type_system import (
+from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementRelationChild,
     GrammarElementRelationParent,
 )

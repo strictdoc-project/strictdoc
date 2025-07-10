@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-28, scope=file)
+"""
+
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-150, scope=file)
+"""
+
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.model import (

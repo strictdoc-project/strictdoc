@@ -247,6 +247,30 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-8
 
+[REQUIREMENT]
+MID: fa090bc6976c4275aadbf522da6b920b
+UID: SDOC-SRS-149
+STATUS: Active
+TITLE: Inline links
+STATEMENT: >>>
+StrictDoc shall support referencing any node by embedding a hyperlink within the text content of another node.
+<<<
+RATIONALE: >>>
+The inline links do not replace the relations between SDoc nodes. Instead, an inline link could be an easy way to refer from one textual node to a chapter or a document. A common use case is "See section ABC for more details".
+<<<
+
+[REQUIREMENT]
+MID: 54132bc6976c4275aadbf522da6b920b
+UID: SDOC-SRS-150
+STATUS: Active
+TITLE: Inline anchors
+STATEMENT: >>>
+StrictDoc shall support adding anchors within the text content of any node, such that these anchors can be referenced by inline links from other nodes.
+<<<
+RATIONALE: >>>
+Anchors allow authors to define precise reference points within SDoc node fields.
+<<<
+
 [[/SECTION]]
 
 [[SECTION]]
@@ -386,11 +410,11 @@ The StrictDoc grammar shall have at least the following fields activated by defa
 
 - UID
 - STATUS
-- LINKS (references to other requirements)
 - TITLE
 - STATEMENT
 - RATIONALE
-- COMMENT.
+- COMMENT
+- RELATIONS (references to other requirements)
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -470,11 +494,13 @@ UID: SDOC-SRS-27
 STATUS: Active
 TITLE: MathJAX
 STATEMENT: >>>
-StrictDoc's markup shall enable support integration with MathJax.
+StrictDoc's markup language shall support integration with MathJax.
 <<<
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-63
+- TYPE: File
+  VALUE: strictdoc/export/html/_static_extra/mathjax/tex-mml-chtml.js
 
 [REQUIREMENT]
 MID: 39f117b79cfa4a8485c458280b3d36ce

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-30, scope=file)
+"""
+
 import pytest
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-147, scope=file)
+"""
+
 # The tests in this file has strings with whitespace that must not be linted.
 # ruff: noqa: W291,W293
 import sys

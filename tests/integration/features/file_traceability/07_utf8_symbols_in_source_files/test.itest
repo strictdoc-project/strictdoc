@@ -1,4 +1,8 @@
+#
+# This test verifies that StrictDoc can parse source files that contain UTF-8 characters.
+#
 # @relation(SDOC-SRS-33, scope=file)
+#
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc

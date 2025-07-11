@@ -1,5 +1,8 @@
+#
 # This test verifies that a source file can be linked to a [[SECTION]] element.
+#
 # @relation(SDOC-SRS-33, scope=file)
+#
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Published: Hello world doc

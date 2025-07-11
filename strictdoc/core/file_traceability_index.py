@@ -25,7 +25,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
-from strictdoc.backend.sdoc_source_code.reader import (
+from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.constants import GraphLinkType

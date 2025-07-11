@@ -2,14 +2,12 @@
 @relation(SDOC-SRS-99, scope=file)
 """
 
-# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
-from strictdoc.backend.sdoc.models.document_grammar import (
-    DocumentGrammar,
-    GrammarElement,
-)
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
     SDocElementIF,

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
 import datetime
 import os
 import re
@@ -9,13 +9,14 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import toml
 
-from strictdoc import SDocRuntimeEnvironment, __version__
+from strictdoc import __version__
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.cli.cli_arg_parser import (
     ExportCommandConfig,
     ServerCommandConfig,
 )
+from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time

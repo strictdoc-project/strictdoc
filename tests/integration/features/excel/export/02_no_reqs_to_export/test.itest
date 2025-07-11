@@ -1,3 +1,5 @@
+# @relation(SDOC-SRS-74, scope=file)
+
 RUN: %strictdoc export --formats=excel --output-dir %T "%S/input.sdoc" | filecheck %s
 
 CHECK: No requirement with UID, nothing to export into excel

@@ -1,3 +1,5 @@
+# @relation(SDOC-SRS-74, scope=file)
+
 # Export only a subset of the fields
 RUN: %strictdoc export --formats=excel --fields=uid,owner --output-dir=Output "%S/input.sdoc"
 

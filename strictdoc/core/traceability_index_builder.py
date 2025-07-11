@@ -1,5 +1,5 @@
 """
-@relation(SDOC-SRS-28, scope=file)
+@relation(SDOC-SRS-28, SDOC-SRS-2, scope=file)
 """
 
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"

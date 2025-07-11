@@ -1,3 +1,5 @@
+# @relation(SDOC-SRS-74, scope=file)
+
 RUN: %strictdoc export --formats=excel --output-dir=Output %S
 
 RUN: %check_exists --file "%T/excel/input1.xlsx"

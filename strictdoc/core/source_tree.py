@@ -1,4 +1,7 @@
-# mypy: disable-error-code="no-untyped-def"
+"""
+@relation(SDOC-SRS-33, scope=file)
+"""
+
 import os
 from enum import Enum
 from typing import Dict, List, Sequence
@@ -57,12 +60,12 @@ class SourceFileType(Enum):
 class SourceFile:
     def __init__(
         self,
-        level,
-        full_path,
-        in_doctree_source_file_rel_path,
-        output_dir_full_path,
-        output_file_full_path,
-    ):
+        level: int,
+        full_path: str,
+        in_doctree_source_file_rel_path: str,
+        output_dir_full_path: str,
+        output_file_full_path: str,
+    ) -> None:
         assert isinstance(level, int)
         assert os.path.exists(full_path)
 
@@ -83,31 +86,31 @@ class SourceFile:
 
         self.is_referenced = False
 
-    def is_python_file(self):
+    def is_python_file(self) -> bool:
         return self.file_type == SourceFileType.PYTHON
 
-    def is_c_file(self):
+    def is_c_file(self) -> bool:
         return self.file_type == SourceFileType.C
 
-    def is_cpp_file(self):
+    def is_cpp_file(self) -> bool:
         return self.file_type == SourceFileType.CPP
 
-    def is_tex_file(self):
+    def is_tex_file(self) -> bool:
         return self.file_type == SourceFileType.TEX
 
-    def is_toml_file(self):
+    def is_toml_file(self) -> bool:
         return self.file_type == SourceFileType.TOML
 
-    def is_jinja_file(self):
+    def is_jinja_file(self) -> bool:
         return self.file_type == SourceFileType.JINJA
 
-    def is_javascript_file(self):
+    def is_javascript_file(self) -> bool:
         return self.file_type == SourceFileType.JAVASCRIPT
 
-    def is_yaml_file(self):
+    def is_yaml_file(self) -> bool:
         return self.file_type == SourceFileType.YAML
 
-    def is_rst_file(self):
+    def is_rst_file(self) -> bool:
         return self.file_type == SourceFileType.RST
 
 
@@ -118,10 +121,10 @@ class SourceTree:
         source_files: Sequence[SourceFile],
         map_file_to_source: Dict[File, SourceFile],
     ):
-        self.file_tree = file_tree
-        self.source_files = source_files
-        self.map_file_to_source = map_file_to_source
+        self.file_tree: FileTree = file_tree
+        self.source_files: Sequence[SourceFile] = source_files
+        self.map_file_to_source: Dict[File, SourceFile] = map_file_to_source
 
-    def get_source_for_file(self, file):
+    def get_source_for_file(self, file: File) -> SourceFile:
         assert isinstance(file, File)
         return self.map_file_to_source[file]

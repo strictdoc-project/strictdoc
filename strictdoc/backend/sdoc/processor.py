@@ -1,6 +1,6 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
 import os.path
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional, cast
 
 from textx import TextXSyntaxError, get_model
 
@@ -18,7 +18,10 @@ from strictdoc.backend.sdoc.models.node import (
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.exception import StrictDocException
-from strictdoc.helpers.textx import preserve_source_location_data
+from strictdoc.helpers.textx import (
+    SupportsTxPosition,
+    preserve_source_location_data,
+)
 
 
 class ParseContext:
@@ -75,7 +78,7 @@ class SDocParsingProcessor:
     def process_document_config(self, document_config: DocumentConfig) -> None:
         the_model = get_model(document_config)
         line_start, col_start = the_model._tx_parser.pos_to_linecol(
-            document_config._tx_position
+            cast(SupportsTxPosition, document_config)._tx_position
         )
         document_config.ng_line_start = line_start
         document_config.ng_col_start = col_start
@@ -98,7 +101,7 @@ class SDocParsingProcessor:
 
         the_model = get_model(document_view)
         line_start, col_start = the_model._tx_parser.pos_to_linecol(
-            document_view._tx_position
+            cast(SupportsTxPosition, document_view)._tx_position
         )
         document_view.ng_line_start = line_start
         document_view.ng_col_start = col_start
@@ -195,7 +198,7 @@ class SDocParsingProcessor:
         ):
             the_model = get_model(node_field)
             line_start, col_start = the_model._tx_parser.pos_to_linecol(
-                node_field._tx_position
+                cast(SupportsTxPosition, node_field)._tx_position
             )
             raise TextXSyntaxError(
                 "Node statement cannot be empty.",

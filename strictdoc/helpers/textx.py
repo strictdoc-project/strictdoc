@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Protocol
 
 from textx import get_model
 
@@ -28,3 +28,7 @@ def preserve_source_location_data(parsed_object: Any) -> None:
     parsed_object.ng_col_end = col_end
     parsed_object.ng_byte_start = parsed_object._tx_position
     parsed_object.ng_byte_end = parsed_object._tx_position_end
+
+
+class SupportsTxPosition(Protocol):
+    _tx_position: int

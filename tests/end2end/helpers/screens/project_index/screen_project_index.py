@@ -14,12 +14,12 @@ from tests.end2end.helpers.screens.project_index.form_import_reqif import (
 from tests.end2end.helpers.screens.project_statistics.project_statistics import (
     Screen_ProjectStatistics,
 )
-from tests.end2end.helpers.screens.requirements_coverage.screen_requirements_coverage import (
-    Screen_RequirementsCoverage,
-)
 from tests.end2end.helpers.screens.search.search import Screen_Search
 from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import (
     Screen_SourceCoverage,
+)
+from tests.end2end.helpers.screens.traceability_matrix.screen_requirements_coverage import (
+    Screen_RequirementsCoverage,
 )
 
 

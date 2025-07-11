@@ -4,7 +4,7 @@ from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
-from tests.end2end.helpers.screens.requirements_coverage.screen_requirements_coverage import (
+from tests.end2end.helpers.screens.traceability_matrix.screen_requirements_coverage import (
     Screen_RequirementsCoverage,
 )
 from tests.end2end.server import SDocTestServer

@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 
-class Screen_RequirementsCoverage:  # pylint: disable=invalid-name
+class Screen_RequirementsCoverage:
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case

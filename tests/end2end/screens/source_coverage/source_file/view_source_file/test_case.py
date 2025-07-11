@@ -7,6 +7,9 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import (
     Screen_SourceCoverage,
 )
+from tests.end2end.helpers.screens.source_file_coverage.screen_source_file_coverage import (
+    Screen_SourceFileCoverage,
+)
 from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
@@ -29,4 +32,9 @@ class Test(E2ECase):
             screen_source_coverage.assert_on_screen()
 
             screen_source_coverage.assert_contains_text("strictdoc.toml")
-            screen_source_coverage.assert_contains_text("test_case.py")
+            screen_source_coverage.assert_contains_text("file.py")
+
+            screen_source_file_coverage: Screen_SourceFileCoverage = (
+                screen_source_coverage.do_click_on_file("file.py")
+            )
+            screen_source_file_coverage.assert_on_screen()

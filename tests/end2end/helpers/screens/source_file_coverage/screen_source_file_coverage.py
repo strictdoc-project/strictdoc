@@ -1,19 +1,15 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
-from tests.end2end.helpers.screens.source_file_coverage.screen_source_file_coverage import (
-    Screen_SourceFileCoverage,
-)
 
-
-class Screen_SourceCoverage:
+class Screen_SourceFileCoverage:
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
 
     def assert_on_screen(self) -> None:
         self.test_case.assert_element(
-            '//body[@data-viewtype="coverage-tree"]',
+            '//body[@data-viewtype="source-file"]',
             by=By.XPATH,
         )
         self.test_case.wait_for_ready_state_complete()
@@ -28,7 +24,3 @@ class Screen_SourceCoverage:
     def assert_no_js_and_404_errors(self) -> None:
         self.test_case.assert_no_404_errors()
         self.test_case.assert_no_js_errors()
-
-    def do_click_on_file(self, file: str) -> Screen_SourceFileCoverage:
-        self.test_case.click_xpath(f'(//a[@title="{file}"])')
-        return Screen_SourceFileCoverage(self.test_case)

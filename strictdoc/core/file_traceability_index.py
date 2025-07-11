@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-28, SDOC-SRS-33, scope=file)
 """
 
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-def"
 from copy import copy
 from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
 
@@ -35,6 +35,7 @@ from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.google_test import convert_function_name_to_gtest_macro
 from strictdoc.helpers.ordered_set import OrderedSet
+from strictdoc.helpers.removeprefix import removeprefix
 
 
 class FileTraceabilityIndex:
@@ -239,7 +240,7 @@ class FileTraceabilityIndex:
 
                     functions: List[Function]
                     if test_function.startswith("#GTEST#"):
-                        test_function = test_function.removeprefix("#GTEST#")
+                        test_function = removeprefix(test_function, "#GTEST#")
                         possible_gtest_functions = (
                             convert_function_name_to_gtest_macro(test_function)
                         )

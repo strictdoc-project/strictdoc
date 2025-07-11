@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 import os.path
 from typing import Callable, Dict, List, Optional, cast
 
@@ -56,7 +56,6 @@ class SDocParsingProcessor:
                 enable_mid=document.config.enable_mid,
             )
         )
-        self.parse_context.document = document
         document.ng_including_document_reference = (
             self.parse_context.context_document_reference
         )
@@ -161,7 +160,6 @@ class SDocParsingProcessor:
             resolved_path_to_fragment_file
         )
 
-        self.parse_context.current_include_parent = document_from_file.parent
         self.parse_context.fragments_from_files.append(document_from_file)
 
     def process_requirement(self, requirement: SDocNode) -> None:

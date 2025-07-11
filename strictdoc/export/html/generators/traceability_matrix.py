@@ -1,5 +1,10 @@
-# mypy: disable-error-code="no-untyped-def,union-attr"
+"""
+@relation(SDOC-SRS-112, scope=file)
+"""
+
 from typing import Dict, Optional
+
+from markupsafe import Markup
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -20,7 +25,7 @@ class TraceabilityMatrixHTMLGenerator:
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
-    ):
+    ) -> Markup:
         assert isinstance(html_templates, HTMLTemplates)
 
         known_relations: Dict[str, Dict[Optional[str], bool]] = {
@@ -30,6 +35,8 @@ class TraceabilityMatrixHTMLGenerator:
         }
 
         discovered_relation_types = set()
+
+        assert traceability_index.document_tree is not None
 
         document_: SDocDocument
         for document_ in traceability_index.document_tree.document_list:

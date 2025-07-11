@@ -1,3 +1,5 @@
+// @relation(SDOC-SRS-112, scope=file)
+
 const SELECTOR = '[js-requirements-coverage]';
 
 const __log = (topic, ...payload) => {

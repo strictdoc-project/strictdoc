@@ -1,5 +1,10 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+"""
+@relation(SDOC-SRS-35, scope=file)
+"""
+
 from typing import Optional
+
+from markupsafe import Markup
 
 from strictdoc import __version__
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
@@ -18,7 +23,7 @@ class SourceCoverageViewObject:
         *,
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
-    ):
+    ) -> None:
         self.traceability_index: TraceabilityIndex = traceability_index
         self.project_config: ProjectConfig = project_config
         self.link_renderer: LinkRenderer = LinkRenderer(
@@ -28,15 +33,16 @@ class SourceCoverageViewObject:
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
 
-    def render_screen(self, jinja_environment: JinjaEnvironment):
+    def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
             "screens/source_file_coverage/index.jinja", view_object=self
         )
 
-    def render_static_url(self, url: str):
+    def render_static_url(self, url: str) -> str:
         return self.link_renderer.render_static_url(url)
 
-    def render_url(self, url: str):
+    def render_url(self, url: str) -> str:
+        # FIXME: Switch to Markup(...).
         return self.link_renderer.render_url(url)
 
     def get_file_stats_lines_total(self, source_file: SourceFile) -> str:
@@ -133,7 +139,7 @@ class SourceFileCoverageHTMLGenerator:
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
-    ):
+    ) -> Markup:
         view_object = SourceCoverageViewObject(
             traceability_index=traceability_index,
             project_config=project_config,

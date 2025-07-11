@@ -1,6 +1,6 @@
 # mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 import html
-from typing import Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -24,7 +24,7 @@ class LinkRenderer:
             if len(root_path) > 0
             else f"{static_path}"
         )
-        self.local_anchor_cache: Dict[str, str] = {}
+        self.local_anchor_cache: Dict[Any, str] = {}
         self.req_link_cache: Dict[
             Tuple[DocumentType, int],
             Dict[Union[SDocDocument, SDocNode, SDocSection, Anchor], str],
@@ -46,13 +46,15 @@ class LinkRenderer:
         static_url = "/" + self.static_path + "/" + url
         return static_url
 
-    def render_local_anchor(self, node) -> str:
+    def render_local_anchor(
+        self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]
+    ) -> str:
         if node in self.local_anchor_cache:
             return self.local_anchor_cache[node]
         if isinstance(node, Anchor):
             return f"{self._string_to_link(node.value)}"
 
-        local_anchor: str = ""
+        local_anchor: str
         if node.reserved_uid is not None and len(node.reserved_uid) > 0:
             # UID is unique enough.
             local_anchor = self._string_to_link(node.reserved_uid)
@@ -76,7 +78,7 @@ class LinkRenderer:
                     # TODO: This is not reliable
                     local_anchor = str(id(node))
             else:
-                raise NotImplementedError
+                raise NotImplementedError(node)
         self.local_anchor_cache[node] = local_anchor
         return local_anchor
 

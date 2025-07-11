@@ -1,5 +1,5 @@
 {%- assert
-    requirement.__class__.__name__ == "SDocNode",
+    requirement.__class__.__name__ in ("SDocNode", "SDocCompositeNode"),
     "Expected requirement"
 -%}
 {%- assert

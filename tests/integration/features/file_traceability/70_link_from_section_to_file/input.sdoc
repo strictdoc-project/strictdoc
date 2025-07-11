@@ -1,0 +1,39 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: File
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
+[[SECTION]]
+UID: SECT-1
+TITLE: Sample section
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement Title
+STATEMENT: Requirement Statement
+
+[[/SECTION]]

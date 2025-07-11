@@ -1,0 +1,81 @@
+[DOCUMENT]
+TITLE: Hello math! 
+
+[TEXT]
+STATEMENT: >>>
+When the ``MATHJAX`` feature is enabled, we support the role for inline math.
+Use like this:
+
+.. code-block ::
+
+    Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
+
+
+Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
+
+<<<
+
+[TEXT]
+STATEMENT: >>>
+When the ``MATHJAX`` feature is enabled, we support also the math directive. 
+Use like this:
+
+.. code-block ::
+
+  .. math::
+
+     (a + b)^2 = a^2 + 2ab + b^2
+
+     (a - b)^2 = a^2 - 2ab + b^2
+
+.. math::
+
+   (a + b)^2 = a^2 + 2ab + b^2
+
+   (a - b)^2 = a^2 - 2ab + b^2
+<<<
+
+[TEXT]
+STATEMENT: >>>
+Normally, equations are not numbered. If you want your equation to get a number, use 
+the label option. When given, it selects a label for the equation, by which it can be 
+cross-referenced, and causes an equation number to be issued. 
+
+.. code-block ::
+  
+  .. math:: e^{i\pi} + 1 = 0
+     :label: euler
+  
+
+
+
+.. math:: e^{i\pi} + 1 = 0
+   :label: euler
+
+When you want to cross-reference, use this syntax:
+
+.. code-block ::
+
+  Euler's identity, equation :eq:`euler`, was elected one of the most
+  beautiful mathematical formulas.
+
+
+Euler's identity, equation :eq:`euler`, was elected one of the most
+beautiful mathematical formulas.
+
+<<<
+
+[TEXT]
+STATEMENT: >>>
+There is also an option ``nowrap`` that prevents any wrapping of the given math 
+in a math environment. When you give this option, you must make sure yourself 
+that the math is properly set up. For example:
+
+.. math::
+   :nowrap:
+
+   \begin{eqnarray}
+      y    & = & ax^2 + bx + c \\
+      f(x) & = & x^2 + 2xy + y^2
+   \end{eqnarray}
+<<<

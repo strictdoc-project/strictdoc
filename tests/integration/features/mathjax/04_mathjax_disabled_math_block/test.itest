@@ -1,0 +1,10 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Hello math!
+
+RUN: %check_exists --invert --file "%T/html/_static/mathjax/tex-mml-chtml.js"
+RUN: %check_exists --invert --file "%T/html/_static/mathjax/output/chtml/fonts/tex.js"
+
+RUN: %cat %T/html/04_mathjax_disabled_math_block/input.html | filecheck %s --check-prefix CHECK-HTML
+
+CHECK-HTML: <span class="formula"><i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> = <i>c</i><sup>2</sup></span>.</p>
+CHECK-HTML: (<i>a</i> + <i>b</i>)<sup>2</sup> = <i>a</i><sup>2</sup> + 2<i>ab</i> + <i>b</i><sup>2</sup>

@@ -43,6 +43,16 @@
 
   {%- if view_object.project_config.is_activated_mathjax() -%}
   <script id="MathJax-script" async src="{{ view_object.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
+  <script>
+  // This EventListener is needed to re-typeset the MathJax expressions (after saving)...
+  document.addEventListener("turbo:before-stream-render", (event) => {
+    if (window.MathJax?.typesetPromise) {
+      requestAnimationFrame(() => {
+        MathJax.typesetPromise().catch(console.error);
+      });
+    }
+  });
+  </script>
   {%- endif -%}
   {%- if view_object.project_config.is_activated_rapidoc() -%}
   <script src="{{ view_object.render_static_url('rapidoc/rapidoc-min.js') }}"></script>

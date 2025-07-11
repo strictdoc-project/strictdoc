@@ -13,8 +13,13 @@ from docutils.utils import SystemMessage
 from markupsafe import Markup
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.export.rst.directives.raw_html_role import raw_html_role
+from strictdoc.export.rst.directives.sphinx_style_math import (
+    MathDirective,
+    eq_role,
+    math_role,
+)
 from strictdoc.export.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
 )
@@ -63,6 +68,11 @@ class RstToHtmlFragmentWriter:
         else:
             self.source_path = "<string>"
         self.context_document: Optional[SDocDocument] = context_document
+
+        if project_config.is_feature_activated(ProjectFeature.MATHJAX):
+            directives.register_directive("math", MathDirective)
+            roles.register_canonical_role("math", math_role)
+            roles.register_canonical_role("eq", eq_role)
 
     def write(self, rst_fragment: str, use_cache: bool = True) -> Markup:
         assert isinstance(rst_fragment, str), rst_fragment

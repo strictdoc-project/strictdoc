@@ -1,0 +1,35 @@
+#
+# This test verifies that a source file can be linked to a [[SECTION]] element,
+# which is located in an included document.
+#
+# @relation(SDOC-SRS-33, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/file.py.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/index.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#SECT-1#1#12">
+CHECK-HTML: file.py, <i>lines: 1-12</i>, entire file
+
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#SECT-1#5#12">
+CHECK-HTML: file.py, <i>lines: 5-12</i>, function hello_world()
+
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#SECT-1#10#12">
+CHECK-HTML: file.py, <i>lines: 10-12</i>, range
+
+RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+
+# Left/aside panel: The requirement cell has a link that correctly points to the document file.
+CHECK-SOURCE-FILE: href="../80_link_from_section_to_file_from_included_document/test.html#SECT-1"
+CHECK-SOURCE-FILE: ../_source_files/file.py.html#SECT-1#1#12
+
+# Central panel.
+CHECK-SOURCE-FILE: "../_source_files/file.py.html##1#12"
+CHECK-SOURCE-FILE: 1 - 12 | entire file
+CHECK-SOURCE-FILE: "../_source_files/file.py.html##5#12"
+CHECK-SOURCE-FILE: 5 - 12 | function hello_world()
+CHECK-SOURCE-FILE: "../_source_files/file.py.html##10#12"
+CHECK-SOURCE-FILE: 10 - 12 | range

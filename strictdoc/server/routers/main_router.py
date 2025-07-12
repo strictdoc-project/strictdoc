@@ -123,7 +123,6 @@ from strictdoc.helpers.file_modification_time import (
     get_file_modification_time,
     set_file_modification_time,
 )
-from strictdoc.helpers.file_system import get_etag
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.path_filter import PathFilter
@@ -134,6 +133,7 @@ from strictdoc.helpers.string import (
 )
 from strictdoc.helpers.timing import measure_performance
 from strictdoc.server.error_object import ErrorObject
+from strictdoc.server.helpers.http import request_is_for_non_modified_file
 
 HTTP_STATUS_PRECONDITION_FAILED = 412
 HTTP_STATUS_GATEWAY_TIMEOUT = 504
@@ -2649,7 +2649,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     project_config,
                     [(path_to_output_html, path_to_output_pdf)],
                 )
-            except TimeoutError:
+            except TimeoutError:  # pragma: no cover
                 return Response(
                     content="HTML2PDF timeout error.",
                     status_code=HTTP_STATUS_GATEWAY_TIMEOUT,
@@ -2984,22 +2984,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             ):
                 must_generate_document = True
 
-        if not must_generate_document:
-            if "if-none-match" in request.headers:
-                header_etag = request.headers["if-none-match"]
-                # FIXME: We have copied the Etag calculation procedure from
-                # Starlette's server code. One day this copy may diverge if
-                # Starlette decides to implement something else.
-                # In that case, the risk is that the 200/304 caching will stop
-                # working but such a risk seems acceptable.
-                # FIXME: Known issue: Safari does not send If-Modified-Since,
-                # so we never reach this branch with Safari. Googling reveals
-                # that Safari's behavior is special, and none of the suggested
-                # fixes worked and/or seemed portable.
-                file_etag = get_etag(full_path_to_document)
-                if header_etag == file_etag:
-                    return Response(status_code=304)
-
+        if not must_generate_document and request_is_for_non_modified_file(
+            request, full_path_to_document
+        ):
+            return Response(status_code=304)
         else:
             if document_relative_path.relative_path.startswith("_source_files"):
                 # FIXME: We could be more specific here and only generate the
@@ -3149,16 +3137,8 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 media_type=content_type,
             )
 
-        if "if-none-match" in request.headers:
-            header_etag = request.headers["if-none-match"]
-            # FIXME: We have copied the Etag calculation procedure from
-            # Starlette's server code. One day this copy may diverge if
-            # Starlette decides to implement something else.
-            # In that case, the risk is that the 200/304 caching will stop
-            # working but such a risk seems acceptable.
-            file_etag = get_etag(static_file)
-            if header_etag == file_etag:
-                return Response(status_code=304)
+        if request_is_for_non_modified_file(request, static_file):
+            return Response(status_code=304)
 
         response = FileResponse(static_file, media_type=content_type)
         return response

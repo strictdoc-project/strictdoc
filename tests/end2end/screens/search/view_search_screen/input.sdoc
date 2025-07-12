@@ -1,6 +1,9 @@
 [DOCUMENT]
 TITLE: Test document
 
+[[SECTION]]
+TITLE: New section title
+
 [SECTION]
 TITLE: Section title
 
@@ -9,3 +12,5 @@ TITLE: Requirement title
 STATEMENT: Requirement statement.
 
 [/SECTION]
+
+[[/SECTION]]

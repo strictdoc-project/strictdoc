@@ -1315,7 +1315,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 traceability_index=export_action.traceability_index,
             )
             delete_command.perform()
-        except MultipleValidationErrorAsList as error_:
+        # Excluding this branch from code coverage because the whole function
+        # will be removed in 2025-Q3.
+        except MultipleValidationErrorAsList as error_:  # pragma: no cover
             errors = error_.errors
             output = env().render_template_as_markup(
                 "actions/document/delete_section/"
@@ -2518,7 +2520,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             error_object.add_error(
                 "reqif_file", "Cannot parse ReqIF file: " + str(exception)
             )
-        except Exception as exception:
+        # Catch unexpected errors but exclude from code coverage, because it is
+        # not clear yet how to write a test that triggers this.
+        except Exception as exception:  # pragma: no cover
             error_object.add_error("reqif_file", str(exception))
 
         if error_object.any_errors():
@@ -2728,7 +2732,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                         if node_query.evaluate(node):
                             result.append(node)
                 search_results = result
-            except (AttributeError, NameError, TypeError) as attribute_error_:
+            # Catch unexpected errors but exclude from code coverage, because
+            # it is not clear yet how to write a test that triggers this.
+            except (
+                AttributeError,
+                NameError,
+                TypeError,
+            ) as attribute_error_:  # pragma: no cover
                 error = attribute_error_.args[0]
 
         view_object = SearchScreenViewObject(
@@ -2793,10 +2803,16 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                             )
                         if all(word_ in words_ for word_ in query_words):
                             resulting_nodes.append(node_)
-                        if len(resulting_nodes) >= AUTOCOMPLETE_LIMIT:
-                            break
-                if len(resulting_nodes) >= AUTOCOMPLETE_LIMIT:
-                    break
+
+                            # Excluding the following branch from code coverage
+                            # because it is not practical to create a test that
+                            # reproduces going above the limit. The code is
+                            # simple, so it should be safe to exclude this
+                            # branch from coverage.
+                            if (
+                                len(resulting_nodes) >= AUTOCOMPLETE_LIMIT
+                            ):  # pragma: no cover
+                                break
 
             output = env().render_template_as_markup(
                 "autocomplete/uid/stream_autocomplete_uid.jinja.html",

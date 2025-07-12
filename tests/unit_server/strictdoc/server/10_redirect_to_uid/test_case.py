@@ -33,8 +33,8 @@ def test_redirect_to_existing_and_non_existing_uid(project_config: ProjectConfig
             project_config=project_config
         )
     )
-    response = client.get("/UID/REQ-1", allow_redirects=False)
+    response = client.get("/UID/REQ-1", follow_redirects=False)
     assert response.status_code == 302
 
-    response = client.get("/UID/MID_THAT_DOES_NOT_EXIST", allow_redirects=False)
+    response = client.get("/UID/MID_THAT_DOES_NOT_EXIST", follow_redirects=False)
     assert response.status_code == 404

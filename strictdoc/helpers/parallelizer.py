@@ -72,7 +72,7 @@ class MultiprocessingParallelizer(Parallelizer):
             #
             process_number: int = multiprocessing.cpu_count()
 
-            if environment.is_github_ci_windows():
+            if environment.is_github_ci_windows():  # pragma: no cover
                 fixed_process_number = 2
                 print(  # noqa: T201
                     f"Parallelizer: "
@@ -190,7 +190,7 @@ class MultiprocessingParallelizer(Parallelizer):
     ) -> None:
         register_code_coverage_hook()
 
-        def close_queues() -> None:
+        def close_queues() -> None:  # pragma: no cover
             # It is important that these queue methods are called otherwise the
             # process can get stuck without termination on Windows. This issue
             # caused many flaky test runs on GitHub CI Actions.
@@ -215,7 +215,7 @@ class MultiprocessingParallelizer(Parallelizer):
                 content_idx, content, processing_func = item
                 result = processing_func(content)
                 output_queue.put((content_idx, result))
-            except Exception as exception_:
+            except Exception as exception_:  # pragma: no cover
                 output_queue.put((content_idx, None))
                 if not isinstance(
                     exception_, KeyboardInterrupt

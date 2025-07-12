@@ -32,10 +32,13 @@ class Test(E2ECase):
                 screen_search.do_click_on_search_requirements()
             )
             screen_search_results.assert_text("Requirement statement.")
+            screen_search_results.assert_no_text("Section title")
             self.go_back()
 
             screen_search_results = screen_search.do_click_on_search_sections()
             screen_search_results.assert_text("Section title")
+            screen_search_results.assert_text("New section title")
+            screen_search_results.assert_no_text("Requirement statement.")
             self.go_back()
 
             screen_search_results = (

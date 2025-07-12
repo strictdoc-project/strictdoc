@@ -27,11 +27,14 @@ def project_config():
     project_config.integrate_server_config(server_config)
     return project_config
 
-def test_get_non_existing_document(project_config: ProjectConfig):
+def test_redirect_to_existing_and_non_existing_uid(project_config: ProjectConfig):
     client = TestClient(
         create_app(
             project_config=project_config
         )
     )
-    response = client.get("/does_not_exist/sample.html")
+    response = client.get("/UID/REQ-1", allow_redirects=False)
+    assert response.status_code == 302
+
+    response = client.get("/UID/MID_THAT_DOES_NOT_EXIST", allow_redirects=False)
     assert response.status_code == 404

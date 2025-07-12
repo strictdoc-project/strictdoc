@@ -46,6 +46,24 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: aa45a90bad3f4273ab46dade039ef4c6
+TITLE: 0.9.4 (2025-07-12)
+
+[TEXT]
+MID: a25dd134646e462ca09e850481bccb2b
+STATEMENT: >>>
+This release contains two enhancements:
+
+- `rst: support for sphinx-style math syntax #2367 <https://github.com/strictdoc-project/strictdoc/pull/2367>`_
+  This PR adds support for the Sphinx-style ``.. math::`` directive and the ``:math:`` role for inline formulas in StrictDoc. These formulas are rendered by MathJax when it is enabled as a feature. [@thseiler]
+
+- `tests/integration: connecting source file to [[SECTION]] in included document #2366 <https://github.com/strictdoc-project/strictdoc/pull/2366>`_
+  Previously, there was no explicit integration test verifying the link between a source file and a ``SECTION`` element. This feature was requested by a user. During implementation, it was discovered that an outdated assertion had to be removed to enable rendering of a ``SECTION`` that links to a source file.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: eca2ad204c8246a8b0f29a5eb8d7f799
 TITLE: 0.9.3 (2025-07-03)
 

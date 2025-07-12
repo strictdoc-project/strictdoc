@@ -161,22 +161,22 @@ class TraceabilityIndex:
             )
         )
 
-    def get_parent_relations_with_roles(self, requirement: SDocNode):
-        assert isinstance(requirement, SDocNode)
-        if requirement.reserved_uid is None:
-            return
+    def get_parent_relations_with_roles(
+        self, node: SDocNode
+    ) -> List[Tuple[SDocNode, Optional[str]]]:
+        assert isinstance(node, SDocNode)
 
         return list(
             self.graph_database.get_link_values_with_edges(
                 link_type=GraphLinkType.NODE_TO_PARENT_NODES,
-                lhs_node=requirement,
+                lhs_node=node,
                 edge=ALL_EDGES,
             )
         )
 
     def get_parent_relations_with_role(
         self, requirement: SDocNode, role: Optional[str]
-    ) -> List[Any]:  # FIXME: Make Any->SDocNode.
+    ) -> List[Tuple[SDocNode, Optional[str]]]:
         assert isinstance(requirement, SDocNode)
         if requirement.reserved_uid is None:
             return []
@@ -191,10 +191,8 @@ class TraceabilityIndex:
 
     def get_child_relations_with_roles(
         self, requirement: SDocNode
-    ) -> List[Any]:  # FIXME: Make Any->SDocNode.
+    ) -> List[Tuple[SDocNode, Optional[str]]]:
         assert isinstance(requirement, SDocNode)
-        if requirement.reserved_uid is None:
-            return []
 
         return list(
             self.graph_database.get_link_values_with_edges(
@@ -206,7 +204,7 @@ class TraceabilityIndex:
 
     def get_child_relations_with_role(
         self, requirement: SDocNode, role: Optional[str]
-    ) -> List[Any]:  # FIXME: Make Any->SDocNode
+    ) -> List[Tuple[SDocNode, Optional[str]]]:
         assert isinstance(requirement, SDocNode)
         if requirement.reserved_uid is None:
             return []
@@ -993,7 +991,10 @@ class TraceabilityIndex:
                     f"with incoming relations from:\n{nodes_list_message}."
                 )
 
-    def validate_section_can_remove_uid(self, *, section: SDocSection):
+    # FIXME: This function will be removed in 2025-Q3.
+    def validate_section_can_remove_uid(
+        self, *, section: SDocSection
+    ):  # pragma: no cover
         section_incoming_links: Optional[List[InlineLink]] = (
             self.get_incoming_links(section)
         )

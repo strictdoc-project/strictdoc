@@ -191,7 +191,8 @@ def main() -> None:
     parallelizer = Parallelizer.create(enable_parallelization)
     try:
         _main(parallelizer)
-    except StrictDocException as exception:
+    # FIXME: Rework this to general exception handling.
+    except (StrictDocException, SyntaxError, ValueError) as exception:
         print(f"error: {exception.args[0]}")  # noqa: T201
         sys.exit(1)
     finally:

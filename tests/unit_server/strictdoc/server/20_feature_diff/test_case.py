@@ -5,23 +5,25 @@ from fastapi.testclient import TestClient
 
 from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
-from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.server.app import create_app
 
 PATH_TO_THIS_TEST_FOLDER = os.path.dirname(os.path.abspath(__file__))
-
+PATH_TO_CONFIG = os.path.join(PATH_TO_THIS_TEST_FOLDER, "strictdoc.toml")
+assert os.path.exists(PATH_TO_CONFIG)
 
 @pytest.fixture(scope="module")
 def project_config():
     server_config = ServerCommandConfig(
         input_path=PATH_TO_THIS_TEST_FOLDER,
         output_path=os.path.join(PATH_TO_THIS_TEST_FOLDER, "output"),
-        config_path=None,
+        config_path=PATH_TO_CONFIG,
         reload=False,
         host="127.0.0.1",
         port=8001,
     )
-    project_config: ProjectConfig = ProjectConfig.default_config(
+    project_config: ProjectConfig = ProjectConfigLoader.load_from_path_or_get_default(
+        path_to_config=PATH_TO_CONFIG,
         environment=environment
     )
     project_config.integrate_server_config(server_config)
@@ -33,23 +35,8 @@ def test(project_config: ProjectConfig):
             project_config=project_config
         )
     )
-    response = client.get("/traceability_matrix.html")
-    assert response.status_code == 412
-
-    response = client.get("/source_coverage.html")
-    assert response.status_code == 412
-
-    response = client.get("/project_statistics.html")
-    assert response.status_code == 412
-
-    response = client.get("/some_document-PDF.html")
-    assert response.status_code == 412
-
-    response = client.get("/some_document.standalone.html")
-    assert response.status_code == 412
-
-    response = client.get("/export_html2pdf/NOT_RELEVANT")
-    assert response.status_code == 412
+    response = client.get("/diff?tab=foo")
+    assert response.status_code == 400
 
     response = client.get("/diff")
-    assert response.status_code == 412
+    assert response.status_code == 200

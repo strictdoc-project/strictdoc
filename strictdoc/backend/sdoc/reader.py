@@ -1,12 +1,8 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
-import sys
-import traceback
 from copy import copy
-from typing import Any, Tuple
+from typing import Any, Optional, Tuple
 
-from textx import metamodel_from_str
+from textx import TextXSemanticError, TextXSyntaxError, metamodel_from_str
 
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -33,7 +29,11 @@ class SDReader:
     )
 
     @staticmethod
-    def _read(input_string, file_path=None, migrate_sections: bool = False):
+    def _read(
+        input_string: str,
+        file_path: Optional[str] = None,
+        migrate_sections: bool = False,
+    ) -> Tuple[SDocDocument, ParseContext]:
         parse_context = ParseContext(
             path_to_sdoc_file=file_path, migrate_sections=migrate_sections
         )
@@ -42,9 +42,17 @@ class SDReader:
             processor.get_default_processors()
         )
 
-        document: SDocDocument = SDReader.meta_model.model_from_str(
-            input_string, file_name=file_path
-        )
+        try:
+            document: SDocDocument = SDReader.meta_model.model_from_str(
+                input_string, file_name=file_path
+            )
+        except (TextXSyntaxError, TextXSemanticError) as syntax_error_:
+            raise StrictDocException(
+                f"Could not parse file: "
+                f"{file_path}. "
+                f"Error: {syntax_error_.__class__.__name__}: {syntax_error_}"
+            ) from syntax_error_
+
         parse_context.document_reference.set_document(document)
         document.ng_has_requirements = parse_context.document_has_requirements
 
@@ -52,7 +60,9 @@ class SDReader:
 
     @staticmethod
     def read(
-        input_string, file_path=None, migrate_sections: bool = False
+        input_string: str,
+        file_path: Optional[str] = None,
+        migrate_sections: bool = False,
     ) -> SDocDocument:
         document, _ = SDReader.read_with_parse_context(
             input_string, file_path, migrate_sections=migrate_sections
@@ -61,7 +71,9 @@ class SDReader:
 
     @staticmethod
     def read_with_parse_context(
-        input_string, file_path=None, migrate_sections: bool = False
+        input_string: str,
+        file_path: Optional[str] = None,
+        migrate_sections: bool = False,
     ) -> Tuple[SDocDocument, ParseContext]:
         document, parse_context = SDReader._read(input_string, file_path)
 
@@ -89,41 +101,23 @@ class SDReader:
         with open(file_path, encoding="utf8") as file:
             sdoc_content = file.read()
 
-        try:
-            sdoc, parse_context = self.read_with_parse_context(
-                sdoc_content,
-                file_path=file_path,
-                migrate_sections=project_config.is_new_section_behavior(),
-            )
+        sdoc, parse_context = self.read_with_parse_context(
+            sdoc_content,
+            file_path=file_path,
+            migrate_sections=project_config.is_new_section_behavior(),
+        )
 
-            sdoc.fragments_from_files = parse_context.fragments_from_files
+        sdoc.fragments_from_files = parse_context.fragments_from_files
 
-            # HACK:
-            # ProcessPoolExecutor doesn't work because of non-picklable parts
-            # of textx. The offending fields are stripped down because they
-            # are not used anyway.
-            drop_textx_meta(sdoc)
+        # HACK:
+        # ProcessPoolExecutor doesn't work because of non-picklable parts
+        # of textx. The offending fields are stripped down because they
+        # are not used anyway.
+        drop_textx_meta(sdoc)
 
-            PickleCache.save_to_cache(sdoc, file_path, project_config, "sdoc")
+        PickleCache.save_to_cache(sdoc, file_path, project_config, "sdoc")
 
-            return sdoc
-        except StrictDocException as exception:
-            print(f"error: {exception.args[0]}")  # noqa: T201
-            sys.exit(1)
-        except NotImplementedError:
-            traceback.print_exc()
-            sys.exit(1)
-        except StrictDocSemanticError as exc:
-            print(exc.to_print_message())  # noqa: T201
-            sys.exit(1)
-        except Exception as exc:  # pylint: disable=broad-except
-            print(  # noqa: T201
-                f"error: could not parse file: "
-                f"{file_path}.\n{exc.__class__.__name__}: {exc}"
-            )
-            # TODO: when --debug is provided.
-            traceback.print_exc()
-            sys.exit(1)
+        return sdoc
 
     @staticmethod
     def convert(section: SDocSection) -> SDocNode:

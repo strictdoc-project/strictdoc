@@ -3,15 +3,12 @@
 """
 
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
-import sys
-import traceback
 from itertools import islice
 from typing import List, Optional, Sequence
 
 import tree_sitter_python
 from tree_sitter import Language, Node, Parser
 
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -256,27 +253,10 @@ class SourceFileTraceabilityReader_Python:
         return traceability_info
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
-        try:
-            with open(file_path, "rb") as file:
-                sdoc_content = file.read()
-                sdoc = self.read(sdoc_content, file_path=file_path)
-                return sdoc
-        except UnicodeDecodeError:
-            raise
-        except NotImplementedError:
-            traceback.print_exc()
-            sys.exit(1)
-        except StrictDocSemanticError as exc:
-            print(exc.to_print_message())  # noqa: T201
-            sys.exit(1)
-        except Exception as exc:  # pylint: disable=broad-except
-            print(  # noqa: T201
-                f"error: SourceFileTraceabilityReader_Python: could not parse file: "
-                f"{file_path}.\n{exc.__class__.__name__}: {exc}"
-            )
-            # TODO: when --debug is provided
-            # traceback.print_exc()  # noqa: ERA001
-            sys.exit(1)
+        with open(file_path, "rb") as file:
+            sdoc_content = file.read()
+            sdoc = self.read(sdoc_content, file_path=file_path)
+            return sdoc
 
     @staticmethod
     def get_node_ns(node: Node) -> Sequence[str]:

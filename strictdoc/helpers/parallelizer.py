@@ -33,6 +33,10 @@ from strictdoc.helpers.exception import StrictDocException
 MultiprocessingLambdaType = Callable[[Any], Any]
 
 
+# Marker used by a child process to notify the parent process that it has failed.
+CHILD_PROCESS_FAILED = "CHILD_PROCESS_FAILED"
+
+
 class Parallelizer(ABC):
     @staticmethod
     def create(parallelize: bool) -> "Parallelizer":
@@ -172,6 +176,11 @@ class MultiprocessingParallelizer(Parallelizer):
         while size > 0:
             try:
                 result = self.output_queue.get(block=True, timeout=0.1)
+                if result[1] == CHILD_PROCESS_FAILED:
+                    raise StrictDocException(
+                        "Parallelizer: One of the child processes "
+                        "has exited prematurely."
+                    ) from None
                 results.append(result)
                 size -= 1
             except Empty:
@@ -216,11 +225,12 @@ class MultiprocessingParallelizer(Parallelizer):
                 result = processing_func(content)
                 output_queue.put((content_idx, result))
             except Exception as exception_:  # pragma: no cover
-                output_queue.put((content_idx, None))
+                output_queue.put((content_idx, CHILD_PROCESS_FAILED))
                 if not isinstance(
                     exception_, KeyboardInterrupt
                 ):  # pragma: no cover
                     traceback.print_exc()
+                print(f"error: {str(exception_)}")  # noqa: T201
                 sys.exit(1)
             finally:
                 sys.stdout.flush()

@@ -2,14 +2,11 @@
 @relation(SDOC-SRS-142, scope=file)
 """
 
-import sys
-import traceback
 from typing import List, Optional, Sequence
 
 import tree_sitter_cpp
 from tree_sitter import Language, Node, Parser
 
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
 from strictdoc.backend.sdoc_source_code.models.function import Function
@@ -377,26 +374,10 @@ class SourceFileTraceabilityReader_C:
         return traceability_info
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
-        try:
-            with open(file_path, "rb") as file:
-                sdoc_content = file.read()
-                sdoc = self.read(sdoc_content, file_path=file_path)
-                return sdoc
-        except UnicodeDecodeError:
-            raise
-        except NotImplementedError:
-            traceback.print_exc()
-            sys.exit(1)
-        except StrictDocSemanticError as exc:
-            print(exc.to_print_message())  # noqa: T201
-            sys.exit(1)
-        except Exception as exc:  # pylint: disable=broad-except
-            print(  # noqa: T201
-                f"error: SourceFileTraceabilityReader_C: could not parse file: "
-                f"{file_path}.\n{exc.__class__.__name__}: {exc}"
-            )
-            traceback.print_exc()
-            sys.exit(1)
+        with open(file_path, "rb") as file:
+            sdoc_content = file.read()
+            sdoc = self.read(sdoc_content, file_path=file_path)
+            return sdoc
 
     @staticmethod
     def _get_function_name_node(

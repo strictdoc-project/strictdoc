@@ -30,13 +30,14 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
     ForwardRangeMarker,
     RangeMarker,
 )
+from strictdoc.helpers.exception import StrictDocException
 
 
 def get_textx_syntax_error_message(exception: TextXSyntaxError) -> str:
     return f"SDoc markup error: {exception.context}."
 
 
-class StrictDocSemanticError(Exception):
+class StrictDocSemanticError(StrictDocException):
     def __init__(
         self,
         title: str,

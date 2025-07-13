@@ -1,5 +1,4 @@
 import pytest
-from textx import TextXSyntaxError
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
@@ -931,8 +930,8 @@ UID:
     with pytest.raises(Exception) as exc_info:
         _ = reader.read(input_sdoc)
 
-    assert exc_info.type is TextXSyntaxError
-    assert "Expected ': '" == exc_info.value.args[0]
+    assert exc_info.type is StrictDocException
+    assert "Expected ': '" in exc_info.value.args[0]
 
 
 def test_edge_case_03_uid_present_but_empty_with_space_character():
@@ -950,7 +949,7 @@ UID:
     with pytest.raises(Exception) as exc_info:
         _ = reader.read(input_sdoc)
 
-    assert exc_info.type is TextXSyntaxError
+    assert exc_info.type is StrictDocException
     assert "Expected '([\\w]+[\\w()\\-\\/.: ]*)'" in exc_info.value.args[0]
 
 
@@ -969,7 +968,7 @@ UID:
     with pytest.raises(Exception) as exc_info:
         _ = reader.read(input_sdoc)
 
-    assert exc_info.type is TextXSyntaxError
+    assert exc_info.type is StrictDocException
     assert "Expected '([\\w]+[\\w()\\-\\/.: ]*)'" in exc_info.value.args[0]
 
 
@@ -988,7 +987,7 @@ COMMENT: >>>
     with pytest.raises(Exception) as exc_info:
         _ = reader.read(input_sdoc)
 
-    assert exc_info.type is TextXSyntaxError
+    assert exc_info.type is StrictDocException
     assert (
         "Expected '^\\[ANCHOR: ' or '[LINK: ' or "
         "'(?ms)(?!^<<<)(?!\\[LINK: "
@@ -1013,8 +1012,8 @@ COMMENT: >>>
     with pytest.raises(Exception) as exc_info:
         _ = reader.read(input_sdoc)
 
-    assert exc_info.type is TextXSyntaxError
-    assert "Node statement cannot be empty." == exc_info.value.args[0]
+    assert exc_info.type is StrictDocException
+    assert "Node statement cannot be empty." in exc_info.value.args[0]
 
 
 def test_edge_case_19_empty_section_title():
@@ -1030,13 +1029,13 @@ TITLE:
 
     reader = SDReader()
 
-    with pytest.raises(Exception) as exc_info:
+    with pytest.raises(StrictDocException) as exc_info:
         _ = reader.read(input_sdoc)
 
-    assert exc_info.type is TextXSyntaxError
+    assert exc_info.type is StrictDocException
     assert (
         "Expected 'MID: ' or 'UID: ' or 'LEVEL: ' or 'TITLE: '"
-        == exc_info.value.args[0]
+        in exc_info.value.args[0]
     )
 
 
@@ -1056,8 +1055,8 @@ TITLE:
     with pytest.raises(Exception) as exc_info:
         _ = reader.read(input_sdoc)
 
-    assert exc_info.type is TextXSyntaxError
-    assert "Expected SingleLineString" == exc_info.value.args[0]
+    assert exc_info.type is StrictDocException
+    assert "Expected SingleLineString" in exc_info.value.args[0]
 
 
 def test_edge_case_21_section_title_with_empty_space():
@@ -1077,7 +1076,7 @@ TITLE:
     with pytest.raises(Exception) as exc_info:
         _ = reader.read(input_sdoc)
 
-    assert exc_info.type is TextXSyntaxError
+    assert exc_info.type is StrictDocException
     assert "Expected SingleLineString" in exc_info.value.args[0]
 
 
@@ -1098,8 +1097,8 @@ TITLE:
     with pytest.raises(Exception) as exc_info:
         _ = reader.read(input_sdoc)
 
-    assert exc_info.type is TextXSyntaxError
-    assert "Expected SingleLineString" == exc_info.value.args[0]
+    assert exc_info.type is StrictDocException
+    assert "Expected SingleLineString" in exc_info.value.args[0]
 
 
 def test_edge_case_23_leading_spaces_do_not_imply_empy_field(

@@ -166,23 +166,6 @@ class SDocParsingProcessor:
     def process_requirement(self, requirement: SDocNode) -> None:
         self.parse_context.document_has_requirements = True
 
-        if self.parse_context.document_config.auto_levels:
-            if requirement.ng_resolved_custom_level:
-                raise StrictDocException(
-                    f"{requirement.get_display_node_type_string()}.LEVEL field is provided. "
-                    "This contradicts to the option "
-                    "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
-                    f"Node: {requirement}."
-                )
-        else:
-            if not requirement.ng_resolved_custom_level:
-                raise StrictDocException(
-                    f"{requirement.get_display_node_type_string()}.LEVEL field is not provided. "
-                    "This contradicts to the option "
-                    "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
-                    f"Node: {requirement}."
-                )
-
         requirement.ng_document_reference = (
             self.parse_context.document_reference
         )

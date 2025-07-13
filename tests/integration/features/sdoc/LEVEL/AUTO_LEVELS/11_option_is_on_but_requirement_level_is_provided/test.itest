@@ -1,0 +1,7 @@
+RUN: %strictdoc export %S --output-dir %T
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s
+
+CHECK: href="#1-Requirement-one"
+CHECK: href="#7.8.9-Requirement-two"
+CHECK: href="#2-Requirement-three"

@@ -1,10 +1,10 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 TITLE: First section (numbered)
 
-[SECTION]
+[[SECTION]]
 LEVEL: None
 TITLE: Second section (unnumbered)
 
@@ -22,11 +22,11 @@ STATEMENT: >>>
 This requirement is numbered 1.1.1 (not correct, should be 1.2).
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Second section (numbered)
 
 [REQUIREMENT]
@@ -36,4 +36,4 @@ STATEMENT: >>>
 This requirement is numbered 2 (correct).
 <<<
 
-[/SECTION]
+[[/SECTION]]

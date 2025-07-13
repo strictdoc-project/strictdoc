@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 OPTIONS:
-  AUTO_LEVELS: Off
+  AUTO_LEVELS: On
 
 [GRAMMAR]
 ELEMENTS:
@@ -30,6 +30,9 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
   - TITLE: STATUS
     TYPE: String
     REQUIRED: False
@@ -49,6 +52,9 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
@@ -56,17 +62,21 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
 
-[[SECTION]]
-LEVEL: 1.2.3
-TITLE: Section 1.2.3
-
 [[COMPOSITE_REQUIREMENT]]
-STATEMENT: Composite requirement 4.5.6
-
-[REQUIREMENT]
-LEVEL: 7.8.9
-STATEMENT: Requirement 7.8.9
+TITLE: Composite requirement one
+STATEMENT: Composite requirement one
 
 [[/COMPOSITE_REQUIREMENT]]
 
-[[/SECTION]]
+[[COMPOSITE_REQUIREMENT]]
+LEVEL: 4.5.6
+TITLE: Composite requirement two
+STATEMENT: Composite requirement two
+
+[[/COMPOSITE_REQUIREMENT]]
+
+[[COMPOSITE_REQUIREMENT]]
+TITLE: Composite requirement three
+STATEMENT: Composite requirement three
+
+[[/COMPOSITE_REQUIREMENT]]

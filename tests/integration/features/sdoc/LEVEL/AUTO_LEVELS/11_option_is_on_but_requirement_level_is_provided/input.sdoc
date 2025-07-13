@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  AUTO_LEVELS: On
+
+[REQUIREMENT]
+TITLE: Requirement one
+STATEMENT: Requirement 1
+
+[REQUIREMENT]
+LEVEL: 7.8.9
+TITLE: Requirement two
+STATEMENT: Requirement 7.8.9
+
+[REQUIREMENT]
+TITLE: Requirement three
+STATEMENT: Requirement 3

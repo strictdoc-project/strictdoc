@@ -46,6 +46,24 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 447ab1fa1d38453ab46e0002e6eb852d
+TITLE: Unreleased
+
+[TEXT]
+MID: c536381cea6842f0b77c1aa5ac942ce0
+STATEMENT: >>>
+This release includes a small improvement to the behavior of the ``LEVEL / AUTO_LEVEL`` fields.
+
+The following cases are now considered valid and will no longer trigger validation errors:
+
+- **When AUTO_LEVELS is On**, a node without a level or with a custom level is acceptable. The custom level will be used as-is, while all other nodes will be numbered automatically.
+
+- **When AUTO_LEVELS is Off**, a node without a level is also valid. In this case, the node will simply be omitted from the Table of Contents (TOC).
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: aa45a90bad3f4273ab46dade039ef4c6
 TITLE: 0.9.4 (2025-07-12)
 

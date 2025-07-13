@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined,union-attr"
+# mypy: disable-error-code="union-attr"
 from typing import Optional, Union
 
 from textx import TextXSyntaxError

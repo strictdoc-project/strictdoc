@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 import datetime
 import glob
 import hashlib
@@ -152,5 +152,5 @@ class CompiledHTMLTemplates(HTMLTemplates):
             jinja_cache_mtime = get_file_modification_time(jinja_cache_files[0])
 
             if strictdoc_last_update > jinja_cache_mtime:
-                HTMLTemplates._jinja_environment = None
+                self._jinja_environment = None
                 shutil.rmtree(self.path_to_jinja_cache_bucket_dir)

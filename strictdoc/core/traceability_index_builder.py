@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-28, SDOC-SRS-2, scope=file)
 """
 
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 import datetime
 import glob
 import os
@@ -29,12 +29,13 @@ from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.backend.sdoc_source_code.caching_reader import (
     SourceFileTraceabilityCachingReader,
 )
+from strictdoc.core.constants import GraphLinkType
 from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_dependency_manager import FileDependencyManager
+from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.finders.source_files_finder import (
-    SourceFile,
     SourceFilesFinder,
 )
 from strictdoc.core.graph.many_to_many_set import ManyToManySet
@@ -46,10 +47,8 @@ from strictdoc.core.query_engine.query_object import (
     QueryObject,
 )
 from strictdoc.core.query_engine.query_reader import QueryReader
-from strictdoc.core.source_tree import SourceTree
+from strictdoc.core.source_tree import SourceFile, SourceTree
 from strictdoc.core.traceability_index import (
-    FileTraceabilityIndex,
-    GraphLinkType,
     TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector

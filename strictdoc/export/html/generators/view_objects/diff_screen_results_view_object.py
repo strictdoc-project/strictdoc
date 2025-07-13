@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from dataclasses import dataclass
 from typing import List, Optional, Set
 

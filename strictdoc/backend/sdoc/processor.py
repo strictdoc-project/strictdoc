@@ -1,6 +1,6 @@
-# mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
 import os.path
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional, cast
 
 from textx import TextXSyntaxError, get_model
 
@@ -8,11 +8,9 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
-from strictdoc.backend.sdoc.models.document_grammar import (
-    DocumentGrammar,
-    GrammarElement,
-)
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DocumentView
+from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.model import SDocDocumentFromFileIF
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
@@ -20,7 +18,10 @@ from strictdoc.backend.sdoc.models.node import (
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.exception import StrictDocException
-from strictdoc.helpers.textx import preserve_source_location_data
+from strictdoc.helpers.textx import (
+    SupportsTxPosition,
+    preserve_source_location_data,
+)
 
 
 class ParseContext:
@@ -55,7 +56,6 @@ class SDocParsingProcessor:
                 enable_mid=document.config.enable_mid,
             )
         )
-        self.parse_context.document = document
         document.ng_including_document_reference = (
             self.parse_context.context_document_reference
         )
@@ -77,7 +77,7 @@ class SDocParsingProcessor:
     def process_document_config(self, document_config: DocumentConfig) -> None:
         the_model = get_model(document_config)
         line_start, col_start = the_model._tx_parser.pos_to_linecol(
-            document_config._tx_position
+            cast(SupportsTxPosition, document_config)._tx_position
         )
         document_config.ng_line_start = line_start
         document_config.ng_col_start = col_start
@@ -100,7 +100,7 @@ class SDocParsingProcessor:
 
         the_model = get_model(document_view)
         line_start, col_start = the_model._tx_parser.pos_to_linecol(
-            document_view._tx_position
+            cast(SupportsTxPosition, document_view)._tx_position
         )
         document_view.ng_line_start = line_start
         document_view.ng_col_start = col_start
@@ -160,7 +160,6 @@ class SDocParsingProcessor:
             resolved_path_to_fragment_file
         )
 
-        self.parse_context.current_include_parent = document_from_file.parent
         self.parse_context.fragments_from_files.append(document_from_file)
 
     def process_requirement(self, requirement: SDocNode) -> None:
@@ -197,7 +196,7 @@ class SDocParsingProcessor:
         ):
             the_model = get_model(node_field)
             line_start, col_start = the_model._tx_parser.pos_to_linecol(
-                node_field._tx_position
+                cast(SupportsTxPosition, node_field)._tx_position
             )
             raise TextXSyntaxError(
                 "Node statement cannot be empty.",

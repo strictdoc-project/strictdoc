@@ -1,4 +1,4 @@
-# mypy: disable-error-code="attr-defined,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call,no-untyped-def"
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from strictdoc import environment
@@ -13,4 +13,4 @@ class RSTTemplates:
     jinja_environment.globals.update(isinstance=isinstance)
     jinja_environment.trim_blocks = False
     jinja_environment.lstrip_blocks = False
-    jinja_environment.strip_trailing_newlines = False
+    jinja_environment.keep_trailing_newline = True

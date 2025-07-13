@@ -70,9 +70,6 @@ class RequirementFormField:
         self.field_type = field_type
         self.field_gef_type: str = field_gef_type
 
-    def is_singleline(self) -> bool:
-        return self.field_type == RequirementFormFieldType.SINGLELINE
-
     def is_multiline(self) -> bool:
         return self.field_type == RequirementFormFieldType.MULTILINE
 
@@ -151,16 +148,6 @@ class RequirementFormField:
                 field_gef_type=grammar_field.gef_type,
             )
         raise NotImplementedError(grammar_field)
-
-    @staticmethod
-    def create_mid_field(mid: MID) -> "RequirementFormField":
-        return RequirementFormField(
-            field_mid=MID.create(),
-            field_name="MID",
-            field_type=RequirementFormFieldType.SINGLELINE,
-            field_value=mid,
-            field_gef_type=RequirementFieldType.STRING,
-        )
 
 
 @auto_described
@@ -376,9 +363,6 @@ class RequirementFormObject(ErrorObject):
         content_field_idx = element.get_multiline_field_index()
 
         for field_idx, field_name in enumerate(fields_names):
-            if field_name == "REFS":
-                continue
-
             field = element.fields_map[field_name]
             form_field: RequirementFormField = (
                 RequirementFormField.create_from_grammar_field(

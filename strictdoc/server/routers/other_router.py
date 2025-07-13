@@ -21,7 +21,10 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.git.change_generator import ChangeContainer, ChangeGenerator
 from strictdoc.git.git_client import GitClient
-from strictdoc.server.routers.main_router import HTTP_STATUS_PRECONDITION_FAILED
+from strictdoc.server.routers.main_router import (
+    HTTP_STATUS_BAD_REQUEST,
+    HTTP_STATUS_PRECONDITION_FAILED,
+)
 
 
 def create_other_router(project_config: ProjectConfig) -> APIRouter:
@@ -48,7 +51,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             if tab not in ("diff", "changelog"):
                 return Response(
                     content="The tab= parameter must be either 'diff' or 'changelog'.",
-                    status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                    status_code=HTTP_STATUS_BAD_REQUEST,
                 )
         else:
             tab = "diff"

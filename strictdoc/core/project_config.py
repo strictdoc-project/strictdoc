@@ -249,8 +249,9 @@ class ProjectConfig:
         self.input_paths = [server_config.get_full_input_path()]
         if self.source_root_path is None:
             source_root_path = self.input_paths[0]
-            if not os.path.abspath(source_root_path):
-                source_root_path = os.path.abspath(source_root_path)
+            # If the input argument is a relative path, convert it to an
+            # absolute path.
+            source_root_path = os.path.abspath(source_root_path)
             source_root_path = source_root_path.rstrip("/")
             self.source_root_path = source_root_path
 
@@ -279,8 +280,9 @@ class ProjectConfig:
         self.input_paths = export_config.input_paths
         if self.source_root_path is None:
             source_root_path = export_config.input_paths[0]
-            if not os.path.abspath(source_root_path):
-                source_root_path = os.path.abspath(source_root_path)
+            # If the input argument is a relative path, convert it to an
+            # absolute path.
+            source_root_path = os.path.abspath(source_root_path)
             source_root_path = source_root_path.rstrip("/")
             self.source_root_path = source_root_path
 
@@ -442,8 +444,8 @@ class ProjectConfigLoader:
                 f"Could not parse the config file {path_to_config}: "
                 f"{exception}."
             ) from None
-        except Exception as exception:
-            raise NotImplementedError from exception  # pragma: no cover
+        except Exception as exception:  # pragma: no cover
+            raise AssertionError from exception
 
         config_last_update = get_file_modification_time(path_to_config)
 
@@ -476,8 +478,7 @@ class ProjectConfigLoader:
     ) -> ProjectConfig:
         if path_to_config is not None:
             assert os.path.isfile(path_to_config), path_to_config
-            if not os.path.abspath(path_to_config):
-                path_to_config = os.path.abspath(path_to_config)
+            path_to_config = os.path.abspath(path_to_config)
 
         project_title = ProjectConfig.DEFAULT_PROJECT_TITLE
         dir_for_sdoc_assets = ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS
@@ -542,12 +543,11 @@ class ProjectConfigLoader:
             for include_doc_path in include_doc_paths:
                 try:
                     validate_mask(include_doc_path)
-                except SyntaxError as exception:
-                    print(  # noqa: T201
-                        f"error: strictdoc.toml: 'include_doc_paths': "
-                        f"{exception} Provided string: '{include_doc_path}'."
-                    )
-                    sys.exit(1)
+                except SyntaxError as exception_:
+                    raise SyntaxError(
+                        f"strictdoc.toml: 'include_doc_paths': "
+                        f"{exception_} Provided string: '{include_doc_path}'."
+                    ) from exception_
 
             exclude_doc_paths = project_content.get(
                 "exclude_doc_paths", exclude_doc_paths
@@ -556,12 +556,11 @@ class ProjectConfigLoader:
             for exclude_doc_path in exclude_doc_paths:
                 try:
                     validate_mask(exclude_doc_path)
-                except SyntaxError as exception:
-                    print(  # noqa: T201
-                        f"error: strictdoc.toml: 'exclude_doc_paths': "
-                        f"{exception} Provided string: '{exclude_doc_path}'."
-                    )
-                    sys.exit(1)
+                except SyntaxError as exception_:
+                    raise SyntaxError(
+                        f"strictdoc.toml: 'exclude_doc_paths': "
+                        f"{exception_} Provided string: '{exclude_doc_path}'."
+                    ) from exception_
 
             source_root_path = project_content.get(
                 "source_root_path", source_root_path
@@ -577,12 +576,11 @@ class ProjectConfigLoader:
                     )
                     source_root_path = os.path.abspath(source_root_path)
                 if not os.path.isdir(source_root_path):
-                    print(  # noqa: T201
-                        f"error: strictdoc.toml: 'source_root_path': "
+                    raise ValueError(
+                        f"strictdoc.toml: 'source_root_path': "
                         f"Provided path does not exist: "
                         f"{original_source_root_path}."
                     )
-                    sys.exit(1)
                 if not os.path.isabs(source_root_path):
                     source_root_path = os.path.abspath(source_root_path)
             include_source_paths = project_content.get(
@@ -592,12 +590,11 @@ class ProjectConfigLoader:
             for include_source_path in include_source_paths:
                 try:
                     validate_mask(include_source_path)
-                except SyntaxError as exception:
-                    print(  # noqa: T201
-                        f"error: strictdoc.toml: 'include_source_paths': "
-                        f"{exception} Provided string: '{include_source_path}'."
-                    )
-                    sys.exit(1)
+                except SyntaxError as exception_:
+                    raise SyntaxError(
+                        f"strictdoc.toml: 'include_source_paths': "
+                        f"{exception_} Provided string: '{include_source_path}'."
+                    ) from exception_
 
             exclude_source_paths = project_content.get(
                 "exclude_source_paths", exclude_source_paths
@@ -606,12 +603,11 @@ class ProjectConfigLoader:
             for exclude_source_path in exclude_source_paths:
                 try:
                     validate_mask(exclude_source_path)
-                except SyntaxError as exception:
-                    print(  # noqa: T201
-                        f"error: strictdoc.toml: 'exclude_source_paths': "
-                        f"{exception} Provided string: '{exclude_source_path}'."
-                    )
-                    sys.exit(1)
+                except SyntaxError as exception_:
+                    raise SyntaxError(
+                        f"strictdoc.toml: 'exclude_source_paths': "
+                        f"{exception_} Provided string: '{exclude_source_path}'."
+                    ) from exception_
 
             html2pdf_template = project_content.get(
                 "html2pdf_template", html2pdf_template
@@ -624,11 +620,10 @@ class ProjectConfigLoader:
                         path_to_config_dir, html2pdf_template
                     )
                 if not os.path.isfile(html2pdf_template):
-                    print(  # noqa: T201
-                        "error: strictdoc.toml: 'html2pdf_template': "
-                        f"invalid path to a template file: {html2pdf_template}'."
+                    raise ValueError(
+                        "strictdoc.toml: 'html2pdf_template': "
+                        f"invalid path to a template file: {html2pdf_template}."
                     )
-                    sys.exit(1)
 
             bundle_document_version = project_content.get(
                 "bundle_document_version", bundle_document_version
@@ -659,11 +654,10 @@ class ProjectConfigLoader:
 
             chromedriver = project_content.get("chromedriver", chromedriver)
             if chromedriver is not None and not os.path.isfile(chromedriver):
-                print(  # noqa: T201
-                    f"warning: strictdoc.toml: chromedriver {chromedriver} "
-                    "not found."
+                raise ValueError(
+                    f"strictdoc.toml: 'chromedriver': "
+                    f"not found at path: {chromedriver}."
                 )
-
             if (
                 test_report_root_dict_ := project_content.get(
                     "test_report_root_dict", None
@@ -700,21 +694,17 @@ class ProjectConfigLoader:
             server_content = config_dict["server"]
             server_host = server_content.get("host", server_host)
             if not is_valid_host(server_host):
-                print(  # noqa: T201
-                    "error: strictdoc.toml: 'host': "
-                    f"invalid host: {server_host}'."
+                raise ValueError(
+                    f"strictdoc.toml: 'host': invalid host: {server_host}'."
                 )
-                sys.exit(1)
 
             server_port = server_content.get("port", server_port)
             if not (
                 isinstance(server_port, int) and 1024 < server_port < 65000
             ):
-                print(  # noqa: T201
-                    "error: strictdoc.toml: 'port': "
-                    f"invalid port: {server_port}'."
+                raise ValueError(
+                    f"strictdoc.toml: 'port': invalid port: {server_port}'."
                 )
-                sys.exit(1)
 
         if "reqif" in config_dict:
             # FIXME: Introduce at least a basic validation.

@@ -135,6 +135,7 @@ from strictdoc.helpers.timing import measure_performance
 from strictdoc.server.error_object import ErrorObject
 from strictdoc.server.helpers.http import request_is_for_non_modified_file
 
+HTTP_STATUS_BAD_REQUEST = 400
 HTTP_STATUS_PRECONDITION_FAILED = 412
 HTTP_STATUS_GATEWAY_TIMEOUT = 504
 

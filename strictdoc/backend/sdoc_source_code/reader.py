@@ -3,8 +3,6 @@
 """
 
 # mypy: disable-error-code="no-untyped-call,no-untyped-def"
-import sys
-import traceback
 from functools import partial
 from typing import List, Optional, TypedDict
 
@@ -283,18 +281,12 @@ class SourceFileTraceabilityReader:
 
         self.meta_model.register_obj_processors(obj_processors)
 
-        try:
-            source_file_traceability_info: SourceFileTraceabilityInfo = (
-                self.meta_model.model_from_str(
-                    input_string, file_name=file_path
-                )
-            )
-            source_file_traceability_info.ng_map_reqs_to_markers = (
-                parse_context.map_reqs_to_markers
-            )
-
-        except StrictDocSemanticError as exc:
-            raise exc
+        source_file_traceability_info: SourceFileTraceabilityInfo = (
+            self.meta_model.model_from_str(input_string, file_name=file_path)
+        )
+        source_file_traceability_info.ng_map_reqs_to_markers = (
+            parse_context.map_reqs_to_markers
+        )
 
         # HACK:
         # ProcessPoolExecutor doesn't work because of non-picklable parts
@@ -304,24 +296,7 @@ class SourceFileTraceabilityReader:
         return source_file_traceability_info
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
-        try:
-            with open(file_path, encoding="utf-8") as file:
-                sdoc_content = file.read()
-                sdoc = self.read(sdoc_content, file_path=file_path)
-                return sdoc
-        except UnicodeDecodeError:
-            raise
-        except NotImplementedError:
-            traceback.print_exc()
-            sys.exit(1)
-        except StrictDocSemanticError as exc:
-            print(exc.to_print_message())  # noqa: T201
-            sys.exit(1)
-        except Exception as exc:  # pylint: disable=broad-except
-            print(  # noqa: T201
-                f"error: SourceFileTraceabilityReader: could not parse file: "
-                f"{file_path}.\n{exc.__class__.__name__}: {exc}"
-            )
-            # TODO: when --debug is provided
-            # traceback.print_exc()  # noqa: ERA001
-            sys.exit(1)
+        with open(file_path, encoding="utf-8") as file:
+            sdoc_content = file.read()
+            sdoc = self.read(sdoc_content, file_path=file_path)
+            return sdoc

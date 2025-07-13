@@ -1,6 +1,6 @@
 # mypy: disable-error-code="arg-type,attr-defined,no-untyped-call,no-untyped-def,union-attr"
 import os.path
-from typing import List, Optional
+from typing import Callable, Dict, List, Optional
 
 from textx import TextXSyntaxError, get_model
 
@@ -43,10 +43,10 @@ class ParseContext:
 
 
 class SDocParsingProcessor:
-    def __init__(self, parse_context: ParseContext):
+    def __init__(self, parse_context: ParseContext) -> None:
         self.parse_context: ParseContext = parse_context
 
-    def process_document(self, document: SDocDocument):
+    def process_document(self, document: SDocDocument) -> None:
         document.grammar = (
             self.parse_context.document_grammar
             or DocumentGrammar.create_default(
@@ -60,7 +60,7 @@ class SDocParsingProcessor:
             self.parse_context.context_document_reference
         )
 
-    def get_default_processors(self):
+    def get_default_processors(self) -> Dict[str, Callable[..., None]]:
         return {
             "SDocDocument": self.process_document,
             "DocumentConfig": self.process_document_config,
@@ -74,7 +74,7 @@ class SDocParsingProcessor:
             "SDocNodeField": self.process_node_field,
         }
 
-    def process_document_config(self, document_config: DocumentConfig):
+    def process_document_config(self, document_config: DocumentConfig) -> None:
         the_model = get_model(document_config)
         line_start, col_start = the_model._tx_parser.pos_to_linecol(
             document_config._tx_position

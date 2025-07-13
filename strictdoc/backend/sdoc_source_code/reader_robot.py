@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-142, scope=file)
 """
 
-import sys
 from typing import Union
 
 from robot.api.parsing import (
@@ -16,7 +15,6 @@ from robot.api.parsing import (
     get_model,
 )
 
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
 from strictdoc.backend.sdoc_source_code.models.function import Function
@@ -186,21 +184,7 @@ class SourceFileTraceabilityReader_Robot:
         return traceability_info
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
-        try:
-            with open(file_path) as file:
-                sdoc_content = file.read()
-                sdoc = self.read(sdoc_content, file_path=file_path)
-                return sdoc
-        except UnicodeDecodeError:
-            raise
-        except StrictDocSemanticError as exc:
-            print(exc.to_print_message())  # noqa: T201
-            sys.exit(1)
-        except Exception as exc:  # pylint: disable=broad-except
-            print(  # noqa: T201
-                f"error: SourceFileTraceabilityReader_Robot: could not parse file: "
-                f"{file_path}.\n{exc.__class__.__name__}: {exc}"
-            )
-            # TODO: when --debug is provided
-            # traceback.print_exc()  # noqa: ERA001
-            sys.exit(1)
+        with open(file_path) as file:
+            sdoc_content = file.read()
+            sdoc = self.read(sdoc_content, file_path=file_path)
+            return sdoc

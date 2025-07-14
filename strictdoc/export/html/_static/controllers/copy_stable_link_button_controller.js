@@ -23,7 +23,7 @@
         const expanded = (
           (window.location.protocol === 'file:')
           ? resolved.replace(/#/, 'index.html?a=')
-          : resolved
+          : resolved.replace(/#/, '?a=')
         );
 
         this._updateClipboard(expanded, this._confirmCopy(button, copyIcon, doneIcon));

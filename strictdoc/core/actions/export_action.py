@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,operator"
+# mypy: disable-error-code="arg-type,no-untyped-call,operator"
 import os
 import sys
 from pathlib import Path
@@ -20,7 +20,7 @@ from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
 from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.export.spdx.spdx_generator import SPDXGenerator
-from strictdoc.helpers.parallelizer import NullParallelizer
+from strictdoc.helpers.parallelizer import NullParallelizer, Parallelizer
 from strictdoc.helpers.timing import timing_decorator
 
 
@@ -28,7 +28,7 @@ class ExportAction:
     def __init__(
         self,
         project_config: ProjectConfig,
-        parallelizer,
+        parallelizer: Parallelizer,
     ):
         assert parallelizer
         self.project_config: ProjectConfig = project_config
@@ -185,7 +185,7 @@ class ExportAction:
                 self.traceability_index, self.project_config, output_json_root
             )
 
-    def export_sdoc(self):
+    def export_sdoc(self) -> None:
         assert self.project_config.input_paths
         try:
             traceability_index: TraceabilityIndex = (

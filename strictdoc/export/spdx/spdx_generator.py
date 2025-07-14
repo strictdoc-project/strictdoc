@@ -1,5 +1,5 @@
 # pragma: no cover file.
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
 
 """
 Experimental code to generate SPDX.
@@ -134,7 +134,9 @@ class SDocToSPDXConverter:
         )
 
     @staticmethod
-    def create_document_to_file(document: SDocDocument, document_bytes) -> File:
+    def create_document_to_file(
+        document: SDocDocument, document_bytes: bytes
+    ) -> File:
         return File(
             spdx_id=f"SPDXRef-File-{get_spdx_ref(document)}",
             name=document.meta.document_filename,
@@ -151,7 +153,7 @@ class SDocToSPDXConverter:
         )
 
     @staticmethod
-    def convert_file_to_file(node_link_path: str, file_bytes) -> File:
+    def convert_file_to_file(node_link_path: str, file_bytes: bytes) -> File:
         return File(
             spdx_id=f"SPDXRef-File-{get_spdx_ref(node_link_path)}",
             name=node_link_path,
@@ -205,8 +207,8 @@ class SPDXGenerator:
     def export_tree(
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
-        output_spdx_root,
-    ):
+        output_spdx_root: str,
+    ) -> None:
         Path(output_spdx_root).mkdir(parents=True, exist_ok=True)
 
         sdoc_spdx_converter: SDocToSPDXConverter = SDocToSPDXConverter()

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import sys
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
@@ -19,7 +19,9 @@ from strictdoc.helpers.string import (
 
 class ManageAutoUIDCommand:
     @staticmethod
-    def execute(*, project_config: ProjectConfig, parallelizer: Parallelizer):
+    def execute(
+        *, project_config: ProjectConfig, parallelizer: Parallelizer
+    ) -> None:
         # FIXME: Traceability Index is coupled with HTML output.
         project_config.export_output_html_root = "NOT_RELEVANT"
 

@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import hashlib
 import io
 import os
@@ -156,7 +156,7 @@ class RstToHtmlFragmentWriter:
         return html
 
     def write_with_validation(
-        self, rst_fragment
+        self, rst_fragment: str
     ) -> Tuple[Optional[str], Optional[str]]:
         # How do I convert a docutils document tree into an HTML string?
         # https://stackoverflow.com/a/32168938/598057
@@ -202,7 +202,7 @@ class RstToHtmlFragmentWriter:
         return html, None
 
     @staticmethod
-    def write_anchor_link(title, href) -> str:
+    def write_anchor_link(title: str, href: str) -> str:
         return f"""\
 :rawhtml:`<a href="{href}">🔗&nbsp;{title}</a>`\
 """

@@ -1,12 +1,13 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 import re
+from typing import List, Union
 
 
-def atoi(text):
+def atoi(text: str) -> Union[int, str]:
     return int(text) if text.isdigit() else text
 
 
-def alphanumeric_sort(text):
+def alphanumeric_sort(text: str) -> List[Union[int, str]]:
     """
     Sort keys in the human (alphanumeric) order.
 

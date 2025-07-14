@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-def,union-attr"
+# mypy: disable-error-code="union-attr"
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
@@ -13,7 +13,7 @@ class RowWithGrammarElementFormObject:
     errors: Dict[str, List[str]]
     jinja_environment: JinjaEnvironment
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         assert self.field is not None
         assert isinstance(self.jinja_environment, JinjaEnvironment), (
             self.jinja_environment
@@ -33,5 +33,5 @@ class RowWithGrammarElementFormObject:
             )
             return rendered_template
 
-    def get_errors(self, field_name) -> List[str]:
+    def get_errors(self, field_name: str) -> List[str]:
         return self.errors.get(field_name, [])

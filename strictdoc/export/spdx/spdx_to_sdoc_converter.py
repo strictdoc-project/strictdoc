@@ -5,7 +5,7 @@ This code is excluded from code coverage calculation because the feature is
 highly experimental and most of this code will be removed.
 """
 
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
 from typing import List, Union
 
 from spdx_tools.spdx3.model import RelationshipType, SpdxDocument
@@ -22,6 +22,11 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
+)
+from strictdoc.backend.sdoc.models.model import (
+    SDocDocumentIF,
+    SDocNodeIF,
+    SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
@@ -181,7 +186,11 @@ class SPDXToSDocConverter:
         return document
 
     @staticmethod
-    def _convert_document(document: SpdxDocument, sdoc_document, sdoc_parent):
+    def _convert_document(
+        document: SpdxDocument,
+        sdoc_document: SDocDocument,
+        sdoc_parent: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF],
+    ) -> SDocNode:
         requirement = SDocNode(
             parent=sdoc_parent,
             node_type="SPDX_PACKAGE",
@@ -350,7 +359,7 @@ class SPDXToSDocConverter:
         return requirement
 
     @staticmethod
-    def create_grammar_for_spdx():
+    def create_grammar_for_spdx() -> DocumentGrammar:
         elements = []
 
         #

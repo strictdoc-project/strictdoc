@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
 import os
 from functools import partial
 from pathlib import Path
@@ -51,6 +51,7 @@ from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.git_client import GitClient
+from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.timing import measure_performance
 
@@ -67,8 +68,8 @@ class HTMLGenerator:
         self,
         *,
         traceability_index: TraceabilityIndex,
-        parallelizer,
-    ):
+        parallelizer: Parallelizer,
+    ) -> None:
         Path(self.project_config.export_output_html_root).mkdir(
             parents=True, exist_ok=True
         )
@@ -144,9 +145,9 @@ class HTMLGenerator:
         *,
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
-        export_output_html_root,
+        export_output_html_root: str,
         flat_assets: bool = False,
-    ):
+    ) -> None:
         """
         Copy all assets to output dir during HTML/PDF generation.
 
@@ -314,7 +315,7 @@ class HTMLGenerator:
         document: SDocDocument,
         traceability_index: TraceabilityIndex,
         specific_documents: Optional[Tuple[DocumentType, ...]] = None,
-    ):
+    ) -> None:
         if specific_documents is None:
             specific_documents = DocumentType.all()
 
@@ -340,9 +341,9 @@ class HTMLGenerator:
     def export_single_document(
         self,
         document: SDocDocument,
-        traceability_index,
+        traceability_index: TraceabilityIndex,
         specific_documents: Optional[Tuple[DocumentType, ...]] = None,
-    ):
+    ) -> SDocDocument:
         if document.config.layout == "Website":
             specific_documents = (DocumentType.DOCUMENT,)
         elif specific_documents is None:
@@ -491,7 +492,7 @@ class HTMLGenerator:
         self,
         *,
         traceability_index: TraceabilityIndex,
-    ):
+    ) -> None:
         Path(self.project_config.export_output_html_root).mkdir(
             parents=True, exist_ok=True
         )
@@ -511,7 +512,7 @@ class HTMLGenerator:
         self,
         *,
         traceability_index: TraceabilityIndex,
-    ):
+    ) -> None:
         assets_dir = os.path.join(
             self.project_config.export_output_html_root,
             self.project_config.dir_for_sdoc_assets,
@@ -530,7 +531,7 @@ class HTMLGenerator:
         self,
         *,
         traceability_index: TraceabilityIndex,
-    ):
+    ) -> None:
         requirements_coverage_content = TraceabilityMatrixHTMLGenerator.export(
             project_config=self.project_config,
             traceability_index=traceability_index,
@@ -549,7 +550,7 @@ class HTMLGenerator:
         self,
         *,
         traceability_index: TraceabilityIndex,
-    ):
+    ) -> None:
         assert isinstance(
             traceability_index.document_tree.source_tree, SourceTree
         ), traceability_index.document_tree.source_tree
@@ -581,7 +582,7 @@ class HTMLGenerator:
     def export_project_statistics(
         self,
         traceability_index: TraceabilityIndex,
-    ):
+    ) -> None:
         link_renderer = LinkRenderer(
             root_path="",
             static_path=self.project_config.dir_for_sdoc_assets,

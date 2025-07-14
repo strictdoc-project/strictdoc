@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-55, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import datetime
 from copy import copy
 from dataclasses import dataclass
@@ -62,7 +62,7 @@ class UpdateNodeInfo:
 
 
 class UpdateRequirementActionObject:
-    def __init__(self):
+    def __init__(self) -> None:
         self.existing_references_uids: Set[Tuple[str, str, Optional[str]]] = (
             set()
         )
@@ -438,7 +438,7 @@ class CreateOrUpdateNodeCommand:
 
     def _update_traceability_index_with_links_and_anchors(
         self, updated_node: SDocNode, existing_node_fields: List[SDocNodeField]
-    ):
+    ) -> None:
         traceability_index = self.traceability_index
 
         existing_anchor_uids: Set[str] = set()
@@ -473,7 +473,7 @@ class CreateOrUpdateNodeCommand:
         map_form_to_requirement_fields: Dict[
             RequirementFormField, Optional[FreeTextContainer]
         ],
-    ):
+    ) -> None:
         # FIXME: Leave only one method based on set_field_value().
         for form_field_name, form_fields in form_object.fields.items():
             for form_field_index, form_field in enumerate(form_fields):

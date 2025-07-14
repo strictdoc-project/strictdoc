@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-142, scope=file)
 """
 
-from typing import Union
+from typing import Optional, Union
 
 from robot.api.parsing import (
     Comment,
@@ -168,7 +168,7 @@ class SdocRelationVisitor(ModelVisitor):
 
 class SourceFileTraceabilityReader_Robot:
     def read(
-        self, input_buffer: str, file_path: str
+        self, input_buffer: str, file_path: Optional[str] = None
     ) -> SourceFileTraceabilityInfo:
         traceability_info = SourceFileTraceabilityInfo([])
         if len(input_buffer) == 0:

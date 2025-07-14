@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-72, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-def,union-attr,operator"
+# mypy: disable-error-code="union-attr,operator"
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
@@ -117,7 +117,7 @@ class P01_ReqIFToSDocConverter:
         specification: ReqIFSpecification,
         reqif_bundle: ReqIFBundle,
         context: P01_ReqIFToSDocBuildContext,
-    ):
+    ) -> SDocDocument:
         # This lookup object is used to first collect the spec object type identifiers
         # that are actually used by this document. This is needed to ensure that a
         # StrictDoc document is not created with irrelevant grammar elements that
@@ -231,7 +231,7 @@ class P01_ReqIFToSDocConverter:
         spec_object_type: ReqIFSpecObjectType,
         reqif_bundle: ReqIFBundle,
         is_composite: bool,
-    ):
+    ) -> GrammarElement:
         fields: List[
             Union[
                 GrammarElementFieldString,

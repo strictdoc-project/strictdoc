@@ -1,4 +1,7 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
+
+from markupsafe import Markup
+
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
@@ -23,7 +26,7 @@ class ProgressStatisticsGenerator:
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
-    ):
+    ) -> Markup:
         git_client = GitClient()
 
         document_tree_stats: DocumentTreeStats = DocumentTreeStats()

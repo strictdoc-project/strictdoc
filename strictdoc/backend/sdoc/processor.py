@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
 import os.path
 from typing import Callable, Dict, List, Optional, cast
 
@@ -83,7 +83,9 @@ class SDocParsingProcessor:
         document_config.ng_col_start = col_start
         self.parse_context.document_config = document_config
 
-    def process_document_grammar(self, document_grammar: DocumentGrammar):
+    def process_document_grammar(
+        self, document_grammar: DocumentGrammar
+    ) -> None:
         preserve_source_location_data(document_grammar)
         # FIXME: It would be great to move forward and remove this.
         if not document_grammar.has_text_element():
@@ -92,10 +94,12 @@ class SDocParsingProcessor:
             )
         self.parse_context.document_grammar = document_grammar
 
-    def process_document_grammar_element(self, grammar_element: GrammarElement):
+    def process_document_grammar_element(
+        self, grammar_element: GrammarElement
+    ) -> None:
         preserve_source_location_data(grammar_element)
 
-    def process_document_view(self, document_view: DocumentView):
+    def process_document_view(self, document_view: DocumentView) -> None:
         self.parse_context.document_view = document_view
 
         the_model = get_model(document_view)
@@ -105,7 +109,7 @@ class SDocParsingProcessor:
         document_view.ng_line_start = line_start
         document_view.ng_col_start = col_start
 
-    def process_section(self, section: SDocSection):
+    def process_section(self, section: SDocSection) -> None:
         section.ng_document_reference = self.parse_context.document_reference
         section.ng_including_document_reference = (
             self.parse_context.context_document_reference
@@ -131,7 +135,9 @@ class SDocParsingProcessor:
                     f"Section: {section}"
                 )
 
-    def process_document_from_file(self, document_from_file: DocumentFromFile):
+    def process_document_from_file(
+        self, document_from_file: DocumentFromFile
+    ) -> None:
         assert isinstance(document_from_file, DocumentFromFile), (
             document_from_file
         )
@@ -188,7 +194,7 @@ class SDocParsingProcessor:
 
         preserve_source_location_data(requirement)
 
-    def process_node_field(self, node_field: SDocNodeField):
+    def process_node_field(self, node_field: SDocNodeField) -> None:
         node_field_parts = node_field.parts
         if (
             isinstance(node_field_parts[0], str)

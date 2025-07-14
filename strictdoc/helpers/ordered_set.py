@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def"
 import itertools
 import typing as t
 
@@ -28,7 +27,7 @@ class OrderedSet(t.MutableSet[T]):
     def discard(self, value: T) -> None:
         self._d.pop(value, None)
 
-    def __getitem__(self, index) -> T:
+    def __getitem__(self, index: int) -> T:
         try:
             return next(itertools.islice(self._d, index, index + 1))
         except StopIteration:
@@ -49,11 +48,11 @@ class OrderedSet(t.MutableSet[T]):
     def __repr__(self) -> str:
         return f"<OrderedSet {self}>"
 
-    def sort(self, key=None) -> None:
+    def sort(self, key: t.Optional[t.Callable[[T], t.Any]] = None) -> None:
         key_wrapper: t.Optional[t.Callable[[t.Any], t.Any]]
-        if key:
+        if key is not None:
 
-            def key_wrapper(item):
+            def key_wrapper(item: t.Tuple[T, None]) -> t.Any:
                 return key(item[0])
         else:
             key_wrapper = None

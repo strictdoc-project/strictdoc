@@ -2,9 +2,9 @@
 @relation(SDOC-SRS-142, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 from functools import partial
-from typing import List, Optional, TypedDict
+from typing import Any, Dict, List, Optional, TypedDict
 
 from textx import get_location, metamodel_from_str
 
@@ -32,7 +32,7 @@ class TextXLocation(TypedDict):
     filename: str
 
 
-def req_processor(req: Req):
+def req_processor(req: Req) -> None:
     assert isinstance(req, Req), (
         f"Expected req to be Req, got: {req}, {type(req)}"
     )
@@ -45,7 +45,7 @@ def req_processor(req: Req):
 def source_file_traceability_info_processor(
     source_file_traceability_info: SourceFileTraceabilityInfo,
     parse_context: ParseContext,
-):
+) -> None:
     if len(parse_context.marker_stack) > 0:
         raise create_unmatch_range_error(
             parse_context.marker_stack,
@@ -55,8 +55,10 @@ def source_file_traceability_info_processor(
 
 
 def create_begin_end_range_reqs_mismatch_error(
-    location, lhs_marker_reqs, rhs_marker_reqs
-):
+    location: Dict[str, Any],
+    lhs_marker_reqs: List[str],
+    rhs_marker_reqs: List[str],
+) -> StrictDocSemanticError:
     lhs_marker_reqs_str = ", ".join(lhs_marker_reqs)
     rhs_marker_reqs_str = ", ".join(rhs_marker_reqs)
 
@@ -80,7 +82,9 @@ Content...
     )
 
 
-def create_end_without_begin_error(location):
+def create_end_without_begin_error(
+    location: Dict[str, Any],
+) -> StrictDocSemanticError:
     return StrictDocSemanticError(
         "STRICTDOC RANGE: END marker without preceding BEGIN marker",
         (
@@ -100,7 +104,9 @@ Content...
     )
 
 
-def create_unmatch_range_error(unmatched_ranges: List[RangeMarker]):
+def create_unmatch_range_error(
+    unmatched_ranges: List[RangeMarker],
+) -> StrictDocSemanticError:
     assert isinstance(unmatched_ranges, list)
     assert len(unmatched_ranges) > 0
     range_locations: List[TextXLocation] = []
@@ -131,7 +137,9 @@ def create_unmatch_range_error(unmatched_ranges: List[RangeMarker]):
     )
 
 
-def range_marker_processor(marker: RangeMarker, parse_context: ParseContext):
+def range_marker_processor(
+    marker: RangeMarker, parse_context: ParseContext
+) -> None:
     location = get_location(marker)
     line = location["line"]
 
@@ -188,7 +196,9 @@ def range_marker_processor(marker: RangeMarker, parse_context: ParseContext):
         raise NotImplementedError
 
 
-def line_marker_processor(line_marker: LineMarker, parse_context: ParseContext):
+def line_marker_processor(
+    line_marker: LineMarker, parse_context: ParseContext
+) -> None:
     location = get_location(line_marker)
     line = location["line"]
 
@@ -211,7 +221,7 @@ def line_marker_processor(line_marker: LineMarker, parse_context: ParseContext):
 
 def function_range_marker_processor(
     function_range_marker: FunctionRangeMarker, parse_context: ParseContext
-):
+) -> None:
     if (
         len(parse_context.marker_stack) > 0
         and parse_context.marker_stack[-1].ng_is_nodoc
@@ -247,7 +257,9 @@ class SourceFileTraceabilityReader:
             use_regexp_group=True,
         )
 
-    def read(self, input_string, file_path=None) -> SourceFileTraceabilityInfo:
+    def read(
+        self, input_string: str, file_path: Optional[str] = None
+    ) -> SourceFileTraceabilityInfo:
         # TODO: This might be possible to handle directly in the textx grammar.
         # AttributeError: 'str' object has no attribute '_tx_parser'.
         file_size = len(input_string)

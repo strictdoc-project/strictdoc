@@ -1,11 +1,11 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 import datetime
 import glob
 import hashlib
 import os.path
 import shutil
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from jinja2 import (
     Environment,
@@ -29,11 +29,11 @@ class JinjaEnvironment:
     def __init__(self, environment: Environment):
         self.environment = environment
 
-    def get_template(self, *args, **kwargs) -> Template:
+    def get_template(self, *args: Any, **kwargs: Any) -> Template:
         return self.environment.get_template(*args, **kwargs)
 
     def render_template_as_markup(
-        self, template: str, *args, **kwargs
+        self, template: str, *args: Any, **kwargs: Any
     ) -> Markup:
         return Markup(
             self.environment.get_template(template).render(*args, **kwargs)
@@ -46,7 +46,7 @@ class HTMLTemplates:
         project_config: ProjectConfig,
         enable_caching: bool,
         strictdoc_last_update: datetime.datetime,
-    ):
+    ) -> "HTMLTemplates":
         assert isinstance(strictdoc_last_update, datetime.datetime)
         if enable_caching:
             cacheable_templates = CompiledHTMLTemplates(project_config)
@@ -63,7 +63,7 @@ class HTMLTemplates:
 
 
 class NormalHTMLTemplates(HTMLTemplates):
-    def __init__(self):
+    def __init__(self) -> None:
         self._jinja_environment: JinjaEnvironment = JinjaEnvironment(
             Environment(
                 loader=FileSystemLoader(
@@ -91,7 +91,7 @@ class CompiledHTMLTemplates(HTMLTemplates):
         )
         self._jinja_environment: Optional[JinjaEnvironment] = None
 
-    def compile_jinja_templates(self):
+    def compile_jinja_templates(self) -> None:
         if os.path.isdir(self.path_to_jinja_cache_bucket_dir):
             return
         jinja_environment = Environment(

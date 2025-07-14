@@ -1,12 +1,17 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
-from typing import List, Optional
+# mypy: disable-error-code="no-untyped-call"
+from typing import TYPE_CHECKING, List, Optional
 
 from strictdoc.helpers.auto_described import auto_described
+
+if TYPE_CHECKING:
+    from strictdoc.backend.sdoc.models.document import SDocDocument
 
 
 @auto_described
 class ViewElementField:
-    def __init__(self, parent, name: str, placement: Optional[str]):
+    def __init__(
+        self, parent: "ViewElementTags", name: str, placement: Optional[str]
+    ):
         self.parent = parent
         self.name: str = name
         self.placement: Optional[str] = placement
@@ -15,7 +20,10 @@ class ViewElementField:
 @auto_described
 class ViewElementTags:
     def __init__(
-        self, parent, object_type: str, visible_fields: List[ViewElementField]
+        self,
+        parent: "ViewElement",
+        object_type: str,
+        visible_fields: List[ViewElementField],
     ):
         self.parent = parent
         self.object_type: str = object_type
@@ -24,7 +32,7 @@ class ViewElementTags:
 
 @auto_described
 class ViewElementHiddenTag:
-    def __init__(self, parent, hidden_tag: str):
+    def __init__(self, parent: "ViewElement", hidden_tag: str):
         self.parent = parent
         self.hidden_tag: str = hidden_tag
 
@@ -42,7 +50,7 @@ class NullViewElement:
 class ViewElement(NullViewElement):
     def __init__(
         self,
-        parent,
+        parent: "DocumentView",
         view_id: str,
         tags: List[ViewElementTags],
         hidden_tags: Optional[List[ViewElementHiddenTag]],
@@ -78,26 +86,27 @@ class DefaultViewElement(ViewElement):
 
 @auto_described()
 class DocumentView:
-    def __init__(self, parent, views: List[ViewElement]):
+    def __init__(
+        self, parent: Optional["SDocDocument"], views: List[ViewElement]
+    ):
         self.parent = parent
         self.views: List[ViewElement] = views
         self.ng_line_start: int = 0
         self.ng_col_start: int = 0
 
     @staticmethod
-    def create_default(parent) -> "DocumentView":
-        return DocumentView(
-            parent,
-            [
-                DefaultViewElement(
-                    parent=parent,
-                    view_id="NOT_RELEVANT",
-                    tags=[],
-                    hidden_tags=[],
-                    name=None,
-                )
-            ],
+    def create_default(parent: Optional["SDocDocument"]) -> "DocumentView":
+        document_view = DocumentView(parent, [])
+        document_view.views.append(
+            DefaultViewElement(
+                parent=document_view,
+                view_id="NOT_RELEVANT",
+                tags=[],
+                hidden_tags=[],
+                name=None,
+            )
         )
+        return document_view
 
     def get_default_view(self) -> ViewElement:
         return self.views[0]

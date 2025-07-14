@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
 import os.path
 from pathlib import Path
 from typing import Dict, List, Tuple, Union
@@ -299,7 +299,7 @@ class SDWriter:
         root_node: Union[SDocDocument, SDocSection, SDocNode, DocumentFromFile],
         document: SDocDocument,
         document_iterator: DocumentCachingIterator,
-    ):
+    ) -> str:
         assert isinstance(document_iterator, DocumentCachingIterator), (
             document_iterator
         )
@@ -376,7 +376,7 @@ class SDWriter:
         raise AssertionError("Must not reach here")  # pragma: no cover
 
     @staticmethod
-    def _print_document_from_file(document_from_file: DocumentFromFile):
+    def _print_document_from_file(document_from_file: DocumentFromFile) -> str:
         assert isinstance(document_from_file, DocumentFromFile)
         output = ""
         output += "[DOCUMENT_FROM_FILE]"
@@ -393,7 +393,7 @@ class SDWriter:
         section: SDocSection,
         document: SDocDocument,
         iterator: DocumentCachingIterator,
-    ):
+    ) -> str:
         assert isinstance(section, SDocSection)
         output = ""
         output += "[SECTION]"
@@ -438,7 +438,7 @@ class SDWriter:
 
     def _print_requirement_fields(
         self, section_content: SDocNode, document: SDocDocument
-    ):
+    ) -> str:
         output = ""
 
         current_view: ViewElement = document.view.get_current_view(
@@ -480,7 +480,13 @@ class SDWriter:
         return output
 
     @staticmethod
-    def _print_grammar_field_type(grammar_field):
+    def _print_grammar_field_type(
+        grammar_field: Union[
+            GrammarElementFieldString,
+            GrammarElementFieldMultipleChoice,
+            GrammarElementFieldSingleChoice,
+        ],
+    ) -> str:
         output = ""
         output += "  - TITLE: "
         output += grammar_field.title
@@ -515,7 +521,7 @@ class SDWriter:
         return output
 
     @classmethod
-    def _print_requirement_relations(cls, requirement: SDocNode):
+    def _print_requirement_relations(cls, requirement: SDocNode) -> str:
         assert isinstance(requirement, SDocNode)
 
         if len(requirement.relations) == 0:

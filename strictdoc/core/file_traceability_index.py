@@ -2,9 +2,18 @@
 @relation(SDOC-SRS-28, SDOC-SRS-33, scope=file)
 """
 
-# mypy: disable-error-code="arg-type,no-untyped-def"
+# mypy: disable-error-code="arg-type"
 from copy import copy
-from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Set,
+    Tuple,
+    Union,
+)
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
@@ -37,9 +46,14 @@ from strictdoc.helpers.google_test import convert_function_name_to_gtest_macro
 from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.removeprefix import removeprefix
 
+if TYPE_CHECKING:
+    from strictdoc.core.traceability_index import (
+        TraceabilityIndex,
+    )
+
 
 class FileTraceabilityIndex:
-    def __init__(self):
+    def __init__(self) -> None:
         # "file.py" -> List[SDocNode]
         self.map_paths_to_reqs: Dict[str, OrderedSet[SDocNode]] = {}
 
@@ -188,8 +202,10 @@ class FileTraceabilityIndex:
         return source_file_tr_info
 
     def validate_and_resolve(
-        self, traceability_index, project_config: ProjectConfig
-    ):
+        self,
+        traceability_index: "TraceabilityIndex",
+        project_config: ProjectConfig,
+    ) -> None:
         """
         Resolve all source code traceability after the index is fully built.
         """
@@ -552,11 +568,11 @@ class FileTraceabilityIndex:
             traceability_info_,
         ) in self.map_paths_to_source_file_traceability_info.items():
 
-            def marker_comparator(marker):
+            def marker_comparator_start(marker: RangeMarker) -> Optional[int]:
                 return marker.ng_range_line_begin
 
             sorted_markers = sorted(
-                traceability_info_.markers, key=marker_comparator
+                traceability_info_.markers, key=marker_comparator_start
             )
 
             traceability_info_.markers = sorted_markers
@@ -607,10 +623,12 @@ class FileTraceabilityIndex:
                 markers_,
             ) in traceability_info_.ng_map_reqs_to_markers.items():
 
-                def marker_comparator(marker):
+                def marker_comparator_range(
+                    marker: RangeMarker,
+                ) -> Tuple[Optional[int], Optional[int]]:
                     return marker.ng_range_line_begin, marker.ng_range_line_end
 
-                markers_.sort(key=marker_comparator)
+                markers_.sort(key=marker_comparator_range)
 
                 # Validate here, SDocNode.relations doesn't track marker roles.
                 node = traceability_index.get_node_by_uid(req_uid_)
@@ -638,7 +656,7 @@ class FileTraceabilityIndex:
         # Sort by node UID alphabetically.
         for path_requirements_ in self.map_paths_to_reqs.values():
 
-            def compare_sdocnode_by_uid(node_) -> str:
+            def compare_sdocnode_by_uid(node_: SDocNode) -> str:
                 return assert_cast(node_.reserved_uid, str)
 
             path_requirements_.sort(key=compare_sdocnode_by_uid)
@@ -797,7 +815,7 @@ class FileTraceabilityIndex:
         self.trace_infos.append(traceability_info)
 
     def get_req_uids_by_function_name(
-        self, rel_path_posix, name
+        self, rel_path_posix: str, name: str
     ) -> Optional[List[Tuple[str, Optional[str]]]]:
         if rel_path_posix in self.map_file_function_names_to_reqs_uids:
             return self.map_file_function_names_to_reqs_uids[
@@ -806,7 +824,7 @@ class FileTraceabilityIndex:
         return None
 
     def get_req_uids_by_class_name(
-        self, rel_path_posix, name
+        self, rel_path_posix: str, name: str
     ) -> Optional[List[Tuple[str, Optional[str]]]]:
         if rel_path_posix in self.map_file_class_names_to_reqs_uids:
             return self.map_file_class_names_to_reqs_uids[rel_path_posix].get(
@@ -820,7 +838,7 @@ class FileTraceabilityIndex:
         function: Function,
         marker_type: RangeMarkerType,
         reqs_uids: List[Tuple[str, Optional[str]]],
-    ):
+    ) -> None:
         markers_by_role = {}
         for req_uid_, role in reqs_uids:
             req = Req(None, req_uid_)

@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-36, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,operator"
+# mypy: disable-error-code="no-untyped-call,operator"
 import os
 from pathlib import Path
 from typing import List, Tuple, Union
@@ -94,7 +94,7 @@ class SourceFileViewHTMLGenerator:
         source_file: SourceFile,
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
-    ):
+    ) -> Markup:
         with open(source_file.full_path, encoding="utf-8") as opened_file:
             source_file_lines = opened_file.readlines()
 

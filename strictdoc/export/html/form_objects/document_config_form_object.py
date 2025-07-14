@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData
@@ -26,15 +26,17 @@ class DocumentMetadataFormField:
         self.field_value: str = field_value
 
     @staticmethod
-    def create_from_document(name: str, value: str):
+    def create_from_document(
+        name: str, value: str
+    ) -> "DocumentMetadataFormField":
         return DocumentMetadataFormField(
             field_mid=MID.create(), field_name=name, field_value=value
         )
 
-    def get_input_field_name(self):
+    def get_input_field_name(self) -> str:
         return f"metadata[{self.field_mid}][name]"
 
-    def get_input_field_value(self):
+    def get_input_field_value(self) -> str:
         return f"metadata[{self.field_mid}][value]"
 
 

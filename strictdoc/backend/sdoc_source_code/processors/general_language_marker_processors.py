@@ -86,7 +86,7 @@ Content...
 
 
 def create_unmatch_range_error(
-    unmatched_ranges: List[RangeMarker], filename: str
+    unmatched_ranges: List[RangeMarker], filename: Optional[str]
 ) -> StrictDocSemanticError:
     assert isinstance(unmatched_ranges, list)
     assert len(unmatched_ranges) > 0

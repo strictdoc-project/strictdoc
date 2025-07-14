@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-28, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import datetime
 from copy import deepcopy
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
@@ -14,6 +14,7 @@ from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
+from strictdoc.backend.sdoc_source_code.models.range_marker import RangeMarker
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
@@ -118,7 +119,7 @@ class TraceabilityIndex:
         )
         return len(children_requirements) > 0
 
-    def has_source_file_reqs(self, source_file_rel_path):
+    def has_source_file_reqs(self, source_file_rel_path: str) -> bool:
         return self._file_traceability_index.has_source_file_reqs(
             source_file_rel_path
         )
@@ -145,7 +146,9 @@ class TraceabilityIndex:
     def get_file_traceability_index(self) -> FileTraceabilityIndex:
         return self._file_traceability_index
 
-    def get_document_iterator(self, document) -> DocumentCachingIterator:
+    def get_document_iterator(
+        self, document: SDocDocument
+    ) -> DocumentCachingIterator:
         return self.document_iterators[document]
 
     def get_parent_requirements(self, requirement: SDocNode) -> List[SDocNode]:
@@ -251,13 +254,15 @@ class TraceabilityIndex:
         for tag in tags:
             yield tag, document_tags[tag]
 
-    def get_requirement_file_links(self, requirement):
+    def get_requirement_file_links(
+        self, requirement: SDocNode
+    ) -> List[Tuple[str, List[RangeMarker]]]:
         return self._file_traceability_index.get_requirement_file_links(
             requirement
         )
 
     def get_source_file_reqs(
-        self, source_file_rel_path
+        self, source_file_rel_path: str
     ) -> Optional[List[SDocNode]]:
         return self._file_traceability_index.get_source_file_reqs(
             source_file_rel_path
@@ -277,13 +282,13 @@ class TraceabilityIndex:
             source_file_rel_path
         )
 
-    def get_node_by_uid(self, uid: str):
+    def get_node_by_uid(self, uid: str) -> Any:
         assert isinstance(uid, str) and len(uid) > 0, uid
         return self.graph_database.get_link_value(
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
         )
 
-    def get_node_by_uid_weak2(self, uid: str):
+    def get_node_by_uid_weak2(self, uid: str) -> Optional[Any]:
         """
         FIXME: This can likely replace _weak below with no problem.
         """
@@ -293,7 +298,7 @@ class TraceabilityIndex:
         )
 
     def get_linkable_node_by_uid(
-        self, uid
+        self, uid: str
     ) -> Union[SDocDocument, SDocNode, SDocSection, Anchor]:
         return assert_cast(
             self.get_node_by_uid(uid),
@@ -321,7 +326,7 @@ class TraceabilityIndex:
         return None
 
     def get_linkable_node_by_uid_weak(
-        self, uid
+        self, uid: str
     ) -> Union[SDocDocument, SDocNode, SDocSection, Anchor, None]:
         return assert_optional_cast(
             self.graph_database.get_link_value_weak(
@@ -346,7 +351,7 @@ class TraceabilityIndex:
         self,
         source_file: SourceFile,
         traceability_info: SourceFileTraceabilityInfo,
-    ):
+    ) -> None:
         self._file_traceability_index.create_traceability_info(
             source_file, traceability_info
         )
@@ -379,7 +384,7 @@ class TraceabilityIndex:
             rhs_node=section,
         )
 
-    def create_inline_link(self, new_link: InlineLink):
+    def create_inline_link(self, new_link: InlineLink) -> None:
         assert isinstance(new_link, InlineLink)
 
         # InlineLink points to a section, node or to anchor.
@@ -418,7 +423,7 @@ class TraceabilityIndex:
         """
         self.index_last_updated = datetime.datetime.today()
 
-    def create_requirement(self, requirement: SDocNode):
+    def create_requirement(self, requirement: SDocNode) -> None:
         assert isinstance(requirement, SDocNode), requirement
 
         self.graph_database.create_link(
@@ -501,7 +506,7 @@ class TraceabilityIndex:
 
         cycle_detector = TreeCycleDetector()
 
-        def parent_cycle_traverse_(node_id):
+        def parent_cycle_traverse_(node_id: str) -> List[Any]:
             node = self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_NODE,
                 lhs_node=node_id,
@@ -572,7 +577,7 @@ class TraceabilityIndex:
 
         cycle_detector = TreeCycleDetector()
 
-        def child_cycle_traverse_(node_id):
+        def child_cycle_traverse_(node_id: str) -> List[Any]:
             node = self.graph_database.get_link_value(
                 link_type=GraphLinkType.UID_TO_NODE,
                 lhs_node=node_id,
@@ -602,7 +607,7 @@ class TraceabilityIndex:
                 datetime.datetime.today(),
             )
 
-    def update_with_anchor(self, anchor: Anchor):
+    def update_with_anchor(self, anchor: Anchor) -> None:
         # By this time, we know that the validations have passed just before.
         existing_anchor: Optional[Anchor] = (
             self.graph_database.get_link_value_weak(
@@ -635,7 +640,7 @@ class TraceabilityIndex:
 
     def update_disconnect_two_documents_if_no_links_left(
         self, document: SDocDocument, other_document: SDocDocument
-    ):
+    ) -> None:
         assert document != other_document
 
         for node, _ in self.document_iterators[document].all_content(
@@ -845,7 +850,7 @@ class TraceabilityIndex:
             rhs_node=inline_link,
         )
 
-    def remove_anchor_by_uid(self, anchor_uid: str):
+    def remove_anchor_by_uid(self, anchor_uid: str) -> None:
         anchor: Anchor = self.graph_database.get_link_value(
             link_type=GraphLinkType.UID_TO_NODE,
             lhs_node=anchor_uid,
@@ -994,7 +999,7 @@ class TraceabilityIndex:
     # FIXME: This function will be removed in 2025-Q3.
     def validate_section_can_remove_uid(
         self, *, section: SDocSection
-    ):  # pragma: no cover
+    ) -> None:  # pragma: no cover
         section_incoming_links: Optional[List[InlineLink]] = (
             self.get_incoming_links(section)
         )
@@ -1020,7 +1025,7 @@ class TraceabilityIndex:
 
     def validate_can_create_uid(
         self, uid: str, existing_node_mid: Optional[MID]
-    ):
+    ) -> None:
         assert isinstance(uid, str), uid
         assert len(uid) > 0, uid
 

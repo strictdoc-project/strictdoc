@@ -22,7 +22,7 @@
         // Expand folder to index if we run from the local file system.
         const expanded = (
           (window.location.protocol === 'file:')
-          ? resolved.replace(/#/, 'index.html#')
+          ? resolved.replace(/#/, 'index.html?a=')
           : resolved
         );
 

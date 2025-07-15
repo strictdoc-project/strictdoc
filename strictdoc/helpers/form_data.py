@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import re
 from typing import Dict, List, Tuple, Union
 
@@ -15,32 +15,60 @@ ParsedFormData: TypeAlias = Dict[
     str, Union[ParsedFormDataLeaf, ParsedFormDataContainer]
 ]
 
+ParsedFormDataNode: TypeAlias = Union[
+    str,
+    Dict[str, "ParsedFormDataNode"],
+    List["ParsedFormDataNode"],
+]
 
-def _set_value_by_key_path(obj, parts, value):
-    cursor = obj
+
+def as_dict(node: ParsedFormDataNode) -> Dict[str, ParsedFormDataNode]:
+    if not isinstance(node, dict):
+        raise KeyError("Expected dict node")
+    return node
+
+
+def as_list(node: ParsedFormDataNode) -> List[ParsedFormDataNode]:
+    if not isinstance(node, list):
+        raise KeyError("Expected list node")
+    return node
+
+
+def _set_value_by_key_path(
+    obj: Dict[str, ParsedFormDataNode],
+    parts: List[Union[str, int]],
+    value: Union[ParsedFormDataLeaf, ParsedFormDataContainer],
+) -> None:
+    cursor: ParsedFormDataNode = obj
     for part_idx, part in enumerate(parts):
         try:
             next_component = parts[part_idx + 1]
 
             if isinstance(part, str):
+                cursor_dict = as_dict(cursor)
+
                 if isinstance(next_component, str):
                     if next_component != "":
                         if part not in cursor:
                             if not isinstance(cursor, dict):
                                 raise KeyError
-                            cursor[part] = {}
+                            cursor_dict[part] = {}
                     else:
                         if part not in cursor:
-                            cursor[part] = []
+                            cursor_dict[part] = []
                 else:
                     if part not in cursor:
-                        cursor[part] = []
-                cursor = cursor[part]
+                        cursor_dict[part] = []
+
+                cursor = cursor_dict[part]
             else:
                 assert isinstance(part, int)
+
                 if isinstance(next_component, str):
+                    cursor_list = as_list(cursor)
+
                     try:
-                        cursor = cursor[part]
+                        cursor = cursor_list[part]
                     except IndexError:
                         if part != len(cursor):
                             raise IndentationError(
@@ -48,8 +76,8 @@ def _set_value_by_key_path(obj, parts, value):
                                 "is broken in this form data: "
                                 f"{obj} {parts} {value}."
                             ) from None
-                        cursor.append({})
-                        cursor = cursor[part]
+                        cursor_list.append({})
+                        cursor = cursor_list[part]
                 else:
                     raise NotImplementedError("No [][] supported.")
         except IndexError:

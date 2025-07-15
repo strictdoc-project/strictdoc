@@ -358,15 +358,15 @@ class DocumentScreenViewObject:
         """
         Get a stable link for a given node.
 
-        An example of a link produced: ../../#SDOC_UG_CONTACT
+        An example of a link provided: ../../#SDOC_UG_CONTACT
         The copy_stable_link_button_controller.js consumes this link and
-        transforms it into a link like: http://127.0.0.1:5111/#SDOC_UG_CONTACT.
+        transforms it into a link like: http://127.0.0.1:5111/?a=SDOC_UG_CONTACT.
         """
 
         assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
         base_url = self.link_renderer.render_url("")
         if node.reserved_uid is not None:
-            return base_url + "#" + node.reserved_uid
+            return base_url + "?a=" + node.reserved_uid
         if node.reserved_mid is not None and node.mid_permanent:
-            return base_url + "#" + node.reserved_mid
+            return base_url + "?a=" + node.reserved_mid
         return base_url

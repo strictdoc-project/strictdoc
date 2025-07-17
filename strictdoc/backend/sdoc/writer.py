@@ -16,9 +16,8 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementFieldTag,
-    GrammarElementRelationChild,
-    GrammarElementRelationFile,
-    GrammarElementRelationParent,
+    GrammarElementFieldType,
+    GrammarElementRelationType,
     RequirementFieldType,
 )
 from strictdoc.backend.sdoc.models.node import (
@@ -265,13 +264,10 @@ class SDWriter:
                             grammar_field
                         )
 
-                    relations: List[
-                        Union[
-                            GrammarElementRelationParent,
-                            GrammarElementRelationChild,
-                            GrammarElementRelationFile,
-                        ]
-                    ] = element.relations
+                    relations: List[GrammarElementRelationType] = (
+                        element.relations
+                    )
+
                     if len(relations) > 0:
                         output += "  RELATIONS:\n"
 
@@ -481,11 +477,7 @@ class SDWriter:
 
     @staticmethod
     def _print_grammar_field_type(
-        grammar_field: Union[
-            GrammarElementFieldString,
-            GrammarElementFieldMultipleChoice,
-            GrammarElementFieldSingleChoice,
-        ],
+        grammar_field: GrammarElementFieldType,
     ) -> str:
         output = ""
         output += "  - TITLE: "

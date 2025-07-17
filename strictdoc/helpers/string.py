@@ -84,6 +84,6 @@ def interpolate_at_pattern_lazy(
 
     def replace_variable(match: Match[str]) -> str:
         variable_name = match.group(1)
-        return value_resolver(variable_name) or ""
+        return value_resolver(variable_name)
 
     return re.sub(pattern, replace_variable, template)

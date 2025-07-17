@@ -1,5 +1,5 @@
 # mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
-from typing import List, Optional, Set, Tuple, Union
+from typing import List, Optional, Set, Tuple
 
 from jinja2 import Template
 from markupsafe import Markup
@@ -16,6 +16,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
+    GrammarElementRelationType,
 )
 from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.core.project_config import ProjectConfig
@@ -330,13 +331,7 @@ class GrammarElementFormObject(ErrorObject):
                 required="True" if field.field_required else "False",
             )
             grammar_fields.append(grammar_field)
-        relation_fields: List[
-            Union[
-                GrammarElementRelationParent,
-                GrammarElementRelationChild,
-                GrammarElementRelationFile,
-            ]
-        ] = []
+        relation_fields: List[GrammarElementRelationType] = []
 
         for relation in self.relations:
             if relation.relation_type == "Parent":

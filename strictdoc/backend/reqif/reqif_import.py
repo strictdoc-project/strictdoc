@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-72, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-def"
 import os.path
 from typing import List
 
@@ -58,7 +57,9 @@ class ReqIFImport:
         return documents
 
     @staticmethod
-    def select_reqif_profile(import_config: ImportReqIFCommandConfig):
+    def select_reqif_profile(
+        import_config: ImportReqIFCommandConfig,
+    ) -> P01_ReqIFToSDocConverter:
         if (
             import_config.profile is None
             or import_config.profile == ReqIFProfile.P01_SDOC

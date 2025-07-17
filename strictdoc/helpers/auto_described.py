@@ -1,32 +1,44 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 # This function could be a separate package but keeping it within the project
 # for simplicity.
 __version__ = "0.0.1"
 
-from typing import Any, Optional
+from typing import Any, Callable, Optional, Type, TypeVar, Union, overload
+
+T = TypeVar("T", bound=Type[Any])
+
+
+@overload
+def auto_described(cls: T) -> T: ...
+@overload
+def auto_described(
+    cls: None = ..., *, str_and_repr: bool = ...
+) -> Callable[[T], T]: ...
 
 
 # Maybe there is a better way to generate __str__ and __repr__.
 # But for now, this solution works good enough:
 # https://stackoverflow.com/a/33800620/598057
 # https://stackoverflow.com/a/24617244/598057
-def auto_described(cls: Optional[Any] = None, str_and_repr: bool = True):
-    def configure_class(clz):
-        def __str__(self):
+def auto_described(
+    cls: Optional[Any] = None, str_and_repr: bool = True
+) -> Union[T, Callable[[T], T]]:
+    def configure_class(clz: T) -> T:
+        def __str__(self: object) -> str:
             return auto_str(self)
 
-        def __repr__(self):
+        def __repr__(self: object) -> str:
             return auto_str(self)
 
-        clz.__str__ = __str__
+        clz.__str__ = __str__  # type: ignore[assignment]
         if str_and_repr:
-            clz.__repr__ = __repr__
+            clz.__repr__ = __repr__  # type: ignore[assignment]
         return clz
 
     if cls is not None:
         return configure_class(cls)
 
-    def factory(clz):
+    def factory(clz: T) -> T:
         return configure_class(clz)
 
     return factory

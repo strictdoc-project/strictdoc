@@ -1,18 +1,20 @@
-# mypy: disable-error-code="no-untyped-def"
 import contextlib
 from functools import wraps
 from time import time
-from typing import Any, Callable, TypeVar
+from typing import Callable, Iterator, TypeVar
+
+from typing_extensions import ParamSpec
 
 from strictdoc.helpers.math import round_up
 
-TimingDecoratorT = TypeVar("TimingDecoratorT", bound=Callable[..., Any])
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
-def timing_decorator(name) -> Callable[[TimingDecoratorT], TimingDecoratorT]:
-    def timing_internal(func):
+def timing_decorator(name: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
+    def timing_internal(func: Callable[P, R]) -> Callable[P, R]:
         @wraps(func)
-        def wrap(*args, **kw):
+        def wrap(*args: P.args, **kw: P.kwargs) -> R:
             print(f"Step '{name}' start.", flush=True)  # noqa: T201
             time_start = time()
             result = func(*args, **kw)
@@ -29,7 +31,7 @@ def timing_decorator(name) -> Callable[[TimingDecoratorT], TimingDecoratorT]:
 
 
 @contextlib.contextmanager
-def measure_performance(title):
+def measure_performance(title: str) -> Iterator[None]:
     time_start = time()
     yield
     time_end = time()

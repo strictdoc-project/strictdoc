@@ -44,7 +44,7 @@ class SourceFileTraceabilityReader_C:
     def read(
         self,
         input_buffer: bytes,
-        file_path: str,
+        file_path: Optional[str] = None,
     ) -> SourceFileTraceabilityInfo:
         assert isinstance(input_buffer, bytes)
 

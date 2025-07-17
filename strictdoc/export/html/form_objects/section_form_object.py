@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call"
 from collections import defaultdict
 
 from starlette.datastructures import FormData
@@ -38,15 +38,15 @@ class SectionFormObject(ErrorObject):
         self.context_document_mid = context_document_mid
 
     @property
-    def section_uid(self):
+    def section_uid(self) -> str:
         return self.section_uid_field.field_value
 
     @property
-    def section_title(self):
+    def section_title(self) -> str:
         return self.section_title_field.field_value
 
     @staticmethod
-    def create_new(context_document_mid: str):
+    def create_new(context_document_mid: str) -> "SectionFormObject":
         return SectionFormObject(
             section_mid=MID.create(),
             section_uid_field=RequirementFormField(
@@ -65,7 +65,9 @@ class SectionFormObject(ErrorObject):
         )
 
     @staticmethod
-    def create_from_section(*, section: SDocSection, context_document_mid: str):
+    def create_from_section(
+        *, section: SDocSection, context_document_mid: str
+    ) -> "SectionFormObject":
         uid_field_value = (
             section.reserved_uid if section.reserved_uid is not None else ""
         )

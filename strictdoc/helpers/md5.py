@@ -1,8 +1,7 @@
-# mypy: disable-error-code="no-untyped-def"
 import hashlib
 
 
-def get_md5(obj: str):
+def get_md5(obj: str) -> str:
     return hashlib.md5(obj.encode("utf-8")).hexdigest()
 
 

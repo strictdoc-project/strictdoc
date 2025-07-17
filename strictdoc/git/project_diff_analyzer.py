@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
 import hashlib
 import statistics
 from dataclasses import dataclass, field
@@ -69,7 +69,7 @@ class ProjectTreeDiffStats:
         default_factory=dict
     )
 
-    def get_md5_by_node(self, node) -> str:
+    def get_md5_by_node(self, node: Any) -> str:
         return self.map_nodes_to_hashes[node]
 
     def contains_requirement_md5(self, requirement_md5: str) -> bool:
@@ -107,7 +107,7 @@ class ProjectTreeDiffStats:
         requirement: SDocNode,
         relation_uid: str,
         relation_role: Optional[str],
-    ):
+    ) -> bool:
         other_requirement: Optional[SDocNode] = self.find_requirement(
             requirement
         )
@@ -198,7 +198,9 @@ class ChangeStats:
         default_factory=dict
     )
 
-    def find_change(self, node: Any):
+    def find_change(
+        self, node: Any
+    ) -> Optional[Union[DocumentChange, SectionChange, RequirementChange]]:
         return self.map_nodes_to_changes.get(node)
 
     def get_total_changes(self) -> int:
@@ -263,8 +265,10 @@ class ChangeStats:
         return self._section_counter.get(ChangeType.SECTION)
 
     def add_change(
-        self, change: ChangeUnionType, node_type: Optional[str] = None
-    ):
+        self,
+        change: Union[DocumentChange, SectionChange, RequirementChange],
+        node_type: Optional[str] = None,
+    ) -> None:
         self.changes.append(change)
         if change.change_type in (
             ChangeType.REQUIREMENT_REMOVED,
@@ -304,7 +308,7 @@ class ChangeStats:
         rhs_index: TraceabilityIndex,
         lhs_stats: ProjectTreeDiffStats,
         rhs_stats: ProjectTreeDiffStats,
-    ):
+    ) -> "ChangeStats":
         stats = ChangeStats()
 
         ChangeStats._iterate_one_index(
@@ -323,7 +327,7 @@ class ChangeStats:
         other_stats: ProjectTreeDiffStats,
         change_stats: "ChangeStats",
         side: str,
-    ):
+    ) -> None:
         assert side in ("left", "right")
 
         for document in index.document_tree.document_list:

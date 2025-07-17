@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-72, scope=file)
 """
 
-# mypy: disable-error-code="arg-type,no-untyped-def"
+# mypy: disable-error-code="arg-type"
 import os
 from pathlib import Path
 
@@ -24,7 +24,7 @@ class ReqIFExport:
         traceability_index: TraceabilityIndex,
         output_reqif_root: str,
         reqifz: bool,
-    ):
+    ) -> None:
         Path(output_reqif_root).mkdir(parents=True, exist_ok=True)
 
         if project_config.reqif_profile == ReqIFProfile.P01_SDOC:

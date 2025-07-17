@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
 import html
 from typing import Any, Dict, Optional, Tuple, Union
 
@@ -6,6 +6,9 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
+from strictdoc.backend.sdoc_source_code.models.range_marker import (
+    RangeMarker,
+)
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.helpers.cast import assert_cast
@@ -13,7 +16,7 @@ from strictdoc.helpers.string import create_safe_title_string
 
 
 class LinkRenderer:
-    def __init__(self, *, root_path, static_path: str):
+    def __init__(self, *, root_path: str, static_path: str) -> None:
         assert isinstance(root_path, str)
         assert isinstance(static_path, str), static_path
         assert len(static_path) > 0, static_path
@@ -155,7 +158,7 @@ class LinkRenderer:
     def render_node_doxygen_link(
         self,
         node: Union[SDocDocument, SDocNode, SDocSection, Anchor],
-    ):
+    ) -> str:
         """
         Create a Doxygen link for a given node.
 
@@ -171,7 +174,9 @@ class LinkRenderer:
         requirement_link = f"{document_link}#{local_link}"
         return requirement_link
 
-    def render_requirement_link_from_source_file(self, node, source_file):
+    def render_requirement_link_from_source_file(
+        self, node: SDocNode, source_file: SourceFile
+    ) -> str:
         assert isinstance(node, SDocNode)
         assert isinstance(source_file, SourceFile)
         local_link = self.render_local_anchor(node)
@@ -194,7 +199,7 @@ class LinkRenderer:
     @staticmethod
     def render_source_file_link(
         requirement: SDocNode, requirement_source_path: str
-    ):
+    ) -> str:
         assert isinstance(requirement_source_path, str), requirement_source_path
 
         assert requirement.ng_document_reference is not None
@@ -208,12 +213,12 @@ class LinkRenderer:
         return source_file_link
 
     @staticmethod
-    def render_source_file_link_from_root(requirement_source_path: str):
+    def render_source_file_link_from_root(requirement_source_path: str) -> str:
         assert isinstance(requirement_source_path, str)
         return f"_source_files/{requirement_source_path}.html"
 
     @staticmethod
-    def render_source_file_link_from_root_2(source_file: SourceFile):
+    def render_source_file_link_from_root_2(source_file: SourceFile) -> str:
         assert isinstance(source_file, SourceFile)
         source_file_link = (
             "_source_files"
@@ -227,10 +232,10 @@ class LinkRenderer:
         requirement: SDocNode,
         source_link: str,
         context_source_file: SourceFile,
-    ):
+    ) -> str:
         assert isinstance(source_link, str), source_link
 
-        def get_root_path_prefix(level):
+        def get_root_path_prefix(level: int) -> str:
             assert level > 0
             return ("../" * level)[:-1]
 
@@ -248,13 +253,13 @@ class LinkRenderer:
         req_uid: str,  # noqa: ARG004
         source_link: str,
         context_source_file: SourceFile,
-        source_range,
-    ):
+        source_range: RangeMarker,
+    ) -> str:
         assert isinstance(source_link, str)
         assert isinstance(context_source_file, SourceFile)
         assert len(source_link) > 0
 
-        def get_root_path_prefix(level):
+        def get_root_path_prefix(level: int) -> str:
             assert level > 0
             return ("../" * level)[:-1]
 
@@ -273,8 +278,8 @@ class LinkRenderer:
         self,
         source_link: str,
         context_source_file: SourceFile,
-        source_range,
-    ):
+        source_range: RangeMarker,
+    ) -> str:
         assert isinstance(source_link, str)
         assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
@@ -290,8 +295,8 @@ class LinkRenderer:
         requirement: SDocNode,
         source_link: str,
         context_source_file: SourceFile,
-        source_range,
-    ):
+        source_range: RangeMarker,
+    ) -> str:
         assert isinstance(source_link, str)
         assert isinstance(context_source_file, SourceFile)
         return self.render_requirement_in_source_file_range_link_using_id(
@@ -302,5 +307,5 @@ class LinkRenderer:
         )
 
     @staticmethod
-    def _string_to_link(string):
+    def _string_to_link(string: str) -> str:
         return create_safe_title_string(string)

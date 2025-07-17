@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-99, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
@@ -20,8 +20,8 @@ from strictdoc.helpers.mid import MID
 
 @auto_described
 class SectionContext:
-    def __init__(self):
-        self.title_number_string = None
+    def __init__(self) -> None:
+        self.title_number_string: Optional[str] = None
 
 
 @auto_described
@@ -90,7 +90,7 @@ class SDocSection(SDocSectionIF):
         return f"Section({', '.join(debug_components)})"
 
     @property
-    def is_root_included_document(self):
+    def is_root_included_document(self) -> bool:
         return False
 
     def get_display_title(self, include_toc_number: bool = True) -> str:
@@ -101,7 +101,7 @@ class SDocSection(SDocSectionIF):
     def get_document(self) -> Optional[SDocDocumentIF]:
         return self.ng_document_reference.get_document()
 
-    def get_including_document(self):
+    def get_including_document(self) -> Optional[SDocDocumentIF]:
         return self.ng_including_document_reference.get_document()
 
     @property
@@ -120,7 +120,7 @@ class SDocSection(SDocSectionIF):
         )
         return document
 
-    def document_is_included(self):
+    def document_is_included(self) -> bool:
         return self.ng_including_document_reference.get_document() is not None
 
     def is_requirement(self) -> bool:

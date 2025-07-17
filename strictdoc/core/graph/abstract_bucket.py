@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def"
 from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Tuple
 
@@ -42,13 +41,13 @@ class AbstractBucket(ABC):
     @abstractmethod
     def create_link(
         self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
-    ):
+    ) -> None:
         raise NotImplementedError
 
     @abstractmethod
     def delete_link(
         self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
-    ):
+    ) -> None:
         raise NotImplementedError
 
     def delete_link_weak(
@@ -56,12 +55,12 @@ class AbstractBucket(ABC):
         *,
         lhs_node: Any,
         rhs_node: Any,
-    ):
+    ) -> None:
         raise NotImplementedError
 
     def delete_all_links(
         self,
         *,
         lhs_node: Any,
-    ):
+    ) -> None:
         raise NotImplementedError

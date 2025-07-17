@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call"
 import datetime
 import os
 import re
@@ -60,7 +60,7 @@ class ProjectFeature(str, Enum):
     ALL_FEATURES = "ALL_FEATURES"
 
     @staticmethod
-    def all():  # noqa: A003
+    def all() -> List[str]:  # noqa: A003
         return list(map(lambda c: c.value, ProjectFeature))
 
 
@@ -340,7 +340,7 @@ class ProjectConfig:
     def is_activated_table_screen(self) -> bool:
         return ProjectFeature.TABLE_SCREEN in self.project_features
 
-    def is_activated_trace_screen(self):
+    def is_activated_trace_screen(self) -> bool:
         return ProjectFeature.TRACEABILITY_SCREEN in self.project_features
 
     def is_activated_deep_trace_screen(self) -> bool:

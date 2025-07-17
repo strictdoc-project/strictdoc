@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-152, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 import os
 from typing import List, NamedTuple, Optional, Tuple, Union
 
@@ -31,7 +31,7 @@ class RequirementColumns(NamedTuple):
     extra_header_pairs: List[Tuple[int, str]]
 
 
-def safe_name(dangerous_name):
+def safe_name(dangerous_name: str) -> str:
     dangerous_name = dangerous_name.splitlines()[0]
     dangerous_name = dangerous_name.strip()
     dangerous_name = dangerous_name.upper()
@@ -127,7 +127,7 @@ class ExcelToSDocConverter:
 
     @staticmethod
     def create_document(
-        title: Optional[str], extra_header_pairs
+        title: Optional[str], extra_header_pairs: List[Tuple[int, str]]
     ) -> SDocDocument:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
@@ -175,10 +175,11 @@ class ExcelToSDocConverter:
 
     @staticmethod
     def create_requirement(
-        row_values,
-        document,
+        row_values: List[str],
+        document: SDocDocument,
         columns: RequirementColumns,
-    ):
+    ) -> SDocNode:
+        assert columns.statement_column is not None
         statement = row_values[columns.statement_column]
         uid = None
         if columns.uid_column is not None:

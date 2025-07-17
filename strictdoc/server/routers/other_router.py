@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call"
 import os
 import urllib
 from copy import deepcopy
@@ -41,7 +41,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         left_revision: Optional[str] = None,
         right_revision: Optional[str] = None,
         tab: Optional[str] = None,
-    ):
+    ) -> HTMLResponse:
         if not project_config.is_activated_diff():
             return Response(
                 content="The DIFF feature is not activated in the project config.",
@@ -117,7 +117,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         left_revision: Optional[str] = None,
         right_revision: Optional[str] = None,
         tab: Optional[str] = None,
-    ):
+    ) -> HTMLResponse:
         if not project_config.is_activated_diff():
             return Response(
                 content="The DIFF feature is not activated in the project config.",

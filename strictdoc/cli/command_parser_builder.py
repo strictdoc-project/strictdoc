@@ -1,6 +1,7 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 import argparse
 import sys
+from typing import List, NoReturn
 
 from strictdoc import __version__
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
@@ -22,13 +23,13 @@ EXPORT_FORMATS = [
 EXCEL_PARSERS = ["basic"]
 
 
-def formatter(prog):
+def formatter(prog: str) -> argparse.RawTextHelpFormatter:
     return argparse.RawTextHelpFormatter(
         prog, indent_increment=2, max_help_position=4, width=80
     )
 
 
-def _check_formats(formats):
+def _check_formats(formats: str) -> List[str]:
     formats_array = formats.split(",")
     for fmt in formats_array:
         if fmt in EXPORT_FORMATS:
@@ -39,7 +40,7 @@ def _check_formats(formats):
     return formats_array
 
 
-def _check_reqif_profile(profile):
+def _check_reqif_profile(profile: str) -> str:
     if profile not in ReqIFProfile.ALL:
         # To maintain the compatibility with the previous behavior.
         if profile == "sdoc":
@@ -50,7 +51,7 @@ def _check_reqif_profile(profile):
     return profile
 
 
-def _check_reqif_import_markup(markup):
+def _check_reqif_import_markup(markup: str) -> str:
     if markup is None:
         return None
     if markup not in SDocMarkup.ALL:
@@ -60,12 +61,12 @@ def _check_reqif_import_markup(markup):
     return markup
 
 
-def _parse_fields(fields):
+def _parse_fields(fields: str) -> List[str]:
     fields_array = fields.split(",")
     return fields_array
 
 
-def add_config_argument(parser):
+def add_config_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--config",
         type=str,
@@ -74,7 +75,7 @@ def add_config_argument(parser):
 
 
 class SDocArgumentParser(argparse.ArgumentParser):
-    def error(self, message: str):
+    def error(self, message: str) -> NoReturn:
         self.print_usage(sys.stderr)
         print(f"{self.prog}: error: {message}", file=sys.stderr)  # noqa: T201
         print("")  # noqa: T201
@@ -89,7 +90,7 @@ class SDocArgumentParser(argparse.ArgumentParser):
 
 
 class CommandParserBuilder:
-    def build(self) -> argparse.ArgumentParser:
+    def build(self) -> SDocArgumentParser:
         # https://stackoverflow.com/a/19476216/598057
         main_parser = SDocArgumentParser(
             prog="strictdoc",
@@ -126,7 +127,9 @@ class CommandParserBuilder:
         return main_parser
 
     @staticmethod
-    def add_about_command(parent_command_parser):
+    def add_about_command(
+        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
+    ) -> None:
         parent_command_parser.add_parser(
             "about",
             help="About StrictDoc.",
@@ -135,7 +138,9 @@ class CommandParserBuilder:
         )
 
     @staticmethod
-    def add_export_command(parent_command_parser):
+    def add_export_command(
+        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
+    ) -> None:
         # Command – Export.
         command_parser_export = parent_command_parser.add_parser(
             "export",
@@ -254,7 +259,9 @@ class CommandParserBuilder:
         add_config_argument(command_parser_export)
 
     @staticmethod
-    def add_import_command(parent_command_parser):
+    def add_import_command(
+        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
+    ) -> None:
         command_parser_import = parent_command_parser.add_parser(
             "import",
             help="Create StrictDoc files from other formats.",
@@ -325,7 +332,7 @@ class CommandParserBuilder:
             )
         )
 
-        def check_excel_parser(parser):
+        def check_excel_parser(parser: str) -> str:
             if parser not in EXCEL_PARSERS:
                 message = (
                     f"invalid choice: '{parser}' (choose from {EXCEL_PARSERS})"
@@ -353,7 +360,9 @@ class CommandParserBuilder:
         )
 
     @staticmethod
-    def add_server_command(parent_command_parser):
+    def add_server_command(
+        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
+    ) -> None:
         command_parser_server = parent_command_parser.add_parser(
             "server",
             help="Run StrictDoc web server.",
@@ -384,7 +393,9 @@ class CommandParserBuilder:
         add_config_argument(command_parser_server)
 
     @staticmethod
-    def add_version_command(parent_command_parser):
+    def add_version_command(
+        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
+    ) -> None:
         parent_command_parser.add_parser(
             "version",
             help="Print the version of StrictDoc.",
@@ -392,7 +403,9 @@ class CommandParserBuilder:
         )
 
     @staticmethod
-    def add_passthrough_command(parent_command_parser):
+    def add_passthrough_command(
+        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
+    ) -> None:
         # Passthrough command is kept for backwards compatibility. It will
         # internally be handled as export --formats sdoc.
         command_parser_passthrough = parent_command_parser.add_parser(
@@ -486,7 +499,9 @@ class CommandParserBuilder:
         add_config_argument(command_parser_passthrough)
 
     @staticmethod
-    def add_dump_command(parent_command_parser):
+    def add_dump_command(
+        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
+    ) -> None:
         command_parser_dump_grammar = parent_command_parser.add_parser(
             "dump-grammar",
             help="Dump the SDoc grammar to a .tx file.",
@@ -497,7 +512,9 @@ class CommandParserBuilder:
         )
 
     @staticmethod
-    def add_manage_command(parent_command_parser):
+    def add_manage_command(
+        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
+    ) -> None:
         manage_command_parser = parent_command_parser.add_parser(
             "manage",
             help="Manage StrictDoc project.",
@@ -538,7 +555,9 @@ class CommandParserBuilder:
         add_config_argument(command_parser_auto_uid)
 
     @staticmethod
-    def add_diff_command(command_subparsers):
+    def add_diff_command(
+        command_subparsers: "argparse._SubParsersAction[SDocArgumentParser]",
+    ) -> None:
         diff_command_parser = command_subparsers.add_parser(
             "diff",
             help="Generate Diff between two SDoc project trees.",

@@ -53,7 +53,7 @@ class Parallelizer(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def shutdown(self) -> None:
+    def shutdown(self) -> bool:
         raise NotImplementedError
 
 
@@ -106,7 +106,7 @@ class MultiprocessingParallelizer(Parallelizer):
             ) from None
         # @sdoc[/SDOC_IMPL_2]
 
-    def shutdown(self) -> None:
+    def shutdown(self) -> bool:
         bad_child_exit_code: bool = False
 
         # @sdoc[SDOC_IMPL_2]
@@ -120,7 +120,9 @@ class MultiprocessingParallelizer(Parallelizer):
                 self.input_queue.put(None)
 
             for process_ in self.processes:
-                process_.join(timeout=5)
+                # Before forcing the child process to terminate, wait with join()
+                # to let the child process exit by itself.
+                process_.join(timeout=2)
                 if process_.is_alive():
                     print(  # noqa: T201
                         f"error: Parallelizer: Process PID {process_.pid} "
@@ -133,7 +135,7 @@ class MultiprocessingParallelizer(Parallelizer):
             for process_ in self.processes:
                 if process_.exitcode != 0:
                     print(  # noqa: T201
-                        "error: Parallelizer: Failed child process: "
+                        "error: Parallelizer: Child process status: "
                         f"PID: {process_.pid}, exit code: {process_.exitcode}.",
                         flush=True,
                     )
@@ -157,11 +159,13 @@ class MultiprocessingParallelizer(Parallelizer):
         # On Windows GitHub CI, there is sometimes a strange random edge case where
         # no child process has failed prematurely but there is at least one
         # child process that is reported with a non-realistic exit code:
-        # error: Parallelizer: Failed child process: PID: 6624, exit code: 3221356611.
+        # error: Parallelizer: Child process status: PID: 6624, exit code: 3221356611.
         # Exiting with 1 only it is known that a child process has failed and
         # ignoring the bad exit codes otherwise.
         if bad_child_exit_code and self.at_least_one_child_process_failed:
-            sys.exit(1)
+            return False
+
+        return True
 
     def run_parallel(
         self,
@@ -177,6 +181,7 @@ class MultiprocessingParallelizer(Parallelizer):
             try:
                 result = self.output_queue.get(block=True, timeout=0.1)
                 if result[1] == CHILD_PROCESS_FAILED:
+                    self.at_least_one_child_process_failed = True
                     raise StrictDocException(
                         "Parallelizer: One of the child processes "
                         "has exited prematurely."
@@ -199,28 +204,40 @@ class MultiprocessingParallelizer(Parallelizer):
     ) -> None:
         register_code_coverage_hook()
 
-        def close_queues() -> None:  # pragma: no cover
-            # It is important that these queue methods are called otherwise the
-            # process can get stuck without termination on Windows. This issue
-            # caused many flaky test runs on GitHub CI Actions.
-            # https://github.com/strictdoc-project/strictdoc/issues/2083
+        def close_queues_() -> None:  # pragma: no cover
+            """
+            Close the multiprocessing queues owned by the child process.
+
+            It is important that these queue methods are called otherwise the
+            process can get stuck without termination as tested on both Windows
+            and macOS. This issue caused many flaky test runs on GitHub CI Actions.
+            https://github.com/strictdoc-project/strictdoc/issues/2083
+
+            Both close() and cancel_join_thread() check if they need to be called,
+            so assuming that this method can be called multiple times as well.
+            """
+
             input_queue.close()
             output_queue.close()
-            if environment.is_windows():
-                input_queue.cancel_join_thread()
-                output_queue.cancel_join_thread()
-            else:
-                input_queue.join_thread()
-                output_queue.join_thread()
+            input_queue.cancel_join_thread()
+            output_queue.cancel_join_thread()
 
-        atexit.register(close_queues)
+        def exit_hook_() -> None:
+            close_queues_()
+
+        atexit.register(exit_hook_)
+
+        success = True
 
         while True:
             content_idx = -1
             try:
                 item = input_queue.get(block=True)
+                # The parent signals this child process to terminate peacefully.
+                # Stopping the infinite loop without signalling any error.
                 if item is None:
                     break
+
                 content_idx, content, processing_func = item
                 result = processing_func(content)
                 output_queue.put((content_idx, result))
@@ -230,11 +247,14 @@ class MultiprocessingParallelizer(Parallelizer):
                     exception_, KeyboardInterrupt
                 ):  # pragma: no cover
                     traceback.print_exc()
-                print(f"error: {str(exception_)}")  # noqa: T201
-                sys.exit(1)
-            finally:
-                sys.stdout.flush()
-                sys.stderr.flush()
+                print(f"error: {str(exception_)}", flush=True)  # noqa: T201
+                success = False
+                break
+
+        close_queues_()
+        sys.stdout.flush()
+        sys.stderr.flush()
+        sys.exit(0 if success else 1)
 
 
 class NullParallelizer(Parallelizer):
@@ -248,5 +268,5 @@ class NullParallelizer(Parallelizer):
             results.append(processing_func(content))
         return results
 
-    def shutdown(self) -> None:
-        pass
+    def shutdown(self) -> bool:
+        return True

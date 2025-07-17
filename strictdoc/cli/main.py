@@ -6,6 +6,7 @@
 import multiprocessing
 import os
 import sys
+import traceback
 
 strictdoc_root_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..")
@@ -191,10 +192,13 @@ def main() -> None:
     try:
         _main(parallelizer)
     except Exception as exception:
+        # FIXME: Implement traceback.print_exc() when a --debug option is provided.
         print(f"error: {str(exception)}")  # noqa: T201
         sys.exit(1)
     finally:
-        parallelizer.shutdown()
+        success = parallelizer.shutdown()
+        if not success:
+            sys.exit(1)
 
 
 if __name__ == "__main__":

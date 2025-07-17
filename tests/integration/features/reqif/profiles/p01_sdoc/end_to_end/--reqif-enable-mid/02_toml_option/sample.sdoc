@@ -25,9 +25,6 @@ ELEMENTS:
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: MID

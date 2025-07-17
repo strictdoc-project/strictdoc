@@ -20,9 +20,6 @@ ELEMENTS:
   - TITLE: COMMENT
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 
 [REQUIREMENT]
 UID: ABC-123

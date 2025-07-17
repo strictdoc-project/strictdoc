@@ -4,6 +4,7 @@ TITLE: Design Document
 UID: SDOC_DD
 VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
 DATE: @GIT_COMMIT_DATETIME
+PREFIX: SDOC-SRS-
 OPTIONS:
   ENABLE_MID: True
   VIEW_STYLE: Narrative
@@ -11,6 +12,25 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PREFIX
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
 - TAG: TEXT
   FIELDS:
   - TITLE: MID
@@ -22,6 +42,23 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
   - TYPE: File
+- TAG: DESIGN
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
 
 [TEXT]
 MID: 2c006e9044074d239db4a45328633657
@@ -29,7 +66,7 @@ STATEMENT: >>>
 This document describes the architecture and the implementation details of StrictDoc. Compared to the User Guide that describes how to use StrictDoc, this Design Document focuses on the "how it works" of StrictDoc.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: a74f4e7328714765b5e051768ca8383d
 TITLE: Overview
 
@@ -44,9 +81,9 @@ StrictDoc consists of two applications:
 Both applications share a significant subset of the backend and frontend logic. The backend logic is written in Python, the frontend logic is written using HTML/CSS, Jinja templates, and a combination of Turbo.js/Stimulus.js frontend libraries.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: f296843b2027457f851a159abafc97e3
 TITLE: Building blocks
 
@@ -84,9 +121,9 @@ StrictDoc is based on the following open-source libraries and tools:
      - Used for end-to-end testing of StrictDoc's Web-based user interface.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 5328a6f4c8544f5e92a91279b5b2c0df
 UID: SECTION-DD-High-level-architecture
 TITLE: High-level architecture
@@ -102,9 +139,9 @@ The following diagram captures the high-level architecture of StrictDoc.
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 9b81ed50014c412bb617e90552e58879
 TITLE: StrictDoc command-line application
 
@@ -121,9 +158,9 @@ The command-line application can be seen as a Model-View-Controller application:
 - The resulting output is written back to HTML or other formats (View layer).
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: dbcfa8a98e4f4928b0b35938d57dd644
 TITLE: StrictDoc web application
 
@@ -138,7 +175,7 @@ StrictDoc Web application is based on FastAPI / Uvicorn. The end-to-end usage cy
 - The server writes the updated content back to the SDoc files stored on a user's file system.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: dd2bd75fdffe49a1a0299b804538329c
 TITLE: The HTML Over the Wire (Hotwire) architecture
 
@@ -156,11 +193,11 @@ Currently, the web server renders the HTML documents using the same generators t
 To ensure that certain Stimulus-based interactive features work not only in the web application but also in the static HTML output, StrictDoc uses the UMD build of Stimulus instead of the default ES module version. This allows the browser to execute Stimulus controllers in environments where module loading is not available, preserving interactivity in static documentation pages.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 108af17c077c48bea04557c9d325e924
 TITLE: Parsing SDoc files
 
@@ -178,9 +215,9 @@ StrictDoc relies on both tools to get:
 One important implementation detail of Arpeggio that influences StrictDoc user experience is that the parser stops immediately when it encounters an error. For a document that has several issues, the parser highlights only the first error without going any further. When the first error is resolved, the second error will be shown, etc.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 4db723c7ae2c4350b2f184783cb638e7
 UID: SECTION-DD-Caching-artifacts
 TITLE: Caching artifacts
@@ -203,9 +240,9 @@ A general algorithm is as follows:
 An MD5 checksum is generated for a piece of content, and a file with this checksum in its name is written to disk. On subsequent reads, the checksum is recalculated, and the disk is checked for an existing file with the matching checksum. If a match is found, the file is read from disk, avoiding the need for extensive parsing or computation.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 4b904b71438c47fcac8aba14df2dd7c0
 TITLE: HTML escaping
 
@@ -241,4 +278,47 @@ Good to know for a start:
 .. _html.escape: https://docs.python.org/3/library/html.html#html.escape
 <<<
 
-[/SECTION]
+[[/SECTION]]
+
+[[SECTION]]
+MID: 92e8709709614f0f9ccdf702799bf56c
+TITLE: ReqIF interface
+
+[DESIGN]
+MID: abe8709709614f0f9ccdf702799bf511
+UID: SDOC-SRS-153
+TITLE: ReqIF-to-SDoc import
+STATEMENT: >>>
+The following details describe the implementation of the StrictDoc ReqIF-to-SDoc converter.
+
+The table below shows how ReqIF elements are mapped to SDoc elements:
+
+.. list-table:: **Table: Mapping between ReqIF elements and SDoc elements**
+    :widths: 50 50
+    :header-rows: 1
+
+    * - ReqIF Element
+      - SDoc Element
+
+    * - Specification
+      - Document
+
+    * - Spec Object Type
+      - Grammar Element
+
+    * - Spec Object
+      - Node
+
+Before converting ReqIF elements to SDoc elements, StrictDoc first traverses the entire XML file. This is necessary because a single ReqIF file may contain multiple specifications, and it is otherwise not possible to determine which Spec Object Types, Spec Relations, or Spec Relation Types are used by which specification or whether they are used at all.
+
+StrictDoc uses a **lazy** approach to generating SDoc documents from a ReqIF XML file. For each ReqIF Specification, only the elements that are actually used by that specification will be included in the corresponding SDoc document.
+
+**Example:**
+
+If ReqIF Specification “A” uses Spec Object Type “X”, and Specification “B” uses Spec Relation Type “Y”, the resulting SDoc documents will be:
+
+* SDoc document “A” with a grammar element for type “X”
+* SDoc document “B” with a grammar element for type “Y”
+<<<
+
+[[/SECTION]]

@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-72, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,union-attr"
 import datetime
 import uuid
 from collections import defaultdict
@@ -125,6 +124,7 @@ class P01_SDocToReqIFObjectConverter:
 
         document: SDocDocument
         for document in document_tree.document_list:
+            assert document.grammar is not None
             for element in document.grammar.elements:
                 for field in element.fields:
                     multiline = element.is_field_multiline(field.title)

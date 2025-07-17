@@ -3,3 +3,8 @@
 features = [
   "REQIF",
 ]
+
+# Avoid reading the sample file initially because this test imports it via UI.
+exclude_doc_paths = [
+  "sample.reqif"
+]

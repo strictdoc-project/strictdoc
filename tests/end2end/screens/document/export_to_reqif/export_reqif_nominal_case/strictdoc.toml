@@ -1,0 +1,11 @@
+[project]
+
+features = [
+  "REQIF",
+]
+
+# Avoid reading the export file because this file is only used to verify that
+# the ReqIF file exported via UI is identical to this file.
+exclude_doc_paths = [
+  "export.expected.reqif"
+]

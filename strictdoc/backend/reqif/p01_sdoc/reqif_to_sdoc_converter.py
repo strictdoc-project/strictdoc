@@ -19,6 +19,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import (
     ReqIFChapterField,
     ReqIFRequirementReservedField,
 )
+from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -42,6 +43,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.string import (
     create_safe_requirement_tag_string,
@@ -190,10 +192,14 @@ class P01_ReqIFToSDocConverter:
         # Use the previously created map of composite Spec Object Types, i.e.,
         # those that are section/chapters and can nest other elements.
         #
-        document = P01_ReqIFToSDocConverter.create_document(
+
+        document: SDocDocument = P01_ReqIFToSDocConverter.create_document(
             specification=specification, context=context
         )
         document.section_contents = []
+
+        document_reference = DocumentReference()
+        document_reference.set_document(document)
 
         grammar: DocumentGrammar
         if len(elements) > 0:
@@ -224,6 +230,7 @@ class P01_ReqIFToSDocConverter:
                     spec_object=spec_object,
                     context=context,
                     parent_section=parent_node,
+                    document_reference=document_reference,
                     reqif_bundle=reqif_bundle,
                     level=hierarchy_.level,
                 )
@@ -340,7 +347,7 @@ class P01_ReqIFToSDocConverter:
             None, document_title, document_config, None, None, []
         )
         if context.enable_mid:
-            document.reserved_mid = specification.identifier
+            document.reserved_mid = MID(specification.identifier)
         if context.import_markup is not None:
             document_config.markup = context.import_markup
 
@@ -352,6 +359,7 @@ class P01_ReqIFToSDocConverter:
         spec_object: ReqIFSpecObject,
         context: P01_ReqIFToSDocBuildContext,
         parent_section: Union[SDocSectionIF, SDocDocumentIF, SDocNodeIF],
+        document_reference: DocumentReference,
         reqif_bundle: ReqIFBundle,
         level: int,
     ) -> SDocNode:
@@ -476,6 +484,9 @@ class P01_ReqIFToSDocConverter:
             else None,
         )
         requirement.ng_level = level
+        requirement.ng_document_reference = document_reference
+        requirement.ng_including_document_reference = DocumentReference()
+
         for field_ in fields:
             field_.parent = requirement
         if foreign_key_id_or_none is not None:

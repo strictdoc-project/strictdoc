@@ -30,6 +30,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
+    GrammarElementFieldType,
     GrammarElementRelationParent,
 )
 from strictdoc.backend.sdoc.models.model import (
@@ -232,13 +233,7 @@ class P01_ReqIFToSDocConverter:
         reqif_bundle: ReqIFBundle,
         is_composite: bool,
     ) -> GrammarElement:
-        fields: List[
-            Union[
-                GrammarElementFieldString,
-                GrammarElementFieldMultipleChoice,
-                GrammarElementFieldSingleChoice,
-            ]
-        ] = []
+        fields: List[GrammarElementFieldType] = []
 
         for attribute in spec_object_type.attribute_definitions:
             field_name = (

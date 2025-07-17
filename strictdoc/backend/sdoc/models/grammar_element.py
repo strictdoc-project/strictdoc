@@ -123,6 +123,14 @@ class GrammarElementFieldTag(GrammarElementField):
         self.mid: MID = MID.create()
 
 
+GrammarElementFieldType = Union[
+    GrammarElementFieldString,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldTag,
+]
+
+
 @auto_described
 class GrammarElementRelationParent:  # noqa: PLW1641
     def __init__(
@@ -180,6 +188,13 @@ class GrammarElementRelationFile:
         self.mid: MID = MID.create()
 
 
+GrammarElementRelationType = Union[
+    GrammarElementRelationParent,
+    GrammarElementRelationChild,
+    GrammarElementRelationFile,
+]
+
+
 @auto_described()
 class GrammarElement:
     def __init__(
@@ -189,20 +204,8 @@ class GrammarElement:
         property_is_composite: str,
         property_prefix: str,
         property_view_style: str,
-        fields: List[
-            Union[
-                GrammarElementFieldString,
-                GrammarElementFieldMultipleChoice,
-                GrammarElementFieldSingleChoice,
-            ]
-        ],
-        relations: List[
-            Union[
-                GrammarElementRelationParent,
-                GrammarElementRelationChild,
-                GrammarElementRelationFile,
-            ]
-        ],
+        fields: List[GrammarElementFieldType],
+        relations: List[GrammarElementRelationType],
     ) -> None:
         self.parent: Any = parent
         self.tag: str = tag
@@ -234,20 +237,12 @@ class GrammarElement:
             property_view_style.lower() if property_view_style != "" else None
         )
 
-        self.fields: List[
-            Union[
-                GrammarElementFieldString,
-                GrammarElementFieldMultipleChoice,
-                GrammarElementFieldSingleChoice,
-            ]
-        ] = fields
-        self.relations: List[
-            Union[
-                GrammarElementRelationParent,
-                GrammarElementRelationChild,
-                GrammarElementRelationFile,
-            ]
-        ] = relations if relations is not None and len(relations) > 0 else []
+        self.fields: List[GrammarElementFieldType] = fields
+
+        self.relations: List[GrammarElementRelationType] = (
+            relations if relations is not None and len(relations) > 0 else []
+        )
+
         fields_map: OrderedDict[str, GrammarElementField] = OrderedDict()
 
         statement_field: Optional[Tuple[str, int]] = None
@@ -330,13 +325,7 @@ class GrammarElement:
     @staticmethod
     def create_default_relations(
         parent: "GrammarElement",
-    ) -> List[
-        Union[
-            GrammarElementRelationParent,
-            GrammarElementRelationChild,
-            GrammarElementRelationFile,
-        ]
-    ]:
+    ) -> List[GrammarElementRelationType]:
         return [
             GrammarElementRelationParent(
                 parent=parent,

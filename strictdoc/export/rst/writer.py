@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call"
+# mypy: disable-error-code="no-untyped-call"
 from enum import Enum
 from typing import Optional
 
@@ -37,6 +37,7 @@ class RSTWriter:
 
         for content_node, _ in document_iterator.all_content():
             if isinstance(content_node, SDocSection):
+                assert content_node.ng_level is not None
                 output += self._print_rst_header(
                     content_node.title,
                     content_node.ng_level,

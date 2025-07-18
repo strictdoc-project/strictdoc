@@ -5,7 +5,7 @@ This code is excluded from code coverage calculation because the feature is
 highly experimental and most of this code will be removed.
 """
 
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 from typing import List, Union
 
 from spdx_tools.spdx3.model import RelationshipType, SpdxDocument
@@ -19,6 +19,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
     GrammarElementFieldString,
+    GrammarElementFieldType,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
@@ -365,7 +366,7 @@ class SPDXToSDocConverter:
         #
         # SPDX Document
         #
-        fields = [
+        fields: List[GrammarElementFieldType] = [
             GrammarElementFieldString(
                 parent=None,
                 title="UID",

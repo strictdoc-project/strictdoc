@@ -1,5 +1,5 @@
 # pragma: no cover file.
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 
 """
 Experimental code to generate SPDX.
@@ -80,8 +80,10 @@ def get_spdx_ref(node: Union[SDocDocument, SDocNode, str]) -> str:
         identifier = node.reserved_mid
     elif node.reserved_uid is not None:
         identifier = node.reserved_uid
-    else:
+    elif node.reserved_title is not None:
         identifier = re.sub(r"[ #-/\\]", "_", node.reserved_title)
+    else:
+        raise RuntimeError("Cannot create unique identifier for this node.")
 
     if isinstance(node, SDocDocument):
         return "SDocDocument-" + identifier
@@ -289,6 +291,7 @@ class SPDXGenerator:
                     #
                     # Create SPDX Snippet from SDoc Requirement.
                     #
+                    assert isinstance(node, SDocNode)
                     spdx_snippet: Snippet = (
                         sdoc_spdx_converter.convert_requirement_to_snippet(
                             node, document_bytes, spdx_file

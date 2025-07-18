@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 from typing import List, Optional, Set, Tuple
 
 from jinja2 import Template
@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
     GrammarElementField,
     GrammarElementFieldString,
+    GrammarElementFieldType,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
@@ -155,7 +156,7 @@ class GrammarElementFormObject(ErrorObject):
             parse_form_data(request_form_data_as_list), dict
         )
 
-        element_mid = request_form_dict["element_mid"]
+        element_mid = assert_cast(request_form_dict["element_mid"], str)
 
         element_is_composite = request_form_dict["is_composite"]
         element_prefix = request_form_dict["prefix"]
@@ -168,7 +169,7 @@ class GrammarElementFormObject(ErrorObject):
         for field_mid, field_dict in document_grammar_fields.items():
             assert isinstance(field_dict, dict), type(field_dict)
 
-            field_name = field_dict["field_name"]
+            field_name = assert_cast(field_dict["field_name"], str)
             field_human_title = field_dict.get("field_human_title")
             if field_human_title is not None:
                 field_human_title = field_human_title.strip()
@@ -195,8 +196,8 @@ class GrammarElementFormObject(ErrorObject):
         for field_mid, field_dict in document_grammar_relations.items():
             assert isinstance(field_dict, dict), type(field_dict)
 
-            field_type = field_dict["type"]
-            field_role = field_dict["role"].strip()
+            field_type = assert_cast(field_dict["type"], str)
+            field_role = assert_cast(field_dict["role"].strip(), str)
 
             form_object_relation = GrammarFormRelation(
                 relation_mid=field_mid,
@@ -356,7 +357,7 @@ class GrammarElementFormObject(ErrorObject):
     def convert_to_grammar_element(
         self, existing_grammar: DocumentGrammar
     ) -> GrammarElement:
-        grammar_fields: List[GrammarElementField] = []
+        grammar_fields: List[GrammarElementFieldType] = []
         for field in self.fields:
             grammar_field = GrammarElementFieldString(
                 parent=None,

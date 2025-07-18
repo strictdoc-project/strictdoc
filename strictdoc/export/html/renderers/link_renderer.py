@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import html
 from typing import Any, Dict, Optional, Tuple, Union
 
@@ -250,7 +250,7 @@ class LinkRenderer:
 
     @staticmethod
     def render_requirement_in_source_file_range_link_using_id(
-        req_uid: str,  # noqa: ARG004
+        req_uid: Optional[str],  # noqa: ARG004
         source_link: str,
         context_source_file: SourceFile,
         source_range: RangeMarker,
@@ -258,6 +258,9 @@ class LinkRenderer:
         assert isinstance(source_link, str)
         assert isinstance(context_source_file, SourceFile)
         assert len(source_link) > 0
+
+        if req_uid is None:
+            req_uid = ""
 
         def get_root_path_prefix(level: int) -> str:
             assert level > 0

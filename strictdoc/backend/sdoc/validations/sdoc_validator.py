@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,union-attr"
+# mypy: disable-error-code="union-attr"
 import re
 from typing import Iterator, Optional, Set
 
@@ -244,8 +244,8 @@ class SDocValidator:
     def validate_requirement_field(
         requirement: SDocNode,
         document_grammar: DocumentGrammar,
-        requirement_field: SDocNodeField,
-        grammar_field: GrammarElementField,
+        requirement_field: Optional[SDocNodeField],
+        grammar_field: Optional[GrammarElementField],
         path_to_sdoc_file: str,
         auto_uid_mode: bool = True,
     ) -> bool:

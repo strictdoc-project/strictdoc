@@ -416,6 +416,7 @@ class TraceabilityIndexBuilder:
 
                 if isinstance(node, SDocNode):
                     try:
+                        assert document.grammar is not None
                         SDocValidator.validate_node(
                             node,
                             document_grammar=document.grammar,

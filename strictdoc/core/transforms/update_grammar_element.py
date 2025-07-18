@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,union-attr"
+# mypy: disable-error-code="union-attr"
 from collections import OrderedDict
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -52,6 +52,7 @@ class UpdateGrammarElementCommand:
         #
         # Convert the form object to an updated grammar element.
         #
+        assert document.grammar is not None
         updated_element: GrammarElement = (
             form_object.convert_to_grammar_element(document.grammar)
         )

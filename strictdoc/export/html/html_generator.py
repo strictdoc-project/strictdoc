@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import os
 from functools import partial
 from pathlib import Path

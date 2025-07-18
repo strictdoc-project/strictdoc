@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call"
+# mypy: disable-error-code="no-untyped-call"
 from collections import defaultdict
 
 from starlette.datastructures import FormData
@@ -103,7 +103,9 @@ class SectionFormObject(ErrorObject):
         request_form_dict: ParsedFormData = assert_cast(
             parse_form_data(request_form_data_as_list), dict
         )
-        context_document_mid = request_form_dict["context_document_mid"]
+        context_document_mid = assert_cast(
+            request_form_dict["context_document_mid"], str
+        )
         requirement_dict = assert_cast(request_form_dict["requirement"], dict)
         requirement_fields_dict = assert_cast(requirement_dict["fields"], dict)
 

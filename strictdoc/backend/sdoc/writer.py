@@ -1,7 +1,7 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import os.path
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -19,6 +19,9 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementFieldType,
     GrammarElementRelationType,
     RequirementFieldType,
+)
+from strictdoc.backend.sdoc.models.model import (
+    SDocElementIF,
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
@@ -292,7 +295,7 @@ class SDWriter:
 
     def _print_node(
         self,
-        root_node: Union[SDocDocument, SDocSection, SDocNode, DocumentFromFile],
+        root_node: SDocElementIF,
         document: SDocDocument,
         document_iterator: DocumentCachingIterator,
     ) -> str:

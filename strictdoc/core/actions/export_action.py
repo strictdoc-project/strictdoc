@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,operator"
+# mypy: disable-error-code="no-untyped-call,operator"
 import os
 import sys
 from pathlib import Path
@@ -71,12 +71,6 @@ class ExportAction:
             # The bundle document is generated only when the option is provided.
             traceability_index_copy: Optional[TraceabilityIndex] = None
             bundle_document: Optional[SDocDocument] = None
-            if self.project_config.generate_bundle_document:
-                traceability_index_copy, bundle_document = (
-                    self.traceability_index.clone_to_bundle_document(
-                        self.project_config
-                    )
-                )
 
             if (
                 "html" in self.project_config.export_formats
@@ -90,6 +84,11 @@ class ExportAction:
                     parallelizer=self.parallelizer,
                 )
                 if self.project_config.generate_bundle_document:
+                    traceability_index_copy, bundle_document = (
+                        self.traceability_index.clone_to_bundle_document(
+                            self.project_config
+                        )
+                    )
                     html_generator.export_single_document(
                         document=bundle_document,
                         traceability_index=traceability_index_copy,
@@ -109,6 +108,11 @@ class ExportAction:
                 )
 
                 if self.project_config.generate_bundle_document:
+                    traceability_index_copy, bundle_document = (
+                        self.traceability_index.clone_to_bundle_document(
+                            self.project_config
+                        )
+                    )
                     HTML2PDFGenerator.export_tree(
                         self.project_config,
                         traceability_index_copy,

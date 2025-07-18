@@ -1,5 +1,6 @@
 # mypy: disable-error-code="no-untyped-call"
 from dataclasses import dataclass
+from typing import Optional
 
 from markupsafe import Markup
 
@@ -20,7 +21,7 @@ class DiffScreenViewObject:
         left_revision_urlencoded: str,
         right_revision: str,
         right_revision_urlencoded: str,
-        error_message: str,
+        error_message: Optional[str],
         tab: str,
     ):
         self.project_config: ProjectConfig = project_config
@@ -29,7 +30,7 @@ class DiffScreenViewObject:
         self.left_revision_urlencoded: str = left_revision_urlencoded
         self.right_revision: str = right_revision
         self.right_revision_urlencoded: str = right_revision_urlencoded
-        self.error_message: str = error_message
+        self.error_message: Optional[str] = error_message
         self.tab: str = tab
 
         link_renderer = LinkRenderer(

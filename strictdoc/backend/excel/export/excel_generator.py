@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-134, scope=file)
 """
 
-# mypy: disable-error-code="arg-type,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,union-attr"
 import os
 from pathlib import Path
 from typing import Dict, List
@@ -46,7 +46,7 @@ class ExcelGenerator:
         traceability_index: TraceabilityIndex,
         output_excel_root: str,
         project_config: ProjectConfig,
-    ):
+    ) -> None:
         Path(output_excel_root).mkdir(parents=True, exist_ok=True)
 
         document: SDocDocument
@@ -65,10 +65,10 @@ class ExcelGenerator:
     @staticmethod
     def _export_single_document(
         document: SDocDocument,
-        traceability_index,
-        document_out_file,
+        traceability_index: TraceabilityIndex,
+        document_out_file: str,
         project_config: ProjectConfig,
-    ):
+    ) -> None:
         with xlsxwriter.Workbook(document_out_file) as workbook:
             worksheet = workbook.add_worksheet(name=EXCEL_SHEET_NAME)
             workbook.set_properties(
@@ -249,7 +249,7 @@ class ExcelGenerator:
         return refs
 
     @staticmethod
-    def _init_columns_width(fields: List[str]):
+    def _init_columns_width(fields: List[str]) -> Dict[str, Dict[str, int]]:
         columns: Dict[str, Dict[str, int]] = {}
 
         for field in fields:
@@ -259,8 +259,11 @@ class ExcelGenerator:
 
     @staticmethod
     def _set_columns_width(
-        workbook: Workbook, worksheet: Worksheet, columns, fields: List[str]
-    ):
+        workbook: Workbook,
+        worksheet: Worksheet,
+        columns: Dict[str, Dict[str, int]],
+        fields: List[str],
+    ) -> None:
         cell_format_text_wrap = workbook.add_format()
         cell_format_text_wrap.set_text_wrap()
 

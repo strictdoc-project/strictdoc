@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-72, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
 import datetime
 import uuid
 from collections import defaultdict
@@ -94,7 +93,7 @@ class P01_SDocToReqIFObjectConverter:
         document_tree: DocumentTree,
         multiline_is_xhtml: bool,
         enable_mid: bool,
-    ):
+    ) -> ReqIFBundle:
         creation_time = datetime.datetime.now(
             datetime.datetime.now().astimezone().tzinfo
         ).isoformat()
@@ -125,6 +124,7 @@ class P01_SDocToReqIFObjectConverter:
 
         document: SDocDocument
         for document in document_tree.document_list:
+            assert document.grammar is not None
             for element in document.grammar.elements:
                 for field in element.fields:
                     multiline = element.is_field_multiline(field.title)
@@ -519,9 +519,11 @@ class P01_SDocToReqIFObjectConverter:
     def _convert_document_grammar_to_spec_types(
         cls,
         grammar: DocumentGrammar,
-        data_types_lookup,
+        data_types_lookup: Union[
+            ReqIFDataTypeDefinitionString, ReqIFDataTypeDefinitionXHTML
+        ],
         context: P01_SDocToReqIFBuildContext,
-    ):
+    ) -> List[ReqIFSpecificationType]:
         spec_object_types: List[ReqIFSpecificationType] = []
 
         grammar_document: SDocDocument = assert_cast(

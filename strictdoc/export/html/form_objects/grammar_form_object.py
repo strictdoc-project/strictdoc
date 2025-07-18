@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call"
 from typing import List, Optional, Set
 
 from markupsafe import Markup
@@ -46,7 +46,7 @@ class GrammarElementFormField:
         is_new: bool,
         grammar_element: GrammarElement,
         document_mid: str,
-    ):
+    ) -> "GrammarElementFormField":
         return GrammarElementFormField(
             is_new=is_new,
             field_mid=grammar_element.mid,
@@ -54,13 +54,13 @@ class GrammarElementFormField:
             document_mid=document_mid,
         )
 
-    def get_input_field_name(self):
+    def get_input_field_name(self) -> str:
         return f"document_grammar_element_field[{self.field_mid}][field_name]"
 
-    def get_input_field_is_new(self):
+    def get_input_field_is_new(self) -> str:
         return f"document_grammar_element_field[{self.field_mid}][is_new]"
 
-    def get_is_new_as_string(self):
+    def get_is_new_as_string(self) -> str:
         return "true" if self.is_new else "false"
 
 

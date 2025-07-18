@@ -2,10 +2,9 @@
 @relation(SDOC-SRS-137, SDOC-SRS-140, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-def"
 from copy import copy
 from enum import Enum
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.helpers.auto_described import auto_described
@@ -20,7 +19,7 @@ class RangeMarkerType(Enum):
 @auto_described
 class FunctionRangeMarker:
     def __init__(
-        self, parent, reqs_objs: List[Req], scope: str, role: Optional[str]
+        self, parent: Any, reqs_objs: List[Req], scope: str, role: Optional[str]
     ):
         assert isinstance(reqs_objs, list)
         assert isinstance(scope, str), scope
@@ -91,7 +90,7 @@ class FunctionRangeMarker:
 class ForwardFunctionRangeMarker(FunctionRangeMarker):
     def __init__(
         self,
-        parent,
+        parent: Any,
         reqs_objs: List[Req],
         scope: str,
         role: Optional[str] = None,

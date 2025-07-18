@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def"
 from typing import Any, Dict, List, Optional, Union
 
 from typing_extensions import TypeAlias
@@ -70,7 +69,7 @@ class SourceFileTraceabilityInfo:
 
         self.markers: List[RelationMarkerType] = []
 
-    def get_coverage(self):
+    def get_coverage(self) -> float:
         return self._coverage
 
     def set_coverage_stats(

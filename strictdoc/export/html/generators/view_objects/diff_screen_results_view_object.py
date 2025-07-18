@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 from dataclasses import dataclass
 from typing import List, Optional, Set
 
@@ -8,10 +8,16 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.git.change_generator import ChangeContainer
+from strictdoc.git.project_diff_analyzer import (
+    ChangeStats,
+    ProjectTreeDiffStats,
+)
 from strictdoc.helpers.cast import assert_cast
 
 
@@ -24,17 +30,17 @@ class DiffScreenResultsViewObject:
         change_container: ChangeContainer,
         document_tree_lhs: DocumentTree,
         document_tree_rhs: DocumentTree,
-        documents_iterator_lhs,
-        documents_iterator_rhs,
+        documents_iterator_lhs: DocumentTreeIterator,
+        documents_iterator_rhs: DocumentTreeIterator,
         left_revision: str,
         left_revision_urlencoded: str,
         right_revision: str,
         right_revision_urlencoded: str,
-        lhs_stats,
-        rhs_stats,
-        change_stats,
-        traceability_index_lhs,
-        traceability_index_rhs,
+        lhs_stats: ProjectTreeDiffStats,
+        rhs_stats: ProjectTreeDiffStats,
+        change_stats: ChangeStats,
+        traceability_index_lhs: TraceabilityIndex,
+        traceability_index_rhs: TraceabilityIndex,
         tab: str,
     ):
         self.project_config: ProjectConfig = project_config
@@ -50,8 +56,8 @@ class DiffScreenResultsViewObject:
         self.lhs_stats = lhs_stats
         self.rhs_stats = rhs_stats
         self.change_stats = change_stats
-        self.traceability_index_lhs = traceability_index_lhs
-        self.traceability_index_rhs = traceability_index_rhs
+        self.traceability_index_lhs: TraceabilityIndex = traceability_index_lhs
+        self.traceability_index_rhs: TraceabilityIndex = traceability_index_rhs
         self.tab: str = tab
         self.results: bool = True
         link_renderer = LinkRenderer(

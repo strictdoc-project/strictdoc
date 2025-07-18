@@ -1,8 +1,12 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
+import argparse
 import os
-from typing import List, Optional
+from typing import Any, List, Optional
 
-from strictdoc.cli.command_parser_builder import CommandParserBuilder
+from strictdoc.cli.command_parser_builder import (
+    CommandParserBuilder,
+    SDocArgumentParser,
+)
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.net import is_valid_host
 
@@ -61,10 +65,12 @@ class ManageAutoUIDCommandConfig:
 
 
 class ImportExcelCommandConfig:
-    def __init__(self, input_path: str, output_path: str, parser):
-        self.input_path = input_path
-        self.output_path = output_path
-        self.parser = parser
+    def __init__(
+        self, input_path: str, output_path: str, parser: SDocArgumentParser
+    ) -> None:
+        self.input_path: str = input_path
+        self.output_path: str = output_path
+        self.parser: SDocArgumentParser = parser
 
 
 @auto_described
@@ -121,12 +127,12 @@ class ServerCommandConfig:
 class ExportCommandConfig:
     def __init__(
         self,
-        input_paths,
+        input_paths: str,
         output_dir: Optional[str],
         config_path: Optional[str],
         project_title: Optional[str],
-        formats,
-        fields,
+        formats: List[str],
+        fields: List[str],
         generate_bundle_document: bool,
         no_parallelization: bool,
         enable_mathjax: bool,
@@ -144,8 +150,8 @@ class ExportCommandConfig:
         self.output_dir: Optional[str] = output_dir
         self._config_path: Optional[str] = config_path
         self.project_title: Optional[str] = project_title
-        self.formats = formats
-        self.fields = fields
+        self.formats: List[str] = formats
+        self.fields: List[str] = fields
         self.generate_bundle_document: bool = generate_bundle_document
         self.no_parallelization: bool = no_parallelization
         self.enable_mathjax: bool = enable_mathjax
@@ -189,8 +195,8 @@ class ExportCommandConfig:
 
 
 class DumpGrammarCommandConfig:
-    def __init__(self, output_file):
-        self.output_file = output_file
+    def __init__(self, output_file: str):
+        self.output_file: str = output_file
 
 
 class DiffCommandConfig:
@@ -206,53 +212,56 @@ class DiffCommandConfig:
 
 
 class SDocArgsParser:
-    def __init__(self, args):
-        self.args = args
+    def __init__(self, args: argparse.Namespace):
+        self.args: argparse.Namespace = args
 
     @property
-    def is_about_command(self):
-        return self.args.command == "about"
+    def is_about_command(self) -> bool:
+        return str(self.args.command) == "about"
 
     @property
-    def is_passthrough_command(self):
-        return self.args.command == "passthrough"
+    def is_passthrough_command(self) -> bool:
+        return str(self.args.command) == "passthrough"
 
     @property
-    def is_export_command(self):
-        return self.args.command == "export"
+    def is_export_command(self) -> bool:
+        return str(self.args.command) == "export"
 
     @property
-    def is_import_command_reqif(self):
+    def is_import_command_reqif(self) -> bool:
         return (
-            self.args.command == "import" and self.args.import_format == "reqif"
+            str(self.args.command) == "import"
+            and str(self.args.import_format) == "reqif"
         )
 
     @property
-    def is_import_command_excel(self):
+    def is_import_command_excel(self) -> bool:
         return (
-            self.args.command == "import" and self.args.import_format == "excel"
+            str(self.args.command) == "import"
+            and str(self.args.import_format) == "excel"
         )
 
     @property
-    def is_server_command(self):
-        return self.args.command == "server"
+    def is_server_command(self) -> bool:
+        return str(self.args.command) == "server"
 
     @property
-    def is_dump_grammar_command(self):
-        return self.args.command == "dump-grammar"
+    def is_dump_grammar_command(self) -> bool:
+        return str(self.args.command) == "dump-grammar"
 
     @property
-    def is_version_command(self):
-        return self.args.command == "version"
+    def is_version_command(self) -> bool:
+        return str(self.args.command) == "version"
 
     @property
-    def is_diff_command(self):
-        return self.args.command == "diff"
+    def is_diff_command(self) -> bool:
+        return str(self.args.command) == "diff"
 
     @property
-    def is_manage_autouid_command(self):
+    def is_manage_autouid_command(self) -> bool:
         return (
-            self.args.command == "manage" and self.args.subcommand == "auto-uid"
+            str(self.args.command) == "manage"
+            and str(self.args.subcommand) == "auto-uid"
         )
 
     def get_export_config(self) -> ExportCommandConfig:
@@ -278,7 +287,7 @@ class SDocArgsParser:
             self.args.chromedriver,
         )
 
-    def get_import_config_reqif(self, _) -> ImportReqIFCommandConfig:
+    def get_import_config_reqif(self, _: Any) -> ImportReqIFCommandConfig:
         return ImportReqIFCommandConfig(
             self.args.input_path,
             self.args.output_path,
@@ -294,7 +303,7 @@ class SDocArgsParser:
             include_sections=self.args.include_sections,
         )
 
-    def get_import_config_excel(self, _) -> ImportExcelCommandConfig:
+    def get_import_config_excel(self, _: Any) -> ImportExcelCommandConfig:
         return ImportExcelCommandConfig(
             self.args.input_path, self.args.output_path, self.args.parser
         )
@@ -320,7 +329,9 @@ class SDocArgsParser:
         )
 
 
-def create_sdoc_args_parser(testing_args=None) -> SDocArgsParser:
+def create_sdoc_args_parser(
+    testing_args: Optional[argparse.Namespace] = None,
+) -> SDocArgsParser:
     args = testing_args
     if not args:
         builder = CommandParserBuilder()

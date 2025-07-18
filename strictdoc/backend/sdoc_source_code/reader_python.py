@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-142, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 from itertools import islice
 from typing import List, Optional, Sequence
 
@@ -35,7 +35,7 @@ from strictdoc.helpers.file_stats import SourceFileStats
 
 class SourceFileTraceabilityReader_Python:
     def read(
-        self, input_buffer: bytes, file_path=None
+        self, input_buffer: bytes, file_path: Optional[str] = None
     ) -> SourceFileTraceabilityInfo:
         assert isinstance(input_buffer, bytes)
 

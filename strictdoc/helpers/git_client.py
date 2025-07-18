@@ -10,7 +10,7 @@ class GitClient:
         self._commit_datetime: Optional[str] = None
         self._branch: Optional[str] = None
 
-    def get_commit_hash(self) -> Optional[str]:
+    def get_commit_hash(self) -> str:
         if self._commit_hash is not None:
             return self._commit_hash
         commit_hash = self._run_git_command(
@@ -19,7 +19,7 @@ class GitClient:
         self._commit_hash = commit_hash.strip()
         return self._commit_hash
 
-    def get_commit_date(self) -> Optional[str]:
+    def get_commit_date(self) -> str:
         if self._commit_date is not None:
             return self._commit_date
         commit_date = self._run_git_command(
@@ -28,7 +28,7 @@ class GitClient:
         self._commit_date = commit_date.strip()
         return self._commit_date
 
-    def get_commit_datetime(self) -> Optional[str]:
+    def get_commit_datetime(self) -> str:
         if self._commit_datetime is not None:
             return self._commit_datetime
         commit_datetime = self._run_git_command(
@@ -43,7 +43,7 @@ class GitClient:
         self._commit_datetime = commit_datetime.strip()
         return self._commit_datetime
 
-    def get_branch(self) -> Optional[str]:
+    def get_branch(self) -> str:
         if self._branch is not None:
             return self._branch
         branch = self._run_git_command(

@@ -1,8 +1,7 @@
 """
-@relation(SDOC-SRS-72, scope=file)
+@relation(SDOC-SRS-72, SDOC-SRS-153, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-def,union-attr,operator"
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
@@ -30,6 +29,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
+    GrammarElementFieldType,
     GrammarElementRelationParent,
 )
 from strictdoc.backend.sdoc.models.model import (
@@ -117,16 +117,30 @@ class P01_ReqIFToSDocConverter:
         specification: ReqIFSpecification,
         reqif_bundle: ReqIFBundle,
         context: P01_ReqIFToSDocBuildContext,
-    ):
+    ) -> SDocDocument:
+        """
+        Convert a single ReqIF Specification to a SDoc document.
+        """
+
+        #
         # This lookup object is used to first collect the spec object type identifiers
         # that are actually used by this document. This is needed to ensure that a
         # StrictDoc document is not created with irrelevant grammar elements that
         # actually belong to other Specifications in this ReqIF bundle.
         # Using Dict as an ordered set.
+        #
         spec_object_type_identifiers_used_by_this_document: OrderedSet[str] = (
             OrderedSet()
         )
-        section_spec_types = set()
+
+        # This variable tracks spec types of elements that can nest other elements.
+        # Usually, these elements are document sections/chapters.
+        composite_spec_types = set()
+
+        #
+        # Iterate this ReqIF specification's hierarchy to get information
+        # about the used spec types and the spec types that are composite.
+        #
         for hierarchy_ in reqif_bundle.iterate_specification_hierarchy(
             specification,
         ):
@@ -137,27 +151,60 @@ class P01_ReqIFToSDocConverter:
                 spec_object.spec_object_type
             )
             if hierarchy_.children is not None:
-                section_spec_types.add(spec_object.spec_object_type)
+                composite_spec_types.add(spec_object.spec_object_type)
 
+        #
+        # Iterate over the collected Spec Object types and create their
+        # corresponding SDoc Grammar Elements.
+        #
+        elements: List[GrammarElement] = []
         for (
             spec_object_type_
         ) in reqif_bundle.core_content.req_if_content.spec_types:
             if not isinstance(spec_object_type_, ReqIFSpecObjectType):
                 continue
 
+            spec_object_type_identifier_ = spec_object_type_.identifier
+            if (
+                spec_object_type_identifier_
+                not in spec_object_type_identifiers_used_by_this_document
+            ):
+                continue
+
             grammar_element: GrammarElement = P01_ReqIFToSDocConverter.create_grammar_element_from_spec_object_type(
                 spec_object_type=spec_object_type_,
                 reqif_bundle=reqif_bundle,
-                is_composite=spec_object_type_.identifier in section_spec_types,
+                is_composite=spec_object_type_.identifier
+                in composite_spec_types,
             )
+
+            elements.append(grammar_element)
             context.map_spec_object_type_identifier_to_grammar_node_tags[
-                spec_object_type_.identifier
+                spec_object_type_identifier_
             ] = grammar_element
 
+        #
+        # Create an empty SDoc document and iterate the complete ReqIF
+        # Specification one more time, creating a corresponding SDoc Node for
+        # each ReqIF Spec Object.
+        # Use the previously created map of composite Spec Object Types, i.e.,
+        # those that are section/chapters and can nest other elements.
+        #
         document = P01_ReqIFToSDocConverter.create_document(
             specification=specification, context=context
         )
         document.section_contents = []
+
+        grammar: DocumentGrammar
+        if len(elements) > 0:
+            grammar = DocumentGrammar(parent=document, elements=elements)
+            grammar.is_default = False
+        else:
+            # This case is mainly a placeholder for simple edge cases such as
+            # an empty [DOCUMENT] where there are no grammar or nodes declared.
+            grammar = DocumentGrammar.create_default(parent=document)
+
+        document.grammar = grammar
 
         node_stack: List[Union[SDocDocumentIF, SDocNodeIF]] = [document]
 
@@ -183,45 +230,8 @@ class P01_ReqIFToSDocConverter:
             )
             parent_node.section_contents.append(converted_node)
 
-            if spec_object.spec_object_type in section_spec_types:
+            if spec_object.spec_object_type in composite_spec_types:
                 node_stack.append(converted_node)
-
-        elements: List[GrammarElement] = []
-        for (
-            spec_object_type_
-        ) in reqif_bundle.core_content.req_if_content.spec_types:
-            if not isinstance(spec_object_type_, ReqIFSpecObjectType):
-                continue
-
-            spec_object_type_identifier_ = spec_object_type_.identifier
-            if (
-                spec_object_type_identifier_
-                not in spec_object_type_identifiers_used_by_this_document
-            ):
-                continue
-
-            grammar_element = (
-                context.map_spec_object_type_identifier_to_grammar_node_tags[
-                    spec_object_type_identifier_
-                ]
-            )
-            if len(grammar_element.relations) == 0:
-                grammar_element.relations = (
-                    GrammarElement.create_default_relations(grammar_element)
-                )
-
-            elements.append(grammar_element)
-
-        grammar: DocumentGrammar
-        if len(elements) > 0:
-            grammar = DocumentGrammar(parent=document, elements=elements)
-            grammar.is_default = False
-        else:
-            # This case is mainly a placeholder for simple edge cases such as
-            # an empty [DOCUMENT] where there are no grammar or nodes declared.
-            grammar = DocumentGrammar.create_default(parent=document)
-
-        document.grammar = grammar
 
         return document
 
@@ -231,14 +241,8 @@ class P01_ReqIFToSDocConverter:
         spec_object_type: ReqIFSpecObjectType,
         reqif_bundle: ReqIFBundle,
         is_composite: bool,
-    ):
-        fields: List[
-            Union[
-                GrammarElementFieldString,
-                GrammarElementFieldMultipleChoice,
-                GrammarElementFieldSingleChoice,
-            ]
-        ] = []
+    ) -> GrammarElement:
+        fields: List[GrammarElementFieldType] = []
 
         for attribute in spec_object_type.attribute_definitions:
             field_name = (

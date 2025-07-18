@@ -1,12 +1,15 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 from dataclasses import dataclass
 from typing import Any, List, Optional, Union
 
 from markupsafe import Markup
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc.models.anchor import Anchor
+from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import NullViewElement
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
@@ -136,7 +139,7 @@ class SourceFileViewObject:
             DocumentType.DOCUMENT, node
         )
 
-    def render_node_rationale(self, node) -> Markup:
+    def render_node_rationale(self, node: SDocNode) -> Markup:
         return self.markup_renderer.render_node_rationale(
             DocumentType.DOCUMENT, node
         )
@@ -147,10 +150,10 @@ class SourceFileViewObject:
             DocumentType.DOCUMENT, node_field
         )
 
-    def render_url(self, url: str):
+    def render_url(self, url: str) -> str:
         return self.link_renderer.render_url(url)
 
-    def render_marker_range_link(self, marker):
+    def render_marker_range_link(self, marker: RangeMarker) -> str:
         return self.link_renderer.render_marker_range_link(
             self.source_file.in_doctree_source_file_rel_path_posix,
             self.source_file,
@@ -163,10 +166,12 @@ class SourceFileViewObject:
             node, None, DocumentType.DOCUMENT
         )
 
-    def render_static_url(self, url: str):
+    def render_static_url(self, url: str) -> str:
         return self.link_renderer.render_static_url(url)
 
-    def render_local_anchor(self, node):
+    def render_local_anchor(
+        self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]
+    ) -> str:
         return self.link_renderer.render_local_anchor(node)
 
     def get_source_file_path(self) -> str:

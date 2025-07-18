@@ -2,8 +2,8 @@
 @relation(SDOC-SRS-31, SDOC-SRS-101, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
-from typing import Optional, Tuple
+# mypy: disable-error-code="no-untyped-call"
+from typing import Any, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
 from strictdoc.helpers.auto_described import auto_described
@@ -14,7 +14,7 @@ from strictdoc.helpers.mid import MID
 class FileEntry:
     def __init__(
         self,
-        parent,
+        parent: Any,
         g_file_format: Optional[str],
         g_file_path: str,
         g_line_range: Optional[str],
@@ -66,7 +66,7 @@ class FileEntryFormat:
 
 @auto_described
 class Reference:
-    def __init__(self, ref_type: str, parent):
+    def __init__(self, ref_type: str, parent: Any):
         self.parent = parent
         self.ref_type: str = ref_type
         self.role: Optional[str] = None
@@ -75,7 +75,7 @@ class Reference:
 @auto_described
 class FileReference(Reference):
     def __init__(
-        self, parent, g_file_entry: FileEntry, role: Optional[str] = None
+        self, parent: Any, g_file_entry: FileEntry, role: Optional[str] = None
     ):
         super().__init__(ReferenceType.FILE, parent)
         self.g_file_entry: FileEntry = g_file_entry
@@ -93,7 +93,7 @@ class FileReference(Reference):
 
 @auto_described
 class ParentReqReference(Reference):
-    def __init__(self, parent, ref_uid: str, role: Optional[str]):
+    def __init__(self, parent: Any, ref_uid: str, role: Optional[str]):
         super().__init__(ReferenceType.PARENT, parent)
         self.ref_uid: str = ref_uid
         # When ROLE: field is not provided for a parent reference, the
@@ -107,7 +107,7 @@ class ParentReqReference(Reference):
 
 @auto_described
 class ChildReqReference(Reference):
-    def __init__(self, parent, ref_uid, role: str):
+    def __init__(self, parent: Any, ref_uid: str, role: str):
         super().__init__(ReferenceType.CHILD, parent)
         self.ref_uid = ref_uid
         # When ROLE: field is not provided for a child reference, the

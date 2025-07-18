@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import os
 from pathlib import Path
 
@@ -9,7 +9,9 @@ from strictdoc.export.rst.writer import RSTWriter
 
 class DocumentRSTGenerator:
     @staticmethod
-    def export_tree(traceability_index: TraceabilityIndex, output_rst_root):
+    def export_tree(
+        traceability_index: TraceabilityIndex, output_rst_root: str
+    ) -> None:
         Path(output_rst_root).mkdir(parents=True, exist_ok=True)
 
         document: SDocDocument
@@ -31,7 +33,9 @@ class DocumentRSTGenerator:
                 file.write(document_content)
 
     @staticmethod
-    def export(document, traceability_index):
+    def export(
+        document: SDocDocument, traceability_index: TraceabilityIndex
+    ) -> str:
         writer = RSTWriter(traceability_index)
 
         single_or_many = (

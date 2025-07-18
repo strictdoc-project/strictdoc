@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def"
 import strictdoc
 
 

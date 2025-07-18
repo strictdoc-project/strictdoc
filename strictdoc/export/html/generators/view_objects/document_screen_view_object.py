@@ -1,12 +1,13 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Iterator, List, Optional, Sequence, Tuple, Union
+from typing import Any, Iterator, List, Optional, Sequence, Tuple, Union
 
 from jinja2 import Template
 from markupsafe import Markup
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
@@ -16,7 +17,7 @@ from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentIterationContext
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
-from strictdoc.core.file_tree import File, Folder
+from strictdoc.core.file_tree import File, FileOrFolderEntry, Folder
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
@@ -75,7 +76,7 @@ class DocumentScreenViewObject:
             with open(project_config.html2pdf_template) as f_:
                 self.custom_html2pdf_template = Template(f_.read())
 
-    def has_included_document(self):
+    def has_included_document(self) -> bool:
         return len(self.document.included_documents) > 0
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
@@ -166,7 +167,7 @@ class DocumentScreenViewObject:
         return output
 
     def render_update_document_content_with_moved_node(
-        self, jinja_environment: JinjaEnvironment, moved_node
+        self, jinja_environment: JinjaEnvironment, moved_node: Any
     ) -> Markup:
         content = jinja_environment.render_template_as_markup(
             "screens/document/document/frame_document_content.jinja.html",
@@ -193,7 +194,7 @@ class DocumentScreenViewObject:
         if self.document.config.version is None:
             return None
 
-        def resolver(variable_name):
+        def resolver(variable_name: str) -> str:
             if variable_name == "GIT_VERSION":
                 return self.git_client.get_commit_hash()
             elif variable_name == "GIT_BRANCH":
@@ -208,7 +209,7 @@ class DocumentScreenViewObject:
         if self.document.config.date is None:
             return None
 
-        def resolver(variable_name):
+        def resolver(variable_name: str) -> str:
             if variable_name == "GIT_COMMIT_DATE":
                 return self.git_client.get_commit_date()
             elif variable_name == "GIT_COMMIT_DATETIME":
@@ -226,13 +227,13 @@ class DocumentScreenViewObject:
     def has_any_nodes(self) -> bool:
         return self.document.has_any_nodes()
 
-    def iterator_files_first(self):
+    def iterator_files_first(self) -> Iterator[FileOrFolderEntry]:
         yield from self.document_tree_iterator.iterator_files_first()
 
     def render_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_url(url))
 
-    def render_node_link(self, node) -> str:
+    def render_node_link(self, node: SDocNode) -> str:
         assert isinstance(node, SDocNode), node
         return self.link_renderer.render_node_link(
             node, self.document, self.document_type
@@ -252,7 +253,7 @@ class DocumentScreenViewObject:
     @staticmethod
     def render_standalone_document_link(
         document: SDocDocument, context_document: SDocDocument
-    ):
+    ) -> str:
         # FIXME: Check if the context_document can be removed.
         assert context_document is None
         root_prefix = document.meta.get_root_path_prefix()
@@ -266,20 +267,22 @@ class DocumentScreenViewObject:
     def render_static_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_static_url(url))
 
-    def render_local_anchor(self, node) -> str:
+    def render_local_anchor(
+        self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]
+    ) -> str:
         return self.link_renderer.render_local_anchor(node)
 
-    def render_node_statement(self, node) -> Markup:
+    def render_node_statement(self, node: SDocNode) -> Markup:
         return self.markup_renderer.render_node_statement(
             self.document_type, node
         )
 
-    def render_truncated_node_statement(self, node) -> Markup:
+    def render_truncated_node_statement(self, node: SDocNode) -> Markup:
         return self.markup_renderer.render_truncated_node_statement(
             self.document_type, node
         )
 
-    def render_node_rationale(self, node) -> Markup:
+    def render_node_rationale(self, node: SDocNode) -> Markup:
         return self.markup_renderer.render_node_rationale(
             self.document_type, node
         )

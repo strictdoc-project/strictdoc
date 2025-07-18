@@ -2,9 +2,12 @@
 @relation(SDOC-SRS-110, SDOC-SRS-151, scope=file)
 """
 
-from typing import List, Optional, Tuple
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from strictdoc.helpers.auto_described import auto_described
+
+if TYPE_CHECKING:
+    from strictdoc.backend.sdoc.models.document import SDocDocument
 
 
 @auto_described
@@ -36,7 +39,7 @@ class DocumentCustomMetadata:
 @auto_described
 class DocumentConfig:
     @staticmethod
-    def default_config(document) -> "DocumentConfig":  # type: ignore[no-untyped-def]
+    def default_config(document: Optional["SDocDocument"]) -> "DocumentConfig":
         return DocumentConfig(
             parent=document,
             version=None,
@@ -55,10 +58,10 @@ class DocumentConfig:
             custom_metadata=None,
         )
 
-    def __init__(  # type: ignore[no-untyped-def]
+    def __init__(
         self,
         *,
-        parent,
+        parent: Optional["SDocDocument"],
         version: Optional[str],
         date: Optional[str],
         uid: Optional[str],

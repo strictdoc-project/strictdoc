@@ -1,11 +1,10 @@
 # mypy: disable-error-code="no-untyped-call,union-attr"
-from typing import Dict, List, Optional, Set, Union
+from typing import Dict, List, Optional, Set
 
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
-    GrammarElementFieldMultipleChoice,
-    GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
+    GrammarElementFieldType,
 )
 from strictdoc.backend.sdoc.models.model import (
     RequirementFieldName,
@@ -51,13 +50,7 @@ class DocumentGrammar(SDocGrammarIF):
         )
 
         # @relation(SDOC-SRS-132, scope=range_start)
-        fields: List[
-            Union[
-                GrammarElementFieldString,
-                GrammarElementFieldSingleChoice,
-                GrammarElementFieldMultipleChoice,
-            ]
-        ] = []
+        fields: List[GrammarElementFieldType] = []
 
         if enable_mid:
             fields.append(
@@ -165,13 +158,7 @@ class DocumentGrammar(SDocGrammarIF):
             DocumentGrammar.create_default_text_element()
         )
 
-        fields: List[
-            Union[
-                GrammarElementFieldString,
-                GrammarElementFieldSingleChoice,
-                GrammarElementFieldMultipleChoice,
-            ]
-        ] = [
+        fields: List[GrammarElementFieldType] = [
             GrammarElementFieldString(
                 parent=None,
                 title=RequirementFieldName.UID,
@@ -298,13 +285,7 @@ class DocumentGrammar(SDocGrammarIF):
         parent: Optional["DocumentGrammar"] = None,
         enable_mid: bool = False,
     ) -> GrammarElement:
-        fields: List[
-            Union[
-                GrammarElementFieldString,
-                GrammarElementFieldSingleChoice,
-                GrammarElementFieldMultipleChoice,
-            ]
-        ] = []
+        fields: List[GrammarElementFieldType] = []
         if enable_mid:
             fields.append(
                 GrammarElementFieldString(
@@ -345,13 +326,7 @@ class DocumentGrammar(SDocGrammarIF):
     def create_default_section_element(
         parent: Optional["DocumentGrammar"] = None, enable_mid: bool = False
     ) -> GrammarElement:
-        fields: List[
-            Union[
-                GrammarElementFieldString,
-                GrammarElementFieldSingleChoice,
-                GrammarElementFieldMultipleChoice,
-            ]
-        ] = []
+        fields: List[GrammarElementFieldType] = []
         if enable_mid:
             fields.append(
                 GrammarElementFieldString(

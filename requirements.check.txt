@@ -1,7 +1,7 @@
 toml
 
 # Lint
-mypy>=0.910
+mypy>=0.910,<1.17
 ruff>=0.9
 fixit
 

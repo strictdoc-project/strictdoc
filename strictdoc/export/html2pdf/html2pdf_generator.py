@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-51, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-def,union-attr"
+# mypy: disable-error-code="union-attr"
 import os
 from pathlib import Path
 from typing import List, Tuple
@@ -30,7 +30,7 @@ class HTML2PDFGenerator:
         html_templates: HTMLTemplates,
         output_html2pdf_root: str,
         flat_assets: bool = False,
-    ):
+    ) -> None:
         if not project_config.is_activated_html2pdf():
             raise StrictDocException("HTML2PDF feature is not enabled")
 

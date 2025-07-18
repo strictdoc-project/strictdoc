@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
 import os.path
 from pathlib import Path
 from typing import Dict, List, Tuple, Union
@@ -16,9 +16,8 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
     GrammarElementFieldTag,
-    GrammarElementRelationChild,
-    GrammarElementRelationFile,
-    GrammarElementRelationParent,
+    GrammarElementFieldType,
+    GrammarElementRelationType,
     RequirementFieldType,
 )
 from strictdoc.backend.sdoc.models.node import (
@@ -265,13 +264,10 @@ class SDWriter:
                             grammar_field
                         )
 
-                    relations: List[
-                        Union[
-                            GrammarElementRelationParent,
-                            GrammarElementRelationChild,
-                            GrammarElementRelationFile,
-                        ]
-                    ] = element.relations
+                    relations: List[GrammarElementRelationType] = (
+                        element.relations
+                    )
+
                     if len(relations) > 0:
                         output += "  RELATIONS:\n"
 
@@ -299,7 +295,7 @@ class SDWriter:
         root_node: Union[SDocDocument, SDocSection, SDocNode, DocumentFromFile],
         document: SDocDocument,
         document_iterator: DocumentCachingIterator,
-    ):
+    ) -> str:
         assert isinstance(document_iterator, DocumentCachingIterator), (
             document_iterator
         )
@@ -376,7 +372,7 @@ class SDWriter:
         raise AssertionError("Must not reach here")  # pragma: no cover
 
     @staticmethod
-    def _print_document_from_file(document_from_file: DocumentFromFile):
+    def _print_document_from_file(document_from_file: DocumentFromFile) -> str:
         assert isinstance(document_from_file, DocumentFromFile)
         output = ""
         output += "[DOCUMENT_FROM_FILE]"
@@ -393,7 +389,7 @@ class SDWriter:
         section: SDocSection,
         document: SDocDocument,
         iterator: DocumentCachingIterator,
-    ):
+    ) -> str:
         assert isinstance(section, SDocSection)
         output = ""
         output += "[SECTION]"
@@ -438,7 +434,7 @@ class SDWriter:
 
     def _print_requirement_fields(
         self, section_content: SDocNode, document: SDocDocument
-    ):
+    ) -> str:
         output = ""
 
         current_view: ViewElement = document.view.get_current_view(
@@ -480,7 +476,9 @@ class SDWriter:
         return output
 
     @staticmethod
-    def _print_grammar_field_type(grammar_field):
+    def _print_grammar_field_type(
+        grammar_field: GrammarElementFieldType,
+    ) -> str:
         output = ""
         output += "  - TITLE: "
         output += grammar_field.title
@@ -515,7 +513,7 @@ class SDWriter:
         return output
 
     @classmethod
-    def _print_requirement_relations(cls, requirement: SDocNode):
+    def _print_requirement_relations(cls, requirement: SDocNode) -> str:
         assert isinstance(requirement, SDocNode)
 
         if len(requirement.relations) == 0:

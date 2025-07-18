@@ -1,5 +1,5 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
-from typing import Tuple
+# mypy: disable-error-code="no-untyped-call"
+from typing import Callable, Dict, Optional, Tuple
 
 from textx import metamodel_from_str
 
@@ -55,7 +55,7 @@ class QueryParsingProcessor:
     def __init__(self, parse_context: QueryParseContext):
         self.parse_context: QueryParseContext = parse_context
 
-    def get_default_processors(self):
+    def get_default_processors(self) -> Dict[str, Callable[..., None]]:
         return {}
 
 
@@ -64,7 +64,9 @@ class QueryReader:
         self.path_to_output_root = path_to_output_root
 
     @staticmethod
-    def _read(input_string, file_path=None) -> Tuple[Query, QueryParseContext]:
+    def _read(
+        input_string: str, file_path: Optional[str] = None
+    ) -> Tuple[Query, QueryParseContext]:
         meta_model = metamodel_from_str(
             QUERY_GRAMMAR,
             classes=QUERY_MODELS,
@@ -82,6 +84,6 @@ class QueryReader:
         return query, parse_context
 
     @staticmethod
-    def read(input_string, file_path=None) -> Query:
+    def read(input_string: str, file_path: Optional[str] = None) -> Query:
         document, _ = QueryReader._read(input_string, file_path)
         return document

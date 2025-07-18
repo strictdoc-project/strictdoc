@@ -1,5 +1,5 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
-from typing import List, Optional, Set, Tuple, Union
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+from typing import List, Optional, Set, Tuple
 
 from jinja2 import Template
 from markupsafe import Markup
@@ -16,6 +16,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
+    GrammarElementRelationType,
 )
 from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.core.project_config import ProjectConfig
@@ -34,7 +35,7 @@ from strictdoc.server.error_object import ErrorObject
 from strictdoc.server.helpers.turbo import render_turbo_stream
 
 
-def is_reserved_field(field_name: str):
+def is_reserved_field(field_name: str) -> bool:
     return field_name in (
         RequirementFieldName.UID,
         RequirementFieldName.TITLE,
@@ -61,7 +62,9 @@ class GrammarFormField:
         self.reserved: bool = reserved
 
     @staticmethod
-    def create_from_grammar_field(*, grammar_field: GrammarElementField):
+    def create_from_grammar_field(
+        *, grammar_field: GrammarElementField
+    ) -> "GrammarFormField":
         reserved = is_reserved_field(grammar_field.title)
         return GrammarFormField(
             field_mid=grammar_field.mid,
@@ -71,10 +74,10 @@ class GrammarFormField:
             reserved=reserved,
         )
 
-    def get_input_field_name(self):
+    def get_input_field_name(self) -> str:
         return f"document_grammar_field[{self.field_mid}][field_name]"
 
-    def get_input_field_human_title(self):
+    def get_input_field_human_title(self) -> str:
         return f"document_grammar_field[{self.field_mid}][field_human_title]"
 
 
@@ -92,10 +95,10 @@ class GrammarFormRelation:
             relation_role if relation_role is not None else ""
         )
 
-    def relation_type_input_name(self):
+    def relation_type_input_name(self) -> str:
         return f"document_grammar_relation[{self.relation_mid}][type]"
 
-    def relation_role_input_name(self):
+    def relation_role_input_name(self) -> str:
         return f"document_grammar_relation[{self.relation_mid}][role]"
 
 
@@ -328,13 +331,7 @@ class GrammarElementFormObject(ErrorObject):
                 required="True" if field.field_required else "False",
             )
             grammar_fields.append(grammar_field)
-        relation_fields: List[
-            Union[
-                GrammarElementRelationParent,
-                GrammarElementRelationChild,
-                GrammarElementRelationFile,
-            ]
-        ] = []
+        relation_fields: List[GrammarElementRelationType] = []
 
         for relation in self.relations:
             if relation.relation_type == "Parent":

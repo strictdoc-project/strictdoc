@@ -1,5 +1,5 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
-from typing import List, Optional
+# mypy: disable-error-code="arg-type,no-untyped-call"
+from typing import Any, Dict, List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -9,7 +9,7 @@ from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 
 class SDocObjectFactory:
     @staticmethod
-    def create_document(title: Optional[str]):
+    def create_document(title: Optional[str]) -> SDocDocument:
         return SDocDocument(
             mid=None,
             title=title if title else "NONAME",
@@ -21,7 +21,7 @@ class SDocObjectFactory:
 
     @staticmethod
     def create_requirement(
-        parent,
+        parent: Any,
         node_type: Optional[str] = "REQUIREMENT",
         uid: Optional[str] = None,
         level: Optional[str] = None,
@@ -140,7 +140,9 @@ class SDocObjectFactory:
         return requirement
 
     @staticmethod
-    def create_requirement_from_dict(requirement_dict, parent, level):
+    def create_requirement_from_dict(
+        requirement_dict: Dict[str, str], parent: Any, level: int
+    ) -> SDocNode:
         assert requirement_dict is not None
         assert parent
         assert isinstance(level, int)

@@ -1,18 +1,18 @@
-# mypy: disable-error-code="no-untyped-def"
 from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.core.file_tree import FileTree
 from strictdoc.core.source_tree import SourceTree
 
 
 class DocumentTree:
     def __init__(
         self,
-        file_tree,
-        document_list,
+        file_tree: List[FileTree],
+        document_list: List[SDocDocument],
         map_docs_by_paths: Dict[str, SDocDocument],
-        map_docs_by_rel_paths,
+        map_docs_by_rel_paths: Dict[str, SDocDocument],
         map_grammars_by_filenames: Dict[str, DocumentGrammar],
     ):
         assert isinstance(file_tree, list)
@@ -31,7 +31,7 @@ class DocumentTree:
 
         self.source_tree: Optional[SourceTree] = None  # Attached later.
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"DocumentTree("
             f"{self.file_tree}"
@@ -54,5 +54,5 @@ class DocumentTree:
     ) -> Optional[DocumentGrammar]:
         return self.map_grammars_by_filenames.get(filename)
 
-    def attach_source_tree(self, source_tree: SourceTree):
+    def attach_source_tree(self, source_tree: SourceTree) -> None:
         self.source_tree = source_tree

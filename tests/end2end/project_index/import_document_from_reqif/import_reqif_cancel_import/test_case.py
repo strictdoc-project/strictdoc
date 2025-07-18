@@ -15,7 +15,7 @@ path_to_reqif_sample = os.path.join(
 )
 
 
-class Test_UC55_T02_CancelReqIFImportForm(E2ECase):
+class Test(E2ECase):
     def test(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder

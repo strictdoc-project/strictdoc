@@ -1,8 +1,9 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 import os
 import tempfile
 from contextlib import ExitStack
 from pathlib import Path
+from typing import List, Tuple
 
 import uvicorn
 
@@ -14,7 +15,7 @@ from strictdoc.server.config import SDocServerEnvVariable
 from strictdoc.server.reload_config import UvicornReloadConfig
 
 
-def print_warning_message():
+def print_warning_message() -> None:
     strictdoc_version = "StrictDoc web server v" + __version__
     print(  # noqa: T201
         f"""
@@ -31,7 +32,7 @@ def print_warning_message():
 
 def run_strictdoc_server(
     *, server_config: ServerCommandConfig, project_config: ProjectConfig
-):
+) -> None:
     print_warning_message()
 
     with ExitStack() as stack:
@@ -62,8 +63,12 @@ def run_strictdoc_server(
         # Not doing any resolutions seems to work fine with StrictDoc, so using
         # a 'do nothing' stub and an assert below to make sure that this function
         # is not removed by uvicorn.
-        def dont_resolve_reload_patterns(arg1, arg2):  # pragma: no cover
-            return arg1, list(map(Path, arg2))  # pragma: no cover
+        def dont_resolve_reload_patterns(
+            patterns_list: List[str], directories_list: List[str]
+        ) -> Tuple[List[str], List[Path]]:  # pragma: no cover
+            return patterns_list, list(  # pragma: no cover
+                map(Path, directories_list)
+            )
 
         assert hasattr(uvicorn.config, "resolve_reload_patterns"), (
             "REGRESSION: The function 'resolve_reload_patterns' is not defined "

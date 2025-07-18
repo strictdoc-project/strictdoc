@@ -2,12 +2,12 @@
 @relation(SDOC-SRS-28, SDOC-SRS-2, scope=file)
 """
 
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def,union-attr"
+# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
 import datetime
 import glob
 import os
 import sys
-from typing import Dict, Iterator, List, Optional, Set, Union
+from typing import Any, Dict, Iterator, List, Optional, Set, Union
 
 from textx import TextXSyntaxError
 
@@ -59,6 +59,7 @@ from strictdoc.helpers.file_modification_time import (
     get_file_modification_time,
 )
 from strictdoc.helpers.mid import MID
+from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
@@ -67,7 +68,7 @@ class TraceabilityIndexBuilder:
     def create(
         *,
         project_config: ProjectConfig,
-        parallelizer,
+        parallelizer: Parallelizer,
         skip_source_files: bool = False,
     ) -> TraceabilityIndex:
         # TODO: It would be great to hide this code behind --development flag.
@@ -673,7 +674,7 @@ class TraceabilityIndexBuilder:
 
                 # @relation(SDOC-SRS-30, scope=range_start)
                 # Detect cycles
-                def parent_cycle_traverse_(node_id):
+                def parent_cycle_traverse_(node_id: str) -> Any:
                     current_node = (
                         traceability_index.graph_database.get_link_value(
                             link_type=GraphLinkType.UID_TO_NODE,
@@ -695,7 +696,7 @@ class TraceabilityIndexBuilder:
                     parent_cycle_traverse_,
                 )
 
-                def child_cycle_traverse_(node_id):
+                def child_cycle_traverse_(node_id: str) -> Any:
                     current_node = (
                         traceability_index.graph_database.get_link_value(
                             link_type=GraphLinkType.UID_TO_NODE,
@@ -784,7 +785,7 @@ class TraceabilityIndexBuilder:
     @staticmethod
     def _filter_nodes(
         project_config: ProjectConfig, traceability_index: TraceabilityIndex
-    ):
+    ) -> None:
         if (
             project_config.filter_requirements is not None
             or project_config.filter_sections is not None

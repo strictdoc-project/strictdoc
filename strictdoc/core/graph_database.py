@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def"
 from typing import Any, Dict, Hashable, List, Optional, Tuple
 
 from strictdoc.core.graph.abstract_bucket import AbstractBucket
@@ -6,7 +5,7 @@ from strictdoc.helpers.ordered_set import OrderedSet
 
 
 class ConstraintViolation(Exception):
-    def __init__(self, message):
+    def __init__(self, message: str) -> None:
         super().__init__(message)
 
 
@@ -66,7 +65,7 @@ class GraphDatabase:
         lhs_node: Any,
         rhs_node: Any,
         edge: Optional[str] = None,
-    ):
+    ) -> None:
         assert lhs_node is not None, lhs_node
         assert rhs_node is not None, rhs_node
         self._id_to_bucket[link_type].create_link(
@@ -80,7 +79,7 @@ class GraphDatabase:
         lhs_node: Any,
         rhs_node: Any,
         edge: Optional[str] = None,
-    ):
+    ) -> None:
         self._id_to_bucket[link_type].delete_link(
             lhs_node=lhs_node, rhs_node=rhs_node, edge=edge
         )
@@ -91,7 +90,7 @@ class GraphDatabase:
         link_type: Hashable,
         lhs_node: Any,
         rhs_node: Any,
-    ):
+    ) -> None:
         self._id_to_bucket[link_type].delete_link_weak(
             lhs_node=lhs_node, rhs_node=rhs_node
         )
@@ -101,5 +100,5 @@ class GraphDatabase:
         *,
         link_type: Hashable,
         lhs_node: Any,
-    ):
+    ) -> None:
         self._id_to_bucket[link_type].delete_all_links(lhs_node=lhs_node)

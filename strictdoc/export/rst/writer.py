@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-call"
 from enum import Enum
 from typing import Optional
 
@@ -51,7 +51,7 @@ class RSTWriter:
         return output.lstrip()
 
     @staticmethod
-    def _print_rst_header_2(string: str, level: int):
+    def _print_rst_header_2(string: str, level: int) -> str:
         assert isinstance(string, str), string
         assert isinstance(level, int), level
         chars = {
@@ -74,7 +74,7 @@ class RSTWriter:
     @staticmethod
     def _print_rst_header(
         string: str, level: int, reference_uid: Optional[str]
-    ):
+    ) -> str:
         assert isinstance(string, str), string
         assert isinstance(level, int), level
         chars = {
@@ -102,7 +102,7 @@ class RSTWriter:
         output += "\n\n"
         return output
 
-    def _print_requirement_fields(self, section_content: SDocNode):
+    def _print_requirement_fields(self, section_content: SDocNode) -> str:
         requirement_template = RSTTemplates.jinja_environment.get_template(
             "requirement.jinja.rst"
         )
@@ -114,7 +114,7 @@ class RSTWriter:
         )
         return output
 
-    def _print_node_field(self, object_with_parts: SDocNodeField):
+    def _print_node_field(self, object_with_parts: SDocNodeField) -> str:
         output = ""
         prev_part = None
         for part in object_with_parts.parts:

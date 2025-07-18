@@ -1,6 +1,6 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
+# mypy: disable-error-code="no-untyped-call"
 import os
-from typing import Union
+from typing import Optional, Union
 
 import bs4
 from bs4 import BeautifulSoup
@@ -22,14 +22,16 @@ class EmbeddableTag:
         IMAGE_SVG: {"attr": "data", "type": "image/svg+xml"},
     }
 
-    def __init__(self, asset_type, path):
+    def __init__(self, asset_type: str, path: str) -> None:
         assert asset_type
         assert path
-        self.asset_type = asset_type
-        self.path = path
+        self.asset_type: str = asset_type
+        self.path: str = path
 
     @staticmethod
-    def recognize_from_soup_tag(tag: bs4.element.Tag):
+    def recognize_from_soup_tag(
+        tag: bs4.element.Tag,
+    ) -> Optional["EmbeddableTag"]:
         rel_value: str
         if tag.name == "link":
             if "rel" in tag.attrs:
@@ -37,7 +39,7 @@ class EmbeddableTag:
                     rel_value = tag.attrs["rel"][0]
                     if rel_value == "stylesheet":
                         return EmbeddableTag(
-                            EmbeddableTag.CSS, tag.attrs["href"]
+                            EmbeddableTag.CSS, str(tag.attrs["href"])
                         )
                 if len(tag.attrs["rel"]) == 2:
                     rel_value = tag.attrs["rel"][0]
@@ -45,7 +47,7 @@ class EmbeddableTag:
                         ref_value_second = tag.attrs["rel"][1]
                         if ref_value_second == "icon":
                             return EmbeddableTag(
-                                EmbeddableTag.ICO, tag.attrs["href"]
+                                EmbeddableTag.ICO, str(tag.attrs["href"])
                             )
         elif tag.name == "script":
             if "type" in tag.attrs:
@@ -54,36 +56,38 @@ class EmbeddableTag:
                     type_value in ("text/javascript", "module")
                     and "src" in tag.attrs
                 ):
-                    return EmbeddableTag(EmbeddableTag.JS, tag.attrs["src"])
+                    return EmbeddableTag(
+                        EmbeddableTag.JS, str(tag.attrs["src"])
+                    )
         elif tag.name == "img":
             if "src" in tag.attrs:
                 rel_value = str(tag.attrs["src"])
                 if rel_value.lower().endswith(".png"):
                     return EmbeddableTag(
-                        EmbeddableTag.IMAGE_PNG, tag.attrs["src"]
+                        EmbeddableTag.IMAGE_PNG, str(tag.attrs["src"])
                     )
         elif tag.name == "object":
             if "type" in tag.attrs:
                 type_value = tag.attrs["type"]
                 if type_value == "image/svg+xml":
                     return EmbeddableTag(
-                        EmbeddableTag.IMAGE_SVG, tag.attrs["data"]
+                        EmbeddableTag.IMAGE_SVG, str(tag.attrs["data"])
                     )
         return None
 
-    def get_path(self):
+    def get_path(self) -> str:
         return self.path
 
-    def get_attr(self):
+    def get_attr(self) -> str:
         return EmbeddableTag.MAP[self.asset_type]["attr"]
 
-    def get_type(self):
+    def get_type(self) -> str:
         return EmbeddableTag.MAP[self.asset_type]["type"]
 
 
 class HTMLEmbedder:
     @staticmethod
-    def embed_assets(html_string, path):
+    def embed_assets(html_string: str, path: str) -> str:
         soup = BeautifulSoup(html_string, "html5lib")
 
         tag: Union[
@@ -107,7 +111,7 @@ class HTMLEmbedder:
         return output
 
     @staticmethod
-    def _read_file_as_base64(asset_path):
+    def _read_file_as_base64(asset_path: str) -> DataURI:
         # DataURI.from_file seems to work well without knowing content type.
         # There is also a lower-level DataURI.make file.
         base64 = DataURI.from_file(asset_path)

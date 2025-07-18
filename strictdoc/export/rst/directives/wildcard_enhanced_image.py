@@ -1,6 +1,7 @@
-# mypy: disable-error-code="no-untyped-def"
 import os
+from typing import List
 
+from docutils import nodes
 from docutils.parsers.rst.directives.images import Image
 
 
@@ -9,7 +10,7 @@ class WildcardEnhancedImage(Image):
 
     current_reference_path = os.getcwd()
 
-    def run(self):
+    def run(self) -> List[nodes.Node]:
         # A user has suggested that StrictDoc could be capable of rendering
         # a Sphinx-specific directive: image.* (this directive does not exist
         # in the Docutils).
@@ -35,6 +36,8 @@ class WildcardEnhancedImage(Image):
         # """,
         # the self.arguments looks like this:
         # ['some_picture.*']  # noqa: ERA001
+        messages: List[nodes.Node] = []
+
         assert len(self.arguments) > 0
         rel_path_to_image = self.arguments[0]
         if rel_path_to_image.endswith(".*"):
@@ -66,4 +69,6 @@ class WildcardEnhancedImage(Image):
                 # process.
                 return []
 
-        return super().run()
+        messages = super().run()
+
+        return messages

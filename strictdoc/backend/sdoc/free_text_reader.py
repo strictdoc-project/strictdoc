@@ -1,5 +1,5 @@
-# mypy: disable-error-code="no-untyped-call,no-untyped-def"
-from typing import Tuple
+# mypy: disable-error-code="no-untyped-call"
+from typing import Optional, Tuple
 
 from textx import metamodel_from_str
 
@@ -14,7 +14,7 @@ from strictdoc.helpers.textx import drop_textx_meta
 class SDFreeTextReader:
     @staticmethod
     def _read(
-        input_string, file_path=None
+        input_string: str, file_path: Optional[str] = None
     ) -> Tuple[FreeTextContainer, ParseContext]:
         meta_model = metamodel_from_str(
             SDocGrammarBuilder.create_free_text_grammar(),
@@ -36,7 +36,9 @@ class SDFreeTextReader:
         return document, parse_context
 
     @staticmethod
-    def read(input_string: str, file_path=None) -> FreeTextContainer:
+    def read(
+        input_string: str, file_path: Optional[str] = None
+    ) -> FreeTextContainer:
         assert isinstance(input_string, str), input_string
         document, _ = SDFreeTextReader._read(input_string, file_path)
         return document

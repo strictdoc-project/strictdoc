@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-def"
 import os
 from copy import deepcopy
 from datetime import datetime
@@ -17,7 +16,7 @@ class DiffCommand:
     @staticmethod
     def execute(
         *, project_config: ProjectConfig, diff_config: DiffCommandConfig
-    ):
+    ) -> None:
         if not project_config.is_activated_diff():
             raise RuntimeError(
                 "The DIFF feature is not activated in the project config."

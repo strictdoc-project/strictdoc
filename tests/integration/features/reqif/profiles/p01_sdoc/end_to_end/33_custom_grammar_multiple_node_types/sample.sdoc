@@ -19,9 +19,6 @@ ELEMENTS:
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 - TAG: TEXT
   FIELDS:
   - TITLE: UID
@@ -30,9 +27,6 @@ ELEMENTS:
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: UID
@@ -50,9 +44,6 @@ ELEMENTS:
   - TITLE: COMMENT
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 - TAG: ASSUMPTION
   FIELDS:
   - TITLE: UID
@@ -67,9 +58,6 @@ ELEMENTS:
   - TITLE: COMMENT
     TYPE: String
     REQUIRED: False
-  RELATIONS:
-  - TYPE: Parent
-  - TYPE: File
 
 [TEXT]
 STATEMENT: >>>

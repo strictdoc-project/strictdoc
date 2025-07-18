@@ -2,4 +2,4 @@ RUN: %expect_exit 1 %strictdoc export %S --output-dir %T | filecheck %s --dump-i
 
 CHECK: error: Could not parse file: {{.*}}input1.sdoc:1:1: Expected '[DOCUMENT]' => '*THIS DOCUM'
 CHECK: error: Parallelizer: One of the child processes has exited prematurely.
-CHECK: error: Parallelizer: Failed child process: PID: {{\d+}}, exit code: {{\d+}}.
+CHECK: error: Parallelizer: Child process status: PID: {{\d+}}, exit code: {{\d+}}.

@@ -813,6 +813,7 @@ class TraceabilityIndexBuilder:
                 else:
                     sections_query_object = QueryNullObject()
             except TextXSyntaxError:
+                # FIXME: This must throw a StrictDocException.
                 print("error: Cannot parse filter query.")  # noqa: T201
                 sys.exit(1)
             try:

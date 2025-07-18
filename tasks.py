@@ -317,10 +317,11 @@ def test_end2end(
 
 
 @task(aliases=["tu"])
-def test_unit(context, focus=None):
+def test_unit(context, focus=None, output=False):
     Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
 
     focus_argument = f"-k {focus}" if focus is not None else ""
+    output_argument = "--capture=no" if output else ""
 
     cwd = os.getcwd()
 
@@ -334,6 +335,7 @@ def test_unit(context, focus=None):
             --data-file={path_to_coverage_file}
             -m pytest
             {focus_argument}
+            {output_argument}
             --junit-xml={TEST_REPORTS_DIR}/tests_unit.pytest.junit.xml
             -o cache_dir=build/pytest_unit_with_coverage
             -o junit_suite_name="StrictDoc Unit Tests"

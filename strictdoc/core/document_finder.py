@@ -3,6 +3,7 @@ import sys
 from functools import partial
 from typing import Dict, List, Tuple, Union
 
+from strictdoc.backend.reqif.reqif_reader import ReqIFReader
 from strictdoc.backend.sdoc.grammar_reader import SDocGrammarReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -85,6 +86,14 @@ class DocumentFinder:
                     doc_full_path, project_config
                 )
                 assert isinstance(document_or_grammar, DocumentGrammar)
+            elif doc_full_path.endswith(".reqif"):
+                reqif_reader = ReqIFReader()
+                reqif_documents = reqif_reader.read_from_file(
+                    doc_full_path, project_config
+                )
+                assert len(reqif_documents) >= 0
+                document_or_grammar = reqif_documents[0]
+                assert isinstance(document_or_grammar, SDocDocument)
             elif doc_full_path.endswith(".junit.xml"):
                 junit_xml_reader = JUnitXMLReader()
                 document_or_grammar = junit_xml_reader.read_from_file(
@@ -279,6 +288,7 @@ class DocumentFinder:
                     extensions=[
                         ".sdoc",
                         ".sgra",
+                        ".reqif",
                         ".junit.xml",
                         ".gcov.json",
                         ".robot.xml",

@@ -1,0 +1,6 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Sample ReqIF document
+
+RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Sample ReqIF document
+CHECK-HTML: input.reqif

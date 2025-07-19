@@ -65,6 +65,7 @@ def screen_should_display_file(
         file.has_extension(".junit.xml")
         or file.has_extension(".gcov.json")
         or file.has_extension(".robot.xml")
+        or file.has_extension(".reqif")
     ):
         return True
 

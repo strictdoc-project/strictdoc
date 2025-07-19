@@ -78,6 +78,10 @@ class P01_SDocToReqIFBuildContext:
         self.map_node_uids_to_their_relations: Dict[str, List[Reference]] = (
             defaultdict(list)
         )
+
+        # Maps SDoc field titles to ReqiF Data Type identifiers.
+        self.data_types_lookup: Dict[str, str] = {}
+
         self.map_grammar_node_tags_to_spec_object_type: Dict[
             SDocDocument, Dict[str, ReqIFSpecObjectType]
         ] = defaultdict(dict)
@@ -108,8 +112,13 @@ class P01_SDocToReqIFObjectConverter:
         spec_objects: List[ReqIFSpecObject] = []
         spec_relations: List[ReqIFSpecRelation] = []
         specifications: List[ReqIFSpecification] = []
-        data_types: List[ReqIFDataTypeDefinitionString] = []
-        data_types_lookup = {}
+        data_types: List[
+            Union[
+                ReqIFDataTypeDefinitionString,
+                ReqIFDataTypeDefinitionXHTML,
+                ReqIFDataTypeDefinitionEnumeration,
+            ]
+        ] = []
 
         specification_type = ReqIFSpecificationType(
             identifier=SDOC_SPECIFICATION_TYPE_SINGLETON,
@@ -137,7 +146,7 @@ class P01_SDocToReqIFObjectConverter:
                         if multiline:
                             if (
                                 StrictDocReqIFTypes.MULTI_LINE_STRING.value
-                                in data_types_lookup
+                                in context.data_types_lookup
                             ):
                                 continue
                             if multiline_is_xhtml:
@@ -153,13 +162,13 @@ class P01_SDocToReqIFObjectConverter:
                                         StrictDocReqIFTypes.MULTI_LINE_STRING.value
                                     ),
                                 )
-                            data_types_lookup[
+                            context.data_types_lookup[
                                 StrictDocReqIFTypes.MULTI_LINE_STRING.value
                             ] = data_type.identifier
                         else:
                             if (
                                 StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                                in data_types_lookup
+                                in context.data_types_lookup
                             ):
                                 continue
                             data_type = ReqIFDataTypeDefinitionString.create(
@@ -167,7 +176,7 @@ class P01_SDocToReqIFObjectConverter:
                                     StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                                 ),
                             )
-                            data_types_lookup[
+                            context.data_types_lookup[
                                 StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                             ] = data_type.identifier
                         data_types.append(data_type)
@@ -193,7 +202,9 @@ class P01_SDocToReqIFObjectConverter:
                             values=values,
                         )
                         data_types.append(data_type)
-                        data_types_lookup[field.title] = data_type.identifier
+                        context.data_types_lookup[field.title] = (
+                            data_type.identifier
+                        )
                     elif isinstance(field, GrammarElementFieldMultipleChoice):
                         values = []
                         values_map = {}
@@ -216,7 +227,9 @@ class P01_SDocToReqIFObjectConverter:
                             values=values,
                         )
                         data_types.append(data_type)
-                        data_types_lookup[field.title] = data_type.identifier
+                        context.data_types_lookup[field.title] = (
+                            data_type.identifier
+                        )
                     else:
                         raise NotImplementedError(  # pragma: no cover
                             field
@@ -224,7 +237,6 @@ class P01_SDocToReqIFObjectConverter:
 
             document_spec_types = cls._convert_document_grammar_to_spec_types(
                 grammar=assert_cast(document.grammar, DocumentGrammar),
-                data_types_lookup=data_types_lookup,
                 context=context,
             )
             spec_types.extend(document_spec_types)
@@ -272,7 +284,6 @@ class P01_SDocToReqIFObjectConverter:
                     grammar=assert_cast(document.grammar, DocumentGrammar),
                     context=context,
                     data_types=data_types,
-                    data_types_lookup=data_types_lookup,
                 )
                 spec_objects.append(spec_object)
                 hierarchy = ReqIFSpecHierarchy(
@@ -397,7 +408,6 @@ class P01_SDocToReqIFObjectConverter:
         grammar: DocumentGrammar,
         context: P01_SDocToReqIFBuildContext,
         data_types: List[ReqIFDataTypeDefinitionString],
-        data_types_lookup: Dict[str, str],
     ) -> ReqIFSpecObject:
         node_document = assert_cast(requirement.get_document(), SDocDocument)
 
@@ -420,7 +430,7 @@ class P01_SDocToReqIFObjectConverter:
                 continue
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
-                data_type_ref = data_types_lookup[field.field_name]
+                data_type_ref = context.data_types_lookup[field.field_name]
 
                 enum_ref_value = None
                 for data_type in data_types:
@@ -442,7 +452,7 @@ class P01_SDocToReqIFObjectConverter:
                 field_values: List[str] = field.get_text_value().split(",")
                 field_values = list(map(lambda v: v.strip(), field_values))
 
-                data_type_ref = data_types_lookup[field.field_name]
+                data_type_ref = context.data_types_lookup[field.field_name]
 
                 data_type_lookup = {}
                 for data_type in data_types:
@@ -519,9 +529,6 @@ class P01_SDocToReqIFObjectConverter:
     def _convert_document_grammar_to_spec_types(
         cls,
         grammar: DocumentGrammar,
-        data_types_lookup: Union[
-            ReqIFDataTypeDefinitionString, ReqIFDataTypeDefinitionXHTML
-        ],
         context: P01_SDocToReqIFBuildContext,
     ) -> List[ReqIFSpecificationType]:
         spec_object_types: List[ReqIFSpecificationType] = []
@@ -568,7 +575,9 @@ class P01_SDocToReqIFObjectConverter:
                     attribute = SpecAttributeDefinition.create(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         identifier=field.title,
-                        datatype_definition=data_types_lookup[field.title],
+                        datatype_definition=context.data_types_lookup[
+                            field.title
+                        ],
                         long_name=field.title,
                         multi_valued=False,
                     )
@@ -576,7 +585,9 @@ class P01_SDocToReqIFObjectConverter:
                     attribute = SpecAttributeDefinition.create(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         identifier=field.title,
-                        datatype_definition=data_types_lookup[field.title],
+                        datatype_definition=context.data_types_lookup[
+                            field.title
+                        ],
                         long_name=field.title,
                         multi_valued=True,
                     )

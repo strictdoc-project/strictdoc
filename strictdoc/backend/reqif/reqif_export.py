@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-72, scope=file)
 """
 
-# mypy: disable-error-code="arg-type"
 import os
 from pathlib import Path
 
@@ -28,6 +27,7 @@ class ReqIFExport:
         Path(output_reqif_root).mkdir(parents=True, exist_ok=True)
 
         if project_config.reqif_profile == ReqIFProfile.P01_SDOC:
+            assert traceability_index.document_tree is not None
             reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
                 document_tree=traceability_index.document_tree,
                 multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,

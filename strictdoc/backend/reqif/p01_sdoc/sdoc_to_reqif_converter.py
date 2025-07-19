@@ -66,6 +66,9 @@ class StrictDocReqIFTypes(Enum):
     MULTI_CHOICE = "SDOC_DATATYPE_MULTI_CHOICE"
 
 
+REQIF_SINGLELINE_MAX_LENGTH = "10000"
+
+
 def generate_unique_identifier(element_type: str) -> str:
     return f"{element_type}-{uuid.uuid4()}"
 
@@ -88,6 +91,9 @@ class P01_SDocToReqIFBuildContext:
         self.map_spec_relation_tuple_to_spec_relation_type: Dict[
             Tuple[str, Optional[str]], ReqIFSpecRelationType
         ] = {}
+        self.export_date_str: str = datetime.datetime.now(
+            datetime.timezone.utc
+        ).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class P01_SDocToReqIFObjectConverter:
@@ -139,10 +145,6 @@ class P01_SDocToReqIFObjectConverter:
                     multiline = element.is_field_multiline(field.title)
 
                     if isinstance(field, GrammarElementFieldString):
-                        data_type: Union[
-                            ReqIFDataTypeDefinitionString,
-                            ReqIFDataTypeDefinitionXHTML,
-                        ]
                         if multiline:
                             if (
                                 StrictDocReqIFTypes.MULTI_LINE_STRING.value
@@ -154,13 +156,16 @@ class P01_SDocToReqIFObjectConverter:
                                     identifier=(
                                         StrictDocReqIFTypes.MULTI_LINE_STRING.value
                                     ),
+                                    last_change=context.export_date_str,
                                     is_self_closed=True,
                                 )
                             else:
-                                data_type = ReqIFDataTypeDefinitionString.create(
+                                data_type = ReqIFDataTypeDefinitionString(
                                     identifier=(
                                         StrictDocReqIFTypes.MULTI_LINE_STRING.value
                                     ),
+                                    last_change=context.export_date_str,
+                                    max_length=REQIF_SINGLELINE_MAX_LENGTH,
                                 )
                             context.data_types_lookup[
                                 StrictDocReqIFTypes.MULTI_LINE_STRING.value
@@ -171,10 +176,12 @@ class P01_SDocToReqIFObjectConverter:
                                 in context.data_types_lookup
                             ):
                                 continue
-                            data_type = ReqIFDataTypeDefinitionString.create(
+                            data_type = ReqIFDataTypeDefinitionString(
                                 identifier=(
                                     StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                                 ),
+                                last_change=context.export_date_str,
+                                max_length=REQIF_SINGLELINE_MAX_LENGTH,
                             )
                             context.data_types_lookup[
                                 StrictDocReqIFTypes.SINGLE_LINE_STRING.value
@@ -193,12 +200,13 @@ class P01_SDocToReqIFObjectConverter:
                             values.append(value)
                             values_map[option] = option
 
-                        data_type = ReqIFDataTypeDefinitionEnumeration.create(
+                        data_type = ReqIFDataTypeDefinitionEnumeration(
                             identifier=(
                                 generate_unique_identifier(
                                     StrictDocReqIFTypes.SINGLE_CHOICE.value
                                 )
                             ),
+                            last_change=context.export_date_str,
                             values=values,
                         )
                         data_types.append(data_type)
@@ -218,12 +226,13 @@ class P01_SDocToReqIFObjectConverter:
                             values.append(value)
                             values_map[option] = option
 
-                        data_type = ReqIFDataTypeDefinitionEnumeration.create(
+                        data_type = ReqIFDataTypeDefinitionEnumeration(
                             identifier=(
                                 generate_unique_identifier(
                                     StrictDocReqIFTypes.MULTI_CHOICE.value
                                 )
                             ),
+                            last_change=context.export_date_str,
                             values=values,
                         )
                         data_types.append(data_type)
@@ -243,8 +252,8 @@ class P01_SDocToReqIFObjectConverter:
 
             document_iterator = DocumentCachingIterator(document)
 
-            # TODO: This is a throw-away object. It gets discarded when the
-            # iteration is over. Find a way to do without it.
+            # FIXME: This is a throw-away object. It gets discarded when the
+            #        iteration is over. Find a way to do without it.
             root_hierarchy = ReqIFSpecHierarchy(
                 xml_node=None,
                 is_self_closed=False,
@@ -290,7 +299,7 @@ class P01_SDocToReqIFObjectConverter:
                     xml_node=None,
                     is_self_closed=False,
                     identifier=generate_unique_identifier("SPEC-IDENTIFIER"),
-                    last_change=None,
+                    last_change=context.export_date_str,
                     long_name=None,
                     spec_object=spec_object.identifier,
                     children=None,
@@ -312,7 +321,7 @@ class P01_SDocToReqIFObjectConverter:
                 xml_node=None,
                 description=None,
                 identifier=specification_identifier,
-                last_change=None,
+                last_change=context.export_date_str,
                 long_name=document.title,
                 values=None,
                 specification_type=specification_type.identifier,
@@ -331,7 +340,10 @@ class P01_SDocToReqIFObjectConverter:
                     node_relation_, (ParentReqReference, ChildReqReference)
                 ):
                     continue
-                related_node_uid = node_relation_.ref_uid
+                parent_or_child_relation = assert_cast(
+                    node_relation_, (ParentReqReference, ChildReqReference)
+                )
+                related_node_uid = parent_or_child_relation.ref_uid
                 parent_spec_object = context.map_uid_to_spec_objects[
                     related_node_uid
                 ]
@@ -435,6 +447,9 @@ class P01_SDocToReqIFObjectConverter:
                 enum_ref_value = None
                 for data_type in data_types:
                     if data_type_ref == data_type.identifier:
+                        assert isinstance(
+                            data_type, ReqIFDataTypeDefinitionEnumeration
+                        )
                         for data_type_value in data_type.values:
                             if data_type_value.key == field.get_text_value():
                                 enum_ref_value = data_type_value.identifier
@@ -457,6 +472,9 @@ class P01_SDocToReqIFObjectConverter:
                 data_type_lookup = {}
                 for data_type in data_types:
                     if data_type_ref == data_type.identifier:
+                        assert isinstance(
+                            data_type, ReqIFDataTypeDefinitionEnumeration
+                        )
                         for data_type_value in data_type.values:
                             data_type_lookup[data_type_value.key] = (
                                 data_type_value.identifier
@@ -514,10 +532,11 @@ class P01_SDocToReqIFObjectConverter:
                 requirement.node_type
             ]
         )
-        spec_object = ReqIFSpecObject.create(
+        spec_object = ReqIFSpecObject(
             identifier=requirement_identifier,
             spec_object_type=spec_object_type.identifier,
             attributes=attributes,
+            last_change=context.export_date_str,
         )
         if requirement.reserved_uid is not None:
             context.map_uid_to_spec_objects[requirement.reserved_uid] = (
@@ -554,25 +573,27 @@ class P01_SDocToReqIFObjectConverter:
                             if context.multiline_is_xhtml
                             else SpecObjectAttributeType.STRING
                         )
-                        attribute = SpecAttributeDefinition.create(
+                        attribute = SpecAttributeDefinition(
                             attribute_type=attribute_type,
                             identifier=field_title,
                             datatype_definition=(
                                 StrictDocReqIFTypes.MULTI_LINE_STRING.value
                             ),
                             long_name=field_title,
+                            last_change=context.export_date_str,
                         )
                     else:
-                        attribute = SpecAttributeDefinition.create(
+                        attribute = SpecAttributeDefinition(
                             attribute_type=SpecObjectAttributeType.STRING,
                             identifier=field_title,
                             datatype_definition=(
                                 StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                             ),
                             long_name=field_title,
+                            last_change=context.export_date_str,
                         )
                 elif isinstance(field, GrammarElementFieldSingleChoice):
-                    attribute = SpecAttributeDefinition.create(
+                    attribute = SpecAttributeDefinition(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         identifier=field.title,
                         datatype_definition=context.data_types_lookup[
@@ -580,9 +601,10 @@ class P01_SDocToReqIFObjectConverter:
                         ],
                         long_name=field.title,
                         multi_valued=False,
+                        last_change=context.export_date_str,
                     )
                 elif isinstance(field, GrammarElementFieldMultipleChoice):
-                    attribute = SpecAttributeDefinition.create(
+                    attribute = SpecAttributeDefinition(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         identifier=field.title,
                         datatype_definition=context.data_types_lookup[
@@ -590,6 +612,7 @@ class P01_SDocToReqIFObjectConverter:
                         ],
                         long_name=field.title,
                         multi_valued=True,
+                        last_change=context.export_date_str,
                     )
                 else:
                     raise NotImplementedError(  # pragma: no cover
@@ -598,13 +621,14 @@ class P01_SDocToReqIFObjectConverter:
                 attribute_definitions.append(attribute)
 
             # Extra chapter name attribute.
-            chapter_name_attribute = SpecAttributeDefinition.create(
+            chapter_name_attribute = SpecAttributeDefinition(
                 attribute_type=SpecObjectAttributeType.STRING,
                 identifier="ReqIF.ChapterName",
                 datatype_definition=(
                     StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                 ),
                 long_name="ReqIF.ChapterName",
+                last_change=context.export_date_str,
             )
             attribute_definitions.append(chapter_name_attribute)
 
@@ -613,6 +637,7 @@ class P01_SDocToReqIFObjectConverter:
                 identifier=spec_object_type_identifier,
                 long_name=element.tag,
                 attribute_definitions=attribute_definitions,
+                last_change=context.export_date_str,
             )
             spec_object_types.append(spec_object_type)
             context.map_grammar_node_tags_to_spec_object_type[grammar_document][

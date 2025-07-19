@@ -2,6 +2,7 @@
 @relation(SDOC-SRS-72, SDOC-SRS-153, scope=file)
 """
 
+import re
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionEnumeration
@@ -15,9 +16,8 @@ from reqif.models.reqif_types import SpecObjectAttributeType
 from reqif.reqif_bundle import ReqIFBundle
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
-    REQIF_MAP_TO_SDOC_FIELD_MAP,
-    ReqIFChapterField,
-    ReqIFRequirementReservedField,
+    ReqIFReservedField,
+    map_reqif_field_title_to_sdoc_field_title,
 )
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -43,6 +43,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
+from strictdoc.helpers.lxml import convert_xhtml_to_multiline_string
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.string import (
@@ -68,6 +69,8 @@ class P01_ReqIFToSDocBuildContext:
 
 
 class P01_ReqIFToSDocConverter:
+    SAFE_SDOC_FIELD_NAME_REGEX = re.compile(r"[^A-Za-z0-9]")
+
     @staticmethod
     def convert_reqif_bundle(
         reqif_bundle: ReqIFBundle,
@@ -109,9 +112,7 @@ class P01_ReqIFToSDocConverter:
 
     @staticmethod
     def convert_requirement_field_from_reqif(field_name: str) -> str:
-        if field_name in ReqIFRequirementReservedField.SET:
-            return REQIF_MAP_TO_SDOC_FIELD_MAP[field_name]
-        return field_name
+        return map_reqif_field_title_to_sdoc_field_title(field_name)
 
     @staticmethod
     def _create_document_from_reqif_specification(
@@ -251,21 +252,34 @@ class P01_ReqIFToSDocConverter:
     ) -> GrammarElement:
         fields: List[GrammarElementFieldType] = []
 
+        unique_safe_field_names: OrderedSet[str] = OrderedSet()
         for attribute in spec_object_type.attribute_definitions:
             field_name = (
                 P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
                     attribute.long_name
                 )
             )
-            # Chapter name is a reserved field for sections.
-            if field_name == ReqIFChapterField.CHAPTER_NAME:
-                continue
+            sdoc_safe_field_name = (
+                P01_ReqIFToSDocConverter._create_sdoc_safe_field_name(
+                    field_name
+                )
+            )
+            assert sdoc_safe_field_name not in unique_safe_field_names, (
+                "ReqIF Spec Object type attributes translate to "
+                f"non unique fields in SDoc: {sdoc_safe_field_name}. "
+                f"Unique fields: {unique_safe_field_names}."
+            )
+            unique_safe_field_names.add(sdoc_safe_field_name)
+
+            sdoc_field_human_title = (
+                field_name if field_name != sdoc_safe_field_name else None
+            )
             if attribute.attribute_type == SpecObjectAttributeType.STRING:
                 fields.append(
                     GrammarElementFieldString(
                         parent=None,
-                        title=field_name,
-                        human_title=None,
+                        title=sdoc_safe_field_name,
+                        human_title=sdoc_field_human_title,
                         required="False",
                     )
                 )
@@ -273,8 +287,8 @@ class P01_ReqIFToSDocConverter:
                 fields.append(
                     GrammarElementFieldString(
                         parent=None,
-                        title=field_name,
-                        human_title=None,
+                        title=sdoc_safe_field_name,
+                        human_title=sdoc_field_human_title,
                         required="False",
                     )
                 )
@@ -286,13 +300,24 @@ class P01_ReqIFToSDocConverter:
                         attribute.datatype_definition
                     )
                 )
-                options = list(map(lambda v: v.key, enum_data_type.values))
+
+                options = []
+                for value_ in enum_data_type.values:
+                    if value_.long_name is not None:
+                        assert len(value_.long_name) > 0, (
+                            "Empty enum values are not allowed. "
+                            f"Invalid enum data type: {enum_data_type}"
+                        )
+                        options.append(value_.long_name)
+                    else:
+                        options.append(value_.key)
+
                 if attribute.multi_valued is True:
                     fields.append(
                         GrammarElementFieldMultipleChoice(
                             parent=None,
-                            title=field_name,
-                            human_title=None,
+                            title=sdoc_safe_field_name,
+                            human_title=sdoc_field_human_title,
                             options=options,
                             required="False",
                         )
@@ -301,8 +326,8 @@ class P01_ReqIFToSDocConverter:
                     fields.append(
                         GrammarElementFieldSingleChoice(
                             parent=None,
-                            title=field_name,
-                            human_title=None,
+                            title=sdoc_safe_field_name,
+                            human_title=sdoc_field_human_title,
                             options=options,
                             required="False",
                         )
@@ -379,10 +404,19 @@ class P01_ReqIFToSDocConverter:
             if long_name_or_none is None:
                 raise NotImplementedError
             field_name: str = long_name_or_none
-            if attribute.attribute_type == SpecObjectAttributeType.ENUMERATION:
-                sdoc_field_name = P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
+
+            sdoc_field_name = (
+                P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
                     field_name,
                 )
+            )
+            sdoc_field_name = (
+                P01_ReqIFToSDocConverter._create_sdoc_safe_field_name(
+                    sdoc_field_name
+                )
+            )
+
+            if attribute.attribute_type == SpecObjectAttributeType.ENUMERATION:
                 enum_values_resolved = []
                 for (
                     attribute_definition_
@@ -403,9 +437,15 @@ class P01_ReqIFToSDocConverter:
 
                         enum_values_list = list(attribute.value)
                         for enum_value in enum_values_list:
-                            enum_values_resolved.append(
-                                datatype.values_map[enum_value].key
+                            reqif_enum_value = datatype.values_map[enum_value]
+                            reqif_enum_value_value = (
+                                reqif_enum_value.long_name
+                                if reqif_enum_value.long_name is not None
+                                and len(reqif_enum_value.long_name) > 0
+                                else reqif_enum_value.key
                             )
+                            assert len(reqif_enum_value_value) > 0
+                            enum_values_resolved.append(reqif_enum_value_value)
 
                         break
                 else:
@@ -431,8 +471,8 @@ class P01_ReqIFToSDocConverter:
                 or attribute.attribute_type == SpecObjectAttributeType.XHTML
                 or field_name
                 in (
-                    ReqIFRequirementReservedField.TEXT,
-                    ReqIFRequirementReservedField.COMMENT_NOTES,
+                    ReqIFReservedField.TEXT,
+                    ReqIFReservedField.COMMENT_NOTES,
                 )
             ):
                 attribute_value = attribute_value.lstrip()
@@ -443,11 +483,22 @@ class P01_ReqIFToSDocConverter:
                     # but doing this anyway to highlight the intention.
                     attribute_value = attribute_value.strip()
 
-            sdoc_field_name = (
-                P01_ReqIFToSDocConverter.convert_requirement_field_from_reqif(
-                    field_name,
-                )
-            )
+                    if context.import_markup != "HTML":
+                        attribute_value = convert_xhtml_to_multiline_string(
+                            attribute_value
+                        )
+
+                    # We saw ReqIF examples where tools produce ReqIF.ChapterName
+                    # as XHTML, not String. Assuming this is a wrong/legacy
+                    # behavior but still supporting it.
+                    # See tests/integration/features/reqif/profiles/p01_sdoc/examples/01_sample
+                    # for an example.
+                    if field_name in (
+                        ReqIFReservedField.NAME,
+                        ReqIFReservedField.CHAPTER_NAME,
+                    ):
+                        multiline = False
+
             if multiline:
                 attribute_value = ensure_newline(attribute_value)
             fields.append(
@@ -552,3 +603,9 @@ class P01_ReqIFToSDocConverter:
             if len(parent_refs) > 0:
                 requirement.relations = parent_refs
         return requirement
+
+    @staticmethod
+    def _create_sdoc_safe_field_name(reqif_field_long_name: str) -> str:
+        return P01_ReqIFToSDocConverter.SAFE_SDOC_FIELD_NAME_REGEX.sub(
+            "_", reqif_field_long_name
+        ).upper()

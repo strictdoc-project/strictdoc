@@ -32,52 +32,52 @@
         </DATATYPE-DEFINITION-ENUMERATION>
         <DATATYPE-DEFINITION-ENUMERATION DESC="" IDENTIFIER="_5b7b3973-a40c-3a3b-acc6-851dea28d92a" LAST-CHANGE="2023-08-24T15:28:11.242708971" LONG-NAME="To which types of vehicle does this apply?">
           <SPECIFIED-VALUES>
-            <ENUM-VALUE IDENTIFIER="_1ed22fcf-02ae-38b5-9dad-ff9a57dd3f94" LAST-CHANGE="2023-08-24T15:28:11.253810637" LONG-NAME="Buses (all) | M2">
+            <ENUM-VALUE IDENTIFIER="_1ed22fcf-02ae-38b5-9dad-ff9a57dd3f94" LAST-CHANGE="2023-08-24T15:28:11.253810637" LONG-NAME="Buses - all | M2">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="1" OTHER-CONTENT=""/>
               </PROPERTIES>
             </ENUM-VALUE>
-            <ENUM-VALUE IDENTIFIER="_ca009a23-6bed-3663-8724-c6d4300d0cdd" LAST-CHANGE="2023-08-24T15:28:11.253825887" LONG-NAME="Buses (all) | M3">
+            <ENUM-VALUE IDENTIFIER="_ca009a23-6bed-3663-8724-c6d4300d0cdd" LAST-CHANGE="2023-08-24T15:28:11.253825887" LONG-NAME="Buses - all | M3">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="2" OTHER-CONTENT=""/>
               </PROPERTIES>
             </ENUM-VALUE>
-            <ENUM-VALUE IDENTIFIER="_9408259f-78fd-3ac3-836c-672b9cf6ffc9" LAST-CHANGE="2023-08-24T15:28:11.253829222" LONG-NAME="Buses (all) | buses (general)">
+            <ENUM-VALUE IDENTIFIER="_9408259f-78fd-3ac3-836c-672b9cf6ffc9" LAST-CHANGE="2023-08-24T15:28:11.253829222" LONG-NAME="Buses - all | buses - general">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="3" OTHER-CONTENT=""/>
               </PROPERTIES>
             </ENUM-VALUE>
-            <ENUM-VALUE IDENTIFIER="_6d6d3dea-b0e5-3292-8568-d412ff99185a" LAST-CHANGE="2023-08-24T15:28:11.253831352" LONG-NAME="PCs (all) | M1">
+            <ENUM-VALUE IDENTIFIER="_6d6d3dea-b0e5-3292-8568-d412ff99185a" LAST-CHANGE="2023-08-24T15:28:11.253831352" LONG-NAME="PCs - all | M1">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="4" OTHER-CONTENT=""/>
               </PROPERTIES>
             </ENUM-VALUE>
-            <ENUM-VALUE IDENTIFIER="_47309616-82d0-358d-9fd4-143282823844" LAST-CHANGE="2023-08-24T15:28:11.253833631" LONG-NAME="PCs (all) | PCs (general)">
+            <ENUM-VALUE IDENTIFIER="_47309616-82d0-358d-9fd4-143282823844" LAST-CHANGE="2023-08-24T15:28:11.253833631" LONG-NAME="PCs - all | PCs - general">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="5" OTHER-CONTENT=""/>
               </PROPERTIES>
             </ENUM-VALUE>
-            <ENUM-VALUE IDENTIFIER="_baa7af4c-fd5b-3362-85be-6313ae718e65" LAST-CHANGE="2023-08-24T15:28:11.25383569" LONG-NAME="Trucks (all) | N1">
+            <ENUM-VALUE IDENTIFIER="_baa7af4c-fd5b-3362-85be-6313ae718e65" LAST-CHANGE="2023-08-24T15:28:11.25383569" LONG-NAME="Trucks - all | N1">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="6" OTHER-CONTENT=""/>
               </PROPERTIES>
             </ENUM-VALUE>
-            <ENUM-VALUE IDENTIFIER="_99863bdc-abf3-314a-8b46-1ee50e93e0f0" LAST-CHANGE="2023-08-24T15:28:11.253838143" LONG-NAME="Trucks (all) | N2">
+            <ENUM-VALUE IDENTIFIER="_99863bdc-abf3-314a-8b46-1ee50e93e0f0" LAST-CHANGE="2023-08-24T15:28:11.253838143" LONG-NAME="Trucks - all | N2">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="7" OTHER-CONTENT=""/>
               </PROPERTIES>
             </ENUM-VALUE>
-            <ENUM-VALUE IDENTIFIER="_10caedcf-1be3-37de-9365-e2d1749740d5" LAST-CHANGE="2023-08-24T15:28:11.253840849" LONG-NAME="Trucks (all) | N3">
+            <ENUM-VALUE IDENTIFIER="_10caedcf-1be3-37de-9365-e2d1749740d5" LAST-CHANGE="2023-08-24T15:28:11.253840849" LONG-NAME="Trucks - all | N3">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="8" OTHER-CONTENT=""/>
               </PROPERTIES>
             </ENUM-VALUE>
-            <ENUM-VALUE IDENTIFIER="_710cb0a9-7e53-3e37-931d-3ce9d53d069c" LAST-CHANGE="2023-08-24T15:28:11.253843375" LONG-NAME="Trucks (all) | trucks (general)">
+            <ENUM-VALUE IDENTIFIER="_710cb0a9-7e53-3e37-931d-3ce9d53d069c" LAST-CHANGE="2023-08-24T15:28:11.253843375" LONG-NAME="Trucks - all | trucks - general">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="9" OTHER-CONTENT=""/>
               </PROPERTIES>
             </ENUM-VALUE>
-            <ENUM-VALUE IDENTIFIER="_a8094fc8-2bba-3fb4-a491-c8efe28e762d" LAST-CHANGE="2023-08-24T15:28:11.253860091" LONG-NAME="">
+            <ENUM-VALUE IDENTIFIER="_a8094fc8-2bba-3fb4-a491-c8efe28e762d" LAST-CHANGE="2023-08-24T15:28:11.253860091" LONG-NAME="Other">
               <PROPERTIES>
                 <EMBEDDED-VALUE KEY="10" OTHER-CONTENT=""/>
               </PROPERTIES>
@@ -271,7 +271,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-800094403...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -353,7 +353,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1296777781...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -440,7 +440,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-8777602262...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -527,7 +527,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-3863645040...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -609,7 +609,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1479856220...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -691,7 +691,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-8115727826...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -773,7 +773,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1259839806...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -855,7 +855,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9464678217...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -937,7 +937,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-3739062049...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1019,7 +1019,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6410369870...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1101,7 +1101,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7525179202...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1183,7 +1183,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7269471756...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1265,7 +1265,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5147026012...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1347,7 +1347,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6347952334...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1429,7 +1429,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-941514812...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1511,7 +1511,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-3218863434...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1593,7 +1593,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-3059328087...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1675,7 +1675,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-3136273741...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1757,7 +1757,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9949067721...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1839,7 +1839,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-3075536904...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -1921,7 +1921,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-4372756441...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2003,7 +2003,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5512684929...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2085,7 +2085,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6887034286...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2167,7 +2167,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7554940541...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2249,7 +2249,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1619523204...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2331,7 +2331,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1789134926...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2413,7 +2413,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6917232909...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2495,7 +2495,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9340854717...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2577,7 +2577,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6898346570...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2664,7 +2664,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-2436964642...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2751,7 +2751,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1808923387...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2838,7 +2838,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7068117402...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -2925,7 +2925,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-283673809...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3012,7 +3012,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5414531972...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3099,7 +3099,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9347299576...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3186,7 +3186,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-8068106365...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3273,7 +3273,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7000115537...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3360,7 +3360,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7392950794...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3447,7 +3447,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6251844059...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3534,7 +3534,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1258946577...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3621,7 +3621,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9642852011...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3708,7 +3708,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1159585295...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3795,7 +3795,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-2188523933...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3882,7 +3882,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-8869565931...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -3969,7 +3969,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9655006692...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4056,7 +4056,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-173903207...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4143,7 +4143,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-4437392108...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4230,7 +4230,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7231710889...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4317,7 +4317,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-3856771626...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4404,7 +4404,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1552650554...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4491,7 +4491,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-2027681480...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4578,7 +4578,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-8576707282...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4665,7 +4665,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-8321981209...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4752,7 +4752,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9387935987...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4839,7 +4839,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7023507353...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -4926,7 +4926,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7298310144...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5013,7 +5013,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1075256361...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5100,7 +5100,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6138260782...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5187,7 +5187,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5647998407...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5274,7 +5274,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-4308580990...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5361,7 +5361,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-2137374419...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5448,7 +5448,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1428791751...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5535,7 +5535,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9676532582...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5622,7 +5622,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1968810068...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5709,7 +5709,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-952321743...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5796,7 +5796,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-4385285431...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5883,7 +5883,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-2306522878...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -5970,7 +5970,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-4975961063...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6057,7 +6057,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5731851921...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6144,7 +6144,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5314675155...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6231,7 +6231,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7947804285...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6318,7 +6318,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-3454865771...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6405,7 +6405,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6803295887...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6492,7 +6492,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9889542268...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6579,7 +6579,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-908130948...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6666,7 +6666,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-716334318...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6753,7 +6753,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5835886909...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6840,7 +6840,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-8411277964...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -6927,7 +6927,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-1138792890...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7014,7 +7014,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-4939431975...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7101,7 +7101,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5404371533...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7188,7 +7188,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5139386584...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7275,7 +7275,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-3139452980...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7362,7 +7362,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-2731172538...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7449,7 +7449,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7204634363...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7536,7 +7536,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9879655889...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7623,7 +7623,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5380229692...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7710,7 +7710,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-9303550356...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7797,7 +7797,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-7775127350...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7884,7 +7884,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-4451010361...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -7971,7 +7971,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6890198797...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -8058,7 +8058,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-6432327145...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -8145,7 +8145,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-8820416554...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -8232,7 +8232,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-5571156336...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -8319,7 +8319,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-104571040...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -8406,7 +8406,7 @@
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>_ca8ca892-72ff-3964-8add-217cd02d802e</ATTRIBUTE-DEFINITION-XHTML-REF>
               </DEFINITION>
-              <THE-VALUE>...Anonymized-4320228361...</THE-VALUE>
+              <THE-VALUE><xhtml:div><xhtml:p>Anonymized content...</xhtml:p></xhtml:div></THE-VALUE>
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-ENUMERATION>
               <DEFINITION>
@@ -8459,7 +8459,7 @@
       </SPEC-OBJECTS>
       <SPEC-RELATIONS/>
       <SPECIFICATIONS>
-        <SPECIFICATION IDENTIFIER="_5e3b07dc-8950-3994-be56-0c4e72399b51" LAST-CHANGE="2023-08-24T15:28:11.287101632" LONG-NAME="...Anonymized-3908282161...">
+        <SPECIFICATION IDENTIFIER="_5e3b07dc-8950-3994-be56-0c4e72399b51" LAST-CHANGE="2023-08-24T15:28:11.287101632" LONG-NAME="Anonymized Specification">
           <TYPE>
             <SPECIFICATION-TYPE-REF>_8043d603-34b9-3494-b4c5-ab350ebe7e00</SPECIFICATION-TYPE-REF>
           </TYPE>

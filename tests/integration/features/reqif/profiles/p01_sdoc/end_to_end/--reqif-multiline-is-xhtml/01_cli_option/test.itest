@@ -1,4 +1,5 @@
 RUN: %strictdoc export --formats=reqif-sdoc --reqif-multiline-is-xhtml %S/sample.sdoc --output-dir %T
+RUN: reqif validate --use-reqif-schema %T/reqif/output.reqif
 RUN: %strictdoc import reqif sdoc %T/reqif/output.reqif %T/
 RUN: %diff %S/sample.sdoc %T/sample.sdoc
 
@@ -8,24 +9,34 @@ CHECK-EXPORTED-REQIF:<DATATYPE-DEFINITION-XHTML IDENTIFIER="SDOC_DATATYPE_MULTI_
 
 CHECK-EXPORTED-REQIF:             <ATTRIBUTE-VALUE-XHTML>
 CHECK-EXPORTED-REQIF:              <DEFINITION>
-CHECK-EXPORTED-REQIF:                <ATTRIBUTE-DEFINITION-XHTML-REF>ReqIF.Text</ATTRIBUTE-DEFINITION-XHTML-REF>
+CHECK-EXPORTED-REQIF:                <ATTRIBUTE-DEFINITION-XHTML-REF>TEXT_{{.*}}_ReqIF.Text</ATTRIBUTE-DEFINITION-XHTML-REF>
 CHECK-EXPORTED-REQIF:              </DEFINITION>
-CHECK-EXPORTED-REQIF:              <THE-VALUE>Document free text.</THE-VALUE>
+CHECK-EXPORTED-REQIF:              <THE-VALUE>
+CHECK-EXPORTED-REQIF-NEXT:<xhtml:div>
+CHECK-EXPORTED-REQIF-NEXT:<xhtml:p>Document free text.</xhtml:p>
+CHECK-EXPORTED-REQIF-NEXT:</xhtml:div>
+CHECK-EXPORTED-REQIF-NEXT:         </THE-VALUE>
 CHECK-EXPORTED-REQIF:            </ATTRIBUTE-VALUE-XHTML>
 
 CHECK-EXPORTED-REQIF:                 <ATTRIBUTE-VALUE-XHTML>
 CHECK-EXPORTED-REQIF-NEXT:              <DEFINITION>
-CHECK-EXPORTED-REQIF-NEXT:                <ATTRIBUTE-DEFINITION-XHTML-REF>ReqIF.Text</ATTRIBUTE-DEFINITION-XHTML-REF>
+CHECK-EXPORTED-REQIF-NEXT:                <ATTRIBUTE-DEFINITION-XHTML-REF>TEXT_{{.*}}_ReqIF.Text</ATTRIBUTE-DEFINITION-XHTML-REF>
 CHECK-EXPORTED-REQIF-NEXT:              </DEFINITION>
-CHECK-EXPORTED-REQIF-NEXT:              <THE-VALUE>Section free text.</THE-VALUE>
+CHECK-EXPORTED-REQIF-NEXT:              <THE-VALUE>
+CHECK-EXPORTED-REQIF-NEXT:                <xhtml:div>
+CHECK-EXPORTED-REQIF-NEXT:                  <xhtml:p>Section free text.</xhtml:p>
+CHECK-EXPORTED-REQIF-NEXT:                </xhtml:div>
+CHECK-EXPORTED-REQIF-NEXT:              </THE-VALUE>
 CHECK-EXPORTED-REQIF-NEXT:            </ATTRIBUTE-VALUE-XHTML>
 
 CHECK-EXPORTED-REQIF:                 <ATTRIBUTE-VALUE-XHTML>
 CHECK-EXPORTED-REQIF-NEXT:              <DEFINITION>
-CHECK-EXPORTED-REQIF-NEXT:                <ATTRIBUTE-DEFINITION-XHTML-REF>ReqIF.Text</ATTRIBUTE-DEFINITION-XHTML-REF>
+CHECK-EXPORTED-REQIF-NEXT:                <ATTRIBUTE-DEFINITION-XHTML-REF>REQUIREMENT_{{.*}}_ReqIF.Text</ATTRIBUTE-DEFINITION-XHTML-REF>
 CHECK-EXPORTED-REQIF-NEXT:              </DEFINITION>
-CHECK-EXPORTED-REQIF-NEXT:              <THE-VALUE>Statement line #1
-CHECK-EXPORTED-REQIF-EMPTY:
-CHECK-EXPORTED-REQIF-NEXT:                Statement line #2
-CHECK-EXPORTED-REQIF-EMPTY:
-CHECK-EXPORTED-REQIF-NEXT:                Statement line #3</THE-VALUE>
+CHECK-EXPORTED-REQIF-NEXT:              <THE-VALUE>
+CHECK-EXPORTED-REQIF-NEXT:                <xhtml:div>
+CHECK-EXPORTED-REQIF-NEXT:                  <xhtml:p>Statement line #1</xhtml:p>
+CHECK-EXPORTED-REQIF-NEXT:                  <xhtml:p>Statement line #2</xhtml:p>
+CHECK-EXPORTED-REQIF-NEXT:                  <xhtml:p>Statement line #3</xhtml:p>
+CHECK-EXPORTED-REQIF-NEXT:                </xhtml:div>
+CHECK-EXPORTED-REQIF-NEXT:              </THE-VALUE>

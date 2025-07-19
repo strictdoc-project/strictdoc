@@ -20,7 +20,7 @@ from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.helpers.cast import assert_optional_cast
 
-MULTIPLE_CHOICE_FIELD_KW = r"[a-zA-Z0-9\/\-_ ]+"
+MULTIPLE_CHOICE_FIELD_KW = r"[a-zA-Z0-9\/\-|_ ]+"
 MULTIPLE_CHOICE_FIELD_REGEX = re.compile(
     rf"^{MULTIPLE_CHOICE_FIELD_KW}(, {MULTIPLE_CHOICE_FIELD_KW})*$"
 )

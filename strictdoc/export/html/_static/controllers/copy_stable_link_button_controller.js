@@ -22,8 +22,8 @@
         // Expand folder to index if we run from the local file system.
         const expanded = (
           (window.location.protocol === 'file:')
-          ? resolved.replace(/#/, 'index.html#')
-          : resolved
+          ? resolved.replace(/#/, 'index.html?a=')
+          : resolved.replace(/#/, '?a=')
         );
 
         this._updateClipboard(expanded, this._confirmCopy(button, copyIcon, doneIcon));

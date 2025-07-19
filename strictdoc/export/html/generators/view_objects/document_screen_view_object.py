@@ -363,7 +363,7 @@ class DocumentScreenViewObject:
 
         An example of a link produced: ../../#SDOC_UG_CONTACT
         The copy_stable_link_button_controller.js consumes this link and
-        transforms it into a link like: http://127.0.0.1:5111/#SDOC_UG_CONTACT.
+        transforms it into a link like: http://127.0.0.1:5111/?a=SDOC_UG_CONTACT.
         """
 
         assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node

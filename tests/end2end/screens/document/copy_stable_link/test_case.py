@@ -25,7 +25,7 @@ class Test(E2ECase):
             # open the project index with the target UID reference
             self.open(
                 exporter.get_output_path_as_uri()
-                + "copy_stable_link/input/index.html#"
+                + "copy_stable_link/input/index.html?a="
                 + target
             )
 
@@ -66,5 +66,5 @@ class Test(E2ECase):
             # check if stable link is as expected
             assert (
                 value
-                == exporter.get_output_path_as_uri() + "index.html#" + target
+                == exporter.get_output_path_as_uri() + "index.html?a=" + target
             )

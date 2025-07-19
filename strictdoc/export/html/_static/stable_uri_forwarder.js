@@ -70,9 +70,16 @@ function processStableUriRedirect(anchor)
 
 // In case an anchor is present at content load time.
 document.addEventListener("DOMContentLoaded", () => {
-    const anchor = window.location.hash.substring(1);
-    if (anchor) {
-        processStableUriRedirect(anchor)
+    const anchorParam = new URLSearchParams(window.location.search).get("a");
+    if (anchorParam) {
+        processStableUriRedirect(anchorParam)
+        return
+    }
+
+    // for legacy link support
+    const anchorHash = window.location.hash.substring(1);
+    if (anchorHash) {
+        processStableUriRedirect(anchorHash)
     }
 });
 

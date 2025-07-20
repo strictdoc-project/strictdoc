@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-untyped-call"
+import urllib
 from dataclasses import dataclass
 from typing import Optional
 
@@ -17,19 +18,15 @@ class DiffScreenViewObject:
         *,
         project_config: ProjectConfig,
         results: bool,
-        left_revision: str,
-        left_revision_urlencoded: str,
-        right_revision: str,
-        right_revision_urlencoded: str,
+        left_revision: Optional[str],
+        right_revision: Optional[str],
         error_message: Optional[str],
         tab: str,
     ):
         self.project_config: ProjectConfig = project_config
         self.results: bool = results
-        self.left_revision: str = left_revision
-        self.left_revision_urlencoded: str = left_revision_urlencoded
-        self.right_revision: str = right_revision
-        self.right_revision_urlencoded: str = right_revision_urlencoded
+        self.left_revision: Optional[str] = left_revision
+        self.right_revision: Optional[str] = right_revision
         self.error_message: Optional[str] = error_message
         self.tab: str = tab
 
@@ -40,6 +37,22 @@ class DiffScreenViewObject:
         self.standalone: bool = False
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
+
+    @property
+    def left_revision_urlencoded(self) -> str:
+        return (
+            urllib.parse.quote(self.left_revision)
+            if self.left_revision is not None
+            else ""
+        )
+
+    @property
+    def right_revision_urlencoded(self) -> str:
+        return (
+            urllib.parse.quote(self.right_revision)
+            if self.right_revision is not None
+            else ""
+        )
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(

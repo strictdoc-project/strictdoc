@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import hashlib
 import statistics
 from dataclasses import dataclass, field
@@ -166,7 +166,8 @@ class ProjectTreeDiffStats:
 
             if len(candidate_requirements) > 0:
                 candidate_requirement = max(
-                    candidate_requirements, key=candidate_requirements.get
+                    candidate_requirements,
+                    key=lambda k: candidate_requirements[k],
                 )
                 self.cache_requirement_to_requirement[requirement] = (
                     candidate_requirement
@@ -817,17 +818,17 @@ class ChangeStats:
         *,
         requirement: SDocNode,
         other_requirement: SDocNode,
-    ) -> Optional[List[RequirementFieldChange]]:
+    ) -> List[RequirementFieldChange]:
         assert isinstance(requirement, SDocNode)
         assert isinstance(other_requirement, SDocNode)
 
         changes = []
 
-        changed_fields: Dict[SDocNodeField, None] = dict.fromkeys(
-            requirement.ordered_fields_lookup.get("COMMENT", []), 1
+        changed_fields: Set[SDocNodeField] = set(
+            requirement.ordered_fields_lookup.get("COMMENT", [])
         )
-        changed_other_fields: Dict[SDocNodeField, None] = dict.fromkeys(
-            other_requirement.ordered_fields_lookup.get("COMMENT", []), 1
+        changed_other_fields: Set[SDocNodeField] = set(
+            other_requirement.ordered_fields_lookup.get("COMMENT", [])
         )
 
         if len(changed_fields) == 0 or len(changed_other_fields) == 0:
@@ -854,17 +855,17 @@ class ChangeStats:
             return changes
 
         similarities: List[Tuple[float, SDocNodeField, SDocNodeField]] = []
-        for changed_field_ in list(changed_fields.keys()):
+        for changed_field_ in list(changed_fields):
             comment_value = changed_field_.get_text_value()
             assert comment_value is not None
-            for changed_other_field_ in list(changed_other_fields.keys()):
+            for changed_other_field_ in list(changed_other_fields):
                 comment_other_value = changed_other_field_.get_text_value()
                 assert comment_other_value is not None
 
                 similarity = similar(comment_value, comment_other_value)
                 if similarity == 1:
-                    del changed_fields[changed_field_]
-                    del changed_other_fields[changed_other_field_]
+                    changed_fields.remove(changed_field_)
+                    changed_other_fields.remove(changed_other_field_)
                     break
 
                 similarities.append(
@@ -904,8 +905,8 @@ class ChangeStats:
                     right_diff=right_diff,
                 )
             )
-            del changed_fields[changed_field_]
-            del changed_other_fields[changed_other_field_]
+            changed_fields.remove(changed_field_)
+            changed_other_fields.remove(changed_other_field_)
 
         # Iterate over remaining fields.
         for changed_field_ in changed_fields:

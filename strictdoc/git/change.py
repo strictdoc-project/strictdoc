@@ -72,8 +72,8 @@ class SectionChange:
         matched_mid: Optional[MID],
         matched_uid: Optional[str],
         section_token: Optional[str],
-        lhs_section: Optional[SDocSection],
-        rhs_section: Optional[SDocSection],
+        lhs_section: Optional[Union[SDocSection, SDocDocument, SDocNode]],
+        rhs_section: Optional[Union[SDocSection, SDocDocument, SDocNode]],
         uid_modified: bool,
         title_modified: bool,
         lhs_colored_title_diff: Optional[Markup],
@@ -90,8 +90,12 @@ class SectionChange:
         self.lhs_colored_title_diff: Optional[Markup] = lhs_colored_title_diff
         self.rhs_colored_title_diff: Optional[Markup] = rhs_colored_title_diff
 
-        self.lhs_section: Optional[SDocSection] = lhs_section
-        self.rhs_section: Optional[SDocSection] = rhs_section
+        self.lhs_section: Optional[
+            Union[SDocSection, SDocDocument, SDocNode]
+        ] = lhs_section
+        self.rhs_section: Optional[
+            Union[SDocSection, SDocDocument, SDocNode]
+        ] = rhs_section
 
         if matched_mid is not None or matched_uid is not None:
             change_type = ChangeType.SECTION_MODIFIED

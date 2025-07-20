@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call"
+# mypy: disable-error-code="no-untyped-call"
 import os
 import urllib
 from copy import deepcopy
@@ -87,24 +87,11 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             # diff page.
             pass
 
-        left_revision_urlencoded = (
-            urllib.parse.quote(left_revision)
-            if left_revision is not None
-            else ""
-        )
-        right_revision_urlencoded = (
-            urllib.parse.quote(right_revision)
-            if right_revision is not None
-            else ""
-        )
-
         view_object = DiffScreenViewObject(
             project_config=project_config,
             results=False,
             left_revision=left_revision,
-            left_revision_urlencoded=left_revision_urlencoded,
             right_revision=right_revision,
-            right_revision_urlencoded=right_revision_urlencoded,
             error_message=error_message,
             tab=tab,
         )
@@ -187,6 +174,17 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             root_path="", static_path=project_config.dir_for_sdoc_assets
         )
 
+        left_revision_urlencoded = (
+            urllib.parse.quote(left_revision)
+            if left_revision is not None
+            else ""
+        )
+        right_revision_urlencoded = (
+            urllib.parse.quote(right_revision)
+            if right_revision is not None
+            else ""
+        )
+
         if not results:
             output = template.render(
                 project_config=project_config,
@@ -197,9 +195,9 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
                 link_renderer=link_renderer,
                 results=False,
                 left_revision=left_revision,
-                left_revision_urlencoded=urllib.parse.quote(left_revision),
+                left_revision_urlencoded=left_revision_urlencoded,
                 right_revision=right_revision,
-                right_revision_urlencoded=urllib.parse.quote(right_revision),
+                right_revision_urlencoded=right_revision_urlencoded,
                 error_message=error_message,
             )
             status_code = 200 if error_message is None else 422
@@ -242,6 +240,8 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             rhs_project_config=project_config_copy_rhs,
         )
 
+        assert change_container.traceability_index_lhs.document_tree is not None
+        assert change_container.traceability_index_rhs.document_tree is not None
         view_object = DiffScreenResultsViewObject(
             project_config=project_config,
             change_container=change_container,
@@ -250,9 +250,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
             documents_iterator_lhs=change_container.documents_iterator_lhs,
             documents_iterator_rhs=change_container.documents_iterator_rhs,
             left_revision=left_revision,
-            left_revision_urlencoded=urllib.parse.quote(left_revision),
             right_revision=right_revision,
-            right_revision_urlencoded=urllib.parse.quote(right_revision),
             lhs_stats=change_container.lhs_stats,
             rhs_stats=change_container.rhs_stats,
             change_stats=change_container.change_stats,

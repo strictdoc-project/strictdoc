@@ -52,13 +52,56 @@ TITLE: Unreleased
 [TEXT]
 MID: c536381cea6842f0b77c1aa5ac942ce0
 STATEMENT: >>>
-This release includes a small improvement to the behavior of the ``LEVEL / AUTO_LEVEL`` fields.
+This release includes the following enhancements.
+
+**1) A small improvement to the behavior of the LEVEL/AUTO_LEVEL fields.**
 
 The following cases are now considered valid and will no longer trigger validation errors:
 
 - **When AUTO_LEVELS is On**, a node without a level or with a custom level is acceptable. The custom level will be used as-is, while all other nodes will be numbered automatically.
 
 - **When AUTO_LEVELS is Off**, a node without a level is also valid. In this case, the node will simply be omitted from the Table of Contents (TOC).
+
+**2) Initial support for direct reading of ReqIF files alongside SDoc files.**
+
+It is now possible to add a ReqIF file to a Git repository and have it read directly into the StrictDoc HTML view, without first converting it to SDoc. The conversion to internal SDoc models happens automatically at runtime. This feature enables workflows where a requirements baseline is maintained in a ReqIF file, and there is no need to convert it to SDoc before adding parent trace links from child SDoc documents stored in the same repository.
+
+**3) ReqIF Schema compatibility for ReqIF export.**
+
+StrictDoc now exports ReqIF files that fully comply with the ReqIF XSD schema. Previously, exported files could trigger minor validation errors — harmless but distracting when editing XML in an IDE. These issues have now been resolved. All relevant integration tests have been updated to include schema validation, ensuring ongoing compliance with the ReqIF XSD standard.
+
+**4) Support HTTP Conneg on stable links.**
+
+This change enables an API integration with StrictDoc. It lays the groundwork for implementing APIs such as OSLC Requirements Management, allowing integration with tools like IBM DOORS NG, the broader IBM Jazz platform, Siemens Polarion, and other OSLC-compliant systems.
+
+With this change, StrictDoc can support content negotiation based on the Accept header in incoming requests. For example:
+
+- When a client requests a requirement with ``Accept: text/html``, StrictDoc will serve the regular HTML export.
+
+- When a tool like Polarion sends a request for the same URI but with headers such as ``Accept: text/turtle;q=0.9, application/ld+json;q=0.7, application/rdf+xml;q=0.5``, the server can detect this and return an appropriate OSLC-compliant response instead.
+
+This approach enables serving different representations of the same requirement, e.g.,
+``localhost:3000/?a=SDOC-HIGH-REQS-MANAGEMENT``, while maintaining a consistent ID across formats.
+
+Thanks to @berezovskyi for contributing this change.
+
+**5) The DOCUMENT_FROM_FILE compatibility with new [[SECTION]] syntax.**
+
+During the migration to [[SECTION]], we overlooked verifying that the DOCUMENT_FROM_FILE directive works with the new section elements. Based on a user report, this has now been corrected — DOCUMENT_FROM_FILE is fully compatible with [[SECTION]].
+
+Thanks to @nowittyusername for reporting this issue.
+
+**6) The TITLE-STATEMENT-DESCRIPTION-CONTENT validation has been removed.**
+
+StrictDoc no longer requires one of the fields TITLE-STATEMENT-DESCRIPTION-CONTENT to be present on every SDoc node. The rationale for removal is as follows.
+
+There are cases where we want to allow none of the standard SDoc reserved fields to be present on a node, even though this means that no SDoc naming conventions are followed.
+
+In particular, some ReqIF files contain fields that follow neither ReqIF nor SDoc naming conventions.
+
+Previously, the fields TITLE, STATEMENT, DESCRIPTION, or CONTENT were used to determine whether a field should be treated as single-line or multiline. Under the new behavior, if none of these fields are present, all fields will be treated as multiline by default.
+
+In the future, we may introduce a separate field for the GrammarElement field declarations, for example, to explicitly specify whether a field should be interpreted as Title, Meta, Content, etc.
 <<<
 
 [[/SECTION]]

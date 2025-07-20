@@ -1,3 +1,4 @@
+import argparse
 import os
 from enum import Enum
 from pathlib import Path
@@ -16,8 +17,7 @@ from reqif.reqif_bundle import ReqIFBundle
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
     DEFAULT_SDOC_GRAMMAR_FIELDS,
-    ReqIFChapterField,
-    ReqIFRequirementReservedField,
+    ReqIFReservedField,
 )
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -295,9 +295,6 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             field_name = AUREON_ReqIFToSDocConverter.get_requirement_field_from_reqif(
                 attribute.long_name
             )
-            # Chapter name is a reserved field for sections.
-            if field_name == ReqIFChapterField.CHAPTER_NAME:
-                continue
             if attribute.attribute_type == SpecObjectAttributeType.STRING:
                 fields.append(
                     GrammarElementFieldString(
@@ -356,6 +353,8 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             parent=None,
             tag="REQUIREMENT",
             property_is_composite="",
+            property_prefix="",
+            property_view_style="",
             fields=fields,
             relations=[]
         )
@@ -471,8 +470,8 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
             if (
                 "\n" in attribute_value
                 or field_name in (
-                    ReqIFRequirementReservedField.TEXT,
-                    ReqIFRequirementReservedField.COMMENT_NOTES
+                    ReqIFReservedField.TEXT,
+                    ReqIFReservedField.COMMENT_NOTES
                 )
             ):
                 attribute_value = attribute_value.lstrip()
@@ -521,8 +520,15 @@ class AUREON_ReqIFToSDocConverter:  # pylint: disable=invalid-name
 
 
 def main():
+    main_parser = argparse.ArgumentParser()
+
+    main_parser.add_argument("input_path", type=str)
+    main_parser.add_argument("output_path", type=str)
+
+    args = main_parser.parse_args()
+
     reqif_bundle: ReqIFBundle = ReqIFParser.parse(
-        "sample.reqif"
+        args.input_path
     )
 
     converter = AUREON_ReqIFToSDocConverter()
@@ -532,10 +538,10 @@ def main():
 
     project_config = ProjectConfig.default_config(SDocRuntimeEnvironment(__file__))
     document_content = SDWriter(project_config).write(document)
-    output_folder = os.path.join(os.getcwd(), "Output")
+    output_folder = os.path.dirname(args.input_path)
     Path(output_folder).mkdir(parents=True, exist_ok=True)
     with open(
-        os.path.join(output_folder, "sample.sdoc"), "w", encoding="utf8"
+        os.path.join(output_folder, args.input_path), "w", encoding="utf8"
     ) as output_file:
         output_file.write(document_content)
 

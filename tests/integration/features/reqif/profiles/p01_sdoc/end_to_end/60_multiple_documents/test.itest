@@ -1,4 +1,5 @@
 RUN: %strictdoc export --formats=reqif-sdoc %S/ --output-dir %T
+RUN: reqif validate --use-reqif-schema %T/reqif/output.reqif
 RUN: %strictdoc import reqif sdoc %T/reqif/output.reqif %T/
 RUN: %diff %S/Sample_1.sdoc %T/Sample_1.sdoc
 RUN: %diff %S/Sample_2.sdoc %T/Sample_2.sdoc

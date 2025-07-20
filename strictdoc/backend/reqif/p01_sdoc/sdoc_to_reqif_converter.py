@@ -8,6 +8,7 @@ from collections import defaultdict
 from enum import Enum
 from typing import Dict, List, Optional, Tuple, Union
 
+from reqif.helpers.string.xhtml_indent import reqif_indent_xhtml_string
 from reqif.models.reqif_core_content import ReqIFCoreContent
 from reqif.models.reqif_data_type import (
     ReqIFDataTypeDefinitionEnumeration,
@@ -34,8 +35,7 @@ from reqif.reqif_bundle import ReqIFBundle
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import (
     SDOC_SPECIFICATION_TYPE_SINGLETON,
-    SDOC_TO_REQIF_FIELD_MAP,
-    SDocRequirementReservedField,
+    map_sdoc_field_title_to_reqif_field_title,
 )
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -190,12 +190,17 @@ class P01_SDocToReqIFObjectConverter:
                     elif isinstance(field, GrammarElementFieldSingleChoice):
                         values = []
                         values_map = {}
-                        for option in field.options:
-                            value = ReqIFEnumValue.create(
+                        for option_idx_, option in enumerate(field.options):
+                            value = ReqIFEnumValue(
                                 identifier=generate_unique_identifier(
                                     "ENUM-VALUE"
                                 ),
-                                key=option,
+                                key=str(option_idx_),
+                                last_change=context.export_date_str,
+                                # ReqIF XML validator wants OTHER-CONTENT to be
+                                # present, even if empty.
+                                other_content="",
+                                long_name=option,
                             )
                             values.append(value)
                             values_map[option] = option
@@ -216,12 +221,17 @@ class P01_SDocToReqIFObjectConverter:
                     elif isinstance(field, GrammarElementFieldMultipleChoice):
                         values = []
                         values_map = {}
-                        for option in field.options:
-                            value = ReqIFEnumValue.create(
+                        for option_idx_, option in enumerate(field.options):
+                            value = ReqIFEnumValue(
                                 identifier=generate_unique_identifier(
                                     "ENUM-VALUE"
                                 ),
-                                key=option,
+                                key=str(option_idx_),
+                                last_change=context.export_date_str,
+                                # ReqIF XML validator wants OTHER-CONTENT to be
+                                # present, even if empty.
+                                other_content="",
+                                long_name=option,
                             )
                             values.append(value)
                             values_map[option] = option
@@ -357,7 +367,7 @@ class P01_SDocToReqIFObjectConverter:
                         xml_node=None,
                         description=None,
                         identifier=generate_unique_identifier("SPEC-RELATION"),
-                        last_change=None,
+                        last_change=context.export_date_str,
                         relation_type_ref=spec_relation_type.identifier,
                         source=spec_object.identifier,
                         target=parent_spec_object.identifier,
@@ -423,6 +433,12 @@ class P01_SDocToReqIFObjectConverter:
     ) -> ReqIFSpecObject:
         node_document = assert_cast(requirement.get_document(), SDocDocument)
 
+        spec_object_type: ReqIFSpecObjectType = (
+            context.map_grammar_node_tags_to_spec_object_type[node_document][
+                requirement.node_type
+            ]
+        )
+
         enable_mid = context.enable_mid and node_document.config.enable_mid
 
         requirement_identifier: str
@@ -440,6 +456,14 @@ class P01_SDocToReqIFObjectConverter:
             # The MID field, if exists, is extracted separately as a ReqIF Identifier.
             if field.field_name == "MID":
                 continue
+
+            field_name = map_sdoc_field_title_to_reqif_field_title(
+                field.field_name,
+                grammar_element.property_is_composite == True,
+            )
+
+            field_identifier = spec_object_type.identifier + "_" + field_name
+
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
                 data_type_ref = context.data_types_lookup[field.field_name]
@@ -451,7 +475,11 @@ class P01_SDocToReqIFObjectConverter:
                             data_type, ReqIFDataTypeDefinitionEnumeration
                         )
                         for data_type_value in data_type.values:
-                            if data_type_value.key == field.get_text_value():
+                            if data_type_value.long_name is not None:
+                                data_type_sdoc_value = data_type_value.long_name
+                            else:
+                                data_type_sdoc_value = data_type_value.key
+                            if data_type_sdoc_value == field.get_text_value():
                                 enum_ref_value = data_type_value.identifier
                                 break
 
@@ -460,7 +488,7 @@ class P01_SDocToReqIFObjectConverter:
                 attribute = SpecObjectAttribute(
                     xml_node=None,
                     attribute_type=SpecObjectAttributeType.ENUMERATION,
-                    definition_ref=field.field_name,
+                    definition_ref=field_identifier,
                     value=[enum_ref_value],
                 )
             elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
@@ -476,7 +504,11 @@ class P01_SDocToReqIFObjectConverter:
                             data_type, ReqIFDataTypeDefinitionEnumeration
                         )
                         for data_type_value in data_type.values:
-                            data_type_lookup[data_type_value.key] = (
+                            if data_type_value.long_name is not None:
+                                data_type_sdoc_value = data_type_value.long_name
+                            else:
+                                data_type_sdoc_value = data_type_value.key
+                            data_type_lookup[data_type_sdoc_value] = (
                                 data_type_value.identifier
                             )
 
@@ -487,7 +519,7 @@ class P01_SDocToReqIFObjectConverter:
                 attribute = SpecObjectAttribute(
                     xml_node=None,
                     attribute_type=SpecObjectAttributeType.ENUMERATION,
-                    definition_ref=field.field_name,
+                    definition_ref=field_identifier,
                     value=field_values_refs,
                 )
             elif isinstance(grammar_field, GrammarElementFieldString):
@@ -496,23 +528,29 @@ class P01_SDocToReqIFObjectConverter:
                 field_value: str = field.get_text_value().rstrip()
 
                 attribute_type: SpecObjectAttributeType
-                if context.multiline_is_xhtml:
-                    attribute_type = (
-                        SpecObjectAttributeType.XHTML
-                        if is_multiline_field
-                        else SpecObjectAttributeType.STRING
-                    )
+                if is_multiline_field:
+                    if context.multiline_is_xhtml:
+                        attribute_type = SpecObjectAttributeType.XHTML
+                        field_value = (
+                            "<xhtml:div>\n  "
+                            + "\n  ".join(
+                                f"<xhtml:p>{line}</xhtml:p>"
+                                for line in field_value.split("\n\n")
+                            )
+                            + "\n</xhtml:div>"
+                        )
+                        field_value = reqif_indent_xhtml_string(field_value)
+                    else:
+                        attribute_type = SpecObjectAttributeType.STRING
+                        field_value = escape(field_value)
                 else:
                     field_value = escape(field_value)
                     attribute_type = SpecObjectAttributeType.STRING
 
-                field_name = field.field_name
-                if field_name in SDocRequirementReservedField.SET:
-                    field_name = SDOC_TO_REQIF_FIELD_MAP[field_name]
                 attribute = SpecObjectAttribute(
                     xml_node=None,
                     attribute_type=attribute_type,
-                    definition_ref=field_name,
+                    definition_ref=field_identifier,
                     value=field_value,
                 )
             else:
@@ -527,11 +565,6 @@ class P01_SDocToReqIFObjectConverter:
                     requirement.reserved_uid
                 ] = requirement.relations
 
-        spec_object_type: ReqIFSpecObjectType = (
-            context.map_grammar_node_tags_to_spec_object_type[node_document][
-                requirement.node_type
-            ]
-        )
         spec_object = ReqIFSpecObject(
             identifier=requirement_identifier,
             spec_object_type=spec_object_type.identifier,
@@ -557,16 +590,26 @@ class P01_SDocToReqIFObjectConverter:
         )
 
         for element in grammar.elements:
+            spec_object_type_identifier = element.tag + "_" + uuid.uuid4().hex
+
             attribute_definitions = []
 
             field: GrammarElementField
             for field in element.fields:
                 multiline = element.is_field_multiline(field.title)
+                field_title = map_sdoc_field_title_to_reqif_field_title(
+                    field.title, element.property_is_composite == True
+                )
+                field_human_title = (
+                    field.human_title
+                    if field.human_title is not None
+                    else field_title
+                )
+                field_identifier = (
+                    spec_object_type_identifier + "_" + field_title
+                )
 
                 if isinstance(field, GrammarElementFieldString):
-                    field_title = field.title
-                    if field_title in SDocRequirementReservedField.SET:
-                        field_title = SDOC_TO_REQIF_FIELD_MAP[field_title]
                     if multiline:
                         attribute_type = (
                             SpecObjectAttributeType.XHTML
@@ -575,42 +618,42 @@ class P01_SDocToReqIFObjectConverter:
                         )
                         attribute = SpecAttributeDefinition(
                             attribute_type=attribute_type,
-                            identifier=field_title,
+                            identifier=field_identifier,
                             datatype_definition=(
                                 StrictDocReqIFTypes.MULTI_LINE_STRING.value
                             ),
-                            long_name=field_title,
+                            long_name=field_human_title,
                             last_change=context.export_date_str,
                         )
                     else:
                         attribute = SpecAttributeDefinition(
                             attribute_type=SpecObjectAttributeType.STRING,
-                            identifier=field_title,
+                            identifier=field_identifier,
                             datatype_definition=(
                                 StrictDocReqIFTypes.SINGLE_LINE_STRING.value
                             ),
-                            long_name=field_title,
+                            long_name=field_human_title,
                             last_change=context.export_date_str,
                         )
                 elif isinstance(field, GrammarElementFieldSingleChoice):
                     attribute = SpecAttributeDefinition(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
-                        identifier=field.title,
+                        identifier=field_identifier,
                         datatype_definition=context.data_types_lookup[
                             field.title
                         ],
-                        long_name=field.title,
+                        long_name=field_human_title,
                         multi_valued=False,
                         last_change=context.export_date_str,
                     )
                 elif isinstance(field, GrammarElementFieldMultipleChoice):
                     attribute = SpecAttributeDefinition(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
-                        identifier=field.title,
+                        identifier=field_identifier,
                         datatype_definition=context.data_types_lookup[
                             field.title
                         ],
-                        long_name=field.title,
+                        long_name=field_human_title,
                         multi_valued=True,
                         last_change=context.export_date_str,
                     )
@@ -620,19 +663,6 @@ class P01_SDocToReqIFObjectConverter:
                     ) from None
                 attribute_definitions.append(attribute)
 
-            # Extra chapter name attribute.
-            chapter_name_attribute = SpecAttributeDefinition(
-                attribute_type=SpecObjectAttributeType.STRING,
-                identifier="ReqIF.ChapterName",
-                datatype_definition=(
-                    StrictDocReqIFTypes.SINGLE_LINE_STRING.value
-                ),
-                long_name="ReqIF.ChapterName",
-                last_change=context.export_date_str,
-            )
-            attribute_definitions.append(chapter_name_attribute)
-
-            spec_object_type_identifier = element.tag + "_" + uuid.uuid4().hex
             spec_object_type = ReqIFSpecObjectType.create(
                 identifier=spec_object_type_identifier,
                 long_name=element.tag,
@@ -665,6 +695,7 @@ class P01_SDocToReqIFObjectConverter:
             )
             spec_relation_type = ReqIFSpecRelationType(
                 identifier=generate_unique_identifier(spec_relation_type_name),
+                last_change=context.export_date_str,
                 long_name=spec_relation_type_name,
             )
             spec_relation_types.append(spec_relation_type)

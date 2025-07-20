@@ -1,12 +1,9 @@
-import pytest
-
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.exception import StrictDocException
 from tests.unit.helpers.fake_document_meta import create_fake_document_meta
 
 
@@ -455,29 +452,3 @@ the foo must bar
     writer = SDWriter(default_project_config)
     output = writer.write(document)
     assert input_sdoc == output
-
-
-def test_500_validation_grammar_without_TITLE_or_STATEMENT():
-    input_sdoc = """
-[DOCUMENT]
-TITLE: Test Doc
-
-[GRAMMAR]
-ELEMENTS:
-- TAG: TEXT
-  FIELDS:
-  - TITLE: FOO
-    TYPE: String
-    REQUIRED: True
-""".lstrip()
-
-    reader = SDReader()
-
-    with pytest.raises(Exception) as exc_info:
-        _ = reader.read(input_sdoc)
-
-    assert exc_info.type is StrictDocException
-    assert exc_info.value.args[0] == (
-        "The grammar element TEXT must have at least one of the following fields: "
-        "TITLE, STATEMENT, DESCRIPTION, CONTENT."
-    )

@@ -1,7 +1,0 @@
-[GRAMMAR]
-ELEMENTS:
-- TAG: REQUIREMENT
-  FIELDS:
-  - TITLE: FOO
-    TYPE: String
-    REQUIRED: True

@@ -482,21 +482,14 @@ class SDocNode(SDocNodeIF):
         element: GrammarElement = document_grammar.elements_by_type[
             self.node_type
         ]
-        grammar_field_titles = list(map(lambda f: f.title, element.fields))
-
-        reference_field_index: int = element.get_multiline_field_index()
 
         for field in self.enumerate_fields():
             if field.field_name in RESERVED_NON_META_FIELDS:
                 continue
-            field_index = grammar_field_titles.index(field.field_name)
 
-            # A field is considered singleline if it goes before the STATEMENT
-            # field and vice versa.
-            if field_index >= reference_field_index:
-                is_single_line_field = False
-            else:
-                is_single_line_field = True
+            is_single_line_field = not element.is_field_multiline(
+                field.field_name
+            )
 
             if is_single_line_field and skip_single_lines:
                 continue
@@ -654,10 +647,10 @@ class SDocNode(SDocNodeIF):
             document.grammar, DocumentGrammar
         )
         element: GrammarElement = grammar.elements_by_type[self.node_type]
-        grammar_field_titles = list(map(lambda f: f.title, element.fields))
-        field_index = grammar_field_titles.index(field_name)
 
-        multiline = field_index >= element.get_multiline_field_index()
+        field_index = element.field_titles.index(field_name)
+
+        multiline = element.is_field_multiline(field_name)
         if multiline and isinstance(value, str):
             value = ensure_newline(value)
 
@@ -688,7 +681,7 @@ class SDocNode(SDocNodeIF):
             return
 
         new_ordered_fields_lookup = OrderedDict()
-        for field_title in grammar_field_titles[:field_index]:
+        for field_title in element.field_titles[:field_index]:
             if field_title in self.ordered_fields_lookup:
                 new_ordered_fields_lookup[field_title] = (
                     self.ordered_fields_lookup[field_title]
@@ -704,7 +697,7 @@ class SDocNode(SDocNodeIF):
             else value
         ]
         after_field_index = field_index + 1
-        for field_title in grammar_field_titles[after_field_index:]:
+        for field_title in element.field_titles[after_field_index:]:
             if field_title in self.ordered_fields_lookup:
                 new_ordered_fields_lookup[field_title] = (
                     self.ordered_fields_lookup[field_title]

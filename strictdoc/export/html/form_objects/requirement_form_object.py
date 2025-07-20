@@ -299,11 +299,9 @@ class RequirementFormObject(ErrorObject):
         element: GrammarElement = grammar.elements_by_type[element_type]
         form_fields: List[RequirementFormField] = []
 
-        fields_names = list(element.fields_map.keys())
-        content_field_idx = element.get_multiline_field_index()
+        for field_idx, field_name in enumerate(element.field_titles):
+            multiline = element.is_field_idx_multiline(field_idx)
 
-        for field_idx, field_name in enumerate(fields_names):
-            multiline = field_idx >= content_field_idx
             field = element.fields_map[field_name]
 
             if field_name not in requirement_fields:
@@ -358,16 +356,14 @@ class RequirementFormObject(ErrorObject):
         element: GrammarElement = grammar.elements_by_type[element_type]
 
         form_fields: List[RequirementFormField] = []
-        fields_names = list(element.fields_map.keys())
 
-        content_field_idx = element.get_multiline_field_index()
-
-        for field_idx, field_name in enumerate(fields_names):
+        for field_idx, field_name in enumerate(element.field_titles):
             field = element.fields_map[field_name]
+            multiline = element.is_field_idx_multiline(field_idx)
             form_field: RequirementFormField = (
                 RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
-                    multiline=field_idx >= content_field_idx,
+                    multiline=multiline,
                     value="",
                 )
             )
@@ -411,11 +407,8 @@ class RequirementFormObject(ErrorObject):
         form_fields: List[RequirementFormField] = []
         form_refs_fields: List[RequirementReferenceFormField] = []
 
-        fields_names = list(element.fields_map.keys())
-        content_field_idx = element.get_multiline_field_index()
-
-        for field_idx, field_name in enumerate(fields_names):
-            multiline = field_idx >= content_field_idx
+        for field_idx, field_name in enumerate(element.field_titles):
+            multiline = element.is_field_idx_multiline(field_idx)
 
             # Handle all other fields in a general way.
             field = element.fields_map[field_name]

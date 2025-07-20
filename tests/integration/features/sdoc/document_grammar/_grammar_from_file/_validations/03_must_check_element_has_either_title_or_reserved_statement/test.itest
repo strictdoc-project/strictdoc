@@ -1,3 +1,0 @@
-RUN: %expect_exit 1 %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-
-CHECK: StrictDocException: The grammar element REQUIREMENT must have at least one of the following fields: TITLE, STATEMENT, DESCRIPTION, CONTENT.

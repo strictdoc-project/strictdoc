@@ -78,8 +78,11 @@ def test_04_meta_multilines_not_nones():
         required="False",
     )
     requirement_grammar_element = grammar.elements_by_type["REQUIREMENT"]
+    # FIXME: All these methods could be well encapsulated in the Grammar Element.
     requirement_grammar_element.fields.append(meta_test_field)
     requirement_grammar_element.fields_map["META_TEST_FIELD"] = meta_test_field
+    requirement_grammar_element.field_titles.append("META_TEST_FIELD")
+
     document.grammar = grammar
 
     requirement = SDocObjectFactory.create_requirement(

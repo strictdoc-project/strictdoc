@@ -10,7 +10,6 @@ from strictdoc.backend.sdoc.models.model import (
     RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
-from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.mid import MID
 
 
@@ -278,14 +277,7 @@ class GrammarElement:
             multiline_field_index = self.get_field_titles().index("TITLE") + 1
         except ValueError:
             multiline_field_index = self.content_field[1]
-            if multiline_field_index == -1:
-                raise StrictDocException(
-                    (
-                        f"The grammar element {self.tag} must have at least one of the "
-                        f"following fields: TITLE, STATEMENT, DESCRIPTION, CONTENT."
-                    ),
-                ) from None
-        self.multiline_field_index: int = multiline_field_index
+        self._multiline_field_index: int = multiline_field_index
 
         self.mid: MID = MID.create()
         self.ng_line_start: Optional[int] = None
@@ -341,16 +333,12 @@ class GrammarElement:
 
     def is_field_multiline(self, field_name: str) -> bool:
         field_index = self.field_titles.index(field_name)
-        try:
-            title_field_index = self.field_titles.index("TITLE")
-            if field_index <= title_field_index:
-                return False
-        except ValueError:
-            pass
-        return field_index >= self.content_field[1]
+        return self.is_field_idx_multiline(field_index)
 
-    def get_multiline_field_index(self) -> int:
-        return self.multiline_field_index
+    def is_field_idx_multiline(self, field_idx: int) -> bool:
+        # If there is none of TITLE-STATEMENT-DESCRIPTION-CONTENT present, i.e.,
+        # multiline_field_index is -1, every field will be treated as multiline.
+        return self._multiline_field_index <= field_idx
 
     def get_view_style(self) -> Optional[str]:
         if self.property_view_style_lower is not None:

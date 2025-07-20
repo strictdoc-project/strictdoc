@@ -80,6 +80,12 @@ class GrammarFormField:
     def get_input_field_human_title(self) -> str:
         return f"document_grammar_field[{self.field_mid}][field_human_title]"
 
+    def get_input_field_required(self) -> str:
+        return f"document_grammar_field[{self.field_mid}][field_required]"
+
+    def get_input_field_required_value(self) -> str:
+        return "true" if self.field_required else "false"
+
 
 @auto_described
 class GrammarFormRelation:
@@ -110,6 +116,9 @@ class GrammarElementFormObject(ErrorObject):
         document_mid: str,
         element_mid: str,
         element_name: str,
+        is_composite: Optional[bool],
+        prefix: Optional[str],
+        view_style: Optional[str],
         fields: List[GrammarFormField],
         relations: List[GrammarFormRelation],
         project_config: ProjectConfig,
@@ -120,6 +129,9 @@ class GrammarElementFormObject(ErrorObject):
         self.document_mid = document_mid
         self.element_mid: str = element_mid
         self.element_name: str = element_name
+        self.is_composite: Optional[bool] = is_composite
+        self.prefix: Optional[str] = prefix
+        self.view_style: Optional[str] = view_style
         self.fields: List[GrammarFormField] = fields
         self.relations: List[GrammarFormRelation] = relations
         self.project_config: ProjectConfig = project_config
@@ -145,6 +157,10 @@ class GrammarElementFormObject(ErrorObject):
 
         element_mid = request_form_dict["element_mid"]
 
+        element_is_composite = request_form_dict["is_composite"]
+        element_prefix = request_form_dict["prefix"]
+        element_view_style = request_form_dict["view_style"]
+
         #
         # Grammar fields.
         #
@@ -158,11 +174,14 @@ class GrammarElementFormObject(ErrorObject):
                 field_human_title = field_human_title.strip()
                 if len(field_human_title) == 0:
                     field_human_title = None
+            field_required_string = field_dict.get("field_required")
+            field_required = field_required_string == "true"
+
             form_object_field = GrammarFormField(
                 field_mid=field_mid,
                 field_name=field_name,
                 field_human_title=field_human_title,
-                field_required=False,
+                field_required=field_required,
                 reserved=is_reserved_field(field_name),
             )
             form_object_fields.append(form_object_field)
@@ -194,6 +213,15 @@ class GrammarElementFormObject(ErrorObject):
             document_mid=document.reserved_mid,
             element_mid=element_mid,
             element_name=element.tag,
+            is_composite=(
+                True
+                if element_is_composite == "true"
+                else False
+                if element_is_composite == "false"
+                else None
+            ),
+            prefix=element_prefix,
+            view_style=element_view_style,
             fields=form_object_fields,
             relations=form_object_relations,
             project_config=project_config,
@@ -236,6 +264,9 @@ class GrammarElementFormObject(ErrorObject):
             document_mid=document.reserved_mid,
             element_mid=element_mid,
             element_name=element.tag,
+            is_composite=element.property_is_composite,
+            prefix=element.property_prefix,
+            view_style=element.property_view_style,
             fields=grammar_form_fields,
             relations=grammar_form_relations,
             project_config=project_config,
@@ -270,7 +301,10 @@ class GrammarElementFormObject(ErrorObject):
             else:
                 fields_so_far.add(field.field_name)
 
-        if len(self.relations) == 0 and self.element_name != "TEXT":
+        if len(self.relations) == 0 and self.element_name not in (
+            "TEXT",
+            "SECTION",
+        ):
             self.add_error(
                 "Relations_Row",
                 (
@@ -362,13 +396,19 @@ class GrammarElementFormObject(ErrorObject):
                 raise NotImplementedError(relation)
 
         existing_element = existing_grammar.get_element_by_mid(self.element_mid)
+
         requirement_element = GrammarElement(
             parent=None,
             tag=existing_element.tag,
-            # FIXME: MERGE NODES.
-            property_is_composite="",
-            property_prefix="",
-            property_view_style="",
+            property_is_composite=(
+                "True"
+                if self.is_composite == True
+                else "False"
+                if self.is_composite == False
+                else ""
+            ),
+            property_prefix=self.prefix or "",
+            property_view_style=self.view_style or "",
             fields=grammar_fields,
             relations=relation_fields,
         )
@@ -462,3 +502,25 @@ class GrammarElementFormObject(ErrorObject):
             action="update",
             target="modal",
         )
+
+    def get_input_field_is_composite(self) -> str:
+        return "is_composite"
+
+    def get_input_field_is_composite_value(self) -> str:
+        if self.is_composite is not None:
+            if self.is_composite == True:
+                return "true"
+            return "false"
+        return ""
+
+    def get_input_field_prefix(self) -> str:
+        return "prefix"
+
+    def get_input_field_prefix_value(self) -> str:
+        return self.prefix or ""
+
+    def get_input_field_view_style(self) -> str:
+        return "view_style"
+
+    def get_input_field_view_style_value(self) -> str:
+        return self.view_style or ""

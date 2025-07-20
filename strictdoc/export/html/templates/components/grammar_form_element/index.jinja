@@ -23,6 +23,25 @@
     <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
     <input type="hidden" id="element_mid" name="element_mid" value="{{ form_object.element_mid }}"/>
 
+    {# FIXME: This will become a proper checkbox field eventually. #}
+    <input
+      type="hidden"
+      value="{{ form_object.get_input_field_is_composite_value() }}"
+      name="{{ form_object.get_input_field_is_composite() }}"
+    />
+    {# FIXME: This will become a proper checkbox field eventually. #}
+    <input
+      type="hidden"
+      value="{{ form_object.get_input_field_prefix_value() }}"
+      name="{{ form_object.get_input_field_prefix() }}"
+    />
+    {# FIXME: This will become a proper checkbox field eventually. #}
+    <input
+      type="hidden"
+      value="{{ form_object.get_input_field_view_style_value() }}"
+      name="{{ form_object.get_input_field_view_style() }}"
+    />
+
     {# Fields TAB #}
     <sdoc-tab-content id="Fields" active>
       <sdoc-form-descr>

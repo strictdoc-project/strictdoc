@@ -2377,18 +2377,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             document=document,
             traceability_index=export_action.traceability_index,
         )
-        grammar_changed = update_grammar_action.perform()
-
-        # If the grammar has not changed, do nothing and save the edit form.
-        if not grammar_changed:
-            output = form_object.render_close_form()
-            return HTMLResponse(
-                content=output,
-                status_code=200,
-                headers={
-                    "Content-Type": "text/vnd.turbo-stream.html",
-                },
-            )
+        update_grammar_action.perform()
 
         # Re-generate the document's SDOC.
         SDWriter(project_config).write_to_file(document)
@@ -2448,6 +2437,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             document_mid=document_mid,
             element_mid="NOT_RELEVANT",
             element_name="NOT_RELEVANT",
+            is_composite=None,  # Not used in this limited partial template.
+            prefix=None,  # Not used in this limited partial template.
+            view_style=None,  # Not used in this limited partial template.
             fields=[],  # Not used in this limited partial template.
             relations=[],  # Not used in this limited partial template.
             project_config=project_config,
@@ -2469,6 +2461,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             document_mid=document_mid,
             element_mid="NOT_RELEVANT",
             element_name="NOT_RELEVANT",
+            is_composite=None,  # Not used in this limited partial template.
+            prefix=None,  # Not used in this limited partial template.
+            view_style=None,  # Not used in this limited partial template.
             fields=[],  # Not used in this limited partial template.
             relations=[],  # Not used in this limited partial template.
             project_config=project_config,

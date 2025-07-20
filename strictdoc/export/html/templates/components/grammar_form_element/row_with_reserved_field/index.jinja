@@ -23,6 +23,13 @@
   {%- endif -%}
 >
 
+  {# FIXME: This will become a proper checkbox field eventually. #}
+  <input
+    type="hidden"
+    value="{{ form_object.field.get_input_field_required_value() }}"
+    name="{{ form_object.field.get_input_field_required() }}"
+  />
+
   {%- with
     field_class_name = "monospace",
     field_editable = false,

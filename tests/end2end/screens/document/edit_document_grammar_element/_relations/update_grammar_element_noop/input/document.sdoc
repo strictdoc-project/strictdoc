@@ -3,6 +3,18 @@ TITLE: Document 1
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+    PREFIX: SECT-
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
 - TAG: TEXT
   FIELDS:
   - TITLE: UID
@@ -28,9 +40,14 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
 
+[[SECTION]]
+TITLE: Section example
+
 [REQUIREMENT]
 TITLE: Requirement title
 STATEMENT: >>>
 Requirement statement.
 <<<
 CUSTOM_FIELD: Value 1
+
+[[/SECTION]]

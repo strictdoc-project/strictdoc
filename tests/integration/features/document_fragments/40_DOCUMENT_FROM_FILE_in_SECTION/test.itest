@@ -1,0 +1,9 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Hello world
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: Hello world
+CHECK-HTML: Chapter
+CHECK-HTML: Subchapter
+CHECK-HTML: The system shall have a requirement.

@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world
+
+[[SECTION]]
+TITLE: Chapter
+
+[[SECTION]]
+TITLE: Subchapter
+
+[DOCUMENT_FROM_FILE]
+FILE: system_requirements.sdoc
+
+[[/SECTION]]
+
+[[/SECTION]]

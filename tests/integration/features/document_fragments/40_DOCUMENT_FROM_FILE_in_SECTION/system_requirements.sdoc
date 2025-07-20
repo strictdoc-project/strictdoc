@@ -1,0 +1,32 @@
+[DOCUMENT]
+TITLE: System requirements
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATUS
+    TYPE: SingleChoice(Draft, Active, Deleted)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: VERIFICATION
+    TYPE: MultipleChoice(Review, Analysis, Inspection, Test)
+    REQUIRED: True
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: Child
+
+[REQUIREMENT]
+UID: TEST-SYS-001
+STATUS: Draft
+STATEMENT: The system shall have a requirement.
+VERIFICATION: Analysis, Test
+RATIONALE: Lorem Ipsum.

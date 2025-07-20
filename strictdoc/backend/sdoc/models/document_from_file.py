@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.model import (
     SDocNodeIF,
     SDocSectionIF,
 )
+from strictdoc.backend.sdoc.models.node import SDocCompositeNode
 from strictdoc.helpers.auto_described import auto_described
 
 
@@ -80,7 +81,9 @@ class DocumentFromFile(SDocDocumentFromFileIF):
 
         if isinstance(including_document_or_section, SDocDocumentIF):
             including_document = including_document_or_section
-        elif isinstance(including_document_or_section, SDocSectionIF):
+        elif isinstance(
+            including_document_or_section, (SDocSectionIF, SDocCompositeNode)
+        ):
             including_document_: Optional[SDocDocumentIF] = (
                 including_document_or_section.get_document()
             )

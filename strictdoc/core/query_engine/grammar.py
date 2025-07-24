@@ -45,6 +45,14 @@ BooleanExpression:
   |
   NodeIsSectionExpression
   |
+  NodeIsSourceFileExpression
+  |
+  NodeIsSourceFileWithCompleteCoverageExpression
+  |
+  NodeIsSourceFileWithPartialCoverageExpression
+  |
+  NodeIsSourceFileWithNoCoverageExpression
+  |
   NodeIsRootExpression
   |
   EqualExpression
@@ -81,7 +89,7 @@ NodeHasChildRequirementsExpression:
 ;
 
 NodeIsRequirementExpression:
-  _ = 'node.is_requirement'
+  _ = 'node.is_requirement' '()'?
 ;
 
 NodeIsRootExpression:
@@ -89,7 +97,23 @@ NodeIsRootExpression:
 ;
 
 NodeIsSectionExpression:
-  _ = 'node.is_section'
+  _ = 'node.is_section' '()'?
+;
+
+NodeIsSourceFileExpression:
+  _ = 'node.is_source_file()'
+;
+
+NodeIsSourceFileWithCompleteCoverageExpression:
+  _ = 'node.is_source_file_with_complete_coverage()'
+;
+
+NodeIsSourceFileWithPartialCoverageExpression:
+  _ = 'node.is_source_file_with_partial_coverage()'
+;
+
+NodeIsSourceFileWithNoCoverageExpression:
+  _ = 'node.is_source_file_with_no_coverage()'
 ;
 
 EqualExpression:

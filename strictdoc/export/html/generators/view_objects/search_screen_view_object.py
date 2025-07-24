@@ -8,13 +8,14 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import DocumentView
-from strictdoc.backend.sdoc.models.model import SDocElementIF
+from strictdoc.backend.sdoc.models.model import SDocExtendedElementIF
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_tree import FileOrFolderEntry
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.source_tree import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
@@ -31,14 +32,14 @@ class SearchScreenViewObject:
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
         templates: HTMLTemplates,
-        search_results: List[SDocElementIF],
+        search_results: List[SDocExtendedElementIF],
         search_value: str,
         error: Optional[str],
     ) -> None:
         self.traceability_index: TraceabilityIndex = traceability_index
         self.project_config: ProjectConfig = project_config
         self.templates: HTMLTemplates = templates
-        self.search_results: List[SDocElementIF] = search_results
+        self.search_results: List[SDocExtendedElementIF] = search_results
         self.search_value: str = search_value
         self.error: Optional[str] = error
 
@@ -100,6 +101,13 @@ class SearchScreenViewObject:
 
     def render_static_url(self, url: str) -> str:
         return self.link_renderer.render_static_url(url)
+
+    def render_source_file_link_from_root_2(
+        self, source_file: SourceFile
+    ) -> str:
+        return Markup(
+            self.link_renderer.render_source_file_link_from_root_2(source_file)
+        )
 
     def render_local_anchor(
         self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]

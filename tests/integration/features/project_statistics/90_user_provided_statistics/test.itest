@@ -1,0 +1,10 @@
+RUN: cd %S/
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/project_statistics.html"
+
+RUN: %cat "%T/html/project_statistics.html" | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: Custom section
+CHECK-HTML: Custom metric
+CHECK-HTML: Custom value

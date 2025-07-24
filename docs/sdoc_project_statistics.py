@@ -1,5 +1,7 @@
+from collections import defaultdict
+from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List, Union
+from typing import Dict, List, Optional, Union
 
 from markupsafe import Markup
 
@@ -15,16 +17,58 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.generators.view_objects.project_statistics_view_object import (
     ProjectStatisticsViewObject,
 )
-from strictdoc.export.html.generators.view_objects.project_tree_stats import (
-    DocumentTreeStats,
-)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.git_client import GitClient
 
 
-class ProgressStatisticsGenerator:
+@dataclass
+class DocumentStats:
+    requirements_total: int = 0
+    requirements_no_uid: List[SDocNode] = field(default_factory=list)
+
+
+@dataclass
+class DocumentTreeStats:
+    total_documents: int = 0
+    total_requirements: int = 0
+    total_sections: int = 0
+    total_source_files: int = 0
+    total_source_files_complete_coverage: int = 0
+    total_source_files_partial_coverage: int = 0
+    total_source_files_no_coverage: int = 0
+
+    total_tbd: int = 0
+    total_tbc: int = 0
+
+    git_commit_hash: Optional[str] = None
+
+    # Section.
+    sections_without_text_nodes: int = 0
+
+    # UID.
+    requirements_no_uid: int = 0
+    requirements_no_links: int = 0
+    requirements_root_no_links: int = 0
+    requirements_no_rationale: int = 0
+
+    # STATUS.
+    requirements_status_breakdown: Dict[Optional[str], int] = field(
+        default_factory=lambda: defaultdict(int)
+    )
+
+    def sort_requirements_status_breakdown(self) -> None:
+        self.requirements_status_breakdown = dict(
+            sorted(
+                self.requirements_status_breakdown.items(),
+                key=lambda item: (item[0] is not None, item[1]),
+                reverse=True,
+            )
+        )
+
+
+class SDocStatisticsGenerator:
     @staticmethod
     def export(
         project_config: ProjectConfig,
@@ -249,10 +293,6 @@ class ProgressStatisticsGenerator:
                     )
                 )
 
-        #
-        # Source files metrics.
-        #
-
         section = MetricSection(name="Source files", metrics=[])
         metrics.append(section)
 
@@ -289,25 +329,19 @@ class ProgressStatisticsGenerator:
             )
         )
 
-        #
-        # TBD/TBC metrics.
-        #
-
         section = MetricSection(name="TBD/TBC", metrics=[])
-        metrics.append(section)
-
         section.metrics.append(
             Metric(
                 name="Total TBD",
                 value=str(document_tree_stats.total_tbd),
-                link='search?q=node.contains("TBD")',
+                link="search?q=TBD",
             )
         )
         section.metrics.append(
             Metric(
                 name="Total TBC",
                 value=str(document_tree_stats.total_tbc),
-                link='search?q=node.contains("TBC")',
+                link="search?q=TBD",
             )
         )
 

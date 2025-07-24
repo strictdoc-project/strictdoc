@@ -31,12 +31,18 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementField,
     RequirementFieldType,
 )
-from strictdoc.backend.sdoc.models.model import SDocNodeIF
+from strictdoc.backend.sdoc.models.model import (
+    SDocExtendedElementIF,
+    SDocNodeIF,
+)
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
 from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.writer import SDWriter
+from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+    SourceFileTraceabilityInfo,
+)
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.analyzers.document_stats import DocumentTreeStats
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
@@ -2711,7 +2717,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 error = f"error: {e}"
 
         if node_query is not None:
-            result = []
+            result: List[SDocExtendedElementIF] = []
             try:
                 document_tree = assert_cast(
                     export_action.traceability_index.document_tree, DocumentTree
@@ -2727,6 +2733,21 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     ):
                         if node_query.evaluate(node):
                             result.append(node)
+
+                assert (
+                    export_action.traceability_index.document_tree is not None
+                )
+                if (
+                    export_action.traceability_index.document_tree.source_tree
+                    is not None
+                ):
+                    for source_file_ in export_action.traceability_index.document_tree.source_tree.source_files:
+                        source_file_info_: SourceFileTraceabilityInfo = export_action.traceability_index.get_file_traceability_index().get_coverage_info(
+                            source_file_.in_doctree_source_file_rel_path_posix
+                        )
+                        if node_query.evaluate(source_file_info_):
+                            result.append(source_file_info_)
+
                 search_results = result
             # Catch unexpected errors but exclude from code coverage, because
             # it is not clear yet how to write a test that triggers this.

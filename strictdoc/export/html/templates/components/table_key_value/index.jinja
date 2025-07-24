@@ -3,7 +3,7 @@
 {% if key_value_pair["Section"] is defined %}
   <div class="sdoc-table_key_value-section">{{ key_value_pair["Section"] }}</div>
 {% else %}
-  {% if view_object.project_config.is_activated_search() and key_value_pair["Link"] is defined %}
+  {% if view_object.project_config.is_activated_search() and key_value_pair["Link"] is defined and key_value_pair["Link"] is not none %}
     <a
       class="sdoc-table_key_value-key"
       data-testid="search-{{ key_value_pair["Key"].lower().replace(" ", "-") }}"

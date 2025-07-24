@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 from typing import Callable, Dict, Optional, Tuple
 
 from textx import metamodel_from_str
@@ -16,6 +15,10 @@ from strictdoc.core.query_engine.query_object import (
     NodeIsRequirementExpression,
     NodeIsRootExpression,
     NodeIsSectionExpression,
+    NodeIsSourceFileExpression,
+    NodeIsSourceFileWithCompleteCoverageExpression,
+    NodeIsSourceFileWithNoCoverageExpression,
+    NodeIsSourceFileWithPartialCoverageExpression,
     NoneExpression,
     NotEqualExpression,
     NotExpression,
@@ -37,6 +40,10 @@ QUERY_MODELS = [
     NodeIsRequirementExpression,
     NodeIsRootExpression,
     NodeIsSectionExpression,
+    NodeIsSourceFileExpression,
+    NodeIsSourceFileWithCompleteCoverageExpression,
+    NodeIsSourceFileWithPartialCoverageExpression,
+    NodeIsSourceFileWithNoCoverageExpression,
     NoneExpression,
     NotEqualExpression,
     NotExpression,
@@ -52,7 +59,7 @@ class QueryParseContext:
 
 
 class QueryParsingProcessor:
-    def __init__(self, parse_context: QueryParseContext):
+    def __init__(self, parse_context: QueryParseContext) -> None:
         self.parse_context: QueryParseContext = parse_context
 
     def get_default_processors(self) -> Dict[str, Callable[..., None]]:
@@ -60,7 +67,7 @@ class QueryParsingProcessor:
 
 
 class QueryReader:
-    def __init__(self, path_to_output_root: str = "NOT_RELEVANT"):
+    def __init__(self, path_to_output_root: str = "NOT_RELEVANT") -> None:
         self.path_to_output_root = path_to_output_root
 
     @staticmethod

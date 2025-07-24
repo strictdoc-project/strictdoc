@@ -1,5 +1,7 @@
 # mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+import importlib
 import os
+import sys
 from functools import partial
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -48,6 +50,7 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.git_client import GitClient
@@ -587,7 +590,38 @@ class HTMLGenerator:
             root_path="",
             static_path=self.project_config.dir_for_sdoc_assets,
         )
-        document_content = ProgressStatisticsGenerator.export(
+
+        statistics_generator = ProgressStatisticsGenerator
+
+        if (
+            custom_statistics_generator_path
+            := self.project_config.statistics_generator
+        ) is not None:
+            # It is important to add the input folder to the import path.
+            # Otherwise, the custom statistics generator may not be found.
+            # In fact, a more reasonable path to add would be the project config
+            # path, but since it is not maintained by ProjectConfig yet and
+            # usually equals the input path, add the input path for
+            # now.
+            input_paths = self.project_config.input_paths
+            assert input_paths is not None and len(input_paths) > 0, (
+                "Expected a valid input path."
+            )
+            sys.path.insert(0, input_paths[0])
+
+            module_path, class_name = custom_statistics_generator_path.rsplit(
+                ".", 1
+            )
+            try:
+                module = importlib.import_module(module_path)
+                statistics_generator = getattr(module, class_name)
+            except ModuleNotFoundError as module_not_found_error_:
+                raise StrictDocException(
+                    "Could not import a user-provided statistics generator: "
+                    f"{module_not_found_error_}."
+                ) from module_not_found_error_
+
+        document_content = statistics_generator.export(
             self.project_config,
             traceability_index,
             link_renderer,

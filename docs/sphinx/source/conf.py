@@ -7,6 +7,7 @@
 import os
 import string
 import sys
+from typing import List
 
 import guzzle_sphinx_theme
 
@@ -62,7 +63,7 @@ extensions = ["guzzle_sphinx_theme"]
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
-html_extra_path = [
+html_extra_path: List[str] = [
     # The StrictDoc HTML Export used to be stored alongside this Sphinx HTML
     # export.
     # "../../strictdoc-html"
@@ -71,7 +72,7 @@ html_extra_path = [
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns: List[str] = []
 
 master_doc = "index"
 

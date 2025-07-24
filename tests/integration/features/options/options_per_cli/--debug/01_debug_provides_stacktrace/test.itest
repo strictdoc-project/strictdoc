@@ -1,0 +1,7 @@
+RUN: %expect_exit 1 %strictdoc export DOES_NOT_EXIST.sdoc | filecheck %s --dump-input=fail --check-prefix CHECK-WITH-NODEBUG
+CHECK-WITH-NODEBUG: error: Provided input path does not exist: DOES_NOT_EXIST.sdoc
+CHECK-WITH-NODEBUG: Rerun with strictdoc --debug <...> to enable stack trace printing.
+
+RUN: %expect_exit 1 %strictdoc --debug export DOES_NOT_EXIST.sdoc | filecheck %s --dump-input=fail --check-prefix CHECK-WITH-DEBUG
+CHECK-WITH-DEBUG: Traceback (most recent call last):
+CHECK-WITH-DEBUG: error: Provided input path does not exist: DOES_NOT_EXIST.sdoc

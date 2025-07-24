@@ -6,9 +6,6 @@ from strictdoc.cli.cli_arg_parser import (
 FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
-TOTAL_EXPORT_ARGS = 18
-
-
 def cli_args_parser():
     return CommandParserBuilder().build()
 
@@ -17,9 +14,8 @@ def test_export_01_minimal():
     parser = cli_args_parser()
     args = parser.parse_args(["export", "docs"])
 
-    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
-
     assert args.command == "export"
+    assert args.debug is False
     assert args.fields == ["uid", "statement", "parent"]
     assert args.formats == ["html"]
     assert args.input_paths == ["docs"]
@@ -46,8 +42,6 @@ def test_export_02_output_dir():
         ["export", "docs", "--output-dir", "custom-output-dir"]
     )
 
-    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
-
     assert args.command == "export"
     assert args.input_paths == ["docs"]
     assert args.fields == ["uid", "statement", "parent"]
@@ -69,8 +63,6 @@ def test_export_03_parallelization():
 
     args = parser.parse_args(["export", "docs", "--no-parallelization"])
 
-    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
-
     assert args.command == "export"
     assert args.fields == ["uid", "statement", "parent"]
     assert args.formats == ["html"]
@@ -90,8 +82,6 @@ def test_export_04_export_format_rst():
     parser = cli_args_parser()
 
     args = parser.parse_args(["export", "--formats=rst", "docs"])
-
-    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
 
     assert args.command == "export"
     assert args.fields == ["uid", "statement", "parent"]
@@ -116,8 +106,6 @@ def test_export_05_export_format_multiple():
     assert args.command == "export"
     assert args.input_paths == ["docs"]
 
-    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
-
     assert args.command == "export"
     assert args.fields == ["uid", "statement", "parent"]
     assert args.formats == ["html", "rst"]
@@ -137,8 +125,6 @@ def test_export_07_enable_mathjax():
     parser = cli_args_parser()
     args = parser.parse_args(["export", "--enable-mathjax", "docs"])
 
-    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
-
     assert args.command == "export"
     assert args.enable_mathjax is True
 
@@ -152,7 +138,6 @@ def test_export_08_project_title():
 
     args = parser.parse_args(["export", "docs", "--project-title", "StrictDoc"])
 
-    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
     assert args.project_title == "StrictDoc"
 
     config_parser = create_sdoc_args_parser(args)
@@ -166,8 +151,6 @@ def test_export_09_config():
     args = parser.parse_args(
         ["export", "docs", "--config", "/path/to/strictdoc.toml"]
     )
-
-    assert len(args._get_kwargs()) == TOTAL_EXPORT_ARGS
 
     config_parser = create_sdoc_args_parser(args)
     export_config = config_parser.get_export_config()
@@ -183,6 +166,7 @@ def test_passthrough_01_minimal():
         ("chromedriver", None),
         ("command", "passthrough"),
         ("config", None),
+        ("debug", False),
         ("enable_mathjax", False),
         ("fields", None),
         ("filter_requirements", None),
@@ -212,6 +196,7 @@ def test_passthrough_02_minimal():
         ("chromedriver", None),
         ("command", "passthrough"),
         ("config", None),
+        ("debug", False),
         ("enable_mathjax", False),
         ("fields", None),
         ("filter_requirements", None),

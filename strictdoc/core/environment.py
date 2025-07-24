@@ -46,6 +46,8 @@ class SDocRuntimeEnvironment:
             f"{self.path_to_strictdoc}"
         )
 
+        self.is_debug_mode: bool = False
+
     def is_windows(self) -> bool:
         return platform.system() == "Windows"
 

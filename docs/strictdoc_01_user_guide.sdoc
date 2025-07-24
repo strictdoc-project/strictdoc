@@ -161,7 +161,7 @@ Run StrictDoc as follows:
 
 .. code-block:: text
 
-    strictdoc export hello.sdoc
+    strictdoc export .
 
 The expected output:
 

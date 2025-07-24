@@ -337,7 +337,12 @@ class TraceabilityIndexBuilder:
                         "TraceabilityIndex: "
                         f'the document "{document.reserved_title}" '
                         "imports a grammar from a file that does not exist: "
-                        f'"{document.grammar.import_from_file}".'
+                        f'"{document.grammar.import_from_file}". One known '
+                        f"source of this error is when only a single document "
+                        f"file is provided as input to the export or server "
+                        f"command, rather than the containing folder. To locate "
+                        f"the grammar file, StrictDoc needs to be able to "
+                        f"resolve it relative to the input path."
                     )
                 document.grammar.update_with_elements(document_grammar.elements)
 

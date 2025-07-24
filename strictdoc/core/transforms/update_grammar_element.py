@@ -29,7 +29,7 @@ class UpdateGrammarElementCommand:
         self.document: SDocDocument = document
         self.traceability_index: TraceabilityIndex = traceability_index
 
-    def perform(self) -> bool:
+    def perform(self) -> None:
         form_object: GrammarElementFormObject = self.form_object
         document: SDocDocument = self.document
         existing_element: GrammarElement = document.grammar.get_element_by_mid(
@@ -61,23 +61,9 @@ class UpdateGrammarElementCommand:
         #
         document_grammar_field_names = updated_element.get_field_titles()
 
-        existing_document_grammar_field_names = (
-            existing_element.get_field_titles()
-        )
-        grammar_changed = (
-            document_grammar_field_names
-            != existing_document_grammar_field_names
-        )
         existing_requirement_element = document.grammar.elements_by_type[
             existing_element.tag
         ]
-        grammar_changed = (
-            grammar_changed
-            or existing_requirement_element.relations
-            != updated_element.relations
-        )
-        if not grammar_changed:
-            return False
 
         document.grammar.update_element(existing_element, updated_element)
 
@@ -138,5 +124,3 @@ class UpdateGrammarElementCommand:
                         new_relations.append(requirement_relation_)
                 requirement.relations = new_relations
             requirement.ordered_fields_lookup = new_ordered_fields_lookup
-
-        return True

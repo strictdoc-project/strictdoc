@@ -46,13 +46,31 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: a5ab8dd5bc4045e99299eff729e430e6
+TITLE: Unreleased
+
+[TEXT]
+MID: 6d0bb97e7ef74fc1ae93cf2a91480e6a
+STATEMENT: >>>
+This release includes the following enhancements and bugfixes.
+
+**Fix for updating HUMAN_TITLE in Edit Grammar Element UI.**
+
+This change removes a previously implemented "clever" optimization that skipped saving a grammar element if none of its fields appeared to be modified. Over time, this check became outdated due to the introduction of new grammar element features such as HUMAN_TITLE, PROPERTIES/IS_COMPOSITE, PROPERTIES/VIEW_STYLE, and others. As a result, the issue manifested as a no-op where updates, such as changing a HUMAN_TITLE, were not saved to disk after submitting the form.
+
+Thanks to @zheylmun for reporting this issue.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 447ab1fa1d38453ab46e0002e6eb852d
 TITLE: 0.10.0 (2025-07-20)
 
 [TEXT]
 MID: c536381cea6842f0b77c1aa5ac942ce0
 STATEMENT: >>>
-This release includes the following enhancements.
+This release includes the following enhancements and bugfixes.
 
 **1) A small improvement to the behavior of the LEVEL/AUTO_LEVEL fields.**
 

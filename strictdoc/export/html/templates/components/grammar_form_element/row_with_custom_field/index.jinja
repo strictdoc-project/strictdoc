@@ -37,6 +37,13 @@
   {%- endif -%}
 >
 
+  {# FIXME: This will become a proper checkbox field eventually. #}
+  <input
+    type="hidden"
+    value="{{ form_object.field.get_input_field_required_value() }}"
+    name="{{ form_object.field.get_input_field_required() }}"
+  />
+
   {%- set placeholder_name = form_object.field.field_name|default('custom field name', true) %}
   {# field_placeholder = "Enter "~placeholder_name~" here...", #}
   {%- with

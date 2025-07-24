@@ -546,29 +546,6 @@ def coverage_combine(context):
 
 
 @task
-def lint_black(context):
-    result: invoke.runners.Result = run_invoke_with_tox(
-        context,
-        ToxEnvironment.CHECK,
-        """
-            black
-                *.py
-                developer/
-                strictdoc/
-                tests/unit/
-                tests/integration/*.py
-                tests/end2end/
-            --color --line-length 80 2>&1
-        """,
-    )
-    # black always exits with 0, so we handle the output.
-    if "reformatted" in result.stdout:
-        print("invoke: black found issues")  # noqa: T201
-        result.exited = 1
-        raise invoke.exceptions.UnexpectedExit(result)
-
-
-@task
 def lint_ruff_format(context):
     result: invoke.runners.Result = run_invoke_with_tox(
         context,
@@ -578,6 +555,7 @@ def lint_ruff_format(context):
                 format
                 *.py
                 developer/
+                docs/
                 strictdoc/
                 tests/unit/
                 tests/integration/*.py
@@ -614,7 +592,7 @@ def lint_mypy(context):
         context,
         ToxEnvironment.CHECK,
         """
-            mypy strictdoc/
+            mypy docs/ strictdoc/
                 --show-error-codes
                 --disable-error-code=import
                 --disable-error-code=misc

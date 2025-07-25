@@ -3773,6 +3773,35 @@ To activate the project statistics screen, add/edit the ``strictdoc.toml`` confi
 This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.
 <<<
 
+[[SECTION]]
+MID: aa84a8c59a904c9dbb1052b1bff169bf
+TITLE: User-provided custom statistics generator (experimental)
+
+[TEXT]
+MID: 7cf15de69efc46a5abe6b6fc786e4b71
+STATEMENT: >>>
+StrictDoc allows users to write their own custom statistics generators.
+
+To connect a custom generator, add it to the ``strictdoc.toml`` configuration file as follows:
+
+.. code-block::
+
+    [project]
+    title = "StrictDoc Documentation"
+
+    statistics_generator = "docs.sdoc_project_statistics.SDocStatisticsGenerator"
+
+The path specified by the config variable must a valid path to a Python file, and the last path component must be an existing statistics generator class.
+
+A statistics generator is a class that iterates over the traceability index, collects and calculates relevant statistics about the traceability graph, and stores the results as a list of ``Metric`` and ``MetricSection`` objects.
+
+.. note::
+
+    StrictDoc’s built-in statistics generator is a good example of how to implement a custom one. See `SDocStatisticsGenerator <https://github.com/strictdoc-project/strictdoc/blob/6f57747e6a1b5b3cb29c0047f9df5959da64ebb1/docs/sdoc_project_statistics.py>`_.
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

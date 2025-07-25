@@ -1,3 +1,15 @@
+"""
+Model class that holds the default project metrics data.
+
+NOTE: If a user wants to customize the default project statistics screen by
+      implementing their own statistics generator, they will likely need to
+      create a custom version of this model class with their own set of metric
+      fields. This class serves as an example of how project metrics and
+      statistics can be structured and stored.
+
+@relation(SDOC-SRS-97, scope=file)
+"""
+
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional

@@ -1044,6 +1044,21 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/export/html/generators/project_statistics.py
 
+[REQUIREMENT]
+MID: 7968fb7612f64504b5a430ccbffe80f1
+UID: SDOC-SRS-154
+STATUS: Active
+TITLE: Support for user-provided custom statistics generators
+STATEMENT: >>>
+StrictDoc shall support customization of the project statistics screen, enabling users to define and display their own project-specific statistics.
+<<<
+RATIONALE: >>>
+Projects often have unique traceability and reporting requirements, and supporting custom statistics allows StrictDoc to display metrics that are most relevant to each project's context.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-49
+
 [[/SECTION]]
 
 [[SECTION]]

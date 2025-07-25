@@ -1,3 +1,12 @@
+#
+# This test verifies the following functionality:
+# - that a user can provide a custom statistics generator in the strictdoc.toml.
+# - StrictDoc will import the custom statistics generator and run it instead the default generator.
+# - The resulting statistics HTML has the custom metrics displayed correctly.
+#
+# @relation(SDOC-SRS-154, scope=file)
+#
+
 RUN: cd %S/
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Published: Hello world doc

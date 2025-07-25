@@ -1,3 +1,11 @@
+#
+# This test verifies the following functionality:
+# When PROJECT_STATISTICS_SCREEN feature is activated, StrictDoc will generate
+# the default Project Statistics HTML page, listing the default project metrics.
+#
+# @relation(SDOC-SRS-97, scope=file)
+#
+
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Published: Hello world doc
 

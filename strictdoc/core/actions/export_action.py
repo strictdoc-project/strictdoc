@@ -74,6 +74,12 @@ class ExportAction:
             # The bundle document is generated only when the option is provided.
             traceability_index_copy: Optional[TraceabilityIndex] = None
             bundle_document: Optional[SDocDocument] = None
+            if self.project_config.generate_bundle_document:
+                traceability_index_copy, bundle_document = (
+                    self.traceability_index.clone_to_bundle_document(
+                        self.project_config
+                    )
+                )
 
             if (
                 "html" in self.project_config.export_formats
@@ -87,11 +93,6 @@ class ExportAction:
                     parallelizer=self.parallelizer,
                 )
                 if self.project_config.generate_bundle_document:
-                    traceability_index_copy, bundle_document = (
-                        self.traceability_index.clone_to_bundle_document(
-                            self.project_config
-                        )
-                    )
                     assert bundle_document is not None, (
                         "bundle_document must not be None."
                     )

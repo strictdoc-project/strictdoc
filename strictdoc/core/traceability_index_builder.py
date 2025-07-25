@@ -85,12 +85,12 @@ class TraceabilityIndexBuilder:
         latest_strictdoc_own_file = (
             max(strict_own_files, key=os.path.getctime)
             if len(strict_own_files) > 0
-            else ""
+            else None
         )
 
         strictdoc_last_update: datetime.datetime = (
             get_file_modification_time(latest_strictdoc_own_file)
-            if (latest_strictdoc_own_file != "")
+            if (latest_strictdoc_own_file is not None)
             else datetime.datetime.fromtimestamp(0)
         )
         if (

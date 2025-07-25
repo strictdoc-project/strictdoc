@@ -83,7 +83,9 @@ def get_spdx_ref(node: Union[SDocDocument, SDocNode, str]) -> str:
     elif node.reserved_title is not None:
         identifier = re.sub(r"[ #-/\\]", "_", node.reserved_title)
     else:
-        raise RuntimeError("Cannot create unique identifier for this node.")
+        raise RuntimeError(
+            f"Cannot create unique identifier for this node: {node}"
+        )
 
     if isinstance(node, SDocDocument):
         return "SDocDocument-" + identifier

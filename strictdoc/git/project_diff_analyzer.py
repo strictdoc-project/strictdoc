@@ -824,15 +824,15 @@ class ChangeStats:
 
         changes = []
 
-        changed_fields: Set[SDocNodeField] = set(
-            requirement.ordered_fields_lookup.get("COMMENT", [])
+        changed_fields: Dict[SDocNodeField, None] = dict.fromkeys(
+            requirement.ordered_fields_lookup.get("COMMENT", []), None
         )
-        changed_other_fields: Set[SDocNodeField] = set(
-            other_requirement.ordered_fields_lookup.get("COMMENT", [])
+        changed_other_fields: Dict[SDocNodeField, None] = dict.fromkeys(
+            other_requirement.ordered_fields_lookup.get("COMMENT", []), None
         )
 
         if len(changed_fields) == 0 or len(changed_other_fields) == 0:
-            for changed_field_ in changed_fields:
+            for changed_field_ in changed_fields.keys():
                 changes.append(
                     RequirementFieldChange(
                         field_name="COMMENT",
@@ -842,7 +842,7 @@ class ChangeStats:
                         right_diff=None,
                     )
                 )
-            for changed_other_field_ in changed_other_fields:
+            for changed_other_field_ in changed_other_fields.keys():
                 changes.append(
                     RequirementFieldChange(
                         field_name="COMMENT",
@@ -864,8 +864,8 @@ class ChangeStats:
 
                 similarity = similar(comment_value, comment_other_value)
                 if similarity == 1:
-                    changed_fields.remove(changed_field_)
-                    changed_other_fields.remove(changed_other_field_)
+                    del changed_fields[changed_field_]
+                    del changed_other_fields[changed_other_field_]
                     break
 
                 similarities.append(
@@ -905,8 +905,8 @@ class ChangeStats:
                     right_diff=right_diff,
                 )
             )
-            changed_fields.remove(changed_field_)
-            changed_other_fields.remove(changed_other_field_)
+            del changed_fields[changed_field_]
+            del changed_other_fields[changed_other_field_]
 
         # Iterate over remaining fields.
         for changed_field_ in changed_fields:

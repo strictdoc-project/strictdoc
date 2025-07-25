@@ -1,4 +1,3 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,operator"
 import os
 import sys
 from pathlib import Path
@@ -55,6 +54,10 @@ class ExportAction:
         assert self.traceability_index is not None, (
             "The index must be built at this point."
         )
+        assert self.project_config.export_formats is not None, (
+            "The export_formats must not be None."
+        )
+
         if (
             "html" in self.project_config.export_formats
             or "html-standalone" in self.project_config.export_formats
@@ -90,6 +93,12 @@ class ExportAction:
                     parallelizer=self.parallelizer,
                 )
                 if self.project_config.generate_bundle_document:
+                    assert bundle_document is not None, (
+                        "bundle_document must not be None."
+                    )
+                    assert traceability_index_copy is not None, (
+                        "traceability_index_copy must not be None."
+                    )
                     html_generator.export_single_document(
                         document=bundle_document,
                         traceability_index=traceability_index_copy,
@@ -109,6 +118,9 @@ class ExportAction:
                 )
 
                 if self.project_config.generate_bundle_document:
+                    assert traceability_index_copy is not None, (
+                        "traceability_index_copy must not be None."
+                    )
                     HTML2PDFGenerator.export_tree(
                         self.project_config,
                         traceability_index_copy,

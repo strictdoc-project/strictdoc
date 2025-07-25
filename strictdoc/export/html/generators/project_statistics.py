@@ -32,6 +32,12 @@ class ProgressStatisticsGenerator:
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
     ) -> Markup:
+        """
+        Export default project statistics to an HTML page.
+
+        @relation(SDOC-SRS-97, scope=function)
+        """
+
         git_client = GitClient()
 
         document_tree_stats: DocumentTreeStats = DocumentTreeStats()

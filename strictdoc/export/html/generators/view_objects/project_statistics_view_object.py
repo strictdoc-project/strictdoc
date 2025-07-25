@@ -1,3 +1,10 @@
+"""
+View Object class that bridges between project metrics data and the Project
+Statistics screen Jinja templates.
+
+@relation(SDOC-SRS-97, scope=file)
+"""
+
 from dataclasses import dataclass
 from typing import List, Union
 

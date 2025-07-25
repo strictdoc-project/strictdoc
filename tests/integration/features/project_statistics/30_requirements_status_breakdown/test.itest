@@ -1,3 +1,11 @@
+#
+# This test verifies the following functionality:
+# The default project statistics include metrics summarizing the breakdown of requirement statuses:
+# for each status, there is a metric showing how many requirements have that status.
+#
+# @relation(SDOC-SRS-97, scope=file)
+#
+
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 

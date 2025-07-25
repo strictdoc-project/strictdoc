@@ -54,7 +54,26 @@ MID: 6d0bb97e7ef74fc1ae93cf2a91480e6a
 STATEMENT: >>>
 This release includes the following enhancements and bugfixes.
 
-**Fix for updating HUMAN_TITLE in Edit Grammar Element UI.**
+**1\) Debug option to print detailed stack traces.**
+
+The ``--debug`` option has been added to all commands in the StrictDoc command-line interface. Without this option, StrictDoc prints only the error message and the source of the error. When the ``--debug`` option is provided, StrictDoc prints a detailed stack trace of the exception that caused the error.
+
+**2\) User-provided custom statistics generator.**
+
+- Reworked how metrics are collected, stored, and rendered. Introduced Metric and MetricSection classes to encapsulate the metrics displayed on the Statistics screen.
+
+- Added a configuration hook allowing users to specify a custom statistics generator. If provided, the custom generator overrides the default one.
+
+- StrictDoc now includes its own statistics generator, which will be customized over time for its own documentation.
+
+- Introduced four new metrics to the default statistics generator:
+
+  - Total source files
+  - Complete coverage
+  - Partial coverage
+  - No coverage.
+
+**3\) Fix for updating HUMAN_TITLE in Edit Grammar Element UI.**
 
 This change removes a previously implemented "clever" optimization that skipped saving a grammar element if none of its fields appeared to be modified. Over time, this check became outdated due to the introduction of new grammar element features such as HUMAN_TITLE, PROPERTIES/IS_COMPOSITE, PROPERTIES/VIEW_STYLE, and others. As a result, the issue manifested as a no-op where updates, such as changing a HUMAN_TITLE, were not saved to disk after submitting the form.
 

@@ -586,6 +586,13 @@ class HTMLGenerator:
         self,
         traceability_index: TraceabilityIndex,
     ) -> None:
+        """
+        Export project statistics to a dedicated HTML page.
+
+        @relation(SDOC-SRS-97, scope=function)
+        @relation(SDOC-SRS-154, scope=function)
+        """
+
         link_renderer = LinkRenderer(
             root_path="",
             static_path=self.project_config.dir_for_sdoc_assets,

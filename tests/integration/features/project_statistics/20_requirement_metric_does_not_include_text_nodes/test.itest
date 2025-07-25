@@ -1,4 +1,9 @@
-# This test ensures that the TEXT nodes DO NOT contribute to the requirements statistics.
+#
+# This test verifies the following functionality:
+# The TEXT nodes DO NOT contribute to the requirements statistics.
+#
+# @relation(SDOC-SRS-97, scope=file)
+#
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Published: Hello world doc

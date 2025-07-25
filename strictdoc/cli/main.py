@@ -6,6 +6,7 @@
 import multiprocessing
 import os
 import sys
+from typing import Optional
 
 strictdoc_root_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..")
@@ -22,6 +23,7 @@ from strictdoc.cli.cli_arg_parser import (
     ImportExcelCommandConfig,
     ImportReqIFCommandConfig,
     ManageAutoUIDCommandConfig,
+    SDocArgsParser,
     create_sdoc_args_parser,
 )
 from strictdoc.commands.about_command import AboutCommand
@@ -33,14 +35,13 @@ from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.actions.import_action import ImportAction
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.helpers.coverage import register_code_coverage_hook
+from strictdoc.helpers.exception import ExceptionInfo
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.server.server import run_strictdoc_server
 
 
-def _main(parallelizer: Parallelizer) -> None:
+def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
     register_code_coverage_hook()
-
-    parser = create_sdoc_args_parser()
 
     project_config: ProjectConfig
 
@@ -54,8 +55,7 @@ def _main(parallelizer: Parallelizer) -> None:
         try:
             export_config.validate()
         except CLIValidationError as exception_:
-            print(f"error: {exception_.args[0]}")  # noqa: T201
-            sys.exit(1)
+            raise exception_
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=export_config.get_path_to_config(),
             environment=environment,
@@ -79,8 +79,7 @@ def _main(parallelizer: Parallelizer) -> None:
         try:
             server_config.validate()
         except CLIValidationError as exception_:
-            print(f"error: {exception_.args[0]}")  # noqa: T201
-            sys.exit(1)
+            raise exception_
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=server_config.get_path_to_config(),
             environment=environment,
@@ -118,8 +117,8 @@ def _main(parallelizer: Parallelizer) -> None:
         try:
             manage_config.validate()
         except CLIValidationError as exception_:
-            print(f"error: {exception_.args[0]}")  # noqa: T201
-            sys.exit(1)
+            raise exception_
+
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=manage_config.get_path_to_config(),
             environment=environment,
@@ -187,15 +186,40 @@ def main() -> None:
     )
 
     enable_parallelization = "--no-parallelization" not in sys.argv
-    parallelizer = Parallelizer.create(enable_parallelization)
+
+    # NOTE: The parser can exit before the _main starts when no arguments
+    #       or incorrect arguments are provided. In those cases, it is still
+    #       important that the parallelizer is correctly shut down.
     try:
-        _main(parallelizer)
-    except Exception as exception:
-        # FIXME: Implement traceback.print_exc() when a --debug option is provided.
-        print(f"error: {str(exception)}")  # noqa: T201
+        parser = create_sdoc_args_parser()
+    except Exception as exception_:
+        print(f"error: {str(exception_)}", flush=True)  # noqa: T201
         sys.exit(1)
+
+    if parser.is_debug_mode():
+        environment.is_debug_mode = True
+
+    parallelizer = Parallelizer.create(enable_parallelization)
+
+    exception_info: Optional[ExceptionInfo] = None
+    try:
+        _main(parallelizer, parser)
+    except Exception as exception_:
+        exception_info = ExceptionInfo(exception_)
     finally:
         success = parallelizer.shutdown()
+
+        if exception_info is not None:
+            success = False
+            if parser.is_debug_mode():
+                exception_info.print_stack_trace()
+            print(exception_info.get_detailed_error_message(), flush=True)  # noqa: T201
+            if not parser.is_debug_mode():
+                print(  # noqa: T201
+                    "Rerun with strictdoc --debug <...> to enable stack trace printing.",
+                    flush=True,
+                )
+
         if not success:
             sys.exit(1)
 

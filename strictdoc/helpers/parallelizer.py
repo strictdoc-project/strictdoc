@@ -21,14 +21,16 @@ def map_does_not_work(self, contents, processing_func):
 import atexit
 import multiprocessing
 import sys
-import traceback
 from abc import ABC, abstractmethod
 from queue import Empty
-from typing import Any, Callable, Iterable, Tuple, Union
+from typing import Any, Callable, Iterable, Optional, Tuple, Union
 
 from strictdoc import environment
 from strictdoc.helpers.coverage import register_code_coverage_hook
-from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.exception import (
+    ExceptionInfo,
+    StrictDocException,
+)
 
 MultiprocessingLambdaType = Callable[[Any], Any]
 
@@ -149,12 +151,8 @@ class MultiprocessingParallelizer(Parallelizer):
         # https://github.com/strictdoc-project/strictdoc/issues/2083
         self.input_queue.close()
         self.output_queue.close()
-        if environment.is_windows():
-            self.input_queue.cancel_join_thread()
-            self.output_queue.cancel_join_thread()
-        else:
-            self.input_queue.join_thread()
-            self.output_queue.join_thread()
+        self.input_queue.cancel_join_thread()
+        self.output_queue.cancel_join_thread()
 
         # On Windows GitHub CI, there is sometimes a strange random edge case where
         # no child process has failed prematurely but there is at least one
@@ -227,7 +225,7 @@ class MultiprocessingParallelizer(Parallelizer):
 
         atexit.register(exit_hook_)
 
-        success = True
+        exception_info: Optional[ExceptionInfo] = None
 
         while True:
             content_idx = -1
@@ -243,18 +241,24 @@ class MultiprocessingParallelizer(Parallelizer):
                 output_queue.put((content_idx, result))
             except Exception as exception_:  # pragma: no cover
                 output_queue.put((content_idx, CHILD_PROCESS_FAILED))
-                if not isinstance(
-                    exception_, KeyboardInterrupt
-                ):  # pragma: no cover
-                    traceback.print_exc()
-                print(f"error: {str(exception_)}", flush=True)  # noqa: T201
-                success = False
+
+                exception_info = ExceptionInfo(exception_)
+
                 break
 
         close_queues_()
         sys.stdout.flush()
         sys.stderr.flush()
-        sys.exit(0 if success else 1)
+
+        if exception_info is None:
+            sys.exit(0)
+        else:  # pragma: no cover
+            if environment.is_debug_mode:
+                exception_info.print_stack_trace()
+            print(  # noqa: T201
+                exception_info.get_detailed_error_message(), flush=True
+            )
+            sys.exit(1)
 
 
 class NullParallelizer(Parallelizer):

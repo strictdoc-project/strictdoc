@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 import argparse
 import os
 from typing import Any, List, Optional
@@ -8,6 +7,7 @@ from strictdoc.cli.command_parser_builder import (
     SDocArgumentParser,
 )
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.net import is_valid_host
 
 
@@ -214,6 +214,9 @@ class DiffCommandConfig:
 class SDocArgsParser:
     def __init__(self, args: argparse.Namespace):
         self.args: argparse.Namespace = args
+
+    def is_debug_mode(self) -> bool:
+        return assert_cast(self.args.debug, bool)
 
     @property
     def is_about_command(self) -> bool:

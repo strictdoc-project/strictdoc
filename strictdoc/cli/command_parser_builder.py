@@ -109,6 +109,13 @@ class CommandParserBuilder:
             "-v", "--version", action="version", version=__version__
         )
 
+        main_parser.add_argument(
+            "--debug",
+            action="store_true",
+            default=False,
+            help="Enable more verbose printing of errors when they are encountered.",
+        )
+
         command_subparsers = main_parser.add_subparsers(
             title="command", dest="command"
         )

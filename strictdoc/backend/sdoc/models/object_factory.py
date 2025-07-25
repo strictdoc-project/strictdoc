@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call"
+# mypy: disable-error-code="no-untyped-call"
 from typing import Any, Dict, List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
@@ -22,7 +22,7 @@ class SDocObjectFactory:
     @staticmethod
     def create_requirement(
         parent: Any,
-        node_type: Optional[str] = "REQUIREMENT",
+        node_type: str = "REQUIREMENT",
         uid: Optional[str] = None,
         level: Optional[str] = None,
         title: Optional[str] = None,

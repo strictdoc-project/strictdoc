@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import os.path
 from typing import Callable, Dict, List, Optional, cast
 
@@ -53,7 +53,7 @@ class SDocParsingProcessor:
             or DocumentGrammar.create_default(
                 document,
                 create_section_element=self.parse_context.migrate_sections,
-                enable_mid=document.config.enable_mid,
+                enable_mid=document.config.enable_mid or False,
             )
         )
         document.ng_including_document_reference = (
@@ -143,6 +143,7 @@ class SDocParsingProcessor:
         )
 
         # Windows paths are backslashes, so using abspath in addition.
+        assert self.parse_context.path_to_sdoc_dir is not None
         resolved_path_to_fragment_file = os.path.abspath(
             os.path.join(
                 self.parse_context.path_to_sdoc_dir, document_from_file.file

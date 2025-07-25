@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-134, scope=file)
 """
 
-# mypy: disable-error-code="arg-type,union-attr"
+# mypy: disable-error-code="union-attr"
 import os
 from pathlib import Path
 from typing import Dict, List
@@ -84,6 +84,7 @@ class ExcelGenerator:
             fields = project_config.excel_export_fields
 
             # FIXME: Check if all fields are defined by the DocumentGrammar.
+            assert fields is not None
             columns = ExcelGenerator._init_columns_width(fields)
 
             document_iterator = traceability_index.get_document_iterator(
@@ -274,8 +275,8 @@ class ExcelGenerator:
                 worksheet.set_column(idx, idx, columns[field][MAX_WIDTH_KEY])
 
     @staticmethod
-    def _init_headers(fields: List[str]) -> List[str]:
-        headers: List[str] = []
+    def _init_headers(fields: List[str]) -> List[Dict[str, str]]:
+        headers: List[Dict[str, str]] = []
 
         for field in fields:
             headers.append({"header": field.upper()})

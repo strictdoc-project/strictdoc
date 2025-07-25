@@ -14,8 +14,8 @@ from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.section import SDocSection
-from strictdoc.backend.sdoc_source_code.models.range_marker import RangeMarker
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+    RelationMarkerType,
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.asset_manager import AssetManager
@@ -256,7 +256,7 @@ class TraceabilityIndex:
 
     def get_requirement_file_links(
         self, requirement: SDocNode
-    ) -> List[Tuple[str, List[RangeMarker]]]:
+    ) -> List[Tuple[str, List[RelationMarkerType]]]:
         return self._file_traceability_index.get_requirement_file_links(
             requirement
         )

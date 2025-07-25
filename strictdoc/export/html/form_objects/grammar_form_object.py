@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call"
+# mypy: disable-error-code="no-untyped-call"
 from typing import List, Optional, Set
 
 from markupsafe import Markup
@@ -113,7 +113,7 @@ class GrammarFormObject(ErrorObject):
             assert isinstance(field_dict, dict), type(field_dict)
 
             is_new = field_dict["is_new"] == "true"
-            field_name = field_dict["field_name"]
+            field_name = assert_cast(field_dict["field_name"], str)
 
             form_object_field = GrammarElementFormField(
                 is_new=is_new,

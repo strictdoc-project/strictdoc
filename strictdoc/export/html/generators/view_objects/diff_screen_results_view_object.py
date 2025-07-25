@@ -1,4 +1,5 @@
 # mypy: disable-error-code="no-untyped-call"
+import urllib
 from dataclasses import dataclass
 from typing import List, Optional, Set
 
@@ -32,10 +33,8 @@ class DiffScreenResultsViewObject:
         document_tree_rhs: DocumentTree,
         documents_iterator_lhs: DocumentTreeIterator,
         documents_iterator_rhs: DocumentTreeIterator,
-        left_revision: str,
-        left_revision_urlencoded: str,
-        right_revision: str,
-        right_revision_urlencoded: str,
+        left_revision: Optional[str],
+        right_revision: Optional[str],
         lhs_stats: ProjectTreeDiffStats,
         rhs_stats: ProjectTreeDiffStats,
         change_stats: ChangeStats,
@@ -49,10 +48,8 @@ class DiffScreenResultsViewObject:
         self.document_tree_rhs: DocumentTree = document_tree_rhs
         self.documents_iterator_lhs = documents_iterator_lhs
         self.documents_iterator_rhs = documents_iterator_rhs
-        self.left_revision: str = left_revision
-        self.left_revision_urlencoded: str = left_revision_urlencoded
-        self.right_revision: str = right_revision
-        self.right_revision_urlencoded: str = right_revision_urlencoded
+        self.left_revision: Optional[str] = left_revision
+        self.right_revision: Optional[str] = right_revision
         self.lhs_stats = lhs_stats
         self.rhs_stats = rhs_stats
         self.change_stats = change_stats
@@ -68,6 +65,22 @@ class DiffScreenResultsViewObject:
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
         self.error_message: Optional[str] = None
+
+    @property
+    def left_revision_urlencoded(self) -> str:
+        return (
+            urllib.parse.quote(self.left_revision)
+            if self.left_revision is not None
+            else ""
+        )
+
+    @property
+    def right_revision_urlencoded(self) -> str:
+        return (
+            urllib.parse.quote(self.right_revision)
+            if self.right_revision is not None
+            else ""
+        )
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(

@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-28, SDOC-SRS-33, scope=file)
 """
 
-# mypy: disable-error-code="arg-type"
 from copy import copy
 from typing import (
     TYPE_CHECKING,
@@ -35,6 +34,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 )
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+    RelationMarkerType,
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.constants import GraphLinkType
@@ -97,11 +97,13 @@ class FileTraceabilityIndex:
 
     def get_requirement_file_links(
         self, requirement: SDocNode
-    ) -> List[Tuple[str, List[RangeMarker]]]:
+    ) -> List[Tuple[str, List[RelationMarkerType]]]:
         if requirement.reserved_uid not in self.map_reqs_uids_to_paths:
             return []
 
-        matching_links_with_markers: List[Tuple[str, List[RangeMarker]]] = []
+        matching_links_with_markers: List[
+            Tuple[str, List[RelationMarkerType]]
+        ] = []
         requirement_source_paths: OrderedSet[str] = self.map_reqs_uids_to_paths[
             requirement.reserved_uid
         ]
@@ -568,7 +570,10 @@ class FileTraceabilityIndex:
             traceability_info_,
         ) in self.map_paths_to_source_file_traceability_info.items():
 
-            def marker_comparator_start(marker: RangeMarker) -> Optional[int]:
+            def marker_comparator_start(
+                marker: RelationMarkerType,
+            ) -> int:
+                assert marker.ng_range_line_begin is not None
                 return marker.ng_range_line_begin
 
             sorted_markers = sorted(
@@ -624,8 +629,10 @@ class FileTraceabilityIndex:
             ) in traceability_info_.ng_map_reqs_to_markers.items():
 
                 def marker_comparator_range(
-                    marker: RangeMarker,
-                ) -> Tuple[Optional[int], Optional[int]]:
+                    marker: RelationMarkerType,
+                ) -> Tuple[int, int]:
+                    assert marker.ng_range_line_begin is not None
+                    assert marker.ng_range_line_end is not None
                     return marker.ng_range_line_begin, marker.ng_range_line_end
 
                 markers_.sort(key=marker_comparator_range)

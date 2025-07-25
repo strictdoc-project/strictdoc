@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-28, SDOC-SRS-2, scope=file)
 """
 
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import datetime
 import glob
 import os
@@ -85,11 +85,13 @@ class TraceabilityIndexBuilder:
         latest_strictdoc_own_file = (
             max(strict_own_files, key=os.path.getctime)
             if len(strict_own_files) > 0
-            else 0
+            else None
         )
 
-        strictdoc_last_update: datetime.datetime = get_file_modification_time(
-            latest_strictdoc_own_file
+        strictdoc_last_update: datetime.datetime = (
+            get_file_modification_time(latest_strictdoc_own_file)
+            if (latest_strictdoc_own_file is not None)
+            else datetime.datetime.fromtimestamp(0)
         )
         if (
             project_config.config_last_update is not None
@@ -421,6 +423,7 @@ class TraceabilityIndexBuilder:
 
                 if isinstance(node, SDocNode):
                     try:
+                        assert document.grammar is not None
                         SDocValidator.validate_node(
                             node,
                             document_grammar=document.grammar,

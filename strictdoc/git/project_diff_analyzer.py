@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="no-untyped-call,union-attr"
 import hashlib
 import statistics
 from dataclasses import dataclass, field
@@ -166,7 +166,8 @@ class ProjectTreeDiffStats:
 
             if len(candidate_requirements) > 0:
                 candidate_requirement = max(
-                    candidate_requirements, key=candidate_requirements.get
+                    candidate_requirements,
+                    key=lambda k: candidate_requirements[k],
                 )
                 self.cache_requirement_to_requirement[requirement] = (
                     candidate_requirement
@@ -817,21 +818,21 @@ class ChangeStats:
         *,
         requirement: SDocNode,
         other_requirement: SDocNode,
-    ) -> Optional[List[RequirementFieldChange]]:
+    ) -> List[RequirementFieldChange]:
         assert isinstance(requirement, SDocNode)
         assert isinstance(other_requirement, SDocNode)
 
         changes = []
 
         changed_fields: Dict[SDocNodeField, None] = dict.fromkeys(
-            requirement.ordered_fields_lookup.get("COMMENT", []), 1
+            requirement.ordered_fields_lookup.get("COMMENT", []), None
         )
         changed_other_fields: Dict[SDocNodeField, None] = dict.fromkeys(
-            other_requirement.ordered_fields_lookup.get("COMMENT", []), 1
+            other_requirement.ordered_fields_lookup.get("COMMENT", []), None
         )
 
         if len(changed_fields) == 0 or len(changed_other_fields) == 0:
-            for changed_field_ in changed_fields:
+            for changed_field_ in changed_fields.keys():
                 changes.append(
                     RequirementFieldChange(
                         field_name="COMMENT",
@@ -841,7 +842,7 @@ class ChangeStats:
                         right_diff=None,
                     )
                 )
-            for changed_other_field_ in changed_other_fields:
+            for changed_other_field_ in changed_other_fields.keys():
                 changes.append(
                     RequirementFieldChange(
                         field_name="COMMENT",
@@ -854,10 +855,10 @@ class ChangeStats:
             return changes
 
         similarities: List[Tuple[float, SDocNodeField, SDocNodeField]] = []
-        for changed_field_ in list(changed_fields.keys()):
+        for changed_field_ in list(changed_fields):
             comment_value = changed_field_.get_text_value()
             assert comment_value is not None
-            for changed_other_field_ in list(changed_other_fields.keys()):
+            for changed_other_field_ in list(changed_other_fields):
                 comment_other_value = changed_other_field_.get_text_value()
                 assert comment_other_value is not None
 

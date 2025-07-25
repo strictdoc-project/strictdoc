@@ -26,6 +26,7 @@ class ReqIFExport:
     ) -> None:
         Path(output_reqif_root).mkdir(parents=True, exist_ok=True)
 
+        assert traceability_index.document_tree is not None
         if project_config.reqif_profile == ReqIFProfile.P01_SDOC:
             assert traceability_index.document_tree is not None
             reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(

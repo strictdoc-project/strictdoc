@@ -3789,9 +3789,9 @@ To connect a custom generator, add it to the ``strictdoc.toml`` configuration fi
     [project]
     title = "StrictDoc Documentation"
 
-    statistics_generator = "docs.sdoc_project_statistics.SDocStatisticsGenerator"
+    statistics_generator = "custom_statistics.CustomStatisticsGenerator"
 
-The path specified by the config variable must a valid path to a Python file, and the last path component must be an existing statistics generator class.
+The path specified by the config variable must be a valid path to a Python file, and the last component must reference an existing statistics generator class. StrictDoc automatically adds the document input path to its Python search paths, so the specified path must be discoverable relative to the location where the SDoc documents are read.
 
 A statistics generator is a class that iterates over the traceability index, collects and calculates relevant statistics about the traceability graph, and stores the results as a list of ``Metric`` and ``MetricSection`` objects.
 

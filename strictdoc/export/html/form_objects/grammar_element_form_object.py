@@ -221,8 +221,8 @@ class GrammarElementFormObject(ErrorObject):
                 if element_is_composite == "false"
                 else None
             ),
-            prefix=element_prefix,
-            view_style=element_view_style,
+            prefix=assert_cast(element_prefix, str),
+            view_style=assert_cast(element_view_style, str),
             fields=form_object_fields,
             relations=form_object_relations,
             project_config=project_config,

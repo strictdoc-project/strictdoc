@@ -69,6 +69,18 @@ class SourceFileTraceabilityInfo:
 
         self.markers: List[RelationMarkerType] = []
 
+    # FIXME: is_requirement() will go away.
+    def is_requirement(self) -> bool:
+        return False
+
+    # FIXME: is_section() will go away.
+    def is_section(self) -> bool:
+        return False
+
+    # FIXME: is_section() will go away.
+    def is_source_file(self) -> bool:
+        return True
+
     def get_coverage(self) -> float:
         return self._coverage
 

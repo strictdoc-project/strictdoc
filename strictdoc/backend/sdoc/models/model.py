@@ -8,6 +8,9 @@ from typing import Generator, List, Optional, Union
 from strictdoc.backend.sdoc.models.document_config import (
     DocumentConfig,
 )
+from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+    SourceFileTraceabilityInfo,
+)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.mid import MID
 
@@ -171,4 +174,10 @@ SDocElementIF = Union[
     SDocSectionIF,
     SDocDocumentIF,
     SDocDocumentFromFileIF,
+]
+
+
+SDocExtendedElementIF = Union[
+    SDocElementIF,
+    SourceFileTraceabilityInfo,
 ]

@@ -5,9 +5,14 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
 )
 from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
-from strictdoc.backend.sdoc.models.model import SDocElementIF
+from strictdoc.backend.sdoc.models.model import (
+    SDocExtendedElementIF,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.section import SDocSection
+from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+    SourceFileTraceabilityInfo,
+)
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
 
@@ -55,6 +60,26 @@ class NodeHasChildRequirementsExpression:
 
 
 class NodeIsRequirementExpression:
+    def __init__(self, parent: Any, _: Any):
+        self.parent: Any = parent
+
+
+class NodeIsSourceFileExpression:
+    def __init__(self, parent: Any, _: Any):
+        self.parent: Any = parent
+
+
+class NodeIsSourceFileWithCompleteCoverageExpression:
+    def __init__(self, parent: Any, _: Any):
+        self.parent: Any = parent
+
+
+class NodeIsSourceFileWithPartialCoverageExpression:
+    def __init__(self, parent: Any, _: Any):
+        self.parent: Any = parent
+
+
+class NodeIsSourceFileWithNoCoverageExpression:
     def __init__(self, parent: Any, _: Any):
         self.parent: Any = parent
 
@@ -132,10 +157,10 @@ class QueryObject:
         self.query: Query = query
         self.traceability_index: TraceabilityIndex = traceability_index
 
-    def evaluate(self, node: SDocElementIF) -> bool:
+    def evaluate(self, node: SDocExtendedElementIF) -> bool:
         return self._evaluate(node, self.query.root_expression)
 
-    def _evaluate(self, node: SDocElementIF, expression: Any) -> bool:
+    def _evaluate(self, node: SDocExtendedElementIF, expression: Any) -> bool:
         if isinstance(expression, EqualExpression):
             return self._evaluate_equal(node, expression)
         if isinstance(expression, NotEqualExpression):
@@ -156,6 +181,26 @@ class QueryObject:
             return (
                 isinstance(node, SDocNode) and node.node_type == "SECTION"
             ) or isinstance(node, SDocSection)
+        if isinstance(expression, NodeIsSourceFileExpression):
+            return isinstance(node, SourceFileTraceabilityInfo)
+        if isinstance(
+            expression, NodeIsSourceFileWithCompleteCoverageExpression
+        ):
+            return (
+                isinstance(node, SourceFileTraceabilityInfo)
+                and node.get_coverage() == 100
+            )
+        if isinstance(
+            expression, NodeIsSourceFileWithPartialCoverageExpression
+        ):
+            return isinstance(node, SourceFileTraceabilityInfo) and (
+                0 < node.get_coverage() < 100
+            )
+        if isinstance(expression, NodeIsSourceFileWithNoCoverageExpression):
+            return (
+                isinstance(node, SourceFileTraceabilityInfo)
+                and node.get_coverage() == 0
+            )
         if isinstance(expression, NodeIsRootExpression):
             if isinstance(node, SDocNode):
                 return node.is_root
@@ -193,21 +238,21 @@ class QueryObject:
         assert 0, expression
 
     def _evaluate_equal(
-        self, node: SDocElementIF, expression: EqualExpression
+        self, node: SDocExtendedElementIF, expression: EqualExpression
     ) -> bool:
         return self._evaluate_value(
             node, expression.lhs_expr
         ) == self._evaluate_value(node, expression.rhs_expr)
 
     def _evaluate_not_equal(
-        self, node: SDocElementIF, expression: NotEqualExpression
+        self, node: SDocExtendedElementIF, expression: NotEqualExpression
     ) -> bool:
         return self._evaluate_value(
             node, expression.lhs_expr
         ) != self._evaluate_value(node, expression.rhs_expr)
 
     def _evaluate_value(
-        self, node: SDocElementIF, expression: Any
+        self, node: SDocExtendedElementIF, expression: Any
     ) -> Optional[str]:
         if isinstance(expression, NodeFieldExpression):
             return self._evaluate_node_field_expression(node, expression)
@@ -219,7 +264,7 @@ class QueryObject:
 
     def _evaluate_node_field_expression(
         self,
-        node: SDocElementIF,
+        node: SDocExtendedElementIF,
         expression: NodeFieldExpression,
     ) -> Optional[str]:
         field_name = expression.field_name
@@ -256,7 +301,7 @@ class QueryObject:
             raise NotImplementedError
 
     def _evaluate_node_has_parent_requirements(
-        self, node: SDocElementIF
+        self, node: SDocExtendedElementIF
     ) -> bool:
         if not isinstance(node, SDocNode):
             raise TypeError(
@@ -267,7 +312,7 @@ class QueryObject:
         return self.traceability_index.has_parent_requirements(node)
 
     def _evaluate_node_has_child_requirements(
-        self, node: SDocElementIF
+        self, node: SDocExtendedElementIF
     ) -> bool:
         if not isinstance(node, SDocNode):
             raise TypeError(
@@ -279,7 +324,7 @@ class QueryObject:
 
     def _evaluate_node_contains(
         self,
-        node: SDocElementIF,
+        node: SDocExtendedElementIF,
         expression: NodeContainsExpression,
     ) -> bool:
         if isinstance(node, SDocNode):
@@ -296,7 +341,9 @@ class QueryObject:
             return False
         raise NotImplementedError
 
-    def _evaluate_node_contains_any_text(self, node: SDocElementIF) -> bool:
+    def _evaluate_node_contains_any_text(
+        self, node: SDocExtendedElementIF
+    ) -> bool:
         if not isinstance(node, SDocSection) and not (
             isinstance(node, SDocNode) and node.node_type == "SECTION"
         ):

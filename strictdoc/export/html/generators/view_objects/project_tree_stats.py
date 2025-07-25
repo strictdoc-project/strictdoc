@@ -16,8 +16,14 @@ class DocumentTreeStats:
     total_documents: int = 0
     total_requirements: int = 0
     total_sections: int = 0
+    total_source_files: int = 0
+    total_source_files_complete_coverage: int = 0
+    total_source_files_partial_coverage: int = 0
+    total_source_files_no_coverage: int = 0
+
     total_tbd: int = 0
     total_tbc: int = 0
+
     git_commit_hash: Optional[str] = None
 
     # Section.

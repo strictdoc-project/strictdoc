@@ -28,6 +28,8 @@ features = [
   "NESTOR",
 ]
 
+statistics_generator = "docs.sdoc_project_statistics.SDocStatisticsGenerator"
+
 include_doc_paths = [
   "docs/**",
   "docs_extra/**",

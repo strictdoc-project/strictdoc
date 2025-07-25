@@ -111,6 +111,7 @@ class ProjectConfig:
         config_last_update: Optional[datetime.datetime],
         chromedriver: Optional[str],
         section_behavior: Optional[str],
+        statistics_generator: Optional[str],
     ) -> None:
         assert isinstance(environment, SDocRuntimeEnvironment)
         if source_root_path is not None:
@@ -206,6 +207,8 @@ class ProjectConfig:
         self.chromedriver: Optional[str] = chromedriver
         self.section_behavior: Optional[str] = section_behavior
 
+        self.statistics_generator: Optional[str] = statistics_generator
+
     @staticmethod
     def default_config(environment: SDocRuntimeEnvironment) -> "ProjectConfig":
         assert isinstance(environment, SDocRuntimeEnvironment)
@@ -235,6 +238,7 @@ class ProjectConfig:
             config_last_update=None,
             chromedriver=None,
             section_behavior=ProjectConfig.DEFAULT_SECTION_BEHAVIOR,
+            statistics_generator=None,
         )
 
     # Some server command settings can override the project config settings.
@@ -508,6 +512,7 @@ class ProjectConfigLoader:
         chromedriver: Optional[str] = None
 
         section_behavior: str = ProjectConfig.DEFAULT_SECTION_BEHAVIOR
+        statistics_generator: Optional[str] = None
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -536,6 +541,10 @@ class ProjectConfigLoader:
                     sys.exit(1)
             if ProjectFeature.ALL_FEATURES in project_features:
                 project_features = ProjectFeature.all()
+
+            statistics_generator = project_content.get(
+                "statistics_generator", statistics_generator
+            )
 
             include_doc_paths = project_content.get(
                 "include_doc_paths", include_doc_paths
@@ -752,4 +761,5 @@ class ProjectConfigLoader:
             config_last_update=config_last_update,
             chromedriver=chromedriver,
             section_behavior=section_behavior,
+            statistics_generator=statistics_generator,
         )

@@ -1,4 +1,3 @@
-# mypy: disable-error-code="arg-type,no-untyped-call"
 import datetime
 import os
 import re
@@ -414,6 +413,9 @@ class ProjectConfig:
         return self.environment.get_extra_static_files_path()
 
     def shall_parse_nodes(self, path_to_file: str) -> bool:
+        if self.source_root_path is None:
+            return False
+
         for sdoc_source_config_entry_ in self.source_nodes:
             # FIXME: Move the setting of full paths to .finalize() of this config
             #        class when it is implemented.
@@ -425,6 +427,7 @@ class ProjectConfig:
             )
             if path_to_file.startswith(full_path):
                 return True
+
         return False
 
 
@@ -503,7 +506,7 @@ class ProjectConfigLoader:
         bundle_document_date = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE
 
         traceability_matrix_relation_columns: Optional[
-            List[Tuple[str, str]]
+            List[Tuple[str, Optional[str]]]
         ] = None
         reqif_profile = ReqIFProfile.P01_SDOC
         reqif_multiline_is_xhtml = False

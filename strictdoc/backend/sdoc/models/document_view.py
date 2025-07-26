@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 from typing import TYPE_CHECKING, List, Optional
 
 from strictdoc.helpers.auto_described import auto_described

@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 import re
 from collections import defaultdict
 from typing import Dict, List, Optional

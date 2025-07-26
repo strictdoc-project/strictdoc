@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-call,union-attr"
+# mypy: disable-error-code="arg-type,union-attr"
 import importlib
 import os
 import sys

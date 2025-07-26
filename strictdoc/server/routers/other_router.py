@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 import os
 import urllib
 from copy import deepcopy

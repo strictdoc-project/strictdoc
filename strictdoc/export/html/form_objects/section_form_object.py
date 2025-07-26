@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 from collections import defaultdict
 
 from starlette.datastructures import FormData

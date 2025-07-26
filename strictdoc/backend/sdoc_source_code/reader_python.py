@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-142, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call"
 from itertools import islice
 from typing import List, Optional, Sequence
 

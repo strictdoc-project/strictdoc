@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 import datetime
 import glob
 import hashlib

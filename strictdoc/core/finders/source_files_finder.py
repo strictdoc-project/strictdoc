@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 import os
 from pathlib import Path
 from typing import List

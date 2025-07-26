@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 from typing import Dict, List, Optional
 
 from starlette.datastructures import FormData

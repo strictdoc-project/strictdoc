@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 from typing import List, Optional, Set
 
 from markupsafe import Markup

@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 import urllib
 from dataclasses import dataclass
 from typing import List, Optional, Set

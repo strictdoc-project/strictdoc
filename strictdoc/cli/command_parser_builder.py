@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 import argparse
 import sys
 from typing import List, NoReturn

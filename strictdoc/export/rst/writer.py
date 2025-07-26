@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 from enum import Enum
 from typing import Optional
 

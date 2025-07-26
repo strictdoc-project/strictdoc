@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 from typing import Any, Dict, List, Optional
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference

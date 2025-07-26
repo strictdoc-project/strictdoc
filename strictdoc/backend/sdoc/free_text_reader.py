@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 from typing import Optional, Tuple
 
 from textx import metamodel_from_str

@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-untyped-call"
 import os
 from typing import Optional, Union
 

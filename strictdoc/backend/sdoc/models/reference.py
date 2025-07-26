@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-31, SDOC-SRS-101, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call"
 from typing import Any, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.grammar_element import ReferenceType

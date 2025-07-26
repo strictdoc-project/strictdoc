@@ -486,12 +486,14 @@ The following IDEs are known to work:
 - JetBrains's PyCharm and WebStorm (TextMate JSON). The other `JetBrains IDEs <https://www.jetbrains.com/products/>`_ are expected to work too.
 - Eclipse (TextMate JSON)
 - Sublime Text (Sublime Syntax)
+- Neovim (Tree-sitter grammar)
 
 Due to the incompatibilities between these formats, the markup files are provided in separate repositories:
 
-- `strictdoc-project/strictdoc.tmLanguage <https://github.com/strictdoc-project/strictdoc.tmLanguage>`_ – TextMate grammar files for StrictDoc (JSON)
-- `strictdoc-project/strictdoc.tmbundle <https://github.com/strictdoc-project/strictdoc.tmbundle>`_ – TextMate grammar files for StrictDoc (PLIST)
+- `strictdoc-project/strictdoc.tmLanguage <https://github.com/strictdoc-project/strictdoc.tmLanguage>`_ – TextMate grammar files for StrictDoc (JSON).
+- `strictdoc-project/strictdoc.tmbundle <https://github.com/strictdoc-project/strictdoc.tmbundle>`_ – TextMate grammar files for StrictDoc (PLIST).
 - `strictdoc-project/strictdoc.sublime-syntax <https://github.com/strictdoc-project/strictdoc.sublime-syntax>`_ –  StrictDoc markup syntax highlighting in Sublime Text.
+- `manueldiagostino/tree-sitter-strictdoc <https://github.com/manueldiagostino/tree-sitter-strictdoc>`_ – StrictDoc Tree‑sitter parser for Neovim.
 
 The instructions for installing the StrictDoc markup can be found in all repositories.
 

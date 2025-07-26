@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,union-attr"
+# mypy: disable-error-code="union-attr"
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Iterator, List, Optional, Sequence, Tuple, Union

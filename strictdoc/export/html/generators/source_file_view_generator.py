@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-36, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,operator"
+# mypy: disable-error-code="operator"
 import os
 from pathlib import Path
 from typing import List, Tuple, Union

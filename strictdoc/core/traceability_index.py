@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-28, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,union-attr"
+# mypy: disable-error-code="union-attr"
 import datetime
 from copy import deepcopy
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union

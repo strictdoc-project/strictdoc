@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-99, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call,union-attr"
+# mypy: disable-error-code="union-attr"
 from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference

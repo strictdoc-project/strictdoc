@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,union-attr"
+# mypy: disable-error-code="union-attr"
 import sys
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError

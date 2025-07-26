@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,union-attr"
+# mypy: disable-error-code="union-attr"
 from collections import defaultdict
 from typing import Dict, List, Optional, Union
 

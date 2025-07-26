@@ -80,7 +80,6 @@ class SDocStatisticsGenerator:
 
         document_tree_stats: DocumentTreeStats = DocumentTreeStats()
 
-        assert traceability_index.document_tree is not None
         document_tree_stats.total_documents = len(
             traceability_index.document_tree.document_list
         )

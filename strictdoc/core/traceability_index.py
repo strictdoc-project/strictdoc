@@ -44,6 +44,7 @@ from strictdoc.helpers.sorting import alphanumeric_sort
 class TraceabilityIndex:
     def __init__(
         self,
+        document_tree: DocumentTree,
         document_iterators: Dict[SDocDocument, DocumentCachingIterator],
         file_traceability_index: FileTraceabilityIndex,
         graph_database: GraphDatabase,
@@ -57,7 +58,7 @@ class TraceabilityIndex:
         )
 
         self.graph_database: GraphDatabase = graph_database
-        self.document_tree: Optional[DocumentTree] = None
+        self.document_tree: DocumentTree = document_tree
         self.asset_manager: Optional[AssetManager] = None
         self.file_dependency_manager: FileDependencyManager = (
             file_dependency_manager

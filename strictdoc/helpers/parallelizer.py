@@ -132,7 +132,6 @@ class MultiprocessingParallelizer(Parallelizer):
                         flush=True,
                     )
                     process_.terminate()
-                    process_.join()
 
             for process_ in self.processes:
                 if process_.exitcode != 0:

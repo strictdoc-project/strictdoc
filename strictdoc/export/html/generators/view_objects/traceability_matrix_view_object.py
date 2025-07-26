@@ -33,7 +33,6 @@ class TraceabilityMatrixViewObject:
             known_relations_list
         )
         self.standalone: bool = False
-        assert traceability_index.document_tree is not None
         self.document_tree_iterator: DocumentTreeIterator = (
             DocumentTreeIterator(traceability_index.document_tree)
         )
@@ -41,7 +40,6 @@ class TraceabilityMatrixViewObject:
         self.strictdoc_version = __version__
 
     def iterate_documents(self) -> Iterator[SDocDocument]:
-        assert self.traceability_index.document_tree is not None
         yield from filter(
             lambda document_: not document_.document_is_included(),
             self.traceability_index.document_tree.document_list,

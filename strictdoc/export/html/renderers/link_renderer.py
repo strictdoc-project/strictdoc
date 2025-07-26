@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,union-attr"
+# mypy: disable-error-code="union-attr"
 import html
 from typing import Any, Dict, Optional, Tuple, Union
 

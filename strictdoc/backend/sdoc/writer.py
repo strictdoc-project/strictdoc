@@ -1,4 +1,4 @@
-# mypy: disable-error-code="no-untyped-call,union-attr"
+# mypy: disable-error-code="union-attr"
 import os.path
 from pathlib import Path
 from typing import Dict, List, Tuple

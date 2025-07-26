@@ -2,9 +2,8 @@
 @relation(SDOC-SRS-142, scope=file)
 """
 
-# mypy: disable-error-code="no-untyped-call"
 from functools import partial
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, Dict, List, Optional, TypedDict, Union
 
 from textx import get_location, metamodel_from_str
 
@@ -23,6 +22,7 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 )
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
 from strictdoc.helpers.file_stats import SourceFileStats
+from strictdoc.helpers.list import find_duplicates
 from strictdoc.helpers.textx import drop_textx_meta
 
 
@@ -137,9 +137,25 @@ def create_unmatch_range_error(
     )
 
 
+def validate_marker_uids(
+    marker: Union[FunctionRangeMarker, LineMarker, RangeMarker],
+    parse_context: ParseContext,
+) -> None:
+    possible_duplicates = find_duplicates(marker.reqs)
+    if len(possible_duplicates) > 0:
+        location = get_location(marker)
+
+        raise ValueError(
+            "@relation marker contains duplicate node UIDs: "
+            f"{possible_duplicates}. Location: {parse_context.filename}:{location['line']}."
+        )
+
+
 def range_marker_processor(
     marker: RangeMarker, parse_context: ParseContext
 ) -> None:
+    validate_marker_uids(marker, parse_context)
+
     location = get_location(marker)
     line = location["line"]
 
@@ -199,6 +215,8 @@ def range_marker_processor(
 def line_marker_processor(
     line_marker: LineMarker, parse_context: ParseContext
 ) -> None:
+    validate_marker_uids(line_marker, parse_context)
+
     location = get_location(line_marker)
     line = location["line"]
 
@@ -222,6 +240,8 @@ def line_marker_processor(
 def function_range_marker_processor(
     function_range_marker: FunctionRangeMarker, parse_context: ParseContext
 ) -> None:
+    validate_marker_uids(function_range_marker, parse_context)
+
     if (
         len(parse_context.marker_stack) > 0
         and parse_context.marker_stack[-1].ng_is_nodoc

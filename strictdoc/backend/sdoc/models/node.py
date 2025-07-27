@@ -51,7 +51,7 @@ class SDocNodeField:
         multiline__: Optional[str],
     ) -> None:
         self.parent: Optional[SDocNode] = parent
-        self.field_name = field_name
+        self.field_name: str = field_name
         self.parts: List[Any] = parts
         self.multiline: bool = multiline__ is not None and len(multiline__) > 0
 

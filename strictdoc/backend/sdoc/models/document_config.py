@@ -30,10 +30,10 @@ class DocumentCustomMetadata:
         self,
         *,
         parent: Optional["DocumentConfig"] = None,
-        entries: Optional[List[DocumentCustomMetadataKeyValuePair]],
+        entries: List[DocumentCustomMetadataKeyValuePair],
     ) -> None:
         _ = parent
-        self.entries = entries
+        self.entries: List[DocumentCustomMetadataKeyValuePair] = entries
 
 
 @auto_described

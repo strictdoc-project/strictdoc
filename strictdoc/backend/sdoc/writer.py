@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 import os.path
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -438,6 +437,8 @@ class SDWriter:
     def _print_requirement_fields(
         self, section_content: SDocNode, document: SDocDocument
     ) -> str:
+        assert document.grammar is not None
+
         output = ""
 
         current_view: ViewElement = document.view.get_current_view(

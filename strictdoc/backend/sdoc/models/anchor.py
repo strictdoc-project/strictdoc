@@ -55,11 +55,6 @@ class Anchor:
     def get_parent_or_including_document(self) -> SDocDocumentIF:
         return self.parent_node().get_parent_or_including_document()
 
-    # FIXME: Remove this. Use get_parent_or_including_document() instead.
-    @property
-    def parent_or_including_document(self) -> SDocDocumentIF:
-        return self.get_parent_or_including_document()
-
     def get_including_document(self) -> Optional[SDocDocumentIF]:
         return self.parent_node().get_including_document()
 

@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 import html
 from typing import Any, Dict, Optional, Tuple, Union
 
@@ -104,11 +103,12 @@ class LinkRenderer:
         ), node
 
         if isinstance(node, SDocDocument):
-            context_level_or_none = (
-                context_document.meta.level
-                if context_document is not None
-                else None
-            )
+            context_level_or_none: Optional[int] = None
+            if context_document is not None:
+                assert context_document.meta is not None
+                context_level_or_none = context_document.meta.level
+
+            assert node.meta is not None
             document_link = node.meta.get_html_link(
                 document_type,
                 context_level_or_none,
@@ -133,13 +133,15 @@ class LinkRenderer:
             return f"#{local_link}"
 
         # Now two cases:
-        # - Context document exists and we want to take into account this
+        # - Context document exists, and we want to take into account this
         # document's depth.
         # - Context document does not exist, such as when we are on a Search
         # screen. In this case, the level is simply zero.
-        level: int = (
-            context_document.meta.level if context_document is not None else 0
-        )  # FIXME 0 or 1?
+        level: int = 0
+        if context_document is not None:
+            assert context_document.meta is not None
+            level = context_document.meta.level
+
         link_cache_key = (document_type, level)
         if link_cache_key in self.req_link_cache:
             document_type_cache = self.req_link_cache[link_cache_key]
@@ -147,7 +149,10 @@ class LinkRenderer:
                 return document_type_cache[node]
         else:
             self.req_link_cache[link_cache_key] = {}
-        document_link = node.parent_or_including_document.meta.get_html_link(
+
+        parent_or_including_document = node.get_parent_or_including_document()
+        assert parent_or_including_document.meta is not None
+        document_link = parent_or_including_document.meta.get_html_link(
             document_type,
             level,
         )
@@ -167,10 +172,13 @@ class LinkRenderer:
         """
 
         assert isinstance(node, (SDocNode, SDocSection, Anchor)), node
+
+        parent_or_including_document = node.get_parent_or_including_document()
+        assert parent_or_including_document is not None
+        assert parent_or_including_document.meta is not None
+
         local_link = self.render_local_anchor(node)
-        document_link = (
-            node.parent_or_including_document.meta.get_html_doc_link()
-        )
+        document_link = parent_or_including_document.meta.get_html_doc_link()
         requirement_link = f"{document_link}#{local_link}"
         return requirement_link
 
@@ -189,6 +197,7 @@ class LinkRenderer:
             self.req_link_cache[link_cache_key] = {}
 
         document = assert_cast(node.get_document(), SDocDocument)
+        assert document.meta is not None
         document_link = document.meta.get_html_link(
             DocumentType.DOCUMENT, source_file.level + 1
         )
@@ -206,6 +215,7 @@ class LinkRenderer:
         document: SDocDocument = assert_cast(
             requirement.ng_document_reference.get_document(), SDocDocument
         )
+        assert document.meta is not None
         path_prefix = document.meta.get_root_path_prefix()
         source_file_link = (
             f"{path_prefix}/_source_files/{requirement_source_path}.html"

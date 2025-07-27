@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 import hashlib
 import statistics
 from dataclasses import dataclass, field
@@ -356,6 +355,7 @@ class ChangeStats:
                         document.reserved_mid
                     ]
                 else:
+                    assert document.meta is not None
                     other_document_or_none = (
                         other_stats.map_rel_paths_to_docs.get(
                             document.meta.input_doc_rel_path.relative_path
@@ -952,6 +952,8 @@ class ProjectDiffAnalyzer:
         document: SDocDocument,
         document_tree_stats: ProjectTreeDiffStats,
     ) -> None:
+        assert document.meta is not None
+
         document_iterator = DocumentCachingIterator(document)
 
         map_nodes_to_hashers: Dict[Any, Any] = {document: hashlib.md5()}

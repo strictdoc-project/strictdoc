@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 from typing import Optional, Union
 
 from textx import TextXSyntaxError
@@ -334,7 +333,7 @@ ELEMENTS:
     ) -> "StrictDocSemanticError":
         role_and_type = marker.role if marker.role is not None else "Any"
         return StrictDocSemanticError(
-            title=(f"File marker role is not registered: {role_and_type}."),
+            title=f"File marker role is not registered: {role_and_type}.",
             hint=f"Problematic requirement: {node.reserved_uid}.",
             example=None,
             line=marker.ng_source_line_begin,
@@ -368,6 +367,7 @@ ELEMENTS:
         view_element: ViewElement,
         object_type: str,
     ) -> "StrictDocSemanticError":
+        assert document.meta is not None
         return StrictDocSemanticError(
             title=(
                 f"View element '{view_element.view_id}' references a non-existing"
@@ -391,6 +391,7 @@ ELEMENTS:
         object_type: str,
         field_name: str,
     ) -> "StrictDocSemanticError":
+        assert document.meta is not None
         return StrictDocSemanticError(
             title=(
                 f"View element '{view_element.view_id}' references a non-existing"
@@ -412,6 +413,8 @@ ELEMENTS:
         document_config: DocumentConfig,
         default_view: str,
     ) -> "StrictDocSemanticError":
+        assert document.meta is not None
+
         filename = document.meta.input_doc_full_path
 
         return StrictDocSemanticError(

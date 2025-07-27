@@ -7,6 +7,7 @@ from strictdoc.backend.sdoc.models.model import (
     SDocDocumentFromFileIF,
     SDocDocumentIF,
     SDocElementIF,
+    SDocIteratedElementIF,
     SDocNodeIF,
     SDocSectionIF,
 )
@@ -71,7 +72,7 @@ class DocumentCachingIterator:
     def all_content(
         self,
         print_fragments: bool = False,
-    ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
+    ) -> Iterator[Tuple[SDocIteratedElementIF, DocumentIterationContext]]:
         root_node = self.document
 
         yield from self.all_node_content(
@@ -87,7 +88,7 @@ class DocumentCachingIterator:
         print_fragments: bool = False,
         level_stack: Tuple[int, ...] = (),
         custom_level: bool = False,
-    ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
+    ) -> Iterator[Tuple[SDocIteratedElementIF, DocumentIterationContext]]:
         if isinstance(node, SDocSection):
             # If node is not whitelisted, we ignore it. Also, note that due to
             # this early return, all child nodes of this node are ignored

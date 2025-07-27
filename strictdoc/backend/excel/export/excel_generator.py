@@ -13,7 +13,9 @@ from xlsxwriter.worksheet import Worksheet
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
-from strictdoc.backend.sdoc.models.model import SDocElementIF
+from strictdoc.backend.sdoc.models.model import (
+    SDocIteratedElementIF,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
@@ -236,7 +238,9 @@ class ExcelGenerator:
             os.unlink(document_out_file)
 
     @staticmethod
-    def _lookup_refs(document_contents: List[SDocElementIF]) -> Dict[str, int]:
+    def _lookup_refs(
+        document_contents: List[SDocIteratedElementIF],
+    ) -> Dict[str, int]:
         refs: Dict[str, int] = {}
         row = 1
 

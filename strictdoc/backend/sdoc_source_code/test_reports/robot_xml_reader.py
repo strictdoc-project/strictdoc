@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-143, scope=file)
 """
 
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Type, Union
 
 import robot.result
 from robot.api import ExecutionResult, ResultVisitor
@@ -22,7 +22,7 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.paths import path_to_posix_path
 
 
-class SdocVisitor(ResultVisitor):
+class SdocVisitor(ResultVisitor):  # type: ignore[misc]
     def __init__(self, project_config: ProjectConfig):
         self.project_config = project_config
         self.suites: Dict[str, Union[SDocDocument, SDocSection]] = {}
@@ -229,7 +229,7 @@ class SdocVisitor(ResultVisitor):
 class RobotOutputXMLReader:
     @classmethod
     def read_from_file(
-        cls: "RobotOutputXMLReader",
+        cls: Type["RobotOutputXMLReader"],
         doc_file: File,
         project_config: ProjectConfig,
     ) -> SDocDocument:

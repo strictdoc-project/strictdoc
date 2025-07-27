@@ -54,7 +54,7 @@ def math_role(
     return [node], []
 
 
-class MathDirective(Directive):
+class MathDirective(Directive):  # type: ignore[misc]
     """Docutils directive emulating Sphinx-style math syntax."""
 
     has_content = True

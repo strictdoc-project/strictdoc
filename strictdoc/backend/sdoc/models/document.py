@@ -176,7 +176,7 @@ class SDocDocument(SDocDocumentIF):
 
     def iterate_included_documents_depth_first(
         self,
-    ) -> Generator["SDocDocument", None, None]:
+    ) -> Generator["SDocDocumentIF", None, None]:
         for included_document_ in self.included_documents:
             yield included_document_
             yield from included_document_.iterate_included_documents_depth_first()

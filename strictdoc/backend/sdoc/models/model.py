@@ -60,9 +60,14 @@ class SDocNodeIF(ABC):
     ng_whitelisted: bool
     ng_has_requirements: bool
 
-    # FIXME: Get rid of @property everywhere.
     @property
+    @abstractmethod
     def reserved_uid(self) -> Optional[str]:
+        raise NotImplementedError
+
+    @reserved_uid.setter
+    @abstractmethod
+    def reserved_uid(self, uid: Optional[str]) -> None:
         raise NotImplementedError
 
     @property

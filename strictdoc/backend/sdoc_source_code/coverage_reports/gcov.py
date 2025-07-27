@@ -6,6 +6,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Type
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -36,7 +37,9 @@ class GCovStatsObject:
 class GCovJSONReader:
     @classmethod
     def read_from_file(
-        cls: "GCovJSONReader", doc_file: File, project_config: ProjectConfig
+        cls: Type["GCovJSONReader"],
+        doc_file: File,
+        project_config: ProjectConfig,
     ) -> SDocDocument:
         with open(doc_file.full_path, encoding="UTF-8") as file:
             content = file.read()
@@ -44,7 +47,7 @@ class GCovJSONReader:
 
     @classmethod
     def read_from_string(
-        cls: "GCovJSONReader",
+        cls: Type["GCovJSONReader"],
         content: str,
         doc_file: File,  # noqa: ARG003
         project_config: ProjectConfig,  # noqa: ARG003

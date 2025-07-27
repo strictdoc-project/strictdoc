@@ -4,7 +4,7 @@
 
 import os
 from enum import IntEnum
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Type, Union
 
 import bs4
 from bs4 import BeautifulSoup
@@ -47,7 +47,9 @@ class JUnitXMLFormat(IntEnum):
 class JUnitXMLReader:
     @classmethod
     def read_from_file(
-        cls: "JUnitXMLReader", doc_file: File, project_config: ProjectConfig
+        cls: Type["JUnitXMLReader"],
+        doc_file: File,
+        project_config: ProjectConfig,
     ) -> SDocDocument:
         with open(doc_file.full_path, encoding="UTF-8") as file:
             content = file.read()
@@ -55,7 +57,7 @@ class JUnitXMLReader:
 
     @classmethod
     def read_from_string(
-        cls: "JUnitXMLReader",
+        cls: Type["JUnitXMLReader"],
         content: str,
         doc_file: File,
         project_config: ProjectConfig,

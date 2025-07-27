@@ -13,7 +13,8 @@ def traverse_tree(tree: Tree) -> Generator[Node, None, None]:
     visited_children = False
     while True:
         if not visited_children:
-            yield cursor.node
+            if cursor.node is not None:
+                yield cursor.node
             if not cursor.goto_first_child():
                 visited_children = True
         elif cursor.goto_next_sibling():

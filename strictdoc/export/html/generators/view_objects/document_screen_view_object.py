@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Iterator, List, Optional, Sequence, Tuple, Union
@@ -305,6 +304,7 @@ class DocumentScreenViewObject:
         )
 
     def get_grammar_elements(self) -> List[GrammarElement]:
+        assert self.document.grammar is not None
         return self.document.grammar.elements
 
     def table_of_contents(

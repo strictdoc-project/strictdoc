@@ -39,7 +39,7 @@ from strictdoc.backend.sdoc_source_code.processors.general_language_marker_proce
 from strictdoc.helpers.file_stats import SourceFileStats
 
 
-class SdocRelationVisitor(ModelVisitor):
+class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
     """
     Create functions from test cases in *.robot files and create markers.
 

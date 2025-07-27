@@ -263,6 +263,14 @@ class SDocNode(SDocNodeIF):
             RequirementFieldName.UID, singleline_only=True
         )
 
+    @reserved_uid.setter
+    def reserved_uid(self, uid: Optional[str]) -> None:
+        self.set_field_value(
+            field_name="UID",
+            form_field_index=0,
+            value=uid,
+        )
+
     @property
     def reserved_status(self) -> Optional[str]:
         return self._get_cached_field(

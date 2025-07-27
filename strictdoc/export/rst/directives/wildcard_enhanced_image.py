@@ -5,7 +5,7 @@ from docutils import nodes
 from docutils.parsers.rst.directives.images import Image
 
 
-class WildcardEnhancedImage(Image):
+class WildcardEnhancedImage(Image):  # type: ignore[misc]
     WILDCARD_EXTENSIONS = ["svg", "png", "gif", "jpg", "jpeg"]
 
     current_reference_path = os.getcwd()

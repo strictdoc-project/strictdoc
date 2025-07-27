@@ -24,7 +24,7 @@ class SourceFileType(Enum):
     RST = [".rst"]
     SDOC = [".sdoc"]
 
-    UNKNOWN: List[str] = []
+    UNKNOWN: List[str] = []  # type: ignore[misc]
 
     @classmethod
     def create_from_path(cls, path_to_file: str) -> "SourceFileType":

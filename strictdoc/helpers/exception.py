@@ -23,7 +23,7 @@ class ExceptionInfo:
         self.func = func
 
     def print_stack_trace(self) -> None:
-        traceback.print_exception(
+        traceback.print_exception(  # type: ignore[misc]
             *self.exc_info, limit=None, file=sys.stdout, chain=True
         )
 

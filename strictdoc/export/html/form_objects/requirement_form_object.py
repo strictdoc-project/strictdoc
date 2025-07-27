@@ -561,7 +561,7 @@ class RequirementFormObject(ErrorObject):
 
     def enumerate_reference_fields(
         self,
-    ) -> Iterator[List[RequirementReferenceFormField]]:
+    ) -> Iterator[RequirementReferenceFormField]:
         yield from self.reference_fields
 
     def enumerate_relation_roles(

@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-55, scope=file)
 """
 
-# mypy: disable-error-code="union-attr"
 import datetime
 from copy import copy
 from dataclasses import dataclass
@@ -231,6 +230,10 @@ class CreateOrUpdateNodeCommand:
                         reference_node
                     )
                 else:
+                    assert (
+                        reference_node.ng_including_document_from_file
+                        is not None
+                    )
                     parent = (
                         reference_node.ng_including_document_from_file.parent
                     )
@@ -244,10 +247,10 @@ class CreateOrUpdateNodeCommand:
             elif self.node_info.whereto == NodeCreationOrder.AFTER:
                 if isinstance(reference_node, SDocDocument):
                     assert reference_node.document_is_included()
+                    assert reference_node.ng_including_document_from_file
                     parent = (
                         reference_node.ng_including_document_from_file.parent
                     )
-                    assert reference_node.ng_including_document_from_file
                     insert_to_idx = (
                         parent.section_contents.index(
                             reference_node.ng_including_document_from_file
@@ -264,6 +267,7 @@ class CreateOrUpdateNodeCommand:
 
             # Reset the 'needs generation' flag on all documents.
             for document_ in traceability_index.document_tree.document_list:
+                assert document_.meta is not None
                 set_file_modification_time(
                     document_.meta.input_doc_full_path,
                     datetime.datetime.today(),
@@ -278,6 +282,7 @@ class CreateOrUpdateNodeCommand:
             if document.config.enable_mid:
                 requirement.mid_permanent = True
 
+            assert document.grammar is not None
             grammar_element: GrammarElement = document.grammar.elements_by_type[
                 form_object.element_type
             ]
@@ -316,6 +321,7 @@ class CreateOrUpdateNodeCommand:
             requirement.relations = []
 
         for document_ in traceability_index.document_tree.document_list:
+            assert document_.meta is not None
             set_file_modification_time(
                 document_.meta.input_doc_full_path, datetime.datetime.today()
             )
@@ -488,7 +494,7 @@ class CreateOrUpdateNodeCommand:
                 free_text_content: Optional[FreeTextContainer] = (
                     map_form_to_requirement_fields[form_field]
                 )
-                requirement_field = (
+                requirement_field: Optional[SDocNodeField] = (
                     SDocNodeField(
                         node,
                         field_name=form_field_name,
@@ -506,7 +512,10 @@ class CreateOrUpdateNodeCommand:
                     form_field_index=form_field_index,
                     value=requirement_field,
                 )
-                if free_text_content is not None:
+                if (
+                    requirement_field is not None
+                    and free_text_content is not None
+                ):
                     for part_ in requirement_field.parts:
                         if isinstance(part_, str):
                             continue

@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 from collections import OrderedDict
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -14,7 +13,7 @@ from strictdoc.core.traceability_index import (
 from strictdoc.export.html.form_objects.grammar_element_form_object import (
     GrammarElementFormObject,
 )
-from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.cast import assert_optional_cast
 
 
 class UpdateGrammarElementCommand:
@@ -32,6 +31,8 @@ class UpdateGrammarElementCommand:
     def perform(self) -> None:
         form_object: GrammarElementFormObject = self.form_object
         document: SDocDocument = self.document
+        assert document.grammar is not None
+
         existing_element: GrammarElement = document.grammar.get_element_by_mid(
             form_object.element_mid
         )
@@ -71,10 +72,12 @@ class UpdateGrammarElementCommand:
         document_iterator = self.traceability_index.document_iterators[document]
 
         for node, _ in document_iterator.all_content():
-            if not node.is_requirement():
+            requirement: Optional[SDocNode] = assert_optional_cast(
+                node, SDocNode
+            )
+            if requirement is None:
                 continue
 
-            requirement: SDocNode = assert_cast(node, SDocNode)
             if requirement.node_type != updated_element.tag:
                 continue
 

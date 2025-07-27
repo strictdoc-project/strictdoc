@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 import re
 from typing import Iterator, Optional, Set
 
@@ -113,6 +112,8 @@ class SDocValidator:
 
     @staticmethod
     def _validate_document_view(document: SDocDocument) -> None:
+        assert document.grammar is not None
+
         document_view: Optional[DocumentView] = document.view
         if document_view is not None:
             for view in document_view.views:
@@ -208,6 +209,7 @@ class SDocValidator:
             except StopIteration:
                 break
             if valid_or_not_required_field:
+                assert requirement_field is not None
                 # COMMENT can appear multiple times.
                 if requirement_field.field_name == RequirementFieldName.COMMENT:
                     requirement_field = next(requirement_field_iterator, None)
@@ -223,6 +225,7 @@ class SDocValidator:
                 grammar_field = next(grammar_fields_iterator, None)
                 requirement_field = next(requirement_field_iterator, None)
             else:
+                assert grammar_field is not None
                 assert not grammar_field.required or (
                     grammar_field.title == "UID" and auto_uid_mode
                 )

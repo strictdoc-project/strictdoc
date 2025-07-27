@@ -41,7 +41,6 @@ class SDocSection(SDocSectionIF):
         meaningful_uid: Optional[str] = None
         if uid is not None and len(uid) > 0:
             meaningful_uid = uid
-        self.uid: Optional[str] = meaningful_uid
         self.reserved_uid: Optional[str] = meaningful_uid
 
         self.title: str = title

@@ -93,6 +93,9 @@ class ForwardRangeMarker:
 
         # Line number of the marker in the source code.
         self.ng_source_line_begin: Optional[int] = None
+        # The column number is never used but keeping for compatibility with
+        # the other markers when used for error reporting.
+        self.ng_source_column_begin: Optional[int] = None
 
         self.ng_range_line_begin: Optional[int] = None
         self.ng_range_line_end: Optional[int] = None

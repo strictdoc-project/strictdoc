@@ -266,7 +266,7 @@ class JSONGenerator:
             node_dict["MID"] = section.reserved_mid
 
         if section.reserved_uid is not None:
-            node_dict["UID"] = section.uid
+            node_dict["UID"] = section.reserved_uid
 
         if (
             isinstance(section, SDocSection)

@@ -402,9 +402,9 @@ class SDWriter:
             output += section.reserved_mid
             output += "\n"
 
-        if section.uid:
+        if section.reserved_uid:
             output += "UID: "
-            output += section.uid
+            output += section.reserved_uid
             output += "\n"
 
         if section.custom_level:

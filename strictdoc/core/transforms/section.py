@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 from collections import defaultdict
 from typing import Dict, List, Optional, Union
 
@@ -110,10 +109,8 @@ class UpdateSectionCommand:
         # Updating section UID.
         if len(form_object.section_uid) > 0:
             section_uid = assert_cast(form_object.section_uid, str)
-            section.uid = section_uid
             section.reserved_uid = section_uid
         else:
-            section.uid = None
             section.reserved_uid = None
 
         traceability_index.create_section(section)

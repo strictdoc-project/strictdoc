@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 import sys
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
@@ -50,7 +49,6 @@ class ManageAutoUIDCommand:
                     auto_uid = document_tree_stats.get_auto_section_uid(
                         document_acronym, section
                     )
-                    section.uid = auto_uid
                     section.reserved_uid = auto_uid
 
         for (
@@ -72,6 +70,8 @@ class ManageAutoUIDCommand:
                 next_number += 1
 
         for document in traceability_index.document_tree.document_list:
+            assert document.meta is not None
+
             # Most recently, we parse JUnit XML or Gcov JSON files.
             # These must not be written back.
             if not document.meta.document_filename.endswith(".sdoc"):

@@ -97,9 +97,14 @@ class SDocNodeIF(ABC):
     def get_prefix(self) -> Optional[str]:
         raise NotImplementedError
 
+    @abstractmethod
+    def blacklist_if_needed(self) -> None:
+        raise NotImplementedError
+
 
 class SDocSectionIF(ABC):
     reserved_mid: MID
+    reserved_uid: Optional[str]
     mid_permanent: bool
     parent: Union["SDocDocumentIF", "SDocSectionIF"]
     section_contents: List["SDocElementIF"]
@@ -124,6 +129,10 @@ class SDocSectionIF(ABC):
     def get_display_title(self, include_toc_number: bool = True) -> str:
         raise NotImplementedError
 
+    @abstractmethod
+    def blacklist_if_needed(self) -> None:
+        raise NotImplementedError
+
 
 class SDocGrammarIF:
     pass
@@ -141,6 +150,11 @@ class SDocDocumentIF(ABC):
     ng_level: Optional[int]
     ng_whitelisted: bool
     ng_has_requirements: bool
+
+    # FIXME: Get rid of @property everywhere.
+    @property
+    def reserved_uid(self) -> Optional[str]:
+        raise NotImplementedError
 
     @abstractmethod
     def get_prefix(self) -> str:
@@ -162,6 +176,10 @@ class SDocDocumentIF(ABC):
 
     @property
     def ng_resolved_custom_level(self) -> Optional[str]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def blacklist_if_needed(self) -> None:
         raise NotImplementedError
 
 

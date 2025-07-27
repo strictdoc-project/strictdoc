@@ -81,6 +81,8 @@ class SDocDocument(SDocDocumentIF):
             SDocDocumentFromFileIF
         ] = None
 
+        self.ng_whitelisted: bool = True
+
     def iterate_nodes(
         self, element_type: Optional[str] = None
     ) -> Generator[SDocNodeIF, None, None]:
@@ -265,3 +267,11 @@ class SDocDocument(SDocDocumentIF):
             return self.collect_options_for_tag(element_type, field_name)
 
         raise AssertionError(f"Must not reach here: {field}")
+
+    def blacklist_if_needed(self) -> None:
+        if self.section_contents is not None:
+            for node_ in self.section_contents:
+                if node_.ng_whitelisted:
+                    return
+
+        self.ng_whitelisted = False

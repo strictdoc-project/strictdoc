@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 from typing import List, Optional, Set, Tuple
 
 from jinja2 import Template
@@ -146,6 +145,8 @@ class GrammarElementFormObject(ErrorObject):
         project_config: ProjectConfig,
         jinja_environment: JinjaEnvironment,
     ) -> "GrammarElementFormObject":
+        assert document.grammar is not None
+
         form_object_fields: List[GrammarFormField] = []
         form_object_relations: List[GrammarFormRelation] = []
         request_form_data_as_list = [
@@ -165,7 +166,9 @@ class GrammarElementFormObject(ErrorObject):
         #
         # Grammar fields.
         #
-        document_grammar_fields = request_form_dict["document_grammar_field"]
+        document_grammar_fields = assert_cast(
+            request_form_dict["document_grammar_field"], dict
+        )
         for field_mid, field_dict in document_grammar_fields.items():
             assert isinstance(field_dict, dict), type(field_dict)
 
@@ -190,8 +193,8 @@ class GrammarElementFormObject(ErrorObject):
         #
         # Grammar relations.
         #
-        document_grammar_relations = request_form_dict.get(
-            "document_grammar_relation", {}
+        document_grammar_relations = assert_cast(
+            request_form_dict.get("document_grammar_relation", {}), dict
         )
         for field_mid, field_dict in document_grammar_relations.items():
             assert isinstance(field_dict, dict), type(field_dict)

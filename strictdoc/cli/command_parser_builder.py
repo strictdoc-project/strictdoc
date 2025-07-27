@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import List, NoReturn
+from typing import List, NoReturn, Optional
 
 from strictdoc import __version__
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
@@ -50,10 +50,8 @@ def _check_reqif_profile(profile: str) -> str:
     return profile
 
 
-def _check_reqif_import_markup(markup: str) -> str:
-    if markup is None:
-        return None
-    if markup not in SDocMarkup.ALL:
+def _check_reqif_import_markup(markup: Optional[str]) -> str:
+    if markup is None or markup not in SDocMarkup.ALL:
         valid_text_markups_string = ", ".join(SDocMarkup.ALL)
         message = f"invalid choice: '{markup}' (choose from {valid_text_markups_string})"
         raise argparse.ArgumentTypeError(message)

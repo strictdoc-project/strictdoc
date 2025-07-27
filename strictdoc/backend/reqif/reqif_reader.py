@@ -11,14 +11,11 @@ from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
     P01_ReqIFToSDocConverter,
 )
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.core.project_config import ProjectConfig
 
 
 class ReqIFReader:
     @staticmethod
-    def read_from_file(
-        input_path: str, project_config: ProjectConfig
-    ) -> List[SDocDocument]:
+    def read_from_file(input_path: str) -> List[SDocDocument]:
         converter = P01_ReqIFToSDocConverter()
 
         documents: List[SDocDocument]
@@ -27,7 +24,7 @@ class ReqIFReader:
             assert len(reqifz_bundle.reqif_bundles) > 0
             documents = converter.convert_reqif_bundle(
                 next(iter(reqifz_bundle.reqif_bundles.values())),
-                enable_mid=True or project_config.reqif_enable_mid,
+                enable_mid=True,
                 import_markup="HTML",
             )
         else:

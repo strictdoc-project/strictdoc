@@ -542,8 +542,6 @@ class TraceabilityIndexBuilder:
                     continue
 
                 requirement = assert_cast(node, SDocNode)
-                if requirement is None:
-                    continue
 
                 #
                 # At this point, we resolve LINKs, and the expectation is that
@@ -689,8 +687,6 @@ class TraceabilityIndexBuilder:
                     continue
 
                 requirement = assert_cast(node, SDocNode)
-                if requirement is None:
-                    continue
 
                 if requirement.reserved_uid is None:
                     continue

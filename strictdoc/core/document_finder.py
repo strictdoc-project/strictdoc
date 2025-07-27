@@ -88,9 +88,7 @@ class DocumentFinder:
                 assert isinstance(document_or_grammar, DocumentGrammar)
             elif doc_full_path.endswith(".reqif"):
                 reqif_reader = ReqIFReader()
-                reqif_documents = reqif_reader.read_from_file(
-                    doc_full_path, project_config
-                )
+                reqif_documents = reqif_reader.read_from_file(doc_full_path)
                 assert len(reqif_documents) >= 0
                 document_or_grammar = reqif_documents[0]
                 assert isinstance(document_or_grammar, SDocDocument)

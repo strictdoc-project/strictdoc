@@ -155,7 +155,7 @@ class CreateSectionCommand:
             )
         )
 
-        document: SDocDocument
+        document: SDocDocumentIF  # type: ignore[unreachable]
         if isinstance(reference_node, SDocDocument):
             if not reference_node.document_is_included():
                 document = reference_node
@@ -172,7 +172,6 @@ class CreateSectionCommand:
         elif document_ := reference_node.get_document():
             assert isinstance(document_, SDocDocument)
             document = document_
-
         else:
             raise AssertionError(
                 f"Unexpected error: Expected a document node to be available for reference node: {reference_node}."

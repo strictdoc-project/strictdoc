@@ -1,3 +1,5 @@
+# mypy: disable-error-code="unreachable"
+
 import hashlib
 import statistics
 from dataclasses import dataclass, field

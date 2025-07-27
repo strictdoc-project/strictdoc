@@ -2,6 +2,8 @@
 @relation(SDOC-SRS-150, scope=file)
 """
 
+# mypy: disable-error-code="unreachable"
+
 from typing import Optional
 
 from strictdoc.backend.sdoc.models.model import (

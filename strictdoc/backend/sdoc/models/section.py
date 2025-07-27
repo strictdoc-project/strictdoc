@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-99, scope=file)
 """
 
-# mypy: disable-error-code="union-attr"
 from typing import List, Optional, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
@@ -99,19 +98,23 @@ class SDocSection(SDocSectionIF):
         return self.title
 
     def get_document(self) -> Optional[SDocDocumentIF]:
+        assert self.ng_document_reference is not None
         return self.ng_document_reference.get_document()
 
     def get_including_document(self) -> Optional[SDocDocumentIF]:
+        assert self.ng_including_document_reference is not None
         return self.ng_including_document_reference.get_document()
 
     @property
     def parent_or_including_document(self) -> SDocDocumentIF:
+        assert self.ng_including_document_reference is not None
         including_document_or_none = (
             self.ng_including_document_reference.get_document()
         )
         if including_document_or_none is not None:
             return including_document_or_none
 
+        assert self.ng_document_reference is not None
         document: Optional[SDocDocumentIF] = (
             self.ng_document_reference.get_document()
         )
@@ -121,6 +124,7 @@ class SDocSection(SDocSectionIF):
         return document
 
     def document_is_included(self) -> bool:
+        assert self.ng_including_document_reference is not None
         return self.ng_including_document_reference.get_document() is not None
 
     def is_requirement(self) -> bool:
@@ -130,8 +134,9 @@ class SDocSection(SDocSectionIF):
         return True
 
     def has_any_text_nodes(self) -> bool:
+        # FIXME: Remove using __class__.
         return any(
-            node_.__class__.__name__ == "SDocNode" and node_.node_type == "TEXT"
+            node_.__class__.__name__ == "SDocNode" and node_.node_type == "TEXT"  # type: ignore[union-attr]
             for node_ in self.section_contents
         )
 

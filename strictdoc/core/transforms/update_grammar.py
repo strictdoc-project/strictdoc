@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -35,6 +34,7 @@ class UpdateGrammarCommand:
         )
 
         map_existing_elements_by_name: Dict[str, GrammarElement] = {}
+        assert document.grammar is not None
         for grammar_element_ in document.grammar.elements:
             map_existing_elements_by_name[grammar_element_.tag] = (
                 grammar_element_

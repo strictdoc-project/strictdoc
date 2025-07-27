@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-28, scope=file)
 """
 
-# mypy: disable-error-code="union-attr"
 import datetime
 from copy import deepcopy
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
@@ -528,10 +527,12 @@ class TraceabilityIndex:
         )
 
         # Mark document and parent document (if different) for re-generation.
+        assert document.meta is not None
         set_file_modification_time(
             document.meta.input_doc_full_path, datetime.datetime.today()
         )
         if parent_requirement_document != document:
+            assert parent_requirement_document.meta is not None
             set_file_modification_time(
                 parent_requirement_document.meta.input_doc_full_path,
                 datetime.datetime.today(),
@@ -599,10 +600,12 @@ class TraceabilityIndex:
         )
 
         # Mark document and parent document (if different) for re-generation.
+        assert document.meta is not None
         set_file_modification_time(
             document.meta.input_doc_full_path, datetime.datetime.today()
         )
         if child_requirement_document != document:
+            assert child_requirement_document.meta is not None
             set_file_modification_time(
                 child_requirement_document.meta.input_doc_full_path,
                 datetime.datetime.today(),
@@ -773,10 +776,12 @@ class TraceabilityIndex:
             )
 
         # Mark document and parent document (if different) for re-generation.
+        assert document.meta is not None
         set_file_modification_time(
             document.meta.input_doc_full_path, datetime.datetime.today()
         )
         if parent_requirement_document != document:
+            assert parent_requirement_document.meta is not None
             set_file_modification_time(
                 parent_requirement_document.meta.input_doc_full_path,
                 datetime.datetime.today(),
@@ -821,10 +826,12 @@ class TraceabilityIndex:
             )
 
         # Mark document and parent document (if different) for re-generation.
+        assert document.meta is not None
         set_file_modification_time(
             document.meta.input_doc_full_path, datetime.datetime.today()
         )
         if child_requirement_document != document:
+            assert child_requirement_document.meta is not None
             set_file_modification_time(
                 child_requirement_document.meta.input_doc_full_path,
                 datetime.datetime.today(),
@@ -1108,6 +1115,7 @@ class TraceabilityIndex:
             if document_.document_is_included():
                 continue
 
+            assert document_.ng_including_document_reference is not None
             document_.ng_including_document_reference.set_document(
                 bundle_document
             )

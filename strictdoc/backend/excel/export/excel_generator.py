@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-134, scope=file)
 """
 
-# mypy: disable-error-code="union-attr"
 import os
 from pathlib import Path
 from typing import Dict, List
@@ -23,6 +22,7 @@ from strictdoc.backend.sdoc.models.reference import (
 )
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.helpers.cast import assert_cast
 
 EXCEL_SHEET_NAME = "Requirements"
 MAX_WIDTH = 75
@@ -53,6 +53,8 @@ class ExcelGenerator:
 
         document: SDocDocument
         for document in traceability_index.document_tree.document_list:
+            assert document.meta is not None
+
             document_out_file_name = (
                 f"{document.meta.document_filename_base}.xlsx"
             )
@@ -104,7 +106,10 @@ class ExcelGenerator:
                 for node, _ in traceability_index.get_document_iterator(
                     document
                 ).all_content(print_fragments=False):
-                    if not node.is_requirement() or not node.reserved_uid:
+                    if (
+                        not isinstance(node, SDocNode)
+                        or node.reserved_uid is None
+                    ):
                         # Only export the requirements with UID.
                         continue
 
@@ -122,7 +127,9 @@ class ExcelGenerator:
                             )
                             if len(parent_refs) > 0:
                                 # FIXME: Allow multiple parent refs.
-                                ref = parent_refs[0]
+                                ref = assert_cast(
+                                    parent_refs[0], ParentReqReference
+                                )
                                 columns[field][MAX_WIDTH_KEY] = max(
                                     len(ref.ref_uid),
                                     columns[field][MAX_WIDTH_KEY],
@@ -166,16 +173,20 @@ class ExcelGenerator:
                                 relations_components = []
                                 # Using a transition marker to separate
                                 # multiple references.
-                                for ref in node.relations:
-                                    if isinstance(ref, ParentReqReference):
+                                for relation_ in node.relations:
+                                    if isinstance(
+                                        relation_, ParentReqReference
+                                    ):
                                         relations_components.append(
-                                            ref.ref_type + ": " + ref.ref_uid
-                                        )
-                                    elif isinstance(ref, FileReference):
-                                        relations_components.append(
-                                            ref.ref_type
+                                            relation_.ref_type
                                             + ": "
-                                            + ref.get_posix_path()
+                                            + relation_.ref_uid
+                                        )
+                                    elif isinstance(relation_, FileReference):
+                                        relations_components.append(
+                                            relation_.ref_type
+                                            + ": "
+                                            + relation_.get_posix_path()
                                         )
                                 relations_row_value: str = (
                                     "\n----------\n".join(relations_components)

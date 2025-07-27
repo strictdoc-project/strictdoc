@@ -1,6 +1,5 @@
-# mypy: disable-error-code="union-attr"
 import os.path
-from typing import Callable, Dict, List, Optional, cast
+from typing import Callable, Dict, List, Optional, Union, cast
 
 from textx import TextXSyntaxError, get_model
 
@@ -11,7 +10,12 @@ from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
-from strictdoc.backend.sdoc.models.model import SDocDocumentFromFileIF
+from strictdoc.backend.sdoc.models.model import (
+    SDocDocumentFromFileIF,
+    SDocDocumentIF,
+    SDocNodeIF,
+    SDocSectionIF,
+)
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
     SDocNodeField,
@@ -115,6 +119,10 @@ class SDocParsingProcessor:
             self.parse_context.context_document_reference
         )
         preserve_source_location_data(section)
+
+        # FIXME: Refactor to eliminate the need in such assert.
+        assert self.parse_context.document_config is not None
+
         if self.parse_context.document_config.auto_levels:
             if (
                 section.ng_resolved_custom_level
@@ -179,14 +187,17 @@ class SDocParsingProcessor:
             self.parse_context.context_document_reference
         )
 
-        cursor = requirement.parent
+        cursor: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF] = (
+            requirement.parent
+        )
         while (
-            not isinstance(cursor, SDocDocument)
+            isinstance(cursor, (SDocSectionIF, SDocNodeIF))
             and not cursor.ng_has_requirements
         ):
             cursor.ng_has_requirements = True
             cursor = cursor.parent
 
+        assert self.parse_context.document_config is not None
         if (
             requirement.reserved_title is None
             or not self.parse_context.document_config.is_requirement_in_toc()

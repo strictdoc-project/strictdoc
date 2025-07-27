@@ -1,6 +1,5 @@
-# mypy: disable-error-code="union-attr"
 import re
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Match, Optional, Tuple, Union
 
 from typing_extensions import TypeAlias
 
@@ -98,7 +97,10 @@ def parse_form_data(
     result_dict: ParsedFormData = {}
 
     for key, value in form_data:
-        first_match = re.match(rf"({FIELD_NAME})", key)
+        first_match: Optional[Match[str]] = re.match(rf"({FIELD_NAME})", key)
+
+        assert first_match is not None, "first_match must not be None."
+
         match_groups = first_match.groups()
         assert len(match_groups) == 1
 

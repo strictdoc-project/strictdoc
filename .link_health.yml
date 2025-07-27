@@ -15,6 +15,7 @@ exceptions:
   - url: https://github.com/mull-project/FileCheck.py/blob/main/pyproject.toml
   - url: https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc
   - url: https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py
+  - url: https://github.com/strictdoc-project/strictdoc/blob/6f57747e6a1b5b3cb29c0047f9df5959da64ebb1/docs/sdoc_project_statistics.py
   - url: https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/backend/sdoc/grammar/grammar.py
   - url: https://github.com/textX/textX/blob/master/LICENSE.txt
   - url: https://github.com/sphinx-doc/sphinx/blob/master/LICENSE.rst

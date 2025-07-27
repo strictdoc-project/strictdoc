@@ -52,9 +52,10 @@ class SDocNodeFieldIF(ABC):
 class SDocNodeIF(ABC):
     reserved_mid: MID
     node_type: str
+    section_contents: List["SDocElementIF"]
     ng_level: Optional[int]
     ng_resolved_custom_level: Optional[str]
-    section_contents: List["SDocElementIF"]
+    ng_whitelisted: bool
 
     # FIXME: Get rid of @property everywhere.
     @property
@@ -96,9 +97,10 @@ class SDocNodeIF(ABC):
 
 class SDocSectionIF(ABC):
     parent: Union["SDocDocumentIF", "SDocSectionIF"]
+    section_contents: List["SDocElementIF"]
     ng_level: Optional[int]
     ng_resolved_custom_level: Optional[str]
-    section_contents: List["SDocElementIF"]
+    ng_whitelisted: bool
 
     @abstractmethod
     def get_document(self) -> Optional["SDocDocumentIF"]:
@@ -122,13 +124,14 @@ class SDocGrammarIF:
 
 
 class SDocDocumentIF(ABC):
+    section_contents: List["SDocElementIF"]
+    included_documents: List["SDocDocumentIF"]
     config: DocumentConfig
     grammar: Optional[SDocGrammarIF]
     meta: Optional[DocumentMeta]
-    section_contents: List["SDocElementIF"]
-    included_documents: List["SDocDocumentIF"]
     is_bundle_document: bool
     ng_level: Optional[int]
+    ng_whitelisted: bool
 
     @abstractmethod
     def get_prefix(self) -> str:
@@ -156,6 +159,7 @@ class SDocDocumentIF(ABC):
 class SDocDocumentFromFileIF(ABC):
     parent: Union[SDocDocumentIF, SDocSectionIF]
     ng_resolved_custom_level: Optional[str]
+    ng_whitelisted: bool
 
     @abstractmethod
     def iterate_nodes(

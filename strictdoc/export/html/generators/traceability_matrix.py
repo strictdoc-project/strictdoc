@@ -36,8 +36,6 @@ class TraceabilityMatrixHTMLGenerator:
 
         discovered_relation_types = set()
 
-        assert traceability_index.document_tree is not None
-
         document_: SDocDocument
         for document_ in traceability_index.document_tree.document_list:
             assert document_.grammar is not None

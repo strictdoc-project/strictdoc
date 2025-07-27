@@ -116,7 +116,6 @@ class TraceabilityIndexBuilder:
                 project_config,
             )
         )
-        traceability_index.document_tree = document_tree
         traceability_index.asset_manager = asset_manager
         traceability_index.strictdoc_last_update = strictdoc_last_update
 
@@ -271,6 +270,7 @@ class TraceabilityIndexBuilder:
         )
 
         traceability_index = TraceabilityIndex(
+            document_tree,
             d_01_document_iterators,
             file_traceability_index=d_07_file_traceability_index,
             graph_database=graph_database,

@@ -2679,8 +2679,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.get("/reqif/export_tree", response_class=Response)
     def get_reqif_export_tree() -> Response:
-        assert export_action.traceability_index.document_tree is not None
-
         reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
             document_tree=export_action.traceability_index.document_tree,
             multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,
@@ -2734,9 +2732,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                         if node_query.evaluate(node):
                             result.append(node)
 
-                assert (
-                    export_action.traceability_index.document_tree is not None
-                )
                 if (
                     export_action.traceability_index.document_tree.source_tree
                     is not None

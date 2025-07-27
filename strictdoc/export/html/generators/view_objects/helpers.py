@@ -16,7 +16,6 @@ def screen_should_display_folder(
         see screen_should_display_file() for a description of the purpose.
     """
     assert isinstance(folder, Folder), folder
-    assert traceability_index.document_tree is not None
 
     if not folder.has_sdoc_content:
         return False
@@ -59,7 +58,6 @@ def screen_should_display_file(
         prints its included documents recursively.
     """
     assert isinstance(file, File), file
-    assert traceability_index.document_tree is not None
 
     if (
         file.has_extension(".junit.xml")

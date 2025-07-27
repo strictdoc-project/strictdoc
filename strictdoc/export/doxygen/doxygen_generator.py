@@ -36,7 +36,6 @@ class DoxygenGenerator:
 
         template_all_nodes = ""
 
-        assert traceability_index.document_tree is not None
         assert traceability_index.document_tree.document_list is not None
 
         document_: SDocDocument

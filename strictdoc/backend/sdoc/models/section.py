@@ -105,8 +105,7 @@ class SDocSection(SDocSectionIF):
         assert self.ng_including_document_reference is not None
         return self.ng_including_document_reference.get_document()
 
-    @property
-    def parent_or_including_document(self) -> SDocDocumentIF:
+    def get_parent_or_including_document(self) -> SDocDocumentIF:
         assert self.ng_including_document_reference is not None
         including_document_or_none = (
             self.ng_including_document_reference.get_document()

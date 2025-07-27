@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-51, scope=file)
 """
 
-# mypy: disable-error-code="union-attr"
 import os
 from pathlib import Path
 from typing import List, Tuple
@@ -49,6 +48,8 @@ class HTML2PDFGenerator:
         paths_to_print: List[Tuple[str, str]] = []
 
         for document_ in traceability_index.document_tree.document_list:
+            assert document_.meta is not None
+
             # Skip generating the included documents, unless the option is provided.
             if not project_config.export_included_documents:
                 if document_.document_is_included():

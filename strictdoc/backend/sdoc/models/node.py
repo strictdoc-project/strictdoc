@@ -366,11 +366,6 @@ class SDocNode(SDocNodeIF):
             debug_components.append(f"document = {document.get_debug_info()}")
         return f"Requirement({', '.join(debug_components)})"
 
-    # FIXME: Remove this method. Use get_parent_or_including_document() instead.
-    @property
-    def parent_or_including_document(self) -> SDocDocumentIF:
-        return self.get_parent_or_including_document()
-
     def document_is_included(self) -> bool:
         assert self.ng_including_document_reference is not None
         return self.ng_including_document_reference.get_document() is not None

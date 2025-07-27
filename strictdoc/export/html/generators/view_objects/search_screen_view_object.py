@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 from dataclasses import dataclass
 from typing import Iterator, List, Optional, Union
 

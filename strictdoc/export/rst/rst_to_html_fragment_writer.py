@@ -1,4 +1,3 @@
-# mypy: disable-error-code="union-attr"
 import hashlib
 import io
 import os
@@ -47,6 +46,7 @@ class RstToHtmlFragmentWriter:
         )
 
         if context_document is not None:
+            assert context_document.meta is not None
             WildcardEnhancedImage.current_reference_path = (
                 context_document.meta.output_document_dir_full_path
             )

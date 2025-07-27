@@ -5,7 +5,6 @@ This code is excluded from code coverage calculation because the feature is
 highly experimental and most of this code will be removed.
 """
 
-# mypy: disable-error-code="union-attr"
 from typing import List, Union
 
 from spdx_tools.spdx3.model import RelationshipType, SpdxDocument

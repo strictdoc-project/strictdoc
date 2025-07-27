@@ -1,5 +1,4 @@
 # pragma: no cover file.
-# mypy: disable-error-code="union-attr"
 
 """
 Experimental code to generate SPDX.
@@ -141,6 +140,8 @@ class SDocToSPDXConverter:
     def create_document_to_file(
         document: SDocDocument, document_bytes: bytes
     ) -> File:
+        assert document.meta is not None
+
         return File(
             spdx_id=f"SPDXRef-File-{get_spdx_ref(document)}",
             name=document.meta.document_filename,
@@ -181,6 +182,8 @@ class SDocToSPDXConverter:
             document_bytes[requirement.ng_byte_start : requirement.ng_byte_end]
         )
         assert requirement.reserved_uid is not None
+        assert requirement.reserved_statement is not None
+
         return Snippet(
             spdx_id=requirement.reserved_uid,
             primary_purpose=SoftwarePurpose.DOCUMENTATION,
@@ -250,6 +253,7 @@ class SPDXGenerator:
         lookup_file_name_to_spdx_file: Dict[str, File] = {}
 
         for document_ in traceability_index.document_tree.document_list:
+            assert document_.meta is not None
             with open(document_.meta.input_doc_full_path, "rb") as input_file_:
                 document_bytes = input_file_.read()
 
@@ -282,7 +286,10 @@ class SPDXGenerator:
             )
 
             for node, _ in document_iterator.all_content():
-                if node.is_requirement():
+                if (
+                    isinstance(node, SDocNode)
+                    and node.node_type == "REQUIREMENT"
+                ):
                     if node.reserved_uid is None:
                         continue
 
@@ -293,7 +300,6 @@ class SPDXGenerator:
                     #
                     # Create SPDX Snippet from SDoc Requirement.
                     #
-                    assert isinstance(node, SDocNode)
                     spdx_snippet: Snippet = (
                         sdoc_spdx_converter.convert_requirement_to_snippet(
                             node, document_bytes, spdx_file
@@ -375,6 +381,9 @@ class SPDXGenerator:
                 document_
             )
             for node, _ in document_iterator.all_content():
+                if not isinstance(node, SDocNode):
+                    continue
+
                 if node.is_requirement():
                     if node.reserved_uid is None:
                         continue

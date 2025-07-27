@@ -2,7 +2,6 @@
 @relation(SDOC-SRS-28, SDOC-SRS-2, scope=file)
 """
 
-# mypy: disable-error-code="union-attr"
 import datetime
 import glob
 import os
@@ -184,6 +183,8 @@ class TraceabilityIndexBuilder:
                         node_document = assert_cast(
                             node_.get_document(), SDocDocument
                         )
+                        assert node_document.meta is not None
+
                         traceability_index.file_dependency_manager.add_dependency(
                             source_file.full_path,
                             source_file.output_file_full_path,
@@ -314,6 +315,9 @@ class TraceabilityIndexBuilder:
 
         document: SDocDocument
         for document in document_tree.document_list:
+            assert document.grammar is not None
+            assert document.meta is not None
+
             if document.config.view_style_tag == "REQUIREMENT_STYLE":
                 DEPRECATION_ENGINE.add_message(
                     "DEPRECATED_REQUIREMENT_STYLE",
@@ -497,7 +501,7 @@ class TraceabilityIndexBuilder:
                         rhs_node=node,
                     )
 
-                if node.is_requirement():
+                if isinstance(node, SDocNode):
                     requirement_node: SDocNode = assert_cast(node, SDocNode)
                     if requirement_node.reserved_tags is not None:
                         for tag in requirement_node.reserved_tags:
@@ -527,22 +531,26 @@ class TraceabilityIndexBuilder:
         requirement: SDocNode
 
         for document in document_tree.document_list:
+            assert document.meta is not None
+
             document_iterator = d_01_document_iterators[document]
 
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
             ):
-                if not node.is_requirement():
+                if not isinstance(node, SDocNode):
                     continue
 
                 requirement = assert_cast(node, SDocNode)
+                if requirement is None:
+                    continue
 
                 #
                 # At this point, we resolve LINKs, and the expectation is that
                 # all UIDs or ANCHORS (they also have UIDs) are registered at the
                 # previous pass.
                 #
-                for node_field_ in node.enumerate_fields():
+                for node_field_ in requirement.enumerate_fields():
                     for part in node_field_.parts:
                         if isinstance(part, InlineLink):
                             if not graph_database.has_link(
@@ -601,6 +609,8 @@ class TraceabilityIndexBuilder:
                             parent_requirement.get_document(), SDocDocument
                         )
                         if document != parent_document:
+                            assert parent_document.meta is not None
+
                             # This is where we help the incremental generation to
                             # understand that the related documents must be
                             # re-generated together.
@@ -647,6 +657,8 @@ class TraceabilityIndexBuilder:
                             child_requirement.get_document(), SDocDocument
                         )
                         if document != child_requirement_document:
+                            assert child_requirement_document.meta is not None
+
                             # This is where we help the incremental generation to
                             # understand that the related documents must be
                             # re-generated together.
@@ -673,10 +685,13 @@ class TraceabilityIndexBuilder:
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
             ):
-                # FIXME: is_requirement() typing issue.
-                if not node.is_requirement():
+                if not isinstance(node, SDocNode):
                     continue
+
                 requirement = assert_cast(node, SDocNode)
+                if requirement is None:
+                    continue
+
                 if requirement.reserved_uid is None:
                     continue
 
@@ -729,6 +744,8 @@ class TraceabilityIndexBuilder:
 
         map_documents_by_input_rel_path: Dict[str, SDocDocument] = {}
         for document_ in document_tree.document_list:
+            assert document_.meta is not None
+
             map_documents_by_input_rel_path[
                 document_.meta.input_doc_full_path
             ] = document_
@@ -830,10 +847,9 @@ class TraceabilityIndexBuilder:
                         traceability_index.get_document_iterator(document)
                     )
                     for node, _ in document_iterator.all_content():
-                        if (
-                            node.is_section
-                            and not sections_query_object.evaluate(node)
-                        ):
+                        if isinstance(
+                            node, SDocSection
+                        ) and not sections_query_object.evaluate(node):
                             node.ng_whitelisted = False
                             # If the node is the last one, we check if all other
                             # nodes are filtered out and if so, mark the parent
@@ -847,10 +863,9 @@ class TraceabilityIndexBuilder:
                                 if isinstance(node.parent, SDocSection):
                                     node.parent.blacklist_if_needed()
 
-                        elif (
-                            node.is_requirement()
-                            and not requirements_query_object.evaluate(node)
-                        ):
+                        elif isinstance(
+                            node, SDocNode
+                        ) and not requirements_query_object.evaluate(node):
                             node.ng_whitelisted = False
                             # If the node is the last one, we check if all other
                             # nodes are filtered out and if so, mark the parent
@@ -861,8 +876,7 @@ class TraceabilityIndexBuilder:
                                 ]
                                 == node
                             ):
-                                if node.parent.is_section():
-                                    node.parent.blacklist_if_needed()
+                                node.parent.blacklist_if_needed()
 
             except (AttributeError, NameError, TypeError) as attribute_error_:
                 print(  # noqa: T201

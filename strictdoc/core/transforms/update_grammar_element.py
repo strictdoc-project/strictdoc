@@ -13,7 +13,7 @@ from strictdoc.core.traceability_index import (
 from strictdoc.export.html.form_objects.grammar_element_form_object import (
     GrammarElementFormObject,
 )
-from strictdoc.helpers.cast import assert_optional_cast
+from strictdoc.helpers.cast import assert_cast
 
 
 class UpdateGrammarElementCommand:
@@ -72,12 +72,10 @@ class UpdateGrammarElementCommand:
         document_iterator = self.traceability_index.document_iterators[document]
 
         for node, _ in document_iterator.all_content():
-            requirement: Optional[SDocNode] = assert_optional_cast(
-                node, SDocNode
-            )
-            if requirement is None:
+            if not isinstance(node, SDocNode):
                 continue
 
+            requirement: SDocNode = assert_cast(node, SDocNode)
             if requirement.node_type != updated_element.tag:
                 continue
 

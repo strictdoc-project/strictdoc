@@ -588,6 +588,19 @@ class SDocNode(SDocNodeIF):
             )
         )
 
+    def blacklist_if_needed(self) -> None:
+        if self.section_contents is not None:
+            for node_ in self.section_contents:
+                if node_.ng_whitelisted:
+                    return
+
+        self.ng_whitelisted = False
+
+        # If it turns out that all child nodes are blacklisted,
+        # go up and blacklist the parent node if needed.
+        if self.parent.ng_whitelisted:
+            self.parent.blacklist_if_needed()
+
     def _get_cached_field(
         self, field_name: str, singleline_only: bool
     ) -> Optional[str]:

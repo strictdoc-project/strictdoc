@@ -127,7 +127,7 @@ class ServerCommandConfig:
 class ExportCommandConfig:
     def __init__(
         self,
-        input_paths: str,
+        input_paths: List[str],
         output_dir: Optional[str],
         config_path: Optional[str],
         project_title: Optional[str],

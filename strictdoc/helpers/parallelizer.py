@@ -18,6 +18,8 @@ def map_does_not_work(self, contents, processing_func):
         return executor.map(processing_func, contents)
 """
 
+# mypy: disable-error-code="unreachable"
+
 import atexit
 import multiprocessing
 import sys

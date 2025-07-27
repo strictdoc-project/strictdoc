@@ -250,11 +250,9 @@ class DocumentScreenViewObject:
         )
 
     @staticmethod
-    def render_standalone_document_link(
-        document: SDocDocument, context_document: SDocDocument
-    ) -> str:
-        # FIXME: Check if the context_document can be removed.
-        assert context_document is None
+    def render_standalone_document_link(document: SDocDocument) -> str:
+        assert document.meta is not None
+
         root_prefix = document.meta.get_root_path_prefix()
         document_link = document.meta.get_html_standalone_document_link()
         return (

@@ -585,6 +585,10 @@ def lint_ruff(context):
 def lint_mypy(context):
     # These checks do not seem to be useful:
     # - import
+    # --disallow-any-expr
+    # --disallow-any-explicit
+    # --disallow-any-unimported  # noqa: ERA001
+    # --disallow-any-decorated
     # - type-abstract. It is ignored on purpose because of assert_cast()
     #   implementation. See https://stackoverflow.com/a/74073453/598057.
     run_invoke_with_tox(
@@ -596,7 +600,26 @@ def lint_mypy(context):
                 --disable-error-code=import
                 --disable-error-code=type-abstract
                 --cache-dir=build/mypy
+                --extra-checks
+
                 --strict
+                --strict-optional
+                --strict-equality
+
+                --check-untyped-defs
+                --disallow-any-generics
+                --disallow-incomplete-defs
+                --disallow-subclassing-any
+                --disallow-untyped-calls
+                --disallow-untyped-decorators
+                --disallow-untyped-defs
+                --no-implicit-optional
+                --warn-no-return
+                --warn-redundant-casts
+                --warn-return-any
+                --warn-unreachable
+                --warn-unused-ignores
+
                 --python-version=3.8
         """,
     )

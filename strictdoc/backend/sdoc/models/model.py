@@ -51,6 +51,7 @@ class SDocNodeFieldIF(ABC):
 
 class SDocNodeIF(ABC):
     reserved_mid: MID
+    mid_permanent: bool
     node_type: str
     section_contents: List["SDocElementIF"]
     ng_level: Optional[int]
@@ -96,6 +97,8 @@ class SDocNodeIF(ABC):
 
 
 class SDocSectionIF(ABC):
+    reserved_mid: MID
+    mid_permanent: bool
     parent: Union["SDocDocumentIF", "SDocSectionIF"]
     section_contents: List["SDocElementIF"]
     ng_level: Optional[int]
@@ -124,6 +127,8 @@ class SDocGrammarIF:
 
 
 class SDocDocumentIF(ABC):
+    reserved_mid: MID
+    mid_permanent: bool
     section_contents: List["SDocElementIF"]
     included_documents: List["SDocDocumentIF"]
     config: DocumentConfig
@@ -178,6 +183,13 @@ SDocElementIF = Union[
     SDocSectionIF,
     SDocDocumentIF,
     SDocDocumentFromFileIF,
+]
+
+
+SDocIteratedElementIF = Union[
+    SDocNodeIF,
+    SDocSectionIF,
+    SDocDocumentIF,
 ]
 
 

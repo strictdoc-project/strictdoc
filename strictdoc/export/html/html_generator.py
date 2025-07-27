@@ -1,4 +1,3 @@
-# mypy: disable-error-code="arg-type,union-attr"
 import importlib
 import os
 import sys
@@ -50,6 +49,7 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
@@ -268,9 +268,12 @@ class HTMLGenerator:
 
         redundant_assets: Dict[str, List[SDocRelativePath]] = {}
         for document_ in traceability_index.document_tree.document_list:
+            assert document_.meta is not None
             for (
                 included_document_
             ) in document_.iterate_included_documents_depth_first():
+                assert included_document_.meta is not None
+
                 redundant_assets.setdefault(
                     document_.meta.input_doc_assets_dir_rel_path.relative_path_posix,
                     [],
@@ -278,6 +281,8 @@ class HTMLGenerator:
                 redundant_assets[
                     document_.meta.input_doc_assets_dir_rel_path.relative_path_posix
                 ].append(included_document_.meta.input_doc_assets_dir_rel_path)
+
+        assert traceability_index.asset_manager is not None
 
         asset_dir_: AssetDir
         for asset_dir_ in traceability_index.asset_manager.iterate():
@@ -322,14 +327,16 @@ class HTMLGenerator:
         if specific_documents is None:
             specific_documents = DocumentType.all()
 
-        input_doc_full_path = document.meta.input_doc_full_path
-        output_doc_full_path = document.meta.output_document_full_path
+        document_meta = assert_cast(document.meta, DocumentMeta)
+
+        input_doc_full_path = document_meta.input_doc_full_path
+        output_doc_full_path = document_meta.output_document_full_path
 
         if os.path.isfile(output_doc_full_path) and (
             get_file_modification_time(input_doc_full_path)
             < get_file_modification_time(output_doc_full_path)
             and not traceability_index.file_dependency_manager.must_generate(
-                document.meta.input_doc_full_path
+                document_meta.input_doc_full_path
             )
         ):
             with measure_performance(f"Skip: {document.title}"):

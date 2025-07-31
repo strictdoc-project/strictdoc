@@ -376,6 +376,39 @@ use it, refer to the instructions located in ``developer/snap/README.md``.
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: 4af1193170a7416d81a799344dfc8ed6
+TITLE: Installing StrictDoc with Nix
+
+[TEXT]
+MID: 2045b5e37fc34a83b7457c43d816bf2c
+STATEMENT: >>>
+Strictdoc is `packaged in nixpkgs <https://search.nixos.org/packages?query=strictdoc>`_ as ``strictdoc``.
+
+You can try it without installing with ``nix-shell``
+
+.. code-block:: bash
+
+    nix-shell -p strictdoc
+
+or ``nix run``
+
+.. code-block:: bash
+
+    nix run nixpkgs#strictdoc
+
+Or you can add it to your system's packages with
+
+
+.. code-block:: nix
+
+  environment.systemPackages = [
+    pkgs.strictdoc
+  ];
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

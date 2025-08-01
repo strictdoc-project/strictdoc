@@ -399,7 +399,6 @@ or ``nix run``:
 
 Or you can add it to your system's packages with
 
-
 .. code-block:: nix
 
   environment.systemPackages = [

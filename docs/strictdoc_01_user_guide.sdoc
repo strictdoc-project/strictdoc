@@ -383,7 +383,7 @@ TITLE: Installing StrictDoc with Nix
 [TEXT]
 MID: 2045b5e37fc34a83b7457c43d816bf2c
 STATEMENT: >>>
-Strictdoc is `packaged in nixpkgs <https://search.nixos.org/packages?query=strictdoc>`_ as ``strictdoc``.
+StrictDoc is `packaged in nixpkgs <https://search.nixos.org/packages?query=strictdoc>`_ as ``strictdoc``.
 
 You can try it without installing with ``nix-shell``
 

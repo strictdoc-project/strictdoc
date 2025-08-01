@@ -391,7 +391,7 @@ You can try it without installing with ``nix-shell``
 
     nix-shell -p strictdoc
 
-or ``nix run``
+or ``nix run``:
 
 .. code-block:: bash
 

@@ -397,7 +397,7 @@ or ``nix run``:
 
     nix run nixpkgs#strictdoc
 
-Or you can add it to your system's packages with
+Or you can add it to your system's packages with:
 
 .. code-block:: nix
 

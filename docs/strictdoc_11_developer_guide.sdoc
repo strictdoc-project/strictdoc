@@ -8,6 +8,25 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PREFIX
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
 - TAG: TEXT
   FIELDS:
   - TITLE: MID
@@ -36,12 +55,12 @@ considered to be the currently preferred development style for StrictDoc.
 Any feedback on this development guide is appreciated.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: c069e4c7b4d04dd09eb73f940e947bfd
 UID: DEVGUIDE_GETTING_STARTED
 TITLE: Getting started
 
-[SECTION]
+[[SECTION]]
 MID: 7477d397d0ca493f8e47532455d44965
 TITLE: System dependencies
 
@@ -65,7 +84,7 @@ From the core Python packages, StrictDoc needs Invoke, Tox and TOML:
     pip install invoke tox toml
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: b7a21564c30043acbf1733d9b47bd0bc
 TITLE: Windows-specific: Long Path support
 
@@ -77,11 +96,11 @@ As `reported <https://github.com/strictdoc-project/strictdoc/issues/1118>`_ by a
 You can find information on how to enable the long paths support at https://pip.pypa.io/warnings/enable-long-paths.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 89ec30b9f67c489da635be391b0b0e15
 TITLE: Installing StrictDoc from GitHub (developer mode)
 
@@ -102,7 +121,7 @@ STATEMENT: >>>
 The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc, but not StrictDoc itself.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: 1814a8c25afc40cba6dca1696cae119b
 TITLE: Development within a virtual environment
 
@@ -133,13 +152,13 @@ To also install the dev dependencies specified in ``pyproject.toml``:
     pip install ".[development]"
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 90d5d79146e64660a71cd74ac23f6811
 TITLE: Invoke for development tasks
 
@@ -159,9 +178,9 @@ Make sure to familiarize yourself with the available developer tasks by running:
     invoke --list
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: e7ce6a2f13614974b43aba56f6ae7253
 TITLE: Main "Check" task
 
@@ -177,9 +196,9 @@ Before doing anything else, run the main ``check`` command to make sure that Str
 The ``check`` command runs all StrictDoc lint and test tasks with the only exception of end-to-end Web tests that are run with a separate task (see below).
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 07d9a3c17be8475089844f5eb2cd8299
 UID: DEVGUIDE_PYTHON_CODE
 TITLE: Python code
@@ -223,9 +242,9 @@ STATEMENT: >>>
   introduces changes in code but no change to the functionality.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 6e9707c99199464583f091056d1ae458
 UID: DEVGUIDE_GIT_WORKFLOW
 TITLE: Git workflow
@@ -272,9 +291,9 @@ where the context can be a major feature being added or a folder. A form of  ``c
     Code climate: fix all remaining major Pylint warnings
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2420b2d7a4624bd99b0f8088dfa9abff
 TITLE: Frontend development
 
@@ -288,9 +307,9 @@ The shortest path to run the server when the StrictDoc's source code is cloned:
     invoke server
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 73c717608cce4abca2c768f1dbfb705d
 TITLE: Running End-to-End Web tests
 
@@ -302,9 +321,9 @@ STATEMENT: >>>
     invoke test-end2end
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 240dc1426d994397ac1401834b4f0ef0
 TITLE: Running integration tests
 
@@ -326,9 +345,9 @@ The ``--focus`` parameter can be used to run only selected tests that match a gi
 See `How to test command-line programs with Python tools: LIT and FileCheck <https://stanislaw.github.io/2020-11-20-how-to-test-command-line-programs-with-python.html>`_ to learn more about LIT and FileCheck, which enable the StrictDoc integration tests.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 7b4bf839b1c44b0d82001060596d8cbf
 TITLE: Documentation
 
@@ -345,9 +364,9 @@ STATEMENT: >>>
   developer machine.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: a44e3b99323b4ac291f4b4d3948c3cc0
 TITLE: Conventions
 
@@ -360,4 +379,4 @@ STATEMENT: >>>
   - Exception: HTML data-attributes and ``testid`` identifiers.
 <<<
 
-[/SECTION]
+[[/SECTION]]

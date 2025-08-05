@@ -11,6 +11,25 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PREFIX
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
 - TAG: TEXT
   FIELDS:
   - TITLE: MID
@@ -58,13 +77,14 @@ ELEMENTS:
   - TYPE: Parent
 
 [TEXT]
+MID: fc77215d50134f17aa242b4df7310099
 STATEMENT: >>>
 This document outlines a set of high-level requirements for StrictDoc, a text-based requirements management system. While StrictDoc already meets many of these requirements, a further discussion is needed to clarify any remaining questions. For the outstanding requirements, we can establish a practical implementation plan within the upcoming 2023-2024 StrictDoc roadmap.
 
 These requirements are recommended by engineers who adhere to the DO-178B and DO-178C standards of the aviation industry. For a visual summary of the DO-178 standard, please refer to this link: https://upload.wikimedia.org/wikipedia/commons/4/4f/DO-178B_Process_Visual_Summary_Rev_A.pdf.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: 6be4dbe02b4346df9849eaa6fe077e0e
 UID: SECTION-DR-Already-implemented-features
 TITLE: Already implemented features
@@ -229,9 +249,9 @@ COMMENT: >>>
 S: This feature is easy to implement. The easiest implementation path is to include a config parameter, such as ``project_grammar`` in the already-existing ``strictdoc.toml`` file. At startup, StrictDoc recognizes the parameter and reads the grammar from a separate file. The project grammar becomes a single source of truth for all documents in the project tree but the option to override a grammar for a given document is still preserved.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 09f3e3faa1b84aafb19f26e22ab06c95
 UID: SECTION-DR-Needs-discussion
 TITLE: Needs discussion
@@ -375,4 +395,4 @@ Two issues when a parent ref is set to ``REQUIRED: True`` in grammar:
 I worked around this, using a top .sdoc with grammar parent ref optional. Including a specific requirement titled "derived" on which all other .sdoc derived reqd will point as parent ref. But this might be improved.
 <<<
 
-[/SECTION]
+[[/SECTION]]

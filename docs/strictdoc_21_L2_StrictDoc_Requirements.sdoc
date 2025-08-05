@@ -25,6 +25,9 @@ ELEMENTS:
     REQUIRED: True
 - TAG: TEXT
   FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
   - TITLE: UID
     TYPE: String
     REQUIRED: False

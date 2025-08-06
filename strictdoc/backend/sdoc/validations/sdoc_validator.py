@@ -80,10 +80,7 @@ class SDocValidator:
             grammar_element.parent.parent, SDocDocument
         )
         if document is not None and document.config.enable_mid:
-            if (
-                grammar_element.tag != "TEXT"
-                and "MID" not in grammar_element.fields_map
-            ):
+            if "MID" not in grammar_element.fields_map:
                 raise StrictDocSemanticError.grammar_element_has_no_mid_field(
                     grammar_element,
                     path_to_grammar,
@@ -227,7 +224,7 @@ class SDocValidator:
             else:
                 assert grammar_field is not None
                 assert not grammar_field.required or (
-                    grammar_field.title == "UID" and auto_uid_mode
+                    grammar_field.title in ("MID", "UID") and auto_uid_mode
                 )
                 grammar_field = next(grammar_fields_iterator, None)
 
@@ -287,7 +284,7 @@ class SDocValidator:
                     grammar_field.title
                     not in requirement.ordered_fields_lookup.keys()
                 ):
-                    if grammar_field.title == "UID" and auto_uid_mode:
+                    if grammar_field.title in ("MID", "UID") and auto_uid_mode:
                         return False
 
                     raise StrictDocSemanticError.missing_required_field(

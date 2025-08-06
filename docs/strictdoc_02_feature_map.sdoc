@@ -27,6 +27,9 @@ ELEMENTS:
     REQUIRED: True
 - TAG: TEXT
   FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
   - TITLE: UID
     TYPE: String
     REQUIRED: False
@@ -63,6 +66,7 @@ ELEMENTS:
   - TYPE: Parent
 
 [TEXT]
+MID: f405431dc66e4d6786be020a62a4e5a3
 STATEMENT: >>>
 This document provides a comprehensive overview of all available features in StrictDoc from the user's perspective. It includes descriptions and relevant screenshots to illustrate each feature's functionality. Each entry is linked to additional documentation, such as the [LINK: SDOC_UG], offering further details, usage instructions, and examples to help users understand and effectively utilize StrictDoc’s capabilities.
 <<<
@@ -95,6 +99,7 @@ MID: 3f422abd9abe4717a995ae4150df12e3
 TITLE: Use case
 
 [TEXT]
+MID: 8ea5b080819e47afa78bc346d671cf30
 STATEMENT: >>>
 The main use case for SDoc is to model a structure of a technical document that consists of tens and hundreds of technical requirements. The following high-level requirements for the markup are therefore relevant:
 
@@ -113,6 +118,7 @@ MID: fa7b37153def4eb4a6e9dcee079cba2a
 TITLE: Inspirations
 
 [TEXT]
+MID: 104b6ff4623f4ac9a965aa789c4cf001
 STATEMENT: >>>
 The SDoc markup is a hybrid of TOML and YAML with some influence from HTML/XML and `ASN.1 <https://en.wikipedia.org/wiki/ASN.1>`_. Using each of these formats as-is, and also the JSON format, was considered but discarded during the design.
 
@@ -192,6 +198,7 @@ MID: 87b1538be72a4ff7945b5bb95f856471
 TITLE: Screenshots
 
 [TEXT]
+MID: f48ae881c5134f77885202b019e124d4
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_SDoc.png
    :alt: SDoc markup
@@ -233,6 +240,7 @@ MID: 4e46063e2031418298b55a1861179900
 TITLE: Screenshots
 
 [TEXT]
+MID: 586f8745588b483b8e027021d90931ac
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_HTMLExport_01_Index.png
    :alt: StrictDoc HTML export – Project tree
@@ -272,6 +280,7 @@ MID: 6b5989db0e984c42b12440993c885987
 TITLE: Screenshots
 
 [TEXT]
+MID: 28ce32fe182c45ce882b65c835620339
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_WebUI.png
    :alt: StrictDoc web interface
@@ -314,6 +323,7 @@ MID: ceec313d9ec040b9bcaaf64967ed6af8
 TITLE: Screenshots
 
 [TEXT]
+MID: 363aae23cbb44f30aff42ef6a430ffdf
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_TraceabilityToSource_1.png
    :alt: Traceability to source 1
@@ -356,6 +366,7 @@ MID: f4763b00f9624cfd8b44f8e571f2aec6
 TITLE: Screenshots
 
 [TEXT]
+MID: 3d3d3e2c1c974ed4a2382770225212d7
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_Grammar.png
    :alt: Document grammar
@@ -419,6 +430,7 @@ MID: f0a7041347444f3a822129120faf0fcd
 TITLE: Screenshots
 
 [TEXT]
+MID: 45be72764a73440b8abf313bb84420aa
 STATEMENT: >>>
 **Export to RST and PDF using Sphinx/LaTeX**
 
@@ -491,6 +503,7 @@ MID: 631f1620053342c8a398a1a5d458f873
 TITLE: Screenshots
 
 [TEXT]
+MID: 64afc2abdab847439c0c18420db7ba47
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_SearchScreen_01.png
    :alt: StrictDoc Search Screen
@@ -529,6 +542,7 @@ MID: 7d215ba517fc4aee9dfb381279297cc7
 TITLE: Screenshots
 
 [TEXT]
+MID: bd5a4763e2ca4df497dbaeeff9ffbd71
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_StatisticsScreen_01.png
    :alt: Project statistics
@@ -573,6 +587,7 @@ MID: c60c6fab5740469aa251bfa3a805f21f
 TITLE: Screenshots
 
 [TEXT]
+MID: 1fad67b63724450bb63738cf7e29d051
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_DiffChangelog_1.png
    :alt: StrictDoc Diff/Changelog 1
@@ -651,6 +666,7 @@ MID: 275658296e5342acab72102589096f15
 TITLE: Screenshots
 
 [TEXT]
+MID: 100daefc4121415989324de1978d1f59
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_StrictDocTOML.png
    :alt: StrictDoc config file strictdoc.toml

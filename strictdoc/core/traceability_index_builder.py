@@ -350,7 +350,19 @@ class TraceabilityIndexBuilder:
                         f"the grammar file, StrictDoc needs to be able to "
                         f"resolve it relative to the input path."
                     )
+
                 document.grammar.update_with_elements(document_grammar.elements)
+
+                # This is for the backward compatibility with the existing users.
+                # If the included project grammar has no TEXT element defined,
+                # we add it here automatically.
+                if not document.grammar.has_text_element():
+                    document.grammar.add_element_first(
+                        DocumentGrammar.create_default_text_element(
+                            document.grammar,
+                            enable_mid=document.config.enable_mid is True,
+                        )
+                    )
 
             # This is important because due to the difference between the
             # normal grammar vs imported grammar, the parent may not be set at

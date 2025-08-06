@@ -10,8 +10,30 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PREFIX
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
 - TAG: TEXT
   FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
   - TITLE: UID
     TYPE: String
     REQUIRED: False
@@ -48,6 +70,7 @@ ELEMENTS:
   - TYPE: File
 
 [TEXT]
+MID: c455f0297eb648c6aa9c6d239f043e0d
 STATEMENT: >>>
 The StrictDoc project is structured around two distinct requirement documents that guide its development:
 
@@ -59,33 +82,36 @@ This document, the Requirements Tool Specification, delineates the general requi
 In contrast, the StrictDoc Requirements Specification, the second document, delves deeply into the 'HOW' aspect of StrictDoc’s implementation. It builds upon the high-level requirements set out in this document, treating them as parent requirements to guide its detailed development approach.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: 668d18a7489043b38dd435933319e8e7
 TITLE: Summary of user needs
 
 [TEXT]
+MID: 7a94c3f55e32498187603400923bfae4
 STATEMENT: >>>
 This section offers an overview of the necessary capabilities of a requirements and documentation management tool.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: 1cbe275272994922a942fd088fa969d8
 TITLE: Free and open source tool
 
 [TEXT]
+MID: 3ca29d12a7804f089f5b2aa955e4da59
 STATEMENT: >>>
 The primary user need and entry point for this Requirements Tool specification is the availability of free, lightweight, yet capable software for creating requirements specifications and other technical documentation. The tool should facilitate the creation of requirements specifications and technical documents, effectively lowering the entry barrier for requirements engineering and technical documentation writing.
 
 It is assumed throughout this document that the requirements tool will be developed as open-source software available at no cost. However, with minor adjustments, these requirements could also apply to commercial requirements tools. See [LINK: SECTION-SSSS-Licensing-and-distribution].
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 18136bcb9a5b4226a7a95d27dae49805
 TITLE: Document types
 
 [TEXT]
+MID: 14383453f84747d3abdce6b5dce50c7f
 STATEMENT: >>>
 A requirements tool is very often also a documentation writing and management tool, so, besides the requirements editing functionality, the tool shall be able to accommodate for the variety of documents and templates used in different industries.
 
@@ -108,12 +134,13 @@ Examples of typical document types include:
 The documentation/requirements management requirements for a Requirements Tool are specified in the sections [LINK: SECTION-RTS-Documentation-management] and [LINK: SECTION-RTS-Requirements-management].
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: 973b586b8a89411ab4f083fd4c262cf5
 UID: SECTION-RTC-Appendix-A-Document-archetypes
 TITLE: Document structure differences
 
 [TEXT]
+MID: 4a847b9a58444e4a9be056db1f23272c
 STATEMENT: >>>
 The table below summarizes various differences observed across industry documents.
 
@@ -134,16 +161,17 @@ The table below summarizes various differences observed across industry document
      - Not all documents provide requirement titles. When the requirement titles are missing, the grouping is may be provided by sections/chapters. When the titles are present, the requirement titles can also be section titles.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 52b6175f03d7495a9fa8dbffa36aeff4
 UID: SECTION-LRTS-Workflows
 TITLE: Workflows
 
 [TEXT]
+MID: c537b8fa5b54417eb9dff6478553f6d7
 STATEMENT: >>>
 Besides supporting a variety of document types, a Requirements Tool shall also support and integrate well with multiple documentation and requirements management workflows.
 
@@ -180,13 +208,14 @@ At least the following workflows have been identified to be relevant:
 The section [LINK: SECTION-SSSS-Existing-workflows] contains the workflow-related requirements for a Requirements Tool.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 08d547a3b04d485ca1f5a3a94a664ee1
 TITLE: Target audience
 
 [TEXT]
+MID: 847eaab505124e7797bd25c865f9d868
 STATEMENT: >>>
 A Requirements Tool may have different users, each with a different role, experience and background which necessitates the requirements towards usability, installation, and user experience.
 
@@ -221,16 +250,17 @@ Not all users of a requirements tool must have an engineering background. In fac
 The requirement sets in the sections [LINK: SECTION-RTC-Usability-installation-and-usage] and [LINK: SECTION-SSSS-Implementation-suggestions] aim to equip the Requirements Tool with sufficient capabilities to support all of the user groups described above.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: f1ffdc7f78134d4b98f3c90e9be40cc7
 UID: SECTION-RTS-Documentation-management
 TITLE: Documentation management
 
 [TEXT]
+MID: 0cacb010f5164118adce5dd8512c3e27
 STATEMENT: >>>
 This section outlines the requirements towards a Requirements Tool as a documentation tool.
 
@@ -329,14 +359,15 @@ RELATIONS:
 - TYPE: Parent
   VALUE: ZEP-9
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: fd227b9cfdc54d7db3134cdb925bde87
 UID: SECTION-RTS-Requirements-management
 TITLE: Requirements management
 
 [TEXT]
+MID: c1e2431cdf2141ca86931f29b9912ff7
 STATEMENT: >>>
 This section outlines the requirements towards a Requirements Tool as a requirements management tool.
 
@@ -539,9 +570,9 @@ STATEMENT: >>>
 The Requirements Tool shall provide capabilities for validating requirements according to the EARS syntax.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 7c112f3a5885477084396fd26387a864
 TITLE: Tool configurability
 
@@ -580,14 +611,15 @@ RATIONALE: >>>
 Sometimes, the project-level configuration can be not fine-grained enough. The requirement ensures that the requirements tool allows a configuration on a document level.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 56dabce670be4691b35434bda6d6bb36
 UID: SECTION-SSSS-Performance
 TITLE: Performance
 
 [TEXT]
+MID: 68e4b4b1ba78485f8620575ef9e1eaa2
 STATEMENT: >>>
 This section captures the performance requirements towards a Requirements Tool.
 <<<
@@ -610,9 +642,9 @@ STATEMENT: >>>
 The Requirements Tool shall be able to handle documentation packages of at least 100 documents without significant performance degradation.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: d1a483f3e321414b83bb4a39b1283293
 TITLE: Data integrity
 
@@ -631,14 +663,15 @@ COMMENT: >>>
 This includes safeguarding against data corruption, loss, and ensuring the reliability of links within the documentation.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: ec52fa5cc1714b07863eb7da9432be1d
 UID: SECTION-SSSS-Existing-workflows
 TITLE: Existing workflows
 
 [TEXT]
+MID: 33769a5f0ca94b99a4802adc81841037
 STATEMENT: >>>
 This section captures the requirements towards specific workflows that a Requirements Tool should support as outlined in [LINK: SECTION-LRTS-Workflows].
 <<<
@@ -735,9 +768,9 @@ The Requirements Tool shall provide capabilities for change management:
 - Visualizing the impact that a changed requirement has on a project tree.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 85d2f75b2f074f98ace5ceb5288c09b9
 UID: SECTION-RTC-Usability-installation-and-usage
 TITLE: Usability, installation and usage
@@ -866,9 +899,9 @@ RATIONALE: >>>
 When the requirements data is accessible by a user directly, it is possible to exchange the data or implement additional scripting procedures.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 29fa83c59e714d0da8b36a9dc65b0c72
 UID: SECTION-SSSS-Implementation-suggestions
 TITLE: Implementation suggestions
@@ -980,14 +1013,15 @@ NOTE: Long-term maintenance aspects to consider:
 - Take into account maintainability by the development team as well as the users, e.g., IT/DevOps department.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 7bdea1a7cb9e4f6fbcf8497670f87278
 UID: SECTION-RTS-Text-based-requirements-language
 TITLE: Text-based requirements language (optional)
 
 [TEXT]
+MID: dfe5a61ed10149bebcf69d9c5c3b1316
 STATEMENT: >>>
 Note: Not all requirements tools must be text-based. But when they are, the
 following requirements apply.
@@ -1034,9 +1068,9 @@ The Requirement Tool shall allow reading requirements files from multiple folder
 NOTE: The folders/repositories can be arbitrarily nested.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 8b1da9907bc847c989dc807b7dff2a05
 UID: SECTION-RTS-Requirements-and-source-code
 TITLE: Requirements and source code
@@ -1060,14 +1094,15 @@ RELATIONS:
 - TYPE: Parent
   VALUE: ZEP-12
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: cd9e353e07ae4d50b1aa08999854aa02
 UID: SECTION-RTS-Requirements-exchange-formats-export-import
 TITLE: Requirements exchange formats (export/import)
 
 [TEXT]
+MID: ecc76e0991e44d6282776365496193e6
 STATEMENT: >>>
 This section captures the requirements related to "Requirements exchange" as outlined in the section [LINK: SECTION-LRTS-Workflows].
 
@@ -1110,9 +1145,9 @@ STATEMENT: >>>
 The Requirements Tool shall support exporting/importing requirements content from/to Excel.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: efaa3e91045c4d49a70232f09a85ad35
 UID: SECTION-RTS-Requirements-collaboration
 TITLE: Collaboration on requirements
@@ -1129,9 +1164,9 @@ UID: SDOC-SSS-66
 STATUS: Draft
 TITLE: Send notifications about updated requirements
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: f80a4b7ff03042849c3814c6cd5e5ca4
 UID: SECTION-SSSS-Development-process
 TITLE: Development process
@@ -1191,14 +1226,15 @@ RATIONALE: >>>
 Many project developments require a qualification of the tools used during the development. A requirements tool is one of the critical tools that affect the project development. If a requirement tool is developed to the higher standards of quality, it simplifies the argument of bringing the tool forward and using it in a particular project.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: e4cd429e9ec04deabfd1fb1381c39e38
 UID: SECTION-SSSS-Licensing-and-distribution
 TITLE: Licensing and distribution
 
 [TEXT]
+MID: 92bf658bcddb4d2899b78c526fbddf38
 STATEMENT: >>>
 This section outlines the requirements for the "free and open source" aspect of the Requirements Tool.
 <<<
@@ -1235,4 +1271,4 @@ RATIONALE: >>>
 This requirement captures the essence of an open and free requirements management tool.
 <<<
 
-[/SECTION]
+[[/SECTION]]

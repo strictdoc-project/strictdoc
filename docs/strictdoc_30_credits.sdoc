@@ -8,6 +8,25 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PREFIX
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
 - TAG: TEXT
   FIELDS:
   - TITLE: MID
@@ -33,7 +52,7 @@ As an open-source project, StrictDoc is based on the work of many people and org
 This page gives due credit to everyone who made StrictDoc possible.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: c89b5ba9c6dc427497647b64048a2c98
 TITLE: Contributions to StrictDoc
 
@@ -59,9 +78,9 @@ Companies:
 Single/smaller contributions can be also seen on the `StrictDoc's Insights/Contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_ page.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 4d59a5df65d547e685cb491937793f69
 TITLE: Open source software
 
@@ -93,9 +112,9 @@ The credits also recursively go to the building blocks of each of the above proj
 Refer to the `configuration file <https://github.com/strictdoc-project/strictdoc/blob/main/pyproject.toml>`_ for an up-to-date summary of StrictDoc's dependencies.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2da7450f8b804a7a8494921486bd4d8e
 TITLE: Hosting and Continuous Integration
 
@@ -107,9 +126,9 @@ StrictDoc is hosted on `GitHub <https://github.com>`_ and uses `GitHub Actions <
 StrictDoc's documentation is hosted on `Read the Docs <https://readthedocs.org>`_.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 43ccb6448b9d4b65a2c40df54d1707aa
 TITLE: Free and commercial IDEs by JetBrains
 
@@ -123,4 +142,4 @@ from `JetBrains <https://www.jetbrains.com/>`_.
 In 2022-2023, the `Licenses for Open Source Development - Community Support <https://www.jetbrains.com/community/opensource/#support>`_ from JetBrains were provided to the core team for free, based on the precondition that StrictDoc is developed as completely free software, without any monetization mechanisms.
 <<<
 
-[/SECTION]
+[[/SECTION]]

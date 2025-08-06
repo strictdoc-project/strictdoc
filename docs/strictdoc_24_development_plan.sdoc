@@ -10,6 +10,25 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PREFIX
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
 - TAG: TEXT
   FIELDS:
   - TITLE: MID
@@ -29,7 +48,7 @@ This document presents the goals of the StrictDoc project and describes how the
 project is developed.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: 24b0bc5efe074a419b441900d30b2876
 TITLE: Project goals
 
@@ -59,9 +78,9 @@ An important feature of StrictDoc is its focus on open data, ensuring ease of da
 StrictDoc shall be compatible with other software and engineering tools. This includes at least the compatibility with the Python ecosystem, the model-based systems engineering tools, such as Capella, and the formats providing Software Bill of Materials, such as SPDX.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: f1e3c17829fd4eebbd390fceaeb95619
 UID: SECTION-DP-Project-milestones
 TITLE: Project milestones
@@ -128,7 +147,7 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
      - Gcov coverage justification report. SDoc node VERSIONs. External links.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: bf9f3f05501140da8d35cde39493c72f
 TITLE: The roadmap diagram
 
@@ -145,11 +164,11 @@ The following diagram contains the work items at the epic and single task levels
 The roadmap and other artifacts are maintained at a publicly available draw.io diagram workspace `here <https://drive.google.com/file/d/1pkI0T1eAbcTSyCnqH4wCKKQSOfgWTaxi/view>`_.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 625560c790a3492eaf45466b787602d7
 TITLE: Versioning
 
@@ -159,9 +178,9 @@ STATEMENT: >>>
 As of release 0.1.0 (2024-11-01), StrictDoc follows a `semantic versioning <https://semver.org>`_-oriented release scheme. The MAJOR.MINOR.PATCH components are managed according to the guidelines of the semantic versioning specification.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: ef6bde37e1c54f49afdbd3c6785fd01c
 TITLE: Quality
 
@@ -171,7 +190,7 @@ STATEMENT: >>>
 StrictDoc's development incorporates quality measures to ensure a high standard of code quality.
 <<<
 
-[SECTION]
+[[SECTION]]
 MID: bc49b1e28fff4386b3bf5788a6686a79
 TITLE: Linting of code
 
@@ -181,9 +200,9 @@ STATEMENT: >>>
 StrictDoc uses `Ruff <https://docs.astral.sh/ruff/formatter/>`_ to ensure consistent code formatting and to check for common issues in Python code.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 38ce17138405490b80e06037b40dc49d
 TITLE: Static analysis
 
@@ -193,9 +212,9 @@ STATEMENT: >>>
 StrictDoc uses `mypy <https://github.com/python/mypy>`_ to statically check the robustness of its Python type system.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2834756354a7420499d0deecfe0ee9c4
 TITLE: Testing
 
@@ -211,9 +230,9 @@ The integration tests are based on the `LLVM Integrated Tester <https://llvm.org
 The end-to-end web interface tests are based on the `SeleniumBase <https://seleniumbase.io/>`_ test framework.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2004550abd54486d9aa5f98282eef6e1
 TITLE: Traceability between StrictDoc requirements, code, and tests
 
@@ -229,9 +248,9 @@ Most of StrictDoc's implemented features are tested through its own documentatio
 As of Q2 2025, the goal is to achieve 100% traceability across all artifacts in the StrictDoc codebase.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 30b874ab3eac4d429633537e1e89677f
 TITLE: Continuous integration (CI)
 
@@ -241,11 +260,11 @@ STATEMENT: >>>
 Contributions to StrictDoc are made through GitHub pull requests. Each pull request is validated by a series of checks and test jobs run on GitHub Actions CI servers.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 MID: 2ae3a8822a424a9e8ad6976c2476d109
 TITLE: Python baseline
 
@@ -259,4 +278,4 @@ Ideally, the lowest Python version should only be raised when it is consistently
 Another reason for upgrading the minimum Python version is due to the upstream dependencies. As these dependencies stop supporting the older versions of Python, StrictDoc must be upgraded to maintain compatibility. With the existing dependency graph, this happens rather infrequently as most dependencies also maintain the compatibility with the older Python versions.
 <<<
 
-[/SECTION]
+[[/SECTION]]

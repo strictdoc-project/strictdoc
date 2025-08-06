@@ -1,4 +1,7 @@
-RUN: cd %S
+# FIXME: Make config available as --config.
+RUN: cp %S/strictdoc.toml %T/../
+RUN: cp %S/file.py %T/../
+
 RUN: %strictdoc export %S --formats=html,spdx --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Step 'Export SDoc' took:
 

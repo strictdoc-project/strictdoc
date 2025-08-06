@@ -16,16 +16,22 @@ def get_exception_origin() -> Tuple[str, int, str, str]:
 class ExceptionInfo:
     def __init__(self, exception: Exception):
         self.exception = exception
-        self.exc_info = sys.exc_info()
+
         filename, lineno, func, _ = get_exception_origin()
         self.filename = filename
         self.lineno = lineno
         self.func = func
 
-    def print_stack_trace(self) -> None:
-        traceback.print_exception(  # type: ignore[misc]
-            *self.exc_info, limit=None, file=sys.stdout, chain=True
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+
+        traceback_strings = traceback.format_exception(
+            exc_type, exc_value, exc_traceback, limit=None, chain=True
         )
+
+        self.traceback_str = "".join(traceback_strings)
+
+    def get_stack_trace(self) -> str:
+        return self.traceback_str
 
     def get_detailed_error_message(self) -> str:
         return (
@@ -40,3 +46,17 @@ class StrictDocException(Exception):
 
     def to_print_message(self) -> str:
         return str(self.args[0])
+
+
+class StrictDocChildProcessException(Exception):
+    """
+    A special custom exception that wraps the ExceptionInfo.
+
+    RATIONALE: This is needed to pass exception information from the child
+    process to the parent process. The reason is that ProcessPoolExecutor does
+    not propagate the exception stack trace to the parent process. StrictDoc
+    captures the child process's trace as ExceptionInfo to address this limitation.
+    """
+
+    def __init__(self, exception_info: ExceptionInfo):
+        self.exception_info: ExceptionInfo = exception_info

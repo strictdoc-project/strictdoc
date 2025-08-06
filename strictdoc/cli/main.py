@@ -35,7 +35,10 @@ from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.actions.import_action import ImportAction
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.helpers.coverage import register_code_coverage_hook
-from strictdoc.helpers.exception import ExceptionInfo
+from strictdoc.helpers.exception import (
+    ExceptionInfo,
+    StrictDocChildProcessException,
+)
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.server.server import run_strictdoc_server
 
@@ -204,23 +207,20 @@ def main() -> None:
     exception_info: Optional[ExceptionInfo] = None
     try:
         _main(parallelizer, parser)
+    except StrictDocChildProcessException as exception_info_:
+        exception_info = exception_info_.exception_info
     except Exception as exception_:
         exception_info = ExceptionInfo(exception_)
     finally:
-        success = parallelizer.shutdown()
-
         if exception_info is not None:
-            success = False
             if parser.is_debug_mode():
-                exception_info.print_stack_trace()
+                print(exception_info.get_stack_trace(), flush=True)  # noqa: T201
             print(exception_info.get_detailed_error_message(), flush=True)  # noqa: T201
             if not parser.is_debug_mode():
                 print(  # noqa: T201
                     "Rerun with strictdoc --debug <...> to enable stack trace printing.",
                     flush=True,
                 )
-
-        if not success:
             sys.exit(1)
 
 

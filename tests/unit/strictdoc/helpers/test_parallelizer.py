@@ -1,11 +1,12 @@
 import os
 import signal
 import sys
+from concurrent.futures.process import BrokenProcessPool
 from time import sleep
 
 import pytest
 
-from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.exception import StrictDocChildProcessException
 from strictdoc.helpers.parallelizer import MultiprocessingParallelizer
 
 
@@ -34,7 +35,7 @@ def test_nominal_use_case():
 
         assert list(output_items) == [2, 4, 6]
     finally:
-        assert parallelizer.shutdown()
+        parallelizer.shutdown()
 
 
 def test_if_child_process_fails_then_parallelizer_exits_with_non_zero():
@@ -46,12 +47,12 @@ def test_if_child_process_fails_then_parallelizer_exits_with_non_zero():
         with pytest.raises(Exception) as exc_info:
             parallelizer.run_parallel(input_items, child_process_that_fails)
 
-        assert exc_info.type is StrictDocException
-        assert exc_info.value.args[0] == (
-            "Parallelizer: One of the child processes has exited prematurely."
+        assert exc_info.type is StrictDocChildProcessException
+        assert exc_info.value.args[0].exception.args[0] == (
+            "This child process always fails."
         )
     finally:
-        assert not parallelizer.shutdown()
+        parallelizer.shutdown()
 
 
 @pytest.mark.skipif(
@@ -68,9 +69,9 @@ def test_use_case_when_interrupted_with_sigterm():
                 input_items, child_that_sigterms_itself_and_hangs
             )
 
-        assert exc_info.type is StrictDocException
+        assert exc_info.type is BrokenProcessPool
         assert exc_info.value.args[0] == (
-            "Parallelizer: One of the child processes has exited prematurely."
+            "A process in the process pool was terminated abruptly while the future was running or pending."
         )
     finally:
-        assert not parallelizer.shutdown()
+        parallelizer.shutdown()

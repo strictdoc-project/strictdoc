@@ -10,4 +10,3 @@ CHECK: - item 1
 CHECK: adsfasdfasdf
 CHECK: - item 2
 CHECK: <<<
-CHECK: error: Parallelizer: One of the child processes has exited prematurely.

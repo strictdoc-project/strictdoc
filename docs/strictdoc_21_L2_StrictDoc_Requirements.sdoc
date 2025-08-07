@@ -1768,8 +1768,6 @@ RELATIONS:
   VALUE: SDOC-SSS-13
 - TYPE: Parent
   VALUE: SDOC-SSS-14
-- TYPE: File
-  VALUE: strictdoc/helpers/parallelizer.py
 
 [REQUIREMENT]
 MID: 54602f6d120548c8bbd70d1d25113d53

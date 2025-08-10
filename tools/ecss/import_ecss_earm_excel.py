@@ -206,6 +206,17 @@ class ECSS_EARM_Excel_Importer:
             with open(document_path, "w") as output_file:
                 output_file.write(sdoc_content)
 
+        strictdoc_toml_config = os.path.join(ecss_output_dir, "strictdoc.toml")
+        with open(strictdoc_toml_config, "w") as output_file:
+            output_file.write("""\
+[project]
+title = "ECSS: Example HTML export"
+
+features = [
+    # No features.
+]
+""")
+
     @staticmethod
     def create_ecss_grammar(document: SDocDocumentIF) -> DocumentGrammar:
         fields: List[GrammarElementFieldType] = []

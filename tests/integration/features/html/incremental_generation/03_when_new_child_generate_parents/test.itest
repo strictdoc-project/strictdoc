@@ -15,14 +15,14 @@ CHECK-THIRD: Published: Parent doc
 
 RUN: %cp %S/grandchild.sdoc %S/sandbox/grandchild.sdoc
 RUN: %strictdoc export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-FOURTH
+CHECK-FOURTH: Skip: Parent doc
 CHECK-FOURTH: Published: Child doc
 CHECK-FOURTH: Published: Grandchild doc
-CHECK-FOURTH: Skip: Parent doc
 
 RUN: rm %S/sandbox/grandchild.sdoc
 RUN: %strictdoc export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-FIFTH
-CHECK-FIFTH: Published: Child doc
 CHECK-FIFTH: Skip: Parent doc
+CHECK-FIFTH: Published: Child doc
 
 RUN: rm %S/sandbox/child.sdoc
 RUN: %strictdoc export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-SIXTH

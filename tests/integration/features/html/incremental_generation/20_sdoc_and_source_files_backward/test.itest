@@ -15,8 +15,8 @@ CHECK-1: Published: Parent doc
 RUN: %cp %S/src/file_refs_grandchild.py %S/sandbox/
 RUN: %strictdoc export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-2
 CHECK-2: Skip: Child doc
-CHECK-2: Published: Grandchild doc
 CHECK-2: Skip: Parent doc
+CHECK-2: Published: Grandchild doc
 CHECK-2: File: file_refs_grandchild.py
 
 RUN: %strictdoc export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-3
@@ -28,5 +28,5 @@ CHECK-3: Skip: file_refs_grandchild.py
 RUN: rm %S/sandbox/file_refs_grandchild.py
 RUN: %strictdoc export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-4
 CHECK-4: Skip: Child doc
-CHECK-4: Published: Grandchild doc
 CHECK-4: Skip: Parent doc
+CHECK-4: Published: Grandchild doc

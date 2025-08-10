@@ -102,6 +102,22 @@ class HTMLGenerator:
             for document_ in traceability_index.document_tree.document_list:
                 if document_.document_is_included():
                     continue
+
+                document_meta = assert_cast(document_.meta, DocumentMeta)
+
+                input_doc_full_path = document_meta.input_doc_full_path
+                output_doc_full_path = document_meta.output_document_full_path
+
+                if os.path.isfile(output_doc_full_path) and (
+                    get_file_modification_time(input_doc_full_path)
+                    < get_file_modification_time(output_doc_full_path)
+                    and not traceability_index.file_dependency_manager.must_generate(
+                        document_meta.input_doc_full_path
+                    )
+                ):
+                    with measure_performance(f"Skip: {document_.title}"):
+                        continue
+
                 documents_to_export.append(document_)
 
         parallelizer.run_parallel(documents_to_export, export_binding)
@@ -327,20 +343,6 @@ class HTMLGenerator:
         if specific_documents is None:
             specific_documents = DocumentType.all()
 
-        document_meta = assert_cast(document.meta, DocumentMeta)
-
-        input_doc_full_path = document_meta.input_doc_full_path
-        output_doc_full_path = document_meta.output_document_full_path
-
-        if os.path.isfile(output_doc_full_path) and (
-            get_file_modification_time(input_doc_full_path)
-            < get_file_modification_time(output_doc_full_path)
-            and not traceability_index.file_dependency_manager.must_generate(
-                document_meta.input_doc_full_path
-            )
-        ):
-            with measure_performance(f"Skip: {document.title}"):
-                return
         with measure_performance(f"Published: {document.title}"):
             self.export_single_document(
                 document,

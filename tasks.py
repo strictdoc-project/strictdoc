@@ -557,6 +557,7 @@ def lint_ruff_format(context):
                 developer/
                 docs/
                 strictdoc/
+                tools/ecss
                 tests/unit/
                 tests/integration/*.py
                 tests/end2end/

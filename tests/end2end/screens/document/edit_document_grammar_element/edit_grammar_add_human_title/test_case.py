@@ -57,6 +57,6 @@ class Test(E2ECase):
 
             form_edit_grammar_element.do_form_submit()
 
-            screen_document.assert_text("CUSTOM FIELD")
+            screen_document.assert_text("Custom Field")
 
         assert test_setup.compare_sandbox_and_expected_output()

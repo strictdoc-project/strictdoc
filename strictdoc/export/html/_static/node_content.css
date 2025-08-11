@@ -115,10 +115,9 @@ sdoc-node-field-label {
   font-family: var(--code-font-family);
   font-weight: 500;
   line-height: 1;
-  text-transform: uppercase;
   color: var(--requirement-label-color);
 
-  /* @mettta and @stanislaw are commenting this out because the REQUIREMENT's field names
+  /* @mettta and @stanislaw are commenting this out because REQUIREMENT's field names
      were split apart, even though there was enough screen width
     word-break: break-word;
   */

@@ -59,6 +59,8 @@ StrictDoc is software for writing technical requirements specifications.
 StrictDoc is a spare-time open-source project developed by Stanislav Pankevich (@stanislaw) and Maryna Balioura (@mettta) with contributions from the Open Source community.
 
 The project exists since mid-2019.
+
+For a quick overview of the project, check out the `StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc_SlideDeck.pdf>`_ slide deck.
 <<<
 
 [[/SECTION]]
@@ -67,27 +69,51 @@ The project exists since mid-2019.
 MID: 86827c92ec3a493d8a2382b75b5277a8
 TITLE: Resources about StrictDoc
 
-[TEXT]
-MID: 2ba0c8fa79604b708927ffed2ef94664
-STATEMENT: >>>
-**Talks:**
+[[SECTION]]
+MID: f7083cf6a84e4b858b5e551f8c8a555a
+TITLE: Presentations
 
-`Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project <https://ftp.fau.de/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_
+[TEXT]
+MID: 52342105083e4f80884959d4ca7f4dba
+STATEMENT: >>>
+1\) `StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc_SlideDeck.pdf>`_
+
+This slide deck provides a concise overview of the project, including its goals, real-world case studies, the motivation behind its creation, implementation details, and the development roadmap.
+
+2\) `Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project <https://ftp.fau.de/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_
 
 This presentation introduces the SPDX Safety Profile and details its application within the context of the Zephyr Project. There is also a presentation of the Zephyr project's methodology for capturing requirements using StrictDoc and a discussion of the upcoming plans for the integration of SPDX into StrictDoc.
+<<<
 
-**Blog posts:**
+[[/SECTION]]
 
-`From Code to Compliance – Part1: IEC 62443 Certification with Industrial Grade Linux Operating System by Linutronix <https://www.linutronix.de/blog/From-Code-to-Compliance-Part1-IEC-62443-Certification-with>`_
+[[SECTION]]
+MID: d22b63a405264a6a80d4ab3f9b2bf9c5
+TITLE: Blog posts
 
-The blog post outlines how Linuxtronix achieved security certification for Linux-based industrial software, with StrictDoc serving as an important building block in their development workflow.
+[TEXT]
+MID: b2f5aea77e504ee1b64a67be24bd3c58
+STATEMENT: >>>
+1\) `From Code to Compliance – Part1: IEC 62443 Certification with Industrial Grade Linux Operating System by Linutronix <https://www.linutronix.de/blog/From-Code-to-Compliance-Part1-IEC-62443-Certification-with>`_
 
-`Requirement Traceability with All Substance and No Fuss <https://www.bugseng.com/requirement-traceability-with-all-substance-and-no-fuss/>`_ by BUGSENG.
+The blog post outlines how Linutronix achieved security certification for Linux-based industrial software, with StrictDoc serving as an important building block in their development workflow.
 
-**Screencasts/tutorials:**
+2\) `Requirement Traceability with All Substance and No Fuss <https://www.bugseng.com/requirement-traceability-with-all-substance-and-no-fuss/>`_ by BUGSENG.
+<<<
 
+[[/SECTION]]
+
+[[SECTION]]
+MID: d75bd4d35b4b425b90ec8667ffffe191
+TITLE: Screencasts / tutorials
+
+[TEXT]
+MID: 9d23e77aa7f848cb8efca49f5cf41f77
+STATEMENT: >>>
 `Automotive SPICE in opensource StrictDoc tool, with System Architecure ideas <https://www.youtube.com/watch?v=k2MCFWvCs7E>`_ by Lukasz Juranek.
 <<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 

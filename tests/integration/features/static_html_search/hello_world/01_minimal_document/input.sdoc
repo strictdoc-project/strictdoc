@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+TITLE: Req #1
+STATEMENT: System shall do #1.
+
+[REQUIREMENT]
+TITLE: Req #2
+STATEMENT: System shall do #2.
+
+[REQUIREMENT]
+TITLE: Req #3
+STATEMENT: System shall do #3.

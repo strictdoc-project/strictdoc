@@ -33,4 +33,156 @@
     {%- endif -%}
   </div>
 </turbo-frame>
+{%- else -%}
+    <style>
+      #suggestions {
+        position: fixed;
+        top: 300px;
+        left: 300px;
+        z-index: 100;
+      }
+    </style>
+
+  <div class="actions_group">
+    <form style="position: relative; width: 100%;">
+        <input type="text" id="userinput" tabindex="2" placeholder="Search by movie title ..." autocorrect="off" spellcheck="false" autocomplete="off" autofocus>
+    </form>
+  </div>
+
+<div id="suggestions"></div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/nextapps-de/flexsearch@0.8.2/dist/flexsearch.compact.min.js"></script>
+
+<script src="{{ view_object.render_static_url('static_html_search_index.js') }}"></script>
+
+<script>
+
+    const index = new FlexSearch.Document({
+        document: {
+            store: true,
+            index: [{
+                field: "title",
+                // important: a forward tokenizer is minimum
+                // required by an instant search
+                tokenize: "forward"
+            }]
+        }
+    });
+
+    const data = window.searchIndex;
+    for(let i = 0; i < data.length; i++){
+        // pass a json-like object
+        index.add(i, {
+            "title": data[i]
+        });
+    }
+
+    const suggestions = document.getElementById("suggestions");
+    const userinput = document.getElementById("userinput");
+
+    let selectedIndex = 0;
+
+    userinput.addEventListener("input", handleInputEvent_input, true);
+    userinput.addEventListener("keyup", handleInputEvent_keyUp, true);
+    userinput.addEventListener("keydown", handleInputEvent_keyDown, true);
+    suggestions.addEventListener("click", accept_suggestion, true);
+
+    function handleInputEvent_input(){
+        if (userinput.value === "") {
+          suggestions.replaceChildren();
+          return;
+        }
+
+        let results = index.searchCache({
+            query: userinput.value,
+            suggest: true,
+            limit: 25,
+            pluck: "title",
+            enrich: true,
+            highlight: "<b>$1</b>"
+        });
+
+        let i = 0, len = results.length;
+
+        if (len == 0) {
+          suggestions.replaceChildren();
+          return;
+        }
+
+        let entry, childs = suggestions.childNodes;
+
+        for(; i < len; i++){
+            entry = childs[i];
+
+            if(!entry){
+                entry = document.createElement("div");
+                suggestions.appendChild(entry);
+            }
+
+            entry.innerHTML = results[i].highlight; //data[results[i]];
+        }
+
+        while(childs.length > len){
+            suggestions.removeChild(childs[i]);
+        }
+
+        select_result(0);
+    }
+
+    function handleInputEvent_keyDown(event) {
+        const keyCode = (event || window.event).keyCode;
+
+        if (keyCode === 13 || keyCode === 39) {
+            event.preventDefault && event.preventDefault();
+            const node = suggestions.childNodes[selectedIndex];
+            if (!node) {
+                return;
+            }
+            userinput.value = node.textContent;
+            suggestions.textContent = "";
+            return;
+        }
+    }
+
+    function handleInputEvent_keyUp(event) {
+        if(event){
+            const key = event.key;
+            if (key === "ArrowUp") {
+                if (selectedIndex > 0) {
+                    select_result(selectedIndex - 1);
+                }
+                event.preventDefault && event.preventDefault();
+                return;
+            }
+            if(key === "ArrowDown"){
+                if (selectedIndex < (suggestions.childNodes.length - 1)) {
+                    select_result(selectedIndex + 1);
+                }
+                event.preventDefault && event.preventDefault();
+                return;
+            }
+        }
+    }
+
+    function select_result(index){
+
+        let node = suggestions.childNodes[selectedIndex];
+        node && (node.style.backgroundColor = "");
+
+        selectedIndex = index;
+
+        node = suggestions.childNodes[selectedIndex];
+        node && (node.style.backgroundColor = "rgba(0, 0, 255, 0.1)");
+    }
+
+    function accept_suggestion(event) {
+        console.log("accept_autocomplete");
+        const target = (event || window.event).target;
+        userinput.value = target.textContent;
+        suggestions.textContent = "";
+        return false;
+    }
+</script>
+
 {%- endif -%}

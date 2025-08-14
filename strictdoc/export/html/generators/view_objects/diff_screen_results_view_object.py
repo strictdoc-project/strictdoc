@@ -81,6 +81,9 @@ class DiffScreenResultsViewObject:
             else ""
         )
 
+    def get_document_level(self) -> int:
+        return 0
+
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
             "screens/git/index.jinja", view_object=self

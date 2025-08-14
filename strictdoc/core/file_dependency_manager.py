@@ -1,4 +1,8 @@
 """
+A simple container class for tracking dependencies between artifacts.
+
+It provides answers to whether a given artifact has to be re-generated or not.
+
 @relation(SDOC-SRS-2, scope=file)
 """
 
@@ -17,17 +21,11 @@ from strictdoc.helpers.pickle import pickle_dump, pickle_load
 
 
 @dataclass
-class FileDependencyEntry:
-    path_to_file_output: str
-    dependencies: Set[str]
-
-
-@dataclass
 class FileDependencyManager:
     path_to_cache_dir: str
     path_to_cache: str
-    dependencies_now: Dict[str, FileDependencyEntry]
-    dependencies_prev: Dict[str, FileDependencyEntry]
+    dependencies_now: Dict[str, Set[str]]
+    dependencies_prev: Dict[str, Set[str]]
     dependencies_must_renegerate: Set[str]
 
     @staticmethod
@@ -61,21 +59,18 @@ class FileDependencyManager:
         )
 
     def must_generate(self, path_to_input_file: str) -> bool:
-        return path_to_input_file in self.dependencies_must_renegerate
+        must_regenerate = (
+            path_to_input_file in self.dependencies_must_renegerate
+        )
+        return must_regenerate
 
     def add_dependency(
         self,
-        path_to_input_file: str,
-        path_to_output_file: str,
+        path_to_file: str,
         path_to_dependent_file: str,
     ) -> None:
-        assert os.path.isfile(path_to_input_file), path_to_input_file
-        assert os.path.isfile(path_to_dependent_file), path_to_dependent_file
-
-        entry = self.dependencies_now.setdefault(
-            path_to_input_file, FileDependencyEntry(path_to_output_file, set())
-        )
-        entry.dependencies.add(path_to_dependent_file)
+        dependencies = self.dependencies_now.setdefault(path_to_file, set())
+        dependencies.add(path_to_dependent_file)
 
     def save_to_cache(self) -> None:
         self.dependencies_prev = deepcopy(self.dependencies_now)
@@ -96,38 +91,23 @@ class FileDependencyManager:
             self.dependencies_prev.items(),
         )
         for items_ in [items_now, items_before]:
-            for path_to_input_file_, entry_ in items_:
-                path_to_output_file = entry_.path_to_file_output
-
-                if (
-                    # The file has not been generated yet.
-                    not os.path.isfile(path_to_output_file)
-                    # The file used to exist but not anymore.
-                    or not os.path.isfile(path_to_input_file_)
-                    # The file is outdated compared to its HTML output artifact.
-                    or get_file_modification_time(path_to_input_file_)
-                    > get_file_modification_time(path_to_output_file)
-                    # The file is outdated compared to StrictDoc's own code (this
-                    # branch is development-only).
-                    or strictdoc_last_update
-                    > get_file_modification_time(path_to_output_file)
-                ):
-                    # If the file is not a no longer existing file, mark it for
-                    # regeneration.
-                    if os.path.isfile(path_to_input_file_):
+            for path_to_input_file_, dependencies_ in items_:
+                for path_to_dependency_ in dependencies_:
+                    if (
+                        # The file has not been generated yet.
+                        not os.path.isfile(path_to_dependency_)
+                        # The file used to exist but not anymore.
+                        or not os.path.isfile(path_to_input_file_)
+                        # The file is outdated compared to its HTML output artifact.
+                        or get_file_modification_time(path_to_input_file_)
+                        > get_file_modification_time(path_to_dependency_)
+                        # The file is outdated compared to StrictDoc's own code (this
+                        # branch is development-only).
+                        or strictdoc_last_update
+                        > get_file_modification_time(path_to_dependency_)
+                    ):
                         self.dependencies_must_renegerate.add(
-                            path_to_input_file_
-                        )
-
-                    for path_to_dependent_input_file_ in entry_.dependencies:
-                        if (
-                            path_to_dependent_input_file_
-                            in self.dependencies_must_renegerate
-                        ):
-                            continue
-
-                        self.dependencies_must_renegerate.add(
-                            path_to_dependent_input_file_
+                            path_to_dependency_
                         )
 
         self.save_to_cache()

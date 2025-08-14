@@ -1,5 +1,5 @@
 import re
-from typing import Callable, Match, Optional
+from typing import Callable, List, Match, Optional
 
 REGEX_TRAILING_WHITESPACE_SINGLELINE = re.compile(r"\s{2,}")
 REGEX_TRAILING_WHITESPACE_MULTILINE = re.compile(r" +\n")
@@ -87,3 +87,11 @@ def interpolate_at_pattern_lazy(
         return value_resolver(variable_name)
 
     return re.sub(pattern, replace_variable, template)
+
+
+def tokenize(text: str) -> List[str]:
+    text = text.lower()
+
+    pattern = r"[a-z0-9]+(?:[-_./][a-z0-9]+)*"
+    tokens = re.findall(pattern, text)
+    return tokens

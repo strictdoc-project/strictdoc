@@ -1,10 +1,12 @@
 import importlib
 import os
 import sys
+from collections import defaultdict
 from functools import partial
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
+import orjson
 from html2pdf4doc.html2pdf4doc import PATH_TO_HTML2PDF4DOC_JS
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -54,9 +56,10 @@ from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.git_client import GitClient
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.paths import SDocRelativePath
-from strictdoc.helpers.timing import measure_performance
+from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
 class HTMLGenerator:
@@ -82,6 +85,11 @@ class HTMLGenerator:
             traceability_index=traceability_index,
             project_config=self.project_config,
             export_output_html_root=self.project_config.export_output_html_root,
+        )
+
+        # Export static search index.
+        self.export_static_html_search_index(
+            traceability_index=traceability_index
         )
 
         # Export all documents in parallel.
@@ -112,7 +120,7 @@ class HTMLGenerator:
                     get_file_modification_time(input_doc_full_path)
                     < get_file_modification_time(output_doc_full_path)
                     and not traceability_index.file_dependency_manager.must_generate(
-                        document_meta.input_doc_full_path
+                        document_meta.output_document_full_path
                     )
                 ):
                     with measure_performance(f"Skip: {document_.title}"):
@@ -120,7 +128,16 @@ class HTMLGenerator:
 
                 documents_to_export.append(document_)
 
-        parallelizer.run_parallel(documents_to_export, export_binding)
+        if len(documents_to_export) > 0:
+            if len(traceability_index.document_tree.document_list) <= 25:
+                parallelizer.run_parallel(documents_to_export, export_binding)
+            else:
+                print(  # noqa: T201
+                    "NOTE: Running document export without parallelization "
+                    "because the document tree contains more than 25 documents."
+                )
+                for document_ in documents_to_export:
+                    export_binding(document_)
 
         # Export document tree.
         # FIXME: It is important that this export is **after** the parallelized
@@ -648,4 +665,90 @@ class HTMLGenerator:
             "project_statistics.html",
         )
         with open(output_html_source_coverage, "w", encoding="utf8") as file:
+            file.write(document_content)
+
+    @timing_decorator("Export static HTML search index")
+    def export_static_html_search_index(
+        self,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        # First check if there is nothing to do because no documents have been
+        # changed or regenerated.
+        for document_ in traceability_index.document_tree.document_list:
+            assert document_.meta is not None
+            if traceability_index.file_dependency_manager.must_generate(
+                document_.meta.output_document_full_path
+            ):
+                break
+        else:
+            print(  # noqa: T201
+                "All documents are up-to-date. "
+                "Skipping the generation of a search index."
+            )
+            return
+
+        global_index: Dict[str, Set[str]] = defaultdict(set)
+        global_map_nodes_by_mid: Dict[str, Dict[str, str]] = {}
+
+        document_index_list: List[Dict[str, Set[str]]] = []
+        document_map_list: List[Dict[str, Dict[str, str]]] = []
+
+        with measure_performance("Build search index"):
+            for document_ in traceability_index.document_tree.document_list:
+                assert document_.meta is not None
+                document_index_list.append(
+                    document_.search_index.document_index
+                )
+                document_map_list.append(
+                    document_.search_index.map_nodes_by_mid
+                )
+            for document_index_ in document_index_list:
+                for term_, document_mids_ in document_index_.items():
+                    global_index[term_].update(document_mids_)
+            for map_nodes_by_mid_ in document_map_list:
+                global_map_nodes_by_mid.update(map_nodes_by_mid_)
+
+        link_renderer = LinkRenderer(
+            root_path="",
+            static_path=self.project_config.dir_for_sdoc_assets,
+        )
+        for _, node_ in global_map_nodes_by_mid.items():
+            node = traceability_index.get_node_by_mid(MID(node_["MID"]))
+            node_["_LINK"] = link_renderer.render_local_anchor(node)
+
+        def default(obj: Any) -> Any:
+            if isinstance(obj, set):
+                return list(obj)
+            raise TypeError
+
+        with measure_performance("Serialize search index to JS"):
+            document_content = (
+                b"window.SDOC_LUNR_SEARCH_INDEX = "
+                + orjson.dumps(
+                    global_index,
+                    option=orjson.OPT_NON_STR_KEYS,
+                    default=default,
+                )
+                + b";\n\n"
+            )
+
+        with measure_performance("Serialize lookup map {MID => node} to JS"):
+            document_content += (
+                b"window.SDOC_MAP_MID_TO_NODES = "
+                + orjson.dumps(
+                    global_map_nodes_by_mid, option=orjson.OPT_NON_STR_KEYS
+                )
+                + b";\n"
+            )
+
+        # Export StrictDoc's own assets.
+        output_html_static_files = os.path.join(
+            self.project_config.export_output_html_root,
+            self.project_config.dir_for_sdoc_assets,
+        )
+        output_html_source_coverage = os.path.join(
+            output_html_static_files,
+            "static_html_search_index.js",
+        )
+        with open(output_html_source_coverage, "wb") as file:
             file.write(document_content)

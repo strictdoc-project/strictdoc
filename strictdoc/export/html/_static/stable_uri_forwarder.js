@@ -16,15 +16,22 @@
 
 // Resolve the MID / UID to the correct page / anchor using the projectMap.
 function resolveStableUriRedirectUsingProjectMap(anchor) {
-    const anchorIsMID = /^[a-fA-F0-9]{32}$/.test(anchor);
     for (const [page, nodes] of Object.entries(projectMap)) {
         for (const node of nodes) {
+            if (node['_LINK'].toLowerCase() === anchor.toLowerCase()) {
+                window.location.replace(page + "#" + node['_LINK']);
+                return;
+            }
+
+            const nodeHasUID = 'UID' in node && typeof node['UID'] === 'string';
+            if (nodeHasUID && node['UID'].toLowerCase() === anchor.toLowerCase()) {
+                window.location.replace(page + "#" + node['_LINK']);
+                return;
+            }
+
             const nodeHasMID = 'MID' in node && typeof node['MID'] === 'string';
-            if ( (anchorIsMID && nodeHasMID && node['MID']?.toLowerCase() === anchor.toLowerCase()) 
-                || (node['UID'] === anchor)
-            )
-            {
-                window.location.replace(page + "#" + node['UID']);
+            if (nodeHasMID && node['MID'].toLowerCase() === anchor.toLowerCase()) {
+                window.location.replace(page + "#" + node['_LINK']);
                 return;
             }
         }        

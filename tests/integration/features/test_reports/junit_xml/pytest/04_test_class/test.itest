@@ -1,3 +1,5 @@
+# FIXME: Migrate this test to %T.
+
 REQUIRES: PYTHON_39_OR_HIGHER
 
 RUN: cd %S && PYTHONPATH=$(pwd) pytest tests/ --junit-xml=%T/tests_unit.pytest.junit.xml --rootdir=%S

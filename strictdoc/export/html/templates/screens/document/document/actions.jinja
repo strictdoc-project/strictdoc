@@ -33,4 +33,36 @@
     {%- endif -%}
   </div>
 </turbo-frame>
+{%- else -%}
+    <style>
+      #suggestions {
+        position: fixed;
+        top: 100px;
+        right: 50px;
+        z-index: 100;
+        background-color: white;
+        border: 3px solid orange;
+      }
+      .static_search_result_node {
+          margin: 10px;
+          padding: 10px;
+      }
+
+    </style>
+
+  <div class="actions_group">
+    <form style="position: relative; width: 100%;">
+        <input type="text" id="userinput" tabindex="2" placeholder="Search by movie title ..." autocorrect="off" spellcheck="false" autocomplete="off" autofocus>
+    </form>
+  </div>
+
+<div id="suggestions"></div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/nextapps-de/flexsearch@0.8.2/dist/flexsearch.compact.min.js"></script>
+
+<script src="{{ view_object.render_static_url('static_html_search_index.js') }}"></script>
+<script src="{{ view_object.render_static_url('static_html_search.js') }}"></script>
+
+
 {%- endif -%}

@@ -1,4 +1,5 @@
 import importlib
+import json
 import os
 import sys
 from functools import partial
@@ -8,7 +9,9 @@ from typing import Dict, List, Optional, Tuple
 from html2pdf4doc.html2pdf4doc import PATH_TO_HTML2PDF4DOC_JS
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.asset_manager import AssetDir
+from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
@@ -89,6 +92,8 @@ class HTMLGenerator:
             self.export_single_document_with_performance,
             traceability_index=traceability_index,
         )
+
+        self.export_static_html_search_index(traceability_index=traceability_index)
 
         # By default, do not export included documents. Only, if the option to
         # include is provided.
@@ -646,6 +651,62 @@ class HTMLGenerator:
         output_html_source_coverage = os.path.join(
             self.project_config.export_output_html_root,
             "project_statistics.html",
+        )
+        with open(output_html_source_coverage, "w", encoding="utf8") as file:
+            file.write(document_content)
+
+    def export_static_html_search_index(
+        self,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        """
+        TBD
+        """
+
+        link_renderer = LinkRenderer(
+            root_path="",
+            static_path=self.project_config.dir_for_sdoc_assets,
+        )
+
+
+        nodes = []
+        for document_ in traceability_index.document_tree.document_list:
+            assert document_.meta is not None
+            document_iterator = DocumentCachingIterator(document_)
+
+            for node, _ in document_iterator.all_content(
+                print_fragments=False,
+            ):
+                node_dict = {}
+
+                node_dict["MID"] = node.reserved_mid
+
+                if (
+                    isinstance(node, SDocNode) and
+                    "UID" in node.ordered_fields_lookup
+                ):
+                    node_dict["UID"] = node.reserved_uid
+                if (
+                    isinstance(node, SDocNode) and
+                    "STATEMENT" in node.ordered_fields_lookup
+                ):
+                    node_dict["STATEMENT"] = node.reserved_statement
+
+                if len(node_dict) > 0:
+                    nodes.append(node_dict)
+
+        document_content = "window.searchIndex = " + json.dumps(nodes,
+                                                           ensure_ascii=False,
+                                                           indent=2) + ";"
+
+        # Export StrictDoc's own assets.
+        output_html_static_files = os.path.join(
+            self.project_config.export_output_html_root,
+            self.project_config.dir_for_sdoc_assets,
+        )
+        output_html_source_coverage = os.path.join(
+            output_html_static_files,
+            "static_html_search_index.js",
         )
         with open(output_html_source_coverage, "w", encoding="utf8") as file:
             file.write(document_content)

@@ -677,11 +677,21 @@ class HTMLGenerator:
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
             ):
+                node_dict = {}
+
+                if (
+                    isinstance(node, SDocNode) and
+                    "UID" in node.ordered_fields_lookup
+                ):
+                    node_dict["UID"] = node.reserved_uid
                 if (
                     isinstance(node, SDocNode) and
                     "STATEMENT" in node.ordered_fields_lookup
                 ):
-                    nodes.append(node.reserved_statement)
+                    node_dict["STATEMENT"] = node.reserved_statement
+
+                if len(node_dict) > 0:
+                    nodes.append(node_dict)
 
         document_content = "window.searchIndex = " + json.dumps(nodes,
                                                            ensure_ascii=False,

@@ -60,21 +60,30 @@
 
     const index = new FlexSearch.Document({
         document: {
-            store: true,
-            index: [{
-                field: "title",
-                // important: a forward tokenizer is minimum
-                // required by an instant search
-                tokenize: "forward"
-            }]
+            id: "UID",
+            store: ["UID", "STATEMENT"],
+            index: [
+                {
+                    field: "UID",
+                    // important: a forward tokenizer is minimum
+                    // required by an instant search
+                    tokenize: "forward"
+                },
+                {
+                    field: "STATEMENT",
+                    // important: a forward tokenizer is minimum
+                    // required by an instant search
+                    tokenize: "forward"
+                },
+            ]
         }
     });
 
     const data = window.searchIndex;
     for(let i = 0; i < data.length; i++){
-        // pass a json-like object
-        index.add(i, {
-            "title": data[i]
+        index.add({
+            "UID":       "UID",
+            "STATEMENT": "STATEMENT"
         });
     }
 
@@ -96,10 +105,11 @@
 
         let results = index.searchCache({
             query: userinput.value,
+            index: ["UID", "STATEMENT"],
             suggest: true,
-            limit: 25,
-            pluck: "title",
             enrich: true,
+            limit: 25,
+            //pluck: "UID",
             highlight: "<b>$1</b>"
         });
 

@@ -66,6 +66,7 @@ class SDocDocument(SDocDocumentIF):
 
         self.fragments_from_files: List[SDocDocumentFromFileIF] = []
 
+        # FIXME: Is this used?
         self.ng_level: int = 0
         self.ng_has_requirements = False
 

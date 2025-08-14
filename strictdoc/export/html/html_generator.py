@@ -1,4 +1,5 @@
 import importlib
+import json
 import os
 import sys
 from functools import partial
@@ -6,9 +7,12 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from html2pdf4doc.html2pdf4doc import PATH_TO_HTML2PDF4DOC_JS
+from lunr import lunr
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.asset_manager import AssetDir
+from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.source_tree import SourceTree
@@ -56,7 +60,7 @@ from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.paths import SDocRelativePath
-from strictdoc.helpers.timing import measure_performance
+from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
 class HTMLGenerator:
@@ -88,6 +92,10 @@ class HTMLGenerator:
         export_binding = partial(
             self.export_single_document_with_performance,
             traceability_index=traceability_index,
+        )
+
+        self.export_static_html_search_index(
+            traceability_index=traceability_index
         )
 
         # By default, do not export included documents. Only, if the option to
@@ -646,6 +654,89 @@ class HTMLGenerator:
         output_html_source_coverage = os.path.join(
             self.project_config.export_output_html_root,
             "project_statistics.html",
+        )
+        with open(output_html_source_coverage, "w", encoding="utf8") as file:
+            file.write(document_content)
+
+    @timing_decorator("Export static HTML search index")
+    def export_static_html_search_index(
+        self,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        """
+        FIXME
+        """
+
+        nodes = []
+        map_nodes_by_mid = {}
+        for document_ in traceability_index.document_tree.document_list:
+            assert document_.meta is not None
+            document_iterator = DocumentCachingIterator(document_)
+
+            for node, _ in document_iterator.all_content(
+                print_fragments=False,
+            ):
+                node_dict = {}
+
+                node_dict["MID"] = node.reserved_mid
+                map_nodes_by_mid[node.reserved_mid] = node_dict
+
+                if (
+                    isinstance(node, SDocNode)
+                    and "UID" in node.ordered_fields_lookup
+                ):
+                    node_dict["UID"] = node.reserved_uid
+                else:
+                    node_dict["UID"] = ""
+
+                if (
+                    isinstance(node, SDocNode)
+                    and "TITLE" in node.ordered_fields_lookup
+                ):
+                    node_dict["TITLE"] = node.reserved_title
+                else:
+                    node_dict["TITLE"] = ""
+
+                if (
+                    isinstance(node, SDocNode)
+                    and "STATEMENT" in node.ordered_fields_lookup
+                ):
+                    node_dict["STATEMENT"] = node.reserved_statement
+                else:
+                    node_dict["STATEMENT"] = ""
+
+                if len(node_dict) > 0:
+                    nodes.append(node_dict)
+
+        idx = lunr(
+            ref="MID",
+            # FIXME: boost: dict(field_name='title', boost=10), 'body'
+            fields=["UID", "MID", "TITLE", "STATEMENT"],
+            documents=nodes,
+        )
+
+        serialized_idx = idx.serialize()
+
+        document_content = (
+            "window.SDOC_LUNR_SEARCH_INDEX = "
+            + json.dumps(serialized_idx, ensure_ascii=False, indent=2)
+            + ";\n\n"
+        )
+
+        document_content += (
+            "window.SDOC_MAP_MID_TO_NODES = "
+            + json.dumps(map_nodes_by_mid, ensure_ascii=False, indent=2)
+            + ";\n"
+        )
+
+        # Export StrictDoc's own assets.
+        output_html_static_files = os.path.join(
+            self.project_config.export_output_html_root,
+            self.project_config.dir_for_sdoc_assets,
+        )
+        output_html_source_coverage = os.path.join(
+            output_html_static_files,
+            "static_html_search_index.js",
         )
         with open(output_html_source_coverage, "w", encoding="utf8") as file:
             file.write(document_content)

@@ -1,0 +1,49 @@
+<style>
+  #search_results {
+    display: none;
+    position: fixed;
+    left: 25%;
+    width: 50%;
+    top: 100px;
+    z-index: 100;
+    background-color: white;
+    border: 3px solid orange;
+  }
+  .static_search_result_node {
+      margin: 10px;
+      padding: 10px;
+  }
+  #results_navigation #start {
+      display: none;
+  }
+  #results_navigation #previous {
+      display: none;
+  }
+  #results_navigation #next {
+      display: none;
+  }
+  #results_navigation #end {
+      display: none;
+  }
+</style>
+
+<div class="actions_group">
+<form style="position: relative; width: 100%;">
+    <input type="text" id="userinput" tabindex="2" placeholder="Search" autocorrect="off" spellcheck="false" autocomplete="off" autofocus>
+</form>
+</div>
+
+<div id="search_results">
+<div id="results_count"></div>
+<div id="results_navigation">
+<a id="start" href="#">Start</a>
+<a id="previous" href="#">Previous</a>
+<a id="next" href="#">Next</a>
+<a id="end" href="#">End</a>
+</div>
+<div id="suggestions"></div>
+</div>
+
+<script src="{{ view_object.render_static_url('lunr.min.js') }}"></script>
+<script src="{{ view_object.render_static_url('static_html_search_index.js') }}"></script>
+<script src="{{ view_object.render_static_url('static_html_search.js') }}"></script>

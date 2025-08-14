@@ -67,6 +67,9 @@ class ProjectTreeViewObject:
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()
 
+    def get_document_level(self) -> int:
+        return 0
+
     def should_display_fragments_toggle(self) -> bool:
         return self.project_config.export_included_documents
 

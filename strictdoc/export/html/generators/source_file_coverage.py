@@ -33,6 +33,9 @@ class SourceCoverageViewObject:
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
 
+    def get_document_level(self) -> int:
+        return 0
+
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
             "screens/source_file_coverage/index.jinja", view_object=self

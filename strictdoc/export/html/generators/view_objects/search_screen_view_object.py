@@ -69,6 +69,9 @@ class SearchScreenViewObject:
         self.link_document_type: DocumentType = DocumentType.DOCUMENT
         self.document: Optional[SDocDocument] = None
 
+    def get_document_level(self) -> int:
+        return 0
+
     def render_truncated_node_statement(self, node: SDocNode) -> Markup:
         return self.markup_renderer.render_truncated_node_statement(
             self.document_type, node

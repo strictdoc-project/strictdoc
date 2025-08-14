@@ -4,6 +4,8 @@
 # - StrictDoc will import the custom statistics generator and run it instead the default generator.
 # - The resulting statistics HTML has the custom metrics displayed correctly.
 #
+# FIXME: Migrate this test to %T.
+#
 # @relation(SDOC-SRS-154, scope=file)
 #
 

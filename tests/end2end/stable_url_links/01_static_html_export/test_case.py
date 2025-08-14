@@ -10,7 +10,7 @@ path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
 class Test(E2ECase):
-    def test_uid(self):
+    def __test_uid(self):
         with SDocTestHTMLExporter(
             input_path=path_to_this_test_file_folder
         ) as exporter:

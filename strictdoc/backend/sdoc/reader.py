@@ -5,7 +5,9 @@ from textx import TextXSemanticError, TextXSyntaxError, metamodel_from_str
 
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
-from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document import (
+    SDocDocument,
+)
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import (
     SDocCompositeNode,
@@ -114,6 +116,8 @@ class SDReader:
         # of textx. The offending fields are stripped down because they
         # are not used anyway.
         drop_textx_meta(sdoc)
+
+        sdoc.build_search_index()
 
         PickleCache.save_to_cache(sdoc, file_path, project_config, "sdoc")
 

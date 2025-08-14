@@ -77,12 +77,18 @@ class SDocTestHTMLExporter:
         self.exit_stack.enter_context(self.log_file_out)
         self.exit_stack.enter_context(self.log_file_err)
 
+        args_string = " ".join(args)
+        print(  # noqa: T201
+            f"SDocTestHTMLExporter: will execute command:\n{args_string}"
+        )
+
         process = subprocess.run(  # pylint: disable=consider-using-with
             args,
             check=True,
             stdout=self.log_file_out.fileno(),
             stderr=self.log_file_err.fileno(),
             shell=False,
+            capture_output=False,
         )
         self.process = process
 

@@ -2,7 +2,9 @@
 @relation(SDOC-SRS-98, SDOC-SRS-109, scope=file)
 """
 
-from typing import Generator, List, Optional
+from collections import defaultdict
+from dataclasses import dataclass
+from typing import DefaultDict, Dict, Generator, List, Optional, Set
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -23,18 +25,32 @@ from strictdoc.backend.sdoc.models.model import (
     SDocElementIF,
     SDocNodeIF,
 )
-from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.ordered_set import OrderedSet
+from strictdoc.helpers.string import tokenize
+from strictdoc.helpers.timing import measure_performance
 
 
 @auto_described
 class SDocDocumentContext:
     def __init__(self) -> None:
         self.title_number_string: Optional[str] = None
+
+
+@dataclass
+class SDocDocumentSearchIndex:
+    document_index: DefaultDict[str, Set[str]]
+    map_nodes_by_mid: Dict[str, Dict[str, str]]
+
+    @classmethod
+    def create_empty(cls) -> "SDocDocumentSearchIndex":
+        return SDocDocumentSearchIndex(
+            document_index=defaultdict(set), map_nodes_by_mid={}
+        )
 
 
 @auto_described
@@ -66,6 +82,7 @@ class SDocDocument(SDocDocumentIF):
 
         self.fragments_from_files: List[SDocDocumentFromFileIF] = []
 
+        # FIXME: Is this used?
         self.ng_level: int = 0
         self.ng_has_requirements = False
 
@@ -82,6 +99,7 @@ class SDocDocument(SDocDocumentIF):
         ] = None
 
         self.ng_whitelisted: bool = True
+        self.search_index = SDocDocumentSearchIndex.create_empty()
 
     def iterate_nodes(
         self, element_type: Optional[str] = None
@@ -275,3 +293,57 @@ class SDocDocument(SDocDocumentIF):
                     return
 
         self.ng_whitelisted = False
+
+    def build_search_index(self) -> None:
+        document_index = defaultdict(set)
+        map_nodes_by_mid = {}
+
+        with measure_performance(f"Build search index: {self.title}"):
+            from strictdoc.core.document_iterator import (  # noqa: PLC0415
+                DocumentCachingIterator,
+            )
+
+            document_iterator = DocumentCachingIterator(self)
+
+            for node, _ in document_iterator.all_content(
+                print_fragments=False,
+            ):
+                if not isinstance(node, SDocNode):
+                    continue
+
+                node_dict = {}
+
+                node_dict["MID"] = node.reserved_mid.get_string_value()
+                map_nodes_by_mid[node.reserved_mid.get_string_value()] = (
+                    node_dict
+                )
+
+                for (
+                    field_name_,
+                    field_values_,
+                ) in node.ordered_fields_lookup.items():
+                    requirement_field: SDocNodeField = field_values_[0]
+                    requirement_field_value = requirement_field.get_text_value()
+
+                    node_dict[field_name_] = requirement_field_value
+
+                    tokens = set(tokenize(requirement_field_value))
+                    for token in tokens:
+                        if len(token) > 1:
+                            document_index[token].add(
+                                node.reserved_mid.get_string_value()
+                            )
+
+                            for i in range(0, len(token)):
+                                token_incremental = token[: i + 1]
+                                document_index[token_incremental].add(
+                                    node.reserved_mid
+                                )
+                                token_deincremental = token[i:]
+                                document_index[token_deincremental].add(
+                                    node.reserved_mid
+                                )
+
+        self.search_index = SDocDocumentSearchIndex(
+            document_index, map_nodes_by_mid
+        )

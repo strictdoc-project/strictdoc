@@ -947,7 +947,6 @@ def watch(context, sdocs_path="."):
             export
             {sdocs_path}
             --output-dir output/
-            --experimental-enable-file-traceability
     """
 
     run_invoke_with_tox(

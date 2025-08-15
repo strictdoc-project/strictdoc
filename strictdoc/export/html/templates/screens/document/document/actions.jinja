@@ -80,10 +80,11 @@
     });
 
     const data = window.searchIndex;
+    console.log(data);
     for(let i = 0; i < data.length; i++){
         index.add({
-            "UID":       "UID",
-            "STATEMENT": "STATEMENT"
+            "UID":       data[i]["UID"] || "",
+            "STATEMENT": data[i]["STATEMENT"] || "",
         });
     }
 
@@ -113,6 +114,7 @@
             highlight: "<b>$1</b>"
         });
 
+        console.log(results);
         let i = 0, len = results.length;
 
         if (len == 0) {
@@ -120,17 +122,27 @@
           return;
         }
 
-        let entry, childs = suggestions.childNodes;
+        let flatResults = [];
+        for(let i = 0; i < len; i++) {
+            const fieldResults = results[i];
+            console.log(fieldResults);
+            for(let j = 0; j < fieldResults.result.length; j++) {
+                flatResults.push(fieldResults.result[j]);
+            }
+        }
+        console.log(flatResults);
+
+        const childs = suggestions.childNodes;
 
         for(; i < len; i++){
-            entry = childs[i];
+            let entry = childs[i];
 
             if(!entry){
                 entry = document.createElement("div");
                 suggestions.appendChild(entry);
             }
 
-            entry.innerHTML = results[i].highlight; //data[results[i]];
+            entry.innerHTML = flatResults[i].highlight; //data[results[i]];
         }
 
         while(childs.length > len){

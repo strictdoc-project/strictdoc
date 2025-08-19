@@ -8,7 +8,7 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
-  <script src="{{ view_object.render_static_url_with_prefix('stimulus_umd.min.js') }}"></script>
+  <script src="{{ view_object.render_static_url('stimulus_umd.min.js') }}"></script>
   <script>
     Stimulus.application = Stimulus.Application.start();
   </script>

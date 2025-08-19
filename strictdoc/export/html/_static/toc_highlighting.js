@@ -1,6 +1,7 @@
 const TOC_HIGHLIGHT_DEBUG = false;
 
 const TOC_FRAME_SELECTOR = 'turbo-frame#frame-toc'; // updating
+const TOC_LIST_SELECTOR = 'ul#toc';
 const TOC_ELEMENT_SELECTOR = 'a';
 const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content'; // replacing => parentNode is needed
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
@@ -27,9 +28,10 @@ window.addEventListener("load",function(){
 
   // * Frames are stable and we define them once.
   const tocFrame = document.querySelector(TOC_FRAME_SELECTOR);
+  const tocList = tocFrame ? tocFrame.querySelector(TOC_LIST_SELECTOR) : null;
   const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR)?.parentNode;
 
-  if(!tocFrame || !contentFrame) { return }
+  if(!tocFrame || !tocList || !contentFrame) { return }
 
   // ! depends on TOC markup
   tocHighlightingState.contentFrameTop = contentFrame.offsetParent
@@ -65,8 +67,10 @@ window.addEventListener("load",function(){
     }
   );
 
-  // * Call for the first time.
-  highlightTOC(tocFrame, contentFrame, anchorObserver);
+  // * Call for the first time only if the TOC actually contains items.
+  if (tocList && tocList.querySelector(TOC_ELEMENT_SELECTOR)) {
+    highlightTOC(tocFrame, contentFrame, anchorObserver);
+  }
 
 },false);
 
@@ -85,6 +89,11 @@ function handleHashChange() {
   const match = hash.match(/#(.*)/);
   const fragment = match ? match[1] : null;
 
+  // Guard: no links collected yet (e.g., empty TOC or init race)
+  if (!tocHighlightingState.links || typeof tocHighlightingState.links.forEach !== 'function') {
+    return;
+  }
+
   tocHighlightingState.links.forEach(link => {
     targetItem(link, false)
   });
@@ -99,8 +108,10 @@ function handleHashChange() {
 
 function processLinkList(tocFrame) {
   // * Collects all links in the TOC
-  tocHighlightingState.links = null;
   tocHighlightingState.links = tocFrame.querySelectorAll(TOC_ELEMENT_SELECTOR);
+  if (!tocHighlightingState.links || tocHighlightingState.links.length === 0) {
+    return;
+  }
   tocHighlightingState.links.length
     && tocHighlightingState.links.forEach(link => {
     const id = link.getAttribute('anchor');
@@ -251,6 +262,9 @@ function findDeepestLastChild(element) {
 }
 
 function targetItem(element, on = true) {
+  if (!element) { return } // Guard against race conditions:
+  // hashchange or intersection events may fire
+  // before the TOC is fully built, resulting in undefined link elements.
   if(on) {
     element.setAttribute('targeted', '');
   } else {
@@ -259,6 +273,7 @@ function targetItem(element, on = true) {
 }
 
 function fireItem(element, on = true) {
+  if (!element) { return } // Guard against race conditions
   if(on) {
     element.setAttribute('intersected', '');
   } else {
@@ -267,6 +282,7 @@ function fireItem(element, on = true) {
 }
 
 function fireFolder(element, on = true) {
+  if (!element) { return } // Guard against race conditions
   if(on) {
     element.setAttribute('parented', '');
   } else {

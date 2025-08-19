@@ -1796,6 +1796,13 @@ sdoc-tabs.in_aside_panel sdoc-tab[active] {
   margin-bottom: var(--base-rhythm);
 }
 
+.static_search-result-node-field-key {
+  font-size: var(--font-size-sm);
+  font-family: var(--code-font-family);
+  font-weight: 500;
+  color: var(--requirement-label-color);
+}
+
 .static_search-result-node-link,
 .static_search-result-node-link a {
   color: var(--color-action);

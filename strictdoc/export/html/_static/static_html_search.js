@@ -116,7 +116,7 @@ class SearchResultsView {
                 if (key === "MID" || value === "") {
                     return;
                 }
-                node_key_values = node_key_values + `<div class="static_search-result-node-field">${key}: ${value}</div>`;
+                node_key_values = node_key_values + `<div class="static_search-result-node-field"><span class="static_search-result-node-field-key">${key}:</span> ${value}</div>`;
             });
 
             const pathPrefix = (this.documentLevel === 0) ? "" : "../".repeat(this.documentLevel);

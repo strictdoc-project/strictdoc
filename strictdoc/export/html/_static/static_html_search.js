@@ -14,6 +14,7 @@ class SearchResultsView {
             "SearchResultsView: strictdoc-document-level meta tag is not a valid number."
         );
 
+        this.searchBox = document.getElementById("search");
         this.searchResults = document.getElementById("search_results");
         this.resultsCount = document.getElementById("results_count");
         this.suggestions = document.getElementById("suggestions");
@@ -35,7 +36,7 @@ class SearchResultsView {
     }
 
     hideResults() {
-        this.searchResults.style.display = "none";
+        this.searchBox.removeAttribute("active");
         this.resultsCount.innerHTML = "";
         this.suggestions.replaceChildren();
         this.selectedIndex = 0;
@@ -69,7 +70,7 @@ class SearchResultsView {
 
         this.displayPage(1);
 
-        this.searchResults.style.display = "block";
+        this.searchBox.setAttribute("active", "");
     }
 
     displayPage(page) {
@@ -101,15 +102,15 @@ class SearchResultsView {
                 if (key === "MID" || value === "") {
                     return;
                 }
-                node_key_values = node_key_values + `<div class="static_search_result_node_field">${key}: ${value}</div>`;
+                node_key_values = node_key_values + `<div class="static_search-result-node-field">${key}: ${value}</div>`;
             });
 
             const pathPrefix = (this.documentLevel === 0) ? "" : "../".repeat(this.documentLevel);
 
-            entry.innerHTML = `<div class="static_search_result_node">
+            entry.innerHTML = `<div class="static_search-result-node">
     ${node_key_values}
-    <div class="link">
-        <a href="${pathPrefix}index.html?a=${node["UID"]}">LINK</a>
+    <div class="static_search-result-node-link">
+        <a href="${pathPrefix}index.html?a=${node["UID"]}">Go to node →</a>
     </div>
     </div>
     `;
@@ -125,28 +126,28 @@ class SearchResultsView {
 
         if (this.results.length > SearchResultsView.PAGE_SIZE) {
             if (page < 2) {
-                this.navigationStart.style.display = "none";
-                this.navigationPrevious.style.display = "none";
+                this.navigationStart.setAttribute("disabled", "");
+                this.navigationPrevious.setAttribute("disabled", "");
             } else {
-                this.navigationStart.style.display = "inline";
-                this.navigationPrevious.style.display = "inline";
+                this.navigationStart.removeAttribute("disabled");
+                this.navigationPrevious.removeAttribute("disabled");
             }
             if (page >= Math.ceil(this.results.length / SearchResultsView.PAGE_SIZE)) {
-                this.navigationNext.style.display = "none";
-                this.navigationEnd.style.display = "none";
+                this.navigationNext.setAttribute("disabled", "");
+                this.navigationEnd.setAttribute("disabled", "");
             } else {
-                this.navigationNext.style.display = "inline";
-                this.navigationEnd.style.display = "inline";
+                this.navigationNext.removeAttribute("disabled");
+                this.navigationEnd.removeAttribute("disabled");
             }
         } else {
-            this.navigationStart.style.display = "none";
-            this.navigationPrevious.style.display = "none";
-            this.navigationNext.style.display = "none";
-            this.navigationEnd.style.display = "none";
+            this.navigationStart.setAttribute("disabled", "");
+            this.navigationPrevious.setAttribute("disabled", "");
+            this.navigationNext.setAttribute("disabled", "");
+            this.navigationEnd.setAttribute("disabled", "");
         }
 
         this.resultsCount.innerHTML = `\
-Results: ${rangeStart}–${rangeEnd} from ${this.results.length}
+Results: <b>${rangeStart}–${rangeEnd}</b> from ${this.results.length}
 `;
 
         this._selectResult(0);

@@ -3,13 +3,22 @@ TITLE: Hello math!
 
 [TEXT]
 STATEMENT: >>>
-When the ``MATHJAX`` feature is enabled, we support the role for inline math.
-Use like this:
+When the ``MATHJAX`` feature is enabled, we support the sphinx math syntax. 
+<<<
+
+[[SECTION]]
+TITLE: Expressing Math (Sphinx-Style)
+
+[TEXT]
+STATEMENT: >>>
+The input language for mathematics is LaTeX markup. This is the de-facto standard for plain-text math notation.
+StricDoc supports the Sphinx-style math extensions to wrap LaTex markup in rST.
+
+The ``:math:`` role can be used for inline math, like this:
 
 .. code-block ::
 
     Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
-
 
 Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
 
@@ -17,8 +26,8 @@ Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
 
 [TEXT]
 STATEMENT: >>>
-When the ``MATHJAX`` feature is enabled, we support also the math directive. 
-Use like this:
+StrictDoc also supports the ``.. math::`` directive, which renders the equation(s) as a new, centered paragrahs. 
+The directive supports multiple equations, which should be separated by a blank line. For example:
 
 .. code-block ::
 
@@ -33,13 +42,37 @@ Use like this:
    (a + b)^2 = a^2 + 2ab + b^2
 
    (a - b)^2 = a^2 - 2ab + b^2
+
+In addition, each single equation is set within a split environment, which means that you can have multiple aligned lines in an equation, aligned at ``&`` and separated by ``\\\\``:
+
+.. code-block ::
+
+  .. math::
+
+     (a + b)^2  &=  (a + b)(a + b) \\
+                &=  a^2 + 2ab + b^2
+
+.. math::
+
+   (a + b)^2  &=  (a + b)(a + b) \\
+              &=  a^2 + 2ab + b^2
+
+
+When the math is only one line of text, it can also be given as a directive argument:
+
+.. code-block ::
+
+  .. math:: (a + b)^2 = a^2 + 2ab + b^2
+
+.. math:: (a + b)^2 = a^2 + 2ab + b^2
 <<<
+
+[[SECTION]]
+TITLE: Referencing Equations
 
 [TEXT]
 STATEMENT: >>>
-Normally, equations are not numbered. If you want your equation to get a number, use 
-the label option. When given, it selects a label for the equation, by which it can be 
-cross-referenced, and causes an equation number to be issued. 
+Normally, equations are not numbered. To issue an equation number, add a label: 
 
 .. code-block ::
   
@@ -47,12 +80,10 @@ cross-referenced, and causes an equation number to be issued.
      :label: euler
   
 
-
-
 .. math:: e^{i\pi} + 1 = 0
    :label: euler
 
-When you want to cross-reference, use this syntax:
+To cross-reference an equation from the text, use the ``:eq:`` role, and specify the desired label.
 
 .. code-block ::
 
@@ -63,13 +94,70 @@ When you want to cross-reference, use this syntax:
 Euler's identity, equation :eq:`euler`, was elected one of the most
 beautiful mathematical formulas.
 
+The directive supports only a single label per block, so you need to split multiple equations into multiple blocks to reference them:
+
+.. code-block :: 
+
+  .. math::
+     :label: binominal-plus
+
+     (a + b)^2 = a^2 + 2ab + b^2
+
+  .. math::
+     :label: binominal-minus
+
+     (a - b)^2 = a^2 - 2ab + b^2
+
+.. math::
+   :label: binominal-plus
+
+   (a + b)^2 = a^2 + 2ab + b^2
+
+.. math::
+   :label: binominal-minus
+
+   (a - b)^2 = a^2 - 2ab + b^2
+
+
+If you want the two formulas to share a single equation number (and reference), you can put them into a single aligned block:
+
+.. code-block :: 
+
+   .. math::
+     :label: binominal
+
+     (a + b)^2 &= a^2 + 2ab + b^2  \\
+     (a - b)^2 &= a^2 - 2ab + b^2
+
+.. math::
+   :label: binominal
+
+   (a + b)^2 &= a^2 + 2ab + b^2  \\
+   (a - b)^2 &= a^2 - 2ab + b^2
+
 <<<
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: More Control over the Math Environment
 
 [TEXT]
 STATEMENT: >>>
-There is also an option ``nowrap`` that prevents any wrapping of the given math 
-in a math environment. When you give this option, you must make sure yourself 
-that the math is properly set up. For example:
+There is also an option ``no-wrap`` that prevents any automatic wrapping of the given equations in a math environment.
+This option gives you full control, but you are also now responsible that the math environemnt is properly set up. 
+
+If you want equation numbering, use an environment without asterisk ``*``:
+
+.. code-block ::
+
+  .. math::
+     :no-wrap:
+
+     \begin{eqnarray}
+        y    & = & ax^2 + bx + c \\
+        f(x) & = & x^2 + 2xy + y^2
+     \end{eqnarray}
 
 .. math::
    :nowrap:
@@ -78,4 +166,119 @@ that the math is properly set up. For example:
       y    & = & ax^2 + bx + c \\
       f(x) & = & x^2 + 2xy + y^2
    \end{eqnarray}
+
+To suppress the equation numbering for the entire block, add an
+asterisk ``*`` to the end of the environment name.
+For example:
+
+.. code-block ::
+
+  .. math::
+     :nowrap:
+
+     \begin{eqnarray*}
+        y    & = & ax^2 + bx + c \\
+        f(x) & = & x^2 + 2xy + y^2
+     \end{eqnarray*}
+
+.. math::
+   :nowrap:
+
+   \begin{eqnarray*}
+      y    & = & ax^2 + bx + c \\
+      f(x) & = & x^2 + 2xy + y^2
+   \end{eqnarray*}
+
+It is also possible to suppress the equation numbering for an individual equation using ``\notag``.
+
+.. code-block ::
+
+  .. math::
+     :nowrap:
+
+     \begin{eqnarray}
+        y    & = & ax^2 + bx + c  \notag \\
+        f(x) & = & x^2 + 2xy + y^2
+     \end{eqnarray}
+
+.. math::
+   :nowrap:
+
+   \begin{eqnarray}
+      y    & = & ax^2 + bx + c \notag \\
+      f(x) & = & x^2 + 2xy + y^2
+   \end{eqnarray}
+
+.. note ::
+   
+   Note that recent versions of Sphinx use ``no-wrap``, but in older versions of Sphinx, the option was called ``nowrap`` without the dash. StricDoc supports both variants for compatibility reasons, but
+   for new content, we recommend to use the more recent version ``no-wrap``.
+
 <<<
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Referencing Equations in other Nodes
+
+[TEXT]
+STATEMENT: >>>
+
+Referencing equations only works within the same .sdoc document, but equations from any node in the current document can be referenced, and it does not matter wether the equation is defined before the reference, or after.
+
+For example, these are Maxwell's equations:
+
+.. math::
+   :label: maxwell
+
+   \nabla \cdot \mathbf{E} &= \frac{\rho}{\varepsilon_0} \\
+   \nabla \cdot \mathbf{B} &= 0 \\
+   \nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \\
+   \nabla \times \mathbf{B} &= \mu_0 \mathbf{J} + \mu_0 \varepsilon_0 \frac{\partial \mathbf{E}}{\partial t}
+
+And, here we check that we can correctly refer to:
+
+* an equation that is located earlier in the same node: :eq:`maxwell`   
+* an equation that is located later in the same node: :eq:`einstein`
+* an equation that is located in a different, earlier node: :eq:`euler`
+* an equation that is located in a later node :eq:`navier-stokes`
+
+And here is Einsteins well-known equation:
+
+.. math:: E = mc^2 
+   :label: einstein
+
+.. note::
+  
+  To ensure that this feature works correctly also in the webeditor, converting labels to equation numbers needs to be performed by MathJax (at render time in the browser).
+  StricDoc therefore transparently passes the equation lables to the generated HTML code.  
+<<<
+
+[REQUIREMENT]
+STATEMENT: >>>
+This requirement shows the navier stokes equations:
+
+.. math::
+   :label: navier-stokes
+
+   \rho \left( \frac{\partial \mathbf{u}}{\partial t} + \mathbf{u} \cdot \nabla \mathbf{u} \right)
+   &= - \nabla p + \mu \nabla^2 \mathbf{u} + \mathbf{f} \\
+
+   \nabla \cdot \mathbf{u} &= 0 
+<<<
+
+[TEXT]
+STATEMENT: >>>
+Here is some more filler text to make the scrolling in the brower more obvious:
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel mattis enim. Nam pellentesque mattis 
+augue volutpat interdum. Nam suscipit turpis malesuada sem commodo placerat. Suspendisse venenatis arcu vitae 
+ipsum lobortis, in iaculis tellus placerat. In tincidunt ante odio, id mollis dolor vestibulum quis. 
+Quisque id ligula libero. Aenean interdum ac urna accumsan pellentesque. Sed pulvinar ac lorem eu malesuada. 
+Morbi hendrerit eleifend venenatis. Donec quis viverra metus. Etiam sagittis, nisl vel ultrices egestas, urna dui 
+euismod enim, ut convallis ante nulla et ex.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]

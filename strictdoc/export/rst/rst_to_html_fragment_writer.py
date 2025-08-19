@@ -16,8 +16,11 @@ from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.export.rst.directives.raw_html_role import raw_html_role
 from strictdoc.export.rst.directives.sphinx_style_math import (
     MathDirective,
+    MathDirectiveForServer,
     eq_role,
+    eq_role_for_server,
     math_role,
+    math_role_for_server,
 )
 from strictdoc.export.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
@@ -70,9 +73,14 @@ class RstToHtmlFragmentWriter:
         self.context_document: Optional[SDocDocument] = context_document
 
         if project_config.is_feature_activated(ProjectFeature.MATHJAX):
-            directives.register_directive("math", MathDirective)
-            roles.register_canonical_role("math", math_role)
-            roles.register_canonical_role("eq", eq_role)
+            if project_config.is_running_on_server:
+                roles.register_canonical_role("eq", eq_role_for_server)
+                roles.register_canonical_role("math", math_role_for_server)
+                directives.register_directive("math", MathDirectiveForServer)
+            else:
+                roles.register_canonical_role("eq", eq_role)
+                roles.register_canonical_role("math", math_role)
+                directives.register_directive("math", MathDirective)
 
     def write(self, rst_fragment: str, use_cache: bool = True) -> Markup:
         assert isinstance(rst_fragment, str), rst_fragment

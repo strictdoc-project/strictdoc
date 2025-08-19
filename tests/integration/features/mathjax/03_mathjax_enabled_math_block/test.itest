@@ -7,7 +7,15 @@ RUN: %check_exists --file "%T/html/_static/mathjax/output/chtml/fonts/tex.js"
 RUN: %cat %T/html/03_mathjax_enabled_math_block/input.html | filecheck %s --check-prefix CHECK-HTML
 
 CHECK-HTML: <span class="math notranslate nohighlight">\( a^2 + b^2 = c^2 \)</span>
-CHECK-HTML: <div class="math notranslate nohighlight">\[\begin{align}\begin{aligned}(a + b)^2 = a^2 + 2ab + b^2 \\ (a - b)^2 = a^2 - 2ab + b^2\end{aligned}\end{align}\]</div></div>
-CHECK-HTML: <a id="euler"></a><div class="math notranslate nohighlight"><span class="eqno">(1)</span>\[e^{i\pi} + 1 = 0\]</div>
-CHECK-HTML: <a href="#euler">(1)</a>
-CHECK-HTML: <div class="math notranslate nohighlight">\begin{eqnarray}
+CHECK-HTML: <div class="math notranslate nohighlight">\[ \begin{align*}\begin{aligned}(a + b)^2 = a^2 + 2ab + b^2 \\ (a - b)^2 = a^2 - 2ab + b^2\end{aligned}\end{align*} \]</div>
+CHECK-HTML: <div class="math notranslate nohighlight">\[ \begin{equation}\label{euler}\begin{aligned} e^{i\pi} + 1 = 0 \end{aligned}\end{equation} \]</div>
+CHECK-HTML: <p>Euler's identity, equation <span class="math notranslate nohighlight">\( \eqref{euler} \)</span>, was elected one of the most
+CHECK-HTML: <div class="math notranslate nohighlight">\[ \begin{eqnarray}
+CHECK-HTML:    y    & = & ax^2 + bx + c \\
+CHECK-HTML:    f(x) & = & x^2 + 2xy + y^2
+CHECK-HTML: \end{eqnarray} \]</div>
+CHECK-HTML: <span class="math notranslate nohighlight">\( \eqref{maxwell} \)</span>
+CHECK-HTML: <span class="math notranslate nohighlight">\( \eqref{einstein} \)</span>
+CHECK-HTML: <span class="math notranslate nohighlight">\( \eqref{euler} \)</span>
+CHECK-HTML: <span class="math notranslate nohighlight">\( \eqref{navier-stokes} \)</span>
+

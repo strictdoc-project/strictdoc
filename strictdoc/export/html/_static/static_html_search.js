@@ -33,6 +33,20 @@ class SearchResultsView {
         this.results = null;
         this.currentPage = 1;
         suggestions.addEventListener("click", this.acceptSuggestion, true);
+        document.addEventListener("keydown", (event) => this.handleEscape(event), true);
+    }
+
+    handleEscape(event) {
+        if (event.key === "Escape") {
+            this.hideResults();
+            // On Esc, remove focus from the input field.
+            // Otherwise the field remains focused and a subsequent click won't fire a 'focus' event,
+            // so the search won't restart. Blurring ensures the next refocus re‑triggers search with
+            // the existing text.
+            if (typeof userinput !== "undefined" && document.activeElement === userinput) {
+            userinput.blur();
+            }
+        }
     }
 
     hideResults() {
@@ -189,13 +203,15 @@ const userinput = document.getElementById("userinput");
 userinput.addEventListener("input", handleInputEvent_input, true);
 userinput.addEventListener("keyup", handleInputEvent_keyUp, true);
 userinput.addEventListener("keydown", handleInputEvent_keyDown, true);
+userinput.addEventListener("focus", handleInputEvent_focus, true);
 
 const searchResultsView = new SearchResultsView();
 
 function handleInputEvent_input(){
     if (userinput.value === "") {
-      searchResultsView.clearResults
-      return;
+        // searchResultsView.clearResults
+        searchResultsView.hideResults();
+        return;
     }
 
     console.log("User input: " + userinput.value);
@@ -217,6 +233,13 @@ function handleInputEvent_keyDown(event) {
     //     suggestions.textContent = "";
     //     return;
     // }
+}
+
+function handleInputEvent_focus(event) {
+    if (userinput.value !== "") {
+        let results = idx.search(userinput.value);
+        searchResultsView.populateResults(results);
+    }
 }
 
 function handleInputEvent_keyUp(event) {

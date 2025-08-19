@@ -180,7 +180,9 @@ class ProjectTree {
 
     this._initStateAndStorage();
 
-    console.assert(this.controlTarget, `controlTarget not found on the page`);
+    // * this.controlTarget may not be present on the page, for example, in the case of static export.
+    // console.assert(this.controlTarget, `controlTarget not found on the page`);
+
     this._createControl();
     this._addControl();
 
@@ -315,7 +317,8 @@ class ProjectTree {
   }
 
   _addControl() {
-    this.controlTarget.append(this.controlElement);
+    // * this.controlTarget may not be present on the page, for example, in the case of static export.
+    this.controlTarget && this.controlTarget.append(this.controlElement);
   }
 
   _removeControl() {
@@ -348,10 +351,12 @@ class ProjectTree {
 window.addEventListener("DOMContentLoaded", function(){
 
   const controlTarget = document.querySelector(SWITCH_SELECTOR);
-  if (!controlTarget) {
-    console.error(`Selector "${SWITCH_SELECTOR}" not found on the page`);
-    return;
-  }
+  // * This element may not be present on the page, for example, in the case of static export.
+  // if (!controlTarget) {
+  //   console.error(`Selector "${SWITCH_SELECTOR}" not found on the page`);
+  //   return;
+  // }
+
   const mutatingFrame = document.querySelector(FRAME_SELECTOR);
   if (!mutatingFrame) {
     console.error(`Selector "${FRAME_SELECTOR}" not found on the page`);

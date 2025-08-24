@@ -1,0 +1,17 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/tests/file.cpp.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/test_specification.html | filecheck %s --check-prefix CHECK-HTML-TESTSPEC
+CHECK-HTML-TESTSPEC: Test specification
+CHECK-HTML-TESTSPEC: TEST(ApsDecoder, ApsUpdateFwd)
+CHECK-HTML-TESTSPEC: TEST_DOC/tests/file.cpp/TEST(ApsDecoder, ApsUpdateFwd)
+CHECK-HTML-TESTSPEC: tests/file.cpp, <i>lines: 3-20</i>, function TEST(ApsDecoder, ApsUpdateFwd)()
+
+RUN: %cat %T/html/_source_files/tests/file.cpp.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+
+CHECK-SOURCE-FILE: TEST_DOC/tests/file.cpp/TEST(ApsDecoder, ApsUpdateFwd)

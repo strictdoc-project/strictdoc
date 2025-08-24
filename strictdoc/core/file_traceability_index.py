@@ -646,6 +646,11 @@ class FileTraceabilityIndex:
                     node.node_type
                 ]
                 for marker in markers_:
+                    # Backwards markers do not require referenced node grammar
+                    # to have the relation/role registered in the grammar.
+                    if isinstance(marker, (FunctionRangeMarker, RangeMarker)):
+                        continue
+
                     if not grammar_element.has_relation_type_role(
                         relation_type="File",
                         relation_role=marker.role,

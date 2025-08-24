@@ -1,0 +1,22 @@
+<div class="actions_group">
+</div>
+<div id="search" class="search-box">
+  <div class="search-input">
+      <input type="text" id="userinput" tabindex="2" placeholder="Search" autocorrect="off" spellcheck="false" autocomplete="off" data-testid="static-html-search-input">
+  </div>
+  <div id="search_results" class="search-results">
+    <div id="results_navigation" class="search-results-navigation">
+      <div id="results_count" class="search-results-count"></div>
+      <div class="search-results-navigation-buttons">
+        <span class="search-results-navigation-button" id="start" data-testid="static-html-search-button-start"></span>
+        <span class="search-results-navigation-button" id="previous" data-testid="static-html-search-button-previous"></span>
+        <span class="search-results-navigation-button" id="next" data-testid="static-html-search-button-next"></span>
+        <span class="search-results-navigation-button" id="end" data-testid="static-html-search-button-end"></span>
+      </div>
+    </div>
+    <div id="suggestions" class="search-suggestions"></div>
+  </div>
+</div>
+
+<script src="{{ view_object.render_static_url('static_html_search_index.js') }}"></script>
+<script src="{{ view_object.render_static_url('static_html_search.js') }}"></script>

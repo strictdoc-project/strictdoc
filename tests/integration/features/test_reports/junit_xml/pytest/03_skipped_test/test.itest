@@ -1,3 +1,5 @@
+# FIXME: Migrate this test to %T.
+
 REQUIRES: PYTHON_39_OR_HIGHER
 
 # Failing test will exit with a non-zero code. Use "true" to make LIT continue running.

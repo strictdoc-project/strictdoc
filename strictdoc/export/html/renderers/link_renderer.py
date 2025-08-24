@@ -61,7 +61,7 @@ class LinkRenderer:
             # UID is unique enough.
             local_anchor = self._string_to_link(node.reserved_uid)
         else:
-            # If an element as no UID, provide some uniqueness.
+            # If an element has no UID, provide some uniqueness.
             unique_prefix = node.context.title_number_string
             if isinstance(node, (SDocSection, SDocDocument)):
                 local_anchor = (
@@ -77,8 +77,7 @@ class LinkRenderer:
                         f"{self._string_to_link(node.reserved_title)}"
                     )
                 else:
-                    # TODO: This is not reliable
-                    local_anchor = str(id(node))
+                    local_anchor = self._string_to_link(node.reserved_mid)
             else:
                 raise NotImplementedError(node)
         self.local_anchor_cache[node] = local_anchor

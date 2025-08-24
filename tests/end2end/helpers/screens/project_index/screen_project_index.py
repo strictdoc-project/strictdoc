@@ -155,7 +155,49 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
         )
         return Screen_Document(self.test_case)
 
+    #
+    # Static HTML search.
+    #
+
+    def do_enter_search_query(self, search_query: str) -> None:
+        input_xpath = "//input[@data-testid='static-html-search-input']"
+
+        # We simulate a user typing the supplied field_value.
+        self.test_case.type(input_xpath, search_query, by=By.XPATH)
+
+    def do_go_to_search_result(self, result: int) -> None:
+        assert result > 0, f"Result is 1-based index: {result}"
+        xpath = f"(//div[@class='static_search-result-node-link']//a)[{result}]"
+        self.test_case.click_xpath(xpath)
+
+    def do_click_search_result_start(self) -> None:
+        input_xpath = "//span[@data-testid='static-html-search-button-start']"
+        self.test_case.click_xpath(input_xpath)
+
+    def do_click_search_result_previous(self) -> None:
+        input_xpath = (
+            "//span[@data-testid='static-html-search-button-previous']"
+        )
+        self.test_case.click_xpath(input_xpath)
+
+    def do_click_search_result_next(self) -> None:
+        input_xpath = "//span[@data-testid='static-html-search-button-next']"
+        self.test_case.click_xpath(input_xpath)
+
+    def do_click_search_result_end(self) -> None:
+        input_xpath = "//span[@data-testid='static-html-search-button-end']"
+        self.test_case.click_xpath(input_xpath)
+
+    def assert_search_results(
+        self, range_start: int, range_end: int, total: int
+    ) -> None:
+        self.test_case.assert_text("Results:")
+        self.test_case.assert_text(f"{range_start}–{range_end}")
+        self.test_case.assert_text(f"from {total}")
+
+    #
     # Add new document
+    #
 
     def do_open_modal_form_add_document(self) -> Form_AddDocument:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)

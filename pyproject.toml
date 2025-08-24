@@ -64,6 +64,9 @@ dependencies = [
     # Requirements-to-source traceability. Colored syntax for source files.
     "pygments >= 2.10.0, == 2.*",
 
+    # Faster JSON serialization for Static HTML search.
+    "orjson",
+
     # Static HTML export with embedded assets.
     "beautifulsoup4 >= 4.12.0, == 4.*",
     "html5lib>=1.1",  # Used by beautifulsoup4 as an optional plugin.

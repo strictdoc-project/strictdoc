@@ -1,3 +1,5 @@
+# FIXME: Migrate this test to %T.
+
 # TBD: Figure out how to set PYTHONPATH on Windows.
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 

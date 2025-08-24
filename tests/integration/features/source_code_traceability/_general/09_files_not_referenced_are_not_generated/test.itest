@@ -1,3 +1,5 @@
+# FIXME: Migrate this test to %T.
+
 RUN: cd %S && %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 
 CHECK: Published: Hello world doc

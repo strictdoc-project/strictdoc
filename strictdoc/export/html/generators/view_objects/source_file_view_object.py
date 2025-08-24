@@ -91,6 +91,9 @@ class SourceFileViewObject:
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
 
+    def get_document_level(self) -> int:
+        return self.source_file.level
+
     def render_screen(self) -> Markup:
         return self.jinja_environment.render_template_as_markup(
             "screens/source_file_view/index.jinja", view_object=self

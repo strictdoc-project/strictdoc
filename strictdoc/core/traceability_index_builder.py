@@ -188,12 +188,14 @@ class TraceabilityIndexBuilder:
                         traceability_index.file_dependency_manager.add_dependency(
                             source_file.full_path,
                             source_file.output_file_full_path,
-                            node_document.meta.input_doc_full_path,
+                        )
+                        traceability_index.file_dependency_manager.add_dependency(
+                            source_file.full_path,
+                            node_document.meta.output_document_full_path,
                         )
                         traceability_index.file_dependency_manager.add_dependency(
                             node_document.meta.input_doc_full_path,
-                            node_document.meta.output_document_full_path,
-                            source_file.full_path,
+                            source_file.output_file_full_path,
                         )
 
             traceability_index.document_tree.attach_source_tree(source_tree)
@@ -317,6 +319,11 @@ class TraceabilityIndexBuilder:
         for document in document_tree.document_list:
             assert document.grammar is not None
             assert document.meta is not None
+
+            traceability_index.file_dependency_manager.add_dependency(
+                document.meta.input_doc_full_path,
+                document.meta.output_document_full_path,
+            )
 
             if document.config.view_style_tag == "REQUIREMENT_STYLE":
                 DEPRECATION_ENGINE.add_message(
@@ -626,13 +633,11 @@ class TraceabilityIndexBuilder:
                             # re-generated together.
                             file_dependency_manager.add_dependency(
                                 document.meta.input_doc_full_path,
-                                document.meta.output_document_full_path,
-                                parent_document.meta.input_doc_full_path,
+                                parent_document.meta.output_document_full_path,
                             )
                             file_dependency_manager.add_dependency(
                                 parent_document.meta.input_doc_full_path,
-                                parent_document.meta.output_document_full_path,
-                                document.meta.input_doc_full_path,
+                                document.meta.output_document_full_path,
                             )
                     elif reference.ref_type == ReferenceType.CHILD:
                         child_reference: ChildReqReference = assert_cast(
@@ -674,13 +679,11 @@ class TraceabilityIndexBuilder:
                             # re-generated together.
                             file_dependency_manager.add_dependency(
                                 document.meta.input_doc_full_path,
-                                document.meta.output_document_full_path,
-                                child_requirement_document.meta.input_doc_full_path,
+                                child_requirement_document.meta.output_document_full_path,
                             )
                             file_dependency_manager.add_dependency(
                                 child_requirement_document.meta.input_doc_full_path,
-                                child_requirement_document.meta.output_document_full_path,
-                                document.meta.input_doc_full_path,
+                                document.meta.output_document_full_path,
                             )
                     else:
                         raise AssertionError(reference.ref_type)

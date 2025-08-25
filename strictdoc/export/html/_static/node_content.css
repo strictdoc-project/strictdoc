@@ -32,7 +32,12 @@ sdoc-node-content {
 
   /* and use overflow-wrap: break-word; in the field */
   max-width: 100%;
-  overflow-x: auto;
+
+  /*
+    DEV: to show anchors (in the context) to the left of the node,
+    need to remove this:
+    overflow-x: auto;
+   */
 }
 
 sdoc-node-title {

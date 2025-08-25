@@ -1,25 +1,49 @@
+{%- set local_anchor = link_renderer.render_local_anchor(anchor) %}
+{%- set incoming_links = traceability_index.get_incoming_links(anchor) %}
+{%- set anchor_has_back_links = incoming_links is not none and incoming_links|length > 0 %}
 {#
-  FIXME: node-role="section" is wrong here but that's what the anchor_controller
-         currently uses to find anchor nodes.
+  {% filter indent(width=4) %} is used so that every line inside the raw block
+  gets prefixed with 4 spaces (required by RST for ".. raw:: html").
+  Important quirks:
+    - There must be a blank line *after* ".. raw:: html" and before this filter starts.
+    - Keep the opening filter tag on its own line, followed by a blank line,
+      so the first content line is indented correctly.
+    - Also add a blank line *after* {% endfilter %}, otherwise the raw block
+      may not terminate cleanly.
 #}
 
 .. raw:: html
 
-    {% set local_anchor = link_renderer.render_local_anchor(anchor) -%}
-    <sdoc-anchor id="{{ local_anchor }}" node-role="section" data-uid="{{ local_anchor }}" data-anchor="{{ local_anchor }}" style="top:unset">
-    {%- set incoming_links = traceability_index.get_incoming_links(anchor) -%}
-    {%- if incoming_links is not none and incoming_links|length > 0 -%}
-    <template>
-      Incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
-      {%- for incoming_link in incoming_links -%}
-      {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
-      {%- set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), anchor.get_parent_or_including_document(), document_type) -%}
-      <a href="{{ incoming_link_href }}">
-        {{ incoming_link_parent_node.get_display_title() }}
-      </a>
-      {%- endfor -%}
-    </template>
-    {%- endif -%}
+    {% filter indent(width=4) %}
+
+    <sdoc-anchor id="{{ local_anchor }}" data-uid="{{ local_anchor }}" data-anchor="{{ local_anchor }}" style="top:unset">
+      <div class="anchor_block" data-testid="anchor_hover_button">
+        {#
+          RST `.. raw:: html` requires uniform indentation of every line.
+          We capture the include into `_btn` and indent it by 8 spaces (plus prefix the first line)
+          so the entire included snippet stays correctly indented inside the raw block.
+          Problem: without this, the include renders starting at column 0 and breaks the raw block
+          (docutils raises: "Explicit markup ends without a blank line; unexpected unindent.").
+        #}
+        {% set _btn %}
+          {% with anchor_button_text=local_anchor %}
+          {% include "components/anchor/anchor_clipboard_button.jinja"%}
+          {% endwith %}
+        {% endset %}
+        {{ '        ' ~ (_btn | indent(8)) }}
+        {% if anchor_has_back_links %}
+        <div class="anchor_back_links">
+          Incoming link{% if incoming_links|length > 1 %}s{% endif %} from:
+          {% for incoming_link in incoming_links %}
+            {% set incoming_link_parent_node = incoming_link.parent_node() %}
+            {% set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), anchor.get_parent_or_including_document(), document_type) %}
+            <a href="{{ incoming_link_href }}">
+              {{ incoming_link_parent_node.get_display_title() }}
+            </a>
+          {% endfor %}
+        </div>
+        <div class="anchor_back_links_number" data-testid="anchor_links_number">{{ incoming_links|length }}</div>
+        {% endif %}
+      </div>
     </sdoc-anchor>
-
-
+    {% endfilter %}

@@ -1,0 +1,13 @@
+{#
+  anchor_button_text
+ #}
+<div class="anchor_button" title="Click to copy" data-testid="section-anchor-button">
+  <span class="anchor_base_icon" style="line-height: 0.1;">
+    <span class="svg_icon_not_hover_visible">{% include "_res/svg_ico16_anchor.jinja" %}</span>
+    <span class="svg_icon_hover_visible">{% include "_res/svg_ico16_copy.jinja" %}</span>
+  </span>
+  <span class="anchor_check_icon" style="line-height: 0.1; display: none;">
+    {% include "_res/svg_ico16_done.jinja" %}
+  </span>
+  <span class="anchor_button_text">{{ anchor_button_text }}</span>
+</div>

@@ -3,6 +3,8 @@
 # If a user provides a non-existing path to a custom statistics generator,
 # StrictDoc will terminate the execution and display an error message.
 #
+# FIXME: Migrate this test to %T.
+#
 # @relation(SDOC-SRS-154, scope=file)
 #
 

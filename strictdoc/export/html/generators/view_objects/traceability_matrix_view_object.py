@@ -61,3 +61,6 @@ class TraceabilityMatrixViewObject:
         self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]
     ) -> str:
         return self.link_renderer.render_local_anchor(node)
+
+    def get_document_level(self) -> int:
+        return 0

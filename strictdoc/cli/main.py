@@ -40,6 +40,7 @@ from strictdoc.helpers.exception import (
     StrictDocChildProcessException,
 )
 from strictdoc.helpers.parallelizer import Parallelizer
+from strictdoc.helpers.timing import measure_performance
 from strictdoc.server.server import run_strictdoc_server
 
 
@@ -225,6 +226,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    with measure_performance("Total execution time"):
+        main()
 else:  # pragma: no cover
     pass

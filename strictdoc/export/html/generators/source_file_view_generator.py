@@ -3,7 +3,6 @@
 """
 
 # mypy: disable-error-code="operator"
-import os
 from pathlib import Path
 from typing import List, Tuple, Union
 
@@ -45,7 +44,6 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import measure_performance
 
 
@@ -58,12 +56,8 @@ class SourceFileViewHTMLGenerator:
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
     ) -> None:
-        if os.path.isfile(source_file.output_file_full_path) and (
-            get_file_modification_time(source_file.full_path)
-            < get_file_modification_time(source_file.output_file_full_path)
-            and not traceability_index.file_dependency_manager.must_generate(
-                source_file.full_path
-            )
+        if not traceability_index.file_dependency_manager.must_generate(
+            source_file.output_file_full_path
         ):
             with measure_performance(
                 f"Skip: {source_file.in_doctree_source_file_rel_path}"

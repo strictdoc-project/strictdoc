@@ -293,6 +293,10 @@ class DocumentScreenViewObject:
     def get_page_title(self) -> str:
         return self.document_type.get_page_title()
 
+    def get_document_level(self) -> int:
+        assert self.document.meta is not None
+        return self.document.meta.level
+
     def date_today(self) -> str:
         return datetime.today().strftime("%Y-%m-%d")
 

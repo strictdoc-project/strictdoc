@@ -1,3 +1,5 @@
+# FIXME: Migrate this test to %T.
+
 RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
 
 RUN: cat %T/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG

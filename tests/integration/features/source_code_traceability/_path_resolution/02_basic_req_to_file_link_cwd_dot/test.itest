@@ -1,4 +1,5 @@
 # @relation(SDOC-SRS-145, scope=file)
+# FIXME: Migrate this test to %T.
 
 RUN: cd %S
 RUN: %strictdoc export . --output-dir %T | filecheck %s --dump-input=fail

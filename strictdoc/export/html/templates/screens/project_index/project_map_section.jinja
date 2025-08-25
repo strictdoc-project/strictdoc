@@ -1,7 +1,11 @@
 {%- assert section is defined -%}
+
+{# FIXME: Improve the flow. #}
+{%- if section.__class__.__name__ != "DocumentFromFile" -%}
 {%- with node = section -%}
   {%- include "screens/project_index/project_map_node.jinja" -%}
 {%- endwith -%}
+{%- endif -%}
 
 {%- for node_ in section.section_contents -%}  
   {%- if node_.__class__.__name__ == "DocumentFromFile" or node_.is_section -%}

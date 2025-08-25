@@ -37,6 +37,9 @@ class DiffScreenViewObject:
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
 
+    def get_document_level(self) -> int:
+        return 0
+
     @property
     def left_revision_urlencoded(self) -> str:
         return (

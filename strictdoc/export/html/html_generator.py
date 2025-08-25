@@ -672,6 +672,13 @@ class HTMLGenerator:
         self,
         traceability_index: TraceabilityIndex,
     ) -> None:
+        """
+        Export a static search index as dictionaries in .js files.
+
+        @relation(SDOC-SRS-155, scope=function)
+        @relation(SDOC-SRS-156, scope=function)
+        """
+
         # First check if there is nothing to do because no documents have been
         # changed or regenerated.
         for document_ in traceability_index.document_tree.document_list:

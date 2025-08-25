@@ -359,6 +359,18 @@ RELATIONS:
 - TYPE: Parent
   VALUE: ZEP-9
 
+[REQUIREMENT]
+MID: 3bb5252d75bc486b98e7606fb642bac0
+UID: SDOC-SSS-95
+STATUS: Active
+TITLE: Content search
+STATEMENT: >>>
+The Requirements Tool shall provide functionality to search content in the documentation tree.
+<<<
+RATIONALE: >>>
+Efficient navigation of large documentation trees requires search capabilities so that users can quickly locate relevant information without manually browsing through all content.
+<<<
+
 [[/SECTION]]
 
 [[SECTION]]

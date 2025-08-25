@@ -295,6 +295,12 @@ class SDocDocument(SDocDocumentIF):
         self.ng_whitelisted = False
 
     def build_search_index(self) -> None:
+        """
+        Build a static search index for this document.
+
+        @relation(SDOC-SRS-155, scope=function)
+        """
+
         document_index = defaultdict(set)
         map_nodes_by_mid = {}
 

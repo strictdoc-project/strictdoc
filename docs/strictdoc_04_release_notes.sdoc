@@ -46,6 +46,26 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: f53df5a2e9674373a8f52f1a01b5010d
+TITLE: Unreleased
+
+[TEXT]
+MID: 177963dca83748d89bfaeb01b3d663a8
+STATEMENT: >>>
+This release includes the following enhancements and bug fixes.
+
+A new static HTML search has been added to the HTML export, making it possible to search for content in documentation trees. The feature is currently available only in the static HTML export but will be added to the web interface in the future.
+
+StrictDoc's ``Parallelizer`` class has been switched to a more modern and simpler ``ProcessPoolExecutor`` API. This change should resolve edge cases when running parallel processes on Windows and macOS. Previously, the StrictDoc parent process could occasionally hang because child processes were not always deallocated correctly.
+
+A standalone Python script for exporting a complete set of European space standards (ECSS) has been added to the ``tools/`` folder. The script generates a set of SDoc files from the ECSS Applicability Requirement Matrix (EARM) Excel file.
+
+Numbering of math equations has been fixed for RST markup. Thanks to @thseiler for contributing this improvement.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: a5ab8dd5bc4045e99299eff729e430e6
 TITLE: 0.10.1 (2025-07-25)
 

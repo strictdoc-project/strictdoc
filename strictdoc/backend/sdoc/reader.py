@@ -117,7 +117,9 @@ class SDReader:
         # are not used anyway.
         drop_textx_meta(sdoc)
 
+        # @relation(SDOC-SRS-155, scope=range_start)
         sdoc.build_search_index()
+        # @relation(SDOC-SRS-155, scope=range_end)
 
         PickleCache.save_to_cache(sdoc, file_path, project_config, "sdoc")
 

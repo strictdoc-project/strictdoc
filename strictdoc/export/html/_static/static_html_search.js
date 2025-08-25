@@ -1,5 +1,9 @@
-function highlightWord(text, word) {
+/**
+ * @relation(SDOC-SRS-155, scope=file)
+ * @relation(SDOC-SRS-156, scope=file)
+ */
 
+function highlightWord(text, word) {
     let newStr = text.replace(new RegExp(word, "gi"), (match) => "<mark>" + match + "</mark>");
     return newStr;
 }
@@ -7,10 +11,8 @@ function highlightWord(text, word) {
 function intersectSets(sets) {
     if (sets.length === 0) return new Set();
 
-    // Start from the first set
     let intersection = new Set(sets[0]);
 
-    // Keep only elements that appear in all sets
     for (const s of sets.slice(1)) {
         intersection = new Set([...intersection].filter(x => s.has(x)));
     }

@@ -25,13 +25,6 @@
         // This attribute triggers CSS:
         anchor.setAttribute("visible", "");
 
-        // Anchors may appear on inline elements inside a node.
-        // Then they render inside the text/content block instead of at the left margin.
-        // Calculate shift = (anchor right edge – node left edge)
-        // and move the any anchor block left so it aligns at the node margin.
-        const translate = anchor.getBoundingClientRect().right - this.element.getBoundingClientRect().x;
-        anchor.style.transform = `translate(-${translate}px,0)`;
-
         const anchorText = anchor.dataset.anchor;
         const anchorButton = anchor.querySelector(ANCHOR_BUTTON_SELECTOR);
         const anchorIcon = anchor.querySelector(ANCHOR_BASE_ICON_SELECTOR);

@@ -451,6 +451,16 @@ sdoc-node > sdoc-anchor {
   z-index: 0;
 }
 
+sdoc-anchor.anchor_in_rst {
+  top:unset;
+  /*
+    For anchors generated within the text,
+    we shift them to the left, beyond the node
+    (by the sdoc-node padding-inline).
+  */
+  transform: translateX(calc(-4 * var(--base-rhythm)));
+}
+
 sdoc-anchor:target + sdoc-node-content sdoc-node-title,
 sdoc-anchor:target + sdoc-section sdoc-section-title,
 sdoc-anchor:target + .requirement__title {

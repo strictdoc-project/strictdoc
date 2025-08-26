@@ -1,3 +1,7 @@
+{#
+  Without data-anchor, the element will not be processed by JS
+  for displaying the copy button and incoming links.
+#}
 {%- set local_anchor = link_renderer.render_local_anchor(anchor) %}
 {%- set incoming_links = traceability_index.get_incoming_links(anchor) %}
 {%- set anchor_has_back_links = incoming_links is not none and incoming_links|length > 0 %}

@@ -1,6 +1,6 @@
 (() => {
 
-  const ANCHOR_SELECTOR = 'sdoc-anchor[data-uid]'; // Skip <sdoc-anchor> without [data-uid]
+  const ANCHOR_SELECTOR = 'sdoc-anchor[data-anchor]';
   const ANCHOR_BLOCK_SELECTOR = '.anchor_block';
   const ANCHOR_BUTTON_SELECTOR = '.anchor_button';
   const ANCHOR_BASE_ICON_SELECTOR = '.anchor_base_icon';
@@ -32,7 +32,7 @@
         const translate = anchor.getBoundingClientRect().right - this.element.getBoundingClientRect().x;
         anchor.style.transform = `translate(-${translate}px,0)`;
 
-        const anchorText = anchor.dataset.anchor || anchor.dataset.uid;
+        const anchorText = anchor.dataset.anchor;
         const anchorButton = anchor.querySelector(ANCHOR_BUTTON_SELECTOR);
         const anchorIcon = anchor.querySelector(ANCHOR_BASE_ICON_SELECTOR);
         const checkIcon = anchor.querySelector(ANCHOR_CHECK_ICON_SELECTOR);

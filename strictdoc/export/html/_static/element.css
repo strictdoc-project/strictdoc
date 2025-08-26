@@ -472,11 +472,11 @@ sdoc-anchor .anchor_block {
 }
 
 /*
-  This code is triggered when
-  export/html/_static/controllers/anchor_controller.js adds
-  the [visible] attribute to the sdoc-anchor:
+  This styles should only be triggered if
+  export/html/_static/controllers/anchor_controller.js
+  processes the parent sdoc-node.
 */
-sdoc-anchor[visible] {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor {
   position: absolute;
   z-index: 2;
   left: 0;
@@ -484,19 +484,19 @@ sdoc-anchor[visible] {
   opacity: 0;
 }
 
-sdoc-node:hover sdoc-anchor[visible] {
+sdoc-node[data-controller="anchor_controller"]:hover sdoc-anchor {
   opacity: 1;
 }
 
-sdoc-anchor[visible].anchor_has_back_links {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor.anchor_has_back_links {
   opacity: 1;
 }
 
-sdoc-anchor[visible]:hover {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover {
   z-index: 10;
 }
 
-sdoc-anchor[visible] .anchor_block {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_block {
   display: block;
   position: absolute;
   top: 0;
@@ -507,14 +507,14 @@ sdoc-anchor[visible] .anchor_block {
   opacity: .6;
 }
 
-sdoc-anchor[visible]:hover .anchor_block {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover .anchor_block {
   background-color: rgb(255, 255, 255);
   border-color: rgba(0, 0, 0, 0.05);
   box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
   opacity: 1;
 }
 
-sdoc-anchor[visible] .anchor_button {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button {
   cursor: pointer;
   font-size:var(--font-size-sm);
   font-weight: 600;
@@ -545,40 +545,40 @@ sdoc-anchor[visible] .anchor_button {
   opacity: .6;
 }
 
-sdoc-anchor[visible] .anchor_button:hover {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button:hover {
   color: var(--color-hover);
   z-index: 6;
 
   opacity: 1;
 }
 
-sdoc-anchor[visible] .anchor_button svg {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button svg {
   color: var(--color-fg-secondary);
   margin-left: calc(var(--base-rhythm)*(-.5));
   margin-right: calc(var(--base-rhythm)*(-.5));
 }
 
-sdoc-anchor[visible].anchor_has_back_links .anchor_button svg {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor.anchor_has_back_links .anchor_button svg {
   color: black;
   opacity: 1;
 }
 
-sdoc-anchor[visible] .anchor_button:hover svg {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button:hover svg {
   color: var(--color-action) !important;
 }
 
-sdoc-anchor[visible] .anchor_button_text {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button_text {
   font-size: var(--font-size-sm);
   font-weight: bolder;
 
   display: none;
 }
 
-sdoc-anchor[visible]:hover .anchor_button_text {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover .anchor_button_text {
   display: block;
 }
 
-sdoc-anchor[visible] .anchor_back_links {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links {
   min-width: 300px;
   padding-left: calc(var(--base-rhythm)*4);
   padding-right: var(--base-rhythm);
@@ -588,19 +588,19 @@ sdoc-anchor[visible] .anchor_back_links {
   display: none;
 }
 
-sdoc-anchor[visible]:hover .anchor_back_links {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover .anchor_back_links {
   display: block;
 }
 
-sdoc-anchor[visible] .anchor_back_links a {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links a {
   display: list-item;
 }
-sdoc-anchor[visible] .anchor_back_links a::marker {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links a::marker {
   content: '⇠  ';
   width: calc(var(--base-rhythm)*4);
 }
 
-sdoc-anchor[visible] .anchor_back_links_number {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links_number {
   color: var(--color-fg-accent);
   position: absolute;
   width: calc(var(--base-rhythm)*4);
@@ -610,7 +610,7 @@ sdoc-anchor[visible] .anchor_back_links_number {
   font-weight: bold;
 }
 
-sdoc-anchor[visible]:hover .anchor_back_links_number {
+sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover .anchor_back_links_number {
   top: calc(var(--base-rhythm)*5);
 }
 

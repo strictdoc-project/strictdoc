@@ -10,21 +10,10 @@
 
   class AnchorController extends Stimulus.Controller {
     initialize() {
-      // this.element is the DOM element to which the controller is connected to.
-      // e.g. sdoc-node or .content (The anchor must always be inside this.element)
-
+      // this.element == sdoc-node
+      // Processing node anchors and inline anchors in the text:
       const anchors = [...this.element.querySelectorAll(ANCHOR_SELECTOR)];
-
       anchors.forEach(anchor => {
-
-        // data-controller="anchor_controller" is set on both the content element
-        // and sdoc-nodes. When editing/reloading a single node,
-        // skip anchors already marked as visible to prevent re-processing.
-        if (anchor.hasAttribute("visible")) { return };
-        // In the other case, start processing the anchor.
-        // This attribute triggers CSS:
-        anchor.setAttribute("visible", "");
-
         const anchorText = anchor.dataset.anchor;
         const anchorButton = anchor.querySelector(ANCHOR_BUTTON_SELECTOR);
         const anchorIcon = anchor.querySelector(ANCHOR_BASE_ICON_SELECTOR);

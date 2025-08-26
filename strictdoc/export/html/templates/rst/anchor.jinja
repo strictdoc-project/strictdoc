@@ -1,25 +1,45 @@
 {#
-  FIXME: node-role="section" is wrong here but that's what the anchor_controller
-         currently uses to find anchor nodes.
+  Without data-anchor, the element will not be processed by JS
+  for displaying the copy button and incoming links.
 #}
+{%- set local_anchor = link_renderer.render_local_anchor(anchor) %}
+{%- set incoming_links = traceability_index.get_incoming_links(anchor) %}
+{%- set anchor_has_back_links = incoming_links is not none and incoming_links|length > 0 %}
 
 .. raw:: html
 
-    {% set local_anchor = link_renderer.render_local_anchor(anchor) -%}
-    <sdoc-anchor id="{{ local_anchor }}" node-role="section" data-uid="{{ local_anchor }}" data-anchor="{{ local_anchor }}" style="top:unset">
-    {%- set incoming_links = traceability_index.get_incoming_links(anchor) -%}
-    {%- if incoming_links is not none and incoming_links|length > 0 -%}
-    <template>
-      Incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
-      {%- for incoming_link in incoming_links -%}
-      {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
-      {%- set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), anchor.get_parent_or_including_document(), document_type) -%}
-      <a href="{{ incoming_link_href }}">
-        {{ incoming_link_parent_node.get_display_title() }}
-      </a>
-      {%- endfor -%}
-    </template>
-    {%- endif -%}
+    <sdoc-anchor id="{{ local_anchor }}" data-uid="{{ local_anchor }}" data-anchor="{{ local_anchor }}" class="anchor_in_rst">
+      <div class="anchor_block" data-testid="anchor_hover_button">
+        {#
+          RST `.. raw:: html` requires uniform indentation of every line.
+          We capture the include into `_button_template` and indent it by 8 spaces (plus prefix the first line)
+          so the entire included snippet stays correctly indented inside the raw block.
+          Problem: without this, the include renders starting at column 0 and breaks the raw block
+          (docutils raises: "Explicit markup ends without a blank line; unexpected unindent.").
+        #}
+        {% set _button_template %}
+          {% with anchor_button_text=local_anchor %}
+          {% include "components/anchor/anchor_clipboard_button.jinja"%}
+          {% endwith %}
+        {% endset %}
+        {{ '        ' ~ (_button_template | indent(8)) }}
+        {% if anchor_has_back_links %}
+        <div class="anchor_back_links">
+          Incoming link{% if incoming_links|length > 1 %}s{% endif %} from:
+          {% for incoming_link in incoming_links %}
+            {% set incoming_link_parent_node = incoming_link.parent_node() %}
+            {% set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), anchor.get_parent_or_including_document(), document_type) %}
+            <a href="{{ incoming_link_href }}">
+              {{ incoming_link_parent_node.get_display_title() }}
+            </a>
+          {% endfor %}
+        </div>
+        <div class="anchor_back_links_number" data-testid="anchor_links_number">{{ incoming_links|length }}</div>
+        {% endif %}
+      </div>
     </sdoc-anchor>
 
-
+{#
+  RST raw directive: requires one blank line after the raw HTML content block.
+  Note: Always leave an empty line after </sdoc-anchor>.
+#}

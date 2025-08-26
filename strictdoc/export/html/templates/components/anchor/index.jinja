@@ -1,21 +1,35 @@
+{#
+  Without data-anchor, the element will not be processed by JS
+  for displaying the copy button and incoming links.
+#}
+{%- set local_anchor = view_object.render_local_anchor(sdoc_entity) %}
+{%- set incoming_links = view_object.traceability_index.get_incoming_links(sdoc_entity) %}
+{%- set anchor_has_back_links = incoming_links is not none and incoming_links|length > 0 -%}
 <sdoc-anchor
-  id="{{ view_object.render_local_anchor(sdoc_entity) }}"
+  id="{{ local_anchor }}"
+  data-anchor="{{ local_anchor }}"
   node-role="{{ sdoc_entity.get_type_string() }}"
   {% if sdoc_entity.reserved_uid is not none -%}
   data-uid="{{ sdoc_entity.reserved_uid }}"
-  {%- endif -%}
+  {% endif %}
+  {% if anchor_has_back_links %}class="anchor_has_back_links"{% endif %}
 >
-{%- set incoming_links = view_object.traceability_index.get_incoming_links(sdoc_entity) %}
-{%- if incoming_links is not none and incoming_links|length > 0 -%}
-<template>
-  Incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
-  {% for incoming_link in incoming_links -%}
-  {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
-  {%- set incoming_link_href = view_object.render_node_link(incoming_link.parent_node()) -%}
-  <a href="{{ incoming_link_href }}">
-    {{ incoming_link_parent_node.get_display_title() }}
-  </a>
-  {% endfor -%}
-</template>
-{%- endif -%}
+  <div class="anchor_block" data-testid="anchor_hover_button">
+    {% with anchor_button_text=local_anchor %}
+      {% include "components/anchor/anchor_clipboard_button.jinja" %}
+    {% endwith %}
+    {%- if anchor_has_back_links -%}
+    <div class="anchor_back_links">
+      Incoming link{% if incoming_links|length > 1 -%}s{%- endif %} from:
+      {% for incoming_link in incoming_links -%}
+        {%- set incoming_link_parent_node = incoming_link.parent_node() -%}
+        {%- set incoming_link_href = view_object.render_node_link(incoming_link.parent_node()) -%}
+        <a href="{{ incoming_link_href }}">
+          {{ incoming_link_parent_node.get_display_title() }}
+        </a>
+      {% endfor -%}
+    </div>
+    <div class="anchor_back_links_number" data-testid="anchor_links_number">{{ incoming_links|length }}</div>
+    {%- endif -%}
+  </div>
 </sdoc-anchor>

@@ -1124,7 +1124,7 @@ UID: SDOC-SRS-155
 STATUS: Active
 TITLE: Content search
 STATEMENT: >>>
-StrictDoc shall provide searching with queries via a search bar.
+StrictDoc shall provide searching documentation content with queries via a search bar.
 <<<
 RATIONALE: >>>
 As per the parent requirement, a search bar with query support enables users to interactively find specific content without navigating the entire documentation tree.

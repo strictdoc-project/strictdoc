@@ -304,51 +304,48 @@ class SDocDocument(SDocDocumentIF):
         document_index = defaultdict(set)
         map_nodes_by_mid = {}
 
-        with measure_performance(f"Build search index: {self.title}"):
-            from strictdoc.core.document_iterator import (  # noqa: PLC0415
-                DocumentCachingIterator,
-            )
+        from strictdoc.core.document_iterator import (  # noqa: PLC0415
+            DocumentCachingIterator,
+        )
 
-            document_iterator = DocumentCachingIterator(self)
+        document_iterator = DocumentCachingIterator(self)
 
-            for node, _ in document_iterator.all_content(
-                print_fragments=False,
-            ):
-                if not isinstance(node, SDocNode):
-                    continue
+        for node, _ in document_iterator.all_content(
+            print_fragments=False,
+        ):
+            if not isinstance(node, SDocNode):
+                continue
 
-                node_dict = {}
+            node_dict = {}
 
-                node_dict["MID"] = node.reserved_mid.get_string_value()
-                map_nodes_by_mid[node.reserved_mid.get_string_value()] = (
-                    node_dict
-                )
+            node_dict["MID"] = node.reserved_mid.get_string_value()
+            map_nodes_by_mid[node.reserved_mid.get_string_value()] = node_dict
 
-                for (
-                    field_name_,
-                    field_values_,
-                ) in node.ordered_fields_lookup.items():
-                    requirement_field: SDocNodeField = field_values_[0]
-                    requirement_field_value = requirement_field.get_text_value()
+            for (
+                field_name_,
+                field_values_,
+            ) in node.ordered_fields_lookup.items():
+                requirement_field: SDocNodeField = field_values_[0]
+                requirement_field_value = requirement_field.get_text_value()
 
-                    node_dict[field_name_] = requirement_field_value
+                node_dict[field_name_] = requirement_field_value
 
-                    tokens = set(tokenize(requirement_field_value))
-                    for token in tokens:
-                        if len(token) > 1:
-                            document_index[token].add(
-                                node.reserved_mid.get_string_value()
+                tokens = set(tokenize(requirement_field_value))
+                for token in tokens:
+                    if len(token) > 1:
+                        document_index[token].add(
+                            node.reserved_mid.get_string_value()
+                        )
+
+                        for i in range(0, len(token)):
+                            token_incremental = token[: i + 1]
+                            document_index[token_incremental].add(
+                                node.reserved_mid
                             )
-
-                            for i in range(0, len(token)):
-                                token_incremental = token[: i + 1]
-                                document_index[token_incremental].add(
-                                    node.reserved_mid
-                                )
-                                token_deincremental = token[i:]
-                                document_index[token_deincremental].add(
-                                    node.reserved_mid
-                                )
+                            token_deincremental = token[i:]
+                            document_index[token_deincremental].add(
+                                node.reserved_mid
+                            )
 
         self.search_index = SDocDocumentSearchIndex(
             document_index, map_nodes_by_mid

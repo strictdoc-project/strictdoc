@@ -896,7 +896,7 @@ def release(context, test_pypi=False, username=None, password=None):
         context,
         ToxEnvironment.RELEASE,
         f"""
-            twine upload dist/strictdoc-*.tar.gz
+            twine upload dist/strictdoc-*.tar.gz dist/strictdoc-*.whl
                 {repository_argument_or_none}
                 {user_password}
         """,

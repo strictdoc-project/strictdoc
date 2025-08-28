@@ -6,16 +6,21 @@ const TOC_ELEMENT_SELECTOR = 'a';
 const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content'; // replacing => parentNode is needed
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
 
+// * Runtime state;
+// * anchorsCount/anchorsSig skip unnecessary re-observe on TOC mutations.
 let tocHighlightingState = {
   data: {},
   links: null,
   anchors: null,
+  anchorsCount: -1,
+  anchorsSig: 0,
   contentFrameTop: undefined,
   closerForFolder: {},
   folderSet: new Set(),
 };
 
 function resetState() {
+  // * Keep anchorsCount/anchorsSig to detect changes across TOC mutations.
   tocHighlightingState.data = {};
   tocHighlightingState.links = null;
   tocHighlightingState.anchors = null;
@@ -142,11 +147,54 @@ function processLinkList(tocFrame) {
 }
 
 function processAnchorList(contentFrame, anchorObserver) {
-  anchorObserver.disconnect(); // FIXME Re-subscribe anchors (can be optimized later to avoid full re-scan)
+  // * Re-scan content anchors;
+  // * detect cheap changes via count + order-sensitive signature.
 
   // * Collects all anchors in the document
-  tocHighlightingState.anchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
-  tocHighlightingState.anchors.forEach(anchor => {
+  const newAnchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
+
+  // * Build order-sensitive signature to detect renames/reorders without full re-subscribe.
+  let sig = 0;
+  for (let i = 0; i < newAnchors.length; i++) {
+    const id = newAnchors[i].id || "";
+    // djb2-like rolling hash with index mix; kept in 32-bit int space
+    let h = 5381;
+    for (let j = 0; j < id.length; j++) {
+      h = ((h << 5) + h) ^ id.charCodeAt(j);
+    }
+    // mix position to make reorders detectable
+    sig = (sig ^ ((h + i * 2654435761) | 0)) | 0;
+  }
+
+  // * Set unchanged → keep IO subscriptions; rebuild data[id].anchor after resetState().
+  const unchanged = (
+    tocHighlightingState.anchorsCount === newAnchors.length &&
+    tocHighlightingState.anchorsSig === sig
+  );
+
+  if (unchanged) {
+    // * After resetState(), mapping in data[] is empty.
+    // We must rebuild anchor→data mapping even if the set is unchanged,
+    // otherwise IntersectionObserver events may hit undefined.
+    tocHighlightingState.anchors = newAnchors;
+    newAnchors.forEach(anchor => {
+      const id = anchor.id;
+      tocHighlightingState.data[id] = {
+        'anchor': anchor,
+        ...tocHighlightingState.data[id]
+      };
+    });
+    return;
+  }
+
+  // * Set changed → drop old IO targets and re‑subscribe.
+  anchorObserver.disconnect(); // ** Re-subscribe anchors only when content changed
+
+  tocHighlightingState.anchors = newAnchors;
+  tocHighlightingState.anchorsCount = newAnchors.length;
+  tocHighlightingState.anchorsSig = sig;
+
+  newAnchors.forEach(anchor => {
     const id = anchor.id;
     tocHighlightingState.data[id] = {
       'anchor': anchor,

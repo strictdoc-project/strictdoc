@@ -14,15 +14,22 @@
       // Processing node anchors and inline anchors in the text:
       const anchors = [...this.element.querySelectorAll(ANCHOR_SELECTOR)];
       anchors.forEach(anchor => {
-        const anchorText = anchor.dataset.anchor;
-        const anchorButton = anchor.querySelector(ANCHOR_BUTTON_SELECTOR);
-        const anchorIcon = anchor.querySelector(ANCHOR_BASE_ICON_SELECTOR);
-        const checkIcon = anchor.querySelector(ANCHOR_CHECK_ICON_SELECTOR);
 
-        anchorButton.addEventListener("click", function (event) {
-          event.preventDefault();
-          updateClipboard(anchorText, confirmMessage(anchorButton, anchorIcon, checkIcon))
-        });
+        // Note: template already applies conditions whether an anchorBlock is rendered.
+        // JS assumes that if anchorBlock exists, it is valid to process.
+        const anchorBlock = anchor.querySelector(ANCHOR_BLOCK_SELECTOR);
+
+        if (anchorBlock) {
+          const anchorText = anchor.dataset.anchor;
+          const anchorButton = anchor.querySelector(ANCHOR_BUTTON_SELECTOR);
+          const anchorIcon = anchor.querySelector(ANCHOR_BASE_ICON_SELECTOR);
+          const checkIcon = anchor.querySelector(ANCHOR_CHECK_ICON_SELECTOR);
+
+          anchorButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            updateClipboard(anchorText, confirmMessage(anchorButton, anchorIcon, checkIcon))
+          });
+        }
       })
     }
   }

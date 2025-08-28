@@ -218,15 +218,15 @@ function handleIntersect(entries, observer) {
 
       if(
         // * If the node goes up ⬆️ off the screen
-        entry.boundingClientRect.y < tocHighlightingState.contentFrameTop
+        entry.boundingClientRect.top <= entry.rootBounds.top
         // * and this is the last child of the section
         && tocHighlightingState.closerForFolder[anchor]
       ) {
         // * When the LAST CHILD of the section disappears
-        // * over the upper boundary ( < tocHighlightingState.contentFrameTop),
+        // * over the upper boundary (<= entry.rootBounds.top),
         // * strictly speaking, this occurs when the lower bound disappears:
         // * entry.boundingClientRect.bottom.
-        // * But we will use the upper bound, entry.boundingClientRect.y
+        // * But we will use the upper bound, entry.boundingClientRect.top
         // * which will be less than or equal to the lower bound.
 
         // ** remove highlights from closer`s parent folder in the TOC

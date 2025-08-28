@@ -329,10 +329,6 @@ function findDeepestLastChild(element) {
 
 function targetItem(element, on = true) {
   // * Toggle "targeted" attribute for direct hash navigation.
-
-  //// hashchange or intersection events may fire
-  //// before the TOC is fully built, resulting in undefined link elements.
-
   console.assert(element, 'targetItem(): expected a valid element');
   if(on) {
     element.setAttribute('targeted', '');
@@ -343,10 +339,6 @@ function targetItem(element, on = true) {
 
 function fireItem(element, on = true) {
   // * Toggle "intersected" attribute for visible anchors.
-
-  //// Guard: events may fire before TOC is fully built.
-  ////// Guard against race conditions
-
   console.assert(element, 'fireItem(): expected a valid element');
   if(on) {
     element.setAttribute('intersected', '');
@@ -357,9 +349,6 @@ function fireItem(element, on = true) {
 
 function fireFolder(element, on = true) {
   // * Toggle "parented" attribute for section folders.
-
-  //// Guard against race conditions
-
   console.assert(element, 'fireFolder(): expected a valid element');
   if(on) {
     element.setAttribute('parented', '');

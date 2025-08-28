@@ -142,7 +142,7 @@ function processLinkList(tocFrame) {
 }
 
 function processAnchorList(contentFrame, anchorObserver) {
-  anchorObserver.disconnect(); // FIXME don`t work: have to hack at #rootBounds_null
+  anchorObserver.disconnect(); // FIXME Re-subscribe anchors (can be optimized later to avoid full re-scan)
 
   // * Collects all anchors in the document
   tocHighlightingState.anchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
@@ -161,14 +161,11 @@ function handleIntersect(entries, observer) {
 
   entries.forEach((entry) => {
 
-    // #rootBounds_null
-    // rootBounds: null
-    // after frame reload and before init
-    if(!entry.rootBounds) {
-      return
-    }
-
     const anchor = entry.target.id;
+    // * Sometimes rootBounds is null right after IO init; fall back to viewport bounds.
+    const topBound = entry.rootBounds ? entry.rootBounds.top : 0;
+    const bottomBound = entry.rootBounds ? entry.rootBounds.bottom : window.innerHeight;
+
     // * For anchors that go into the viewport,
     // * finds the corresponding links
     const link = tocHighlightingState.data[anchor].link;
@@ -207,7 +204,7 @@ function handleIntersect(entries, observer) {
 
       if(
         // * If the node goes down ⬇️ off the screen
-        entry.boundingClientRect.bottom >= entry.rootBounds.bottom
+        entry.boundingClientRect.bottom >= bottomBound
         // *  and it's a folder
         && tocHighlightingState.folderSet.has(anchor)
       ) {
@@ -218,12 +215,12 @@ function handleIntersect(entries, observer) {
 
       if(
         // * If the node goes up ⬆️ off the screen
-        entry.boundingClientRect.top <= entry.rootBounds.top
+        entry.boundingClientRect.top <= topBound
         // * and this is the last child of the section
         && tocHighlightingState.closerForFolder[anchor]
       ) {
         // * When the LAST CHILD of the section disappears
-        // * over the upper boundary (<= entry.rootBounds.top),
+        // * over the upper boundary (<= topBound),
         // * strictly speaking, this occurs when the lower bound disappears:
         // * entry.boundingClientRect.bottom.
         // * But we will use the upper bound, entry.boundingClientRect.top

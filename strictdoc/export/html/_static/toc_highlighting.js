@@ -86,8 +86,7 @@ function highlightTOC(tocFrame, contentFrame, anchorObserver) {
 
 function handleHashChange() {
   const hash = window.location.hash;
-  const match = hash.match(/#(.*)/);
-  const fragment = match ? match[1] : null;
+  const fragment = hash ? decodeURIComponent(hash.slice(1)) : null;
 
   if (!tocHighlightingState.links || tocHighlightingState.links.length === 0) {
     return;

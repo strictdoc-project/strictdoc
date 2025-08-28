@@ -119,12 +119,12 @@ class SearchResultsView {
                 suggestions.appendChild(entry);
             }
 
-            const node = window.SDOC_MAP_MID_TO_NODES[flatResult];
+            const node = window.SDOC_MAP_MID_TO_NODES[parseInt(flatResult, 10)];
             console.assert(!!node, "node must be defined for result: " + flatResult);
 
             let node_key_values = "";
             Object.entries(node).forEach(([key, value]) => {
-                if (value === "") {
+                if (value === "" || key === "_LINK") {
                     return;
                 }
 
@@ -323,7 +323,7 @@ function handleInputEvent_input() {
             highlightElements = [andQuery];
 
             for (const result of results) {
-                const node = window.SDOC_MAP_MID_TO_NODES[result];
+                const node = window.SDOC_MAP_MID_TO_NODES[parseInt(result, 10)];
                 console.assert(!!node, "node must be defined for result: " + result);
 
 

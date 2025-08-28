@@ -694,11 +694,13 @@ class HTMLGenerator:
             )
             return
 
-        global_index: Dict[str, Set[str]] = defaultdict(set)
-        global_map_nodes_by_mid: Dict[str, Dict[str, str]] = {}
+        global_index: Dict[str, Set[int]] = defaultdict(set)
+        global_map_nodes_by_mid: Dict[int, Dict[str, str]] = {}
 
         document_index_list: List[Dict[str, Set[str]]] = []
-        document_map_list: List[Dict[str, Dict[str, str]]] = []
+        document_map_list: List[Dict[int, Dict[str, str]]] = []
+
+        map_mid_to_numbers: Dict[str, int] = {}
 
         with measure_performance("Build search index"):
             for document_ in traceability_index.document_tree.document_list:
@@ -706,12 +708,27 @@ class HTMLGenerator:
                 document_index_list.append(
                     document_.search_index.document_index
                 )
-                document_map_list.append(
-                    document_.search_index.map_nodes_by_mid
-                )
+                map_nodes_by_numbers: Dict[int, Dict[str, str]] = {}
+                for (
+                    node_mid_,
+                    node_dict_,
+                ) in document_.search_index.map_nodes_by_mid.items():
+                    if node_mid_ not in map_mid_to_numbers:
+                        map_mid_to_numbers[node_mid_] = (
+                            len(map_mid_to_numbers) + 1
+                        )
+                    document_mid_number = map_mid_to_numbers[node_mid_]
+                    assert isinstance(document_mid_number, int)
+                    map_nodes_by_numbers[document_mid_number] = node_dict_
+
+                document_map_list.append(map_nodes_by_numbers)
             for document_index_ in document_index_list:
                 for term_, document_mids_ in document_index_.items():
-                    global_index[term_].update(document_mids_)
+                    document_mid_numbers = set()
+                    for document_mid_ in document_mids_:
+                        document_mid_number = map_mid_to_numbers[document_mid_]
+                        document_mid_numbers.add(document_mid_number)
+                    global_index[term_].update(document_mid_numbers)
             for map_nodes_by_mid_ in document_map_list:
                 global_map_nodes_by_mid.update(map_nodes_by_mid_)
 

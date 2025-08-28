@@ -32,7 +32,6 @@ from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.string import tokenize
-from strictdoc.helpers.timing import measure_performance
 
 
 @auto_described

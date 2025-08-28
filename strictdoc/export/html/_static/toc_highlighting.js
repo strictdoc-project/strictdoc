@@ -100,9 +100,17 @@ function handleHashChange() {
     targetItem(link, false)
   });
   // * If there's a fragment and a mapped pair, highlight its link.
-  fragment
-    && tocHighlightingState.data[fragment]
-    && targetItem(tocHighlightingState.data[fragment].link)
+  if (fragment) {
+    const pair = tocHighlightingState.data[fragment];
+    if (pair && pair.link) {
+      targetItem(pair.link);
+    } else {
+      // No mapping found — keep URL as-is and move on silently
+      // TOC_HIGHLIGHT_DEBUG &&
+      console.warn('handleHashChange(): no mapping for fragment', fragment);
+      return;
+    }
+  }
 }
 
 function processLinkList(tocFrame) {
@@ -234,7 +242,11 @@ function handleIntersect(entries, observer) {
       if (tocHighlightingState.closerForFolder[anchor]) {
         tocHighlightingState.closerForFolder[anchor].forEach(id => {
           TOC_HIGHLIGHT_DEBUG && console.log(`🔴`, id, `(from ${anchor})`);
-          fireFolder(tocHighlightingState.data[id].link)
+          const pair2 = tocHighlightingState.data[id];
+          console.assert(pair2 && pair2.link, 'handleIntersect(): missing folder link for', id);
+          if (pair2 && pair2.link) {
+            fireFolder(pair2.link);
+          }
         })
       }
       TOC_HIGHLIGHT_DEBUG && console.groupEnd();
@@ -273,7 +285,11 @@ function handleIntersect(entries, observer) {
         // ** remove highlights from closer`s parent folder in the TOC
         tocHighlightingState.closerForFolder[anchor].forEach(id => {
           TOC_HIGHLIGHT_DEBUG && console.log(`⚫ ⬆️`, id,);
-          fireFolder(tocHighlightingState.data[id].link, false)
+          const pair3 = tocHighlightingState.data[id];
+          console.assert(pair3 && pair3.link, 'handleIntersect(): missing folder link for', id);
+          if (pair3 && pair3.link) {
+            fireFolder(pair3.link, false);
+          }
         });
       }
 
@@ -303,9 +319,12 @@ function findDeepestLastChild(element) {
 }
 
 function targetItem(element, on = true) {
-  if (!element) { return } // Guard against race conditions:
-  // hashchange or intersection events may fire
-  // before the TOC is fully built, resulting in undefined link elements.
+  // * Toggle "targeted" attribute for direct hash navigation.
+
+  //// hashchange or intersection events may fire
+  //// before the TOC is fully built, resulting in undefined link elements.
+
+  console.assert(element, 'targetItem(): expected a valid element');
   if(on) {
     element.setAttribute('targeted', '');
   } else {
@@ -314,7 +333,12 @@ function targetItem(element, on = true) {
 }
 
 function fireItem(element, on = true) {
-  if (!element) { return } // Guard against race conditions
+  // * Toggle "intersected" attribute for visible anchors.
+
+  //// Guard: events may fire before TOC is fully built.
+  ////// Guard against race conditions
+
+  console.assert(element, 'fireItem(): expected a valid element');
   if(on) {
     element.setAttribute('intersected', '');
   } else {
@@ -323,7 +347,11 @@ function fireItem(element, on = true) {
 }
 
 function fireFolder(element, on = true) {
-  if (!element) { return } // Guard against race conditions
+  // * Toggle "parented" attribute for section folders.
+
+  //// Guard against race conditions
+
+  console.assert(element, 'fireFolder(): expected a valid element');
   if(on) {
     element.setAttribute('parented', '');
   } else {

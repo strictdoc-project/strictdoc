@@ -31,7 +31,7 @@ window.addEventListener("load",function(){
   const tocList = tocFrame ? tocFrame.querySelector(TOC_LIST_SELECTOR) : null;
   const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR)?.parentNode;
 
-  if(!tocFrame || !tocList || !contentFrame) { return }
+  if (!tocFrame || !contentFrame) { return }
 
   // ! depends on TOC markup
   tocHighlightingState.contentFrameTop = contentFrame.offsetParent
@@ -89,8 +89,7 @@ function handleHashChange() {
   const match = hash.match(/#(.*)/);
   const fragment = match ? match[1] : null;
 
-  // Guard: no links collected yet (e.g., empty TOC or init race)
-  if (!tocHighlightingState.links || typeof tocHighlightingState.links.forEach !== 'function') {
+  if (!tocHighlightingState.links || tocHighlightingState.links.length === 0) {
     return;
   }
 
@@ -109,12 +108,13 @@ function handleHashChange() {
 function processLinkList(tocFrame) {
   // * Collects all links in the TOC
   tocHighlightingState.links = tocFrame.querySelectorAll(TOC_ELEMENT_SELECTOR);
-  if (!tocHighlightingState.links || tocHighlightingState.links.length === 0) {
+  if (tocHighlightingState.links.length === 0) {
     return;
   }
   tocHighlightingState.links.length
     && tocHighlightingState.links.forEach(link => {
     const id = link.getAttribute('anchor');
+    if (!id) return; // Skip links without an anchor attribute
     tocHighlightingState.data[id] = {
       'link': link,
       ...tocHighlightingState.data[id]
@@ -123,7 +123,7 @@ function processLinkList(tocFrame) {
     // ! depends on TOC markup
     // is link in collapsible node and precedes the UL
     // ! expected UL or null
-    const ul = link.nextSibling;
+    const ul = link.nextElementSibling;
 
     if (ul && ul.nodeName === 'UL') {
       // register folder
@@ -131,8 +131,8 @@ function processLinkList(tocFrame) {
 
       // register closer
       const lastLink = findDeepestLastChild(ul);
-      const lastAnchor = lastLink.getAttribute('anchor');
-
+      const lastAnchor = lastLink?.getAttribute('anchor');
+      if (!lastAnchor) return;
 
       if (!tocHighlightingState.closerForFolder[lastAnchor]) {
         tocHighlightingState.closerForFolder[lastAnchor] = [];
@@ -146,10 +146,8 @@ function processAnchorList(contentFrame, anchorObserver) {
   anchorObserver.disconnect(); // FIXME don`t work: have to hack at #rootBounds_null
 
   // * Collects all anchors in the document
-  tocHighlightingState.anchors = null;
   tocHighlightingState.anchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
-  tocHighlightingState.anchors.length
-    && tocHighlightingState.anchors.forEach(anchor => {
+  tocHighlightingState.anchors.forEach(anchor => {
     const id = anchor.id;
     tocHighlightingState.data[id] = {
       'anchor': anchor,

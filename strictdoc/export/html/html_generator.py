@@ -692,6 +692,24 @@ class HTMLGenerator:
                 "All documents are up-to-date. "
                 "Skipping the generation of a search index."
             )
+            # If no documents need to be regenerated, set the search_index_timestamp
+            # to the timestamp of the first document. The assumption here is
+            # that StrictDoc does not randomize the document list, and the first
+            # document will always be the same.
+            # The HTML/JS code can rely on this timestamp to decide whether it
+            # has to re-read the search index from the JS file or it can simply
+            # fetch it from the DB which is 2x faster when it comes to very
+            # large indexes.
+            if len(traceability_index.document_tree.document_list) > 0:
+                first_document = traceability_index.document_tree.document_list[
+                    0
+                ]
+                assert first_document.meta is not None
+                traceability_index.search_index_timestamp = (
+                    get_file_modification_time(
+                        first_document.meta.input_doc_full_path
+                    )
+                )
             return
 
         global_index: Dict[str, Set[int]] = defaultdict(set)
@@ -747,7 +765,7 @@ class HTMLGenerator:
 
         with measure_performance("Serialize search index to JS"):
             document_content = (
-                b"window.SDOC_LUNR_SEARCH_INDEX = "
+                b"window.SDOC_SEARCH_INDEX = "
                 + orjson.dumps(
                     global_index,
                     option=orjson.OPT_NON_STR_KEYS,

@@ -412,6 +412,10 @@ class ProjectConfig:
     def get_extra_static_files_path(self) -> str:
         return self.environment.get_extra_static_files_path()
 
+    def get_project_hash(self) -> str:
+        assert self.input_paths is not None and len(self.input_paths) > 0
+        return get_md5(self.input_paths[0])
+
     def shall_parse_nodes(self, path_to_file: str) -> bool:
         if self.source_root_path is None:
             return False

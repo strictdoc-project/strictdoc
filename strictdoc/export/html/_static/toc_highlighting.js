@@ -101,7 +101,16 @@ function handleHashChange() {
   });
   // * If there's a fragment and a mapped pair, highlight its link.
   if (fragment) {
-    const pair = tocHighlightingState.data[fragment];
+    let pair = tocHighlightingState.data[fragment];
+    if (!pair || !pair.link) {
+      // Try to resolve moved/renumbered ids by suffix
+      const resolved = resolveMovedFragment(fragment);
+      if (resolved) {
+        TOC_HIGHLIGHT_DEBUG && console.log('handleHashChange(): remapped fragment', fragment, '→', resolved);
+        history.replaceState(null, '', '#' + encodeURIComponent(resolved));
+        pair = tocHighlightingState.data[resolved];
+      }
+    }
     if (pair && pair.link) {
       targetItem(pair.link);
     } else {
@@ -357,4 +366,21 @@ function fireFolder(element, on = true) {
   } else {
     element.removeAttribute('parented');
   }
+}
+
+function resolveMovedFragment(oldId) {
+  // Heuristic: many ids look like "<numbering>-<slug>", where numbering changes on reorder.
+  // Try to map by the slug suffix after the first '-' if the exact id is missing.
+  const dash = oldId.indexOf('-');
+  if (dash === -1) return null; // no recognizable pattern
+  const suffix = oldId.slice(dash + 1);
+  if (!suffix) return null;
+
+  const keys = Object.keys(tocHighlightingState.data);
+  const candidates = keys.filter(k => k.endsWith(suffix));
+  if (candidates.length === 1) {
+    return candidates[0];
+  }
+  // If multiple candidates, don't guess.
+  return null;
 }

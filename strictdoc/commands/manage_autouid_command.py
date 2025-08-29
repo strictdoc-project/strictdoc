@@ -72,6 +72,9 @@ class ManageAutoUIDCommand:
         for document in traceability_index.document_tree.document_list:
             assert document.meta is not None
 
+            if document.reserved_title == "Test specification":
+                assert 0, document
+
             # Most recently, we parse JUnit XML or Gcov JSON files.
             # These must not be written back.
             if not document.meta.document_filename.endswith(".sdoc"):

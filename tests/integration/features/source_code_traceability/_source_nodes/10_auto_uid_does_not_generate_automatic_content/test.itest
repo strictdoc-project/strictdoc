@@ -1,7 +1,8 @@
 REQUIRES: PYTHON_39_OR_HIGHER
 
 RUN: cp -r %S/* ./
-RUN: %strictdoc export .
-RUN: %strictdoc manage auto-uid . | filecheck %s
+UN: %strictdoc export .
+RUN: %strictdoc manage auto-uid . ; false
+| filecheck %s
 
 CHECK: Published: Hello world doc

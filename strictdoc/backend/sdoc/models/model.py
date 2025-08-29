@@ -59,6 +59,7 @@ class SDocNodeIF(ABC):
     ng_resolved_custom_level: Optional[str]
     ng_whitelisted: bool
     ng_has_requirements: bool
+    autogen: bool
 
     @property
     @abstractmethod
@@ -117,6 +118,7 @@ class SDocSectionIF(ABC):
     ng_resolved_custom_level: Optional[str]
     ng_whitelisted: bool
     ng_has_requirements: bool
+    autogen: bool
 
     @abstractmethod
     def get_document(self) -> Optional["SDocDocumentIF"]:
@@ -155,6 +157,7 @@ class SDocDocumentIF(ABC):
     ng_level: Optional[int]
     ng_whitelisted: bool
     ng_has_requirements: bool
+    autogen: bool
 
     # FIXME: Get rid of @property everywhere.
     @property
@@ -192,6 +195,7 @@ class SDocDocumentFromFileIF(ABC):
     parent: Union[SDocDocumentIF, SDocSectionIF]
     ng_resolved_custom_level: Optional[str]
     ng_whitelisted: bool
+    autogen: bool
 
     @abstractmethod
     def iterate_nodes(

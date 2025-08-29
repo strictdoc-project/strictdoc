@@ -298,6 +298,11 @@ class SDWriter:
         document: SDocDocument,
         document_iterator: DocumentCachingIterator,
     ) -> str:
+        # Currently, auto-generated nodes are never written back to file system.
+        # We could revisit this in the future.
+        if root_node.autogen:
+            return ""
+
         assert isinstance(document_iterator, DocumentCachingIterator), (
             document_iterator
         )

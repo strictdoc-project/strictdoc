@@ -1,0 +1,14 @@
+# This test verifies that the auto-generated content created from test
+# specifications is not written back to file system when auto-uid command
+# is executed.
+
+REQUIRES: PYTHON_39_OR_HIGHER
+
+RUN: cp -r %S/* ./
+RUN: %strictdoc manage auto-uid .
+
+RUN: cat ./description.sdoc | filecheck %s
+
+CHECK-NOT: file.c
+CHECK-NOT: TEST_DOC/tests/file.c/test_case_1
+CHECK-NOT: test_case_1

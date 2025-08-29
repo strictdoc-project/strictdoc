@@ -10,6 +10,7 @@ exceptions:
   - url: https://strictdoc.readthedocs.io/en/latest/sphinx
   - url: https://strictdoc.readthedocs.io/en/latest/sphinx/
   # FIXME: Not sure why these are failing now with GitHub.
+  - url: https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc.pdf
   - url: https://github.com/strictdoc-project/strictdoc/blob/93486a0e9fb30b141187587eae9e995cd86c6cbf/strictdoc/backend/dsl/grammar.py
   - url: https://github.com/NASA-SW-VnV/fret/blob/master/PUBLICATIONS.md
   - url: https://github.com/mull-project/FileCheck.py/blob/main/pyproject.toml

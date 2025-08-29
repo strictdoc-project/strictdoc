@@ -106,10 +106,5 @@
   <div id="confirm"></div>
   {% block scripts %}{% endblock scripts %}
 
-  {% if not view_object.project_config.is_running_on_server %}
-    <script src="{{ view_object.render_static_url('static_html_search_index.js') }}" defer></script>
-    <script src="{{ view_object.render_static_url('static_html_search.js') }}" defer></script>
-  {% endif %}
-
 </body>
 </html>

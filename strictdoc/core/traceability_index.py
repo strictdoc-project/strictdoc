@@ -68,6 +68,15 @@ class TraceabilityIndex:
             datetime.datetime.fromtimestamp(0)
         )
 
+        # The timestamp is used by HTML/JS for invalidating the search index
+        # cache in the IndexedDB database.
+        # If no documents have to be re-generated with the second+ run of
+        # StrictDoc, this timestamp is set of a modification date of the first
+        # SDoc document, see export_static_html_search_index.
+        self.search_index_timestamp: datetime.datetime = datetime.datetime.now(
+            datetime.timezone.utc
+        )
+
     @property
     def document_iterators(self) -> Dict[SDocDocument, DocumentCachingIterator]:
         return self._document_iterators

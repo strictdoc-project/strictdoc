@@ -5,6 +5,9 @@ mypy>=0.910,<1.17
 ruff>=0.9
 fixit
 
+# Lint - JS
+jsbeautifier
+
 # Unit tests
 pytest>=6.2.2
 # Pytest fixture that provides fake file system for testing code that accesses

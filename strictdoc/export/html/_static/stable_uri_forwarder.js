@@ -16,84 +16,84 @@
 
 // Resolve the MID / UID to the correct page / anchor using the projectMap.
 function resolveStableUriRedirectUsingProjectMap(anchor) {
-    for (const [page, nodes] of Object.entries(projectMap)) {
-        for (const node of nodes) {
-            if (node['_LINK'].toLowerCase() === anchor.toLowerCase()) {
-                window.location.replace(page + "#" + node['_LINK']);
-                return;
-            }
+  for (const [page, nodes] of Object.entries(projectMap)) {
+    for (const node of nodes) {
+      if (node['_LINK'].toLowerCase() === anchor.toLowerCase()) {
+        window.location.replace(page + "#" + node['_LINK']);
+        return;
+      }
 
-            const nodeHasUID = 'UID' in node && typeof node['UID'] === 'string';
-            if (nodeHasUID && node['UID'].toLowerCase() === anchor.toLowerCase()) {
-                window.location.replace(page + "#" + node['_LINK']);
-                return;
-            }
+      const nodeHasUID = 'UID' in node && typeof node['UID'] === 'string';
+      if (nodeHasUID && node['UID'].toLowerCase() === anchor.toLowerCase()) {
+        window.location.replace(page + "#" + node['_LINK']);
+        return;
+      }
 
-            const nodeHasMID = 'MID' in node && typeof node['MID'] === 'string';
-            if (nodeHasMID && node['MID'].toLowerCase() === anchor.toLowerCase()) {
-                window.location.replace(page + "#" + node['_LINK']);
-                return;
-            }
-        }        
+      const nodeHasMID = 'MID' in node && typeof node['MID'] === 'string';
+      if (nodeHasMID && node['MID'].toLowerCase() === anchor.toLowerCase()) {
+        window.location.replace(page + "#" + node['_LINK']);
+        return;
+      }
     }
+  }
 }
 
 // Dynamically load the projectMap an resolve MID / UID.
 function loadProjectMapAndResolveStableUriRedirect(anchor) {
-    
-    // ProjectMap is loaded, no need to load it again.
-    if (typeof projectMap !== 'undefined') {
-        resolveStableUriRedirectUsingProjectMap(anchor);
-        return;
-    }
 
-    // Get script URL and derive from it the url of project_map.js
-    const scriptUrl = new URL(document.getElementById("stable_uri_forwarder").src, window.location.href)
-    const projectMapUrl = new URL('project_map.js', scriptUrl).href;
+  // ProjectMap is loaded, no need to load it again.
+  if (typeof projectMap !== 'undefined') {
+    resolveStableUriRedirectUsingProjectMap(anchor);
+    return;
+  }
 
-    // Dynamically load project map and resolve
-    const script = document.createElement("script");
-    script.src = projectMapUrl;
-    script.onload = () => resolveStableUriRedirectUsingProjectMap(anchor);
-    script.onerror = () => {
-        console.error(`Failed to load project map from ${projectMapUrl}`);
-    };
-    document.head.appendChild(script);
+  // Get script URL and derive from it the url of project_map.js
+  const scriptUrl = new URL(document.getElementById("stable_uri_forwarder").src, window.location
+    .href)
+  const projectMapUrl = new URL('project_map.js', scriptUrl).href;
+
+  // Dynamically load project map and resolve
+  const script = document.createElement("script");
+  script.src = projectMapUrl;
+  script.onload = () => resolveStableUriRedirectUsingProjectMap(anchor);
+  script.onerror = () => {
+    console.error(`Failed to load project map from ${projectMapUrl}`);
+  };
+  document.head.appendChild(script);
 }
 
-function processStableUriRedirect(anchor)
-{
-    const exportType = document.querySelector('meta[name="strictdoc-export-type"]')?.content;
+function processStableUriRedirect(anchor) {
+  const exportType = document.querySelector('meta[name="strictdoc-export-type"]')?.content;
 
-    if (exportType === 'webserver') {
-        // For the web server, we let the main_router.py dynamically forward UID to node.
-        window.location.replace("/UID/" + anchor);
-    } else if (exportType === 'static') {
-        // For static exports, we use the project_map.js.
-        loadProjectMapAndResolveStableUriRedirect(anchor)
-    }
+  if (exportType === 'webserver') {
+    // For the web server, we let the main_router.py dynamically forward UID to node.
+    window.location.replace("/UID/" + anchor);
+  } else if (exportType === 'static') {
+    // For static exports, we use the project_map.js.
+    loadProjectMapAndResolveStableUriRedirect(anchor)
+  }
 }
 
 
 // In case an anchor is present at content load time.
 document.addEventListener("DOMContentLoaded", () => {
-    const anchorParam = new URLSearchParams(window.location.search).get("a");
-    if (anchorParam) {
-        processStableUriRedirect(anchorParam)
-        return
-    }
+  const anchorParam = new URLSearchParams(window.location.search).get("a");
+  if (anchorParam) {
+    processStableUriRedirect(anchorParam)
+    return
+  }
 
-    // for legacy link support
-    const anchorHash = window.location.hash.substring(1);
-    if (anchorHash) {
-        processStableUriRedirect(anchorHash)
-    }
+  // for legacy link support
+  const anchorHash = window.location.hash.substring(1);
+  if (anchorHash) {
+    processStableUriRedirect(anchorHash)
+  }
 });
 
 // In case an anchor is added manually afterwards (eases testing).
 window.addEventListener("hashchange", () => {
-    const anchor = window.location.hash.substring(1);
-    if (anchor) {
-        processStableUriRedirect(anchor)
-    }
+  const anchor = window.location.hash.substring(1);
+  if (anchor) {
+    processStableUriRedirect(anchor)
+  }
 });

@@ -641,8 +641,8 @@ def lint_format_js(context):
                 --end-with-newline
                 --replace
                 -w100
-                
                 strictdoc/export/html/_static/static_html_search.js
+                strictdoc/export/html/_static/stable_uri_forwarder.js
         """,
     )
     # Ruff always exits with 0, so we handle the output.

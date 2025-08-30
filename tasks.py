@@ -629,6 +629,29 @@ def lint_mypy(context):
 # # @sdoc[/SDOC-SRS-43]
 
 
+@task
+def lint_format_js(context):
+    # NOTE: Could not find the '--' equivalent for -w80.
+    result: invoke.runners.Result = run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        """
+            js-beautify
+                --indent-size=2
+                --end-with-newline
+                --replace
+                -w100
+                
+                strictdoc/export/html/_static/static_html_search.js
+        """,
+    )
+    # Ruff always exits with 0, so we handle the output.
+    if "reformatted" in result.stdout:
+        print("invoke: ruff format found issues")  # noqa: T201
+        result.exited = 1
+        raise invoke.exceptions.UnexpectedExit(result)
+
+
 @task(aliases=["lf"])
 def lint_fixit(context, fix=False, auto=False, path="strictdoc/"):
     if fix:

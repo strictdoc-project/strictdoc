@@ -46,6 +46,24 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 3e3043021e034cb69dfd9b62eecadbb3
+TITLE: 0.11.1 (2025-09-01)
+
+[TEXT]
+MID: 9a4bbed442b94d72859d70d31282efc1
+STATEMENT: >>>
+This release includes further optimizations of the static HTML search feature:
+
+The size of the generated search index was reduced by using original integer identifiers instead of MID strings.
+
+The page loading performance for very large documents improved by at least 2x through caching the search index in IndexedDB on the browser side.
+
+The search index is now loaded only after the entire page has finished loading. This means that search is unavailable for very large pages until the search JavaScript has been loaded. We will look into improving this aspect of the user experience in the future.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: f53df5a2e9674373a8f52f1a01b5010d
 TITLE: 0.11.0 (2025-08-26)
 

@@ -60,7 +60,7 @@ StrictDoc is a spare-time open-source project developed by Stanislav Pankevich (
 
 The project exists since mid-2019.
 
-For a quick overview of the project, check out the `StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc_SlideDeck.pdf>`_ slide deck.
+For a quick overview of the project, check out the `StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc.pdf>`_ slide deck.
 <<<
 
 [[/SECTION]]
@@ -76,7 +76,7 @@ TITLE: Presentations
 [TEXT]
 MID: 52342105083e4f80884959d4ca7f4dba
 STATEMENT: >>>
-1\) `StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc_SlideDeck.pdf>`_
+1\) `StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc.pdf>`_
 
 This slide deck provides a concise overview of the project, including its goals, real-world case studies, the motivation behind its creation, implementation details, and the development roadmap.
 

@@ -46,6 +46,24 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 4bd05b9073254db38322102f4bbc5096
+TITLE: 0.11.2 (2025-09-02)
+
+[TEXT]
+MID: 7776a30d522b4b5f9a6e405d20241566
+STATEMENT: >>>
+This release contains a single bug fix.
+
+The html2pdf4doc_python library has been updated to the latest version, which includes a fix for a recent regression introduced in StrictDoc version 0.11.0 and html2pdf4doc_python version 0.0.19.
+
+The bug report: `Bug: Large TOC overflows into footer / header #46 <https://github.com/strictdoc-project/html2pdf4doc_python/issues/46>`_.
+
+Thanks to @thseiler for reporting this issue.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 3e3043021e034cb69dfd9b62eecadbb3
 TITLE: 0.11.1 (2025-09-01)
 

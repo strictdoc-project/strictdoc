@@ -2616,7 +2616,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             root_path=root_path, static_path=project_config.dir_for_sdoc_assets
         )
         markup_renderer = MarkupRenderer.create(
-            "RST",
+            document.config.get_markup(),
             export_action.traceability_index,
             link_renderer,
             html_templates,

@@ -62,7 +62,7 @@ class HTML2PDFGenerator:
                 static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
-                "RST",
+                document_.config.get_markup(),
                 traceability_index,
                 link_renderer,
                 html_templates,

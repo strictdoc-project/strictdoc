@@ -1,6 +1,5 @@
 RUN: %expect_exit 1 %strictdoc export %S | filecheck %s --dump-input=fail
-CHECK: error: problems when converting RST to HTML:
-CHECK: RST markup syntax error on line 2: Bullet list ends without a blank line; unexpected unindent.
+CHECK: error: problems when converting RST to HTML: RST markup syntax error on line 2: Bullet list ends without a blank line; unexpected unindent.
 CHECK: RST fragment: >>>
 CHECK: - item 1
 CHECK: adsfasdfasdf

@@ -2,7 +2,6 @@ import hashlib
 import io
 import os
 import re
-import sys
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -151,13 +150,13 @@ class RstToHtmlFragmentWriter:
                 )
             else:
                 error_message = f"RST markup syntax error: {warnings}"
-            print(  # noqa: T201
-                f"error: problems when converting RST to HTML:\n{error_message}"
+            final_message = (
+                f"problems when converting RST to HTML: {error_message}\n"
+                "RST fragment: >>>\n"
+                f"{rst_fragment}"
+                "<<<"
             )
-            print("RST fragment: >>>")  # noqa: T201
-            print(rst_fragment)  # noqa: T201
-            print("<<<")  # noqa: T201
-            sys.exit(1)
+            raise RuntimeError(final_message)
 
         html: str = output["html_body"]
 

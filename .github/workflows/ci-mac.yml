@@ -15,6 +15,7 @@ jobs:
         python-version: [
           "3.9", "3.13"
         ]
+        itest_group: [ "main_group", "html2pdf_group" ]
 
     steps:
     - uses: actions/checkout@v3
@@ -38,4 +39,8 @@ jobs:
 
     - name: Run tests
       run: |
-        invoke test
+        if [ "${{ matrix.itest_group }}" = "html2pdf_group" ]; then
+          invoke test-integration --html2pdf
+        else
+          invoke test
+        fi

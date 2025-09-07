@@ -97,6 +97,7 @@ class ProjectConfig:
         exclude_source_paths: List[str],
         test_report_root_dict: Dict[str, str],
         source_nodes: List[Dict[str, str]],
+        html2pdf_strict: bool,
         html2pdf_template: Optional[str],
         bundle_document_version: Optional[str],
         bundle_document_date: Optional[str],
@@ -172,6 +173,7 @@ class ProjectConfig:
 
         self.excel_export_fields: Optional[List[str]] = None
 
+        self.html2pdf_strict: bool = html2pdf_strict
         self.html2pdf_template: Optional[str] = html2pdf_template
         self.bundle_document_version: Optional[str] = bundle_document_version
         self.bundle_document_date: Optional[str] = bundle_document_date
@@ -226,6 +228,7 @@ class ProjectConfig:
             exclude_source_paths=[],
             test_report_root_dict={},
             source_nodes=[],
+            html2pdf_strict=False,
             html2pdf_template=None,
             bundle_document_version=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION,
             bundle_document_date=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE,
@@ -505,6 +508,7 @@ class ProjectConfigLoader:
         exclude_source_paths: List[str] = []
         test_report_root_dict: Dict[str, str] = {}
         source_nodes: List[Dict[str, str]] = []
+        html2pdf_strict: bool = False
         html2pdf_template: Optional[str] = None
         bundle_document_version = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION
         bundle_document_date = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE
@@ -625,6 +629,16 @@ class ProjectConfigLoader:
                         f"strictdoc.toml: 'exclude_source_paths': "
                         f"{exception_} Provided string: '{exclude_source_path}'."
                     ) from exception_
+
+            html2pdf_strict = project_content.get(
+                "html2pdf_strict", html2pdf_strict
+            )
+            if html2pdf_strict is not None:
+                if not isinstance(html2pdf_strict, bool):
+                    raise ValueError(
+                        "strictdoc.toml: 'html2pdf_strict': "
+                        f"must be a true/false value: {html2pdf_strict}."
+                    )
 
             html2pdf_template = project_content.get(
                 "html2pdf_template", html2pdf_template
@@ -757,6 +771,7 @@ class ProjectConfigLoader:
             exclude_source_paths=exclude_source_paths,
             test_report_root_dict=test_report_root_dict,
             source_nodes=source_nodes,
+            html2pdf_strict=html2pdf_strict,
             html2pdf_template=html2pdf_template,
             bundle_document_version=bundle_document_version,
             bundle_document_date=bundle_document_date,

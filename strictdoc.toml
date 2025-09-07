@@ -28,8 +28,6 @@ features = [
   "NESTOR",
 ]
 
-statistics_generator = "docs.sdoc_project_statistics.SDocStatisticsGenerator"
-
 include_doc_paths = [
   "docs/**",
   "docs_extra/**",
@@ -66,3 +64,7 @@ test_report_root_dict = [
   { "reports/tests_integration.lit.junit.xml" = "tests/integration" },
   { "reports/tests_integration_html2pdf.lit.junit.xml" = "tests/integration" },
 ]
+
+html2pdf_strict = false
+
+statistics_generator = "docs.sdoc_project_statistics.SDocStatisticsGenerator"

@@ -686,7 +686,6 @@ def test(context, shard=None):
     test_unit(context)
     test_unit_server(context)
     test_integration(context, shard=shard)
-    test_integration(context, shard=shard, html2pdf=True)
 
 
 @task(aliases=["ta"])

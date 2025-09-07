@@ -46,6 +46,22 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 721b576103a748c8a63d3147ec771b95
+TITLE: 0.11.3 (2025-09-07)
+
+[TEXT]
+MID: e60129ab582946319616595111296e76
+STATEMENT: >>>
+This release contains two enhancements.
+
+1\) The HTML2PDF functionality was updated to support the ``html2pdf_strict`` config option, which controls whether the html2pdf4doc library validates the printed PDF pages. The only, but very important, validation added is the one that checks whether the number of PDF pages in the printed file equals the number of pages paginated by html2pdf4doc. We are still addressing some remaining edge cases related to image scaling and table splitting, and this validation helps detect those issues. Eventually, every project should be able to set ``html2pdf_strict`` to ``true`` and have all documents printed without any layout errors, even minor ones. If ``html2pdf_strict`` is set to ``false``, the validation message is still printed, but it does not cause StrictDoc to terminate with a non-zero exit code.
+
+2\) Parsing of SDoc nodes from source files was adjusted so that the ``manage auto-uid`` command no longer causes auto-generated content to be written back to the template SDoc files. Thanks to @johanenglund for reporting this issue.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 4bd05b9073254db38322102f4bbc5096
 TITLE: 0.11.2 (2025-09-02)
 

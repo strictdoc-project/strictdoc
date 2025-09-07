@@ -486,8 +486,6 @@ STATEMENT: >>>
 
 - Option to keep all multi-line text fields to 80 symbols width.
 
-- Moving nodes between documents.
-
 - TBL view: Column filters to show/hide columns.
 
 - TBL view: Completely empty columns are hidden by default.
@@ -527,8 +525,6 @@ STATEMENT: >>>
 - **Language Server Protocol.** The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio, PyCharm. A smart LSP can enable features like syntax highlighting, autocompletion and easy navigation through requirements. The promising base for the implementation: https://github.com/openlawlibrary/pygls.
 
 - StrictDoc shall support rendering text/code blocks into Markdown syntax.
-
-- **Fuzzy requirements search.** This feature can be implemented in the CLI as well as in the future GUI. A fuzzy requirements search can help to find existing requirements and also identify relevant requirements when creating new requirements.
 
 - Support creation of FMEA/FMECA safety analysis documents.
 

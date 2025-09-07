@@ -66,6 +66,7 @@ class GCovJSONReader:
             view=None,
             grammar=None,
             section_contents=[],
+            autogen=True,
         )
         document.ng_including_document_reference = DocumentReference()
         grammar = DocumentGrammar.create_for_test_report(document)

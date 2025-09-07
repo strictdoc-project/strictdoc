@@ -70,6 +70,10 @@ class SDocSection(SDocSectionIF):
         self.ng_byte_start: Optional[int] = None
         self.ng_byte_end: Optional[int] = None
 
+        # FIXME: Section will be removed in 2025-Q3.
+        #        Sections are never auto-generated, so this is always hard-coded to False.
+        self.autogen: bool = False
+
     @staticmethod
     def get_type_string() -> str:
         return "section"

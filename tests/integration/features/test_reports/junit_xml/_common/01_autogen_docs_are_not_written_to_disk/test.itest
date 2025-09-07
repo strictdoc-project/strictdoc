@@ -1,0 +1,9 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+
+RUN: cp -r %S/* ./
+RUN: %strictdoc manage auto-uid .
+
+RUN: cat ./reports/tests_unit.ctest.junit.xml | filecheck %s
+
+CHECK-NOT: [DOCUMENT]
+CHECK: <?xml version="1.0" encoding="UTF-8"?>

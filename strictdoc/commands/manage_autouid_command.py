@@ -72,9 +72,13 @@ class ManageAutoUIDCommand:
         for document in traceability_index.document_tree.document_list:
             assert document.meta is not None
 
-            # Most recently, we parse JUnit XML or Gcov JSON files.
+            # Most recently, we parse JUnit XML, Gcov JSON files or SDoc
+            # documents generated from source code comments.
             # These must not be written back.
-            if not document.meta.document_filename.endswith(".sdoc"):
+            if (
+                not document.meta.document_filename.endswith(".sdoc")
+                or document.autogen
+            ):
                 continue
 
             document_content = SDWriter(project_config).write(document)

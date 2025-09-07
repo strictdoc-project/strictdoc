@@ -35,6 +35,10 @@ class DocumentFromFile(SDocDocumentFromFileIF):
         self.resolved_full_path_to_document_file: Optional[str] = None
         self.resolved_document: Optional[SDocDocumentIF] = None
 
+        # Document from file is currently never auto-generated, so this is
+        # always hard-coded to False.
+        self.autogen: bool = False
+
     def iterate_nodes(
         self, element_type: Optional[str] = None
     ) -> Generator[SDocNodeIF, None, None]:

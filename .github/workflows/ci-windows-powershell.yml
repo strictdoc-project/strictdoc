@@ -14,6 +14,7 @@ jobs:
       matrix:
         python-version: ["3.9"]
         shard: ["1/2", "2/2"]
+        itest_group: [ "main_group", "html2pdf_group" ]
 
     steps:
     - uses: actions/checkout@v3
@@ -52,6 +53,11 @@ jobs:
         $tidyPath = (Get-ChildItem "C:\ProgramData\chocolatey\lib\html-tidy" -Recurse -Filter tidy.exe | Select-Object -First 1).DirectoryName
         echo "$tidyPath" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
 
-    - name: Run tests (Powershell)
+    - name: Run tests
+      shell: bash
       run: |
-        invoke test --shard=${{ matrix.shard }}
+        if [ "${{ matrix.itest_group }}" = "html2pdf_group" ]; then
+          invoke test-integration --html2pdf --shard=${{ matrix.shard }}
+        else
+          invoke test --shard=${{ matrix.shard }}
+        fi

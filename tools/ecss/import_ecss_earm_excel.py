@@ -213,7 +213,8 @@ class ECSS_EARM_Excel_Importer:
 title = "ECSS: Example HTML export"
 
 features = [
-    # No features.
+    # Disable all features, except those specified below.
+    "HTML2PDF",
 ]
 """)
 

@@ -14,6 +14,7 @@ jobs:
       matrix:
         python-version: ["3.12"]
         shard: ["1/2", "2/2"]
+        itest_group: [ "main_group", "html2pdf_group" ]
 
     steps:
     - uses: actions/checkout@v3
@@ -56,7 +57,11 @@ jobs:
       run: |
         invoke lint
 
-    - name: Run tests (Bash)
-      run: |
-        invoke test --shard=${{ matrix.shard }}
+    - name: Run tests
       shell: bash
+      run: |
+        if [ "${{ matrix.itest_group }}" = "html2pdf_group" ]; then
+          invoke test-integration --html2pdf --shard=${{ matrix.shard }}
+        else
+          invoke test --shard=${{ matrix.shard }}
+        fi

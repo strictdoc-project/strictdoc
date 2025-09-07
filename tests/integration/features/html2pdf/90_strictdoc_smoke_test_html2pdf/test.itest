@@ -1,0 +1,5 @@
+REQUIRES: PYTHON_39_OR_HIGHER
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+REQUIRES: TEST_HTML2PDF
+
+RUN: cd "%strictdoc_root/" && %strictdoc export "%strictdoc_root/" --formats=html2pdf --output-dir="%T"

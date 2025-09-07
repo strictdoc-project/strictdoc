@@ -4,6 +4,7 @@
 
 from typing import TYPE_CHECKING, List, Optional, Tuple
 
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.helpers.auto_described import auto_described
 
 if TYPE_CHECKING:
@@ -128,7 +129,7 @@ class DocumentConfig:
 
     def get_markup(self) -> str:
         if self.markup is None:
-            return "RST"
+            return SDocMarkup.RST
         return self.markup
 
     def get_requirement_style_mode(self) -> str:

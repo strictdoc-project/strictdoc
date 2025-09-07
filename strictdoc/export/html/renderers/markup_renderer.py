@@ -2,6 +2,7 @@ from typing import Dict, Optional, Tuple, Union
 
 from markupsafe import Markup
 
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
@@ -38,7 +39,7 @@ class MarkupRenderer:
             HTMLFragmentWriter,
             TextToHtmlWriter,
         ]
-        if not markup or markup == "RST":
+        if not markup or markup == SDocMarkup.RST:
             html_fragment_writer = RstToHtmlFragmentWriter(
                 project_config=config,
                 context_document=context_document,

@@ -227,10 +227,36 @@ def line_marker_processor(
         # This marker is within a "nosdoc" block, so we ignore it.
         return
 
+    # Semantic constraint validation
+    has_previous_markers = len(parse_context.markers) > 0
+    is_consecutive = (
+        has_previous_markers
+        and parse_context.markers[-1].ng_range_line_end == line
+    )
+    is_at_eof = line == parse_context.file_stats.lines_total
+
+    if is_consecutive:
+        raise StrictDocSemanticError(
+            "Consecutive LineMarkers are not allowed",
+            hint=None,
+            example=None,
+            line=line,
+            filename=location["filename"],
+        )
+
+    if is_at_eof:
+        raise StrictDocSemanticError(
+            "LineMarker cannot be followed by EOF",
+            hint=None,
+            example=None,
+            line=line,
+            filename=location["filename"],
+        )
+
     parse_context.markers.append(line_marker)
     line_marker.ng_source_line_begin = line
     line_marker.ng_range_line_begin = line
-    line_marker.ng_range_line_end = line
+    line_marker.ng_range_line_end = line + 1
 
     for req in line_marker.reqs:
         markers = parse_context.map_reqs_to_markers.setdefault(req, [])

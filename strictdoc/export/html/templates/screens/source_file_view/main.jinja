@@ -6,8 +6,12 @@
 
   {%- if view_object.pygmented_source_file_lines|length > 0 -%}
   <div id="source" class="source">
+    {%- set ns = namespace(prev_line = none) -%}
     {%- for line in view_object.pygmented_source_file_lines -%}
-      {%- if line.__class__.__name__ == "SourceMarkerTuple" and not line.is_end() -%}
+      {%- set is_marker = (line.__class__.__name__ == "SourceMarkerTuple") -%}
+      {%- set is_markup = (line.__class__.__name__ == "Markup") -%}
+
+      {%- if is_marker and not line.is_end() -%}
         {%- set current_marker_link = view_object.render_marker_range_link(line) -%}
         {%- set current_range_begin = line.ng_range_line_begin -%}
         {%- set current_range_end = line.ng_range_line_end -%}
@@ -70,17 +74,36 @@
           {%- endif -%}
         </div>
       </div>
-      {%- if line.__class__.__name__ == "SourceMarkerTuple" and (line.is_end() or line.is_line_marker()) -%}
+
+      {#-- keep begin marker to close on the next non-marker line --#}
+      {%- if is_marker and line.is_line_marker() -%}
+        {%- set ns.prev_line = line -%}
+      {%- endif -%}
+
+      {#-- decide closer candidate: explicit end vs implicit close --#}
+      {%- set marker_is_end = (is_marker and line.is_range_marker() and line.is_end()) -%}
+      {%- set implicit_close = (is_markup and ns.prev_line != none) -%}
+
+      {%- if marker_is_end -%}
+        {%- set range_closer_line = line -%}
+      {%- elif implicit_close -%}
+        {%- set range_closer_line = ns.prev_line -%}
+        {%- set ns.prev_line = none -%}
+      {%- else -%}
+        {%- set range_closer_line = none -%}
+      {%- endif -%}
+
+      {% if range_closer_line != None %}
         <div
           class="source__range-closer"
-          data-end="{{ line.markers[0].ng_range_line_end }}"
+          data-end="{{ range_closer_line.markers[0].ng_range_line_end }}"
         >
           <div class="source__range-closer-label">
             {%- with
-              begin=line.markers[0].ng_range_line_begin,
-              end=line.markers[0].ng_range_line_end,
-              href=view_object.render_marker_range_link(line),
-              scope=line.markers[0].get_description()
+              begin=range_closer_line.markers[0].ng_range_line_begin,
+              end=range_closer_line.markers[0].ng_range_line_end,
+              href=view_object.render_marker_range_link(range_closer_line),
+              scope=range_closer_line.markers[0].get_description()
             -%}
               {% include "screens/source_file_view/range_button.jinja" %}
             {%- endwith -%}

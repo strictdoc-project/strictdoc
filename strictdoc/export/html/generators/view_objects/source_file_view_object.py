@@ -47,6 +47,9 @@ class SourceMarkerTuple:
     def is_line_marker(self) -> bool:
         return any(map(lambda m_: isinstance(m_, LineMarker), self.markers))
 
+    def is_range_marker(self) -> bool:
+        return any(map(lambda m_: isinstance(m_, RangeMarker), self.markers))
+
 
 SourceLineEntry = Union[
     Markup,

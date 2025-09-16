@@ -6,13 +6,13 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --file "%T/html/_source_files/file.robot.html"
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#5#5">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#11#11">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#5#6">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#11#12">
 
 RUN: %cat %T/html/_source_files/file.robot.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 CHECK-SOURCE-FILE: href="../{{.*}}/input.html#REQ-1"
-CHECK-SOURCE-FILE: href="../_source_files/file.robot.html##5#5"
-CHECK-SOURCE-FILE: href="../_source_files/file.robot.html##11#11"
+CHECK-SOURCE-FILE: href="../_source_files/file.robot.html##5#6"
+CHECK-SOURCE-FILE: href="../_source_files/file.robot.html##11#12"
 
 RUN: %cat %T/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
-CHECK-SOURCE-COVERAGE: 16.7
+CHECK-SOURCE-COVERAGE: 33.3

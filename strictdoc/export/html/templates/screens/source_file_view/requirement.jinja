@@ -75,7 +75,7 @@
             {%- endif -%}
             </span>
             {% elif range.is_line_marker() %}
-            <b>[ {{ range.ng_range_line_begin }} ]</b>
+            <b>[ {{ range.ng_range_line_begin }}-{{ range.ng_range_line_end }} ]</b>
             <span class="source__range-pointer_description">{{ link }}, line</span>
             {% endif %}
           </a>

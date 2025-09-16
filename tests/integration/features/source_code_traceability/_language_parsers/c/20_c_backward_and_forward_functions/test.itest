@@ -11,7 +11,7 @@ RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHE
 CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#1#55">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#1#55">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#3#10">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#32#32">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#32#33">
 CHECK-HTML: <a{{.*}}href="../_source_files/file2.c.html#REQ-1#1#8">
 
 RUN: %cat %T/html/_source_files/file.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
@@ -19,7 +19,7 @@ CHECK-SOURCE-FILE: 1 - 55 | entire file
 CHECK-SOURCE-FILE: 3 - 10 | function foo()
 CHECK-SOURCE-FILE: 12 - 16 | range
 CHECK-SOURCE-FILE: 22 - 55 | function longFunctionName()
-CHECK-SOURCE-FILE: 32 - 32 | line
+CHECK-SOURCE-FILE: 32 - 33 | line
 
 RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: 100.0

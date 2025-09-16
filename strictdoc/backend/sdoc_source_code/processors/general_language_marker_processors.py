@@ -2,7 +2,9 @@
 @relation(SDOC-SRS-33, scope=file)
 """
 
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
+
+from textx import get_location
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -16,6 +18,21 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
+from strictdoc.helpers.list import find_duplicates
+
+
+def validate_marker_uids(
+    marker: Union[FunctionRangeMarker, LineMarker, RangeMarker],
+    parse_context: ParseContext,
+) -> None:
+    possible_duplicates = find_duplicates(marker.reqs)
+    if len(possible_duplicates) > 0:
+        location = get_location(marker)
+
+        raise ValueError(
+            "@relation marker contains duplicate node UIDs: "
+            f"{possible_duplicates}. Location: {parse_context.filename}:{location['line']}."
+        )
 
 
 def source_file_traceability_info_processor(
@@ -213,6 +230,20 @@ def range_marker_processor(
 def line_marker_processor(
     line_marker: LineMarker, parse_context: ParseContext
 ) -> None:
+    validate_marker_uids(line_marker, parse_context)
+
+    # If the object is coming from textX, obtain information from textX parsing
+    # information.
+    line: int
+    if line_marker.ng_source_line_begin is None:
+        location = get_location(line_marker)
+        line = location["line"]
+        line_marker.ng_source_line_begin = line
+        line_marker.ng_range_line_begin = line
+        line_marker.ng_range_line_end = line + 1
+    else:
+        line = line_marker.ng_source_line_begin
+
     if (
         len(parse_context.marker_stack) > 0
         and parse_context.marker_stack[-1].ng_is_nodoc
@@ -220,10 +251,31 @@ def line_marker_processor(
         # This marker is within a "nosdoc" block, so we ignore it.
         return
 
+    has_previous_markers = len(parse_context.markers) > 0
+    is_consecutive = (
+        has_previous_markers
+        and parse_context.markers[-1].ng_range_line_end == line
+    )
+    if is_consecutive:
+        raise StrictDocSemanticError(
+            "Consecutive LineMarkers are not allowed",
+            hint=None,
+            example=None,
+            line=line,
+            filename=parse_context.filename,
+        )
+
+    is_at_eof = line == parse_context.file_stats.lines_total
+    if is_at_eof:
+        raise StrictDocSemanticError(
+            "LineMarker cannot be followed by EOF",
+            hint=None,
+            example=None,
+            line=line,
+            filename=parse_context.filename,
+        )
+
     parse_context.markers.append(line_marker)
-
-    assert line_marker.ng_source_line_begin is not None
-
     for req in line_marker.reqs:
         markers = parse_context.map_reqs_to_markers.setdefault(req, [])
         markers.append(line_marker)

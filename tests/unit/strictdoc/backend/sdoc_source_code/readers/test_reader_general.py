@@ -355,15 +355,15 @@ CONTENT 3
         assert markers[0].reqs == ["REQ-001"]
         assert markers[0].ng_source_line_begin == 1
         assert markers[0].ng_range_line_begin == 1
-        assert markers[0].ng_range_line_end == 1
+        assert markers[0].ng_range_line_end == 2
         assert markers[1].reqs == ["REQ-002"]
         assert markers[1].ng_source_line_begin == 3
         assert markers[1].ng_range_line_begin == 3
-        assert markers[1].ng_range_line_end == 3
+        assert markers[1].ng_range_line_end == 4
         assert markers[2].reqs == ["REQ-003"]
         assert markers[2].ng_source_line_begin == 5
         assert markers[2].ng_range_line_begin == 5
-        assert markers[2].ng_range_line_end == 5
+        assert markers[2].ng_range_line_end == 6
 
 
 def test_060_file_level_marker():
@@ -443,3 +443,29 @@ CONTENT 3
         exc_info.value.args[0]
         == "Unmatched @sdoc keyword found in source file."
     )
+
+
+def test_validation_04_consecutive_line_markers():
+    source_input = """
+    # @sdoc(REQ-001)
+    # @sdoc(REQ-002)
+    """
+    reader = SourceFileTraceabilityReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(source_input)
+
+    assert exc_info.type is StrictDocSemanticError
+    assert exc_info.value.args[0] == "Consecutive LineMarkers are not allowed"
+
+
+def test_validation_05_line_marker_followed_by_eof():
+    source_input = "# @sdoc(REQ-001)"
+
+    reader = SourceFileTraceabilityReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(source_input)
+
+    assert exc_info.type is StrictDocSemanticError
+    assert exc_info.value.args[0] == "LineMarker cannot be followed by EOF"

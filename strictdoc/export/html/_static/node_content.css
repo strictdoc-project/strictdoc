@@ -40,6 +40,19 @@ sdoc-node-content {
    */
 }
 
+/* Workaround for html2pdf4doc print bug:
+  (https://github.com/strictdoc-project/strictdoc/issues/2450#issuecomment-3299134769)
+   Disable background for elements that trigger header/footer overlap.
+   This hides the background of problematic split (not sliced) sections
+   to prevent them from covering header/footer areas during printing.
+   Real fix will be applied in html2pdf4doc in a future release. */
+@media print {
+  sdoc-node-content {
+    background: none;
+    background-color: transparent;
+  }
+}
+
 sdoc-node-title {
   display: block;
 

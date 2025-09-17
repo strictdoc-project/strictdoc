@@ -988,6 +988,7 @@ The ``[[SECTION]]`` element is a reserved composite node in StrictDoc's default 
     [[/COMPOSITE_REQUIREMENT]]
 
 .. note::
+    :class: html2pdf4doc-no-break
 
     Composite requirements should not be used in every document. In most cases, a simple combination of nested ``[[SECTION]]`` and ``[[REQUIREMENT]]`` elements is sufficient. See also [LINK: UG_PORTABILITY_CONSIDERATIONS].
 <<<

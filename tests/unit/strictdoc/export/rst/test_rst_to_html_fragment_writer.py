@@ -127,5 +127,5 @@ Hello. What nex?
     assert html_output is None
     assert error == (
         "RST markup syntax error on line 7: "
-        "Unexpected section title or transition."
+        "Bullet list ends without a blank line; unexpected unindent."
     )

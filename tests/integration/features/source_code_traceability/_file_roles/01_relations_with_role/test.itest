@@ -17,8 +17,8 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#4#6">
 CHECK-HTML: file.c, <i>lines: 4-6</i>, function extfoo
 CHECK-HTML: <span{{.*}}">(Implementation)</span>
 
-CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#11#11">
-CHECK-HTML: file.c, <i>lines: 11-11</i>, line
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#11#12">
+CHECK-HTML: file.c, <i>lines: 11-12</i>, line
 CHECK-HTML: <span{{.*}}">(Implementation)</span>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#15#16">
@@ -41,8 +41,8 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#13#20">
 CHECK-HTML: file.py, <i>lines: 13-20</i>, range
 CHECK-HTML: <span{{.*}}">(Implementation)</span>
 
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#24#24">
-CHECK-HTML: file.py, <i>lines: 24-24</i>, line
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#24#25">
+CHECK-HTML: file.py, <i>lines: 24-25</i>, line
 CHECK-HTML: <span{{.*}}">(Implementation)</span>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.txt.html#REQ-001#1#2">

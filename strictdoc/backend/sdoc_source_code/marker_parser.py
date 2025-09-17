@@ -189,7 +189,7 @@ class MarkerParser:
                 element_.meta.column + col_offset
             )
             line_marker.ng_range_line_begin = line_start
-            line_marker.ng_range_line_end = line_end
+            line_marker.ng_range_line_end = line_end + 1
             markers.append(line_marker)
         else:
             raise NotImplementedError

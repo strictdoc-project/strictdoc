@@ -407,15 +407,15 @@ CONTENT 3
     assert markers[0].reqs == ["REQ-001"]
     assert markers[0].ng_source_line_begin == 1
     assert markers[0].ng_range_line_begin == 1
-    assert markers[0].ng_range_line_end == 1
+    assert markers[0].ng_range_line_end == 2
     assert markers[1].reqs == ["REQ-002"]
     assert markers[1].ng_source_line_begin == 3
     assert markers[1].ng_range_line_begin == 3
-    assert markers[1].ng_range_line_end == 3
+    assert markers[1].ng_range_line_end == 4
     assert markers[2].reqs == ["REQ-003"]
     assert markers[2].ng_source_line_begin == 5
     assert markers[2].ng_range_line_begin == 5
-    assert markers[2].ng_range_line_end == 5
+    assert markers[2].ng_range_line_end == 6
 
 
 def test_070_function_marker():

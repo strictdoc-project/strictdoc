@@ -21,4 +21,5 @@ def bar2():
 
 
 if __name__ == "__main__":
-    pass  # @relation(REQ-001, scope=line, role=Implementation)
+    # @relation(REQ-001, scope=line, role=Implementation)
+    pass

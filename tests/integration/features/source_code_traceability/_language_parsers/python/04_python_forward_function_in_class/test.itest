@@ -11,7 +11,7 @@ RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#16">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#16">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#11#16">
-CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#13#13">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#13#14">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-2#4#5">
 
 RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
@@ -25,7 +25,7 @@ CHECK-SOURCE-FILE: file.py, function Foo.hello_world
 CHECK-SOURCE-FILE: <b>[ 11-16 ]</b>
 CHECK-SOURCE-FILE: file.py, range
 
-CHECK-SOURCE-FILE: <b>[ 13 ]</b>
+CHECK-SOURCE-FILE: <b>[ 13-14 ]</b>
 CHECK-SOURCE-FILE: file.py, line
 
 CHECK-SOURCE-FILE: <b>[ 4-5 ]</b>

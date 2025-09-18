@@ -46,6 +46,22 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: f2a70deaf8164240951fca48510d7aa4
+TITLE: 0.12.0 (2025-09-17)
+
+[TEXT]
+MID: a7e0cee58f054a50818f07a02bab7230
+STATEMENT: >>>
+This release contains a change in how the source code line markers work, as well as several small HTML2PDF layout fixes.
+
+The source code line markers were changed to include the next source line that follows immediately after the marker. As discussed with a user in #2434, this behavior of line markers makes more sense compared to the previous approach, which assumed that the source line had to be followed by a line marker, forcing both the source line and the marker to be on the same line. Thanks to @Mooan for initiating this discussion and contributing a pull request.
+
+The HTML2PDF fixes include an important correction for an issue where running titles were not displayed on some pages in certain cases. For now, we have implemented a workaround, and the complete fix is being tracked in the upstream html2pdf4doc repository.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 721b576103a748c8a63d3147ec771b95
 TITLE: 0.11.3 (2025-09-07)
 

@@ -17,11 +17,34 @@
 #}
 {% set user_requirement_style = sdoc_entity.get_requirement_style_mode() %}
 
+{#
+  dev tag: #narrative_meta_hanging
+
+  Html2pdf4doc rules for `Narrative` requirement style:
+  * If no title:
+    “meta” does not hang
+    -> add .html2pdf4doc-no-hanging to .node_fields_group-secondary.
+  * If no multi-line content:
+    the node is not split at all (with or without a title)
+    -> add .html2pdf4doc-no-break to node.
+  * PROBLEM:
+    We assume that the number of single-line strings is no greater than the height of the page
+
+  FIXME: Review this rules after upgrading html2pdf4doc to 0.2.4+
+#}
+{% set _no_title = not sdoc_entity.reserved_title %}
+{% set _has_multiline_fields = sdoc_entity.has_multiline_fields() %}
+{% set _narrative_has_multiline_fields = _has_multiline_fields and user_requirement_style == 'narrative' %}
+{% set _narrative_has_no_multiline_fields = not _has_multiline_fields and user_requirement_style == 'narrative' %}
+
 <sdoc-node-content
   node-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
   data-level="{{ sdoc_entity.context.title_number_string }}"
   {%- if sdoc_entity.reserved_status %}
     data-status='{{ sdoc_entity.reserved_status.lower() }}'
+  {%- endif %}
+  {%- if _narrative_has_no_multiline_fields %}
+    class="html2pdf4doc-no-break"
   {%- endif %}
   show-node-type-name="{{ sdoc_entity.get_node_type_string() }}"
   data-testid="requirement-style-{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
@@ -37,12 +60,12 @@
   #}
 
   {% if user_requirement_style == 'narrative' %}
-    <sdoc-scope class="node_fields_group-secondary html2pdf4doc-no-hanging">
+    <sdoc-scope class="node_fields_group-secondary{% if _no_title %} html2pdf4doc-no-hanging{% endif %}">
       {% include "components/node_field/meta/index.jinja" %}
       {% include "components/node_field/links/index.jinja" %}
       {% include "components/node_field/files/index.jinja" %}
     </sdoc-scope>
-    {% if sdoc_entity.has_multiline_fields() %}
+    {% if _narrative_has_multiline_fields %}
     <sdoc-scope class="node_fields_group-primary">
       {% include "components/node_field/statement/index.jinja" %}
       {% include "components/node_field/rationale/index.jinja" %}

@@ -46,6 +46,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 27d526d90cda48dfa5cbf17df88299ba
+TITLE: 0.12.1 (2025-09-18)
+
+[TEXT]
+MID: 7433a733b3794983b5e17169897c3732
+STATEMENT: >>>
+This bugfix release contains several HTML2PDF layout fixes.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: f2a70deaf8164240951fca48510d7aa4
 TITLE: 0.12.0 (2025-09-17)
 

@@ -1,0 +1,6 @@
+[project]
+title = "Test project"
+
+features = [
+    "TREEMAP_SCREEN"
+]

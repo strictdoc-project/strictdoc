@@ -3039,6 +3039,15 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 html_generator.export_requirements_coverage_screen(
                     traceability_index=export_action.traceability_index,
                 )
+            elif document_relative_path.relative_path == "tree_map.html":
+                if not project_config.is_activated_tree_map():
+                    return Response(
+                        content="The Tree Map feature is not activated in the project config.",
+                        status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                    )
+                html_generator.export_tree_map_screen(
+                    traceability_index=export_action.traceability_index,
+                )
             elif document_relative_path.relative_path == "source_coverage.html":
                 if not project_config.is_activated_requirements_to_source_traceability():
                     return Response(

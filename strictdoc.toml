@@ -26,6 +26,7 @@ features = [
   "HTML2PDF",
   "DIFF",
   "NESTOR",
+  "TREEMAP_SCREEN",
 ]
 
 include_doc_paths = [

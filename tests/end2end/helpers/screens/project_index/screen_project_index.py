@@ -21,6 +21,7 @@ from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import
 from tests.end2end.helpers.screens.traceability_matrix.screen_requirements_coverage import (
     Screen_RequirementsCoverage,
 )
+from tests.end2end.helpers.screens.tree_map.tree_map import Screen_TreeMap
 
 
 class Screen_ProjectIndex:  # pylint: disable=invalid-name
@@ -154,6 +155,14 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             f"//a[@data-testid='tree-file-link'][.//div[@class='project_tree-file-title' and normalize-space(text())='{document_title}']]"
         )
         return Screen_Document(self.test_case)
+
+    def do_click_on_tree_map_screen_link(
+        self,
+    ) -> Screen_TreeMap:
+        self.test_case.click_xpath(
+            '//a[@data-testid="project-tree-link-tree-map"]',
+        )
+        return Screen_TreeMap(self.test_case)
 
     #
     # Static HTML search.

@@ -13,6 +13,7 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.doxygen.doxygen_generator import DoxygenGenerator
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.generators.tree_map import TreeMapGenerator
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
@@ -56,6 +57,11 @@ class ExportAction:
         )
         assert self.project_config.export_formats is not None, (
             "The export_formats must not be None."
+        )
+
+        TreeMapGenerator.export(
+            project_config=self.project_config,
+            traceability_index=self.traceability_index
         )
 
         if (

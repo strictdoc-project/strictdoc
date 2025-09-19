@@ -152,3 +152,6 @@ sdoc-scope {
   border-radius: 6px;
   */
 }
+.document img {
+  /* display: block; */
+}

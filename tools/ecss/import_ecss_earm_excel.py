@@ -1,3 +1,41 @@
+r"""
+Convert ECSS Applicability Requirement Matrix (EARM) Excel to SDoc files,
+one SDoc file per one ECSS document.
+
+How to use this script:
+
+1) Create a test folder:
+
+mkdir ecss_test/
+cd ecss_test/
+
+2) Install StrictDoc:
+
+pip install strictdoc
+
+3) Download this script:
+
+wget https://raw.githubusercontent.com/strictdoc-project/strictdoc/refs/heads/main/tools/ecss/import_ecss_earm_excel.py
+
+4) Download the ECSS Applicability Requirement Matrix (EARM) Excel from
+https://ecss.nl/standards/downloads__trashed/earm/ or use a direct link to the
+latest export as of 2025 Q3:
+
+wget https://ecss.nl/wp-content/uploads/2025/02/EARM_ECSS_export\(DOORS-v1.0_Dec2024\).xlsx
+
+5) Run the import script:
+
+python import_ecss_earm_excel.py EARM_ECSS_export\(DOORS-v1.0_Dec2024\).xlsx
+
+The SDoc files shall be written to output/ecss/ folder.
+
+6) Generate StrictDoc documentation:
+
+strictdoc export output/ecss/
+
+7) The HTML export shall be available at path: output/html/index.html.
+"""
+
 import argparse
 import os
 import re

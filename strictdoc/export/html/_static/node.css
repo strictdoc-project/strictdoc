@@ -67,6 +67,11 @@ sdoc-node[show-node-type-name][node-view="plain"]::before {
   content: none;
 }
 
+/* for quick test */
+sdoc-node[node-style="readonly"][node-view="narrative"] {
+  /* padding-bottom: calc(2 * var(--base-rhythm)); */
+}
+
 /* editable_node */
 
 sdoc-node[node-style="card"][node-role="requirement"],

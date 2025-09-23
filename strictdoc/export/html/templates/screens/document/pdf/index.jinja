@@ -25,6 +25,7 @@
   {%- if view_object.project_config.is_activated_html2pdf() -%}
   <script
   defer
+    mask='false'
     data-debug-mode='true'
     data-preloader='true'
     data-preloader-target='[html2pdf-preloader]'
@@ -34,7 +35,7 @@
     data-page-break-before-selectors='H2'
     data-no-break-selectors='.html2pdf4doc-no-break sdoc-section-title sdoc-meta sdoc-node-title .pdf-toc-row'
     data-no-hanging-selectors='.html2pdf4doc-no-hanging sdoc-section-title sdoc-anchor sdoc-meta .admonition-title sdoc-node-title sdoc-node-field-label strong:only-child'
-  src="{{ view_object.render_static_url('__test_bundle_table_0920.js') }}"></script>
+  src="{{ view_object.render_static_url('__test_bundle_table_0923.js') }}"></script>
   {%- endif -%}
   {# src="{{ view_object.render_static_url('html2pdf4doc.min.js') }}"></script> #}
 

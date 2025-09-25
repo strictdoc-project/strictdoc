@@ -63,7 +63,7 @@ class SDocGrammarReader:
         if unpickled_content is not None:
             return unpickled_content
 
-        with open(file_path, encoding="utf8") as file:
+        with open(file_path, encoding="utf-8-sig") as file:
             grammar_content = file.read()
 
         try:

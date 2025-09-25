@@ -4,6 +4,8 @@ from typing import Callable, List, Match, Optional
 REGEX_TRAILING_WHITESPACE_SINGLELINE = re.compile(r"\s{2,}")
 REGEX_TRAILING_WHITESPACE_MULTILINE = re.compile(r" +\n")
 
+UTF8_BOM = "\ufeff"
+
 
 # WIP: Check if this is used.
 def escape(string: str) -> str:
@@ -95,3 +97,8 @@ def tokenize(text: str) -> List[str]:
     pattern = r"[a-z0-9]+(?:[-_./][a-z0-9]+)*"
     tokens = re.findall(pattern, text)
     return tokens
+
+
+def strip_bom(s: str) -> str:
+    # U+FEFF is the BOM character when in str form
+    return s.lstrip(UTF8_BOM)

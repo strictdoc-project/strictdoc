@@ -4,7 +4,6 @@ from typing import List, Union
 from markupsafe import Markup
 
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
@@ -50,9 +49,7 @@ class ProgressStatisticsGenerator:
         for document in traceability_index.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             for node, _ in document_iterator.all_content(print_fragments=False):
-                if isinstance(node, SDocSection) or (
-                    isinstance(node, SDocNode) and node.node_type == "SECTION"
-                ):
+                if isinstance(node, SDocNode) and node.node_type == "SECTION":
                     document_tree_stats.total_sections += 1
                     if not node.has_any_text_nodes():
                         document_tree_stats.sections_without_text_nodes += 1

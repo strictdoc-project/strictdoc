@@ -866,6 +866,21 @@ OPTIONS:
     assert input_sdoc == output
 
 
+def test_090_byte_order_mark_symbol_does_not_cause_parsing_errors():
+    input_sdoc = (
+        "\ufeff"
+        """\
+[DOCUMENT]
+TITLE: Test Doc
+"""
+    )
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+
 def test__validation__30__composite_node_start_end_tags_do_not_match():
     input_sdoc = """\
 [DOCUMENT]

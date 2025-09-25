@@ -140,7 +140,6 @@ ignore = [
     "PLR5501",
 
     "UP035", # [*] Import from `collections.abc` instead: `Iterator`
-    "UP038", # [*] Use `X | Y` in `isinstance` call instead of `(X, Y)` (conflict with Pylint)
 ]
 
 # Avoid trying to fix flake8-bugbear (`B`) violations.

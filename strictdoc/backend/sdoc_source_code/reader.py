@@ -292,7 +292,7 @@ class SourceFileTraceabilityReader:
         return source_file_traceability_info
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
-        with open(file_path, encoding="utf-8") as file:
+        with open(file_path, encoding="utf-8-sig") as file:
             sdoc_content = file.read()
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc

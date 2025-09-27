@@ -3840,6 +3840,35 @@ A statistics generator is a class that iterates over the traceability index, col
 [[/SECTION]]
 
 [[SECTION]]
+MID: 875c097b4da348938ed71de4b8e8e73b
+TITLE: Document tree map screen
+
+[TEXT]
+MID: 36067f1c73c545fea0b2408b32ee8a9a
+STATEMENT: >>>
+The Document Tree Map screen, or simply Tree Map, provides a visualization of the document tree and of requirements coverage by source files and tests.
+
+The feature can be activated as follows:
+
+.. code-block::
+
+    [project]
+    title = "My project"
+
+    features = [
+      "TREE_MAP_SCREEN"
+    ]
+
+The feature has experimental status because it has only been tested against StrictDoc's own documentation. Several questions still remain to be answered:
+
+- How to allow users to customize this screen with their own additional visualizations.
+- How to allow users to customize rules for color-coding the document nodes.
+- How should the traceability mechanics work when there are multiple levels of requirements and a given requirement can reference either source files or child requirements.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: aa7ebc36cd2947ac9aa293d6c76d8848
 UID: SECTION-UG-Diff-changelog-screen
 TITLE: Diff/changelog screen

@@ -153,8 +153,15 @@ class DocumentGrammar(SDocGrammarIF):
 
     @staticmethod
     def create_for_test_report(parent: SDocDocumentIF) -> "DocumentGrammar":
+        section_element: GrammarElement = (
+            DocumentGrammar.create_default_section_element(
+                parent=None, enable_mid=parent.config.enable_mid == True
+            )
+        )
         text_element: GrammarElement = (
-            DocumentGrammar.create_default_text_element()
+            DocumentGrammar.create_default_text_element(
+                parent=None, enable_mid=parent.config.enable_mid == True
+            )
         )
 
         fields: List[GrammarElementFieldType] = [
@@ -215,11 +222,16 @@ class DocumentGrammar(SDocGrammarIF):
             requirement_element
         )
 
-        elements: List[GrammarElement] = [text_element, requirement_element]
+        elements: List[GrammarElement] = [
+            section_element,
+            text_element,
+            requirement_element,
+        ]
         grammar = DocumentGrammar(
             parent=parent, elements=elements, import_from_file=None
         )
         grammar.is_default = True
+        section_element.parent = grammar
         text_element.parent = grammar
         requirement_element.parent = grammar
 

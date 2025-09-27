@@ -18,7 +18,6 @@ from strictdoc.backend.sdoc.models.reference import (
     FileEntryFormat,
     FileReference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.file_tree import File
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
@@ -126,20 +125,11 @@ class JUnitXMLReader:
             total_skipped: int = int(str(xml_testsuite_["skipped"]))
             total_success: int = total_tests - total_failures - total_skipped
 
-            test_suite_section = SDocSection(
+            test_suite_section = SDocNode.create_section(
                 parent=document,
-                mid=None,
-                uid=None,
-                custom_level=None,
+                document=document,
                 title=title,
-                requirement_prefix=None,
-                section_contents=[],
             )
-            test_suite_section.ng_including_document_reference = (
-                DocumentReference()
-            )
-            test_suite_section.ng_document_reference = DocumentReference()
-            test_suite_section.ng_document_reference.set_document(document)
             document.section_contents.append(test_suite_section)
 
             summary_table = f"""\

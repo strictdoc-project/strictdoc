@@ -210,6 +210,28 @@ class SDocNode(SDocNodeIF):
         return total_size
 
     @staticmethod
+    def create_section(
+        parent: Any, document: SDocDocumentIF, title: str
+    ) -> "SDocCompositeNode":
+        node = SDocCompositeNode(
+            parent=parent,
+            node_type="SECTION",
+            fields=[],
+            relations=[],
+            section_contents=[],
+            node_type_close="SECTION",
+        )
+        node.ng_including_document_reference = DocumentReference()
+        node.ng_document_reference = DocumentReference()
+        node.ng_document_reference.set_document(document)
+        node.set_field_value(
+            field_name="TITLE",
+            form_field_index=0,
+            value=title,
+        )
+        return node
+
+    @staticmethod
     def get_type_string() -> str:
         return "requirement"
 

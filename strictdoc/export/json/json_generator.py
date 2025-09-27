@@ -19,7 +19,6 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -27,9 +26,8 @@ from strictdoc.helpers.cast import assert_cast
 
 
 class TAG(Enum):
-    SECTION = 1
-    REQUIREMENT = 2
-    COMPOSITE_REQUIREMENT = 3
+    REQUIREMENT = 1
+    COMPOSITE_REQUIREMENT = 2
 
 
 class JSONKey:
@@ -192,13 +190,7 @@ class JSONGenerator:
         document: SDocDocument,
         level_stack: Tuple[int, ...],
     ) -> Dict[str, Any]:
-        if isinstance(node, SDocSection):
-            section_dict: Dict[str, Any] = cls._write_section(
-                node, document, level_stack
-            )
-            return section_dict
-
-        elif isinstance(node, SDocNode):
+        if isinstance(node, SDocNode):
             subnode_dict = cls._write_requirement(
                 node=node,
                 document=document,
@@ -233,7 +225,7 @@ class JSONGenerator:
             return subnode_dict
 
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f"Node type is not supported: {node}")
 
     @classmethod
     def _write_included_document(
@@ -247,49 +239,6 @@ class JSONGenerator:
             "TITLE": node.reserved_title,
             JSONKey.NODES: [],
         }
-        return node_dict
-
-    @classmethod
-    def _write_section(
-        cls,
-        section: SDocSection,
-        document: SDocDocument,
-        level_stack: Tuple[int, ...],
-    ) -> Dict[str, Any]:
-        assert isinstance(section, (SDocSection, SDocDocument))
-        node_dict: Dict[str, Any] = {
-            "_TOC": cls._get_level_string(section, level_stack),
-            "_NODE_TYPE": "SECTION",
-        }
-
-        if section.mid_permanent or document.config.enable_mid:
-            node_dict["MID"] = section.reserved_mid
-
-        if section.reserved_uid is not None:
-            node_dict["UID"] = section.reserved_uid
-
-        if (
-            isinstance(section, SDocSection)
-            and section.custom_level is not None
-        ):
-            node_dict["LEVEL"] = section.custom_level
-
-        if section.requirement_prefix is not None:
-            node_dict["PREFIX"] = section.requirement_prefix
-
-        node_dict["TITLE"] = str(section.title)
-        node_dict[JSONKey.NODES] = []
-
-        current_number = 0
-        for subnode_ in section.section_contents:
-            if subnode_.ng_resolved_custom_level is None:
-                current_number += 1
-
-            section_subnode_dict: Dict[str, Any] = cls._write_node(
-                subnode_, document, level_stack + (current_number,)
-            )
-            node_dict[JSONKey.NODES].append(section_subnode_dict)
-
         return node_dict
 
     @classmethod
@@ -395,7 +344,7 @@ class JSONGenerator:
     @classmethod
     def _get_level_string(
         cls,
-        node_: Union[SDocNode, SDocSection, SDocDocument],
+        node_: Union[SDocNode, SDocDocument],
         level_stack: Tuple[int, ...],
     ) -> str:
         return (

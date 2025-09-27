@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 1 (with text)
 
 [TEXT]
@@ -9,9 +9,9 @@ STATEMENT: >>>
 Text
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 2 (with text)
 
 [TEXT]
@@ -19,9 +19,9 @@ STATEMENT: >>>
 Text
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 3 (without text)
 
-[/SECTION]
+[[/SECTION]]

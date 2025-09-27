@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Test document
 
-[SECTION]
+[[SECTION]]
 TITLE: Section title
 
 [REQUIREMENT]
@@ -32,7 +32,7 @@ STATEMENT: Requirement statement. TBD
 TITLE: Requirement title
 STATEMENT: Requirement statement. TBC
 
-[/SECTION]
+[[/SECTION]]
 
 [[SECTION]]
 TITLE: New kind of section

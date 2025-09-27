@@ -1499,6 +1499,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.post("/actions/document/move_node", response_class=Response)
     async def move_node(request: Request) -> Response:
+        """
+        @relation(SDOC-SRS-92, scope=function)
+        """
+
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         moved_node_mid: str = request_dict["moved_node_mid"]

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-104, scope=file)
+"""
+
 import os
 import sys
 from functools import partial

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-20, scope=file)
+"""
+
 REGEX_UID = r"([\w]+[\w()\-\/.: ]*)"
 
 NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"

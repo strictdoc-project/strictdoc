@@ -10,7 +10,7 @@ import os
 import textwrap
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import pandas as pd
 import plotly.express as px
@@ -28,6 +28,22 @@ from strictdoc.features.tree_map.helpers import (
 )
 from strictdoc.features.tree_map.view_object import TreeMapViewObject
 from strictdoc.helpers.timing import timing_decorator
+
+
+@dataclass
+class GraphSection:
+    title: str
+    description: str
+    graph_content: str
+
+    def get_html(self) -> str:
+        return f"""
+<h2 class="section">{self.title}</h2>
+
+<p class="section_description">{self.description}</p>
+
+{self.graph_content}
+"""
 
 
 @dataclass
@@ -120,9 +136,31 @@ class TreeMapGenerator:
 
                 node_stats = NodeStats(child_nodes=1)
 
-                if len(traceability_index.get_children_requirements(node_)) > 0:
-                    node_stats.child_nodes_with_links_to_source_files = 1
-                    node_stats.child_nodes_with_links_to_test_files = 1
+                children = traceability_index.get_children_requirements(node_)
+
+                has_children_all_covered_with_code = len(children) > 0
+                has_children_all_covered_with_test = len(children) > 0
+
+                for child_node_ in children:
+                    child_node_stats = get_node_stats(child_node_)
+                    if (
+                        child_node_stats.child_nodes_with_links_to_source_files
+                        == 0
+                    ):
+                        has_children_all_covered_with_code = False
+
+                    if (
+                        child_node_stats.child_nodes_with_links_to_test_files
+                        == 0
+                    ):
+                        has_children_all_covered_with_test = False
+
+                node_stats.child_nodes_with_links_to_source_files = int(
+                    has_children_all_covered_with_code
+                )
+                node_stats.child_nodes_with_links_to_test_files = int(
+                    has_children_all_covered_with_test
+                )
 
                 source_files = traceability_index.get_file_traceability_index().get_requirement_file_links(
                     node_
@@ -338,7 +376,7 @@ class TreeMapGenerator:
 
         df["_HOVER"] = df.apply(hover_, axis=1)
 
-        parts = []
+        parts: List[GraphSection] = []
 
         # FIGURE: Document tree map.
         fig = px.treemap(
@@ -372,9 +410,14 @@ class TreeMapGenerator:
             hovertemplate=None,
         )
         parts.append(
-            (
-                "Document tree map",
-                pio.to_html(
+            GraphSection(
+                title="Document tree map",
+                description="""\
+This is a general representation of a document tree. All nodes are included,
+both normative (e.g., REQUIREMENT) and non-normative (e.g., TEXT). The numbers
+indicate how many nodes each section or node contains.
+""",
+                graph_content=pio.to_html(
                     fig,
                     full_html=False,
                     include_plotlyjs=True,
@@ -415,9 +458,29 @@ class TreeMapGenerator:
             hovertemplate=None,
         )
         parts.append(
-            (
-                "Requirements coverage with source",
-                pio.to_html(
+            GraphSection(
+                title="Requirements coverage with source",
+                description="""\
+This graph shows which requirements are covered by at least one source file.
+A requirement is also considered covered if it has child requirements that are
+themselves covered by source files.
+
+<ul>
+  <li>
+    <span style="background-color: #AAFFAA;">Green</span> –
+    Requirement/section is fully covered with one or more source file.
+  </li>
+  <li>
+    <span style="background-color: #FFFFAA;">Yellow</span> –
+    Section is partially covered with one or more source file.
+  </li>
+  <li>
+    <span style="background-color: #FFAAAA;">Red</span> –
+        Requirement/section is not covered by any source files.
+  </li>
+</ul>
+""",
+                graph_content=pio.to_html(
                     fig,
                     full_html=False,
                     include_plotlyjs=False,
@@ -440,9 +503,29 @@ class TreeMapGenerator:
             hovertemplate=None,
         )
         parts.append(
-            (
-                "Requirements coverage with test",
-                pio.to_html(
+            GraphSection(
+                title="Requirements coverage with test",
+                description="""\
+This graph shows which requirements are covered by at least one test.
+A requirement is also considered covered if it has child requirements that are
+themselves covered by tests.
+
+<ul>
+  <li>
+    <span style="background-color: #AAFFAA;">Green</span> –
+    Requirement/section is fully covered with one or more tests.
+  </li>
+  <li>
+    <span style="background-color: #FFFFAA;">Yellow</span> –
+    Section is partially covered with one or more test.
+  </li>
+  <li>
+    <span style="background-color: #FFAAAA;">Red</span> –
+        Requirement/section is not covered with by any tests.
+  </li>
+</ul>
+""",
+                graph_content=pio.to_html(
                     fig,
                     full_html=False,
                     include_plotlyjs=False,
@@ -450,9 +533,7 @@ class TreeMapGenerator:
             )
         )
 
-        body = "".join(
-            f'<h2 class="section">{part_[0]}</h2>{part_[1]}' for part_ in parts
-        )
+        body = "".join(part_.get_html() for part_ in parts)
 
         view_object = TreeMapViewObject(
             traceability_index=traceability_index,

@@ -95,6 +95,10 @@ dependencies = [
 
     # Robot Framework dependencies
     "robotframework >= 4.0.0",
+
+    # Tree map graphs.
+    "plotly",
+    "pandas"
 ]
 # @sdoc[/SDOC-SRS-89]
 

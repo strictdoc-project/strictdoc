@@ -184,8 +184,6 @@ class SDocParsingProcessor:
         self.parse_context.fragments_from_files.append(document_from_file)
 
     def process_requirement(self, requirement: SDocNode) -> None:
-        self.parse_context.document_has_requirements = True
-
         requirement.ng_document_reference = (
             self.parse_context.document_reference
         )
@@ -193,15 +191,18 @@ class SDocParsingProcessor:
             self.parse_context.context_document_reference
         )
 
-        cursor: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF] = (
-            requirement.parent
-        )
-        while (
-            isinstance(cursor, (SDocSectionIF, SDocNodeIF))
-            and not cursor.ng_has_requirements
-        ):
-            cursor.ng_has_requirements = True
-            cursor = cursor.parent
+        if requirement.node_type not in ("SECTION", "TEXT"):
+            self.parse_context.document_has_requirements = True
+
+            cursor: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF] = (
+                requirement.parent
+            )
+            while (
+                isinstance(cursor, (SDocSectionIF, SDocNodeIF))
+                and not cursor.ng_has_requirements
+            ):
+                cursor.ng_has_requirements = True
+                cursor = cursor.parent
 
         assert self.parse_context.document_config is not None
         if (

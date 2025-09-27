@@ -39,6 +39,9 @@ def test(project_config: ProjectConfig):
     response = client.get("/source_coverage.html")
     assert response.status_code == 412
 
+    response = client.get("/tree_map.html")
+    assert response.status_code == 412
+
     response = client.get("/project_statistics.html")
     assert response.status_code == 412
 

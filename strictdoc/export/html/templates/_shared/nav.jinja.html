@@ -70,4 +70,15 @@
   </a>
 {%- endif -%}
 
+{%- if view_object.project_config.is_activated_tree_map() -%}
+  <a
+    data-link="tree_map"
+    class="nav_button"
+    href="{{ view_object.render_url('tree_map.html') }}"
+    title="Tree map"
+    data-testid="project-tree-link-tree-map"
+  >
+    M
+  </a>
+{%- endif -%}
 </div>

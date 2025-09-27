@@ -1,0 +1,19 @@
+[DOCUMENT]
+MID: 6a8bc1d467c348dbad29707cd6a3f260
+TITLE: Static HTML search Test
+OPTIONS:
+  ENABLE_MID: True
+
+[[SECTION]]
+MID: sect-1234
+TITLE: Test section
+
+[REQUIREMENT]
+MID: req-1234
+UID: REQ-1
+TITLE: Requirement without UID
+STATEMENT: >>>
+This requirement has no UID.
+<<<
+
+[[/SECTION]]

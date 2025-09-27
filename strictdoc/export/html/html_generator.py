@@ -51,6 +51,7 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
+from strictdoc.features.tree_map.generator import TreeMapGenerator
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
@@ -148,6 +149,9 @@ class HTMLGenerator:
 
         # Export JavaScript map of the document tree (project map)
         self.export_project_map(traceability_index=traceability_index)
+
+        if self.project_config.is_activated_tree_map():
+            self.export_tree_map_screen(traceability_index)
 
         # Export project statistics.
         if self.project_config.is_feature_activated(
@@ -794,3 +798,13 @@ class HTMLGenerator:
         )
         with open(output_html_source_coverage, "wb") as file:
             file.write(document_content)
+
+    def export_tree_map_screen(
+        self,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        TreeMapGenerator.export(
+            project_config=self.project_config,
+            traceability_index=traceability_index,
+            html_templates=self.html_templates,
+        )

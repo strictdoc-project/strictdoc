@@ -1,0 +1,6 @@
+[project]
+title = "StrictDoc Documentation"
+
+features = [
+  "TREEMAP_SCREEN",
+]

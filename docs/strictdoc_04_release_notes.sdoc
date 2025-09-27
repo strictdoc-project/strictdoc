@@ -46,6 +46,20 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 9e294d6a047b42bf8c55c090fb685b4a
+TITLE: Unreleased
+
+[TEXT]
+MID: ab6e1c508d224bf1bfb303a808f33f9f
+STATEMENT: >>>
+This release contains a new feature and several bug fixes.
+
+A new experimental screen, Tree Map, provides visualizations of the overall document tree as well as requirements coverage by source files and tests. The visualization is based on a tree map graph generated using Plotly.js.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 27d526d90cda48dfa5cbf17df88299ba
 TITLE: 0.12.1 (2025-09-18)
 

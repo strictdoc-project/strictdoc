@@ -1,5 +1,9 @@
 """
-TBD
+Generate HTML graphs with documentation tree information.
+
+Uses Plotly.js for generating tree map graphs.
+
+@relation(SDOC-SRS-157, scope=file)
 """
 
 import os

@@ -18,6 +18,8 @@ features = [
 
   # Experimental features.
   "PROJECT_STATISTICS_SCREEN",
+  "TREE_MAP_SCREEN",
+
   # "REQIF",
   # "STANDALONE_DOCUMENT_SCREEN",
   "TRACEABILITY_MATRIX_SCREEN",
@@ -26,7 +28,6 @@ features = [
   "HTML2PDF",
   "DIFF",
   "NESTOR",
-  "TREEMAP_SCREEN",
 ]
 
 include_doc_paths = [
@@ -48,6 +49,7 @@ include_source_paths = [
   "tests/integration/**itest",
   "tests/unit/**.py",
   "tests/unit_server/**.py",
+  "tests/end2end/**.py",
   "tasks.py",
   "pyproject.toml",
 ]
@@ -56,9 +58,14 @@ exclude_source_paths = [
   # StrictDoc (almost never) uses __init__ files.
   # The used files will be whitelisted include_source_paths.
   "**__init__.py",
+  "**.test.py",
   "build/**",
   "output/**",
+  "tests/unit/*.py",
+  "tests/unit/helpers/*.py",
   "tests/integration/**ignored.itest",
+  "tests/end2end/*.py",
+  "tests/end2end/helpers/*.py",
 ]
 
 test_report_root_dict = [

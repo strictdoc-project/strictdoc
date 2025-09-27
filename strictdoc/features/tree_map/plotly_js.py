@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-157, scope=file)
+"""
+
 from markupsafe import Markup
 
 PLOTLY_JS_EXTENSION = Markup("""

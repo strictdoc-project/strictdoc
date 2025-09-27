@@ -47,7 +47,7 @@ class ProjectFeature(str, Enum):
     REQIF = "REQIF"
     DIFF = "DIFF"
     PROJECT_STATISTICS_SCREEN = "PROJECT_STATISTICS_SCREEN"
-    TREEMAP_SCREEN = "TREEMAP_SCREEN"
+    TREE_MAP_SCREEN = "TREE_MAP_SCREEN"
     STANDALONE_DOCUMENT_SCREEN = "STANDALONE_DOCUMENT_SCREEN"
     TRACEABILITY_MATRIX_SCREEN = "TRACEABILITY_MATRIX_SCREEN"
     REQUIREMENT_TO_SOURCE_TRACEABILITY = "REQUIREMENT_TO_SOURCE_TRACEABILITY"
@@ -368,7 +368,7 @@ class ProjectConfig:
         )
 
     def is_activated_tree_map(self) -> bool:
-        return ProjectFeature.TREEMAP_SCREEN in self.project_features
+        return ProjectFeature.TREE_MAP_SCREEN in self.project_features
 
     def is_activated_standalone_document(self) -> bool:
         return (

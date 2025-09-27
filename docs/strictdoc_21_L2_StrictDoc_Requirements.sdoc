@@ -1065,6 +1065,31 @@ RELATIONS:
 [[/SECTION]]
 
 [[SECTION]]
+MID: d84e3a79b3e443cabe96d7c18ea5d322
+TITLE: Screen: Document tree map
+
+[REQUIREMENT]
+MID: 1520fa85ed7a4f1aa80c49ed858f402f
+UID: SDOC-SRS-157
+STATUS: Active
+TITLE: Tree map
+STATEMENT: >>>
+StrictDoc shall provide a tree map screen, visualizing the following information:
+
+- Document tree map
+- Requirements coverage by source code
+- Requirements coverage by test files.
+<<<
+RATIONALE: >>>
+Enables the visualization and browsing of the overall document tree and requirements coverage information.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-29
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 14ad600308434e6baaeef02d3e90b720
 TITLE: Screen: Traceability matrix
 

@@ -191,7 +191,7 @@ class SDocParsingProcessor:
             self.parse_context.context_document_reference
         )
 
-        if requirement.node_type not in ("SECTION", "TEXT"):
+        if requirement.is_normative_node():
             self.parse_context.document_has_requirements = True
 
             cursor: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF] = (

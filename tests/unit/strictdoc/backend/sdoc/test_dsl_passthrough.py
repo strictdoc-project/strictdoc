@@ -8,7 +8,6 @@ from strictdoc.backend.sdoc.models.node import (
 from strictdoc.backend.sdoc.models.reference import (
     FileReference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.helpers.exception import StrictDocException
@@ -152,7 +151,7 @@ def test_010_multiple_sections(default_project_config):
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -162,9 +161,9 @@ This is a statement 2
 This is a statement 3
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -174,7 +173,7 @@ This is a statement 2
 This is a statement 3
 <<<
 
-[/SECTION]
+[[/SECTION]]
 """
 
     reader = SDReader()
@@ -235,12 +234,14 @@ def test_021_section_and_document_mid(default_project_config):
 [DOCUMENT]
 MID: xyz09876
 TITLE: Test Doc
+OPTIONS:
+  ENABLE_MID: True
 
-[SECTION]
+[[SECTION]]
 MID: abcdef123456
 TITLE: Test Section
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()
@@ -286,7 +287,7 @@ def test_030_multiline_statement(default_project_config):
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -296,7 +297,7 @@ This is a statement 2
 This is a statement 3
 <<<
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()
@@ -324,14 +325,14 @@ def test_036_rationale_single_line(default_project_config):
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Test Section
 
 [REQUIREMENT]
 STATEMENT: Some statement
 RATIONALE: This is a Rationale
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()
@@ -356,7 +357,7 @@ def test_037_rationale_multi_line(default_project_config):
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -367,7 +368,7 @@ This is a Rationale line 2
 This is a Rationale line 3
 <<<
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()
@@ -592,7 +593,7 @@ OPTIONS:
   VIEW_STYLE: Table
   NODE_IN_TOC: True
 
-[SECTION]
+[[SECTION]]
 LEVEL: 123
 TITLE: "Section"
 
@@ -600,7 +601,7 @@ TITLE: "Section"
 LEVEL: 456
 STATEMENT: ABC
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()
@@ -620,7 +621,7 @@ STATEMENT: ABC
     assert document.config.requirement_in_toc == "True"
 
     section = document.section_contents[0]
-    assert isinstance(section, SDocSection)
+    assert isinstance(section, SDocNode)
     assert section.custom_level == "123"
 
     requirement = section.section_contents[0]
@@ -638,7 +639,7 @@ def test_100_basic_test(default_project_config):
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Test Section
 
 [REQUIREMENT]
@@ -660,7 +661,7 @@ TITLE: Optional title B
 STATEMENT: System shall do Y
 COMMENT: This requirement is very important
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()
@@ -766,7 +767,7 @@ VERSION: 0.0.1
 OPTIONS:
   AUTO_LEVELS: Off
 
-[SECTION]
+[[SECTION]]
 LEVEL: 123
 TITLE: "Section"
 
@@ -774,7 +775,7 @@ TITLE: "Section"
 LEVEL: 456
 STATEMENT: ABC
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()
@@ -784,7 +785,7 @@ STATEMENT: ABC
 
     document: SDocDocument = reader.read(input_sdoc)
     assert document.config.auto_levels is False
-    section: SDocSection = document.section_contents[0]
+    section: SDocNode = document.section_contents[0]
     assert section.custom_level == "123"
 
     requirement = section.section_contents[0]
@@ -1036,10 +1037,10 @@ def test_edge_case_19_empty_section_title():
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE:
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()
@@ -1048,10 +1049,8 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is StrictDocException
-    assert (
-        "Expected 'MID: ' or 'UID: ' or 'LEVEL: ' or 'TITLE: '"
-        in exc_info.value.args[0]
-    )
+    assert "TITLE:*" in exc_info.value.args[0]
+    assert "Expected ' '" in exc_info.value.args[0]
 
 
 def test_edge_case_20_empty_section_title():
@@ -1059,10 +1058,10 @@ def test_edge_case_20_empty_section_title():
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE: 
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()  # noqa: W291
 
     reader = SDReader()
@@ -1071,7 +1070,7 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is StrictDocException
-    assert "Expected SingleLineString" in exc_info.value.args[0]
+    assert "TITLE: *" in exc_info.value.args[0]
 
 
 def test_edge_case_21_section_title_with_empty_space():
@@ -1080,10 +1079,10 @@ def test_edge_case_21_section_title_with_empty_space():
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE: 
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()  # noqa: W291
 
     reader = SDReader()
@@ -1092,7 +1091,7 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is StrictDocException
-    assert "Expected SingleLineString" in exc_info.value.args[0]
+    assert "TITLE: *" in exc_info.value.args[0]
 
 
 def test_edge_case_22_section_title_with_two_empty_spaces():
@@ -1101,10 +1100,10 @@ def test_edge_case_22_section_title_with_two_empty_spaces():
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE:  
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()  # noqa: W291
 
     reader = SDReader()
@@ -1113,7 +1112,7 @@ TITLE:
         _ = reader.read(input_sdoc)
 
     assert exc_info.type is StrictDocException
-    assert "Expected SingleLineString" in exc_info.value.args[0]
+    assert "TITLE: *" in exc_info.value.args[0]
 
 
 def test_edge_case_23_leading_spaces_do_not_imply_empy_field(

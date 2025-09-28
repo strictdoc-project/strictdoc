@@ -80,7 +80,11 @@ STATEMENT: >>>
 
 This slide deck provides a concise overview of the project, including its goals, real-world case studies, the motivation behind its creation, implementation details, and the development roadmap.
 
-2\) `Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project <https://ftp.fau.de/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_
+2\) `Achieving end-to-end traceability in software projects using open source tools (2025) <https://github.com/strictdoc-project/strictdoc/blob/main/about/2025_ESA_SW_Product_Assurance_Workshop.pdf>`_
+
+This is a short presentation about StrictDoc, delivered at the ESA Software Product Assurance Workshop 2025.
+
+3\) `Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project (2024) <https://ftp.fau.de/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_
 
 This presentation introduces the SPDX Safety Profile and details its application within the context of the Zephyr Project. There is also a presentation of the Zephyr project's methodology for capturing requirements using StrictDoc and a discussion of the upcoming plans for the integration of SPDX into StrictDoc.
 <<<
@@ -94,7 +98,7 @@ TITLE: Blog posts
 [TEXT]
 MID: b2f5aea77e504ee1b64a67be24bd3c58
 STATEMENT: >>>
-1\) `From Code to Compliance – Part1: IEC 62443 Certification with Industrial Grade Linux Operating System by Linutronix <https://www.linutronix.de/blog/From-Code-to-Compliance-Part1-IEC-62443-Certification-with>`_
+1\) `From Code to Compliance – Part1: IEC 62443 Certification with Industrial Grade Linux Operating System <https://www.linutronix.de/blog/From-Code-to-Compliance-Part1-IEC-62443-Certification-with>`_ by Linutronix.
 
 The blog post outlines how Linutronix achieved security certification for Linux-based industrial software, with StrictDoc serving as an important building block in their development workflow.
 
@@ -155,7 +159,7 @@ There are users of StrictDoc who use both StrictDoc and Sphinx. The following wo
 - Connect RST documentation tree with a Sphinx setup.
 - Run Sphinx against an RST documentation tree, obtain a Sphinx documentation website or LaTex PDF.
 
-There is a GitHub issue `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_ where a closer bridging between StrictDoc and Sphinx was discussed with no specific and actionable outcome. This comment is `especially relevant <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1505108384>`_ as well as the one about `possible implementation <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1545599711>`_.
+There is a GitHub issue `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_ where a closer bridging between StrictDoc and Sphinx was discussed with no specific and actionable outcome. This comment is `especially relevant <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1505108384>`_ as well as the one about a `possible implementation <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1545599711>`_.
 <<<
 
 [[/SECTION]]
@@ -421,10 +425,13 @@ MID: 730bfedff6b24c34a6d6331051fd76d3
 STATEMENT: >>>
 Most relevant GitHub statistics:
 
-- `Contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_
+- `StrictDoc contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_
 
-The `pip trends <https://piptrends.com>`_ helps to visualize the Pip package download stats. The ``reqif`` satellite project is included for comparison as well:
-`strictdoc vs reqif <https://piptrends.com/compare/strictdoc-vs-reqif>`_.
+- The `pip trends <https://piptrends.com>`_ helps to visualize the Pip package download stats.
+
+  - The ``reqif`` satellite project is included for comparison as well: `strictdoc vs reqif <https://piptrends.com/compare/strictdoc-vs-reqif>`_.
+
+- `Known StrictDoc issues <https://github.com/strictdoc-project/strictdoc/issues?q=is%3Aissue%20state%3Aopen%20type%3ABug>`_
 <<<
 
 [[/SECTION]]

@@ -6,10 +6,10 @@ STATEMENT: >>>
 Hello world!
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: First section
 
-[/SECTION]
+[[/SECTION]]
 
 [DOCUMENT_FROM_FILE]
 FILE: fragment.sdoc

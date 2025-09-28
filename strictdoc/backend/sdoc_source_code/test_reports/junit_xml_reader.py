@@ -22,6 +22,7 @@ from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.file_tree import File
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
+from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.paths import path_to_posix_path
 
 
@@ -51,7 +52,7 @@ class JUnitXMLReader:
         doc_file: File,
         project_config: ProjectConfig,
     ) -> SDocDocument:
-        with open(doc_file.full_path, encoding="UTF-8") as file:
+        with file_open_read_utf8(doc_file.full_path) as file:
             content = file.read()
         return cls.read_from_string(content, doc_file, project_config)
 

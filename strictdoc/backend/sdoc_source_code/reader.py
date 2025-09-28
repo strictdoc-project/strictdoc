@@ -26,6 +26,7 @@ from strictdoc.backend.sdoc_source_code.processors.general_language_marker_proce
     validate_marker_uids,
 )
 from strictdoc.helpers.file_stats import SourceFileStats
+from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.textx import drop_textx_meta
 
 
@@ -292,7 +293,7 @@ class SourceFileTraceabilityReader:
         return source_file_traceability_info
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
-        with open(file_path, encoding="utf-8-sig") as file:
+        with file_open_read_utf8(file_path) as file:
             sdoc_content = file.read()
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc

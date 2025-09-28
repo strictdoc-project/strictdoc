@@ -24,6 +24,7 @@ from strictdoc.export.rst.directives.sphinx_style_math import (
 from strictdoc.export.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
 )
+from strictdoc.helpers.file_system import file_open_read_bytes
 
 
 class RstToHtmlFragmentWriter:
@@ -97,8 +98,8 @@ class RstToHtmlFragmentWriter:
         )
         if use_cache and os.path.isdir(path_to_rst_fragment_bucket_dir):
             if os.path.isfile(path_to_cached_fragment):
-                with open(
-                    path_to_cached_fragment, "rb"
+                with file_open_read_bytes(
+                    path_to_cached_fragment
                 ) as cached_fragment_file_:
                     return Markup(cached_fragment_file_.read().decode("UTF-8"))
         else:

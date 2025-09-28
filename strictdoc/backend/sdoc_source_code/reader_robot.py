@@ -37,6 +37,7 @@ from strictdoc.backend.sdoc_source_code.processors.general_language_marker_proce
     source_file_traceability_info_processor,
 )
 from strictdoc.helpers.file_stats import SourceFileStats
+from strictdoc.helpers.file_system import file_open_read_utf8
 
 
 class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
@@ -184,7 +185,7 @@ class SourceFileTraceabilityReader_Robot:
         return traceability_info
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
-        with open(file_path) as file:
+        with file_open_read_utf8(file_path) as file:
             sdoc_content = file.read()
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc

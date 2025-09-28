@@ -59,6 +59,7 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
 from strictdoc.export.spdx.spdx_to_sdoc_converter import SPDXToSDocConverter
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.file_system import file_open_read_bytes
 from strictdoc.helpers.sha256 import get_sha256
 
 RELATION_ID_HOW_TO = "SPDXRef-Relationship-How-to-form-ID?"
@@ -254,7 +255,9 @@ class SPDXGenerator:
 
         for document_ in traceability_index.document_tree.document_list:
             assert document_.meta is not None
-            with open(document_.meta.input_doc_full_path, "rb") as input_file_:
+            with file_open_read_bytes(
+                document_.meta.input_doc_full_path
+            ) as input_file_:
                 document_bytes = input_file_.read()
 
             #
@@ -340,7 +343,9 @@ class SPDXGenerator:
                         if node_link_path_ in lookup_file_name_to_spdx_file:
                             continue
 
-                        with open(node_link_path_, "rb") as node_link_file_:
+                        with file_open_read_bytes(
+                            node_link_path_
+                        ) as node_link_file_:
                             file_bytes = node_link_file_.read()
 
                         source_spdx_file = (

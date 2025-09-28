@@ -1,9 +1,14 @@
+import codecs
 import os
 import platform
 import shutil
 import tempfile
+from contextlib import contextmanager
+from io import BufferedReader, TextIOWrapper
 from pathlib import Path
-from typing import Optional
+from typing import Iterator, Optional
+
+UTF8_BOM_BYTES = codecs.BOM_UTF8  # b'\xef\xbb\xbf'
 
 
 def sync_dir(src_dir: str, dst_dir: str, message: Optional[str]) -> None:
@@ -73,3 +78,21 @@ def get_portable_temp_dir() -> Path:
     return Path(
         "/tmp" if platform.system() == "Darwin" else tempfile.gettempdir()
     )
+
+
+@contextmanager
+def file_open_read_utf8(file_path: str) -> Iterator[TextIOWrapper]:
+    # utf-8-sig is important here because it strips the UTF BOM markers
+    # from the beginning of source files created by some Windows tools.
+    with open(file_path, encoding="utf-8-sig") as file_:
+        yield file_
+
+
+@contextmanager
+def file_open_read_bytes(file_path: str) -> Iterator[BufferedReader]:
+    with open(file_path, "rb") as raw_file:
+        start = raw_file.read(len(UTF8_BOM_BYTES))
+        if start != UTF8_BOM_BYTES:
+            # No BOM -> rewind to beginning.
+            raw_file.seek(0)
+        yield raw_file

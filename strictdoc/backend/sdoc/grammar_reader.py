@@ -14,6 +14,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_optional_cast
+from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.textx import (
     drop_textx_meta,
     preserve_source_location_data,
@@ -63,7 +64,7 @@ class SDocGrammarReader:
         if unpickled_content is not None:
             return unpickled_content
 
-        with open(file_path, encoding="utf-8-sig") as file:
+        with file_open_read_utf8(file_path) as file:
             grammar_content = file.read()
 
         try:

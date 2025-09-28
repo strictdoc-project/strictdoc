@@ -30,6 +30,7 @@ from strictdoc.backend.sdoc_source_code.processors.general_language_marker_proce
 )
 from strictdoc.backend.sdoc_source_code.tree_sitter_helpers import traverse_tree
 from strictdoc.helpers.file_stats import SourceFileStats
+from strictdoc.helpers.file_system import file_open_read_bytes
 
 
 class SourceFileTraceabilityReader_Python:
@@ -252,7 +253,7 @@ class SourceFileTraceabilityReader_Python:
         return traceability_info
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
-        with open(file_path, "rb") as file:
+        with file_open_read_bytes(file_path) as file:
             sdoc_content = file.read()
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc

@@ -128,7 +128,7 @@ class RstToHtmlFragmentWriter:
 
         output = publish_parts(
             rst_fragment,
-            writer_name="html",
+            writer="html",
             settings_overrides=settings,
             source_path=self.source_path,
         )
@@ -175,7 +175,7 @@ class RstToHtmlFragmentWriter:
 
         try:
             output = publish_parts(
-                rst_fragment, writer_name="html", settings_overrides=settings
+                rst_fragment, writer="html", settings_overrides=settings
             )
             warnings = (
                 warning_stream.getvalue().rstrip("\n")

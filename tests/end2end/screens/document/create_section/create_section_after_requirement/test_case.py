@@ -1,7 +1,7 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
 )
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -37,15 +37,15 @@ class Test(E2ECase):
 
             node_menu = requirement.do_open_node_menu()
 
-            form_edit_section: Form_EditSection = (
-                node_menu.do_node_add_section_below()
+            form_edit_section: Form_EditRequirement = (
+                node_menu.do_node_add_element_below("SECTION")
             )
-            form_edit_section.do_fill_in_title("Section title")
+            form_edit_section.do_fill_in("TITLE", "Section title")
             form_edit_section.do_form_submit()
 
-            section = screen_document.get_section()
+            section = screen_document.get_node(2)
 
-            section.assert_section_title("Section title", "2")
+            section.assert_requirement_title("Section title", "2")
             screen_document.assert_toc_contains("Section title")
 
         assert test_setup.compare_sandbox_and_expected_output()

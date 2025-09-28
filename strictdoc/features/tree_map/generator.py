@@ -508,7 +508,8 @@ themselves covered by source files.
                 description="""\
 This graph shows which requirements are covered by at least one test.
 A requirement is also considered covered if it has child requirements that are
-themselves covered by tests.
+themselves covered by tests. A source file is considered a test file if its path
+contains "tests/".
 
 <ul>
   <li>

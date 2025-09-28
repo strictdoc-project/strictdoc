@@ -47,7 +47,7 @@ This document maintains a record of all changes to StrictDoc since November 2023
 
 [[SECTION]]
 MID: 9e294d6a047b42bf8c55c090fb685b4a
-TITLE: Unreleased
+TITLE: 0.13.0 (2025-09-28)
 
 [TEXT]
 MID: ab6e1c508d224bf1bfb303a808f33f9f
@@ -55,6 +55,10 @@ STATEMENT: >>>
 This release contains a new feature and several bug fixes.
 
 A new experimental screen, Tree Map, provides visualizations of the overall document tree as well as requirements coverage by source files and tests. The visualization is based on a tree map graph generated using Plotly.js.
+
+StrictDoc now correctly handles Unicode BOM (byte order mark) based on a user report. Previously, SDoc files with a BOM caused parsing errors because the parser did not recognize the marker. Although UTF-8 files normally do not contain BOMs, some tools (likely on Windows) may add them. StrictDoc now strips BOM markers from all input files before parsing, preventing errors if BOMs are present. Thanks to @ichsteffen for reporting this.
+
+In the background, we have started removing the legacy ``Section/[SECTION]`` code. The core still supports the old ``[SECTION]`` syntax, but we are incrementally migrating all unit, integration, and end-to-end tests to the new ``[[SECTION]]`` syntax.
 <<<
 
 [[/SECTION]]

@@ -1,12 +1,12 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[SECTION]
+[[SECTION]]
 TITLE: Section A
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Section B
 
-[/SECTION]
+[[/SECTION]]

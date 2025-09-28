@@ -1,7 +1,7 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
 )
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -30,11 +30,11 @@ class Test(E2ECase):
 
             screen_document.assert_text("Hello world!")
 
-            section = screen_document.get_section()
-            form_edit_section: Form_EditSection = (
-                section.do_open_form_edit_section()
+            section = screen_document.get_node(2)
+            form_edit_section: Form_EditRequirement = (
+                section.do_open_form_edit_requirement()
             )
-            form_edit_section.do_fill_in_uid("Section-UID-After")
+            form_edit_section.do_fill_in("UID", "Section-UID-After")
             form_edit_section.do_form_submit()
 
             screen_document.assert_text("Section-UID-After")

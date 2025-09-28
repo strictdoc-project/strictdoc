@@ -1,13 +1,13 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[SECTION]
+[[SECTION]]
 TITLE: First section
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 UID: Existing-Section-UID
 TITLE: Second section
 
-[/SECTION]
+[[/SECTION]]

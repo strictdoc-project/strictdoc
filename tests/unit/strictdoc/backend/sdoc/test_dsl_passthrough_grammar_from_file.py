@@ -11,10 +11,10 @@ TITLE: Fragment
 [GRAMMAR]
 IMPORT_FROM_FILE: grammar.sgra
 
-[SECTION]
+[[SECTION]]
 TITLE: First section
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()

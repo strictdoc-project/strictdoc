@@ -138,7 +138,7 @@ class GCovJSONReader:
             file_section.section_contents.append(non_covered_functions_section)
 
             for json_function_ in json_file_["functions"]:
-                json_function_name = json_function_["demangled_name"]
+                json_function_name = json_function_["name"]
                 is_function_covered = json_function_["execution_count"] > 0
                 stats.add_function(is_function_covered)
 

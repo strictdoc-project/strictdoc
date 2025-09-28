@@ -20,6 +20,7 @@ from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.string import strip_bom
 from strictdoc.helpers.textx import drop_textx_meta
 
@@ -103,9 +104,7 @@ class SDReader:
         if unpickled_content:
             return assert_cast(unpickled_content, SDocDocument)
 
-        # utf-8-sig is important here because it strips the UTF BOM markers
-        # from the beginning of source files created on Windows.
-        with open(file_path, encoding="utf-8-sig") as file:
+        with file_open_read_utf8(file_path) as file:
             sdoc_content = file.read()
 
         sdoc, parse_context = self.read_with_parse_context(

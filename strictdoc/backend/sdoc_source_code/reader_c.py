@@ -35,6 +35,7 @@ from strictdoc.backend.sdoc_source_code.tree_sitter_helpers import (
 )
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_stats import SourceFileStats
+from strictdoc.helpers.file_system import file_open_read_bytes
 
 
 class SourceFileTraceabilityReader_C:
@@ -374,7 +375,7 @@ class SourceFileTraceabilityReader_C:
         return traceability_info
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
-        with open(file_path, "rb") as file:
+        with file_open_read_bytes(file_path) as file:
             sdoc_content = file.read()
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc

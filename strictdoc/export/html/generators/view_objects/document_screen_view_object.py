@@ -28,6 +28,7 @@ from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.string import interpolate_at_pattern_lazy
 from strictdoc.server.helpers.turbo import render_turbo_stream
@@ -72,7 +73,7 @@ class DocumentScreenViewObject:
 
         self.custom_html2pdf_template: Optional[Template] = None
         if project_config.html2pdf_template is not None:
-            with open(project_config.html2pdf_template) as f_:
+            with file_open_read_utf8(project_config.html2pdf_template) as f_:
                 self.custom_html2pdf_template = Template(f_.read())
 
     def has_included_document(self) -> bool:

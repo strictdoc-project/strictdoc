@@ -227,12 +227,14 @@ STATEMENT: >>>
 
 .. code-block:: python
 
-    for a_, b_ in foo:
-        # use a_, b_ within the loop.
+    for foo_, bar_ in baz:
+        # use foo_, bar_ within the loop.
 
 - The function arguments with the default values shall be avoided. This convention improves the visibility of the function interfaces at the coast of increased verbosity which is the price that StrictDoc development is willing to pay, maintaining the software long-term. The all-explicit function parameters indication is especially useful when the large code refactorings are made.
 
 - StrictDoc has been making a gradual shift towards a stronger type system. Although type annotations haven't been added everywhere in the codebase, it is preferred to include them for all new code that is written.
+
+- For opening files, use the helpers ``file_open_read_utf8`` and ``file_open_read_bytes``. These helpers perform normal file opening but also strip the UTF-8 BOM character, which is added by some Windows tools.
 
 - If a contribution includes changes in StrictDoc's code, at least the
   integration-level tests should be added to the ``tests/integration``. If the

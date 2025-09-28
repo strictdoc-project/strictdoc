@@ -44,6 +44,7 @@ from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.timing import measure_performance
 
 
@@ -89,7 +90,7 @@ class SourceFileViewHTMLGenerator:
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
     ) -> Markup:
-        with open(source_file.full_path, encoding="utf-8") as opened_file:
+        with file_open_read_utf8(source_file.full_path) as opened_file:
             source_file_lines = opened_file.readlines()
 
         pygmented_source_file_lines: List[SourceLineEntry] = []

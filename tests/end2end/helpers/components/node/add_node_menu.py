@@ -4,9 +4,6 @@ from seleniumbase import BaseCase
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
-)
 
 
 class AddNode_Menu:  # pylint: disable=invalid-name
@@ -63,19 +60,6 @@ class AddNode_Menu:  # pylint: disable=invalid-name
             f"{self.node_xpath}"
             '//*[@data-testid="node-add-section-child-action"]'
         )
-
-    # Add section
-
-    # From Node
-    def do_node_add_section_above(self) -> Form_EditSection:
-        self.test_case.click(
-            selector=(
-                f"{self.node_xpath}"
-                '//*[@data-testid="node-add-section-DEPRECATED-above-action"]'
-            ),
-            by=By.XPATH,
-        )
-        return Form_EditSection(self.test_case)
 
     # Add requirement
 

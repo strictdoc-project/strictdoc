@@ -87,16 +87,6 @@ class AddNode_Menu:  # pylint: disable=invalid-name
         )
         return Form_EditSection(self.test_case)
 
-    def do_node_add_section_child(self) -> Form_EditSection:
-        self.test_case.click(
-            selector=(
-                f"{self.node_xpath}"
-                '//*[@data-testid="node-add-section-child-action"]'
-            ),
-            by=By.XPATH,
-        )
-        return Form_EditSection(self.test_case)
-
     # Add requirement
 
     # From ROOT

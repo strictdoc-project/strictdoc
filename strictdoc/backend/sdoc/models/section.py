@@ -74,6 +74,9 @@ class SDocSection(SDocSectionIF):
         #        Sections are never auto-generated, so this is always hard-coded to False.
         self.autogen: bool = False
 
+    def is_document(self) -> bool:
+        return False
+
     @staticmethod
     def get_type_string() -> str:
         return "section"

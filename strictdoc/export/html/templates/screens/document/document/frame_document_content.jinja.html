@@ -9,7 +9,9 @@
 
         {%- for node, _ in view_object.document_content_iterator() %}
 
-        {%- if node.is_section() or node.is_document() %}
+        {%- if node.is_document() %}
+          {% include "components/section/index_extends_node.jinja" %}
+        {%- elif node.is_section() %}
           {% include "components/section/index_extends_node.jinja" %}
         {%- elif node.is_requirement() %}
           {# {%- if node.is_text_node() %}

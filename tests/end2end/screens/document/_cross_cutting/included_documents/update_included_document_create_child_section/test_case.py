@@ -1,9 +1,9 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.node.add_node_menu import AddNode_Menu
-from tests.end2end.helpers.components.node.section import Section
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
+from tests.end2end.helpers.components.node.requirement import Requirement
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
 )
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -32,19 +32,19 @@ class Test(E2ECase):
 
             screen_document.assert_text("Hello world!")
 
-            section: Section = screen_document.get_section(node_order=2)
+            section: Requirement = screen_document.get_node(node_order=2)
 
             section_menu: AddNode_Menu = section.do_open_node_menu()
-            form_edit_section: Form_EditSection = (
-                section_menu.do_node_add_section_child()
+            form_edit_section: Form_EditRequirement = (
+                section_menu.do_node_add_element_child("SECTION")
             )
 
-            form_edit_section.do_fill_in_title("Second section")
+            form_edit_section.do_fill_in("TITLE", "Second section")
             form_edit_section.do_form_submit()
 
-            section: Section = screen_document.get_section(3)
+            section: Requirement = screen_document.get_node(3)
 
-            section.assert_section_title("Second section")
+            section.assert_requirement_title("Second section")
 
             screen_document.assert_toc_contains("Second section")
 

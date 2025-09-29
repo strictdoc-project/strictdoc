@@ -9,7 +9,7 @@ Hello world!
 [DOCUMENT_FROM_FILE]
 FILE: fragment.sdoc
 
-[SECTION]
+[[SECTION]]
 TITLE: First section
 
-[/SECTION]
+[[/SECTION]]

@@ -6,15 +6,15 @@ STATEMENT: >>>
 Hello world!
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: Section Foobar
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Section created by this test
 
-[/SECTION]
+[[/SECTION]]
 
 [DOCUMENT_FROM_FILE]
 FILE: fragment.sdoc

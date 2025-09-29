@@ -180,6 +180,9 @@ class SDocDocument(SDocDocumentIF):
     def is_requirement(self) -> bool:
         return False
 
+    def is_document(self) -> bool:
+        return True
+
     def get_display_node_type(self) -> str:
         return "Document"
 

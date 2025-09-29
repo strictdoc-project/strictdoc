@@ -1,7 +1,7 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
 )
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -28,20 +28,20 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            existing_section = screen_document.get_section()
+            existing_section = screen_document.get_node()
 
             existing_section_menu = existing_section.do_open_node_menu()
 
-            form_edit_section: Form_EditSection = (
-                existing_section_menu.do_node_add_section_below()
+            form_edit_section: Form_EditRequirement = (
+                existing_section_menu.do_node_add_element_below("SECTION")
             )
 
-            form_edit_section.do_fill_in_title("Section 2")
-            form_edit_section.do_fill_in_uid("SECTION-UID")
+            form_edit_section.do_fill_in("TITLE", "Section 2")
+            form_edit_section.do_fill_in("UID", "SECTION-UID")
 
             form_edit_section.do_form_submit_and_catch_error(
                 "The chosen UID must be unique. "
-                "There is another section 'Section 1' with a UID 'SECTION-UID'."
+                "Another node with this UID already exists: 'SECTION-UID'."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

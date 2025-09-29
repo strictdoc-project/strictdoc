@@ -10,9 +10,6 @@ from tests.end2end.helpers.screens.document.form_edit_included_document import (
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
-)
 
 
 class Node:  # pylint: disable=invalid-name
@@ -165,10 +162,6 @@ class Node:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
         return Form_EditRequirement(self.test_case)
-
-    def do_open_form_edit_section(self) -> Form_EditSection:
-        self._do_node_edit()
-        return Form_EditSection(self.test_case)
 
     def do_open_form_edit_included_document(self) -> Form_EditIncludedDocument:
         self._do_node_edit()

@@ -1,13 +1,13 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[SECTION]
+[[SECTION]]
 UID: DUPLICATE_UID
 TITLE: First section
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Second section
 
-[/SECTION]
+[[/SECTION]]

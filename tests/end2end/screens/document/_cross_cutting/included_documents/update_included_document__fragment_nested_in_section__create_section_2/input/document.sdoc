@@ -6,10 +6,10 @@ STATEMENT: >>>
 Hello world!
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: Section that nests a document fragment.
 
 [DOCUMENT_FROM_FILE]
 FILE: fragment.sdoc
 
-[/SECTION]
+[[/SECTION]]

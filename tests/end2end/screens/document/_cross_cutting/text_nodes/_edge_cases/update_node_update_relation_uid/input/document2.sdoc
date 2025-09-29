@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[SECTION]
+[[SECTION]]
 TITLE: Section title
 
 [REQUIREMENT]
@@ -16,4 +16,4 @@ STATEMENT: >>>
 Text statement.
 <<<
 
-[/SECTION]
+[[/SECTION]]

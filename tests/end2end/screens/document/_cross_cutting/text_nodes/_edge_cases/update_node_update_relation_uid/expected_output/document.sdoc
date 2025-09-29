@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[SECTION]
+[[SECTION]]
 TITLE: Section title
 
 [TEXT]
@@ -18,4 +18,4 @@ RELATIONS:
 - TYPE: Parent
   VALUE: REQ-2
 
-[/SECTION]
+[[/SECTION]]

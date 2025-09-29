@@ -1,9 +1,10 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.node.add_node_menu import AddNode_Menu
+from tests.end2end.helpers.components.node.requirement import Requirement
 from tests.end2end.helpers.components.node.section import Section
-from tests.end2end.helpers.screens.document.form_edit_section import (
-    Form_EditSection,
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
 )
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -32,19 +33,21 @@ class Test(E2ECase):
 
             screen_document.assert_text("Hello world!")
 
-            section: Section = screen_document.get_section(node_order=2)
+            section: Section = screen_document.get_section(node_order=1)
 
             section_menu: AddNode_Menu = section.do_open_node_menu()
-            form_edit_section: Form_EditSection = (
-                section_menu.do_node_add_section_above()
+            form_edit_section: Form_EditRequirement = (
+                section_menu.do_node_add_element_above("SECTION")
             )
 
-            form_edit_section.do_fill_in_title("Section created by this test")
+            form_edit_section.do_fill_in(
+                "TITLE", "Section created by this test"
+            )
             form_edit_section.do_form_submit()
 
-            section: Section = screen_document.get_section(2)
+            section: Requirement = screen_document.get_node(3)
 
-            section.assert_section_title("Section created by this test")
+            section.assert_requirement_title("Section created by this test")
 
             screen_document.assert_toc_contains("Section created by this test")
 
@@ -56,7 +59,7 @@ class Test(E2ECase):
             # A basic extra test that ensures that the section has a right
             # document parent (encountered this regression during implementation).
             #
-            form_edit_section = section.do_open_form_edit_section()
+            form_edit_section = section.do_open_form_edit_requirement()
             form_edit_section.do_form_submit()
 
             screen_document.assert_toc_contains("Section Foobar")

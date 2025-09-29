@@ -6,10 +6,10 @@ STATEMENT: >>>
 Hello world!
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: Section Foobar
 
-[/SECTION]
+[[/SECTION]]
 
 [DOCUMENT_FROM_FILE]
 FILE: fragment.sdoc

@@ -27,8 +27,8 @@ class Test(E2ECase):
 
             screen_document.assert_text("Hello world!")
 
-            section = screen_document.get_section()
-            section.assert_section_title("First section")
+            section = screen_document.get_node(2)
+            section.assert_requirement_title("First section")
             section.do_delete_node()  # confirm is inside
 
             screen_document.assert_no_text("First section")

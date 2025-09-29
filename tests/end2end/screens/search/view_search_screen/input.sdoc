@@ -4,13 +4,13 @@ TITLE: Test document
 [[SECTION]]
 TITLE: New section title
 
-[SECTION]
+[[SECTION]]
 TITLE: Section title
 
 [REQUIREMENT]
 TITLE: Requirement title
 STATEMENT: Requirement statement.
 
-[/SECTION]
+[[/SECTION]]
 
 [[/SECTION]]

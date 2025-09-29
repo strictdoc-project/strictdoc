@@ -66,17 +66,6 @@ class AddNode_Menu:  # pylint: disable=invalid-name
 
     # Add section
 
-    # From ROOT
-    def do_node_add_section_first(self) -> Form_EditSection:
-        self.test_case.click(
-            selector=(
-                '//*[@data-testid="node-root"]'
-                '//*[@data-testid="node-add-section-DEPRECATED-first-action"]'
-            ),
-            by=By.XPATH,
-        )
-        return Form_EditSection(self.test_case)
-
     # From Node
     def do_node_add_section_above(self) -> Form_EditSection:
         self.test_case.click(

@@ -34,11 +34,10 @@ class Test(E2ECase):
             )
             screen_deep_traceability.assert_on_screen_deep_traceability()
 
-            section = screen_deep_traceability.get_section()
+            section = screen_deep_traceability.get_node()
+            section.assert_requirement_title("Section title")
 
-            section.assert_section_title("Section title")
-
-            requirement = screen_deep_traceability.get_node()
+            requirement = screen_deep_traceability.get_node(2)
 
             requirement.assert_requirement_title("Requirement title")
             requirement.assert_requirement_uid("REC_UID")
@@ -51,7 +50,7 @@ class Test(E2ECase):
             modal.assert_modal()
 
             # requirement in modal turns out to be the last one on the page
-            last = 2
+            last = 3
 
             modal_requirement = screen_deep_traceability.get_requirement_modal(
                 last

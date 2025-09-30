@@ -11,6 +11,16 @@ ELEMENTS:
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: UID
@@ -55,7 +65,7 @@ ELEMENTS:
   - TYPE: Parent
   - TYPE: File
 
-[SECTION]
+[[SECTION]]
 TITLE: First title
 
 [TEST_CASE]
@@ -65,4 +75,4 @@ STATEMENT: >>>
 Shall test foo.
 <<<
 
-[/SECTION]
+[[/SECTION]]

@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 UID: SECT-1
 TITLE: New section
 
@@ -10,4 +10,4 @@ STATEMENT: >>>
 Free text!
 <<<
 
-[/SECTION]
+[[/SECTION]]

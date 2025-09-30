@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Included doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Images
 
 [TEXT]
@@ -11,4 +11,4 @@ STATEMENT: >>>
    :class: image
 <<<
 
-[/SECTION]
+[[/SECTION]]

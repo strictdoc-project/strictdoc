@@ -4,7 +4,7 @@
 
 import os
 from enum import IntEnum
-from typing import Any, List, Optional, Type, Union
+from typing import Any, List, Optional, Type
 
 import bs4
 from bs4 import BeautifulSoup
@@ -88,13 +88,8 @@ class JUnitXMLReader:
         document.grammar = grammar
         document.config.requirement_style = "Table"
 
-        xml_testsuite_list: List[
-            Union[
-                bs4.element.PageElement,
-                bs4.element.Tag,
-                bs4.element.NavigableString,
-            ]
-        ]
+        xml_testsuite_list: List[bs4.element.Tag]
+
         xml_testsuites: Optional[bs4.element.Tag] = assert_optional_cast(
             soup.find("testsuites", recursive=False), bs4.element.Tag
         )

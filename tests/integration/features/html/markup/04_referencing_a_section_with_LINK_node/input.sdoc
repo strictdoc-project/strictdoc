@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 UID: CHAPTER_1
 TITLE: Chapter 1
 
@@ -12,4 +12,4 @@ STATEMENT: >>>
 [LINK: CUSTOM-2]
 <<<
 
-[/SECTION]
+[[/SECTION]]

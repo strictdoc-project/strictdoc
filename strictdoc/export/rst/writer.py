@@ -40,6 +40,7 @@ class RSTWriter:
                 and content_node.node_type == "SECTION"
             ):
                 assert content_node.ng_level is not None
+                assert content_node.reserved_title is not None
                 output += self._print_rst_header(
                     content_node.reserved_title,
                     content_node.ng_level,

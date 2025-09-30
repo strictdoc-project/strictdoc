@@ -6,7 +6,7 @@ STATEMENT: >>>
 Hello world!
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 1 title
 
 [TEXT]
@@ -14,7 +14,7 @@ STATEMENT: >>>
 This is a free text of this section 1.
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: Nested section 1 title
 
 [TEXT]
@@ -22,7 +22,7 @@ STATEMENT: >>>
 This is a free text of this nested section 1.
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: Nested section 11 title
 
 [TEXT]
@@ -30,13 +30,13 @@ STATEMENT: >>>
 This is a free text of this nested section 11.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 2 title
 
 [TEXT]
@@ -44,7 +44,7 @@ STATEMENT: >>>
 This is a free text of this section 2.
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: Nested section 2 title
 
 [TEXT]
@@ -52,6 +52,6 @@ STATEMENT: >>>
 This is a free text of this nested section 2.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]

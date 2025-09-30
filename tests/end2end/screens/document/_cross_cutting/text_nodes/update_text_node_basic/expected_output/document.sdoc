@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[SECTION]
+[[SECTION]]
 TITLE: Section title
 
 [TEXT]
@@ -10,4 +10,4 @@ STATEMENT: >>>
 Modified text statement.
 <<<
 
-[/SECTION]
+[[/SECTION]]

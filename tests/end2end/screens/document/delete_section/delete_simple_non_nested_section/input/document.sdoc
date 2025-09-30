@@ -6,7 +6,7 @@ STATEMENT: >>>
 Hello world!
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: First section
 
 [TEXT]
@@ -14,4 +14,4 @@ STATEMENT: >>>
 This is a free text of this section.
 <<<
 
-[/SECTION]
+[[/SECTION]]

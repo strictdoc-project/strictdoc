@@ -35,7 +35,7 @@ class Test(E2ECase):
 
             screen_document.assert_text("Text statement.")
 
-            node = screen_document.get_node()
+            node = screen_document.get_node(2)
             edit_form: Form_EditRequirement = (
                 node.do_open_form_edit_requirement()
             )

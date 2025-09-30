@@ -26,12 +26,13 @@ class Test(E2ECase):
             screen_document.assert_text("See the section")
             screen_document.assert_text("Referenced section")
 
-            section = screen_document.get_section(1)
-            section.assert_section_title("Referenced section")
+            section = screen_document.get_node(2)
+            section.assert_requirement_title("Referenced section")
             section.do_delete_node(proceed_with_confirm=False)
 
             screen_document.assert_text(
-                "This section cannot be removed because it contains incoming links."
+                "Cannot remove node 'Referenced section' with incoming LINKs from: "
+                "'REQUIREMENT with no title/UID' -> 'SDOC_UG_CONTACT'."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

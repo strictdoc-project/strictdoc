@@ -39,7 +39,7 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
             screen_document.assert_not_empty_document()
 
-            requirement = screen_document.get_node(2)
+            requirement = screen_document.get_node(3)
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()
             )

@@ -4,7 +4,7 @@ TITLE: Fragment
 [GRAMMAR]
 IMPORT_FROM_FILE: grammar.sgra
 
-[SECTION]
+[[SECTION]]
 TITLE: First section
 
 [REQUIREMENT]
@@ -14,4 +14,4 @@ STATEMENT: >>>
 Requirement statement.
 <<<
 
-[/SECTION]
+[[/SECTION]]

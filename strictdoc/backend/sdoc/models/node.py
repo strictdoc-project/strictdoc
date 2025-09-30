@@ -248,6 +248,13 @@ class SDocNode(SDocNodeIF):
         include_toc_number: bool = True,  # noqa: ARG002
     ) -> str:
         if self.reserved_title is not None:
+            if (
+                include_toc_number
+                and self.context.title_number_string is not None
+            ):
+                return (
+                    f"{self.context.title_number_string}. {self.reserved_title}"
+                )
             return self.reserved_title
         if self.reserved_uid is not None:
             return self.reserved_uid

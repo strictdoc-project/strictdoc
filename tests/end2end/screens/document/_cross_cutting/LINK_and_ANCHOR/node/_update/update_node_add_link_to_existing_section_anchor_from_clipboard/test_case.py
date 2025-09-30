@@ -28,11 +28,11 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            section_1 = screen_document.get_section(node_order=1)
+            section_1 = screen_document.get_node(node_order=1)
             section_1.do_copy_anchor_to_buffer()
             copied_text = self.paste_text()
 
-            section = screen_document.get_node(node_order=1)
+            section = screen_document.get_node(node_order=3)
             form_edit_requirement: Form_EditRequirement = (
                 section.do_open_form_edit_requirement()
             )
@@ -43,7 +43,6 @@ Statement with LINK: [LINK: {copied_text}]
             )
 
             form_edit_requirement.do_form_submit()
-
             screen_document.assert_text(
                 "Statement with LINK: 🔗 1. First section"
             )

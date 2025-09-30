@@ -6,7 +6,7 @@ STATEMENT: >>>
 Document free text.
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: Section title
 
 [TEXT]
@@ -21,4 +21,4 @@ STATEMENT: >>>
 Requirement statement.
 <<<
 
-[/SECTION]
+[[/SECTION]]

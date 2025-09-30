@@ -1,11 +1,11 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[SECTION]
+[[SECTION]]
 UID: S-01
 TITLE: First section
 
-[/SECTION]
+[[/SECTION]]
 
 [REQUIREMENT]
 UID: REQ-1

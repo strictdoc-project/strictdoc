@@ -31,7 +31,7 @@ class Test(E2ECase):
             section.do_delete_node(proceed_with_confirm=False)
 
             screen_document.assert_text(
-                "Cannot remove node 'Referenced section' with incoming LINKs from: "
+                "Cannot remove node '1. Referenced section' with incoming LINKs from: "
                 "'REQUIREMENT with no title/UID' -> 'SDOC_UG_CONTACT'."
             )
 

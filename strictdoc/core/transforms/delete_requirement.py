@@ -34,6 +34,8 @@ class DeleteRequirementCommand:
         for document_node_, _ in document_iterator.all_node_content(
             self.requirement,
             print_fragments=True,
+            # FIXME: update_levels is a hack. See all_node_content().
+            update_levels=False,
         ):
             if not isinstance(document_node_, SDocNode):
                 continue

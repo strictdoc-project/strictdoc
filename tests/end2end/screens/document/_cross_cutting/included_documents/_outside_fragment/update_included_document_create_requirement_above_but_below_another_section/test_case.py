@@ -31,7 +31,7 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            section: Section = screen_document.get_section(node_order=2)
+            section: Section = screen_document.get_section(node_order=1)
 
             section_menu: AddNode_Menu = section.do_open_node_menu()
             form_edit_section: Form_EditRequirement = (
@@ -45,7 +45,7 @@ class Test(E2ECase):
 
             form_edit_section.do_form_submit()
 
-            requirement: Requirement = screen_document.get_node(1)
+            requirement: Requirement = screen_document.get_node(2)
 
             requirement.assert_requirement_title("Requirement title")
 

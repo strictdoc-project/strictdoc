@@ -1,10 +1,10 @@
 [DOCUMENT]
 TITLE: Document 1
 
-[SECTION]
+[[SECTION]]
 TITLE: Section Foobar
 
-[/SECTION]
+[[/SECTION]]
 
 [DOCUMENT_FROM_FILE]
 FILE: fragment.sdoc

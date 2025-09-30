@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Fragment
 
-[SECTION]
+[[SECTION]]
 UID: Section-UID-Before
 TITLE: First section
 
@@ -10,4 +10,4 @@ STATEMENT: >>>
 This is a free text of this section.
 <<<
 
-[/SECTION]
+[[/SECTION]]

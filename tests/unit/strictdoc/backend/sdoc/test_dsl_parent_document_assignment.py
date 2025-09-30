@@ -1,6 +1,5 @@
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.helpers.cast import assert_cast
 
@@ -29,13 +28,13 @@ def test_002_level_2_req():
 [DOCUMENT]
 TITLE: Test Doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 1
 
 [REQUIREMENT]
 STATEMENT: ...
 
-[/SECTION]
+[[/SECTION]]
 """.lstrip()
 
     reader = SDReader()
@@ -43,7 +42,7 @@ STATEMENT: ...
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
-    section = assert_cast(document.section_contents[0], SDocSection)
+    section = assert_cast(document.section_contents[0], SDocNode)
     req: SDocNode = assert_cast(section.section_contents[0], SDocNode)
     assert req.ng_document_reference.get_document() == document
     assert req.get_document() == document

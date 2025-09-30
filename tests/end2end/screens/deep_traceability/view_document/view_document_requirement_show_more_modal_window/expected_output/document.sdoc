@@ -3,7 +3,7 @@ TITLE: Document title
 OPTIONS:
   VIEW_STYLE: Table
 
-[SECTION]
+[[SECTION]]
 UID: SEC_UID
 TITLE: Section title
 
@@ -17,4 +17,4 @@ RATIONALE: >>>
 Requirement rationale.
 <<<
 
-[/SECTION]
+[[/SECTION]]

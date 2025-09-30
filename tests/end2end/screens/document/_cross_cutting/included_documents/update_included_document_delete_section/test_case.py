@@ -25,7 +25,7 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            section = screen_document.get_section(2)
+            section = screen_document.get_node(1)
             section.do_delete_node()
 
             screen_document.get_root_node().assert_document_title_contains(

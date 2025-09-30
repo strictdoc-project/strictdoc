@@ -1,8 +1,10 @@
 [DOCUMENT]
 TITLE: Hello world doc
+OPTIONS:
+  ENABLE_MID: True
 
-[SECTION]
+[[SECTION]]
 MID: ABCD0123
 TITLE: Section title
 
-[/SECTION]
+[[/SECTION]]

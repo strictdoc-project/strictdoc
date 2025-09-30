@@ -29,13 +29,13 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_toc.assert_toc_opened()
 
-            section_without_uid = screen_document.get_section(1)
-            section_with_uid = screen_document.get_section(2)
+            section_without_uid = screen_document.get_node(1)
+            section_with_uid = screen_document.get_node(2)
             # Requirement #1 has not a title and doesn't go in the TOC
-            requirement_with_title = screen_document.get_node(2)
+            requirement_with_title = screen_document.get_node(4)
 
-            section_without_uid.assert_section_title("Section without UID")
-            section_with_uid.assert_section_title("Section with UID")
+            section_without_uid.assert_requirement_title("Section without UID")
+            section_with_uid.assert_requirement_title("Section with UID")
             requirement_with_title.assert_requirement_title(
                 "Requirement 2 title"
             )

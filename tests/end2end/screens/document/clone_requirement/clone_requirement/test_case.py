@@ -38,7 +38,7 @@ class Test(E2ECase):
                 by=By.XPATH,
             )
 
-            requirement = screen_document.get_node()
+            requirement = screen_document.get_node(2)
             requirement.assert_requirement_title("Requirement title", "2")
             requirement.assert_requirement_uid_contains("REQ-1")
             requirement.assert_requirement_statement_contains(

@@ -32,8 +32,8 @@ class Test(E2ECase):
             # Section exists.
             #
 
-            section = screen_document.get_section()
-            section.assert_section_title("Section title", "1")
+            section = screen_document.get_node()
+            section.assert_requirement_title("Section title", "1")
 
             #
             # Requirement is added below.
@@ -52,7 +52,7 @@ class Test(E2ECase):
             # Expected for Requirement:
             #
 
-            requirement = screen_document.get_node()
+            requirement = screen_document.get_node(2)
             requirement.assert_requirement_title("Requirement title", "2")
             screen_document.assert_toc_contains("Requirement title")
 

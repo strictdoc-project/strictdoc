@@ -88,7 +88,13 @@ class DocumentCachingIterator:
         print_fragments: bool = False,
         level_stack: Tuple[int, ...] = (),
         custom_level: bool = False,
+        update_levels: bool = True,
     ) -> Iterator[Tuple[SDocIteratedElementIF, DocumentIterationContext]]:
+        """
+        FIXME: update_levels is hack. Change the design so that the node state
+               is not patched during the iteration.
+        """
+
         if isinstance(node, SDocSection):
             # If node is not whitelisted, we ignore it. Also, note that due to
             # this early return, all child nodes of this node are ignored
@@ -100,8 +106,10 @@ class DocumentCachingIterator:
             context = DocumentIterationContext(
                 node, level_stack, custom_level=custom_level
             )
-            node.context.title_number_string = context.get_level_string()
-            node.ng_level = context.get_level()
+
+            if update_levels:
+                node.context.title_number_string = context.get_level_string()
+                node.ng_level = context.get_level()
 
             yield node, context
 
@@ -128,6 +136,7 @@ class DocumentCachingIterator:
                     level_stack=level_stack + (current_number,),
                     custom_level=custom_level
                     or subnode_.ng_resolved_custom_level is not None,
+                    update_levels=update_levels,
                 )
 
         elif isinstance(node, SDocNode):
@@ -141,8 +150,9 @@ class DocumentCachingIterator:
             context = DocumentIterationContext(
                 node, level_stack, custom_level=custom_level
             )
-            node.context.title_number_string = context.get_level_string()
-            node.ng_level = context.get_level()
+            if update_levels:
+                node.context.title_number_string = context.get_level_string()
+                node.ng_level = context.get_level()
 
             yield node, context
 
@@ -161,6 +171,7 @@ class DocumentCachingIterator:
                         level_stack=level_stack + (current_number,),
                         custom_level=custom_level
                         or subnode_.ng_resolved_custom_level is not None,
+                        update_levels=update_levels,
                     )
 
         elif isinstance(node, SDocDocument):
@@ -172,8 +183,11 @@ class DocumentCachingIterator:
                 context = DocumentIterationContext(
                     node, level_stack, custom_level=custom_level
                 )
-                node.context.title_number_string = context.get_level_string()
-                node.ng_level = context.get_level()
+                if update_levels:
+                    node.context.title_number_string = (
+                        context.get_level_string()
+                    )
+                    node.ng_level = context.get_level()
 
                 yield node, context
 
@@ -198,6 +212,7 @@ class DocumentCachingIterator:
                     level_stack=level_stack + (current_number,),
                     custom_level=custom_level
                     or subnode_.ng_resolved_custom_level is not None,
+                    update_levels=update_levels,
                 )
 
         elif isinstance(node, DocumentFromFile):
@@ -210,6 +225,7 @@ class DocumentCachingIterator:
                 node.resolved_document,
                 print_fragments=print_fragments,
                 level_stack=level_stack,
+                update_levels=update_levels,
             )
 
         else:

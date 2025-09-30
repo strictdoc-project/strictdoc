@@ -1,16 +1,16 @@
 [DOCUMENT]
 TITLE: Document title
 
-[SECTION]
+[[SECTION]]
 TITLE: Section without UID
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 UID: SECTION_01
 TITLE: Section with UID
 
-[/SECTION]
+[[/SECTION]]
 
 [REQUIREMENT]
 UID: REQ_01

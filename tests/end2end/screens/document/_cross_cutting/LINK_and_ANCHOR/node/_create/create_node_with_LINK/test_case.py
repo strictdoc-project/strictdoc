@@ -45,7 +45,7 @@ class Test(E2ECase):
 
             requirement_2 = screen_document.get_node(2)
             requirement_2.assert_requirement_statement_contains(
-                "See 🔗 Req #1."
+                "See 🔗 1. Req #1."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

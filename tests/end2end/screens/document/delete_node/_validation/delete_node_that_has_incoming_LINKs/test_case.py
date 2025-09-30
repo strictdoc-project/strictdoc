@@ -29,7 +29,7 @@ class Test(E2ECase):
             section.do_delete_node(proceed_with_confirm=False)
 
             screen_document.assert_text(
-                "Cannot remove node 'Linked-to requirement' with incoming LINKs from: "
+                "Cannot remove node '1. Linked-to requirement' with incoming LINKs from: "
                 "'REQUIREMENT with no title/UID' -> 'REQ-001', "
                 "'REQUIREMENT with no title/UID' -> 'REQ-001'."
             )

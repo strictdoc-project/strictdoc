@@ -30,8 +30,8 @@ class Test(E2ECase):
             requirement.do_delete_node(proceed_with_confirm=False)
 
             screen_document.assert_text(
-                "Cannot remove node 'Requirement title #1' with incoming relations from: "
-                "'Requirement title #2', 'Requirement title #3'."
+                "Cannot remove node '1. Requirement title #1' with incoming relations from: "
+                "'2. Requirement title #2', '3. Requirement title #3'."
             )
 
         assert test_setup.compare_sandbox_and_expected_output()

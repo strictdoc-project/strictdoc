@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Fragment
 
-[SECTION]
+[[SECTION]]
 TITLE: First section
 
 [REQUIREMENT]
@@ -11,4 +11,4 @@ STATEMENT: >>>
 Requirement statement.
 <<<
 
-[/SECTION]
+[[/SECTION]]

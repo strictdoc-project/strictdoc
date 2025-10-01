@@ -6,7 +6,7 @@ OPTIONS:
 [DOCUMENT_FROM_FILE]
 FILE: subnested.sdoc
 
-[SECTION]
+[[SECTION]]
 TITLE: Nested Doc Section
 
 [COMPOSITE_REQUIREMENT]
@@ -17,4 +17,4 @@ TITLE: Nested Doc Section Requirement
 
 [/COMPOSITE_REQUIREMENT]
 
-[/SECTION]
+[[/SECTION]]

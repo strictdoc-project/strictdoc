@@ -3,7 +3,7 @@ TITLE: Dummy Software Requirements Specification #1
 VERSION: @GIT_VERSION, @GIT_BRANCH
 DATE: @GIT_COMMIT_DATETIME
 
-[SECTION]
+[[SECTION]]
 UID: SEC-1
 TITLE: Section #1
 
@@ -15,4 +15,4 @@ STATEMENT: >>>
    :width: 100%
 <<<
 
-[/SECTION]
+[[/SECTION]]

@@ -7,7 +7,7 @@ UID: ROOT-1
 TITLE: Requirement in root
 STATEMENT: lorem ipsum
 
-[SECTION]
+[[SECTION]]
 TITLE: Section without UID containing a requirement
 
 [REQUIREMENT]
@@ -15,18 +15,18 @@ UID: REQ-WITHIN-SECTION-THAT-HAS-NO-UID
 TITLE: Requirment within a Section
 STATEMENT: lorem ipsum
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 UID: SECTION-1
 TITLE: Section that has an UID
 
 [TEXT]
 STATEMENT: lorem ipsum
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 UID: SECTION-2
 TITLE: Section with UID containing a requirement
 
@@ -35,13 +35,13 @@ UID: REQ-WITHIN-SECTION-2
 TITLE: Requirement within a Section that has a UID
 STATEMENT: lorem ipsum
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 UID: SECTION-3
 TITLE: Nested Sections Test
 
-[SECTION]
+[[SECTION]]
 UID: SECTION-3-1
 TITLE: Subsection for the nexted section test
 
@@ -50,6 +50,6 @@ UID: REQ-WITHIN-SECTION-3-1
 TITLE: Requirement within a nested Section
 STATEMENT: lorem ipsum
 
-[/SECTION]
+[[/SECTION]]
 
-[/SECTION]
+[[/SECTION]]

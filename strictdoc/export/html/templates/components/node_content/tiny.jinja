@@ -11,7 +11,7 @@
   {%- endif %}
   data-testid="requirement-style-{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
 >
-  {% set title_number = false %}
+  {% set title_number = true %}
   {% set truncated_statement = true %}
   {% include "components/node_field/title/index.jinja" %}
   {% include "components/node_field/uid/index.jinja" %}

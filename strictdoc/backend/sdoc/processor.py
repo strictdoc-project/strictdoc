@@ -126,29 +126,6 @@ class SDocParsingProcessor:
         )
         preserve_source_location_data(section)
 
-        # FIXME: Refactor to eliminate the need in such assert.
-        assert self.parse_context.document_config is not None
-
-        if self.parse_context.document_config.auto_levels:
-            if (
-                section.ng_resolved_custom_level
-                and section.ng_resolved_custom_level != "None"
-            ):
-                raise StrictDocException(
-                    "[SECTION].LEVEL field is provided. "
-                    "This contradicts to the option "
-                    "[DOCUMENT].OPTIONS.AUTO_LEVELS set to On. "
-                    f"Section: {section}"
-                )
-        else:
-            if not section.ng_resolved_custom_level:
-                raise StrictDocException(
-                    "[SECTION].LEVEL field is not provided. "
-                    "This contradicts to the option "
-                    "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
-                    f"Section: {section}"
-                )
-
     def process_document_from_file(
         self, document_from_file: DocumentFromFile
     ) -> None:
@@ -212,6 +189,18 @@ class SDocParsingProcessor:
             requirement.ng_resolved_custom_level = "None"
 
         preserve_source_location_data(requirement)
+
+        # FIXME: Refactor to eliminate the need in such assert.
+        assert self.parse_context.document_config is not None
+
+        if not self.parse_context.document_config.auto_levels:
+            if not requirement.ng_resolved_custom_level:
+                raise StrictDocException(
+                    f"[{requirement.node_type}].LEVEL field is not provided. "
+                    "This contradicts to the option "
+                    "[DOCUMENT].OPTIONS.AUTO_LEVELS set to Off. "
+                    f"Node: {requirement}"
+                )
 
     def process_node_field(self, node_field: SDocNodeField) -> None:
         node_field_parts = node_field.parts

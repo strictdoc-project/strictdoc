@@ -47,9 +47,9 @@ CHECK-TABLE: <h1 data-testid="document-title">&lt;b&gt;&#34;escaping&#34;&amp;nb
 # Main document: Section.
 CHECK-INPUT: <sdoc-autogen>1.&nbsp;&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;</sdoc-autogen>
 CHECK-DTR: <sdoc-autogen>1.&nbsp;&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;</sdoc-autogen>
-CHECK-TABLE: <div class="requirement__title">
-CHECK-TABLE-NEXT: &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;
-CHECK-TABLE-NEXT: </div>
+
+CHECK-TABLE: &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;
+
 CHECK-TRACE: <sdoc-autogen>1.&nbsp;&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;</sdoc-autogen>
 
 # Main document: Text statement.

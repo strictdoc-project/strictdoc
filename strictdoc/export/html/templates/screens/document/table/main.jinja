@@ -30,11 +30,7 @@
               {%- set requirement = node %}
               <tr>
                 <td class="content-view-td content-view-td-type">
-                  {%- if node.is_text_node() %}
-                    Text
-                  {%- else %}
-                    Requirement
-                  {%- endif -%}
+                  {{ node.node_type }}
                 </td>
                 <td class="content-view-td content-view-td-meta">
                   {{ requirement.context.title_number_string }}

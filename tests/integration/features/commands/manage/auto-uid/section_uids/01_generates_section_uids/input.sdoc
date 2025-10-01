@@ -1,17 +1,17 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 1
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 2
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 3
 
-[/SECTION]
+[[/SECTION]]

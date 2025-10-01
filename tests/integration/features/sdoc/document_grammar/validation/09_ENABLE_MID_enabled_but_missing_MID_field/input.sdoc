@@ -3,7 +3,7 @@ TITLE: Hello world doc
 OPTIONS:
   ENABLE_MID: True
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 1
 
 [REQUIREMENT]
@@ -12,4 +12,4 @@ TITLE: Req-1
 [REQUIREMENT]
 TITLE: Req-2
 
-[/SECTION]
+[[/SECTION]]

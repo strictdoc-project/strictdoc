@@ -344,7 +344,7 @@ class DocumentGrammar(SDocGrammarIF):
                     parent=None,
                     title=RequirementFieldName.MID,
                     human_title=None,
-                    required="True",
+                    required="False",
                 )
             )
         fields.append(

@@ -268,11 +268,7 @@ class QueryObject:
         expression: NodeFieldExpression,
     ) -> Optional[str]:
         field_name = expression.field_name
-        if (
-            isinstance(node, SDocNode)
-            and node.is_requirement()
-            and node.node_type == "REQUIREMENT"
-        ):
+        if isinstance(node, SDocNode):
             requirement: SDocNode = assert_cast(node, SDocNode)
             requirement_document: SDocDocument = assert_cast(
                 requirement.get_document(), SDocDocument

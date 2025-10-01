@@ -5,6 +5,19 @@ OPTIONS:
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
 - TAG: REQUIREMENT
   FIELDS:
   - TITLE: MID
@@ -20,7 +33,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
 
-[SECTION]
+[[SECTION]]
 TITLE: Section 1
 
 [REQUIREMENT]
@@ -29,4 +42,4 @@ TITLE: Req-1
 [REQUIREMENT]
 TITLE: Req-2
 
-[/SECTION]
+[[/SECTION]]

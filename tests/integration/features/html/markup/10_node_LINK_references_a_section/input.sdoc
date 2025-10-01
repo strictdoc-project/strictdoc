@@ -3,6 +3,16 @@ TITLE: Hello world doc
 
 [GRAMMAR]
 ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
 - TAG: TEXT
   FIELDS:
   - TITLE: STATEMENT
@@ -23,7 +33,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: True
 
-[SECTION]
+[[SECTION]]
 TITLE: Referencing section
 
 [TEXT]
@@ -40,4 +50,4 @@ COMMENT: [LINK: SECTION]
 COMMENT: [LINK: SECTION]
 CUSTOM_FIELD: [LINK: SECTION]
 
-[/SECTION]
+[[/SECTION]]

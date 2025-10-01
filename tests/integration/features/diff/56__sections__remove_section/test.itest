@@ -10,7 +10,7 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Documents modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No documents were modified.</div>
 
-CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Sections modified</div>
+CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">SECTION nodes</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1 (1 removed)</div>
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">TEXT nodes</div>
@@ -26,4 +26,4 @@ CHECK-CHANGELOG:UID{{.*}}SECT-1
 CHECK-CHANGELOG:modified="left"
 CHECK-CHANGELOG:TITLE{{.*}}To be removed section
 
-CHECK-CHANGELOG:Section removed
+CHECK-CHANGELOG:Requirement removed

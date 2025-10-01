@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Chapter 1
 
 [TEXT]
@@ -13,9 +13,9 @@ Here's the chapter 1 with anchor:
 Some other text.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Chapter 2
 
 [TEXT]
@@ -23,4 +23,4 @@ STATEMENT: >>>
 See [LINK: ANCHOR_1] for more details.
 <<<
 
-[/SECTION]
+[[/SECTION]]

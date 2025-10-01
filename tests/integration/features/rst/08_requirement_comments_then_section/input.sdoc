@@ -14,7 +14,7 @@ COMMENT: >>>
 Requirement 1 comment #2.
 <<<
 
-[SECTION]
+[[SECTION]]
 TITLE: User interfaces
 
 [TEXT]
@@ -22,4 +22,4 @@ STATEMENT: >>>
 Some free text...
 <<<
 
-[/SECTION]
+[[/SECTION]]

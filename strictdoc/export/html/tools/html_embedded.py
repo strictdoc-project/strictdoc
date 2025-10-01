@@ -1,5 +1,5 @@
 import os
-from typing import Optional, Union
+from typing import Optional
 
 import bs4
 from bs4 import BeautifulSoup
@@ -89,14 +89,7 @@ class HTMLEmbedder:
     def embed_assets(html_string: str, path: str) -> str:
         soup = BeautifulSoup(html_string, "html5lib")
 
-        tag: Union[
-            bs4.element.Tag,
-            bs4.element.PageElement,
-            bs4.element.NavigableString,
-        ]
         for tag in soup.find_all(recursive=True):
-            if not isinstance(tag, bs4.element.Tag):
-                continue
             embeddable_tag = EmbeddableTag.recognize_from_soup_tag(tag)
             if not embeddable_tag:
                 continue

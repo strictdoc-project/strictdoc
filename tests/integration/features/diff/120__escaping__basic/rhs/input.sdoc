@@ -1,16 +1,16 @@
 [DOCUMENT]
 TITLE: Doc Title with more special characters <>&"'
 
-[SECTION]
+[[SECTION]]
 TITLE: Added section with more special characters <>&"'
 
 [REQUIREMENT]
 TITLE: Added title with more special characters <>&"'
 STATEMENT: Added statement with more special characters <>&"'
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 UID: SECT-1
 TITLE: Changed section with more special characters <>&"'
 
@@ -19,4 +19,4 @@ UID: REQ-1
 TITLE: Changed title with more special characters <>&"'
 STATEMENT: Changed statement with more special characters <>&"'
 
-[/SECTION]
+[[/SECTION]]

@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 UID: CHAPTER_1
 TITLE: Chapter 1
 
@@ -30,4 +30,4 @@ STATEMENT: >>>
 Go and read [LINK: CHAPTER_1].
 <<<
 
-[/SECTION]
+[[/SECTION]]

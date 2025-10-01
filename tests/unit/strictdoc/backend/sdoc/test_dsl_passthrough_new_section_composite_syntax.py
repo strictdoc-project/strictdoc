@@ -1,9 +1,10 @@
-from strictdoc.backend.sdoc.models.document import SDocDocument
+import pytest
+
 from strictdoc.backend.sdoc.reader import SDReader
-from strictdoc.backend.sdoc.writer import SDWriter
+from strictdoc.helpers.exception import StrictDocException
 
 
-def test_010_multiple_sections(default_project_config):
+def test_010_multiple_sections():
     input_sdoc = """\
 [DOCUMENT]
 TITLE: Test Doc
@@ -31,38 +32,13 @@ This is a statement 3
 [/SECTION]
 """
 
-    output_sdoc = """\
-[DOCUMENT]
-TITLE: Test Doc
-
-[[SECTION]]
-TITLE: Test Section
-
-[[SECTION]]
-TITLE: Test Section (Nested)
-
-[[SECTION]]
-TITLE: Test Section (Sub-nested)
-
-[REQUIREMENT]
-STATEMENT: >>>
-This is a statement 1
-This is a statement 2
-This is a statement 3
-<<<
-
-[[/SECTION]]
-
-[[/SECTION]]
-
-[[/SECTION]]
-"""
-
     reader = SDReader()
 
-    document = reader.read(input_sdoc, migrate_sections=True)
-    assert isinstance(document, SDocDocument)
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(input_sdoc)
 
-    writer = SDWriter(default_project_config)
-    output = writer.write(document)
-    assert output == output_sdoc
+    assert exc_info.type is StrictDocException
+    assert (
+        "[SECTION] elements are no longer supported by StrictDoc. "
+        "See the migration guide for more details:"
+    ) in exc_info.value.args[0]

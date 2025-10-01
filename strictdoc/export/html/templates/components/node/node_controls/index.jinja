@@ -116,26 +116,6 @@
         {%- if sdoc_entity.get_type_string() == 'document' -%}
           {# Add first document Section & Requirement, on CONFIG #}
 
-          {# 0 • There should be a line for the node type: #}
-          {% if view_object.should_display_old_section_as_deprecated() %}
-          <li class="viewtype__menu_header">Section&nbsp;(DEPRECATED):</li>
-          {% else %}
-          <li class="viewtype__menu_header">Section:</li>
-          {% endif %}
-
-          {# There should be 3 places for the buttons: #}
-          <li>{# 1 • Document -> add Section #}</li>
-          <li>{# 2 • Document -> add Section #}</li>
-          <li>{# 3 • Document -> add Section #}
-            <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&context_document_mid={{view_object.document.reserved_mid}}"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add first child SECTION"
-              data-testid="node-add-section-DEPRECATED-first-action"
-            >{% include "_res/svg_ico16_add_child.jinja" %}</a>
-          </li>
-
           {% for element_ in view_object.get_grammar_elements() %}
             {# 0 • There should be a line for the node type: #}
             <li class="viewtype__menu_header">{{ element_.tag }}:</li>
@@ -159,43 +139,6 @@
 
         {# *** Section node *** #}
         {%- if sdoc_entity.get_type_string() == 'section' -%}
-
-          {# 0 • There should be a line for the node type: #}
-          {% if view_object.should_display_old_section_as_deprecated() %}
-          <li class="viewtype__menu_header">Section&nbsp;(DEPRECATED):</li>
-          {% else %}
-          <li class="viewtype__menu_header">Section:</li>
-          {% endif %}
-
-          {# There should be 3 places for the buttons: #}
-          <li>{# 1 • Section -> add Section #}
-            <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&context_document_mid={{view_object.document.reserved_mid}}"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add SECTION above"
-              data-testid="node-add-section-DEPRECATED-above-action"
-            >{% include "_res/svg_ico16_add_above.jinja" %}</a>
-          </li>
-          <li>{# 2 • Section -> add Section #}
-            <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&context_document_mid={{view_object.document.reserved_mid}}"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add child SECTION"
-              data-testid="node-add-section-DEPRECATED-child-action"
-            >{% include "_res/svg_ico16_add_child.jinja" %}</a>
-          </li>
-          <li>{# 3 • Section -> add Section #}
-            <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&context_document_mid={{view_object.document.reserved_mid}}"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add SECTION below"
-              data-testid="node-add-section-DEPRECATED-below-action"
-            >{% include "_res/svg_ico16_add_below.jinja" %}</a>
-          </li>
-
           {# 0 • There should be a line for the node type: #}
           {% for element_ in view_object.get_grammar_elements() %}
             <li class="viewtype__menu_header">{{ element_.tag }}:</li>
@@ -235,35 +178,6 @@
 
         {# *** Requirement node *** #}
         {%- if sdoc_entity.get_type_string() == 'requirement' -%}
-
-          {# 0 • There should be a line for the node type: #}
-          {% if view_object.should_display_old_section_as_deprecated() %}
-          <li class="viewtype__menu_header">Section&nbsp;(DEPRECATED):</li>
-          {% else %}
-          <li class="viewtype__menu_header">Section:</li>
-          {% endif %}
-
-          {# There should be 3 places for the buttons: #}
-          <li>{# 1 • Requirement -> add Section #}</li>
-          <li>{# 2 • Requirement -> add Section #}
-            <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&context_document_mid={{view_object.document.reserved_mid}}"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add SECTION above"
-              data-testid="node-add-section-DEPRECATED-above-action"
-            >{% include "_res/svg_ico16_add_above.jinja" %}</a>
-          </li>
-          <li>{# 3 • Requirement -> add Section #}
-            <a
-              href="/actions/document/new_section?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&context_document_mid={{view_object.document.reserved_mid}}"
-              data-turbo-action="replace"
-              data-turbo="true"
-              title="Add SECTION below"
-              data-testid="node-add-section-DEPRECATED-below-action"
-            >{% include "_res/svg_ico16_add_below.jinja" %}</a>
-          </li>
-
           {# 0 • There should be a line for the node type: #}
           {% for element_ in view_object.get_grammar_elements() %}
             <li class="viewtype__menu_header">{{ element_.tag }}:</li>

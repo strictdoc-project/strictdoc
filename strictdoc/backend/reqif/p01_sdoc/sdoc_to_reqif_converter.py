@@ -51,7 +51,6 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.cast import assert_cast
@@ -282,14 +281,6 @@ class P01_SDocToReqIFObjectConverter:
             for node_, _ in document_iterator.all_content(
                 print_fragments=False
             ):
-                if isinstance(node_, SDocSection):
-                    raise AssertionError(
-                        "[SECTION] tags are deprecated when using ReqIF export/import. "
-                        "Use [[SECTION]] tags instead. "
-                        "See the migration guide for more details: "
-                        "https://strictdoc.readthedocs.io/en/latest/latest/docs/strictdoc_01_user_guide.html#SECTION-UG-NODE-MIGRATION"
-                    )
-
                 if not isinstance(node_, SDocNode):
                     continue
                 leaf_or_composite_node = assert_cast(node_, SDocNode)

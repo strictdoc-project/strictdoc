@@ -1,5 +1,5 @@
 import os.path
-from typing import Callable, Dict, List, Optional, Union, cast
+from typing import Any, Callable, Dict, List, Optional, Union, cast
 
 from textx import TextXSyntaxError, get_model
 
@@ -14,13 +14,11 @@ from strictdoc.backend.sdoc.models.model import (
     SDocDocumentFromFileIF,
     SDocDocumentIF,
     SDocNodeIF,
-    SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
     SDocNodeField,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.textx import (
     SupportsTxPosition,
@@ -56,7 +54,6 @@ class SDocParsingProcessor:
             self.parse_context.document_grammar
             or DocumentGrammar.create_default(
                 document,
-                create_section_element=self.parse_context.migrate_sections,
                 enable_mid=document.config.enable_mid or False,
             )
         )
@@ -119,12 +116,11 @@ class SDocParsingProcessor:
         document_view.ng_line_start = line_start
         document_view.ng_col_start = col_start
 
-    def process_section(self, section: SDocSection) -> None:
-        section.ng_document_reference = self.parse_context.document_reference
-        section.ng_including_document_reference = (
-            self.parse_context.context_document_reference
-        )
-        preserve_source_location_data(section)
+    def process_section(self, _: Any) -> None:
+        raise StrictDocException("""
+[SECTION] elements are no longer supported by StrictDoc. See the migration guide for more details:\n"
+"https://strictdoc.readthedocs.io/en/latest/latest/docs/strictdoc_01_user_guide.html#SECTION-UG-NODE-MIGRATION."
+""")
 
     def process_document_from_file(
         self, document_from_file: DocumentFromFile
@@ -171,11 +167,9 @@ class SDocParsingProcessor:
         if requirement.is_normative_node():
             self.parse_context.document_has_requirements = True
 
-            cursor: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF] = (
-                requirement.parent
-            )
+            cursor: Union[SDocDocumentIF, SDocNodeIF] = requirement.parent
             while (
-                isinstance(cursor, (SDocSectionIF, SDocNodeIF))
+                isinstance(cursor, (SDocNodeIF))
                 and not cursor.ng_has_requirements
             ):
                 cursor.ng_has_requirements = True

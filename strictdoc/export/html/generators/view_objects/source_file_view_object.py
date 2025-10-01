@@ -8,7 +8,6 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import NullViewElement
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
@@ -175,7 +174,7 @@ class SourceFileViewObject:
         return self.link_renderer.render_static_url(url)
 
     def render_local_anchor(
-        self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]
+        self, node: Union[Anchor, SDocNode, SDocDocument]
     ) -> str:
         return self.link_renderer.render_local_anchor(node)
 

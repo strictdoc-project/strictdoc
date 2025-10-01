@@ -12,7 +12,6 @@ from strictdoc.backend.sdoc.models.document_view import ViewElement
 from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.model import SDocElementIF
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentIterationContext
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
@@ -266,7 +265,7 @@ class DocumentScreenViewObject:
         return Markup(self.link_renderer.render_static_url(url))
 
     def render_local_anchor(
-        self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]
+        self, node: Union[Anchor, SDocNode, SDocDocument]
     ) -> str:
         return self.link_renderer.render_local_anchor(node)
 
@@ -350,17 +349,12 @@ class DocumentScreenViewObject:
         )
 
     def should_display_stable_link(
-        self, node: Union[SDocDocument, SDocSection, SDocNode]
+        self, node: Union[SDocDocument, SDocNode]
     ) -> bool:
-        assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
+        assert isinstance(node, (SDocDocument, SDocNode)), node
         return node.reserved_uid is not None
 
-    def should_display_old_section_as_deprecated(self) -> bool:
-        return self.project_config.is_new_section_behavior()
-
-    def get_stable_link(
-        self, node: Union[SDocDocument, SDocSection, SDocNode]
-    ) -> str:
+    def get_stable_link(self, node: Union[SDocDocument, SDocNode]) -> str:
         """
         Get a stable link for a given node.
 
@@ -369,7 +363,7 @@ class DocumentScreenViewObject:
         transforms it into a link like: http://127.0.0.1:5111/?a=SDOC_UG_CONTACT.
         """
 
-        assert isinstance(node, (SDocDocument, SDocSection, SDocNode)), node
+        assert isinstance(node, (SDocDocument, SDocNode)), node
         base_url = self.link_renderer.render_url("")
         if node.reserved_uid is not None:
             return base_url + "#" + node.reserved_uid

@@ -12,7 +12,6 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     RelationMarkerType,
     SourceFileTraceabilityInfo,
@@ -308,24 +307,21 @@ class TraceabilityIndex:
 
     def get_linkable_node_by_uid(
         self, uid: str
-    ) -> Union[SDocDocument, SDocNode, SDocSection, Anchor]:
+    ) -> Union[SDocDocument, SDocNode, Anchor]:
         return assert_cast(
             self.get_node_by_uid(uid),
-            (SDocDocument, SDocNode, SDocSection, Anchor),
+            (SDocDocument, SDocNode, Anchor),
         )
 
     def get_node_by_uid_weak(
         self, uid: str
-    ) -> Union[SDocDocument, SDocSection, SDocNode, None]:
+    ) -> Union[SDocDocument, SDocNode, None]:
         assert isinstance(uid, str), uid
         for document in self.document_tree.document_list:
             document_iterator = DocumentCachingIterator(document)
             for node, _ in document_iterator.all_content(print_fragments=False):
                 if isinstance(node, SDocDocument):
                     if node.config.uid == uid:
-                        return node
-                elif isinstance(node, SDocSection):
-                    if node.reserved_uid == uid:
                         return node
                 elif isinstance(node, SDocNode):
                     if node.reserved_uid == uid:
@@ -336,16 +332,16 @@ class TraceabilityIndex:
 
     def get_linkable_node_by_uid_weak(
         self, uid: str
-    ) -> Union[SDocDocument, SDocNode, SDocSection, Anchor, None]:
+    ) -> Union[SDocDocument, SDocNode, Anchor, None]:
         return assert_optional_cast(
             self.graph_database.get_link_value_weak(
                 link_type=GraphLinkType.UID_TO_NODE, lhs_node=uid
             ),
-            (SDocDocument, SDocNode, SDocSection, Anchor),
+            (SDocDocument, SDocNode, Anchor),
         )
 
     def get_incoming_links(
-        self, node: Union[SDocDocument, SDocNode, SDocSection, Anchor]
+        self, node: Union[SDocDocument, SDocNode, Anchor]
     ) -> Optional[List[InlineLink]]:
         incoming_links = self.graph_database.get_link_values(
             link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
@@ -379,20 +375,6 @@ class TraceabilityIndex:
             rhs_node=document,
         )
 
-    def create_section(self, section: SDocSection) -> None:
-        assert isinstance(section, SDocSection)
-        if section.reserved_uid is not None:
-            self.graph_database.create_link(
-                link_type=GraphLinkType.UID_TO_NODE,
-                lhs_node=section.reserved_uid,
-                rhs_node=section,
-            )
-        self.graph_database.create_link(
-            link_type=GraphLinkType.MID_TO_NODE,
-            lhs_node=section.reserved_mid,
-            rhs_node=section,
-        )
-
     def create_inline_link(self, new_link: InlineLink) -> None:
         assert isinstance(new_link, InlineLink)
 
@@ -401,14 +383,12 @@ class TraceabilityIndex:
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=new_link.link
         )
 
-        node_or_anchor: Union[SDocDocument, SDocNode, SDocSection, Anchor] = (
-            assert_cast(
-                self.graph_database.get_link_value(
-                    link_type=GraphLinkType.UID_TO_NODE,
-                    lhs_node=new_link.link,
-                ),
-                (SDocDocument, SDocNode, SDocSection, Anchor),
-            )
+        node_or_anchor: Union[SDocDocument, SDocNode, Anchor] = assert_cast(
+            self.graph_database.get_link_value(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=new_link.link,
+            ),
+            (SDocDocument, SDocNode, Anchor),
         )
         self.graph_database.create_link(
             link_type=GraphLinkType.NODE_TO_INCOMING_LINKS,
@@ -709,21 +689,6 @@ class TraceabilityIndex:
                 rhs_node=document,
             )
 
-    def delete_section(self, section: SDocSection) -> None:
-        assert isinstance(section, SDocSection), section
-
-        self.graph_database.delete_link(
-            link_type=GraphLinkType.MID_TO_NODE,
-            lhs_node=section.reserved_mid,
-            rhs_node=section,
-        )
-        if section.reserved_uid is not None:
-            self.graph_database.delete_link(
-                link_type=GraphLinkType.UID_TO_NODE,
-                lhs_node=section.reserved_uid,
-                rhs_node=section,
-            )
-
     def delete_requirement(self, requirement: SDocNode) -> None:
         assert isinstance(requirement, SDocNode), SDocNode
 
@@ -886,12 +851,10 @@ class TraceabilityIndex:
     def validate_node_against_anchors(
         self,
         *,
-        node: Union[SDocDocument, SDocSection, SDocNode, None],
+        node: Union[SDocDocument, SDocNode, None],
         new_anchors: List[Anchor],
     ) -> None:
-        assert node is None or isinstance(
-            node, (SDocDocument, SDocSection, SDocNode)
-        )
+        assert node is None or isinstance(node, (SDocDocument, SDocNode))
         assert isinstance(new_anchors, list)
 
         # Check that this node does not have duplicated anchors.
@@ -1013,42 +976,15 @@ class TraceabilityIndex:
                     f"with incoming relations from:\n{nodes_list_message}."
                 )
 
-    # FIXME: This function will be removed in 2025-Q3.
-    def validate_section_can_remove_uid(
-        self, *, section: SDocSection
-    ) -> None:  # pragma: no cover
-        section_incoming_links: Optional[List[InlineLink]] = (
-            self.get_incoming_links(section)
-        )
-        if section_incoming_links is None or len(section_incoming_links) == 0:
-            return
-
-        unique_incoming_link_parent_nodes = []
-        for section_incoming_link in section_incoming_links:
-            unique_incoming_link_parent_nodes.append(
-                section_incoming_link.parent.parent
-            )
-        incoming_link_parent_titles = map(
-            lambda n: f"'{n.title}'", unique_incoming_link_parent_nodes
-        )
-        incoming_links_sources_string = ", ".join(incoming_link_parent_titles)
-        raise SingleValidationError(
-            f"Cannot remove a section UID "
-            f"'{section.reserved_uid}' because there are "
-            f"existing LINKs referencing this "
-            "section. The incoming links are located in these "
-            f"nodes: {incoming_links_sources_string}."
-        )
-
     def validate_can_create_uid(
         self, uid: str, existing_node_mid: Optional[MID]
     ) -> None:
         assert isinstance(uid, str), uid
         assert len(uid) > 0, uid
 
-        existing_node_with_uid: Union[
-            SDocDocument, SDocSection, SDocNode, None
-        ] = self.get_node_by_uid_weak(uid)
+        existing_node_with_uid: Union[SDocDocument, SDocNode, None] = (
+            self.get_node_by_uid_weak(uid)
+        )
 
         if existing_node_with_uid is None:
             return

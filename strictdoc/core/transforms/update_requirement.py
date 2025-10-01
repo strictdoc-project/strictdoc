@@ -17,13 +17,12 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.free_text import FreeTextContainer
 from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocSectionIF
+from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocNodeIF
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.constants import (
     GraphLinkType,
 )
@@ -209,7 +208,7 @@ class CreateOrUpdateNodeCommand:
                 requirement=requirement, old_uid=existing_uid
             )
         else:
-            reference_node: Union[SDocDocument, SDocSection] = (
+            reference_node: Union[SDocDocument, SDocNode] = (
                 traceability_index.get_node_by_mid(
                     MID(self.node_info.reference_mid)
                 )
@@ -217,7 +216,7 @@ class CreateOrUpdateNodeCommand:
             document = traceability_index.get_node_by_mid(
                 MID(form_object.document_mid)
             )
-            parent: Union[SDocDocumentIF, SDocSectionIF]
+            parent: Union[SDocDocumentIF, SDocNodeIF]
             if self.node_info.whereto == NodeCreationOrder.CHILD:
                 parent = reference_node
                 insert_to_idx = len(parent.section_contents)

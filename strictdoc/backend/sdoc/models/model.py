@@ -52,7 +52,7 @@ class SDocNodeFieldIF(ABC):
 class SDocNodeIF(ABC):
     reserved_mid: MID
     mid_permanent: bool
-    parent: Union["SDocNodeIF", "SDocDocumentIF", "SDocSectionIF"]
+    parent: Union["SDocNodeIF", "SDocDocumentIF"]
     node_type: str
     section_contents: List["SDocElementIF"]
     ng_level: Optional[int]
@@ -101,39 +101,6 @@ class SDocNodeIF(ABC):
 
     @abstractmethod
     def get_prefix(self) -> Optional[str]:
-        raise NotImplementedError
-
-    @abstractmethod
-    def blacklist_if_needed(self) -> None:
-        raise NotImplementedError
-
-
-class SDocSectionIF(ABC):
-    reserved_mid: MID
-    reserved_uid: Optional[str]
-    mid_permanent: bool
-    parent: Union["SDocDocumentIF", "SDocSectionIF"]
-    section_contents: List["SDocElementIF"]
-    ng_level: Optional[int]
-    ng_resolved_custom_level: Optional[str]
-    ng_whitelisted: bool
-    ng_has_requirements: bool
-    autogen: bool
-
-    @abstractmethod
-    def get_document(self) -> Optional["SDocDocumentIF"]:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_prefix(self) -> str:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_debug_info(self) -> str:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_display_title(self, include_toc_number: bool = True) -> str:
         raise NotImplementedError
 
     @abstractmethod
@@ -192,7 +159,7 @@ class SDocDocumentIF(ABC):
 
 
 class SDocDocumentFromFileIF(ABC):
-    parent: Union[SDocDocumentIF, SDocSectionIF]
+    parent: Union[SDocDocumentIF, SDocNodeIF]
     ng_resolved_custom_level: Optional[str]
     ng_whitelisted: bool
     autogen: bool
@@ -211,7 +178,6 @@ class SDocDocumentFromFileIF(ABC):
 
 SDocElementIF = Union[
     SDocNodeIF,
-    SDocSectionIF,
     SDocDocumentIF,
     SDocDocumentFromFileIF,
 ]
@@ -219,7 +185,6 @@ SDocElementIF = Union[
 
 SDocIteratedElementIF = Union[
     SDocNodeIF,
-    SDocSectionIF,
     SDocDocumentIF,
 ]
 

@@ -16,7 +16,6 @@ from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.git.change import (
@@ -25,7 +24,6 @@ from strictdoc.git.change import (
     DocumentChange,
     RequirementChange,
     RequirementFieldChange,
-    SectionChange,
 )
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.diff import get_colored_html_diff_string, similar
@@ -58,7 +56,6 @@ def calculate_similarity(lhs: SDocNode, rhs: SDocNode) -> float:
 class ProjectTreeDiffStats:
     document_md5_hashes: Set[str] = field(default_factory=set)
     requirement_md5_hashes: Set[str] = field(default_factory=set)
-    section_md5_hashes: Set[str] = field(default_factory=set)
     map_nodes_to_hashes: Dict[Any, str] = field(default_factory=dict)
     map_mid_to_nodes: Dict[MID, Any] = field(default_factory=dict)
     map_uid_to_nodes: Dict[str, Any] = field(default_factory=dict)
@@ -75,9 +72,6 @@ class ProjectTreeDiffStats:
 
     def contains_requirement_md5(self, requirement_md5: str) -> bool:
         return requirement_md5 in self.requirement_md5_hashes
-
-    def contains_section_md5(self, section_md5: str) -> bool:
-        return section_md5 in self.section_md5_hashes
 
     def contains_document_md5(self, document_md5: str) -> bool:
         return document_md5 in self.document_md5_hashes
@@ -179,11 +173,6 @@ class ProjectTreeDiffStats:
         other_requirement: SDocNode = self.map_uid_to_nodes[
             requirement.reserved_uid
         ]
-        # FIXME: This is an interesting case when a SDocNode can be promoted
-        # or unpromoted to a Section with the same UID preserved. Ignore this
-        # case for now.
-        if not isinstance(other_requirement, SDocNode):
-            return None
         return other_requirement
 
 
@@ -202,7 +191,7 @@ class ChangeStats:
 
     def find_change(
         self, node: Any
-    ) -> Optional[Union[DocumentChange, SectionChange, RequirementChange]]:
+    ) -> Optional[Union[DocumentChange, RequirementChange]]:
         return self.map_nodes_to_changes.get(node)
 
     def get_total_changes(self) -> int:
@@ -216,23 +205,6 @@ class ChangeStats:
             ChangeType.REQUIREMENT
         )
         return this_node_type_changes_bucket
-
-    def get_changes_sections_stats_string(self) -> str:
-        """
-        Example: 2 removed, 1 modified, 2 added.
-        """
-        change_components = []
-        removed = self._section_counter.get(ChangeType.SECTION_REMOVED)
-        if removed is not None:
-            change_components.append(f"{removed} removed")
-        modified = self._section_counter.get(ChangeType.SECTION_MODIFIED)
-        if modified is not None:
-            change_components.append(f"{modified} modified")
-        added = self._section_counter.get(ChangeType.SECTION_ADDED)
-        if added is not None:
-            change_components.append(f"{added} added")
-        assert len(change_components) > 0
-        return ", ".join(change_components)
 
     def get_changes_requirements_stats_string(self, node_type: str) -> str:
         """
@@ -263,12 +235,9 @@ class ChangeStats:
     def get_changes_documents_modified(self) -> Optional[int]:
         return self._document_counter.get(ChangeType.DOCUMENT)
 
-    def get_changes_sections_modified(self) -> Optional[int]:
-        return self._section_counter.get(ChangeType.SECTION)
-
     def add_change(
         self,
-        change: Union[DocumentChange, SectionChange, RequirementChange],
+        change: Union[DocumentChange, RequirementChange],
         node_type: Optional[str] = None,
     ) -> None:
         self.changes.append(change)
@@ -284,16 +253,6 @@ class ChangeStats:
 
             node_type_counter.setdefault(ChangeType.REQUIREMENT, 0)
             node_type_counter[ChangeType.REQUIREMENT] += 1
-        elif change.change_type in (
-            ChangeType.SECTION_REMOVED,
-            ChangeType.SECTION_MODIFIED,
-            ChangeType.SECTION_ADDED,
-        ):
-            self._section_counter.setdefault(change.change_type, 0)
-            self._section_counter[change.change_type] += 1
-
-            self._section_counter.setdefault(ChangeType.SECTION, 0)
-            self._section_counter[ChangeType.SECTION] += 1
         elif change.change_type in (ChangeType.DOCUMENT_MODIFIED,):
             self._document_counter.setdefault(change.change_type, 0)
             self._document_counter[change.change_type] += 1
@@ -436,131 +395,6 @@ class ChangeStats:
             # because they both have FREETEXT.
             #
             for node, _ in document_iterator.all_content(print_fragments=True):
-                if isinstance(node, (SDocSection, SDocDocument)):
-                    if node in change_stats.map_nodes_to_changes:
-                        continue
-
-                    section_md5 = self_stats.get_md5_by_node(node)
-                    section_modified = not other_stats.contains_section_md5(
-                        section_md5
-                    )
-                    if section_modified:
-                        matched_mid: Optional[MID] = None
-                        matched_uid: Optional[str] = None
-                        other_section_or_none: Optional[SDocSection] = None
-
-                        if (
-                            node.mid_permanent
-                            and node.reserved_mid
-                            in other_stats.map_mid_to_nodes
-                        ):
-                            other_section_or_none = (
-                                other_stats.map_mid_to_nodes[node.reserved_mid]
-                            )
-                            matched_mid = node.reserved_mid
-                        if node.reserved_uid is not None:
-                            assert len(node.reserved_uid) > 0
-                            if other_stats.map_uid_to_nodes.get(
-                                node.reserved_uid
-                            ):
-                                matched_uid = node.reserved_uid
-                                other_section_or_none = (
-                                    other_stats.map_uid_to_nodes[matched_uid]
-                                )
-                        # FIXME: This is when a Requirement becomes
-                        # a Section with the same UID preserved.
-                        if other_section_or_none is not None and not (
-                            isinstance(other_section_or_none, SDocSection)
-                            or (
-                                isinstance(other_section_or_none, SDocNode)
-                                and other_section_or_none.node_type == "SECTION"
-                            )
-                        ):
-                            other_section_or_none = None
-                            matched_uid = None
-                            matched_mid = None
-
-                        uid_modified = False
-                        title_modified = False
-                        lhs_colored_title_diff = None
-                        rhs_colored_title_diff = None
-
-                        # If there is another section and the UIDs are not the
-                        # same, consider the UID modified.
-                        # If there is no other section, consider the UID
-                        # modified.
-                        if other_section_or_none is not None:
-                            if (
-                                node.reserved_uid
-                                != other_section_or_none.reserved_uid
-                            ):
-                                uid_modified = True
-                        else:
-                            uid_modified = True
-
-                        if other_section_or_none is not None:
-                            if (
-                                node.reserved_title
-                                != other_section_or_none.reserved_title
-                            ):
-                                title_modified = True
-                                lhs_colored_title_diff = (
-                                    get_colored_html_diff_string(
-                                        node.reserved_title,
-                                        other_section_or_none.reserved_title,
-                                        "left",
-                                    )
-                                )
-                                rhs_colored_title_diff = (
-                                    get_colored_html_diff_string(
-                                        node.reserved_title,
-                                        other_section_or_none.reserved_title,
-                                        "right",
-                                    )
-                                )
-                        else:
-                            title_modified = True
-
-                        #
-                        # Step: Create a section token that is used by JS to match
-                        # the LHS nodes with RHS nodes.
-                        #
-                        section_token: Optional[str] = None
-                        if other_section_or_none is not None:
-                            section_token = MID.create()
-
-                        lhs_section: Optional[
-                            Union[SDocSection, SDocDocument, SDocNode]
-                        ]
-                        rhs_section: Optional[
-                            Union[SDocSection, SDocDocument, SDocNode]
-                        ]
-                        if side == "left":
-                            lhs_section = node
-                            rhs_section = other_section_or_none
-                        else:
-                            lhs_section = other_section_or_none
-                            rhs_section = node
-
-                        section_change: SectionChange = SectionChange(
-                            matched_mid=matched_mid,
-                            matched_uid=matched_uid,
-                            section_token=section_token,
-                            lhs_section=lhs_section,
-                            rhs_section=rhs_section,
-                            uid_modified=uid_modified,
-                            title_modified=title_modified,
-                            lhs_colored_title_diff=lhs_colored_title_diff,
-                            rhs_colored_title_diff=rhs_colored_title_diff,
-                        )
-
-                        change_stats.map_nodes_to_changes[node] = section_change
-                        if other_section_or_none is not None:
-                            change_stats.map_nodes_to_changes[
-                                other_section_or_none
-                            ] = section_change
-                        change_stats.add_change(section_change)
-
                 if isinstance(node, SDocNode):
                     #
                     # Step: We check if a requirement was modified at all, or if
@@ -975,7 +809,7 @@ class ProjectDiffAnalyzer:
             if node.mid_permanent:
                 document_tree_stats.map_mid_to_nodes[node.reserved_mid] = node
 
-            if isinstance(node, (SDocSection, SDocDocument)):
+            if isinstance(node, SDocDocument):
                 if node.reserved_uid is not None:
                     document_tree_stats.map_uid_to_nodes[node.reserved_uid] = (
                         node
@@ -1042,9 +876,7 @@ class ProjectDiffAnalyzer:
             node_md5 = node_hasher_.hexdigest()
             document_tree_stats.map_nodes_to_hashes[node_] = node_md5
 
-            if isinstance(node_, SDocSection):
-                document_tree_stats.section_md5_hashes.add(node_md5)
-            elif isinstance(node_, SDocNode):
+            if isinstance(node_, SDocNode):
                 document_tree_stats.requirement_md5_hashes.add(node_md5)
             elif isinstance(node_, SDocDocument):
                 document_tree_stats.document_md5_hashes.add(node_md5)

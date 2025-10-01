@@ -11,7 +11,6 @@ from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
     SDocElementIF,
     SDocNodeIF,
-    SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import SDocCompositeNode
 from strictdoc.helpers.auto_described import auto_described
@@ -21,10 +20,10 @@ from strictdoc.helpers.auto_described import auto_described
 class DocumentFromFile(SDocDocumentFromFileIF):
     def __init__(
         self,
-        parent: Union[SDocDocumentIF, SDocSectionIF],
+        parent: Union[SDocDocumentIF, SDocNodeIF],
         file: str,
     ) -> None:
-        self.parent: Union[SDocDocumentIF, SDocSectionIF] = parent
+        self.parent: Union[SDocDocumentIF, SDocNodeIF] = parent
         self.file: str = file
 
         self.ng_has_requirements: bool = False
@@ -85,9 +84,7 @@ class DocumentFromFile(SDocDocumentFromFileIF):
 
         if isinstance(including_document_or_section, SDocDocumentIF):
             including_document = including_document_or_section
-        elif isinstance(
-            including_document_or_section, (SDocSectionIF, SDocCompositeNode)
-        ):
+        elif isinstance(including_document_or_section, SDocCompositeNode):
             including_document_: Optional[SDocDocumentIF] = (
                 including_document_or_section.get_document()
             )

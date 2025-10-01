@@ -404,9 +404,6 @@ class ProjectConfig:
             ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS in self.project_features
         )
 
-    def is_new_section_behavior(self) -> bool:
-        return self.section_behavior == "[[SECTION]]"
-
     def get_strictdoc_root_path(self) -> str:
         return self.environment.path_to_strictdoc
 

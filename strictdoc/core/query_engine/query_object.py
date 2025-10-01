@@ -9,7 +9,6 @@ from strictdoc.backend.sdoc.models.model import (
     SDocExtendedElementIF,
 )
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
@@ -178,9 +177,7 @@ class QueryObject:
                 isinstance(node, SDocNode) and node.node_type == "REQUIREMENT"
             )
         if isinstance(expression, NodeIsSectionExpression):
-            return (
-                isinstance(node, SDocNode) and node.node_type == "SECTION"
-            ) or isinstance(node, SDocSection)
+            return isinstance(node, SDocNode) and node.node_type == "SECTION"
         if isinstance(expression, NodeIsSourceFileExpression):
             return isinstance(node, SourceFileTraceabilityInfo)
         if isinstance(
@@ -286,13 +283,6 @@ class QueryObject:
             if field_value is not None:
                 return field_value
             return None
-        elif isinstance(node, SDocSection) and node.is_section():
-            section: SDocSection = assert_cast(node, SDocSection)
-            if field_name == "UID":
-                return section.reserved_uid
-            elif field_name == "TITLE":
-                return section.title
-            raise AttributeError(f"No such section field: {field_name}.")
         else:
             raise NotImplementedError
 
@@ -330,19 +320,12 @@ class QueryObject:
                 if expression.string in requirement_field_.get_text_value():
                     return True
             return False
-        if isinstance(node, SDocSection):
-            section = assert_cast(node, SDocSection)
-            if expression.string in section.title:
-                return True
-            return False
         raise NotImplementedError
 
     def _evaluate_node_contains_any_text(
         self, node: SDocExtendedElementIF
     ) -> bool:
-        if not isinstance(node, SDocSection) and not (
-            isinstance(node, SDocNode) and node.node_type == "SECTION"
-        ):
+        if not (isinstance(node, SDocNode) and node.node_type == "SECTION"):
             raise TypeError(
                 f"node.contains_any_text can be only called on "
                 f"SECTION objects, got: {node.__class__.__name__}. To fix "

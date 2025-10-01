@@ -7,7 +7,6 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_tree import File, Folder
@@ -51,7 +50,7 @@ class ProjectTreeViewObject:
         )
 
     def render_local_anchor(
-        self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]
+        self, node: Union[Anchor, SDocNode, SDocDocument]
     ) -> str:
         return self.link_renderer.render_local_anchor(node)
 

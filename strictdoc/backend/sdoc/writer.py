@@ -32,7 +32,6 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig
@@ -326,14 +325,7 @@ class SDWriter:
             )
             return self._print_document_from_file(document_from_file)
 
-        if isinstance(root_node, SDocSection):
-            return self._print_section(
-                root_node,
-                document,
-                document_iterator,
-            )
-
-        elif isinstance(root_node, SDocNode):
+        if isinstance(root_node, SDocNode):
             output = ""
 
             if (
@@ -387,54 +379,6 @@ class SDWriter:
 
         output += "FILE: "
         output += document_from_file.file
-        output += "\n\n"
-
-        return output
-
-    def _print_section(
-        self,
-        section: SDocSection,
-        document: SDocDocument,
-        iterator: DocumentCachingIterator,
-    ) -> str:
-        assert isinstance(section, SDocSection)
-        output = ""
-        output += "[SECTION]"
-        output += "\n"
-
-        if section.mid_permanent or document.config.enable_mid:
-            output += "MID: "
-            output += section.reserved_mid
-            output += "\n"
-
-        if section.reserved_uid:
-            output += "UID: "
-            output += section.reserved_uid
-            output += "\n"
-
-        if section.custom_level:
-            output += "LEVEL: "
-            output += section.custom_level
-            output += "\n"
-
-        output += "TITLE: "
-        output += str(section.title)
-        output += "\n"
-        if section.requirement_prefix is not None:
-            output += "PREFIX: "
-            output += section.requirement_prefix
-            output += "\n"
-
-        output += "\n"
-
-        for node_ in section.section_contents:
-            output += self._print_node(
-                node_,
-                document,
-                document_iterator=iterator,
-            )
-
-        output += "[/SECTION]"
         output += "\n\n"
 
         return output

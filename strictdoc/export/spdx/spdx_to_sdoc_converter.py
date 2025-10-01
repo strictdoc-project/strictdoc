@@ -26,7 +26,6 @@ from strictdoc.backend.sdoc.models.grammar_element import (
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
     SDocNodeIF,
-    SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
@@ -38,7 +37,6 @@ from strictdoc.backend.sdoc.models.reference import (
     FileReference,
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
 
 
@@ -85,14 +83,10 @@ class SPDXToSDocConverter:
         # Files.
         #
 
-        file_section = SDocSection(
+        file_section = SDocNode.create_section(
             parent=document,
-            mid=None,
-            uid=None,
-            custom_level=None,
+            document=document,
             title="Files",
-            requirement_prefix=None,
-            section_contents=[],
         )
         document.section_contents.append(file_section)
 
@@ -108,14 +102,10 @@ class SPDXToSDocConverter:
         # Snippets.
         #
 
-        snippets_section = SDocSection(
+        snippets_section = SDocNode.create_section(
             parent=document,
-            mid=None,
-            uid=None,
-            custom_level=None,
+            document=document,
             title="Snippets",
-            requirement_prefix=None,
-            section_contents=[],
         )
         document.section_contents.append(snippets_section)
 
@@ -189,7 +179,7 @@ class SPDXToSDocConverter:
     def _convert_document(
         document: SpdxDocument,
         sdoc_document: SDocDocument,
-        sdoc_parent: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF],
+        sdoc_parent: Union[SDocDocumentIF, SDocNodeIF],
     ) -> SDocNode:
         requirement = SDocNode(
             parent=sdoc_parent,
@@ -218,7 +208,7 @@ class SPDXToSDocConverter:
     def _convert_package(
         package: Package,
         sdoc_document: SDocDocument,
-        sdoc_parent: Union[SDocSection, SDocDocument],
+        sdoc_parent: Union[SDocNode, SDocDocument],
     ) -> SDocNode:
         requirement = SDocNode(
             parent=sdoc_parent,
@@ -256,7 +246,7 @@ class SPDXToSDocConverter:
     def _convert_file(
         file: File,
         sdoc_document: SDocDocument,
-        sdoc_parent: Union[SDocSection, SDocDocument],
+        sdoc_parent: Union[SDocNode, SDocDocument],
     ) -> SDocNode:
         fields: List[SDocNodeField] = []
         requirement = SDocNode(
@@ -306,7 +296,7 @@ class SPDXToSDocConverter:
     def _convert_snippet(
         snippet: Snippet,
         sdoc_document: SDocDocument,
-        sdoc_parent: Union[SDocSection, SDocDocument],
+        sdoc_parent: Union[SDocNode, SDocDocument],
         spdx_container: SPDXSDocContainer,
     ) -> SDocNode:
         fields: List[SDocNodeField] = []
@@ -360,7 +350,11 @@ class SPDXToSDocConverter:
 
     @staticmethod
     def create_grammar_for_spdx() -> DocumentGrammar:
-        elements = []
+        section_element: GrammarElement = (
+            DocumentGrammar.create_default_section_element(enable_mid=False)
+        )
+
+        elements = [section_element]
 
         #
         # SPDX Document

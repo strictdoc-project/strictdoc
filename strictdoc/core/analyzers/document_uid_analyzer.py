@@ -4,7 +4,6 @@ from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.analyzers.document_stats import (
     DocumentStats,
     DocumentTreeStats,
@@ -68,9 +67,7 @@ class DocumentUIDAnalyzer:
         this_document_stats = DocumentStats(document)
         document_iterator = DocumentCachingIterator(document)
         for node, _ in document_iterator.all_content():
-            if isinstance(node, SDocSection) or (
-                isinstance(node, SDocNode) and node.node_type == "SECTION"
-            ):
+            if isinstance(node, SDocNode) and node.node_type == "SECTION":
                 if node.reserved_uid is not None:
                     this_document_stats.section_uids_so_far[
                         node.reserved_uid

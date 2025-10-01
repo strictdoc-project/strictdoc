@@ -5,7 +5,6 @@ from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.string import create_safe_title_string
 
 
@@ -21,7 +20,7 @@ class DocumentStats:
     requirements_per_prefix: Dict[str, SinglePrefixRequirements] = field(
         default_factory=dict
     )
-    sections_without_uid: List[typing.Union[SDocNode, SDocSection]] = field(
+    sections_without_uid: List[typing.Union[SDocNode]] = field(
         default_factory=list
     )
     section_uids_so_far: typing.Counter[str] = field(default_factory=Counter)
@@ -57,7 +56,7 @@ class DocumentTreeStats:
     def get_auto_section_uid(
         self,
         document_acronym: str,
-        section: typing.Union[SDocNode, SDocSection],
+        section: typing.Union[SDocNode],
     ) -> str:
         if section.reserved_title is None:
             return ""

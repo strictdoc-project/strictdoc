@@ -9,7 +9,6 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import DocumentView
 from strictdoc.backend.sdoc.models.model import SDocExtendedElementIF
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_tree import FileOrFolderEntry
@@ -95,7 +94,7 @@ class SearchScreenViewObject:
         return self.link_renderer.render_static_url_with_prefix(url)
 
     def render_node_link(
-        self, incoming_link: Union[SDocDocument, SDocNode, SDocSection, Anchor]
+        self, incoming_link: Union[SDocDocument, SDocNode, Anchor]
     ) -> str:
         return self.link_renderer.render_node_link(
             incoming_link, None, DocumentType.DOCUMENT
@@ -112,6 +111,6 @@ class SearchScreenViewObject:
         )
 
     def render_local_anchor(
-        self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]
+        self, node: Union[Anchor, SDocNode, SDocDocument]
     ) -> str:
         return self.link_renderer.render_local_anchor(node)

@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Referencing section
 
 [TEXT]
@@ -9,4 +9,4 @@ STATEMENT: >>>
 [LINK: SECTION]
 <<<
 
-[/SECTION]
+[[/SECTION]]

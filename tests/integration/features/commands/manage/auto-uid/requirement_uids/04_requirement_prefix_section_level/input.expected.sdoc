@@ -2,9 +2,9 @@
 TITLE: Hello world doc
 PREFIX: DOC-
 
-[SECTION]
-TITLE: Section 1
+[[SECTION]]
 PREFIX: LEVEL1-REQ-
+TITLE: Section 1
 
 [REQUIREMENT]
 UID: LEVEL1-REQ-1
@@ -14,11 +14,11 @@ STATEMENT: System shall do L1-1.
 UID: LEVEL1-REQ-2
 STATEMENT: System shall do L1-1.
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
-TITLE: Section 2
+[[SECTION]]
 PREFIX: LEVEL2-REQ-
+TITLE: Section 2
 
 [REQUIREMENT]
 UID: LEVEL2-REQ-2
@@ -28,4 +28,4 @@ STATEMENT: System shall do L2-1.
 UID: LEVEL2-REQ-1
 STATEMENT: System shall do L2-1.
 
-[/SECTION]
+[[/SECTION]]

@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 TITLE: New section
 
 [TEXT]
@@ -9,4 +9,4 @@ STATEMENT: >>>
 Hello world!
 <<<
 
-[/SECTION]
+[[/SECTION]]

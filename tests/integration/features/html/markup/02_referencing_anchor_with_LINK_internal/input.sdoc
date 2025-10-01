@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Referencing section
 
 [TEXT]
@@ -13,9 +13,9 @@ See the [LINK: Software_requirements_specification] for more details.
 See the [LINK: Interface_Control_Document] for more details.
 <<<
 
-[/SECTION]
+[[/SECTION]]
 
-[SECTION]
+[[SECTION]]
 TITLE: Section with anchor
 
 [TEXT]
@@ -37,4 +37,4 @@ Anchors start.
 Anchors end.
 <<<
 
-[/SECTION]
+[[/SECTION]]

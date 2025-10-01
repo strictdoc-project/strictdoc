@@ -1,4 +1,4 @@
-# DESCRIPTION: This test ensures that the MID field is added automatically to the
+# This test ensures that the MID field is added automatically to the
 # default implicit grammar and no validation is triggered about the
 # missing MID grammar element field declaration.
 

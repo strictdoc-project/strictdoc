@@ -9,7 +9,7 @@ STATEMENT: Statement #1
 TITLE: Title #2
 STATEMENT: Statement #2
 
-[SECTION]
+[[SECTION]]
 TITLE: MUST_BE_FILTERED
 
 [REQUIREMENT]
@@ -20,4 +20,4 @@ STATEMENT: Statement #3
 TITLE: Title #4
 STATEMENT: Statement #4
 
-[/SECTION]
+[[/SECTION]]

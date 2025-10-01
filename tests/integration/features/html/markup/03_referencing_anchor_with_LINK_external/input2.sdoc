@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 TITLE: Section with anchor
 
 [TEXT]
@@ -40,4 +40,4 @@ STATEMENT: >>>
 Anchors end.
 <<<
 
-[/SECTION]
+[[/SECTION]]

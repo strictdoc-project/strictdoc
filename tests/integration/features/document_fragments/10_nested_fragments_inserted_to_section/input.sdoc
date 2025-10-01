@@ -3,10 +3,10 @@ TITLE: Hello world doc
 OPTIONS:
   AUTO_LEVELS: On
 
-[SECTION]
+[[SECTION]]
 TITLE: Section that nests a fragment
 
 [DOCUMENT_FROM_FILE]
 FILE: nested.sdoc
 
-[/SECTION]
+[[/SECTION]]

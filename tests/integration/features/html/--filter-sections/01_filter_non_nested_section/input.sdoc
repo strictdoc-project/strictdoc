@@ -1,7 +1,7 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[SECTION]
+[[SECTION]]
 TITLE: MUST_BE_FILTERED
 
 [REQUIREMENT]
@@ -20,4 +20,4 @@ STATEMENT: Statement #3
 TITLE: Title #4
 STATEMENT: Statement #4
 
-[/SECTION]
+[[/SECTION]]

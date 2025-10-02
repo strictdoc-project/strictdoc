@@ -9,12 +9,10 @@ from strictdoc.backend.sdoc.models.model import (
     SDocElementIF,
     SDocIteratedElementIF,
     SDocNodeIF,
-    SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.cast import assert_cast
 
 
@@ -95,51 +93,7 @@ class DocumentCachingIterator:
                is not patched during the iteration.
         """
 
-        if isinstance(node, SDocSection):
-            # If node is not whitelisted, we ignore it. Also, note that due to
-            # this early return, all child nodes of this node are ignored
-            # as well because they are not added to the iteration queue.
-            if not node.ng_whitelisted:
-                return
-
-            # FIXME: This will be changed to yield only context.
-            context = DocumentIterationContext(
-                node, level_stack, custom_level=custom_level
-            )
-
-            if update_levels:
-                node.context.title_number_string = context.get_level_string()
-                node.ng_level = context.get_level()
-
-            yield node, context
-
-            current_number = 0
-            for subnode_ in node.section_contents:
-                if subnode_.ng_resolved_custom_level is None and not (
-                    isinstance(subnode_, SDocNode)
-                    and subnode_.node_type == "TEXT"
-                    and subnode_.reserved_title is None
-                ):
-                    current_number += 1
-
-                yield from self.all_node_content(
-                    assert_cast(
-                        subnode_,
-                        (
-                            SDocNodeIF,
-                            SDocSectionIF,
-                            SDocDocumentIF,
-                            SDocDocumentFromFileIF,
-                        ),
-                    ),
-                    print_fragments=print_fragments,
-                    level_stack=level_stack + (current_number,),
-                    custom_level=custom_level
-                    or subnode_.ng_resolved_custom_level is not None,
-                    update_levels=update_levels,
-                )
-
-        elif isinstance(node, SDocNode):
+        if isinstance(node, SDocNode):
             # If node is not whitelisted, we ignore it. Also, note that due to
             # this early return, all child nodes of this node are ignored
             # as well because they are not added to the iteration queue.
@@ -203,7 +157,6 @@ class DocumentCachingIterator:
                         subnode_,
                         (
                             SDocNodeIF,
-                            SDocSectionIF,
                             SDocDocumentIF,
                             SDocDocumentFromFileIF,
                         ),

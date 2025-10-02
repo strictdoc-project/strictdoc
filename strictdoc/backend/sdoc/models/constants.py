@@ -43,10 +43,8 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 
 SECTION_MODELS = [
-    SDocSection,
     DocumentFromFile,
     SDocNode,
     SDocNodeField,

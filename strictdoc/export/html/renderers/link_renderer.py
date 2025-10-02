@@ -4,7 +4,6 @@ from typing import Any, Dict, Optional, Tuple, Union
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     RangeMarker,
 )
@@ -29,7 +28,7 @@ class LinkRenderer:
         self.local_anchor_cache: Dict[Any, str] = {}
         self.req_link_cache: Dict[
             Tuple[DocumentType, int],
-            Dict[Union[SDocDocument, SDocNode, SDocSection, Anchor], str],
+            Dict[Union[SDocDocument, SDocNode, Anchor], str],
         ] = {}
 
     def render_url(self, url: str) -> str:
@@ -49,7 +48,7 @@ class LinkRenderer:
         return static_url
 
     def render_local_anchor(
-        self, node: Union[Anchor, SDocNode, SDocSection, SDocDocument]
+        self, node: Union[Anchor, SDocNode, SDocDocument]
     ) -> str:
         if node in self.local_anchor_cache:
             return self.local_anchor_cache[node]
@@ -63,7 +62,7 @@ class LinkRenderer:
         else:
             # If an element has no UID, provide some uniqueness.
             unique_prefix = node.context.title_number_string
-            if isinstance(node, (SDocSection, SDocDocument)):
+            if isinstance(node, (SDocDocument)):
                 local_anchor = (
                     f"{unique_prefix}-{self._string_to_link(node.title)}"
                 )
@@ -85,7 +84,7 @@ class LinkRenderer:
 
     def render_node_link(
         self,
-        node: Union[SDocDocument, SDocNode, SDocSection, Anchor],
+        node: Union[SDocDocument, SDocNode, Anchor],
         context_document: Optional[SDocDocument],
         document_type: DocumentType,
         allow_local: bool = True,
@@ -97,9 +96,7 @@ class LinkRenderer:
                          full paths are used when jumping to the DOC screen.
         """
 
-        assert isinstance(
-            node, (SDocDocument, SDocNode, SDocSection, Anchor)
-        ), node
+        assert isinstance(node, (SDocDocument, SDocNode, Anchor)), node
 
         if isinstance(node, SDocDocument):
             context_level_or_none: Optional[int] = None
@@ -114,7 +111,7 @@ class LinkRenderer:
             )
             return document_link + "#_TOP"
 
-        assert isinstance(node, (SDocNode, SDocSection, Anchor)), node
+        assert isinstance(node, (SDocNode, Anchor)), node
         assert isinstance(document_type, DocumentType), type(document_type)
         local_link = self.render_local_anchor(node)
         including_document = node.get_including_document()
@@ -161,7 +158,7 @@ class LinkRenderer:
 
     def render_node_doxygen_link(
         self,
-        node: Union[SDocDocument, SDocNode, SDocSection, Anchor],
+        node: Union[SDocDocument, SDocNode, Anchor],
     ) -> str:
         """
         Create a Doxygen link for a given node.
@@ -170,7 +167,7 @@ class LinkRenderer:
                          full paths are used when jumping to the DOC screen.
         """
 
-        assert isinstance(node, (SDocNode, SDocSection, Anchor)), node
+        assert isinstance(node, (SDocNode, Anchor)), node
 
         parent_or_including_document = node.get_parent_or_including_document()
         assert parent_or_including_document is not None

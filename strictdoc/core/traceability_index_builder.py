@@ -23,7 +23,6 @@ from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.backend.sdoc_source_code.caching_reader import (
     SourceFileTraceabilityCachingReader,
@@ -234,7 +233,6 @@ class TraceabilityIndexBuilder:
                         MID,
                         (
                             SDocNode,
-                            SDocSection,
                             SDocDocument,
                             InlineLink,
                             Anchor,
@@ -243,9 +241,7 @@ class TraceabilityIndexBuilder:
                 ),
                 (
                     GraphLinkType.UID_TO_NODE,
-                    OneToOneDictionary(
-                        str, (SDocDocument, SDocNode, SDocSection, Anchor)
-                    ),
+                    OneToOneDictionary(str, (SDocDocument, SDocNode, Anchor)),
                 ),
                 (
                     GraphLinkType.NODE_TO_PARENT_NODES,
@@ -279,8 +275,6 @@ class TraceabilityIndexBuilder:
             graph_database=graph_database,
             file_dependency_manager=file_dependency_manager,
         )
-
-        found_deprecated_section: bool = False
 
         # It seems to be impossible to accomplish everything in just one for
         # loop. One particular problem that requires two passes: it is not
@@ -426,24 +420,6 @@ class TraceabilityIndexBuilder:
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
             ):
-                if (
-                    isinstance(node, SDocSection)
-                    and not found_deprecated_section
-                ):
-                    found_deprecated_section = True
-
-                    DEPRECATION_ENGINE.add_message(
-                        "DEPRECATED_SECTION",
-                        "WARNING: At least one document in this documentation tree "
-                        "uses a deprecated [SECTION] element. "
-                        "All [SECTION] elements must be renamed to [[SECTION]], "
-                        "and the SECTION element must be registered in the "
-                        "document grammar. "
-                        "See the migration guide for more details:\n"
-                        "https://strictdoc.readthedocs.io/en/latest/latest/docs/strictdoc_01_user_guide.html#SECTION-UG-NODE-MIGRATION\n"
-                        "This warning will become an error in 2025 Q3.",
-                    )
-
                 if isinstance(node, SDocNode):
                     try:
                         assert document.grammar is not None
@@ -828,7 +804,6 @@ class TraceabilityIndexBuilder:
         ):
             query_reader = QueryReader()
             requirements_query_object: Union[QueryObject, QueryNullObject]
-            sections_query_object: Union[QueryObject, QueryNullObject]
             try:
                 if project_config.filter_requirements is not None:
                     requirements_query = query_reader.read(
@@ -839,15 +814,6 @@ class TraceabilityIndexBuilder:
                     )
                 else:
                     requirements_query_object = QueryNullObject()
-                if project_config.filter_sections is not None:
-                    sections_query = query_reader.read(
-                        project_config.filter_sections
-                    )
-                    sections_query_object = QueryObject(
-                        sections_query, traceability_index
-                    )
-                else:
-                    sections_query_object = QueryNullObject()
             except TextXSyntaxError:
                 # FIXME: This must throw a StrictDocException.
                 print("error: Cannot parse filter query.")  # noqa: T201
@@ -858,9 +824,11 @@ class TraceabilityIndexBuilder:
                         traceability_index.get_document_iterator(document)
                     )
                     for node, _ in document_iterator.all_content():
-                        if isinstance(
-                            node, SDocSection
-                        ) and not sections_query_object.evaluate(node):
+                        if (
+                            isinstance(node, SDocNode)
+                            and node.node_type == "SECTION"
+                            and not requirements_query_object.evaluate(node)
+                        ):
                             node.ng_whitelisted = False
                             # If the node is the last one, we check if all other
                             # nodes are filtered out and if so, mark the parent
@@ -871,7 +839,10 @@ class TraceabilityIndexBuilder:
                                 ]
                                 == node
                             ):
-                                if isinstance(node.parent, SDocSection):
+                                if (
+                                    isinstance(node.parent, SDocNode)
+                                    and node.parent.node_type == "SECTION"
+                                ):
                                     node.parent.blacklist_if_needed()
 
                         elif isinstance(

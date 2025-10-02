@@ -4,7 +4,6 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
     SDocNodeIF,
-    SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.document_iterator import DocumentCachingIterator
@@ -55,7 +54,7 @@ class DeleteRequirementCommand:
 
         self.traceability_index.delete_requirement(self.requirement)
 
-        requirement_parent: Union[SDocSectionIF, SDocDocumentIF, SDocNodeIF] = (
+        requirement_parent: Union[SDocDocumentIF, SDocNodeIF] = (
             self.requirement.parent
         )
 

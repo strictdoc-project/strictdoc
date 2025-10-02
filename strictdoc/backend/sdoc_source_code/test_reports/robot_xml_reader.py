@@ -16,7 +16,6 @@ from strictdoc.backend.sdoc.models.reference import (
     FileEntryFormat,
     FileReference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.file_tree import File
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.paths import path_to_posix_path
@@ -25,7 +24,7 @@ from strictdoc.helpers.paths import path_to_posix_path
 class SdocVisitor(ResultVisitor):  # type: ignore[misc]
     def __init__(self, project_config: ProjectConfig):
         self.project_config = project_config
-        self.suites: Dict[str, Union[SDocDocument, SDocSection]] = {}
+        self.suites: Dict[str, Union[SDocDocument, SDocNode]] = {}
         self.document: Optional[SDocDocument] = None
 
     def visit_suite(self, suite: robot.result.TestSuite) -> None:
@@ -57,14 +56,10 @@ class SdocVisitor(ResultVisitor):  # type: ignore[misc]
                 "depth-first traversal expected"
             )
             parent_sdoc_node = self.suites[suite.parent.full_name]
-            section = SDocSection(
+            section = SDocNode.create_section(
                 parent=parent_sdoc_node,
-                mid=None,
-                uid=None,
-                custom_level=None,
+                document=self.document,
                 title=suite.name,
-                requirement_prefix=None,
-                section_contents=[],
             )
             section.ng_including_document_reference = DocumentReference()
             section.ng_document_reference = DocumentReference()
@@ -188,7 +183,7 @@ class SdocVisitor(ResultVisitor):  # type: ignore[misc]
     def summary_from_suite(
         self,
         suite: robot.result.TestSuite,
-        parent: Union[SDocDocument, SDocSection],
+        parent: Union[SDocDocument, SDocNode],
     ) -> SDocNode:
         assert self.document
         summary_table = f"""\

@@ -17,7 +17,6 @@ from strictdoc.backend.sdoc.models.reference import (
     FileEntryFormat,
     FileReference,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.file_tree import File
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.file_system import file_open_read_utf8
@@ -84,28 +83,20 @@ class GCovJSONReader:
         for json_file_ in json_files:
             json_file_name = json_file_["file"]
 
-            file_section = SDocSection(
+            file_section = SDocNode.create_section(
                 parent=document,
-                mid=None,
-                uid=None,
-                custom_level=None,
+                document=document,
                 title=json_file_name,
-                requirement_prefix=None,
-                section_contents=[],
             )
             file_section.ng_including_document_reference = DocumentReference()
             file_section.ng_document_reference = DocumentReference()
             file_section.ng_document_reference.set_document(document)
             document.section_contents.append(file_section)
 
-            covered_functions_section = SDocSection(
+            covered_functions_section = SDocNode.create_section(
                 parent=document,
-                mid=None,
-                uid=None,
-                custom_level=None,
+                document=document,
                 title="Covered functions",
-                requirement_prefix=None,
-                section_contents=[],
             )
             covered_functions_section.ng_including_document_reference = (
                 DocumentReference()
@@ -118,14 +109,10 @@ class GCovJSONReader:
             )
             file_section.section_contents.append(covered_functions_section)
 
-            non_covered_functions_section = SDocSection(
+            non_covered_functions_section = SDocNode.create_section(
                 parent=document,
-                mid=None,
-                uid=None,
-                custom_level=None,
+                document=document,
                 title="Non-covered functions",
-                requirement_prefix=None,
-                section_contents=[],
             )
             non_covered_functions_section.ng_including_document_reference = (
                 DocumentReference()

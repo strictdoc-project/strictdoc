@@ -8,19 +8,12 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNode,
     SDocNodeField,
 )
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.helpers.auto_described import auto_described
-from strictdoc.helpers.mid import MID
 
 
 class ChangeType(str, Enum):
     DOCUMENT = "Document"
     DOCUMENT_MODIFIED = "Document modified"
-
-    SECTION = "Section"
-    SECTION_REMOVED = "Section removed"
-    SECTION_MODIFIED = "Section modified"
-    SECTION_ADDED = "Section added"
 
     REQUIREMENT = "Requirement"
     REQUIREMENT_REMOVED = "Requirement removed"
@@ -54,71 +47,6 @@ class DocumentChange:
         self.rhs_document: Optional[SDocDocument] = rhs_document
 
         self.change_type: ChangeType = ChangeType.DOCUMENT_MODIFIED
-
-    def get_colored_title_diff(self, side: str) -> Optional[Markup]:
-        assert self.title_modified
-        if side == "left":
-            return self.lhs_colored_title_diff
-        if side == "right":
-            return self.rhs_colored_title_diff
-        raise AssertionError(f"Must not reach here: {side}")
-
-
-@auto_described
-class SectionChange:
-    def __init__(
-        self,
-        *,
-        matched_mid: Optional[MID],
-        matched_uid: Optional[str],
-        section_token: Optional[str],
-        lhs_section: Optional[Union[SDocSection, SDocDocument, SDocNode]],
-        rhs_section: Optional[Union[SDocSection, SDocDocument, SDocNode]],
-        uid_modified: bool,
-        title_modified: bool,
-        lhs_colored_title_diff: Optional[Markup],
-        rhs_colored_title_diff: Optional[Markup],
-    ):
-        assert lhs_section is not None or rhs_section is not None
-        if matched_uid is not None:
-            assert len(matched_uid) > 0
-        self.matched_mid: Optional[MID] = matched_mid
-        self.matched_uid: Optional[str] = matched_uid
-        self.section_token: Optional[str] = section_token
-        self.uid_modified: bool = uid_modified
-        self.title_modified: bool = title_modified
-        self.lhs_colored_title_diff: Optional[Markup] = lhs_colored_title_diff
-        self.rhs_colored_title_diff: Optional[Markup] = rhs_colored_title_diff
-
-        self.lhs_section: Optional[
-            Union[SDocSection, SDocDocument, SDocNode]
-        ] = lhs_section
-        self.rhs_section: Optional[
-            Union[SDocSection, SDocDocument, SDocNode]
-        ] = rhs_section
-
-        if matched_mid is not None or matched_uid is not None:
-            change_type = ChangeType.SECTION_MODIFIED
-            assert isinstance(lhs_section, SDocSection) or (
-                isinstance(lhs_section, SDocNode)
-                and lhs_section.node_type == "SECTION"
-            ), lhs_section
-            assert isinstance(rhs_section, SDocSection) or (
-                isinstance(rhs_section, SDocNode)
-                and rhs_section.node_type == "SECTION"
-            ), rhs_section
-        elif lhs_section is not None:
-            assert rhs_section is None, rhs_section
-            change_type = ChangeType.SECTION_REMOVED
-        elif rhs_section is not None:
-            assert lhs_section is None, lhs_section
-            change_type = ChangeType.SECTION_ADDED
-        else:
-            raise AssertionError("Must not reach here.")  # pragma: no cover
-        self.change_type = change_type
-
-    def is_paired_change(self) -> bool:
-        return self.lhs_section is not None and self.rhs_section is not None
 
     def get_colored_title_diff(self, side: str) -> Optional[Markup]:
         assert self.title_modified
@@ -212,4 +140,4 @@ class RequirementChange:
         return self.map_fields_to_changes.get(requirement_field)
 
 
-ChangeUnionType = Union[DocumentChange, SectionChange, RequirementChange]
+ChangeUnionType = Union[DocumentChange, RequirementChange]

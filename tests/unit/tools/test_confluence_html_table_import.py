@@ -20,7 +20,7 @@ def test_01():
     sdoc = ConfluenceHTMLTableImport.import_from_file(html_file)
 
     section1 = sdoc.section_contents[0]
-    assert section1.title == "Section 1"
+    assert section1.reserved_title == "Section 1"
     section1_reqs = section1.section_contents
     assert section1_reqs[0].reserved_uid == "REQ-1-1 UID"
     assert section1_reqs[0].reserved_title == "REQ-1-1 Title"
@@ -38,7 +38,7 @@ def test_01():
     )
 
     section2 = sdoc.section_contents[1]
-    assert section2.title == "Section 2"
+    assert section2.reserved_title == "Section 2"
     section2_reqs = section2.section_contents
     assert section2_reqs[0].reserved_uid == "REQ-2-1 UID"
     assert section2_reqs[0].reserved_title == "REQ-2-1 Title"
@@ -69,7 +69,7 @@ def test_02():
     assert len(sdoc.section_contents) == 1
 
     section1 = sdoc.section_contents[0]
-    assert section1.title == "Section 1"
+    assert section1.reserved_title == "Section 1"
     section1_reqs = section1.section_contents
     assert section1_reqs[0].reserved_uid == "REQ-1-1 UID"
     assert section1_reqs[0].reserved_title == "REQ-1-1 Title"

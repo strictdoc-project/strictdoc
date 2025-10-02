@@ -36,7 +36,6 @@ from strictdoc.backend.sdoc.models.grammar_element import (
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
     SDocNodeIF,
-    SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
@@ -383,7 +382,7 @@ class P01_ReqIFToSDocConverter:
     def create_requirement_from_spec_object(
         spec_object: ReqIFSpecObject,
         context: P01_ReqIFToSDocBuildContext,
-        parent_section: Union[SDocSectionIF, SDocDocumentIF, SDocNodeIF],
+        parent_section: Union[SDocDocumentIF, SDocNodeIF],
         document_reference: DocumentReference,
         reqif_bundle: ReqIFBundle,
         level: int,

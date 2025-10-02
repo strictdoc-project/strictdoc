@@ -5,7 +5,6 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.rst_templates import RSTTemplates
@@ -35,7 +34,7 @@ class RSTWriter:
             )
 
         for content_node, _ in document_iterator.all_content():
-            if isinstance(content_node, SDocSection) or (
+            if (
                 isinstance(content_node, SDocNode)
                 and content_node.node_type == "SECTION"
             ):

@@ -1,8 +1,0 @@
-RUN: %strictdoc import reqif sdoc %S/sample.reqif %T/
-RUN: %cat %T/Anonymized_Specification.sdoc | filecheck %s
-
-CHECK: [FRAGMENT]
-
-RUN: %strictdoc export --formats=reqif-sdoc %T/Anonymized_Specification.sdoc
-UN: %strictdoc import reqif sdoc %T/reqif/output.reqif %T/output_step2.sdoc
-UN: %diff %T/output.sdoc %T/output_step2.sdoc

@@ -41,7 +41,6 @@ class DocumentGrammar(SDocGrammarIF):
     @staticmethod
     def create_default(
         parent: Optional[SDocDocumentIF],
-        create_section_element: bool = False,
         enable_mid: bool = False,
     ) -> "DocumentGrammar":
         text_element: GrammarElement = (
@@ -131,13 +130,12 @@ class DocumentGrammar(SDocGrammarIF):
 
         elements: List[GrammarElement] = []
 
-        if create_section_element:
-            section_element: GrammarElement = (
-                DocumentGrammar.create_default_section_element(
-                    enable_mid=enable_mid
-                )
+        section_element: GrammarElement = (
+            DocumentGrammar.create_default_section_element(
+                enable_mid=enable_mid
             )
-            elements.append(section_element)
+        )
+        elements.append(section_element)
 
         elements.append(text_element)
         elements.append(requirement_element)

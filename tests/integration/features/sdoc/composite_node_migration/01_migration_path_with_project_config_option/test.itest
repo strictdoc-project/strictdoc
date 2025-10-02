@@ -1,4 +1,2 @@
-RUN: %strictdoc export %S/input.sdoc --formats=sdoc --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Step 'Export SDoc' took:
-
-RUN: %diff %T/sdoc/input.sdoc %S/input.expected.sdoc
+RUN: %expect_exit 1 %strictdoc export %S/input.sdoc --formats=sdoc --output-dir %T | filecheck %s --dump-input=fail
+CHECK: [SECTION] elements are no longer supported by StrictDoc. See the migration guide for more details:

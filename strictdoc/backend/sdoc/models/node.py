@@ -21,7 +21,6 @@ from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
     SDocElementIF,
     SDocNodeIF,
-    SDocSectionIF,
 )
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -103,7 +102,7 @@ class SDocNodeField:
 class SDocNode(SDocNodeIF):
     def __init__(
         self,
-        parent: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF],
+        parent: Union[SDocDocumentIF, SDocNodeIF],
         node_type: str,
         fields: List[SDocNodeField],
         relations: List[Reference],
@@ -116,7 +115,7 @@ class SDocNode(SDocNodeIF):
         assert isinstance(node_type, str)
         assert isinstance(relations, list), relations
 
-        self.parent: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF] = parent
+        self.parent: Union[SDocDocumentIF, SDocNodeIF] = parent
 
         self.node_type: str = node_type
 
@@ -259,7 +258,10 @@ class SDocNode(SDocNodeIF):
         if self.reserved_uid is not None:
             return self.reserved_uid
         if self.node_type == "TEXT":
-            if isinstance(self.parent, SDocSectionIF):
+            if (
+                isinstance(self.parent, SDocNode)
+                and self.parent.node_type == "SECTION"
+            ):
                 return f'Text node from section "{self.parent.get_display_title()}"'
             if isinstance(self.parent, SDocDocumentIF):
                 return f'Text node from document "{self.parent.get_display_title()}"'
@@ -778,7 +780,7 @@ class SDocNode(SDocNodeIF):
 class SDocCompositeNode(SDocNode):
     def __init__(
         self,
-        parent: Union[SDocDocumentIF, SDocSectionIF, SDocNodeIF],
+        parent: Union[SDocDocumentIF, SDocNodeIF],
         **fields: Any,
     ) -> None:
         super().__init__(parent, **fields, is_composite=True)

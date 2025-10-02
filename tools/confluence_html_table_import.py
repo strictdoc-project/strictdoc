@@ -8,13 +8,13 @@ from bs4 import BeautifulSoup
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 
 STRICTDOC_ROOT_PATH = os.path.join(os.path.dirname(__file__), "..")
 sys.path.append(STRICTDOC_ROOT_PATH)
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.section import SDocSection
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.project_config import ProjectConfig
@@ -50,13 +50,13 @@ class ConfluenceHTMLTableImport:
             view=None,
             section_contents=[],
         )
-        document.grammar = DocumentGrammar.create_default(document)
+        document.grammar = DocumentGrammar.create_default(
+            document
+        )
         for section_idx, reqs in enumerate(reqs_array_array):
             section_name = headers[section_idx].text
-            section = SDocSection(
-                document, None,None, "1", section_name,
-                requirement_prefix=None,
-                section_contents=[]
+            section = SDocNode.create_section(
+                document, document, section_name,
             )
             section.ng_document_reference = DocumentReference()
             section.ng_document_reference.set_document(document)

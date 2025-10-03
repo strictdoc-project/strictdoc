@@ -373,9 +373,6 @@ class SDocNode(SDocNodeIF):
     def is_text_node(self) -> bool:
         return self.node_type == "TEXT"
 
-    def is_section(self) -> bool:
-        return False
-
     def is_document(self) -> bool:
         return False
 

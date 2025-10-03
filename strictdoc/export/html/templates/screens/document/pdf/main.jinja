@@ -33,7 +33,7 @@
             {% include "components/node_content/index_extends_readonly.jinja" %}
           {# {% endif %} #}
 
-        {%- elif node.is_section() %}
+        {%- elif node.is_document() %}
           {# needed for self.local_anchor_cache: #}
           {%- set section = node %}
           {# needed for template: #}

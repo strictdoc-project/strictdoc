@@ -1,13 +1,24 @@
 {%- assert node is defined -%}
 
-{%- set mid = '' -%}
-{%- if node.reserved_mid is defined and node.mid_permanent is defined and node.mid_permanent -%}
-  {%- set mid = node.reserved_mid -%}
-{%- endif -%}
+{# FIXME: Improve the flow. #}
+{%- if node.__class__.__name__ != "DocumentFromFile" -%}
+  {%- set mid = '' -%}
+  {%- if node.reserved_mid is defined and node.mid_permanent is defined and node.mid_permanent -%}
+    {%- set mid = node.reserved_mid -%}
+  {%- endif -%}
 
-{%- set uid = '' -%}
-{%- if node.reserved_uid is defined -%}
-  {%- set uid = node.reserved_uid -%}
-{%- endif %}
+  {%- set uid = '' -%}
+  {%- if node.reserved_uid is defined -%}
+    {%- set uid = node.reserved_uid -%}
+  {%- endif %}
 
   { {%- if mid -%}"MID":"{{ mid }}",{%- endif -%}{% if uid -%}"UID":"{{ uid }}",{%- endif -%}"_LINK":"{{ view_object.render_local_anchor(node) }}" },
+{%- endif -%}
+
+{% if node.section_contents %}
+  {%- for node_ in node.section_contents -%}
+    {% with node = node_ %}
+      {%- include "screens/project_index/project_map_node.jinja" -%}
+    {% endwith %}
+  {%- endfor -%}
+{%- endif  -%}

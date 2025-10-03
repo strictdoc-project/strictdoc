@@ -21,6 +21,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
 from strictdoc.backend.sdoc_source_code.processors.general_language_marker_processors import (
     function_range_marker_processor,
@@ -69,6 +70,8 @@ class SourceFileTraceabilityReader_C:
         tree = parser.parse(input_buffer)
 
         nodes = traverse_tree(tree)
+
+        source_node: Optional[SourceNode]
         for node_ in nodes:
             function_name: str
             function_markers: List[FunctionRangeMarker]
@@ -168,6 +171,7 @@ class SourceFileTraceabilityReader_C:
                     if specifier_node_.text == b"static":
                         function_attributes.add(FunctionAttribute.STATIC)
 
+                source_node = None
                 function_markers = []
                 function_comment_node = None
                 if (
@@ -215,6 +219,8 @@ class SourceFileTraceabilityReader_C:
                     markers=function_markers,
                     attributes=function_attributes,
                 )
+                if source_node is not None:
+                    source_node.function = new_function
                 traceability_info.functions.append(new_function)
 
             elif node_.type == "function_definition":
@@ -266,6 +272,7 @@ class SourceFileTraceabilityReader_C:
                 if function_name.startswith("TEST"):
                     function_display_name = function_name
 
+                source_node = None
                 function_markers = []
                 function_comment_node = None
                 function_comment_text = None
@@ -326,6 +333,8 @@ class SourceFileTraceabilityReader_C:
                     traceability_info.ng_map_names_to_definition_functions[
                         function_name
                     ] = new_function
+                if source_node is not None:
+                    source_node.function = new_function
             elif node_.type == "comment":
                 #
                 # FIXME: Here parsing of function comments can happen as well

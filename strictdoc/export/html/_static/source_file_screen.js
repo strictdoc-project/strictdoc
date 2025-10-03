@@ -285,7 +285,16 @@ class Dom {
     this.active.labels?.forEach(label => label?.classList.remove(this.activeClass));
     if (this.active.rangeAlias) {
       this.ranges[this.active.rangeAlias].banner.classList.remove(this.activeClass);
-      this.closers[this.active.rangeEnd].classList.remove(this.activeClass);
+
+      const closer = this.closers?.[this.active.rangeEnd];
+      console.assert(
+        closer,
+        "Closer must not be null. One known way of getting this error is " +
+        "when a closing function/range marker is missing and not registered " +
+        "with the file traceability info."
+      );
+
+      closer.classList.remove(this.activeClass);
     }
 
     // make changes to state

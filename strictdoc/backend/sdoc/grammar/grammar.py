@@ -48,7 +48,7 @@ MultiLineString[noskipws]:
 ;
 
 FieldName[noskipws]:
-  /{NEGATIVE_UID}{NEGATIVE_RELATIONS}[A-Z]+[A-Z_0-9]*/
+  /{NEGATIVE_UID}{NEGATIVE_RELATIONS}[A-Z]+[A-Za-z0-9_\-]*/
 ;
 """
 

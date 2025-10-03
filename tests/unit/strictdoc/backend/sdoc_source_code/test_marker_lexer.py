@@ -409,13 +409,6 @@ FOOBAR
 
 
 def test_60_exclude_reserved_keywords():
-    """
-    Ensure that a single field can be parsed.
-
-    It turns out that this particular case is pretty sensitive with respect to
-    how the grammar is constructed.
-    """
-
     input_string = """
         FIXME: This can likely replace _weak below with no problem.
 
@@ -426,3 +419,28 @@ def test_60_exclude_reserved_keywords():
     assert tree.data == "start"
 
     assert len(tree.children) == 0
+
+
+def test_80_linux_spdx_like_identifiers():
+    input_string = """\
+SPDX-ID: REQ-1
+
+SPDX-Text: This
+           is
+           a statement
+           \n\n
+           And this is the same statement's another paragraph.
+"""
+
+    tree = MarkerLexer.parse(input_string, parse_nodes=True)
+    assert tree.data == "start"
+
+    assert len(tree.children) == 2
+    assert tree.children[0].data == "node_field"
+    assert tree.children[0].children[0].data == "node_name"
+    assert tree.children[0].children[0].children[0].value == "SPDX-ID"
+    assert tree.children[0].children[1].data == "node_multiline_value"
+    assert tree.children[1].data == "node_field"
+    assert tree.children[1].children[0].data == "node_name"
+    assert tree.children[1].children[0].children[0].value == "SPDX-Text"
+    assert tree.children[1].children[1].data == "node_multiline_value"

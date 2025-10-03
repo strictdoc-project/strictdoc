@@ -17,6 +17,7 @@ class GrammarTemplate(Template):
 
 
 RELATION_MARKER_START = r"@relation[\(\{]"
+REGEX_NODE_NAME = r"[A-Za-z0-9_\-]+"
 
 GRAMMAR = GrammarTemplate("""
 start: ##START
@@ -29,13 +30,13 @@ relation_scope: /file|class|function|line|range_start|range_end/
 relation_role: ALPHANUMERIC_WORD
 
 node_field: node_name ":" node_multiline_value
-node_name: /(?!(##RESERVED_KEYWORDS))[A-Z_]+/
+node_name: /(?!(##RESERVED_KEYWORDS))##REGEX_NODE_NAME/
 node_multiline_value: (_WS_INLINE | _NL) (NODE_FIRST_STRING_VALUE _NL) (NODE_STRING_VALUE _NL)*
 
 NODE_FIRST_STRING_VALUE.2: /\\s*[^\n\r]+/x
 NODE_STRING_VALUE.2: /(?![ ]*##RELATION_MARKER_START)(?!\\s*[A-Z_]+: )[^\n\r]+/x
 
-_NORMAL_STRING_NO_MARKER_NO_NODE: /(?!\\s*##RELATION_MARKER_START)((?!\\s*[A-Z_]+: )|(##RESERVED_KEYWORDS)).+/
+_NORMAL_STRING_NO_MARKER_NO_NODE: /(?!\\s*##RELATION_MARKER_START)((?!\\s*##REGEX_NODE_NAME: )|(##RESERVED_KEYWORDS)).+/
 
 _NORMAL_STRING_NO_MARKER: /(?!\\s*##RELATION_MARKER_START).+/
 
@@ -68,6 +69,7 @@ class MarkerLexer:
             start = "(relation_marker | _NORMAL_STRING_NO_MARKER | _WS)*"
 
         grammar = GRAMMAR.substitute(
+            REGEX_NODE_NAME=REGEX_NODE_NAME,
             RELATION_MARKER_START=RELATION_MARKER_START,
             RESERVED_KEYWORDS=RESERVED_KEYWORDS,
             REGEX_REQ=REGEX_REQ,

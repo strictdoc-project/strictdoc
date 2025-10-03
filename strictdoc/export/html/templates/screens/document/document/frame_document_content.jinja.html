@@ -11,8 +11,6 @@
 
         {%- if node.is_document() %}
           {% include "components/section/index_extends_node.jinja" %}
-        {%- elif node.is_section() %}
-          {% include "components/section/index_extends_node.jinja" %}
         {%- elif node.is_requirement() %}
           {# {%- if node.is_text_node() %}
             {% include "components/text_node/index_extends_node.jinja" %}

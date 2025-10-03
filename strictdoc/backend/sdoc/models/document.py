@@ -170,9 +170,6 @@ class SDocDocument(SDocDocumentIF):
     def uid(self) -> Optional[str]:
         return self.config.uid
 
-    def is_section(self) -> bool:
-        return True
-
     @property
     def is_root_included_document(self) -> bool:
         return self.document_is_included()

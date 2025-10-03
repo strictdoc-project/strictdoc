@@ -12,7 +12,7 @@
         {% with requirement=node, document=node.document, node_controls=True %}
           {%- include "components/node_content/tiny_extends_card.jinja" -%}
         {% endwith %}
-      {% elif node.is_section() %}
+      {% elif node.is_document() %}
         {% with section=node, document=node.document, node_controls=True %}
           {%- include "components/section/tiny_extends_card.jinja" -%}
         {% endwith %}

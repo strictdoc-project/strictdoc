@@ -38,7 +38,7 @@
                 {%- set requirement = section_or_requirement %}
                 {% include "screens/git/node/requirement.jinja" %}
 
-              {%- elif section_or_requirement.is_section() %}
+              {%- elif section_or_requirement.is_document() %}
                 {%- set section = section_or_requirement %}
                 {% include "screens/git/node/section.jinja" %}
               {%- endif %}

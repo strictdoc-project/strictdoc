@@ -16,7 +16,6 @@ def get_etag(file_path: str) -> str:
     NOTE: The Starlette's version is async and uses anyio.
     """
 
-    assert os.path.isfile(file_path)
     stat_result = os.stat(file_path)
     mode = stat_result.st_mode
     if not stat.S_ISREG(mode):

@@ -1,10 +1,7 @@
-import sys
-import traceback
 from typing import Optional
 
 from textx import metamodel_from_str
 
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import GRAMMAR_MODELS
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -14,6 +11,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_optional_cast
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.textx import (
     drop_textx_meta,
@@ -38,11 +36,19 @@ class SDocGrammarReader:
             }
         )
 
-        grammar_wrapper: DocumentGrammarWrapper = (
-            SDocGrammarReader.meta_model.model_from_str(
-                input_string, file_name=file_path
+        try:
+            grammar_wrapper: DocumentGrammarWrapper = (
+                SDocGrammarReader.meta_model.model_from_str(
+                    input_string, file_name=file_path
+                )
             )
-        )
+        except Exception as exc_:  # pylint: disable=broad-except
+            raise StrictDocException(
+                f"Could not parse file: "
+                f"{file_path}. "
+                f"Error: {exc_.__class__.__name__}: {exc_}"
+            ) from exc_
+
         grammar: DocumentGrammar = grammar_wrapper.grammar
         grammar.parent = None
 
@@ -67,26 +73,9 @@ class SDocGrammarReader:
         with file_open_read_utf8(file_path) as file:
             grammar_content = file.read()
 
-        try:
-            grammar: DocumentGrammar = self.read(
-                grammar_content, file_path=file_path
-            )
-            PickleCache.save_to_cache(
-                grammar, file_path, project_config, "grammar"
-            )
+        grammar: DocumentGrammar = self.read(
+            grammar_content, file_path=file_path
+        )
+        PickleCache.save_to_cache(grammar, file_path, project_config, "grammar")
 
-            return grammar
-        except NotImplementedError:
-            traceback.print_exc()
-            sys.exit(1)
-        except StrictDocSemanticError as exc:
-            print(exc.to_print_message())  # noqa: T201
-            sys.exit(1)
-        except Exception as exc:  # pylint: disable=broad-except
-            print(  # noqa: T201
-                f"error: could not parse file: "
-                f"{file_path}.\n{exc.__class__.__name__}: {exc}"
-            )
-            # TODO: when --debug is provided.
-            traceback.print_exc()
-            sys.exit(1)
+        return grammar

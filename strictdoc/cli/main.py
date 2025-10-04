@@ -213,6 +213,8 @@ def main() -> None:
     except Exception as exception_:
         exception_info = ExceptionInfo(exception_)
     finally:
+        parallelizer.shutdown()
+
         if exception_info is not None:
             if parser.is_debug_mode():
                 print(exception_info.get_stack_trace(), flush=True)  # noqa: T201

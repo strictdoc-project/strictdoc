@@ -237,11 +237,6 @@ class SDocNode(SDocNodeIF):
     def get_node_type_string(self) -> Optional[str]:
         return self.node_type
 
-    def get_display_node_type_string(self) -> Optional[str]:
-        if self.is_composite:
-            return f"[[{self.node_type}]]"
-        return f"[{self.node_type}]"
-
     def get_display_title(
         self,
         include_toc_number: bool = True,  # noqa: ARG002

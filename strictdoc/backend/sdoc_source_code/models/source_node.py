@@ -5,6 +5,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Union
 
+from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
@@ -21,3 +22,4 @@ class SourceNode:
         default_factory=list
     )
     fields: Dict[str, str] = field(default_factory=dict)
+    function: Optional[Function] = None

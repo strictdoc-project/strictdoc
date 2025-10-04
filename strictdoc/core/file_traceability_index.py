@@ -38,6 +38,7 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.constants import GraphLinkType
+from strictdoc.core.document_iterator import DocumentCachingIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.cast import assert_cast
@@ -561,119 +562,6 @@ class FileTraceabilityIndex:
                             )
 
         #
-        # STEP: For each trace info object:
-        #       - Sort the markers according to their source location.
-        #       - Calculate coverage information.
-        #
-        for (
-            path,
-            traceability_info_,
-        ) in self.map_paths_to_source_file_traceability_info.items():
-
-            def marker_comparator_start(
-                marker: RelationMarkerType,
-            ) -> int:
-                assert marker.ng_range_line_begin is not None
-                return marker.ng_range_line_begin
-
-            sorted_markers = sorted(
-                traceability_info_.markers, key=marker_comparator_start
-            )
-
-            traceability_info_.markers = sorted_markers
-            # Finding how many lines are covered by the requirements in the file.
-            # Quick and dirty: https://stackoverflow.com/a/15273749/598057
-            merged_ranges: List[List[int]] = []
-            for marker_ in traceability_info_.markers:
-                assert isinstance(
-                    marker_,
-                    (
-                        FunctionRangeMarker,
-                        ForwardRangeMarker,
-                        RangeMarker,
-                        LineMarker,
-                    ),
-                ), marker_
-                if marker_.ng_is_nodoc:
-                    continue
-                if not marker_.is_begin():
-                    continue
-                begin, end = (
-                    assert_cast(marker_.ng_range_line_begin, int),
-                    assert_cast(marker_.ng_range_line_end, int),
-                )
-                if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
-                    merged_ranges[-1][1] = max(merged_ranges[-1][1], end)
-                else:
-                    merged_ranges.append([begin, end])
-            coverage = 0
-            for merged_range in merged_ranges:
-                for line_ in range(merged_range[0], merged_range[1] + 1):
-                    if traceability_info_.file_stats.lines_info[line_]:
-                        coverage += 1
-
-            for function_ in traceability_info_.functions:
-                for merged_range in merged_ranges:
-                    if (
-                        function_.line_begin >= merged_range[0]
-                        and function_.line_end <= merged_range[1]
-                    ):
-                        traceability_info_.covered_functions += 1
-                        break
-
-            traceability_info_.set_coverage_stats(merged_ranges, coverage)
-
-            for (
-                req_uid_,
-                markers_,
-            ) in traceability_info_.ng_map_reqs_to_markers.items():
-
-                def marker_comparator_range(
-                    marker: RelationMarkerType,
-                ) -> Tuple[int, int]:
-                    assert marker.ng_range_line_begin is not None
-                    assert marker.ng_range_line_end is not None
-                    return marker.ng_range_line_begin, marker.ng_range_line_end
-
-                markers_.sort(key=marker_comparator_range)
-
-                # Validate here, SDocNode.relations doesn't track marker roles.
-                node = traceability_index.get_node_by_uid(req_uid_)
-                document = node.get_document()
-                assert document is not None
-                assert document.grammar is not None
-                grammar_element = document.grammar.elements_by_type[
-                    node.node_type
-                ]
-                for marker in markers_:
-                    # Backwards markers do not require referenced node grammar
-                    # to have the relation/role registered in the grammar.
-                    if isinstance(marker, (FunctionRangeMarker, RangeMarker)):
-                        continue
-
-                    if not grammar_element.has_relation_type_role(
-                        relation_type="File",
-                        relation_role=marker.role,
-                    ):
-                        raise StrictDocSemanticError.invalid_marker_role(
-                            node=node,
-                            marker=marker,
-                            path_to_src_file=path,
-                        )
-
-        # Sort by paths alphabetically.
-        for paths_with_role in self.map_reqs_uids_to_paths.values():
-            paths_with_role.sort()
-
-        # Sort by node UID alphabetically.
-        for path_requirements_ in self.map_paths_to_reqs.values():
-
-            def compare_sdocnode_by_uid(node_: SDocNode) -> str:
-                return assert_cast(node_.reserved_uid, str)
-
-            path_requirements_.sort(key=compare_sdocnode_by_uid)
-
-        #
         # STEP: Create auto-generated documents created from source file comments.
         #       Register these documents with the main traceability index.
         #
@@ -702,6 +590,8 @@ class FileTraceabilityIndex:
             )
             return section_node
 
+        documents_with_generated_content = set()
+
         section_cache = {}
         source_nodes_config: List[Dict[str, str]] = project_config.source_nodes
         for (
@@ -723,6 +613,7 @@ class FileTraceabilityIndex:
 
             document_uid = relevant_source_node_entry["uid"]
             document = traceability_index.get_node_by_uid(document_uid)
+            documents_with_generated_content.add(document)
 
             current_top_node = document
             path_components = path_to_source_file_.split("/")
@@ -758,7 +649,6 @@ class FileTraceabilityIndex:
                 source_sdoc_node.ng_including_document_reference = (
                     DocumentReference()
                 )
-
                 source_sdoc_node.set_field_value(
                     field_name="UID",
                     form_field_index=0,
@@ -784,6 +674,34 @@ class FileTraceabilityIndex:
                     rhs_node=source_sdoc_node,
                 )
 
+                source_node_function = source_node_.function
+                assert source_node_function is not None
+
+                function_marker = self.forward_function_marker_from_function(
+                    function=source_node_function,
+                    marker_type=RangeMarkerType.FUNCTION,
+                    reqs=[Req(None, source_sdoc_node_uid)],
+                    role=None,
+                    description=f"function {source_node_function.display_name}()",
+                )
+
+                traceability_info_.ng_map_reqs_to_markers.setdefault(
+                    source_sdoc_node_uid, []
+                ).append(function_marker)
+
+                self.map_reqs_uids_to_paths.setdefault(
+                    source_sdoc_node_uid, OrderedSet()
+                ).add(path_to_source_file_)
+
+                self.map_paths_to_reqs.setdefault(
+                    path_to_source_file_, OrderedSet()
+                ).add(source_sdoc_node)
+
+                function_marker_copy = function_marker.create_end_marker()
+
+                traceability_info_.markers.append(function_marker)
+                traceability_info_.markers.append(function_marker_copy)
+
                 #
                 # This connects:
                 # - Source nodes and auto-generated requirements.
@@ -792,15 +710,6 @@ class FileTraceabilityIndex:
                 for marker_ in source_node_.markers:
                     if not isinstance(marker_, FunctionRangeMarker):
                         continue
-                    traceability_info_.ng_map_reqs_to_markers.setdefault(
-                        source_sdoc_node_uid, []
-                    ).append(marker_)
-                    self.map_reqs_uids_to_paths.setdefault(
-                        source_sdoc_node_uid, OrderedSet()
-                    ).add(path_to_source_file_)
-                    self.map_paths_to_reqs.setdefault(
-                        path_to_source_file_, OrderedSet()
-                    ).add(source_sdoc_node)
 
                     for req_ in marker_.reqs:
                         node = traceability_index.get_node_by_uid_weak2(req_)
@@ -814,6 +723,19 @@ class FileTraceabilityIndex:
                             lhs_node=node,
                             rhs_node=source_sdoc_node,
                         )
+
+        # Iterate over all generated documents to calculate all node levels.
+        for document_ in documents_with_generated_content:
+            document_iterator = DocumentCachingIterator(document_)
+            for _, _ in document_iterator.all_content(
+                print_fragments=False,
+            ):
+                pass
+
+        #
+        # STEP: Calculate requirements coverage by code. Sort nodes.
+        #
+        self.calculate_code_coverage_and_sort_nodes(traceability_index)
 
     def create_requirement_with_forward_source_links(
         self, requirement: SDocNode
@@ -938,3 +860,122 @@ class FileTraceabilityIndex:
         marker.ng_source_line_begin = 1
         marker.ng_range_line_end = file_info.file_stats.lines_total
         return marker
+
+    def calculate_code_coverage_and_sort_nodes(
+        self, traceability_index: "TraceabilityIndex"
+    ) -> None:
+        """
+        Finalize code coverage and sort all nodes.
+
+        For each trace info object:
+        - Sort the markers according to their source location.
+        - Calculate coverage information.
+        """
+
+        for (
+            path,
+            traceability_info_,
+        ) in self.map_paths_to_source_file_traceability_info.items():
+
+            def marker_comparator_start(
+                marker: RelationMarkerType,
+            ) -> int:
+                assert marker.ng_range_line_begin is not None
+                return marker.ng_range_line_begin
+
+            sorted_markers = sorted(
+                traceability_info_.markers, key=marker_comparator_start
+            )
+
+            traceability_info_.markers = sorted_markers
+            # Finding how many lines are covered by the requirements in the file.
+            # Quick and dirty: https://stackoverflow.com/a/15273749/598057
+            merged_ranges: List[List[int]] = []
+            for marker_ in traceability_info_.markers:
+                assert isinstance(
+                    marker_,
+                    (
+                        FunctionRangeMarker,
+                        ForwardRangeMarker,
+                        RangeMarker,
+                        LineMarker,
+                    ),
+                ), marker_
+                if marker_.ng_is_nodoc:
+                    continue
+                if not marker_.is_begin():
+                    continue
+                begin, end = (
+                    assert_cast(marker_.ng_range_line_begin, int),
+                    assert_cast(marker_.ng_range_line_end, int),
+                )
+                if merged_ranges and merged_ranges[-1][1] >= (begin - 1):
+                    merged_ranges[-1][1] = max(merged_ranges[-1][1], end)
+                else:
+                    merged_ranges.append([begin, end])
+            coverage = 0
+            for merged_range in merged_ranges:
+                for line_ in range(merged_range[0], merged_range[1] + 1):
+                    if traceability_info_.file_stats.lines_info[line_]:
+                        coverage += 1
+
+            for function_ in traceability_info_.functions:
+                for merged_range in merged_ranges:
+                    if (
+                        function_.line_begin >= merged_range[0]
+                        and function_.line_end <= merged_range[1]
+                    ):
+                        traceability_info_.covered_functions += 1
+                        break
+
+            traceability_info_.set_coverage_stats(merged_ranges, coverage)
+
+            for (
+                req_uid_,
+                markers_,
+            ) in traceability_info_.ng_map_reqs_to_markers.items():
+
+                def marker_comparator_range(
+                    marker: RelationMarkerType,
+                ) -> Tuple[int, int]:
+                    assert marker.ng_range_line_begin is not None
+                    assert marker.ng_range_line_end is not None
+                    return marker.ng_range_line_begin, marker.ng_range_line_end
+
+                markers_.sort(key=marker_comparator_range)
+
+                # Validate here, SDocNode.relations doesn't track marker roles.
+                node = traceability_index.get_node_by_uid(req_uid_)
+                document = node.get_document()
+                assert document is not None
+                assert document.grammar is not None
+                grammar_element = document.grammar.elements_by_type[
+                    node.node_type
+                ]
+                for marker in markers_:
+                    # Backwards markers do not require referenced node grammar
+                    # to have the relation/role registered in the grammar.
+                    if isinstance(marker, (FunctionRangeMarker, RangeMarker)):
+                        continue
+
+                    if not grammar_element.has_relation_type_role(
+                        relation_type="File",
+                        relation_role=marker.role,
+                    ):
+                        raise StrictDocSemanticError.invalid_marker_role(
+                            node=node,
+                            marker=marker,
+                            path_to_src_file=path,
+                        )
+
+        # Sort by paths alphabetically.
+        for paths_with_role in self.map_reqs_uids_to_paths.values():
+            paths_with_role.sort()
+
+        # Sort by node UID alphabetically.
+        for path_requirements_ in self.map_paths_to_reqs.values():
+
+            def compare_sdocnode_by_uid(node_: SDocNode) -> str:
+                return assert_cast(node_.reserved_uid, str)
+
+            path_requirements_.sort(key=compare_sdocnode_by_uid)

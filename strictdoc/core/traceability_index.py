@@ -976,29 +976,6 @@ class TraceabilityIndex:
                     f"with incoming relations from:\n{nodes_list_message}."
                 )
 
-    def validate_can_create_uid(
-        self, uid: str, existing_node_mid: Optional[MID]
-    ) -> None:
-        assert isinstance(uid, str), uid
-        assert len(uid) > 0, uid
-
-        existing_node_with_uid: Union[SDocDocument, SDocNode, None] = (
-            self.get_node_by_uid_weak(uid)
-        )
-
-        if existing_node_with_uid is None:
-            return
-
-        if existing_node_mid is not None:
-            if existing_node_with_uid.reserved_mid == existing_node_mid:
-                return
-
-        raise SingleValidationError(
-            "UID uniqueness validation error: "
-            "There is already an existing node "
-            f"with this UID: {existing_node_with_uid.get_display_title()}."
-        )
-
     def clone_to_bundle_document(
         self, project_config: ProjectConfig
     ) -> Tuple["TraceabilityIndex", SDocDocument]:

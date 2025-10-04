@@ -204,24 +204,6 @@ class ExcelGenerator:
                             columns[field][MAX_WIDTH_KEY] = max(
                                 value_len, columns[field][MAX_WIDTH_KEY]
                             )
-                        elif hasattr(node, "special_fields"):
-                            if len(node.special_fields):
-                                for special_field in node.special_fields:
-                                    if (
-                                        special_field.field_name.upper()
-                                        == field_uc
-                                    ):
-                                        value = special_field.field_value
-                                        worksheet.write(row, idx, value)
-                                        if (
-                                            value
-                                            and len(value)
-                                            > columns[field][MAX_WIDTH_KEY]
-                                        ):
-                                            columns[field][MAX_WIDTH_KEY] = len(
-                                                value
-                                            )
-                                        break
 
                     row += 1
 

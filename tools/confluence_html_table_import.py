@@ -16,7 +16,6 @@ sys.path.append(STRICTDOC_ROOT_PATH)
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.writer import SDWriter
-from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.project_config import ProjectConfig
 
 
@@ -193,7 +192,7 @@ def main():
     sdoc = ConfluenceHTMLTableImport.import_from_file(path_to_input_html)
     print(sdoc)  # noqa: T201
 
-    project_config = ProjectConfig.default_config(SDocRuntimeEnvironment(__file__))
+    project_config = ProjectConfig.default_config()
     sdoc_content = SDWriter(project_config).write(sdoc)
     with open("output.sdoc", "w") as output_file:
         output_file.write(sdoc_content)

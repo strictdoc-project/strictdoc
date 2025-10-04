@@ -46,7 +46,6 @@ from typing import Dict, List
 
 import openpyxl
 
-from strictdoc import environment
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -231,7 +230,7 @@ class ECSS_EARM_Excel_Importer:
 
             ecss_document.section_contents.append(requirement_node)
 
-        project_config = ProjectConfig.default_config(environment)
+        project_config = ProjectConfig.default_config()
 
         ecss_output_dir = os.path.join(path_to_output_dir, "ecss")
         shutil.rmtree(ecss_output_dir, ignore_errors=True)

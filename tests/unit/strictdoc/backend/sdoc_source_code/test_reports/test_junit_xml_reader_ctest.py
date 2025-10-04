@@ -7,7 +7,6 @@ import tempfile
 
 import pytest
 
-from strictdoc import environment
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc_source_code.test_reports.junit_xml_reader import (
@@ -39,9 +38,7 @@ def test_01_ctest():
 </testsuite>
 """.lstrip()
 
-    project_config: ProjectConfig = ProjectConfig.default_config(
-        environment=environment
-    )
+    project_config: ProjectConfig = ProjectConfig.default_config()
 
     with tempfile.NamedTemporaryFile(
         mode="w+", delete=True, suffix=".ctest.junit.xml"
@@ -69,9 +66,7 @@ def test_01_ctest():
 def test__90__error_handling__empty_xml():
     source_input = ""
 
-    project_config: ProjectConfig = ProjectConfig.default_config(
-        environment=environment
-    )
+    project_config: ProjectConfig = ProjectConfig.default_config()
 
     with tempfile.NamedTemporaryFile(
         mode="w+", delete=True, suffix=".ctest.junit.xml"

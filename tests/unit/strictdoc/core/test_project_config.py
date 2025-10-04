@@ -1,6 +1,5 @@
 import pytest
 
-from strictdoc import environment
 from strictdoc.core.project_config import (
     ProjectConfigLoader,
     ProjectFeature,
@@ -14,7 +13,7 @@ def test_01_project_title():
 title = "StrictDoc Documentation"
 """
     project_config = ProjectConfigLoader.load_from_string(
-        toml_string=config_string, environment=environment
+        toml_string=config_string
     )
     assert project_config.project_title == "StrictDoc Documentation"
 
@@ -30,7 +29,7 @@ features = [
 ]
 """
     project_config = ProjectConfigLoader.load_from_string(
-        toml_string=config_string, environment=environment
+        toml_string=config_string
     )
     assert project_config.project_title == "StrictDoc Documentation"
     assert project_config.project_features == [
@@ -82,9 +81,7 @@ include_doc_paths = [
 """
 
     with pytest.raises(SyntaxError) as exc_info_:
-        _ = ProjectConfigLoader.load_from_string(
-            toml_string=config_string, environment=environment
-        )
+        _ = ProjectConfigLoader.load_from_string(toml_string=config_string)
 
     exception: SyntaxError = exc_info_.value
     assert exception.args[0] == (
@@ -104,9 +101,7 @@ exclude_doc_paths = [
 """
 
     with pytest.raises(SyntaxError) as exc_info_:
-        _ = ProjectConfigLoader.load_from_string(
-            toml_string=config_string, environment=environment
-        )
+        _ = ProjectConfigLoader.load_from_string(toml_string=config_string)
 
     exception: SyntaxError = exc_info_.value
     assert exception.args[0] == (
@@ -126,9 +121,7 @@ include_source_paths = [
 """
 
     with pytest.raises(SyntaxError) as exc_info_:
-        _ = ProjectConfigLoader.load_from_string(
-            toml_string=config_string, environment=environment
-        )
+        _ = ProjectConfigLoader.load_from_string(toml_string=config_string)
 
     exception: SyntaxError = exc_info_.value
     assert exception.args[0] == (
@@ -148,9 +141,7 @@ exclude_source_paths = [
 """
 
     with pytest.raises(SyntaxError) as exc_info_:
-        _ = ProjectConfigLoader.load_from_string(
-            toml_string=config_string, environment=environment
-        )
+        _ = ProjectConfigLoader.load_from_string(toml_string=config_string)
 
     exception: SyntaxError = exc_info_.value
     assert exception.args[0] == (
@@ -169,9 +160,7 @@ host = "BAD$$$HOST"
 """
 
     with pytest.raises(ValueError) as exc_info_:
-        _ = ProjectConfigLoader.load_from_string(
-            toml_string=config_string, environment=environment
-        )
+        _ = ProjectConfigLoader.load_from_string(toml_string=config_string)
 
     exception: ValueError = exc_info_.value
     assert exception.args[0] == (
@@ -189,9 +178,7 @@ port = 1234567
 """
 
     with pytest.raises(ValueError) as exc_info_:
-        _ = ProjectConfigLoader.load_from_string(
-            toml_string=config_string, environment=environment
-        )
+        _ = ProjectConfigLoader.load_from_string(toml_string=config_string)
 
     exception: ValueError = exc_info_.value
     assert exception.args[0] == (
@@ -208,9 +195,7 @@ chromedriver = "DOES_NOT_EXIST"
 """
 
     with pytest.raises(ValueError) as exc_info_:
-        _ = ProjectConfigLoader.load_from_string(
-            toml_string=config_string, environment=environment
-        )
+        _ = ProjectConfigLoader.load_from_string(toml_string=config_string)
 
     exception: ValueError = exc_info_.value
     assert exception.args[0] == (
@@ -227,9 +212,7 @@ html2pdf_template = "DOES_NOT_EXIST"
 """
 
     with pytest.raises(ValueError) as exc_info_:
-        _ = ProjectConfigLoader.load_from_string(
-            toml_string=config_string, environment=environment
-        )
+        _ = ProjectConfigLoader.load_from_string(toml_string=config_string)
 
     exception: ValueError = exc_info_.value
     assert exception.args[0] == (

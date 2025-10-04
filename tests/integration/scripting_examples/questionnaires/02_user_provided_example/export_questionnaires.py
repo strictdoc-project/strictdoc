@@ -4,7 +4,6 @@ from typing import Optional
 
 import xlsxwriter
 
-from strictdoc import environment
 from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -125,7 +124,8 @@ if __name__ == "__main__":
 
     export_config: ExportCommandConfig = parser.get_export_config()
     project_config = ProjectConfigLoader.load_from_path_or_get_default(
-        path_to_config=export_config.get_path_to_config(), environment=environment)
+        path_to_config=export_config.get_path_to_config()
+    )
     project_config.integrate_export_config(export_config)
 
     parallelizer = Parallelizer.create(False)

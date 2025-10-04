@@ -3,7 +3,6 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 
-from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.server.app import create_app
@@ -21,9 +20,7 @@ def project_config():
         host="127.0.0.1",
         port=8001,
     )
-    project_config: ProjectConfig = ProjectConfig.default_config(
-        environment=environment
-    )
+    project_config: ProjectConfig = ProjectConfig.default_config()
     project_config.integrate_server_config(server_config)
     return project_config
 

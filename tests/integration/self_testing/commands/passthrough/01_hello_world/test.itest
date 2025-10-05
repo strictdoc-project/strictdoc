@@ -1,5 +1,3 @@
-REQUIRES: PYTHON_39_OR_HIGHER
-
 RUN: cd "%strictdoc_root/" && %strictdoc passthrough "%strictdoc_root/" --output-dir="%T/"
 
 RUN: %diff "%strictdoc_root/docs/strictdoc_01_user_guide.sdoc" "%T/sdoc/docs/strictdoc_01_user_guide.sdoc"

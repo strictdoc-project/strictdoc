@@ -25,7 +25,7 @@ dynamic = ["version"]
 description = "StrictDoc is open-source software for technical documentation and requirements management."
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 authors = [
     { name = "Stanislav Pankevich", email = "s.pankevich@gmail.com" },
     { name = "Maryna Balioura", email = "mettta@gmail.com" },
@@ -34,7 +34,6 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -54,7 +53,7 @@ dependencies = [
     "toml",
 
     # Parsing and rendering RST.
-    "docutils >= 0.16, == 0.*",
+    "docutils >= 0.22.2, == 0.*",
 
     # Tree Sitter is used for language/AST-aware parsing of Python, C and other files.
     "tree-sitter",

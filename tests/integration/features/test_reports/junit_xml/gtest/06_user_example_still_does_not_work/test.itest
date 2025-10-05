@@ -1,8 +1,6 @@
 # This test mainly verifies that the test results are resolved for multiple test
 # cases and multiple files.
 
-REQUIRES: PYTHON_39_OR_HIGHER
-
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 
 # Ensure that the test report document is generated.

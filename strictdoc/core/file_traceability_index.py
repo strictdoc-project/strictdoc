@@ -45,7 +45,6 @@ from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.google_test import convert_function_name_to_gtest_macro
 from strictdoc.helpers.ordered_set import OrderedSet
-from strictdoc.helpers.removeprefix import removeprefix
 
 if TYPE_CHECKING:
     from strictdoc.core.traceability_index import (
@@ -259,7 +258,7 @@ class FileTraceabilityIndex:
 
                     functions: List[Function]
                     if test_function.startswith("#GTEST#"):
-                        test_function = removeprefix(test_function, "#GTEST#")
+                        test_function = test_function.removeprefix("#GTEST#")
                         possible_gtest_functions = (
                             convert_function_name_to_gtest_macro(test_function)
                         )

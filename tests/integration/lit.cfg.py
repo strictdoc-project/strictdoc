@@ -1,7 +1,6 @@
 # ruff: noqa: F821
 
 import os
-import sys
 from typing import Any
 
 import lit.formats
@@ -76,9 +75,6 @@ config.substitutions.append(
 )
 
 config.suffixes = [".itest"]
-
-if sys.version_info >= (3, 9):
-    config.available_features.add("PYTHON_39_OR_HIGHER")
 
 config.is_windows = lit_config.isWindows
 if not lit_config.isWindows:

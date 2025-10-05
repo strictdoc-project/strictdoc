@@ -2,8 +2,6 @@
 # specifications is not written back to file system when auto-uid command
 # is executed.
 
-REQUIRES: PYTHON_39_OR_HIGHER
-
 RUN: cp -r %S/* ./
 RUN: %strictdoc manage auto-uid .
 

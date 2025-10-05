@@ -1135,3 +1135,43 @@ def test_docker(context, image: str = "strictdoc:latest"):
 def qualification(context):
     test_all(context, coverage=True, headless=True)
     coverage_combine(context)
+
+
+@task()
+def drawio(context):
+    path_to_drawio = "/Applications/draw.io.app/Contents/MacOS/draw.io"
+
+    artifacts = [
+        (
+            "developer/drawio/Architecture.drawio",
+            "docs/_assets/StrictDoc_Workspace-Architecture.drawio.png",
+        ),
+        (
+            "developer/drawio/Backlog.drawio",
+            "docs/_assets/StrictDoc_Workspace-Backlog.drawio.png",
+        ),
+        (
+            "developer/drawio/Roadmap.drawio",
+            "docs/_assets/StrictDoc_Workspace-Roadmap.drawio.png",
+        ),
+    ]
+
+    for path_to_drawio_, path_to_png_ in artifacts:
+        print(f"Copying: {path_to_drawio_} -> {path_to_png_}")  # noqa: T201
+
+        # Basic safety for now to avoid writing wrong files.
+        os.path.isfile(path_to_drawio_), path_to_drawio_
+        os.path.isfile(path_to_png_), path_to_png_
+
+        run_invoke(
+            context,
+            f"""
+            {path_to_drawio}
+                --export
+                --format png
+                -o {path_to_png_}
+                --page-index 0
+                {path_to_drawio_}
+            """,
+            pty=True,
+        )

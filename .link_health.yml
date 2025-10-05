@@ -33,3 +33,4 @@ exceptions:
   - url: https://github.com/doorstop-dev/doorstop/blob/804153c67c7c5466ee94e9553118cc3df03a56f9/reqs/REQ001.yml
   - url: https://github.com/tiangolo/fastapi/blob/master/LICENSE
   - url: https://github.com/strictdoc-project/strictdoc/blob/main/about/2025_ESA_SW_Product_Assurance_Workshop.pdf
+  - url: https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/core/project_config.py

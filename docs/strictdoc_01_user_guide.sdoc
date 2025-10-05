@@ -3181,12 +3181,22 @@ If the ``output-dir`` option is not provided, the ``output/`` folder is the defa
 
 [[SECTION]]
 MID: 17a8adb92c8d4e7992e869355e73912d
-TITLE: Options
+TITLE: Configuration
+
+[TEXT]
+MID: 1b42e7a029f5452abbf1fe35411f8e3d
+STATEMENT: >>>
+.. warning::
+
+    StrictDoc is migrating from TOML to Python for its configuration files, see the migration note: [LINK: SECTION-UG-MIGRATE-CONFIG-2025-Q4].
+
+Once the new Python configuration syntax has been sufficiently tested, using TOML will trigger deprecation warnings. The removal of TOML support is expected to take place in 2026-Q1.
+<<<
 
 [[SECTION]]
 MID: 05f82bdf26f141738d2f511133633a2d
 UID: SDOC_UG_OPTIONS_PROJECT_LEVEL
-TITLE: Project-level options
+TITLE: Project-level configuration
 
 [TEXT]
 MID: 6449098df878484fbe8aed8a8b0e9a97
@@ -4420,6 +4430,56 @@ Additionally, when the section behavior is specified to ``[[SECTION]]``, the UI 
 <<<
 
 [[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: d20ff7cbf64f4db7afb6c82b70445e55
+UID: SECTION-UG-MIGRATE-CONFIG-2025-Q4
+TITLE: Migrating StrictDoc Configuration: Python Replaces TOML (2025 Q4)
+
+[TEXT]
+MID: f72351be40d84f23970f93720c3625c7
+STATEMENT: >>>
+Until 2025-Q4, StrictDoc has been using TOML for its ``strictdoc.toml`` configuration file.
+
+Since 2025-Q4, the new configuration format moving forward is Python. Once the new Python configuration syntax has been sufficiently tested, using TOML will trigger deprecation warnings. The removal of TOML support is expected to take place in 2026-Q1.
+
+The rationale for this change is that configuring StrictDoc with a Python file provides greater flexibility for users who need to:
+
+- Create custom generators
+- Remove existing generators
+- Customize requirement and document tree validations
+- Customize project statistics
+
+With a configuration file written directly in Python, it becomes much easier for users to inject their own Python code into StrictDoc’s traceability pipeline. Achieving the same with TOML would require additional layers of indirection.
+
+Instead of using ``strictdoc.toml``, the new approach includes ``strictdoc_config.py`` with the following syntax:
+
+.. code-block:: py
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="StrictDoc Documentation",
+            dir_for_sdoc_assets="assets",
+            dir_for_sdoc_cache="output/_cache",
+            project_features=[
+                "TRACEABILITY_SCREEN",
+                "SEARCH",
+            ],
+            # ...
+        )
+        return config
+
+All TOML configuration options specified in StrictDoc’s documentation are still valid but must be migrated to their Python equivalents.
+
+See `StrictDoc's own config file <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/core/project_config.py>`_ for a realistic example.
+
+Refer to the `ProjectConfig <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/core/project_config.py>`_ class for a complete overview of all available options.
+<<<
 
 [[/SECTION]]
 

@@ -1,6 +1,5 @@
 import os
 
-from strictdoc import environment
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
@@ -28,7 +27,7 @@ def test_01():
      - Row 2, column 3
 """.lstrip()
 
-    project_config = ProjectConfig.default_config(environment=environment)
+    project_config = ProjectConfig.default_config()
     html_output = RstToHtmlFragmentWriter(
         context_document=None, project_config=project_config
     ).write(rst_input)
@@ -40,7 +39,7 @@ def test_02():
 - First item is a bullet point.
 """.lstrip()
 
-    project_config = ProjectConfig.default_config(environment=environment)
+    project_config = ProjectConfig.default_config()
     html_output = RstToHtmlFragmentWriter(
         context_document=None, project_config=project_config
     ).write(rst_input)
@@ -52,7 +51,7 @@ def test_image_01():
 .. image:: _assets/picture.svg
 """.lstrip()
 
-    project_config = ProjectConfig.default_config(environment=environment)
+    project_config = ProjectConfig.default_config()
     html_output = RstToHtmlFragmentWriter(
         context_document=None, project_config=project_config
     ).write(rst_input)
@@ -83,7 +82,7 @@ def test_with_validation_01_tables():
      - Row 2, column 3
 """.lstrip()
 
-    project_config = ProjectConfig.default_config(environment=environment)
+    project_config = ProjectConfig.default_config()
     html_output, _ = RstToHtmlFragmentWriter(
         context_document=None, project_config=project_config
     ).write_with_validation(rst_input)
@@ -98,7 +97,7 @@ def test_with_validation_02_warning_message():
   ---
 """.lstrip()
 
-    project_config = ProjectConfig.default_config(environment=environment)
+    project_config = ProjectConfig.default_config()
     html_output, error = RstToHtmlFragmentWriter(
         context_document=None, project_config=project_config
     ).write_with_validation(rst_input)
@@ -120,7 +119,7 @@ Hello. What nex?
   ----
 """.lstrip()
 
-    project_config = ProjectConfig.default_config(environment=environment)
+    project_config = ProjectConfig.default_config()
     html_output, error = RstToHtmlFragmentWriter(
         context_document=None, project_config=project_config
     ).write_with_validation(rst_input)

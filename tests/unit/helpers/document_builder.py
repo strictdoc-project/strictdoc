@@ -2,7 +2,6 @@ import os
 import tempfile
 from typing import Optional
 
-from strictdoc import environment
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -21,9 +20,7 @@ from strictdoc.helpers.paths import SDocRelativePath
 
 class DocumentBuilder:
     def __init__(self, uid="DOC-1"):
-        self.project_config: ProjectConfig = ProjectConfig.default_config(
-            environment
-        )
+        self.project_config: ProjectConfig = ProjectConfig.default_config()
         self.document: SDocDocument = self._create_empty_document(
             self.project_config, uid
         )

@@ -62,7 +62,6 @@ def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
             raise exception_
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=export_config.get_path_to_config(),
-            environment=environment,
         )
         project_config.integrate_export_config(export_config)
 
@@ -86,7 +85,6 @@ def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
             raise exception_
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=server_config.get_path_to_config(),
-            environment=environment,
         )
         run_strictdoc_server(
             server_config=server_config, project_config=project_config
@@ -95,7 +93,6 @@ def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
     elif parser.is_import_command_reqif:
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=os.getcwd(),
-            environment=environment,
         )
         import_reqif_config: ImportReqIFCommandConfig = (
             parser.get_import_config_reqif(environment.path_to_strictdoc)
@@ -106,7 +103,6 @@ def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
     elif parser.is_import_command_excel:
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=os.getcwd(),
-            environment=environment,
         )
         import_excel_config: ImportExcelCommandConfig = (
             parser.get_import_config_excel(environment.path_to_strictdoc)
@@ -125,7 +121,6 @@ def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
 
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=manage_config.get_path_to_config(),
-            environment=environment,
         )
         # FIXME: This must be improved.
         project_config.input_paths = [manage_config.input_path]
@@ -153,7 +148,6 @@ def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
         diff_config: DiffCommandConfig = parser.get_diff_config()
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=os.getcwd(),
-            environment=environment,
         )
         DiffCommand.execute(
             project_config=project_config, diff_config=diff_config

@@ -1,4 +1,3 @@
-from strictdoc import environment
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementRelationChild,
     GrammarElementRelationParent,
@@ -69,7 +68,7 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
         node_info=UpdateNodeInfo(requirement2),
         context_document=document_1,
         traceability_index=traceability_index,
-        project_config=ProjectConfig.default_config(environment),
+        project_config=ProjectConfig.default_config(),
     )
     update_command.perform()
 
@@ -137,7 +136,7 @@ def test_02_single_document_add_second_parent_relation_with_role():
         node_info=UpdateNodeInfo(requirement2),
         context_document=document_1,
         traceability_index=traceability_index,
-        project_config=ProjectConfig.default_config(environment),
+        project_config=ProjectConfig.default_config(),
     )
     update_command.perform()
     assert len(requirement2.relations) == 1
@@ -229,7 +228,7 @@ def test_20_single_document_add_second_child_relation_with_role():
         node_info=UpdateNodeInfo(requirement2),
         context_document=document_1,
         traceability_index=traceability_index,
-        project_config=ProjectConfig.default_config(environment),
+        project_config=ProjectConfig.default_config(),
     )
     update_command.perform()
 
@@ -314,7 +313,7 @@ def test_25_single_document_remove_child_relation():
         node_info=UpdateNodeInfo(requirement2),
         context_document=document_1,
         traceability_index=traceability_index,
-        project_config=ProjectConfig.default_config(environment),
+        project_config=ProjectConfig.default_config(),
     )
     update_command.perform()
 
@@ -370,7 +369,7 @@ def test_26_two_documents_remove_child_relation():
     traceability_index: TraceabilityIndex = (
         TraceabilityIndexBuilder.create_from_document_tree(
             document_tree,
-            project_config=ProjectConfig.default_config(environment),
+            project_config=ProjectConfig.default_config(),
         )
     )
     traceability_index.document_tree = document_tree
@@ -395,7 +394,7 @@ def test_26_two_documents_remove_child_relation():
         node_info=UpdateNodeInfo(requirement2),
         context_document=document_1,
         traceability_index=traceability_index,
-        project_config=ProjectConfig.default_config(environment),
+        project_config=ProjectConfig.default_config(),
     )
     update_command.perform()
 

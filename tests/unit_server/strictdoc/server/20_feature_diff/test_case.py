@@ -3,7 +3,6 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 
-from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.server.app import create_app
@@ -24,7 +23,6 @@ def project_config():
     )
     project_config: ProjectConfig = ProjectConfigLoader.load_from_path_or_get_default(
         path_to_config=PATH_TO_CONFIG,
-        environment=environment
     )
     project_config.integrate_server_config(server_config)
     return project_config

@@ -3,12 +3,13 @@ import os
 import re
 import sys
 import tempfile
+import types
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
 import toml
 
-from strictdoc import __version__
+from strictdoc import __version__, environment
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.cli.cli_arg_parser import (
@@ -20,6 +21,7 @@ from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.md5 import get_md5
+from strictdoc.helpers.module import import_from_path
 from strictdoc.helpers.net import is_valid_host
 from strictdoc.helpers.path_filter import validate_mask
 
@@ -64,8 +66,7 @@ class ProjectFeature(str, Enum):
         return list(map(lambda c: c.value, ProjectFeature))
 
 
-@auto_described
-class ProjectConfig:
+class ProjectConfigDefault:
     DEFAULT_PROJECT_TITLE = "Untitled Project"
     DEFAULT_DIR_FOR_SDOC_ASSETS = "_static"
     DEFAULT_DIR_FOR_SDOC_CACHE = "output/_cache"
@@ -82,43 +83,50 @@ class ProjectConfig:
     DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE = "@GIT_COMMIT_DATETIME"
     DEFAULT_SECTION_BEHAVIOR = "[SECTION]"
 
+
+@auto_described
+class ProjectConfig:
     def __init__(
         self,
-        environment: SDocRuntimeEnvironment,
-        project_title: str,
-        dir_for_sdoc_assets: str,
-        dir_for_sdoc_cache: str,
-        project_features: List[str],
-        server_host: str,
-        server_port: int,
-        include_doc_paths: List[str],
-        exclude_doc_paths: List[str],
-        source_root_path: Optional[str],
-        include_source_paths: List[str],
-        exclude_source_paths: List[str],
-        test_report_root_dict: Dict[str, str],
-        source_nodes: List[Dict[str, str]],
-        html2pdf_strict: bool,
-        html2pdf_template: Optional[str],
-        bundle_document_version: Optional[str],
-        bundle_document_date: Optional[str],
+        project_title: str = ProjectConfigDefault.DEFAULT_PROJECT_TITLE,
+        dir_for_sdoc_assets: str = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_ASSETS,
+        dir_for_sdoc_cache: str = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE,
+        project_features: Optional[List[str]] = None,
+        server_host: str = ProjectConfigDefault.DEFAULT_SERVER_HOST,
+        server_port: int = ProjectConfigDefault.DEFAULT_SERVER_PORT,
+        include_doc_paths: Optional[List[str]] = None,
+        exclude_doc_paths: Optional[List[str]] = None,
+        source_root_path: Optional[str] = None,
+        include_source_paths: Optional[List[str]] = None,
+        exclude_source_paths: Optional[List[str]] = None,
+        test_report_root_dict: Optional[Dict[str, str]] = None,
+        source_nodes: Optional[List[Dict[str, str]]] = None,
+        html2pdf_strict: bool = False,
+        html2pdf_template: Optional[str] = None,
+        bundle_document_version: Optional[
+            str
+        ] = ProjectConfigDefault.DEFAULT_BUNDLE_DOCUMENT_VERSION,
+        bundle_document_date: Optional[
+            str
+        ] = ProjectConfigDefault.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE,
         traceability_matrix_relation_columns: Optional[
             List[Tuple[str, Optional[str]]]
-        ],
-        reqif_profile: str,
-        reqif_multiline_is_xhtml: bool,
-        reqif_enable_mid: bool,
-        reqif_import_markup: Optional[str],
-        config_last_update: Optional[datetime.datetime],
-        chromedriver: Optional[str],
-        section_behavior: Optional[str],
-        statistics_generator: Optional[str],
+        ] = None,
+        reqif_profile: str = ReqIFProfile.P01_SDOC,
+        # FIXME: Change to true by default.
+        reqif_multiline_is_xhtml: bool = False,
+        # FIXME: Change to true by default.
+        reqif_enable_mid: bool = False,
+        reqif_import_markup: Optional[str] = None,
+        chromedriver: Optional[str] = None,
+        # FIXME: The section_behavior field will be removed by the end of 2025-Q4.
+        section_behavior: Optional[
+            str
+        ] = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR,
+        statistics_generator: Optional[str] = None,
+        # Reserved for StrictDoc's internal use.
+        _config_last_update: Optional[datetime.datetime] = None,
     ) -> None:
-        assert isinstance(environment, SDocRuntimeEnvironment)
-        if source_root_path is not None:
-            assert os.path.isdir(source_root_path), source_root_path
-            assert os.path.isabs(source_root_path), source_root_path
-
         self.environment: SDocRuntimeEnvironment = environment
 
         # Settings obtained from the strictdoc.toml config file.
@@ -145,16 +153,37 @@ class ProjectConfig:
 
         self.dir_for_sdoc_cache: str = dir_for_sdoc_cache
 
-        self.project_features: List[str] = project_features
+        self.project_features: List[str] = (
+            project_features
+            if project_features is not None
+            else ProjectConfigDefault.DEFAULT_FEATURES
+        )
         self.server_host: str = server_host
         self.server_port: int = server_port
-        self.include_doc_paths: List[str] = include_doc_paths
-        self.exclude_doc_paths: List[str] = exclude_doc_paths
+        self.include_doc_paths: List[str] = (
+            include_doc_paths if include_doc_paths is not None else []
+        )
+        self.exclude_doc_paths: List[str] = (
+            exclude_doc_paths if exclude_doc_paths is not None else []
+        )
+
+        if source_root_path is not None:
+            assert os.path.isdir(source_root_path), source_root_path
+            assert os.path.isabs(source_root_path), source_root_path
         self.source_root_path: Optional[str] = source_root_path
-        self.include_source_paths: List[str] = include_source_paths
-        self.exclude_source_paths: List[str] = exclude_source_paths
-        self.test_report_root_dict: Dict[str, str] = test_report_root_dict
-        self.source_nodes: List[Dict[str, str]] = source_nodes
+
+        self.include_source_paths: List[str] = (
+            include_source_paths if include_source_paths is not None else []
+        )
+        self.exclude_source_paths: List[str] = (
+            exclude_source_paths if exclude_source_paths is not None else []
+        )
+        self.test_report_root_dict: Dict[str, str] = (
+            test_report_root_dict if test_report_root_dict is not None else {}
+        )
+        self.source_nodes: List[Dict[str, str]] = (
+            source_nodes if source_nodes is not None else []
+        )
 
         # Settings derived from the command-line parameters.
 
@@ -201,48 +230,20 @@ class ProjectConfig:
         self.auto_uid_mode = False
         self.autouuid_include_sections: bool = False
 
-        self.config_last_update: Optional[datetime.datetime] = (
-            config_last_update
-        )
-        self.is_running_on_server: bool = False
         self.view: Optional[str] = None
         self.chromedriver: Optional[str] = chromedriver
         self.section_behavior: Optional[str] = section_behavior
 
         self.statistics_generator: Optional[str] = statistics_generator
 
-    @staticmethod
-    def default_config(environment: SDocRuntimeEnvironment) -> "ProjectConfig":
-        assert isinstance(environment, SDocRuntimeEnvironment)
-        return ProjectConfig(
-            environment=environment,
-            project_title=ProjectConfig.DEFAULT_PROJECT_TITLE,
-            dir_for_sdoc_assets=ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS,
-            dir_for_sdoc_cache=ProjectConfig.DEFAULT_DIR_FOR_SDOC_CACHE,
-            project_features=ProjectConfig.DEFAULT_FEATURES,
-            server_host=ProjectConfig.DEFAULT_SERVER_HOST,
-            server_port=ProjectConfig.DEFAULT_SERVER_PORT,
-            include_doc_paths=[],
-            exclude_doc_paths=[],
-            source_root_path=None,
-            include_source_paths=[],
-            exclude_source_paths=[],
-            test_report_root_dict={},
-            source_nodes=[],
-            html2pdf_strict=False,
-            html2pdf_template=None,
-            bundle_document_version=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION,
-            bundle_document_date=ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE,
-            traceability_matrix_relation_columns=None,
-            reqif_profile=ReqIFProfile.P01_SDOC,
-            reqif_multiline_is_xhtml=False,
-            reqif_enable_mid=False,
-            reqif_import_markup=None,
-            config_last_update=None,
-            chromedriver=None,
-            section_behavior=ProjectConfig.DEFAULT_SECTION_BEHAVIOR,
-            statistics_generator=None,
+        self.config_last_update: Optional[datetime.datetime] = (
+            _config_last_update
         )
+        self.is_running_on_server: bool = False
+
+    @staticmethod
+    def default_config() -> "ProjectConfig":
+        return ProjectConfig()
 
     # Some server command settings can override the project config settings.
     def integrate_server_config(
@@ -269,7 +270,7 @@ class ProjectConfig:
             # If a custom cache folder is not specified in the config, adjust the
             # cache folder to be located in the output folder.
             if self.dir_for_sdoc_cache.startswith(
-                ProjectConfig.DEFAULT_DIR_FOR_SDOC_CACHE
+                ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE
             ):
                 self.dir_for_sdoc_cache = os.path.join(
                     output_dir_, "_cache", __version__
@@ -308,7 +309,7 @@ class ProjectConfig:
         # If a custom cache folder is not specified in the config, adjust the
         # cache folder to be located in the output folder.
         if self.dir_for_sdoc_cache.startswith(
-            ProjectConfig.DEFAULT_DIR_FOR_SDOC_CACHE
+            ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE
         ):
             self.dir_for_sdoc_cache = os.path.join(
                 output_dir, "_cache", __version__
@@ -444,14 +445,24 @@ class ProjectConfigLoader:
     def load_from_path_or_get_default(
         *,
         path_to_config: str,
-        environment: SDocRuntimeEnvironment,
     ) -> ProjectConfig:
         if not os.path.exists(path_to_config):
-            return ProjectConfig.default_config(environment=environment)
+            return ProjectConfig.default_config()
         if os.path.isdir(path_to_config):
-            path_to_config = os.path.join(path_to_config, "strictdoc.toml")
+            path_to_config_dir = path_to_config
+            path_to_config = os.path.join(path_to_config_dir, "strictdoc.toml")
+            if not os.path.isfile(path_to_config):
+                path_to_config = os.path.join(
+                    path_to_config_dir, "strictdoc_config.py"
+                )
+
         if not os.path.isfile(path_to_config):
-            return ProjectConfig.default_config(environment=environment)
+            return ProjectConfig.default_config()
+
+        if path_to_config.endswith("strictdoc_config.py"):
+            return ProjectConfigLoader.load_from_python(
+                config_py_path=path_to_config
+            )
 
         try:
             config_content = toml.load(path_to_config)
@@ -467,19 +478,26 @@ class ProjectConfigLoader:
 
         return ProjectConfigLoader._load_from_dictionary(
             config_dict=config_content,
-            environment=environment,
             config_last_update=config_last_update,
             path_to_config=path_to_config,
         )
 
     @staticmethod
-    def load_from_string(
-        *, toml_string: str, environment: SDocRuntimeEnvironment
-    ) -> ProjectConfig:
+    def load_from_python(*, config_py_path: str) -> ProjectConfig:
+        module = import_from_path(config_py_path)
+        create_config_function = module.create_config
+        assert isinstance(create_config_function, types.FunctionType), type(
+            create_config_function
+        )
+        project_config = create_config_function()
+        assert isinstance(project_config, ProjectConfig)
+        return project_config
+
+    @staticmethod
+    def load_from_string(*, toml_string: str) -> ProjectConfig:
         config_dict = toml.loads(toml_string)
         return ProjectConfigLoader._load_from_dictionary(
             config_dict=config_dict,
-            environment=environment,
             config_last_update=None,
             path_to_config=None,
         )
@@ -488,7 +506,6 @@ class ProjectConfigLoader:
     def _load_from_dictionary(
         *,
         config_dict: Dict[str, Any],
-        environment: SDocRuntimeEnvironment,
         config_last_update: Optional[datetime.datetime],
         path_to_config: Optional[str],
     ) -> ProjectConfig:
@@ -496,12 +513,12 @@ class ProjectConfigLoader:
             assert os.path.isfile(path_to_config), path_to_config
             path_to_config = os.path.abspath(path_to_config)
 
-        project_title = ProjectConfig.DEFAULT_PROJECT_TITLE
-        dir_for_sdoc_assets = ProjectConfig.DEFAULT_DIR_FOR_SDOC_ASSETS
-        dir_for_sdoc_cache = ProjectConfig.DEFAULT_DIR_FOR_SDOC_CACHE
-        project_features = ProjectConfig.DEFAULT_FEATURES
-        server_host = ProjectConfig.DEFAULT_SERVER_HOST
-        server_port = ProjectConfig.DEFAULT_SERVER_PORT
+        project_title = ProjectConfigDefault.DEFAULT_PROJECT_TITLE
+        dir_for_sdoc_assets = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_ASSETS
+        dir_for_sdoc_cache = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE
+        project_features = ProjectConfigDefault.DEFAULT_FEATURES
+        server_host = ProjectConfigDefault.DEFAULT_SERVER_HOST
+        server_port = ProjectConfigDefault.DEFAULT_SERVER_PORT
         include_doc_paths: List[str] = []
         exclude_doc_paths: List[str] = []
         source_root_path = None
@@ -511,8 +528,12 @@ class ProjectConfigLoader:
         source_nodes: List[Dict[str, str]] = []
         html2pdf_strict: bool = False
         html2pdf_template: Optional[str] = None
-        bundle_document_version = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_VERSION
-        bundle_document_date = ProjectConfig.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE
+        bundle_document_version = (
+            ProjectConfigDefault.DEFAULT_BUNDLE_DOCUMENT_VERSION
+        )
+        bundle_document_date = (
+            ProjectConfigDefault.DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE
+        )
 
         traceability_matrix_relation_columns: Optional[
             List[Tuple[str, Optional[str]]]
@@ -523,7 +544,7 @@ class ProjectConfigLoader:
         reqif_import_markup: Optional[str] = None
         chromedriver: Optional[str] = None
 
-        section_behavior: str = ProjectConfig.DEFAULT_SECTION_BEHAVIOR
+        section_behavior: str = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR
         statistics_generator: Optional[str] = None
 
         if "project" in config_dict:
@@ -758,7 +779,6 @@ class ProjectConfigLoader:
                 )
 
         return ProjectConfig(
-            environment=environment,
             project_title=project_title,
             dir_for_sdoc_assets=dir_for_sdoc_assets,
             dir_for_sdoc_cache=dir_for_sdoc_cache,
@@ -781,8 +801,8 @@ class ProjectConfigLoader:
             reqif_multiline_is_xhtml=reqif_multiline_is_xhtml,
             reqif_enable_mid=reqif_enable_mid,
             reqif_import_markup=reqif_import_markup,
-            config_last_update=config_last_update,
             chromedriver=chromedriver,
             section_behavior=section_behavior,
             statistics_generator=statistics_generator,
+            _config_last_update=config_last_update,
         )

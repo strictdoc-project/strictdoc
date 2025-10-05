@@ -54,3 +54,6 @@ strictdoc/export/html2pdf/.wdm
 
 ### Test reports
 reports/
+
+### Draw.io
+.*.drawio.bkp

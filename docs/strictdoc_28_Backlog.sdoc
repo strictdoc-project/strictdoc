@@ -1,6 +1,7 @@
 [DOCUMENT]
 MID: cabef7629dda4f2fb34255d01fea8d5f
 TITLE: StrictDoc Backlog
+UID: SDOC_BACKLOG
 VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
 DATE: @GIT_COMMIT_DATETIME
 PREFIX: SDOC-BACKLOG-
@@ -99,6 +100,12 @@ StrictDoc shall not implement the real-time editing capability to its web interf
 RATIONALE: >>>
 The real-time editing feature is hard to achieve with a small part-time involvement from the development team. This requirement can only be reconsidered, if StrictDoc would experience a significant increase in the development power.
 <<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 17cc0a3e936b45e581de5ed57bcba801
+TITLE: Backlog high-level overview
 
 [[/SECTION]]
 

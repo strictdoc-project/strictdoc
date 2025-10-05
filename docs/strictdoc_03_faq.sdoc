@@ -382,7 +382,15 @@ TITLE: How long has the StrictDoc project been around?
 [TEXT]
 MID: 47d60404cf574aebb8c83795589c4137
 STATEMENT: >>>
-The first StrictDoc commit dates back to ``2019-08-10``. A short development chronology of StrictDoc is as follows:
+.. note::
+
+    The complete list of the project milestones is maintained in the Development Plan: [LINK: SECTION-DP-Project-milestones].
+
+Below is a brief chronology of the early development of StrictDoc.
+
+----
+
+The first StrictDoc commit dates back to ``2019-08-10``.
 
 **2019 – July – August**
 
@@ -406,12 +414,6 @@ The result of these efforts was the realization that a text-based requirements a
 **2020 – July**
 
 The custom RST parser was replaced with a TextX-based DSL. Since then, StrictDoc has been using TextX for parsing SDoc files.
-
-**2022 – November**
-
-The FastAPI/Turbo/Stimulus-based Web interface prototype was created to complement the text-based interface with a graphical user interface (GUI). When the Web-based GUI is stable, StrictDoc may become useable by non-programmers too.
-
-See also: [LINK: SECTION-DP-Project-milestones].
 <<<
 
 [[/SECTION]]

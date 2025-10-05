@@ -81,6 +81,18 @@ StrictDoc shall be compatible with other software and engineering tools. This in
 [[/SECTION]]
 
 [[SECTION]]
+MID: 10fba42c4c444be89823d82944f7326f
+TITLE: Roadmap
+
+[TEXT]
+MID: ae3ab626e10a4aff9b7748bee75fd816
+STATEMENT: >>>
+All StrictDoc work is tracked on GitHub via the `StrictDoc issues <https://github.com/strictdoc-project/strictdoc/issues>`_ and `StrictDoc Pull Requests <https://github.com/strictdoc-project/strictdoc/pulls>`_ on GitHub.
+
+As an open-source project, StrictDoc is developed without strict deadlines. However, there are certain high-level priorities that influence its development. In particular, features aligned with the core roadmap and those strongly requested by active users are usually given the highest priority. StrictDoc also benefits from contributions by users who want a particular feature and are willing to develop it themselves.
+<<<
+
+[[SECTION]]
 MID: f1e3c17829fd4eebbd390fceaeb95619
 UID: SECTION-DP-Project-milestones
 TITLE: Project milestones
@@ -88,7 +100,7 @@ TITLE: Project milestones
 [TEXT]
 MID: fd9294fdd2b546de993f649767371394
 STATEMENT: >>>
-As an open-source project, StrictDoc is developed without strict deadlines, however there are certain high-level priorities that influence the development. The work is loosely organized in quarters.
+The work is loosely organized in quarters which are maintained as `GitHub milestones <https://github.com/strictdoc-project/strictdoc/milestones>`_, such as 2025-Q1, 2025-Q2, etc.
 
 .. list-table::
    :header-rows: 1
@@ -143,25 +155,60 @@ As an open-source project, StrictDoc is developed without strict deadlines, howe
      - Connecting requirements to functions (C, Python) and classes (Python) in source code. Support the linking in both directions independently: from requirements to source using RELATION/File and from source to requirements using @relation markers. LINK to documents.
    * - 2025-Q1
      - Connecting requirements to source code – further work. StrictDoc containerized in Docker. JUnit XML report generation.
-   * - 2025-Q2 (planned)
+   * - 2025-Q2
      - Gcov coverage justification report. SDoc node VERSIONs. External links.
+   * - 2025-Q3
+     - Static HTML search. Testing large documentation trees (100+ documents). Tree map visualization. Initial work for Ada support.
+   * - 2025-Q4
+     - Python file for StrictDoc configuration instead of TOML. Requirement validations and node constraints. Reading SDoc nodes from source files, e.g., ``SPDX-*`` identifiers.
 <<<
+
+[[/SECTION]]
 
 [[SECTION]]
 MID: bf9f3f05501140da8d35cde39493c72f
-TITLE: The roadmap diagram
+TITLE: Roadmap diagram
 
 [TEXT]
 MID: 53e101acb20e44e89de27f0f77c5f0cb
 STATEMENT: >>>
-The following diagram contains the work items at the epic and single task levels. This PNG file is exported from a draw.io diagram, where the master version of the roadmap is maintained.
+Additionally, a StrictDoc project maintains a high-level roadmap overview using a draw.io diagram.
+
+The diagram contains work items at both the epic and single-task levels. It represents the already open StrictDoc GitHub issues, as well as some concepts in the backlog that are yet to be worked on.
 
 .. image:: _assets/StrictDoc_Workspace-Roadmap.drawio.png
    :alt: Development plan diagram
    :class: image
    :width: 100%
+<<<
 
-The roadmap and other artifacts are maintained at a publicly available draw.io diagram workspace `here <https://drive.google.com/file/d/1pkI0T1eAbcTSyCnqH4wCKKQSOfgWTaxi/view>`_.
+[[/SECTION]]
+
+[[SECTION]]
+MID: 0adcf781ba5b47b0b2e421db2fd97acb
+TITLE: Backlog
+
+[TEXT]
+MID: 4c253eba99644f2dad971e0b0d79f143
+STATEMENT: >>>
+StrictDoc maintains its backlog in a dedicated SDoc document (see [LINK: SDOC_BACKLOG]), as well as among the GitHub issues specifically tracked under the milestone `Backlog <https://github.com/strictdoc-project/strictdoc/issues?q=is%3Aissue%20state%3Aopen%20milestone%3A20XX-Backlog>`_.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 21917df7f66d464a9d9a717def2e10db
+TITLE: Backlog diagram
+
+[TEXT]
+MID: c34b77865324416f98a36aa8bdb0fcaa
+STATEMENT: >>>
+The following diagram contains the backlog work items at the epic and single task levels.
+
+.. image:: _assets/StrictDoc_Workspace-Backlog.drawio.png
+   :alt: StrictDoc Backlog
+   :class: image
+   :width: 100%
 <<<
 
 [[/SECTION]]
@@ -189,6 +236,22 @@ MID: 14d0e79fcadc43f1a1cee2d66ae6b763
 STATEMENT: >>>
 StrictDoc's development incorporates quality measures to ensure a high standard of code quality.
 <<<
+
+[[SECTION]]
+MID: 185776da602c49589f9252b46a9ce663
+TITLE: Bug reporting and tracking
+
+[TEXT]
+MID: a7874a49450448dfbfb557f9495f2b6e
+STATEMENT: >>>
+StrictDoc provides an issue template for bug reports, which users can use to report bugs and other issues.
+
+All known bugs in StrictDoc are reported as GitHub issues and labeled with the Bug tag:
+
+`Known StrictDoc issues and bugs <https://github.com/strictdoc-project/strictdoc/issues?q=is%3Aissue%20state%3Aopen%20type%3ABug>`_
+<<<
+
+[[/SECTION]]
 
 [[SECTION]]
 MID: bc49b1e28fff4386b3bf5788a6686a79
@@ -245,7 +308,7 @@ Most of StrictDoc's implemented features are tested through its own documentatio
 - Source files and tests
 - Tests, test results, and code coverage data
 
-As of Q2 2025, the goal is to achieve 100% traceability across all artifacts in the StrictDoc codebase.
+The goal is to achieve 100% traceability across all artifacts in the StrictDoc codebase.
 <<<
 
 [[/SECTION]]
@@ -271,7 +334,7 @@ TITLE: Python baseline
 [TEXT]
 MID: 081ee6266bab4a3a80f290c95e055a25
 STATEMENT: >>>
-The supported version of Python is kept to be as low as possible. As of 2024-Q4, the currently supported version is Python 3.8.
+The supported version of Python is kept to be as low as possible. As of 2025-Q4, the currently supported version is Python 3.9.
 
 Ideally, the lowest Python version should only be raised when it is consistently deprecated by the major software platforms like Ubuntu or GitHub Actions.
 

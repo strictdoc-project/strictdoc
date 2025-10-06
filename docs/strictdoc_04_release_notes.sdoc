@@ -47,12 +47,12 @@ This document maintains a record of all changes to StrictDoc since November 2023
 
 [[SECTION]]
 MID: 403c9f0ad6c34b50b25133f1d9357335
-TITLE: Unreleased (2025-10-05)
+TITLE: 0.14.0 (2025-10-05)
 
 [TEXT]
 MID: 9baeff3b28ea4bfe9ca8afe6b21826a8
 STATEMENT: >>>
-This release introduces a new feature: configuring StrictDoc using a Python file instead of a TOML file, improvements to parsing SDoc nodes from source files, and the removal of the legacy ``Section/[SECTION]`` element.
+This release introduces several improvements: configuring StrictDoc using a Python file instead of a TOML file, improvements to parsing SDoc nodes from source files, the removal of the legacy ``Section/[SECTION]`` element, dropped Python 3.8 support.
 
 1\) **Parsing StrictDoc configuration from a Python file:**
 StrictDoc can now be configured using a Python file rather than a TOML file. This new method (``strictdoc_config.py``) is intended to replace ``strictdoc.toml`` in the long term.
@@ -71,6 +71,8 @@ The feature for parsing SDoc files from source code has been extended to support
 
 3\) **Removal of legacy Section/[SECTION]:**
 The legacy ``Section/[SECTION]`` element has been fully removed from the codebase, completing the migration to composite ``[[SECTION]]`` nodes. From now on, all projects using the old ``[SECTION]`` syntax will generate an error and receive a suggestion to migrate to the new syntax.
+
+4\) **Dropped Python 3.8 support:** We could stay with Python 3.8 a little longer, but several important pip packages that StrictDoc depends on have already dropped support for it, most notably tree-sitter and docutils.
 <<<
 
 [[/SECTION]]

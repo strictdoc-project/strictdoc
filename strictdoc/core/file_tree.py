@@ -166,6 +166,14 @@ class FileFinder:
                     continue
 
                 full_file_path = os.path.join(current_root_path, file)
+
+                # A known edge case: A file is found by os.walk(), but it is a
+                # Linux pipe file which fails an os.path.isfile() check.
+                # It seems to be safe to ignore this and possibly other cases
+                # here without writing any test for this case.
+                if not os.path.isfile(full_file_path):  # pragma: no cover
+                    continue
+
                 rel_file_path = os.path.join(current_root_relative_path, file)
 
                 if path_filter_excludes.match(rel_file_path):

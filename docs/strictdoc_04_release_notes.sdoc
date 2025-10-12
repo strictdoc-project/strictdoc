@@ -46,6 +46,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: c2ee8e32a2324963a90e7ba81f95ee0d
+TITLE: Unreleased
+
+[TEXT]
+MID: 12345f3b28ea4bfe9ca8afe6b21826a8
+STATEMENT: >>>
+An edge case has been fixed where StrictDoc's FileFinder was detecting Linux pipe files that could not be processed meaningfully by StrictDoc's source file generator. With this release, such files will be ignored.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 403c9f0ad6c34b50b25133f1d9357335
 TITLE: 0.14.0 (2025-10-05)
 

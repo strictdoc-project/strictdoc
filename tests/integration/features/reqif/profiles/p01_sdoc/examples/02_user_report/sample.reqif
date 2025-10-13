@@ -1,0 +1,3732 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<REQ-IF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/spec/ReqIF/20110401/reqif.xsd" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:reqif-common="http://www.prostep.org/reqif" xmlns:rm-reqif="http://www.ibm.com/rm/reqif" xmlns:rm="http://www.ibm.com/rm" xsi:schemaLocation="http://www.omg.org/spec/ReqIF/20110401/reqif.xsd http://www.omg.org/spec/ReqIF/20110401/reqif.xsd">
+  <THE-HEADER>
+    <REQ-IF-HEADER IDENTIFIER="_7f5ed387-982d-4a50-87c7-a0343c18cc7a">
+      <COMMENT>Created by ...</COMMENT>
+      <CREATION-TIME>2025-10-13T10:15:25.955Z</CREATION-TIME>
+      <REQ-IF-TOOL-ID>ReqView 2.21.2</REQ-IF-TOOL-ID>
+      <REQ-IF-VERSION>1.0</REQ-IF-VERSION>
+      <SOURCE-TOOL-ID>ReqView 2.21.2</SOURCE-TOOL-ID>
+      <TITLE>DEMO/NEEDS</TITLE>
+    </REQ-IF-HEADER>
+  </THE-HEADER>
+  <CORE-CONTENT>
+    <REQ-IF-CONTENT>
+      <DATATYPES>
+        <DATATYPE-DEFINITION-XHTML LONG-NAME="XHTMLString" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_610f011a-fd0b-4827-a247-12cc83e66fa9"/>
+        <DATATYPE-DEFINITION-STRING LONG-NAME="String" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_efb6ff33-b3a0-4edb-9ced-3f4688fbcc59" MAX-LENGTH="1048576"/>
+        <DATATYPE-DEFINITION-DATE LONG-NAME="DateTime" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_9825ef4a-e805-4263-a03b-c0f94ed6f5bd"/>
+        <DATATYPE-DEFINITION-INTEGER LONG-NAME="Integer" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_6823a0d4-6d24-42a8-bf7f-91bc1d72341a" MIN="-2147483648" MAX="2147483647"/>
+        <DATATYPE-DEFINITION-ENUMERATION LONG-NAME="asAn" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_85599375-23b2-46c1-a886-a0808bd1e684">
+          <SPECIFIED-VALUES>
+            <ENUM-VALUE LONG-NAME="Architect" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_6b85acb1-7b11-4f8b-8373-d6d813b6605a">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="0" OTHER-CONTENT="Architect"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Editor" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_19f3050e-6155-4fe5-93cd-a54282e38e66">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="1" OTHER-CONTENT="Editor"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Reviewer" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_0521c9a6-7750-40fc-ba7e-fc07cf4d131c">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="2" OTHER-CONTENT="Reviewer"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+          </SPECIFIED-VALUES>
+        </DATATYPE-DEFINITION-ENUMERATION>
+        <DATATYPE-DEFINITION-ENUMERATION LONG-NAME="status" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_58c085af-8ceb-4b94-91b5-39d20ca88940">
+          <SPECIFIED-VALUES>
+            <ENUM-VALUE LONG-NAME="New" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_889200d6-8e8d-4b51-ae6c-6ed0af17b259">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="0" OTHER-CONTENT="New"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Planned" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_f90286f4-be73-4a72-b338-d2dcc03b834e">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="1" OTHER-CONTENT="Planned"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Implemented" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_cf138a75-40ac-421b-9ca2-8a40cc7ac93d">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="2" OTHER-CONTENT="Implemented"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Verified" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_7235ddc4-c61e-489a-a6d5-39ad6260c906">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="3" OTHER-CONTENT="Verified"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+          </SPECIFIED-VALUES>
+        </DATATYPE-DEFINITION-ENUMERATION>
+        <DATATYPE-DEFINITION-ENUMERATION LONG-NAME="type" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_7e103352-c224-4e28-88a2-77fa241f385f">
+          <SPECIFIED-VALUES>
+            <ENUM-VALUE LONG-NAME="Section" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_a13670f4-cd57-404d-b2ea-04e034258437">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="0" OTHER-CONTENT="SEC"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Information" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_fdeb4429-35b5-4684-8cb1-174b9b063481">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="1" OTHER-CONTENT="INF"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Epic" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_97561d86-2234-4b16-af40-3da8f8544ac2">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="2" OTHER-CONTENT="EPIC"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="User Story" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_a81e353e-1e4f-4073-8b6c-6208a2e0892a">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="3" OTHER-CONTENT="STORY"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Constraint" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_f791b0de-77b7-404f-8689-1b329496c537">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="4" OTHER-CONTENT="CON"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+          </SPECIFIED-VALUES>
+        </DATATYPE-DEFINITION-ENUMERATION>
+        <DATATYPE-DEFINITION-ENUMERATION LONG-NAME="risk" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_37d3eb5d-e2b4-4dc2-85e7-cb3d7a94edc2">
+          <SPECIFIED-VALUES>
+            <ENUM-VALUE LONG-NAME="High" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_1cae99f1-c5f4-4b51-bf32-17e06cf9ec07">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="0" OTHER-CONTENT="High"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Medium" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_933cabad-00a8-4baa-ae55-4ad0d1ce3f12">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="1" OTHER-CONTENT="Medium"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Low" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_669f0d71-4cf4-4345-8f3d-75dc09f2519c">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="2" OTHER-CONTENT="Low"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+          </SPECIFIED-VALUES>
+        </DATATYPE-DEFINITION-ENUMERATION>
+        <DATATYPE-DEFINITION-ENUMERATION LONG-NAME="priority" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_a515023e-90ec-40b2-b499-ff36a7bab0d0">
+          <SPECIFIED-VALUES>
+            <ENUM-VALUE LONG-NAME="High" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_719f5a5f-40bd-462f-9277-9938c91abbd0">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="0" OTHER-CONTENT="High"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Medium" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_58d96344-1b3a-4b9a-b2df-98471d9f1a52">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="1" OTHER-CONTENT="Medium"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+            <ENUM-VALUE LONG-NAME="Low" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_c220da74-5afe-450b-b3ab-54c576a216f5">
+              <PROPERTIES>
+                <EMBEDDED-VALUE KEY="2" OTHER-CONTENT="Low"/>
+              </PROPERTIES>
+            </ENUM-VALUE>
+          </SPECIFIED-VALUES>
+        </DATATYPE-DEFINITION-ENUMERATION>
+      </DATATYPES>
+      <SPEC-TYPES>
+        <SPECIFICATION-TYPE LONG-NAME="NEEDS Type" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_ab604478-4ade-4787-be7a-05c09458db0d">
+          <SPEC-ATTRIBUTES>
+            <ATTRIBUTE-DEFINITION-XHTML LONG-NAME="ReqIF.Description" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_166cbeeb-58ad-45fb-9516-205b75e76a1a" IS-EDITABLE="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>_610f011a-fd0b-4827-a247-12cc83e66fa9</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+            <ATTRIBUTE-DEFINITION-STRING LONG-NAME="ReqIF.ForeignModifiedBy" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_78c56d7e-2d06-4ebb-82cc-6584d98112d2" IS-EDITABLE="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>_efb6ff33-b3a0-4edb-9ced-3f4688fbcc59</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING LONG-NAME="ReqIF.ForeignCreatedBy" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_8a309a0a-a8a2-4e66-b9e0-0d1048d518d2" IS-EDITABLE="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>_efb6ff33-b3a0-4edb-9ced-3f4688fbcc59</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-DATE LONG-NAME="ReqIF.ForeignCreatedOn" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_bd8eaa1f-1be2-4b08-815c-13778f869e38" IS-EDITABLE="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-DATE-REF>_9825ef4a-e805-4263-a03b-c0f94ed6f5bd</DATATYPE-DEFINITION-DATE-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-DATE>
+            <ATTRIBUTE-DEFINITION-STRING LONG-NAME="ReqIF.ForeignID" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_c04a4aad-6217-4f11-bfc7-b75ce359b9bc" IS-EDITABLE="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>_efb6ff33-b3a0-4edb-9ced-3f4688fbcc59</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+          </SPEC-ATTRIBUTES>
+        </SPECIFICATION-TYPE>
+        <SPEC-OBJECT-TYPE LONG-NAME="NEEDS Object Type" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_371a824d-75b2-42a4-87e2-937e8d4ccb10">
+          <SPEC-ATTRIBUTES>
+            <ATTRIBUTE-DEFINITION-INTEGER LONG-NAME="Estimation" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_194a3917-c490-4d69-a90a-fa2a13ec2d4a" IS-EDITABLE="true">
+              <TYPE>
+                <DATATYPE-DEFINITION-INTEGER-REF>_6823a0d4-6d24-42a8-bf7f-91bc1d72341a</DATATYPE-DEFINITION-INTEGER-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-INTEGER>
+            <ATTRIBUTE-DEFINITION-STRING LONG-NAME="ReqIF.ForeignID" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_2bd41668-9394-406e-bcdf-fef8cdbd9f71" IS-EDITABLE="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>_efb6ff33-b3a0-4edb-9ced-3f4688fbcc59</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-STRING LONG-NAME="ReqIF.ChapterName" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_6b57d63c-68c9-48f9-97f9-952ee466d8a5" IS-EDITABLE="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>_efb6ff33-b3a0-4edb-9ced-3f4688fbcc59</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-ENUMERATION LONG-NAME="As a(n)" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_7183aef4-3ef9-4765-82c1-f010a71964a6" MULTI-VALUED="false" IS-EDITABLE="true">
+              <TYPE>
+                <DATATYPE-DEFINITION-ENUMERATION-REF>_85599375-23b2-46c1-a886-a0808bd1e684</DATATYPE-DEFINITION-ENUMERATION-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-ENUMERATION>
+            <ATTRIBUTE-DEFINITION-XHTML LONG-NAME="Acceptance Criteria" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_899b96b5-7374-40f6-bf81-fd43774b670e" IS-EDITABLE="true">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>_610f011a-fd0b-4827-a247-12cc83e66fa9</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+            <ATTRIBUTE-DEFINITION-XHTML LONG-NAME="ReqIF.Text" LAST-CHANGE="2022-03-01T00:00:00.000Z" IDENTIFIER="_9a012846-ec15-4115-b666-fd08c8b89c79" IS-EDITABLE="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>_610f011a-fd0b-4827-a247-12cc83e66fa9</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+            <ATTRIBUTE-DEFINITION-XHTML LONG-NAME="I want to" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_a007da76-150c-4666-8260-df313cae7d49" IS-EDITABLE="true">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>_610f011a-fd0b-4827-a247-12cc83e66fa9</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+            <ATTRIBUTE-DEFINITION-XHTML LONG-NAME="So that" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_ad913e97-d830-4f67-bb16-27edcd771d6c" IS-EDITABLE="true">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>_610f011a-fd0b-4827-a247-12cc83e66fa9</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+            <ATTRIBUTE-DEFINITION-ENUMERATION LONG-NAME="Status" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd" MULTI-VALUED="false" IS-EDITABLE="true">
+              <TYPE>
+                <DATATYPE-DEFINITION-ENUMERATION-REF>_58c085af-8ceb-4b94-91b5-39d20ca88940</DATATYPE-DEFINITION-ENUMERATION-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-ENUMERATION>
+            <ATTRIBUTE-DEFINITION-ENUMERATION LONG-NAME="Type" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_e4724bd9-3ead-4140-9ee1-d2765b12d71b" MULTI-VALUED="false" IS-EDITABLE="true">
+              <TYPE>
+                <DATATYPE-DEFINITION-ENUMERATION-REF>_7e103352-c224-4e28-88a2-77fa241f385f</DATATYPE-DEFINITION-ENUMERATION-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-ENUMERATION>
+            <ATTRIBUTE-DEFINITION-ENUMERATION LONG-NAME="Risk" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_e5d8b342-a1d7-4a66-992e-f428407bd7ee" MULTI-VALUED="false" IS-EDITABLE="true">
+              <TYPE>
+                <DATATYPE-DEFINITION-ENUMERATION-REF>_37d3eb5d-e2b4-4dc2-85e7-cb3d7a94edc2</DATATYPE-DEFINITION-ENUMERATION-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-ENUMERATION>
+            <ATTRIBUTE-DEFINITION-ENUMERATION LONG-NAME="Priority" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_eb423f0d-e282-4335-a314-c829af77c7c4" MULTI-VALUED="false" IS-EDITABLE="true">
+              <TYPE>
+                <DATATYPE-DEFINITION-ENUMERATION-REF>_a515023e-90ec-40b2-b499-ff36a7bab0d0</DATATYPE-DEFINITION-ENUMERATION-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-ENUMERATION>
+          </SPEC-ATTRIBUTES>
+        </SPEC-OBJECT-TYPE>
+      </SPEC-TYPES>
+      <SPEC-OBJECTS>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_57916083-61b1-4406-b5ec-a341a2c10de7">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-45">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_9a012846-ec15-4115-b666-fd08c8b89c79</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>
+                    <xhtml:em>&#169; Copyright by Eccam s.r.o. All rights reserved.</xhtml:em>
+                  </xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_fdeb4429-35b5-4684-8cb1-174b9b063481</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_c41769d3-cac5-4c45-9dfa-a33f52ac93d6">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-2">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Introduction">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a13670f4-cd57-404d-b2ea-04e034258437</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_9b0d3723-912b-4728-aa0e-5c3bdfe04ea0">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-64">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Purpose">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a13670f4-cd57-404d-b2ea-04e034258437</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_05fa03f6-9896-41cf-abc5-05c567b3cbbd">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-67">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_9a012846-ec15-4115-b666-fd08c8b89c79</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>The main purpose of this document is to provide new <xhtml:a href="https://reqview.com">ReqView&#160;</xhtml:a>users a working example of a document describing high-level user needs by means of user stories.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_fdeb4429-35b5-4684-8cb1-174b9b063481</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_8f30721e-0740-4277-b997-427a6b7e6db7">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-65">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Scope">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a13670f4-cd57-404d-b2ea-04e034258437</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_1b5b7ed0-1303-41e7-a58b-87e40e495784">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-75">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_9a012846-ec15-4115-b666-fd08c8b89c79</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>This document specifies top level user needs for a simple <xhtml:a href="https://www.reqview.com/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">HW/SW requirements management tool</xhtml:a>.</xhtml:p>
+                  <xhtml:p><xhtml:strong>Note:</xhtml:strong> The document is not complete.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_fdeb4429-35b5-4684-8cb1-174b9b063481</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_7b6ac21f-da50-47b3-bf72-b31a5fee2331">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-66">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_9a012846-ec15-4115-b666-fd08c8b89c79</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Users should be able to:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>
+                      <xhtml:a href="https://www.reqview.com/doc/edit-document/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">Capture requirements specifications</xhtml:a>
+                    </xhtml:li>
+                    <xhtml:li>
+                      <xhtml:a href="https://www.reqview.com/doc/edit-document/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples#edit-attributes">Manage requirements using custom attributes</xhtml:a>
+                    </xhtml:li>
+                    <xhtml:li>
+                      <xhtml:a href="https://www.reqview.com/doc/requirements-traceability-links/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">Set up requirements traceability</xhtml:a>
+                    </xhtml:li>
+                    <xhtml:li>
+                      <xhtml:a href="https://www.reqview.com/blog/requirements-traceability-matrix/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples#traceability-matrix">Browse the requirements traceability matrix (RTM)</xhtml:a>
+                    </xhtml:li>
+                    <xhtml:li>
+                      <xhtml:a href="https://www.reqview.com/doc/change-management/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples#control-project-changes">Control project changes</xhtml:a>
+                    </xhtml:li>
+                    <xhtml:li>
+                      <xhtml:a href="https://www.reqview.com/doc/filter-and-search/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples#filter-document-objects">Filter</xhtml:a>
+                      <xhtml:a href="https://www.reqview.com/doc/review-document/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">and search requirements</xhtml:a>
+                    </xhtml:li>
+                    <xhtml:li><xhtml:a href="https://www.reqview.com/doc/import-html-ms-word/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">Import requirements from MS Word</xhtml:a> or <xhtml:a href="https://www.reqview.com/doc/import-csv-ms-excel/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">Excel</xhtml:a></xhtml:li>
+                    <xhtml:li><xhtml:a href="https://www.reqview.com/doc/export-docx/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">Export requirements to DOCX</xhtml:a>, <xhtml:a href="https://www.reqview.com/doc/export-xlsx/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">XLSX</xhtml:a>, <xhtml:a href="https://www.reqview.com/doc/export-pdf/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">PDF</xhtml:a>, <xhtml:a href="https://www.reqview.com/doc/export-html/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">HTML</xhtml:a>, or <xhtml:a href="https://www.reqview.com/doc/export-csv/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples">CSV</xhtml:a></xhtml:li>
+                    <xhtml:li>
+                      <xhtml:a href="https://www.reqview.com/doc/requirements-traceability-links/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples#traceability-reports">Analyze requirements coverage and impact of changes</xhtml:a>
+                    </xhtml:li>
+                    <xhtml:li>
+                      <xhtml:a href="https://www.reqview.com/doc/review-document/?utm_source=WebApp&amp;utm_medium=Application&amp;utm_campaign=Examples#print-documents">Print requirements specifications</xhtml:a>
+                    </xhtml:li>
+                    <xhtml:li>Integrate ReqView with Jira project management tool&#160;</xhtml:li>
+                    <xhtml:li>Integrate ReqView with Enterprise Architect modelling tool</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_fdeb4429-35b5-4684-8cb1-174b9b063481</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_03658799-6c3b-44fe-a0e6-a23613fce43f">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-1">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="User Roles">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a13670f4-cd57-404d-b2ea-04e034258437</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_2f415d73-2069-4cc2-b2e9-c5b5c359efd2">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-5">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Requirements Architect">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_6b85acb1-7b11-4f8b-8373-d6d813b6605a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_9a012846-ec15-4115-b666-fd08c8b89c79</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Requirements Architect defines requirements model and configure the requirements project for other users.</xhtml:p>
+                  <xhtml:p>Requirements Architect is typically a <xhtml:em>QA manager</xhtml:em> or <xhtml:em>project manager</xhtml:em>.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:ul>
+                    <xhtml:li>Define custom attributes</xhtml:li>
+                    <xhtml:li>Configure project traceability</xhtml:li>
+                    <xhtml:li>Create document templates</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_fdeb4429-35b5-4684-8cb1-174b9b063481</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_24d3fba9-b865-41bd-9126-b0aac6f560f0">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-6">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Editor">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_9a012846-ec15-4115-b666-fd08c8b89c79</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Editor defines project requirements and creates requirements and tests documents.</xhtml:p>
+                  <xhtml:p>Editor is typically a <xhtml:em>requirements engineer</xhtml:em>, <xhtml:em>business analyst</xhtml:em>, <xhtml:em>project manager</xhtml:em>, <xhtml:em>QA engineer</xhtml:em> or a <xhtml:em>tester</xhtml:em>.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:ul>
+                    <xhtml:li>Capture structured requirements</xhtml:li>
+                    <xhtml:li>Update requirements custom attributes</xhtml:li>
+                    <xhtml:li>Discuss requirements</xhtml:li>
+                    <xhtml:li>Maintain requirements traceability links</xhtml:li>
+                    <xhtml:li>Print requirements</xhtml:li>
+                    <xhtml:li>Import requirements</xhtml:li>
+                    <xhtml:li>Export requirements</xhtml:li>
+                    <xhtml:li>Create traceability reports</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_fdeb4429-35b5-4684-8cb1-174b9b063481</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_aa5e2cab-0621-4555-bcb7-bf0aeca0394a">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-7">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Reviewer">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_0521c9a6-7750-40fc-ba7e-fc07cf4d131c</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_9a012846-ec15-4115-b666-fd08c8b89c79</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Reviewer reads project documents, performs review and provides feedback for improving the content of the document.</xhtml:p>
+                  <xhtml:p>Reviewer is typically an internal <xhtml:em>QA expert</xhtml:em> reviewing requirements and tests, <xhtml:em>customer</xhtml:em> or <xhtml:em>supplier</xhtml:em> commenting requirements and setting the requirement acceptance state.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:ul>
+                    <xhtml:li>Provide feedback to requirements specifications</xhtml:li>
+                    <xhtml:li>Update requirements review status</xhtml:li>
+                    <xhtml:li>Print requirements</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_fdeb4429-35b5-4684-8cb1-174b9b063481</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_11f269ac-d037-495b-b873-005baf3b08d0">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-3">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="User Stories">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a13670f4-cd57-404d-b2ea-04e034258437</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_3fb4ac96-1467-4651-99f0-150c6ded802f">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-9">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Requirements Storage">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_97561d86-2234-4b16-af40-3da8f8544ac2</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_ab4826dd-421a-40ad-9aea-6c24cf9d0f9c">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-58">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Document Files">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>saving project in a file</xhtml:li>
+                    <xhtml:li>opening project from a file</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>save document in a file</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>users can open the document for further editing or review</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_d1fa5338-44e6-40e2-a971-b8a656238a16">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-14">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Document Templates">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_6b85acb1-7b11-4f8b-8373-d6d813b6605a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>saving a document as a document template file,</xhtml:li>
+                    <xhtml:li>add a new document into a project from a saved document template file while preserving document attributes definition, values of object attributes and object attachments.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>save a document as a template file</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can reuse the document structure and configuration of custom attributes for new documents</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_6c0a35fc-d7f9-4175-84dc-4e5aad145238">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-33">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Autosave">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>instantly saves all the changes,</xhtml:li>
+                    <xhtml:li>restores the same project content when it is restarted.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>automatically persist my changes</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I do not lose my changes if the tool is unexpectedly terminated before saving into a file</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_4883987f-6c3a-4a66-a44f-8cd7000b70f0">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-8">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Define Requirements">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_97561d86-2234-4b16-af40-3da8f8544ac2</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_47e4b317-17f5-45c4-a16c-a5fbda44a5c5">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-68">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Requirement Description">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>setting a description of a selected requirement</xhtml:li>
+                    <xhtml:li>removing description of a selected requirement</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>specify requirements by a textual description</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>the requirements can be reviewed by other users.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_8366a026-3158-443b-a759-fe299e589534">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-32">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Unique IDs">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>automatic generation of document ID which can not be further changed</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>identify requirements by their unique ID</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can reference requirements from other documents or communication</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_767f4667-4b3e-497f-b061-6024977a62db">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-12">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Document Structure">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>creation of a new project,</xhtml:li>
+                    <xhtml:li>adding a new document into a project,</xhtml:li>
+                    <xhtml:li>deletion of a document from a project.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>organize requirements in a tree document hierarchy with numbered sections</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can easily navigate in the document structure</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_b2f883b8-769e-4aeb-b419-41490e5b2ce7">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-73">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Table View">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>displaying of requirements in a table,</xhtml:li>
+                    <xhtml:li>displaying requirements ID, description, discussion, links and custom attributes in columns,</xhtml:li>
+                    <xhtml:li>hiding requirements table columns,</xhtml:li>
+                    <xhtml:li>reordering of requirements table columns,</xhtml:li>
+                    <xhtml:li>resizing of requirements table columns.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>display a table of requirements</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can review all requirements information in a single view</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_138a88a8-b347-4835-8f85-661236e4c2bd">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-74">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Detailed View">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>displaying custom attributes of the selected requirement in a pane or dialog,</xhtml:li>
+                    <xhtml:li>displaying discussion of the selected requirement in a pane or dialog,</xhtml:li>
+                    <xhtml:li>displaying traceability links for the selected requirement in a pane or dialog,</xhtml:li>
+                    <xhtml:li>displaying history of changes for the selected requirement in a pane or dialog.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>display all information about the selected requirement</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can display details about any requirement which are not visible in the requirements table</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_40f3c5d5-6c6f-45c6-869a-535b8eadc13a">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-17">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Attachments">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>attachment of image file to document objects,</xhtml:li>
+                    <xhtml:li>displaying image attachments in the context of the related document object,</xhtml:li>
+                    <xhtml:li>deletion of attachments</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>attach images and other documents to requirements</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can enhance textual requirements with visual content such as mockups, diagrams, etc.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_7c634ae1-0e07-46c4-bc0c-3340513f6956">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-35">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Sort">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports sorting requirements by:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>the natural document order,</xhtml:li>
+                    <xhtml:li>value of a custom attribute.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>order requirements by a chosen custom attribute</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can display requirements sorted by priority, risk, effort, etc.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_f90286f4-be73-4a72-b338-d2dcc03b834e</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_ce912e6b-e263-4c69-8d4c-d7d7050ee86b">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-70">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Manage Requirements">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_97561d86-2234-4b16-af40-3da8f8544ac2</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_561c6863-ba20-41ef-8f9a-932b8e352af9">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-19">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Custom Attributes Configuration">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_6b85acb1-7b11-4f8b-8373-d6d813b6605a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>creation of a new custom attribute,</xhtml:li>
+                    <xhtml:li>deletion of a custom attribute,</xhtml:li>
+                    <xhtml:li>definition of following custom attribute types<xhtml:ul><xhtml:li>number</xhtml:li><xhtml:li>date</xhtml:li><xhtml:li>boolean</xhtml:li><xhtml:li>single and multivalue enumeration</xhtml:li><xhtml:li>string / rich formatted text</xhtml:li></xhtml:ul></xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>define additional requirements attributes</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>the document can flexibly store additional requirement properties, such as requirement source, priority, status, etc.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_7235ddc4-c61e-489a-a6d5-39ad6260c906</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_8547cf35-70e0-47e9-8683-44702395341a">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-69">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Custom Attributes">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>setting requirements source, priority, status and acceptance criteria</xhtml:li>
+                    <xhtml:li>setting and resetting a value of a custom attribute for multiple requirements</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>set a value of a chosen custom attribute for one or more selected requirements</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can define additional requirements properties, such as requirements source, prioritize requirements, manage requirement status, define acceptance criteria, etc.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_7235ddc4-c61e-489a-a6d5-39ad6260c906</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_b9d27d67-aa41-4d85-8cc1-a90a715f9d37">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-16">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Traceability Configuration">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_6b85acb1-7b11-4f8b-8373-d6d813b6605a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>creation of at least one link type</xhtml:li>
+                    <xhtml:li>definition of a start and end role for a link type</xhtml:li>
+                    <xhtml:li>removal of a link type including all existing links</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>define types of relationships between requirements</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>users can perform traceability analysis for a chosen group of links</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_d080f428-cf1e-4919-89db-a8169d735e51">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-21">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Traceability Links">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>creation of links with chosen link type between selected requirements,</xhtml:li>
+                    <xhtml:li>deletion of links</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>link related requirements</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can analyze requirements coverage, gap in requirements and impact of requirement changes.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_00ab0f5f-5bca-4635-9854-0de89db36a60">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-34">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Filter">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports filtering requirements:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>by full text search in the object heading, text or a custom attribute</xhtml:li>
+                    <xhtml:li>with the given traceability link type</xhtml:li>
+                    <xhtml:li>in the given section</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>filter requirements</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can identify and manipulate requirements matching a condition</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_f83fb577-55a7-476b-8ea4-83fecdf77f9b">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-36">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Search">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports searching requirements containing a given keyword.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>find keywords</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can identify and manipulate requirements containing the searched keyword(s)</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_fb861b9d-011e-4046-8f17-cdc453bc3ed3">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-22">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Review Requirements">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_97561d86-2234-4b16-af40-3da8f8544ac2</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_48d5aa49-31b8-4ff9-a52c-be80258fa9fa">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-24">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Discussion">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_0521c9a6-7750-40fc-ba7e-fc07cf4d131c</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>commenting a selected requirement,</xhtml:li>
+                    <xhtml:li>displaying discussion for a selected requirement.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>comment requirements</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can provide feedback during requirements review</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_78da2553-a8ba-47ed-8382-e8c207c1bf4f">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-30">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Traceability Browser">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_0521c9a6-7750-40fc-ba7e-fc07cf4d131c</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>displaying linked requirements ordered by link type</xhtml:li>
+                    <xhtml:li>changing focus to a selected requirement</xhtml:li>
+                    <xhtml:li>filtering requirements with missing traceability links of a given link type</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>trace related requirements</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can perform coverage, gap and change impact analysis</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_eea2a384-27ee-44c6-bbd2-6c80a1642768">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-29">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Print">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_0521c9a6-7750-40fc-ba7e-fc07cf4d131c</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>printing a document with the same layout as it is displayed,</xhtml:li>
+                    <xhtml:li>saving the document as PDF with the same layout as it is displayed.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>print a document view</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can review requirements without the need to run the tool</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_e995cf73-40dd-41da-a96c-141d850cbd85">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-31">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Audit Trail">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_97561d86-2234-4b16-af40-3da8f8544ac2</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_92f9a2c4-44fb-49ee-bc72-a5a7110bcd84">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-26">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="History of Changes">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>displaying history of changes for a selected requirement.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>list all requirement changes</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can understand how the requirement evolved in time</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_dd4efc4c-c48c-4723-8866-16999d813d7f">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-23">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Traceability Report">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_0521c9a6-7750-40fc-ba7e-fc07cf4d131c</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>generation of a custom traceability report which visualizes end-to-end requirements traceability</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>generate a traceability report</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can analyze coverage, gaps and impact of requirements changes</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_fd49a637-753e-4114-8caa-587db1bea80b">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-11">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Integrations">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_97561d86-2234-4b16-af40-3da8f8544ac2</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_f267ba72-6383-44b1-8b6a-37422d3841a4">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-27">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Import from Word">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>import of MS Word HTML preserving structure of document sections and paragraphs and image attachments</xhtml:li>
+                    <xhtml:li>pasting of a text or a HTML fragment to requirements description.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>import a requirements specification from a MS Word document</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can reuse existing requirements specifications or other structured documents</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_c511a76d-8c3c-4643-a24c-5124ba36df3a">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-71">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Import from Excel">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>import of new requirements from a CSV file including custom attribute values</xhtml:li>
+                    <xhtml:li>updating requirements from a CSV file including custom attribute values</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>import requirements from a MS Excel spreadsheet</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can import or update list of requirements</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_a71a2a78-a185-43e7-891b-34b3247e93bc">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-28">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Export to Word">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>export of a document to a HTML file,</xhtml:li>
+                    <xhtml:li>import of an exported HTML file to a MS Word document preserving requirements structure and content</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>to export structured requirements specification to MS Word</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can share requirements specifications with users without the tool</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_6ac4abc9-e72b-4e19-9412-80fe38121ec5">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-72">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Export to CSV">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>export of filtered list of requirements to a CSV file.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>export filtered list of requirements to MS Excel</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can reuse or update requirements in another application</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_cf138a75-40ac-421b-9ca2-8a40cc7ac93d</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_a73d14ba-8b96-4f87-9a62-2f3089395772">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-80">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Export to Jira">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>export of requirements from a document to Jira,</xhtml:li>
+                    <xhtml:li>mapping type of requirements to Jira issue types,</xhtml:li>
+                    <xhtml:li>setting Jira issue summary, description from ReqView id, heading and text attributes,</xhtml:li>
+                    <xhtml:li>preserving values of other Jira issue fields updated by Jira users (iteration, owner, status),</xhtml:li>
+                    <xhtml:li>preserving Jira links,</xhtml:li>
+                    <xhtml:li>bidirectional navigation between exported ReqView requirements and corresponding Jira issues.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>export requirements to Jira</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>the development team can manage requirements implementation</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_f90286f4-be73-4a72-b338-d2dcc03b834e</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_9830280e-05a6-487e-bb93-83ae4b2005f6">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-81">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Update from Jira">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>mapping Jira issue fields to ReqView attributes,</xhtml:li>
+                    <xhtml:li>updating values of mapped attributes from corresponding Jira issue fields.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>update requirements by information from Jira</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can track the implementation status in ReqView&#160;</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_f90286f4-be73-4a72-b338-d2dcc03b834e</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_d7779470-dc1c-421a-8de7-40cd8671e614">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-84">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Export to ReqIF">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool supports:</xhtml:p>
+                  <xhtml:ul>
+                    <xhtml:li>exporting documents to the ReqIF format,</xhtml:li>
+                    <xhtml:li>preserving requirements structure, format, attachments, attributes, and links between exported requirements,</xhtml:li>
+                    <xhtml:li>compliance with <xhtml:a href="https://www.omg.org/reqif/">OMG ReqIF standard</xhtml:a>.</xhtml:li>
+                  </xhtml:ul>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>export document to &#160;the Requirements Interchange Format (ReqIF)</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can provide requirements in a standardized format to suppliers or other team members using other tools</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_f90286f4-be73-4a72-b338-d2dcc03b834e</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_97181f13-30c7-427d-8bc3-a2a8ba556b08">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-82">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Export to Enterprise Architect">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_889200d6-8e8d-4b51-ae6c-6ed0af17b259</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_24e864b2-5105-4712-b09a-ce981c8f6e04">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-83">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Import from Enterprise Architect">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_889200d6-8e8d-4b51-ae6c-6ed0af17b259</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a81e353e-1e4f-4073-8b6c-6208a2e0892a</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_fc5a0688-ffa0-4d49-8f88-f6cb7ebe15c1">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-4">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Constraints">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_a13670f4-cd57-404d-b2ea-04e034258437</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_03711176-9aac-4767-a58f-a9238495d0c4">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-39">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Startup Time">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool starts in less than 10s even for large projects.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>quickly start the tool</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I do not need to wait long time for editing a project</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_7235ddc4-c61e-489a-a6d5-39ad6260c906</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_f791b0de-77b7-404f-8689-1b329496c537</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_4cb8d2ca-d47c-4666-8551-e8fb663c1667">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-41">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Edit Response Time">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool updates view after any edit operation in a document with 10000 requirements in less than 1s.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>edit effectively requirements in large documents</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can work without waiting for tool responses</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_7235ddc4-c61e-489a-a6d5-39ad6260c906</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_f791b0de-77b7-404f-8689-1b329496c537</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_c6d0adc9-ba8d-4f81-bb50-7199c07707fb">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-44">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Document Size">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool can store documents with 10000 requirements and 100 attachments of total size 100 MB.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>create large requirements specifications</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can capture all requirements in a single document even for complex system development projects</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_7235ddc4-c61e-489a-a6d5-39ad6260c906</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_f791b0de-77b7-404f-8689-1b329496c537</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_0264ef81-e5e4-405f-8dde-4dd74e8721a2">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-42">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Security">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool does not send any project information to the internet without user consent.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>store confidential information in the tool</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can be sure that no confidential information is compromised</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_7235ddc4-c61e-489a-a6d5-39ad6260c906</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_f791b0de-77b7-404f-8689-1b329496c537</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_12b51945-516b-46fe-991c-5980dc57d099">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>_371a824d-75b2-42a4-87e2-937e8d4ccb10</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS-51">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_2bd41668-9394-406e-bcdf-fef8cdbd9f71</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Compatibility">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_6b57d63c-68c9-48f9-97f9-952ee466d8a5</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_7183aef4-3ef9-4765-82c1-f010a71964a6</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_19f3050e-6155-4fe5-93cd-a54282e38e66</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_899b96b5-7374-40f6-bf81-fd43774b670e</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>Tool is installed and run on Windows, Linux and a Mac.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_a007da76-150c-4666-8260-df313cae7d49</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>install and run the tool on Windows, Linux or Mac operating system</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_ad913e97-d830-4f67-bb16-27edcd771d6c</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>
+                  <xhtml:p>I can use the tool on any desktop PC or notebook.</xhtml:p>
+                </xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_cf083ae9-5fec-49b5-83a2-4a7e6b2c4efd</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_7235ddc4-c61e-489a-a6d5-39ad6260c906</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+            <ATTRIBUTE-VALUE-ENUMERATION>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-ENUMERATION-REF>_e4724bd9-3ead-4140-9ee1-d2765b12d71b</ATTRIBUTE-DEFINITION-ENUMERATION-REF>
+              </DEFINITION>
+              <VALUES>
+                <ENUM-VALUE-REF>_f791b0de-77b7-404f-8689-1b329496c537</ENUM-VALUE-REF>
+              </VALUES>
+            </ATTRIBUTE-VALUE-ENUMERATION>
+          </VALUES>
+        </SPEC-OBJECT>
+      </SPEC-OBJECTS>
+      <SPECIFICATIONS>
+        <SPECIFICATION LONG-NAME="NEEDS" LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_cf024593-2de0-45cf-ae98-0941b85cc094">
+          <TYPE>
+            <SPECIFICATION-TYPE-REF>_ab604478-4ade-4787-be7a-05c09458db0d</SPECIFICATION-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>_166cbeeb-58ad-45fb-9516-205b75e76a1a</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE>
+                <xhtml:div>ReqView User Needs</xhtml:div>
+              </THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Libor Bus, Eccam, libor.bus@eccam.com">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_78c56d7e-2d06-4ebb-82cc-6584d98112d2</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="Libor Bus, Eccam s.r.o., libor.bus@eccam.com">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_8a309a0a-a8a2-4e66-b9e0-0d1048d518d2</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-DATE THE-VALUE="2016-05-24T09:16:13.126Z">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-DATE-REF>_bd8eaa1f-1be2-4b08-815c-13778f869e38</ATTRIBUTE-DEFINITION-DATE-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-DATE>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="NEEDS">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>_c04a4aad-6217-4f11-bfc7-b75ce359b9bc</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+          </VALUES>
+          <CHILDREN>
+            <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_e8d19d9a-3d11-4314-b711-0132d22ead4f">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_57916083-61b1-4406-b5ec-a341a2c10de7</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_c0d25165-7acf-47ef-bde2-76b5d8440036">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_c41769d3-cac5-4c45-9dfa-a33f52ac93d6</SPEC-OBJECT-REF>
+              </OBJECT>
+              <CHILDREN>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_83d59a42-5e06-405b-9683-15f25c5d7407">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_9b0d3723-912b-4728-aa0e-5c3bdfe04ea0</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_9631ed3e-c24d-4cd8-a06a-7dd69bfe7540">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_05fa03f6-9896-41cf-abc5-05c567b3cbbd</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_2aa15b03-a5e2-4811-ba0c-f72fb7b07c62">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_8f30721e-0740-4277-b997-427a6b7e6db7</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_044cb14f-da46-4340-bb12-2472e8bf1cc6">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_1b5b7ed0-1303-41e7-a58b-87e40e495784</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_40825494-33a9-49c8-9ea8-2513620de16a">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_7b6ac21f-da50-47b3-bf72-b31a5fee2331</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_627517c8-9298-41eb-960a-63686bd638b5">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_03658799-6c3b-44fe-a0e6-a23613fce43f</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_0f054755-de64-438f-bbfb-6767181f9e64">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_2f415d73-2069-4cc2-b2e9-c5b5c359efd2</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_de44ae6c-8533-49cb-b127-b47e1c9ee7bb">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_24d3fba9-b865-41bd-9126-b0aac6f560f0</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_69b1b171-4716-45ee-a6cc-c2ace60356b1">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_aa5e2cab-0621-4555-bcb7-bf0aeca0394a</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+              </CHILDREN>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_c144a57c-8104-4e8d-8505-48c9d1772834">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_11f269ac-d037-495b-b873-005baf3b08d0</SPEC-OBJECT-REF>
+              </OBJECT>
+              <CHILDREN>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_3408ece7-ce36-42b4-b9ab-5cce6c4560cc">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_3fb4ac96-1467-4651-99f0-150c6ded802f</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_d4a04768-d1c5-4d4c-a82e-ae5009442619">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_ab4826dd-421a-40ad-9aea-6c24cf9d0f9c</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_27764e5a-bde7-449d-88f4-7283c2eb4dff">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_d1fa5338-44e6-40e2-a971-b8a656238a16</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_fd773783-d8a5-4b90-a78f-5fa058e94a9c">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_6c0a35fc-d7f9-4175-84dc-4e5aad145238</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_f1ae1f45-b497-4d03-9f1d-68d6b7d0cb8e">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_4883987f-6c3a-4a66-a44f-8cd7000b70f0</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_41d5f8f9-7bf4-484a-82b0-8a92a1b7bb08">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_47e4b317-17f5-45c4-a16c-a5fbda44a5c5</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_63d5912b-ad1e-4775-a481-c2ec7a9d0324">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_8366a026-3158-443b-a759-fe299e589534</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_e93d273c-ffa2-4d98-9542-0dafd43ab95d">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_767f4667-4b3e-497f-b061-6024977a62db</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_e48b8a00-ee2e-462a-83df-95a804f79900">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_b2f883b8-769e-4aeb-b419-41490e5b2ce7</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_a56b317b-0cc6-457d-a7cd-d495fb7b3b15">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_138a88a8-b347-4835-8f85-661236e4c2bd</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_6c959336-ffb8-43a3-bfc7-ef2a12556e00">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_40f3c5d5-6c6f-45c6-869a-535b8eadc13a</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_a4480778-b58f-4ca3-9839-c577e32f5725">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_7c634ae1-0e07-46c4-bc0c-3340513f6956</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_2ec4f645-b168-4838-9f46-8c6dc9f3fdb0">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_ce912e6b-e263-4c69-8d4c-d7d7050ee86b</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_79197460-4ccf-4d76-8c36-25705b80022b">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_561c6863-ba20-41ef-8f9a-932b8e352af9</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_f31911a1-7da4-4cb4-80cf-45b59e632ece">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_8547cf35-70e0-47e9-8683-44702395341a</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_65bb8cc9-6128-4e37-a528-abaa229ca089">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_b9d27d67-aa41-4d85-8cc1-a90a715f9d37</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_9b572ded-167b-4bef-8d98-c764eca9707d">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_d080f428-cf1e-4919-89db-a8169d735e51</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_606b38a9-3cdc-43ca-bde7-199c9107379f">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_00ab0f5f-5bca-4635-9854-0de89db36a60</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_7040063b-3b96-4eba-bd9b-097ee3619d35">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_f83fb577-55a7-476b-8ea4-83fecdf77f9b</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_4b86826d-3de2-4e47-8d96-4b2c7199a6d3">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_fb861b9d-011e-4046-8f17-cdc453bc3ed3</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_d5330c15-0529-4e45-8572-56321e80b178">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_48d5aa49-31b8-4ff9-a52c-be80258fa9fa</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_61ea1c7a-5426-4428-b34b-4aab7a9a3bbe">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_78da2553-a8ba-47ed-8382-e8c207c1bf4f</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_0af70790-604c-4e1e-a1fb-cb5e053a1d42">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_eea2a384-27ee-44c6-bbd2-6c80a1642768</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_13750595-b032-488f-a251-02cb4b9fbee2">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_e995cf73-40dd-41da-a96c-141d850cbd85</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_bf0eb149-5ea9-4704-b452-e737306dc6ab">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_92f9a2c4-44fb-49ee-bc72-a5a7110bcd84</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_265f320f-d111-4a4c-9966-774e671102b6">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_dd4efc4c-c48c-4723-8866-16999d813d7f</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_fcfec086-4b4f-4f95-8287-2bd25b8125e9">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_fd49a637-753e-4114-8caa-587db1bea80b</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_2fa6f22c-ef22-4fbd-88a9-b85507fd736c">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_f267ba72-6383-44b1-8b6a-37422d3841a4</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_878fadfd-251a-4983-a45b-3d8c26606b1c">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_c511a76d-8c3c-4643-a24c-5124ba36df3a</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_65b3ce22-d63a-4e55-8f40-9e30ef71079d">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_a71a2a78-a185-43e7-891b-34b3247e93bc</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_15279826-6ebe-478c-ac93-7f1c15eb5c1a">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_6ac4abc9-e72b-4e19-9412-80fe38121ec5</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_f02c537e-e0f6-4914-a696-e3bf614e2af1">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_a73d14ba-8b96-4f87-9a62-2f3089395772</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_4a473aeb-4497-44b8-bafd-de8e034752b4">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_9830280e-05a6-487e-bb93-83ae4b2005f6</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_e028e74a-4de7-4558-82b0-b833de82f004">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_d7779470-dc1c-421a-8de7-40cd8671e614</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_a7a168e3-ae8c-44b0-a9a0-c02780e679d7">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_97181f13-30c7-427d-8bc3-a2a8ba556b08</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                    <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_d1273418-d906-4ba3-abdc-9fad99157cc3">
+                      <OBJECT>
+                        <SPEC-OBJECT-REF>_24e864b2-5105-4712-b09a-ce981c8f6e04</SPEC-OBJECT-REF>
+                      </OBJECT>
+                    </SPEC-HIERARCHY>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+              </CHILDREN>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_34697cf4-07b1-4ab3-b580-af3de605f17d">
+              <OBJECT>
+                <SPEC-OBJECT-REF>_fc5a0688-ffa0-4d49-8f88-f6cb7ebe15c1</SPEC-OBJECT-REF>
+              </OBJECT>
+              <CHILDREN>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_4a45fae5-50b3-4d30-8844-d1d1bbe252bc">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_03711176-9aac-4767-a58f-a9238495d0c4</SPEC-OBJECT-REF>
+                  </OBJECT>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_b4e6ce37-df3d-4e64-a3d7-cae12dbf4b13">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_4cb8d2ca-d47c-4666-8551-e8fb663c1667</SPEC-OBJECT-REF>
+                  </OBJECT>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_0617f571-feb0-411d-a87b-e6f8eae10d10">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_c6d0adc9-ba8d-4f81-bb50-7199c07707fb</SPEC-OBJECT-REF>
+                  </OBJECT>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_520c84c1-bc6d-420f-bffc-3eaeaca837f7">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_0264ef81-e5e4-405f-8dde-4dd74e8721a2</SPEC-OBJECT-REF>
+                  </OBJECT>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY LAST-CHANGE="2025-06-04T14:35:37.733Z" IDENTIFIER="_cd6b55be-e7cf-4fbd-8988-9b27bcc022c4">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>_12b51945-516b-46fe-991c-5980dc57d099</SPEC-OBJECT-REF>
+                  </OBJECT>
+                </SPEC-HIERARCHY>
+              </CHILDREN>
+            </SPEC-HIERARCHY>
+          </CHILDREN>
+        </SPECIFICATION>
+      </SPECIFICATIONS>
+    </REQ-IF-CONTENT>
+  </CORE-CONTENT>
+  <TOOL-EXTENSIONS>
+    <REQ-IF-TOOL-EXTENSION>
+      <reqif-common:EXCHANGE-CONVERSATION>
+        <reqif-common:IDENTIFIER>_413c7a94-7772-4dc1-aa9a-4220fdba759e</reqif-common:IDENTIFIER>
+      </reqif-common:EXCHANGE-CONVERSATION>
+    </REQ-IF-TOOL-EXTENSION>
+  </TOOL-EXTENSIONS>
+</REQ-IF>

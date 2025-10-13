@@ -1549,6 +1549,39 @@ In this example REQ-1 is the parent of REQ-2 and REQ-2 refines REQ-1.
 [[/SECTION]]
 
 [[SECTION]]
+MID: b25de974c19746be8eff551919e6d6e1
+UID: SECTION-UG-Single-vs-multiline-fields
+TITLE: Single vs multiline fields
+
+[TEXT]
+MID: affdbd758a2b44c2af9f3d61fe4414c2
+STATEMENT: >>>
+For each node field, StrictDoc supports both single-line and multiline fields.
+
+Example:
+
+.. code-block::
+
+    [NODE]
+    TITLE: Single-line field
+    STATEMENT: >>>
+    Multiline field.
+    <<<
+
+The following summarizes the current StrictDoc convention for using single-line vs. multiline fields:
+
+In the default and most common use case, single-line fields are used for meta-information such as ``MID``, ``UID``, ``TITLE``, ``TAGS``, etc. Multiline fields are used for the actual document or requirement content such as ``STATEMENT``, ``RATIONALE``, ``COMMENT``, and similar fields.
+
+Single-line fields are parsed as plain text, not as RST. To render RST or to have ``[LINK: ...]`` recognized as HTML, the field must be multiline.
+
+By convention, each node contains one primary multiline ``STATEMENT`` field (or an equivalent). All fields before this main statement field should be single-line fields storing meta-information, and all fields after the statement field should typically be multiline content.
+
+There is an ongoing discussion on GitHub about formalizing the single-line and multiline convention in the SDoc format: https://github.com/strictdoc-project/strictdoc/discussions/2221. User feedback is welcome.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 57df0956302f4c728f6b35606320b660
 UID: UG_COMPOSABLE_DOCUMENTS
 TITLE: DOCUMENT_FROM_FILE – Composing documents from other documents
@@ -1741,7 +1774,7 @@ user interface as well as other export formats.
 
 All fields before the content field are considered meta information. Meta information
 fields are assumed to be single-line. The content field and all following fields
-accept single-line and multiline strings.
+accept single-line and multiline strings. See [LINK: SECTION-UG-Single-vs-multiline-fields] for more details.
 
 .. note::
 
@@ -2161,9 +2194,7 @@ TITLE: Links
 [TEXT]
 MID: 8b07c82f462348a58c3ab81be4db753d
 STATEMENT: >>>
-Elements that have an UID can be referenced from section text using a ``[LINK: <UID>]`` tag.
-To reference a section that has an UID, use ``[LINK: <Section UID>]`` tag.
-Likewise, a requirement can be referenced with ``[LINK: <Requirement UID>]``.
+Elements that have a UID can be referenced from any node’s multiline field using a ``[LINK: <UID>]`` tag.
 
 Example:
 
@@ -2171,8 +2202,7 @@ The following link references a section: [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 
 .. note::
 
-    Adding a ``LINK`` tag will only work from the section text.
-    In the requirement fields, the LINK tag will not be recognized.
+    Adding a LINK tag only works when it is placed in multiline fields written with ``>>>...<<<``. Single-line fields do not support RST syntax or tags such as ``[LINK:...]``. See also: [LINK: SECTION-UG-Single-vs-multiline-fields].
 <<<
 
 [[/SECTION]]

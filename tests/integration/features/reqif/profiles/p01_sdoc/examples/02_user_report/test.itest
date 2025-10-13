@@ -1,0 +1,10 @@
+RUN: %strictdoc --debug import reqif sdoc %S/sample.reqif %T/
+RUN: %strictdoc export %T/
+
+RUN: %check_exists --file %T/NEEDS.sdoc
+
+RUN: %strictdoc export --formats=reqif-sdoc %T/NEEDS.sdoc --output-dir %T
+RUN: %strictdoc import reqif sdoc %T/reqif/output.reqif %T/reimport
+
+# FIXME: Get to 100% compatibility.
+_UN: %diff %T/NEEDS.sdoc %T/reimport/NEEDS.sdoc

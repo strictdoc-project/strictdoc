@@ -9,6 +9,6 @@ CHECK-NOT: html2pdf4doc: ChromeDriver available at path: {{.*}}strictdoc_cache{{
 
 RUN: %check_exists --file %T/html2pdf/pdf/input.pdf
 
-RUN: %check_exists --file %T/html2pdf/html/06_system_chromedriver/input.html
+RUN: %check_exists --file %T/html2pdf/html/06_system_chromedriver/input-PDF.html
 
 RUN: python %S/test_pdf.py

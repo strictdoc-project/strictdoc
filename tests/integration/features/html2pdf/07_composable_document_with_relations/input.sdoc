@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Project Risk Management
+
+[TEXT]
+STATEMENT: Main file
+
+[DOCUMENT_FROM_FILE]
+FILE: nested/included.sdoc
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Third one
+STATEMENT: >>>
+Third statement links to fourth: [LINK: REQ-004]
+<<<
+
+[REQUIREMENT]
+UID: REQ-004
+TITLE: fourth one
+STATEMENT: >>>
+The fourth statement
+<<<

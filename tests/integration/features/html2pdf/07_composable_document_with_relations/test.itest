@@ -1,0 +1,18 @@
+REQUIRES: TEST_HTML2PDF
+
+RUN: %strictdoc export %S --formats=html2pdf --included-documents --output-dir %T | filecheck %s --dump-input=fail
+CHECK: html2pdf4doc: JS logs from the print session
+
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html
+RUN: %check_exists --file %T/html2pdf/pdf/input.pdf
+
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html | filecheck %s --dump-input=fail --check-prefix CHECK-INPUT-PDF
+CHECK-INPUT-PDF: <p>First statement links to second: <a href="../07_composable_document_with_relations/input-PDF.html#REQ-002">🔗&nbsp;1.2. second one</a></p>
+
+RUN: %strictdoc export %S --formats=html2pdf --included-documents --generate-bundle-document --output-dir %T | filecheck %s --dump-input=fail
+# With --generate-bundle-document, a bundle document is generated.
+RUN: %check_exists --file %T/html2pdf/html/bundle-PDF.html
+RUN: %check_exists --file %T/html2pdf/pdf/bundle.pdf
+
+FIXME: CHECK-INPUT-PDF-BUNDLE: Resolve the links correctly.
+

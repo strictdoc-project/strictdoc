@@ -3,15 +3,15 @@ REQUIRES: TEST_HTML2PDF
 RUN: %strictdoc export %S --formats=html2pdf --output-dir %T | filecheck %s --dump-input=fail
 CHECK: html2pdf4doc: JS logs from the print session
 
-RUN: %check_exists --file %T/html2pdf/html/03_three_documents_with_assets/input.html
-RUN: %check_exists --file %T/html2pdf/html/03_three_documents_with_assets/nested/input2.html
-RUN: %check_exists --file %T/html2pdf/html/03_three_documents_with_assets/nested/subnested/input3.html
+RUN: %check_exists --file %T/html2pdf/html/03_three_documents_with_assets/input-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/03_three_documents_with_assets/nested/input2-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/03_three_documents_with_assets/nested/subnested/input3-PDF.html
 
 RUN: %check_exists --file %T/html2pdf/html/03_three_documents_with_assets/_assets/file.svg
 RUN: %check_exists --file %T/html2pdf/html/03_three_documents_with_assets/nested/_assets/file.svg
 RUN: %check_exists --file %T/html2pdf/html/03_three_documents_with_assets/nested/subnested/_assets/file.svg
 
-RUN: %cat %T/html2pdf/html/03_three_documents_with_assets/nested/subnested/input3.html | filecheck %s --check-prefix CHECK-DOC-HTML
+RUN: %cat %T/html2pdf/html/03_three_documents_with_assets/nested/subnested/input3-PDF.html | filecheck %s --check-prefix CHECK-DOC-HTML
 CHECK-DOC-HTML:data="_assets/file.svg"
 
 RUN: python %S/test_pdf.py

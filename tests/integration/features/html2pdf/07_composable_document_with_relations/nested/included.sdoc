@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: Included doc
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: First one
+STATEMENT: >>>
+First statement links to second: [LINK: REQ-002]
+<<<
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: second one
+STATEMENT: >>>
+The second statement
+<<<

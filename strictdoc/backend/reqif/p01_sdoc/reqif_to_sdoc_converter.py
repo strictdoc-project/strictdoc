@@ -87,15 +87,16 @@ class P01_ReqIFToSDocConverter:
         ):
             return []
 
-        for (
-            spec_relation_
-        ) in reqif_bundle.core_content.req_if_content.spec_relations:
-            spec_relation_type_ = reqif_bundle.lookup.get_spec_type_by_ref(
-                spec_relation_.relation_type_ref
-            )
-            context.map_source_target_pairs_to_spec_relation_types[
-                (spec_relation_.source, spec_relation_.target)
-            ] = spec_relation_type_
+        if reqif_bundle.core_content.req_if_content.spec_relations is not None:
+            for (
+                spec_relation_
+            ) in reqif_bundle.core_content.req_if_content.spec_relations:
+                spec_relation_type_ = reqif_bundle.lookup.get_spec_type_by_ref(
+                    spec_relation_.relation_type_ref
+                )
+                context.map_source_target_pairs_to_spec_relation_types[
+                    (spec_relation_.source, spec_relation_.target)
+                ] = spec_relation_type_
 
         documents: List[SDocDocument] = []
         for (
@@ -282,6 +283,15 @@ class P01_ReqIFToSDocConverter:
                         required="False",
                     )
                 )
+            elif attribute.attribute_type == SpecObjectAttributeType.INTEGER:
+                fields.append(
+                    GrammarElementFieldString(
+                        parent=None,
+                        title=sdoc_safe_field_name,
+                        human_title=sdoc_field_human_title,
+                        required="False",
+                    )
+                )
             elif attribute.attribute_type == SpecObjectAttributeType.XHTML:
                 fields.append(
                     GrammarElementFieldString(
@@ -338,7 +348,7 @@ class P01_ReqIFToSDocConverter:
                 pass
             else:
                 raise NotImplementedError(  # pragma: no cover
-                    attribute
+                    attribute.attribute_type, attribute
                 ) from None
 
         requirement_element = GrammarElement(

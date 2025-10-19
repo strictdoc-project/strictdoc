@@ -13,16 +13,16 @@ REGEX_DOUBLE_WILDCARD = (
 
 REGEX_MASK_VALIDATION = rf"[^(\\|\/)]{REGEX_DOUBLE_WILDCARD}"
 
-MOST_COMMON_CHARACTERS = ("[", "]", "(", ")", "{", "}", "?", "+", "!")
+MOST_COMMON_CHARACTERS = ("..", "[", "]", "(", ")", "{", "}", "?", "+", "!")
 
 
 def validate_mask(mask: str) -> None:
     if mask == "":
         raise SyntaxError("Path mask must not be empty.")
 
-    if not mask[0].isalnum() and mask[0] != "*":
+    if not mask[0].isalnum() and mask[0] not in ("*", "."):
         raise SyntaxError(
-            "Path mask must start with an alphanumeric character or "
+            "Path mask must start with an alphanumeric character, a dot, or "
             "a wildcard symbol '*'."
         )
 

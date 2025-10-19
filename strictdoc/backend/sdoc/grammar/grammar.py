@@ -1,7 +1,9 @@
 """
-@relation(SDOC-SRS-20, scope=file)
+@relation(SDOC-SRS-19, SDOC-SRS-127, SDOC-SRS-20, SDOC-SRS-23, SDOC-SRS-145, scope=file)
 """
 
+# FIXME: Extract this to a file with a shared set of global constants.
+# @relation(SDOC-SRS-22, scope=line)
 REGEX_UID = r"([\w]+[\w()\-\/.: ]*)"
 
 NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"

@@ -69,6 +69,9 @@ class SourceFileTraceabilityInfo:
 
         self.markers: List[RelationMarkerType] = []
 
+    def is_document(self) -> bool:
+        return False
+
     # FIXME: is_requirement() will go away.
     def is_requirement(self) -> bool:
         return False

@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-10, scope=file)
+#
+
 name: "StrictDoc on macOS"
 
 on:

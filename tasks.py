@@ -233,6 +233,10 @@ def test_end2end(
     test_path=None,
     coverage: bool = False,
 ):
+    """
+    @relation(SDOC-SRS-46, scope=function)
+    """
+
     environment = {}
 
     coverage_command_or_none = ""
@@ -318,6 +322,10 @@ def test_end2end(
 
 @task(aliases=["tu"])
 def test_unit(context, focus=None, output=False):
+    """
+    @relation(SDOC-SRS-44, scope=function)
+    """
+
     Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
 
     focus_argument = f"-k {focus}" if focus is not None else ""
@@ -385,6 +393,10 @@ def test_integration(
     shard=None,
     environment=ToxEnvironment.CHECK,
 ):
+    """
+    @relation(SDOC-SRS-45, scope=function)
+    """
+
     cwd = os.getcwd()
 
     if strictdoc is None:
@@ -547,6 +559,10 @@ def coverage_combine(context):
 
 @task
 def lint_ruff_format(context):
+    """
+    @relation(SDOC-SRS-42, scope=function)
+    """
+
     result: invoke.runners.Result = run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
@@ -572,6 +588,10 @@ def lint_ruff_format(context):
 
 @task(aliases=["lr"])
 def lint_ruff(context):
+    """
+    @relation(SDOC-SRS-42, scope=function)
+    """
+
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
@@ -581,9 +601,12 @@ def lint_ruff(context):
     )
 
 
-# @sdoc[SDOC-SRS-43]
 @task(aliases=["lm"])
 def lint_mypy(context):
+    """
+    @relation(SDOC-SRS-41, SDOC-SRS-43, scope=function)
+    """
+
     # These checks do not seem to be useful:
     # - import
     # --disallow-any-expr
@@ -624,9 +647,6 @@ def lint_mypy(context):
                 --python-version=3.9
         """,
     )
-
-
-# # @sdoc[/SDOC-SRS-43]
 
 
 @task

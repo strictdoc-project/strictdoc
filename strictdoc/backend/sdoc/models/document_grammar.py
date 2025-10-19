@@ -43,6 +43,10 @@ class DocumentGrammar(SDocGrammarIF):
         parent: Optional[SDocDocumentIF],
         enable_mid: bool = False,
     ) -> "DocumentGrammar":
+        """
+        @relation(SDOC-SRS-93, scope=function)
+        """
+
         text_element: GrammarElement = (
             DocumentGrammar.create_default_text_element(enable_mid=enable_mid)
         )

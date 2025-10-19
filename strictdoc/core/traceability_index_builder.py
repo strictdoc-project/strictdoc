@@ -218,6 +218,10 @@ class TraceabilityIndexBuilder:
         document_tree: DocumentTree,
         project_config: ProjectConfig,
     ) -> TraceabilityIndex:
+        """
+        @relation(SDOC-SRS-32, SDOC-SRS-102, scope=function)
+        """
+
         # FIXME: Too many things going on below. Would be great to simplify this
         # workflow.
         d_01_document_iterators: Dict[

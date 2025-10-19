@@ -532,6 +532,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     def get_edit_requirement(
         node_id: str, context_document_mid: str
     ) -> Response:
+        """
+        @relation(SDOC-SRS-106, scope=function)
+        """
+
         requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(MID(node_id))
         )
@@ -630,6 +634,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.post("/actions/document/update_requirement")
     async def document__update_requirement(request: Request) -> Response:
+        """
+        @relation(SDOC-SRS-106, scope=function)
+        """
+
         request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         requirement_mid = request_dict["requirement_mid"]
@@ -791,6 +799,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         "/actions/document/cancel_edit_requirement", response_class=Response
     )
     def cancel_edit_requirement(requirement_mid: str) -> Response:
+        """
+        @relation(SDOC-SRS-106, scope=function)
+        """
+
         assert isinstance(requirement_mid, str) and len(requirement_mid) > 0, (
             f"{requirement_mid}"
         )
@@ -1048,6 +1060,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.get("/actions/project_index/new_document", response_class=Response)
     def get_new_document() -> Response:
+        """
+        @relation(SDOC-SRS-107, scope=function)
+        """
+
         output = env().render_template_as_markup(
             "actions/project_index/stream_new_document.jinja.html",
             error_object=ErrorObject(),
@@ -1068,6 +1084,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document_title: str = Form(""),
         document_path: str = Form(""),
     ) -> Response:
+        """
+        @relation(SDOC-SRS-107, scope=function)
+        """
+
         error_object = ErrorObject()
         if document_title is None or len(document_title) == 0:
             error_object.add_error(
@@ -1306,6 +1326,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.get("/actions/document/edit_config", response_class=Response)
     def document__edit_config(document_mid: str) -> Response:
+        """
+        @relation(SDOC-SRS-57, scope=function)
+        """
+
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1386,6 +1410,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.post("/actions/document/save_config", response_class=Response)
     async def document__save_edit_config(request: Request) -> Response:
+        """
+        @relation(SDOC-SRS-57, scope=function)
+        """
+
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
@@ -1554,6 +1582,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.get("/actions/document/cancel_edit_config", response_class=Response)
     def document__cancel_edit_config(document_mid: str) -> Response:
+        """
+        @relation(SDOC-SRS-57, scope=function)
+        """
+
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1643,6 +1675,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.get("/actions/document/edit_grammar", response_class=Response)
     def document__edit_grammar(document_mid: str) -> Response:
+        """
+        @relation(SDOC-SRS-56, scope=function)
+        """
+
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1661,6 +1697,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.post("/actions/document/save_grammar", response_class=Response)
     async def document__save_grammar(request: Request) -> Response:
+        """
+        @relation(SDOC-SRS-56, scope=function)
+        """
+
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
@@ -1745,6 +1785,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         "/actions/document/add_grammar_element", response_class=Response
     )
     def document__add_grammar_element(document_mid: str) -> Response:
+        """
+        @relation(SDOC-SRS-56, scope=function)
+        """
+
         form_object: GrammarFormObject = GrammarFormObject(
             document_mid=document_mid,
             fields=[],  # Not used in this limited partial template.
@@ -1766,6 +1810,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     def document__edit_grammar_element(
         document_mid: str, element_mid: str
     ) -> Response:
+        """
+        @relation(SDOC-SRS-56, scope=function)
+        """
+
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1790,6 +1838,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         "/actions/document/save_grammar_element", response_class=Response
     )
     async def document__save_grammar_element(request: Request) -> Response:
+        """
+        @relation(SDOC-SRS-56, scope=function)
+        """
+
         request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
@@ -1875,6 +1927,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     @router.get("/actions/document/add_grammar_field", response_class=Response)
     def document__add_grammar_field(document_mid: str) -> Response:
+        """
+        @relation(SDOC-SRS-56, scope=function)
+        """
+
         form_object: GrammarElementFormObject = GrammarElementFormObject(
             document_mid=document_mid,
             element_mid="NOT_RELEVANT",
@@ -1899,6 +1955,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         "/actions/document/add_grammar_relation", response_class=Response
     )
     def document__add_grammar_relation(document_mid: str) -> Response:
+        """
+        @relation(SDOC-SRS-56, scope=function)
+        """
+
         form_object = GrammarElementFormObject(
             document_mid=document_mid,
             element_mid="NOT_RELEVANT",
@@ -2426,6 +2486,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             return get_asset(request, full_path)
 
     def get_document(request: Request, url_to_document: str) -> Response:
+        """
+        @relation(SDOC-SRS-4, scope=function)
+        """
+
         document_relative_path: SDocRelativePath = SDocRelativePath.from_url(
             url_to_document
         )

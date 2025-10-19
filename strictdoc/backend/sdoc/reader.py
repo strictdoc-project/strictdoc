@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-105, scope=file)
+"""
+
 from copy import copy
 from typing import Optional, Tuple
 

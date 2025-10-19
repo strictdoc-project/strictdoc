@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-46, scope=file)
+"""
+
 import os
 import shutil
 import subprocess

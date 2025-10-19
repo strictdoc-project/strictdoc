@@ -21,6 +21,10 @@ class ManageAutoUIDCommand:
     def execute(
         *, project_config: ProjectConfig, parallelizer: Parallelizer
     ) -> None:
+        """
+        @relation(SDOC-SRS-85, scope=function)
+        """
+
         # FIXME: Traceability Index is coupled with HTML output.
         project_config.export_output_html_root = "NOT_RELEVANT"
 

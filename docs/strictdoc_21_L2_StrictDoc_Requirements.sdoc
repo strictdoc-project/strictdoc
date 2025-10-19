@@ -1372,8 +1372,6 @@ STATUS: Active
 TITLE: File marker
 STATEMENT: >>>
 StrictDoc's shall support file markers that can be attached to entire source files.
-
-NOTE: A single-line marker points to a single line in a source file.
 <<<
 RATIONALE: >>>
 There are cases when a requirement can be attached to an entire file.
@@ -2329,5 +2327,9 @@ All StrictDoc software shall be licensed under the Apache 2 license.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-40
+- TYPE: File
+  VALUE: LICENSE
+- TYPE: File
+  VALUE: NOTICE
 
 [[/SECTION]]

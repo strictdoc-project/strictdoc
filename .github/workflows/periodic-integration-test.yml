@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-9, SDOC-SRS-10, scope=file)
+#
+
 ---
 name: StrictDoc - Periodic integration test
 on:

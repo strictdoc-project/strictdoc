@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-85, scope=file)
+#
+
 RUN: cp %S/input.sdoc %T/
 RUN: %strictdoc manage auto-uid %T/
 RUN: %diff %S/input.expected.sdoc %T/input.sdoc

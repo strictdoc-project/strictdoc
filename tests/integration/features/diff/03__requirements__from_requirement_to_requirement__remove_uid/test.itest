@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-111, scope=file)
+#
+
 RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-section">Summary of the changes</div>

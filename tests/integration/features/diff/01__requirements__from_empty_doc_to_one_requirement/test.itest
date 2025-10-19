@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-111, scope=file)
+#
+
 RUN: cd %S && %strictdoc --debug diff %S/lhs %S/rhs --output-dir %T
 
 RUN: cat %T/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG

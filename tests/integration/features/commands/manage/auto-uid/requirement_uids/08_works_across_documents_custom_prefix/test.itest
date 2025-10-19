@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-85, scope=file)
+#
+
 RUN: cp %S/input1.sdoc %T/
 RUN: cp %S/input2.sdoc %T/
 RUN: cp %S/input3.sdoc %T/

@@ -3,6 +3,8 @@
 # JUnit XML files with SDoc content.
 # The scope of the auto_uid is only SDoc files. All other extensions must be ignored.
 #
+# @relation(SDOC-SRS-85, scope=file)
+#
 
 RUN: cp %S/*.xml %T/
 RUN: %strictdoc manage auto-uid %T | filecheck %s --dump-input=fail

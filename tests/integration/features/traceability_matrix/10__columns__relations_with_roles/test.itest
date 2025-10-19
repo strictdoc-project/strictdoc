@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-112, scope=file)
+#
+
 RUN: %strictdoc export %S/input --output-dir %T | filecheck %s
 CHECK: Published: Hello world doc #1
 

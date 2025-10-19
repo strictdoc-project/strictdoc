@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-111, scope=file)
+#
+
 # FIXME: Migrate this test to %T.
 
 RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T

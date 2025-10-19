@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-2, scope=file)
+#
+
 RUN: %strictdoc export %S --no-parallelization --config %S/strictdoc.toml --output-dir %T | filecheck %s --dump-input=fail --check-prefix=CHECK-FIRST
 CHECK-FIRST: Published: Parent doc
 CHECK-FIRST: Published: Child doc

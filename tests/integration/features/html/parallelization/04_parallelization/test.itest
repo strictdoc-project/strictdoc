@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-1, scope=file)
+#
+
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published:
 CHECK: Published:

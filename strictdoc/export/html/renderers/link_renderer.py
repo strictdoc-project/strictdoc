@@ -114,6 +114,13 @@ class LinkRenderer:
         assert isinstance(node, (SDocNode, Anchor)), node
         assert isinstance(document_type, DocumentType), type(document_type)
         local_link = self.render_local_anchor(node)
+
+        # If the context document is a bundle, all contained documents are
+        # merged into this bundle document. In this case, all links are local,
+        # so there is no need to resolve links to external documents.
+        if context_document is not None and context_document.is_bundle_document:
+            return f"#{local_link}"
+
         including_document = node.get_including_document()
         if (
             including_document is not None

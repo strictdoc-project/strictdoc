@@ -989,6 +989,8 @@ class TraceabilityIndex:
         - The bundle is generated to the root of the output folder (level=0).
         - Some variables do not contribute (yet) to the final result, so they
           are marked as NOT_RELEVANT.
+
+        @relation(SDOC-SRS-51, scope=function)
         """
         traceability_index_copy = deepcopy(self)
         bundle_document = SDocDocument(

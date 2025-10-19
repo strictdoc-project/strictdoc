@@ -741,13 +741,18 @@ RELATIONS:
 MID: f2fd90ad8a2946e7b085233a9c7a8a75
 UID: SDOC-SRS-51
 STATUS: Active
-TITLE: Export to printable HTML pages (HTML2PDF)
+TITLE: Export to HTML content to PDF (HTML2PDF)
 STATEMENT: >>>
-StrictDoc shall provide export to printable HTML pages.
+StrictDoc shall allow exporting documents and entire documentation trees to PDF.
+<<<
+RATIONALE: >>>
+As required by the parent requirement, PDF is one of the most common documentation formats.
 <<<
 RELATIONS:
 - TYPE: Parent
   VALUE: DO178-5
+- TYPE: Parent
+  VALUE: SDOC-SSS-96
 
 [REQUIREMENT]
 MID: 8811f0ef33de4365bc66a602a8c184f6

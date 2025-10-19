@@ -105,6 +105,7 @@ class ExportAction:
                         specific_documents=(DocumentType.DOCUMENT,),
                     )
 
+            # @relation(SDOC-SRS-51, scope=range_start)
             if "html2pdf" in self.project_config.export_formats:
                 output_html2pdf_root = os.path.join(
                     self.project_config.output_dir, "html2pdf"
@@ -128,6 +129,7 @@ class ExportAction:
                         output_html2pdf_root,
                         flat_assets=True,
                     )
+            # @relation(SDOC-SRS-51, scope=range_end)
 
         if "rst" in self.project_config.export_formats:
             output_rst_root = os.path.join(

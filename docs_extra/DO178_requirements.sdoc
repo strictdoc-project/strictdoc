@@ -173,9 +173,6 @@ TITLE: PDF and HTML publishing
 STATEMENT: >>>
 StrictDoc shall support publication of documents to HTML and PDF formats.
 <<<
-COMMENT: >>>
-N: Sphinx is nice for release.
-<<<
 
 [REQUIREMENT]
 MID: 8b73ce9efcc840b2be272d5aaef08e70

@@ -1122,6 +1122,18 @@ The Requirements Tool should fundamentally support the exchange of documentation
 <<<
 
 [REQUIREMENT]
+MID: 086eb992322d4c43ad91a40f6c9f9952
+UID: SDOC-SSS-96
+STATUS: Active
+TITLE: PDF export
+STATEMENT: >>>
+The Requirements Tool shall support exporting documentation content to PDF, both individual documents and complete documentation trees.
+<<<
+RATIONALE: >>>
+PDF is one of the most common formats for reviewing documentation.
+<<<
+
+[REQUIREMENT]
 MID: 73e70548c2cf415f94adbf1066d5fe4b
 UID: SDOC-SSS-58
 STATUS: Active

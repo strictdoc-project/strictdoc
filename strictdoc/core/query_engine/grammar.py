@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-155, scope=file)
+"""
+
 QUERY_GRAMMAR = r"""
 Query:
  root_expression = BooleanExpression

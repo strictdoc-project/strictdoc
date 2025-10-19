@@ -853,9 +853,9 @@ RELATIONS:
 MID: 13968ae160744e10ba8979eaee2f4f54
 UID: SDOC-SRS-55
 STATUS: Active
-TITLE: Edit requirement nodes
+TITLE: Update node
 STATEMENT: >>>
-StrictDoc's Document screen shall allow editing requirements.
+StrictDoc's Document screen shall allow update document content.
 <<<
 RELATIONS:
 - TYPE: Parent

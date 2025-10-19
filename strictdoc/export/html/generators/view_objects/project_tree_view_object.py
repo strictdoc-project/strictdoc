@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-53, scope=file)
+"""
+
 from dataclasses import dataclass
 from typing import Union
 

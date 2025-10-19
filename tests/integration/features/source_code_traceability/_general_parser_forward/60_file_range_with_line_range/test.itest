@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-145, scope=file)
+#
+
 NOTE: The first link is created from a forward marker, the second from a backward markers.
       Ensure that both links are identical from the UI perspective.
 

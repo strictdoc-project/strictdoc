@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-155, scope=file)
+"""
+
 from dataclasses import dataclass
 from typing import Iterator, List, Optional, Union
 

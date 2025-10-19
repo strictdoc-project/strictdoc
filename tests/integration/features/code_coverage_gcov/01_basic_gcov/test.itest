@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-144, scope=file)
+#
+
 RUN: cd %T && gcc --coverage -g -O0 -o main %S/src/main.c
 
 RUN: cd %T && ./main | filecheck %s --check-prefix CHECK-C

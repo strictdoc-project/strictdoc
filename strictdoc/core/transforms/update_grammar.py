@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-56, scope=file)
+"""
+
 from typing import Dict, List
 
 from strictdoc.backend.sdoc.models.document import SDocDocument

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-54, scope=file)
+"""
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Iterator, List, Optional, Sequence, Tuple, Union

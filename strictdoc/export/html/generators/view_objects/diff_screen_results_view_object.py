@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-111, scope=file)
+"""
+
 import urllib
 from dataclasses import dataclass
 from typing import List, Optional, Set

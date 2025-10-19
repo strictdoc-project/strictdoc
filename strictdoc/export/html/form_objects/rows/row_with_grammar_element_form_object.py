@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-56, scope=file)
+"""
+
 from dataclasses import dataclass
 from typing import Any, Dict, List
 

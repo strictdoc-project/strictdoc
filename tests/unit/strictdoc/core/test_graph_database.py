@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-28, scope=file)
+"""
+
 from strictdoc.core.graph.many_to_many_set import ManyToManySet
 from strictdoc.core.graph.one_to_one_dictionary import OneToOneDictionary
 from strictdoc.core.graph_database import (

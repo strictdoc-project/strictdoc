@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-27, scope=file)
+#
+
 RUN: %strictdoc export %S --enable-mathjax --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 

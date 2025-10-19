@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-46, scope=file)
+#
+
 name: "StrictDoc - End-to-end tests"
 
 on:

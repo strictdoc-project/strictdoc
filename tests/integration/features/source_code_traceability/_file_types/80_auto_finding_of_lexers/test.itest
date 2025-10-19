@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-142, scope=file)
+#
+
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Published: Hello world doc
 
@@ -26,4 +30,3 @@ CHECK-SOURCE-FILE: file.ml, range
 RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: file.ml
 CHECK-SOURCE-COVERAGE: strictdoc.toml
-CHECK-SOURCE-COVERAGE: test.itest

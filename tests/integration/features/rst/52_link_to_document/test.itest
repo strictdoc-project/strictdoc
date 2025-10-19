@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-70, scope=file)
+#
+
 RUN: %strictdoc export %S --formats=rst --output-dir %T
 
 RUN: %check_exists --file "%T/rst/input1.rst"

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-19, scope=file)
+"""
+
 from typing import Dict, List, Optional, Set
 
 from strictdoc.backend.sdoc.models.grammar_element import (

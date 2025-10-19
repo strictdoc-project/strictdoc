@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-2, scope=file)
+#
+
 # Create a separate input folder to ensure clear management of the SDoc files.
 RUN: %mkdir %S/sandbox
 RUN: %cp %S/strictdoc.toml %S/sandbox/

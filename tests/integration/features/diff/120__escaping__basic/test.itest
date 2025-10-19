@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-111, scope=file)
+#
+
 RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
 
 RUN: cat %T/diff.html | filecheck %s --dump-input=fail --check-prefix=CHECK-DIFF

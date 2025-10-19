@@ -1,4 +1,8 @@
-RUN: %strictdoc export %S/input --output-dir %T | filecheck %s --dump-input=fail
+#
+# @relation(SDOC-SRS-112, scope=file)
+#
+
+RUN: %strictdoc --debug export %S/input --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%T/html/traceability_matrix.html"

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-39, scope=file)
+"""
+
 import datetime
 import os
 import re
@@ -86,6 +90,10 @@ class ProjectConfigDefault:
 
 @auto_described
 class ProjectConfig:
+    """
+    @relation(SDOC-SRS-119, scope=class)
+    """
+
     def __init__(
         self,
         project_title: str = ProjectConfigDefault.DEFAULT_PROJECT_TITLE,

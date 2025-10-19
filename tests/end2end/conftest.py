@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-46, scope=file)
+"""
+
 # ruff: noqa: ARG001
 import os
 import sys

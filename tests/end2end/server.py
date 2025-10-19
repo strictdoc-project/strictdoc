@@ -4,6 +4,8 @@ A non-blocking read on a subprocess.PIPE in Python,
 https://stackoverflow.com/a/4896288/598057
 TODO: Consider switching from subprocess to asyncio for starting a server...
 https://stackoverflow.com/a/68564737/598057
+
+@relation(SDOC-SRS-46, scope=file)
 """
 
 import datetime

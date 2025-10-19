@@ -73,6 +73,10 @@ class Reference:
 
 @auto_described
 class FileReference(Reference):
+    """
+    @relation(SDOC-SRS-145, scope=function)
+    """
+
     def __init__(
         self, parent: Any, g_file_entry: FileEntry, role: Optional[str] = None
     ):

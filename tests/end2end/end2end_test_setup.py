@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-46, scope=file)
+"""
+
 import difflib
 import filecmp
 import os.path

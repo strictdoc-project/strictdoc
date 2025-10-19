@@ -15,6 +15,8 @@ DocumentMeta(
     output_document_dir_full_path = "/tmp/doc_project/output/html/doc_project",
     output_document_dir_rel_path = "doc_project"
 )
+
+@relation(SDOC-SRS-48, scope=file)
 """
 
 import os

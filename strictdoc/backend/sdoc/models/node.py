@@ -100,6 +100,10 @@ class SDocNodeField:
 
 @auto_described
 class SDocNode(SDocNodeIF):
+    """
+    @relation(SDOC-SRS-135, SDOC-SRS-100, scope=class)
+    """
+
     def __init__(
         self,
         parent: Union[SDocDocumentIF, SDocNodeIF],
@@ -770,6 +774,10 @@ class SDocNode(SDocNodeIF):
 
 @auto_described
 class SDocCompositeNode(SDocNode):
+    """
+    @relation(SDOC-SRS-99, scope=class)
+    """
+
     def __init__(
         self,
         parent: Union[SDocDocumentIF, SDocNodeIF],

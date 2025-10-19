@@ -13,9 +13,9 @@ def test_case_01_empty_mask_allows_everything():
     assert "Path mask must not be empty." in exc_info.value.args[0]
 
     with pytest.raises(SyntaxError) as exc_info:
-        validate_mask(".")
+        validate_mask(" ")
     assert (
-        "Path mask must start with an alphanumeric character or "
+        "Path mask must start with an alphanumeric character, a dot, or "
         "a wildcard symbol '*'."
     ) in exc_info.value.args[0]
 
@@ -39,5 +39,5 @@ def test_case_01_empty_mask_allows_everything():
         validate_mask("a[")
     assert (
         "Path mask must not contain any of the special characters: "
-        "('[', ']', '(', ')', '{', '}', '?', '+', '!')."
+        "('..', '[', ']', '(', ')', '{', '}', '?', '+', '!')."
     ) in exc_info.value.args[0]

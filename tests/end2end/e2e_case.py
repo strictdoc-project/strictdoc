@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-46, scope=file)
+"""
+
 from time import sleep
 
 from selenium.common import WebDriverException

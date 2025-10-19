@@ -78,12 +78,16 @@ class DocumentFinder:
             f"Reading SDOC: {os.path.basename(doc_full_path)}"
         ):
             document_or_grammar: Union[SDocDocument, DocumentGrammar]
+
+            # @relation(SDOC-SRS-104, scope=range_start)
             if doc_full_path.endswith(".sdoc"):
                 sdoc_reader: SDReader = SDReader()
                 document_or_grammar = sdoc_reader.read_from_file(
                     doc_full_path, project_config
                 )
                 assert isinstance(document_or_grammar, SDocDocument)
+            # @relation(SDOC-SRS-104, scope=range_end)
+
             elif doc_full_path.endswith(".sgra"):
                 sgra_reader = SDocGrammarReader()
                 document_or_grammar = sgra_reader.read_from_file(
@@ -125,6 +129,10 @@ class DocumentFinder:
         project_config: ProjectConfig,
         parallelizer: Parallelizer,
     ) -> DocumentTree:
+        """
+        @relation(SDOC-SRS-48, scope=function)
+        """
+
         assert isinstance(file_trees, list)
 
         output_root_html = project_config.export_output_html_root

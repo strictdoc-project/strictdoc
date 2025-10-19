@@ -1,5 +1,5 @@
 """
-@relation(SDOC-SRS-137, SDOC-SRS-140, scope=file)
+@relation(SDOC-SRS-137, SDOC-SRS-139, SDOC-SRS-140, scope=file)
 """
 
 from copy import copy

@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-8, scope=file)
+#
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -77,6 +81,7 @@ dependencies = [
     "openpyxl >= 3.1.0",
 
     # ReqIF
+    # @relation(SDOC-SRS-73, scope=line)
     "reqif >= 0.0.39, == 0.*",
 
     # SPDX

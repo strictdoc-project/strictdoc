@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-46, scope=file)
+"""
+
 WAIT_TIMEOUT = 10
 POLL_TIMEOUT = 0.1
 WARMUP_INTERVAL = 0

@@ -19,7 +19,15 @@
       {% elif node.is_source_file() %}
         <sdoc-node node-style="card" node-role="requirement" data-testid="node-source-file">
           <sdoc-node-field>
+          {#
+           # The source files are not generated when there are no nodes linking to them.
+           # Adding hyperlinks only if the files actually exist.
+           #}
+          {% if node.ng_map_reqs_to_markers.keys() | length > 0 %}
           <a href="{{ view_object.render_source_file_link_from_root_2(node.source_file) }}">{{ node.source_file.in_doctree_source_file_rel_path }}</a>
+          {% else %}
+          {{ node.source_file.in_doctree_source_file_rel_path }}
+          {% endif %}
           </sdoc-node-field>
           <sdoc-node-field>
           Lines: {{ node.file_stats.lines_total }}

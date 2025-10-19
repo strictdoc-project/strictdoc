@@ -1,5 +1,5 @@
 """
-@relation(SDOC-SRS-142, scope=file)
+@relation(SDOC-SRS-142, SDOC-SRS-146, scope=file)
 """
 
 from typing import List, Optional, Sequence

@@ -139,11 +139,7 @@ class FileFinder:
                 dirs[:] = []
                 continue
 
-            dirs[:] = [
-                d
-                for d in dirs
-                if (not d.startswith(".") and d not in ("output", "Output"))
-            ]
+            dirs[:] = [d for d in dirs if d not in ("output", "Output")]
             dirs.sort(key=alphanumeric_sort)
 
             current_root_path_level: int = (
@@ -270,8 +266,7 @@ class PathFinder:
             dirs[:] = [
                 d
                 for d in dirs
-                if not d.startswith(".")
-                and not d.startswith("__")
+                if not d.startswith("__")
                 and d not in ("build", "output", "Output", "tests")
             ]
 

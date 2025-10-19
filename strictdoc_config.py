@@ -37,6 +37,9 @@ def create_config() -> ProjectConfig:
             "tests/**",
         ],
         include_source_paths=[
+            "LICENSE",
+            "NOTICE",
+            ".github/workflows/**",
             "strictdoc/**.py",
             "strictdoc/**.js",
             "strictdoc/**.jinja.rst",
@@ -50,6 +53,7 @@ def create_config() -> ProjectConfig:
         exclude_source_paths=[
             # StrictDoc (almost never) uses __init__ files.
             # The used files will be whitelisted include_source_paths.
+            "**__pycache__**",
             "**__init__.py",
             "**.test.py",
             "build/**",

@@ -134,6 +134,15 @@ def test_case_10_dot_slash_in_the_beginning():
     assert path_filter.match("./filename.part.sdoc")
 
 
+def test_case_11_mask_starts_with_dot():
+    path_filter = PathFilter(
+        [".github/workflows/**"], positive_or_negative=True
+    )
+
+    # POSITIVE
+    assert path_filter.match(".github/workflows/release.yml")
+
+
 def test_case_50_negative_empty_mask():
     path_filter = PathFilter([], positive_or_negative=False)
 

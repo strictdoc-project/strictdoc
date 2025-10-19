@@ -52,7 +52,14 @@ TITLE: Unreleased
 [TEXT]
 MID: 12345f3b28ea4bfe9ca8afe6b21826a8
 STATEMENT: >>>
-An edge case has been fixed where StrictDoc's FileFinder was detecting Linux pipe files that could not be processed meaningfully by StrictDoc's source file generator. With this release, such files will be ignored.
+This release includes several bug fixes and improvements for edge cases.
+
+An edge case has been fixed where StrictDoc’s FileFinder was detecting Linux pipe files that could not be processed meaningfully by StrictDoc’s source file generator. With this release, such files are now ignored.
+
+The ReqIF-to-SDoc converter has been improved to handle integer fields by treating them as string grammar fields. Since StrictDoc does not yet support INTEGER fields, they are converted to STRING fields during import. This workaround was sufficient to support the user’s use case.
+Thanks to @kerfallaCisse for reporting this issue.
+
+The HTML2PDF generator has been fixed to correctly resolve document paths when printing a bundle document that includes other documents. This edge case involved a combination of three features — HTML2PDF, bundle documents, and composable documents — that had not previously been tested to work together. Thanks to @CMon for reporting this issue.
 <<<
 
 [[/SECTION]]

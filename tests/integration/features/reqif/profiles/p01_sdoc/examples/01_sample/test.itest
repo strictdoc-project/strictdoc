@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-72, scope=file)
+#
+
 RUN: %strictdoc import reqif sdoc %S/sample.reqif %T/
 RUN: %cat %T/sample.sdoc | filecheck %s
 

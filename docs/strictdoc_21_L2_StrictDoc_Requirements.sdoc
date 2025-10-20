@@ -738,23 +738,6 @@ RELATIONS:
   VALUE: strictdoc/server/routers/main_router.py
 
 [REQUIREMENT]
-MID: f2fd90ad8a2946e7b085233a9c7a8a75
-UID: SDOC-SRS-51
-STATUS: Active
-TITLE: Export to HTML content to PDF (HTML2PDF)
-STATEMENT: >>>
-StrictDoc shall allow exporting documents and entire documentation trees to PDF.
-<<<
-RATIONALE: >>>
-As required by the parent requirement, PDF is one of the most common documentation formats.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: DO178-5
-- TYPE: Parent
-  VALUE: SDOC-SSS-96
-
-[REQUIREMENT]
 MID: 8811f0ef33de4365bc66a602a8c184f6
 UID: SDOC-SRS-48
 STATUS: Active
@@ -850,6 +833,18 @@ RELATIONS:
   VALUE: SDOC-SSS-3
 
 [REQUIREMENT]
+MID: 9b291b5df5914f13b23fb8c367be0a24
+UID: SDOC-SRS-161
+STATUS: Active
+TITLE: Clone node from existing node
+STATEMENT: >>>
+StrictDoc shall support cloning nodes from existing nodes.
+<<<
+RATIONALE: >>>
+Simplifies the creation of similar nodes.
+<<<
+
+[REQUIREMENT]
 MID: 13968ae160744e10ba8979eaee2f4f54
 UID: SDOC-SRS-55
 STATUS: Active
@@ -860,6 +855,15 @@ StrictDoc's Document screen shall allow update document content.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-4
+
+[REQUIREMENT]
+MID: 0ec87f08626a4839b5951d98fef9e0e1
+UID: SDOC-SRS-162
+STATUS: Active
+TITLE: Delete node
+STATEMENT: >>>
+StrictDoc's Document screen shall support the deletion of document nodes.
+<<<
 
 [REQUIREMENT]
 MID: b805e36294764e8f8cb5a88ab8fa0467
@@ -1044,6 +1048,38 @@ RELATIONS:
 [[/SECTION]]
 
 [[SECTION]]
+MID: 181dfbcbbfac41e18f7fb09af0df8f4e
+TITLE: Screen: HTML2PDF
+
+[REQUIREMENT]
+MID: f2fd90ad8a2946e7b085233a9c7a8a75
+UID: SDOC-SRS-51
+STATUS: Active
+TITLE: Export to HTML content to PDF (HTML2PDF)
+STATEMENT: >>>
+StrictDoc shall allow exporting documents and entire documentation trees to PDF.
+<<<
+RATIONALE: >>>
+As required by the parent requirement, PDF is one of the most common documentation formats.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: DO178-5
+- TYPE: Parent
+  VALUE: SDOC-SSS-96
+
+[REQUIREMENT]
+MID: 6cfcb21b3f1949f49d13af6b00d3d37a
+UID: SDOC-SRS-160
+STATUS: Active
+TITLE: Custom PDF export template
+STATEMENT: >>>
+StrictDoc shall support the customization of the PDF export template.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: ddf15b3113a54107979752ec192e2ded
 TITLE: Screen: Project statistics
 
@@ -1115,6 +1151,55 @@ Enables the visualization and browsing of the overall document tree and requirem
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-29
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 63df985038374acb82e9b4185eff5a7e
+TITLE: Screen: Source coverage
+
+[REQUIREMENT]
+MID: 3aeb1eea0dba4041a9161a1a8d291999
+UID: SDOC-SRS-35
+STATUS: Active
+TITLE: Project source code coverage
+STATEMENT: >>>
+StrictDoc shall generate project source code coverage information.
+
+NOTE: Source code information can be visualized using both web or CLI interfaces.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
+- TYPE: Parent
+  VALUE: DO178-13
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: strictdoc/export/html/generators/source_file_coverage.py
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 9c19eea544ec4d90bb65fd8fd9b13cc4
+TITLE: Screen: Single source file coverage
+
+[REQUIREMENT]
+MID: 56ecfb19152e45b09c0e55de2d1d5f05
+UID: SDOC-SRS-36
+STATUS: Active
+TITLE: Single source file coverage
+STATEMENT: >>>
+StrictDoc shall generate single file traceability information.
+<<<
+RATIONALE: >>>
+With this capability in place, it is possible to focus on a single implementation file's links to requirements which helps in the code reviews and inspections.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
+- TYPE: File
+  FORMAT: Sourcecode
+  VALUE: strictdoc/export/html/generators/source_file_view_generator.py
 
 [[/SECTION]]
 
@@ -1442,43 +1527,6 @@ A reference example: Generating test specifications from the TEST_SPEC nodes whi
 <<<
 
 [[/SECTION]]
-
-[REQUIREMENT]
-MID: 3aeb1eea0dba4041a9161a1a8d291999
-UID: SDOC-SRS-35
-STATUS: Active
-TITLE: Generate project source code coverage
-STATEMENT: >>>
-StrictDoc shall generate project source code coverage information.
-
-NOTE: Source code information can be visualized using both web or CLI interfaces.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-72
-- TYPE: Parent
-  VALUE: DO178-13
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/html/generators/source_file_coverage.py
-
-[REQUIREMENT]
-MID: 56ecfb19152e45b09c0e55de2d1d5f05
-UID: SDOC-SRS-36
-STATUS: Active
-TITLE: Generate single source file coverage
-STATEMENT: >>>
-StrictDoc shall generate single file traceability information.
-<<<
-RATIONALE: >>>
-With this capability in place, it is possible to focus on a single implementation file's links to requirements which helps in the code reviews and inspections.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-72
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/html/generators/source_file_view_generator.py
 
 [[/SECTION]]
 

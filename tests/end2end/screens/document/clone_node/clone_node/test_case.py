@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-161, scope=file)
+#
+
 from selenium.webdriver.common.by import By
 
 from tests.end2end.e2e_case import E2ECase

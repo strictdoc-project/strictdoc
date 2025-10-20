@@ -220,6 +220,10 @@ def function_range_marker_processor(
     function_range_marker.ng_range_line_end = (
         parse_context.file_stats.lines_total
     )
+    # Function range markers supported by this general reader can only
+    # be of scope=file. Only the language-aware parsing results in
+    # markers also having scope=function or scope=class.
+    function_range_marker.set_description("entire file")
 
     for req in function_range_marker.reqs:
         markers = parse_context.map_reqs_to_markers.setdefault(req, [])

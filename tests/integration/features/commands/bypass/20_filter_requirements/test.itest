@@ -1,4 +1,0 @@
-RUN: %expect_exit 0 %strictdoc passthrough %S/input.sdoc --output-dir=%T --filter-requirements '("2" in node["TITLE"] or "4" in node["TITLE"])' | filecheck %s --dump-input=fail
-CHECK: Reading SDOC: input.sdoc
-
-RUN: %diff %S/expected/output.sdoc %T/sdoc/input.sdoc

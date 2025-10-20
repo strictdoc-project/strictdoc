@@ -49,12 +49,7 @@ def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
 
     project_config: ProjectConfig
 
-    if parser.is_passthrough_command or parser.is_export_command:
-        if parser.is_passthrough_command:
-            print(  # noqa: T201
-                "warning: passthrough is deprecated, use strictdoc "
-                "export --formats sdoc instead."
-            )
+    if parser.is_export_command:
         export_config: ExportCommandConfig = parser.get_export_config()
         try:
             export_config.validate()

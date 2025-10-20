@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-72, scope=file)
+#
+
 RUN: %strictdoc export --formats=reqifz-sdoc --output-dir %T %S/sample.sdoc
 RUN: %strictdoc import reqif sdoc %T/reqif/output.reqifz %T/
 RUN: %diff %S/sample.sdoc %T/sample.sdoc

@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-163, scope=file)
+#
+
 RUN: %mkdir %T/
 RUN: %strictdoc version | filecheck %s --dump-input=fail
 RUN: %strictdoc -v | filecheck %s --dump-input=fail

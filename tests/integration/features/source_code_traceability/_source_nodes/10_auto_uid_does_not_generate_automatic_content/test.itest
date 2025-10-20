@@ -1,6 +1,10 @@
+#
 # This test verifies that the auto-generated content created from test
 # specifications is not written back to file system when auto-uid command
 # is executed.
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
 
 RUN: cp -r %S/* ./
 RUN: %strictdoc manage auto-uid .

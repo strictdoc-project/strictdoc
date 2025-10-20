@@ -8,3 +8,7 @@ features = [
 source_nodes = [
   { "tests/" = { uid = "TEST_DOC", node_type = "TEST_SPEC" } }
 ]
+
+exclude_source_paths = [
+    "test.itest"
+]

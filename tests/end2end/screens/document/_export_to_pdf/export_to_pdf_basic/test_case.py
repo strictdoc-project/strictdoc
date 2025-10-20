@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-51, scope=file)
+"""
+
 import os
 import shutil
 

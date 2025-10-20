@@ -10,3 +10,7 @@ source_nodes = [
   # exist/have files with valid source comments containing SDoc node descriptions.
   { "tests_another_path/" = { uid = "TEST_DOC", node_type = "TEST_SPEC" } }
 ]
+
+exclude_source_paths = [
+    "test.itest"
+]

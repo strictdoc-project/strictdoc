@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-72, scope=file)
+"""
+
 import filecmp
 import os
 import shutil

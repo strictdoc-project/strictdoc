@@ -8,3 +8,7 @@ features = [
 source_nodes = [
   { "src/" = { uid = "SPDX_DOC", node_type = "REQUIREMENT" } }
 ]
+
+exclude_source_paths = [
+    "test.itest"
+]

@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-163, scope=file)
+#
+
 RUN: %strictdoc about | filecheck %s --dump-input=fail
 
 CHECK:= StrictDoc =

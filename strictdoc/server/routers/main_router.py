@@ -533,7 +533,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         node_id: str, context_document_mid: str
     ) -> Response:
         """
-        @relation(SDOC-SRS-106, scope=function)
+        @relation(SDOC-SRS-55, scope=function)
         """
 
         requirement: SDocNode = (
@@ -635,7 +635,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @router.post("/actions/document/update_requirement")
     async def document__update_requirement(request: Request) -> Response:
         """
-        @relation(SDOC-SRS-106, scope=function)
+        @relation(SDOC-SRS-55, scope=function)
         """
 
         request_form_data: FormData = await request.form()
@@ -800,7 +800,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     )
     def cancel_edit_requirement(requirement_mid: str) -> Response:
         """
-        @relation(SDOC-SRS-106, scope=function)
+        @relation(SDOC-SRS-55, scope=function)
         """
 
         assert isinstance(requirement_mid, str) and len(requirement_mid) > 0, (

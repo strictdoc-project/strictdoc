@@ -841,9 +841,9 @@ RELATIONS:
 MID: 201187122be14ea48d69106d396c6790
 UID: SDOC-SRS-106
 STATUS: Active
-TITLE: Update document
+TITLE: Create node
 STATEMENT: >>>
-StrictDoc's Document screen shall allow updating documents.
+StrictDoc's Document screen shall allow creating document nodes.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -860,6 +860,30 @@ StrictDoc's Document screen shall allow update document content.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-4
+
+[REQUIREMENT]
+MID: b805e36294764e8f8cb5a88ab8fa0467
+UID: SDOC-SRS-159
+STATUS: Active
+TITLE: Create node relation
+STATEMENT: >>>
+StrictDoc's Document screen shall creating updating node relations.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-7
+
+[REQUIREMENT]
+MID: f32c091454c94bc5bd2091e2c4f38582
+UID: SDOC-SRS-158
+STATUS: Active
+TITLE: Update node relation
+STATEMENT: >>>
+StrictDoc's Document screen shall allow updating node relations.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-7
 
 [REQUIREMENT]
 MID: edc02a3a97704007b70b93102c76b278
@@ -1261,7 +1285,7 @@ Tracing requirements to not just test files but also the test report information
 [REQUIREMENT]
 MID: aefeb5b89d82446281e2c7c2eae12345
 UID: SDOC-SRS-144
-STATUS: Draft
+STATUS: Active
 TITLE: Link requirements with code coverage information
 STATEMENT: >>>
 StrictDoc shall support linking between requirements, source files, and code coverage information.

@@ -1,2 +1,0 @@
-RUN: %expect_exit 0 %strictdoc passthrough %S/input.sdoc --output-dir=%T/
-RUN: %diff %S/input.sdoc %T/sdoc/input.sdoc

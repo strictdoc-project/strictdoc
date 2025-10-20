@@ -1,4 +1,4 @@
-RUN: %expect_exit 0 %strictdoc passthrough %S/input.sdoc --output-dir=%T | filecheck %s --dump-input=fail
+RUN: %expect_exit 0 %strictdoc export %S/input.sdoc --formats=sdoc --output-dir=%T | filecheck %s --dump-input=fail
 CHECK: Reading SDOC: input.sdoc
 
 RUN: %cat %T/sdoc/input.sdoc | filecheck %s --dump-input=fail --check-prefix=CHECK-OUT-SDOC

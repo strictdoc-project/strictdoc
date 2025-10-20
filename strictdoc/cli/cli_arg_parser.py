@@ -221,10 +221,6 @@ class SDocArgsParser:
         return str(self.args.command) == "about"
 
     @property
-    def is_passthrough_command(self) -> bool:
-        return str(self.args.command) == "passthrough"
-
-    @property
     def is_export_command(self) -> bool:
         return str(self.args.command) == "export"
 

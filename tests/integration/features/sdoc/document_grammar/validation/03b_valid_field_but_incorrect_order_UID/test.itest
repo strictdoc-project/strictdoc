@@ -1,4 +1,4 @@
-RUN: %expect_exit 1 %strictdoc passthrough %S/input.sdoc --output-dir %T/ | filecheck %s
+RUN: %expect_exit 1 %strictdoc export %S/input.sdoc --formats=sdoc --output-dir %T/ | filecheck %s
 
 # The same validation message should be produced even if the auto-uid command is executed.
 # https://github.com/strictdoc-project/strictdoc/issues/1896

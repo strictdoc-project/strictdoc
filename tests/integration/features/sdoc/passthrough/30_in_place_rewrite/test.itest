@@ -1,0 +1,4 @@
+RUN: mkdir %T/sandbox
+RUN: cp %S/input.sdoc %T/sandbox/
+RUN: %expect_exit 0 %strictdoc export %T/sandbox/input.sdoc --formats=sdoc --output-dir=%T/sandbox --filter-requirements='"2" not in node["TITLE"]'
+RUN: %diff %S/expected.sdoc %T/sandbox/sdoc/input.sdoc

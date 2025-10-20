@@ -3809,15 +3809,15 @@ TITLE: Filtering content
 [TEXT]
 MID: d52d86750ad54ce1b3263ebb092451c0
 STATEMENT: >>>
-Both ``export`` command-line interface commands support filtering documentation content with ``--filter-requirements`` and ``--filter-sections`` options.
+The ``export`` command-line interface command supports filtering documentation content with the ``--filter-nodes`` option.
 
-Both options are based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted requirements/sections will be exported.
+The option is based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted nodes will be exported.
 
 Example:
 
 .. code-block::
 
-    strictdoc export . --filter-requirements '"System" in node["TITLE"]'
+    strictdoc export . --filter-nodes '"System" in node["TITLE"]'
 <<<
 
 [[/SECTION]]

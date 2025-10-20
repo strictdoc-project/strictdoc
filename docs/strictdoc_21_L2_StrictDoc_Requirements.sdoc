@@ -1285,7 +1285,7 @@ Tracing requirements to not just test files but also the test report information
 [REQUIREMENT]
 MID: aefeb5b89d82446281e2c7c2eae12345
 UID: SDOC-SRS-144
-STATUS: Draft
+STATUS: Active
 TITLE: Link requirements with code coverage information
 STATEMENT: >>>
 StrictDoc shall support linking between requirements, source files, and code coverage information.

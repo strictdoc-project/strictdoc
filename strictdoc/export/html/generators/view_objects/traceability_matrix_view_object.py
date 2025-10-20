@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-112, scope=file)
+"""
+
 from typing import Iterator, List, Optional, Tuple, Union
 
 from markupsafe import Markup

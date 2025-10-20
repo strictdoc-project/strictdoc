@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-55, scope=file)
+"""
+
 import os
 
 from tests.end2end.e2e_case import E2ECase

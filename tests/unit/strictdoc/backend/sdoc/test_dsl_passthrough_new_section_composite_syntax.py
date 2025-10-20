@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-136, scope=file)
+"""
+
 import pytest
 
 from strictdoc.backend.sdoc.reader import SDReader

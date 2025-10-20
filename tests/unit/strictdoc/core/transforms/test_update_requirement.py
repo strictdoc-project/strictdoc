@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-55, scope=file)
+"""
+
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementRelationChild,
     GrammarElementRelationParent,

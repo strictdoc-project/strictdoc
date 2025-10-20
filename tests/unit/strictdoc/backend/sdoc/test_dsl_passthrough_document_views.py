@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-136, scope=file)
+"""
+
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.writer import SDWriter

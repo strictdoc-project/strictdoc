@@ -58,11 +58,14 @@ def create_config() -> ProjectConfig:
             "**.test.py",
             "build/**",
             "output/**",
+            # Uncomment when it is clear what to do with helpers.
+            "strictdoc/helpers/*.py",
+            "tests/unit/strictdoc/helpers/*.py",
             "tests/unit/*.py",
             "tests/unit/helpers/*.py",
             "tests/integration/**ignored.itest",
             "tests/end2end/*.py",
-            "tests/end2end/helpers/*.py",
+            "tests/end2end/helpers/**.py",
         ],
         test_report_root_dict={
             "reports/tests_integration.lit.junit.xml": "tests/integration",

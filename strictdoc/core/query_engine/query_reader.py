@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-155, scope=file)
+"""
+
 from typing import Callable, Dict, Optional, Tuple
 
 from textx import metamodel_from_str

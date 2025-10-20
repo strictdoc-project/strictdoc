@@ -1,3 +1,7 @@
+//
+// @relation(SDOC-SRS-53, scope=file)
+//
+
 const FRAME_SELECTOR = '#frame_project_tree';
 const SWITCH_SELECTOR = '#project_tree_controls';
 const FRAGMENT_ATTR = 'included-document';

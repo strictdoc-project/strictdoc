@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-109, scope=file)
+#
+
 RUN: %expect_exit 1 %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 
 CHECK: error: [DOCUMENT_FROM_FILE]: Path to a document file does not exist: nested.sdoc.

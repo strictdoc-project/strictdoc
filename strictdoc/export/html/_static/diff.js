@@ -1,3 +1,7 @@
+//
+// @relation(SDOC-SRS-111, scope=file)
+//
+
 window.addEventListener("load",function(){
 
     const mutatingFrame = document.querySelector('#diff_result');

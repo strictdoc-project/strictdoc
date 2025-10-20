@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-28, scope=file)
+"""
+
 from typing import Any, Dict, Hashable, List, Optional, Tuple
 
 from strictdoc.core.graph.abstract_bucket import AbstractBucket

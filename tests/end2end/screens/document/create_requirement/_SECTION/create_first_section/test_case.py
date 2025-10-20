@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-106, scope=file)
+"""
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
@@ -13,6 +17,7 @@ class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
+        # Run server.
         with SDocTestServer(
             input_path=test_setup.path_to_sandbox
         ) as test_server:
@@ -29,34 +34,18 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
 
             root_node = screen_document.get_root_node()
-
             root_node_menu = root_node.do_open_node_menu()
 
             form_edit_section: Form_EditRequirement = (
                 root_node_menu.do_node_add_element_first("SECTION")
             )
 
-            form_edit_section.do_fill_in("TITLE", "Section 1")
-            form_edit_section.do_fill_in("UID", "SAME-UID")
+            form_edit_section.do_fill_in("UID", "SECTION-UID")
+            form_edit_section.do_fill_in("TITLE", "First title")
             form_edit_section.do_form_submit()
 
-            created_section = screen_document.get_node()
-            created_section_menu = created_section.do_open_node_menu()
-
-            form_edit_section: Form_EditRequirement = (
-                created_section_menu.do_node_add_element_below("SECTION")
-            )
-            form_edit_section.do_fill_in("TITLE", "Section 2")
-            form_edit_section.do_form_submit()
-
-            created_section = screen_document.get_node(node_order=2)
-            form_edit_section: Form_EditRequirement = (
-                created_section.do_open_form_edit_requirement()
-            )
-            form_edit_section.do_fill_in("UID", "SAME-UID")
-            form_edit_section.do_form_submit_and_catch_error(
-                "The chosen UID must be unique. "
-                "Another node with this UID already exists: 'SAME-UID'."
-            )
+            section = screen_document.get_node(1)
+            section.assert_requirement_title("First title", "1")
+            screen_document.assert_toc_contains("First title")
 
         assert test_setup.compare_sandbox_and_expected_output()

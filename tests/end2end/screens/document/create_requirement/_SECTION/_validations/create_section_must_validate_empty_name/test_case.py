@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-106, scope=file)
+"""
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
@@ -28,12 +32,17 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            section = screen_document.get_node()
-            section_menu = section.do_open_node_menu()
-
+            root_node = screen_document.get_root_node()
+            root_node_menu = root_node.do_open_node_menu()
             form_edit_section: Form_EditRequirement = (
-                section_menu.do_node_add_element_above("SECTION")
+                root_node_menu.do_node_add_element_first("SECTION")
             )
-            form_edit_section.do_form_cancel()
+
+            form_edit_section.do_fill_in("TITLE", "")
+            form_edit_section.do_form_submit_and_catch_error(
+                "Node's TITLE must not be empty. "
+                "If there is no appropriate value for this field yet, "
+                "enter TBD (to be done) or TBC (to be confirmed)."
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

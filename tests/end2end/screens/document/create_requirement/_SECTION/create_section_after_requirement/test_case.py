@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-106, scope=file)
+"""
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
@@ -13,7 +17,6 @@ class Test(E2ECase):
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
-        # Run server.
         with SDocTestServer(
             input_path=test_setup.path_to_sandbox
         ) as test_server:
@@ -29,19 +32,24 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            root_node = screen_document.get_root_node()
-            root_node_menu = root_node.do_open_node_menu()
+            # Check Requirement
+
+            requirement = screen_document.get_node()
+            requirement.assert_requirement_title("Requirement title", "1")
+
+            # Create Section after
+
+            node_menu = requirement.do_open_node_menu()
 
             form_edit_section: Form_EditRequirement = (
-                root_node_menu.do_node_add_element_first("SECTION")
+                node_menu.do_node_add_element_below("SECTION")
             )
-
-            form_edit_section.do_fill_in("UID", "SECTION-UID")
-            form_edit_section.do_fill_in("TITLE", "First title")
+            form_edit_section.do_fill_in("TITLE", "Section title")
             form_edit_section.do_form_submit()
 
-            section = screen_document.get_node(1)
-            section.assert_requirement_title("First title", "1")
-            screen_document.assert_toc_contains("First title")
+            section = screen_document.get_node(2)
+
+            section.assert_requirement_title("Section title", "2")
+            screen_document.assert_toc_contains("Section title")
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-106, scope=file)
+"""
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
@@ -47,8 +51,13 @@ class Test(E2ECase):
                 created_section_menu.do_node_add_element_below("SECTION")
             )
             form_edit_section.do_fill_in("TITLE", "Section 2")
-            form_edit_section.do_fill_in("UID", "SAME-UID")
+            form_edit_section.do_form_submit()
 
+            created_section = screen_document.get_node(node_order=2)
+            form_edit_section: Form_EditRequirement = (
+                created_section.do_open_form_edit_requirement()
+            )
+            form_edit_section.do_fill_in("UID", "SAME-UID")
             form_edit_section.do_form_submit_and_catch_error(
                 "The chosen UID must be unique. "
                 "Another node with this UID already exists: 'SAME-UID'."

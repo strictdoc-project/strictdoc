@@ -862,6 +862,18 @@ RELATIONS:
   VALUE: SDOC-SSS-4
 
 [REQUIREMENT]
+MID: b805e36294764e8f8cb5a88ab8fa0467
+UID: SDOC-SRS-159
+STATUS: Active
+TITLE: Create node relation
+STATEMENT: >>>
+StrictDoc's Document screen shall creating updating node relations.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-7
+
+[REQUIREMENT]
 MID: f32c091454c94bc5bd2091e2c4f38582
 UID: SDOC-SRS-158
 STATUS: Active
@@ -869,6 +881,9 @@ TITLE: Update node relation
 STATEMENT: >>>
 StrictDoc's Document screen shall allow updating node relations.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-7
 
 [REQUIREMENT]
 MID: edc02a3a97704007b70b93102c76b278

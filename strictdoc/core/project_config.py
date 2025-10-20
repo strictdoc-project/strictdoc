@@ -206,8 +206,7 @@ class ProjectConfig:
         self.export_formats: Optional[List[str]] = None
         self.export_included_documents: bool = False
         self.generate_bundle_document: bool = False
-        self.filter_requirements: Optional[str] = None
-        self.filter_sections: Optional[str] = None
+        self.filter_nodes: Optional[str] = None
 
         self.excel_export_fields: Optional[List[str]] = None
 
@@ -327,8 +326,7 @@ class ProjectConfig:
         self.export_formats = export_config.formats
         self.export_included_documents = export_config.included_documents
         self.generate_bundle_document = export_config.generate_bundle_document
-        self.filter_requirements = export_config.filter_requirements
-        self.filter_sections = export_config.filter_sections
+        self.filter_nodes = export_config.filter_nodes
         self.excel_export_fields = export_config.fields
         self.view = export_config.view
         self.chromedriver = export_config.chromedriver

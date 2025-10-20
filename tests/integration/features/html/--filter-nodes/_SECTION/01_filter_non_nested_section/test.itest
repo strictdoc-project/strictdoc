@@ -1,4 +1,4 @@
-RUN: %strictdoc export %S --output-dir %T --filter-requirements='"MUST_BE_FILTERED" not in node["TITLE"]' | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T --filter-nodes='"MUST_BE_FILTERED" not in node["TITLE"]' | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML

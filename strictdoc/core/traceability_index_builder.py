@@ -802,71 +802,64 @@ class TraceabilityIndexBuilder:
     def _filter_nodes(
         project_config: ProjectConfig, traceability_index: TraceabilityIndex
     ) -> None:
-        if (
-            project_config.filter_requirements is not None
-            or project_config.filter_sections is not None
-        ):
-            query_reader = QueryReader()
-            requirements_query_object: Union[QueryObject, QueryNullObject]
-            try:
-                if project_config.filter_requirements is not None:
-                    requirements_query = query_reader.read(
-                        project_config.filter_requirements
-                    )
-                    requirements_query_object = QueryObject(
-                        requirements_query, traceability_index
-                    )
-                else:
-                    requirements_query_object = QueryNullObject()
-            except TextXSyntaxError:
-                # FIXME: This must throw a StrictDocException.
-                print("error: Cannot parse filter query.")  # noqa: T201
-                sys.exit(1)
-            try:
-                for document in traceability_index.document_tree.document_list:
-                    document_iterator = (
-                        traceability_index.get_document_iterator(document)
-                    )
-                    for node, _ in document_iterator.all_content():
-                        if (
-                            isinstance(node, SDocNode)
-                            and node.node_type == "SECTION"
-                            and not requirements_query_object.evaluate(node)
-                        ):
-                            node.ng_whitelisted = False
-                            # If the node is the last one, we check if all other
-                            # nodes are filtered out and if so, mark the parent
-                            # section node as not whitelisted as well.
-                            if (
-                                node.parent.section_contents[
-                                    len(node.parent.section_contents) - 1
-                                ]
-                                == node
-                            ):
-                                if (
-                                    isinstance(node.parent, SDocNode)
-                                    and node.parent.node_type == "SECTION"
-                                ):
-                                    node.parent.blacklist_if_needed()
+        if project_config.filter_nodes is None:
+            return
 
-                        elif isinstance(
-                            node, SDocNode
-                        ) and not requirements_query_object.evaluate(node):
-                            node.ng_whitelisted = False
-                            # If the node is the last one, we check if all other
-                            # nodes are filtered out and if so, mark the parent
-                            # section node as not whitelisted as well.
+        query_reader = QueryReader()
+        requirements_query_object: Union[QueryObject, QueryNullObject]
+        try:
+            requirements_query = query_reader.read(project_config.filter_nodes)
+            requirements_query_object = QueryObject(
+                requirements_query, traceability_index
+            )
+        except TextXSyntaxError as textx_syntax_error_:
+            raise StrictDocException(
+                "Cannot parse filter query."
+            ) from textx_syntax_error_
+
+        try:
+            for document in traceability_index.document_tree.document_list:
+                document_iterator = traceability_index.get_document_iterator(
+                    document
+                )
+                for node, _ in document_iterator.all_content():
+                    if (
+                        isinstance(node, SDocNode)
+                        and node.node_type == "SECTION"
+                        and not requirements_query_object.evaluate(node)
+                    ):
+                        node.ng_whitelisted = False
+                        # If the node is the last one, we check if all other
+                        # nodes are filtered out and if so, mark the parent
+                        # section node as not whitelisted as well.
+                        if (
+                            node.parent.section_contents[
+                                len(node.parent.section_contents) - 1
+                            ]
+                            == node
+                        ):
                             if (
-                                node.parent.section_contents[
-                                    len(node.parent.section_contents) - 1
-                                ]
-                                == node
+                                isinstance(node.parent, SDocNode)
+                                and node.parent.node_type == "SECTION"
                             ):
                                 node.parent.blacklist_if_needed()
 
-            except (AttributeError, NameError, TypeError) as attribute_error_:
-                print(  # noqa: T201
-                    "error: cannot apply a filter query to a node: "
-                    f"{attribute_error_}"
-                )
-                sys.exit(1)
+                    elif isinstance(
+                        node, SDocNode
+                    ) and not requirements_query_object.evaluate(node):
+                        node.ng_whitelisted = False
+                        # If the node is the last one, we check if all other
+                        # nodes are filtered out and if so, mark the parent
+                        # section node as not whitelisted as well.
+                        if (
+                            node.parent.section_contents[
+                                len(node.parent.section_contents) - 1
+                            ]
+                            == node
+                        ):
+                            node.parent.blacklist_if_needed()
+
+        except (AttributeError, NameError, TypeError) as attribute_error_:
+            raise StrictDocException(
+                f"Cannot apply a filter query to a node: {attribute_error_}"
+            ) from attribute_error_

@@ -238,15 +238,13 @@ class CommandParserBuilder:
                 "SPEC-OBJECT's IDENTIFIER and vice versa when exporting/importing."
             ),
         )
+        # FIXME: --filter-requirements will be removed in 2026.
         command_parser_export.add_argument(
+            "--filter-nodes",
             "--filter-requirements",
+            dest="filter_nodes",
             type=str,
             help="Filter which requirements will be exported.",
-        )
-        command_parser_export.add_argument(
-            "--filter-sections",
-            type=str,
-            help="Filter which sections will be exported.",
         )
         command_parser_export.add_argument(
             "--view",
@@ -429,15 +427,13 @@ class CommandParserBuilder:
             type=str,
             help="A directory where to output the SDoc files to.",
         )
+        # FIXME: --filter-requirements will be removed in 2026.
         command_parser_passthrough.add_argument(
+            "--filter-nodes",
             "--filter-requirements",
+            dest="filter_nodes",
             type=str,
             help="Filter which requirements will be exported.",
-        )
-        command_parser_passthrough.add_argument(
-            "--filter-sections",
-            type=str,
-            help="Filter which sections will be exported.",
         )
         command_parser_passthrough.add_argument(
             "--view",

@@ -1,4 +1,6 @@
 RUN: %strictdoc export %S --output-dir %T --filter-requirements='("2" in node["TITLE"] or "4" in node["TITLE"])' | filecheck %s --dump-input=fail
+RUN: rm -rf %T/*
+RUN: %strictdoc export %S --output-dir %T --filter-nodes='("2" in node["TITLE"] or "4" in node["TITLE"])' | filecheck %s --dump-input=fail
 CHECK: Published: Hello world doc
 
 RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML

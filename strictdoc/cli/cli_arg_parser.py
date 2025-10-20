@@ -137,8 +137,7 @@ class ExportCommandConfig:
         no_parallelization: bool,
         enable_mathjax: bool,
         included_documents: bool,
-        filter_requirements: Optional[str],
-        filter_sections: Optional[str],
+        filter_nodes: Optional[str],
         reqif_profile: Optional[str],
         reqif_multiline_is_xhtml: bool,
         reqif_enable_mid: bool,
@@ -156,8 +155,7 @@ class ExportCommandConfig:
         self.no_parallelization: bool = no_parallelization
         self.enable_mathjax: bool = enable_mathjax
         self.included_documents: bool = included_documents
-        self.filter_requirements: Optional[str] = filter_requirements
-        self.filter_sections: Optional[str] = filter_sections
+        self.filter_nodes: Optional[str] = filter_nodes
         self.reqif_profile: Optional[str] = reqif_profile
         self.reqif_multiline_is_xhtml: bool = reqif_multiline_is_xhtml
         self.reqif_enable_mid: bool = reqif_enable_mid
@@ -281,8 +279,7 @@ class SDocArgsParser:
             self.args.no_parallelization,
             self.args.enable_mathjax,
             self.args.included_documents,
-            self.args.filter_requirements,
-            self.args.filter_sections,
+            self.args.filter_nodes,
             self.args.reqif_profile,
             self.args.reqif_multiline_is_xhtml,
             self.args.reqif_enable_mid,

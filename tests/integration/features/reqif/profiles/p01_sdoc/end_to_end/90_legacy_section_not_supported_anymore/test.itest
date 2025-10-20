@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-SRS-72, scope=file)
+#
+
 RUN: %expect_exit 1 %strictdoc export --formats=reqif-sdoc %S/sample.sdoc 2>&1 | filecheck %s
 
 CHECK: [SECTION] elements are no longer supported by StrictDoc. See the migration guide for more details:

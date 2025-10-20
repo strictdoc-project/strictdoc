@@ -1,6 +1,6 @@
-#
-# @relation(SDOC-SRS-161, scope=file)
-#
+"""
+@relation(SDOC-SRS-161, scope=file)
+"""
 
 from selenium.webdriver.common.by import By
 

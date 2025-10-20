@@ -1,3 +1,7 @@
+"""
+@relation(SDOC-SRS-163, scope=file)
+"""
+
 import strictdoc
 
 

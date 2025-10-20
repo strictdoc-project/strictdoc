@@ -585,99 +585,6 @@ The Requirements Tool shall provide capabilities for validating requirements acc
 [[/SECTION]]
 
 [[SECTION]]
-MID: 7c112f3a5885477084396fd26387a864
-TITLE: Tool configurability
-
-[REQUIREMENT]
-MID: 4550038552894ef69b85b281cff60c60
-UID: SDOC-SSS-92
-STATUS: Active
-TITLE: Project-level configuration
-STATEMENT: >>>
-The Requirements Tool shall provide a solution for configuring the project-level options.
-
-NOTE: Examples of project-level options:
-
-- Project title.
-- Global settings for the Requirements Tool itself.
-<<<
-RATIONALE: >>>
-The requirement ensures the configurability of the tool for a specific project.
-<<<
-
-[REQUIREMENT]
-MID: 4550b38552894ef69b85b281cff60360
-UID: SDOC-SSS-93
-STATUS: Active
-TITLE: Document-level configuration
-STATEMENT: >>>
-The Requirements Tool shall provide a solution for configuring the document-level options.
-
-NOTE: Examples of document-level options:
-
-- Document title
-- Requirement prefix.
-- Other options local to the content and the presentation of a given document.
-<<<
-RATIONALE: >>>
-Sometimes, the project-level configuration can be not fine-grained enough. The requirement ensures that the requirements tool allows a configuration on a document level.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
-MID: 56dabce670be4691b35434bda6d6bb36
-UID: SECTION-SSSS-Performance
-TITLE: Performance
-
-[TEXT]
-MID: 68e4b4b1ba78485f8620575ef9e1eaa2
-STATEMENT: >>>
-This section captures the performance requirements towards a Requirements Tool.
-<<<
-
-[REQUIREMENT]
-MID: a0a95079e3c0438bb3ea9e5af7ddddc9
-UID: SDOC-SSS-13
-STATUS: Active
-TITLE: Support large requirements sets
-STATEMENT: >>>
-The Requirements Tool shall support requirement trees with at least 10000 requirements.
-<<<
-
-[REQUIREMENT]
-MID: 64b982c9299a4c8eb7031495e940a3f8
-UID: SDOC-SSS-14
-STATUS: Active
-TITLE: Support large project trees
-STATEMENT: >>>
-The Requirements Tool shall be able to handle documentation packages of at least 100 documents without significant performance degradation.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
-MID: d1a483f3e321414b83bb4a39b1283293
-TITLE: Data integrity
-
-[REQUIREMENT]
-MID: d1323d222a0040b2b6122c59b3c00f06
-UID: SDOC-SSS-94
-STATUS: Active
-TITLE: Data integrity of documentation/requirements
-STATEMENT: >>>
-The Requirements Tool shall ensure the integrity of stored documentation and requirements data throughout its lifecycle.
-<<<
-RATIONALE: >>>
-The requirement ensures that the tool and the tool's development includes measures for reducing the risk of any data corruption.
-<<<
-COMMENT: >>>
-This includes safeguarding against data corruption, loss, and ensuring the reliability of links within the documentation.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
 MID: ec52fa5cc1714b07863eb7da9432be1d
 UID: SECTION-SSSS-Existing-workflows
 TITLE: Existing workflows
@@ -783,6 +690,188 @@ The Requirements Tool shall provide capabilities for change management:
 [[/SECTION]]
 
 [[SECTION]]
+MID: 8b1da9907bc847c989dc807b7dff2a05
+UID: SECTION-RTS-Requirements-and-source-code
+TITLE: Requirements and source code
+
+[REQUIREMENT]
+MID: 4692362c77974fb8bcbeefdc248d0e89
+UID: SDOC-SSS-72
+STATUS: Active
+TITLE: Traceability between requirements and source code
+STATEMENT: >>>
+The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code with only minimal changes needed in the source code.
+
+NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster, etc.
+<<<
+RATIONALE: >>>
+This requirement connects the worlds of requirements and source code which ensures that the traceability between requirements-implementation and requirements-tests can be achieved in an explicit way. Without a direct support of tracing requirements to source code by a requirements tool, the users have to find workarounds that are less efficient.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-11
+- TYPE: Parent
+  VALUE: ZEP-12
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: cd9e353e07ae4d50b1aa08999854aa02
+UID: SECTION-RTS-Requirements-exchange-formats-export-import
+TITLE: Requirements exchange formats (export/import)
+
+[TEXT]
+MID: ecc76e0991e44d6282776365496193e6
+STATEMENT: >>>
+This section captures the requirements related to "Requirements exchange" as outlined in the section [LINK: SECTION-LRTS-Workflows].
+
+The Requirements Tool should fundamentally support the exchange of documentation and requirements with other tools. Importing data into this tool and exporting data from it to other tools should be straightforward. The key focus of this section's requirements is on enabling seamless access to requirements and documentation data.
+<<<
+
+[REQUIREMENT]
+MID: 086eb992322d4c43ad91a40f6c9f9952
+UID: SDOC-SSS-96
+STATUS: Active
+TITLE: PDF export
+STATEMENT: >>>
+The Requirements Tool shall support exporting documentation content to PDF, both individual documents and complete documentation trees.
+<<<
+RATIONALE: >>>
+PDF is one of the most common formats for reviewing documentation.
+<<<
+
+[REQUIREMENT]
+MID: 73e70548c2cf415f94adbf1066d5fe4b
+UID: SDOC-SSS-58
+STATUS: Active
+TITLE: ReqIF export/import
+STATEMENT: >>>
+The Requirements Tool shall support exporting/importing requirements content from/to ReqIF format.
+<<<
+RATIONALE: >>>
+ReqIF is a standard for exchanging requirements. There is currently no other standard of a higher maturity.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-6
+
+[REQUIREMENT]
+MID: c94de32c2c2e454d81c77724a4f29283
+UID: SDOC-SSS-59
+STATUS: Active
+TITLE: CSV export/import
+STATEMENT: >>>
+The Requirements Tool shall support exporting/importing requirements content from/to CSV.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: ZEP-7
+
+[REQUIREMENT]
+MID: f7a600a238e34075ac6b65852492cc2f
+UID: SDOC-SSS-60
+STATUS: Active
+TITLE: Excel export/import
+STATEMENT: >>>
+The Requirements Tool shall support exporting/importing requirements content from/to Excel.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 7c112f3a5885477084396fd26387a864
+TITLE: Tool configurability
+
+[REQUIREMENT]
+MID: 4550038552894ef69b85b281cff60c60
+UID: SDOC-SSS-92
+STATUS: Active
+TITLE: Project-level configuration
+STATEMENT: >>>
+The Requirements Tool shall provide a solution for configuring the project-level options.
+
+NOTE: Examples of project-level options:
+
+- Project title.
+- Global settings for the Requirements Tool itself.
+<<<
+RATIONALE: >>>
+The requirement ensures the configurability of the tool for a specific project.
+<<<
+
+[REQUIREMENT]
+MID: 4550b38552894ef69b85b281cff60360
+UID: SDOC-SSS-93
+STATUS: Active
+TITLE: Document-level configuration
+STATEMENT: >>>
+The Requirements Tool shall provide a solution for configuring the document-level options.
+
+NOTE: Examples of document-level options:
+
+- Document title
+- Requirement prefix.
+- Other options local to the content and the presentation of a given document.
+<<<
+RATIONALE: >>>
+Sometimes, the project-level configuration can be not fine-grained enough. The requirement ensures that the requirements tool allows a configuration on a document level.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 56dabce670be4691b35434bda6d6bb36
+UID: SECTION-SSSS-Performance
+TITLE: Performance
+
+[TEXT]
+MID: 68e4b4b1ba78485f8620575ef9e1eaa2
+STATEMENT: >>>
+This section captures the performance requirements towards a Requirements Tool.
+<<<
+
+[REQUIREMENT]
+MID: a0a95079e3c0438bb3ea9e5af7ddddc9
+UID: SDOC-SSS-13
+STATUS: Active
+TITLE: Support large requirements sets
+STATEMENT: >>>
+The Requirements Tool shall support requirement trees with at least 10000 requirements.
+<<<
+
+[REQUIREMENT]
+MID: 64b982c9299a4c8eb7031495e940a3f8
+UID: SDOC-SSS-14
+STATUS: Active
+TITLE: Support large project trees
+STATEMENT: >>>
+The Requirements Tool shall be able to handle documentation packages of at least 100 documents without significant performance degradation.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: d1a483f3e321414b83bb4a39b1283293
+TITLE: Data integrity
+
+[REQUIREMENT]
+MID: d1323d222a0040b2b6122c59b3c00f06
+UID: SDOC-SSS-94
+STATUS: Active
+TITLE: Data integrity of documentation/requirements
+STATEMENT: >>>
+The Requirements Tool shall ensure the integrity of stored documentation and requirements data throughout its lifecycle.
+<<<
+RATIONALE: >>>
+The requirement ensures that the tool and the tool's development includes measures for reducing the risk of any data corruption.
+<<<
+COMMENT: >>>
+This includes safeguarding against data corruption, loss, and ensuring the reliability of links within the documentation.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 85d2f75b2f074f98ace5ceb5288c09b9
 UID: SECTION-RTC-Usability-installation-and-usage
 TITLE: Usability, installation and usage
@@ -805,6 +894,15 @@ NOTE: Factors to consider:
 <<<
 RATIONALE: >>>
 A tool that can be used by a large number of people simplifies its adoption and allows more users to work with documentation and requirements.
+<<<
+
+[REQUIREMENT]
+MID: 5461fce7174a4bc79048b3528b699beb
+UID: SDOC-SSS-97
+STATUS: Active
+TITLE: Tool identification
+STATEMENT: >>>
+The Requirements Tool shall provide identifying information, including title, release version, and project website links.
 <<<
 
 [REQUIREMENT]
@@ -1078,95 +1176,6 @@ STATEMENT: >>>
 The Requirement Tool shall allow reading requirements files from multiple folders or repositories.
 
 NOTE: The folders/repositories can be arbitrarily nested.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
-MID: 8b1da9907bc847c989dc807b7dff2a05
-UID: SECTION-RTS-Requirements-and-source-code
-TITLE: Requirements and source code
-
-[REQUIREMENT]
-MID: 4692362c77974fb8bcbeefdc248d0e89
-UID: SDOC-SSS-72
-STATUS: Active
-TITLE: Traceability between requirements and source code
-STATEMENT: >>>
-The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code with only minimal changes needed in the source code.
-
-NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster, etc.
-<<<
-RATIONALE: >>>
-This requirement connects the worlds of requirements and source code which ensures that the traceability between requirements-implementation and requirements-tests can be achieved in an explicit way. Without a direct support of tracing requirements to source code by a requirements tool, the users have to find workarounds that are less efficient.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: ZEP-11
-- TYPE: Parent
-  VALUE: ZEP-12
-
-[[/SECTION]]
-
-[[SECTION]]
-MID: cd9e353e07ae4d50b1aa08999854aa02
-UID: SECTION-RTS-Requirements-exchange-formats-export-import
-TITLE: Requirements exchange formats (export/import)
-
-[TEXT]
-MID: ecc76e0991e44d6282776365496193e6
-STATEMENT: >>>
-This section captures the requirements related to "Requirements exchange" as outlined in the section [LINK: SECTION-LRTS-Workflows].
-
-The Requirements Tool should fundamentally support the exchange of documentation and requirements with other tools. Importing data into this tool and exporting data from it to other tools should be straightforward. The key focus of this section's requirements is on enabling seamless access to requirements and documentation data.
-<<<
-
-[REQUIREMENT]
-MID: 086eb992322d4c43ad91a40f6c9f9952
-UID: SDOC-SSS-96
-STATUS: Active
-TITLE: PDF export
-STATEMENT: >>>
-The Requirements Tool shall support exporting documentation content to PDF, both individual documents and complete documentation trees.
-<<<
-RATIONALE: >>>
-PDF is one of the most common formats for reviewing documentation.
-<<<
-
-[REQUIREMENT]
-MID: 73e70548c2cf415f94adbf1066d5fe4b
-UID: SDOC-SSS-58
-STATUS: Active
-TITLE: ReqIF export/import
-STATEMENT: >>>
-The Requirements Tool shall support exporting/importing requirements content from/to ReqIF format.
-<<<
-RATIONALE: >>>
-ReqIF is a standard for exchanging requirements. There is currently no other standard of a higher maturity.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: ZEP-6
-
-[REQUIREMENT]
-MID: c94de32c2c2e454d81c77724a4f29283
-UID: SDOC-SSS-59
-STATUS: Active
-TITLE: CSV export/import
-STATEMENT: >>>
-The Requirements Tool shall support exporting/importing requirements content from/to CSV.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: ZEP-7
-
-[REQUIREMENT]
-MID: f7a600a238e34075ac6b65852492cc2f
-UID: SDOC-SSS-60
-STATUS: Active
-TITLE: Excel export/import
-STATEMENT: >>>
-The Requirements Tool shall support exporting/importing requirements content from/to Excel.
 <<<
 
 [[/SECTION]]

@@ -1801,6 +1801,18 @@ RELATIONS:
 MID: 44eb09d0e5b542d5984d234167e6f337
 TITLE: User experience
 
+[REQUIREMENT]
+MID: 2bfb3703b218411b87864733bffb59cf
+UID: SDOC-SRS-163
+STATUS: Active
+TITLE: StrictDoc identification
+STATEMENT: >>>
+StrictDoc shall provide 'about' and 'version' commands that display the project's title, current version, license, and links to the project's web pages.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-97
+
 [[SECTION]]
 MID: 821c01118a9643a188a4ecc5b0cec6a5
 UID: SECTION-SSRS-Strict-mode-by-default
@@ -1813,6 +1825,9 @@ STATUS: Active
 TITLE: Warnings are errors
 STATEMENT: >>>
 StrictDoc's default mode of operation shall treat all warnings as errors.
+<<<
+RATIONALE: >>>
+When warnings are treated as errors, the user becomes aware of potential issues as soon as they appear.
 <<<
 RELATIONS:
 - TYPE: Parent

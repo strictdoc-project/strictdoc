@@ -2518,11 +2518,23 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             return Response(status_code=304)
         else:
             if document_relative_path.relative_path.startswith("_source_files"):
-                # FIXME: We could be more specific here and only generate the
-                # requested file.
-                html_generator.export_source_coverage_screen(
-                    traceability_index=export_action.traceability_index,
-                )
+                if document_relative_path.relative_path.endswith(
+                    "source_coverage.html"
+                ):
+                    html_generator.export_source_coverage_screen(
+                        traceability_index=export_action.traceability_index,
+                    )
+                else:
+                    try:
+                        html_generator.export_single_source_file_screen(
+                            traceability_index=export_action.traceability_index,
+                            path_to_source_file=document_relative_path.relative_path,
+                        )
+                    except FileNotFoundError:
+                        return HTMLResponse(
+                            content=f"Not Found: {url_to_document}",
+                            status_code=404,
+                        )
             elif document_relative_path.relative_path == "index.html":
                 html_generator.export_project_tree_screen(
                     traceability_index=export_action.traceability_index,

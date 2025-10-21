@@ -59,7 +59,7 @@ from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import Parallelizer
-from strictdoc.helpers.paths import SDocRelativePath
+from strictdoc.helpers.paths import SDocRelativePath, path_to_posix_path
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
@@ -171,6 +171,9 @@ class HTMLGenerator:
         if self.project_config.is_feature_activated(
             ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
         ):
+            self.export_source_files_screens(
+                traceability_index=traceability_index,
+            )
             self.export_source_coverage_screen(
                 traceability_index=traceability_index,
             )
@@ -579,7 +582,8 @@ class HTMLGenerator:
         ) as file:
             file.write(requirements_coverage_content)
 
-    def export_source_coverage_screen(
+    @timing_decorator("Export source file pages")
+    def export_source_files_screens(
         self,
         *,
         traceability_index: TraceabilityIndex,
@@ -601,6 +605,15 @@ class HTMLGenerator:
                 html_templates=self.html_templates,
             )
 
+    def export_source_coverage_screen(
+        self,
+        *,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        assert isinstance(
+            traceability_index.document_tree.source_tree, SourceTree
+        ), traceability_index.document_tree.source_tree
+
         source_coverage_content = SourceFileCoverageHTMLGenerator.export(
             project_config=self.project_config,
             traceability_index=traceability_index,
@@ -611,6 +624,47 @@ class HTMLGenerator:
         )
         with open(output_html_source_coverage, "w", encoding="utf8") as file:
             file.write(source_coverage_content)
+
+    def export_single_source_file_screen(
+        self,
+        *,
+        traceability_index: TraceabilityIndex,
+        path_to_source_file: str,
+    ) -> None:
+        assert isinstance(
+            traceability_index.document_tree.source_tree, SourceTree
+        ), traceability_index.document_tree.source_tree
+
+        # FIXME: path_to_source_file must not enter this function with forward slashes.
+        #        Test and fix this on Windows.
+        #        https://github.com/strictdoc-project/strictdoc/issues/2068
+        relative_path_to_source_file = path_to_posix_path(path_to_source_file)
+        relative_path_to_source_file = (
+            relative_path_to_source_file.removeprefix("_source_files/")
+        )
+        relative_path_to_source_file = (
+            relative_path_to_source_file.removesuffix(".html")
+        )
+
+        for (
+            source_file
+        ) in traceability_index.document_tree.source_tree.source_files:
+            if not source_file.is_referenced:
+                continue
+
+            if (
+                relative_path_to_source_file
+                == source_file.in_doctree_source_file_rel_path_posix
+            ):
+                SourceFileViewHTMLGenerator.export_to_file(
+                    project_config=self.project_config,
+                    source_file=source_file,
+                    traceability_index=traceability_index,
+                    html_templates=self.html_templates,
+                )
+                return
+
+        raise FileNotFoundError
 
     def export_project_statistics(
         self,

@@ -2,9 +2,9 @@
 
 def some_function():
     #
-    # @sdoc[REQ-01]
+    # @relation(REQ-01, scope=range_start)
     a = 1
-    # @sdoc[/REQ-01]
+    # @relation(REQ-01, scope=range_end)
     #
     #
     #

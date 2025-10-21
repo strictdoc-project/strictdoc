@@ -2735,10 +2735,6 @@ To connect a source file to a requirement, a dedicated ``@relation`` marker must
 
     For language-specific parsing of source code, e.g., Python and C, make sure to enable the corresponding option, see [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
 
-.. warning::
-
-    The legacy ``@sdoc`` marker is still supported by StrictDoc but is deprecated. ``@relation`` is the new correct marker name.
-
 It is also possible to use @relation markers and be compatible with Doxygen. See [LINK: SECTION-UG-Doxygen].
 
 **1\) Linking a file to a requirement**
@@ -2926,6 +2922,28 @@ To establish a backward link from a source file to an SDoc node:
 .. note::
 
     See [LINK: SECTION-UG-Relation-roles] for a general description of the SDoc relations.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: b893f545d95d457e8366928c467a2f5d
+TITLE: Ignoring source code markers
+
+[TEXT]
+MID: 5c9881f6fa2847b3b95ef0cad131cfb3
+STATEMENT: >>>
+Sometimes, it is necessary to ignore ``@relation(...)`` markers in a specific section of a file. This can be done using the special skip keyword, as shown below:
+
+.. code-block::
+
+    # @relation(skip, scope=range_start)
+    # @relation(REQ-001, scope=range_start)
+    ...
+    # @relation(REQ-001, scope=range_end)
+    # @relation(skip, scope=range_end)
+
+In this example, the ``skip``-relation causes StrictDoc to ignore the ``REQ-001`` requirement, so that it does not appear in the traceability information.
 <<<
 
 [[/SECTION]]

@@ -1,4 +1,4 @@
 def hello_world():
-    # @sdoc[REQ-002]
+    # @relation(REQ-002, scope=range_start)
     print("Hello world!")  # noqa: T201
-    # @sdoc[/REQ-002]
+    # @relation(REQ-002, scope=range_end)

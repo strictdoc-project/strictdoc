@@ -1,4 +1,4 @@
-# <b>"escaping"&nbsp;'line mark'</b> @sdoc(REQ-1)
+# <b>"escaping"&nbsp;'line mark'</b> @relation(REQ-1, scope=line)
 def print_test():
     test1 = """
     <b>"escaping"&nbsp;'normal src line'</b>
@@ -9,7 +9,7 @@ def print_test():
     print(f"{test1} {test2}")  # noqa: T201#
 
 
-# <b>"escaping"&nbsp;'range mark before'</b> @sdoc[REQ-1]
+# <b>"escaping"&nbsp;'range mark before'</b> @relation(REQ-1, scope=range_start)
 def hello_world():
     print("hello world")  # noqa: T201
-# <b>"escaping"&nbsp;'range mark after'</b> @sdoc[/REQ-1]
+# <b>"escaping"&nbsp;'range mark after'</b> @relation(REQ-1, scope=range_end)

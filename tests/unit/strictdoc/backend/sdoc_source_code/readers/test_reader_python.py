@@ -146,14 +146,14 @@ print("Hello world")
     markers = info.markers
 
     assert markers[0].reqs == ["REQ-001", "REQ-002", "REQ-003"]
-    assert markers[0].begin_or_end == "["
+    assert markers[0].is_begin()
     assert markers[0].ng_source_line_begin == 1
     assert markers[0].ng_source_column_begin == 3
     assert markers[0].ng_range_line_begin == 1
     assert markers[0].ng_range_line_end == 3
 
     assert markers[1].reqs == ["REQ-001", "REQ-002", "REQ-003"]
-    assert markers[1].begin_or_end == "[/"
+    assert markers[1].is_end()
     assert markers[1].ng_source_line_begin == 3
     assert markers[1].ng_source_column_begin == 3
     assert markers[1].ng_range_line_begin == 1
@@ -216,13 +216,13 @@ def test_003_one_range_marker_with_offset():
     markers = info.markers
 
     assert markers[0].reqs == ["REQ-001", "REQ-002", "REQ-003"]
-    assert markers[0].begin_or_end == "["
+    assert markers[0].is_begin()
     assert markers[0].ng_source_line_begin == 4
     assert markers[0].ng_range_line_begin == 4
     assert markers[0].ng_range_line_end == 6
 
     assert markers[1].reqs == ["REQ-001", "REQ-002", "REQ-003"]
-    assert markers[1].begin_or_end == "[/"
+    assert markers[1].is_end()
     assert markers[1].ng_source_line_begin == 6
     assert markers[1].ng_range_line_begin == 4
     assert markers[1].ng_range_line_end == 6
@@ -290,15 +290,15 @@ CONTENT 9
     assert marker_8.ng_range_line_begin == 14
 
 
-def test_010_nosdoc_keyword():
+def test_010_relation_skip_keyword():
     source_input = b"""
-# @sdoc[nosdoc]
-# @sdoc[REQ-001]
+# @relation(skip, scope=range_start)
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001]
-# @sdoc[/nosdoc]
+# @relation(REQ-001, scope=range_end)
+# @relation(skip, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader_Python()
@@ -307,15 +307,15 @@ CONTENT 3
     assert len(document.markers) == 0
 
 
-def test_011_nosdoc_keyword_then_normal_marker():
+def test_011_relation_skip_keyword_then_normal_marker():
     source_input = b"""
-# @relation(nosdoc, scope=range_start)
+# @relation(skip, scope=range_start)
 # @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
 # @relation(REQ-001, scope=range_end)
-# @relation(nosdoc, scope=range_end)
+# @relation(skip, scope=range_end)
 # @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
@@ -329,15 +329,15 @@ CONTENT 3
     assert len(document.markers) == 2
 
 
-def test_011_nosdoc_keyword_then_normal_marker_4spaces_indent():
+def test_011_relation_skip_keyword_then_normal_marker_4spaces_indent():
     source_input = b"""
-    # @relation(nosdoc, scope=range_start)
+    # @relation(skip, scope=range_start)
     # @relation(REQ-001, scope=range_start)
     CONTENT 1
     CONTENT 2
     CONTENT 3
     # @relation(REQ-001, scope=range_end)
-    # @relation(nosdoc, scope=range_end)
+    # @relation(skip, scope=range_end)
     # @relation(REQ-001, scope=range_start)
     CONTENT 1
     CONTENT 2
@@ -349,6 +349,25 @@ def test_011_nosdoc_keyword_then_normal_marker_4spaces_indent():
 
     document = reader.read(source_input)
     assert len(document.markers) == 2
+
+
+def test_011_relation_skip_file():
+    source_input = b"""
+\"\"\"
+@relation(skip, scope=file)
+\"\"\"
+
+# @relation(REQ-001, scope=range_start)
+CONTENT 1
+CONTENT 2
+CONTENT 3
+# @relation(REQ-001, scope=range_end)
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader_Python()
+
+    document = reader.read(source_input)
+    assert len(document.markers) == 0
 
 
 # Testing that correct line location is assigned when the marker is not on the
@@ -373,13 +392,13 @@ def test_012_marker_not_first_line():
 
     markers: List[RangeMarker] = document.markers
     assert markers[0].reqs == ["REQ-001"]
-    assert markers[0].begin_or_end == "["
+    assert markers[0].is_begin()
     assert markers[0].ng_source_line_begin == 4
     assert markers[0].ng_range_line_begin == 4
     assert markers[0].ng_range_line_end == 8
 
     assert markers[1].reqs == ["REQ-001"]
-    assert markers[1].begin_or_end == "[/"
+    assert markers[1].is_end()
     assert markers[1].ng_source_line_begin == 8
     assert markers[1].ng_range_line_begin == 4
     assert markers[1].ng_range_line_end == 8
@@ -570,9 +589,9 @@ CONTENT 3
     assert exc_info.type is StrictDocSemanticError
     assert (
         exc_info.value.args[0]
-        == "Unmatched @sdoc keyword found in source file."
+        == "Unmatched @relation keyword found in source file."
     )
     assert (
         exc_info.value.args[1]
-        == "The @sdoc keywords are also unmatched on lines: [(2, 3)]."
+        == "The @relation keywords are also unmatched on lines: [(2, 3)]."
     )

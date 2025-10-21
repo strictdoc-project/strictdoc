@@ -28,7 +28,7 @@ class LineMarker:
         self.ng_range_line_begin: Optional[int] = None
         self.ng_range_line_end: Optional[int] = None
 
-        self.ng_is_nodoc: bool = "nosdoc" in self.reqs
+        self.ng_is_nodoc: bool = "skip" in self.reqs
         self.begin_or_end = True
 
     def is_begin(self) -> bool:

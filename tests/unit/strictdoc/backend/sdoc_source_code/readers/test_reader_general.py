@@ -15,14 +15,6 @@ from strictdoc.backend.sdoc_source_code.reader import (
 
 def test_001_one_range_marker():
     source_input = """
-# @sdoc[REQ-001]
-CONTENT 1
-CONTENT 2
-CONTENT 3
-# @sdoc[/REQ-001]
-""".lstrip()
-
-    source_input_new_syntax = """
     # @relation(REQ-001, scope=range_start)
     CONTENT 1
     CONTENT 2
@@ -30,36 +22,35 @@ CONTENT 3
     # @relation(REQ-001, scope=range_end)
     """.lstrip()
 
-    for source_input_ in [source_input, source_input_new_syntax]:
-        reader = SourceFileTraceabilityReader()
+    reader = SourceFileTraceabilityReader()
 
-        document = reader.read(source_input_)
-        markers = document.markers
-        assert markers[0].reqs == ["REQ-001"]
-        assert markers[0].begin_or_end == "["
-        assert markers[0].ng_source_line_begin == 1
-        assert markers[0].ng_range_line_begin == 1
-        assert markers[0].ng_range_line_end == 5
+    document = reader.read(source_input)
+    markers = document.markers
+    assert markers[0].reqs == ["REQ-001"]
+    assert markers[0].is_begin()
+    assert markers[0].ng_source_line_begin == 1
+    assert markers[0].ng_range_line_begin == 1
+    assert markers[0].ng_range_line_end == 5
 
-        assert markers[1].reqs == ["REQ-001"]
-        assert markers[1].begin_or_end == "[/"
-        assert markers[1].ng_source_line_begin == 5
-        assert markers[1].ng_range_line_begin == 1
-        assert markers[1].ng_range_line_end == 5
+    assert markers[1].reqs == ["REQ-001"]
+    assert markers[1].is_end()
+    assert markers[1].ng_source_line_begin == 5
+    assert markers[1].ng_range_line_begin == 1
+    assert markers[1].ng_range_line_end == 5
 
 
 def test_002_two_range_markers():
     source_input = """
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001]
-# @sdoc[REQ-002]
+# @relation(REQ-001, scope=range_end)
+# @relation(REQ-002, scope=range_start)
 CONTENT 4
 CONTENT 5
 CONTENT 6
-# @sdoc[/REQ-002]
+# @relation(REQ-002, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -119,21 +110,21 @@ def test_007_single_line_with_no_newline():
 def test_008_three_nested_range_markers():
     source_input = """
 CONTENT 1
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 2
-# @sdoc[REQ-002]
+# @relation(REQ-002, scope=range_start)
 CONTENT 3
-# @sdoc[REQ-003]
+# @relation(REQ-003, scope=range_start)
 CONTENT 4
-# @sdoc[/REQ-003]
+# @relation(REQ-003, scope=range_end)
 CONTENT 5
-# @sdoc[/REQ-002]
+# @relation(REQ-002, scope=range_end)
 CONTENT 6
-# @sdoc[/REQ-001]
+# @relation(REQ-001, scope=range_end)
 CONTENT 7
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 8
-# @sdoc[/REQ-001]
+# @relation(REQ-001, scope=range_end)
 CONTENT 9
 """.lstrip()
 
@@ -180,11 +171,11 @@ CONTENT 9
 
 def test_009_two_requirements_in_one_marker():
     source_input = """
-# @sdoc[REQ-001, REQ-002]
+# @relation(REQ-001, REQ-002, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001, REQ-002]
+# @relation(REQ-001, REQ-002, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -192,27 +183,27 @@ CONTENT 3
     document = reader.read(source_input)
     markers = document.markers
     assert markers[0].reqs == ["REQ-001", "REQ-002"]
-    assert markers[0].begin_or_end == "["
+    assert markers[0].is_begin()
     assert markers[0].ng_source_line_begin == 1
     assert markers[0].ng_range_line_begin == 1
     assert markers[0].ng_range_line_end == 5
 
     assert markers[1].reqs == ["REQ-001", "REQ-002"]
-    assert markers[1].begin_or_end == "[/"
+    assert markers[1].is_end()
     assert markers[1].ng_source_line_begin == 5
     assert markers[1].ng_range_line_begin == 1
     assert markers[1].ng_range_line_end == 5
 
 
-def test_010_nosdoc_keyword():
+def test_010_relation_skip_keyword():
     source_input = """
-# @sdoc[nosdoc]
-# @sdoc[REQ-001]
+# @relation(skip, scope=range_start)
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001]
-# @sdoc[/nosdoc]
+# @relation(REQ-001, scope=range_end)
+# @relation(skip, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -222,20 +213,20 @@ CONTENT 3
     assert len(document.markers) == 0
 
 
-def test_011_nosdoc_keyword_then_normal_marker():
+def test_011_relation_skip_keyword_then_normal_marker():
     source_input = """
-# @sdoc[nosdoc]
-# @sdoc[REQ-001]
+# @relation(skip, scope=range_start)
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001]
-# @sdoc[/nosdoc]
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_end)
+# @relation(skip, scope=range_end)
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001]
+# @relation(REQ-001, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -245,20 +236,20 @@ CONTENT 3
     assert len(document.markers) == 2
 
 
-def test_011_nosdoc_keyword_then_normal_marker_4spaces_indent():
+def test_012_relation_skip_keyword_then_normal_marker_4spaces_indent():
     source_input = """
-    # @sdoc[nosdoc]
-    # @sdoc[REQ-001]
+    # @relation(skip, scope=range_start)
+    # @relation(REQ-001, scope=range_start)
     CONTENT 1
     CONTENT 2
     CONTENT 3
-    # @sdoc[/REQ-001]
-    # @sdoc[/nosdoc]
-    # @sdoc[REQ-001]
+    # @relation(REQ-001, scope=range_end)
+    # @relation(skip, scope=range_end)
+    # @relation(REQ-001, scope=range_start)
     CONTENT 1
     CONTENT 2
     CONTENT 3
-    # @sdoc[/REQ-001]
+    # @relation(REQ-001, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -266,19 +257,41 @@ def test_011_nosdoc_keyword_then_normal_marker_4spaces_indent():
     document = reader.read(source_input)
     assert len(document.g_parts) == 12
     assert len(document.markers) == 2
+
+
+def test_013_relation_skip_entire_file():
+    source_input = """\
+# @relation(skip, scope=file)
+# @relation(REQ-001, scope=range_start)
+CONTENT 1
+CONTENT 2
+CONTENT 3
+# @relation(REQ-001, scope=range_end)
+# @relation(REQ-001, scope=range_start)
+CONTENT 1
+CONTENT 2
+CONTENT 3
+# @relation(REQ-001, scope=range_end)
+"""
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(source_input)
+    assert len(document.g_parts) == 11
+    assert len(document.markers) == 0
 
 
 # Testing that textx assigns correct line location when the marker is not on the
 # first line.
-def test_012_marker_not_first_line():
+def test_020_marker_not_first_line():
     source_input = """
 
 
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-001]
+# @relation(REQ-001, scope=range_end)
 
 
 
@@ -290,25 +303,25 @@ CONTENT 3
 
     markers: List[RangeMarker] = document.markers
     assert markers[0].reqs == ["REQ-001"]
-    assert markers[0].begin_or_end == "["
+    assert markers[0].is_begin()
     assert markers[0].ng_source_line_begin == 4
     assert markers[0].ng_range_line_begin == 4
     assert markers[0].ng_range_line_end == 8
 
     assert markers[1].reqs == ["REQ-001"]
-    assert markers[1].begin_or_end == "[/"
+    assert markers[1].is_end()
     assert markers[1].ng_source_line_begin == 8
     assert markers[1].ng_range_line_begin == 4
     assert markers[1].ng_range_line_end == 8
 
 
-def test_013_one_range_marker():
+def test_031_one_range_marker():
     source_input = """
-@sdoc[REQ-001]
+@relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-@sdoc[/REQ-001]
+@relation(REQ-001, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -316,13 +329,13 @@ CONTENT 3
     document = reader.read(source_input)
     markers = document.markers
     assert markers[0].reqs == ["REQ-001"]
-    assert markers[0].begin_or_end == "["
+    assert markers[0].is_begin()
     assert markers[0].ng_source_line_begin == 1
     assert markers[0].ng_range_line_begin == 1
     assert markers[0].ng_range_line_end == 5
 
     assert markers[1].reqs == ["REQ-001"]
-    assert markers[1].begin_or_end == "[/"
+    assert markers[1].is_end()
     assert markers[1].ng_source_line_begin == 5
     assert markers[1].ng_range_line_begin == 1
     assert markers[1].ng_range_line_end == 5
@@ -330,40 +343,30 @@ CONTENT 3
 
 def test_050_line_marker():
     source_input = """
-# @sdoc(REQ-001)
+# @relation(REQ-001, scope=line)
 CONTENT 1
-# @sdoc(REQ-002)
+# @relation(REQ-002, scope=line)
 CONTENT 2
-# @sdoc(REQ-003)
+# @relation(REQ-003, scope=line)
 CONTENT 3
 """.lstrip()
 
-    source_input_new_syntax = """
-    # @relation(REQ-001, scope=line)
-    CONTENT 1
-    # @relation(REQ-002, scope=line)
-    CONTENT 2
-    # @relation(REQ-003, scope=line)
-    CONTENT 3
-    """.lstrip()
+    reader = SourceFileTraceabilityReader()
 
-    for source_input_ in [source_input, source_input_new_syntax]:
-        reader = SourceFileTraceabilityReader()
-
-        document = reader.read(source_input_)
-        markers = document.markers
-        assert markers[0].reqs == ["REQ-001"]
-        assert markers[0].ng_source_line_begin == 1
-        assert markers[0].ng_range_line_begin == 1
-        assert markers[0].ng_range_line_end == 2
-        assert markers[1].reqs == ["REQ-002"]
-        assert markers[1].ng_source_line_begin == 3
-        assert markers[1].ng_range_line_begin == 3
-        assert markers[1].ng_range_line_end == 4
-        assert markers[2].reqs == ["REQ-003"]
-        assert markers[2].ng_source_line_begin == 5
-        assert markers[2].ng_range_line_begin == 5
-        assert markers[2].ng_range_line_end == 6
+    document = reader.read(source_input)
+    markers = document.markers
+    assert markers[0].reqs == ["REQ-001"]
+    assert markers[0].ng_source_line_begin == 1
+    assert markers[0].ng_range_line_begin == 1
+    assert markers[0].ng_range_line_end == 2
+    assert markers[1].reqs == ["REQ-002"]
+    assert markers[1].ng_source_line_begin == 3
+    assert markers[1].ng_range_line_begin == 3
+    assert markers[1].ng_range_line_end == 4
+    assert markers[2].reqs == ["REQ-003"]
+    assert markers[2].ng_source_line_begin == 5
+    assert markers[2].ng_range_line_begin == 5
+    assert markers[2].ng_range_line_end == 6
 
 
 def test_060_file_level_marker():
@@ -382,18 +385,19 @@ def hello_world():
     assert len(document.markers) == 1
     markers = document.markers
     assert markers[0].reqs == ["REQ-001"]
-    assert markers[0].ng_source_line_begin == 1
+    assert markers[0].ng_source_line_begin == 2
+    assert markers[0].ng_source_column_begin == 1
     assert markers[0].ng_range_line_begin == 1
     assert markers[0].ng_range_line_end == 6
 
 
 def test_validation_01_one_range_marker_begin_req_not_equal_to_end_req():
     source_input = """
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
-# @sdoc[/REQ-002]
+# @relation(REQ-002, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -410,7 +414,7 @@ CONTENT 3
 
 def test_validation_02_one_range_marker_end_without_begin():
     source_input = """
-# @sdoc[/REQ-002]
+# @relation(REQ-002, scope=range_end)
 """.lstrip()
 
     reader = SourceFileTraceabilityReader()
@@ -427,7 +431,7 @@ def test_validation_02_one_range_marker_end_without_begin():
 
 def test_validation_03_range_start_without_range_end():
     source_input = """
-# @sdoc[REQ-001]
+# @relation(REQ-001, scope=range_start)
 CONTENT 1
 CONTENT 2
 CONTENT 3
@@ -441,14 +445,14 @@ CONTENT 3
     assert exc_info.type is StrictDocSemanticError
     assert (
         exc_info.value.args[0]
-        == "Unmatched @sdoc keyword found in source file."
+        == "Unmatched @relation keyword found in source file."
     )
 
 
 def test_validation_04_consecutive_line_markers():
     source_input = """
-    # @sdoc(REQ-001)
-    # @sdoc(REQ-002)
+    # @relation(REQ-001, scope=line)
+    # @relation(REQ-002, scope=line)
     """
     reader = SourceFileTraceabilityReader()
 
@@ -460,7 +464,7 @@ def test_validation_04_consecutive_line_markers():
 
 
 def test_validation_05_line_marker_followed_by_eof():
-    source_input = "# @sdoc(REQ-001)"
+    source_input = "# @relation(REQ-001, scope=line)"
 
     reader = SourceFileTraceabilityReader()
 

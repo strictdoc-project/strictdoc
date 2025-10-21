@@ -1,6 +1,6 @@
 Test document
 -------------
 
-.. @sdoc[REQ-002, REQ-003]
+.. @relation(REQ-002, REQ-003, scope=range_start)
 Some text here.
-.. @sdoc[/REQ-002, REQ-003]
+.. @relation(REQ-002, REQ-003, scope=range_end)

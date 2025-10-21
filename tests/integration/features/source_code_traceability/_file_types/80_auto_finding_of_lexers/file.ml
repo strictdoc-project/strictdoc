@@ -1,5 +1,5 @@
 open Core
 let () =
-  (* @sdoc[REQ-001] *)
+  (* @relation(REQ-001, scope=range_start) *)
   printf "%s\n" "hello world"
-  (* @sdoc[/REQ-001] *)
+  (* @relation(REQ-001, scope=range_end) *)

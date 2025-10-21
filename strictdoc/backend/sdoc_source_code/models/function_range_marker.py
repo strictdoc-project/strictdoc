@@ -50,7 +50,7 @@ class FunctionRangeMarker:
         self.ng_marker_line: Optional[int] = None
         self.ng_marker_column: Optional[int] = None
 
-        self.ng_is_nodoc = "nosdoc" in self.reqs
+        self.ng_is_nodoc = "skip" in self.reqs
 
         self.begin_or_end: bool = True
 

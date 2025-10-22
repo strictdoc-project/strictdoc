@@ -27,10 +27,18 @@
     {%- include "components/badge/index.jinja" -%}
   {%- endwith -%}
 
-  {% assert document.reserved_uid is not none %}
-  <div
-    class="sdoc_pre_content"
-  >{{ document.reserved_uid }}</div>
+  {%- if uid_modified -%}
+    {%- set colored_diff = document_change.get_colored_uid_diff(side) -%}
+    {# Using a dummy if block to get rid of leading and trailing whitespaces #}
+    {%- if colored_diff is not none -%}
+      {{ colored_diff }}
+    {%- else -%}
+      {{ document.reserved_uid }}
+    {%- endif -%}
+  {%- else -%}
+    {{ document.reserved_uid }}
+  {%- endif -%}
+
 </div>
 
 {% endif %}

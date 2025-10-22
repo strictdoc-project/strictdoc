@@ -1,10 +1,5 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
-[TEXT]
-STATEMENT: >>>
-This is a free text.
-<<<
-
 [DOCUMENT_FROM_FILE]
 FILE: fragment.sdoc

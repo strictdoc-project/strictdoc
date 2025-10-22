@@ -3,7 +3,7 @@
 """
 
 from itertools import islice
-from typing import List, Optional, Sequence
+from typing import Any, List, Optional, Sequence, Tuple
 
 import tree_sitter_python
 from tree_sitter import Language, Node, Parser
@@ -62,6 +62,8 @@ class SourceFileTraceabilityReader_Python:
 
         nodes = traverse_tree(tree)
         map_function_to_node = {}
+
+        visited_comments = set()
         for node_ in nodes:
             if node_.type == "module":
                 function = Function(
@@ -214,16 +216,34 @@ class SourceFileTraceabilityReader_Python:
                     function_markers
                 )
             elif node_.type == "comment":
+                if node_ in visited_comments:
+                    continue
+
+                assert node_.parent is not None
                 assert node_.text is not None, (
                     f"Comment without a text: {node_}"
                 )
 
-                node_text_string = node_.text.decode("utf8")
+                if not SourceFileTraceabilityReader_Python.is_comment_alone_on_line(
+                    node_
+                ):
+                    continue
+
+                merged_comments, last_idx = (
+                    SourceFileTraceabilityReader_Python.collect_consecutive_comments(
+                        node_
+                    )
+                )
+
+                for j in range(node_.parent.children.index(node_), last_idx):
+                    visited_comments.add(node_.parent.children[j])
+
+                last_comment = node_.parent.children[last_idx - 1]
 
                 source_node = MarkerParser.parse(
-                    node_text_string,
+                    merged_comments,
                     node_.start_point[0] + 1,
-                    node_.end_point[0] + 1,
+                    last_comment.end_point[0] + 1,
                     node_.start_point[0] + 1,
                     None,
                 )
@@ -286,3 +306,62 @@ class SourceFileTraceabilityReader_Python:
         # The array now contains the "fully qualified" node name,
         # we want to return the namespace, so don't return the last part.
         return parent_scopes[:-1]
+
+    @staticmethod
+    def collect_consecutive_comments(comment_node: Any) -> Tuple[str, int]:
+        parent = comment_node.parent
+
+        siblings = parent.children
+        idx = siblings.index(comment_node)
+
+        merged_texts = []
+
+        last_node = None
+
+        while idx < len(siblings) and siblings[idx].type == "comment":
+            n = siblings[idx]
+            assert n.text is not None
+            text = n.text.decode("utf8")
+
+            if last_node is not None:
+                # Tree-sitter line numbers are 0-based
+                last_end_line = last_node.end_point[0]
+                curr_start_line = n.start_point[0]
+
+                # Stop merging if there is an empty line between comments
+                if curr_start_line > last_end_line + 1:
+                    break
+
+            merged_texts.append(text)
+            last_node = n
+            idx += 1
+
+        return "\n".join(merged_texts), idx
+
+    @staticmethod
+    def is_comment_alone_on_line(node: Any) -> bool:
+        """
+        Return True if the comment node is the only thing on its line (ignoring whitespace).
+        """
+
+        if node.type != "comment":
+            return False
+
+        parent = node.parent
+        assert parent is not None
+
+        comment_line = node.start_point[0]
+
+        for sibling in parent.children:
+            if sibling is node:
+                continue
+            start_line = sibling.start_point[0]
+            end_line = sibling.end_point[0]
+
+            # If sibling shares the same line as comment
+            if start_line <= comment_line <= end_line:
+                # If it's not a comment (code, punctuation, etc.)
+                if sibling.type != "comment":
+                    return False
+
+        return True

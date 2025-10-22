@@ -82,7 +82,7 @@
 
       {#-- decide closer candidate: explicit end vs implicit close --#}
       {%- set marker_is_end = (is_marker and line.is_range_marker() and line.is_end()) -%}
-      {%- set implicit_close = (is_markup and ns.prev_line != none) -%}
+      {%- set implicit_close = (is_markup and ns.prev_line != none and ns.prev_line.ng_range_line_end == loop.index) -%}
 
       {%- if marker_is_end -%}
         {%- set range_closer_line = line -%}

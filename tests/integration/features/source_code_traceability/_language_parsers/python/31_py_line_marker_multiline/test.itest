@@ -1,0 +1,11 @@
+# @relation(SDOC-SRS-124, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/file.py.html"
+
+RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: [ 1-15 ]
+CHECK-SOURCE-FILE: [ 4-10 ]
+CHECK-SOURCE-FILE: [ 12-15 ]

@@ -10,6 +10,7 @@ from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 
 pytestmark = pytest.mark.skipif(
     sys.version_info < (3, 9), reason="Requires Python 3.9 or higher"
@@ -182,4 +183,37 @@ def test_23_parses_within_doxygen_comment():
     assert function_range.reqs_objs[1].ng_source_column == 8
     assert function_range.reqs_objs[2].uid == "REQ-6"
     assert function_range.reqs_objs[2].ng_source_line == 13
+    assert function_range.reqs_objs[2].ng_source_column == 8
+
+
+def test_24_parses_multiline_marker():
+    input_string = """\
+/**
+ * Some text.
+ *
+ * @relation(
+ *     REQ-1,
+ *     REQ-2,
+ *     REQ-3,
+ *     scope=line
+ * )
+ * HERE SOME LINE
+ */
+"""
+
+    source_node = MarkerParser.parse(input_string, 1, 11, 1)
+
+    function_range = source_node.markers[0]
+    assert isinstance(function_range, LineMarker)
+    assert function_range.ng_source_line_begin == 4
+    assert function_range.ng_range_line_begin == 4
+    assert function_range.ng_range_line_end == 10
+    assert function_range.reqs_objs[0].uid == "REQ-1"
+    assert function_range.reqs_objs[0].ng_source_line == 5
+    assert function_range.reqs_objs[0].ng_source_column == 8
+    assert function_range.reqs_objs[1].uid == "REQ-2"
+    assert function_range.reqs_objs[1].ng_source_line == 6
+    assert function_range.reqs_objs[1].ng_source_column == 8
+    assert function_range.reqs_objs[2].uid == "REQ-3"
+    assert function_range.reqs_objs[2].ng_source_line == 7
     assert function_range.reqs_objs[2].ng_source_column == 8

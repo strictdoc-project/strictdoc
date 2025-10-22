@@ -47,7 +47,7 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
-# @sdoc[SDOC-SRS-89]
+# @relation(SDOC-SRS-89, scope=range_start)
 dependencies = [
     "textx >= 4.0.0, == 4.*",
     "lark >= 1.2.2",
@@ -104,7 +104,7 @@ dependencies = [
     "plotly",
     "pandas"
 ]
-# @sdoc[/SDOC-SRS-89]
+# @relation(SDOC-SRS-89, scope=range_end)
 
 [project.optional-dependencies]
 development = [

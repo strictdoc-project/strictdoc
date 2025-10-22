@@ -13,22 +13,15 @@ class RangeMarker:
     def __init__(
         self,
         parent: Any,
-        begin_or_end: str,
         reqs_objs: List[Req],
         scope: str = "",
         role: Optional[str] = None,
     ) -> None:
         assert isinstance(reqs_objs, list)
         self.parent: Any = parent
-        assert len(begin_or_end) > 0 or scope is not None
 
-        self.begin_or_end: str
-        if len(begin_or_end) > 0:
-            self.begin_or_end = begin_or_end
-        else:
-            assert scope in ("range_start", "range_end")
-            self.begin_or_end = "[" if scope == "range_start" else "[/"
-            self.ng_new_relation_keyword = True
+        assert scope in ("range_start", "range_end")
+        self.begin_or_end: bool = scope == "range_start"
 
         self.reqs_objs: List[Req] = reqs_objs
         self.reqs: List[str] = list(map(lambda req: req.uid, reqs_objs))
@@ -51,14 +44,13 @@ class RangeMarker:
         self.ng_range_line_begin: Optional[int] = None
         self.ng_range_line_end: Optional[int] = None
 
-        self.ng_is_nodoc: bool = "nosdoc" in self.reqs
-        self.ng_new_relation_keyword = scope is not None and len(scope) > 0
+        self.ng_is_nodoc: bool = "skip" in self.reqs
 
     def is_begin(self) -> bool:
-        return self.begin_or_end == "["
+        return self.begin_or_end
 
     def is_end(self) -> bool:
-        return self.begin_or_end == "[/"
+        return not self.begin_or_end
 
     def is_range_marker(self) -> bool:
         return True

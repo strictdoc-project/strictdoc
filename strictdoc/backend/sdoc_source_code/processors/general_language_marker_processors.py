@@ -18,6 +18,7 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.list import find_duplicates
 
 
@@ -35,14 +36,49 @@ def validate_marker_uids(
         )
 
 
+def _handle_skip_marker(
+    marker: Union[RangeMarker, FunctionRangeMarker, LineMarker],
+    parse_context: ParseContext,
+) -> None:
+    assert marker.ng_is_nodoc, marker
+    assert marker.ng_source_line_begin is not None, marker
+    assert marker.ng_source_column_begin is not None, marker
+
+    if marker.is_begin():
+        parse_context.marker_stack.append(marker)
+    elif marker.is_end():
+        try:
+            current_top_marker = parse_context.marker_stack.pop()
+            if (
+                not current_top_marker.ng_is_nodoc
+                or current_top_marker.is_end()
+            ):
+                raise create_begin_end_range_reqs_mismatch_error(
+                    parse_context.filename,
+                    assert_cast(current_top_marker.ng_source_line_begin, int),
+                    assert_cast(current_top_marker.ng_source_column_begin, int),
+                    current_top_marker.reqs,
+                    marker.reqs,
+                )
+        except IndexError:
+            raise create_end_without_begin_error(
+                parse_context.filename,
+                marker.ng_source_line_begin,
+                marker.ng_source_column_begin,
+            ) from None
+
+
 def source_file_traceability_info_processor(
     source_file_traceability_info: SourceFileTraceabilityInfo,
     parse_context: ParseContext,
 ) -> None:
     if len(parse_context.marker_stack) > 0:
-        raise create_unmatch_range_error(
-            parse_context.marker_stack, parse_context.filename
-        )
+        if any(
+            not marker_.ng_is_nodoc for marker_ in parse_context.marker_stack
+        ):
+            raise create_unmatch_range_error(
+                parse_context.marker_stack, filename=parse_context.filename
+            )
     source_file_traceability_info.markers = parse_context.markers
     source_file_traceability_info.file_stats = parse_context.file_stats
     source_file_traceability_info.ng_map_reqs_to_markers = (
@@ -67,13 +103,13 @@ def create_begin_end_range_reqs_mismatch_error(
             "with the same requirement(s): "
             f"'{lhs_marker_reqs_str}' != '{rhs_marker_reqs_str}'."
         ),
-        # @sdoc[nosdoc]  # noqa: ERA001
+        # @relation(skip, scope=range_start)  # noqa: ERA001
         """
 # [REQ-001]
 Content...
 # [/REQ-001]
         """.lstrip(),
-        # @sdoc[/nosdoc]  # noqa: ERA001
+        # @relation(skip, scope=range_end)  # noqa: ERA001
         line=line,
         col=col,
         filename=filename,
@@ -89,13 +125,13 @@ def create_end_without_begin_error(
             "STRICT RANGE shall be opened with "
             "START marker and ended with END marker."
         ),
-        # @sdoc[nosdoc]  # noqa: ERA001
+        # @relation(skip, scope=range_start)  # noqa: ERA001
         """
 # [REQ-001]
 Content...
 # [/REQ-001]
         """.lstrip(),
-        # @sdoc[/nosdoc]  # noqa: ERA001
+        # @relation(skip, scope=range_end)  # noqa: ERA001
         line=line,
         col=col,
         filename=filename,
@@ -103,7 +139,8 @@ Content...
 
 
 def create_unmatch_range_error(
-    unmatched_ranges: List[RangeMarker], filename: Optional[str]
+    unmatched_ranges: List[Union[RangeMarker, FunctionRangeMarker, LineMarker]],
+    filename: Optional[str],
 ) -> StrictDocSemanticError:
     assert isinstance(unmatched_ranges, list)
     assert len(unmatched_ranges) > 0
@@ -121,20 +158,20 @@ def create_unmatch_range_error(
     hint: Optional[str] = None
     if len(unmatched_ranges) > 1:
         range_lines = range_locations[1:]
-        hint = f"The @sdoc keywords are also unmatched on lines: {range_lines}."
+        hint = f"The @relation keywords are also unmatched on lines: {range_lines}."
 
     return StrictDocSemanticError(
-        "Unmatched @sdoc keyword found in source file.",
+        "Unmatched @relation keyword found in source file.",
         hint=hint,
-        # @sdoc[nosdoc]
+        # @relation(skip, scope=range_start)
         example=(
-            "Each @sdoc keyword must be matched with a closing keyword. "
+            "Each @relation keyword must be matched with a closing keyword. "
             "Example:\n"
-            "@sdoc[REQ-001]\n"
+            "@relation(REQ-001, scope=range_start)\n"
             "...\n"
-            "@sdoc[/REQ-001]"
+            "@relation(REQ-001, scope=range_end)"
         ),
-        # @sdoc[/nosdoc]
+        # @relation(skip, scope=range_end)
         line=first_location[0],
         col=first_location[1],
         filename=filename,
@@ -145,13 +182,14 @@ def function_range_marker_processor(
     marker: FunctionRangeMarker, parse_context: ParseContext
 ) -> None:
     if marker.ng_is_nodoc:
+        _handle_skip_marker(marker, parse_context)
         return
 
     if (
         len(parse_context.marker_stack) > 0
         and parse_context.marker_stack[-1].ng_is_nodoc
     ):
-        # This marker is within a "nosdoc" block, so we ignore it.
+        # This marker is within a "@relation(skip...)" block, so we ignore it.
         return
 
     parse_context.markers.append(marker)
@@ -165,30 +203,15 @@ def function_range_marker_processor(
 def range_marker_processor(
     marker: RangeMarker, parse_context: ParseContext
 ) -> None:
-    current_top_marker: RangeMarker
-
     if marker.ng_is_nodoc:
-        if marker.is_begin():
-            parse_context.marker_stack.append(marker)
-        elif marker.is_end():
-            try:
-                current_top_marker = parse_context.marker_stack.pop()
-                if (
-                    not current_top_marker.ng_is_nodoc
-                    or current_top_marker.is_end()
-                ):
-                    raise create_begin_end_range_reqs_mismatch_error(
-                        "FIXME", -1, -1, current_top_marker.reqs, marker.reqs
-                    )
-            except IndexError:
-                raise create_end_without_begin_error("FIXME", -1, -1) from None
+        _handle_skip_marker(marker, parse_context)
         return
 
     if (
         len(parse_context.marker_stack) > 0
         and parse_context.marker_stack[-1].ng_is_nodoc
     ):
-        # This marker is within a "nosdoc" block, so we ignore it.
+        # This marker is within a "@relation(skip...)" block, so we ignore it.
         return
 
     parse_context.markers.append(marker)
@@ -209,9 +232,9 @@ def range_marker_processor(
             if marker.reqs != current_top_marker.reqs:
                 assert marker.ng_source_line_begin is not None
                 raise create_begin_end_range_reqs_mismatch_error(
-                    "FIXME",
-                    marker.ng_source_line_begin,
-                    -1,
+                    parse_context.filename,
+                    assert_cast(marker.ng_source_line_begin, int),
+                    assert_cast(marker.ng_source_column_begin, int),
                     current_top_marker.reqs,
                     marker.reqs,
                 )
@@ -222,7 +245,11 @@ def range_marker_processor(
             marker.ng_range_line_begin = current_top_marker.ng_range_line_begin
 
         except IndexError:
-            raise create_end_without_begin_error("FIXME", 1, 1) from None
+            raise create_end_without_begin_error(
+                parse_context.filename,
+                assert_cast(marker.ng_source_line_begin, int),
+                assert_cast(marker.ng_source_column_begin, int),
+            ) from None
     else:
         raise NotImplementedError
 
@@ -248,7 +275,7 @@ def line_marker_processor(
         len(parse_context.marker_stack) > 0
         and parse_context.marker_stack[-1].ng_is_nodoc
     ):
-        # This marker is within a "nosdoc" block, so we ignore it.
+        # This marker is within a "@relation(skip...)" block, so we ignore it.
         return
 
     has_previous_markers = len(parse_context.markers) > 0

@@ -1,8 +1,8 @@
 #include <iostream>
 
 int main() {
-    // @sdoc[REQ-002, REQ-003]
+    // @relation(REQ-002, REQ-003, scope=range_start)
     std::cout << "Hello World!";
-    // @sdoc[/REQ-002, REQ-003]
+    // @relation(REQ-002, REQ-003, scope=range_end)
     return 0;
 }

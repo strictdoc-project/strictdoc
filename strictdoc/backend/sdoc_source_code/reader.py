@@ -3,11 +3,10 @@
 """
 
 from functools import partial
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Optional, TypedDict
 
 from textx import get_location, metamodel_from_str
 
-from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
@@ -22,9 +21,14 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 )
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
 from strictdoc.backend.sdoc_source_code.processors.general_language_marker_processors import (
+    _handle_skip_marker,
+    create_begin_end_range_reqs_mismatch_error,
+    create_end_without_begin_error,
+    create_unmatch_range_error,
     line_marker_processor,
     validate_marker_uids,
 )
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_stats import SourceFileStats
 from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.textx import drop_textx_meta
@@ -51,94 +55,14 @@ def source_file_traceability_info_processor(
     parse_context: ParseContext,
 ) -> None:
     if len(parse_context.marker_stack) > 0:
-        raise create_unmatch_range_error(
-            parse_context.marker_stack,
-        )
+        if any(
+            not marker_.ng_is_nodoc for marker_ in parse_context.marker_stack
+        ):
+            raise create_unmatch_range_error(
+                parse_context.marker_stack, filename=parse_context.filename
+            )
     source_file_traceability_info.markers = parse_context.markers
     source_file_traceability_info.file_stats = parse_context.file_stats
-
-
-def create_begin_end_range_reqs_mismatch_error(
-    location: Dict[str, Any],
-    lhs_marker_reqs: List[str],
-    rhs_marker_reqs: List[str],
-) -> StrictDocSemanticError:
-    lhs_marker_reqs_str = ", ".join(lhs_marker_reqs)
-    rhs_marker_reqs_str = ", ".join(rhs_marker_reqs)
-
-    return StrictDocSemanticError(
-        "STRICTDOC RANGE: BEGIN and END requirements mismatch",
-        (
-            "STRICT RANGE marker should START and END "
-            "with the same requirement(s): "
-            f"'{lhs_marker_reqs_str}' != '{rhs_marker_reqs_str}'."
-        ),
-        # @sdoc[nosdoc]  # noqa: ERA001
-        """
-# [REQ-001]
-Content...
-# [/REQ-001]
-        """.lstrip(),
-        # @sdoc[/nosdoc]  # noqa: ERA001
-        line=location["line"],
-        col=location["col"],
-        filename=location["filename"],
-    )
-
-
-def create_end_without_begin_error(
-    location: Dict[str, Any],
-) -> StrictDocSemanticError:
-    return StrictDocSemanticError(
-        "STRICTDOC RANGE: END marker without preceding BEGIN marker",
-        (
-            "STRICT RANGE shall be opened with "
-            "START marker and ended with END marker."
-        ),
-        # @sdoc[nosdoc]  # noqa: ERA001
-        """
-# [REQ-001]
-Content...
-# [/REQ-001]
-        """.lstrip(),
-        # @sdoc[/nosdoc]  # noqa: ERA001
-        line=location["line"],
-        col=location["col"],
-        filename=location["filename"],
-    )
-
-
-def create_unmatch_range_error(
-    unmatched_ranges: List[RangeMarker],
-) -> StrictDocSemanticError:
-    assert isinstance(unmatched_ranges, list)
-    assert len(unmatched_ranges) > 0
-    range_locations: List[TextXLocation] = []
-    for unmatched_range in unmatched_ranges:
-        location = get_location(unmatched_range)
-        range_locations.append(location)
-    first_location = range_locations[0]
-    hint: Optional[str] = None
-    if len(unmatched_ranges) > 1:
-        range_lines = list(map(lambda loc: loc["line"], range_locations[1:]))
-        hint = f"The @sdoc keywords are also unmatched on lines: {range_lines}."
-
-    return StrictDocSemanticError(
-        "Unmatched @sdoc keyword found in source file.",
-        hint=hint,
-        # @sdoc[nosdoc]
-        example=(
-            "Each @sdoc keyword must be matched with a closing keyword. "
-            "Example:\n"
-            "@sdoc[REQ-001]\n"
-            "...\n"
-            "@sdoc[/REQ-001]"
-        ),
-        # @sdoc[/nosdoc]
-        line=first_location["line"],
-        col=first_location["col"],
-        filename=first_location["filename"],
-    )
 
 
 def range_marker_processor(
@@ -148,34 +72,22 @@ def range_marker_processor(
 
     location = get_location(marker)
     line = location["line"]
+    column = location["col"]
+    marker.ng_source_line_begin = line
+    marker.ng_source_column_begin = column
 
-    current_top_marker: RangeMarker
     if marker.ng_is_nodoc:
-        if marker.is_begin():
-            parse_context.marker_stack.append(marker)
-        elif marker.is_end():
-            try:
-                current_top_marker = parse_context.marker_stack.pop()
-                if (
-                    not current_top_marker.ng_is_nodoc
-                    or current_top_marker.is_end()
-                ):
-                    raise create_begin_end_range_reqs_mismatch_error(
-                        location, current_top_marker.reqs, marker.reqs
-                    )
-            except IndexError:
-                raise create_end_without_begin_error(location) from None
+        _handle_skip_marker(marker, parse_context)
         return
 
     if (
         len(parse_context.marker_stack) > 0
         and parse_context.marker_stack[-1].ng_is_nodoc
     ):
-        # This marker is within a "nosdoc" block, so we ignore it.
+        # This marker is within a "@relation(skip...)" block, so we ignore it.
         return
 
     parse_context.markers.append(marker)
-    marker.ng_source_line_begin = line
 
     if marker.is_begin():
         marker.ng_range_line_begin = line
@@ -189,7 +101,11 @@ def range_marker_processor(
             current_top_marker = parse_context.marker_stack.pop()
             if marker.reqs != current_top_marker.reqs:
                 raise create_begin_end_range_reqs_mismatch_error(
-                    location, current_top_marker.reqs, marker.reqs
+                    parse_context.filename,
+                    assert_cast(current_top_marker.ng_source_line_begin, int),
+                    assert_cast(current_top_marker.ng_range_line_begin, int),
+                    current_top_marker.reqs,
+                    marker.reqs,
                 )
             current_top_marker.ng_range_line_end = line
 
@@ -197,7 +113,9 @@ def range_marker_processor(
             marker.ng_range_line_end = line
 
         except IndexError:
-            raise create_end_without_begin_error(location) from None
+            raise create_end_without_begin_error(
+                parse_context.filename, line, location["col"]
+            ) from None
     else:
         raise NotImplementedError
 
@@ -207,19 +125,30 @@ def function_range_marker_processor(
 ) -> None:
     validate_marker_uids(function_range_marker, parse_context)
 
-    if (
-        len(parse_context.marker_stack) > 0
-        and parse_context.marker_stack[-1].ng_is_nodoc
-    ):
-        # This marker is within a "nosdoc" block, so we ignore it.
-        return
+    location = get_location(function_range_marker)
+    line = location["line"]
+    column = location["col"]
 
-    parse_context.markers.append(function_range_marker)
-    function_range_marker.ng_source_line_begin = 1
+    function_range_marker.ng_source_line_begin = line
+    function_range_marker.ng_source_column_begin = column
     function_range_marker.ng_range_line_begin = 1
     function_range_marker.ng_range_line_end = (
         parse_context.file_stats.lines_total
     )
+
+    if function_range_marker.ng_is_nodoc:
+        _handle_skip_marker(function_range_marker, parse_context)
+        return
+
+    if (
+        len(parse_context.marker_stack) > 0
+        and parse_context.marker_stack[-1].ng_is_nodoc
+    ):
+        # This marker is within a "@relation(skip...)" block, so we ignore it.
+        return
+
+    parse_context.markers.append(function_range_marker)
+
     # Function range markers supported by this general reader can only
     # be of scope=file. Only the language-aware parsing results in
     # markers also having scope=function or scope=class.

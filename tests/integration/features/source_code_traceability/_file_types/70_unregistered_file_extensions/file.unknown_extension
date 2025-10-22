@@ -1,5 +1,5 @@
 Some content here
-@sdoc[REQ-001]
+@relation(REQ-001, scope=range_start)
 Some content here
-@sdoc[/REQ-001]
+@relation(REQ-001, scope=range_end)
 Some content here

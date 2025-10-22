@@ -52,7 +52,9 @@ TITLE: Unreleased
 [TEXT]
 MID: 12345f3b28ea4bfe9ca8afe6b21826a8
 STATEMENT: >>>
-This release includes several bug fixes and improvements for edge cases.
+This release includes the removal of legacy @sdoc markers, several bug fixes, and enhancements for edge cases.
+
+The legacy ``@sdoc`` marker has been removed from the codebase. From now on, only the ``@relation`` markers are recognized when linking requirements with source code files.
 
 An edge case has been fixed where StrictDoc’s FileFinder was detecting Linux pipe files that could not be processed meaningfully by StrictDoc’s source file generator. With this release, such files are now ignored.
 

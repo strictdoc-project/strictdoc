@@ -163,11 +163,10 @@ class MarkerParser:
                 function_marker.set_description(f"class {entity_name}")
             markers.append(function_marker)
         elif relation_scope in ("range_start", "range_end"):
-            start_or_end = relation_scope == "range_start"
             range_marker = RangeMarker(
                 None,
-                "[" if start_or_end else "[/",
                 requirements,
+                scope=relation_scope,
                 role=relation_role,
             )
             range_marker.ng_source_line_begin = (
@@ -178,7 +177,6 @@ class MarkerParser:
             )
             range_marker.ng_range_line_begin = line_start
             range_marker.ng_range_line_end = line_end
-            range_marker.ng_new_relation_keyword = True
             markers.append(range_marker)
         elif relation_scope == "line":
             line_marker = LineMarker(None, requirements, role=relation_role)

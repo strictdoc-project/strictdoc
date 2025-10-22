@@ -48,6 +48,19 @@ def test_03_single_marker_with_role():
     assert tree.children[0].children[2].children[0].value == "Implementation"
 
 
+def test_04_skip_markers():
+    tree = MarkerLexer.parse("@relation(skip, scope=file)")
+    assert len(tree.children) == 1
+    assert tree.data == "start"
+
+    assert len(tree.children) == 1
+    assert tree.children[0].data == "relation_marker"
+    assert tree.children[0].children[0].data == "relation_node_uid"
+    assert tree.children[0].children[0].children[0].value.startswith("skip")
+    assert tree.children[0].children[1].data == "relation_scope"
+    assert tree.children[0].children[1].children[0].value == "file"
+
+
 def test_10_single_marker_with_newline():
     input_string = "@relation(REQ-1, scope=function)\n"
 

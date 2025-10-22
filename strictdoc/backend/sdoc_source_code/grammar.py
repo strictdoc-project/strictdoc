@@ -17,20 +17,12 @@ EmptyLine[noskipws]:
 ;
 
 RangeMarker[noskipws]:
-  // It is a hard-won result: it is important that the "@sdoc" is within the
-  // regex. Putting it next to the regex as "@sdoc" does not work.
+  // It is a hard-won result: it is important that the "@relation" is within the
+  // regex. Putting it next to the regex as "@relation" does not work.
   // TODO: It would be great to check this with the TextX developers.
-  (
-  /^.*?@sdoc/
-  (begin_or_end = "[/" | begin_or_end = "[")
-  (reqs_objs += Req[', ']) ']' '\n'?
-  )
-  |
-  (
   /^.*?@relation/
   '('
   (reqs_objs += Req[', ']) ', scope=' scope=/(range_start|range_end)/ (", role=" role=/{REGEX_ROLE}/)? ')' '\n'?
-  )
 ;
 
 FunctionRangeMarker[noskipws]:
@@ -39,18 +31,12 @@ FunctionRangeMarker[noskipws]:
 ;
 
 LineMarker[noskipws]:
-  // It is a hard-won result: it is important that the "@sdoc" is within the
-  // regex. Putting it next to the regex as "@sdoc" does not work.
+  // It is a hard-won result: it is important that the "@relation" is within the
+  // regex. Putting it next to the regex as "@relation" does not work.
   // TODO: It would be great to check this with the TextX developers.
-  (
-  /^.*?@sdoc/
-  "(" (reqs_objs += Req[', ']) ')' '\n'?
-  )
-  |
-  (
+
   /^.*?@relation/
   "(" (reqs_objs += Req[', ']) ', scope=line' (", role=" role=/{REGEX_ROLE}/)? ")" '\n'?
-  )
 ;
 
 Req[noskipws]:

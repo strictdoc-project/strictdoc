@@ -1,5 +1,5 @@
 foo:
-# @sdoc[REQ-002, REQ-003]
+# @relation(REQ-002, REQ-003, scope=range_start)
   bar:
     baz: 1
-# @sdoc[/REQ-002, REQ-003]
+# @relation(REQ-002, REQ-003, scope=range_end)

@@ -14,7 +14,6 @@ RESERVED_STRINGS = [
     "pragma",
     "pylint",
     "@relation",
-    "@sdoc",
     "type:",
 ]
 

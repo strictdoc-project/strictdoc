@@ -1,9 +1,9 @@
 def hello_world():
-    # @sdoc[nosdoc]
-    # @sdoc[REQ-001]
+    # @relation(skip, scope=range_start)
+    # @relation(REQ-001, scope=range_start)
     print("ignored hello world")  # noqa: T201
-    # @sdoc[/REQ-001]
-    # @sdoc[/nosdoc]
-    # @sdoc[REQ-001]
+    # @relation(REQ-001, scope=range_end)
+    # @relation(skip, scope=range_end)
+    # @relation(REQ-001, scope=range_start)
     print("real hello world")  # noqa: T201
-    # @sdoc[/REQ-001]
+    # @relation(REQ-001, scope=range_end)

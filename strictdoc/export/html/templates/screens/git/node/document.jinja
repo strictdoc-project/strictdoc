@@ -1,0 +1,29 @@
+{% set document_change = view_object.change_stats.find_change(document) %}
+
+<details
+  class="diff_node"
+  {% if document_change is not none %}
+    modified="{{ side }}"
+  {% endif %}
+>
+  <summary>
+    {%- with badge_text = "DOCUMENT (included)" -%}
+      {%- include "components/badge/index.jinja" -%}
+    {%- endwith -%}
+    <span>
+      {{ document.context.title_number_string if document.context.title_number_string else "&nbsp;"|safe * (document.ng_level * 2 - 1) }}
+    </span>
+    <span>{{ document.reserved_title }}</span>
+    {%- if tab == "diff" -%}
+      {%- if document_change is not none -%}
+        {%- if document_change.document_token is not none -%}
+          {%- with uid=document_change.document_token -%}
+            {%- include "screens/git/sync/button.jinja" -%}
+          {%- endwith -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  </summary>
+
+  {% include "screens/git/fields/document_fields.jinja" %}
+</details>

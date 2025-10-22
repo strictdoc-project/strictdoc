@@ -58,6 +58,8 @@ The legacy ``@sdoc`` marker has been removed from the codebase. From now on, onl
 
 An edge case has been fixed where StrictDoc’s FileFinder was detecting Linux pipe files that could not be processed meaningfully by StrictDoc’s source file generator. With this release, such files are now ignored.
 
+The Diff/Changelog feature has been extended to better support change tracking of included documents. Previously, only the contents of included documents were visualized, but not the root nodes of the documents themselves. Now, changes to included documents, such as their UID or TITLE, are displayed correctly.
+
 The ReqIF-to-SDoc converter has been improved to handle integer fields by treating them as string grammar fields. Since StrictDoc does not yet support INTEGER fields, they are converted to STRING fields during import. This workaround was sufficient to support the user’s use case.
 Thanks to @kerfallaCisse for reporting this issue.
 

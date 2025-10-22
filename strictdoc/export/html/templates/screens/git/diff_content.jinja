@@ -2,7 +2,7 @@
 {%- if not document_tree_iterator.is_empty_tree() -%}
   <div class="diff_content">
     {%- for folder_or_file in document_tree_iterator.iterator_files_first(): -%}
-      {%- if folder_or_file.is_folder(): %}
+      {%- if folder_or_file.is_folder() %}
         {%- if folder_or_file.files|length > 0 %}
           <div
             class="diff_folder"
@@ -34,14 +34,14 @@
 
             {%- set document_iterator = traceability_index.get_document_iterator(document) -%}
             {%- for section_or_requirement, _ in document_iterator.all_content(print_fragments=True) %}
-              {%- if section_or_requirement.is_requirement() %}
+                {% if section_or_requirement.is_document() %}
+                    {% with document = section_or_requirement %}
+                        {% include "screens/git/node/document.jinja" %}
+                    {% endwith %}
+                {% else %}
                 {%- set requirement = section_or_requirement %}
-                {% include "screens/git/node/requirement.jinja" %}
-
-              {%- elif section_or_requirement.is_document() %}
-                {%- set section = section_or_requirement %}
-                {% include "screens/git/node/section.jinja" %}
-              {%- endif %}
+                    {% include "screens/git/node/requirement.jinja" %}
+                {% endif %}
             {%- endfor -%}
         </details>
         {% endif %}

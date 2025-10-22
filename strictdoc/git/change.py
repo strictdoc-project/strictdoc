@@ -31,8 +31,12 @@ class DocumentChange:
         rhs_document: Optional[SDocDocument],
         uid_modified: bool,
         title_modified: bool,
+        lhs_colored_uid_diff: Optional[Markup],
+        rhs_colored_uid_diff: Optional[Markup],
         lhs_colored_title_diff: Optional[Markup],
         rhs_colored_title_diff: Optional[Markup],
+        document_token: str,
+        is_included_document: bool,
     ):
         assert lhs_document is not None or rhs_document is not None
         if matched_uid is not None:
@@ -40,6 +44,10 @@ class DocumentChange:
         self.matched_uid: Optional[str] = matched_uid
         self.uid_modified: bool = uid_modified
         self.title_modified: bool = title_modified
+
+        self.lhs_colored_uid_diff: Optional[Markup] = lhs_colored_uid_diff
+        self.rhs_colored_uid_diff: Optional[Markup] = rhs_colored_uid_diff
+
         self.lhs_colored_title_diff: Optional[Markup] = lhs_colored_title_diff
         self.rhs_colored_title_diff: Optional[Markup] = rhs_colored_title_diff
 
@@ -47,6 +55,16 @@ class DocumentChange:
         self.rhs_document: Optional[SDocDocument] = rhs_document
 
         self.change_type: ChangeType = ChangeType.DOCUMENT_MODIFIED
+        self.document_token: str = document_token
+        self.is_included_document: bool = is_included_document
+
+    def get_colored_uid_diff(self, side: str) -> Optional[Markup]:
+        assert self.uid_modified
+        if side == "left":
+            return self.lhs_colored_uid_diff
+        if side == "right":
+            return self.rhs_colored_uid_diff
+        raise AssertionError(f"Must not reach here: {side}")
 
     def get_colored_title_diff(self, side: str) -> Optional[Markup]:
         assert self.title_modified

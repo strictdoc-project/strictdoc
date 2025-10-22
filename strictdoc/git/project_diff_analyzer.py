@@ -233,7 +233,22 @@ class ChangeStats:
         return ", ".join(change_components)
 
     def get_changes_documents_modified(self) -> Optional[int]:
-        return self._document_counter.get(ChangeType.DOCUMENT)
+        return sum(
+            1
+            for change_ in self.changes
+            if isinstance(change_, DocumentChange)
+            and change_.change_type == ChangeType.DOCUMENT_MODIFIED
+            and not change_.is_included_document
+        )
+
+    def get_changes_included_documents_modified(self) -> Optional[int]:
+        return sum(
+            1
+            for change_ in self.changes
+            if isinstance(change_, DocumentChange)
+            and change_.change_type == ChangeType.DOCUMENT_MODIFIED
+            and change_.is_included_document
+        )
 
     def add_change(
         self,
@@ -293,13 +308,6 @@ class ChangeStats:
 
         for document in index.document_tree.document_list:
             #
-            # The included documents are ignored. All their information should
-            # be contained in the including documents at this point.
-            #
-            if document.document_is_included():
-                continue
-
-            #
             # First, take care of the document node itself. Check if the document
             # root-level free text (abstract) has changed.
             #
@@ -325,6 +333,8 @@ class ChangeStats:
 
                 uid_modified: bool = False
                 title_modified: bool = False
+                lhs_colored_uid_diff: Optional[Markup] = None
+                rhs_colored_uid_diff: Optional[Markup] = None
                 lhs_colored_title_diff: Optional[Markup] = None
                 rhs_colored_title_diff: Optional[Markup] = None
 
@@ -338,6 +348,16 @@ class ChangeStats:
                         != other_document_or_none.reserved_uid
                     ):
                         uid_modified = True
+                        lhs_colored_uid_diff = get_colored_html_diff_string(
+                            document.reserved_uid or "",
+                            other_document_or_none.reserved_uid or "",
+                            "left",
+                        )
+                        rhs_colored_uid_diff = get_colored_html_diff_string(
+                            document.reserved_uid or "",
+                            other_document_or_none.reserved_uid or "",
+                            "right",
+                        )
                 else:
                     uid_modified = True
 
@@ -367,14 +387,20 @@ class ChangeStats:
                         lhs_document = other_document_or_none
                         rhs_document = document
 
+                    document_token: str = MID.create()
+
                     document_change: DocumentChange = DocumentChange(
                         matched_uid=None,
                         lhs_document=lhs_document,
                         rhs_document=rhs_document,
                         uid_modified=uid_modified,
                         title_modified=title_modified,
+                        lhs_colored_uid_diff=lhs_colored_uid_diff,
+                        rhs_colored_uid_diff=rhs_colored_uid_diff,
                         lhs_colored_title_diff=lhs_colored_title_diff,
                         rhs_colored_title_diff=rhs_colored_title_diff,
+                        document_token=document_token,
+                        is_included_document=document.document_is_included(),
                     )
                     change_stats.map_nodes_to_changes[document] = (
                         document_change
@@ -384,6 +410,13 @@ class ChangeStats:
                             other_document_or_none
                         ] = document_change
                     change_stats.add_change(document_change)
+
+            #
+            # The included documents are ignored. All their information should
+            # be contained in the including documents at this point.
+            #
+            if document.document_is_included():
+                continue
 
             document_iterator = DocumentCachingIterator(document)
 

@@ -145,6 +145,9 @@ class SDocDocumentIF(ABC):
     ) -> Generator["SDocDocumentIF", None, None]:
         raise NotImplementedError
 
+    def document_is_included(self) -> bool:
+        raise NotImplementedError
+
     @abstractmethod
     def get_display_title(self, include_toc_number: bool = True) -> str:
         raise NotImplementedError

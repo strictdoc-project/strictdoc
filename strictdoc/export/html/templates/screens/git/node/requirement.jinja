@@ -7,7 +7,12 @@
   {% endif %}
 >
   <summary>
-    {%- with badge_text = "TEXT" if requirement.is_text_node() else "R" -%}
+    {#
+     # FIXME: It would be great to write full node types but CSS must be
+              improved so that a node type is not similar to the node fields
+              visually.
+     #}
+    {%- with badge_text = requirement.node_type[0].upper() -%}
       {%- include "components/badge/index.jinja" -%}
     {%- endwith -%}
     <span>

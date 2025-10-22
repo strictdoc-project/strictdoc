@@ -1,11 +1,4 @@
 <div class="changelog_content">
-  {% set documents_modified = view_object.change_container.change_stats.get_changes_documents_modified() %}
-  {% if documents_modified is not none %}
-    {% set _documents_modified = documents_modified %}
-  {% else %}
-    {% set _documents_modified = "No documents were modified." %}
-  {% endif %}
-
   <div class="sdoc-table_key_value">
     {% with key_value_pair =
       {"Section":"Compared revisions"}
@@ -46,6 +39,12 @@
       {% include "components/table_key_value/index.jinja" %}
     {% endwith %}
 
+    {% set documents_modified = view_object.change_container.change_stats.get_changes_documents_modified() %}
+    {% if documents_modified > 0 %}
+        {% set _documents_modified = documents_modified %}
+    {% else %}
+        {% set _documents_modified = "No documents were modified." %}
+    {% endif %}
     {% with key_value_pair =
         {
           "Key":"Documents modified",
@@ -54,6 +53,18 @@
     %}
       {% include "components/table_key_value/index.jinja" %}
     {% endwith %}
+
+    {% set documents_included_modified = view_object.change_container.change_stats.get_changes_included_documents_modified() %}
+    {% if documents_included_modified > 0 %}
+        {% with key_value_pair =
+            {
+              "Key":"DOCUMENT (included) nodes",
+              "Value": documents_included_modified,
+            }
+        %}
+          {% include "components/table_key_value/index.jinja" %}
+        {% endwith %}
+    {% endif %}
 
     {% for node_type_ in view_object.get_node_types() %}
       {% set requirements_modified = view_object.change_container.change_stats.get_changes_requirements_changed(node_type_) %}
@@ -91,12 +102,6 @@
             {% set requirement_change = view_object.change_stats.find_change(requirement) %}
             {% include "screens/git/fields/requirement_fields.jinja" %}
           {% endwith %}
-        {% elif change.change_type == "Section removed" or change.change_type == "Section modified" %}
-          {% assert change.lhs_section is not none, change %}
-          {% with section=change.lhs_section, side="left", self_stats=view_object.change_container.lhs_stats, other_stats=view_object.change_container.rhs_stats, traceability_index=view_object.change_container.traceability_index_lhs %}
-            {% set section_change = view_object.change_stats.find_change(section) %}
-            {% include "screens/git/fields/section_fields.jinja" %}
-          {% endwith %}
         {% elif change.change_type == "Document modified" %}
           {% if change.lhs_document is not none %}
             {% with document=change.lhs_document, side="left", self_stats=view_object.change_container.lhs_stats, other_stats=view_object.change_container.rhs_stats, traceability_index=view_object.change_container.traceability_index_lhs %}
@@ -116,11 +121,6 @@
           {% with requirement=change.rhs_requirement, side="right", self_stats=view_object.change_container.rhs_stats, other_stats=view_object.change_container.lhs_stats, traceability_index=view_object.change_container.traceability_index_rhs %}
             {% set requirement_change = view_object.change_stats.find_change(requirement) %}
             {% include "screens/git/fields/requirement_fields.jinja" %}
-          {% endwith %}
-        {% elif change.change_type == "Section added" or change.change_type == "Section modified" %}
-          {% with section=change.rhs_section, side="right", self_stats=view_object.change_container.rhs_stats, other_stats=view_object.change_container.lhs_stats, traceability_index=view_object.change_container.traceability_index_rhs %}
-            {% set section_change = view_object.change_stats.find_change(section) %}
-            {% include "screens/git/fields/section_fields.jinja" %}
           {% endwith %}
         {% elif change.change_type == "Document modified" %}
           {% if change.rhs_document is not none %}

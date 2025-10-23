@@ -2,9 +2,10 @@
 # @relation(SDOC-SRS-111, scope=file)
 #
 
-RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
+RUN: cp %S/strictdoc.toml %T/
+RUN: cd %T && %strictdoc export . --generate-diff-dirs %S/lhs %S/rhs --output-dir %T
 
-RUN: cat %T/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
+RUN: cat %T/html/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>2</div>
@@ -18,6 +19,5 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>2 (1 removed, 1 ad
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">REQUIREMENT nodes</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No nodes were modified.</div>
 
-NOTE: This ensures that red-green diff is explained correctly.
 CHECK-CHANGELOG:<span class="sdoc_pre_content">This is a free text.
 CHECK-CHANGELOG:<span class="sdoc_pre_content">It is a MODIFIED free text.

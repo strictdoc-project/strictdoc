@@ -17,7 +17,7 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.git.change_generator import ChangeContainer
+from strictdoc.git.change_container import ChangeContainer
 from strictdoc.git.project_diff_analyzer import (
     ChangeStats,
     ProjectTreeDiffStats,

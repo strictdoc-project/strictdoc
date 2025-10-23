@@ -95,9 +95,9 @@
         <span class="changelog_change_type {{ _change_type[1] }}">{{ change.change_type.value }}</span>
       </div>
       <div class="changelog_change_node">
-        {% if change.change_type == "Requirement added" or change.change_type == "Section added" %}
+        {% if change.change_type == "Node added" or change.change_type == "Section added" %}
           <div class="changelog_node_null">{{ change.change_type.value }}</div>
-        {% elif change.change_type == "Requirement removed" or change.change_type == "Requirement modified" %}
+        {% elif change.change_type == "Node removed" or change.change_type == "Node modified" %}
           {% with requirement=change.lhs_requirement, side="left", self_stats=view_object.change_container.lhs_stats, other_stats=view_object.change_container.rhs_stats, traceability_index=view_object.change_container.traceability_index_lhs %}
             {% set requirement_change = view_object.change_stats.find_change(requirement) %}
             {% include "screens/git/fields/requirement_fields.jinja" %}
@@ -115,9 +115,9 @@
         {% endif %}
       </div>
       <div class="changelog_change_node">
-        {% if change.change_type == "Requirement removed" or change.change_type == "Section removed" %}
+        {% if change.change_type == "Node removed" or change.change_type == "Section removed" %}
           <div class="changelog_node_null">{{ change.change_type.value }}</div>
-        {% elif change.change_type == "Requirement added" or change.change_type == "Requirement modified" %}
+        {% elif change.change_type == "Node added" or change.change_type == "Node modified" %}
           {% with requirement=change.rhs_requirement, side="right", self_stats=view_object.change_container.rhs_stats, other_stats=view_object.change_container.lhs_stats, traceability_index=view_object.change_container.traceability_index_rhs %}
             {% set requirement_change = view_object.change_stats.find_change(requirement) %}
             {% include "screens/git/fields/requirement_fields.jinja" %}

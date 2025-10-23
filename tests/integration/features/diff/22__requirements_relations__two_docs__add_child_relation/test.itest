@@ -2,11 +2,10 @@
 # @relation(SDOC-SRS-111, scope=file)
 #
 
-# FIXME: Migrate this test to %T.
+RUN: cp %S/strictdoc.toml %T/
+RUN: cd %T && %strictdoc export . --generate-diff-dirs %S/lhs %S/rhs --output-dir %T
 
-RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
-
-RUN: cat %T/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
+RUN: cat %T/html/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1</div>
@@ -21,7 +20,7 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">REQUIREMENT nodes</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1 (1 modified)</div>
 
 CHECK-CHANGELOG:# 1
-CHECK-CHANGELOG:Requirement modified
+CHECK-CHANGELOG:Node modified
 
 CHECK-CHANGELOG:REQ-1
 CHECK-CHANGELOG:Requirement #1
@@ -33,7 +32,7 @@ CHECK-CHANGELOG:System shall do 1.
 CHECK-CHANGELOG:text="child-relation"{{.*}}REQ-2
 CHECK-CHANGELOG:Requirement #2
 
-RUN: cat %T/diff.html | filecheck %s --check-prefix=CHECK-DIFF
+RUN: cat %T/html/diff.html | filecheck %s --check-prefix=CHECK-DIFF
 
 # The left document: no specific assertions.
 CHECK-DIFF: modified="left"

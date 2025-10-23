@@ -1,0 +1,16 @@
+#
+# @relation(SDOC-SRS-111, scope=file)
+#
+
+RUN: cp %S/strictdoc_config.py %T/
+RUN: git init
+RUN: git config user.name "Your Name"
+RUN: git config user.email "you@example.com"
+RUN: git config user.email "you@example.com"
+RUN: cp %S/lhs/input.sdoc %T/
+RUN: git add .
+RUN: git commit -m "Test commit #1"
+RUN: cp %S/rhs/input.sdoc %T/
+RUN: git add .
+RUN: git commit -m "Test commit #2"
+RUN: %strictdoc export %T --generate-diff-git "HEAD^..HEAD" --output-dir %T/output

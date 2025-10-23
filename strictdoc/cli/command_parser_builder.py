@@ -58,6 +58,17 @@ def _check_reqif_import_markup(markup: Optional[str]) -> str:
     return markup
 
 
+def _check_git_revisions(git_revisions: str) -> str:
+    if ".." not in git_revisions:
+        message = (
+            "Invalid Git revision pair. "
+            'The expected format is: "<Git revision>..<Git revision>". '
+            'Example: "HEAD^..HEAD".'
+        )
+        raise argparse.ArgumentTypeError(message)
+    return git_revisions
+
+
 def _parse_fields(fields: str) -> List[str]:
     fields_array = fields.split(",")
     return fields_array
@@ -125,7 +136,6 @@ class CommandParserBuilder:
         self.add_import_command(command_subparsers)
         self.add_version_command(command_subparsers)
         self.add_dump_command(command_subparsers)
-        self.add_diff_command(command_subparsers)
 
         return main_parser
 
@@ -249,6 +259,24 @@ class CommandParserBuilder:
             "--view",
             type=str,
             help="Choose which view will be exported.",
+        )
+        command_parser_export.add_argument(
+            "--generate-diff-git",
+            type=_check_git_revisions,
+            help=(
+                "Generate Diff/Changelog for a given pair of Git revisions. "
+                'Example: --generate-diff-git "HEAD^..HEAD"'
+            ),
+        )
+        command_parser_export.add_argument(
+            "--generate-diff-dirs",
+            "--generate-diff-dirs",
+            metavar=("OLD_PATH", "NEW_PATH"),
+            nargs=2,
+            help=(
+                "Generate Diff/Changelog for a given pair of local directories. "
+                'Example: --generate-diff-dirs "./old_path" "./new_path"'
+            ),
         )
         command_parser_export.add_argument(
             "--chromedriver",
@@ -458,28 +486,3 @@ class CommandParserBuilder:
             ),
         )
         add_config_argument(command_parser_auto_uid)
-
-    @staticmethod
-    def add_diff_command(
-        command_subparsers: "argparse._SubParsersAction[SDocArgumentParser]",
-    ) -> None:
-        diff_command_parser = command_subparsers.add_parser(
-            "diff",
-            help="Generate Diff between two SDoc project trees.",
-            formatter_class=formatter,
-        )
-        diff_command_parser.add_argument(
-            "path_to_lhs_tree",
-            type=str,
-            help="Path to the left-hand side project tree.",
-        )
-        diff_command_parser.add_argument(
-            "path_to_rhs_tree",
-            type=str,
-            help="Path to the right-hand side project tree.",
-        )
-        diff_command_parser.add_argument(
-            "--output-dir",
-            type=str,
-            help="A directory where to output the files to.",
-        )

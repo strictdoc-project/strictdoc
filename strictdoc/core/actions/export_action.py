@@ -19,6 +19,7 @@ from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
 from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.export.spdx.spdx_generator import SPDXGenerator
+from strictdoc.git.change_generator import ChangeGenerator
 from strictdoc.helpers.parallelizer import NullParallelizer, Parallelizer
 from strictdoc.helpers.timing import timing_decorator
 
@@ -103,6 +104,25 @@ class ExportAction:
                         document=bundle_document,
                         traceability_index=traceability_index_copy,
                         specific_documents=(DocumentType.DOCUMENT,),
+                    )
+
+            if "html" in self.project_config.export_formats:
+                if (
+                    diff_git_revisions := self.project_config.diff_git_revisions
+                ) is not None:
+                    ChangeGenerator().generate_from_revisions(
+                        diff_git_revisions,
+                        project_config=self.project_config,
+                        html_templates=html_templates,
+                    )
+                if (
+                    diff_dir_revisions := self.project_config.diff_dir_revisions
+                ) is not None:
+                    ChangeGenerator().generate_from_paths(
+                        diff_dir_revisions[0],
+                        diff_dir_revisions[1],
+                        project_config=self.project_config,
+                        html_templates=html_templates,
                     )
 
             # @relation(SDOC-SRS-51, scope=range_start)

@@ -3947,11 +3947,23 @@ To activate the Diff/Changelog screen, add/edit the strictdoc.toml config file i
       "DIFF"
     ]
 
+With the feature enabled, the editable web server interface displays the corresponding Diff/Changelog screen, where users can select Git revisions to compare for change tracking.
+
+To use the feature with a command-line interface:
+
+.. code::
+
+    strictdoc export . --generate-diff-git="HEAD^..HEAD"
+
 .. admonition:: Robust MID-based change tracking
     :class: note
 
-    For optimal results when using the Diff/Changelog feature in a StrictDoc-based project, it is strongly recommended to enable Machine Identifiers (MIDs) for all project artifacts, such as TEXT, REQUIREMENT, etc.
-    Without MIDs, StrictDoc cannot ensure accurate change tracking. If a node lacks an MID, StrictDoc is unable to reliably detect whether it has been modified or relocated in subsequent versions of the documentation tree. For further details, refer to [LINK: SECTION-UG-Machine-identifiers-MID].
+    For optimal results when using the Diff/Changelog feature in a StrictDoc-based project, it is strongly recommended to enable Machine Identifiers (MIDs) for all project artifacts, such as TEXT, REQUIREMENT, and others. Without MIDs, StrictDoc relies on change tracking based on node UIDs, which is less reliable due to at least the following two issues:
+
+    1. The need to maintain UIDs for sections and text nodes, not only for requirements.
+    2. Possible changes to node UIDs. If a node UID changes, for example due to a change in project conventions, StrictDoc cannot reliably determine whether the node has been modified or relocated in later versions of the documentation tree.
+
+    For more details, see [LINK: SECTION-UG-Machine-identifiers-MID].
 <<<
 
 [[/SECTION]]

@@ -186,7 +186,7 @@ class HTMLGenerator:
     @staticmethod
     def export_assets(
         *,
-        traceability_index: TraceabilityIndex,
+        traceability_index: Optional[TraceabilityIndex],
         project_config: ProjectConfig,
         export_output_html_root: str,
         flat_assets: bool = False,
@@ -306,57 +306,60 @@ class HTMLGenerator:
 
         # Export project's assets.
 
-        redundant_assets: Dict[str, List[SDocRelativePath]] = {}
-        for document_ in traceability_index.document_tree.document_list:
-            assert document_.meta is not None
-            for (
-                included_document_
-            ) in document_.iterate_included_documents_depth_first():
-                assert included_document_.meta is not None
+        if traceability_index is not None:
+            redundant_assets: Dict[str, List[SDocRelativePath]] = {}
+            for document_ in traceability_index.document_tree.document_list:
+                assert document_.meta is not None
+                for (
+                    included_document_
+                ) in document_.iterate_included_documents_depth_first():
+                    assert included_document_.meta is not None
 
-                redundant_assets.setdefault(
-                    document_.meta.input_doc_assets_dir_rel_path.relative_path_posix,
-                    [],
+                    redundant_assets.setdefault(
+                        document_.meta.input_doc_assets_dir_rel_path.relative_path_posix,
+                        [],
+                    )
+                    redundant_assets[
+                        document_.meta.input_doc_assets_dir_rel_path.relative_path_posix
+                    ].append(
+                        included_document_.meta.input_doc_assets_dir_rel_path
+                    )
+
+            assert traceability_index.asset_manager is not None
+
+            asset_dir_: AssetDir
+            for asset_dir_ in traceability_index.asset_manager.iterate():
+                source_path = asset_dir_.full_path
+                output_relative_path = asset_dir_.relative_path
+
+                destination_path = os.path.join(
+                    export_output_html_root,
+                    output_relative_path.relative_path
+                    if not flat_assets
+                    else "_assets",
                 )
-                redundant_assets[
-                    document_.meta.input_doc_assets_dir_rel_path.relative_path_posix
-                ].append(included_document_.meta.input_doc_assets_dir_rel_path)
 
-        assert traceability_index.asset_manager is not None
-
-        asset_dir_: AssetDir
-        for asset_dir_ in traceability_index.asset_manager.iterate():
-            source_path = asset_dir_.full_path
-            output_relative_path = asset_dir_.relative_path
-
-            destination_path = os.path.join(
-                export_output_html_root,
-                output_relative_path.relative_path
-                if not flat_assets
-                else "_assets",
-            )
-
-            sync_dir(
-                source_path,
-                destination_path,
-                message=f'Copying project assets "{output_relative_path.relative_path}"',
-            )
-            redundant_asset_paths = redundant_assets.get(
-                output_relative_path.relative_path_posix
-            )
-            if redundant_asset_paths is not None:
-                for redundant_asset_ in redundant_asset_paths:
-                    destination_path = os.path.join(
-                        export_output_html_root,
-                        redundant_asset_.relative_path
-                        if not flat_assets
-                        else "_assets",
-                    )
-                    sync_dir(
-                        source_path,
-                        destination_path,
-                        message=f'Copying project assets "{output_relative_path.relative_path}"',
-                    )
+                sync_dir(
+                    source_path,
+                    destination_path,
+                    message=f'Copying project assets "{output_relative_path.relative_path}"',
+                )
+                redundant_asset_paths = redundant_assets.get(
+                    output_relative_path.relative_path_posix
+                )
+                if redundant_asset_paths is not None:
+                    for redundant_asset_ in redundant_asset_paths:
+                        destination_path = os.path.join(
+                            export_output_html_root,
+                            redundant_asset_.relative_path
+                            if not flat_assets
+                            else "_assets",
+                        )
+                        sync_dir(
+                            source_path,
+                            destination_path,
+                            message=f'Copying project assets "{output_relative_path.relative_path}"',
+                        )
 
     def export_single_document_with_performance(
         self,

@@ -175,8 +175,12 @@ class MarkerParser:
             range_marker.ng_source_column_begin = (
                 element_.meta.column + col_offset
             )
-            range_marker.ng_range_line_begin = line_start
-            range_marker.ng_range_line_end = line_end
+            range_marker.ng_range_line_begin = (
+                comment_line_start + element_.meta.line - 1
+            )
+            range_marker.ng_range_line_end = (
+                comment_line_start + element_.meta.end_line - 1
+            )
             markers.append(range_marker)
         elif relation_scope == "line":
             line_marker = LineMarker(None, requirements, role=relation_role)
@@ -186,8 +190,12 @@ class MarkerParser:
             line_marker.ng_source_column_begin = (
                 element_.meta.column + col_offset
             )
-            line_marker.ng_range_line_begin = line_start
-            line_marker.ng_range_line_end = line_end + 1
+            line_marker.ng_range_line_begin = (
+                comment_line_start + element_.meta.line - 1
+            )
+            line_marker.ng_range_line_end = (
+                comment_line_start + element_.meta.end_line
+            )
             markers.append(line_marker)
         else:
             raise NotImplementedError

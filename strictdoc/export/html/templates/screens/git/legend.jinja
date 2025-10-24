@@ -32,7 +32,7 @@
     </div>
 
     <p>The Diff/Changelog query is shareable via a URL.</p>
-    <p>Example:</p>
+    <p>Examples:</p>
     <div class="sdoc-table_key_value">
       {# djlint:off H022 #}
       <a href="http://127.0.0.1:5111/diff?left_revision=HEAD&right_revision=HEAD%2B&tab=diff"
@@ -40,6 +40,24 @@
       {# djlint:on #}
         <div class="sdoc-table_key_value-value">
         Open a diff between the last commit and the existing changes to the Git tree.
+      </div>
+    </div>
+    <div class="sdoc-table_key_value">
+      {# djlint:off H022 #}
+      <a href="http://127.0.0.1:5111/diff?left_revision=HEAD^&right_revision=HEAD&tab=diff"
+         class="sdoc-table_key_value-key">HEAD^ vs. HEAD</a>
+      {# djlint:on #}
+        <div class="sdoc-table_key_value-value">
+        Open a diff between the last commit and the commit before it.
+      </div>
+    </div>
+    <div class="sdoc-table_key_value">
+      {# djlint:off H022 #}
+      <a href="http://127.0.0.1:5111/diff?left_revision=origin/main&right_revision=HEAD&tab=diff"
+         class="sdoc-table_key_value-key">origin/main vs. HEAD</a>
+      {# djlint:on #}
+        <div class="sdoc-table_key_value-value">
+        Open a diff between the last commit on origin/main and the last commit on the current branch.
       </div>
     </div>
 

@@ -2987,6 +2987,14 @@ To enable SDoc node parsing, the corresponding source file must be registered in
 
 .. code-block::
 
+    features = [
+      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+      "SOURCE_FILE_LANGUAGE_PARSERS",
+    ]
+
+    # if custom include_source_paths are set, it must include the corresponding source file
+    include_source_paths = ["tests/**"]
+
     source_nodes = [
         { "tests/" = { uid = "TEST_DOC", node_type = "TEST_SPEC" } }
     ]

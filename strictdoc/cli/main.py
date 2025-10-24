@@ -17,7 +17,6 @@ sys.path.append(strictdoc_root_path)
 from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import (
     CLIValidationError,
-    DiffCommandConfig,
     DumpGrammarCommandConfig,
     ExportCommandConfig,
     ImportExcelCommandConfig,
@@ -27,7 +26,6 @@ from strictdoc.cli.cli_arg_parser import (
     create_sdoc_args_parser,
 )
 from strictdoc.commands.about_command import AboutCommand
-from strictdoc.commands.diff_command import DiffCommand
 from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.version_command import VersionCommand
@@ -138,15 +136,6 @@ def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
 
     elif parser.is_about_command:
         AboutCommand.execute()
-
-    elif parser.is_diff_command:
-        diff_config: DiffCommandConfig = parser.get_diff_config()
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=os.getcwd(),
-        )
-        DiffCommand.execute(
-            project_config=project_config, diff_config=diff_config
-        )
 
     else:
         raise NotImplementedError

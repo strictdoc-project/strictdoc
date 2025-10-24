@@ -22,7 +22,8 @@ from strictdoc.export.html.generators.view_objects.diff_screen_view_object impor
 )
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.git.change_generator import ChangeContainer, ChangeGenerator
+from strictdoc.git.change_container import ChangeContainer
+from strictdoc.git.change_generator import ChangeGenerator
 from strictdoc.git.git_client import GitClient
 from strictdoc.server.routers.main_router import (
     HTTP_STATUS_BAD_REQUEST,
@@ -44,7 +45,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         left_revision: Optional[str] = None,
         right_revision: Optional[str] = None,
         tab: Optional[str] = None,
-    ) -> HTMLResponse:
+    ) -> Response:
         if not project_config.is_activated_diff():
             return Response(
                 content="The DIFF feature is not activated in the project config.",
@@ -107,7 +108,7 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         left_revision: Optional[str] = None,
         right_revision: Optional[str] = None,
         tab: Optional[str] = None,
-    ) -> HTMLResponse:
+    ) -> Response:
         if not project_config.is_activated_diff():
             return Response(
                 content="The DIFF feature is not activated in the project config.",

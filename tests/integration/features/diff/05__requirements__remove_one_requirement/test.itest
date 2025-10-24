@@ -2,9 +2,10 @@
 # @relation(SDOC-SRS-111, scope=file)
 #
 
-RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
+RUN: cp %S/strictdoc.toml %T/
+RUN: cd %T && %strictdoc export . --generate-diff-dirs %S/lhs %S/rhs --output-dir %T
 
-RUN: cat %T/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
+RUN: cat %T/html/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1</div>
@@ -18,9 +19,9 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>No nodes were modi
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">REQUIREMENT nodes</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1 (1 removed)</div>
 
-CHECK-CHANGELOG:Requirement removed
+CHECK-CHANGELOG:Node removed
 CHECK-CHANGELOG:REQ-1
 CHECK-CHANGELOG:Requirement #1
 CHECK-CHANGELOG:System shall do 1.
 
-CHECK-CHANGELOG:Requirement removed
+CHECK-CHANGELOG:Node removed

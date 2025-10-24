@@ -15,10 +15,10 @@ class ChangeType(str, Enum):
     DOCUMENT = "Document"
     DOCUMENT_MODIFIED = "Document modified"
 
-    REQUIREMENT = "Requirement"
-    REQUIREMENT_REMOVED = "Requirement removed"
-    REQUIREMENT_MODIFIED = "Requirement modified"
-    REQUIREMENT_ADDED = "Requirement added"
+    REQUIREMENT = "Node"
+    REQUIREMENT_REMOVED = "Node removed"
+    REQUIREMENT_MODIFIED = "Node modified"
+    REQUIREMENT_ADDED = "Node added"
 
 
 @auto_described

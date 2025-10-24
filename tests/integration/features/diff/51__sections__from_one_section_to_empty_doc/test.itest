@@ -2,11 +2,10 @@
 # @relation(SDOC-SRS-111, scope=file)
 #
 
-RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
+RUN: cp %S/strictdoc.toml %T/
+RUN: cd %T && %strictdoc export . --generate-diff-dirs %S/lhs %S/rhs --output-dir %T
 
-RUN: cat %T/changelog.html | filecheck %s --dump-input=fail --check-prefix=CHECK-CHANGELOG
-NOTE: This ensures that the output HTML indeed contains a green diff line
-      produced from comparing the old and the modified requirement statement.
+RUN: cat %T/html/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>2</div>

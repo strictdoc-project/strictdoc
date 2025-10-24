@@ -98,7 +98,7 @@ class GitClient:
         )
         if result.returncode == 0:
             return result.stdout.strip()
-        raise LookupError(f"Non-existing revision: {revision}.")
+        raise LookupError(f"Non-existing Git revision: {revision}.")
 
     def hard_reset(self, revision: Optional[str] = None) -> None:
         reset_args = ["git", "reset", "--hard"]

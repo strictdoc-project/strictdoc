@@ -2,9 +2,10 @@
 # @relation(SDOC-SRS-111, scope=file)
 #
 
-RUN: cd %S && %strictdoc diff %S/lhs %S/rhs --output-dir %T
+RUN: cp %S/strictdoc.toml %T/
+RUN: cd %T && %strictdoc export . --generate-diff-dirs %S/lhs %S/rhs --output-dir %T
 
-RUN: cat %T/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
+RUN: cat %T/html/changelog.html | filecheck %s --check-prefix=CHECK-CHANGELOG
 
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">Nodes modified</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1</div>
@@ -19,7 +20,7 @@ CHECK-CHANGELOG:<div class="sdoc-table_key_value-key">REQUIREMENT nodes</div>
 CHECK-CHANGELOG:<div class="sdoc-table_key_value-value"{{.*}}>1 (1 modified)</div>
 
 CHECK-CHANGELOG:# 1
-CHECK-CHANGELOG:Requirement modified
+CHECK-CHANGELOG:Node modified
 
 CHECK-CHANGELOG:REQ-2
 CHECK-CHANGELOG:Requirement #2
@@ -31,7 +32,7 @@ CHECK-CHANGELOG:REQ-2
 CHECK-CHANGELOG:Requirement #2
 CHECK-CHANGELOG:System shall do 2.
 
-RUN: cat %T/diff.html | filecheck %s --check-prefix=CHECK-DIFF
+RUN: cat %T/html/diff.html | filecheck %s --check-prefix=CHECK-DIFF
 
 CHECK-DIFF:<span class="badge" text="UID"></span><span class="sdoc_pre_content">REQ-1</span>
 CHECK-DIFF:<span class="badge" text="child-relation"></span><div class="sdoc_pre_content"><b>REQ-2</b>

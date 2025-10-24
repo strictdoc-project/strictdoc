@@ -1,0 +1,18 @@
+#
+# @relation(SDOC-SRS-111, scope=file)
+#
+
+RUN: cp %S/strictdoc_config.py %T/
+RUN: git init
+RUN: git config user.name "Your Name"
+RUN: git config user.email "you@example.com"
+RUN: git config user.email "you@example.com"
+RUN: cp %S/lhs/input.sdoc %T/
+RUN: git add .
+RUN: git commit -m "Test commit #1"
+RUN: cp %S/rhs/input.sdoc %T/
+RUN: git add .
+RUN: git commit -m "Test commit #2"
+RUN: %expect_exit 2 %strictdoc export %T --generate-diff-git "FOOBAR" --output-dir %T/output | filecheck %s
+
+CHECK:strictdoc export: error: argument --generate-diff-git: Invalid Git revision pair. The expected format is: "<Git revision>..<Git revision>". Example: "HEAD^..HEAD".

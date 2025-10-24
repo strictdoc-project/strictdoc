@@ -52,7 +52,9 @@ TITLE: Unreleased
 [TEXT]
 MID: 12345f3b28ea4bfe9ca8afe6b21826a8
 STATEMENT: >>>
-This release includes the removal of legacy @sdoc markers, several bug fixes, and enhancements for edge cases.
+This release includes an enhancement to the Diff/Changelog feature, the removal of legacy @sdoc markers, several bug fixes, and improvements for edge cases.
+
+The Diff/Changelog feature has been extended to support the new --generate-diff-git option which allows generating the Diff/Changelog screens for a given pair of Git revisions.
 
 The legacy ``@sdoc`` marker has been removed from the codebase. From now on, only the ``@relation`` markers are recognized when linking requirements with source code files.
 

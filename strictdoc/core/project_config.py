@@ -126,6 +126,8 @@ class ProjectConfig:
         # FIXME: Change to true by default.
         reqif_enable_mid: bool = False,
         reqif_import_markup: Optional[str] = None,
+        diff_git_revisions: Optional[str] = None,
+        diff_dir_revisions: Optional[Tuple[str, str]] = None,
         chromedriver: Optional[str] = None,
         # FIXME: The section_behavior field will be removed by the end of 2025-Q4.
         section_behavior: Optional[
@@ -238,6 +240,10 @@ class ProjectConfig:
         self.autouuid_include_sections: bool = False
 
         self.view: Optional[str] = None
+
+        self.diff_git_revisions: Optional[str] = diff_git_revisions
+        self.diff_dir_revisions: Optional[Tuple[str, str]] = diff_dir_revisions
+
         self.chromedriver: Optional[str] = chromedriver
         self.section_behavior: Optional[str] = section_behavior
 
@@ -329,6 +335,13 @@ class ProjectConfig:
         self.filter_nodes = export_config.filter_nodes
         self.excel_export_fields = export_config.fields
         self.view = export_config.view
+
+        if ProjectFeature.DIFF in self.project_features:
+            if export_config.generate_diff_git is not None:
+                self.diff_git_revisions = export_config.generate_diff_git
+            if export_config.generate_diff_dirs is not None:
+                self.diff_dir_revisions = export_config.generate_diff_dirs
+
         self.chromedriver = export_config.chromedriver
 
         if (

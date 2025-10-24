@@ -1,6 +1,6 @@
 import argparse
 import os
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Tuple
 
 from strictdoc.cli.command_parser_builder import (
     CommandParserBuilder,
@@ -127,6 +127,7 @@ class ServerCommandConfig:
 class ExportCommandConfig:
     def __init__(
         self,
+        *,
         input_paths: List[str],
         output_dir: Optional[str],
         config_path: Optional[str],
@@ -142,6 +143,8 @@ class ExportCommandConfig:
         reqif_multiline_is_xhtml: bool,
         reqif_enable_mid: bool,
         view: Optional[str],
+        generate_diff_git: Optional[str],
+        generate_diff_dirs: Optional[Tuple[str, str]],
         chromedriver: Optional[str],
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
@@ -160,6 +163,8 @@ class ExportCommandConfig:
         self.reqif_multiline_is_xhtml: bool = reqif_multiline_is_xhtml
         self.reqif_enable_mid: bool = reqif_enable_mid
         self.view: Optional[str] = view
+        self.generate_diff_git: Optional[str] = generate_diff_git
+        self.generate_diff_dirs: Optional[Tuple[str, str]] = generate_diff_dirs
         self.chromedriver: Optional[str] = chromedriver
 
     def get_path_to_config(self) -> str:
@@ -195,18 +200,6 @@ class ExportCommandConfig:
 class DumpGrammarCommandConfig:
     def __init__(self, output_file: str):
         self.output_file: str = output_file
-
-
-class DiffCommandConfig:
-    def __init__(
-        self,
-        path_to_lhs_tree: str,
-        path_to_rhs_tree: str,
-        output_dir: Optional[str],
-    ):
-        self.path_to_lhs_tree: str = path_to_lhs_tree
-        self.path_to_rhs_tree: str = path_to_rhs_tree
-        self.output_dir: Optional[str] = output_dir
 
 
 class SDocArgsParser:
@@ -251,10 +244,6 @@ class SDocArgsParser:
         return str(self.args.command) == "version"
 
     @property
-    def is_diff_command(self) -> bool:
-        return str(self.args.command) == "diff"
-
-    @property
     def is_manage_autouid_command(self) -> bool:
         return (
             str(self.args.command) == "manage"
@@ -265,22 +254,24 @@ class SDocArgsParser:
         project_title: Optional[str] = self.args.project_title
 
         return ExportCommandConfig(
-            self.args.input_paths,
-            self.args.output_dir,
-            self.args.config,
-            project_title,
-            self.args.formats,
-            self.args.fields,
-            self.args.generate_bundle_document,
-            self.args.no_parallelization,
-            self.args.enable_mathjax,
-            self.args.included_documents,
-            self.args.filter_nodes,
-            self.args.reqif_profile,
-            self.args.reqif_multiline_is_xhtml,
-            self.args.reqif_enable_mid,
-            self.args.view,
-            self.args.chromedriver,
+            input_paths=self.args.input_paths,
+            output_dir=self.args.output_dir,
+            config_path=self.args.config,
+            project_title=project_title,
+            formats=self.args.formats,
+            fields=self.args.fields,
+            generate_bundle_document=self.args.generate_bundle_document,
+            no_parallelization=self.args.no_parallelization,
+            enable_mathjax=self.args.enable_mathjax,
+            included_documents=self.args.included_documents,
+            filter_nodes=self.args.filter_nodes,
+            reqif_profile=self.args.reqif_profile,
+            reqif_multiline_is_xhtml=self.args.reqif_multiline_is_xhtml,
+            reqif_enable_mid=self.args.reqif_enable_mid,
+            view=self.args.view,
+            generate_diff_git=self.args.generate_diff_git,
+            generate_diff_dirs=self.args.generate_diff_dirs,
+            chromedriver=self.args.chromedriver,
         )
 
     def get_import_config_reqif(self, _: Any) -> ImportReqIFCommandConfig:
@@ -316,13 +307,6 @@ class SDocArgsParser:
 
     def get_dump_grammar_config(self) -> DumpGrammarCommandConfig:
         return DumpGrammarCommandConfig(output_file=self.args.output_file)
-
-    def get_diff_config(self) -> DiffCommandConfig:
-        return DiffCommandConfig(
-            path_to_lhs_tree=self.args.path_to_lhs_tree,
-            path_to_rhs_tree=self.args.path_to_rhs_tree,
-            output_dir=self.args.output_dir,
-        )
 
 
 def create_sdoc_args_parser(

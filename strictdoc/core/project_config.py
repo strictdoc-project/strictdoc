@@ -748,6 +748,14 @@ class ProjectConfigLoader:
             assert section_behavior in ("[SECTION]", "[[SECTION]]")
 
             if "source_nodes" in project_content:
+                if not {
+                    ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY,
+                    ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS,
+                }.issubset(project_features):
+                    print(  # noqa: T201
+                        "WARNING: defining source_nodes without enabling REQUIREMENT_TO_SOURCE_TRACEABILITY and "
+                        "SOURCE_FILE_LANGUAGE_PARSERS has no effect"
+                    )
                 source_nodes_config = project_content["source_nodes"]
                 assert isinstance(source_nodes_config, list)
                 for item_ in source_nodes_config:

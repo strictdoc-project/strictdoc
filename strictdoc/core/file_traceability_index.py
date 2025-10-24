@@ -593,6 +593,9 @@ class FileTraceabilityIndex:
 
         section_cache = {}
         source_nodes_config: List[Dict[str, str]] = project_config.source_nodes
+        unused_source_node_paths = {
+            config_entry_["path"] for config_entry_ in source_nodes_config
+        }
         for (
             path_to_source_file_,
             traceability_info_,
@@ -604,8 +607,10 @@ class FileTraceabilityIndex:
                 continue
 
             for config_entry_ in source_nodes_config:
-                if path_to_source_file_.startswith(config_entry_["path"]):
+                config_entry_path = config_entry_["path"]
+                if path_to_source_file_.startswith(config_entry_path):
                     relevant_source_node_entry = config_entry_
+                    unused_source_node_paths.discard(config_entry_path)
                     break
             else:
                 continue
@@ -722,6 +727,13 @@ class FileTraceabilityIndex:
                             lhs_node=node,
                             rhs_node=source_sdoc_node,
                         )
+
+        # Warn if source_node was not matched by any include_source_paths, it indicates misconfiguration
+        for unused_source_node_path in unused_source_node_paths:
+            print(  # noqa: T201
+                f"warning: source_node path {unused_source_node_path} doesn't match any source file. "
+                "Hint: Check include_source_paths."
+            )
 
         # Iterate over all generated documents to calculate all node levels.
         for document_ in documents_with_generated_content:

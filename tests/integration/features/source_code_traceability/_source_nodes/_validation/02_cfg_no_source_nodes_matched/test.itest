@@ -1,0 +1,9 @@
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+# Listing a source directory in source_nodes is not enough to enable the feature.
+# Source files must still be matched by include_source_paths / exclude_source_paths.
+#
+
+RUN: %expect_exit 0 %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: warning: source_node path src/ doesn't match any source file. Hint: Check include_source_paths.

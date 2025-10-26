@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
   <diagram name="Roadmap" id="QL4QDE5GQBR7DcBM7GMb">
-    <mxGraphModel dx="2701" dy="3597" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="3125" dy="3932" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <object label="Background" id="e4xbaoC47YMUbLc9hft--7">
@@ -373,7 +373,7 @@
           <mxGeometry x="340" y="900" width="150" height="70" as="geometry" />
         </mxCell>
         <mxCell id="jwnssjy23zgWTyzq0ZdY-5" value="&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Links to external URLs and other content&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="540" y="1170" width="150" height="70" as="geometry" />
+          <mxGeometry x="600" y="1170" width="150" height="70" as="geometry" />
         </mxCell>
         <mxCell id="jwnssjy23zgWTyzq0ZdY-6" value="JUnit XML -&amp;gt; SDoc test report generator" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="-850" y="1260" width="120" height="70" as="geometry" />
@@ -448,7 +448,7 @@
           <mxGeometry x="-180" y="1260" width="130" height="70" as="geometry" />
         </mxCell>
         <mxCell id="CJRkyjP5KVGCwtUBZvE2-1" value="HTML2PDF more layout tests" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="129" y="1170" width="321" height="70" as="geometry" />
+          <mxGeometry x="129" y="1170" width="401" height="70" as="geometry" />
         </mxCell>
         <mxCell id="CJRkyjP5KVGCwtUBZvE2-2" value="&lt;div&gt;StrictDoc qualification:&lt;/div&gt;&lt;div&gt;Increasing branch code coverage from 97%,&lt;/div&gt;&lt;div&gt;add traces between L2 and source code&lt;/div&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="250" y="1350" width="460" height="70" as="geometry" />
@@ -462,8 +462,11 @@
         <mxCell id="eRPcp-Zo6v9222eVP6_e-1" value="&lt;div&gt;StrictDoc configuration with a Python file (strictdoc_config.py&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="180" y="1080" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="eRPcp-Zo6v9222eVP6_e-2" value="&lt;div&gt;Reading SDoc nodes from source files&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+        <mxCell id="eRPcp-Zo6v9222eVP6_e-2" value="&lt;div&gt;Reading SDoc nodes from source files — Further work&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="240" y="1260" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="2Au77a0Va1j8vjX5-GUo-1" value="Diff: Included documents" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="310" y="990" width="70" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="7">
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="8">
   <diagram id="odpjYmKa3UCVNtoiXPh0" name="Requirements verification">
     <mxGraphModel dx="706" dy="179" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -726,6 +726,101 @@
         </mxCell>
         <mxCell id="HosL7ZGhVDv-kahlzNTk-11" value="Update document" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="230" y="566" width="80" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="r9r9qBKeZLxmEPPqQKe1" name="Linux work">
+    <mxGraphModel dx="1613" dy="1801" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="182MAqE3Yp3qsp92a0fV-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="182MAqE3Yp3qsp92a0fV-1" target="182MAqE3Yp3qsp92a0fV-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-1" value="User-provided node/document/project validations" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="640" y="-80" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-2" value="Write tree-sitter AST back to source code" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="-80" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-4" value="Done" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="-80" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-5" value="WIP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="-80" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-6" value="TBD" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-80" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="182MAqE3Yp3qsp92a0fV-11" target="182MAqE3Yp3qsp92a0fV-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-11" value="Agree whether MID or UID will be used for identifiers or&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;SPDX-Req-ID.&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="-80" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="182MAqE3Yp3qsp92a0fV-14" target="182MAqE3Yp3qsp92a0fV-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-14" value="Make&lt;div&gt;the *ID field configurable in StrictDoc config.&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-15" value="Make&lt;div&gt;RELATIONS work against *ID field&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-16" value="" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="560" y="-70" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="182MAqE3Yp3qsp92a0fV-23" target="182MAqE3Yp3qsp92a0fV-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-23" value="Sphinx compatibility" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="827" y="-80" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-24" value="Rust support" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="-80" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="182MAqE3Yp3qsp92a0fV-25" target="182MAqE3Yp3qsp92a0fV-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-25" value="Basic sphinx-strictdoc skeleton POC" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="827" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-27" value="Discuss which screens have to be integrated into Linux Sphinx" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="807" y="120" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-28" value="" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="977" y="130" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-30" value="SPDX-Req-ID auto-generation" style="swimlane;" vertex="1" parent="1">
+          <mxGeometry x="140" y="210" width="420" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-21" value="For selected *ID field, implement auto-generation in source code" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="182MAqE3Yp3qsp92a0fV-30">
+          <mxGeometry x="20" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-12" value="For selected UID, MID, *ID field, implement auto-generation in SDoc" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="182MAqE3Yp3qsp92a0fV-30">
+          <mxGeometry x="270" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="182MAqE3Yp3qsp92a0fV-15" target="182MAqE3Yp3qsp92a0fV-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="182MAqE3Yp3qsp92a0fV-2" target="182MAqE3Yp3qsp92a0fV-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-31" value="Linux kernel-specific validations for SPDX-Req-* fields." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-34" value="Long-term challenge: &#xa;Very large projects" style="swimlane;" vertex="1" parent="1">
+          <mxGeometry x="1241" y="-80" width="279" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-35" value="&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Maybe:&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Replace textX with tree-sitter-strictdoc&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="182MAqE3Yp3qsp92a0fV-34">
+          <mxGeometry x="19" y="40" width="241" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-36" value="Sharing large Traceability Index between subprocesses becomes slow" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="182MAqE3Yp3qsp92a0fV-34">
+          <mxGeometry x="19" y="120" width="241" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="182MAqE3Yp3qsp92a0fV-37" value="&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Maybe:&lt;/span&gt;&lt;div&gt;&lt;br&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Rewrite text-heavy components in Rust&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="182MAqE3Yp3qsp92a0fV-34">
+          <mxGeometry x="19" y="200" width="241" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

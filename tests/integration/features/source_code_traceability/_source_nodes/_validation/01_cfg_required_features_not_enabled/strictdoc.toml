@@ -1,0 +1,11 @@
+[project]
+
+features = []
+
+source_nodes = [
+  { "src/" = { uid = "SRC_DOC", node_type = "SRC_SPEC" } }
+]
+
+exclude_source_paths = [
+    "src.itest"
+]

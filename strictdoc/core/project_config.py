@@ -749,6 +749,14 @@ class ProjectConfigLoader:
 
             if "source_nodes" in project_content:
                 source_nodes_config = project_content["source_nodes"]
+                if len(source_nodes_config) > 0 and not {
+                    ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY,
+                    ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS,
+                }.issubset(project_features):
+                    print(  # noqa: T201
+                        "warning: defining source_nodes without enabling REQUIREMENT_TO_SOURCE_TRACEABILITY and "
+                        "SOURCE_FILE_LANGUAGE_PARSERS has no effect"
+                    )
                 assert isinstance(source_nodes_config, list)
                 for item_ in source_nodes_config:
                     source_node_path = next(iter(item_))

@@ -1,0 +1,9 @@
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+# Using source_nodes depends on having REQUIREMENT_TO_SOURCE_TRACEABILITY
+# and SOURCE_FILE_LANGUAGE_PARSERS enabled. Warn if not enabled by configuration.
+#
+
+RUN: %expect_exit 0 %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: warning: defining source_nodes without enabling REQUIREMENT_TO_SOURCE_TRACEABILITY and SOURCE_FILE_LANGUAGE_PARSERS has no effect

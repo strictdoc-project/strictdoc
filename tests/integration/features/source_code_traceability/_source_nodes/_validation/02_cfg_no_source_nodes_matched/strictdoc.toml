@@ -1,0 +1,18 @@
+[project]
+
+features = [
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+  "SOURCE_FILE_LANGUAGE_PARSERS",
+]
+
+include_source_paths = [
+    "other_src/*.c"
+]
+
+source_nodes = [
+  { "src/" = { uid = "SRC_DOC", node_type = "SRC_SPEC" } }
+]
+
+exclude_source_paths = [
+    "src.itest"
+]

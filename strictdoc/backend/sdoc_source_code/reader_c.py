@@ -40,8 +40,8 @@ from strictdoc.helpers.file_system import file_open_read_bytes
 
 
 class SourceFileTraceabilityReader_C:
-    def __init__(self, parse_nodes: bool = False) -> None:
-        self.parse_nodes: bool = parse_nodes
+    def __init__(self, custom_tags: Optional[list[str]] = None) -> None:
+        self.custom_tags: Optional[list[str]] = custom_tags
 
     def read(
         self,
@@ -93,7 +93,7 @@ class SourceFileTraceabilityReader_C:
                             if input_buffer[-1] == 10
                             else node_.end_point[0] + 1,
                             node_.start_point[0] + 1,
-                            parse_nodes=self.parse_nodes,
+                            custom_tags=self.custom_tags,
                         )
                         for marker_ in source_node.markers:
                             if not isinstance(marker_, FunctionRangeMarker):
@@ -192,7 +192,7 @@ class SourceFileTraceabilityReader_C:
                         function_last_line,
                         function_comment_node.start_point[0] + 1,
                         entity_name=function_display_name,
-                        parse_nodes=self.parse_nodes,
+                        custom_tags=self.custom_tags,
                     )
                     for marker_ in source_node.markers:
                         if isinstance(marker_, FunctionRangeMarker) and (
@@ -300,7 +300,7 @@ class SourceFileTraceabilityReader_C:
                         function_last_line,
                         function_comment_node.start_point[0] + 1,
                         entity_name=function_display_name,
-                        parse_nodes=self.parse_nodes,
+                        custom_tags=self.custom_tags,
                     )
                     traceability_info.source_nodes.append(source_node)
                     for marker_ in source_node.markers:
@@ -356,7 +356,7 @@ class SourceFileTraceabilityReader_C:
                     node_.start_point[0] + 1,
                     node_.end_point[0] + 1,
                     node_.start_point[0] + 1,
-                    parse_nodes=False,
+                    custom_tags=None,
                 )
 
                 for marker_ in source_node.markers:

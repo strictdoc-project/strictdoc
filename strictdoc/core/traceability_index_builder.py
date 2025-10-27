@@ -15,7 +15,10 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElement,
+    ReferenceType,
+)
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import SDocDocumentFromFileIF
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -139,9 +142,18 @@ class TraceabilityIndexBuilder:
                 with measure_performance(
                     f"Reading source: {source_file.in_doctree_source_file_rel_path}"
                 ):
+                    source_node_grammar_element = (
+                        TraceabilityIndexBuilder.source_node_grammar_element(
+                            source_file.full_path,
+                            project_config,
+                            traceability_index,
+                        )
+                    )
                     traceability_info = (
                         SourceFileTraceabilityCachingReader.read_from_file(
-                            source_file.full_path, project_config
+                            source_file.full_path,
+                            project_config,
+                            source_node_grammar_element,
                         )
                     )
 
@@ -863,3 +875,20 @@ class TraceabilityIndexBuilder:
             raise StrictDocException(
                 f"Cannot apply a filter query to a node: {attribute_error_}"
             ) from attribute_error_
+
+    @staticmethod
+    def source_node_grammar_element(
+        path_to_file: str,
+        project_config: ProjectConfig,
+        traceability_index: TraceabilityIndex,
+    ) -> Optional[GrammarElement]:
+        maybe_parse_nodes_type = project_config.parse_nodes_type(path_to_file)
+        if maybe_parse_nodes_type is None:
+            return None
+        parse_nodes_uid, parse_nodes_type = maybe_parse_nodes_type
+        sdoc_document = assert_cast(
+            traceability_index.get_node_by_uid_weak2(parse_nodes_uid),
+            SDocDocument,
+        )
+        assert sdoc_document.grammar is not None
+        return sdoc_document.grammar.elements_by_type.get(parse_nodes_type)

@@ -3,6 +3,7 @@
 """
 
 from string import Template
+from typing import Optional
 
 from lark import Lark, ParseTree, UnexpectedToken
 
@@ -17,7 +18,17 @@ class GrammarTemplate(Template):
 
 
 RELATION_MARKER_START = r"@relation[\(\{]"
-REGEX_NODE_NAME = r"[A-Za-z0-9_\-]+"
+
+NODE_GRAMMAR_EXTENSION = GrammarTemplate("""
+node_field: node_name ":" node_multiline_value
+node_name: /##CUSTOM_TAGS/
+node_multiline_value: (_WS_INLINE | _NL) (NODE_FIRST_STRING_VALUE _NL) (NODE_STRING_VALUE _NL)*
+
+NODE_FIRST_STRING_VALUE.2: /\\s*[^\n\r]+/x
+NODE_STRING_VALUE.2: /(?![ ]*##RELATION_MARKER_START)(?!\\s*[A-Z_]+: )[^\n\r]+/x
+
+_NORMAL_STRING_NO_MARKER_NO_NODE: /(?!\\s*##RELATION_MARKER_START)((?!\\s*(##CUSTOM_TAGS): )|(##RESERVED_KEYWORDS)).+/
+""")
 
 GRAMMAR = GrammarTemplate("""
 start: ##START
@@ -29,14 +40,7 @@ relation_node_uid: /##REGEX_REQ/
 relation_scope: /file|class|function|line|range_start|range_end/
 relation_role: ALPHANUMERIC_WORD
 
-node_field: node_name ":" node_multiline_value
-node_name: /(?!(##RESERVED_KEYWORDS))##REGEX_NODE_NAME/
-node_multiline_value: (_WS_INLINE | _NL) (NODE_FIRST_STRING_VALUE _NL) (NODE_STRING_VALUE _NL)*
-
-NODE_FIRST_STRING_VALUE.2: /\\s*[^\n\r]+/x
-NODE_STRING_VALUE.2: /(?![ ]*##RELATION_MARKER_START)(?!\\s*[A-Z_]+: )[^\n\r]+/x
-
-_NORMAL_STRING_NO_MARKER_NO_NODE: /(?!\\s*##RELATION_MARKER_START)((?!\\s*##REGEX_NODE_NAME: )|(##RESERVED_KEYWORDS)).+/
+##GRAMMAR_EXTENSION
 
 _NORMAL_STRING_NO_MARKER: /(?!\\s*##RELATION_MARKER_START).+/
 
@@ -62,16 +66,23 @@ ALPHANUMERIC_WORD: /[a-zA-Z0-9_]+/
 
 class MarkerLexer:
     @staticmethod
-    def parse(source_input: str, parse_nodes: bool = False) -> ParseTree:
-        if parse_nodes:
+    def parse(
+        source_input: str, custom_tags: Optional[list[str]] = None
+    ) -> ParseTree:
+        if custom_tags is not None:
+            grammar_extension = NODE_GRAMMAR_EXTENSION.substitute(
+                CUSTOM_TAGS="|".join(f"{tag}(?=:)" for tag in custom_tags),
+                RESERVED_KEYWORDS=RESERVED_KEYWORDS,
+                RELATION_MARKER_START=RELATION_MARKER_START,
+            )
             start = "(relation_marker | node_field | _NORMAL_STRING_NO_MARKER_NO_NODE | _WS)*"
         else:
+            grammar_extension = ""
             start = "(relation_marker | _NORMAL_STRING_NO_MARKER | _WS)*"
 
         grammar = GRAMMAR.substitute(
-            REGEX_NODE_NAME=REGEX_NODE_NAME,
+            GRAMMAR_EXTENSION=grammar_extension,
             RELATION_MARKER_START=RELATION_MARKER_START,
-            RESERVED_KEYWORDS=RESERVED_KEYWORDS,
             REGEX_REQ=REGEX_REQ,
             START=start,
         )

@@ -32,7 +32,7 @@ class MarkerParser:
         comment_line_start: int,
         entity_name: Optional[str] = None,
         col_offset: int = 0,
-        parse_nodes: bool = False,
+        custom_tags: Optional[list[str]] = None,
     ) -> SourceNode:
         """
         Parse relation markers from source file comments.
@@ -54,7 +54,7 @@ class MarkerParser:
         input_string = preprocess_source_code_comment(input_string)
 
         tree: ParseTree = MarkerLexer.parse(
-            input_string, parse_nodes=parse_nodes
+            input_string, custom_tags=custom_tags
         )
 
         for element_ in tree.children:

@@ -1,1 +1,5 @@
-<h1 data-testid="document-title">{{ view_object.document.title }}</h1>
+{%- set local_anchor = view_object.render_local_anchor(view_object.document) %}
+<h1 data-testid="document-title">
+  {{ view_object.document.title }}
+  {% include "components/anchor_document/index.jinja" %}
+</h1>

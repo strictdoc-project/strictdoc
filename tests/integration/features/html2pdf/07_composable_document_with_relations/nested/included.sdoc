@@ -1,11 +1,16 @@
 [DOCUMENT]
 TITLE: Included doc
+UID: INCLUDED-DOC
 
 [REQUIREMENT]
 UID: REQ-001
 TITLE: First one
 STATEMENT: >>>
-First statement links to second: [LINK: REQ-002]
+Link from included document to parent document: [LINK: PARENT-DOC]
+
+Link from included document to included document: [LINK: INCLUDED-DOC]
+
+Link from included document to this included document's requirement: [LINK: REQ-002]
 <<<
 
 [REQUIREMENT]

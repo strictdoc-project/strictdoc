@@ -1,5 +1,6 @@
 [DOCUMENT]
 TITLE: Project Risk Management
+UID: PARENT-DOC
 
 [TEXT]
 STATEMENT: Main file
@@ -11,7 +12,11 @@ FILE: nested/included.sdoc
 UID: REQ-003
 TITLE: Third one
 STATEMENT: >>>
-Third statement links to fourth: [LINK: REQ-004]
+Link from parent document to parent document: [LINK: PARENT-DOC]
+
+Link from parent document to included document: [LINK: INCLUDED-DOC]
+
+Link from parent document to this document's requiremnt: [LINK: REQ-004]
 <<<
 
 [REQUIREMENT]

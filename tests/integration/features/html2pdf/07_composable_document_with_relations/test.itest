@@ -9,7 +9,12 @@ RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html
 RUN: %check_exists --file %T/html2pdf/pdf/input.pdf
 
 RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html | filecheck %s --dump-input=fail --check-prefix CHECK-INPUT-PDF
-CHECK-INPUT-PDF: <p>First statement links to second: <a href="../07_composable_document_with_relations/input-PDF.html#REQ-002">🔗&nbsp;1.2. second one</a></p>
+CHECK-INPUT-PDF: <p>Link from included document to parent document: <a href="#PARENT-DOC">🔗&nbsp;Project Risk Management</a></p>
+CHECK-INPUT-PDF: <p>Link from included document to included document: <a href="#INCLUDED-DOC">🔗&nbsp;Included doc</a></p>
+CHECK-INPUT-PDF: <p>Link from included document to this included document's requirement: <a href="#REQ-002">🔗&nbsp;1.2. second one</a></p>
+CHECK-INPUT-PDF: <p>Link from parent document to parent document: <a href="#PARENT-DOC">🔗&nbsp;Project Risk Management</a></p>
+CHECK-INPUT-PDF: <p>Link from parent document to included document: <a href="#INCLUDED-DOC">🔗&nbsp;Included doc</a></p>
+CHECK-INPUT-PDF: <p>Link from parent document to this document's requiremnt: <a href="#REQ-004">🔗&nbsp;3. fourth one</a></p>
 
 # With --generate-bundle-document, a bundle document is generated.
 RUN: %strictdoc export %S --formats=html2pdf --included-documents --generate-bundle-document --output-dir %T | filecheck %s --dump-input=fail
@@ -18,4 +23,9 @@ RUN: %check_exists --file %T/html2pdf/pdf/bundle.pdf
 
 RUN: %cat %T/html2pdf/html/bundle-PDF.html | filecheck %s --dump-input=fail --check-prefix CHECK-BUNDLE-PDF
 # The link points to the same bundle document, not to its parent document.
-CHECK-BUNDLE-PDF: <p>First statement links to second: <a href="#REQ-002">🔗&nbsp;1.1.2. second one</a></p>
+CHECK-BUNDLE-PDF: <p>Link from included document to parent document: <a href="#PARENT-DOC">🔗&nbsp;Project Risk Management</a></p>
+CHECK-BUNDLE-PDF: <p>Link from included document to included document: <a href="#INCLUDED-DOC">🔗&nbsp;Included doc</a></p>
+CHECK-BUNDLE-PDF: <p>Link from included document to this included document's requirement: <a href="#REQ-002">🔗&nbsp;1.1.2. second one</a></p>
+CHECK-BUNDLE-PDF: <p>Link from parent document to parent document: <a href="#PARENT-DOC">🔗&nbsp;Project Risk Management</a></p>
+CHECK-BUNDLE-PDF: <p>Link from parent document to included document: <a href="#INCLUDED-DOC">🔗&nbsp;Included doc</a></p>
+CHECK-BUNDLE-PDF: <p>Link from parent document to this document's requiremnt: <a href="#REQ-004">🔗&nbsp;1.3. fourth one</a></p>

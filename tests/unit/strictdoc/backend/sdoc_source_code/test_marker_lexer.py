@@ -191,7 +191,7 @@ STATEMENT: When 1, The system 2 shall do 3
 FOOBAR
 """
 
-    tree = MarkerLexer.parse(input_string, parse_nodes=True)
+    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
     assert tree.data == "start"
 
     assert len(tree.children) == 5
@@ -256,7 +256,7 @@ def test_31_single_node_field():
         STATEMENT: This can likely replace _weak below with no problem.
     """
 
-    tree = MarkerLexer.parse(input_string, parse_nodes=True)
+    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
     assert tree.data == "start"
 
     assert len(tree.children) == 1
@@ -291,7 +291,7 @@ def test_31B_single_node_field():
   
     """  # noqa: W293
 
-    tree = MarkerLexer.parse(input_string, parse_nodes=True)
+    tree = MarkerLexer.parse(input_string, custom_tags=["INTENTION"])
     assert tree.data == "start"
 
     assert len(tree.children) == 1
@@ -326,7 +326,7 @@ void hello_world(void) {
 }
 """  # noqa: W293
 
-    tree = MarkerLexer.parse(input_string, parse_nodes=True)
+    tree = MarkerLexer.parse(input_string, custom_tags=["INTENTION"])
     assert tree.data == "start"
 
     assert len(tree.children) == 2
@@ -351,7 +351,7 @@ def test_32_two_single_line_fields():
         STATEMENT: This can likely replace _weak below with no problem.
     """
 
-    tree = MarkerLexer.parse(input_string, parse_nodes=True)
+    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
     assert tree.data == "start"
 
     assert len(tree.children) == 2
@@ -375,7 +375,9 @@ def test_32B_two_single_line_fields_consecutive():
         STATEMENTT: This can likely replace _weak below with no problem.
     """
 
-    tree = MarkerLexer.parse(input_string, parse_nodes=True)
+    tree = MarkerLexer.parse(
+        input_string, custom_tags=["STATEMENT", "STATEMENTT"]
+    )
 
     assert tree.data == "start"
 
@@ -403,7 +405,7 @@ STATEMENT: This
 FOOBAR
 """
 
-    tree = MarkerLexer.parse(input_string, parse_nodes=True)
+    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
     assert tree.data == "start"
 
     assert len(tree.children) == 1
@@ -434,6 +436,38 @@ def test_60_exclude_reserved_keywords():
     assert len(tree.children) == 0
 
 
+def test_70_exclude_similar_but_not_in_grammar():
+    input_string = """
+        Note: This is ordinary comment text.
+
+        STATEMENT: This can likely replace _weak below with no problem.
+        FYI: More ordinary comment text.
+
+        TEST: This can likely replace _weak below with no problem.
+
+        Hint: Again, ordinary comment text.
+    """
+
+    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT", "TEST"])
+    assert tree.data == "start"
+    assert len(tree.children) == 2
+    assert tree.children[0].data == "node_field"
+    assert tree.children[0].children[0].data == "node_name"
+    assert tree.children[0].children[0].children[0].value == "STATEMENT"
+    assert (
+        tree.children[0].children[1].children[0].value
+        == "This can likely replace _weak below with no problem."
+    )
+    assert tree.children[0].children[1].data == "node_multiline_value"
+    assert tree.children[1].children[0].data == "node_name"
+    assert tree.children[1].children[0].children[0].value == "TEST"
+    assert (
+        tree.children[1].children[1].children[0].value
+        == "This can likely replace _weak below with no problem."
+    )
+    assert tree.children[1].children[1].data == "node_multiline_value"
+
+
 def test_80_linux_spdx_like_identifiers():
     input_string = """\
 SPDX-ID: REQ-1
@@ -445,7 +479,7 @@ SPDX-Text: This
            And this is the same statement's another paragraph.
 """
 
-    tree = MarkerLexer.parse(input_string, parse_nodes=True)
+    tree = MarkerLexer.parse(input_string, custom_tags=["SPDX-ID", "SPDX-Text"])
     assert tree.data == "start"
 
     assert len(tree.children) == 2

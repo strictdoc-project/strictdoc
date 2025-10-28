@@ -98,20 +98,6 @@ class LinkRenderer:
 
         assert isinstance(node, (SDocDocument, SDocNode, Anchor)), node
 
-        if isinstance(node, SDocDocument):
-            context_level_or_none: Optional[int] = None
-            if context_document is not None:
-                assert context_document.meta is not None
-                context_level_or_none = context_document.meta.level
-
-            assert node.meta is not None
-            document_link = node.meta.get_html_link(
-                document_type,
-                context_level_or_none,
-            )
-            return document_link + "#_TOP"
-
-        assert isinstance(node, (SDocNode, Anchor)), node
         assert isinstance(document_type, DocumentType), type(document_type)
         local_link = self.render_local_anchor(node)
 
@@ -122,18 +108,15 @@ class LinkRenderer:
             return f"#{local_link}"
 
         including_document = node.get_including_document()
-        if (
-            including_document is not None
-            and including_document.is_bundle_document
-        ):
+        if including_document is not None:
             return f"#{local_link}"
 
-        if (
-            allow_local
-            and context_document is not None
-            and node.get_document() == context_document
-        ):
-            return f"#{local_link}"
+        if allow_local and context_document is not None:
+            if isinstance(node, SDocDocument):
+                if node == context_document:
+                    return f"#{local_link}"
+            elif node.get_document() == context_document:
+                return f"#{local_link}"
 
         # Now two cases:
         # - Context document exists, and we want to take into account this
@@ -153,7 +136,11 @@ class LinkRenderer:
         else:
             self.req_link_cache[link_cache_key] = {}
 
-        parent_or_including_document = node.get_parent_or_including_document()
+        parent_or_including_document = (
+            node.get_parent_or_including_document()
+            if not isinstance(node, SDocDocument)
+            else node
+        )
         assert parent_or_including_document.meta is not None
         document_link = parent_or_including_document.meta.get_html_link(
             document_type,

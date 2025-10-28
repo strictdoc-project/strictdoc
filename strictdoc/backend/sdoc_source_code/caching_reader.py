@@ -83,10 +83,7 @@ class SourceFileTraceabilityCachingReader:
                 or path_to_file.endswith(".cpp")
             ):
                 custom_tags = (
-                    [
-                        field.title
-                        for field in source_node_grammar_element.fields
-                    ]
+                    source_node_grammar_element.get_field_titles()
                     if source_node_grammar_element is not None
                     else None
                 )

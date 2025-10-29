@@ -21,7 +21,7 @@ jobs:
         itest_group: [ "main_group", "html2pdf_group" ]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
 
     - name: "Print Debug info"
       run: |
@@ -30,7 +30,7 @@ jobs:
         echo "$PWD"
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
 

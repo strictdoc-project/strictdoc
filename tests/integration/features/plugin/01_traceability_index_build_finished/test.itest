@@ -1,0 +1,8 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: warning: traceability_index_build_finished() is called.
+CHECK: warning: Node title ends with a dot: "I am a title with a dot at the end, I will trigger the validation.".
+CHECK: Published: Hello world doc
+
+RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Hello world doc
+CHECK-HTML: input.sdoc

@@ -21,6 +21,7 @@ from strictdoc.cli.cli_arg_parser import (
     ServerCommandConfig,
 )
 from strictdoc.core.environment import SDocRuntimeEnvironment
+from strictdoc.core.plugin import StrictDocPlugin
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
@@ -134,6 +135,7 @@ class ProjectConfig:
             str
         ] = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR,
         statistics_generator: Optional[str] = None,
+        user_plugin: Optional[StrictDocPlugin] = None,
         # Reserved for StrictDoc's internal use.
         _config_last_update: Optional[datetime.datetime] = None,
     ) -> None:
@@ -248,6 +250,7 @@ class ProjectConfig:
         self.section_behavior: Optional[str] = section_behavior
 
         self.statistics_generator: Optional[str] = statistics_generator
+        self.user_plugin: Optional[StrictDocPlugin] = user_plugin
 
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update

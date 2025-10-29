@@ -222,6 +222,11 @@ class TraceabilityIndexBuilder:
             traceability_index.strictdoc_last_update
         )
 
+        if project_config.user_plugin is not None:
+            project_config.user_plugin.traceability_index_build_finished(
+                traceability_index
+            )
+
         return traceability_index
 
     @staticmethod

@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+TITLE: I am a title with a dot at the end, I will trigger the validation.
+STATEMENT: >>>
+System A shall do B.
+<<<

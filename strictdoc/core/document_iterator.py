@@ -45,7 +45,7 @@ class DocumentIterationContext:
         return ".".join(map(str, self.level_stack))
 
 
-class DocumentCachingIterator:
+class SDocDocumentIterator:
     def __init__(self, document: SDocDocument) -> None:
         assert isinstance(document, SDocDocument), document
 

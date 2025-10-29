@@ -6,7 +6,7 @@ from strictdoc.backend.sdoc.validations.sdoc_validator import (
     SDocValidator,
     multi_choice_regex_match,
 )
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 
 
 def test_01_positive():
@@ -52,7 +52,7 @@ RELATIONS:
     reader = SDReader()
     document = reader.read(input_sdoc)
 
-    document_iterator = DocumentCachingIterator(document)
+    document_iterator = SDocDocumentIterator(document)
     with pytest.raises(StrictDocSemanticError) as exc_info:
         for node_, _ in document_iterator.all_content(print_fragments=False):
             SDocValidator.validate_node(
@@ -88,7 +88,7 @@ RELATIONS:
     reader = SDReader()
     document = reader.read(input_sdoc)
 
-    document_iterator = DocumentCachingIterator(document)
+    document_iterator = SDocDocumentIterator(document)
     with pytest.raises(StrictDocSemanticError) as exc_info:
         for node_, _ in document_iterator.all_content(print_fragments=False):
             SDocValidator.validate_node(

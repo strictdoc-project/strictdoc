@@ -53,7 +53,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.writer import SDWriter
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
@@ -284,7 +284,7 @@ class SPDXGenerator:
                 spdx_file
             )
 
-            document_iterator: DocumentCachingIterator = (
+            document_iterator: SDocDocumentIterator = (
                 traceability_index.get_document_iterator(document_)
             )
 

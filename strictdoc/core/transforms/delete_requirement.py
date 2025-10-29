@@ -6,7 +6,7 @@ from strictdoc.backend.sdoc.models.model import (
     SDocNodeIF,
 )
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.transforms.validation_error import (
     MultipleValidationErrorAsList,
@@ -29,7 +29,7 @@ class DeleteRequirementCommand:
         document: SDocDocument = assert_cast(
             self.requirement.get_document(), SDocDocument
         )
-        document_iterator = DocumentCachingIterator(document=document)
+        document_iterator = SDocDocumentIterator(document=document)
         for document_node_, _ in document_iterator.all_node_content(
             self.requirement,
             print_fragments=True,

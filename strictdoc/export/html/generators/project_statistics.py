@@ -7,7 +7,7 @@ from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.statistics.metric import Metric, MetricSection
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -47,7 +47,7 @@ class ProgressStatisticsGenerator:
         document_tree_stats.git_commit_hash = git_client.get_commit_hash()
 
         for document in traceability_index.document_tree.document_list:
-            document_iterator = DocumentCachingIterator(document)
+            document_iterator = SDocDocumentIterator(document)
             for node, _ in document_iterator.all_content(print_fragments=False):
                 if isinstance(node, SDocNode) and node.node_type == "SECTION":
                     document_tree_stats.total_sections += 1

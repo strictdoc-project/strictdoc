@@ -18,7 +18,7 @@ import plotly.io as pio
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import HTMLTemplates
@@ -193,7 +193,7 @@ class TreeMapGenerator:
 
             map_node_to_coverage[document_] = get_node_stats(document_)
 
-            document_iterator = DocumentCachingIterator(document_)
+            document_iterator = SDocDocumentIterator(document_)
             for node_, _ in document_iterator.all_content(
                 print_fragments=False
             ):
@@ -241,7 +241,7 @@ class TreeMapGenerator:
                 },
             )
 
-            document_iterator = DocumentCachingIterator(document_)
+            document_iterator = SDocDocumentIterator(document_)
             for node, context_ in document_iterator.all_content(
                 print_fragments=False
             ):

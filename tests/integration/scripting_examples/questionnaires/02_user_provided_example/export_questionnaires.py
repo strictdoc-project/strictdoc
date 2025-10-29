@@ -12,7 +12,7 @@ from strictdoc.cli.cli_arg_parser import (
     ExportCommandConfig,
     create_sdoc_args_parser,
 )
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.core.traceability_index import GraphLinkType, TraceabilityIndex
@@ -63,7 +63,7 @@ class ExportQuestionnaires:
                 for idx, field in enumerate(fields):
                     worksheet.write(0, idx, field)
 
-                document_iterator = DocumentCachingIterator(document)
+                document_iterator = SDocDocumentIterator(document)
                 nodes = []
                 for node, _ in document_iterator.all_content(print_fragments=False):
                     if isinstance(node, SDocNode):

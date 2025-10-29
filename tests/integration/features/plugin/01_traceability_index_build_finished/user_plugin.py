@@ -1,5 +1,5 @@
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.plugin import StrictDocPlugin
 from strictdoc.core.traceability_index import TraceabilityIndex
 
@@ -11,7 +11,7 @@ class UserPlugin(StrictDocPlugin):
         for document in traceability.document_tree.document_list:
             assert document.meta is not None
 
-            document_iterator = DocumentCachingIterator(document)
+            document_iterator = SDocDocumentIterator(document)
 
             for node, _ in document_iterator.all_content(
                 print_fragments=False,

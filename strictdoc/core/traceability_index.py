@@ -18,7 +18,7 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 )
 from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.constants import GraphLinkType
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_dependency_manager import FileDependencyManager
@@ -43,14 +43,14 @@ class TraceabilityIndex:
     def __init__(
         self,
         document_tree: DocumentTree,
-        document_iterators: Dict[SDocDocument, DocumentCachingIterator],
+        document_iterators: Dict[SDocDocument, SDocDocumentIterator],
         file_traceability_index: FileTraceabilityIndex,
         graph_database: GraphDatabase,
         file_dependency_manager: FileDependencyManager,
     ):
-        self._document_iterators: Dict[
-            SDocDocument, DocumentCachingIterator
-        ] = document_iterators
+        self._document_iterators: Dict[SDocDocument, SDocDocumentIterator] = (
+            document_iterators
+        )
         self._file_traceability_index: FileTraceabilityIndex = (
             file_traceability_index
         )
@@ -77,7 +77,7 @@ class TraceabilityIndex:
         )
 
     @property
-    def document_iterators(self) -> Dict[SDocDocument, DocumentCachingIterator]:
+    def document_iterators(self) -> Dict[SDocDocument, SDocDocumentIterator]:
         return self._document_iterators
 
     def is_small_project(self) -> bool:
@@ -156,7 +156,7 @@ class TraceabilityIndex:
 
     def get_document_iterator(
         self, document: SDocDocument
-    ) -> DocumentCachingIterator:
+    ) -> SDocDocumentIterator:
         return self.document_iterators[document]
 
     def get_parent_requirements(self, requirement: SDocNode) -> List[SDocNode]:
@@ -318,7 +318,7 @@ class TraceabilityIndex:
     ) -> Union[SDocDocument, SDocNode, None]:
         assert isinstance(uid, str), uid
         for document in self.document_tree.document_list:
-            document_iterator = DocumentCachingIterator(document)
+            document_iterator = SDocDocumentIterator(document)
             for node, _ in document_iterator.all_content(print_fragments=False):
                 if isinstance(node, SDocDocument):
                     if node.config.uid == uid:
@@ -1031,7 +1031,7 @@ class TraceabilityIndex:
             output_document_dir_rel_path=SDocRelativePath(""),
         )
         traceability_index_copy.document_iterators[bundle_document] = (
-            DocumentCachingIterator(bundle_document)
+            SDocDocumentIterator(bundle_document)
         )
         for document_ in traceability_index_copy.document_tree.document_list:
             # Ignore all included documents. They are anyway included by

@@ -32,7 +32,7 @@ from strictdoc.backend.sdoc_source_code.caching_reader import (
 )
 from strictdoc.core.constants import GraphLinkType
 from strictdoc.core.document_finder import DocumentFinder
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_dependency_manager import FileDependencyManager
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
@@ -241,9 +241,7 @@ class TraceabilityIndexBuilder:
 
         # FIXME: Too many things going on below. Would be great to simplify this
         # workflow.
-        d_01_document_iterators: Dict[
-            SDocDocument, DocumentCachingIterator
-        ] = {}
+        d_01_document_iterators: Dict[SDocDocument, SDocDocumentIterator] = {}
         d_07_file_traceability_index = FileTraceabilityIndex()
 
         graph_database = GraphDatabase(
@@ -435,7 +433,7 @@ class TraceabilityIndexBuilder:
                 rhs_node=document_tags,
             )
 
-            document_iterator = DocumentCachingIterator(document)
+            document_iterator = SDocDocumentIterator(document)
             d_01_document_iterators[document] = document_iterator
 
             for node, _ in document_iterator.all_content(

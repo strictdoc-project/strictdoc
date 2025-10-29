@@ -320,10 +320,10 @@ class SDocDocument(SDocDocumentIF):
         map_nodes_by_mid = {}
 
         from strictdoc.core.document_iterator import (  # noqa: PLC0415
-            DocumentCachingIterator,
+            SDocDocumentIterator,
         )
 
-        document_iterator = DocumentCachingIterator(self)
+        document_iterator = SDocDocumentIterator(self)
 
         for node, _ in document_iterator.all_content(
             print_fragments=False,

@@ -32,7 +32,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast
@@ -74,7 +74,7 @@ class SDWriter:
     ) -> Tuple[str, Dict[str, str]]:
         fragments_dict: Dict[str, str] = {}
 
-        document_iterator = DocumentCachingIterator(document)
+        document_iterator = SDocDocumentIterator(document)
         output = ""
 
         output += "[DOCUMENT]"
@@ -295,14 +295,14 @@ class SDWriter:
         self,
         root_node: SDocElementIF,
         document: SDocDocument,
-        document_iterator: DocumentCachingIterator,
+        document_iterator: SDocDocumentIterator,
     ) -> str:
         # Currently, auto-generated nodes are never written back to file system.
         # We could revisit this in the future.
         if root_node.autogen:
             return ""
 
-        assert isinstance(document_iterator, DocumentCachingIterator), (
+        assert isinstance(document_iterator, SDocDocumentIterator), (
             document_iterator
         )
 

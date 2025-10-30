@@ -3,7 +3,7 @@ from pathlib import Path
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
@@ -40,7 +40,7 @@ class DoxygenGenerator:
 
         document_: SDocDocument
         for document_ in traceability_index.document_tree.document_list:
-            document_iterator = DocumentCachingIterator(document_)
+            document_iterator = SDocDocumentIterator(document_)
 
             for node, _ in document_iterator.all_content(
                 print_fragments=False,

@@ -16,7 +16,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
 )
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.git.change import (
     ChangeType,
@@ -418,7 +418,7 @@ class ChangeStats:
             if document.document_is_included():
                 continue
 
-            document_iterator = DocumentCachingIterator(document)
+            document_iterator = SDocDocumentIterator(document)
 
             #
             # Now iterate over all nodes and collect the diff information.
@@ -823,7 +823,7 @@ class ProjectDiffAnalyzer:
     ) -> None:
         assert document.meta is not None
 
-        document_iterator = DocumentCachingIterator(document)
+        document_iterator = SDocDocumentIterator(document)
 
         map_nodes_to_hashers: Dict[Any, Any] = {document: hashlib.md5()}
 

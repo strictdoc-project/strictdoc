@@ -38,7 +38,7 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.constants import GraphLinkType
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.cast import assert_cast
@@ -737,7 +737,7 @@ class FileTraceabilityIndex:
 
         # Iterate over all generated documents to calculate all node levels.
         for document_ in documents_with_generated_content:
-            document_iterator = DocumentCachingIterator(document_)
+            document_iterator = SDocDocumentIterator(document_)
             for _, _ in document_iterator.all_content(
                 print_fragments=False,
             ):

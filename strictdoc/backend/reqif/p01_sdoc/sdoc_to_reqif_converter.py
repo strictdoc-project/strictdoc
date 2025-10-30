@@ -51,7 +51,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.ordered_set import OrderedSet
@@ -259,7 +259,7 @@ class P01_SDocToReqIFObjectConverter:
             )
             spec_types.extend(document_spec_types)
 
-            document_iterator = DocumentCachingIterator(document)
+            document_iterator = SDocDocumentIterator(document)
 
             # FIXME: This is a throw-away object. It gets discarded when the
             #        iteration is over. Find a way to do without it.

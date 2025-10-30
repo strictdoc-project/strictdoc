@@ -9,7 +9,7 @@ from strictdoc.core.analyzers.document_stats import (
     DocumentTreeStats,
     SinglePrefixRequirements,
 )
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
@@ -65,7 +65,7 @@ class DocumentUIDAnalyzer:
         document: SDocDocument,
     ) -> DocumentStats:
         this_document_stats = DocumentStats(document)
-        document_iterator = DocumentCachingIterator(document)
+        document_iterator = SDocDocumentIterator(document)
         for node, _ in document_iterator.all_content():
             if isinstance(node, SDocNode) and node.node_type == "SECTION":
                 if node.reserved_uid is not None:

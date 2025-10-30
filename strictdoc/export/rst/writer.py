@@ -5,7 +5,7 @@ from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.core.document_iterator import DocumentCachingIterator
+from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.rst_templates import RSTTemplates
 from strictdoc.helpers.rst import escape_str_after_inline_markup
@@ -22,7 +22,7 @@ class RSTWriter:
         self.index = index
 
     def write(self, document: SDocDocument, single_document: bool) -> str:
-        document_iterator = DocumentCachingIterator(document)
+        document_iterator = SDocDocumentIterator(document)
         output = ""
 
         if not single_document:

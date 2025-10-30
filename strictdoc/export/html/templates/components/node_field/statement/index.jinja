@@ -15,5 +15,6 @@
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </sdoc-node-field>
+    {{ view_object.render_issues(sdoc_entity, field="STATEMENT") }}
   {%- endif -%}
 {%- endif -%}

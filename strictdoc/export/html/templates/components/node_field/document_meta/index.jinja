@@ -1,5 +1,7 @@
 {%- set document_config = view_object.document.config -%}
 
+{{ view_object.render_issues(view_object.document) }}
+
 {%- if document_config.has_meta() or document_config.has_custom_metadata() -%}
   <sdoc-meta>
     {%- if view_object.document.config.uid -%}
@@ -19,12 +21,6 @@
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </sdoc-meta-field>
-    {# FIXME: Task #1229 / Uncomment example when validation logic is implemented: #}
-    {#
-      {% with issue_field_name = 'meta' %}
-        {% include "components/issue/index.jinja" %}
-      {% endwith %}
-    #}
     {%- endif -%}
 
     {% set document_date_ = view_object.render_document_date() %}

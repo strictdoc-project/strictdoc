@@ -42,3 +42,5 @@
     {% if title_has_h_level %}</h{{ h_level }}>{% endif %}
   </sdoc-node-title>
 {%- endif %}
+
+{{ view_object.render_issues(sdoc_entity, field="TITLE") }}

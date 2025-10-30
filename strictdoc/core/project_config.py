@@ -443,24 +443,6 @@ class ProjectConfig:
         assert self.input_paths is not None and len(self.input_paths) > 0
         return get_md5(self.input_paths[0])
 
-    def shall_parse_nodes(self, path_to_file: str) -> bool:
-        if self.source_root_path is None:
-            return False
-
-        for sdoc_source_config_entry_ in self.source_nodes:
-            # FIXME: Move the setting of full paths to .finalize() of this config
-            #        class when it is implemented.
-            full_path = sdoc_source_config_entry_.setdefault(
-                "full_path",
-                os.path.join(
-                    self.source_root_path, sdoc_source_config_entry_["path"]
-                ),
-            )
-            if path_to_file.startswith(full_path):
-                return True
-
-        return False
-
     def parse_nodes_type(self, path_to_file: str) -> Optional[tuple[str, str]]:
         if self.source_root_path is None:
             return None

@@ -395,7 +395,7 @@ class TraceabilityIndexBuilder:
                 print(exc.to_print_message())  # noqa: T201
                 sys.exit(1)
 
-            if graph_database.has_link(
+            if graph_database.has_any_link(
                 link_type=GraphLinkType.MID_TO_NODE,
                 lhs_node=document.reserved_mid,
             ):
@@ -452,7 +452,7 @@ class TraceabilityIndexBuilder:
                         print(exc.to_print_message())  # noqa: T201
                         sys.exit(1)
 
-                if graph_database.has_link(
+                if graph_database.has_any_link(
                     link_type=GraphLinkType.MID_TO_NODE,
                     lhs_node=node.reserved_mid,
                 ):
@@ -478,7 +478,7 @@ class TraceabilityIndexBuilder:
 
                 if node.reserved_uid is not None:
                     # @relation(SDOC-SRS-29, scope=range_start)
-                    if traceability_index.graph_database.has_link(
+                    if traceability_index.graph_database.has_any_link(
                         link_type=GraphLinkType.UID_TO_NODE,
                         lhs_node=node.reserved_uid,
                     ):
@@ -565,7 +565,7 @@ class TraceabilityIndexBuilder:
                 for node_field_ in requirement.enumerate_fields():
                     for part in node_field_.parts:
                         if isinstance(part, InlineLink):
-                            if not graph_database.has_link(
+                            if not graph_database.has_any_link(
                                 link_type=GraphLinkType.UID_TO_NODE,
                                 lhs_node=part.link,
                             ):

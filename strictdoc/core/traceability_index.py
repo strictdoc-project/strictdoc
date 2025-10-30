@@ -134,7 +134,7 @@ class TraceabilityIndex:
 
     def has_node_connections(self, node_uid: str) -> bool:
         assert isinstance(node_uid, str), node_uid
-        return self.graph_database.has_link(
+        return self.graph_database.has_any_link(
             link_type=GraphLinkType.UID_TO_NODE,
             lhs_node=node_uid,
         )
@@ -244,7 +244,7 @@ class TraceabilityIndex:
         )
 
     def has_tags(self, document: SDocDocument) -> bool:
-        return self.graph_database.has_link(
+        return self.graph_database.has_any_link(
             link_type=GraphLinkType.DOCUMENT_TO_TAGS,
             lhs_node=document.reserved_mid,
         )
@@ -379,7 +379,7 @@ class TraceabilityIndex:
         assert isinstance(new_link, InlineLink)
 
         # InlineLink points to a section, node or to anchor.
-        assert self.graph_database.has_link(
+        assert self.graph_database.has_any_link(
             link_type=GraphLinkType.UID_TO_NODE, lhs_node=new_link.link
         )
 
@@ -872,7 +872,7 @@ class TraceabilityIndex:
         # by the new anchors.
         if node is None:
             for anchor_uid in new_anchor_uids:
-                if self.graph_database.has_link(
+                if self.graph_database.has_any_link(
                     link_type=GraphLinkType.UID_TO_NODE, lhs_node=anchor_uid
                 ):
                     raise SingleValidationError(
@@ -904,7 +904,7 @@ class TraceabilityIndex:
         #
         for anchor_uid in new_anchor_uids:
             if (
-                self.graph_database.has_link(
+                self.graph_database.has_any_link(
                     link_type=GraphLinkType.UID_TO_NODE, lhs_node=anchor_uid
                 )
                 and anchor_uid not in existing_node_anchor_uids

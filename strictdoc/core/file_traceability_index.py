@@ -604,6 +604,8 @@ class FileTraceabilityIndex:
             path_to_source_file_,
             traceability_info_,
         ) in self.map_paths_to_source_file_traceability_info.items():
+            assert "\\" not in path_to_source_file_
+
             if len(traceability_info_.source_nodes) == 0:
                 continue
 
@@ -676,6 +678,12 @@ class FileTraceabilityIndex:
                 self.connect_source_node_requirements(
                     source_node_, source_sdoc_node, traceability_index
                 )
+
+                for (
+                    field_title_,
+                    field_,
+                ) in source_sdoc_node.ordered_fields_lookup.items():
+                    assert "\\" not in field_[0].get_text_value(), field_title_
 
         # Warn if source_node was not matched by any include_source_paths, it indicates misconfiguration
         for unused_source_node_path in unused_source_node_paths:

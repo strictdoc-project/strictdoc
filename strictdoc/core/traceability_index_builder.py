@@ -885,13 +885,18 @@ class TraceabilityIndexBuilder:
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
     ) -> Optional[GrammarElement]:
-        maybe_parse_nodes_type = project_config.parse_nodes_type(path_to_file)
-        if maybe_parse_nodes_type is None:
+        source_nodes_cfg_entry = project_config.get_relevant_source_nodes_entry(
+            path_to_file
+        )
+        if source_nodes_cfg_entry is None:
             return None
-        parse_nodes_uid, parse_nodes_type = maybe_parse_nodes_type
         sdoc_document = assert_cast(
-            traceability_index.get_node_by_uid_weak2(parse_nodes_uid),
+            traceability_index.get_node_by_uid_weak2(
+                source_nodes_cfg_entry.uid
+            ),
             SDocDocument,
         )
         assert sdoc_document.grammar is not None
-        return sdoc_document.grammar.elements_by_type.get(parse_nodes_type)
+        return sdoc_document.grammar.elements_by_type.get(
+            source_nodes_cfg_entry.node_type
+        )

@@ -8,7 +8,9 @@ import re
 import sys
 import tempfile
 import types
+from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import toml
@@ -38,6 +40,19 @@ def parse_relation_tuple(column_name: str) -> Optional[Tuple[str, str]]:
     if match_result is None:
         return None
     return match_result.group(1), match_result.group(4)
+
+
+@dataclass
+class SourceNodesEntry:
+    path: str
+    uid: str
+    node_type: str
+    full_path: Optional[Path]
+
+    @classmethod
+    def from_cfg_data(cls, data: dict[str, str]) -> "SourceNodesEntry":
+        full_path = Path(data["full_path"]) if "full_path" in data else None
+        return cls(data["path"], data["uid"], data["node_type"], full_path)
 
 
 class ProjectFeature(str, Enum):
@@ -193,8 +208,13 @@ class ProjectConfig:
         self.test_report_root_dict: Dict[str, str] = (
             test_report_root_dict if test_report_root_dict is not None else {}
         )
-        self.source_nodes: List[Dict[str, str]] = (
-            source_nodes if source_nodes is not None else []
+        self.source_nodes: List[SourceNodesEntry] = (
+            [
+                SourceNodesEntry.from_cfg_data(source_node)
+                for source_node in source_nodes
+            ]
+            if source_nodes is not None
+            else []
         )
 
         # Settings derived from the command-line parameters.
@@ -443,23 +463,39 @@ class ProjectConfig:
         assert self.input_paths is not None and len(self.input_paths) > 0
         return get_md5(self.input_paths[0])
 
-    def parse_nodes_type(self, path_to_file: str) -> Optional[tuple[str, str]]:
+    def get_relevant_source_nodes_entry(
+        self, path_to_file: str
+    ) -> Optional[SourceNodesEntry]:
+        """
+        Get relevant source_nodes config item for a given source code file.
+
+        Returns data for the first entry from source_nodes that is a parent path of path_to_file.
+        If path_to_file is absolute, source node config entries are assumed to be in the source_root_path.
+        """
         if self.source_root_path is None:
             return None
 
+        source_file_path = Path(path_to_file)
         for sdoc_source_config_entry_ in self.source_nodes:
             # FIXME: Move the setting of full paths to .finalize() of this config
             #        class when it is implemented.
-            full_path = sdoc_source_config_entry_.setdefault(
-                "full_path",
-                os.path.join(
-                    self.source_root_path, sdoc_source_config_entry_["path"]
-                ),
-            )
-            if path_to_file.startswith(full_path):
-                return sdoc_source_config_entry_[
-                    "uid"
-                ], sdoc_source_config_entry_["node_type"]
+            if sdoc_source_config_entry_.full_path is None:
+                sdoc_source_config_entry_.full_path = Path(
+                    self.source_root_path
+                ) / Path(sdoc_source_config_entry_.path)
+
+            if source_file_path.is_absolute():
+                if (
+                    sdoc_source_config_entry_.full_path
+                    in source_file_path.parents
+                ):
+                    return sdoc_source_config_entry_
+            else:
+                if (
+                    Path(sdoc_source_config_entry_.path)
+                    in source_file_path.parents
+                ):
+                    return sdoc_source_config_entry_
 
         return None
 

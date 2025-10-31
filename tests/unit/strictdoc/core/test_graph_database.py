@@ -26,17 +26,35 @@ def test_01_basic():
         ]
     )
 
+    assert (
+        graph_database.has_link(
+            link_type=Relation.INLINE_LINK_TO_ANCHOR,
+            lhs_node=inline_link,
+            rhs_node=anchor,
+        )
+        is False
+    )
+
     graph_database.create_link(
         link_type=Relation.INLINE_LINK_TO_ANCHOR,
         lhs_node=inline_link,
         rhs_node=anchor,
     )
+
     assert (
         graph_database.get_link_value(
             link_type=Relation.INLINE_LINK_TO_ANCHOR,
             lhs_node=inline_link,
         )
         == anchor
+    )
+    assert (
+        graph_database.has_link(
+            link_type=Relation.INLINE_LINK_TO_ANCHOR,
+            lhs_node=inline_link,
+            rhs_node=anchor,
+        )
+        is True
     )
 
     graph_database.delete_link(
@@ -51,6 +69,14 @@ def test_01_basic():
             lhs_node=inline_link,
         )
         is None
+    )
+    assert (
+        graph_database.has_link(
+            link_type=Relation.INLINE_LINK_TO_ANCHOR,
+            lhs_node=inline_link,
+            rhs_node=anchor,
+        )
+        is False
     )
 
 
@@ -69,10 +95,27 @@ def test_02_basic():
         buckets=[(Relation.INLINE_LINK_TO_ANCHOR, ManyToManySet(Node, Node))]
     )
 
+    assert (
+        graph_database.has_link(
+            link_type=Relation.INLINE_LINK_TO_ANCHOR,
+            lhs_node=anchor,
+            rhs_node=inline_link,
+        )
+        is False
+    )
+
     graph_database.create_link(
         link_type=Relation.INLINE_LINK_TO_ANCHOR,
         lhs_node=anchor,
         rhs_node=inline_link,
+    )
+    assert (
+        graph_database.has_link(
+            link_type=Relation.INLINE_LINK_TO_ANCHOR,
+            lhs_node=anchor,
+            rhs_node=inline_link,
+        )
+        is True
     )
     assert graph_database.get_link_values_reverse(
         link_type=Relation.INLINE_LINK_TO_ANCHOR, rhs_node=inline_link

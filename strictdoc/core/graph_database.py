@@ -21,8 +21,20 @@ class GraphDatabase:
             assert bucket_[0] not in self._id_to_bucket
             self._id_to_bucket[bucket_[0]] = bucket_[1]
 
-    def has_link(self, *, link_type: Hashable, lhs_node: Any) -> bool:
-        return self._id_to_bucket[link_type].has_link(lhs_node=lhs_node)
+    def has_any_link(self, *, link_type: Hashable, lhs_node: Any) -> bool:
+        return self._id_to_bucket[link_type].has_any_link(lhs_node=lhs_node)
+
+    def has_link(
+        self,
+        *,
+        link_type: Hashable,
+        lhs_node: Any,
+        rhs_node: Any,
+        edge: Optional[str] = None,
+    ) -> bool:
+        return self._id_to_bucket[link_type].has_link(
+            lhs_node=lhs_node, rhs_node=rhs_node, edge=edge
+        )
 
     def get_count(self, *, link_type: Hashable) -> int:
         return self._id_to_bucket[link_type].get_count()

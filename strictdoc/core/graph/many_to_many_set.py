@@ -14,9 +14,15 @@ class ManyToManySet(AbstractBucket):
         self._lhs_type: type = lhs_type
         self._rhs_type: type = rhs_type
 
-    def has_link(self, *, lhs_node: Any) -> bool:
+    def has_any_link(self, *, lhs_node: Any) -> bool:
         assert isinstance(lhs_node, self._lhs_type), lhs_node
         return lhs_node in self._links and len(self._links[lhs_node]) > 0
+
+    def has_link(
+        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
+    ) -> bool:
+        assert isinstance(rhs_node, self._rhs_type), rhs_node
+        return rhs_node in self.get_link_values(lhs_node=lhs_node, edge=edge)
 
     def get_count(self, edge: Optional[str] = None) -> int:
         total_count = 0

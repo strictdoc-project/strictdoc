@@ -13,9 +13,17 @@ class OneToOneDictionary(AbstractBucket):
         self._lhs_type: Type[Any] = lhs_type
         self._rhs_type: Union[Type[Any], Tuple[Type[Any], ...]] = rhs_type
 
-    def has_link(self, *, lhs_node: Any) -> bool:
+    def has_any_link(self, *, lhs_node: Any) -> bool:
         assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
         return lhs_node in self._dict
+
+    def has_link(
+        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
+    ) -> bool:
+        assert edge is None
+        assert isinstance(lhs_node, self._lhs_type), (lhs_node, self._lhs_type)
+        assert isinstance(rhs_node, self._rhs_type), (rhs_node, self._rhs_type)
+        return lhs_node in self._dict and rhs_node is self._dict[lhs_node]
 
     def get_count(self) -> int:
         return len(self._dict)

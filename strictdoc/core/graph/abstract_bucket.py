@@ -8,7 +8,13 @@ ALL_EDGES = ".all"
 
 class AbstractBucket(ABC):
     @abstractmethod
-    def has_link(self, *, lhs_node: Any) -> bool:
+    def has_any_link(self, *, lhs_node: Any) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def has_link(
+        self, *, lhs_node: Any, rhs_node: Any, edge: Optional[str] = None
+    ) -> bool:
         raise NotImplementedError
 
     @abstractmethod

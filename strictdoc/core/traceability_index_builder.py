@@ -395,7 +395,7 @@ class TraceabilityIndexBuilder:
                 print(exc.to_print_message())  # noqa: T201
                 sys.exit(1)
 
-            if graph_database.has_link(
+            if graph_database.has_any_link(
                 link_type=GraphLinkType.MID_TO_NODE,
                 lhs_node=document.reserved_mid,
             ):
@@ -452,7 +452,7 @@ class TraceabilityIndexBuilder:
                         print(exc.to_print_message())  # noqa: T201
                         sys.exit(1)
 
-                if graph_database.has_link(
+                if graph_database.has_any_link(
                     link_type=GraphLinkType.MID_TO_NODE,
                     lhs_node=node.reserved_mid,
                 ):
@@ -478,7 +478,7 @@ class TraceabilityIndexBuilder:
 
                 if node.reserved_uid is not None:
                     # @relation(SDOC-SRS-29, scope=range_start)
-                    if traceability_index.graph_database.has_link(
+                    if traceability_index.graph_database.has_any_link(
                         link_type=GraphLinkType.UID_TO_NODE,
                         lhs_node=node.reserved_uid,
                     ):
@@ -565,7 +565,7 @@ class TraceabilityIndexBuilder:
                 for node_field_ in requirement.enumerate_fields():
                     for part in node_field_.parts:
                         if isinstance(part, InlineLink):
-                            if not graph_database.has_link(
+                            if not graph_database.has_any_link(
                                 link_type=GraphLinkType.UID_TO_NODE,
                                 lhs_node=part.link,
                             ):
@@ -885,13 +885,18 @@ class TraceabilityIndexBuilder:
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
     ) -> Optional[GrammarElement]:
-        maybe_parse_nodes_type = project_config.parse_nodes_type(path_to_file)
-        if maybe_parse_nodes_type is None:
+        source_nodes_cfg_entry = project_config.get_relevant_source_nodes_entry(
+            path_to_file
+        )
+        if source_nodes_cfg_entry is None:
             return None
-        parse_nodes_uid, parse_nodes_type = maybe_parse_nodes_type
         sdoc_document = assert_cast(
-            traceability_index.get_node_by_uid_weak2(parse_nodes_uid),
+            traceability_index.get_node_by_uid_weak2(
+                source_nodes_cfg_entry.uid
+            ),
             SDocDocument,
         )
         assert sdoc_document.grammar is not None
-        return sdoc_document.grammar.elements_by_type.get(parse_nodes_type)
+        return sdoc_document.grammar.elements_by_type.get(
+            source_nodes_cfg_entry.node_type
+        )

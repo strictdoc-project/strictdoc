@@ -11,7 +11,11 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import DocumentView
-from strictdoc.backend.sdoc.models.model import SDocExtendedElementIF
+from strictdoc.backend.sdoc.models.model import (
+    SDocDocumentIF,
+    SDocExtendedElementIF,
+    SDocNodeIF,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
@@ -118,3 +122,13 @@ class SearchScreenViewObject:
         self, node: Union[Anchor, SDocNode, SDocDocument]
     ) -> str:
         return self.link_renderer.render_local_anchor(node)
+
+    def render_issues(
+        self,
+        node: Union[SDocNodeIF, SDocDocumentIF],  # noqa: ARG002
+        field: Optional[str] = None,  # noqa: ARG002
+    ) -> str:
+        """
+        FIXME: It is not great that this method is called from here.
+        """
+        return ""

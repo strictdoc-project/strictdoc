@@ -1625,7 +1625,7 @@ sdoc-tabs.in_aside_panel sdoc-tab[active] {
   grid-column: 1 / -1;
   position: relative;
   color: var(--color-danger);
-  padding: var(--base-rhythm);
+  padding: var(--base-rhythm) 0;
   font-size: var(--font-size-sm);
   line-height: 1.5;
 }
@@ -1634,10 +1634,10 @@ sdoc-tabs.in_aside_panel sdoc-tab[active] {
   position: relative;
   padding: calc(.5 * var(--base-rhythm)) var(--base-rhythm);
   border-radius: calc(.5 * var(--base-rhythm));
-  border: 2px solid;
+  border: 1px solid;
 }
 
-.field_issue-ribbon::before {
+sdoc-node-content .field_issue-ribbon::before {
   position: absolute;
   content: '';
   bottom: 100%;
@@ -1653,6 +1653,7 @@ sdoc-tabs.in_aside_panel sdoc-tab[active] {
   content: '';
   position: absolute;
   inset: 0;
+  pointer-events: none;
 }
 
 /*

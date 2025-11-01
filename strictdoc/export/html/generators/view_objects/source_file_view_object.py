@@ -11,6 +11,7 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import NullViewElement
+from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocNodeIF
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
@@ -181,6 +182,16 @@ class SourceFileViewObject:
         self, node: Union[Anchor, SDocNode, SDocDocument]
     ) -> str:
         return self.link_renderer.render_local_anchor(node)
+
+    def render_issues(
+        self,
+        node: Union[SDocNodeIF, SDocDocumentIF],  # noqa: ARG002
+        field: Optional[str] = None,  # noqa: ARG002
+    ) -> str:
+        """
+        FIXME: It is not great that this method is called from here.
+        """
+        return ""
 
     def get_source_file_path(self) -> str:
         return self.source_file.in_doctree_source_file_rel_path_posix

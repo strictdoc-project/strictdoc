@@ -35,7 +35,8 @@ class DocumentTableHTMLGenerator:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=html_templates.jinja_environment(),
             git_client=git_client,
             standalone=False,
         )
-        return view_object.render_screen(html_templates.jinja_environment())
+        return view_object.render_screen()

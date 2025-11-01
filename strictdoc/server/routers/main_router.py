@@ -201,6 +201,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
@@ -514,11 +515,12 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
 
-        output = view_object.render_updated_screen(env())
+        output = view_object.render_updated_screen()
 
         return HTMLResponse(
             content=output,
@@ -761,6 +763,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
@@ -768,7 +771,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         return HTMLResponse(
             content=view_object.render_updated_nodes_and_toc(
                 update_requirement_command_result.this_document_requirements_to_update,
-                env(),
             ),
             status_code=200,
             headers={
@@ -834,13 +836,12 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
         return HTMLResponse(
-            content=view_object.render_updated_nodes_and_toc(
-                [requirement], env()
-            ),
+            content=view_object.render_updated_nodes_and_toc([requirement]),
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
             },
@@ -931,6 +932,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
@@ -1046,12 +1048,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
         return HTMLResponse(
             content=view_object.render_update_document_content_with_moved_node(
-                env(), moved_node
+                moved_node
             ),
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
@@ -1481,6 +1484,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
@@ -1567,13 +1571,12 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
         return HTMLResponse(
-            content=view_object.render_updated_nodes_and_toc(
-                nodes=[document], jinja_environment=env()
-            ),
+            content=view_object.render_updated_nodes_and_toc(nodes=[document]),
             status_code=200,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
@@ -1609,6 +1612,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
@@ -1656,6 +1660,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
@@ -1763,6 +1768,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )
@@ -1907,6 +1913,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            jinja_environment=env(),
             git_client=html_generator.git_client,
             standalone=False,
         )

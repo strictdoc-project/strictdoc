@@ -1,8 +1,26 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: warning: traceability_index_build_finished() is called.
-CHECK: warning: Node title ends with a dot: "I am a title with a dot at the end, I will trigger the validation.".
+CHECK: warning: The whole node is really bad. Node: System A -> B behavior
+CHECK: warning: UID field is really bad. Node: System A -> B behavior
+CHECK: warning: CUSTOM_META_FIELD field is really bad. Node: System A -> B behavior
+CHECK: warning: TITLE field is really bad. Node: System A -> B behavior
+CHECK: warning: STATEMENT field is really bad. Node: System A -> B behavior
+CHECK: warning: RATIONALE field is really bad. Node: System A -> B behavior
+CHECK: warning: COMMENT field is really bad. Node: System A -> B behavior
+CHECK: warning: CUSTOM_CONTENT_FIELD field is really bad. Node: System A -> B behavior
 CHECK: Published: Hello world doc
 
-RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: Hello world doc
-CHECK-HTML: input.sdoc
+RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-INDEX
+CHECK-INDEX: Hello world doc
+CHECK-INDEX: input.sdoc
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Document has 8 issues.
+CHECK-HTML: The whole node is really bad.
+CHECK-HTML: TITLE field is really bad.
+CHECK-HTML: UID field is really bad.
+CHECK-HTML: CUSTOM_META_FIELD field is really bad.
+CHECK-HTML: STATEMENT field is really bad.
+CHECK-HTML: RATIONALE field is really bad.
+CHECK-HTML: COMMENT field is really bad.
+CHECK-HTML: CUSTOM_CONTENT_FIELD field is really bad.

@@ -19,5 +19,51 @@ class UserPlugin(StrictDocPlugin):
                 if not isinstance(node, SDocNode):
                     continue
 
-                if node.reserved_title.endswith("."):
-                    print(f'warning: Node title ends with a dot: "{node.reserved_title}".')  # noqa: T201
+                traceability.validation_index.add_issue(
+                    node,
+                    issue="The whole node is really bad.",
+                    field=None,
+                    subject=f"Node: {node.reserved_title}",
+                )
+                traceability.validation_index.add_issue(
+                    node,
+                    issue="UID field is really bad.",
+                    field="UID",
+                    subject=f"Node: {node.reserved_title}",
+                )
+                traceability.validation_index.add_issue(
+                    node,
+                    issue="CUSTOM_META_FIELD field is really bad.",
+                    field="CUSTOM_META_FIELD",
+                    subject=f"Node: {node.reserved_title}",
+                )
+                traceability.validation_index.add_issue(
+                    node,
+                    issue="TITLE field is really bad.",
+                    field="TITLE",
+                    subject=f"Node: {node.reserved_title}",
+                )
+                traceability.validation_index.add_issue(
+                    node,
+                    issue="STATEMENT field is really bad.",
+                    field="STATEMENT",
+                    subject=f"Node: {node.reserved_title}",
+                )
+                traceability.validation_index.add_issue(
+                    node,
+                    issue="RATIONALE field is really bad.",
+                    field="RATIONALE",
+                    subject=f"Node: {node.reserved_title}",
+                )
+                traceability.validation_index.add_issue(
+                    node,
+                    issue="COMMENT field is really bad.",
+                    field="COMMENT",
+                    subject=f"Node: {node.reserved_title}",
+                )
+                traceability.validation_index.add_issue(
+                    node,
+                    issue="CUSTOM_CONTENT_FIELD field is really bad.",
+                    field="CUSTOM_CONTENT_FIELD",
+                    subject=f"Node: {node.reserved_title}",
+                )

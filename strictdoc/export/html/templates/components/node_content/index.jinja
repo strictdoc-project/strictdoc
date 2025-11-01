@@ -37,6 +37,8 @@
 {% set _narrative_has_multiline_fields = _has_multiline_fields and user_requirement_style == 'narrative' %}
 {% set _narrative_has_no_multiline_fields = not _has_multiline_fields and user_requirement_style == 'narrative' %}
 
+{{ view_object.render_issues(node) }}
+
 <sdoc-node-content
   node-view="{{ requirement_style|d(sdoc_entity.get_requirement_style_mode()) }}"
   data-level="{{ sdoc_entity.context.title_number_string }}"
@@ -52,12 +54,6 @@
   {% set title_number = true %}
   {% set truncated_statement = false %}
   {% include "components/node_field/title/index.jinja" %}
-  {# FIXME: Task #1229 / Uncomment example when validation logic is implemented: #}
-  {#
-    {% with issue_field_name = 'title' %}
-      {% include "components/issue/index.jinja" %}
-    {% endwith %}
-  #}
 
   {% if user_requirement_style == 'narrative' %}
     <sdoc-scope class="node_fields_group-secondary{% if _no_title %} html2pdf4doc-no-hanging{% endif %}">

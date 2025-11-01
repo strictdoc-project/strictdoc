@@ -1,8 +1,78 @@
 [DOCUMENT]
 TITLE: Hello world doc
 
+[GRAMMAR]
+ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: PREFIX
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: CUSTOM_META_FIELD
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: CUSTOM_CONTENT_FIELD
+    TYPE: String
+    REQUIRED: False
+
 [REQUIREMENT]
-TITLE: I am a title with a dot at the end, I will trigger the validation.
+UID: REQ-1
+CUSTOM_META_FIELD: Custom meta content.
+TITLE: System A -> B behavior
 STATEMENT: >>>
 System A shall do B.
+<<<
+RATIONALE: >>>
+Nobody knows anymore why System A shall do B.
+<<<
+COMMENT: >>>
+This is a comment about system A.
+<<<
+CUSTOM_CONTENT_FIELD: >>>
+This is a custom field.
 <<<

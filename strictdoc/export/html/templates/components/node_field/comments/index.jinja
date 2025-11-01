@@ -12,4 +12,5 @@
       {%- endwith -%}
     </sdoc-node-field>
   {%- endfor %}
+  {{ view_object.render_issues(sdoc_entity, field="COMMENT") }}
 {%- endif %}

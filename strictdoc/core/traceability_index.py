@@ -31,6 +31,7 @@ from strictdoc.core.transforms.validation_error import (
     SingleValidationError,
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
+from strictdoc.core.validation_index import ValidationIndex
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.file_modification_time import set_file_modification_time
 from strictdoc.helpers.mid import MID
@@ -54,7 +55,7 @@ class TraceabilityIndex:
         self._file_traceability_index: FileTraceabilityIndex = (
             file_traceability_index
         )
-
+        self.validation_index: ValidationIndex = ValidationIndex()
         self.graph_database: GraphDatabase = graph_database
         self.document_tree: DocumentTree = document_tree
         self.asset_manager: Optional[AssetManager] = None

@@ -42,7 +42,11 @@ from strictdoc.core.finders.source_files_finder import (
 from strictdoc.core.graph.many_to_many_set import ManyToManySet
 from strictdoc.core.graph.one_to_one_dictionary import OneToOneDictionary
 from strictdoc.core.graph_database import GraphDatabase
-from strictdoc.core.project_config import ProjectConfig, ProjectFeature
+from strictdoc.core.project_config import (
+    ProjectConfig,
+    ProjectFeature,
+    SourceNodesEntry,
+)
 from strictdoc.core.query_engine.query_object import (
     QueryNullObject,
     QueryObject,
@@ -142,18 +146,33 @@ class TraceabilityIndexBuilder:
                 with measure_performance(
                     f"Reading source: {source_file.in_doctree_source_file_rel_path}"
                 ):
-                    source_node_grammar_element = (
-                        TraceabilityIndexBuilder.source_node_grammar_element(
-                            source_file.full_path,
-                            project_config,
-                            traceability_index,
+                    source_nodes_cfg_entry = (
+                        project_config.get_relevant_source_nodes_entry(
+                            source_file.full_path
                         )
                     )
+                    if source_nodes_cfg_entry is not None:
+                        source_node_grammar_element = (
+                            traceability_index.get_grammar_element(
+                                source_nodes_cfg_entry.uid,
+                                source_nodes_cfg_entry.node_type,
+                            )
+                        )
+                        assert source_node_grammar_element is not None
+                        source_node_tags = (
+                            TraceabilityIndexBuilder.source_node_parser_tags(
+                                source_nodes_cfg_entry,
+                                source_node_grammar_element,
+                            )
+                        )
+                    else:
+                        source_node_tags = None
+
                     traceability_info = (
                         SourceFileTraceabilityCachingReader.read_from_file(
                             source_file.full_path,
                             project_config,
-                            source_node_grammar_element,
+                            source_node_tags,
                         )
                     )
 
@@ -880,23 +899,15 @@ class TraceabilityIndexBuilder:
             ) from attribute_error_
 
     @staticmethod
-    def source_node_grammar_element(
-        path_to_file: str,
-        project_config: ProjectConfig,
-        traceability_index: TraceabilityIndex,
-    ) -> Optional[GrammarElement]:
-        source_nodes_cfg_entry = project_config.get_relevant_source_nodes_entry(
-            path_to_file
-        )
-        if source_nodes_cfg_entry is None:
-            return None
-        sdoc_document = assert_cast(
-            traceability_index.get_node_by_uid_weak2(
-                source_nodes_cfg_entry.uid
-            ),
-            SDocDocument,
-        )
-        assert sdoc_document.grammar is not None
-        return sdoc_document.grammar.elements_by_type.get(
-            source_nodes_cfg_entry.node_type
-        )
+    def source_node_parser_tags(
+        cfg_entry: SourceNodesEntry, grammar_element: GrammarElement
+    ) -> set[str]:
+        tags = set(grammar_element.get_field_titles())
+        # For remapped fields, don't parse the names from grammar but those from the mapping.
+        for (
+            sdoc_field_name,
+            source_field_name,
+        ) in cfg_entry.sdoc_to_source_map.items():
+            tags.remove(sdoc_field_name)
+            tags.add(source_field_name)
+        return tags

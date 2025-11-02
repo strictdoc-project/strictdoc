@@ -4,7 +4,6 @@
 
 from typing import Optional, Union
 
-from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
@@ -29,7 +28,7 @@ class SourceFileTraceabilityCachingReader:
     def read_from_file(
         path_to_file: str,
         project_config: ProjectConfig,
-        source_node_grammar_element: Optional[GrammarElement],
+        source_node_tags: Optional[set[str]] = None,
     ) -> Optional[SourceFileTraceabilityInfo]:
         unpickled_content = PickleCache.read_from_cache(
             path_to_file, project_config, "source_file"
@@ -42,7 +41,9 @@ class SourceFileTraceabilityCachingReader:
             return unpickled_content
 
         reader = SourceFileTraceabilityCachingReader._get_reader(
-            path_to_file, project_config, source_node_grammar_element
+            path_to_file,
+            project_config,
+            source_node_tags,
         )
         try:
             traceability_info = reader.read_from_file(path_to_file)
@@ -64,7 +65,7 @@ class SourceFileTraceabilityCachingReader:
     def _get_reader(
         path_to_file: str,
         project_config: ProjectConfig,
-        source_node_grammar_element: Optional[GrammarElement],
+        source_node_tags: Optional[set[str]] = None,
     ) -> Union[
         SourceFileTraceabilityReader,
         SourceFileTraceabilityReader_Python,
@@ -82,12 +83,9 @@ class SourceFileTraceabilityCachingReader:
                 or path_to_file.endswith(".hpp")
                 or path_to_file.endswith(".cpp")
             ):
-                custom_tags = (
-                    source_node_grammar_element.get_field_titles()
-                    if source_node_grammar_element is not None
-                    else None
+                return SourceFileTraceabilityReader_C(
+                    custom_tags=source_node_tags
                 )
-                return SourceFileTraceabilityReader_C(custom_tags=custom_tags)
             if path_to_file.endswith(".robot"):
                 return SourceFileTraceabilityReader_Robot()
         return SourceFileTraceabilityReader()

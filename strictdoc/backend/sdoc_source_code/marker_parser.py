@@ -32,7 +32,7 @@ class MarkerParser:
         comment_line_start: int,
         entity_name: Optional[str] = None,
         col_offset: int = 0,
-        custom_tags: Optional[list[str]] = None,
+        custom_tags: Optional[set[str]] = None,
     ) -> SourceNode:
         """
         Parse relation markers from source file comments.

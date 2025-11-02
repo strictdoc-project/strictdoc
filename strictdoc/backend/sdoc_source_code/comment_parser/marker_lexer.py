@@ -67,7 +67,7 @@ ALPHANUMERIC_WORD: /[a-zA-Z0-9_]+/
 class MarkerLexer:
     @staticmethod
     def parse(
-        source_input: str, custom_tags: Optional[list[str]] = None
+        source_input: str, custom_tags: Optional[set[str]] = None
     ) -> ParseTree:
         if custom_tags is not None:
             grammar_extension = NODE_GRAMMAR_EXTENSION.substitute(

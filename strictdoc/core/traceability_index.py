@@ -10,6 +10,7 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
+from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
@@ -352,6 +353,14 @@ class TraceabilityIndex:
             return None
         # FIXME: Should the graph database return OrderedSet or a copied list()?
         return list(incoming_links)
+
+    def get_grammar_element(
+        self, document_uid: str, node_type: str
+    ) -> Optional[GrammarElement]:
+        document = self.get_node_by_uid_weak2(document_uid)
+        if isinstance(document, SDocDocument) and document.grammar is not None:
+            return document.grammar.elements_by_type.get(node_type)
+        return None
 
     def create_traceability_info(
         self,

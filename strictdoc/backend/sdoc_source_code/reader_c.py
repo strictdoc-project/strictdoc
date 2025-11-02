@@ -40,8 +40,8 @@ from strictdoc.helpers.file_system import file_open_read_bytes
 
 
 class SourceFileTraceabilityReader_C:
-    def __init__(self, custom_tags: Optional[list[str]] = None) -> None:
-        self.custom_tags: Optional[list[str]] = custom_tags
+    def __init__(self, custom_tags: Optional[set[str]] = None) -> None:
+        self.custom_tags: Optional[set[str]] = custom_tags
 
     def read(
         self,

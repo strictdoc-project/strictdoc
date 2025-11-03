@@ -20,6 +20,7 @@ from pygments.lexers.special import TextLexer
 from pygments.lexers.templates import HtmlDjangoLexer
 from pygments.util import ClassNotFound
 
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     ForwardFunctionRangeMarker,
     FunctionRangeMarker,
@@ -114,7 +115,15 @@ class SourceFileViewHTMLGenerator:
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            "RST",
+            SDocMarkup.RST,
+            traceability_index,
+            link_renderer,
+            html_templates,
+            project_config,
+            None,
+        )
+        text_renderer = MarkupRenderer.create(
+            SDocMarkup.TEXT,
             traceability_index,
             link_renderer,
             html_templates,
@@ -127,6 +136,7 @@ class SourceFileViewHTMLGenerator:
             project_config=project_config,
             link_renderer=link_renderer,
             markup_renderer=markup_renderer,
+            text_renderer=text_renderer,
             source_file=source_file,
             pygments_styles=pygments_styles,
             pygmented_source_file_lines=pygmented_source_file_lines,

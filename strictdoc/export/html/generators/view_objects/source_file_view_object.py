@@ -8,6 +8,7 @@ from typing import Any, List, Optional, Union
 from markupsafe import Markup
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import NullViewElement
@@ -71,6 +72,7 @@ class SourceFileViewObject:
         project_config: ProjectConfig,
         link_renderer: LinkRenderer,
         markup_renderer: MarkupRenderer,
+        text_renderer: MarkupRenderer,
         source_file: SourceFile,
         pygments_styles: Markup,
         pygmented_source_file_lines: List[SourceLineEntry],
@@ -81,6 +83,7 @@ class SourceFileViewObject:
         self.project_config: ProjectConfig = project_config
         self.link_renderer: LinkRenderer = link_renderer
         self.markup_renderer: MarkupRenderer = markup_renderer
+        self.text_renderer: MarkupRenderer = text_renderer
         self.source_file: SourceFile = source_file
         self.pygments_styles: Markup = pygments_styles
         self.pygmented_source_file_lines: List[SourceLineEntry] = (
@@ -144,20 +147,21 @@ class SourceFileViewObject:
         )
 
     def render_node_statement(self, node: SDocNode) -> Markup:
-        return self.markup_renderer.render_node_statement(
-            DocumentType.DOCUMENT, node
-        )
+        renderer = self.get_node_renderer(node)
+        return renderer.render_node_statement(DocumentType.DOCUMENT, node)
 
     def render_node_rationale(self, node: SDocNode) -> Markup:
-        return self.markup_renderer.render_node_rationale(
-            DocumentType.DOCUMENT, node
-        )
+        renderer = self.get_node_renderer(node)
+        return renderer.render_node_rationale(DocumentType.DOCUMENT, node)
 
     def render_node_field(self, node_field: SDocNodeField) -> Markup:
         assert isinstance(node_field, SDocNodeField), node_field
-        return self.markup_renderer.render_node_field(
-            DocumentType.DOCUMENT, node_field
+        renderer = (
+            self.get_node_renderer(node_field.parent)
+            if node_field.parent is not None
+            else self.markup_renderer
         )
+        return renderer.render_node_field(DocumentType.DOCUMENT, node_field)
 
     def render_url(self, url: str) -> str:
         return self.link_renderer.render_url(url)
@@ -192,6 +196,13 @@ class SourceFileViewObject:
         FIXME: It is not great that this method is called from here.
         """
         return ""
+
+    def get_node_renderer(self, node: SDocNode) -> MarkupRenderer:
+        parent_doc = node.get_parent_or_including_document()
+        parent_doc_config = parent_doc.config
+        if parent_doc_config.markup is SDocMarkup.RST:
+            return self.markup_renderer
+        return self.text_renderer
 
     def get_source_file_path(self) -> str:
         return self.source_file.in_doctree_source_file_rel_path_posix

@@ -4,3 +4,8 @@ CHECK: Published: Hello world doc
 RUN: %cat %T/html/02_options_markup_is_text/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: **This text will not be converted to strong tag**
 CHECK-HTML: &lt;a href=&#34;url&#34;&gt;link&lt;/a&gt;
+
+RUN: %cat %T/html/_source_files/src/file.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: This Requirement Is Rendered in Document View *and* Source Code View
+CHECK-SOURCE-FILE: Writing about &#39;*name&#39; in statement shall not cause an RST parser error.
+CHECK-SOURCE-FILE: Writing about &#39;*name&#39; in rationale shall not cause an RST parser error.

@@ -8,3 +8,9 @@ STATEMENT: >>>
 **This text will not be converted to strong tag**
 <a href="url">link</a>
 <<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: This Requirement Is Rendered in Document View *and* Source Code View
+STATEMENT: Writing about '*name' in statement shall not cause an RST parser error.
+RATIONALE: Writing about '*name' in rationale shall not cause an RST parser error.

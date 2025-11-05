@@ -1,0 +1,29 @@
+#
+# This test verifies that only functions that have at least one annotated field
+# get an auto-generated SDoc node, while plain comments without field annotation
+# don't cause auto-generation. Relation markers don't count as field annotation
+# and shall work as usual.
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/tests/file.c.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: TEST_DOC/tests/file.c/test_case_1
+CHECK-HTML: tests/file.c, <i>lines: 3-20</i>, function test_case_1()
+# relation markers shall still work, but no link to auto-generated shall be there
+CHECK-HTML-NOT: TEST_DOC/tests/file.c/test_case_2
+CHECK-HTML: tests/file.c, <i>lines: 22-29</i>, function test_case_2()
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/description.html | filecheck %s --check-prefix CHECK-HTML-TESTSPEC
+CHECK-HTML-TESTSPEC: test_case_1
+CHECK-HTML-TESTSPEC-NOT: test_case_2
+
+# test_case_2 shall still count as covered, since it has a relation marker
+RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 96.3

@@ -1,0 +1,22 @@
+#
+# This test verifies that source nodes that are merged with a static SDoc node
+# do not cause auto-generation of one or more parent sections. The static node
+# is already in a static parent section. Auto-generated section with conventional
+# name would stay empty and are thus unexpected.
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/src/example/example.c.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: Requirements from Source Nodes
+CHECK-HTML: REQ-EXAMPLE-1
+CHECK-HTML: Title from example.c
+CHECK-HTML: src/example/example.c, <i>lines: 3-14</i>, function example_1()
+CHECK-HTML: Statement from example.c
+CHECK-HTML-NOT: <sdoc-autogen>{{.*}}example.c</sdoc-autogen>

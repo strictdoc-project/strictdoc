@@ -1,0 +1,14 @@
+[project]
+
+features = [
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+  "SOURCE_FILE_LANGUAGE_PARSERS",
+]
+
+source_nodes = [
+  { "tests/" = { uid = "TEST_DOC", node_type = "TEST_SPEC" } }
+]
+
+exclude_source_paths = [
+    "test.itest"
+]

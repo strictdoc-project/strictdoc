@@ -647,6 +647,9 @@ class FileTraceabilityIndex:
                 current_top_node = section_cache[path_component_]
 
             for source_node_ in traceability_info_.source_nodes:
+                if len(source_node_.fields) == 0:
+                    continue
+
                 assert source_node_.entity_name is not None
                 source_sdoc_node_uid = f"{document_uid}/{path_to_source_file_}/{source_node_.entity_name}"
 

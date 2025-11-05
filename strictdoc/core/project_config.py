@@ -8,7 +8,7 @@ import re
 import sys
 import tempfile
 import types
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -47,12 +47,8 @@ class SourceNodesEntry:
     path: str
     uid: str
     node_type: str
-    full_path: Optional[Path]
-
-    @classmethod
-    def from_cfg_data(cls, data: dict[str, str]) -> "SourceNodesEntry":
-        full_path = Path(data["full_path"]) if "full_path" in data else None
-        return cls(data["path"], data["uid"], data["node_type"], full_path)
+    sdoc_to_source_map: Dict[str, str] = field(default_factory=dict)
+    full_path: Optional[Path] = None
 
 
 class ProjectFeature(str, Enum):
@@ -124,7 +120,7 @@ class ProjectConfig:
         include_source_paths: Optional[List[str]] = None,
         exclude_source_paths: Optional[List[str]] = None,
         test_report_root_dict: Optional[Dict[str, str]] = None,
-        source_nodes: Optional[List[Dict[str, str]]] = None,
+        source_nodes: Optional[List[SourceNodesEntry]] = None,
         html2pdf_strict: bool = False,
         html2pdf_template: Optional[str] = None,
         bundle_document_version: Optional[
@@ -209,12 +205,7 @@ class ProjectConfig:
             test_report_root_dict if test_report_root_dict is not None else {}
         )
         self.source_nodes: List[SourceNodesEntry] = (
-            [
-                SourceNodesEntry.from_cfg_data(source_node)
-                for source_node in source_nodes
-            ]
-            if source_nodes is not None
-            else []
+            source_nodes if source_nodes is not None else []
         )
 
         # Settings derived from the command-line parameters.
@@ -585,7 +576,7 @@ class ProjectConfigLoader:
         include_source_paths: List[str] = []
         exclude_source_paths: List[str] = []
         test_report_root_dict: Dict[str, str] = {}
-        source_nodes: List[Dict[str, str]] = []
+        source_nodes: List[SourceNodesEntry] = []
         html2pdf_strict: bool = False
         html2pdf_template: Optional[str] = None
         bundle_document_version = (
@@ -801,14 +792,16 @@ class ProjectConfigLoader:
                 assert isinstance(source_nodes_config, list)
                 for item_ in source_nodes_config:
                     source_node_path = next(iter(item_))
-                    source_node_uid = item_[source_node_path]["uid"]
-                    source_node_node_type = item_[source_node_path]["node_type"]
+                    source_node_item = item_[source_node_path]
                     source_nodes.append(
-                        {
-                            "path": source_node_path,
-                            "uid": source_node_uid,
-                            "node_type": source_node_node_type,
-                        }
+                        SourceNodesEntry(
+                            path=source_node_path,
+                            uid=source_node_item["uid"],
+                            node_type=source_node_item["node_type"],
+                            sdoc_to_source_map=source_node_item["map"]
+                            if "map" in source_node_item
+                            else {},
+                        )
                     )
 
         if "server" in config_dict:

@@ -1,0 +1,24 @@
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/src/example/example.c.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: Requirements from Source Nodes
+CHECK-HTML: <sdoc-autogen>{{.*}}Function Example 1</sdoc-autogen>
+CHECK-HTML: <sdoc-node-field-label>UID:</sdoc-node-field-label>
+CHECK-HTML: <sdoc-autogen>Function1</sdoc-autogen>
+CHECK-HTML: src/example/example.c, <i>lines: 3-14</i>, function example_1()
+CHECK-HTML: <sdoc-node-field-label>MY_FOO:</sdoc-node-field-label>
+CHECK-HTML: FOO text from example.c
+
+RUN: %cat %T/html/_source_files/src/example/example.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: Function1
+
+RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 100.0

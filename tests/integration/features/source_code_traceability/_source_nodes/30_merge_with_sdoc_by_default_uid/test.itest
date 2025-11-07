@@ -1,0 +1,30 @@
+#
+# This test verifies that a source nodes is merged with a static SDoc node if
+# - the source nodes is not marked up with a UID field (i.e., default UID is effective), and
+# - static SDoc node was explicitly given the default UID.
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/src/example.c.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: Requirements from Source Nodes
+CHECK-HTML: SRC-NODES-BASE/src/example.c/example_1
+CHECK-HTML: TITLE from sdoc
+CHECK-HTML: class="requirement__link-parent" href="../30_merge_with_sdoc_by_default_uid/parent.html#REQ-1"
+CHECK-HTML: src/example.c, <i>lines: 3-14</i>, function example_1()
+CHECK-HTML-NOT: FOO text from sdoc
+CHECK-HTML: FOO text from example.c
+CHECK-HTML-NOT: BAR text from sdoc
+CHECK-HTML: BAR text from example.c
+
+RUN: %cat %T/html/_source_files/src/example.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: SRC-NODES-BASE/src/example.c/example_1
+
+RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 100.0

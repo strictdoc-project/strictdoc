@@ -50,6 +50,7 @@ class DocumentConfig:
             requirement_prefix=None,
             root=None,
             enable_mid=None,
+            relation_field=None,
             markup=None,
             auto_levels=None,
             layout=None,
@@ -70,6 +71,7 @@ class DocumentConfig:
         requirement_prefix: Optional[str],
         root: Optional[str],
         enable_mid: Optional[str],
+        relation_field: Optional[str],
         markup: Optional[str],
         auto_levels: Optional[str],
         layout: Optional[str],
@@ -99,6 +101,11 @@ class DocumentConfig:
             True
             if enable_mid == "True"
             else (False if root == "False" else None)
+        )
+        self.relation_field: str = (
+            relation_field
+            if relation_field is not None and len(relation_field) > 0
+            else "UID"
         )
 
         self.markup: Optional[str] = markup

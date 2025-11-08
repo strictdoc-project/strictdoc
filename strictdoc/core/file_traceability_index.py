@@ -456,7 +456,6 @@ class FileTraceabilityIndex:
                         reqs_uids,
                     )
 
-            validated_requirement_uids: Set[str] = set()
             marker_: Union[
                 FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
             ]
@@ -465,29 +464,23 @@ class FileTraceabilityIndex:
                 if isinstance(marker_, ForwardRangeMarker):
                     continue
                 for requirement_uid_ in marker_.reqs:
-                    if requirement_uid_ not in validated_requirement_uids:
-                        node = traceability_index.get_node_by_uid_weak2(
-                            requirement_uid_
+                    node = traceability_index.get_node_by_uid_weak2(
+                        requirement_uid_
+                    )
+                    if node is None:
+                        raise StrictDocException(
+                            f"Source file {source_file.in_doctree_source_file_rel_path_posix} references "
+                            f"a requirement that does not exist: {requirement_uid_}."
                         )
-                        if node is None:
-                            raise StrictDocException(
-                                f"Source file {source_file.in_doctree_source_file_rel_path_posix} references "
-                                f"a requirement that does not exist: {requirement_uid_}."
-                            )
-                        validated_requirement_uids.add(requirement_uid_)
 
                     self.map_reqs_uids_to_paths.setdefault(
                         requirement_uid_, OrderedSet()
                     ).add(source_file.in_doctree_source_file_rel_path_posix)
 
-                    node_id = traceability_index.get_node_by_uid(
-                        requirement_uid_
-                    )
-
                     self.map_paths_to_reqs.setdefault(
                         source_file.in_doctree_source_file_rel_path_posix,
                         OrderedSet(),
-                    ).add(node_id)
+                    ).add(node)
 
                 if isinstance(marker_, FunctionRangeMarker):
                     marker_copy = marker_.create_end_marker()

@@ -80,6 +80,7 @@ DocumentConfig[noskipws]:
   ('ROOT: ' (root = BooleanChoice) '\n')?
   ('OPTIONS:' '\n'
     ('  ENABLE_MID: ' (enable_mid = BooleanChoice) '\n')?
+    ('  RELATION_FIELD: ' (relation_field = SingleLineString) '\n')?
     ('  MARKUP: ' (markup = MarkupChoice) '\n')?
     ('  AUTO_LEVELS: ' (auto_levels = AutoLevelsChoice) '\n')?
     ('  LAYOUT: ' (layout = LayoutChoice) '\n')?

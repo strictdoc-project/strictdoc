@@ -7,6 +7,7 @@ from typing import Any, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.anchor import Anchor
+from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
 )
@@ -305,14 +306,20 @@ class SDocNode(SDocNodeIF):
 
     @property
     def reserved_uid(self) -> Optional[str]:
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        config = assert_cast(document.config, DocumentConfig)
+
         return self._get_cached_field(
-            RequirementFieldName.UID, singleline_only=True
+            config.relation_field, singleline_only=True
         )
 
     @reserved_uid.setter
     def reserved_uid(self, uid: Optional[str]) -> None:
+        document = assert_cast(self.get_document(), SDocDocumentIF)
+        config = assert_cast(document.config, DocumentConfig)
+
         self.set_field_value(
-            field_name="UID",
+            field_name=config.relation_field,
             form_field_index=0,
             value=uid,
         )
@@ -407,8 +414,8 @@ class SDocNode(SDocNodeIF):
         debug_components: List[str] = []
         if self.reserved_mid is not None:
             debug_components.append(f"MID = '{self.reserved_mid}'")
-        if self.reserved_uid is not None:
-            debug_components.append(f"UID = '{self.reserved_uid}'")
+        if (reserved_uid_ := self.reserved_uid) is not None:
+            debug_components.append(f"UID = '{reserved_uid_}'")
         if self.reserved_title is not None:
             debug_components.append(f"TITLE = '{self.reserved_title}'")
 

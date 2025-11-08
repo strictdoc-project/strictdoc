@@ -1,0 +1,12 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Published: Test document
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+
+CHECK-HTML: RELATIONS (Child):
+CHECK-HTML: <a data-turbo="false" class="requirement__link-child" href="#bbbbbbbb_bbbbbbbb_bbbbbbbb_bbbbbbbb">
+CHECK-HTML: Requirement B title
+
+CHECK-HTML: RELATIONS (Parent):
+CHECK-HTML: <a data-turbo="false" class="requirement__link-parent" href="#aaaaaaaa_aaaaaaaa_aaaaaaaa_aaaaaaaa">
+CHECK-HTML: Requirement A title

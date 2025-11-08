@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Hello world doc
+OPTIONS:
+  ENABLE_MID: True
+  RELATION_FIELD: MID
+
+[REQUIREMENT]
+MID: REQ-1
+TITLE: Requirement Title
+STATEMENT: Requirement Statement

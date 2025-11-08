@@ -54,7 +54,7 @@ MID: 12345f3b28ea4bfe9ca8afe6b21826a8
 STATEMENT: >>>
 This release includes several enhancements, the removal of legacy @sdoc markers, several bug fixes, and improvements for edge cases.
 
-The Diff/Changelog feature has been extended to support the new --generate-diff-git option which allows generating the Diff/Changelog screens for a given pair of Git revisions.
+The Diff/Changelog feature has been extended to support the new ``--generate-diff-git`` option which allows generating the Diff/Changelog screens for a given pair of Git revisions.
 
 The legacy ``@sdoc`` marker has been removed from the codebase. From now on, only the ``@relation`` markers are recognized when linking requirements with source code files.
 
@@ -67,7 +67,7 @@ Thanks to @kerfallaCisse for reporting this issue.
 
 The HTML2PDF generator has been fixed to correctly resolve document paths when printing a bundle document that includes other documents. This edge case involved a combination of three features — HTML2PDF, bundle documents, and composable documents — that had not previously been tested to work together. Thanks to @CMon for reporting this issue.
 
-The source code node parser has been updated to recognize only field names that are defined in the corresponding document grammar. This prevents the parser from incorrectly interpreting unrelated ``FIELD: VALUE`` strings found in source code. Thanks to @haxtibal for contributing this improvement.
+The source code node parser has been updated to recognize only those field names that are defined in the corresponding document grammar. This change prevents the parser from incorrectly interpreting unrelated ``FIELD: VALUE`` strings found in source code. In addition, several improvements have been made to the functionality that extracts SDoc nodes from source code comments, inspired by our proof-of-concept work on modeling Linux kernel requirements directly within the Linux source code. Some aspects of this work are not yet documented but will be once the overall concept becomes more mature. Many thanks to @haxtibal for contributing these improvements.
 <<<
 
 [[/SECTION]]

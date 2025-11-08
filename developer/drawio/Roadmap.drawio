@@ -369,8 +369,8 @@
         <mxCell id="jwnssjy23zgWTyzq0ZdY-3" value="UI/UX rework of Source View screen" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="-860" y="1350" width="190" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="jwnssjy23zgWTyzq0ZdY-4" value="Document/requirement validations" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="340" y="900" width="150" height="70" as="geometry" />
+        <mxCell id="jwnssjy23zgWTyzq0ZdY-4" value="Document/node&lt;div&gt;validations&lt;div&gt;(static HTML)&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+          <mxGeometry x="340" y="900" width="110" height="70" as="geometry" />
         </mxCell>
         <mxCell id="jwnssjy23zgWTyzq0ZdY-5" value="&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Links to external URLs and other content&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="600" y="1170" width="150" height="70" as="geometry" />
@@ -457,16 +457,19 @@
           <mxGeometry x="250" y="1440" width="460" height="70" as="geometry" />
         </mxCell>
         <mxCell id="FQoGO6Vod0G9-xvB3XtP-1" value="&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Support parsing Ada source code&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;(StrictDoc parser)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="560" y="1260" width="130" height="70" as="geometry" />
+          <mxGeometry x="690" y="990" width="130" height="70" as="geometry" />
         </mxCell>
         <mxCell id="eRPcp-Zo6v9222eVP6_e-1" value="&lt;div&gt;StrictDoc configuration with a Python file (strictdoc_config.py&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="180" y="1080" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="eRPcp-Zo6v9222eVP6_e-2" value="&lt;div&gt;Reading SDoc nodes from source files — Further work&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="240" y="1260" width="160" height="70" as="geometry" />
+        <mxCell id="eRPcp-Zo6v9222eVP6_e-2" value="&lt;div&gt;Reading SDoc nodes from source files — Further work driven by Linux Kernel Requirements Template proposal&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+          <mxGeometry x="240" y="1260" width="300" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="2Au77a0Va1j8vjX5-GUo-1" value="Diff: Included documents" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+        <mxCell id="2Au77a0Va1j8vjX5-GUo-1" value="Diff: Included documents" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="310" y="990" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="OCJ0sT8p7vvNHOtbERSk-1" value="Linking nodes via MID instead of UID" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="470" y="900" width="90" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

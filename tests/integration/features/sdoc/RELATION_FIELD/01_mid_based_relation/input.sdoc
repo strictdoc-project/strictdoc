@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: Test document
+OPTIONS:
+  ENABLE_MID: True
+  RELATION_FIELD: MID
+
+[REQUIREMENT]
+MID: aaaaaaaa_aaaaaaaa_aaaaaaaa_aaaaaaaa
+TITLE: Requirement A title
+STATEMENT: Requirement A statement
+
+[REQUIREMENT]
+MID: bbbbbbbb_bbbbbbbb_bbbbbbbb_bbbbbbbb
+TITLE: Requirement B title
+STATEMENT: Requirement B statement
+RELATIONS:
+- TYPE: Parent
+  VALUE: aaaaaaaa_aaaaaaaa_aaaaaaaa_aaaaaaaa

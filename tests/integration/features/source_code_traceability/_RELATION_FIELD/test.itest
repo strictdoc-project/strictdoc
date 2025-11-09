@@ -1,0 +1,19 @@
+# @relation(SDOC-SRS-147, SDOC-SRS-137, scope=file)
+
+RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/file.py.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#1#13">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#9">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#11#13">
+
+RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: 1 - 13 | function hello_world()
+CHECK-SOURCE-FILE: 7 - 9 | range
+CHECK-SOURCE-FILE: 11 - 13 | range
+
+RUN: %cat %T/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 85.7

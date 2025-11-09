@@ -96,6 +96,7 @@ class DocumentBuilder:
             requirement_prefix=None,
             root=None,
             enable_mid=None,
+            relation_field=None,
             markup=None,
             auto_levels=None,
             layout=None,

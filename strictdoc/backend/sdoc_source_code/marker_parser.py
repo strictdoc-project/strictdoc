@@ -227,17 +227,11 @@ class MarkerParser:
         assert isinstance(node_value_node, Tree)
         assert node_value_node.data == "node_multiline_value"
 
-        processed_node_values = []
+        node_value = ""
         for node_value_component_ in node_value_node.children:
             assert isinstance(node_value_component_, Token)
-            processed_node_value = node_value_component_.value.strip()
-            if "\\n\\n" in processed_node_value:
-                processed_node_value = processed_node_value.replace(
-                    "\\n\\n", ""
-                )
+            node_value += node_value_component_.value
 
-            processed_node_values.append(processed_node_value)
-
-        node_value = "\n".join(processed_node_values)
+        node_value = node_value.rstrip()
 
         return node_name, node_value

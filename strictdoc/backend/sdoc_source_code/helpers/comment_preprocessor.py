@@ -10,10 +10,11 @@ WS = "[ \t]"
 
 def preprocess_source_code_comment(comment: str) -> str:
     """
-    Remove all Doxygen/Python/etc comment markers for processing.
+    Replace all Doxygen/Python/etc comment markers with spaces for easier processing.
 
-    FIXME: Maybe there is a more efficient way of doing this with no two
-           re.sub() calls.
+    Note that the replacement does not change the size of the input string. This is
+    important for the use case when StrictDoc writes the mutated code comments
+    back to source files.
     """
 
     def replace_with_spaces(match: Match[str]) -> str:
@@ -26,9 +27,4 @@ def preprocess_source_code_comment(comment: str) -> str:
         comment,
         flags=re.MULTILINE,
     )
-    return re.sub(
-        r"^[ \t]+$",
-        "",
-        replacement,
-        flags=re.MULTILINE,
-    )
+    return replacement

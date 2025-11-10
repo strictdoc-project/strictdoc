@@ -1,0 +1,8 @@
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %strictdoc manage auto-uid %S; false
+ | filecheck %s
+
+CHECK: Publishe

@@ -133,7 +133,7 @@ def hello_3():
     assert len(function_3_1_1.child_functions) == 0
 
 
-def test_001_one_range_marker():
+def test_py_001_one_range_marker():
     source_input = b"""\
 # @relation(REQ-001, REQ-002, REQ-003, scope=range_start)
 print("Hello world")

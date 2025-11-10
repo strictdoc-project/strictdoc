@@ -95,12 +95,12 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
             if isinstance(stmt, (Comment, Tags, Documentation)):
                 for token in filter(self._token_filter, stmt.tokens):
                     source_node = MarkerParser.parse(
-                        token.value,
-                        token.lineno,
-                        token.lineno,
-                        token.lineno,
-                        node.name,
-                        token.col_offset,
+                        input_string=token.value,
+                        line_start=token.lineno,
+                        line_end=token.lineno,
+                        comment_line_start=token.lineno,
+                        entity_name=node.name,
+                        col_offset=token.col_offset,
                     )
                     tc_markers.extend(source_node.markers)
 
@@ -136,12 +136,12 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
     ) -> None:
         for token in filter(self._token_filter, node.tokens):
             source_node = MarkerParser.parse(
-                token.value,
-                node.lineno,
-                node.lineno,
-                node.lineno,
-                None,
-                token.col_offset,
+                input_string=token.value,
+                line_start=node.lineno,
+                line_end=node.lineno,
+                comment_line_start=node.lineno,
+                entity_name=None,
+                col_offset=token.col_offset,
             )
             for marker_ in source_node.markers:
                 if (

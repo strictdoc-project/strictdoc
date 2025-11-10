@@ -102,14 +102,17 @@ class SourceFileTraceabilityReader_Python:
 
                         block_comment_text = string_content.text.decode("utf-8")
                         source_node = MarkerParser.parse(
-                            block_comment_text,
-                            node_.start_point[0] + 1,
+                            input_string=block_comment_text,
+                            line_start=node_.start_point[0] + 1,
                             # It is important that +1 is not present here because
                             # currently StrictDoc does not display the last empty line (\n is 10).
-                            node_.end_point[0]
+                            line_end=node_.end_point[0]
                             if input_buffer[-1] == 10
                             else node_.end_point[0] + 1,
-                            string_content.start_point[0] + 1,
+                            comment_line_start=string_content.start_point[0]
+                            + 1,
+                            start_byte=string_content.start_byte,
+                            end_byte=string_content.end_byte,
                         )
                         for marker_ in source_node.markers:
                             if isinstance(marker_, FunctionRangeMarker) and (
@@ -164,11 +167,14 @@ class SourceFileTraceabilityReader_Python:
                                 "utf-8"
                             )
                             source_node = MarkerParser.parse(
-                                block_comment_text,
-                                node_.start_point[0] + 1,
-                                node_.end_point[0] + 1,
-                                string_content.start_point[0] + 1,
-                                function_name,
+                                input_string=block_comment_text,
+                                line_start=node_.start_point[0] + 1,
+                                line_end=node_.end_point[0] + 1,
+                                comment_line_start=string_content.start_point[0]
+                                + 1,
+                                start_byte=string_content.start_byte,
+                                end_byte=string_content.end_byte,
+                                entity_name=function_name,
                             )
                             for marker_ in source_node.markers:
                                 if isinstance(marker_, FunctionRangeMarker):
@@ -241,11 +247,13 @@ class SourceFileTraceabilityReader_Python:
                 last_comment = node_.parent.children[last_idx - 1]
 
                 source_node = MarkerParser.parse(
-                    merged_comments,
-                    node_.start_point[0] + 1,
-                    last_comment.end_point[0] + 1,
-                    node_.start_point[0] + 1,
-                    None,
+                    input_string=merged_comments,
+                    line_start=node_.start_point[0] + 1,
+                    line_end=last_comment.end_point[0] + 1,
+                    comment_line_start=node_.start_point[0] + 1,
+                    start_byte=node_.start_byte,
+                    end_byte=last_comment.end_byte,
+                    entity_name=None,
                 )
                 for marker_ in source_node.markers:
                     if isinstance(marker_, RangeMarker) and (

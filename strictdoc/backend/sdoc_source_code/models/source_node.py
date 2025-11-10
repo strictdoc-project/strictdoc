@@ -16,13 +16,17 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 from strictdoc.core.project_config import SourceNodesEntry
 
 
-@dataclass
+@dataclass(eq=False)
 class SourceNode:
     entity_name: Optional[str]
+    start_byte: int
+    end_byte: int
+    file_bytes: bytes
     markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]] = field(
         default_factory=list
     )
     fields: dict[str, str] = field(default_factory=dict)
+    fields_locations: dict[str, tuple[int, int]] = field(default_factory=dict)
     function: Optional[Function] = None
 
     def get_sdoc_field(

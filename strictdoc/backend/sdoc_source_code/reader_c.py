@@ -50,13 +50,6 @@ class SourceFileTraceabilityReader_C:
     ) -> SourceFileTraceabilityInfo:
         assert isinstance(input_buffer, bytes)
 
-        file_size = len(input_buffer)
-
-        traceability_info = SourceFileTraceabilityInfo([])
-
-        if file_size == 0:
-            return traceability_info
-
         file_stats = SourceFileStats.create(input_buffer)
         parse_context = ParseContext(file_path, file_stats)
 
@@ -68,6 +61,9 @@ class SourceFileTraceabilityReader_C:
         parser = Parser(py_language)  # type: ignore[call-arg, unused-ignore]
 
         tree = parser.parse(input_buffer)
+
+        traceability_info = SourceFileTraceabilityInfo([])
+        traceability_info.file_bytes = input_buffer
 
         nodes = traverse_tree(tree)
 
@@ -85,14 +81,16 @@ class SourceFileTraceabilityReader_C:
                     if comment_node.text is not None:
                         comment_text = comment_node.text.decode("utf-8")
                         source_node = MarkerParser.parse(
-                            comment_text,
-                            node_.start_point[0] + 1,
+                            input_string=comment_text,
+                            line_start=node_.start_point[0] + 1,
                             # It is important that +1 is not present here because
                             # currently StrictDoc does not display the last empty line (\n is 10).
-                            node_.end_point[0]
+                            line_end=node_.end_point[0]
                             if input_buffer[-1] == 10
                             else node_.end_point[0] + 1,
-                            node_.start_point[0] + 1,
+                            comment_line_start=node_.start_point[0] + 1,
+                            start_byte=comment_node.start_byte,
+                            end_byte=comment_node.end_byte,
                             custom_tags=self.custom_tags,
                         )
                         for marker_ in source_node.markers:
@@ -187,10 +185,13 @@ class SourceFileTraceabilityReader_C:
                     function_last_line = node_.end_point[0] + 1
 
                     source_node = MarkerParser.parse(
-                        function_comment_text,
-                        function_comment_node.start_point[0] + 1,
-                        function_last_line,
-                        function_comment_node.start_point[0] + 1,
+                        input_string=function_comment_text,
+                        line_start=function_comment_node.start_point[0] + 1,
+                        line_end=function_last_line,
+                        comment_line_start=function_comment_node.start_point[0]
+                        + 1,
+                        start_byte=function_comment_node.start_byte,
+                        end_byte=function_comment_node.end_byte,
                         entity_name=function_display_name,
                         custom_tags=self.custom_tags,
                     )
@@ -295,13 +296,17 @@ class SourceFileTraceabilityReader_C:
                     function_last_line = node_.end_point[0] + 1
 
                     source_node = MarkerParser.parse(
-                        function_comment_text,
-                        function_comment_node.start_point[0] + 1,
-                        function_last_line,
-                        function_comment_node.start_point[0] + 1,
+                        input_string=function_comment_text,
+                        line_start=function_comment_node.start_point[0] + 1,
+                        line_end=function_last_line,
+                        comment_line_start=function_comment_node.start_point[0]
+                        + 1,
+                        start_byte=function_comment_node.start_byte,
+                        end_byte=function_comment_node.end_byte,
                         entity_name=function_display_name,
                         custom_tags=self.custom_tags,
                     )
+
                     traceability_info.source_nodes.append(source_node)
                     for marker_ in source_node.markers:
                         if isinstance(marker_, FunctionRangeMarker):
@@ -352,13 +357,14 @@ class SourceFileTraceabilityReader_C:
                 node_text_string = node_.text.decode("utf8")
 
                 source_node = MarkerParser.parse(
-                    node_text_string,
-                    node_.start_point[0] + 1,
-                    node_.end_point[0] + 1,
-                    node_.start_point[0] + 1,
+                    input_string=node_text_string,
+                    line_start=node_.start_point[0] + 1,
+                    line_end=node_.end_point[0] + 1,
+                    comment_line_start=node_.start_point[0] + 1,
+                    start_byte=node_.start_byte,
+                    end_byte=node_.end_byte,
                     custom_tags=None,
                 )
-
                 for marker_ in source_node.markers:
                     if isinstance(marker_, RangeMarker) and (
                         range_marker_ := marker_

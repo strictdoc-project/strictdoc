@@ -26,7 +26,14 @@ def test_01_basic_nominal():
     ]
 
     for input_string_ in input_strings:
-        source_node = MarkerParser.parse(input_string_, 1, 1, 1)
+        source_node = MarkerParser.parse(
+            input_string=input_string_,
+            line_start=1,
+            line_end=1,
+            comment_line_start=1,
+            start_byte=0,
+            end_byte=0,
+        )
         function_range = source_node.markers[0]
         assert isinstance(function_range, FunctionRangeMarker)
         assert function_range.ng_source_line_begin == 1
@@ -43,7 +50,14 @@ def test_10_parses_with_leading_newlines():
 @relation(REQ-1, scope=function)
 """
 
-    source_node = MarkerParser.parse(input_string, 1, 5, 1)
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=5,
+        comment_line_start=1,
+        start_byte=0,
+        end_byte=0,
+    )
     function_range = source_node.markers[0]
 
     assert isinstance(function_range, FunctionRangeMarker)
@@ -61,7 +75,14 @@ def test_11_parses_with_leading_whitespace():
     @relation(REQ-1, scope=function)
 """
 
-    source_node = MarkerParser.parse(input_string, 1, 3, 1)
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=3,
+        comment_line_start=1,
+        start_byte=0,
+        end_byte=0,
+    )
     function_range = source_node.markers[0]
 
     assert isinstance(function_range, FunctionRangeMarker)
@@ -81,7 +102,14 @@ def test_20_parses_within_doxygen_comment():
  */
 """
 
-    source_node = MarkerParser.parse(input_string, 1, 5, 1)
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=5,
+        comment_line_start=1,
+        start_byte=0,
+        end_byte=0,
+    )
     function_range = source_node.markers[0]
 
     assert isinstance(function_range, FunctionRangeMarker)
@@ -102,7 +130,14 @@ def test_21_parses_within_doxygen_comment_two_markers():
  */
 """
 
-    source_node = MarkerParser.parse(input_string, 1, 6, 1)
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=6,
+        comment_line_start=1,
+        start_byte=0,
+        end_byte=0,
+    )
     function_range = source_node.markers[0]
 
     assert isinstance(function_range, FunctionRangeMarker)
@@ -122,7 +157,14 @@ def test_22_parses_within_doxygen_comment_curly_braces():
  */
 """
 
-    source_node = MarkerParser.parse(input_string, 1, 5, 1)
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=5,
+        comment_line_start=1,
+        start_byte=0,
+        end_byte=0,
+    )
     function_range = source_node.markers[0]
 
     assert isinstance(function_range, FunctionRangeMarker)
@@ -153,7 +195,14 @@ def test_23_parses_within_doxygen_comment():
  */
 """
 
-    source_node = MarkerParser.parse(input_string, 1, 16, 1)
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=16,
+        comment_line_start=1,
+        start_byte=0,
+        end_byte=0,
+    )
 
     function_range = source_node.markers[0]
     assert isinstance(function_range, FunctionRangeMarker)
@@ -201,7 +250,14 @@ def test_24_parses_multiline_marker():
  */
 """
 
-    source_node = MarkerParser.parse(input_string, 1, 11, 1)
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=11,
+        comment_line_start=1,
+        start_byte=0,
+        end_byte=0,
+    )
 
     function_range = source_node.markers[0]
     assert isinstance(function_range, LineMarker)

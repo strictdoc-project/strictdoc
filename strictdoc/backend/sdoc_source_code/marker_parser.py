@@ -26,10 +26,13 @@ from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode
 class MarkerParser:
     @staticmethod
     def parse(
+        *,
         input_string: str,
         line_start: int,
         line_end: int,
         comment_line_start: int,
+        start_byte: int,
+        end_byte: int,
         entity_name: Optional[str] = None,
         col_offset: int = 0,
         custom_tags: Optional[set[str]] = None,
@@ -49,8 +52,13 @@ class MarkerParser:
         """
 
         node_fields: Dict[str, str] = {}
-        source_node: SourceNode = SourceNode(entity_name)
 
+        source_node: SourceNode = SourceNode(
+            entity_name=entity_name,
+            file_bytes=input_string.encode("utf8"),
+            start_byte=start_byte,
+            end_byte=end_byte,
+        )
         input_string = preprocess_source_code_comment(input_string)
 
         tree: ParseTree = MarkerLexer.parse(
@@ -77,6 +85,11 @@ class MarkerParser:
                     element_,
                 )
                 node_fields[node_name] = node_value
+
+                source_node.fields_locations[node_name] = (
+                    element_.meta.start_pos,
+                    element_.meta.end_pos - 1,
+                )
             else:
                 raise AssertionError
 
@@ -100,7 +113,8 @@ class MarkerParser:
         relation_scope_element: Optional[Tree[Token]] = None
         relation_role_element: Optional[Tree[Token]] = None
         for relation_marker_element_ in element_.children:
-            assert isinstance(relation_marker_element_, Tree)
+            if not isinstance(relation_marker_element_, Tree):
+                continue
             if relation_marker_element_.data == "relation_node_uid":
                 relation_uid_elements.append(relation_marker_element_)
             elif relation_marker_element_.data == "relation_scope":
@@ -212,9 +226,8 @@ class MarkerParser:
         assert isinstance(node_name_node.children[0], Token)
         node_name = node_name_node.children[0].value
 
-        node_value_node = element_.children[1]
-        assert isinstance(node_value_node, Tree)
-        assert node_value_node.data == "node_multiline_value"
+        node_value_node = next(element_.find_data("node_multiline_value"))
+        assert isinstance(node_value_node, Tree), node_value_node
 
         processed_node_values = []
         for node_value_component_ in node_value_node.children:

@@ -69,6 +69,8 @@ class SourceFileTraceabilityInfo:
 
         self.markers: List[RelationMarkerType] = []
 
+        self.file_bytes: bytes = b""
+
     def is_document(self) -> bool:
         return False
 

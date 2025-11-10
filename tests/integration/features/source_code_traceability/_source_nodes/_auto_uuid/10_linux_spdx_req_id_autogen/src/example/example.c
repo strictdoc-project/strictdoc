@@ -12,7 +12,7 @@
  * SPDX-Text: This
  *            is
  *            a statement
- *            \n\n
+ *
  *            And this is the same statement's another paragraph.
  */
 void example_1(void) {

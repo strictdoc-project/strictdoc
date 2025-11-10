@@ -69,6 +69,14 @@ class SourceFileTraceabilityInfo:
 
         self.markers: List[RelationMarkerType] = []
 
+        self.file_bytes: bytes = b""
+
+    @staticmethod
+    def create_from_buffer(input_buffer: bytes) -> "SourceFileTraceabilityInfo":
+        info = SourceFileTraceabilityInfo(g_parts=[])
+        info.file_bytes = input_buffer
+        return info
+
     def is_document(self) -> bool:
         return False
 

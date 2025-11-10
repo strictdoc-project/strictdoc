@@ -8,6 +8,7 @@ from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.source_location import ByteRange
 from strictdoc.helpers.auto_described import auto_described
 
 
@@ -21,6 +22,7 @@ class Function:
         display_name: str,
         line_begin: int,
         line_end: int,
+        code_byte_range: ByteRange,
         child_functions: List[Any],
         markers: List[FunctionRangeMarker],
         attributes: Set[FunctionAttribute],
@@ -36,6 +38,7 @@ class Function:
         self.markers: List[FunctionRangeMarker] = markers
         self.line_begin = line_begin
         self.line_end = line_end
+        self.code_byte_range: ByteRange = code_byte_range
         self.attributes: Set[FunctionAttribute] = attributes
 
     def is_declaration(self) -> bool:

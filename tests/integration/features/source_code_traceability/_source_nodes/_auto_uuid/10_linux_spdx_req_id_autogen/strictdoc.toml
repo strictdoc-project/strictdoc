@@ -1,0 +1,14 @@
+[project]
+
+features = [
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+  "SOURCE_FILE_LANGUAGE_PARSERS",
+]
+
+source_nodes = [
+  { "src/" = { uid = "SPDX_DOC", node_type = "REQUIREMENT" } }
+]
+
+exclude_source_paths = [
+    "test.itest"
+]

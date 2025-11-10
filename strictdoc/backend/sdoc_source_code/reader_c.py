@@ -21,6 +21,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.backend.sdoc_source_code.models.source_location import ByteRange
 from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
 from strictdoc.backend.sdoc_source_code.processors.general_language_marker_processors import (
@@ -50,13 +51,6 @@ class SourceFileTraceabilityReader_C:
     ) -> SourceFileTraceabilityInfo:
         assert isinstance(input_buffer, bytes)
 
-        file_size = len(input_buffer)
-
-        traceability_info = SourceFileTraceabilityInfo([])
-
-        if file_size == 0:
-            return traceability_info
-
         file_stats = SourceFileStats.create(input_buffer)
         parse_context = ParseContext(file_path, file_stats)
 
@@ -68,6 +62,10 @@ class SourceFileTraceabilityReader_C:
         parser = Parser(py_language)  # type: ignore[call-arg, unused-ignore]
 
         tree = parser.parse(input_buffer)
+
+        traceability_info = SourceFileTraceabilityInfo.create_from_buffer(
+            input_buffer
+        )
 
         nodes = traverse_tree(tree)
 
@@ -93,6 +91,9 @@ class SourceFileTraceabilityReader_C:
                             if input_buffer[-1] == 10
                             else node_.end_point[0] + 1,
                             comment_line_start=node_.start_point[0] + 1,
+                            byte_range=ByteRange.create_from_ts_node(
+                                comment_node
+                            ),
                             custom_tags=self.custom_tags,
                         )
                         for marker_ in source_node.markers:
@@ -192,6 +193,9 @@ class SourceFileTraceabilityReader_C:
                         line_end=function_last_line,
                         comment_line_start=function_comment_node.start_point[0]
                         + 1,
+                        byte_range=ByteRange.create_from_ts_node(
+                            function_comment_node
+                        ),
                         entity_name=function_display_name,
                         custom_tags=self.custom_tags,
                     )
@@ -216,6 +220,7 @@ class SourceFileTraceabilityReader_C:
                     if function_comment_node is not None
                     else node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
+                    code_byte_range=ByteRange.create_from_ts_node(node_),
                     child_functions=[],
                     markers=function_markers,
                     attributes=function_attributes,
@@ -301,9 +306,13 @@ class SourceFileTraceabilityReader_C:
                         line_end=function_last_line,
                         comment_line_start=function_comment_node.start_point[0]
                         + 1,
+                        byte_range=ByteRange.create_from_ts_node(
+                            function_comment_node
+                        ),
                         entity_name=function_display_name,
                         custom_tags=self.custom_tags,
                     )
+
                     traceability_info.source_nodes.append(source_node)
                     for marker_ in source_node.markers:
                         if isinstance(marker_, FunctionRangeMarker):
@@ -322,6 +331,7 @@ class SourceFileTraceabilityReader_C:
                     if function_comment_node is not None
                     else node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
+                    code_byte_range=ByteRange.create_from_ts_node(node_),
                     child_functions=[],
                     markers=function_markers,
                     attributes={FunctionAttribute.DEFINITION},
@@ -358,6 +368,7 @@ class SourceFileTraceabilityReader_C:
                     line_start=node_.start_point[0] + 1,
                     line_end=node_.end_point[0] + 1,
                     comment_line_start=node_.start_point[0] + 1,
+                    byte_range=ByteRange.create_from_ts_node(node_),
                     custom_tags=None,
                 )
 

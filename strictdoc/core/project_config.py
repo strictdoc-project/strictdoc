@@ -193,6 +193,7 @@ class ProjectConfig:
         if source_root_path is not None:
             assert os.path.isdir(source_root_path), source_root_path
             assert os.path.isabs(source_root_path), source_root_path
+
         self.source_root_path: Optional[str] = source_root_path
 
         self.include_source_paths: List[str] = (
@@ -463,8 +464,9 @@ class ProjectConfig:
         Returns data for the first entry from source_nodes that is a parent path of path_to_file.
         If path_to_file is absolute, source node config entries are assumed to be in the source_root_path.
         """
-        if self.source_root_path is None:
-            return None
+
+        # FIXME: This should be managed inside ProjectConfig.
+        source_root_path = self.source_root_path or os.getcwd()
 
         source_file_path = Path(path_to_file)
         for sdoc_source_config_entry_ in self.source_nodes:
@@ -472,7 +474,7 @@ class ProjectConfig:
             #        class when it is implemented.
             if sdoc_source_config_entry_.full_path is None:
                 sdoc_source_config_entry_.full_path = Path(
-                    self.source_root_path
+                    source_root_path
                 ) / Path(sdoc_source_config_entry_.path)
 
             if source_file_path.is_absolute():

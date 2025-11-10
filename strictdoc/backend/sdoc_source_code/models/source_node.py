@@ -13,16 +13,24 @@ from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     RangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.source_location import ByteRange
 from strictdoc.core.project_config import SourceNodesEntry
 
 
-@dataclass
+@dataclass(eq=False)
 class SourceNode:
+    """
+    NOTE: eq=False is needed to make this dataclass support being a dictionary key.
+    """
+
     entity_name: Optional[str]
+    byte_range: ByteRange
+    file_bytes: bytes
     markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]] = field(
         default_factory=list
     )
     fields: dict[str, str] = field(default_factory=dict)
+    fields_locations: dict[str, tuple[int, int]] = field(default_factory=dict)
     function: Optional[Function] = None
 
     def get_sdoc_field(

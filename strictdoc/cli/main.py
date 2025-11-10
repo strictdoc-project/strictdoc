@@ -6,6 +6,7 @@
 import multiprocessing
 import os
 import sys
+from pathlib import Path
 from typing import Optional
 
 strictdoc_root_path = os.path.abspath(
@@ -117,6 +118,10 @@ def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
         )
         # FIXME: This must be improved.
         project_config.input_paths = [manage_config.input_path]
+        # FIXME: This must be improved.
+        project_config.source_root_path = str(
+            Path(manage_config.input_path).resolve()
+        )
         # FIXME: This must be improved.
         project_config.auto_uid_mode = True
         project_config.autouuid_include_sections = (

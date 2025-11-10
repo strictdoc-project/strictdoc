@@ -20,6 +20,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.requirement_marker import Req
+from strictdoc.backend.sdoc_source_code.models.source_location import ByteRange
 from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode
 
 
@@ -31,6 +32,7 @@ class MarkerParser:
         line_start: int,
         line_end: int,
         comment_line_start: int,
+        byte_range: ByteRange,
         entity_name: Optional[str] = None,
         col_offset: int = 0,
         custom_tags: Optional[set[str]] = None,
@@ -50,8 +52,12 @@ class MarkerParser:
         """
 
         node_fields: Dict[str, str] = {}
-        source_node: SourceNode = SourceNode(entity_name)
 
+        source_node: SourceNode = SourceNode(
+            entity_name=entity_name,
+            file_bytes=input_string.encode("utf8"),
+            byte_range=byte_range,
+        )
         input_string = preprocess_source_code_comment(input_string)
 
         tree: ParseTree = MarkerLexer.parse(
@@ -78,6 +84,11 @@ class MarkerParser:
                     element_,
                 )
                 node_fields[node_name] = node_value
+
+                source_node.fields_locations[node_name] = (
+                    element_.meta.start_pos,
+                    element_.meta.end_pos - 1,
+                )
             else:
                 raise AssertionError
 

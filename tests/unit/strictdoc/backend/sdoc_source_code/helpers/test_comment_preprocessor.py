@@ -6,6 +6,10 @@ from strictdoc.backend.sdoc_source_code.helpers.comment_preprocessor import (
 
 
 def test_001_doxygen_slashes_and_stars():
+    """
+    NOTE: The expected output contains invisible whitespaces.
+    """
+
     source_input = """\
 /**
  * @relation(REQ-1, scope=function)
@@ -17,14 +21,18 @@ def test_001_doxygen_slashes_and_stars():
     assert (
         preprocessed_comment
         == """\
-
+   
    @relation(REQ-1, scope=function)
-
+   
 """
     )
 
 
-def test_001_doxygen_three_slashes():
+def test_002_doxygen_three_slashes():
+    """
+    NOTE: The expected output contains invisible whitespaces.
+    """
+
     source_input = """\
 ///
 /// @relation(REQ-1, scope=function)
@@ -36,14 +44,18 @@ def test_001_doxygen_three_slashes():
     assert (
         preprocessed_comment
         == """\
-
+   
     @relation(REQ-1, scope=function)
-
+   
 """
     )
 
 
 def test_003_doxygen_two_slashes():
+    """
+    NOTE: The expected output contains invisible whitespaces.
+    """
+
     source_input = """\
 //
 // @relation(REQ-1, scope=function)
@@ -56,14 +68,18 @@ def test_003_doxygen_two_slashes():
     assert (
         preprocessed_comment
         == """\
-
+  
    @relation(REQ-1, scope=function)
-
+  
 """
     )
 
 
 def test_004_python():
+    """
+    NOTE: The expected output contains invisible whitespaces.
+    """
+
     source_input = """\
 #
 # @relation(REQ-1, scope=function)
@@ -75,8 +91,8 @@ def test_004_python():
     assert (
         preprocessed_comment
         == """\
-
+ 
   @relation(REQ-1, scope=function)
-
+ 
 """
     )

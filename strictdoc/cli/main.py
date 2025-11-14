@@ -42,7 +42,7 @@ from strictdoc.helpers.timing import measure_performance
 from strictdoc.server.server import run_strictdoc_server
 
 
-def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
+def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
     register_code_coverage_hook()
 
     project_config: ProjectConfig
@@ -141,7 +141,7 @@ def _main(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
         raise NotImplementedError
 
 
-def main() -> None:
+def _main() -> None:
     # Ensure that multiprocessing.freeze_support() is called in a frozen
     # application
     # https://github.com/pyinstaller/pyinstaller/issues/7438
@@ -185,7 +185,7 @@ def main() -> None:
 
     exception_info: Optional[ExceptionInfo] = None
     try:
-        _main(parallelizer, parser)
+        _main_internal(parallelizer, parser)
     except StrictDocChildProcessException as exception_info_:
         exception_info = exception_info_.exception_info
     except Exception as exception_:
@@ -205,8 +205,12 @@ def main() -> None:
             sys.exit(1)
 
 
-if __name__ == "__main__":
+def main() -> None:
     with measure_performance("Total execution time"):
-        main()
+        _main()
+
+
+if __name__ == "__main__":
+    main()
 else:  # pragma: no cover
     pass

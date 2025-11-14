@@ -257,3 +257,48 @@ def test_24_parses_multiline_marker():
     assert function_range.reqs_objs[2].uid == "REQ-3"
     assert function_range.reqs_objs[2].ng_source_line == 7
     assert function_range.reqs_objs[2].ng_source_column == 8
+
+
+def test_80_linux_spdx_example():
+    input_string = """\
+/**
+ * Some text.
+ *
+ * @relation(REQ-1, scope=function)
+ *
+ * SPDX-Req-ID: SRC-1
+ *
+ * SPDX-Req-HKey: TBD
+ *
+ * SPDX-Text: This
+ *            is
+ *            a statement
+ *            \\n\\n
+ *            And this is the same statement's another paragraph.
+ */
+"""
+
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=11,
+        comment_line_start=1,
+        custom_tags={"SPDX-Req-ID", "SPDX-Req-HKey", "SPDX-Text"},
+    )
+
+    assert list(source_node.fields.keys()) == [
+        "SPDX-Req-ID",
+        "SPDX-Req-HKey",
+        "SPDX-Text",
+    ]
+
+    assert (
+        source_node.fields["SPDX-Text"]
+        == """\
+This
+is
+a statement
+
+And this is the same statement's another paragraph.\
+"""
+    )

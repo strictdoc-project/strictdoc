@@ -2,63 +2,107 @@
 @relation(SDOC-SRS-34, SDOC-SRS-141, scope=file)
 """
 
+from typing import List, Optional
+
+from lark import Tree
+
 from strictdoc.backend.sdoc_source_code.comment_parser.marker_lexer import (
     MarkerLexer,
 )
 
 
+def lark_tree_find_child_trees(tree: Tree):
+    return list(filter(lambda child_: isinstance(child_, Tree), tree.children))
+
+
+def assert_relation_marker(
+    node: Tree, node_uids: List[str], scope: str, role: Optional[str] = None
+) -> None:
+    relation_marker_trees = lark_tree_find_child_trees(node)
+    for idx_ in range(len(node_uids)):
+        assert relation_marker_trees[idx_].data == "relation_node_uid"
+        assert relation_marker_trees[idx_].children[0].value == node_uids[idx_]
+
+    assert relation_marker_trees[len(node_uids)].data == "relation_scope"
+    assert relation_marker_trees[len(node_uids)].children[0].value == scope
+
+    if role is not None:
+        assert relation_marker_trees[len(node_uids) + 1].data == "relation_role"
+        assert (
+            relation_marker_trees[len(node_uids) + 1].children[0].value == role
+        )
+
+
+def assert_node_field(
+    node: Tree, field_name: str, expected_field_value: List[str]
+):
+    node_name = next(node.find_data("node_name"))
+    assert node_name.children[0].value == field_name
+
+    node_values = node.find_data("node_multiline_value")
+    node_value = next(node_values)
+
+    values = list(
+        node_value.scan_values(
+            lambda t: t.type in ("NODE_FIRST_STRING_VALUE", "NODE_STRING_VALUE")
+        )
+    )
+    for idx in range(len(expected_field_value)):
+        assert values[idx] == expected_field_value[idx]
+
+
 def test_01_basic_nominal():
     tree = MarkerLexer.parse("")
-    assert len(tree.children) == 0
     assert tree.data == "start"
 
 
 def test_02_single_marker():
     input_strings = [
-        "@relation(REQ-1, REQ-2, scope=function)",
-        "@relation(REQ_1, REQ_2, scope=function)",
-        "@relation(REQ.1, REQ.2, scope=function)",
-        "@relation(REQ/1, REQ/2, scope=function)",
+        ("REQ-1", "REQ-2"),
+        ("REQ_1", "REQ_2"),
+        ("REQ.1", "REQ.2"),
+        ("REQ/1", "REQ/2"),
     ]
-    for input_string_ in input_strings:
-        tree = MarkerLexer.parse(input_string_)
-        assert len(tree.children) == 1
+    for node_1_, node_2_ in input_strings:
+        input_string = f"@relation({node_1_}, {node_2_}, scope=function)"
+        tree = MarkerLexer.parse(input_string)
         assert tree.data == "start"
-        assert tree.children[0].data == "relation_marker"
-        assert tree.children[0].children[0].data == "relation_node_uid"
-        assert tree.children[0].children[0].children[0].value.startswith("REQ")
-        assert tree.children[0].children[1].data == "relation_node_uid"
-        assert tree.children[0].children[1].children[0].value.startswith("REQ")
-        assert tree.children[0].children[2].data == "relation_scope"
-        assert tree.children[0].children[2].children[0].value == "function"
+
+        relation_markers = tree.find_data("relation_marker")
+        relation_marker = next(relation_markers)
+        assert relation_marker.data == "relation_marker"
+
+        assert_relation_marker(relation_marker, [node_1_, node_2_], "function")
 
 
 def test_03_single_marker_with_role():
     tree = MarkerLexer.parse(
         "@relation(REQ-1, scope=function, role=Implementation)"
     )
-    assert len(tree.children) == 1
     assert tree.data == "start"
-    assert tree.children[0].data == "relation_marker"
-    assert tree.children[0].children[0].data == "relation_node_uid"
-    assert tree.children[0].children[0].children[0].value == "REQ-1"
-    assert tree.children[0].children[1].data == "relation_scope"
-    assert tree.children[0].children[1].children[0].value == "function"
-    assert tree.children[0].children[2].data == "relation_role"
-    assert tree.children[0].children[2].children[0].value == "Implementation"
+
+    relation_markers = tree.find_data("relation_marker")
+    relation_marker = next(relation_markers)
+    assert relation_marker.data == "relation_marker"
+
+    assert_relation_marker(
+        relation_marker, ["REQ-1"], "function", "Implementation"
+    )
 
 
 def test_04_skip_markers():
     tree = MarkerLexer.parse("@relation(skip, scope=file)")
-    assert len(tree.children) == 1
     assert tree.data == "start"
 
-    assert len(tree.children) == 1
-    assert tree.children[0].data == "relation_marker"
-    assert tree.children[0].children[0].data == "relation_node_uid"
-    assert tree.children[0].children[0].children[0].value.startswith("skip")
-    assert tree.children[0].children[1].data == "relation_scope"
-    assert tree.children[0].children[1].children[0].value == "file"
+    relation_markers = tree.find_data("relation_marker")
+    relation_marker = next(relation_markers)
+    assert relation_marker.data == "relation_marker"
+
+    assert_relation_marker(
+        relation_marker,
+        ["skip"],
+        "file",
+    )
 
 
 def test_10_single_marker_with_newline():
@@ -67,12 +111,15 @@ def test_10_single_marker_with_newline():
     tree = MarkerLexer.parse(input_string)
     assert tree.data == "start"
 
-    assert len(tree.children) == 1
-    assert tree.children[0].data == "relation_marker"
-    assert tree.children[0].children[0].data == "relation_node_uid"
-    assert tree.children[0].children[0].children[0].value.startswith("REQ")
-    assert tree.children[0].children[1].data == "relation_scope"
-    assert tree.children[0].children[1].children[0].value == "function"
+    relation_markers = tree.find_data("relation_marker")
+    relation_marker = next(relation_markers)
+    assert relation_marker.data == "relation_marker"
+
+    assert_relation_marker(
+        relation_marker,
+        ["REQ-1"],
+        "function",
+    )
 
 
 def test_11_single_marker_with_newline():
@@ -86,12 +133,15 @@ def test_11_single_marker_with_newline():
     tree = MarkerLexer.parse(input_string)
     assert tree.data == "start"
 
-    assert len(tree.children) == 1
-    assert tree.children[0].data == "relation_marker"
-    assert tree.children[0].children[0].data == "relation_node_uid"
-    assert tree.children[0].children[0].children[0].value.startswith("REQ")
-    assert tree.children[0].children[1].data == "relation_scope"
-    assert tree.children[0].children[1].children[0].value == "function"
+    relation_markers = tree.find_data("relation_marker")
+    relation_marker = next(relation_markers)
+    assert relation_marker.data == "relation_marker"
+
+    assert_relation_marker(
+        relation_marker,
+        ["REQ-1"],
+        "function",
+    )
 
 
 def test_12_python_preprocessed_input():
@@ -102,16 +152,15 @@ def test_12_python_preprocessed_input():
     tree = MarkerLexer.parse(input_string)
     assert tree.data == "start"
 
-    assert len(tree.children) == 1
-    assert tree.children[0].data == "relation_marker"
-    assert tree.children[0].children[0].data == "relation_node_uid"
-    assert tree.children[0].children[0].children[0].value.startswith("REQ")
-    assert tree.children[0].children[1].data == "relation_node_uid"
-    assert tree.children[0].children[1].children[0].value.startswith("REQ")
-    assert tree.children[0].children[2].data == "relation_node_uid"
-    assert tree.children[0].children[2].children[0].value.startswith("REQ")
-    assert tree.children[0].children[3].data == "relation_scope"
-    assert tree.children[0].children[3].children[0].value == "range_start"
+    relation_markers = tree.find_data("relation_marker")
+    relation_marker = next(relation_markers)
+    assert relation_marker.data == "relation_marker"
+
+    assert_relation_marker(
+        relation_marker,
+        ["REQ-001", "REQ-002", "REQ-003"],
+        "range_start",
+    )
 
 
 def test_13_python_preprocessed_input():
@@ -124,26 +173,20 @@ def test_13_python_preprocessed_input():
     tree = MarkerLexer.parse(input_string)
     assert tree.data == "start"
 
-    assert len(tree.children) == 2
-    assert tree.children[0].data == "relation_marker"
-    assert tree.children[0].children[0].data == "relation_node_uid"
-    assert tree.children[0].children[0].children[0].value.startswith("REQ")
-    assert tree.children[0].children[1].data == "relation_node_uid"
-    assert tree.children[0].children[1].children[0].value.startswith("REQ")
-    assert tree.children[0].children[2].data == "relation_node_uid"
-    assert tree.children[0].children[2].children[0].value.startswith("REQ")
-    assert tree.children[0].children[3].data == "relation_scope"
-    assert tree.children[0].children[3].children[0].value == "range_start"
+    relation_markers = tree.find_data("relation_marker")
+    relation_marker_0 = next(relation_markers)
+    relation_marker_1 = next(relation_markers)
 
-    assert tree.children[1].data == "relation_marker"
-    assert tree.children[1].children[0].data == "relation_node_uid"
-    assert tree.children[1].children[0].children[0].value.startswith("REQ")
-    assert tree.children[1].children[1].data == "relation_node_uid"
-    assert tree.children[1].children[1].children[0].value.startswith("REQ")
-    assert tree.children[1].children[2].data == "relation_node_uid"
-    assert tree.children[1].children[2].children[0].value.startswith("REQ")
-    assert tree.children[1].children[3].data == "relation_scope"
-    assert tree.children[1].children[3].children[0].value == "range_end"
+    assert_relation_marker(
+        relation_marker_0,
+        ["REQ-001", "REQ-002", "REQ-003"],
+        "range_start",
+    )
+    assert_relation_marker(
+        relation_marker_1,
+        ["REQ-001", "REQ-002", "REQ-003"],
+        "range_end",
+    )
 
 
 def test_20_single_marker_and_normal_line():
@@ -161,12 +204,13 @@ FOOBAR
     tree = MarkerLexer.parse(input_string)
     assert tree.data == "start"
 
-    assert len(tree.children) == 1
-    assert tree.children[0].data == "relation_marker"
-    assert tree.children[0].children[0].data == "relation_node_uid"
-    assert tree.children[0].children[0].children[0].value.startswith("REQ")
-    assert tree.children[0].children[1].data == "relation_scope"
-    assert tree.children[0].children[1].children[0].value == "function"
+    relation_markers = tree.find_data("relation_marker")
+    relation_marker = next(relation_markers)
+    assert_relation_marker(
+        relation_marker,
+        ["REQ-1"],
+        "function",
+    )
 
 
 def test_30_relation_and_field():
@@ -194,53 +238,39 @@ FOOBAR
     tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
     assert tree.data == "start"
 
-    assert len(tree.children) == 5
-    assert tree.children[0].data == "relation_marker"
-    assert tree.children[0].children[0].data == "relation_node_uid"
-    assert tree.children[0].children[0].children[0].value.startswith("REQ")
-    assert tree.children[0].children[1].data == "relation_scope"
-    assert tree.children[0].children[1].children[0].value == "function"
+    relation_markers = tree.find_data("relation_marker")
+    relation_marker = next(relation_markers)
 
-    assert tree.children[1].data == "node_field"
-    assert tree.children[1].children[0].data == "node_name"
-    assert tree.children[1].children[0].children[0].value == "STATEMENT"
-    assert tree.children[1].children[1].data == "node_multiline_value"
-    assert len(tree.children[1].children[1].children) == 2
-    assert tree.children[1].children[1].children[0].value == "When C,"
-    assert (
-        tree.children[1].children[1].children[1].value
-        == "           The system A shall do B"
+    assert_relation_marker(
+        relation_marker,
+        ["REQ-1"],
+        "function",
     )
 
-    assert tree.children[2].data == "node_field"
-    assert tree.children[2].children[0].data == "node_name"
-    assert tree.children[2].children[0].children[0].value == "STATEMENT"
-    assert tree.children[2].children[1].data == "node_multiline_value"
-    assert len(tree.children[2].children[1].children) == 2
-    assert tree.children[2].children[1].children[0].value == "When Z,"
-    assert (
-        tree.children[2].children[1].children[1].value
-        == "           The system X shall do Y"
+    node_fields = list(tree.find_data("node_field"))
+
+    assert_node_field(
+        node_fields[0],
+        "STATEMENT",
+        ["When C,", "           The system A shall do B"],
     )
 
-    assert tree.children[3].data == "node_field"
-    assert tree.children[3].children[0].data == "node_name"
-    assert tree.children[3].children[0].children[0].value == "STATEMENT"
-    assert tree.children[3].children[1].data == "node_multiline_value"
-    assert len(tree.children[3].children[1].children) == 1
-    assert (
-        tree.children[3].children[1].children[0].value
-        == "When 1, The system 2 shall do 3"
+    assert_node_field(
+        node_fields[1],
+        "STATEMENT",
+        ["When Z,", "           The system X shall do Y"],
     )
 
-    assert tree.children[4].data == "node_field"
-    assert tree.children[4].children[0].data == "node_name"
-    assert tree.children[4].children[0].children[0].value == "STATEMENT"
-    assert tree.children[4].children[1].data == "node_multiline_value"
-    assert len(tree.children[4].children[1].children) == 1
-    assert (
-        tree.children[4].children[1].children[0].value
-        == "When 1, The system 2 shall do 3"
+    assert_node_field(
+        node_fields[2],
+        "STATEMENT",
+        ["When 1, The system 2 shall do 3"],
+    )
+
+    assert_node_field(
+        node_fields[3],
+        "STATEMENT",
+        ["When 1, The system 2 shall do 3"],
     )
 
 
@@ -259,14 +289,12 @@ def test_31_single_node_field():
     tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
     assert tree.data == "start"
 
-    assert len(tree.children) == 1
-    assert tree.children[0].data == "node_field"
-    assert tree.children[0].children[0].data == "node_name"
-    assert tree.children[0].children[0].children[0].value == "STATEMENT"
-    assert tree.children[0].children[1].data == "node_multiline_value"
-    assert (
-        tree.children[0].children[1].children[0].value
-        == "This can likely replace _weak below with no problem."
+    node_fields = list(tree.find_data("node_field"))
+
+    assert_node_field(
+        node_fields[0],
+        "STATEMENT",
+        ["This can likely replace _weak below with no problem."],
     )
 
 
@@ -294,12 +322,13 @@ def test_31B_single_node_field():
     tree = MarkerLexer.parse(input_string, custom_tags=["INTENTION"])
     assert tree.data == "start"
 
-    assert len(tree.children) == 1
-    assert tree.children[0].data == "node_field"
-    assert tree.children[0].children[0].data == "node_name"
-    assert tree.children[0].children[0].children[0].value == "INTENTION"
-    assert tree.children[0].children[1].data == "node_multiline_value"
-    assert tree.children[0].children[1].children[0].value == "Intention A."
+    node_fields = list(tree.find_data("node_field"))
+
+    assert_node_field(
+        node_fields[0],
+        "INTENTION",
+        ["Intention A."],
+    )
 
 
 def test_31C_single_node_field():
@@ -329,12 +358,13 @@ void hello_world(void) {
     tree = MarkerLexer.parse(input_string, custom_tags=["INTENTION"])
     assert tree.data == "start"
 
-    assert len(tree.children) == 2
-    assert tree.children[0].data == "node_field"
-    assert tree.children[0].children[0].data == "node_name"
-    assert tree.children[0].children[0].children[0].value == "INTENTION"
-    assert tree.children[0].children[1].data == "node_multiline_value"
-    assert tree.children[0].children[1].children[0].value == "Intention A."
+    node_fields = list(tree.find_data("node_field"))
+
+    assert_node_field(
+        node_fields[0],
+        "INTENTION",
+        ["Intention A."],
+    )
 
 
 def test_32_two_single_line_fields():
@@ -354,14 +384,17 @@ def test_32_two_single_line_fields():
     tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
     assert tree.data == "start"
 
-    assert len(tree.children) == 2
-    assert tree.children[0].data == "node_field"
-    assert tree.children[0].children[0].data == "node_name"
-    assert tree.children[0].children[0].children[0].value == "STATEMENT"
-    assert tree.children[0].children[1].data == "node_multiline_value"
-    assert (
-        tree.children[0].children[1].children[0].value
-        == "This can likely replace _weak below with no problem."
+    node_fields = list(tree.find_data("node_field"))
+
+    assert_node_field(
+        node_fields[0],
+        "STATEMENT",
+        ["This can likely replace _weak below with no problem."],
+    )
+    assert_node_field(
+        node_fields[1],
+        "STATEMENT",
+        ["This can likely replace _weak below with no problem."],
     )
 
 
@@ -381,14 +414,17 @@ def test_32B_two_single_line_fields_consecutive():
 
     assert tree.data == "start"
 
-    assert len(tree.children) == 2
-    assert tree.children[0].data == "node_field"
-    assert tree.children[0].children[0].data == "node_name"
-    assert tree.children[0].children[0].children[0].value == "STATEMENT"
-    assert tree.children[0].children[1].data == "node_multiline_value"
-    assert (
-        tree.children[0].children[1].children[0].value
-        == "This can likely replace _weak below with no problem."
+    node_fields = list(tree.find_data("node_field"))
+
+    assert_node_field(
+        node_fields[0],
+        "STATEMENT",
+        ["This can likely replace _weak below with no problem."],
+    )
+    assert_node_field(
+        node_fields[1],
+        "STATEMENTT",
+        ["This can likely replace _weak below with no problem."],
     )
 
 
@@ -408,18 +444,18 @@ FOOBAR
     tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
     assert tree.data == "start"
 
-    assert len(tree.children) == 1
-    assert tree.children[0].data == "node_field"
-    assert tree.children[0].children[0].data == "node_name"
-    assert tree.children[0].children[0].children[0].value == "STATEMENT"
-    assert tree.children[0].children[1].data == "node_multiline_value"
-    assert tree.children[0].children[1].children[0].value == "This"
-    assert tree.children[0].children[1].children[1].value == "           \\n\\n"
-    assert tree.children[0].children[1].children[2].value == "           is"
-    assert tree.children[0].children[1].children[3].value == "           \\n\\n"
-    assert (
-        tree.children[0].children[1].children[4].value
-        == "           how we do paragraphs."
+    node_fields = list(tree.find_data("node_field"))
+
+    assert_node_field(
+        node_fields[0],
+        "STATEMENT",
+        [
+            "This",
+            "           \\n\\n",
+            "           is",
+            "           \\n\\n",
+            "           how we do paragraphs.",
+        ],
     )
 
 
@@ -433,7 +469,8 @@ def test_60_exclude_reserved_keywords():
     tree = MarkerLexer.parse(input_string)
     assert tree.data == "start"
 
-    assert len(tree.children) == 0
+    node_fields = list(tree.find_data("node_field"))
+    assert len(node_fields) == 0
 
 
 def test_70_exclude_similar_but_not_in_grammar():
@@ -450,22 +487,20 @@ def test_70_exclude_similar_but_not_in_grammar():
 
     tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT", "TEST"])
     assert tree.data == "start"
-    assert len(tree.children) == 2
-    assert tree.children[0].data == "node_field"
-    assert tree.children[0].children[0].data == "node_name"
-    assert tree.children[0].children[0].children[0].value == "STATEMENT"
-    assert (
-        tree.children[0].children[1].children[0].value
-        == "This can likely replace _weak below with no problem."
+
+    node_fields = list(tree.find_data("node_field"))
+    assert len(node_fields) == 2
+
+    assert_node_field(
+        node_fields[0],
+        "STATEMENT",
+        ["This can likely replace _weak below with no problem."],
     )
-    assert tree.children[0].children[1].data == "node_multiline_value"
-    assert tree.children[1].children[0].data == "node_name"
-    assert tree.children[1].children[0].children[0].value == "TEST"
-    assert (
-        tree.children[1].children[1].children[0].value
-        == "This can likely replace _weak below with no problem."
+    assert_node_field(
+        node_fields[1],
+        "TEST",
+        ["This can likely replace _weak below with no problem."],
     )
-    assert tree.children[1].children[1].data == "node_multiline_value"
 
 
 def test_80_linux_spdx_like_identifiers():
@@ -475,19 +510,29 @@ SPDX-ID: REQ-1
 SPDX-Text: This
            is
            a statement
-           \n\n
+           \\n\\n
            And this is the same statement's another paragraph.
 """
 
     tree = MarkerLexer.parse(input_string, custom_tags=["SPDX-ID", "SPDX-Text"])
     assert tree.data == "start"
 
-    assert len(tree.children) == 2
-    assert tree.children[0].data == "node_field"
-    assert tree.children[0].children[0].data == "node_name"
-    assert tree.children[0].children[0].children[0].value == "SPDX-ID"
-    assert tree.children[0].children[1].data == "node_multiline_value"
-    assert tree.children[1].data == "node_field"
-    assert tree.children[1].children[0].data == "node_name"
-    assert tree.children[1].children[0].children[0].value == "SPDX-Text"
-    assert tree.children[1].children[1].data == "node_multiline_value"
+    node_fields = list(tree.find_data("node_field"))
+    assert len(node_fields) == 2
+
+    assert_node_field(
+        node_fields[0],
+        "SPDX-ID",
+        ["REQ-1"],
+    )
+    assert_node_field(
+        node_fields[1],
+        "SPDX-Text",
+        [
+            "This",
+            "           is",
+            "           a statement",
+            "           \\n\\n",
+            "           And this is the same statement's another paragraph.",
+        ],
+    )

@@ -25,7 +25,7 @@ node_name: /##CUSTOM_TAGS/
 node_multiline_value: (_WS_INLINE | _NL) (NODE_FIRST_STRING_VALUE _NL) (NODE_STRING_VALUE _NL)*
 
 NODE_FIRST_STRING_VALUE.2: /\\s*[^\n\r]+/x
-NODE_STRING_VALUE.2: /(?![ ]*##RELATION_MARKER_START)(?!\\s*[A-Z_]+: )[^\n\r]+/x
+NODE_STRING_VALUE.2: /(?![ ]*##RELATION_MARKER_START)(?!\\s*(##CUSTOM_TAGS): )[^\n\r]+/x
 
 _NORMAL_STRING_NO_MARKER_NO_NODE: /(?!\\s*##RELATION_MARKER_START)((?!\\s*(##CUSTOM_TAGS): )|(##RESERVED_KEYWORDS)).+/
 """)

@@ -15,6 +15,7 @@ from strictdoc.helpers.auto_described import auto_described
 class Function:
     def __init__(
         self,
+        *,
         parent: Any,
         name: str,
         display_name: str,

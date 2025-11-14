@@ -26,6 +26,7 @@ from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode
 class MarkerParser:
     @staticmethod
     def parse(
+        *,
         input_string: str,
         line_start: int,
         line_end: int,

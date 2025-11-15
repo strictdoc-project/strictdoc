@@ -1,0 +1,58 @@
+#
+# This test verifies that a source nodes is merged with a static SDoc node with same explicit UID annotated.
+# The following cases shall be handled:
+# - If MID is set at neither side, a random (but hidden) automatic MID is assigned by StrictDoc.
+# - If MID is set only at the sdoc side, the MID remains effective.
+# - If MID is set only at the source side, early random automatic MID is overwritten by source side MID.
+#
+# Cases tested elsewhere:
+# - If MID is set on both sides and is equal, this is considered "merge by mid".
+# - If MID is set on both sides but is different, this is considered a validation error.
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/src/example.c.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: Requirements from Source Nodes
+CHECK-HTML-NOT: SRC-NODES-BASE/src/example.c/example_1
+CHECK-HTML: REQ-SOURCE-1
+CHECK-HTML: TITLE1 from sdoc
+CHECK-HTML: src/example.c, <i>lines: 3-16</i>, function example_1()
+CHECK-HTML-NOT: FOO1 text from sdoc
+CHECK-HTML: FOO1 text from example.c
+CHECK-HTML-NOT: BAR1 text from sdoc
+CHECK-HTML: BAR1 text from example.c
+
+CHECK-HTML-NOT: SRC-NODES-BASE/src/example.c/example_2
+CHECK-HTML: REQ-SOURCE-2
+CHECK-HTML: TITLE2 from sdoc
+CHECK-HTML: src/example.c, <i>lines: 18-31</i>, function example_2()
+CHECK-HTML-NOT: FOO2 text from sdoc
+CHECK-HTML: FOO2 text from example.c
+CHECK-HTML-NOT: BAR2 text from sdoc
+CHECK-HTML: BAR2 text from example.c
+
+CHECK-HTML-NOT: SRC-NODES-BASE/src/example.c/example_3
+CHECK-HTML: REQ-SOURCE-3
+CHECK-HTML: TITLE3 from sdoc
+CHECK-HTML: 1973a567-a109-491d-b7f0-6bb22eafa6ab
+CHECK-HTML: src/example.c, <i>lines: 33-48</i>, function example_3()
+CHECK-HTML-NOT: FOO3 text from sdoc
+CHECK-HTML: FOO3 text from example.c
+CHECK-HTML-NOT: BAR3 text from sdoc
+CHECK-HTML: BAR3 text from example.c
+
+RUN: %cat %T/html/_source_files/src/example.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-HTML-NOT: SRC-NODES-BASE/src/example.c/example_1
+CHECK-SOURCE-FILE: REQ-SOURCE-1
+CHECK-SOURCE-FILE: REQ-SOURCE-2
+CHECK-SOURCE-FILE: REQ-SOURCE-3
+
+RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 100.0

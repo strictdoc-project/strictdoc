@@ -1,0 +1,9 @@
+#
+# This test verifies that if SDoc node and source node have same MID and thus are
+# subject to be merged, an error is thrown if both sides set also UID and the UID are not equal.
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %expect_exit 1 %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: error: Can't merge node by MID 3bd0162d-d6d2-42a1-9324-ab8415190970: Conflicting UID: REQ-SOURCE-1 != REQ-SOURCE-2

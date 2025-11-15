@@ -116,13 +116,13 @@ def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=manage_config.get_path_to_config(),
         )
-        # FIXME: This must be improved.
+
+        # FIXME: Encapsulate all this in project_config.integrate_manage_autouid_config(),
+        #        following the example of integrate_export_config().
         project_config.input_paths = [manage_config.input_path]
-        # FIXME: This must be improved.
         project_config.source_root_path = str(
             Path(manage_config.input_path).resolve()
         )
-        # FIXME: This must be improved.
         project_config.auto_uid_mode = True
         project_config.autouuid_include_sections = (
             manage_config.include_sections

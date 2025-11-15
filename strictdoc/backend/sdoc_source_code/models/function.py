@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-142, scope=file)
 """
 
-from typing import Any, List, Set
+from typing import Any, List, Optional, Set
 
 from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -22,7 +22,7 @@ class Function:
         display_name: str,
         line_begin: int,
         line_end: int,
-        code_byte_range: ByteRange,
+        code_byte_range: Optional[ByteRange],
         child_functions: List[Any],
         markers: List[FunctionRangeMarker],
         attributes: Set[FunctionAttribute],
@@ -38,7 +38,11 @@ class Function:
         self.markers: List[FunctionRangeMarker] = markers
         self.line_begin = line_begin
         self.line_end = line_end
-        self.code_byte_range: ByteRange = code_byte_range
+
+        # Not all source code functions have ranges.
+        # Example: Robot framework files.
+        self.code_byte_range: Optional[ByteRange] = code_byte_range
+
         self.attributes: Set[FunctionAttribute] = attributes
 
     def is_declaration(self) -> bool:

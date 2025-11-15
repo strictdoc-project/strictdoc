@@ -21,11 +21,14 @@ from strictdoc.core.project_config import SourceNodesEntry
 class SourceNode:
     """
     NOTE: eq=False is needed to make this dataclass support being a dictionary key.
+
+    eq=False means that dictionaries will index by object identity. Copied
+    SourceNode objects will appear as two different SourceNodes. An alternative
+    could be to implement __eq__ and __hash__ so that they target byte_range.
     """
 
     entity_name: Optional[str]
-    byte_range: ByteRange
-    file_bytes: bytes
+    comment_byte_range: Optional[ByteRange]
     markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]] = field(
         default_factory=list
     )

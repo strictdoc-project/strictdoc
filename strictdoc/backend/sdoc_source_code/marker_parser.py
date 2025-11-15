@@ -32,7 +32,7 @@ class MarkerParser:
         line_start: int,
         line_end: int,
         comment_line_start: int,
-        byte_range: ByteRange,
+        comment_byte_range: Optional[ByteRange],
         entity_name: Optional[str] = None,
         col_offset: int = 0,
         custom_tags: Optional[set[str]] = None,
@@ -55,8 +55,7 @@ class MarkerParser:
 
         source_node: SourceNode = SourceNode(
             entity_name=entity_name,
-            file_bytes=input_string.encode("utf8"),
-            byte_range=byte_range,
+            comment_byte_range=comment_byte_range,
         )
         input_string = preprocess_source_code_comment(input_string)
 

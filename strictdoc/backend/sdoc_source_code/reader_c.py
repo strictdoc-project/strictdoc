@@ -89,7 +89,7 @@ class SourceFileTraceabilityReader_C:
                             if input_buffer[-1] == 10
                             else node_.end_point[0] + 1,
                             comment_line_start=node_.start_point[0] + 1,
-                            byte_range=ByteRange.create_from_ts_node(
+                            comment_byte_range=ByteRange.create_from_ts_node(
                                 comment_node
                             ),
                             custom_tags=self.custom_tags,
@@ -191,7 +191,7 @@ class SourceFileTraceabilityReader_C:
                         line_end=function_last_line,
                         comment_line_start=function_comment_node.start_point[0]
                         + 1,
-                        byte_range=ByteRange.create_from_ts_node(
+                        comment_byte_range=ByteRange.create_from_ts_node(
                             function_comment_node
                         ),
                         entity_name=function_display_name,
@@ -304,7 +304,7 @@ class SourceFileTraceabilityReader_C:
                         line_end=function_last_line,
                         comment_line_start=function_comment_node.start_point[0]
                         + 1,
-                        byte_range=ByteRange.create_from_ts_node(
+                        comment_byte_range=ByteRange.create_from_ts_node(
                             function_comment_node
                         ),
                         entity_name=function_display_name,
@@ -366,7 +366,7 @@ class SourceFileTraceabilityReader_C:
                     line_start=node_.start_point[0] + 1,
                     line_end=node_.end_point[0] + 1,
                     comment_line_start=node_.start_point[0] + 1,
-                    byte_range=ByteRange.create_from_ts_node(node_),
+                    comment_byte_range=ByteRange.create_from_ts_node(node_),
                     custom_tags=None,
                 )
 

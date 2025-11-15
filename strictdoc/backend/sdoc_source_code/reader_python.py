@@ -113,7 +113,7 @@ class SourceFileTraceabilityReader_Python:
                             else node_.end_point[0] + 1,
                             comment_line_start=string_content.start_point[0]
                             + 1,
-                            byte_range=ByteRange.create_from_ts_node(
+                            comment_byte_range=ByteRange.create_from_ts_node(
                                 string_content
                             ),
                         )
@@ -175,7 +175,7 @@ class SourceFileTraceabilityReader_Python:
                                 line_end=node_.end_point[0] + 1,
                                 comment_line_start=string_content.start_point[0]
                                 + 1,
-                                byte_range=ByteRange.create_from_ts_node(
+                                comment_byte_range=ByteRange.create_from_ts_node(
                                     string_content
                                 ),
                                 entity_name=function_name,
@@ -256,7 +256,7 @@ class SourceFileTraceabilityReader_Python:
                     line_start=node_.start_point[0] + 1,
                     line_end=last_comment.end_point[0] + 1,
                     comment_line_start=node_.start_point[0] + 1,
-                    byte_range=ByteRange(
+                    comment_byte_range=ByteRange(
                         node_.start_byte, last_comment.end_byte
                     ),
                     entity_name=None,

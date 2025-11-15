@@ -1,0 +1,50 @@
+[DOCUMENT]
+MID: c2d4542d5f1741c88dfcb4f68ad7dcbd
+TITLE: Requirements from Source Nodes
+UID: SRC-NODES-BASE
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  PROPERTIES:
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: FOO
+    TYPE: String
+    REQUIRED: False
+  - TITLE: BAR
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
+[[SECTION]]
+TITLE: Merge example.c into static nodes
+
+[REQUIREMENT]
+UID: SRC-NODES-BASE/src/example.c/example_1
+TITLE: TITLE from sdoc
+FOO: FOO text from sdoc
+BAR: BAR text from sdoc
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1
+
+[[/SECTION]]

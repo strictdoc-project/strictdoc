@@ -47,6 +47,7 @@ from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.google_test import convert_function_name_to_gtest_macro
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.ordered_set import OrderedSet
 
 if TYPE_CHECKING:
@@ -601,15 +602,36 @@ class FileTraceabilityIndex:
                     continue
 
                 assert source_node_.entity_name is not None
+                sdoc_node = None
                 sdoc_node_uid = source_node_.get_sdoc_field(
                     "UID", relevant_source_node_entry
                 )
-                if sdoc_node_uid is None:
-                    sdoc_node_uid = f"{document_uid}/{path_to_source_file_}/{source_node_.entity_name}"
-                sdoc_node = traceability_index.get_node_by_uid_weak(
-                    sdoc_node_uid
+                mid = source_node_.get_sdoc_field(
+                    "MID", relevant_source_node_entry
                 )
 
+                # First merge criterion: Merge if SDoc node with same MID exists.
+                if mid is not None:
+                    sdoc_node_mid = MID(mid)
+                    merge_candidate_sdoc_node = (
+                        traceability_index.get_node_by_mid_weak(sdoc_node_mid)
+                    )
+                    if isinstance(merge_candidate_sdoc_node, SDocNode):
+                        sdoc_node = merge_candidate_sdoc_node
+                        sdoc_node_uid = sdoc_node.reserved_uid
+
+                if sdoc_node is None:
+                    # If no UID from source code field or merge-by-MID, create UID by conventional scheme.
+                    if sdoc_node_uid is None:
+                        sdoc_node_uid = f"{document_uid}/{path_to_source_file_}/{source_node_.entity_name}"
+                    # Second merge criterion: Merge if SDoc node with same UID exists.
+                    tmp_sdoc_node = traceability_index.get_node_by_uid_weak(
+                        sdoc_node_uid
+                    )
+                    if isinstance(tmp_sdoc_node, SDocNode):
+                        sdoc_node = tmp_sdoc_node
+
+                assert sdoc_node_uid is not None
                 if sdoc_node is not None:
                     sdoc_node = assert_cast(sdoc_node, SDocNode)
                     self.merge_sdoc_node_with_source_node(
@@ -626,11 +648,6 @@ class FileTraceabilityIndex:
                         document,
                     )
                     sdoc_node_uid = assert_cast(sdoc_node.reserved_uid, str)
-                    traceability_index.graph_database.create_link(
-                        link_type=GraphLinkType.UID_TO_NODE,
-                        lhs_node=sdoc_node_uid,
-                        rhs_node=sdoc_node,
-                    )
                     if current_top_node is None:
                         current_top_node = (
                             FileTraceabilityIndex.create_source_node_section(
@@ -998,6 +1015,25 @@ class FileTraceabilityIndex:
             )
         # Merge strategy: overwrite any field if there's a field with same name from custom tags.
         sdoc_node_fields = source_node.get_sdoc_fields(source_node_config_entry)
+
+        # Sanity check: Nor UID neither MID must conflict (early auto-MID is allowed to be overwritten)
+        if (
+            "MID" in sdoc_node.ordered_fields_lookup
+            and "MID" in sdoc_node_fields
+        ):
+            sdoc_mid_field = sdoc_node.get_field_by_name("MID").get_text_value()
+            if sdoc_mid_field != sdoc_node_fields["MID"]:
+                raise StrictDocException(
+                    f"Can't merge node by UID {sdoc_node.reserved_uid}: "
+                    f"Conflicting MID: {sdoc_mid_field} != {sdoc_node_fields['MID']}"
+                )
+        if sdoc_node.reserved_uid is not None and "UID" in sdoc_node_fields:
+            if sdoc_node.reserved_uid != sdoc_node_fields["UID"]:
+                raise StrictDocException(
+                    f"Can't merge node by MID {sdoc_node.reserved_mid}: "
+                    f"Conflicting UID: {sdoc_node.reserved_uid} != {sdoc_node_fields['UID']}"
+                )
+
         FileTraceabilityIndex.set_sdoc_node_fields(sdoc_node, sdoc_node_fields)
 
     @staticmethod
@@ -1081,6 +1117,45 @@ class FileTraceabilityIndex:
 
         Here we link REQ and sdoc_node bidirectional.
         """
+        if (
+            sdoc_node.reserved_uid is not None
+            and not traceability_index.graph_database.has_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=sdoc_node.reserved_uid,
+                rhs_node=sdoc_node,
+            )
+        ):
+            traceability_index.graph_database.create_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=sdoc_node.reserved_uid,
+                rhs_node=sdoc_node,
+            )
+
+        # A merge procedure may have overwritten the MID,
+        # in which case the graph database and search index needs an update.
+        if "MID" in sdoc_node.ordered_fields_lookup != sdoc_node.reserved_mid:
+            sdoc_mid_field = sdoc_node.get_field_by_name("MID").get_text_value()
+            if sdoc_mid_field != sdoc_node.reserved_mid:
+                # TODO:
+                # If we really want to support changing the auto-assigned MID,
+                # at least the graph database and the document search index need an update (remove old MID, add new MID).
+                # I currently struggle to update the search index.
+                parent_document = sdoc_node.get_parent_or_including_document()
+                sdoc_node.reserved_mid = MID(sdoc_mid_field)
+                if parent_document.config.enable_mid:
+                    sdoc_node.mid_permanent = True
+
+        if not traceability_index.graph_database.has_link(
+            link_type=GraphLinkType.MID_TO_NODE,
+            lhs_node=sdoc_node.reserved_mid,
+            rhs_node=sdoc_node,
+        ):
+            traceability_index.graph_database.create_link(
+                link_type=GraphLinkType.MID_TO_NODE,
+                lhs_node=sdoc_node.reserved_mid,
+                rhs_node=sdoc_node,
+            )
+
         for marker_ in source_node.markers:
             if not isinstance(marker_, FunctionRangeMarker):
                 continue

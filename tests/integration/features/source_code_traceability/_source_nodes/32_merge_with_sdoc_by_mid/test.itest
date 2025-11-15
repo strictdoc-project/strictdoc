@@ -1,0 +1,34 @@
+#
+# This test verifies that a source nodes is merged with a static SDoc node with same explicit MID annotated.
+# The following case shall be handled:
+# - If MID is set and equal at both sides and no UID update is required, merge the node.
+#
+# Cases tested elsewhere:
+# - If MID is set and equal on both sides but UID update would be required, this is considered a validation error.
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/src/example.c.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: Requirements from Source Nodes
+CHECK-HTML-NOT: SRC-NODES-BASE/src/example.c/example_1
+CHECK-HTML: 3bd0162d-d6d2-42a1-9324-ab8415190970
+CHECK-HTML: TITLE from sdoc
+CHECK-HTML: src/example.c, <i>lines: 3-16</i>, function example_1()
+CHECK-HTML-NOT: FOO text from sdoc
+CHECK-HTML: FOO text from example.c
+CHECK-HTML-NOT: BAR text from sdoc
+CHECK-HTML: BAR text from example.c
+
+RUN: %cat %T/html/_source_files/src/example.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-HTML-NOT: SRC-NODES-BASE/src/example.c/example_1
+CHECK-SOURCE-FILE: 3bd0162d-d6d2-42a1-9324-ab8415190970
+
+RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 100.0

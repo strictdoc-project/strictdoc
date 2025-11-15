@@ -22,6 +22,9 @@ ELEMENTS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
@@ -39,12 +42,31 @@ ELEMENTS:
 TITLE: Merge example.c into static nodes
 
 [REQUIREMENT]
-UID: SRC-NODES-BASE/src/example/example.c/example_1
-TITLE: TITLE from sdoc
-FOO: FOO text from sdoc
-BAR: BAR text from sdoc
+UID: REQ-SOURCE-1
+TITLE: TITLE1 from sdoc
+FOO: FOO1 text from sdoc
+BAR: BAR1 text from sdoc
 RELATIONS:
 - TYPE: Parent
   VALUE: REQ-1
+
+[REQUIREMENT]
+UID: REQ-SOURCE-2
+MID: 80cd685d-0e18-44b8-9842-c1863a2eb9ec
+TITLE: TITLE2 from sdoc
+FOO: FOO2 text from sdoc
+BAR: BAR2 text from sdoc
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-2
+
+[REQUIREMENT]
+UID: REQ-SOURCE-3
+TITLE: TITLE3 from sdoc
+FOO: FOO3 text from sdoc
+BAR: BAR3 text from sdoc
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-3
 
 [[/SECTION]]

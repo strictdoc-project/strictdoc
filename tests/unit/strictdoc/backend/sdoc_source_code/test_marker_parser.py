@@ -31,6 +31,7 @@ def test_01_basic_nominal():
             line_start=1,
             line_end=1,
             comment_line_start=1,
+            comment_byte_range=None,
         )
         function_range = source_node.markers[0]
         assert isinstance(function_range, FunctionRangeMarker)
@@ -53,6 +54,7 @@ def test_10_parses_with_leading_newlines():
         line_start=1,
         line_end=5,
         comment_line_start=1,
+        comment_byte_range=None,
     )
     function_range = source_node.markers[0]
 
@@ -76,6 +78,7 @@ def test_11_parses_with_leading_whitespace():
         line_start=1,
         line_end=3,
         comment_line_start=1,
+        comment_byte_range=None,
     )
     function_range = source_node.markers[0]
 
@@ -101,6 +104,7 @@ def test_20_parses_within_doxygen_comment():
         line_start=1,
         line_end=5,
         comment_line_start=1,
+        comment_byte_range=None,
     )
     function_range = source_node.markers[0]
 
@@ -127,6 +131,7 @@ def test_21_parses_within_doxygen_comment_two_markers():
         line_start=1,
         line_end=6,
         comment_line_start=1,
+        comment_byte_range=None,
     )
     function_range = source_node.markers[0]
 
@@ -152,6 +157,7 @@ def test_22_parses_within_doxygen_comment_curly_braces():
         line_start=1,
         line_end=5,
         comment_line_start=1,
+        comment_byte_range=None,
     )
     function_range = source_node.markers[0]
 
@@ -188,6 +194,7 @@ def test_23_parses_within_doxygen_comment():
         line_start=1,
         line_end=16,
         comment_line_start=1,
+        comment_byte_range=None,
     )
 
     function_range = source_node.markers[0]
@@ -241,6 +248,7 @@ def test_24_parses_multiline_marker():
         line_start=1,
         line_end=11,
         comment_line_start=1,
+        comment_byte_range=None,
     )
 
     function_range = source_node.markers[0]
@@ -283,6 +291,7 @@ def test_80_linux_spdx_example():
         line_start=1,
         line_end=11,
         comment_line_start=1,
+        comment_byte_range=None,
         custom_tags={"SPDX-Req-ID", "SPDX-Req-HKey", "SPDX-Text"},
     )
 

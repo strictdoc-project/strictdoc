@@ -1,0 +1,17 @@
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: cp -r %S/* %T/
+RUN: cd %T/
+RUN: %strictdoc manage auto-uid %T | filecheck %s
+
+CHECK: Reading source: src{{.}}example{{.}}example.c
+CHECK: Total execution time
+
+# File with SPDX fields gets a stable hash generated.
+RUN: cat %T/src/example/example.c | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: SPDX-Req-HKey: e83a7c0e382f18238a3ce4e9ca14444db37955b8b2332756d0b2826eb39ed381
+
+# File without SPDX fields is not modified in any way.
+RUN: %diff %S/src/example/example_no_spdx.c %T/src/example/example_no_spdx.c

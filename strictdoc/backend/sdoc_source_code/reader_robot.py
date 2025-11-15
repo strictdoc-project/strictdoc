@@ -98,6 +98,8 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
                         input_string=token.value,
                         line_start=token.lineno,
                         line_end=token.lineno,
+                        # FIXME: Byte range is currently not used for Robot framework.
+                        comment_byte_range=None,
                         comment_line_start=token.lineno,
                         entity_name=node.name,
                         col_offset=token.col_offset,
@@ -125,6 +127,8 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
             display_name=node.name,
             line_begin=node.lineno,
             line_end=node.end_lineno - trailing_empty_lines,
+            # FIXME: Byte range is currently not used for Robot framework.
+            code_byte_range=None,
             child_functions=[],
             markers=function_markers,
             attributes={FunctionAttribute.DEFINITION},
@@ -139,6 +143,8 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
                 input_string=token.value,
                 line_start=node.lineno,
                 line_end=node.lineno,
+                # FIXME: Byte range is currently not used for Robot framework.
+                comment_byte_range=None,
                 comment_line_start=node.lineno,
                 entity_name=None,
                 col_offset=token.col_offset,

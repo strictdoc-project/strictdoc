@@ -21,6 +21,7 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     RelationMarkerType,
     SourceFileTraceabilityInfo,
 )
+from strictdoc.backend.sdoc_source_code.models.source_location import ByteRange
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
 from strictdoc.backend.sdoc_source_code.processors.general_language_marker_processors import (
     function_range_marker_processor,
@@ -72,6 +73,7 @@ class SourceFileTraceabilityReader_Python:
                     display_name="module",
                     line_begin=node_.start_point[0] + 1,
                     line_end=node_.end_point[0] + 1,
+                    code_byte_range=ByteRange.create_from_ts_node(node_),
                     child_functions=[],
                     markers=[],
                     attributes=set(),
@@ -111,6 +113,9 @@ class SourceFileTraceabilityReader_Python:
                             else node_.end_point[0] + 1,
                             comment_line_start=string_content.start_point[0]
                             + 1,
+                            comment_byte_range=ByteRange.create_from_ts_node(
+                                string_content
+                            ),
                         )
                         for marker_ in source_node.markers:
                             if isinstance(marker_, FunctionRangeMarker) and (
@@ -170,6 +175,9 @@ class SourceFileTraceabilityReader_Python:
                                 line_end=node_.end_point[0] + 1,
                                 comment_line_start=string_content.start_point[0]
                                 + 1,
+                                comment_byte_range=ByteRange.create_from_ts_node(
+                                    string_content
+                                ),
                                 entity_name=function_name,
                             )
                             for marker_ in source_node.markers:
@@ -201,6 +209,7 @@ class SourceFileTraceabilityReader_Python:
                     display_name=function_name,
                     line_begin=node_.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
+                    code_byte_range=ByteRange.create_from_ts_node(node_),
                     child_functions=[],
                     # Python functions do not need to track markers.
                     markers=[],
@@ -247,6 +256,9 @@ class SourceFileTraceabilityReader_Python:
                     line_start=node_.start_point[0] + 1,
                     line_end=last_comment.end_point[0] + 1,
                     comment_line_start=node_.start_point[0] + 1,
+                    comment_byte_range=ByteRange(
+                        node_.start_byte, last_comment.end_byte
+                    ),
                     entity_name=None,
                 )
                 for marker_ in source_node.markers:

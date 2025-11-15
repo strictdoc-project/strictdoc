@@ -13,16 +13,27 @@ from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     RangeMarker,
 )
+from strictdoc.backend.sdoc_source_code.models.source_location import ByteRange
 from strictdoc.core.project_config import SourceNodesEntry
 
 
-@dataclass
+@dataclass(eq=False)
 class SourceNode:
+    """
+    NOTE: eq=False is needed to make this dataclass support being a dictionary key.
+
+    eq=False means that dictionaries will index by object identity. Copied
+    SourceNode objects will appear as two different SourceNodes. An alternative
+    could be to implement __eq__ and __hash__ so that they target byte_range.
+    """
+
     entity_name: Optional[str]
+    comment_byte_range: Optional[ByteRange]
     markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]] = field(
         default_factory=list
     )
     fields: dict[str, str] = field(default_factory=dict)
+    fields_locations: dict[str, tuple[int, int]] = field(default_factory=dict)
     function: Optional[Function] = None
 
     def get_sdoc_field(

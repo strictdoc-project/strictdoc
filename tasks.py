@@ -619,7 +619,10 @@ def lint_mypy(context):
         context,
         ToxEnvironment.CHECK,
         """
-            mypy docs/ strictdoc/
+            mypy docs/
+                 strictdoc/
+                 tests/unit/strictdoc/backend/sdoc_source_code/test_marker_lexer.py
+
                 --show-error-codes
                 --disable-error-code=import
                 --disable-error-code=type-abstract

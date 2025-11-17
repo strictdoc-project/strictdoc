@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-34, SDOC-SRS-141, scope=file)
 """
 
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from lark import Tree
 
@@ -11,12 +11,12 @@ from strictdoc.backend.sdoc_source_code.comment_parser.marker_lexer import (
 )
 
 
-def lark_tree_find_child_trees(tree: Tree):
+def lark_tree_find_child_trees(tree: Any) -> List[Any]:
     return list(filter(lambda child_: isinstance(child_, Tree), tree.children))
 
 
 def assert_relation_marker(
-    node: Tree, node_uids: List[str], scope: str, role: Optional[str] = None
+    node: Any, node_uids: List[str], scope: str, role: Optional[str] = None
 ) -> None:
     relation_marker_trees = lark_tree_find_child_trees(node)
     for idx_ in range(len(node_uids)):
@@ -34,8 +34,8 @@ def assert_relation_marker(
 
 
 def assert_node_field(
-    node: Tree, field_name: str, expected_field_value: List[str]
-):
+    node: Any, field_name: str, expected_field_value: List[str]
+) -> None:
     node_name = next(node.find_data("node_name"))
     assert node_name.children[0].value == field_name
 
@@ -51,12 +51,12 @@ def assert_node_field(
         assert values[idx] == expected_field_value[idx]
 
 
-def test_01_basic_nominal():
+def test_01_basic_nominal() -> None:
     tree = MarkerLexer.parse("")
     assert tree.data == "start"
 
 
-def test_02_single_marker():
+def test_02_single_marker() -> None:
     input_strings = [
         ("REQ-1", "REQ-2"),
         ("REQ_1", "REQ_2"),
@@ -75,7 +75,7 @@ def test_02_single_marker():
         assert_relation_marker(relation_marker, [node_1_, node_2_], "function")
 
 
-def test_03_single_marker_with_role():
+def test_03_single_marker_with_role() -> None:
     tree = MarkerLexer.parse(
         "@relation(REQ-1, scope=function, role=Implementation)"
     )
@@ -90,7 +90,7 @@ def test_03_single_marker_with_role():
     )
 
 
-def test_04_skip_markers():
+def test_04_skip_markers() -> None:
     tree = MarkerLexer.parse("@relation(skip, scope=file)")
     assert tree.data == "start"
 
@@ -105,7 +105,7 @@ def test_04_skip_markers():
     )
 
 
-def test_10_single_marker_with_newline():
+def test_10_single_marker_with_newline() -> None:
     input_string = "@relation(REQ-1, scope=function)\n"
 
     tree = MarkerLexer.parse(input_string)
@@ -122,7 +122,7 @@ def test_10_single_marker_with_newline():
     )
 
 
-def test_11_single_marker_with_newline():
+def test_11_single_marker_with_newline() -> None:
     input_string = """\
 @relation(
     REQ-1,
@@ -144,7 +144,7 @@ def test_11_single_marker_with_newline():
     )
 
 
-def test_12_python_preprocessed_input():
+def test_12_python_preprocessed_input() -> None:
     input_string = """\
   @relation(REQ-001, REQ-002, REQ-003, scope=range_start)
 """
@@ -163,7 +163,7 @@ def test_12_python_preprocessed_input():
     )
 
 
-def test_13_python_preprocessed_input():
+def test_13_python_preprocessed_input() -> None:
     input_string = """\
   @relation(REQ-001, REQ-002, REQ-003, scope=range_start)
   print("Hello world")
@@ -189,7 +189,7 @@ def test_13_python_preprocessed_input():
     )
 
 
-def test_20_single_marker_and_normal_line():
+def test_20_single_marker_and_normal_line() -> None:
     input_string = """\
 FOOBAR
 
@@ -213,7 +213,7 @@ FOOBAR
     )
 
 
-def test_30_relation_and_field():
+def test_30_relation_and_field() -> None:
     input_string = """\
 FOOBAR
 
@@ -235,7 +235,7 @@ STATEMENT: When 1, The system 2 shall do 3
 FOOBAR
 """
 
-    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
+    tree = MarkerLexer.parse(input_string, custom_tags={"STATEMENT"})
     assert tree.data == "start"
 
     relation_markers = tree.find_data("relation_marker")
@@ -274,7 +274,7 @@ FOOBAR
     )
 
 
-def test_31_single_node_field():
+def test_31_single_node_field() -> None:
     """
     Ensure that a single field can be parsed.
 
@@ -286,7 +286,7 @@ def test_31_single_node_field():
         STATEMENT: This can likely replace _weak below with no problem.
     """
 
-    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
+    tree = MarkerLexer.parse(input_string, custom_tags={"STATEMENT"})
     assert tree.data == "start"
 
     node_fields = list(tree.find_data("node_field"))
@@ -298,7 +298,7 @@ def test_31_single_node_field():
     )
 
 
-def test_31B_single_node_field():
+def test_31B_single_node_field() -> None:
     """
     Ensure that a single field can be parsed.
 
@@ -319,7 +319,7 @@ def test_31B_single_node_field():
   
     """  # noqa: W293
 
-    tree = MarkerLexer.parse(input_string, custom_tags=["INTENTION"])
+    tree = MarkerLexer.parse(input_string, custom_tags={"INTENTION"})
     assert tree.data == "start"
 
     node_fields = list(tree.find_data("node_field"))
@@ -331,7 +331,7 @@ def test_31B_single_node_field():
     )
 
 
-def test_31C_single_node_field():
+def test_31C_single_node_field() -> None:
     """
     Ensure that a single field can be parsed.
 
@@ -355,7 +355,7 @@ void hello_world(void) {
 }
 """  # noqa: W293
 
-    tree = MarkerLexer.parse(input_string, custom_tags=["INTENTION"])
+    tree = MarkerLexer.parse(input_string, custom_tags={"INTENTION"})
     assert tree.data == "start"
 
     node_fields = list(tree.find_data("node_field"))
@@ -367,7 +367,7 @@ void hello_world(void) {
     )
 
 
-def test_32_two_single_line_fields():
+def test_32_two_single_line_fields() -> None:
     """
     Ensure that a single field can be parsed.
 
@@ -381,7 +381,7 @@ def test_32_two_single_line_fields():
         STATEMENT: This can likely replace _weak below with no problem.
     """
 
-    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
+    tree = MarkerLexer.parse(input_string, custom_tags={"STATEMENT"})
     assert tree.data == "start"
 
     node_fields = list(tree.find_data("node_field"))
@@ -398,7 +398,7 @@ def test_32_two_single_line_fields():
     )
 
 
-def test_32B_two_single_line_fields_consecutive():
+def test_32B_two_single_line_fields_consecutive() -> None:
     """
     Ensure that two consecutive fields can be parsed.
     """
@@ -409,7 +409,7 @@ def test_32B_two_single_line_fields_consecutive():
     """
 
     tree = MarkerLexer.parse(
-        input_string, custom_tags=["STATEMENT", "STATEMENTT"]
+        input_string, custom_tags={"STATEMENT", "STATEMENTT"}
     )
 
     assert tree.data == "start"
@@ -428,7 +428,7 @@ def test_32B_two_single_line_fields_consecutive():
     )
 
 
-def test_33_multiline_and_multiparagraph_fields():
+def test_33_multiline_and_multiparagraph_fields() -> None:
     input_string = """\
 FOOBAR
 
@@ -441,7 +441,7 @@ STATEMENT: This
 FOOBAR
 """
 
-    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT"])
+    tree = MarkerLexer.parse(input_string, custom_tags={"STATEMENT"})
     assert tree.data == "start"
 
     node_fields = list(tree.find_data("node_field"))
@@ -459,7 +459,7 @@ FOOBAR
     )
 
 
-def test_60_exclude_reserved_keywords():
+def test_60_exclude_reserved_keywords() -> None:
     input_string = """
         FIXME: This can likely replace _weak below with no problem.
 
@@ -473,7 +473,7 @@ def test_60_exclude_reserved_keywords():
     assert len(node_fields) == 0
 
 
-def test_70_exclude_similar_but_not_in_grammar():
+def test_70_exclude_similar_but_not_in_grammar() -> None:
     input_string = """
         Note: This is ordinary comment text.
 
@@ -485,7 +485,7 @@ def test_70_exclude_similar_but_not_in_grammar():
         Hint: Again, ordinary comment text.
     """
 
-    tree = MarkerLexer.parse(input_string, custom_tags=["STATEMENT", "TEST"])
+    tree = MarkerLexer.parse(input_string, custom_tags={"STATEMENT", "TEST"})
     assert tree.data == "start"
 
     node_fields = list(tree.find_data("node_field"))
@@ -503,7 +503,7 @@ def test_70_exclude_similar_but_not_in_grammar():
     )
 
 
-def test_80_linux_spdx_like_identifiers():
+def test_80_linux_spdx_like_identifiers() -> None:
     input_string = """\
 SPDX-ID: REQ-1
 
@@ -514,7 +514,7 @@ SPDX-Text: This
            And this is the same statement's another paragraph.
 """
 
-    tree = MarkerLexer.parse(input_string, custom_tags=["SPDX-ID", "SPDX-Text"])
+    tree = MarkerLexer.parse(input_string, custom_tags={"SPDX-ID", "SPDX-Text"})
     assert tree.data == "start"
 
     node_fields = list(tree.find_data("node_field"))

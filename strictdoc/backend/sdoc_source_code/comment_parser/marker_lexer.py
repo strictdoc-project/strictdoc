@@ -22,9 +22,8 @@ RELATION_MARKER_START = r"@relation[\(\{]"
 NODE_GRAMMAR_EXTENSION = GrammarTemplate("""
 node_field: node_name ":" node_multiline_value
 node_name: /##CUSTOM_TAGS/
-node_multiline_value: (_WS_INLINE | _NL) (NODE_FIRST_STRING_VALUE NEWLINE) (NODE_STRING_VALUE NEWLINE)*
+node_multiline_value: (_WS_INLINE? | (_WS_INLINE NODE_STRING_VALUE)) NEWLINE (NODE_STRING_VALUE NEWLINE)*
 
-NODE_FIRST_STRING_VALUE.2: /\\s*[^\n\r]+/x
 NODE_STRING_VALUE.2: /(?![ ]*##RELATION_MARKER_START)(?!\\s*(##CUSTOM_TAGS):\\s)(?!\\s*##NODE_FIELD_END_MARKER)[^\n\r]+/x
 
 _NORMAL_STRING_NO_MARKER_NO_NODE: /(?!\\s*##RELATION_MARKER_START)((?!\\s*(##CUSTOM_TAGS):\\s)|(##RESERVED_KEYWORDS)).+/

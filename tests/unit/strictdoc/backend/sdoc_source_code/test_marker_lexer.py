@@ -462,6 +462,33 @@ STATEMENT: This
     )
 
 
+def test_34_node_text_starting_below() -> None:
+    """
+    Ensure that first text can start somewhere in the next lines after a field,
+    and that the result keeps starting newlines as separate NEWLINE-symbol.
+    """
+    input_string = """\
+FIELD1:
+
+   Text starting far off from tag.
+"""
+    tree = MarkerLexer.parse(input_string, custom_tags={"FIELD1"})
+    assert tree.data == "start"
+
+    node_fields = list(tree.find_data("node_field"))
+    assert len(node_fields) == 1
+
+    assert_node_field(
+        node_fields[0],
+        "FIELD1",
+        [
+            "\n\n",
+            "   Text starting far off from tag.",
+            "\n",
+        ],
+    )
+
+
 def test_60_exclude_reserved_keywords() -> None:
     input_string = """
         FIXME: This can likely replace _weak below with no problem.

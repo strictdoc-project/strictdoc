@@ -227,19 +227,34 @@ class MarkerParser:
         assert isinstance(node_value_node, Tree)
         assert node_value_node.data == "node_multiline_value"
 
-        # let the first non-empty line after a field determine the dedent
+        # Find minimal indent in lines 1..n. It will be used to dedent the block.
         dedent = None
+        if len(node_value_node.children) > 1:
+            for node_value_component_ in node_value_node.children[1:]:
+                assert isinstance(node_value_component_, Token)
+                if node_value_component_.type == "NEWLINE":
+                    continue
+                line_value = node_value_component_.value
+                non_ws_len = len(line_value.lstrip(" "))
+                this_dedent = len(line_value) - non_ws_len
+                if dedent is None:
+                    dedent = this_dedent
+                elif non_ws_len > 0:
+                    dedent = min(this_dedent, dedent)
+        if dedent is None:
+            dedent = 0
+
+        # Join and dedent.
         node_value = ""
         for i, node_value_component_ in enumerate(node_value_node.children):
             assert isinstance(node_value_component_, Token)
             line_value = node_value_component_.value
-            if dedent is None:
-                if i > 0 and line_value != "\n":
-                    dedent = len(line_value) - len(line_value.lstrip(" "))
-                    line_value = line_value[dedent:]
-            else:
-                leading_spaces = len(line_value) - len(line_value.lstrip(" "))
-                line_value = line_value[min(leading_spaces, dedent) :]
+            if (
+                i > 0
+                and node_value_component_.type != "NEWLINE"
+                and dedent is not None
+            ):
+                line_value = line_value[min(dedent, len(line_value)) :]
             node_value += line_value
 
         node_value = node_value.rstrip()

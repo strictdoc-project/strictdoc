@@ -1,0 +1,13 @@
+# @relation(SDOC-SRS-51, scope=file)
+
+REQUIRES: TEST_HTML2PDF
+
+RUN: %strictdoc export %S --formats=html2pdf --output-dir %T | filecheck %s --dump-input=fail
+CHECK: html2pdf4doc: ChromeDriver available at path: {{.*}}
+CHECK: html2pdf4doc: JS logs from the print session
+
+RUN: %check_exists --file %T/html2pdf/pdf/input.pdf
+
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html
+
+RUN: python %S/test_pdf.py

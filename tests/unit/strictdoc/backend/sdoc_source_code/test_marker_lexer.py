@@ -44,7 +44,8 @@ def assert_node_field(
 
     values = list(
         node_value.scan_values(
-            lambda t: t.type in ("NODE_FIRST_STRING_VALUE", "NODE_STRING_VALUE")
+            lambda t: t.type
+            in ("NODE_FIRST_STRING_VALUE", "NODE_STRING_VALUE", "NEWLINE")
         )
     )
     for idx in range(len(expected_field_value)):
@@ -232,7 +233,7 @@ STATEMENT: When 1, The system 2 shall do 3
 
 STATEMENT: When 1, The system 2 shall do 3
 
-FOOBAR
+Additionally, the system 3 shall do 4.
 """
 
     tree = MarkerLexer.parse(input_string, custom_tags={"STATEMENT"})
@@ -252,13 +253,13 @@ FOOBAR
     assert_node_field(
         node_fields[0],
         "STATEMENT",
-        ["When C,", "           The system A shall do B"],
+        ["When C,", "\n", "           The system A shall do B"],
     )
 
     assert_node_field(
         node_fields[1],
         "STATEMENT",
-        ["When Z,", "           The system X shall do Y"],
+        ["When Z,", "\n", "           The system X shall do Y"],
     )
 
     assert_node_field(
@@ -270,7 +271,11 @@ FOOBAR
     assert_node_field(
         node_fields[3],
         "STATEMENT",
-        ["When 1, The system 2 shall do 3"],
+        [
+            "When 1, The system 2 shall do 3",
+            "\n\n",
+            "Additionally, the system 3 shall do 4.",
+        ],
     )
 
 
@@ -433,12 +438,10 @@ def test_33_multiline_and_multiparagraph_fields() -> None:
 FOOBAR
 
 STATEMENT: This
-           \\n\\n
-           is
-           \\n\\n
-           how we do paragraphs.
 
-FOOBAR
+           is
+
+           how we do paragraphs.
 """
 
     tree = MarkerLexer.parse(input_string, custom_tags={"STATEMENT"})
@@ -451,10 +454,37 @@ FOOBAR
         "STATEMENT",
         [
             "This",
-            "           \\n\\n",
+            "\n\n",
             "           is",
-            "           \\n\\n",
+            "\n\n",
             "           how we do paragraphs.",
+        ],
+    )
+
+
+def test_34_node_text_starting_below() -> None:
+    """
+    Ensure that first text can start somewhere in the next lines after a field,
+    and that the result keeps starting newlines as separate NEWLINE-symbol.
+    """
+    input_string = """\
+FIELD1:
+
+   Text starting far off from tag.
+"""
+    tree = MarkerLexer.parse(input_string, custom_tags={"FIELD1"})
+    assert tree.data == "start"
+
+    node_fields = list(tree.find_data("node_field"))
+    assert len(node_fields) == 1
+
+    assert_node_field(
+        node_fields[0],
+        "FIELD1",
+        [
+            "\n\n",
+            "   Text starting far off from tag.",
+            "\n",
         ],
     )
 
@@ -510,7 +540,7 @@ SPDX-ID: REQ-1
 SPDX-Text: This
            is
            a statement
-           \\n\\n
+
            And this is the same statement's another paragraph.
 """
 
@@ -530,9 +560,11 @@ SPDX-Text: This
         "SPDX-Text",
         [
             "This",
+            "\n",
             "           is",
+            "\n",
             "           a statement",
-            "           \\n\\n",
+            "\n\n",
             "           And this is the same statement's another paragraph.",
         ],
     )

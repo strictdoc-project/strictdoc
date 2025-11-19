@@ -267,6 +267,52 @@ def test_24_parses_multiline_marker():
     assert function_range.reqs_objs[2].ng_source_column == 8
 
 
+def test_30_parser_dedents_field_lines():
+    """
+    Since source code fields will likely opt for text rendering (instead of RST),
+    ensure that ASCII formating is preserved reasonably.
+    """
+    input_string = """\
+    /**
+     * FIELD1: Nothing to dedent here.
+     *
+     * FIELD2: Nothing to
+     * dedent here.
+     *
+     * FIELD3: Dedent
+     *         - this list
+     *           - but keep
+     *             - inner indent
+     *
+     * FIELD4:
+     *        ASCII art
+     *    ___           ___
+     *  ( foo ) <---> ( bar )
+     *    ‾‾‾           ‾‾‾
+     */"""
+
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=7,
+        comment_line_start=1,
+        comment_byte_range=None,
+        custom_tags=["FIELD1", "FIELD2", "FIELD3", "FIELD4"],
+    )
+    assert source_node.fields["FIELD1"] == "Nothing to dedent here."
+    assert source_node.fields["FIELD2"] == "Nothing to\ndedent here."
+    assert source_node.fields["FIELD3"] == (
+        "Dedent\n- this list\n  - but keep\n    - inner indent"
+    )
+    assert source_node.fields["FIELD4"] == (
+        "\n"
+        "      ASCII art\n"
+        "  ___           ___\n"
+        "( foo ) <---> ( bar )\n"
+        "  ‾‾‾           ‾‾‾"
+    )
+
+
 def test_80_linux_spdx_example():
     input_string = """\
 /**
@@ -281,7 +327,7 @@ def test_80_linux_spdx_example():
  * SPDX-Text: This
  *            is
  *            a statement
- *            \\n\\n
+ *
  *            And this is the same statement's another paragraph.
  */
 """

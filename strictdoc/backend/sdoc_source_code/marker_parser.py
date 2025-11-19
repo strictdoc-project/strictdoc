@@ -227,17 +227,36 @@ class MarkerParser:
         assert isinstance(node_value_node, Tree)
         assert node_value_node.data == "node_multiline_value"
 
-        processed_node_values = []
-        for node_value_component_ in node_value_node.children:
+        # Find minimal indent in lines 1..n. It will be used to dedent the block.
+        dedent = None
+        if len(node_value_node.children) > 1:
+            for node_value_component_ in node_value_node.children[1:]:
+                assert isinstance(node_value_component_, Token)
+                if node_value_component_.type == "NEWLINE":
+                    continue
+                line_value = node_value_component_.value
+                non_ws_len = len(line_value.lstrip(" "))
+                this_dedent = len(line_value) - non_ws_len
+                if dedent is None:
+                    dedent = this_dedent
+                elif non_ws_len > 0:
+                    dedent = min(this_dedent, dedent)
+        if dedent is None:
+            dedent = 0
+
+        # Join and dedent.
+        node_value = ""
+        for i, node_value_component_ in enumerate(node_value_node.children):
             assert isinstance(node_value_component_, Token)
-            processed_node_value = node_value_component_.value.strip()
-            if "\\n\\n" in processed_node_value:
-                processed_node_value = processed_node_value.replace(
-                    "\\n\\n", ""
-                )
+            line_value = node_value_component_.value
+            if (
+                i > 0
+                and node_value_component_.type != "NEWLINE"
+                and dedent is not None
+            ):
+                line_value = line_value[min(dedent, len(line_value)) :]
+            node_value += line_value
 
-            processed_node_values.append(processed_node_value)
-
-        node_value = "\n".join(processed_node_values)
+        node_value = node_value.rstrip()
 
         return node_name, node_value

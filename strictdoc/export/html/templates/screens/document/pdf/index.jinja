@@ -26,6 +26,9 @@
   <script
   defer
     {# data-debug-mode='false' #}
+    {% if view_object.is_html2pdf_strict() %}
+    data-console-assert='true'
+    {% endif %}
     data-preloader='true'
     data-preloader-target='[html2pdf-preloader]'
     data-preloader-background='#F2F5F9'

@@ -230,6 +230,9 @@ class DocumentScreenViewObject:
     def is_deeptrace(self) -> bool:
         return self.document_type.is_deeptrace()
 
+    def is_html2pdf_strict(self) -> bool:
+        return self.project_config.html2pdf_strict
+
     def has_any_nodes(self) -> bool:
         return self.document.has_any_nodes()
 

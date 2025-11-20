@@ -2,12 +2,16 @@
 MID: c2d4542d5f1741c88dfcb4f68ad7dcbd
 TITLE: SPDX requirements
 UID: SPDX_DOC
+OPTIONS:
+  ENABLE_MID: True
+  RELATION_FIELD: MID
+  MARKUP: Text
 
 [GRAMMAR]
 ELEMENTS:
 - TAG: TEXT
   FIELDS:
-  - TITLE: UID
+  - TITLE: MID
     TYPE: String
     REQUIRED: False
   - TITLE: STATEMENT
@@ -17,6 +21,9 @@ ELEMENTS:
   PROPERTIES:
     IS_COMPOSITE: True
   FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
   - TITLE: UID
     TYPE: String
     REQUIRED: False
@@ -27,19 +34,28 @@ ELEMENTS:
   PROPERTIES:
     VIEW_STYLE: Narrative
   FIELDS:
+  - TITLE: MID
+    HUMAN_TITLE: SPDX-Req-ID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: HASH
+    HUMAN_TITLE: SPDX-Req-HKey
+    TYPE: String
+    REQUIRED: False
   - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: FOO
+    TYPE: String
+    REQUIRED: False
+  - TITLE: BAR
     TYPE: String
     REQUIRED: False
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
-  - TITLE: SPDX-Req-ID
-    TYPE: String
-    REQUIRED: False
-  - TITLE: SPDX-Req-HKey
-    TYPE: String
-    REQUIRED: False
-  - TITLE: SPDX-Text
+  - TITLE: STATEMENT
+    HUMAN_TITLE: SPDX-Req-Text
     TYPE: String
     REQUIRED: False
   RELATIONS:
@@ -47,6 +63,17 @@ ELEMENTS:
   - TYPE: File
 
 [[SECTION]]
+MID: be53ec4b10544440b953f8fb50ca3ad6
 TITLE: Introduction
 
 [[/SECTION]]
+
+[REQUIREMENT]
+MID: TBD
+HASH: TBD
+FOO: FOO text from sdoc
+BAR: BAR text from sdoc
+TITLE: TITLE from sdoc
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1

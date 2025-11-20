@@ -102,10 +102,10 @@ class DocumentConfig:
             if enable_mid == "True"
             else (False if root == "False" else None)
         )
-        self.relation_field: str = (
+        self.relation_field: Optional[str] = (
             relation_field
             if relation_field is not None and len(relation_field) > 0
-            else "UID"
+            else None
         )
 
         self.markup: Optional[str] = markup
@@ -167,6 +167,9 @@ class DocumentConfig:
         if self.requirement_prefix is not None:
             return self.requirement_prefix
         return "REQ-"
+
+    def get_relation_field(self) -> str:
+        return self.relation_field or "UID"
 
     def has_meta(self) -> bool:
         # TODO: When OPTIONS are not provided to a document, the self.number and

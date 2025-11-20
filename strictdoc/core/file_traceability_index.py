@@ -20,7 +20,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
 )
 from strictdoc.backend.sdoc.models.model import SDocDocumentIF
-from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import FileEntry, FileReference
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -1035,17 +1035,26 @@ class FileTraceabilityIndex:
                 )
 
         FileTraceabilityIndex.set_sdoc_node_fields(sdoc_node, sdoc_node_fields)
+        source_node.sdoc_node = sdoc_node
 
     @staticmethod
     def set_sdoc_node_fields(
         sdoc_node: SDocNode, sdoc_node_fields: dict[str, str]
     ) -> None:
         for field_name, field_value in sdoc_node_fields.items():
+            sdoc_node_has_field = field_name in sdoc_node.ordered_fields_lookup
+
             sdoc_node.set_field_value(
                 field_name=field_name,
                 form_field_index=0,
                 value=field_value,
             )
+
+            if not sdoc_node_has_field:
+                new_field: SDocNodeField = sdoc_node.ordered_fields_lookup[
+                    field_name
+                ][0]
+                new_field.mark_as_source_origin()
 
     @staticmethod
     def create_source_node_section(

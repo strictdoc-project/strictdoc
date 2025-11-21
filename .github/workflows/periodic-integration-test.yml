@@ -15,7 +15,7 @@ jobs:
     name: PIT – Linux
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set up Python 3.
         uses: actions/setup-python@v6
@@ -38,7 +38,7 @@ jobs:
     name: PIT – Linux with PyInstaller
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set up Python 3.
         uses: actions/setup-python@v6
@@ -69,7 +69,7 @@ jobs:
     name: PIT – macOS
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set up Python 3.
         uses: actions/setup-python@v6
@@ -92,7 +92,7 @@ jobs:
     name: PIT – macOS with PyInstaller
     runs-on: macOS-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set up Python 3.
         uses: actions/setup-python@v6
@@ -123,7 +123,7 @@ jobs:
     name: PIT – Check dead links
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set up Python 3.
         uses: actions/setup-python@v6

@@ -158,7 +158,10 @@ class TraceabilityIndexBuilder:
                                 source_nodes_cfg_entry.node_type,
                             )
                         )
-                        assert source_node_grammar_element is not None
+                        assert source_node_grammar_element is not None, (
+                            "Missing grammar element for node: "
+                            f"{source_nodes_cfg_entry.uid} {source_nodes_cfg_entry.node_type}"
+                        )
                         source_node_tags = (
                             TraceabilityIndexBuilder.source_node_parser_tags(
                                 source_nodes_cfg_entry,

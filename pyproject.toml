@@ -18,6 +18,9 @@ include = [
     "pyproject.toml"
 ]
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
 exclude = [
     # Without this, the folder is still included to the output tar.gz because it has a Markdown file.
     "/developer",
@@ -95,7 +98,7 @@ dependencies = [
     "WebSockets",
 
     # HTML2PDF dependencies
-    "html2pdf4doc >= 0.0.22",
+    "html2pdf4doc @ git+https://github.com/strictdoc-project/html2pdf4doc_python.git@main",
 
     # Robot Framework dependencies
     "robotframework >= 4.0.0",

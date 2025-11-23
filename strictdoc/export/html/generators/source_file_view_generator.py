@@ -175,6 +175,9 @@ class SourceFileViewHTMLGenerator:
             lexer = YamlLexer()
         elif source_file.is_rst_file():
             lexer = RstLexer()
+        elif source_file.is_st_file():
+            # Structured Text syntax doesn't seem to be supported by Pygments.
+            lexer = TextLexer()
         else:
             try:
                 lexer = get_lexer_for_filename(source_file.file_name)

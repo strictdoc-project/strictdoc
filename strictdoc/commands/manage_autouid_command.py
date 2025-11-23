@@ -1,5 +1,5 @@
 import sys
-from typing import Dict
+from typing import Dict, Optional
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -132,8 +132,8 @@ class ManageAutoUIDCommand:
     ) -> None:
         """
         NOTE: This only updates the source code with the new calculated value.
-              All links in the graph database and links in the search index are
-              not modified for now.
+              All links in the graph database and links in the search index
+              ARE NOT! modified for now.
         """
 
         assert trace_info.source_file is not None
@@ -149,6 +149,18 @@ class ManageAutoUIDCommand:
         with open(trace_info.source_file.full_path, "rb") as source_file_:
             file_bytes = source_file_.read()
 
+        field_remapped_mid = "MID"
+
+        relevant_source_node_config = (
+            project_config.get_relevant_source_nodes_entry(
+                trace_info.source_file.in_doctree_source_file_rel_path_posix
+            )
+        )
+        if relevant_source_node_config is not None:
+            field_remapped_mid = (
+                relevant_source_node_config.sdoc_to_source_map.get("MID", "MID")
+            )
+
         file_rewrites = {}
         for source_node_ in trace_info.source_nodes:
             function = source_node_.function
@@ -160,14 +172,14 @@ class ManageAutoUIDCommand:
             if source_node_.comment_byte_range is None:
                 continue
 
-            if "SPDX-Req-ID" not in source_node_.fields:
+            if field_remapped_mid not in source_node_.fields:
                 continue
 
-            node_rewrites: Dict[str, str] = {}
+            node_rewrites: Dict[str, bytes] = {}
 
-            # If the source node has the SPDX-REQ-ID but it is not yet a valid
-            # SHA256 identifier, create one and patch the node.
-            existing_req_id = source_node_.fields["SPDX-Req-ID"]
+            # If the source node has the MID (SPDX-REQ-ID), but it is not yet a
+            # valid SHA256 identifier, create one and patch the node.
+            existing_req_id = source_node_.fields[field_remapped_mid]
             if not is_sha256(existing_req_id):
                 hash_spdx_id_str = get_random_sha256()
                 hash_spdx_id = bytes(hash_spdx_id_str, encoding="utf8")
@@ -178,17 +190,37 @@ class ManageAutoUIDCommand:
                         form_field_index=0,
                         value=hash_spdx_id_str,
                     )
-                node_rewrites["SPDX-Req-ID"] = hash_spdx_id_str
+                node_rewrites[field_remapped_mid] = hash_spdx_id
 
-            existing_req_hash = source_node_.fields.get("SPDX-REQ-HKey", None)
-            if existing_req_hash is not None and existing_req_hash != "TBD":
-                # FIXME: Shall we assume that a HKey can only be TBD, a
-                #        valid SHA256, or simply be missing?
-                assert is_sha256(existing_req_hash), existing_req_hash
-            else:
-                assert source_node_.sdoc_node is not None
-                sdoc_node: SDocNode = source_node_.sdoc_node
+                patched_node = MarkerWriter().write(
+                    source_node_,
+                    rewrites=node_rewrites,
+                    comment_file_bytes=file_bytes[
+                        source_node_.comment_byte_range.start : source_node_.comment_byte_range.end
+                    ],
+                )
+                file_rewrites[source_node_] = patched_node
 
+            # If a source node has no sidecar SDoc node attached, there is
+            # nothing else to do.
+            if source_node_.sdoc_node is None:
+                continue
+
+            #
+            # The following is only applicable to the Linux Kernel Requirements
+            # Template proposal:
+            #
+            # Generate HASH field if it is not present. The HASH field is only
+            # generated for SDoc nodes, the source code nodes are not modified.
+            #
+            sdoc_node: SDocNode = source_node_.sdoc_node
+
+            existing_req_hash: Optional[str] = None
+            if "HASH" in sdoc_node.ordered_fields_lookup:
+                hash_field = sdoc_node.get_field_by_name("HASH")
+                existing_req_hash = hash_field.get_text_value()
+
+            if existing_req_hash is None or not is_sha256(existing_req_hash):
                 # FILE_PATH: The file the code resides in, relative to the root of the project repository.
                 file_path = bytes(
                     trace_info.source_file.in_doctree_source_file_rel_path_posix,
@@ -201,19 +233,14 @@ class ManageAutoUIDCommand:
                     field_name_,
                     field_values_,
                 ) in sdoc_node.ordered_fields_lookup.items():
-                    if field_name_ in (
-                        "MID",
-                        "HASH",
-                        "SPDX-Req-ID",
-                        "SPDX-Req-HKey",
-                    ):
+                    if field_name_ in ("MID", "HASH"):
                         continue
                     for field_value_ in field_values_:
                         instance_bytes += bytes(
                             field_value_.get_text_value(), encoding="utf8"
                         )
 
-                # CODE: The code that the SPDX-Req applies to.
+                # CODE: The code that the node hash applies to.
                 code = file_bytes[
                     function.code_byte_range.start : function.code_byte_range.end
                 ]
@@ -235,19 +262,6 @@ class ManageAutoUIDCommand:
                     form_field_index=0,
                     value=hash_spdx_hash_str,
                 )
-
-            if len(node_rewrites) > 0:
-                patched_node = MarkerWriter().write(
-                    source_node_,
-                    rewrites={
-                        "SPDX-Req-ID": hash_spdx_id,
-                        "SPDX-Req-HKey": hash_spdx_hash,
-                    },
-                    comment_file_bytes=file_bytes[
-                        source_node_.comment_byte_range.start : source_node_.comment_byte_range.end
-                    ],
-                )
-                file_rewrites[source_node_] = patched_node
 
         source_writer = SourceWriter()
         output_string = source_writer.write(

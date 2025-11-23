@@ -496,6 +496,10 @@ class SDWriter:
                     output += ", "
                     output += str(ref.g_file_entry.line_range[1])
                     output += "\n"
+                elif ref.g_file_entry.function is not None:
+                    output += "  FUNCTION: "
+                    output += str(ref.g_file_entry.function)
+                    output += "\n"
 
             elif isinstance(reference, ParentReqReference):
                 parent_reference: ParentReqReference = reference

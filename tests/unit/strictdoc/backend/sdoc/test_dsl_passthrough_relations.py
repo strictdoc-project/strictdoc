@@ -87,3 +87,50 @@ RELATIONS:
     output = writer.write(document)
 
     assert input_sdoc == output
+
+
+def test_003_file_relations(default_project_config):
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Refines
+
+[REQUIREMENT]
+STATEMENT: >>>
+This is a statement.
+<<<
+RELATIONS:
+- TYPE: File
+  VALUE: tools/testing/selftests/devmem/tests.c
+- TYPE: File
+  VALUE: tools/testing/selftests/devmem/devmem.c
+  LINE_RANGE: 27, 32
+- TYPE: File
+  VALUE: tools/testing/selftests/devmem/devmem.c
+  FUNCTION: test_function
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter(default_project_config)
+    output = writer.write(document)
+
+    assert input_sdoc == output

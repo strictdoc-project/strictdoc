@@ -1,0 +1,25 @@
+#
+# This test verifies that the Structured Text (PLCs) format is properly recognized
+# by StrictDoc.
+#
+# @relation(SDOC-SRS-142, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Example: Traceability between requirements and source files
+
+RUN: %check_exists --file "%T/html/_source_files/file.st.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.st.html#REQ-001#1#17">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.st.html#REQ-001#11#17">
+
+RUN: %cat %T/html/_source_files/file.st.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+
+# Verify that the Text lexer is selected for this file as Pygments does not
+# support the ST syntax at the moment.
+CHECK-SOURCE-FILE: /* Lexer: Text only */
+# Verify that the link that points back to requirement is displayed correctly.
+CHECK-SOURCE-FILE: href="../65_st_structured_text/example.html#REQ-001"
+# Verify that the range link is displayed correctly.
+CHECK-SOURCE-FILE: href="../_source_files/file.st.html#REQ-001#11#17"

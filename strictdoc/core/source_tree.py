@@ -24,6 +24,9 @@ class SourceFileType(Enum):
     RST = [".rst"]
     SDOC = [".sdoc"]
 
+    # Structured Text (PLC)
+    STRUCTURED_TEXT = [".st"]
+
     UNKNOWN: List[str] = []  # type: ignore[misc]
 
     @classmethod
@@ -52,6 +55,12 @@ class SourceFileType(Enum):
                 return cls.RST
         if path_to_file.endswith(".sdoc"):
             return cls.SDOC
+        # FIXME: .st file could conflict between Structured Text (PLC) and Smalltalk.
+        #        No Smalltalk has been requested by users until now but we may
+        #        want to set up a general disambiguation procedure for cases like this.
+        #        https://github.com/strictdoc-project/strictdoc/issues/2569
+        if path_to_file.endswith(".st"):
+            return cls.STRUCTURED_TEXT
 
         return cls.UNKNOWN
 
@@ -112,6 +121,9 @@ class SourceFile:
 
     def is_rst_file(self) -> bool:
         return self.file_type == SourceFileType.RST
+
+    def is_st_file(self) -> bool:
+        return self.file_type == SourceFileType.STRUCTURED_TEXT
 
 
 class SourceTree:

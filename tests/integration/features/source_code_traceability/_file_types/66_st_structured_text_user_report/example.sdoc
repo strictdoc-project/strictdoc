@@ -1,0 +1,29 @@
+[DOCUMENT]
+TITLE: Example: Traceability between requirements and source files
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement to source reference
+STATEMENT: This requirement references the whole file from requirements.
+RELATIONS:
+- TYPE: File
+  VALUE: file.st
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Source to requirement range reference
+STATEMENT: This requirement references a range in the file.
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Requirement to source range reference
+STATEMENT: This requirement references a range in the file from the requirement.
+RELATIONS:
+- TYPE: File
+  VALUE: file.st
+  LINE_RANGE: 2, 4
+
+[REQUIREMENT]
+UID: SF_REQ-001
+TITLE: Custom requirement prefix range reference
+STATEMENT: This requirement has a custom prefix, and is referenced in the file.

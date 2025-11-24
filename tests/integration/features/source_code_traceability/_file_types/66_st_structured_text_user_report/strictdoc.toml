@@ -1,0 +1,9 @@
+[project]
+
+features = [
+  "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+]
+
+include_source_paths = [
+  "file.st",
+]

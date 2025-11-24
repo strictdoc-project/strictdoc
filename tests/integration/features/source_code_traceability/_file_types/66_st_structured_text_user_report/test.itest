@@ -1,0 +1,31 @@
+#
+# This test verifies that the Structured Text (PLCs) format is properly recognized
+# by StrictDoc. In addition, based on a user report, this test verifies that the
+# markers with mixed slashes and underscored are recognized correctly, e.g., SF_REQ-001.
+#
+# Original issue: https://github.com/strictdoc-project/strictdoc/discussions/2568.
+#
+# @relation(SDOC-SRS-142, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Example: Traceability between requirements and source files
+
+RUN: %check_exists --file "%T/html/_source_files/file.st.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.st.html#REQ-001#1#18">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.st.html#REQ-002#12#18">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.st.html#REQ-003#2#4">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.st.html#SF_REQ-001#1#18">
+
+RUN: %cat %T/html/_source_files/file.st.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+
+# Verify that the Text lexer is selected for this file as Pygments does not
+# support the ST syntax at the moment.
+CHECK-SOURCE-FILE: /* Lexer: Text only */
+# Verify that the link that points back to requirement is displayed correctly.
+CHECK-SOURCE-FILE: href="../66_st_structured_text_user_report/example.html#REQ-001"
+# Verify that the range link is displayed correctly.
+CHECK-SOURCE-FILE: href="../_source_files/file.st.html#REQ-001#1#18"
+CHECK-SOURCE-FILE: href="../_source_files/file.st.html#SF_REQ-001#1#18"

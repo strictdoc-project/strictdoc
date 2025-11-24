@@ -78,6 +78,31 @@ CONTENT 6
     assert marker_4.ng_range_line_begin == 6
 
 
+def test_003_marker_with_dashes_and_underscores():
+    """
+    Verifies that SF_REQ-001 markers can be parsed (identifiers with mixed _ and -).
+
+    Bug report: https://github.com/strictdoc-project/strictdoc/discussions/2568.
+    """
+
+    source_input = """\
+# @relation(SF_REQ-001, scope=file)
+CONTENT 1
+CONTENT 2
+CONTENT 3
+""".lstrip()
+
+    reader = SourceFileTraceabilityReader()
+
+    document = reader.read(source_input)
+    markers = document.markers
+    assert markers[0].reqs == ["SF_REQ-001"]
+    assert markers[0].is_begin()
+    assert markers[0].ng_source_line_begin == 1
+    assert markers[0].ng_range_line_begin == 1
+    assert markers[0].ng_range_line_end == 4
+
+
 def test_005_no_markers():
     source_input = """
 def hello_world_2():

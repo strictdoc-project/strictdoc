@@ -40,7 +40,7 @@ LineMarker[noskipws]:
 ;
 
 Req[noskipws]:
-  uid = /(?!scope=)[A-Za-z][A-Za-z0-9\\-]+/
+  uid = /(?!scope=)[A-Za-z][A-Za-z0-9\\-\\_]+/
 ;
 
 SingleLineString[noskipws]:

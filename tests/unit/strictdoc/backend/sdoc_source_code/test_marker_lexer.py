@@ -4,7 +4,7 @@
 
 from typing import Any, List, Optional
 
-from lark import Tree
+from lark import Token, Tree
 
 from strictdoc.backend.sdoc_source_code.comment_parser.marker_lexer import (
     MarkerLexer,
@@ -485,6 +485,46 @@ FIELD1:
             "\n\n",
             "   Text starting far off from tag.",
             "\n",
+        ],
+    )
+
+
+def test_35a_node_value_newline_lf() -> None:
+    """Verify that LF goes into a separate NEWLINE token."""
+    input_string = "FIELD: value1\nvalue2\n"
+    tree = MarkerLexer.parse(input_string, custom_tags={"FIELD"})
+
+    node_fields = list(tree.find_data("node_field"))
+
+    assert_node_field(
+        node_fields[0],
+        "FIELD",
+        [
+            Token("NODE_STRING_VALUE", "value1"),
+            Token("NEWLINE", "\n"),
+            Token("NODE_STRING_VALUE", "value2"),
+            Token("NEWLINE", "\n"),
+        ],
+    )
+
+
+def test_35b_node_value_newline_crlf() -> None:
+    """Verify that CR LF goes into a separate NEWLINE token."""
+    input_string = "FIELD: value1\r\nvalue2\r\n"
+    tree = MarkerLexer.parse(input_string, custom_tags={"FIELD"})
+
+    node_fields = list(tree.find_data("node_field"))
+
+    assert_node_field(
+        node_fields[0],
+        "FIELD",
+        [
+            Token("NODE_STRING_VALUE", "value1"),
+            Token("NEWLINE", "\r\n"),
+            Token("NODE_STRING_VALUE", "value2"),
+            # The implicit \r\n => \n conversion at EOF is not nice, but doesn't hurt (yet).
+            # We need to improve EOF handling in lark grammar to get rid of it.
+            Token("NEWLINE", "\n"),
         ],
     )
 

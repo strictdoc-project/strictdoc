@@ -121,6 +121,7 @@ RELATIONS:
   VALUE: tools/testing/selftests/devmem/devmem.c
   LINE_RANGE: 27, 32
 - TYPE: File
+  ROLE: TestDefinition
   VALUE: tools/testing/selftests/devmem/devmem.c
   FUNCTION: test_function
 """.lstrip()

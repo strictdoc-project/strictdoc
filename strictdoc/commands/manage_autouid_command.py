@@ -176,6 +176,7 @@ class ManageAutoUIDCommand:
             ]
 
             # This is important for Windows. Otherwise, the hash key will be calculated incorrectly.
+            instance_bytes = instance_bytes.replace(b"\r\n", b"\n")
             code = code.replace(b"\r\n", b"\n")
 
             hash_spdx_id = bytes(get_random_sha256(), encoding="utf8")

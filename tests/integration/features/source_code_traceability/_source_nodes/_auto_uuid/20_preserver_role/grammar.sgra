@@ -1,0 +1,65 @@
+[GRAMMAR]
+ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  PROPERTIES:
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: MID
+    HUMAN_TITLE: SPDX-Req-ID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: HASH
+    TYPE: String
+    REQUIRED: False
+  - TITLE: SPDX-Req-HKey
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    HUMAN_TITLE: SPDX-Req-Text
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    HUMAN_TITLE: SPDX-Req-Note
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+- TAG: TEST
+  PROPERTIES:
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: DESCRIPTION
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: Parent
+    ROLE: TestCase
+  - TYPE: File
+  - TYPE: File
+    ROLE: TestDefinition

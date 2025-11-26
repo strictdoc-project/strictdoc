@@ -1,0 +1,35 @@
+[DOCUMENT]
+MID: c2d4542d5f1741c88dfcb4f68ad7dcbd
+TITLE: Character Drivers and Misc
+UID: DOC-1
+OPTIONS:
+  ENABLE_MID: True
+  RELATION_FIELD: MID
+  MARKUP: Text
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[[SECTION]]
+MID: be53ec4b10544440b953f8fb50ca3ad6
+TITLE: Introduction
+
+[[/SECTION]]
+
+[REQUIREMENT]
+MID: REQ-1-TBD
+HASH: TBD
+TITLE: Requirement 1
+
+[TEST]
+MID: TEST-1-TBD
+TITLE: Test 1
+DESCRIPTION: Test something
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1-TBD
+  ROLE: TestCase
+- TYPE: File
+  ROLE: TestDefinition
+  VALUE: src/example/example.c
+  FUNCTION: test_1

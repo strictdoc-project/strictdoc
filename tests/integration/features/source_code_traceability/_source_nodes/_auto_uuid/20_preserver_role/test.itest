@@ -1,0 +1,10 @@
+RUN: cp -r %S/* %T/
+RUN: cd %T/
+RUN: %strictdoc --debug manage auto-uid %T | filecheck %s
+
+CHECK: Reading source: src{{.}}example{{.}}example.c
+CHECK: Total execution time
+
+RUN: cat %T/requirements.sdoc | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: TestCase
+CHECK-HTML: TestDefinition

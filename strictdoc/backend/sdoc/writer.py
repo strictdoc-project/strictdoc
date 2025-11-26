@@ -482,6 +482,10 @@ class SDWriter:
 
             if isinstance(reference, FileReference):
                 ref: FileReference = reference
+                if ref.role is not None:
+                    output += "  ROLE: "
+                    output += ref.role
+                    output += "\n"
                 file_format = ref.get_file_format()
                 if file_format:
                     output += "  FORMAT: "

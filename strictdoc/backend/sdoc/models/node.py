@@ -3,6 +3,7 @@
 """
 
 from collections import OrderedDict
+from enum import Enum
 from typing import Any, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
@@ -41,6 +42,15 @@ class SDocNodeContext:
         self.title_number_string: Optional[str] = None
 
 
+class SDocNodeFieldOrigin(str, Enum):
+    DOCUMENT = "DOCUMENT"
+    SOURCE = "SOURCE"
+
+    @staticmethod
+    def all() -> List[str]:  # noqa: A003
+        return list(map(lambda c: c.value, SDocNodeFieldOrigin))
+
+
 @auto_described
 class SDocNodeField:
     def __init__(
@@ -54,6 +64,7 @@ class SDocNodeField:
         self.field_name: str = field_name
         self.parts: List[Any] = parts
         self.multiline: bool = multiline__ is not None and len(multiline__) > 0
+        self.origin: SDocNodeFieldOrigin = SDocNodeFieldOrigin.DOCUMENT
 
     @staticmethod
     def create_from_string(
@@ -97,6 +108,12 @@ class SDocNodeField:
             else:
                 raise NotImplementedError(part)  # pragma: no cover
         return text
+
+    def is_document_origin(self) -> bool:
+        return self.origin == SDocNodeFieldOrigin.DOCUMENT
+
+    def mark_as_source_origin(self) -> None:
+        self.origin = SDocNodeFieldOrigin.SOURCE
 
 
 @auto_described
@@ -310,7 +327,7 @@ class SDocNode(SDocNodeIF):
         config = assert_cast(document.config, DocumentConfig)
 
         return self._get_cached_field(
-            config.relation_field, singleline_only=True
+            config.get_relation_field(), singleline_only=True
         )
 
     @reserved_uid.setter
@@ -319,7 +336,7 @@ class SDocNode(SDocNodeIF):
         config = assert_cast(document.config, DocumentConfig)
 
         self.set_field_value(
-            field_name=config.relation_field,
+            field_name=config.get_relation_field(),
             form_field_index=0,
             value=uid,
         )

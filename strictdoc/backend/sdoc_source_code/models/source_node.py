@@ -3,7 +3,7 @@
 """
 
 from dataclasses import dataclass, field
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from strictdoc.backend.sdoc_source_code.models.function import Function
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
@@ -35,6 +35,8 @@ class SourceNode:
     fields: dict[str, str] = field(default_factory=dict)
     fields_locations: dict[str, tuple[int, int]] = field(default_factory=dict)
     function: Optional[Function] = None
+    # FIXME: Adding SDocNode here causes circular import problem.
+    sdoc_node: Optional[Any] = None
 
     def get_sdoc_field(
         self,

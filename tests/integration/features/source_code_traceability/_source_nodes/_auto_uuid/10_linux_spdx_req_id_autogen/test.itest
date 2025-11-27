@@ -21,6 +21,16 @@ CHECK-DIFF-NEXT: > MID: {{[a-f0-9]{64}}}
 CHECK-DIFF-NEXT: > HASH: dee51cd1dc666a6d1b2678c27c2b6dfc85376107e403963a8afc83acb62ff944
 
 #
+# The output requirements file only contains the change in two fields with
+# nothing else affected.
+# The regular expression is used to verify that the field is indeed SHA256.
+#
+RUN: %expect_exit 1 %diff %S/tests.sdoc %T/tests.sdoc | filecheck %s --check-prefix CHECK-DIFF-TESTS
+CHECK-DIFF-TESTS:      <   VALUE: TBD
+CHECK-DIFF-TESTS-NEXT: ---
+CHECK-DIFF-TESTS-NEXT: >   VALUE: {{[a-f0-9]{64}}}
+
+#
 # Source file with SPDX fields gets a stable hash generated.
 #
 RUN: cat %T/src/example/example.c | filecheck %s --check-prefix CHECK-SOURCE-FILE

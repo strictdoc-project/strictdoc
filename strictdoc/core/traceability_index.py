@@ -3,7 +3,7 @@
 """
 
 import datetime
-from copy import deepcopy
+from copy import copy, deepcopy
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
@@ -13,6 +13,10 @@ from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    ParentReqReference,
+)
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     RelationMarkerType,
     SourceFileTraceabilityInfo,
@@ -536,6 +540,73 @@ class TraceabilityIndex:
                 parent_requirement_document.meta.input_doc_full_path,
                 datetime.datetime.today(),
             )
+
+    def update_node_mid(self, node: SDocNode, new_mid: str) -> None:
+        """
+        Update a node’s MID identifier and update all parent and child node
+        relations to reference this new MID.
+
+        The graph database contains relations between nodes. Since these
+        relations remain unchanged, the job of this function is only to update
+        each node's original .relations, so that they point to the new MID.
+        """
+
+        old_mid = node.reserved_mid
+
+        #
+        # Update all child nodes.
+        #
+        child_nodes: OrderedSet[SDocNode] = self.graph_database.get_link_values(
+            link_type=GraphLinkType.NODE_TO_CHILD_NODES,
+            lhs_node=node,
+            edge=ALL_EDGES,
+        )
+        for child_node_ in child_nodes:
+            child_node_document = child_node_.get_document()
+            assert child_node_document is not None
+
+            if child_node_document.config.relation_field != "MID":
+                continue
+
+            for relation_ in copy(child_node_.relations):
+                if (
+                    isinstance(relation_, ParentReqReference)
+                    and relation_.ref_uid == old_mid
+                ):
+                    relation_.ref_uid = new_mid
+
+        #
+        # Update all parent nodes.
+        #
+        parent_nodes: OrderedSet[SDocNode] = (
+            self.graph_database.get_link_values(
+                link_type=GraphLinkType.NODE_TO_PARENT_NODES,
+                lhs_node=node,
+                edge=ALL_EDGES,
+            )
+        )
+        for parent_node_ in parent_nodes:
+            parent_node_document = parent_node_.get_document()
+            assert parent_node_document is not None
+
+            if parent_node_document.config.relation_field != "MID":
+                continue
+
+            for relation_ in copy(parent_node_.relations):
+                if (
+                    isinstance(relation_, ChildReqReference)
+                    and relation_.ref_uid == old_mid
+                ):
+                    relation_.ref_uid = new_mid
+
+        #
+        # Update the node itself.
+        #
+        node.set_field_value(
+            field_name="MID",
+            form_field_index=0,
+            value=new_mid,
+        )
 
     def update_requirement_child_uid(
         self, requirement: SDocNode, child_uid: str, role: Optional[str]

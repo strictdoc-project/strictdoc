@@ -103,7 +103,9 @@ class ManageAutoUIDCommand:
             trace_info_
         ) in traceability_index.get_file_traceability_index().trace_infos:
             ManageAutoUIDCommand._rewrite_source_file(
-                trace_info_, project_config
+                trace_info_,
+                project_config,
+                traceability_index=traceability_index,
             )
 
         for document in traceability_index.document_tree.document_list:
@@ -129,11 +131,16 @@ class ManageAutoUIDCommand:
     def _rewrite_source_file(
         trace_info: SourceFileTraceabilityInfo,
         project_config: ProjectConfig,
+        traceability_index: TraceabilityIndex,
     ) -> None:
         """
-        NOTE: This only updates the source code with the new calculated value.
-              All links in the graph database and links in the search index
-              ARE NOT! modified for now.
+        NOTE: This updates:
+              - The links in graph database.
+              - The source code with the new calculated value.
+              This DOES NOT update MID in the search index built for each
+              document in SDocDocument.build_search_index(). The assumption is
+              that the search index is not used by the 'manage autouid' command,
+              so updating of the document search indexes can be skipped.
         """
 
         assert trace_info.source_file is not None
@@ -185,10 +192,8 @@ class ManageAutoUIDCommand:
                 hash_spdx_id = bytes(hash_spdx_id_str, encoding="utf8")
 
                 if (sdoc_node_ := source_node_.sdoc_node) is not None:
-                    sdoc_node_.set_field_value(
-                        field_name="MID",
-                        form_field_index=0,
-                        value=hash_spdx_id_str,
+                    traceability_index.update_node_mid(
+                        sdoc_node_, hash_spdx_id_str
                     )
                 node_rewrites[field_remapped_mid] = hash_spdx_id
 

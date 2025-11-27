@@ -1,0 +1,72 @@
+[DOCUMENT]
+MID: 11111122222233333344444455555566
+TITLE: SPDX tests
+OPTIONS:
+  ENABLE_MID: True
+  RELATION_FIELD: MID
+  MARKUP: Text
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+- TAG: TEST
+  PROPERTIES:
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: MID
+    HUMAN_TITLE: SPDX-Req-ID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: HASH
+    HUMAN_TITLE: SPDX-Req-HKey
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: FOO
+    TYPE: String
+    REQUIRED: False
+  - TITLE: BAR
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    HUMAN_TITLE: SPDX-Req-Text
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
+[TEST]
+MID: TBD-TEST
+HASH: TBD
+FOO: FOO text from sdoc
+BAR: BAR text from sdoc
+TITLE: TITLE from sdoc
+RELATIONS:
+- TYPE: Parent
+  VALUE: TBD

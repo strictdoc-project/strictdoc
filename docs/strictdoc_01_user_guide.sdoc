@@ -4544,7 +4544,7 @@ Instead of using ``strictdoc.toml``, the new approach includes ``strictdoc_confi
 
 All TOML configuration options specified in StrictDoc’s documentation are still valid but must be migrated to their Python equivalents.
 
-See `StrictDoc's own config file <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/core/project_config.py>`_ for a realistic example.
+See `StrictDoc's own config file <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc_config.py>`_ for a realistic example.
 
 Refer to the `ProjectConfig <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/core/project_config.py>`_ class for a complete overview of all available options.
 <<<

@@ -46,6 +46,22 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: bc41f8bb39b84edb87088bda5b462dbc
+TITLE: 0.15.1 (2025-11-28)
+
+[TEXT]
+MID: ff80bff8ecb24703ab26aba8b74f5b00
+STATEMENT: >>>
+This release contains the following improvements:
+
+1. Our work on the Linux kernel requirements template proposal has continued. Several enhancements were made to reading SDoc nodes from source files. Multiple lexing and parsing improvements were implemented. Node MID and HASH generation was added for source nodes when they have corresponding SDoc nodes in the “sidecar” .sdoc files used by the Linux requirements proposal. Thanks to @haxtibal for contributing patches and feedback for this work.
+
+2. Support for reading Structured Text (PLC) files was added. Previously, files with the .st extension were incorrectly recognized as Smalltalk files, which resulted in incorrect Pygments syntax highlighting. For now, the Pygments lexer for ST is set to plain text. As part of the same work, the general non-language-specific parser for source files did not correctly recognize requirement identifiers that contain underscores. We have fixed this and created a follow-up ticket to unify the requirement identifier regex so that it is shared across all parsers and grammars. Thanks to @xw-mk for reporting the issue.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: c2ee8e32a2324963a90e7ba81f95ee0d
 TITLE: 0.15.0 (2025-11-08)
 

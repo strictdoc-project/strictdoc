@@ -1,0 +1,50 @@
+[DOCUMENT]
+TITLE: long source
+
+[TEXT]
+STATEMENT: Main file
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: one
+STATEMENT: >>>
+long source content:
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+
+    i++
+<<<

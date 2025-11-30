@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 import orjson
-from html2pdf4doc.html2pdf4doc import PATH_TO_HTML2PDF4DOC_JS
+from html2pdf4doc import PATH_TO_HTML2PDF4DOC_JS
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.asset_manager import AssetDir

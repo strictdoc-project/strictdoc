@@ -46,6 +46,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 56d44b3868f04e13b00f1c3a6278c00e
+TITLE: 0.15.2 (2025-11-30)
+
+[TEXT]
+MID: 079aad4ade4446fa8ffda1c7b6dc6072
+STATEMENT: >>>
+This is an intermediate release while we are waiting for the major layout fixes to be released in the upstream JS repository. Even without the complete release, this intermediate release should address several layout bugs that were reported by StrictDoc users.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: bc41f8bb39b84edb87088bda5b462dbc
 TITLE: 0.15.1 (2025-11-28)
 

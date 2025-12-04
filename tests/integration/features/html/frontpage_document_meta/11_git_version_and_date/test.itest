@@ -43,3 +43,13 @@ RUN: %strictdoc export . --output-dir Output/
 RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-4
 CHECK-4: v1.0-1-g{{[a-f0-9]{7}}}, main
 CHECK-4: {{\d{4}-\d{2}-\d{2}}}, {{\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}}}
+
+# Verify that the Git variables are also expanded when used inside user metadata fields.
+CHECK-4: GIT_VERSION:
+CHECK-4: v1.0-1-g{{[a-f0-9]{7}}}
+CHECK-4: GIT_BRANCH:
+CHECK-4: main
+CHECK-4: GIT_COMMIT_DATE:
+CHECK-4: {{\d{4}-\d{2}-\d{2}}}
+CHECK-4: GIT_COMMIT_DATETIME:
+CHECK-4: {{\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}}}

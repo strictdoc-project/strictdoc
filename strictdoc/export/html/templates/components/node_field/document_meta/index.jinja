@@ -44,9 +44,10 @@
 
     {%- if document_config.has_custom_metadata() -%}
     {% for key, value in document_config.get_custom_metadata() %}
-    <sdoc-meta-label data-testid="document-config-metadata-label">{{key}}:</sdoc-meta-label>
-    <sdoc-meta-field data-testid="document-config-metadata-field">
-      <sdoc-autogen>{{ value }}</sdoc-autogen>
+      {% set metadata_value = view_object.render_metadata_value(value) %}
+      <sdoc-meta-label data-testid="document-config-metadata-label">{{key}}:</sdoc-meta-label>
+      <sdoc-meta-field data-testid="document-config-metadata-field">
+      <sdoc-autogen>{{ metadata_value }}</sdoc-autogen>
     </sdoc-meta-field>
     {% endfor %}
     {% endif %}

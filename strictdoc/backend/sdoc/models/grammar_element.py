@@ -83,9 +83,23 @@ class GrammarElementFieldSingleChoice(GrammarElementField):
         self.title: str = title
         self.human_title: Optional[str] = human_title
         self.gef_type = RequirementFieldType.SINGLE_CHOICE
-        self.options: List[str] = options
+
+        processed_options = []
+        for option_ in options:
+            processed_options.append(option_.strip('"'))
+        self.options: List[str] = processed_options
+
         self.required: bool = required == "True"
         self.mid: MID = MID.create()
+
+    def get_unprocessed_options(self) -> List[str]:
+        unprocessed_options = []
+        for option_ in self.options:
+            if any(char_ in option_ for char_ in ["(", ")"]):
+                unprocessed_options.append('"' + option_ + '"')
+            else:
+                unprocessed_options.append(option_)
+        return unprocessed_options
 
 
 @auto_described

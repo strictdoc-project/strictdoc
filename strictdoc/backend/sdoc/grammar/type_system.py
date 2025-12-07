@@ -4,7 +4,7 @@ BooleanChoice[noskipws]:
 ;
 
 ChoiceOption[noskipws]:
-  /[\w\/|-]+( *[\w\/|-]+)*/
+  /(["])[^,]+\1|[^,()"]+/
 ;
 
 ChoiceOptionXs[noskipws]:

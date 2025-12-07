@@ -2,16 +2,19 @@
 @relation(SDOC-SRS-136, scope=file)
 """
 
+import pytest
+
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.reader import SDReader
 from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.exception import StrictDocException
 from tests.unit.helpers.fake_document_meta import create_fake_document_meta
 
 
-def test_150_grammar_minimal_doc(default_project_config):
+def test_01_grammar_minimal_doc(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -58,7 +61,7 @@ ELEMENTS:
     assert expected_sdoc == output
 
 
-def test_151_grammar_single_choice(default_project_config):
+def test_10_grammar_single_choice(default_project_config):
     input_sdoc = """
 [DOCUMENT]
 TITLE: Test Doc
@@ -81,14 +84,18 @@ ELEMENTS:
   - TITLE: SINGLE_CHOICE_FIELD_3
     TYPE: SingleChoice(Hardware test, Software test)
     REQUIRED: True
+  - TITLE: SINGLE_CHOICE_FIELD_4
+    TYPE: SingleChoice("A(B)", "B(C)")
+    REQUIRED: True
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: False
 
 [LOW_LEVEL_REQUIREMENT]
 SINGLE_CHOICE_FIELD: A
-SINGLE_CHOICE_FIELD: Test/Hardware
-SINGLE_CHOICE_FIELD: Hardware test
+SINGLE_CHOICE_FIELD_2: Test/Hardware
+SINGLE_CHOICE_FIELD_3: Hardware test
+SINGLE_CHOICE_FIELD_4: A(B)
 """.lstrip()
 
     reader = SDReader()
@@ -96,10 +103,72 @@ SINGLE_CHOICE_FIELD: Hardware test
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
 
+    assert len(document.section_contents) == 1
+    field_4 = document.grammar.elements_by_type["LOW_LEVEL_REQUIREMENT"].fields[
+        3
+    ]
+    assert field_4.options == ["A(B)", "B(C)"]
+
     writer = SDWriter(default_project_config)
     output = writer.write(document)
 
     assert input_sdoc == output
+
+
+def test_15_grammar_single_choice_with_branches_but_no_quotes_raises_exception():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: SINGLE_CHOICE_FIELD
+    TYPE: SingleChoice(A(B))
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+""".lstrip()
+
+    reader = SDReader()
+
+    with pytest.raises(StrictDocException):
+        _ = reader.read(input_sdoc)
+
+
+def test_16_grammar_single_choice_with_unmatched_quotes_raises_exception():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: SINGLE_CHOICE_FIELD
+    TYPE: SingleChoice("A)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+""".lstrip()
+
+    reader = SDReader()
+
+    with pytest.raises(StrictDocException):
+        _ = reader.read(input_sdoc)
 
 
 def test_152_grammar_multiple_choice(default_project_config):

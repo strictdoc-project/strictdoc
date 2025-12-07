@@ -458,7 +458,7 @@ class SDWriter:
         elif isinstance(grammar_field, GrammarElementFieldSingleChoice):
             output += RequirementFieldType.SINGLE_CHOICE
             output += "("
-            output += ", ".join(grammar_field.options)
+            output += ", ".join(grammar_field.get_unprocessed_options())
             output += ")"
         elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
             output += RequirementFieldType.MULTIPLE_CHOICE

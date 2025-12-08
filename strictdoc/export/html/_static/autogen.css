@@ -136,10 +136,11 @@ sdoc-autogen dt ol {
 /* object */
 
 sdoc-autogen img,
+sdoc-autogen svg,
 sdoc-autogen object {
   max-width: 100%;
   height: auto;
-  padding: 1em;
+  padding: 1em 0;
   background: var(--color-bg-contrast);
 }
 

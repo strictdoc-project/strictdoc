@@ -224,7 +224,9 @@ class DocumentScreenViewObject:
 
         return interpolate_at_pattern_lazy(self.document.config.date, resolver)
 
-    def render_metadata_value(self, metada_value:Optional[str]) -> Optional[str]:
+    def render_metadata_value(
+        self, metada_value: Optional[str]
+    ) -> Optional[str]:
         if metada_value is None:
             return ""
 

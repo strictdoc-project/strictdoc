@@ -3,11 +3,51 @@
 """
 
 import os.path
-from subprocess import CompletedProcess, TimeoutExpired, run
+from subprocess import CalledProcessError, CompletedProcess, TimeoutExpired, run
 from typing import List, Tuple
+
+from html2pdf4doc.main import HPDExitCode
 
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.timing import measure_performance
+
+
+class PDFPrintDriverException(Exception):
+    def __init__(self, exception: Exception):
+        super().__init__()
+        self.exception: Exception = exception
+
+    def get_server_user_message(self) -> str:
+        """
+        Provide a user-friendly message that describes the underlying exception/error.
+        """
+
+        if self.is_could_not_detect_chrome():
+            return "HTML2PDF could not detect an existing Chrome installation."
+
+        if self.is_timeout_error():
+            return "HTML2PDF timeout error."
+
+        if self.is_js_success_timeout():
+            return "HTML2PDF.js success timeout error."
+
+        return "HTML2PDF internal error."
+
+    def is_timeout_error(self) -> bool:
+        return isinstance(self.exception, TimeoutExpired)
+
+    def is_could_not_detect_chrome(self) -> bool:
+        return (
+            isinstance(self.exception, CalledProcessError)
+            and self.exception.returncode == HPDExitCode.COULD_NOT_FIND_CHROME
+        )
+
+    def is_js_success_timeout(self) -> bool:
+        return (
+            isinstance(self.exception, CalledProcessError)
+            and self.exception.returncode
+            == HPDExitCode.DID_NOT_RECEIVE_SUCCESS_STATUS_FROM_HTML2PDF4DOC_JS
+        )
 
 
 class PDFPrintDriver:
@@ -52,7 +92,7 @@ class PDFPrintDriver:
                 _: CompletedProcess[bytes] = run(
                     cmd,
                     capture_output=False,
-                    check=False,
+                    check=True,
                 )
-            except TimeoutExpired:
-                raise TimeoutError from None
+            except Exception as e_:
+                raise PDFPrintDriverException(e_) from e_

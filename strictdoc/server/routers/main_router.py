@@ -113,7 +113,10 @@ from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.export.html2pdf.pdf_print_driver import PDFPrintDriver
+from strictdoc.export.html2pdf.pdf_print_driver import (
+    PDFPrintDriver,
+    PDFPrintDriverException,
+)
 from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import (
@@ -134,7 +137,7 @@ from strictdoc.server.helpers.http import request_is_for_non_modified_file
 
 HTTP_STATUS_BAD_REQUEST = 400
 HTTP_STATUS_PRECONDITION_FAILED = 412
-HTTP_STATUS_GATEWAY_TIMEOUT = 504
+HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
 
 AUTOCOMPLETE_LIMIT = 50
 
@@ -2148,6 +2151,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         path_to_output_pdf = os.path.join(
             project_config.export_output_html_root, "html", "_temp.pdf"
         )
+
+        # FIXME: Add this print driver to a service bus object to make it
+        #        unit-testable.
         pdf_print_driver = PDFPrintDriver()
         with open(path_to_output_html, mode="w", encoding="utf8") as temp_file_:
             temp_file_.write(document_content)
@@ -2158,10 +2164,10 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     project_config,
                     [(path_to_output_html, path_to_output_pdf)],
                 )
-            except TimeoutError:  # pragma: no cover
+            except PDFPrintDriverException as e_:  # pragma: no cover
                 return Response(
-                    content="HTML2PDF timeout error.",
-                    status_code=HTTP_STATUS_GATEWAY_TIMEOUT,
+                    content=e_.get_server_user_message(),
+                    status_code=HTTP_STATUS_INTERNAL_SERVER_ERROR,
                 )
 
             return FileResponse(

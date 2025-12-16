@@ -1,0 +1,22 @@
+[project]
+title = "Documentation"
+# html_assets_strictdoc_dir = "assets"
+
+features = [
+#    # Stable features that should be enabled by default.
+#    "TABLE_SCREEN",
+#    "TRACEABILITY_SCREEN",
+#    "DEEP_TRACEABILITY_SCREEN",
+#
+#    # Stable features that are disabled by default.
+#    "MATHJAX",
+#    "SEARCH",
+
+    # Experimental features are disabled by default.
+    # "REQIF",
+    # "HTML2PDF", # this would require chromium to be installed, which doesn't exist on ARM
+    # "PROJECT_STATISTICS_SCREEN",
+    # "STANDALONE_DOCUMENT_SCREEN",
+    # "TRACEABILITY_MATRIX_SCREEN",
+    # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+]

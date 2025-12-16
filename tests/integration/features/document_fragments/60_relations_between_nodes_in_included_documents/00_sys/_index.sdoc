@@ -1,0 +1,26 @@
+[DOCUMENT]
+TITLE: System Requirements
+VERSION: 0.0.1
+PREFIX: SYS-
+ROOT: True
+
+[GRAMMAR]
+IMPORT_FROM_FILE: _sys_grammar.sgra
+
+[[SECTION]]
+TITLE: System Requirements
+
+[[SECTION]]
+TITLE: General Requirements
+
+[[SECTION]]
+TITLE: Dummy
+
+[DOCUMENT_FROM_FILE]
+FILE: dummy.sdoc
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]

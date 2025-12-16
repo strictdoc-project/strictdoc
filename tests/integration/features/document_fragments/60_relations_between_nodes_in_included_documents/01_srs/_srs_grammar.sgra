@@ -1,0 +1,46 @@
+[GRAMMAR]
+ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: KEYWORDS
+    TYPE: Tag
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TYPE
+    TYPE: SingleChoice(Functional, Non-Functional)
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: NOTE
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: DECOMPOSED_FROM

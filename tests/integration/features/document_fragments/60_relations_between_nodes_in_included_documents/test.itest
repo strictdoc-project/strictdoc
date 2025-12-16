@@ -1,0 +1,8 @@
+RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
+CHECK: Published: System Requirements
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/00_sys/_index.html | filecheck %s --check-prefix CHECK-SYS
+CHECK-SYS: href="../../60_relations_between_nodes_in_included_documents/01_srs/_index.html#SRS-Dummy-Requirement_1">
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/01_srs/_index.html | filecheck %s --check-prefix CHECK-SRS
+CHECK-SRS: href="../../60_relations_between_nodes_in_included_documents/00_sys/_index.html#SYS-Some-Requirement">

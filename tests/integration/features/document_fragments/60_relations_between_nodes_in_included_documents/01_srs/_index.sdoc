@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: Software Requirements Specification.
+VERSION: 0.0.1
+PREFIX: SRS-
+ROOT: False
+
+[GRAMMAR]
+IMPORT_FROM_FILE: _srs_grammar.sgra
+
+[[SECTION]]
+TITLE: Software Requirements
+
+[DOCUMENT_FROM_FILE]
+FILE: dummy.sdoc
+
+[[/SECTION]]

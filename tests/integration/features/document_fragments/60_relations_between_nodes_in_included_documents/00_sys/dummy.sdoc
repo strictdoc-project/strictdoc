@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Dummy Document
+REQ_PREFIX: SYS-Dummy-
+
+[GRAMMAR]
+IMPORT_FROM_FILE: _sys_grammar.sgra
+
+[REQUIREMENT]
+UID: SYS-Some-Requirement
+TYPE: Functional
+STATEMENT: >>>
+System Requirement Text
+<<<

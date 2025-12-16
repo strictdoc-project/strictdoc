@@ -1,0 +1,25 @@
+
+[project]
+name = "Documentation"
+version = "0.1.0"
+description = "Product Life-Cycle Documentation based on strict-doc"
+dependencies = [
+    "strictdoc==0.15.2",
+    "html2pdf4doc==0.0.23", # doesn't work on ARM
+    "selenium>=4.39.0",
+]
+readme = "readme.md"
+requires-python = ">= 3.11"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"] # dummy/unused
+
+[tool.uv]
+managed = true

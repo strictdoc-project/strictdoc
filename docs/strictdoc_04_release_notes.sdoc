@@ -46,6 +46,24 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: d4efd073a4c64123b3acfff0e0d4acee
+TITLE: Unreleased
+
+[TEXT]
+MID: 369768b722cd4140b13fdaa8981a214e
+STATEMENT: >>>
+This release contains the following fixes:
+
+1) The SingleChoice field grammar was made to support field values with parentheses such ``A(B)``, ``B(C)``, etc. Thanks to the Discord user AnotherOne for reporting this issue.
+
+2) The Mermaid visualization issue, where a diagram extended beyond a document page, was fixed by adjusting the SDoc document template CSS styles. Thanks to @xw-mk for reporting this issue.
+
+3) The Link Renderer class was fixed to resolve the links between two including documents. This behavior had been implemented correctly but was broken due to the recent HTML2PDF-related adjustments, and there were no tests to catch the regression. Thanks to @lmapii for reporting this.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 56d44b3868f04e13b00f1c3a6278c00e
 TITLE: 0.15.2 (2025-11-30)
 

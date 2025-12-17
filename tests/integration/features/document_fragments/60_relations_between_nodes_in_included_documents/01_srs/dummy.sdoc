@@ -1,0 +1,30 @@
+[DOCUMENT]
+TITLE: Dummy Software Requirements
+REQ_PREFIX: SRS-Dummy-
+
+[GRAMMAR]
+IMPORT_FROM_FILE: _srs_grammar.sgra
+
+[TEXT]
+STATEMENT: >>>
+Just some normal text.
+<<<
+
+[REQUIREMENT]
+UID: SRS-Dummy-Requirement_1
+TYPE: Functional
+STATEMENT: >>>
+Software Requirement Text.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SYS-Some-Requirement
+  ROLE: DECOMPOSED_FROM
+
+[REQUIREMENT]
+UID: SRS-Dummy-Requirement_2
+KEYWORDS: Derived
+TYPE: Functional
+STATEMENT: >>>
+Derived Software Requirement Text.
+<<<

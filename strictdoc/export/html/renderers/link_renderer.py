@@ -108,7 +108,10 @@ class LinkRenderer:
             return f"#{local_link}"
 
         including_document = node.get_including_document()
-        if including_document is not None:
+        if (
+            including_document is not None
+            and including_document == context_document
+        ):
             return f"#{local_link}"
 
         if allow_local and context_document is not None:

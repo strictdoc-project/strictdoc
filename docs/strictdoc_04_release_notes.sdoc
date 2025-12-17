@@ -52,13 +52,15 @@ TITLE: Unreleased
 [TEXT]
 MID: 369768b722cd4140b13fdaa8981a214e
 STATEMENT: >>>
-This release contains the following fixes:
+This release contains the following enhancements and fixes:
 
 1) The SingleChoice field grammar was made to support field values with parentheses such ``A(B)``, ``B(C)``, etc. Thanks to the Discord user AnotherOne for reporting this issue.
 
 2) The Mermaid visualization issue, where a diagram extended beyond a document page, was fixed by adjusting the SDoc document template CSS styles. Thanks to @xw-mk for reporting this issue.
 
 3) The Link Renderer class was fixed to resolve the links between two including documents. This behavior had been implemented correctly but was broken due to the recent HTML2PDF-related adjustments, and there were no tests to catch the regression. Thanks to @lmapii for reporting this.
+
+4) The document metadata has been extended to recognize reserved macros such as ``@GIT_VERSION`` and ``@GIT_BRANCH``. Previously, these macros were recognized only when added as part of the document's ``VERSION`` and ``DATE`` fields. Now it is possible to use them with any user-defined metadata field. Thanks to @xw-mk for contributing the patch with this improvement.
 <<<
 
 [[/SECTION]]

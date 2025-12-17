@@ -224,6 +224,24 @@ class DocumentScreenViewObject:
 
         return interpolate_at_pattern_lazy(self.document.config.date, resolver)
 
+    def render_metadata_value(self, metadata_value: str) -> str:
+        """
+        FIXME: Remove duplication of Git-resolvers in this class.
+        """
+
+        def resolver(variable_name: str) -> str:
+            if variable_name == "GIT_VERSION":
+                return self.git_client.get_commit_hash()
+            elif variable_name == "GIT_BRANCH":
+                return self.git_client.get_branch()
+            elif variable_name == "GIT_COMMIT_DATE":
+                return self.git_client.get_commit_date()
+            elif variable_name == "GIT_COMMIT_DATETIME":
+                return self.git_client.get_commit_datetime()
+            return variable_name
+
+        return interpolate_at_pattern_lazy(metadata_value, resolver)
+
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()
 

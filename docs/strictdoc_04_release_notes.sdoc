@@ -61,6 +61,8 @@ This release contains the following enhancements and fixes:
 3) The Link Renderer class was fixed to resolve the links between two including documents. This behavior had been implemented correctly but was broken due to the recent HTML2PDF-related adjustments, and there were no tests to catch the regression. Thanks to @lmapii for reporting this.
 
 4) The document metadata has been extended to recognize reserved macros such as ``@GIT_VERSION`` and ``@GIT_BRANCH``. Previously, these macros were recognized only when added as part of the document's ``VERSION`` and ``DATE`` fields. Now it is possible to use them with any user-defined metadata field. Thanks to @xw-mk for contributing the patch with this improvement.
+
+5) The html2pdf4doc dependency was changed to be exact-pinned with == instead of >=. A user reported that they are using an older version of StrictDoc that relies on the older html2pdf4doc API. There is a reason why they cannot migrate to the latest version of StrictDoc, so to support their use case, StrictDoc should have an exact version pinning to avoid html2pdf4doc running away from what the older StrictDoc versions can support.
 <<<
 
 [[/SECTION]]

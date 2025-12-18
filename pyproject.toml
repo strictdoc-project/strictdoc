@@ -95,7 +95,7 @@ dependencies = [
     "WebSockets",
 
     # HTML2PDF dependencies
-    "html2pdf4doc >= 0.0.24",
+    "html2pdf4doc == 0.0.25",
 
     # Robot Framework dependencies
     "robotframework >= 4.0.0",

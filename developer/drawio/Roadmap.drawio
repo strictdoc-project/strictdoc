@@ -471,11 +471,11 @@
         <mxCell id="OCJ0sT8p7vvNHOtbERSk-1" value="Linking nodes via MID instead of UID" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="470" y="900" width="90" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N9cUJzr8JpDOqpJWMLWi-1" value="&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Support parsing Rust source code&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;(StrictDoc parser)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
-          <mxGeometry x="500" y="990" width="130" height="70" as="geometry" />
+        <mxCell id="N9cUJzr8JpDOqpJWMLWi-1" value="&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Support parsing Rust source code&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;(StrictDoc parser)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+          <mxGeometry x="500" y="990" width="210" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N9cUJzr8JpDOqpJWMLWi-2" value="&lt;div&gt;HTML2PDF linear&amp;nbsp;&lt;/div&gt;&lt;div&gt;mutation test&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
-          <mxGeometry x="540" y="1170" width="90" height="70" as="geometry" />
+        <mxCell id="N9cUJzr8JpDOqpJWMLWi-2" value="&lt;div&gt;HTML2PDF linear&amp;nbsp;&lt;/div&gt;&lt;div&gt;mutation test&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+          <mxGeometry x="540" y="1170" width="140" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

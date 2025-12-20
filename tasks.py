@@ -1183,8 +1183,8 @@ def drawio(context):
         print(f"Copying: {path_to_drawio_} -> {path_to_png_}")  # noqa: T201
 
         # Basic safety for now to avoid writing wrong files.
-        os.path.isfile(path_to_drawio_), path_to_drawio_
-        os.path.isfile(path_to_png_), path_to_png_
+        assert os.path.isfile(path_to_drawio_), path_to_drawio_
+        assert os.path.isfile(path_to_png_), path_to_png_
 
         run_invoke(
             context,

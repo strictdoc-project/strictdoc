@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
   <diagram id="P9gQJe-g11wjnl4rl_ec" name="Backlog">
-    <mxGraphModel dx="4727" dy="637" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="4053" dy="95" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -25,7 +25,7 @@
         <mxCell id="JFUUtBqE65CX2bC6MA6P-1" value="WeasyPrint integration" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-9" vertex="1">
           <mxGeometry x="20" y="345" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="z6VyvqNRSlPAOFzJOFlc-1" value="&lt;font color=&quot;#000000&quot;&gt;HTML2PDF: Layout mutation tests&lt;/font&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" vertex="1" parent="xBUwhWlFWRuDQ3vYKA49-9">
+        <mxCell id="z6VyvqNRSlPAOFzJOFlc-1" value="&lt;font color=&quot;#000000&quot;&gt;HTML2PDF: Layout mutation tests&lt;/font&gt;" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-9" vertex="1">
           <mxGeometry x="20" y="285" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-13" value="Project statistics and search" style="swimlane;" parent="my6LpwKuQYxvOHTBM5B0-1" vertex="1">
@@ -175,7 +175,7 @@
         <mxCell id="3DlNu1vb5FTAQpXFcQlW-1" value="Excel import - Support .xlsx" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-41" vertex="1">
           <mxGeometry x="20" y="280" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="z6VyvqNRSlPAOFzJOFlc-3" value="Linux Kernel Requirements Template proposal" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" vertex="1" parent="xBUwhWlFWRuDQ3vYKA49-41">
+        <mxCell id="z6VyvqNRSlPAOFzJOFlc-3" value="Linux Kernel Requirements Template proposal" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-41" vertex="1">
           <mxGeometry x="320" y="280" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-58" value="Interfaces with tools" style="swimlane;" parent="my6LpwKuQYxvOHTBM5B0-1" vertex="1">

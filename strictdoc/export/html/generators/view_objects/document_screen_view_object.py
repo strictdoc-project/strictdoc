@@ -427,15 +427,20 @@ class DocumentScreenViewObject:
          * ASSUMPTION:
             We assume that the number of single-line strings is no greater
             than the height of the page
-
-        FIXME: Review this rules after upgrading html2pdf4doc to 0.2.4+
         """
 
         assert isinstance(node, SDocNode), node
 
-        user_requirement_style = node.get_requirement_style_mode()
-        if user_requirement_style == "narrative":
-            has_multiline_fields = node.has_multiline_fields()
-            if not has_multiline_fields:
-                return "html2pdf4doc-no-break"
+        if not node.has_multiline_fields():
+            html2pdf4doc_classes = []
+
+            if node.get_requirement_style_mode() == "narrative":
+                html2pdf4doc_classes.append("html2pdf4doc-no-break")
+
+            # The section that does not break away from its children.
+            if node.has_child_nodes():
+                html2pdf4doc_classes.append("html2pdf4doc-no-hanging")
+
+            return "".join(html2pdf4doc_classes)
+
         return ""

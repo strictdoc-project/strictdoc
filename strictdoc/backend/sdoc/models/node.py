@@ -317,6 +317,9 @@ class SDocNode(SDocNodeIF):
             for node_ in self.section_contents
         )
 
+    def has_child_nodes(self) -> bool:
+        return len(self.section_contents) > 0
+
     #
     # Reserved fields
     #

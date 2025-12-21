@@ -34,7 +34,7 @@ Notes:
   align-items: flex-end;
 }
 </style>
-<template html2pdf-frontpage>
+<template html2pdf4doc-frontpage>
   {#- add here frontpage html -#}
   <div class="html2pdf-frontpage-grid">
   <div class="html2pdf-frontpage-grid-top">  </div>
@@ -146,10 +146,10 @@ html2pdf-header {
   font-weight: bold;
 }
 </style>
-<template html2pdf-header>
-  {#- uncomment html2pdf-page-number to print page numbers: -#}
-  {#- <div html2pdf-page-number>
-    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
+<template html2pdf4doc-header>
+  {#- uncomment html2pdf4doc-page-number to print page numbers: -#}
+  {#- <div html2pdf4doc-page-number>
+    <span html2pdf4doc-page-number-current></span>/<span html2pdf4doc-page-number-total></span>
   </div> -#}
 
   {#- add here header html: -#}
@@ -192,10 +192,10 @@ html2pdf-footer {
   text-indent: -10000px;
 }
 </style>
-<template html2pdf-footer>
-  {#- uncomment html2pdf-page-number to print page numbers: -#}
-  <div html2pdf-page-number>
-    <span html2pdf-page-number-current></span>/<span html2pdf-page-number-total></span>
+<template html2pdf4doc-footer>
+  {#- uncomment html2pdf4doc-page-number to print page numbers: -#}
+  <div html2pdf4doc-page-number>
+    <span html2pdf4doc-page-number-current></span>/<span html2pdf4doc-page-number-total></span>
   </div>  
   {#- add here footer html -#}
   <div class="html2pdf-footer">

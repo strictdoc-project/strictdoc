@@ -415,3 +415,27 @@ class DocumentScreenViewObject:
         if node.reserved_mid is not None and node.mid_permanent:
             return base_url + "#" + node.reserved_mid
         return base_url
+
+    def get_html2pdf_classes(self, node: SDocNode) -> str:
+        """
+        Get CSS classes for html2pdf4doc for a given node.
+
+        html2pdf4doc rules for `Narrative` requirement style:
+        * If no multi-line content:
+            the node is not split at all (with or without a title)
+            -> add .html2pdf4doc-no-break to node.
+         * ASSUMPTION:
+            We assume that the number of single-line strings is no greater
+            than the height of the page
+
+        FIXME: Review this rules after upgrading html2pdf4doc to 0.2.4+
+        """
+
+        assert isinstance(node, SDocNode), node
+
+        user_requirement_style = node.get_requirement_style_mode()
+        if user_requirement_style == "narrative":
+            has_multiline_fields = node.has_multiline_fields()
+            if not has_multiline_fields:
+                return "html2pdf4doc-no-break"
+        return ""

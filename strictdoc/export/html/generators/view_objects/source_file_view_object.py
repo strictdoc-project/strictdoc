@@ -229,3 +229,13 @@ class SourceFileViewObject:
         total = len(self.trace_info.functions)
         percentage = (covered / total * 100) if total > 0 else 0
         return f"{covered} / {total} ({percentage:.1f}%)"
+
+    def get_html2pdf_classes(self, node: SDocNode) -> str:  # noqa: ARG002
+        """
+        This view object class is coupled with the HTML2PDF-related template
+        logic.
+
+        The Source File View is not printed with HTML2PDF, so we keep its classes
+        to noop.
+        """
+        return ""

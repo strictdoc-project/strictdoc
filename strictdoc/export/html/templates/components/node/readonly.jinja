@@ -2,34 +2,17 @@
 
 {% set node_type_string = sdoc_entity.get_node_type_string() %}
 
-{#
-  dev tag: #narrative_meta_hanging
-
-  Html2pdf4doc rules for `Narrative` requirement style:
-  * If no multi-line content:
-    the node is not split at all (with or without a title)
-    -> add .html2pdf4doc-no-break to node.
-  * PROBLEM:
-    We assume that the number of single-line strings is no greater than the height of the page
-
-  FIXME: Review this rules after upgrading html2pdf4doc to 0.2.4+
-#}
-{% set _user_requirement_style = sdoc_entity.get_requirement_style_mode() %}
-{% set _has_multiline_fields = sdoc_entity.has_multiline_fields() %}
-{% set _narrative_has_no_multiline_fields = not _has_multiline_fields and _user_requirement_style == 'narrative' %}
-
   <sdoc-node
     node-style="readonly"
     node-role="{{ sdoc_entity.get_type_string() }}"
     {%- if node_type_string is not none %}
       show-node-type-name="{{ node_type_string }}"
     {%- endif %}
-    {% if sdoc_entity.is_requirement %}
-      node-view="{{ _user_requirement_style }}"
+    {# FIXME: Is this template always called on SDocNode? Can this check be removed? #}
+    {% if sdoc_entity.is_requirement() %}
+      node-view="{{ sdoc_entity.get_requirement_style_mode() }}"
     {%- endif -%}
-    {%- if _narrative_has_no_multiline_fields %}
-      class="html2pdf4doc-no-break"
-    {%- endif %}
+    class="{{ view_object.get_html2pdf_classes(sdoc_entity) }}"
     data-testid="node-{{ sdoc_entity.get_type_string() }}"
   >
 

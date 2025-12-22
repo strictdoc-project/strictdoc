@@ -431,9 +431,15 @@ class DocumentScreenViewObject:
 
         assert isinstance(node, SDocNode), node
 
-        if not node.has_multiline_fields():
-            html2pdf4doc_classes = []
+        html2pdf4doc_classes = []
 
+        if (
+            node.node_type
+            in self.project_config.html2pdf_forced_page_break_nodes
+        ):
+            html2pdf4doc_classes.append("sdoc-html2pdf4doc-break-before")
+
+        if not node.has_multiline_fields():
             if node.get_requirement_style_mode() == "narrative":
                 html2pdf4doc_classes.append("html2pdf4doc-no-break")
 
@@ -441,6 +447,4 @@ class DocumentScreenViewObject:
             if node.has_child_nodes():
                 html2pdf4doc_classes.append("html2pdf4doc-no-hanging")
 
-            return "".join(html2pdf4doc_classes)
-
-        return ""
+        return " ".join(html2pdf4doc_classes)

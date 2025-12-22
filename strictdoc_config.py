@@ -70,7 +70,8 @@ def create_config() -> ProjectConfig:
             "reports/tests_integration.lit.junit.xml": "tests/integration",
             "reports/tests_integration_html2pdf.lit.junit.xml": "tests/integration",
         },
-        html2pdf_strict=True,
+        # Waiting for a fix to be released soon.
+        html2pdf_strict=False,
         reqif_multiline_is_xhtml=True,
         reqif_enable_mid=True,
         section_behavior="[[SECTION]]",

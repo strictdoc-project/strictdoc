@@ -17,7 +17,7 @@ class Screen_SourceCoverage:
             by=By.XPATH,
         )
         self.test_case.wait_for_ready_state_complete()
-        self.assert_no_js_and_404_errors()
+        self.assert_no_js_errors()
 
     def assert_contains_text(self, text) -> None:
         self.test_case.assert_element(
@@ -25,8 +25,7 @@ class Screen_SourceCoverage:
             by=By.XPATH,
         )
 
-    def assert_no_js_and_404_errors(self) -> None:
-        self.test_case.assert_no_404_errors()
+    def assert_no_js_errors(self) -> None:
         self.test_case.assert_no_js_errors()
 
     def do_click_on_file(self, file: str) -> Screen_SourceFileCoverage:

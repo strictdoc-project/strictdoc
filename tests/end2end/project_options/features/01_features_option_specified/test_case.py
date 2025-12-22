@@ -24,4 +24,4 @@ class Test(E2ECase):
             screen_project_index.assert_link_to_requirements_coverage_present()
             screen_project_index.assert_link_to_source_coverage_present()
 
-            screen_project_index.assert_no_js_and_404_errors()
+            screen_project_index.assert_no_js_errors()

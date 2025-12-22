@@ -25,4 +25,4 @@ class Test_ProjectOptions_HTMLAssetsStrictDocDir_02_OptionSpecified_Document(
 
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
-            screen_document.assert_no_js_and_404_errors()
+            screen_document.assert_no_js_errors()

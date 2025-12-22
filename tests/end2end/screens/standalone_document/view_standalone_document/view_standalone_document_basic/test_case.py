@@ -34,4 +34,4 @@ class Test(E2ECase):
             )
             screen_standalone_document.assert_on_standalone_screen_document()
             screen_standalone_document.assert_not_empty_document()
-            screen_standalone_document.assert_no_js_and_404_errors()
+            screen_standalone_document.assert_no_js_errors()

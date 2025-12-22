@@ -3,16 +3,16 @@
 {% set node_type_string = sdoc_entity.get_node_type_string() %}
 
   <sdoc-node
+    class="{{ view_object.get_html2pdf_classes(sdoc_entity) }}"
     node-style="readonly"
     node-role="{{ sdoc_entity.get_type_string() }}"
     {%- if node_type_string is not none %}
       show-node-type-name="{{ node_type_string }}"
     {%- endif %}
     {# FIXME: Is this template always called on SDocNode? Can this check be removed? #}
-    {% if sdoc_entity.is_requirement() %}
+    {% if sdoc_entity.is_requirement() -%}
       node-view="{{ sdoc_entity.get_requirement_style_mode() }}"
-    {%- endif -%}
-    class="{{ view_object.get_html2pdf_classes(sdoc_entity) }}"
+    {% endif -%}
     data-testid="node-{{ sdoc_entity.get_type_string() }}"
   >
 

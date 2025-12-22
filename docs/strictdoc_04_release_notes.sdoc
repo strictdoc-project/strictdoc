@@ -46,6 +46,20 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 4d7680f589d54d808714f13b5b527de3
+TITLE: Unreleased
+
+[TEXT]
+MID: a14fc4cd52d648eab3c42a43df0cc352
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Based on a user report, the ``html2pdf_forced_page_break_nodes`` option has been added to the StrictDoc configuration. This option allows specifying which nodes should always start on a new page when printed to PDF using the HTML2PDF feature. It is especially useful for documents that contain very large, descriptive requirement nodes with a lot of text. In such cases, starting each node on a new page helps avoid having the beginning of a node lost in the middle of a page. Thanks to @xw-mk for the clear request.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: d4efd073a4c64123b3acfff0e0d4acee
 TITLE: 0.15.3 (2025-12-18)
 

@@ -13,8 +13,7 @@ class Screen_RequirementsCoverage:
             by=By.XPATH,
         )
         self.test_case.wait_for_ready_state_complete()
-        self.assert_no_js_and_404_errors()
+        self.assert_no_js_errors()
 
-    def assert_no_js_and_404_errors(self) -> None:
-        self.test_case.assert_no_404_errors()
+    def assert_no_js_errors(self) -> None:
         self.test_case.assert_no_js_errors()

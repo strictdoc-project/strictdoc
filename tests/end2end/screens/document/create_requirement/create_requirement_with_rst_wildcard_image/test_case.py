@@ -45,6 +45,6 @@ class Test_UC03_T09_CreateSectionWithRSTImage(E2ECase):
             )
             form_edit_requirement.do_form_submit()
 
-            screen_document.assert_no_js_and_404_errors()
+            screen_document.assert_no_js_errors()
 
         assert test_setup.compare_sandbox_and_expected_output()

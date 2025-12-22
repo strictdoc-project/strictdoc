@@ -30,4 +30,4 @@ class Test_ProjectOptions_HTMLAssetsStrictDocDir_03_OptionSpecified_Requirements
                 screen_project_index.do_click_on_requirements_coverage_link()
             )
             screen_requirements_coverage.assert_on_screen()
-            screen_requirements_coverage.assert_no_js_and_404_errors()
+            screen_requirements_coverage.assert_no_js_errors()

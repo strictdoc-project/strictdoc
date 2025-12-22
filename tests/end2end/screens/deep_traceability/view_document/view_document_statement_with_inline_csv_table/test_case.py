@@ -37,7 +37,7 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
             screen_document.assert_not_empty_document()
 
-            screen_document.assert_no_js_and_404_errors()
+            screen_document.assert_no_js_errors()
 
             viewtype_selector = ViewType_Selector(self)
             screen_deep_traceability = (

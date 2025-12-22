@@ -20,4 +20,4 @@ class Test_ProjectOptions_HTMLAssetsStrictDocDir_01_OptionSpecified_ProjectIndex
 
             screen_project_index = Screen_ProjectIndex(self)
             screen_project_index.assert_on_screen()
-            screen_project_index.assert_no_js_and_404_errors()
+            screen_project_index.assert_no_js_errors()

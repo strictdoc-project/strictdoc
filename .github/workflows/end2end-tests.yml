@@ -15,6 +15,10 @@ on:
       - 'strictdoc/server/**'
       - 'tests/end2end/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tests_end2end_macos:
     name: E2E - macOS

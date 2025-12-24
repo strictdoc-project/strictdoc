@@ -13,6 +13,7 @@ from docutils.core import publish_parts
 from docutils.parsers.rst import directives, roles
 from docutils.utils import SystemMessage
 from markupsafe import Markup
+from pygments.lexers import _load_lexers
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
@@ -35,6 +36,8 @@ class RstToHtmlFragmentWriter:
     directives.register_directive("image", WildcardEnhancedImage)
 
     roles.register_local_role("rawhtml", raw_html_role)
+
+    _load_lexers("strictdoc.export.rst.strictdoc_lexer")
 
     BASE_SETTINGS = {
         # This is important for code syntax highlighting. The setting of

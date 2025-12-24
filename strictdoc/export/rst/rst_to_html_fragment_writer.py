@@ -36,6 +36,16 @@ class RstToHtmlFragmentWriter:
 
     roles.register_local_role("rawhtml", raw_html_role)
 
+    BASE_SETTINGS = {
+        # This is important for code syntax highlighting. The setting of
+        # "short" is coupled to the CSS file that we auto-generated using Pygments:
+        # strictdoc/export/html/_static/pygments.css
+        "syntax_highlight": "short",
+        "syntax_highlight_opts": {
+            "linenos": "inline",  # "table"
+        },
+    }
+
     def __init__(
         self,
         *,
@@ -129,7 +139,7 @@ class RstToHtmlFragmentWriter:
         # being printed to sys.stderr.
         # https://www.programcreek.com/python/example/88126/docutils.core.publish_parts
         warning_stream = io.StringIO()
-        settings = {"warning_stream": warning_stream}
+        settings = {**self.BASE_SETTINGS, "warning_stream": warning_stream}
 
         output = publish_parts(
             rst_fragment,
@@ -176,7 +186,7 @@ class RstToHtmlFragmentWriter:
         # being printed to sys.stderr.
         # https://www.programcreek.com/python/example/88126/docutils.core.publish_parts
         warning_stream = io.StringIO()
-        settings = {"warning_stream": warning_stream}
+        settings = {**self.BASE_SETTINGS, "warning_stream": warning_stream}
 
         try:
             output = publish_parts(

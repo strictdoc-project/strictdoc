@@ -46,6 +46,20 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 4d7680f589d54d808714f13b5b527de3
+TITLE: Unreleased
+
+[TEXT]
+MID: a14fc4cd52d648eab3c42a43df0cc352
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The code block syntax highlighting has been enabled for all RST .. code:: blocks. The code blocks that have been tested already include C and Python.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: d4efd073a4c64123b3acfff0e0d4acee
 TITLE: 0.15.3 (2025-12-18)
 

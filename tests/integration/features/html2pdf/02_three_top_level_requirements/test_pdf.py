@@ -1,6 +1,7 @@
 """
 @relation(SDOC-SRS-51, scope=file)
 """
+import re
 
 from pypdf import PdfReader
 
@@ -8,21 +9,22 @@ reader = PdfReader("Output/html2pdf/pdf/input.pdf")
 
 assert len(reader.pages) == 3, reader.pages
 
-page1_text_normalized = (
+page1_text_normalized = re.sub(r"\d{4}-\d{2}-\d{2}", "XXXX-XX-XX",
     reader.pages[0].extract_text()
 )
+
 assert (
         page1_text_normalized
         == """\
 Dummy Software Requirements
 Speciﬁcation #1
 Untitled Project Dummy Software Requirements Speciﬁcation #1
-2025-12-23 1/3\
+XXXX-XX-XX 1/3\
 """
 ), page1_text_normalized
 
 
-page2_text_normalized = (
+page2_text_normalized = re.sub(r"\d{4}-\d{2}-\d{2}", "XXXX-XX-XX",
     reader.pages[1].extract_text()
 )
 assert (
@@ -36,12 +38,12 @@ Dummy high-level requirement #1
 Dummy high-level requirement #2
 Dummy high-level requirement #3
 Untitled Project Dummy Software Requirements Speciﬁcation #1
-2025-12-23 2/3\
+XXXX-XX-XX 2/3\
 """
 ), page2_text_normalized
 
 
-page3_text_normalized = (
+page3_text_normalized = re.sub(r"\d{4}-\d{2}-\d{2}", "XXXX-XX-XX",
     reader.pages[2].extract_text()
     .replace("R E Q-", "R E Q -")
 )
@@ -73,6 +75,6 @@ R E Q - 3
 S T A T E M E N T :
 System ABC shall do 3.
 Untitled Project Dummy Software Requirements Speciﬁcation #1
-2025-12-23 3/3\
+XXXX-XX-XX 3/3\
 """
 ), page3_text_normalized

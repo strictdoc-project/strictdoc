@@ -3,5 +3,5 @@ CHECK: Published: Document with an code block
 
 RUN: %cat %T/html/30_code_block/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
 CHECK-HTML-FILE: Lorem Ipsum.
-CHECK-HTML-FILE: <span class="keyword">struct</span>
+CHECK-HTML-FILE: <span class="k">struct</span>
 CHECK-HTML-FILE: Lorem ipsum.

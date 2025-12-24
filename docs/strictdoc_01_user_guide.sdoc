@@ -2908,7 +2908,7 @@ To establish a forward link with a role from an SDoc node to a source file:
 
 To establish a backward link from a source file to an SDoc node:
 
-.. code-block::
+.. code-block:: c
 
     /**
      * Some text.
@@ -2962,7 +2962,7 @@ STATEMENT: >>>
 
 In addition to recognizing the ``@relation(...)`` markers described above, StrictDoc can also read SDoc node fields when they are defined in source code comments.
 
-.. code-block::
+.. code-block:: c
 
     /**
      * Some text.

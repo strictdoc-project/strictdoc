@@ -54,7 +54,9 @@ MID: a14fc4cd52d648eab3c42a43df0cc352
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) The code block syntax highlighting has been enabled for all RST .. code:: blocks. The code blocks that have been tested already include C and Python.
+1\) The code block syntax highlighting has been enabled for all RST ``.. code::`` blocks. The code blocks that have been tested already include C, TOML, and Python.
+
+Also, a Pygments lexer for the SDoc markup has been added to the StrictDoc source code. From now on, ``.. code:: strictdoc`` blocks are recognized and syntax-highlighted.
 <<<
 
 [[/SECTION]]

@@ -1,7 +1,7 @@
 import re
 from typing import List
 
-REGEX_NAME_PART = r"[A-Za-z0-9-_\.]+"
+REGEX_NAME_PART = r"[A-Za-z0-9-_\. ]+"
 REGEX_FILENAME = rf"{REGEX_NAME_PART}"
 REGEX_FOLDER = rf"{REGEX_NAME_PART}"
 

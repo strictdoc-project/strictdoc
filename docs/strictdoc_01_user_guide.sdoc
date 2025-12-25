@@ -3439,8 +3439,8 @@ The behavior of wildcard symbols ``*`` and ``**`` is as follows:
 
    * - ``docs/**``
      - Match all documents found in the ``docs/`` folder and all its subdirectories.
-   * - ``**/docs/**``
-     - Match all documents found in the ``docs/`` folder and all its subdirectories. The ``docs/`` folder can be a top-level folder or at any level of depth.
+   * - ``**docs/**``
+     - Match all documents found in paths that contain the ``docs/`` path component.
 <<<
 
 [[/SECTION]]

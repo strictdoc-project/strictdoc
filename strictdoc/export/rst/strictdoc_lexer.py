@@ -23,7 +23,7 @@ class StrictDocLexer(RegexLexer):  # type: ignore[misc]
     A Pygments lexer for StrictDoc syntax.
     """
 
-    name = "StrictDocLexer"
+    name = "StrictDoc"
     aliases = ["strictdoc"]
     filenames = ["*.sdoc"]
 
@@ -141,7 +141,7 @@ class StrictDocLexer(RegexLexer):  # type: ignore[misc]
 # Register the lexer
 _mapping.LEXERS["StrictDocLexer"] = (
     "strictdoc.export.rst.strictdoc_lexer",  # module path
-    "StrictDocLexer",  # class name
+    "StrictDoc",
     ("strictdoc",),  # aliases
     ("*.sdoc",),  # filename patterns
     (),  # mimetypes

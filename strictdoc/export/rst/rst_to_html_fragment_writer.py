@@ -37,6 +37,7 @@ class RstToHtmlFragmentWriter:
 
     roles.register_local_role("rawhtml", raw_html_role)
 
+    # FIXME: It doesn't feel right to load lexers like this.
     _load_lexers("strictdoc.export.rst.strictdoc_lexer")
 
     BASE_SETTINGS = {

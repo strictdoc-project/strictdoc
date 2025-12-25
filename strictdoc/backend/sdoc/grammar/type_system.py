@@ -1,4 +1,6 @@
-STRICTDOC_BASIC_TYPE_SYSTEM = r"""
+REGEX_NODE_NAME = r"[A-Z]+(_[A-Z]+)*"
+
+STRICTDOC_BASIC_TYPE_SYSTEM = rf"""
 BooleanChoice[noskipws]:
   ('True' | 'False')
 ;
@@ -12,7 +14,7 @@ ChoiceOptionXs[noskipws]:
 ;
 
 RequirementType[noskipws]:
-  !ReservedKeyword /[A-Z]+(_[A-Z]+)*/
+  !ReservedKeyword /{REGEX_NODE_NAME}/
 ;
 
 ReservedKeyword[noskipws]:

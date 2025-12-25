@@ -52,6 +52,10 @@ RUN: %cat "%T/html/strictdoc/docs/strictdoc_01_user_guide.html" | filecheck %s -
 CHECK-DOCUMENT-NOT: Export to ReqIF
 CHECK-DOCUMENT-NOT: turbo.js
 
+# Verify that the document does not have any Pygments lexing errors created from
+# parsing the RST 'code' blocks.
+CHECK-DOCUMENT-NOT: class="err"
+
 RUN: %check_exists --file "%T/html/index.html"
 RUN: %check_exists --file "%T/html/strictdoc/docs/strictdoc_01_user_guide.html"
 RUN: %check_exists --file "%T/html/strictdoc/docs/strictdoc_01_user_guide-TABLE.html"

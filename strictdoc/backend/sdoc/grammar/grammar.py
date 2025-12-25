@@ -5,6 +5,7 @@
 # FIXME: Extract this to a file with a shared set of global constants.
 # @relation(SDOC-SRS-22, scope=line)
 REGEX_UID = r"([\w]+[\w()\-\/.: ]*)"
+REGEX_FIELD_NAME = r"[A-Z]+[A-Za-z0-9_\-]*"
 
 NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
 NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
@@ -50,7 +51,7 @@ MultiLineString[noskipws]:
 ;
 
 FieldName[noskipws]:
-  /{NEGATIVE_UID}{NEGATIVE_RELATIONS}[A-Z]+[A-Za-z0-9_\-]*/
+  /{NEGATIVE_UID}{NEGATIVE_RELATIONS}{REGEX_FIELD_NAME}/
 ;
 """
 

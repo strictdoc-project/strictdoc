@@ -321,7 +321,7 @@ def test_end2end(
 
 
 @task(aliases=["tu"])
-def test_unit(context, focus=None, output=False):
+def test_unit(context, focus=None, path=None, output=False):
     """
     @relation(SDOC-SRS-44, scope=function)
     """
@@ -332,6 +332,11 @@ def test_unit(context, focus=None, output=False):
     output_argument = "--capture=no" if output else ""
 
     cwd = os.getcwd()
+
+    if path is None:
+        path = "tests/unit"
+    else:
+        assert "tests/unit" in path, path
 
     path_to_coverage_file = f"{cwd}/build/coverage/unit/.coverage"
     run_invoke_with_tox(
@@ -347,10 +352,10 @@ def test_unit(context, focus=None, output=False):
             --junit-xml={TEST_REPORTS_DIR}/tests_unit.pytest.junit.xml
             -o cache_dir=build/pytest_unit_with_coverage
             -o junit_suite_name="StrictDoc Unit Tests"
-            tests/unit/
+            {path}
         """,
     )
-    if not focus:
+    if not focus and path == "tests/unit":
         run_invoke_with_tox(
             context,
             ToxEnvironment.CHECK,
@@ -966,6 +971,7 @@ def release_pyinstaller(context):
             --noconfirm
             --additional-hooks-dir developer/pyinstaller_hooks
             --distpath {path_to_pyi_dist}
+            --hidden-import strictdoc.export.rst.strictdoc_lexer
             --hidden-import strictdoc.server.app
             --add-data strictdoc/export/html/templates:templates/html
             --add-data strictdoc/export/rst/templates:templates/rst

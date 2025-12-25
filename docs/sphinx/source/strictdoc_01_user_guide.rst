@@ -1174,7 +1174,7 @@ Section without a level
 A section can have no level attached to it. To enable this behavior, the field
 ``LEVEL`` has to be set to ``None``.
 
-.. code-block:: text
+.. code-block:: strictdoc
 
     [DOCUMENT]
     TITLE: Hello world doc

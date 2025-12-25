@@ -137,7 +137,7 @@ MID: ffbdb80fb21d48adbaeffb782d7994a2
 STATEMENT: >>>
 "Hello World" example of the SDoc text language:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -153,19 +153,19 @@ Open a command-line terminal program supported on your system.
 
 Once you have ``strictdoc`` installed (see [LINK: SDOC_UG_GETTING_STARTED] below), switch to the directory with the ``hello_world.sdoc`` file. For example, assuming that the file is now in the ``workspace/hello_world`` directory in your user folder:
 
-.. code-block:: text
+.. code:: text
 
     cd <your user home directory>/workspace/hello_world
 
 Run StrictDoc as follows:
 
-.. code-block:: text
+.. code:: text
 
     strictdoc export .
 
 The expected output:
 
-.. code-block:: text
+.. code:: text
 
     $ strictdoc export hello.sdoc
     Parallelization: Enabled
@@ -183,13 +183,13 @@ The expected output:
 
 The HTML output produced so far has been generated statically. Now, start a StrictDoc server from the same directory:
 
-.. code-block:: bash
+.. code:: text
 
     strictdoc server .
 
 The expected output should contain the following line:
 
-.. code-block:: text
+.. code:: text
 
     INFO:     Uvicorn running on http://127.0.0.1:5111 (Press CTRL+C to quit)
 
@@ -276,7 +276,7 @@ TITLE: Installing StrictDoc as a Pip package (recommended way)
 [TEXT]
 MID: 872a60c673854cfd909787f2379d88c7
 STATEMENT: >>>
-.. code-block:: text
+.. code:: text
 
     pip install strictdoc
 <<<
@@ -292,7 +292,7 @@ MID: 867f22a2767a434586d1ee4f7ee161fb
 STATEMENT: >>>
 Sometimes, it takes a while before the latest features and fixes reach the stable Pip release. In that case, installing a Pip package from the Git repository directly is possible:
 
-.. code-block::
+.. code:: text
 
     pip install -U --pre git+https://github.com/strictdoc-project/strictdoc.git@main
 <<<
@@ -310,7 +310,7 @@ StrictDoc can be installed with a dedicated Docker image.
 
 To build the image:
 
-.. code-block:: text
+.. code:: text
 
     docker build . \
         --build-arg STRICTDOC_SOURCE=pypi \
@@ -320,7 +320,7 @@ The ``STRICTDOC_SOURCE`` argument is optional (default value is ``pypi``) and ca
 
 To run the container:
 
-.. code-block:: text
+.. code:: text
 
     docker run \
         --name strictdoc \
@@ -353,7 +353,7 @@ To run the container:
 
 If entering the container manually, the ``strictdoc`` command can be run as follows:
 
-.. code-block:: text
+.. code:: text
 
     bash-5.1# strictdoc export .
     bash-5.1# exit
@@ -387,23 +387,23 @@ StrictDoc is `packaged in nixpkgs <https://search.nixos.org/packages?query=stric
 
 You can try it without installing with ``nix-shell``:
 
-.. code-block:: bash
+.. code:: text
 
     nix-shell -p strictdoc
 
 or ``nix run``:
 
-.. code-block:: bash
+.. code:: text
 
     nix run nixpkgs#strictdoc
 
 Or you can add it to your system's packages with:
 
-.. code-block:: nix
+.. code:: nix
 
-  environment.systemPackages = [
-    pkgs.strictdoc
-  ];
+    environment.systemPackages = [
+        pkgs.strictdoc
+    ];
 <<<
 
 [[/SECTION]]
@@ -426,7 +426,7 @@ The easiest way to see the static HTML export feature in action is to run the [L
 
 The ``export`` command is the main producer of documentation. The native export format of StrictDoc is HTML. The ``export`` command supports a number of parameters, including the option for selecting export formats (HTML, RST, Excel, etc.). The options can be explored with the ``--help`` command.
 
-.. code-block:: bash
+.. code:: text
 
     strictdoc export --help
 <<<
@@ -443,13 +443,13 @@ MID: 1fc9f6f4f84d47439bf6aa3404227ca4
 STATEMENT: >>>
 StrictDoc supports a web-based user interface. The StrictDoc web server is launched via the ``server`` command which accepts a path to a documentation tree as a parameter.
 
-.. code-block:: bash
+.. code:: text
 
     strictdoc server .
 
 The ``server`` command accepts a number of options. To explore the options, run:
 
-.. code-block:: bash
+.. code:: text
 
     strictdoc server --help
 
@@ -563,7 +563,7 @@ located in a single file:
 
 This is how a minimal possible SDoc document looks like:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -585,7 +585,7 @@ A **leaf node** cannot contain any child nodes. It is simply a node with text fi
 
 Example of a leaf node:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [REQUIREMENT]
     STATEMENT: StrictDoc shall be based on a document model.
@@ -594,7 +594,7 @@ A **composite node** can contain other composite or leaf nodes. The default comp
 
 Example of a composite node:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [[SECTION]]
     TITLE: Document model
@@ -625,11 +625,10 @@ STATEMENT: >>>
 The ``[DOCUMENT]`` element must always be present in an SDoc document. It is a
 root of an SDoc document graph.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
-    (newline)
 
 The following ``DOCUMENT`` fields are allowed:
 
@@ -775,7 +774,7 @@ The Inline, Table, and Zebra styles are all variations of a table-based format d
 
 The Plain style is the simplest option, showing only the content of the node fields without any meta information.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Hello world
@@ -800,7 +799,7 @@ The ``NODE_IN_TOC`` option controls whether requirement's title appear
 in the table of contents (TOC). The available options are: ``True`` / ``False``.
 Default is ``True``.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Hello world
@@ -821,15 +820,15 @@ MID: f86d45b7ad1a48ec919b43a695ca9126
 STATEMENT: >>>
 StrictDoc allows additional metadata to be added in the [DOCUMENT] element. The ``METADATA:`` field accepts any number of entries, each consisting of a key-value pair on a separate line. Keys must begin with a letter and end with a colon, but are not otherwise constrained.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Hello world
     OPTIONS:
       NODE_IN_TOC: True
     METADATA:
-      KEY: Value
-      ...
+      AUTHOR: John Doe
+      APPROVED_BY: Jane Smith
 
 The additional metadata is also included on the front page of the exported PDF. This is useful for displaying document-specific information, such as the author's name or project identifiers.
 
@@ -857,7 +856,7 @@ MID: 4474709783b74b1ca31fa754c712344e
 STATEMENT: >>>
 A text node is the most basic document node which is used for normal document text. The ``[TEXT]`` is one of the default leaf elements declared in StrictDoc's default grammar. See [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -887,7 +886,7 @@ The ``REQUIREMENT`` is used for creating requirements, for example technical req
 
 Similar to ``TEXT``, the ``REQUIREMENT`` is a default leaf element declared in StrictDoc's default grammar, see [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -955,7 +954,7 @@ This element can be useful in lower-level specification documents where a given 
 
 The ``[[SECTION]]`` element is a reserved composite node in StrictDoc's default grammar, used to represent nested document sections or chapters. Users can also define custom composite nodes by registering them in the document grammar as follows:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [GRAMMAR]
     ELEMENTS:
@@ -1009,7 +1008,7 @@ The ``[[SECTION]]`` element can used for creating document chapters and grouping
 requirements into logical groups. It is equivalent to the use of ``#``, ``##``,
 ``###``, etc., in Markdown and ``====``, ``----``, ``~~~~`` in RST.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -1042,7 +1041,7 @@ MID: fa700a9b975f493ba7ec2fd0a7b44bbe
 STATEMENT: >>>
 Sections can be nested within each other.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -1078,7 +1077,7 @@ The ``[[SECTION]]`` element is registered by default in StrictDoc's grammar, but
 
 Default ``[[SECTION]]`` grammar is equivalent to the following manual definition:
 
-.. code-block::
+.. code:: strictdoc
 
     [GRAMMAR]
     ELEMENTS:
@@ -1173,7 +1172,7 @@ MID: 7fe2832d60014259a8d67a09f1db102a
 STATEMENT: >>>
 StrictDoc supports the automatic generation of machine identifiers (MIDs). This optional feature can be enabled individually for each document through the document-level ``ENABLE_MID`` config option. If the MIDs are enabled, the document must also provide an explicit grammar for its nodes (see [LINK: SECTION-UG-DOCUMENT-GRAMMAR]) because the default grammar does not include the MID identifier for its default TEXT and REQUIREMENT elements. All grammar elements must include the MID field.
 
-.. code-block::
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Hello World!
@@ -1198,14 +1197,12 @@ StrictDoc supports the automatic generation of machine identifiers (MIDs). This 
       - TITLE: UID
         TYPE: String
         REQUIRED: True
-      ... any other single-line fields by a user
       - TITLE: TITLE
         TYPE: String
         REQUIRED: True
       - TITLE: STATEMENT
         TYPE: String
         REQUIRED: True
-      ... any other multiline fields by a user
 
 When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system.
 
@@ -1227,7 +1224,7 @@ MID: a5a3d62d90f646aa8fac43795aa8fcbb
 STATEMENT: >>>
 Machine identifiers (MIDs) differ from and do not replace unique identifiers (UIDs). A requirement, section, or document node may have both ``MID`` and ``UID`` fields defined. For example:
 
-.. code-block::
+.. code:: strictdoc
 
     [REQUIREMENT]
     MID: 06ab121d3c0f4d8c94652323b8f735c6
@@ -1275,7 +1272,7 @@ typical conventions for naming UIDs:
 - Requirements without a number, e.g. ``SDOC-HIGH-DATA-MODEL`` (StrictDoc)
 - ``SAVOIR.OBC.PM.80`` (SAVOIR guidelines)
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -1298,7 +1295,7 @@ STATEMENT: >>>
 A section can have no level attached to it. To enable this behavior, the field
 ``LEVEL`` has to be set to ``None``.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Hello world doc
@@ -1365,7 +1362,7 @@ Every requirement should have its ``TITLE`` field specified.
 
     Example:
 
-    .. code-block:: text
+    .. code:: strictdoc
 
         [DOCUMENT]
         TITLE: StrictDoc
@@ -1401,7 +1398,7 @@ A requirement should have a ``RATIONALE`` field that explains/justifies why
 the requirement exists. Like comments, the rationale field can be single-line
 or multiline.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -1425,7 +1422,7 @@ STATEMENT: >>>
 A requirement can have one or more comments explaining the requirement. The
 comments can be single-line or multiline.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -1455,7 +1452,7 @@ MID: c0c9c15d57e742ed80f12b8895f01de0
 STATEMENT: >>>
 The ``RELATIONS`` field is used to connect requirements to each other:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -1514,7 +1511,7 @@ MID: a54f41576b2d40df92041862bef13600
 STATEMENT: >>>
 A requirement relation can be specialized with a role. The role must be registered in the document grammar, see [LINK: SDOC_UG_GRAMMAR_RELATIONS].
 
-.. code-block::
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Example
@@ -1523,7 +1520,15 @@ A requirement relation can be specialized with a role. The role must be register
     ELEMENTS:
     - TAG: REQUIREMENT
       FIELDS:
-      ...
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: True
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
       RELATIONS:
       - TYPE: Parent
         ROLE: Refines
@@ -1560,7 +1565,7 @@ For each node field, StrictDoc supports both single-line and multiline fields.
 
 Example:
 
-.. code-block::
+.. code:: strictdoc
 
     [NODE]
     TITLE: Single-line field
@@ -1595,7 +1600,7 @@ STATEMENT: >>>
 StrictDoc ``.sdoc`` files can be built-up from including other documents where a document can be included to no more than one including document.
 
 The ``[DOCUMENT_FROM_FILE]`` element can be used anywhere body elements can be
-used ( e.g. ``[SECTION]``, ``[REQUIREMENT``, ``[COMPOSITE_REQUIREMENT]`` etc.) and will
+used (e.g. ``[SECTION]``, ``[REQUIREMENT]``, ``[TEXT]`` etc.) and will
 evaluate by inserting its contents from the file referenced by its ``FILE:`` property
 where it was used in the parent document. The files included must be proper SDoc
 documents and have a usual ``.sdoc`` extension.
@@ -1603,7 +1608,7 @@ documents and have a usual ``.sdoc`` extension.
 Here is an example pair of files similar to examples above. First the
 ``.sdoc`` file has a ``[DOCUMENT_FROM_FILE]`` that references the latter file.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -1611,30 +1616,26 @@ Here is an example pair of files similar to examples above. First the
     [DOCUMENT_FROM_FILE]
     FILE: include.sdoc
 
-    [REQUIREMENT]
+    [TEXT]
+    STATEMENT: >>>
+    This text is in the main document.
+    <<<
 
 Then the referenced file, ``include.sdoc``:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Section ABC
 
-    [REQUIREMENT]
-
-    [[SECTION]]
-    TITLE: Sub section
-    [[/SECTION]]
-
-    [COMPOSITE_REQUIREMENT]
-
-    [REQUIREMENT]
-
-    [/COMPOSITE_REQUIREMENT]
+    [TEXT]
+    STATEMENT: >>>
+    This text is in the included document.
+    <<<
 
 Which will resolve to the following document after inclusion:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: StrictDoc
@@ -1642,21 +1643,15 @@ Which will resolve to the following document after inclusion:
     [[SECTION]]
     TITLE: Section ABC
 
-    [REQUIREMENT]
+    [TEXT]
+    STATEMENT: >>>
+    This text is in the included document.
+    <<<
 
-    [[SECTION]]
-    TITLE: Sub section
-    [[/SECTION]]
-
-    [COMPOSITE_REQUIREMENT]
-
-    [REQUIREMENT]
-
-    [/COMPOSITE_REQUIREMENT]
-
-    [[/SECTION]]
-
-    [REQUIREMENT]
+    [TEXT]
+    STATEMENT: >>>
+    This text is in the main document.
+    <<<
 
 .. note::
 
@@ -1699,7 +1694,7 @@ specific to a particular document.
 First, such fields have to be registered on a document level using the
 ``[GRAMMAR]`` field. The following example defines a grammar with three elements: ``SECTION``, ``TEXT``, and ``REQUIREMENT``, where the REQUIREMENT element includes several custom fields, such as the ``VERIFICATION`` field.
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: How to declare a document grammar
@@ -1760,7 +1755,7 @@ field mandatory for each and every requirement in the document.
 When the fields are registered on the document level, it becomes possible to
 declare them as the ``[REQUIREMENT]`` special fields:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [REQUIREMENT]
     UID: ABC-123
@@ -1817,7 +1812,7 @@ The supported field types are:
 
 Example:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: How to declare a grammar with different field types
@@ -1895,7 +1890,7 @@ MID: 5396d4571b4c4204b093a44980a489ed
 STATEMENT: >>>
 The ``IS_COMPOSITE`` property controls whether a document node will be treated as a leaf node, e.g., ``[NODE]``, or a composite node, e.g., ``[[NODE]]``.
 
-.. code-block::
+.. code:: strictdoc
 
     [GRAMMAR]
     ELEMENTS:
@@ -1903,23 +1898,24 @@ The ``IS_COMPOSITE`` property controls whether a document node will be treated a
       PROPERTIES:
         IS_COMPOSITE: False
       FIELDS:
-        ...
-    - TAG: NODE2
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+    - TAG: COMPOSITE_NODE
       PROPERTIES:
         IS_COMPOSITE: True
       FIELDS:
-        ...
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
 
     [NODE]
     TITLE: Leaf node
-    ...
 
-    [[NODE2]]
+    [[COMPOSITE_NODE]]
     TITLE: Composite node
 
-    ...
-
-    [[/NODE]]
+    [[/COMPOSITE_NODE]]
 
 .. note::
 
@@ -1937,7 +1933,7 @@ MID: 19d4dcbf0cd24f84996bcddb778e348c
 STATEMENT: >>>
 The ``PREFIX`` property declared for a grammar element determines the prefix that will be automatically added to a UID when creating a new requirement via the StrictDoc web interface or the manage auto-uuid command.
 
-.. code-block::
+.. code:: strictdoc
 
     [GRAMMAR]
     ELEMENTS:
@@ -1945,7 +1941,12 @@ The ``PREFIX`` property declared for a grammar element determines the prefix tha
       PROPERTIES:
         PREFIX: REQ-
       FIELDS:
-      ...
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
 
 See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID].
 <<<
@@ -1962,7 +1963,7 @@ MID: 4678706b4c864f459d1b478cd703fcc1
 STATEMENT: >>>
 The ``VIEW_STYLE`` property controls which template should be used for rendering a given node.
 
-.. code-block::
+.. code:: strictdoc
 
     [GRAMMAR]
     ELEMENTS:
@@ -1991,7 +1992,7 @@ MID: 012b0350547a48fc9ab3fbd6d9b5d502
 STATEMENT: >>>
 The custom grammar configuration includes the optional ``RELATION:`` section which specifies the relations a given document supports.
 
-.. code-block::
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Test Doc
@@ -2029,7 +2030,7 @@ MID: 01b8aa59963b42518d98c4e6b5e3259b
 STATEMENT: >>>
 StrictDoc's custom grammar support the configuration of relation roles. The Parent and Child relations can be further specialized with roles, such as Refines, Implements, Verifies, etc.
 
-.. code-block::
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Test Doc
@@ -2038,7 +2039,12 @@ StrictDoc's custom grammar support the configuration of relation roles. The Pare
     ELEMENTS:
     - TAG: REQUIREMENT
       FIELDS:
-      ...
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
       RELATIONS:
       - TYPE: Parent
         ROLE: Refines
@@ -2066,7 +2072,7 @@ Most of the technical requirements documents can be modeled with just a Parent r
 
 For example, in one (parent) document:
 
-.. code-block::
+.. code:: strictdoc
 
     [REQUIREMENT]
     UID: PARENT-1
@@ -2077,7 +2083,7 @@ For example, in one (parent) document:
 
 Somewhere in another child document:
 
-.. code-block::
+.. code:: strictdoc
 
     [REQUIREMENT]
     UID: CHILD-1
@@ -2091,20 +2097,31 @@ Somewhere in another child document:
 
 In some very special cases, it may be desired to also use the Child relations. For example, creating a so-called Compliance Matrix between a standard and a project requirement can use the Child relation to connect both the upper-level standard requirement with a project-level technical requirement:
 
-.. code-block::
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Standard X Compliance Matrix
 
     [GRAMMAR]
     ELEMENTS:
-    ...
-    RELATIONS:
-    - TYPE: Parent
-    - TYPE: Child
+    - TAG: REQUIREMENT
+      FIELDS:
+      - TITLE: COMPLIANCE
+        TYPE: String
+        REQUIRED: True
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
+      RELATIONS:
+      - TYPE: Parent
+      - TYPE: Child
 
     [REQUIREMENT]
     COMPLIANCE: Compliant.
+    TITLE: STANDARD-001
     STATEMENT: >>>
     This is a compliance statement regarding the Standard X's STANDARD-001 requirement...
     <<<
@@ -2118,7 +2135,11 @@ With such a setup, StrictDoc generates the correct traceability graph that will 
 
 Another example can be adapting the requirements of the Off-the-Shelf (OTS) project to the higher-level requirements of the user project. An intermediate requirements document can be created that connects the parent requirements of the user project with the immutable child requirements of the OTS project. This intermediate document can link the user requirement with the Parent and the OTS project with a Child link.
 
-Both examples above involve activity called Tailoring when an intermediate document (Compliance Matrix) serves as an interface between two layers of documents.
+Both examples above involve an activity called "tailoring" in which an
+intermediate document (the Compliance Matrix) serves as an interface between two
+layers of documents. Tailoring means that a user may implement only a subset of
+a standard and explicitly specify which requirements are implemented, which are
+not, and where deviations from the standard occur.
 <<<
 
 [[/SECTION]]
@@ -2136,7 +2157,7 @@ A document grammar can be described in a separate file with an extension ``.sgra
 
 Example:
 
-.. code-block::
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Document 1
@@ -2152,7 +2173,7 @@ Example:
 
 A grammar file has an extension ``grammar.sgra`` and contains a usual grammar declaration which starts with a ``[GRAMMAR]`` tag.
 
-.. code-block::
+.. code:: strictdoc
 
     [GRAMMAR]
     ELEMENTS:
@@ -2297,7 +2318,7 @@ fields. A field is either missing or is a non-empty string.
 
 The following patterns are all invalid for single-line fields:
 
-.. code-block::
+.. code:: strictdoc
 
     [[SECTION]]
     TITLE:
@@ -2313,7 +2334,7 @@ The following patterns are all invalid for single-line fields:
 
 The following patterns are all invalid for multiline fields:
 
-.. code-block::
+.. code:: strictdoc
 
     [REQUIREMENT]
     COMMENT: >>>
@@ -2369,7 +2390,7 @@ To insert an image into a document, create a folder named ``_assets`` alongside 
 
 This is the example of how images are included using the reST syntax:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [TEXT]
     STATEMENT: >>>
@@ -2395,7 +2416,7 @@ MID: abdf406fe10847929dd7cb12a030456f
 STATEMENT: >>>
 StrictDoc can include the `MathJax <https://www.mathjax.org/>`_ Javascript library to all of the document templates. To activate MathJax, edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
 
-.. code-block::
+.. code:: toml
 
     [project]
     title = "My project"
@@ -2406,7 +2427,7 @@ StrictDoc can include the `MathJax <https://www.mathjax.org/>`_ Javascript libra
 
 Examples of using MathJax:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [TEXT]
     STATEMENT: >>>
@@ -2422,7 +2443,7 @@ Examples of using MathJax:
 
 Sphinx-style syntax is also supported:
 
-.. code-block:: text
+.. code:: strictdoc
 
     [TEXT]
     STATEMENT: >>>
@@ -2458,7 +2479,7 @@ This is a default export option supported by StrictDoc.
 
 The following command creates an HTML export:
 
-.. code-block:: text
+.. code:: text
 
     strictdoc export docs/ --formats=html --output-dir output-html
 
@@ -2510,7 +2531,7 @@ STATEMENT: >>>
 The following command creates a normal HTML export with all pages having their
 assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc.toml`` file, specify:
 
-.. code-block:: yaml
+.. code:: toml
 
     [project]
 
@@ -2537,14 +2558,14 @@ MID: bf8160f43703418db306785c48463123
 STATEMENT: >>>
 The following command creates an RST export:
 
-.. code-block:: text
+.. code:: text
 
     strictdoc export YourDoc.sdoc --formats=rst --output-dir output
 
 The created RST files can be copied to a project created using Sphinx, see
 `Getting Started with Sphinx <https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html>`_.
 
-.. code-block:: text
+.. code:: text
 
     cp -v output/YourDoc.rst docs/sphinx/source/
     cd docs/sphinx && make html
@@ -2568,14 +2589,14 @@ STATEMENT: >>>
 
 The following command creates an RST export:
 
-.. code-block:: text
+.. code:: text
 
     strictdoc export YourDoc.sdoc --formats=rst --output-dir output
 
 The created RST files can be copied to a project created using Sphinx, see
 `Getting Started with Sphinx <https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html>`_.
 
-.. code-block:: text
+.. code:: text
 
     cp -v output/YourDoc.rst docs/sphinx/source/
     cd docs/sphinx && make pdf
@@ -2597,7 +2618,7 @@ MID: 4d956edcd00846a98f59778dd7de9257
 STATEMENT: >>>
 The following command creates a JSON export:
 
-.. code-block::
+.. code:: text
 
     strictdoc export YourDoc.sdoc --formats=json --output-dir output/
 
@@ -2624,7 +2645,7 @@ MID: ed367ed0bc284d4d9318bf6c844c3e3e
 STATEMENT: >>>
 To assign requirement UIDs automatically:
 
-.. code-block::
+.. code:: text
 
     strictdoc manage auto-uid <path-to-project-tree>
 
@@ -2636,7 +2657,7 @@ If a document-level or a section-level requirement mask is provided, the UIDs wi
 
 A document-level requirement mask:
 
-.. code-block::
+.. code:: strictdoc
 
     [DOCUMENT]
     TITLE: Hello world doc
@@ -2644,7 +2665,7 @@ A document-level requirement mask:
 
 A section-level requirement mask:
 
-.. code-block::
+.. code:: strictdoc
 
     [[SECTION]]
     TITLE: Section 2.
@@ -2676,7 +2697,7 @@ Both options can be used independently or in combination, depending on the proje
 
 To activate the traceability to source files, configure the project config with a dedicated feature:
 
-.. code-block:: yaml
+.. code:: toml
 
     [project]
 
@@ -2824,7 +2845,7 @@ The linking of requirements to source files is arranged with a special RELATION 
 
 **1\) Linking a requirement to a whole source file**
 
-.. code-block:: text
+.. code:: strictdoc
 
     [REQUIREMENT]
     UID: REQ-001
@@ -2836,7 +2857,7 @@ The linking of requirements to source files is arranged with a special RELATION 
 
 **2\) Linking a requirement to range in a source file**
 
-.. code-block:: text
+.. code:: strictdoc
 
     [REQUIREMENT]
     UID: REQ-002
@@ -2849,7 +2870,7 @@ The linking of requirements to source files is arranged with a special RELATION 
 
 **3\) Linking a requirement to a function in a source file**
 
-.. code-block:: text
+.. code:: strictdoc
 
     [REQUIREMENT]
     UID: REQ-002
@@ -2869,7 +2890,7 @@ The linking of requirements to source files is arranged with a special RELATION 
 
 **4\) Linking a requirement to a class in a source file (Python only)**
 
-.. code-block:: text
+.. code:: strictdoc
 
     [REQUIREMENT]
     UID: REQ-002
@@ -2895,7 +2916,7 @@ StrictDoc supports relation roles for both SDoc nodes with ``TYPE: File`` and th
 
 To establish a forward link with a role from an SDoc node to a source file:
 
-.. code-block::
+.. code:: strictdoc
 
     [REQUIREMENT]
     UID: REQ-002
@@ -2908,7 +2929,7 @@ To establish a forward link with a role from an SDoc node to a source file:
 
 To establish a backward link from a source file to an SDoc node:
 
-.. code-block:: c
+.. code:: c
 
     /**
      * Some text.
@@ -2935,7 +2956,7 @@ MID: 5c9881f6fa2847b3b95ef0cad131cfb3
 STATEMENT: >>>
 Sometimes, it is necessary to ignore ``@relation(...)`` markers in a specific section of a file. This can be done using the special skip keyword, as shown below:
 
-.. code-block::
+.. code:: python
 
     # @relation(skip, scope=range_start)
     # @relation(REQ-001, scope=range_start)
@@ -2962,7 +2983,7 @@ STATEMENT: >>>
 
 In addition to recognizing the ``@relation(...)`` markers described above, StrictDoc can also read SDoc node fields when they are defined in source code comments.
 
-.. code-block:: c
+.. code:: c
 
     /**
      * Some text.
@@ -2985,7 +3006,7 @@ In addition to recognizing the ``@relation(...)`` markers described above, Stric
 
 To enable SDoc node parsing, the corresponding source file must be registered in the ``strictdoc.toml`` configuration as follows:
 
-.. code-block::
+.. code:: toml
 
     features = [
       "REQUIREMENT_TO_SOURCE_TRACEABILITY",
@@ -3003,7 +3024,7 @@ With the above declaration, StrictDoc will locate the document with the specifie
 
 A document template example:
 
-.. code-block::
+.. code:: strictdoc
 
     [DOCUMENT]
     MID: c2d4542d5f1741c88dfcb4f68ad7dcbd
@@ -3051,7 +3072,7 @@ TITLE: Import flow (ReqIF -> SDoc)
 [TEXT]
 MID: 079ed6d7ec3f4040b59efce7ccd37267
 STATEMENT: >>>
-.. code-block:: text
+.. code:: text
 
     strictdoc import reqif sdoc input.reqif output.sdoc
 
@@ -3076,7 +3097,7 @@ TITLE: Export flow (SDoc -> ReqIF)
 [TEXT]
 MID: 94641cac6b9748bfa2de8648ff197584
 STATEMENT: >>>
-.. code-block:: text
+.. code:: text
 
     strictdoc export --formats=reqif-sdoc %S/input.sdoc
 
@@ -3110,7 +3131,7 @@ The following options are available for ReqIF export/import commands.
 
 All options can be also specified in a project's TOML file as follows:
 
-.. code-block::
+.. code:: toml
 
     [project]
 
@@ -3184,7 +3205,7 @@ TITLE: Import flow (Excel XLS/XLSX -> SDoc)
 [TEXT]
 MID: b01355b5a6d54409a0c7a684376a5278
 STATEMENT: >>>
-.. code-block:: text
+.. code:: text
 
     strictdoc import excel basic input.xls output.sdoc
 
@@ -3205,7 +3226,7 @@ TITLE: Export flow (SDoc -> Excel XLSX)
 [TEXT]
 MID: 14161a9fa81d427f8a5a21367359339e
 STATEMENT: >>>
-.. code-block:: text
+.. code:: text
 
     strictdoc export --formats=excel --output-dir=Output input.sdoc
 
@@ -3218,13 +3239,13 @@ The command does the following:
 
 For exporting only selected fields:
 
-.. code-block:: text
+.. code:: text
 
     strictdoc export --formats=excel --fields=UID,STATUS --output-dir=Output input.sdoc
 
 For exporting a folder with multiple SDoc files, specify a path to a folder or ``.`` for a current directory:
 
-.. code-block:: text
+.. code:: text
 
     strictdoc export --formats=excel .
 
@@ -3271,7 +3292,7 @@ MID: 12501275599f4d7a954892e1a56778b9
 STATEMENT: >>>
 This option specifies a project title.
 
-.. code-block::
+.. code:: toml
 
     [project]
     title = "StrictDoc Documentation"
@@ -3292,7 +3313,7 @@ Sometimes, it is desirable to change the folder name. For example, the GitHub Pa
 
 The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
 
-.. code-block::
+.. code:: toml
 
     [project]
     html_assets_strictdoc_dir = "assets"
@@ -3333,7 +3354,7 @@ MID: be42ecf5c8a84fc3bca0b73ea50647de
 STATEMENT: >>>
 When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc looks for source files in the directory from which the ``strictdoc`` program is run. This can be changed with the ``source_root_path`` option.
 
-.. code-block::
+.. code:: toml
 
     [project]
 
@@ -3359,7 +3380,7 @@ StrictDoc uses an internal default template when exporting documents in PDF form
 
 If the front page, header, or footer needs to be customised, it is possible to provide a custom template with the `html2pdf_template` option.
 
-.. code-block::
+.. code:: toml
 
     [project]
     html2pdf_template = "assets/template/index.jinja"
@@ -3388,7 +3409,7 @@ Use ``include_doc_paths`` and ``exclude_doc_paths`` paths to whitelist/blacklist
 
 In the following example, StrictDoc will look for all files in the input project directory, except all documents in the ``tests/`` folder.
 
-.. code-block:: yaml
+.. code:: toml
 
     [project]
 
@@ -3433,7 +3454,7 @@ MID: 3908f98fab5c47668ba752d0e93033ab
 STATEMENT: >>>
 Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist paths to source files when the traceability between requirements and source files feature is enabled.
 
-.. code-block:: yaml
+.. code:: toml
 
     [project]
 
@@ -3468,7 +3489,7 @@ The feature of exporting the SDoc documents to HTML document view is a core feat
 
 The following is an example of the default configuration. The same features are active/inactive when the option ``features`` is not specified.
 
-.. code-block:: yaml
+.. code:: toml
 
     [project]
     title = "StrictDoc Documentation"
@@ -3503,7 +3524,7 @@ MID: d33880e1740d4d0892852cc8c425f66f
 STATEMENT: >>>
 To select all available features, stable and experimental, specify ``ALL_FEATURES``.
 
-.. code-block::
+.. code:: toml
 
     [project]
 
@@ -3529,7 +3550,7 @@ MID: 9cf2ac683b7a4e939286146ef00631c1
 STATEMENT: >>>
 To disable all features, specify the ``features`` option but leave it empty:
 
-.. code-block:: yaml
+.. code:: toml
 
     [project]
 
@@ -3558,7 +3579,7 @@ By default, StrictDoc runs the server on ``127.0.0.1:5111``.
 
 Use the ``[server]`` section to configure the host and port as follows.
 
-.. code-block:: yaml
+.. code:: toml
 
     [project]
     title = 'Test project with a host "localhost" and a port 5000'
@@ -3589,7 +3610,7 @@ By default, StrictDoc generates a project tree with a project title
 "Untitled Project". To specify the project title use the option
 ``--project-title``.
 
-.. code-block:: text
+.. code:: text
 
     strictdoc export --project-title "My Project" .
 <<<
@@ -3613,7 +3634,7 @@ behavior of the code if something goes wrong.
 
 To disable parallelization use the ``--no-parallelization`` option:
 
-.. code-block:: text
+.. code:: text
 
     strictdoc export --no-parallelization docs/
 
@@ -3697,7 +3718,7 @@ HTML documentation generated by StrictDoc can be integrated with Doxygen documen
 
 Doxygen includes a ``TAGFILE`` feature that allows linking to external documentation. This tagfile is in XML format and looks like this:
 
-.. code::
+.. code:: xml
 
     <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
     <tagfile doxygen_version="1.9.8">
@@ -3709,7 +3730,7 @@ Doxygen includes a ``TAGFILE`` feature that allows linking to external documenta
 
 StrictDoc automatically generates a Doxygen tagfile containing the requirements using the export command:
 
-.. code::
+.. code:: text
 
     strictdoc export . --formats=html,doxygen
 
@@ -3719,7 +3740,7 @@ The location of the StrictDoc export can be specified in the TAGFILE field, eith
 
 To make the StrictDoc @relation keyword work with Doxygen, an alias has to be created:
 
-.. code::
+.. code:: text
 
     ALIASES  += relation{2}="\ref \1"
 
@@ -3774,7 +3795,7 @@ MID: de584af947a445e5bcc782bab6a93baf
 STATEMENT: >>>
 StrictDoc supports search and filtering of document content. However, this feature has not been extensively tested and is hidden behind a feature flag. To activate it, enable the corresponding setting in the ``strictdoc.toml`` configuration file:
 
-.. code-block::
+.. code:: toml
 
     [project]
 
@@ -3841,7 +3862,7 @@ The option is based on the Query Engine, so the same rules that are valid for Se
 
 Example:
 
-.. code-block::
+.. code:: text
 
     strictdoc export . --filter-nodes '"System" in node["TITLE"]'
 <<<
@@ -3862,7 +3883,7 @@ The project statistics screen displays useful information about a documentation 
 
 To activate the project statistics screen, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
 
-.. code::
+.. code:: toml
 
     [project]
     title = "My project"
@@ -3885,7 +3906,7 @@ StrictDoc allows users to write their own custom statistics generators.
 
 To connect a custom generator, add it to the ``strictdoc.toml`` configuration file as follows:
 
-.. code-block::
+.. code:: toml
 
     [project]
     title = "StrictDoc Documentation"
@@ -3916,7 +3937,7 @@ The Document Tree Map screen, or simply Tree Map, provides a visualization of th
 
 The feature can be activated as follows:
 
-.. code-block::
+.. code:: toml
 
     [project]
     title = "My project"
@@ -3959,7 +3980,7 @@ With the feature enabled, the editable web server interface displays the corresp
 
 To use the feature with a command-line interface:
 
-.. code::
+.. code:: text
 
     strictdoc export . --generate-diff-git="HEAD^..HEAD"
 
@@ -4000,7 +4021,7 @@ StrictDoc downloads chromedriver on demand by default, or uses a pre installed e
 
 When printing from the command line (the first method), you can use the ``--generate-bundle-document`` option to have StrictDoc generate a single PDF document that bundles together all individual PDFs. The bundle document gets the document version/date information from Git by default which can be controlled in the ``strictdoc.toml`` config (the default values are shown):
 
-.. code-block:: text
+.. code:: text
 
     bundle_document_version = "@GIT_VERSION (Git branch: @GIT_BRANCH)"
     bundle_document_date = "@GIT_COMMIT_DATETIME"
@@ -4011,7 +4032,7 @@ The third method, the PDF screen, presents a version of the document that is opt
 
 To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
 
-.. code::
+.. code:: toml
 
     [project]
     title = "My project"
@@ -4034,7 +4055,7 @@ MID: 6a4e4467a5c0451ea8291fd94309d525
 STATEMENT: >>>
 The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as follows:
 
-.. code::
+.. code:: strictdoc
 
     [TEXT]
     STATEMENT: >>>
@@ -4054,7 +4075,7 @@ The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as fol
 
 To activate Mermaid, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
 
-.. code::
+.. code:: toml
 
     [project]
     title = "My project"
@@ -4079,7 +4100,7 @@ StrictDoc can read test report files from several testing tools as SDoc content 
 
 The project must have the following features activated for StrictDoc to provide language-aware parsing of C/C++, Python or Robot Framework. It is recommended to provide a dedicated folder for test report XML files to not mix human-written SDoc content and auto-generated test reports.
 
-.. code-block::
+.. code:: toml
 
     [project]
 
@@ -4140,7 +4161,7 @@ MID: fab24f53f02f46e7a4cb49e333dfdc54
 STATEMENT: >>>
 Specifically for LLVM Integrated Tester-produced JUnit XML, an extra config option must be provided because its output XML does not contain precise information about the test root folder.
 
-.. code-block::
+.. code:: toml
 
     [project]
 
@@ -4282,20 +4303,20 @@ STATEMENT: >>>
 This an edge case on macOS: Python crashes in the Parallelizer class when
 creating an output queue:
 
-.. code-block:: py
+.. code:: py
 
     self.output_queue = multiprocessing.Queue()
 
 The fragment of the crash:
 
-.. code-block:: text
+.. code:: text
 
     sl = self._semlock = _multiprocessing.SemLock(
     OSError: [Errno 28] No space left on device
 
 The existing workaround for this problem is to increase a number of semaphores in the macOS config:
 
-.. code-block:: text
+.. code:: text
 
     sudo sysctl -w kern.posix.sem.max=20000
 <<<
@@ -4353,7 +4374,7 @@ The users are encouraged to perform the migration as follows.
 
 The free text node:
 
-.. code-block::
+.. code:: text
 
     [FREETEXT]
     This is a free text node.
@@ -4361,7 +4382,7 @@ The free text node:
 
 becomes
 
-.. code-block::
+.. code:: strictdoc
 
     [TEXT]
     STATEMENT: >>>
@@ -4370,7 +4391,7 @@ becomes
 
 The ``TEXT`` node is now included to a default StrictDoc grammar by default. If a custom grammar is used, the default grammar definition for the ``TEXT`` node is as follows:
 
-.. code-block::
+.. code:: strictdoc
 
     [GRAMMAR]
     ELEMENTS:
@@ -4383,8 +4404,16 @@ The ``TEXT`` node is now included to a default StrictDoc grammar by default. If 
         TYPE: String
         REQUIRED: True
     - TAG: REQUIREMENT
-    ... REQUIREMENT fields
-    ... Optionally other elements definitions.
+      FIELDS:
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: False
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: False
+      - TITLE: STATEMENT
+        TYPE: String
+        REQUIRED: True
 
 The ``strictdoc export --formats sdoc --free-text-to-text ...`` command can be used for converting all FREETEXT nodes to TEXT nodes automatically. See ``strictdoc export --help`` for more details.
 <<<
@@ -4409,7 +4438,7 @@ As of 2025 Q2, the following changes are made to StrictDoc's grammar in a partia
 
 Example of declaring a composite node in a grammar and using it in a document:
 
-.. code-block::
+.. code:: strictdoc
 
     [GRAMMAR]
     ELEMENTS:
@@ -4429,10 +4458,10 @@ Example of declaring a composite node in a grammar and using it in a document:
         TYPE: String
         REQUIRED: True
 
-     [[SECTION]]
-     TITLE: Section #1
+    [[SECTION]]
+    TITLE: Section #1
 
-     [[/SECTION]]
+    [[/SECTION]]
 
 Using the new syntax, it is now possible to declare any custom composite element, such as what ``[COMPOSITE_REQUIREMENT]`` used to provide before.
 
@@ -4462,7 +4491,7 @@ Update all instances of ``[SECTION]`` to ``[[SECTION]]`` manually, or use a comb
 
 Examples of a sed command for Linux and macOS:
 
-.. code-block::
+.. code:: text
 
     # Linux
     find . -type f -name '*.sdoc' -exec sed -i -e 's/^\[SECTION\]/[[SECTION]]/g' -e 's/^\[\/SECTION\]/[[\/SECTION]]/g' {} +
@@ -4474,7 +4503,7 @@ Examples of a sed command for Linux and macOS:
 
 StrictDoc can automatically migrate SDoc files if the project configuration option ``section_behavior`` is set as follows:
 
-.. code-block::
+.. code:: toml
 
     [project]
     section_behavior = "[[SECTION]]"
@@ -4483,7 +4512,7 @@ With this option enabled, StrictDoc's ``export`` command will convert all ``[SEC
 
 To perform the migration, run the export command:
 
-.. code-block::
+.. code:: text
 
     strictdoc export . --formats=sdoc
 
@@ -4524,7 +4553,7 @@ With a configuration file written directly in Python, it becomes much easier for
 
 Instead of using ``strictdoc.toml``, the new approach includes ``strictdoc_config.py`` with the following syntax:
 
-.. code-block:: py
+.. code:: python
 
     from strictdoc.core.project_config import ProjectConfig
 

@@ -96,3 +96,8 @@ def file_open_read_bytes(file_path: str) -> Iterator[BufferedReader]:
             # No BOM -> rewind to beginning.
             raw_file.seek(0)
         yield raw_file
+
+
+def is_binary_file(path: str, sample_size: int = 8192) -> bool:
+    with open(path, "rb") as f:
+        return b"\x00" in f.read(sample_size)

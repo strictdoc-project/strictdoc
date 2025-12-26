@@ -53,11 +53,10 @@ class SourceFileTraceabilityCachingReader:
                 project_config,
                 "source_file",
             )
-        except UnicodeDecodeError:
-            print(  # noqa: T201
-                f"warning: Skip tracing binary file {path_to_file}."
-            )
-            return None
+        except UnicodeDecodeError as error_:
+            # Should never reach this point because the binary files should
+            # already be filtered out at the FileFinder search step.
+            raise error_
 
         return traceability_info
 

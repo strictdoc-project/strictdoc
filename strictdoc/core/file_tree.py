@@ -4,6 +4,7 @@ from typing import Dict, Iterator, List, Optional, Tuple, Union
 
 from typing_extensions import TypeAlias
 
+from strictdoc.helpers.file_system import is_binary_file
 from strictdoc.helpers.path_filter import PathFilter
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.sorting import alphanumeric_sort
@@ -168,6 +169,15 @@ class FileFinder:
                 # It seems to be safe to ignore this and possibly other cases
                 # here without writing any test for this case.
                 if not os.path.isfile(full_file_path):  # pragma: no cover
+                    continue
+
+                # TODO: For now, ignore the binary files but one day a user
+                # might want to create a Relation to a binary file like a
+                # published PDF.
+                if is_binary_file(full_file_path):
+                    print(  # noqa: T201
+                        f"warning: Skip reading binary file {full_file_path}"
+                    )
                     continue
 
                 rel_file_path = os.path.join(current_root_relative_path, file)

@@ -189,7 +189,7 @@ class FileTraceabilityIndex:
         assert (
             source_file_rel_path
             in self.map_paths_to_source_file_traceability_info
-        )
+        ), source_file_rel_path
         source_file_tr_info: SourceFileTraceabilityInfo = (
             self.map_paths_to_source_file_traceability_info[
                 source_file_rel_path

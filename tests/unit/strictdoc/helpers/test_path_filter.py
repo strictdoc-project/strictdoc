@@ -19,12 +19,12 @@ def test_case_02_single_wildcard():
 
     # POSITIVE
     assert path_filter.match("hello.sdoc")
+    assert path_filter.match("docs/01_user_manual.sdoc")
+    assert path_filter.match("docs/something/test.sdoc")
+    assert path_filter.match("docs/.sdoc")
 
     # NEGATIVE
     assert not path_filter.match("docs")
-    assert not path_filter.match("docs/something/test.sdoc")
-    assert not path_filter.match("docs/01_user_manual.sdoc")
-    assert not path_filter.match("docs/.sdoc")
     assert not path_filter.match("sdoc")
 
 
@@ -53,9 +53,9 @@ def test_case_04_single_wildcard():
 
     # POSITIVE
     assert path_filter.match("docs/01_user_manual.sdoc")
+    assert path_filter.match("docs/.sdoc")
 
     # NEGATIVE
-    assert not path_filter.match("docs/.sdoc")
     assert not path_filter.match("docs.sdoc")
     assert not path_filter.match("docs")
     assert not path_filter.match("docs/something/test.sdoc")
@@ -143,6 +143,78 @@ def test_case_11_mask_starts_with_dot():
     assert path_filter.match(".github/workflows/release.yml")
 
 
+def test_case_13_ending_slashes_act_like_double_wildcards():
+    mask = "build"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    # POSITIVE
+    assert path_filter.match("build/foo")
+    assert path_filter.match("build/foo.txt")
+    assert path_filter.match("build/foo/bar")
+
+
+def test_case_14_ending_slashes_act_like_double_wildcards():
+    mask = "build/"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    # POSITIVE
+    assert path_filter.match("build/foo")
+    assert path_filter.match("build/foo.txt")
+    assert path_filter.match("build/foo/bar")
+
+
+def test_case_15_ending_slashes_act_like_double_wildcards():
+    mask = "buil"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    assert not path_filter.match("build/foo")
+    assert not path_filter.match("build/foo.txt")
+    assert not path_filter.match("build/foo/bar")
+
+
+def test_case_20_file_with_double_wildcard():
+    mask = ".DS_Store"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    # POSITIVE
+    assert path_filter.match(".DS_Store")
+    assert path_filter.match("docs/.DS_Store")
+    assert path_filter.match("docs/foo/.DS_Store")
+    assert path_filter.match("docs/foo/.DS_Store/foo")
+
+
+def test_case_21_file_with_double_wildcard():
+    mask = "**.DS_Store"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    # POSITIVE
+    assert path_filter.match(".DS_Store")
+    assert path_filter.match("docs/.DS_Store")
+    assert path_filter.match("docs/foo/.DS_Store")
+
+
+def test_case_40_root_slash():
+    mask = "/build"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    assert path_filter.match("build/foo")
+
+    assert not path_filter.match("strictdoc/build")
+    assert not path_filter.match("foo/build/foo.txt")
+
+
+def test_case_41_root_slash():
+    """
+    TODO: This is the opposite of what Git's gitignore does but not fighting
+          with it yet because it is less intuitive.
+    """
+
+    mask = "/**build"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    assert path_filter.match("strictdoc/build/")
+
+
 def test_case_50_negative_empty_mask():
     path_filter = PathFilter([], positive_or_negative=False)
 
@@ -158,12 +230,12 @@ def test_case_51_negative_behaves_just_like_positive():
 
     # POSITIVE
     assert path_filter.match("hello.sdoc")
+    assert path_filter.match("docs/something/test.sdoc")
+    assert path_filter.match("docs/01_user_manual.sdoc")
+    assert path_filter.match("docs/.sdoc")
 
     # NEGATIVE
     assert not path_filter.match("docs")
-    assert not path_filter.match("docs/something/test.sdoc")
-    assert not path_filter.match("docs/01_user_manual.sdoc")
-    assert not path_filter.match("docs/.sdoc")
     assert not path_filter.match("sdoc")
 
 
@@ -171,5 +243,4 @@ def test_case_80_windows_supported():
     mask = "docs/*.sdoc"
     path_filter = PathFilter([mask], positive_or_negative=False)
 
-    # POSITIVE
-    assert path_filter.match("docs\\hello.sdoc")
+    assert not path_filter.match("docs\\hello.sdoc")

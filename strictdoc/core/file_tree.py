@@ -122,6 +122,8 @@ class FileFinder:
         root_folder: Folder = Folder(root_path, ".", 0)
         folder_map: Dict[str, Folder] = {root_path: root_folder}
 
+        count = 0
+
         for current_dir_full_path_, dirs, files in os.walk(
             root_path, topdown=True
         ):
@@ -129,18 +131,23 @@ class FileFinder:
                 dirs[:] = []
                 continue
 
-            current_root_relative_path = os.path.relpath(
+            current_dir_rel_path_ = os.path.relpath(
                 current_dir_full_path_, start=root_path
             )
-            current_root_relative_path = (
-                (current_root_relative_path + "/")
-                if current_root_relative_path != "."
+            current_dir_rel_path_ = (
+                (current_dir_rel_path_ + "/")
+                if current_dir_rel_path_ != "."
                 else ""
             )
+            current_dir_rel_path = SDocRelativePath(current_dir_rel_path_)
 
-            if path_filter_excludes.match(current_root_relative_path):
+            if path_filter_excludes.match(
+                current_dir_rel_path.relative_path_posix
+            ):
                 dirs[:] = []
                 continue
+
+            count += 1
 
             dirs[:] = [d for d in dirs if d not in ("output", "Output")]
             dirs.sort(key=alphanumeric_sort)
@@ -153,7 +160,7 @@ class FileFinder:
                 current_dir_full_path_,
                 Folder(
                     current_dir_full_path_,
-                    current_root_relative_path,
+                    current_dir_rel_path.relative_path,
                     current_root_path_level,
                 ),
             )
@@ -173,26 +180,32 @@ class FileFinder:
                 if not os.path.isfile(full_file_path):  # pragma: no cover
                     continue
 
-                # TODO: For now, ignore the binary files but one day a user
-                # might want to create a Relation to a binary file like a
-                # published PDF.
-                if is_binary_file(full_file_path):
-                    print(  # noqa: T201
-                        f"warning: Skip reading binary file {full_file_path}"
-                    )
+                rel_file_path = SDocRelativePath(
+                    os.path.join(current_dir_rel_path.relative_path, file)
+                )
+
+                if path_filter_excludes.match(
+                    rel_file_path.relative_path_posix
+                ):
                     continue
 
-                rel_file_path = os.path.join(current_root_relative_path, file)
+                if path_filter_includes.match(
+                    rel_file_path.relative_path_posix
+                ):
+                    # TODO: For now, ignore the binary files but one day a user
+                    # might want to create a Relation to a binary file like a
+                    # published PDF.
+                    if is_binary_file(full_file_path):
+                        print(  # noqa: T201
+                            f"warning: Skip reading binary file {full_file_path}"
+                        )
+                        continue
 
-                if path_filter_excludes.match(rel_file_path):
-                    continue
-
-                if path_filter_includes.match(rel_file_path):
                     current_tree.files.append(
                         File(
                             current_tree.level + 1,
                             full_file_path,
-                            SDocRelativePath(rel_file_path),
+                            rel_file_path,
                         )
                     )
 
@@ -231,6 +244,8 @@ class FileFinder:
 
             current_parent_folder.add_subfolder_tree(current_tree)
 
+        print(f"Scanned {count} directories.")  # noqa: T201
+
         file_tree_structure = FileTree(
             root_folder_or_file=folder_map[root_path]
         )
@@ -256,9 +271,13 @@ class PathFinder:
         )
 
         directories = []
+        count = 0
+
         # Declare str type to make os.path.relpath type checking happy.
         current_dir_full_path_: str
         for current_dir_full_path_, dirs, _ in os.walk(root_path, topdown=True):
+            count += 1
+
             current_root_relative_path: str = os.path.relpath(
                 current_dir_full_path_, start=root_path
             )
@@ -284,5 +303,7 @@ class PathFinder:
 
             if os.path.basename(current_dir_full_path_) == directory:
                 directories.append(current_dir_full_path_)
+
+        print(f"Scanned {count} directories.")  # noqa: T201
 
         return directories

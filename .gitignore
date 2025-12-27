@@ -1,59 +1,40 @@
-*.idea
-**/build/
-*.egg-info/
-*.eggs
-*.pyc
-*.script
-*.venv
-.venv*
-dist
-.sandbox
-.output/
-output.zip
-.output
-*.sketch
+/.idea/
+/.ruff_cache/
+/.venv/
+/.vscode/
+/build/
+/dist/
+/reports/
+/Output/
+/output/
+
 .DS_Store
-.vscode
-.tox/
 
-### StrictDoc's local config file
-*.local.toml
-
-### StrictDoc's default export path
-output/**
-Output/**
-developer/**/output/**
-tests/unit_server/**/output/**
+**/.sandbox/**
+__pycache__
 
 ### LIT/FileCheck integration tests' artifacts. ###
-tests/integration/**/Output/**
-tests/integration/**/output/**
-tests/integration/**/sandbox/
-.lit_test_times.txt
+/tests/integration/**/Output/**
+/tests/integration/**/sandbox/
 
 ### Coverage ###
-.coverage
-coverage.xml
-htmlcov/
+/htmlcov/
 
 ### PyInstaller ###
-strictdoc.spec
+/strictdoc.spec
 
 ### SeleniumBase ###
-latest_logs/
+/latest_logs/
 # Files downloaded during tests are stored here.
-downloaded_files/
+/downloaded_files/
 
-
-### StrictDoc's developer test ###
-__*.sdoc
-__*.sgra
+### StrictDoc developer
+/*.local.toml
+/__*.sdoc
+/__*.sgra
 
 ### webdriver_manager: cache with downloaded Chrome Driver binaries ###
-strictdoc/export/html2pdf/.wdm
-
-### Test reports
-reports/
+/strictdoc/export/html2pdf/.wdm
 
 ### Draw.io
-.*.drawio.bkp
+/developer/drawio/*.drawio.bkp

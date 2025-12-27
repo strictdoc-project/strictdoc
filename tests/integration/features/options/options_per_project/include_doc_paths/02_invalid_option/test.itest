@@ -1,3 +1,3 @@
 RUN: %expect_exit 1 %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 
-CHECK: error: strictdoc.toml: 'include_doc_paths': Path mask must start with an alphanumeric character, a dot, or a wildcard symbol '*'. Provided string: ' '.
+CHECK: error: strictdoc.toml: 'include_doc_paths': Path mask must start with an alphanumeric character, a forward slash, a dot, or a wildcard symbol '*'. Provided mask: ' '.

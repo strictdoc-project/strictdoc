@@ -164,7 +164,9 @@ class DocumentFinder:
             )
 
             if isinstance(document, DocumentGrammar):
-                map_grammars_by_filenames[doc_file.file_name] = document
+                map_grammars_by_filenames[
+                    doc_file.rel_path.relative_path_posix
+                ] = document
                 continue
 
             input_doc_full_path: str = doc_file.full_path

@@ -1,0 +1,11 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Published: Test document
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/nested/subnested/input.html | filecheck %s --check-prefix CHECK-HTML
+
+CHECK-HTML:UID
+CHECK-HTML:ABC-123
+CHECK-HTML:ASIL
+CHECK-HTML:A
+CHECK-HTML:STATUS
+CHECK-HTML:Draft

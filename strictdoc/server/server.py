@@ -45,6 +45,7 @@ def run_strictdoc_server(
             )
 
         project_config.integrate_server_config(server_config)
+        project_config.validate_and_finalize()
 
         reload_config = UvicornReloadConfig.create(
             project_config, server_config

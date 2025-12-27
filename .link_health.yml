@@ -34,3 +34,4 @@ exceptions:
   - url: https://github.com/tiangolo/fastapi/blob/master/LICENSE
   - url: https://github.com/strictdoc-project/strictdoc/blob/main/about/2025_ESA_SW_Product_Assurance_Workshop.pdf
   - url: https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/core/project_config.py
+  - url: https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc_config.py

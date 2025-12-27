@@ -1,4 +1,4 @@
-RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Published: System Requirements
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/00_sys/_index.html | filecheck %s --check-prefix CHECK-SYS

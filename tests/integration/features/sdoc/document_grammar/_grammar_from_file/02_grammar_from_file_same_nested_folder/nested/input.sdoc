@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[REQUIREMENT]
+UID: ABC-123
+STATEMENT: Requirement 7.8.9
+ASIL: A
+STATUS: Draft
+COMMENT: Test comment.

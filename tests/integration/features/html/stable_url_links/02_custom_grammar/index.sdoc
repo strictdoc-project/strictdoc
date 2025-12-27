@@ -2,7 +2,7 @@
 TITLE: Stable URI Test with custom grammar
 
 [GRAMMAR]
-IMPORT_FROM_FILE: grammar.sgra
+IMPORT_FROM_FILE: @my_grammar
 
 [FEATURE]
 UID: ROOT-1

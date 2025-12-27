@@ -81,7 +81,6 @@ def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=server_config.get_path_to_config(),
         )
-        project_config.validate_and_finalize()
         run_strictdoc_server(
             server_config=server_config, project_config=project_config
         )

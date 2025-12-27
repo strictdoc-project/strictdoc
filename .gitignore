@@ -13,6 +13,8 @@
 **/.sandbox/**
 __pycache__
 
+/tests/unit_server/**/output/
+
 ### LIT/FileCheck integration tests' artifacts. ###
 /tests/integration/**/Output/**
 /tests/integration/**/sandbox/

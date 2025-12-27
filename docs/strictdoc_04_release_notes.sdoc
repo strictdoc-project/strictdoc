@@ -57,6 +57,15 @@ This release contains the following enhancements:
 1\) The code block syntax highlighting has been enabled for all RST ``.. code::`` blocks. The code blocks that have been tested already include C, TOML, and Python.
 
 Also, a Pygments lexer for the SDoc markup has been added to the StrictDoc source code. From now on, ``.. code:: strictdoc`` blocks are recognized and syntax-highlighted.
+
+2\) The grammar aliases were added to allow importing a single grammar from multiple SDoc documents located in different directories. From now on, it is possible to register a grammar alias and its path in a project configuration file and use it as follows:
+
+.. code-block:: strictdoc
+
+    [GRAMMAR]
+    IMPORT_FROM_FILE: @my_grammar
+
+Thanks to @gregshue for requesting this feature and explaining the need for it.
 <<<
 
 [[/SECTION]]

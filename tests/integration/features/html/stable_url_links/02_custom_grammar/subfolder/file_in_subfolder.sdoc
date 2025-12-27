@@ -2,7 +2,7 @@
 TITLE: File In Subfolder
 
 [GRAMMAR]
-IMPORT_FROM_FILE: grammar.sgra
+IMPORT_FROM_FILE: @my_grammar
 
 [FEATURE]
 UID: SUB-ROOT-1

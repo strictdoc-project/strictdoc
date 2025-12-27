@@ -119,6 +119,7 @@ class ProjectConfig:
         source_root_path: Optional[str] = None,
         include_source_paths: Optional[List[str]] = None,
         exclude_source_paths: Optional[List[str]] = None,
+        grammars: Optional[Dict[str, str]] = None,
         test_report_root_dict: Optional[Dict[str, str]] = None,
         source_nodes: Optional[List[SourceNodesEntry]] = None,
         html2pdf_strict: bool = False,
@@ -202,6 +203,9 @@ class ProjectConfig:
         self.exclude_source_paths: List[str] = (
             exclude_source_paths if exclude_source_paths is not None else []
         )
+
+        self.grammars: Dict[str, str] = grammars or {}
+
         self.test_report_root_dict: Dict[str, str] = (
             test_report_root_dict if test_report_root_dict is not None else {}
         )
@@ -377,24 +381,45 @@ class ProjectConfig:
             self.reqif_enable_mid = export_config.reqif_enable_mid
 
     def validate_and_finalize(self) -> None:
-        if (input_paths_ := self.input_paths) and len(input_paths_) > 0:
-            path_to_gitignore = os.path.join(self.input_paths[0], ".gitignore")
-            if os.path.isfile(path_to_gitignore):
-                patterns = ["/.git/"]
+        project_path = self.get_project_root_path()
 
-                with open(path_to_gitignore, encoding="utf-8") as f:
-                    for line_ in f:
-                        line = line_.strip()
-                        if not line or line.startswith("#"):
-                            continue
-                        # Ignore !-negated gitignores for now or reimplement
-                        # using a dedicated gitignore Python library.
-                        if line.startswith("!"):
-                            continue
-                        patterns.append(line)
+        #
+        # Read exclude paths from .gitignore. Add them to the user project's
+        # both SDoc and source file search paths.
+        #
+        path_to_gitignore = os.path.join(project_path, ".gitignore")
+        if os.path.isfile(path_to_gitignore):
+            patterns = ["/.git/"]
 
-                self.exclude_doc_paths.extend(patterns)
-                self.exclude_source_paths.extend(patterns)
+            with open(path_to_gitignore, encoding="utf-8") as f:
+                for line_ in f:
+                    line = line_.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    # Ignore !-negated gitignores for now or reimplement
+                    # using a dedicated gitignore Python library.
+                    if line.startswith("!"):
+                        continue
+                    patterns.append(line)
+
+            self.exclude_doc_paths.extend(patterns)
+            self.exclude_source_paths.extend(patterns)
+
+        #
+        # Validate that the provided grammar shortcuts all point to existing
+        # grammar files.
+        #
+        for grammar_alias_, grammar_path_ in self.grammars.items():
+            assert grammar_alias_.startswith("@"), (
+                "Grammar alias must start with an '@' character."
+            )
+            assert "." not in grammar_alias_, (
+                "Grammar alias must not contain any . characters."
+            )
+            assert os.path.isfile(os.path.join(project_path, grammar_path_)), (
+                "Grammar path must point to an existing path relative to the "
+                f"project config file: {grammar_path_}."
+            )
 
     def is_feature_activated(self, feature: ProjectFeature) -> bool:
         return feature in self.project_features
@@ -458,6 +483,11 @@ class ProjectConfig:
         return (
             ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS in self.project_features
         )
+
+    def get_project_root_path(self) -> str:
+        if self.input_paths is not None and len(self.input_paths) > 0:
+            return self.input_paths[0]
+        raise NotImplementedError
 
     def get_strictdoc_root_path(self) -> str:
         return self.environment.path_to_strictdoc

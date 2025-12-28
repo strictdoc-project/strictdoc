@@ -122,13 +122,15 @@ class FileFinder:
         root_folder: Folder = Folder(root_path, ".", 0)
         folder_map: Dict[str, Folder] = {root_path: root_folder}
 
-        for current_root_path, dirs, files in os.walk(root_path, topdown=True):
-            if current_root_path in ignored_dirs:
+        for current_dir_full_path_, dirs, files in os.walk(
+            root_path, topdown=True
+        ):
+            if current_dir_full_path_ in ignored_dirs:
                 dirs[:] = []
                 continue
 
             current_root_relative_path = os.path.relpath(
-                current_root_path, start=root_path
+                current_dir_full_path_, start=root_path
             )
             current_root_relative_path = (
                 (current_root_relative_path + "/")
@@ -144,13 +146,13 @@ class FileFinder:
             dirs.sort(key=alphanumeric_sort)
 
             current_root_path_level: int = (
-                current_root_path.count(os.sep) - root_level
+                current_dir_full_path_.count(os.sep) - root_level
             )
 
             current_tree = folder_map.setdefault(
-                current_root_path,
+                current_dir_full_path_,
                 Folder(
-                    current_root_path,
+                    current_dir_full_path_,
                     current_root_relative_path,
                     current_root_path_level,
                 ),
@@ -162,7 +164,7 @@ class FileFinder:
                 ):
                     continue
 
-                full_file_path = os.path.join(current_root_path, file)
+                full_file_path = os.path.join(current_dir_full_path_, file)
 
                 # A known edge case: A file is found by os.walk(), but it is a
                 # Linux pipe file which fails an os.path.isfile() check.
@@ -205,10 +207,10 @@ class FileFinder:
             if len(current_tree.files) > 0:
                 current_tree.has_sdoc_content = True
 
-            if current_root_path == root_path:
+            if current_dir_full_path_ == root_path:
                 continue
 
-            current_parent_path = os.path.dirname(current_root_path)
+            current_parent_path = os.path.dirname(current_dir_full_path_)
 
             # Top-down search assumes we have seen the parent before.
             assert current_parent_path in folder_map, (
@@ -255,10 +257,10 @@ class PathFinder:
 
         directories = []
         # Declare str type to make os.path.relpath type checking happy.
-        current_root_path: str
-        for current_root_path, dirs, _ in os.walk(root_path, topdown=True):
+        current_dir_full_path_: str
+        for current_dir_full_path_, dirs, _ in os.walk(root_path, topdown=True):
             current_root_relative_path: str = os.path.relpath(
-                current_root_path, start=root_path
+                current_dir_full_path_, start=root_path
             )
             current_root_relative_path = (
                 current_root_relative_path + "/"
@@ -280,7 +282,7 @@ class PathFinder:
                 and d not in ("build", "output", "Output", "tests")
             ]
 
-            if os.path.basename(current_root_path) == directory:
-                directories.append(current_root_path)
+            if os.path.basename(current_dir_full_path_) == directory:
+                directories.append(current_dir_full_path_)
 
         return directories

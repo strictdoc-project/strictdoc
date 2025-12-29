@@ -2,7 +2,7 @@ import collections
 from typing import Iterator
 
 from strictdoc.core.document_tree import DocumentTree
-from strictdoc.core.file_tree import File, FileOrFolderEntry, Folder
+from strictdoc.core.file_system.file_tree import File, FileOrFolderEntry, Folder
 
 
 class DocumentTreeIterator:

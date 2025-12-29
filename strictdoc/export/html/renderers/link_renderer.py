@@ -7,7 +7,7 @@ from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
     RangeMarker,
 )
-from strictdoc.core.source_tree import SourceFile
+from strictdoc.core.file_system.source_tree import SourceFile
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import create_safe_title_string

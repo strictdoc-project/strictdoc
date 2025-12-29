@@ -12,8 +12,8 @@ from html2pdf4doc import PATH_TO_HTML2PDF4DOC_JS
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.asset_manager import AssetDir
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.core.file_system.source_tree import SourceTree
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
-from strictdoc.core.source_tree import SourceTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.generators.document import DocumentHTMLGenerator

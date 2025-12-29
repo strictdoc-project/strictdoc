@@ -27,11 +27,11 @@ from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_dependency_manager import FileDependencyManager
+from strictdoc.core.file_system.source_tree import SourceFile
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.source_tree import SourceFile
 from strictdoc.core.transforms.validation_error import (
     SingleValidationError,
 )

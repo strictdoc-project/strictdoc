@@ -42,8 +42,8 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode
 from strictdoc.core.constants import GraphLinkType
 from strictdoc.core.document_iterator import SDocDocumentIterator
+from strictdoc.core.file_system.source_tree import SourceFile
 from strictdoc.core.project_config import ProjectConfig, SourceNodesEntry
-from strictdoc.core.source_tree import SourceFile
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.google_test import convert_function_name_to_gtest_macro

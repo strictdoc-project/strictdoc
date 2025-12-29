@@ -1,4 +1,4 @@
-from strictdoc.core.file_tree import File, Folder
+from strictdoc.core.file_system.file_tree import File, Folder
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 

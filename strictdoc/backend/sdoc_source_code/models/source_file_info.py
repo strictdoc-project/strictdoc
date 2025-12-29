@@ -12,7 +12,7 @@ from strictdoc.backend.sdoc_source_code.models.range_marker import (
     RangeMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode
-from strictdoc.core.source_tree import SourceFile
+from strictdoc.core.file_system.source_tree import SourceFile
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.file_stats import SourceFileStats
 

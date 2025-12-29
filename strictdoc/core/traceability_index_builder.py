@@ -38,6 +38,7 @@ from strictdoc.core.file_system.document_finder import DocumentFinder
 from strictdoc.core.file_system.source_files_finder import (
     SourceFilesFinder,
 )
+from strictdoc.core.file_system.source_tree import SourceFile, SourceTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.graph.many_to_many_set import ManyToManySet
 from strictdoc.core.graph.one_to_one_dictionary import OneToOneDictionary
@@ -52,7 +53,6 @@ from strictdoc.core.query_engine.query_object import (
     QueryObject,
 )
 from strictdoc.core.query_engine.query_reader import QueryReader
-from strictdoc.core.source_tree import SourceFile, SourceTree
 from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )

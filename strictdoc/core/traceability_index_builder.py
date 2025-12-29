@@ -137,9 +137,12 @@ class TraceabilityIndexBuilder:
             file_tracability_index = (
                 traceability_index.get_file_traceability_index()
             )
-            source_tree: SourceTree = SourceFilesFinder.find_source_files(
-                project_config=project_config
-            )
+
+            with measure_performance("Find source files"):
+                source_tree: SourceTree = SourceFilesFinder.find_source_files(
+                    project_config=project_config
+                )
+
             source_files = source_tree.source_files
             source_file: SourceFile
             for source_file in source_files:

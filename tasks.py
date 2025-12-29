@@ -574,6 +574,7 @@ def lint_ruff_format(context):
         """
             ruff
                 format
+                --cache-dir build/ruff
                 *.py
                 developer/
                 docs/

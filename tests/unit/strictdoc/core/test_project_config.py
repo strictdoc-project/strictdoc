@@ -85,8 +85,7 @@ include_doc_paths = [
 
     exception: SyntaxError = exc_info_.value
     assert exception.args[0] == (
-        "strictdoc.toml: "
-        "'include_doc_paths': Invalid wildcard: '***'. Provided string: '***'."
+        "strictdoc.toml: 'include_doc_paths': Invalid wildcard: '***'."
     )
 
 
@@ -105,8 +104,7 @@ exclude_doc_paths = [
 
     exception: SyntaxError = exc_info_.value
     assert exception.args[0] == (
-        "strictdoc.toml: "
-        "'exclude_doc_paths': Invalid wildcard: '***'. Provided string: '***'."
+        "strictdoc.toml: 'exclude_doc_paths': Invalid wildcard: '***'."
     )
 
 
@@ -125,8 +123,7 @@ include_source_paths = [
 
     exception: SyntaxError = exc_info_.value
     assert exception.args[0] == (
-        "strictdoc.toml: "
-        "'include_source_paths': Invalid wildcard: '***'. Provided string: '***'."
+        "strictdoc.toml: 'include_source_paths': Invalid wildcard: '***'."
     )
 
 
@@ -145,8 +142,7 @@ exclude_source_paths = [
 
     exception: SyntaxError = exc_info_.value
     assert exception.args[0] == (
-        "strictdoc.toml: "
-        "'exclude_source_paths': Invalid wildcard: '***'. Provided string: '***'."
+        "strictdoc.toml: 'exclude_source_paths': Invalid wildcard: '***'."
     )
 
 

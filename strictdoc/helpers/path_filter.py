@@ -1,7 +1,7 @@
 import re
 from typing import List
 
-REGEX_NAME_PART = r"[A-Za-z0-9-_\. ]+"
+REGEX_NAME_PART = r"[A-Za-z0-9-_\. ]*"
 REGEX_FILENAME = rf"{REGEX_NAME_PART}"
 REGEX_FOLDER = rf"{REGEX_NAME_PART}"
 
@@ -20,10 +20,10 @@ def validate_mask(mask: str) -> None:
     if mask == "":
         raise SyntaxError("Path mask must not be empty.")
 
-    if not mask[0].isalnum() and mask[0] not in ("*", "."):
+    if not mask[0].isalnum() and mask[0] not in ("/", "*", ".", "_"):
         raise SyntaxError(
-            "Path mask must start with an alphanumeric character, a dot, or "
-            "a wildcard symbol '*'."
+            "Path mask must start with an alphanumeric character, a forward slash, "
+            f"a dot, or a wildcard symbol '*'. Provided mask: '{mask}'."
         )
 
     if "//" in mask or "\\\\" in mask:
@@ -46,8 +46,7 @@ def compile_regex_mask(path_mask: str) -> str:
     regex_mask = regex_mask.replace("**", "XXXX")
     regex_mask = regex_mask.replace("*", REGEX_WILDCARD)
     regex_mask = regex_mask.replace("XXXX", REGEX_DOUBLE_WILDCARD)
-    # Support files like "file1.py" and "./file1.py"
-    regex_mask = "^" + "(\\.\\/)?" + regex_mask + "$"  # noqa: ISC003
+    regex_mask = "^" + regex_mask + "$"  # noqa: ISC003
     return regex_mask
 
 
@@ -56,15 +55,30 @@ class PathFilter:
         self, filtered_paths: List[str], positive_or_negative: bool
     ) -> None:
         self.filtered_paths: List[str] = filtered_paths
-        compiled_regex_masks: List[str] = []
-        for filtered_path in filtered_paths:
-            validate_mask(filtered_path)
-            compiled_regex_masks.append(compile_regex_mask(filtered_path))
-
-        self.master_regex: re.Pattern[str] = re.compile(
-            "(" + "|".join(compiled_regex_masks) + ")"
-        )
         self.positive_or_negative: bool = positive_or_negative
+
+        compiled_masks: List[re.Pattern[str]] = []
+        for filtered_path_ in filtered_paths:
+            filtered_path = filtered_path_
+
+            validate_mask(filtered_path)
+
+            if filtered_path.startswith("/"):
+                filtered_path = filtered_path.lstrip("/")
+            else:
+                if not filtered_path.startswith("**"):
+                    filtered_path = "(**/)?" + filtered_path
+
+            if filtered_path.endswith("/"):
+                filtered_path += "**"
+            else:
+                if not filtered_path.endswith("*"):
+                    filtered_path += "(/**)?"
+
+            regex = compile_regex_mask(filtered_path)
+            compiled_masks.append(re.compile(regex))
+
+        self.compiled_masks: List[re.Pattern[str]] = compiled_masks
 
     def match(self, found_path: str) -> bool:
         # If this is an empty positive filter, we want to match everything
@@ -73,9 +87,13 @@ class PathFilter:
         if len(self.filtered_paths) == 0:
             return self.positive_or_negative
 
-        portable_found_path = found_path.replace("\\", "/")
-        regex_match = self.master_regex.match(portable_found_path)
-        if regex_match is not None:
-            return True
+        for rx in self.compiled_masks:
+            if rx.match(found_path):
+                return True
 
         return False
+
+    def dump(self) -> str:
+        return "\n".join(
+            str(m_).replace("\\\\", "\\") for m_ in self.compiled_masks
+        )

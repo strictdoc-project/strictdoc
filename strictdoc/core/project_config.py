@@ -376,6 +376,26 @@ class ProjectConfig:
         if not self.reqif_enable_mid:
             self.reqif_enable_mid = export_config.reqif_enable_mid
 
+    def validate_and_finalize(self) -> None:
+        if (input_paths_ := self.input_paths) and len(input_paths_) > 0:
+            path_to_gitignore = os.path.join(self.input_paths[0], ".gitignore")
+            if os.path.isfile(path_to_gitignore):
+                patterns = ["/.git/"]
+
+                with open(path_to_gitignore, encoding="utf-8") as f:
+                    for line_ in f:
+                        line = line_.strip()
+                        if not line or line.startswith("#"):
+                            continue
+                        # Ignore !-negated gitignores for now or reimplement
+                        # using a dedicated gitignore Python library.
+                        if line.startswith("!"):
+                            continue
+                        patterns.append(line)
+
+                self.exclude_doc_paths.extend(patterns)
+                self.exclude_source_paths.extend(patterns)
+
     def is_feature_activated(self, feature: ProjectFeature) -> bool:
         return feature in self.project_features
 
@@ -642,8 +662,7 @@ class ProjectConfigLoader:
                     validate_mask(include_doc_path)
                 except SyntaxError as exception_:
                     raise SyntaxError(
-                        f"strictdoc.toml: 'include_doc_paths': "
-                        f"{exception_} Provided string: '{include_doc_path}'."
+                        f"strictdoc.toml: 'include_doc_paths': {exception_}"
                     ) from exception_
 
             exclude_doc_paths = project_content.get(
@@ -655,8 +674,7 @@ class ProjectConfigLoader:
                     validate_mask(exclude_doc_path)
                 except SyntaxError as exception_:
                     raise SyntaxError(
-                        f"strictdoc.toml: 'exclude_doc_paths': "
-                        f"{exception_} Provided string: '{exclude_doc_path}'."
+                        f"strictdoc.toml: 'exclude_doc_paths': {exception_}"
                     ) from exception_
 
             source_root_path = project_content.get(
@@ -689,8 +707,7 @@ class ProjectConfigLoader:
                     validate_mask(include_source_path)
                 except SyntaxError as exception_:
                     raise SyntaxError(
-                        f"strictdoc.toml: 'include_source_paths': "
-                        f"{exception_} Provided string: '{include_source_path}'."
+                        f"strictdoc.toml: 'include_source_paths': {exception_}"
                     ) from exception_
 
             exclude_source_paths = project_content.get(
@@ -702,8 +719,7 @@ class ProjectConfigLoader:
                     validate_mask(exclude_source_path)
                 except SyntaxError as exception_:
                     raise SyntaxError(
-                        f"strictdoc.toml: 'exclude_source_paths': "
-                        f"{exception_} Provided string: '{exclude_source_path}'."
+                        f"strictdoc.toml: 'exclude_source_paths': {exception_}"
                     ) from exception_
 
             html2pdf_strict = project_content.get(

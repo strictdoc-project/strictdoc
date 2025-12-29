@@ -1,18 +1,15 @@
-# FIXME: Migrate this test to %T.
-
-# Failing test will exit with a non-zero code. Use "true" to make LIT continue running.
-RUN: cd %S && PYTHONPATH=$(pwd) pytest tests/ --junit-xml=%T/tests_unit.pytest.junit.xml --rootdir=%S ; true
-RUN: mkdir -p reports/ && cp %T/tests_unit.pytest.junit.xml reports/tests_unit.pytest.junit.xml
-RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+RUN: cp -r %S/strictdoc.toml %S/docs %S/src %S/tests %T/
+RUN: cd %T && PYTHONPATH=%T pytest tests/ --junit-xml=%T/tests_unit.pytest.junit.xml --rootdir=%T
+RUN: %strictdoc export %T --output-dir %T/output | filecheck %s --dump-input=fail
 
 # Ensure that the test report document is generated.
 CHECK: Published: Test report: pytest
-RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.pytest.junit.html"
+RUN: %check_exists --file "%T/output/html/Output/tests_unit.pytest.junit.html"
 
 # Ensure that the source and test files are generated.
-RUN: %check_exists --file "%T/html/_source_files/src/foo.py.html"
-RUN: %check_exists --file "%T/html/_source_files/tests/test_foo.py.html"
+RUN: %check_exists --file "%T/output/html/_source_files/src/foo.py.html"
+RUN: %check_exists --file "%T/output/html/_source_files/tests/test_foo.py.html"
 
 # Ensure that the test report document has the right content.
-RUN: %cat "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.pytest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+RUN: %cat "%T/output/html/Output/tests_unit.pytest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
 CHECK-TEST-REPORT: SKIPPED

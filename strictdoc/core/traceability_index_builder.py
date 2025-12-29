@@ -31,10 +31,10 @@ from strictdoc.backend.sdoc_source_code.caching_reader import (
     SourceFileTraceabilityCachingReader,
 )
 from strictdoc.core.constants import GraphLinkType
-from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_dependency_manager import FileDependencyManager
+from strictdoc.core.file_system.document_finder import DocumentFinder
 from strictdoc.core.file_system.source_files_finder import (
     SourceFilesFinder,
 )

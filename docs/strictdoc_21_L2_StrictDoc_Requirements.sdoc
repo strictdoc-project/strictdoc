@@ -684,8 +684,6 @@ RELATIONS:
   VALUE: SDOC-SSS-34
 - TYPE: Parent
   VALUE: DO178-3
-- TYPE: File
-  VALUE: strictdoc/core/document_finder.py
 
 [[/SECTION]]
 

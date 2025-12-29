@@ -35,10 +35,10 @@ from strictdoc.core.document_finder import DocumentFinder
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_dependency_manager import FileDependencyManager
-from strictdoc.core.file_traceability_index import FileTraceabilityIndex
-from strictdoc.core.finders.source_files_finder import (
+from strictdoc.core.file_system.source_files_finder import (
     SourceFilesFinder,
 )
+from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.graph.many_to_many_set import ManyToManySet
 from strictdoc.core.graph.one_to_one_dictionary import OneToOneDictionary
 from strictdoc.core.graph_database import GraphDatabase

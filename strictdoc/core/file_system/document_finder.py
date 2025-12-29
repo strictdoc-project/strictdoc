@@ -24,7 +24,7 @@ from strictdoc.backend.sdoc_source_code.test_reports.robot_xml_reader import (
 from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
-from strictdoc.core.file_tree import (
+from strictdoc.core.file_system.file_tree import (
     File,
     FileFinder,
     FileTree,

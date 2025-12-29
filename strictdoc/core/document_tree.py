@@ -2,7 +2,7 @@ from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.core.file_tree import FileTree
+from strictdoc.core.file_system.file_tree import FileTree
 from strictdoc.core.source_tree import SourceTree
 
 

@@ -12,7 +12,7 @@ from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc_source_code.test_reports.junit_xml_reader import (
     JUnitXMLReader,
 )
-from strictdoc.core.file_tree import File
+from strictdoc.core.file_system.file_tree import File
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.paths import SDocRelativePath

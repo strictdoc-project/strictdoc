@@ -6,7 +6,7 @@ import os
 from enum import Enum
 from typing import Dict, List, Sequence
 
-from strictdoc.core.file_tree import File, FileTree
+from strictdoc.core.file_system.file_tree import File, FileTree
 from strictdoc.helpers.auto_described import auto_described
 
 

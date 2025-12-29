@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from typing import List
 
-from strictdoc.core.file_tree import File, FileFinder
+from strictdoc.core.file_system.file_tree import File, FileFinder
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.source_tree import SourceFile, SourceTree
 

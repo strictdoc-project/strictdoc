@@ -18,7 +18,7 @@ from strictdoc.backend.sdoc.models.reference import (
     FileEntryFormat,
     FileReference,
 )
-from strictdoc.core.file_tree import File
+from strictdoc.core.file_system.file_tree import File
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.file_system import file_open_read_utf8

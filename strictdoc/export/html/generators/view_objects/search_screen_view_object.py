@@ -19,7 +19,7 @@ from strictdoc.backend.sdoc.models.model import (
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
-from strictdoc.core.file_tree import FileOrFolderEntry
+from strictdoc.core.file_system.file_tree import FileOrFolderEntry
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.source_tree import SourceFile
 from strictdoc.core.traceability_index import TraceabilityIndex

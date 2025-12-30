@@ -6,7 +6,6 @@
 import multiprocessing
 import os
 import sys
-from pathlib import Path
 from typing import Optional
 
 strictdoc_root_path = os.path.abspath(
@@ -16,15 +15,12 @@ assert os.path.isdir(strictdoc_root_path)
 sys.path.append(strictdoc_root_path)
 
 from strictdoc import environment
-from strictdoc.cli.base_command import CLIValidationError
 from strictdoc.cli.cli_arg_parser import (
     ImportExcelCommandConfig,
     ImportReqIFCommandConfig,
-    ManageAutoUIDCommandConfig,
     SDocArgsParser,
     create_sdoc_args_parser,
 )
-from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.core.actions.import_action import ImportAction
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.helpers.coverage import register_code_coverage_hook
@@ -66,35 +62,6 @@ def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
         )
         import_action = ImportAction()
         import_action.do_import(import_excel_config, project_config)
-
-    elif parser.is_manage_autouid_command:
-        manage_config: ManageAutoUIDCommandConfig = (
-            parser.get_manage_autouid_config()
-        )
-        try:
-            manage_config.validate()
-        except CLIValidationError as exception_:
-            raise exception_
-
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=manage_config.get_path_to_config(),
-        )
-
-        # FIXME: Encapsulate all this in project_config.integrate_manage_autouid_config(),
-        #        following the example of integrate_export_config().
-        project_config.input_paths = [manage_config.input_path]
-        project_config.source_root_path = str(
-            Path(manage_config.input_path).resolve()
-        )
-        project_config.auto_uid_mode = True
-        project_config.autouuid_include_sections = (
-            manage_config.include_sections
-        )
-        project_config.validate_and_finalize()
-
-        ManageAutoUIDCommand.execute(
-            project_config=project_config, parallelizer=parallelizer
-        )
 
     else:
         raise NotImplementedError

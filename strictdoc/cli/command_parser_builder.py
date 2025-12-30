@@ -7,6 +7,7 @@ from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.commands.about_command import AboutCommand
 from strictdoc.commands.export import ExportCommand
+from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.server import ServerCommand
 from strictdoc.commands.shared import _check_reqif_profile
 from strictdoc.commands.version_command import VersionCommand
@@ -17,6 +18,7 @@ EXCEL_PARSERS = ["basic"]
 COMMAND_REGISTRY: Dict[str, Any] = {
     "about": AboutCommand,
     "export": ExportCommand,
+    "manage": {"auto-uid": ManageAutoUIDCommand},
     "server": ServerCommand,
     "version": VersionCommand,
 }
@@ -91,7 +93,6 @@ class CommandParserBuilder:
         )
         command_subparsers.required = True
 
-        self.add_manage_command(command_subparsers)
         self.add_import_command(command_subparsers)
 
         # Dynamically add subcommands
@@ -101,6 +102,7 @@ class CommandParserBuilder:
                 family_subparsers = family_parser.add_subparsers(
                     dest="subcommand"
                 )
+                family_subparsers.required = True
                 for subname, subcmd in cmd.items():
                     sub_parser = family_subparsers.add_parser(
                         subname,
@@ -220,46 +222,3 @@ class CommandParserBuilder:
             type=str,
             help="Path to the output SDoc file.",
         )
-
-    @staticmethod
-    def add_manage_command(
-        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
-    ) -> None:
-        manage_command_parser = parent_command_parser.add_parser(
-            "manage",
-            help="Manage StrictDoc project.",
-            description="See subcommands to manage StrictDoc project.",
-            formatter_class=formatter,
-        )
-        manage_command_subparsers = manage_command_parser.add_subparsers(
-            title="subcommand", dest="subcommand"
-        )
-        manage_command_subparsers.required = True
-
-        command_parser_auto_uid = manage_command_subparsers.add_parser(
-            "auto-uid",
-            help="Generates missing requirements UIDs automatically.",
-            description=(
-                "This command generates missing requirement UID automatically. "
-                "The UIDs are generated based on the nearest section "
-                "PREFIX (if provided) or the document's "
-                'PREFIX (if provided or "REQ-" by default).'
-            ),
-            formatter_class=formatter,
-        )
-
-        command_parser_auto_uid.add_argument(
-            "input_path",
-            type=str,
-            help="Path to the project tree.",
-        )
-        command_parser_auto_uid.add_argument(
-            "--include-sections",
-            action="store_true",
-            help=(
-                "By default, the command only generates the UID for "
-                "requirements. This option enables the generation of UID for "
-                "sections."
-            ),
-        )
-        add_config_argument(command_parser_auto_uid)

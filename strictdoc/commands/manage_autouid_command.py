@@ -1,4 +1,6 @@
+import argparse
 import sys
+from pathlib import Path
 from typing import Dict, Optional
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
@@ -9,12 +11,14 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.backend.sdoc_source_code.source_writer import SourceWriter
+from strictdoc.cli.base_command import BaseCommand, CLIValidationError
+from strictdoc.commands.manage_autouid_config import ManageAutoUIDCommandConfig
 from strictdoc.core.analyzers.document_stats import (
     DocumentStats,
     DocumentTreeStats,
 )
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
-from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.helpers.parallelizer import Parallelizer
@@ -42,14 +46,70 @@ def generate_code_hash(
     return bytes(get_sha256(hash_input), encoding="utf8")
 
 
-class ManageAutoUIDCommand:
-    @staticmethod
-    def execute(
-        *, project_config: ProjectConfig, parallelizer: Parallelizer
-    ) -> None:
+class ManageAutoUIDCommand(BaseCommand):
+    HELP = "Generates missing requirements UIDs automatically."
+    DETAILED_HELP = """\
+This command generates missing requirement UID automatically.
+The UIDs are generated based on the nearest section PREFIX (if provided) or
+the document's PREFIX (if provided or "REQ-" by default).
+"""
+
+    @classmethod
+    def add_arguments(cls, parser: argparse.ArgumentParser) -> None:
+        command_parser_auto_uid = parser
+
+        command_parser_auto_uid.add_argument(
+            "input_path",
+            type=str,
+            help="Path to the project tree.",
+        )
+        command_parser_auto_uid.add_argument(
+            "--include-sections",
+            action="store_true",
+            help=(
+                "By default, the command only generates the UID for "
+                "requirements. This option enables the generation of UID for "
+                "sections."
+            ),
+        )
+        parser.add_argument(
+            "--config",
+            type=str,
+            help="Path to the StrictDoc TOML config file.",
+        )
+
+    def __init__(self, args: argparse.Namespace) -> None:
+        self.args = args
+        self.config: ManageAutoUIDCommandConfig = ManageAutoUIDCommandConfig(
+            **vars(args)
+        )
+
+    def run(self, parallelizer: Parallelizer) -> None:  # noqa: ARG002
         """
         @relation(SDOC-SRS-85, scope=function)
         """
+
+        manage_config: ManageAutoUIDCommandConfig = self.config
+        try:
+            manage_config.validate()
+        except CLIValidationError as exception_:
+            raise exception_
+
+        project_config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=manage_config.get_path_to_config(),
+        )
+
+        # FIXME: Encapsulate all this in project_config.integrate_manage_autouid_config(),
+        #        following the example of integrate_export_config().
+        project_config.input_paths = [manage_config.input_path]
+        project_config.source_root_path = str(
+            Path(manage_config.input_path).resolve()
+        )
+        project_config.auto_uid_mode = True
+        project_config.autouuid_include_sections = (
+            manage_config.include_sections
+        )
+        project_config.validate_and_finalize()
 
         # FIXME: Traceability Index is coupled with HTML output.
         project_config.export_output_html_root = "NOT_RELEVANT"

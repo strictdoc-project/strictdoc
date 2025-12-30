@@ -1,8 +1,6 @@
 import argparse
-import os
 from typing import Any, Dict, Optional
 
-from strictdoc.cli.base_command import CLIValidationError
 from strictdoc.cli.command_parser_builder import (
     COMMAND_REGISTRY,
     CommandParserBuilder,
@@ -26,39 +24,6 @@ class ImportReqIFCommandConfig:
         self.profile: Optional[str] = profile
         self.reqif_enable_mid: bool = reqif_enable_mid
         self.reqif_import_markup: Optional[str] = reqif_import_markup
-
-
-class ManageAutoUIDCommandConfig:
-    def __init__(
-        self,
-        *,
-        input_path: str,
-        config_path: Optional[str],
-        include_sections: bool,
-    ):
-        self.input_path: str = input_path
-        self._config_path: Optional[str] = config_path
-        self.include_sections: bool = include_sections
-
-    def get_path_to_config(self) -> str:
-        path_to_input_dir: str = self.input_path
-        if os.path.isfile(path_to_input_dir):
-            path_to_input_dir = os.path.dirname(path_to_input_dir)
-        path_to_config = (
-            self._config_path
-            if self._config_path is not None
-            else path_to_input_dir
-        )
-        return path_to_config
-
-    def validate(self) -> None:
-        if self._config_path is not None and not os.path.exists(
-            self._config_path
-        ):
-            raise CLIValidationError(
-                "Provided path to a configuration file does not exist: "
-                f"{self._config_path}"
-            )
 
 
 class ImportExcelCommandConfig:
@@ -110,13 +75,6 @@ class SDocArgsParser:
     def is_server_command(self) -> bool:
         return str(self.args.command) == "server"
 
-    @property
-    def is_manage_autouid_command(self) -> bool:
-        return (
-            str(self.args.command) == "manage"
-            and str(self.args.subcommand) == "auto-uid"
-        )
-
     def get_import_config_reqif(self, _: Any) -> ImportReqIFCommandConfig:
         return ImportReqIFCommandConfig(
             self.args.input_path,
@@ -124,13 +82,6 @@ class SDocArgsParser:
             self.args.profile,
             self.args.reqif_enable_mid,
             self.args.reqif_import_markup,
-        )
-
-    def get_manage_autouid_config(self) -> ManageAutoUIDCommandConfig:
-        return ManageAutoUIDCommandConfig(
-            input_path=self.args.input_path,
-            config_path=self.args.config,
-            include_sections=self.args.include_sections,
         )
 
     def get_import_config_excel(self, _: Any) -> ImportExcelCommandConfig:

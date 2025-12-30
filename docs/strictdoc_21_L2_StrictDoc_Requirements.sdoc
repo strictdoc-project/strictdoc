@@ -1712,9 +1712,6 @@ RELATIONS:
   VALUE: strictdoc/cli/main.py
 - TYPE: File
   FORMAT: Sourcecode
-  VALUE: strictdoc/cli/command_parser_builder.py
-- TYPE: File
-  FORMAT: Sourcecode
   VALUE: strictdoc/cli/cli_arg_parser.py
 
 [[/SECTION]]

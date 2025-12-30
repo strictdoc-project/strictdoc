@@ -1,12 +1,13 @@
 from strictdoc.cli.cli_arg_parser import (
-    CommandParserBuilder,
+    SDocArgsParser,
 )
+from strictdoc.cli.main import COMMAND_REGISTRY
 
 FAKE_STRICTDOC_ROOT_PATH = "/tmp/strictdoc-123"
 
 
 def cli_args_parser():
-    return CommandParserBuilder().build()
+    return SDocArgsParser.build_argparse(COMMAND_REGISTRY)
 
 
 def test_export_01_minimal():

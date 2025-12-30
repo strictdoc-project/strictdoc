@@ -33,11 +33,7 @@ def test_export_document_to_reqif():
     project_config.project_features.append(ProjectFeature.REQIF)
     project_config.integrate_server_config(server_config)
 
-    client = TestClient(
-        create_app(
-            project_config=project_config
-        )
-    )
+    client = TestClient(create_app(project_config=project_config))
     response = client.get("/02_export_document_to_reqif/sample.html")
     assert response.status_code == 200
 

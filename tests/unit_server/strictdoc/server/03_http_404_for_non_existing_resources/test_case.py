@@ -26,11 +26,8 @@ def project_config():
     project_config.integrate_server_config(server_config)
     return project_config
 
+
 def test_get_non_existing_resource(project_config: ProjectConfig):
-    client = TestClient(
-        create_app(
-            project_config=project_config
-        )
-    )
+    client = TestClient(create_app(project_config=project_config))
     response = client.get("/does_not_exist/sample.html")
     assert response.status_code == 404

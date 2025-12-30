@@ -26,12 +26,9 @@ def project_config():
     project_config.integrate_server_config(server_config)
     return project_config
 
+
 def test(project_config: ProjectConfig):
-    client = TestClient(
-        create_app(
-            project_config=project_config
-        )
-    )
+    client = TestClient(create_app(project_config=project_config))
     response = client.get("/traceability_matrix.html")
     assert response.status_code == 412
 

@@ -12,3 +12,11 @@ def _check_reqif_profile(profile: str) -> str:
         message = f"invalid choice: '{profile}' (choose from {valid_profiles})"
         raise argparse.ArgumentTypeError(message)
     return profile
+
+
+def add_config_argument(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--config",
+        type=str,
+        help="Path to the StrictDoc TOML config file.",
+    )

@@ -6,7 +6,7 @@ from strictdoc.backend.excel.import_.excel_to_sdoc_converter import (
     ExcelToSDocConverter,
 )
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.cli.cli_arg_parser import ImportExcelCommandConfig
+from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
 
 
 class ExcelImport:

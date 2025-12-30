@@ -4,35 +4,9 @@ from typing import Any, Dict, Optional
 from strictdoc.cli.command_parser_builder import (
     COMMAND_REGISTRY,
     CommandParserBuilder,
-    SDocArgumentParser,
 )
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.parallelizer import Parallelizer
-
-
-class ImportReqIFCommandConfig:
-    def __init__(
-        self,
-        input_path: str,
-        output_path: str,
-        profile: str,
-        reqif_enable_mid: bool,
-        reqif_import_markup: Optional[str],
-    ):
-        self.input_path: str = input_path
-        self.output_path: str = output_path
-        self.profile: Optional[str] = profile
-        self.reqif_enable_mid: bool = reqif_enable_mid
-        self.reqif_import_markup: Optional[str] = reqif_import_markup
-
-
-class ImportExcelCommandConfig:
-    def __init__(
-        self, input_path: str, output_path: str, parser: SDocArgumentParser
-    ) -> None:
-        self.input_path: str = input_path
-        self.output_path: str = output_path
-        self.parser: SDocArgumentParser = parser
 
 
 class SDocArgsParser:
@@ -56,38 +30,6 @@ class SDocArgsParser:
         command_instance.run(parallelizer)
 
         return True
-
-    @property
-    def is_import_command_reqif(self) -> bool:
-        return (
-            str(self.args.command) == "import"
-            and str(self.args.import_format) == "reqif"
-        )
-
-    @property
-    def is_import_command_excel(self) -> bool:
-        return (
-            str(self.args.command) == "import"
-            and str(self.args.import_format) == "excel"
-        )
-
-    @property
-    def is_server_command(self) -> bool:
-        return str(self.args.command) == "server"
-
-    def get_import_config_reqif(self, _: Any) -> ImportReqIFCommandConfig:
-        return ImportReqIFCommandConfig(
-            self.args.input_path,
-            self.args.output_path,
-            self.args.profile,
-            self.args.reqif_enable_mid,
-            self.args.reqif_import_markup,
-        )
-
-    def get_import_config_excel(self, _: Any) -> ImportExcelCommandConfig:
-        return ImportExcelCommandConfig(
-            self.args.input_path, self.args.output_path, self.args.parser
-        )
 
 
 def create_sdoc_args_parser(

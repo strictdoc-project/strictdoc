@@ -13,7 +13,7 @@ from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
 )
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.cli.cli_arg_parser import ImportReqIFCommandConfig
+from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 
 

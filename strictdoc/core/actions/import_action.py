@@ -6,10 +6,8 @@ from strictdoc.backend.excel.excel_import import ExcelImport
 from strictdoc.backend.reqif.reqif_import import ReqIFImport
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.writer import SDWriter
-from strictdoc.cli.cli_arg_parser import (
-    ImportExcelCommandConfig,
-    ImportReqIFCommandConfig,
-)
+from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
+from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.string import (
     create_safe_document_file_name,

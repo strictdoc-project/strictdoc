@@ -1,23 +1,20 @@
 import argparse
 import sys
-from typing import Any, Dict, NoReturn, Optional
+from typing import Any, Dict, NoReturn
 
 from strictdoc import __version__
-from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
-from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.commands.about_command import AboutCommand
 from strictdoc.commands.export import ExportCommand
+from strictdoc.commands.import_excel import ImportExcelCommand
+from strictdoc.commands.import_reqif import ImportReqIFCommand
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.server import ServerCommand
-from strictdoc.commands.shared import _check_reqif_profile
 from strictdoc.commands.version_command import VersionCommand
-
-EXCEL_PARSERS = ["basic"]
-
 
 COMMAND_REGISTRY: Dict[str, Any] = {
     "about": AboutCommand,
     "export": ExportCommand,
+    "import": {"excel": ImportExcelCommand, "reqif": ImportReqIFCommand},
     "manage": {"auto-uid": ManageAutoUIDCommand},
     "server": ServerCommand,
     "version": VersionCommand,
@@ -27,22 +24,6 @@ COMMAND_REGISTRY: Dict[str, Any] = {
 def formatter(prog: str) -> argparse.RawTextHelpFormatter:
     return argparse.RawTextHelpFormatter(
         prog, indent_increment=2, max_help_position=4, width=80
-    )
-
-
-def _check_reqif_import_markup(markup: Optional[str]) -> str:
-    if markup is None or markup not in SDocMarkup.ALL:
-        valid_text_markups_string = ", ".join(SDocMarkup.ALL)
-        message = f"invalid choice: '{markup}' (choose from {valid_text_markups_string})"
-        raise argparse.ArgumentTypeError(message)
-    return markup
-
-
-def add_config_argument(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(
-        "--config",
-        type=str,
-        help="Path to the StrictDoc TOML config file.",
     )
 
 
@@ -93,8 +74,6 @@ class CommandParserBuilder:
         )
         command_subparsers.required = True
 
-        self.add_import_command(command_subparsers)
-
         # Dynamically add subcommands
         for name, cmd in COMMAND_REGISTRY.items():
             if isinstance(cmd, dict):  # command family
@@ -121,104 +100,3 @@ class CommandParserBuilder:
                 cmd.add_arguments(cmd_parser)
 
         return main_parser
-
-    @staticmethod
-    def add_import_command(
-        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
-    ) -> None:
-        command_parser_import = parent_command_parser.add_parser(
-            "import",
-            help="Create StrictDoc files from other formats.",
-            description="Create StrictDoc files from other formats.",
-            formatter_class=formatter,
-        )
-        command_parser_import_subparsers = command_parser_import.add_subparsers(
-            title="import_format", dest="import_format"
-        )
-        command_parser_import_subparsers.required = True
-
-        # Command: Import -> ReqIF.
-        command_parser_import_reqif = (
-            command_parser_import_subparsers.add_parser(
-                "reqif",
-                help="Create StrictDoc file from ReqIF document.",
-                description="Create StrictDoc file from ReqIF document.",
-                formatter_class=formatter,
-            )
-        )
-
-        command_parser_import_reqif.add_argument(
-            "profile",
-            type=_check_reqif_profile,
-            help=(
-                "An argument that selects the ReqIF import/export profile. "
-                f"Possible values: {{{', '.join(ReqIFProfile.ALL)}}}"
-            ),
-        )
-        command_parser_import_reqif.add_argument(
-            "input_path",
-            type=str,
-            help="Path to the input ReqIF file.",
-        )
-        command_parser_import_reqif.add_argument(
-            "output_path",
-            type=str,
-            help="Path to the output SDoc file.",
-        )
-        command_parser_import_reqif.add_argument(
-            "--reqif-enable-mid",
-            default=False,
-            action="store_true",
-            help=(
-                "Controls whether StrictDoc's MID field will be mapped to ReqIF "
-                "SPEC-OBJECT's IDENTIFIER and vice versa when exporting/importing."
-            ),
-        )
-        command_parser_import_reqif.add_argument(
-            "--reqif-import-markup",
-            default=None,
-            type=_check_reqif_import_markup,
-            help=(
-                "Controls which MARKUP option the imported SDoc documents will have. "
-                "This value is RST as what StrictDoc has by default but very often "
-                "the requirements tools use the (X)HTML markup for multiline fields in "
-                "which case HTML is the best option."
-            ),
-        )
-
-        # Command: Import -> Excel.
-        command_parser_import_excel = (
-            command_parser_import_subparsers.add_parser(
-                "excel",
-                help="Create StrictDoc file from Excel document.",
-                description="Create StrictDoc file Excel ReqIF document.",
-                formatter_class=formatter,
-            )
-        )
-
-        def check_excel_parser(parser: str) -> str:
-            if parser not in EXCEL_PARSERS:
-                message = (
-                    f"invalid choice: '{parser}' (choose from {EXCEL_PARSERS})"
-                )
-                raise argparse.ArgumentTypeError(message)
-            return parser
-
-        command_parser_import_excel.add_argument(
-            "parser",
-            type=check_excel_parser,
-            help=(
-                "An argument that selects the ReqIF parser. "
-                f"Possible values: {{{', '.join(EXCEL_PARSERS)}}}"
-            ),
-        )
-        command_parser_import_excel.add_argument(
-            "input_path",
-            type=str,
-            help="Path to the input ReqIF file.",
-        )
-        command_parser_import_excel.add_argument(
-            "output_path",
-            type=str,
-            help="Path to the output SDoc file.",
-        )

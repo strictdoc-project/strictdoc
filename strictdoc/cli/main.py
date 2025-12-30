@@ -16,13 +16,9 @@ sys.path.append(strictdoc_root_path)
 
 from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import (
-    ImportExcelCommandConfig,
-    ImportReqIFCommandConfig,
     SDocArgsParser,
     create_sdoc_args_parser,
 )
-from strictdoc.core.actions.import_action import ImportAction
-from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.helpers.coverage import register_code_coverage_hook
 from strictdoc.helpers.exception import (
     ExceptionInfo,
@@ -35,36 +31,10 @@ from strictdoc.helpers.timing import measure_performance
 def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
     register_code_coverage_hook()
 
-    project_config: ProjectConfig
-
     if parser.run(parallelizer):
         return
 
-    #
-    # FIXME: Migrate the remaining commands.
-    #
-    if parser.is_import_command_reqif:
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=os.getcwd(),
-        )
-        import_reqif_config: ImportReqIFCommandConfig = (
-            parser.get_import_config_reqif(environment.path_to_strictdoc)
-        )
-        import_action = ImportAction()
-        import_action.do_import(import_reqif_config, project_config)
-
-    elif parser.is_import_command_excel:
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=os.getcwd(),
-        )
-        import_excel_config: ImportExcelCommandConfig = (
-            parser.get_import_config_excel(environment.path_to_strictdoc)
-        )
-        import_action = ImportAction()
-        import_action.do_import(import_excel_config, project_config)
-
-    else:
-        raise NotImplementedError
+    raise NotImplementedError
 
 
 def _main() -> None:

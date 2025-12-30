@@ -5,11 +5,11 @@ from typing import Any, Dict, NoReturn, Optional
 from strictdoc import __version__
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
+from strictdoc.commands._shared import _check_reqif_profile
 from strictdoc.commands.about_command import AboutCommand
 from strictdoc.commands.export import ExportCommand
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.server import ServerCommand
-from strictdoc.commands.shared import _check_reqif_profile
 from strictdoc.commands.version_command import VersionCommand
 
 EXCEL_PARSERS = ["basic"]

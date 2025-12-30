@@ -3,8 +3,8 @@ from typing import List
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.base_command import BaseCommand, CLIValidationError
+from strictdoc.commands._shared import _check_reqif_profile
 from strictdoc.commands.export_config import ExportCommandConfig
-from strictdoc.commands.shared import _check_reqif_profile
 from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.project_config import ProjectConfigLoader
 from strictdoc.helpers.parallelizer import Parallelizer

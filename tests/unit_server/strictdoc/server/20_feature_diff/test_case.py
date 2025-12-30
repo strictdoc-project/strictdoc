@@ -7,7 +7,7 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 
-from strictdoc.cli.cli_arg_parser import ServerCommandConfig
+from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.server.app import create_app
 
@@ -15,12 +15,15 @@ PATH_TO_THIS_TEST_FOLDER = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_CONFIG = os.path.join(PATH_TO_THIS_TEST_FOLDER, "strictdoc.toml")
 assert os.path.exists(PATH_TO_CONFIG)
 
+
 @pytest.fixture(scope="module")
 def project_config():
     server_config = ServerCommandConfig(
+        debug=False,
+        command="server",
         input_path=PATH_TO_THIS_TEST_FOLDER,
         output_path=os.path.join(PATH_TO_THIS_TEST_FOLDER, "output"),
-        config_path=PATH_TO_CONFIG,
+        config=PATH_TO_CONFIG,
         reload=False,
         host="127.0.0.1",
         port=8001,

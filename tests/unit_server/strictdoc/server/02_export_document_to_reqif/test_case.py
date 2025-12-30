@@ -8,7 +8,7 @@ import shutil
 
 from fastapi.testclient import TestClient
 
-from strictdoc.cli.cli_arg_parser import ServerCommandConfig
+from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.server.app import create_app
 
@@ -20,9 +20,11 @@ def test_export_document_to_reqif():
     shutil.rmtree(PATH_TO_OUTPUT_FOLDER, ignore_errors=True)
 
     server_config = ServerCommandConfig(
+        debug=False,
+        command="server",
         input_path=PATH_TO_THIS_TEST_FOLDER,
         output_path=PATH_TO_OUTPUT_FOLDER,
-        config_path=None,
+        config=None,
         reload=False,
         host="127.0.0.1",
         port=8001,

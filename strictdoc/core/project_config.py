@@ -18,10 +18,8 @@ import toml
 from strictdoc import __version__, environment
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
-from strictdoc.cli.cli_arg_parser import (
-    ExportCommandConfig,
-    ServerCommandConfig,
-)
+from strictdoc.commands.export_config import ExportCommandConfig
+from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.plugin import StrictDocPlugin
 from strictdoc.helpers.auto_described import auto_described

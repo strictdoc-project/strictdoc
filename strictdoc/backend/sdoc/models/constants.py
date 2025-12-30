@@ -2,6 +2,8 @@
 @relation(SDOC-SRS-18, scope=file)
 """
 
+from typing import Any, List
+
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import (
@@ -58,7 +60,7 @@ SECTION_MODELS = [
     FileEntry,
 ]
 
-GRAMMAR_MODELS = [
+GRAMMAR_MODELS: List[Any] = [
     DocumentGrammar,
     GrammarElement,
     GrammarElementFieldString,
@@ -70,7 +72,7 @@ GRAMMAR_MODELS = [
     GrammarElementRelationFile,
 ]
 
-DOCUMENT_MODELS = [
+DOCUMENT_MODELS: List[Any] = [
     DocumentConfig,
     DocumentCustomMetadata,
     DocumentCustomMetadataKeyValuePair,

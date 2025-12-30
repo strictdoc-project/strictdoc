@@ -1,18 +1,15 @@
 import argparse
 import os
-from typing import Any, List, Optional, Tuple
+from typing import Any, Dict, Optional
 
+from strictdoc.cli.base_command import CLIValidationError
 from strictdoc.cli.command_parser_builder import (
+    COMMAND_REGISTRY,
     CommandParserBuilder,
     SDocArgumentParser,
 )
-from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.net import is_valid_host
-
-
-class CLIValidationError(Exception):
-    pass
+from strictdoc.helpers.parallelizer import Parallelizer
 
 
 class ImportReqIFCommandConfig:
@@ -73,149 +70,27 @@ class ImportExcelCommandConfig:
         self.parser: SDocArgumentParser = parser
 
 
-@auto_described
-class ServerCommandConfig:
-    def __init__(
-        self,
-        *,
-        input_path: str,
-        output_path: Optional[str],
-        config_path: Optional[str],
-        reload: bool,
-        host: Optional[str],
-        port: Optional[int],
-    ):
-        self._input_path: str = input_path
-        self.output_path: Optional[str] = output_path
-        self._config_path: Optional[str] = config_path
-        self.reload: bool = reload
-        self.host: Optional[str] = host
-        self.port: Optional[int] = port
-
-    def get_full_input_path(self) -> str:
-        return os.path.abspath(self._input_path)
-
-    def get_path_to_config(self) -> str:
-        return (
-            self._config_path
-            if self._config_path is not None
-            else self._input_path
-        )
-
-    def validate(self) -> None:
-        if not os.path.exists(self._input_path):
-            raise CLIValidationError(
-                f"Provided input path does not exist: {self._input_path}"
-            )
-
-        if self._config_path is not None and not os.path.exists(
-            self._config_path
-        ):
-            raise CLIValidationError(
-                "Provided path to a configuration file does not exist: "
-                f"{self._config_path}"
-            )
-
-        if (host_ := self.host) is not None:
-            if not is_valid_host(host_):
-                raise CLIValidationError(
-                    f"Provided 'host' argument is not a valid host: {host_}"
-                )
-
-
-@auto_described
-class ExportCommandConfig:
-    def __init__(
-        self,
-        *,
-        input_paths: List[str],
-        output_dir: Optional[str],
-        config_path: Optional[str],
-        project_title: Optional[str],
-        formats: List[str],
-        fields: List[str],
-        generate_bundle_document: bool,
-        no_parallelization: bool,
-        enable_mathjax: bool,
-        included_documents: bool,
-        filter_nodes: Optional[str],
-        reqif_profile: Optional[str],
-        reqif_multiline_is_xhtml: bool,
-        reqif_enable_mid: bool,
-        view: Optional[str],
-        generate_diff_git: Optional[str],
-        generate_diff_dirs: Optional[Tuple[str, str]],
-        chromedriver: Optional[str],
-    ):
-        assert isinstance(input_paths, list), f"{input_paths}"
-        self.input_paths: List[str] = input_paths
-        self.output_dir: Optional[str] = output_dir
-        self._config_path: Optional[str] = config_path
-        self.project_title: Optional[str] = project_title
-        self.formats: List[str] = formats
-        self.fields: List[str] = fields
-        self.generate_bundle_document: bool = generate_bundle_document
-        self.no_parallelization: bool = no_parallelization
-        self.enable_mathjax: bool = enable_mathjax
-        self.included_documents: bool = included_documents
-        self.filter_nodes: Optional[str] = filter_nodes
-        self.reqif_profile: Optional[str] = reqif_profile
-        self.reqif_multiline_is_xhtml: bool = reqif_multiline_is_xhtml
-        self.reqif_enable_mid: bool = reqif_enable_mid
-        self.view: Optional[str] = view
-        self.generate_diff_git: Optional[str] = generate_diff_git
-        self.generate_diff_dirs: Optional[Tuple[str, str]] = generate_diff_dirs
-        self.chromedriver: Optional[str] = chromedriver
-
-    def get_path_to_config(self) -> str:
-        # FIXME: The control flow can be improved.
-        path_to_input_dir: str = self.input_paths[0]
-        if os.path.isfile(path_to_input_dir):
-            path_to_input_dir = os.path.dirname(path_to_input_dir)
-        path_to_config = (
-            self._config_path
-            if self._config_path is not None
-            else path_to_input_dir
-        )
-        return path_to_config
-
-    def validate(self) -> None:
-        for idx_, input_path_ in enumerate(self.input_paths.copy()):
-            if not os.path.exists(input_path_):
-                raise CLIValidationError(
-                    f"Provided input path does not exist: {input_path_}"
-                )
-            if not os.path.isabs(input_path_):
-                self.input_paths[idx_] = os.path.abspath(input_path_).rstrip(
-                    "/"
-                )
-        if self._config_path is not None:
-            if not os.path.exists(self._config_path):
-                raise CLIValidationError(
-                    "Provided path to a configuration file does not exist: "
-                    f"{self._config_path}"
-                )
-
-
-class DumpGrammarCommandConfig:
-    def __init__(self, output_file: str):
-        self.output_file: str = output_file
-
-
 class SDocArgsParser:
-    def __init__(self, args: argparse.Namespace):
+    def __init__(self, args: argparse.Namespace, registry: Dict[str, Any]):
         self.args: argparse.Namespace = args
+        self.registry: Dict[str, Any] = registry
 
     def is_debug_mode(self) -> bool:
         return assert_cast(self.args.debug, bool)
 
-    @property
-    def is_about_command(self) -> bool:
-        return str(self.args.command) == "about"
+    def run(self, parallelizer: Parallelizer) -> bool:
+        if self.args.command not in self.registry:
+            return False
 
-    @property
-    def is_export_command(self) -> bool:
-        return str(self.args.command) == "export"
+        cmd = self.registry[self.args.command]
+        if isinstance(cmd, dict):
+            assert self.args.subcommand in cmd
+            command_instance = cmd[self.args.subcommand](self.args)
+        else:
+            command_instance = cmd(self.args)
+        command_instance.run(parallelizer)
+
+        return True
 
     @property
     def is_import_command_reqif(self) -> bool:
@@ -236,42 +111,10 @@ class SDocArgsParser:
         return str(self.args.command) == "server"
 
     @property
-    def is_dump_grammar_command(self) -> bool:
-        return str(self.args.command) == "dump-grammar"
-
-    @property
-    def is_version_command(self) -> bool:
-        return str(self.args.command) == "version"
-
-    @property
     def is_manage_autouid_command(self) -> bool:
         return (
             str(self.args.command) == "manage"
             and str(self.args.subcommand) == "auto-uid"
-        )
-
-    def get_export_config(self) -> ExportCommandConfig:
-        project_title: Optional[str] = self.args.project_title
-
-        return ExportCommandConfig(
-            input_paths=self.args.input_paths,
-            output_dir=self.args.output_dir,
-            config_path=self.args.config,
-            project_title=project_title,
-            formats=self.args.formats,
-            fields=self.args.fields,
-            generate_bundle_document=self.args.generate_bundle_document,
-            no_parallelization=self.args.no_parallelization,
-            enable_mathjax=self.args.enable_mathjax,
-            included_documents=self.args.included_documents,
-            filter_nodes=self.args.filter_nodes,
-            reqif_profile=self.args.reqif_profile,
-            reqif_multiline_is_xhtml=self.args.reqif_multiline_is_xhtml,
-            reqif_enable_mid=self.args.reqif_enable_mid,
-            view=self.args.view,
-            generate_diff_git=self.args.generate_diff_git,
-            generate_diff_dirs=self.args.generate_diff_dirs,
-            chromedriver=self.args.chromedriver,
         )
 
     def get_import_config_reqif(self, _: Any) -> ImportReqIFCommandConfig:
@@ -295,19 +138,6 @@ class SDocArgsParser:
             self.args.input_path, self.args.output_path, self.args.parser
         )
 
-    def get_server_config(self) -> ServerCommandConfig:
-        return ServerCommandConfig(
-            input_path=self.args.input_path,
-            output_path=self.args.output_path,
-            config_path=self.args.config,
-            reload=self.args.reload,
-            host=self.args.host,
-            port=self.args.port,
-        )
-
-    def get_dump_grammar_config(self) -> DumpGrammarCommandConfig:
-        return DumpGrammarCommandConfig(output_file=self.args.output_file)
-
 
 def create_sdoc_args_parser(
     testing_args: Optional[argparse.Namespace] = None,
@@ -317,4 +147,4 @@ def create_sdoc_args_parser(
         builder = CommandParserBuilder()
         parser = builder.build()
         args = parser.parse_args()
-    return SDocArgsParser(args)
+    return SDocArgsParser(args, COMMAND_REGISTRY)

@@ -9,9 +9,9 @@ from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.cli.cli_arg_parser import (
-    ExportCommandConfig,
     create_sdoc_args_parser,
 )
+from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     parser = create_sdoc_args_parser()
     project_config: ProjectConfig
 
-    export_config: ExportCommandConfig = parser.get_export_config()
+    export_config: ExportCommandConfig = ExportCommandConfig(**vars(parser.args))
     project_config = ProjectConfigLoader.load_from_path_or_get_default(
         path_to_config=export_config.get_path_to_config()
     )

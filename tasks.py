@@ -113,6 +113,7 @@ def server(context, input_path=".", config=None):
         ToxEnvironment.DEVELOPMENT,
         f"""
             python -m strictdoc.cli.main
+                --debug
                 server {input_path} {config_argument}
                     --host 127.0.0.1
                     --output-path ./output/server

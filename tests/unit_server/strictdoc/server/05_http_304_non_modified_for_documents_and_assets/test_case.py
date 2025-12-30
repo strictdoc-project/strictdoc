@@ -7,7 +7,7 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 
-from strictdoc.cli.cli_arg_parser import ServerCommandConfig
+from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.server.app import create_app
 from strictdoc.server.helpers.http import get_etag
@@ -19,9 +19,11 @@ PATH_TO_OUTPUT_FOLDER = os.path.join(PATH_TO_THIS_TEST_FOLDER, "output")
 @pytest.fixture(scope="module")
 def project_config():
     server_config = ServerCommandConfig(
+        debug=False,
+        command="server",
         input_path=PATH_TO_THIS_TEST_FOLDER,
         output_path=PATH_TO_OUTPUT_FOLDER,
-        config_path=None,
+        config=None,
         reload=False,
         host="127.0.0.1",
         port=8001,

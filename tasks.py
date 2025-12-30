@@ -582,6 +582,7 @@ def lint_ruff_format(context):
                 strictdoc/
                 tools/ecss
                 tests/unit/
+                tests/unit_server/
                 tests/integration/*.py
                 tests/end2end/
         """,

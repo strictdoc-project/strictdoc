@@ -28,18 +28,17 @@ def project_config():
         host="127.0.0.1",
         port=8001,
     )
-    project_config: ProjectConfig = ProjectConfigLoader.load_from_path_or_get_default(
-        path_to_config=PATH_TO_CONFIG,
+    project_config: ProjectConfig = (
+        ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=PATH_TO_CONFIG,
+        )
     )
     project_config.integrate_server_config(server_config)
     return project_config
 
+
 def test(project_config: ProjectConfig):
-    client = TestClient(
-        create_app(
-            project_config=project_config
-        )
-    )
+    client = TestClient(create_app(project_config=project_config))
     response = client.get("/diff?tab=foo")
     assert response.status_code == 400
 

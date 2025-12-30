@@ -16,21 +16,15 @@ assert os.path.isdir(strictdoc_root_path)
 sys.path.append(strictdoc_root_path)
 
 from strictdoc import environment
+from strictdoc.cli.base_command import CLIValidationError
 from strictdoc.cli.cli_arg_parser import (
-    CLIValidationError,
-    DumpGrammarCommandConfig,
-    ExportCommandConfig,
     ImportExcelCommandConfig,
     ImportReqIFCommandConfig,
     ManageAutoUIDCommandConfig,
     SDocArgsParser,
     create_sdoc_args_parser,
 )
-from strictdoc.commands.about_command import AboutCommand
-from strictdoc.commands.dump_grammar_command import DumpGrammarCommand
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
-from strictdoc.commands.version_command import VersionCommand
-from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.actions.import_action import ImportAction
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.helpers.coverage import register_code_coverage_hook
@@ -40,7 +34,6 @@ from strictdoc.helpers.exception import (
 )
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.timing import measure_performance
-from strictdoc.server.server import run_strictdoc_server
 
 
 def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
@@ -48,44 +41,13 @@ def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
 
     project_config: ProjectConfig
 
-    if parser.is_export_command:
-        export_config: ExportCommandConfig = parser.get_export_config()
-        try:
-            export_config.validate()
-        except CLIValidationError as exception_:
-            raise exception_
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=export_config.get_path_to_config(),
-        )
-        project_config.integrate_export_config(export_config)
-        project_config.validate_and_finalize()
+    if parser.run(parallelizer):
+        return
 
-        parallelization_value = (
-            "Disabled" if export_config.no_parallelization else "Enabled"
-        )
-        print(  # noqa: T201
-            f"Parallelization: {parallelization_value}", flush=True
-        )
-        export_action = ExportAction(
-            project_config=project_config,
-            parallelizer=parallelizer,
-        )
-        export_action.export()
-
-    elif parser.is_server_command:
-        server_config = parser.get_server_config()
-        try:
-            server_config.validate()
-        except CLIValidationError as exception_:
-            raise exception_
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=server_config.get_path_to_config(),
-        )
-        run_strictdoc_server(
-            server_config=server_config, project_config=project_config
-        )
-
-    elif parser.is_import_command_reqif:
+    #
+    # FIXME: Migrate the remaining commands.
+    #
+    if parser.is_import_command_reqif:
         project_config = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=os.getcwd(),
         )
@@ -133,16 +95,6 @@ def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
         ManageAutoUIDCommand.execute(
             project_config=project_config, parallelizer=parallelizer
         )
-
-    elif parser.is_dump_grammar_command:
-        dump_config: DumpGrammarCommandConfig = parser.get_dump_grammar_config()
-        DumpGrammarCommand.execute(dump_config)
-
-    elif parser.is_version_command:
-        VersionCommand.execute()
-
-    elif parser.is_about_command:
-        AboutCommand.execute()
 
     else:
         raise NotImplementedError

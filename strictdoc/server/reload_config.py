@@ -6,7 +6,7 @@ import os
 from dataclasses import dataclass
 from typing import List, Optional
 
-from strictdoc.cli.cli_arg_parser import ServerCommandConfig
+from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 
 

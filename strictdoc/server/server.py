@@ -11,7 +11,7 @@ from typing import List, Tuple
 import uvicorn
 
 from strictdoc import __version__
-from strictdoc.cli.cli_arg_parser import ServerCommandConfig
+from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.pickle import pickle_dump
 from strictdoc.server.config import SDocServerEnvVariable

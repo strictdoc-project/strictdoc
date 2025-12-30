@@ -1,25 +1,25 @@
 import argparse
 import sys
-from typing import List, NoReturn, Optional
+from typing import Any, Dict, NoReturn, Optional
 
 from strictdoc import __version__
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
-from strictdoc.cli.argument_int_range import IntRange
+from strictdoc.commands.about_command import AboutCommand
+from strictdoc.commands.export import ExportCommand
+from strictdoc.commands.server import ServerCommand
+from strictdoc.commands.shared import _check_reqif_profile
+from strictdoc.commands.version_command import VersionCommand
 
-EXPORT_FORMATS = [
-    "html",
-    "html2pdf",
-    "rst",
-    "json",
-    "excel",
-    "reqif-sdoc",
-    "reqifz-sdoc",
-    "sdoc",
-    "doxygen",
-    "spdx",
-]
 EXCEL_PARSERS = ["basic"]
+
+
+COMMAND_REGISTRY: Dict[str, Any] = {
+    "about": AboutCommand,
+    "export": ExportCommand,
+    "server": ServerCommand,
+    "version": VersionCommand,
+}
 
 
 def formatter(prog: str) -> argparse.RawTextHelpFormatter:
@@ -28,50 +28,12 @@ def formatter(prog: str) -> argparse.RawTextHelpFormatter:
     )
 
 
-def _check_formats(formats: str) -> List[str]:
-    formats_array = formats.split(",")
-    for fmt in formats_array:
-        if fmt in EXPORT_FORMATS:
-            continue
-        export_formats = ", ".join(map(lambda f: f"'{f}'", EXPORT_FORMATS))
-        message = f"invalid choice: '{fmt}' (choose from {export_formats})"
-        raise argparse.ArgumentTypeError(message)
-    return formats_array
-
-
-def _check_reqif_profile(profile: str) -> str:
-    if profile not in ReqIFProfile.ALL:
-        # To maintain the compatibility with the previous behavior.
-        if profile == "sdoc":
-            return ReqIFProfile.P01_SDOC
-        valid_profiles = ", ".join(map(lambda f: f"'{f}'", ReqIFProfile.ALL))
-        message = f"invalid choice: '{profile}' (choose from {valid_profiles})"
-        raise argparse.ArgumentTypeError(message)
-    return profile
-
-
 def _check_reqif_import_markup(markup: Optional[str]) -> str:
     if markup is None or markup not in SDocMarkup.ALL:
         valid_text_markups_string = ", ".join(SDocMarkup.ALL)
         message = f"invalid choice: '{markup}' (choose from {valid_text_markups_string})"
         raise argparse.ArgumentTypeError(message)
     return markup
-
-
-def _check_git_revisions(git_revisions: str) -> str:
-    if ".." not in git_revisions:
-        message = (
-            "Invalid Git revision pair. "
-            'The expected format is: "<Git revision>..<Git revision>". '
-            'Example: "HEAD^..HEAD".'
-        )
-        raise argparse.ArgumentTypeError(message)
-    return git_revisions
-
-
-def _parse_fields(fields: str) -> List[str]:
-    fields_array = fields.split(",")
-    return fields_array
 
 
 def add_config_argument(parser: argparse.ArgumentParser) -> None:
@@ -129,163 +91,34 @@ class CommandParserBuilder:
         )
         command_subparsers.required = True
 
-        self.add_about_command(command_subparsers)
-        self.add_export_command(command_subparsers)
-        self.add_server_command(command_subparsers)
         self.add_manage_command(command_subparsers)
         self.add_import_command(command_subparsers)
-        self.add_version_command(command_subparsers)
-        self.add_dump_command(command_subparsers)
+
+        # Dynamically add subcommands
+        for name, cmd in COMMAND_REGISTRY.items():
+            if isinstance(cmd, dict):  # command family
+                family_parser = command_subparsers.add_parser(name)
+                family_subparsers = family_parser.add_subparsers(
+                    dest="subcommand"
+                )
+                for subname, subcmd in cmd.items():
+                    sub_parser = family_subparsers.add_parser(
+                        subname,
+                        help=subcmd.HELP,
+                        description=subcmd.DETAILED_HELP,
+                        formatter_class=formatter,
+                    )
+                    subcmd.add_arguments(sub_parser)
+            else:
+                cmd_parser = command_subparsers.add_parser(
+                    name,
+                    help=cmd.HELP,
+                    description=cmd.DETAILED_HELP,
+                    formatter_class=formatter,
+                )
+                cmd.add_arguments(cmd_parser)
 
         return main_parser
-
-    @staticmethod
-    def add_about_command(
-        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
-    ) -> None:
-        parent_command_parser.add_parser(
-            "about",
-            help="About StrictDoc.",
-            description="About StrictDoc.",
-            formatter_class=formatter,
-        )
-
-    @staticmethod
-    def add_export_command(
-        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
-    ) -> None:
-        # Command – Export.
-        command_parser_export = parent_command_parser.add_parser(
-            "export",
-            help="Export document tree.",
-            description=(
-                "Export command: "
-                "input SDoc documents are generated into "
-                "HTML and other formats."
-            ),
-            formatter_class=formatter,
-        )
-        command_parser_export.add_argument(
-            "input_paths",
-            type=str,
-            nargs="+",
-            help="One or more folders with *.sdoc files",
-        )
-        command_parser_export.add_argument(
-            "--output-dir", type=str, help="Output folder"
-        )
-        command_parser_export.add_argument(
-            "--project-title", type=str, help="Project title"
-        )
-        command_parser_export.add_argument(
-            "--formats",
-            type=_check_formats,
-            default=["html"],
-            help="Export formats",
-        )
-        command_parser_export.add_argument(
-            "--fields",
-            type=_parse_fields,
-            default=["uid", "statement", "parent"],
-            help="Export fields, only used for Excel export",
-        )
-        command_parser_export.add_argument(
-            "--generate-bundle-document",
-            action="store_true",
-            default=False,
-            help=(
-                "EXPERIMENTAL: "
-                "In addition to generating individual documents, "
-                "also create a concatenated bundle that contains "
-                "all the documents together."
-            ),
-        )
-        command_parser_export.add_argument(
-            "--no-parallelization",
-            action="store_true",
-            help=(
-                "Disables parallelization. "
-                "All work happens in the main thread. "
-                "This option may be useful for debugging."
-            ),
-        )
-        command_parser_export.add_argument(
-            "--enable-mathjax",
-            action="store_true",
-            help="Enables Mathjax support (only HTML export).",
-        )
-        command_parser_export.add_argument(
-            "--included-documents",
-            action="store_true",
-            help=(
-                "By default the included documents are not exported. "
-                "This option makes both including and included documents to be exported."
-            ),
-        )
-        command_parser_export.add_argument(
-            "--reqif-profile",
-            type=_check_reqif_profile,
-            default=ReqIFProfile.P01_SDOC,
-            help="Export formats",
-        )
-        command_parser_export.add_argument(
-            "--reqif-multiline-is-xhtml",
-            default=False,
-            action="store_true",
-            help=(
-                "Controls whether StrictDoc multiline fields are exported as XHTML "
-                "when the option is provided. "
-                "By default StrictDoc exports multiline fields with a STRING type."
-            ),
-        )
-        command_parser_export.add_argument(
-            "--reqif-enable-mid",
-            default=False,
-            action="store_true",
-            help=(
-                "Controls whether StrictDoc's MID field will be mapped to ReqIF "
-                "SPEC-OBJECT's IDENTIFIER and vice versa when exporting/importing."
-            ),
-        )
-        # FIXME: --filter-requirements will be removed in 2026.
-        command_parser_export.add_argument(
-            "--filter-nodes",
-            "--filter-requirements",
-            dest="filter_nodes",
-            type=str,
-            help="Filter which requirements will be exported.",
-        )
-        command_parser_export.add_argument(
-            "--view",
-            type=str,
-            help="Choose which view will be exported.",
-        )
-        command_parser_export.add_argument(
-            "--generate-diff-git",
-            type=_check_git_revisions,
-            help=(
-                "Generate Diff/Changelog for a given pair of Git revisions. "
-                'Example: --generate-diff-git "HEAD^..HEAD"'
-            ),
-        )
-        command_parser_export.add_argument(
-            "--generate-diff-dirs",
-            "--generate-diff-dirs",
-            metavar=("OLD_PATH", "NEW_PATH"),
-            nargs=2,
-            help=(
-                "Generate Diff/Changelog for a given pair of local directories. "
-                'Example: --generate-diff-dirs "./old_path" "./new_path"'
-            ),
-        )
-        command_parser_export.add_argument(
-            "--chromedriver",
-            type=str,
-            help="Path to pre installed chromedriver for html2pdf. "
-            "If not given, chromedriver is downloaded and saved to "
-            "strictdoc cache.",
-        )
-        add_config_argument(command_parser_export)
 
     @staticmethod
     def add_import_command(
@@ -386,62 +219,6 @@ class CommandParserBuilder:
             "output_path",
             type=str,
             help="Path to the output SDoc file.",
-        )
-
-    @staticmethod
-    def add_server_command(
-        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
-    ) -> None:
-        command_parser_server = parent_command_parser.add_parser(
-            "server",
-            help="Run StrictDoc web server.",
-            description="Run StrictDoc web server.",
-            formatter_class=formatter,
-        )
-        command_parser_server.add_argument("input_path")
-        command_parser_server.add_argument("--output-path", type=str)
-        command_parser_server.add_argument("--host", type=str)
-        command_parser_server.add_argument("--port", type=IntRange(1024, 65000))
-        # The --reload and --no-reload options are currently used only for
-        # StrictDoc's own development. We may want to revisit this for the end
-        # users in the future but for now they are excluded from the help
-        # messages.
-        command_parser_server.add_argument(
-            "--reload",
-            default=False,
-            action="store_true",
-            help=argparse.SUPPRESS,
-        )
-        command_parser_server.add_argument(
-            "--no-reload",
-            dest="reload",
-            action="store_false",
-            help=argparse.SUPPRESS,
-        )
-
-        add_config_argument(command_parser_server)
-
-    @staticmethod
-    def add_version_command(
-        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
-    ) -> None:
-        parent_command_parser.add_parser(
-            "version",
-            help="Print the version of StrictDoc.",
-            formatter_class=formatter,
-        )
-
-    @staticmethod
-    def add_dump_command(
-        parent_command_parser: "argparse._SubParsersAction[SDocArgumentParser]",
-    ) -> None:
-        command_parser_dump_grammar = parent_command_parser.add_parser(
-            "dump-grammar",
-            help="Dump the SDoc grammar to a .tx file.",
-            formatter_class=formatter,
-        )
-        command_parser_dump_grammar.add_argument(
-            "output_file", type=str, help="Path to the output .tx file"
         )
 
     @staticmethod

@@ -32,6 +32,6 @@ class AboutCommand(BaseCommand):
             "Docs:    https://strictdoc.readthedocs.io/en/stable/"
         )
         print(  # noqa: T201
-            "Github:  https://github.com/strictdoc-project/strictdoc"
+            "GitHub:  https://github.com/strictdoc-project/strictdoc"
         )
         print("License: Apache 2")  # noqa: T201

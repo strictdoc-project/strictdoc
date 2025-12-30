@@ -6,7 +6,7 @@
 import multiprocessing
 import os
 import sys
-from typing import Optional
+from typing import Any, Dict, Optional
 
 strictdoc_root_path = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..")
@@ -17,8 +17,14 @@ sys.path.append(strictdoc_root_path)
 from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import (
     SDocArgsParser,
-    create_sdoc_args_parser,
 )
+from strictdoc.commands.about_command import AboutCommand
+from strictdoc.commands.export import ExportCommand
+from strictdoc.commands.import_excel import ImportExcelCommand
+from strictdoc.commands.import_reqif import ImportReqIFCommand
+from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
+from strictdoc.commands.server import ServerCommand
+from strictdoc.commands.version_command import VersionCommand
 from strictdoc.helpers.coverage import register_code_coverage_hook
 from strictdoc.helpers.exception import (
     ExceptionInfo,
@@ -27,17 +33,27 @@ from strictdoc.helpers.exception import (
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.timing import measure_performance
 
-
-def _main_internal(parallelizer: Parallelizer, parser: SDocArgsParser) -> None:
-    register_code_coverage_hook()
-
-    if parser.run(parallelizer):
-        return
-
-    raise NotImplementedError
+COMMAND_REGISTRY: Dict[str, Any] = {
+    "about": AboutCommand,
+    "export": ExportCommand,
+    "import": {"excel": ImportExcelCommand, "reqif": ImportReqIFCommand},
+    "manage": {"auto-uid": ManageAutoUIDCommand},
+    "server": ServerCommand,
+    "version": VersionCommand,
+}
 
 
 def _main() -> None:
+    # The parser can raise when no arguments or incorrect arguments are provided.
+    try:
+        parser = SDocArgsParser.create_sdoc_args_parser(COMMAND_REGISTRY)
+    except Exception as exception_:
+        print(f"error: {str(exception_)}", flush=True)  # noqa: T201
+        sys.exit(1)
+
+    if parser.is_debug_mode():
+        environment.is_debug_mode = True
+
     # Ensure that multiprocessing.freeze_support() is called in a frozen
     # application
     # https://github.com/pyinstaller/pyinstaller/issues/7438
@@ -63,25 +79,14 @@ def _main() -> None:
         1, "w", encoding="utf-8", closefd=False
     )
 
+    register_code_coverage_hook()
+
     enable_parallelization = "--no-parallelization" not in sys.argv
-
-    # NOTE: The parser can exit before the _main starts when no arguments
-    #       or incorrect arguments are provided. In those cases, it is still
-    #       important that the parallelizer is correctly shut down.
-    try:
-        parser = create_sdoc_args_parser()
-    except Exception as exception_:
-        print(f"error: {str(exception_)}", flush=True)  # noqa: T201
-        sys.exit(1)
-
-    if parser.is_debug_mode():
-        environment.is_debug_mode = True
-
     parallelizer = Parallelizer.create(enable_parallelization)
 
     exception_info: Optional[ExceptionInfo] = None
     try:
-        _main_internal(parallelizer, parser)
+        parser.run(parallelizer)
     except StrictDocChildProcessException as exception_info_:
         exception_info = exception_info_.exception_info
     except Exception as exception_:

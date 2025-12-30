@@ -9,8 +9,9 @@ from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.cli.cli_arg_parser import (
-    create_sdoc_args_parser,
+    SDocArgsParser,
 )
+from strictdoc.cli.main import COMMAND_REGISTRY
 from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES
@@ -119,7 +120,7 @@ class ExportQuestionnaires:
 
 
 if __name__ == "__main__":
-    parser = create_sdoc_args_parser()
+    parser = SDocArgsParser.create_sdoc_args_parser(COMMAND_REGISTRY)
     project_config: ProjectConfig
 
     export_config: ExportCommandConfig = ExportCommandConfig(**vars(parser.args))

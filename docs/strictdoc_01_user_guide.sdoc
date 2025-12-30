@@ -2193,6 +2193,47 @@ When a ``[GRAMMAR]`` is declared with an ``IMPORT_FROM_FILE`` line, the grammar 
     Editing of the grammars defined in ``.sgra`` files can be only done with a text editor, it is not implemented yet in the editable web interface.
 <<<
 
+[[SECTION]]
+MID: 00d5670e058d43b1b293da87e22c3a26
+TITLE: Grammar aliases
+
+[TEXT]
+MID: eba1c3f3a9364f1c8785c30c6fa5f3cc
+STATEMENT: >>>
+To support sharing a grammar across multiple documents, possibly located in different directories, a grammar alias can be used as follows:
+
+.. code-block: strictdoc
+
+    [DOCUMENT]
+    TITLE: Hello world
+
+    [GRAMMAR]
+    IMPORT_FROM_FILE: @my_grammar
+
+The grammar alias itself must be registered in the project config:
+
+.. code-block:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="StrictDoc Documentation",
+            project_features=[
+                # Intentionally nothing.
+            ],
+            grammars={
+                "@my_grammar": "grammar.sgra",
+            },
+        )
+        return config
+
+The grammar path must be specified relative to the directory containing the project configuration file.
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[/SECTION]]

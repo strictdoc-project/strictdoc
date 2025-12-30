@@ -5,6 +5,7 @@
 import datetime
 import glob
 import os
+import posixpath
 import sys
 from typing import Any, Dict, Iterator, List, Optional, Set, Union
 
@@ -378,10 +379,16 @@ class TraceabilityIndexBuilder:
             # First, resolve all grammars that are imported from grammar files.
             #
             if document.grammar.import_from_file is not None:
-                document_grammar: Optional[DocumentGrammar] = (
-                    document_tree.get_grammar_by_filename(
-                        document.grammar.import_from_file
+                grammar_path = document.grammar.import_from_file
+                if grammar_path.startswith("@"):
+                    grammar_path = project_config.grammars[grammar_path]
+                else:
+                    grammar_path = posixpath.join(
+                        document.meta.input_doc_dir_rel_path.relative_path_posix,
+                        grammar_path,
                     )
+                document_grammar: Optional[DocumentGrammar] = (
+                    document_tree.get_grammar_by_filename(grammar_path)
                 )
                 if document_grammar is None:
                     raise StrictDocException(

@@ -68,8 +68,8 @@ def pytest_configure(config):
     if long_timeouts:
         # Selenium timeout settings.
         settings.MINI_TIMEOUT = 5
-        settings.SMALL_TIMEOUT = 10
-        settings.LARGE_TIMEOUT = 15
+        settings.SMALL_TIMEOUT = 20
+        settings.LARGE_TIMEOUT = 30
         settings.EXTREME_TIMEOUT = 30
 
         test_environment.switch_to_long_timeouts()

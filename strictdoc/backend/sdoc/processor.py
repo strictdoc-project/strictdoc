@@ -1,4 +1,5 @@
 import os.path
+import re
 from typing import Any, Callable, Dict, List, Optional, Union, cast
 
 from textx import TextXSyntaxError, get_model
@@ -88,6 +89,14 @@ class SDocParsingProcessor:
         self, document_grammar: DocumentGrammar
     ) -> None:
         assert self.parse_context.document_config is not None
+
+        if (import_from_file_ := document_grammar.import_from_file) is not None:
+            if re.search(r"\.\.|[/\\]", import_from_file_):
+                raise StrictDocException(
+                    "[GRAMMAR]: "
+                    "IMPORT_FROM_FILE must not contain any '..', '/', '\\' characters: "
+                    f"{import_from_file_}."
+                )
 
         preserve_source_location_data(document_grammar)
         # FIXME: It would be great to move forward and remove this.

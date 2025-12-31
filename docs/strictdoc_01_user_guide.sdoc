@@ -3419,7 +3419,7 @@ MID: 225dc4d22c084a67ae049fca1098bc1a
 STATEMENT: >>>
 StrictDoc uses an internal default template when exporting documents in PDF format.
 
-If the front page, header, or footer needs to be customised, it is possible to provide a custom template with the `html2pdf_template` option.
+If the front page, header, or footer needs to be customised, it is possible to provide a custom template with the ``html2pdf_template`` option.
 
 .. code:: toml
 
@@ -4084,6 +4084,36 @@ To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc.t
 
 This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to how the SDoc HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked out.
 <<<
+
+[[SECTION]]
+MID: 2f3f0488d9564d43a7fdb6f071b1cae9
+TITLE: Forcing a page break for each node
+
+[TEXT]
+MID: 202f6fffba9f4000a95cd69933839fc3
+STATEMENT: >>>
+The ``html2pdf_forced_page_break_nodes`` allows specifying which nodes should always start on a new page when printed to PDF using the HTML2PDF feature. It is especially useful for documents that contain very large, descriptive requirement nodes with a lot of text. In such cases, starting each node on a new page helps avoid having the beginning of a node lost in the middle of a page.
+
+Example of ``strictdoc_config.py``:
+
+.. code-block:: py
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "HTML2PDF",
+            ],
+            html2pdf_forced_page_break_nodes=[
+                "REQUIREMENT"
+            ]
+        )
+        return config
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 

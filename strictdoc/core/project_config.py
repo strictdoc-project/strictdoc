@@ -122,6 +122,7 @@ class ProjectConfig:
         source_nodes: Optional[List[SourceNodesEntry]] = None,
         html2pdf_strict: bool = False,
         html2pdf_template: Optional[str] = None,
+        html2pdf_forced_page_break_nodes: Optional[List[str]] = None,
         bundle_document_version: Optional[
             str
         ] = ProjectConfigDefault.DEFAULT_BUNDLE_DOCUMENT_VERSION,
@@ -230,6 +231,14 @@ class ProjectConfig:
 
         self.html2pdf_strict: bool = html2pdf_strict
         self.html2pdf_template: Optional[str] = html2pdf_template
+
+        if html2pdf_forced_page_break_nodes is not None:
+            assert isinstance(html2pdf_forced_page_break_nodes, list)
+            assert len(html2pdf_forced_page_break_nodes) <= 10
+        self.html2pdf_forced_page_break_nodes: List[str] = (
+            html2pdf_forced_page_break_nodes or []
+        )
+
         self.bundle_document_version: Optional[str] = bundle_document_version
         self.bundle_document_date: Optional[str] = bundle_document_date
 

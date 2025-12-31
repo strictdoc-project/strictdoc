@@ -38,74 +38,9 @@
 
 <body data-viewtype="{%- block viewtype -%}{%- endblock viewtype -%}" data-turbo="false">
 
-<div class="mars">
-  {% if view_object.project_config.is_running_on_server %}
-  {% include "websocket.jinja.html" %}
-  {% endif %}
-</div>
-
-  <div class="layout" id="layout">
-
-    <nav class="layout_nav">
-      {% block layout_nav %}
-      {# 1. Include "_shared/nav.jinja.html" in the corresponding template, if the block is needed #}
-      {# 2. USE ---if not standalone--- if needed (in DOCs templates) #}
-      {% endblock layout_nav %}
-    </nav>
-
-    {%- if not view_object.standalone -%}
-    <aside class="layout_tree">
-      {% block tree_content %}{% endblock tree_content %}
-    </aside>
-    {%- endif -%}
-
-    {%- with toc_position = "right" -%}
-      <aside
-        data-position="{{ toc_position }}"
-        class="layout_toc"
-      >
-        {% block toc_content scoped %}{% endblock toc_content %}
-      </aside>
-    {%- endwith -%}
-
-    <header class="layout_header">
-      {% block header_content %}{% endblock header_content %}
-    </header>
-
-    <main class="layout_main">
-      {% block main_content %}{% endblock main_content %}
-    </main>
-
-    <footer class="layout_footer">
-      <div class="footer">
-        Built with
-        <a
-          class="strictdoc__link"
-          href="https://github.com/strictdoc-project/strictdoc"
-          target="_blank"
-        >StrictDoc</a>
-        <a
-          class="strictdoc__version"
-          href="https://github.com/strictdoc-project/strictdoc/releases/tag/{{ view_object.strictdoc_version }}"
-          target="_blank"
-        >
-          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" >
-            <path fill-rule="evenodd" d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z"/>
-          </svg>
-          {{ view_object.strictdoc_version }}
-        </a>
-      </div>
-    </footer>
-
-    <aside class="layout_aside">
-      {% block aside_content %}{% endblock aside_content %}
-    </aside>
-
-  </div>
-  {# TODO: create this wrappers with JS #}
-  <div id="modal"></div>
-  <div id="confirm"></div>
-  {% block scripts %}{% endblock scripts %}
+    TEST PDF
+    
+    {% block main_content %}{% endblock main_content %}
 
 </body>
 </html>

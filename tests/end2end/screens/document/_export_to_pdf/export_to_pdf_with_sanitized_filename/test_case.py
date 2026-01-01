@@ -14,7 +14,7 @@ from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 path_to_expected_downloaded_file = os.path.join(
-    DOWNLOADED_FILES_PATH, "Basic Document.pdf"
+    DOWNLOADED_FILES_PATH, "To be or not to be _.pdf"
 )
 
 
@@ -30,13 +30,17 @@ class Test(E2ECase):
             screen_project_index = Screen_ProjectIndex(self)
 
             screen_project_index.assert_on_screen()
-            screen_project_index.assert_contains_document("Basic Document")
+            screen_project_index.assert_contains_document(
+                "To be or not to be ? "
+            )
 
             screen_document = screen_project_index.do_click_on_first_document()
 
             screen_document.assert_on_screen_document()
-            screen_document.assert_header_document_title("Basic Document")
-            screen_document.assert_text("Hello world! 😊😊😊")
+            screen_document.assert_header_document_title(
+                "To be or not to be ? "
+            )
+            screen_document.assert_text("That is the question.")
 
             # TODO
             shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)

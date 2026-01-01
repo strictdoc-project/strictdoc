@@ -1,5 +1,6 @@
 [DOCUMENT]
-TITLE: Basic Document
+TITLE: Document with UID
+UID: ABC-123
 
 [TEXT]
 STATEMENT: >>>

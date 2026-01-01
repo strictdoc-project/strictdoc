@@ -14,7 +14,7 @@ from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 path_to_expected_downloaded_file = os.path.join(
-    DOWNLOADED_FILES_PATH, "document.pdf"
+    DOWNLOADED_FILES_PATH, "Document with Picture.pdf"
 )
 
 
@@ -30,12 +30,16 @@ class Test(E2ECase):
             screen_project_index = Screen_ProjectIndex(self)
 
             screen_project_index.assert_on_screen()
-            screen_project_index.assert_contains_document("Document 1")
+            screen_project_index.assert_contains_document(
+                "Document with Picture"
+            )
 
             screen_document = screen_project_index.do_click_on_first_document()
 
             screen_document.assert_on_screen_document()
-            screen_document.assert_header_document_title("Document 1")
+            screen_document.assert_header_document_title(
+                "Document with Picture"
+            )
 
             # TODO
             shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)

@@ -1086,6 +1086,12 @@ class TraceabilityIndex:
         bundle_document.config = DocumentConfig.default_config(bundle_document)
 
         if (
+            project_config.bundle_document_uid is not None
+            and len(project_config.bundle_document_uid) > 0
+        ):
+            bundle_document.config.uid = project_config.bundle_document_uid
+
+        if (
             project_config.bundle_document_version is not None
             and len(project_config.bundle_document_version) > 0
         ):

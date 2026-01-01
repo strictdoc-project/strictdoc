@@ -1,0 +1,22 @@
+# @relation(SDOC-SRS-51, scope=file)
+
+REQUIRES: TEST_HTML2PDF
+
+RUN: %strictdoc export %S --formats=html2pdf --generate-bundle-document --output-dir %T | filecheck %s --dump-input=fail
+CHECK: html2pdf4doc: JS logs from the print session
+
+RUN: %check_exists --file %T/html2pdf/html/bundle-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/subnested/input3-PDF.html
+
+RUN: %cat %T/html2pdf/html/bundle-PDF.html | filecheck %s --check-prefix CHECK-DOC-HTML
+# This ensures that the link is resolved correctly.
+CHECK-DOC-HTML:<a href="#SEC-1">🔗&nbsp;1.1. Section #1</a>
+
+# Git meta information.
+CHECK-DOC-HTML: MY_BUNDLE_DOC_UID
+CHECK-DOC-HTML: v1.2.3
+CHECK-DOC-HTML: 2026-01-01
+
+RUN: python %S/test_pdf.py

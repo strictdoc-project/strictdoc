@@ -123,6 +123,7 @@ class ProjectConfig:
         html2pdf_strict: bool = False,
         html2pdf_template: Optional[str] = None,
         html2pdf_forced_page_break_nodes: Optional[List[str]] = None,
+        bundle_document_uid: Optional[str] = None,
         bundle_document_version: Optional[
             str
         ] = ProjectConfigDefault.DEFAULT_BUNDLE_DOCUMENT_VERSION,
@@ -239,6 +240,7 @@ class ProjectConfig:
             html2pdf_forced_page_break_nodes or []
         )
 
+        self.bundle_document_uid: Optional[str] = bundle_document_uid
         self.bundle_document_version: Optional[str] = bundle_document_version
         self.bundle_document_date: Optional[str] = bundle_document_date
 

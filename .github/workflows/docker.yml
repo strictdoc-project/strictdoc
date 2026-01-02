@@ -15,6 +15,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        fetch-depth: 5
 
     - name: Set up Python
       uses: actions/setup-python@v6
@@ -28,6 +30,10 @@ jobs:
     - name: Install minimal Python packages
       run: |
         pip install -r requirements.bootstrap.txt
+
+    - name: Run Lint tasks
+      run: |
+        invoke lint
 
     - name: Build Docker image with PR branch
       run: |

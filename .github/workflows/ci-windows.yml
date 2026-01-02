@@ -26,6 +26,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        fetch-depth: 5
 
     - name: "Print Debug info"
       run: |

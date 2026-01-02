@@ -26,6 +26,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        fetch-depth: 5
 
     - name: "Print Debug info"
       run: |
@@ -53,6 +55,10 @@ jobs:
     - name: "Windows specific: Install Check dependencies (everything for lint + test)"
       run: |
         pip install -r requirements.check.txt
+
+    - name: Run Lint tasks
+      run: |
+        invoke lint
 
     - name: " Windows specific: Install Tidy via Chocolatey, and add it to $PATH"
       shell: pwsh

@@ -10,6 +10,10 @@ from enum import Enum
 from pathlib import Path
 from typing import Dict, Optional
 
+from developer.git.commit_validator import (
+    validate_commits_locally_or_ci,
+)
+
 if not hasattr(inspect, "getargspec"):
     inspect.getargspec = inspect.getfullargspec
 
@@ -683,6 +687,14 @@ def lint_format_js(context):
         raise invoke.exceptions.UnexpectedExit(result)
 
 
+@task(aliases=["lc"])
+def lint_commit(context):  # noqa: ARG001
+    try:
+        validate_commits_locally_or_ci()
+    except ValueError as e:
+        raise invoke.exceptions.Exit(message=str(e), code=1) from None
+
+
 @task(aliases=["lf"])
 def lint_fixit(context, fix=False, auto=False, path="strictdoc/"):
     if fix:
@@ -707,6 +719,7 @@ def lint_fixit(context, fix=False, auto=False, path="strictdoc/"):
 
 @task(aliases=["l"])
 def lint(context):
+    lint_commit(context)
     lint_ruff_format(context)
     lint_ruff(context)
     lint_mypy(context)

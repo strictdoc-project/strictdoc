@@ -33,6 +33,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        fetch-depth: 5
 
     - name: Set up Python 3.9
       uses: actions/setup-python@v6
@@ -46,6 +48,10 @@ jobs:
     - name: Install minimal Python packages
       run: |
         pip install -r requirements.bootstrap.txt
+
+    - name: Run Lint tasks
+      run: |
+        invoke lint
 
     - name: Run end-to-end tasks
       run: |
@@ -61,6 +67,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        fetch-depth: 5
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
@@ -74,6 +82,10 @@ jobs:
     - name: Install minimal Python packages
       run: |
         pip install -r requirements.bootstrap.txt
+
+    - name: Run Lint tasks
+      run: |
+        invoke lint
 
     - name: Run end-to-end tasks
       run: |
@@ -92,6 +104,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        fetch-depth: 5
 
     - name: Set up Python 3.9
       uses: actions/setup-python@v6
@@ -113,6 +127,10 @@ jobs:
     - name: "Windows specific: Install Check dependencies (everything for test)"
       run: |
         pip install -r requirements.check.txt
+
+    - name: Run Lint tasks
+      run: |
+        invoke lint
 
     - name: Run end-to-end tasks
       run: |

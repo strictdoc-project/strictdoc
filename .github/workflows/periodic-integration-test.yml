@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
 
       - name: Set up Python 3.
         uses: actions/setup-python@v6
@@ -33,6 +35,10 @@ jobs:
       - name: Install minimal Python packages
         run: |
           pip install -r requirements.bootstrap.txt
+
+      - name: Run Lint tasks
+        run: |
+          invoke lint
 
       - name: Build and test locally
         run: |
@@ -43,6 +49,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
 
       - name: Set up Python 3.
         uses: actions/setup-python@v6
@@ -56,6 +64,10 @@ jobs:
       - name: Install minimal Python packages
         run: |
           pip install -r requirements.bootstrap.txt
+
+      - name: Run Lint tasks
+        run: |
+          invoke lint
 
       - name: Build and test using PyInstaller
         run: |
@@ -74,6 +86,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
 
       - name: Set up Python 3.
         uses: actions/setup-python@v6
@@ -87,6 +101,10 @@ jobs:
       - name: Install minimal Python packages
         run: |
           pip install -r requirements.bootstrap.txt
+
+      - name: Run Lint tasks
+        run: |
+          invoke lint
 
       - name: Build and test locally
         run: |
@@ -97,6 +115,8 @@ jobs:
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 5
 
       - name: Set up Python 3.
         uses: actions/setup-python@v6
@@ -110,6 +130,10 @@ jobs:
       - name: Install minimal Python packages
         run: |
           pip install -r requirements.bootstrap.txt
+
+      - name: Run Lint tasks
+        run: |
+          invoke lint
 
       - name: Build using PyInstaller
         run: |

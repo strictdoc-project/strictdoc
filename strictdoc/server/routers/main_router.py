@@ -5,6 +5,7 @@ import re
 from mimetypes import guess_type
 from pathlib import Path
 from typing import Dict, List, Optional, Union
+from urllib.parse import quote
 
 from fastapi import APIRouter, Form, HTTPException, UploadFile
 from fastapi.responses import RedirectResponse
@@ -2170,11 +2171,27 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     status_code=HTTP_STATUS_INTERNAL_SERVER_ERROR,
                 )
 
+            # We derive a name for the exported PDF.
+            proposed_basename = "document"
+            if document.title is not None:
+                proposed_basename = document.title
+            if document.uid is not None:
+                proposed_basename = document.uid + " " + proposed_basename
+
+            # We sanitize the basename, Windows is the most restrictive:
+            # - many forbidden chars.
+            # - not more than 120 chars in total, including the PDF extension
+            forbidden = '<>:"/\\|?*\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f'
+            table = str.maketrans(forbidden, "_" * len(forbidden))
+            sanitized_basename = proposed_basename.translate(table)
+            sanitized_basename = sanitized_basename.strip(" ")[:115]
+            encoded_filename = quote(sanitized_basename + ".pdf")
+
             return FileResponse(
                 path=path_to_output_pdf,
                 status_code=200,
                 headers={
-                    "Content-Disposition": 'attachment; filename="document.pdf"',
+                    "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}",
                 },
                 media_type="application/octet-stream",
             )

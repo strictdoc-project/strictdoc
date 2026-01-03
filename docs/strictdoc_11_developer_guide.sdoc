@@ -254,43 +254,42 @@ TITLE: Git workflow
 [TEXT]
 MID: 0e916453596b460b84a89f722354a825
 STATEMENT: >>>
-- The preferred Git workflow is "1 commit per 1 PR". If the work truly deserves
-  a sequence of commits, each commit shall be self-contained and pass all checks
-  from the ``invoke check`` command. The preferred approach: split the work into
-  several independent Pull Requests to simplify the work of the reviewer.
+The preferred Git workflow is "1 commit per 1 PR". If the work truly deserves a sequence of commits, each commit shall be self-contained and pass all checks from the ``invoke check`` command.
 
-- The branch should be always rebased against the main branch. The
-  ``git fetch && git rebase origin/main`` is preferred over
-  ``git fetch && git merge main``.
+For larger pull requests involving too many changes, the preferred approach: split the work into several independent PRs to simplify the work of the reviewer.
 
-- The Git commit message should follow the format:
+The branch should be always rebased against the main branch. The ``git fetch && git rebase origin/main`` is preferred over ``git fetch && git merge main``.
+
+The Git commit message should follow the format of `Conventional Commits <https://www.conventionalcommits.org/en/v1.0.0/>`_:
 
 .. code-block::
 
-    context: description
+    <type>(<optional scope>): <description>
 
-where the context can be a major feature being added or a folder. A form of  ``context: subcontext: description`` is also an option. Typical examples:
+where the ``scope`` can be a major feature being added or a folder.
 
-``docs: fix links to the grammar.py``
+A form of ``<type>(scope): <subscope>: <description>`` is also an option.
 
-``reqif: native: export/import roundtrip for multiline requirement fields``
-
-``backend/dsl: switch to dynamic fields, with validation``
-
-``Poetry: add filecheck as a dependency``
-
-- Use comma-separated contexts, if the committed work is dedicated to more than one topic. Example:
+Examples:
 
 .. code-block::
 
-    server, UI: update to new requirement styles
+    feat(html2pdf): add a new option to force page breaks
+    fix(backend/sdoc_source_code): add Rust support
+    refactor(cli): migrate "import excel" to command pattern
+    chore(cli): rename shared.py -> _shared.py
+    chore(.github): switch the macOS tests to macos-latest
+    docs: update release notes
 
-- When a contribution is simply an improvement of existing code without a change
-  in the functionality, the commit should be named: ``Code climate: description``. Example:
+If the committed work is dedicated to more than one topic, use comma-separated scopes. Example:
 
 .. code-block::
 
-    Code climate: fix all remaining major Pylint warnings
+    refactor(server, UI): update to new requirement styles
+
+.. note::
+
+    The Conventional Commits specification lists ``scope`` as optional. However, most StrictDoc commits do have a scope. Most of the time, there is a specific feature or area being worked on, so it should be straightforward to identify the right scope.
 <<<
 
 [[/SECTION]]

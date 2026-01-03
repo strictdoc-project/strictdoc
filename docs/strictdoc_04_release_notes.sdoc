@@ -630,9 +630,9 @@ A new export format has been added to generate a Doxygen tagfile for a documenta
 
 The @-macros @GIT_VERSION, @GIT_BRANCH, @GIT_COMMIT_DATE, and @GIT_COMMIT_DATETIME were introduced to simplify the automatic insertion of document version information and publication dates into published documents.
 
-An edge case for reading source files has been addressed. StrictDoc will now issue a warning if it encounters a binary file instead of a source code file, preventing a crash. [Contributed by @haxtibal]
+An edge case for reading source files has been addressed. StrictDoc will now issue a warning if it encounters a binary file instead of a source code file, preventing a crash. [@haxtibal]
 
-A user has contributed an example demonstrating how requirements can be generated into an Excel questionnaire for users to fill out, enabling requirements compliance tracking. The example is located at ``tests/integration/scripting_examples/questionnaires/``. [Contributed by @BenGardiner]
+A user has contributed an example demonstrating how requirements can be generated into an Excel questionnaire for users to fill out, enabling requirements compliance tracking. The example is located at ``tests/integration/examples/python_api/``. [@BenGardiner]
 
 Additionally, a minor HTML2PDF formatting issue has been resolved. Previously, the RST admonitions in StrictDoc's own documentation were not rendered correctly when spanning across two pages.
 <<<

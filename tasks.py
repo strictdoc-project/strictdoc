@@ -1,6 +1,3 @@
-# Invoke is broken on Python 3.11
-# https://github.com/pyinvoke/invoke/issues/833#issuecomment-1293148106
-import inspect
 import os
 import re
 import shutil
@@ -10,15 +7,12 @@ from enum import Enum
 from pathlib import Path
 from typing import Dict, Optional
 
+import invoke
+from invoke import task
+
 from developer.git.commit_validator import (
     validate_commits_locally_or_ci,
 )
-
-if not hasattr(inspect, "getargspec"):
-    inspect.getargspec = inspect.getfullargspec
-
-import invoke
-from invoke import task
 
 # Specifying encoding because Windows crashes otherwise when running Invoke
 # tasks below:

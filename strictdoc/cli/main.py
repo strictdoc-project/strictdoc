@@ -1,18 +1,8 @@
-# pylint: disable=wrong-import-position
-# flake8: noqa: E402
-
 # Needed to ensure that multiprocessing.freeze_support() is called
 # in a frozen application (see main() below).
 import multiprocessing
-import os
 import sys
 from typing import Any, Dict, Optional
-
-strictdoc_root_path = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..")
-)
-assert os.path.isdir(strictdoc_root_path)
-sys.path.append(strictdoc_root_path)
 
 from strictdoc import environment
 from strictdoc.cli.cli_arg_parser import (

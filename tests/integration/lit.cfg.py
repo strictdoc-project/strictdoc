@@ -31,6 +31,8 @@ config.substitutions.append(
 config.substitutions.append(("%THIS_TEST_FOLDER", '$(basename "%S")'))
 
 config.substitutions.append(("%strictdoc_root", current_dir))
+config.environment["PYTHONPATH"] = current_dir
+
 config.substitutions.append(("%strictdoc", strictdoc_exec))
 
 config.substitutions.append(

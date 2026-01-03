@@ -126,7 +126,7 @@ def docs(context):
         context,
         ToxEnvironment.DOCUMENTATION,
         """
-            python3 strictdoc/cli/main.py
+            python3 -m strictdoc.cli.main
                 export .
                     --formats=html
                     --output-dir output/strictdoc_website
@@ -138,7 +138,7 @@ def docs(context):
         context,
         ToxEnvironment.DOCUMENTATION,
         """
-            python3 strictdoc/cli/main.py
+            python3 -m strictdoc.cli.main
                 export ./
                     --formats=rst
                     --output-dir output/sphinx
@@ -404,14 +404,16 @@ def test_integration(
     cwd = os.getcwd()
 
     if strictdoc is None:
-        strictdoc_exec = f'python3 \\"{cwd}/strictdoc/cli/main.py\\"'
+        strictdoc_exec = "python3 -m strictdoc.cli.main"
     else:
         strictdoc_exec = strictdoc
 
     coverage_path_argument = ""
     if coverage:
         path_to_coverage_rc = f"{cwd}/.coveragerc.integration"
-        strictdoc_exec = f'coverage run --rcfile={path_to_coverage_rc} \\"{cwd}/strictdoc/cli/main.py\\"'
+        strictdoc_exec = (
+            f"coverage run --rcfile={path_to_coverage_rc} -m strictdoc.cli.main"
+        )
         if html2pdf:
             path_to_coverage_dir = f"{cwd}/build/coverage/integration_html2pdf/"
         else:
@@ -757,14 +759,6 @@ def changelog(context, github_token):
 
 
 @task
-def dump_grammar(context, output_file):
-    command = f"""
-        python3 strictdoc/cli/main.py dump-grammar {output_file}
-    """
-    run_invoke(context, command)
-
-
-@task
 def check_dead_links(context):
     run_invoke_with_tox(
         context,
@@ -1004,7 +998,7 @@ def release_pyinstaller(context):
 @task
 def watch(context, sdocs_path="."):
     strictdoc_command = f"""
-        python strictdoc/cli/main.py
+        python -m strictdoc.cli.main
             export
             {sdocs_path}
             --output-dir output/
@@ -1075,7 +1069,7 @@ def nuitka(context):
 def performance(context):
     command = """
         python -m cProfile -o output/profile.prof
-            strictdoc/cli/main.py export . --no-parallelization &&
+            -m strictdoc.cli.main export . --no-parallelization &&
         gprof2dot -f pstats output/profile.prof | dot -Tpng -o output/output.png
     """
     run_invoke(context, command)
@@ -1087,18 +1081,6 @@ def performance_snakeviz(context):
         snakeviz output/profile.prof
     """
     run_invoke(context, command)
-
-
-@task()
-def autouid(context):
-    run_invoke(
-        context,
-        """
-            python strictdoc/cli/main.py
-                manage auto-uid
-                drafts/requirements
-        """,
-    )
 
 
 @task(aliases=["bd"])

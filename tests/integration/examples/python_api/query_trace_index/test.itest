@@ -1,0 +1,7 @@
+RUN: cd %S
+RUN: python %S/query_trace_index.py --output-dir=%T/ | filecheck %s
+
+CHECK: Completed building document tree
+CHECK: Safety goals mapped to hardware modules:
+CHECK: 1) Safety goal: 'Safety goal #1'. Hardware modules: ['Hardware module A', 'Hardware module B']
+CHECK: 2) Safety goal: 'Safety goal #2'. Hardware modules: ['Hardware module B']

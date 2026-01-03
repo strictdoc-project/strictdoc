@@ -1,10 +1,6 @@
-# FIXME: Migrate this test to %T.
-
-# TBD: Figure out how to set PYTHONPATH on Windows.
-REQUIRES: PLATFORM_IS_NOT_WINDOWS
-
 RUN: cd %S
-RUN: PYTHONPATH=%strictdoc_root python %S/export_questionnaires.py export . --output-dir=%T/
+
+RUN: python %S/export_questionnaires.py export . --output-dir=%T/
 
 RUN: %check_exists --file "%T/tsrm_questionnaires.xlsx"
 

@@ -1,0 +1,45 @@
+[DOCUMENT]
+TITLE: Example: Hardware requirements
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: MODULE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+
+[REQUIREMENT]
+UID: HWR-1
+MODULE: Hardware module A
+TITLE: Hardware requirement #1
+STATEMENT: >>>
+The hardware requirement #1 statement.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RQ-1
+
+[REQUIREMENT]
+UID: HWR-2
+MODULE: Hardware module B
+TITLE: Hardware requirement #2
+STATEMENT: >>>
+The hardware requirement #2 statement.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RQ-1
+- TYPE: Parent
+  VALUE: RQ-2

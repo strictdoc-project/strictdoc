@@ -1,0 +1,38 @@
+[DOCUMENT]
+TITLE: Example: Requirements
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+
+[REQUIREMENT]
+UID: RQ-1
+TITLE: Requirement #1
+STATEMENT: >>>
+The requirement #1 statement.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SG-1
+
+[REQUIREMENT]
+UID: RQ-2
+TITLE: Requirement #2
+STATEMENT: >>>
+The requirement #2 statement.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SG-2

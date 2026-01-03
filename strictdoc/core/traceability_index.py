@@ -160,6 +160,15 @@ class TraceabilityIndex:
     def get_file_traceability_index(self) -> FileTraceabilityIndex:
         return self._file_traceability_index
 
+    def get_document_by_title(
+        self,
+        document_title: str,
+    ) -> SDocDocument:
+        for document_ in self.document_tree.document_list:
+            if document_.reserved_title == document_title:
+                return document_
+        raise LookupError(f"Document not found: '{document_title}'")
+
     def get_document_iterator(
         self, document: SDocDocument
     ) -> SDocDocumentIterator:

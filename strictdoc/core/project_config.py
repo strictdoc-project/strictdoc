@@ -112,6 +112,7 @@ class ProjectConfig:
         project_features: Optional[List[str]] = None,
         server_host: str = ProjectConfigDefault.DEFAULT_SERVER_HOST,
         server_port: int = ProjectConfigDefault.DEFAULT_SERVER_PORT,
+        input_paths: Optional[List[str]] = None,
         include_doc_paths: Optional[List[str]] = None,
         exclude_doc_paths: Optional[List[str]] = None,
         source_root_path: Optional[str] = None,
@@ -184,6 +185,8 @@ class ProjectConfig:
         )
         self.server_host: str = server_host
         self.server_port: int = server_port
+
+        self.input_paths: Optional[List[str]] = input_paths
         self.include_doc_paths: List[str] = (
             include_doc_paths if include_doc_paths is not None else []
         )
@@ -216,7 +219,6 @@ class ProjectConfig:
         # Settings derived from the command-line parameters.
 
         # Common settings.
-        self.input_paths: Optional[List[str]] = None
         self.output_dir: str = "output"
 
         # Export action.

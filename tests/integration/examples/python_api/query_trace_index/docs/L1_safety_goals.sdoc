@@ -1,0 +1,33 @@
+[DOCUMENT]
+TITLE: Example: Safety goals
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: SAFETY_GOAL
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Refines
+
+[SAFETY_GOAL]
+UID: SG-1
+TITLE: Safety goal #1
+STATEMENT: >>>
+The safety goal statement.
+<<<
+
+[SAFETY_GOAL]
+UID: SG-2
+TITLE: Safety goal #2
+STATEMENT: >>>
+The safety goal statement.
+<<<

@@ -70,6 +70,8 @@ Thanks to @gregshue for requesting this feature and explaining the need for it.
 3\) Based on a user report, the ``html2pdf_forced_page_break_nodes`` option has been added to the StrictDoc configuration. This option allows specifying which nodes should always start on a new page when printed to PDF using the HTML2PDF feature. It is especially useful for documents that contain very large, descriptive requirement nodes with a lot of text. In such cases, starting each node on a new page helps avoid having the beginning of a node lost in the middle of a page. Thanks to @xw-mk for the clear request.
 
 4\) The 'Export to PDF' functionality for printing PDF documents has been extended to download a file with a name derived from the document's title. Previously, all documents were printed and downloaded as ``document.pdf``. Thanks to @thseiler for contributing the patch.
+
+5\) The discovery of SDoc files and source files has been extended to take the project's root .gitignore file into account. From now on, the contents of .gitignore are automatically added to the exclude filters for documents and source files. This ticket had been on the roadmap since long ago, and thanks to @KlfJoat for additionally requesting it.
 <<<
 
 [[/SECTION]]

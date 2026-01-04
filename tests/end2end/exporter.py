@@ -58,7 +58,8 @@ class SDocTestHTMLExporter:
     def run(self) -> None:
         args = [
             "python",
-            "strictdoc/cli/main.py",
+            "-m",
+            "strictdoc.cli.main",
             "export",
         ]
         if self.config_path:

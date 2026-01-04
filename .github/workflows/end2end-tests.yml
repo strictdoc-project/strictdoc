@@ -8,13 +8,6 @@ on:
   pull_request:
     branches: [ "**" ]
 
-    # UI tests take 10+ minutes and will continue to grow.
-    # Reducing the trigger to only changes in the Web frontend-related code.
-    paths:
-      - 'strictdoc/export/html/**'
-      - 'strictdoc/server/**'
-      - 'tests/end2end/**'
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

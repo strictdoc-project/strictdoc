@@ -3455,11 +3455,11 @@ In the following example, StrictDoc will look for all files in the input project
     [project]
 
     include_doc_paths = [
-      "**"
+      "/docs/*.sdoc"
     ]
 
     exclude_doc_paths = [
-      "tests/**"
+      "/tests/**"
     ]
 
 The behavior of wildcard symbols ``*`` and ``**`` is as follows:
@@ -3475,13 +3475,17 @@ The behavior of wildcard symbols ``*`` and ``**`` is as follows:
    * - **Example**
      - **Description**
 
-   * - ``docs/*`` or ``docs/*.sdoc``
-     - Match all documents found in the ``docs/`` folder but not in its subdirectories.
+   * - ``/docs/*`` or ``/docs/*.sdoc``
+     - Match all documents found in the root ``docs/`` folder but not in its subdirectories.
 
-   * - ``docs/**``
-     - Match all documents found in the ``docs/`` folder and all its subdirectories.
+   * - ``/docs/**``
+     - Match all documents found in the root ``docs/`` folder and all its subdirectories.
    * - ``**docs/**``
      - Match all documents found in paths that contain the ``docs/`` path component.
+
+.. note::
+
+    See [LINK: SECTION-UG-Finding-document-and-source-files] for a description of performance considerations related to file discovery.
 <<<
 
 [[/SECTION]]
@@ -3504,14 +3508,18 @@ Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist
     ]
 
     include_source_paths = [
-      "src/**"
+      "/src/**"
     ]
 
     exclude_source_paths = [
-      "src/tests/**"
+      "/src/tests/**"
     ]
 
 The behavior of the wildcards is the same as for the ``include_doc_paths/exclude_doc_paths`` options.
+
+.. note::
+
+    See [LINK: SECTION-UG-Finding-document-and-source-files] for a description of performance considerations related to file discovery.
 <<<
 
 [[/SECTION]]
@@ -3711,8 +3719,42 @@ The ``ManageAutoUIDCommand`` class features a good use of all APIs that one may 
 - The ``DocumentUIDAnalyzer`` is an example of how the objects are manipulated in memory.
 - And finally the final sequence writes the mutated traceability graph back to files using ``SDWriter``.
 
+The `tests/integration/examples/python_api <https://github.com/strictdoc-project/strictdoc/tree/main/tests/integration/examples/python_api>`_ folder contains user-requested or community-contributed examples of scripts that use the Python API.
+
 For any custom Python API request, for example, a need to do a more advanced data analysis on SDoc data, open a GitHub issue and your specific issue will be handled.
 <<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 31d6e96f4688447d9c0934caa37956fb
+TITLE: Performance considerations
+
+[[SECTION]]
+MID: d6d7c073a4bd4793a8ef58247dceef5f
+UID: SECTION-UG-Finding-document-and-source-files
+TITLE: Finding document and source files
+
+[TEXT]
+MID: fbdd39974b224826a2b5c7fd8c0f44d1
+STATEMENT: >>>
+When the number of document and source files grows, StrictDoc has to iterate over the contents of the disk using the filters specified in the configuration file.
+
+When searching for information, StrictDoc considers filters such as ``include/exclude_doc_paths`` and ``include/exclude_source_paths``, as well as the .gitignore file found in the root project folder.
+
+When the number of folders to search and the number of source files grows to thousands or more, StrictDoc has to perform many regular expression matches. This can slow down the documentation generation process if the filters are not optimized well enough.
+
+Every rule specified in the search filters in the configuration file or in .gitignore becomes a regular expression that StrictDoc has to evaluate for every folder and file being iterated over. The following guidelines are therefore relevant:
+
+- The search filters used should be as precise as possible to help StrictDoc decide as quickly as possible whether it should whitelist or blacklist a given path.
+- The search is performed using Python's ``os.walk(<project root>, topdown=True)``. The search is therefore top-down, which allows exclude filters to be applied at the first point of contact with undesired folders. If an undesired folder is detected, the search does not descend into that folder and entirely skips its contents.
+- If a folder to be included or excluded is a root-level folder, the search string should start with ``/`` to indicate that StrictDoc should apply this rule only to root-level folders, ignoring all other paths as it descends into subdirectories. Example: ``/strictdoc/foo/`` instead of ``foo``.
+- Similarly, if a folder to be excluded is not at the root level but is known to be a subdirectory of a specific root-level directory, it is better to specify the full path. For example, instead of ``**/Output/``, it is better to specify ``tests/integration/**/Output/`` to ensure that StrictDoc does not consider directories outside ``tests/integration``.
+- If a user project produces many cache artifacts using multiple tools, it is recommended to store them all in a single cache folder, for example ``build/tool1_cache``, ``build/tool2_cache``, etc., and configure StrictDoc to ignore only the ``/build/`` folder instead of several separate ones. This reduces the number of lookups StrictDoc has to perform during the search.
+- When whitelisting paths, it is better to specify paths that are known to contain wildcards in specific locations. For example, use ``strictdoc/**.py`` instead of ``*.py``.
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 
@@ -4181,9 +4223,9 @@ The project must have the following features activated for StrictDoc to provide 
     ]
 
     include_doc_paths = [
-      "docs/**",
+      "/docs/**",
       # A dedicated folder where StrictDoc could find JUnit XML.
-      "reports/**",
+      "/reports/**",
     ]
 <<<
 
@@ -4325,7 +4367,7 @@ Note that currently, StrictDoc server maintains an in-memory state of a document
 
 The following essential features are still missing and will be worked on in the future:
 
-- Adding images to the multiline fields like such requirements and text nodes ``STATEMENT``.
+- Adding images via drag-and-drop or an upload button to multiline fields.
 - Adding/editing sections with ``LEVEL: None``.
 - Deleting a document.
 - Deleting a section recursively with a correct cleanup of all traceability information.

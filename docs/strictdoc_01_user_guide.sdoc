@@ -465,6 +465,7 @@ StrictDoc uses ``127.0.0.1`` as a default host and ``5111`` as a default port. W
 
 [[SECTION]]
 MID: 9f7fcbdd8e564af8986349deb09745a5
+UID: SECTION-UG-Security-considerations
 TITLE: Security considerations
 
 [TEXT]
@@ -558,7 +559,7 @@ syntax is called SDoc and it's grammar is encoded with the
 tool.
 
 The grammar is defined using textX language for defining grammars and is
-located in a single file:
+located in a grammar file:
 `grammar.py <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/backend/sdoc/grammar/grammar.py>`_.
 
 This is how a minimal possible SDoc document looks like:
@@ -818,7 +819,7 @@ TITLE: Additional Metadata
 [TEXT]
 MID: f86d45b7ad1a48ec919b43a695ca9126
 STATEMENT: >>>
-StrictDoc allows additional metadata to be added in the [DOCUMENT] element. The ``METADATA:`` field accepts any number of entries, each consisting of a key-value pair on a separate line. Keys must begin with a letter and end with a colon, but are not otherwise constrained.
+StrictDoc allows additional metadata to be added in the ``[DOCUMENT]`` element. The ``METADATA:`` field accepts any number of entries, each consisting of a key-value pair on a separate line. Keys must begin with a letter and end with a colon, but are not otherwise constrained.
 
 .. code:: strictdoc
 
@@ -835,7 +836,7 @@ The additional metadata is also included on the front page of the exported PDF. 
 .. note ::
 
     The front page can be further customised using the ``html2pdf_template``
-    directive in strictoc.toml
+    directive in strictoc.toml. See [LINK: SECTION-UG-Path-to-custom-HTML2PDF-template].
 <<<
 
 [[/SECTION]]
@@ -1259,11 +1260,6 @@ MID: 2c3b050a2cd0444fb8948bb6adcb7085
 STATEMENT: >>>
 Unique identifier of the requirement.
 
-.. admonition:: Observation
-
-    Some documents do not use unique identifiers which makes it impossible to trace their requirements to each other.
-    Within StrictDoc's framework, it is assumed that a good requirements document has all of its requirements uniquely identifiable, however, the ``UID`` field is optional to accommodate for documents without connections between requirements.
-
 StrictDoc does not impose any limitations on the format of a UID. Examples of
 typical conventions for naming UIDs:
 
@@ -1279,7 +1275,12 @@ typical conventions for naming UIDs:
 
     [REQUIREMENT]
     UID: SDOC-HIGH-DATA-MODEL
-    STATEMENT: STATEMENT: StrictDoc shall be based on a well-defined data model.
+    STATEMENT: StrictDoc shall be based on a data model.
+
+.. admonition:: Observation
+
+    Some documents do not use unique identifiers which makes it impossible to trace their requirements to each other.
+    Within StrictDoc's framework, it is assumed that a good requirements document has all of its requirements uniquely identifiable, however, the ``UID`` field is optional to accommodate for documents without connections between requirements.
 <<<
 
 [[/SECTION]]
@@ -1484,11 +1485,6 @@ file references requirements by adding multiple ``TYPE: File``-``VALUE`` items.
 
 .. note::
 
-    The ``TYPE: Parent`` and ``TYPE: Child`` are currently the only fully supported types of connection.
-    Linking requirements to files is still experimental (see also [LINK: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE]).
-
-.. note::
-
     In most requirements projects, only the Parent relations should be used, possibly with roles.
     The Child relation should be used only in specific cases.
     See [LINK: SDOC_UG_GRAMMAR_RELATIONS_PARENT_VS_CHILD] for more details.
@@ -1497,7 +1493,7 @@ file references requirements by adding multiple ``TYPE: File``-``VALUE`` items.
 
     In the near future, adding information about external references (e.g. company policy documents, technical specifications, regulatory requirements, etc.) is planned.
 
-.. note::
+.. warning::
 
     By design, StrictDoc will only show parent or child links if both requirements connected with a reference have ``UID`` defined.
 <<<
@@ -1595,7 +1591,7 @@ TITLE: DOCUMENT_FROM_FILE – Composing documents from other documents
 MID: 6ed881a7cb8949cab3d1a1836846b716
 STATEMENT: >>>
 .. note::
-    The composable documents is an early feature with only 50%+ of the implementation complete. See `Epic: UI: Composable documents <https://github.com/strictdoc-project/strictdoc/issues/1698>`_.
+    The composable documents is an early feature with only 50%+ of the implementation complete. See `Epic: UI: Composable documents <https://github.com/strictdoc-project/strictdoc/issues/1698>`_ for an overview of the aspects that are still missing.
 
 StrictDoc ``.sdoc`` files can be built-up from including other documents where a document can be included to no more than one including document.
 
@@ -3412,6 +3408,7 @@ The ``source_root_path`` option supports relative paths, e.g. ``../source_root/`
 
 [[SECTION]]
 MID: 499fa0144cbd48c687ba0d5f9f7cb846
+UID: SECTION-UG-Path-to-custom-HTML2PDF-template
 TITLE: Path to custom HTML2PDF template
 
 [TEXT]
@@ -3728,6 +3725,7 @@ For any custom Python API request, for example, a need to do a more advanced dat
 
 [[SECTION]]
 MID: 31d6e96f4688447d9c0934caa37956fb
+UID: SECTION-UG-Performance-considerations
 TITLE: Performance considerations
 
 [[SECTION]]
@@ -4367,7 +4365,7 @@ Note that currently, StrictDoc server maintains an in-memory state of a document
 
 The following essential features are still missing and will be worked on in the future:
 
-- Adding images via drag-and-drop or an upload button to multiline fields.
+- Adding images via drag-and-drop or an upload button to the multiline fields like such requirements and text nodes ``STATEMENT``.
 - Adding/editing sections with ``LEVEL: None``.
 - Deleting a document.
 - Deleting a section recursively with a correct cleanup of all traceability information.
@@ -4402,39 +4400,13 @@ TITLE: Known issues
 [TEXT]
 MID: 9282f2d7218a4f2e967b6df45b0347ab
 STATEMENT: >>>
-This section documents some known issues and non-obvious implementation details.
+This section used to document known issues and non-obvious implementation details, but it has recently been decomposed into more specific sections such as:
+
+- [LINK: SECTION-UG-Security-considerations]
+- [LINK: SECTION-UG-Performance-considerations]
+- [LINK: UG_PORTABILITY_CONSIDERATIONS]
+- [LINK: SDOC_UG_LIMIT]
 <<<
-
-[[SECTION]]
-MID: 7e4c91401d244149a1aa502d990f0052
-UID: SDOC_IMPL_2
-TITLE: Running out of semaphores on macOS
-
-[TEXT]
-MID: ec83d51626ee4e0cbb75c500ee306b06
-STATEMENT: >>>
-This an edge case on macOS: Python crashes in the Parallelizer class when
-creating an output queue:
-
-.. code:: py
-
-    self.output_queue = multiprocessing.Queue()
-
-The fragment of the crash:
-
-.. code:: text
-
-    sl = self._semlock = _multiprocessing.SemLock(
-    OSError: [Errno 28] No space left on device
-
-The existing workaround for this problem is to increase a number of semaphores in the macOS config:
-
-.. code:: text
-
-    sudo sysctl -w kern.posix.sem.max=20000
-<<<
-
-[[/SECTION]]
 
 [[/SECTION]]
 

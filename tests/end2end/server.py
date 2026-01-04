@@ -330,6 +330,7 @@ class SDocTestServer:
         # It is important that the current environment is passed along with the
         # server command, otherwise the Python packages will not be discovered.
         strictdoc_env: Dict[str, str] = dict(os.environ)
+        strictdoc_env["PYTHONPATH"] = os.getcwd()
 
         should_collect_coverage = test_environment.coverage
         strictdoc_args: List[str] = [sys.executable]
@@ -362,7 +363,8 @@ class SDocTestServer:
 
         strictdoc_args.extend(
             [
-                self.path_to_strictdoc,
+                "-m",
+                "strictdoc.cli.main",
                 "server",
                 "--no-reload",
                 "--port",

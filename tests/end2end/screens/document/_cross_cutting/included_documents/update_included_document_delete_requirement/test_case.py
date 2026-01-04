@@ -28,8 +28,6 @@ class Test(E2ECase):
             requirement = screen_document.get_node(1)
             requirement.do_delete_node()
 
-            screen_document.get_root_node().assert_document_title_contains(
-                "Document 1"
-            )
+            screen_document.assert_no_text("First requirement")
 
         assert test_setup.compare_sandbox_and_expected_output()

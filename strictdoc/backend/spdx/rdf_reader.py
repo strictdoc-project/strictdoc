@@ -1,0 +1,136 @@
+"""
+FIXME
+"""
+
+from copy import copy
+from typing import Optional, Tuple
+
+from textx import TextXSemanticError, TextXSyntaxError, metamodel_from_str
+
+from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
+from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
+from strictdoc.backend.sdoc.models.document import (
+    SDocDocument,
+)
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.node import (
+    SDocCompositeNode,
+)
+from strictdoc.backend.sdoc.pickle_cache import PickleCache
+from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
+from strictdoc.core.project_config import ProjectConfig
+from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.file_system import file_open_read_utf8
+from strictdoc.helpers.string import strip_bom
+from strictdoc.helpers.textx import drop_textx_meta
+
+
+class RDFReader:
+    def _read(
+        self,
+        input_string: str,
+        file_path: Optional[str] = None,
+    ) -> Tuple[SDocDocument, ParseContext]:
+        input_string = strip_bom(input_string)
+
+        parse_context = ParseContext(path_to_sdoc_file=file_path)
+        processor = SDocParsingProcessor(parse_context=parse_context)
+        SDReader.meta_model.register_obj_processors(
+            processor.get_default_processors()
+        )
+
+        try:
+            document: SDocDocument = SDReader.meta_model.model_from_str(
+                input_string, file_name=file_path
+            )
+        except (TextXSyntaxError, TextXSemanticError) as syntax_error_:
+            raise StrictDocException(
+                f"Could not parse file: "
+                f"{file_path}. "
+                f"Error: {syntax_error_.__class__.__name__}: {syntax_error_}"
+            ) from syntax_error_
+
+        parse_context.document_reference.set_document(document)
+        document.ng_has_requirements = parse_context.document_has_requirements
+
+        return document, parse_context
+
+    @staticmethod
+    def read(
+        input_string: str,
+        file_path: Optional[str] = None,
+    ) -> SDocDocument:
+        document, _ = SDReader.read_with_parse_context(input_string, file_path)
+        return document
+
+    @staticmethod
+    def read_with_parse_context(
+        input_string: str,
+        file_path: Optional[str] = None,
+    ) -> Tuple[SDocDocument, ParseContext]:
+        document, parse_context = SDReader._read(input_string, file_path)
+
+        SDReader.fixup_composite_requirements(document)
+
+        return document, parse_context
+
+    def read_from_file(
+        self, file_path: str, project_config: ProjectConfig
+    ) -> SDocDocument:
+        """
+        Parse a provided .sdoc file and convert it into a Document object.
+        """
+
+        unpickled_content = PickleCache.read_from_cache(
+            file_path, project_config, "sdoc"
+        )
+        if unpickled_content:
+            return assert_cast(unpickled_content, SDocDocument)
+
+        with file_open_read_utf8(file_path) as file:
+            sdoc_content = file.read()
+
+        sdoc, parse_context = self.read_with_parse_context(
+            sdoc_content,
+            file_path=file_path,
+        )
+
+        sdoc.fragments_from_files = parse_context.fragments_from_files
+
+        # HACK:
+        # ProcessPoolExecutor doesn't work because of non-picklable parts
+        # of textx. The offending fields are stripped down because they
+        # are not used anyway.
+        drop_textx_meta(sdoc)
+
+        # @relation(SDOC-SRS-155, scope=range_start)
+        sdoc.build_search_index()
+        # @relation(SDOC-SRS-155, scope=range_end)
+
+        PickleCache.save_to_cache(sdoc, file_path, project_config, "sdoc")
+
+        return sdoc
+
+    @staticmethod
+    def fixup_composite_requirements(sdoc: SDocDocument) -> None:
+        for _, node_ in enumerate(copy(sdoc.section_contents)):
+            if isinstance(node_, SDocCompositeNode):
+                SDReader.migration_sections_grammar(sdoc)
+                break
+
+    @staticmethod
+    def migration_sections_grammar(sdoc: SDocDocument) -> None:
+        grammar: DocumentGrammar = assert_cast(sdoc.grammar, DocumentGrammar)
+        section_element_exists = any(
+            element_.tag == "SECTION" for element_ in grammar.elements
+        )
+        if not section_element_exists:
+            grammar.update_with_elements(
+                [
+                    DocumentGrammar.create_default_section_element(
+                        grammar, enable_mid=sdoc.config.enable_mid or False
+                    )
+                ]
+                + grammar.elements
+            )

@@ -46,6 +46,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 91ec1cc14745499c9723930b9739c7d6
+TITLE: 0.16.1 (2026-01-05)
+
+[TEXT]
+MID: 2bdbba2b2ae04499b984d1ff35e26468
+STATEMENT: >>>
+This is a small bugfix release. The only issue being fixed is support for search path filters with the ``~`` character, as found on Windows systems and produced by MS Office tools.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 4d7680f589d54d808714f13b5b527de3
 TITLE: 0.16.0 (2026-01-04)
 

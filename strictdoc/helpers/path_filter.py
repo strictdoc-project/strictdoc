@@ -13,17 +13,20 @@ REGEX_DOUBLE_WILDCARD = (
 
 REGEX_MASK_VALIDATION = rf"[^(\\|\/)]{REGEX_DOUBLE_WILDCARD}"
 
-MOST_COMMON_CHARACTERS = ("..", "[", "]", "(", ")", "{", "}", "?", "+", "!")
+DISALLOWED_CHARACTERS = ("..", "[", "]", "(", ")", "{", "}", "?", "+", "!")
+
+# "~"" comes from Windows.
+ALLOWED_FIRST_CHARACTERS = ("*", "/", ".", "_", "~")
 
 
 def validate_mask(mask: str) -> None:
     if mask == "":
         raise SyntaxError("Path mask must not be empty.")
 
-    if not mask[0].isalnum() and mask[0] not in ("/", "*", ".", "_"):
+    if not mask[0].isalnum() and mask[0] not in ALLOWED_FIRST_CHARACTERS:
         raise SyntaxError(
-            "Path mask must start with an alphanumeric character, a forward slash, "
-            f"a dot, or a wildcard symbol '*'. Provided mask: '{mask}'."
+            "Path mask must start with an alphanumeric character or one of "
+            f"these characters: {ALLOWED_FIRST_CHARACTERS}. Provided mask: '{mask}'."
         )
 
     if "//" in mask or "\\\\" in mask:
@@ -32,16 +35,18 @@ def validate_mask(mask: str) -> None:
     if "***" in mask:
         raise SyntaxError("Invalid wildcard: '***'.")
 
-    for regex_symbol in MOST_COMMON_CHARACTERS:
+    for regex_symbol in DISALLOWED_CHARACTERS:
         if regex_symbol in mask:
             raise SyntaxError(
                 f"Path mask must not contain any of the special characters: "
-                f"{MOST_COMMON_CHARACTERS}."
+                f"{DISALLOWED_CHARACTERS}."
             )
 
 
 def compile_regex_mask(path_mask: str) -> str:
     regex_mask = path_mask
+    # $ can happen on Windows paths, escape it to not be mixed with $-endings.
+    regex_mask = regex_mask.replace("$", r"\$")
     regex_mask = regex_mask.replace(".", "\\.")
     regex_mask = regex_mask.replace("**", "XXXX")
     regex_mask = regex_mask.replace("*", REGEX_WILDCARD)

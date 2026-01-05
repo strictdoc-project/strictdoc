@@ -244,3 +244,20 @@ def test_case_80_windows_supported():
     path_filter = PathFilter([mask], positive_or_negative=False)
 
     assert not path_filter.match("docs\\hello.sdoc")
+
+
+def test_case_81_windows_hidden_files_with_dollar_are_supported():
+    mask = "~$ProjectPlan.docx"
+    path_filter = PathFilter([mask], positive_or_negative=True)
+
+    assert path_filter.match("~$ProjectPlan.docx")
+
+
+def test_case_82_windows_hidden_files_with_dollar_are_supported():
+    mask = "~$*"
+    path_filter = PathFilter([mask], positive_or_negative=True)
+
+    assert path_filter.match("~$ProjectPlan.docx")
+    assert path_filter.match("foo/bar/~$ProjectPlan.docx")
+
+    assert not path_filter.match("$ProjectPlan.docx")

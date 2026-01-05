@@ -15,8 +15,8 @@ def test_case_01_empty_mask_allows_everything():
     with pytest.raises(SyntaxError) as exc_info:
         validate_mask(" ")
     assert (
-        "Path mask must start with an alphanumeric character, a forward slash, "
-        "a dot, or a wildcard symbol '*'."
+        "Path mask must start with an alphanumeric character or one of these "
+        "characters: "
     ) in exc_info.value.args[0]
 
     with pytest.raises(SyntaxError) as exc_info:

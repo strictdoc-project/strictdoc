@@ -1,21 +1,9 @@
-from pygments import highlight
-from pygments.formatters import (
-    HtmlFormatter,
-    RawTokenFormatter,
-    TestcaseFormatter,
-)
 from pygments.token import Token
 
 from strictdoc.export.rst.strictdoc_lexer import (
     SDocPygmentsToken,
     StrictDocLexer,
 )
-
-
-def dump_lexed_code(lexer, code) -> None:
-    print(highlight(code, lexer, RawTokenFormatter()))  # noqa: T201
-    print(highlight(code, lexer, HtmlFormatter()))  # noqa: T201
-    print(highlight(code, lexer, TestcaseFormatter()))  # noqa: T201
 
 
 def test_01_document_tag_only():

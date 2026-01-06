@@ -3747,9 +3747,9 @@ Every rule specified in the search filters in the configuration file or in .giti
 - The search filters used should be as precise as possible to help StrictDoc decide as quickly as possible whether it should whitelist or blacklist a given path.
 - The search is performed using Python's ``os.walk(<project root>, topdown=True)``. The search is therefore top-down, which allows exclude filters to be applied at the first point of contact with undesired folders. If an undesired folder is detected, the search does not descend into that folder and entirely skips its contents.
 - If a folder to be included or excluded is a root-level folder, the search string should start with ``/`` to indicate that StrictDoc should apply this rule only to root-level folders, ignoring all other paths as it descends into subdirectories. Example: ``/strictdoc/foo/`` instead of ``foo``.
-- Similarly, if a folder to be excluded is not at the root level but is known to be a subdirectory of a specific root-level directory, it is better to specify the full path. For example, instead of ``**/Output/``, it is better to specify ``tests/integration/**/Output/`` to ensure that StrictDoc does not consider directories outside ``tests/integration``.
+- Similarly, if a folder to be excluded is not at the root level but is known to be a subdirectory of a specific root-level directory, it is better to specify the full path. For example, instead of ``**/Output/``, it is better to specify ``/tests/integration/**/Output/`` to ensure that StrictDoc does not consider directories outside ``tests/integration``.
 - If a user project produces many cache artifacts using multiple tools, it is recommended to store them all in a single cache folder, for example ``build/tool1_cache``, ``build/tool2_cache``, etc., and configure StrictDoc to ignore only the ``/build/`` folder instead of several separate ones. This reduces the number of lookups StrictDoc has to perform during the search.
-- When whitelisting paths, it is better to specify paths that are known to contain wildcards in specific locations. For example, use ``strictdoc/**.py`` instead of ``*.py``.
+- When whitelisting paths, it is better to specify paths that are known to contain wildcards in specific locations. For example, use ``src/**.py`` and ``tests/**.py`` instead of ``*.py``.
 <<<
 
 [[/SECTION]]

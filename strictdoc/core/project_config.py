@@ -609,15 +609,6 @@ class ProjectConfigLoader:
         return project_config
 
     @staticmethod
-    def load_from_string(*, toml_string: str) -> ProjectConfig:
-        config_dict = toml.loads(toml_string)
-        return ProjectConfigLoader._load_from_dictionary(
-            config_dict=config_dict,
-            config_last_update=None,
-            path_to_config=None,
-        )
-
-    @staticmethod
     def _load_from_dictionary(
         *,
         config_dict: Dict[str, Any],

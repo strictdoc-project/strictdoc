@@ -1,0 +1,56 @@
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: LEVEL
+    TYPE: SingleChoice(SYS, HLR, LLR)
+    REQUIRED: True
+  - TITLE: PRIORITY
+    TYPE: SingleChoice(High, Medium, Low)
+    REQUIRED: False
+  - TITLE: STEREOTYPE
+    TYPE: SingleChoice(Allocated, Derived)
+    REQUIRED: True
+  - TITLE: TYPE
+    TYPE: SingleChoice(Functional, Non-Functional)
+    REQUIRED: True
+  - TITLE: SAFETYRELEVANT
+    TYPE: SingleChoice(No, Yes)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: VERIFICATION_METHOD
+    TYPE: SingleChoice(LLT, SSIT, HSIT, ST, ANALYSIS)
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: File
+  - TYPE: Parent
+    ROLE: links_to_HLR
+  - TYPE: Parent
+    ROLE: links_to_Req
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+    PREFIX: None
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+    

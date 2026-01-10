@@ -1,0 +1,33 @@
+[DOCUMENT]
+TITLE: Software Design Description
+UID: SDD_XXXXXX
+VERSION: @GIT_VERSION
+DATE: @GIT_COMMIT_DATETIME
+OPTIONS:
+  MARKUP: RST
+  AUTO_LEVELS: On
+  VIEW_STYLE: Table
+  NODE_IN_TOC: True
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar_LLR.sgra
+
+[TEXT]
+STATEMENT: >>>
+Defines the software architecture and low level requirements, that will satisfy high level requirements.
+<<<
+
+[REQUIREMENT]
+UID: LLR-00001
+TITLE: System Initialization
+LEVEL: LLR
+PRIORITY: Medium
+STEREOTYPE: Derived
+TYPE: Functional
+SAFETYRELEVANT: Yes
+STATEMENT: blabla
+RATIONALE: Required to ensure predictable behavior on system power-up.
+VERIFICATION_METHOD: LLT
+RELATIONS:
+- TYPE: File
+  VALUE: try/try.c

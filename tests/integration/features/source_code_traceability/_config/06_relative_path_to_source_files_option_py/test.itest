@@ -1,0 +1,4 @@
+RUN: %strictdoc export %S/doc --output-dir %T | filecheck %s --dump-input=fail
+
+CHECK: Reading source: try{{[/\\]}}try.c
+CHECK: File: try{{[/\\]}}try.c

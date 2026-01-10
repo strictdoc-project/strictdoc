@@ -195,10 +195,6 @@ class ProjectConfig:
             exclude_doc_paths if exclude_doc_paths is not None else []
         )
 
-        if source_root_path is not None:
-            assert os.path.isdir(source_root_path), source_root_path
-            assert os.path.isabs(source_root_path), source_root_path
-
         self.source_root_path: Optional[str] = source_root_path
 
         self.include_source_paths: List[str] = (
@@ -394,6 +390,27 @@ class ProjectConfig:
 
     def validate_and_finalize(self) -> None:
         project_path = self.get_project_root_path()
+
+        #
+        # Resolve the source root path.
+        #
+        if os.path.isdir(project_path):
+            source_root_path = self.source_root_path
+            if source_root_path is not None:
+                original_source_root_path = source_root_path
+                if not os.path.isabs(source_root_path):
+                    source_root_path = os.path.join(
+                        project_path, source_root_path
+                    )
+                    source_root_path = os.path.abspath(source_root_path)
+                if not os.path.isdir(source_root_path):
+                    raise ValueError(
+                        "config: "
+                        "source_root_path: "
+                        f"Provided path does not exist: "
+                        f"{original_source_root_path}."
+                    )
+                self.source_root_path = source_root_path
 
         #
         # Read exclude paths from .gitignore. Add them to the user project's
@@ -723,24 +740,6 @@ class ProjectConfigLoader:
             source_root_path = project_content.get(
                 "source_root_path", source_root_path
             )
-            if source_root_path is not None:
-                original_source_root_path = source_root_path
-                if (
-                    not os.path.isabs(source_root_path)
-                    and path_to_config is not None
-                ):
-                    source_root_path = os.path.join(
-                        os.path.dirname(path_to_config), source_root_path
-                    )
-                    source_root_path = os.path.abspath(source_root_path)
-                if not os.path.isdir(source_root_path):
-                    raise ValueError(
-                        f"strictdoc.toml: 'source_root_path': "
-                        f"Provided path does not exist: "
-                        f"{original_source_root_path}."
-                    )
-                if not os.path.isabs(source_root_path):
-                    source_root_path = os.path.abspath(source_root_path)
             include_source_paths = project_content.get(
                 "include_source_paths", include_source_paths
             )

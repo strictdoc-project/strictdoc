@@ -320,7 +320,7 @@ def test_end2end(
 
 
 @task(aliases=["tu"])
-def test_unit(context, focus=None, path=None, output=False):
+def test_unit(context, coverage=False, focus=None, path=None, output=False):
     """
     @relation(SDOC-SRS-44, scope=function)
     """
@@ -354,7 +354,7 @@ def test_unit(context, focus=None, path=None, output=False):
             {path}
         """,
     )
-    if not focus and path == "tests/unit":
+    if coverage and not focus and path == "tests/unit":
         run_invoke_with_tox(
             context,
             ToxEnvironment.CHECK,
@@ -730,7 +730,7 @@ def test(context, shard=None):
 
 @task(aliases=["ta"])
 def test_all(context, coverage=False, headless=False):
-    test_unit(context)
+    test_unit(context, coverage=coverage)
     test_unit_server(context)
     test_integration(context, coverage=coverage)
     test_integration(context, coverage=coverage, html2pdf=True)

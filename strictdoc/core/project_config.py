@@ -23,6 +23,7 @@ from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.plugin import StrictDocPlugin
 from strictdoc.helpers.auto_described import auto_described
+from strictdoc.helpers.deprecation_engine import DEPRECATION_ENGINE
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.md5 import get_md5
@@ -588,6 +589,16 @@ class ProjectConfigLoader:
             ) from None
         except Exception as exception:  # pragma: no cover
             raise AssertionError from exception
+
+        DEPRECATION_ENGINE.add_message(
+            "DEPRECATED_CONFIG_TOML",
+            (
+                "WARNING: StrictDoc TOML configuration format is deprecated. "
+                "Replace the TOML config file with a Python config file.\n\n"
+                "See the migration guide for mode details:\n\n"
+                "https://strictdoc.readthedocs.io/en/stable/?a=SECTION-UG-MIGRATE-CONFIG-2025-Q4"
+            ),
+        )
 
         config_last_update = get_file_modification_time(path_to_config)
 

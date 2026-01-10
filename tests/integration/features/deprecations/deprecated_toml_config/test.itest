@@ -1,0 +1,4 @@
+RUN: %strictdoc export %S/input.sdoc --formats=sdoc --output-dir %T | filecheck %s --dump-input=fail
+CHECK: DEPRECATION: This project has the following issues:
+CHECK: Issue #1
+CHECK: WARNING: StrictDoc TOML configuration format is deprecated.

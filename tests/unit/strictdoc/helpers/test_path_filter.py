@@ -37,8 +37,6 @@ def test_case_03_single_wildcard():
     # This is possible, but it will be filtered by extension before this filter
     # anyway.
     assert path_filter.match("docs/01_user_manual_sdoc")
-
-    # FIXME: Disallow this?
     assert path_filter.match("docs/.sdoc")
 
     # NEGATIVE
@@ -170,6 +168,47 @@ def test_case_15_ending_slashes_act_like_double_wildcards():
     assert not path_filter.match("build/foo")
     assert not path_filter.match("build/foo.txt")
     assert not path_filter.match("build/foo/bar")
+
+
+def test_case_16_range_of_characters():
+    mask = "*.py[codz]"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    assert path_filter.match("foo.pyc")
+    assert path_filter.match("foo/foo.pyo")
+    assert path_filter.match("foo/foo/foo.pyo")
+
+
+def test_case_17_range_of_characters():
+    mask = "fo[o-]"
+    path_filter = PathFilter([mask], positive_or_negative=True)
+
+    assert path_filter.match("foo")
+    assert path_filter.match("fo-")
+    assert path_filter.match("foo/fo-")
+
+    assert not path_filter.match("foz")
+
+
+def test_case_18_known_dollar_character_use():
+    """
+    The Jython files are generated as: example.py -> example$py.class.
+    """
+
+    mask = "*$py.class"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    assert path_filter.match("foo$py.class")
+    assert path_filter.match("foo/foo$py.class")
+    assert path_filter.match("foo/foo/foo$py.class")
+
+
+def test_case_19_parentheses():
+    mask = "tree(not_in_use).css"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    assert path_filter.match("tree(not_in_use).css")
+    assert path_filter.match("foo/tree(not_in_use).css")
 
 
 def test_case_20_file_with_double_wildcard():

@@ -13,7 +13,7 @@ REGEX_DOUBLE_WILDCARD = (
 
 REGEX_MASK_VALIDATION = rf"[^(\\|\/)]{REGEX_DOUBLE_WILDCARD}"
 
-DISALLOWED_CHARACTERS = ("..", "[", "]", "(", ")", "{", "}", "?", "+", "!")
+DISALLOWED_CHARACTERS = ("..", "{", "}", "?", "+", "!")
 
 # "~"" comes from Windows.
 ALLOWED_FIRST_CHARACTERS = ("*", "/", ".", "_", "~")
@@ -67,6 +67,9 @@ class PathFilter:
             filtered_path = filtered_path_
 
             validate_mask(filtered_path)
+
+            filtered_path = filtered_path.replace("(", r"\(")
+            filtered_path = filtered_path.replace(")", r"\)")
 
             if filtered_path.startswith("/"):
                 filtered_path = filtered_path.lstrip("/")

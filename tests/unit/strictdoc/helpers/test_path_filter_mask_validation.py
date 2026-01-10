@@ -36,8 +36,8 @@ def test_case_01_empty_mask_allows_everything():
     assert "Invalid wildcard: '***'." in exc_info.value.args[0]
 
     with pytest.raises(SyntaxError) as exc_info:
-        validate_mask("a[")
+        validate_mask("a+")
     assert (
         "Path mask must not contain any of the special characters: "
-        "('..', '[', ']', '(', ')', '{', '}', '?', '+', '!')."
+        "('..', '{', '}', '?', '+', '!')."
     ) in exc_info.value.args[0]

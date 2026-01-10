@@ -420,7 +420,7 @@ class ProjectConfig:
         # Validate that the provided grammar shortcuts all point to existing
         # grammar files.
         #
-        for grammar_alias_, grammar_path_ in self.grammars.items():
+        for grammar_alias_, grammar_path_ in list(self.grammars.items()):
             assert grammar_alias_.startswith("@"), (
                 "Grammar alias must start with an '@' character."
             )
@@ -431,6 +431,8 @@ class ProjectConfig:
                 "Grammar path must point to an existing path relative to the "
                 f"project config file: {grammar_path_}."
             )
+            if grammar_path_.startswith("./"):
+                self.grammars[grammar_alias_] = grammar_path_.removeprefix("./")
 
     def is_feature_activated(self, feature: ProjectFeature) -> bool:
         return feature in self.project_features

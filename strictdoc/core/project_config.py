@@ -188,22 +188,71 @@ class ProjectConfig:
         self.server_port: int = server_port
 
         self.input_paths: Optional[List[str]] = input_paths
-        self.include_doc_paths: List[str] = (
-            include_doc_paths if include_doc_paths is not None else []
-        )
-        self.exclude_doc_paths: List[str] = (
-            exclude_doc_paths if exclude_doc_paths is not None else []
-        )
 
+        #
+        # include_doc_paths
+        #
+        include_doc_paths = include_doc_paths or []
+        assert isinstance(include_doc_paths, list), include_doc_paths
+        for include_doc_path in include_doc_paths:
+            try:
+                validate_mask(include_doc_path)
+            except SyntaxError as exception_:
+                raise ValueError(
+                    f"config: include_doc_paths: {exception_}"
+                ) from exception_
+        self.include_doc_paths: List[str] = include_doc_paths
+
+        #
+        # exclude_doc_paths
+        #
+        exclude_doc_paths = exclude_doc_paths or []
+        assert isinstance(exclude_doc_paths, list), exclude_doc_paths
+        for exclude_doc_path in exclude_doc_paths:
+            try:
+                validate_mask(exclude_doc_path)
+            except SyntaxError as exception_:
+                raise ValueError(
+                    f"config: exclude_doc_paths: {exception_}"
+                ) from exception_
+        self.exclude_doc_paths: List[str] = exclude_doc_paths
+
+        #
+        # include_source_paths
+        #
+        include_source_paths = include_source_paths or []
+        assert isinstance(include_source_paths, list), include_source_paths
+        for include_source_path in include_source_paths:
+            try:
+                validate_mask(include_source_path)
+            except SyntaxError as exception_:
+                raise ValueError(
+                    f"config: include_source_paths: {exception_}"
+                ) from exception_
+        self.include_source_paths: List[str] = include_source_paths
+
+        #
+        # exclude_source_paths
+        #
+        exclude_source_paths = exclude_source_paths or []
+        assert isinstance(exclude_source_paths, list), exclude_source_paths
+        for exclude_source_path in exclude_source_paths:
+            try:
+                validate_mask(exclude_source_path)
+            except SyntaxError as exception_:
+                raise SyntaxError(
+                    f"config: exclude_source_paths: {exception_}"
+                ) from exception_
+        self.exclude_source_paths: List[str] = exclude_source_paths
+
+        #
+        # source_root_path
+        #
         self.source_root_path: Optional[str] = source_root_path
 
-        self.include_source_paths: List[str] = (
-            include_source_paths if include_source_paths is not None else []
-        )
-        self.exclude_source_paths: List[str] = (
-            exclude_source_paths if exclude_source_paths is not None else []
-        )
-
+        #
+        # grammars - Grammar aliases.
+        #
         self.grammars: Dict[str, str] = grammars or {}
 
         self.test_report_root_dict: Dict[str, str] = (
@@ -718,53 +767,22 @@ class ProjectConfigLoader:
             include_doc_paths = project_content.get(
                 "include_doc_paths", include_doc_paths
             )
-            assert isinstance(include_doc_paths, list)
-            for include_doc_path in include_doc_paths:
-                try:
-                    validate_mask(include_doc_path)
-                except SyntaxError as exception_:
-                    raise SyntaxError(
-                        f"strictdoc.toml: 'include_doc_paths': {exception_}"
-                    ) from exception_
 
             exclude_doc_paths = project_content.get(
                 "exclude_doc_paths", exclude_doc_paths
             )
-            assert isinstance(exclude_doc_paths, list)
-            for exclude_doc_path in exclude_doc_paths:
-                try:
-                    validate_mask(exclude_doc_path)
-                except SyntaxError as exception_:
-                    raise SyntaxError(
-                        f"strictdoc.toml: 'exclude_doc_paths': {exception_}"
-                    ) from exception_
 
             source_root_path = project_content.get(
                 "source_root_path", source_root_path
             )
+
             include_source_paths = project_content.get(
                 "include_source_paths", include_source_paths
             )
-            assert isinstance(include_source_paths, list)
-            for include_source_path in include_source_paths:
-                try:
-                    validate_mask(include_source_path)
-                except SyntaxError as exception_:
-                    raise SyntaxError(
-                        f"strictdoc.toml: 'include_source_paths': {exception_}"
-                    ) from exception_
 
             exclude_source_paths = project_content.get(
                 "exclude_source_paths", exclude_source_paths
             )
-            assert isinstance(exclude_source_paths, list)
-            for exclude_source_path in exclude_source_paths:
-                try:
-                    validate_mask(exclude_source_path)
-                except SyntaxError as exception_:
-                    raise SyntaxError(
-                        f"strictdoc.toml: 'exclude_source_paths': {exception_}"
-                    ) from exception_
 
             html2pdf_strict = project_content.get(
                 "html2pdf_strict", html2pdf_strict

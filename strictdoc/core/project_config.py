@@ -472,6 +472,21 @@ class ProjectConfig:
             )
 
         #
+        # Validate HTML2PDF template path.
+        #
+        if (html2pdf_template := self.html2pdf_template) is not None:
+            assert not os.path.isabs(html2pdf_template)
+            if project_path is not None:
+                html2pdf_template = os.path.join(
+                    project_path, html2pdf_template
+                )
+            if not os.path.isfile(html2pdf_template):
+                raise ValueError(
+                    "config: html2pdf_template: "
+                    f"invalid path to a template file: {html2pdf_template}."
+                )
+
+        #
         # Resolve the source root path.
         #
         if os.path.isdir(project_path):
@@ -812,18 +827,6 @@ class ProjectConfigLoader:
             html2pdf_template = project_content.get(
                 "html2pdf_template", html2pdf_template
             )
-            if html2pdf_template is not None:
-                assert not os.path.isabs(html2pdf_template)
-                if path_to_config is not None:
-                    path_to_config_dir = os.path.dirname(path_to_config)
-                    html2pdf_template = os.path.join(
-                        path_to_config_dir, html2pdf_template
-                    )
-                if not os.path.isfile(html2pdf_template):
-                    raise ValueError(
-                        "strictdoc.toml: 'html2pdf_template': "
-                        f"invalid path to a template file: {html2pdf_template}."
-                    )
 
             bundle_document_version = project_content.get(
                 "bundle_document_version", bundle_document_version

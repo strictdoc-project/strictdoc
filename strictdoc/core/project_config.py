@@ -5,7 +5,6 @@
 import datetime
 import os
 import re
-import sys
 import tempfile
 import types
 from dataclasses import dataclass, field
@@ -179,11 +178,31 @@ class ProjectConfig:
 
         self.dir_for_sdoc_cache: str = dir_for_sdoc_cache
 
-        self.project_features: List[str] = (
+        #
+        # project_features
+        #
+        project_features = (
             project_features
             if project_features is not None
             else ProjectConfigDefault.DEFAULT_FEATURES
         )
+
+        assert isinstance(project_features, list), (
+            f"config: project_features: parameter must be an "
+            f"array: '{project_features}'."
+        )
+
+        for feature in project_features:
+            assert feature in ProjectFeature.all(), (
+                f"config: project_features: unknown feature declared: "
+                f"'{feature}'."
+            )
+
+        if ProjectFeature.ALL_FEATURES in project_features:
+            project_features = ProjectFeature.all()
+
+        self.project_features: List[str] = project_features
+
         self.server_host: str = server_host
         self.server_port: int = server_port
 
@@ -755,22 +774,6 @@ class ProjectConfigLoader:
             )
 
             project_features = project_content.get("features", project_features)
-            if not isinstance(project_features, list):
-                print(  # noqa: T201
-                    f"error: strictdoc.toml: 'feature' parameter must be an "
-                    f"array: '{project_features}'."
-                )
-                sys.exit(1)
-
-            for feature in project_features:
-                if feature not in ProjectFeature.all():
-                    print(  # noqa: T201
-                        f"error: strictdoc.toml: unknown feature declared: "
-                        f"'{feature}'."
-                    )
-                    sys.exit(1)
-            if ProjectFeature.ALL_FEATURES in project_features:
-                project_features = ProjectFeature.all()
 
             statistics_generator = project_content.get(
                 "statistics_generator", statistics_generator

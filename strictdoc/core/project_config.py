@@ -240,7 +240,7 @@ class ProjectConfig:
             try:
                 validate_mask(exclude_source_path)
             except SyntaxError as exception_:
-                raise SyntaxError(
+                raise ValueError(
                     f"config: exclude_source_paths: {exception_}"
                 ) from exception_
         self.exclude_source_paths: List[str] = exclude_source_paths

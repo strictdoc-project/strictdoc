@@ -1,0 +1,5 @@
+# @relation(SDOC-SRS-51, scope=file)
+
+RUN: %expect_exit 1 %strictdoc export %S --formats=html2pdf --output-dir %T | filecheck %s --dump-input=fail
+
+CHECK: error: config: html2pdf_template: invalid path to a template file: {{.*}}DOES_NOT_EXIST.

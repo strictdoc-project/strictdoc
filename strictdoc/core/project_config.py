@@ -5,7 +5,6 @@
 import datetime
 import os
 import re
-import sys
 import tempfile
 import types
 from dataclasses import dataclass, field
@@ -179,14 +178,47 @@ class ProjectConfig:
 
         self.dir_for_sdoc_cache: str = dir_for_sdoc_cache
 
-        self.project_features: List[str] = (
+        #
+        # project_features
+        #
+        project_features = (
             project_features
             if project_features is not None
             else ProjectConfigDefault.DEFAULT_FEATURES
         )
+
+        assert isinstance(project_features, list), (
+            f"config: project_features: parameter must be an "
+            f"array: '{project_features}'."
+        )
+
+        for feature in project_features:
+            assert feature in ProjectFeature.all(), (
+                f"config: project_features: unknown feature declared: "
+                f"'{feature}'."
+            )
+
+        if ProjectFeature.ALL_FEATURES in project_features:
+            project_features = ProjectFeature.all()
+
+        self.project_features: List[str] = project_features
+
+        #
+        # server_host and server_port
+        #
+        assert is_valid_host(server_host), (
+            f"config: server_host: invalid host: {server_host}'."
+        )
         self.server_host: str = server_host
+
+        assert isinstance(server_port, int) and 1024 < server_port < 65000, (
+            f"strictdoc.toml: 'port': invalid port: {server_port}'."
+        )
         self.server_port: int = server_port
 
+        #
+        # input_paths
+        #
         self.input_paths: Optional[List[str]] = input_paths
 
         #
@@ -240,7 +272,7 @@ class ProjectConfig:
             try:
                 validate_mask(exclude_source_path)
             except SyntaxError as exception_:
-                raise SyntaxError(
+                raise ValueError(
                     f"config: exclude_source_paths: {exception_}"
                 ) from exception_
         self.exclude_source_paths: List[str] = exclude_source_paths
@@ -278,7 +310,12 @@ class ProjectConfig:
 
         self.excel_export_fields: Optional[List[str]] = None
 
+        assert isinstance(html2pdf_strict, bool), (
+            "config: html2pdf_strict: "
+            f"must be a True/False value: {html2pdf_strict}."
+        )
         self.html2pdf_strict: bool = html2pdf_strict
+
         self.html2pdf_template: Optional[str] = html2pdf_template
 
         if html2pdf_forced_page_break_nodes is not None:
@@ -295,9 +332,27 @@ class ProjectConfig:
         self.traceability_matrix_relation_columns: Optional[
             List[Tuple[str, Optional[str]]]
         ] = traceability_matrix_relation_columns
+
+        #
+        # ReqIF
+        #
         self.reqif_profile: str = reqif_profile
+
+        assert isinstance(reqif_multiline_is_xhtml, bool), (
+            reqif_multiline_is_xhtml
+        )
         self.reqif_multiline_is_xhtml: bool = reqif_multiline_is_xhtml
+
+        assert isinstance(reqif_enable_mid, bool), reqif_enable_mid
         self.reqif_enable_mid: bool = reqif_enable_mid
+
+        if reqif_import_markup is not None:
+            assert reqif_import_markup in SDocMarkup.ALL, (
+                "config: reqif_import_markup: expected a valid markup: "
+                f"({SDocMarkup.ALL}). Got: "
+                f"'{reqif_import_markup}'."
+            )
+
         self.reqif_import_markup: Optional[str] = reqif_import_markup
 
         #
@@ -439,6 +494,43 @@ class ProjectConfig:
 
     def validate_and_finalize(self) -> None:
         project_path = self.get_project_root_path()
+
+        #
+        # Validate source nodes config.
+        #
+        if len(self.source_nodes) > 0 and not {
+            ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY,
+            ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS,
+        }.issubset(self.project_features):
+            print(  # noqa: T201
+                "warning: defining source_nodes without enabling REQUIREMENT_TO_SOURCE_TRACEABILITY and "
+                "SOURCE_FILE_LANGUAGE_PARSERS has no effect"
+            )
+
+        #
+        # Validate HTML2PDF template path.
+        #
+        if (html2pdf_template := self.html2pdf_template) is not None:
+            assert not os.path.isabs(html2pdf_template)
+            if project_path is not None:
+                html2pdf_template = os.path.join(
+                    project_path, html2pdf_template
+                )
+            if not os.path.isfile(html2pdf_template):
+                raise ValueError(
+                    "config: html2pdf_template: "
+                    f"invalid path to a template file: {html2pdf_template}."
+                )
+
+        #
+        # Validate path to Chrome Driver.
+        #
+        if (
+            chromedriver := self.chromedriver
+        ) is not None and not os.path.isfile(chromedriver):
+            raise ValueError(
+                f"config: chromedriver: not found at path: {chromedriver}."
+            )
 
         #
         # Resolve the source root path.
@@ -673,7 +765,6 @@ class ProjectConfigLoader:
         return ProjectConfigLoader._load_from_dictionary(
             config_dict=config_content,
             config_last_update=config_last_update,
-            path_to_config=path_to_config,
         )
 
     @staticmethod
@@ -692,12 +783,7 @@ class ProjectConfigLoader:
         *,
         config_dict: Dict[str, Any],
         config_last_update: Optional[datetime.datetime],
-        path_to_config: Optional[str],
     ) -> ProjectConfig:
-        if path_to_config is not None:
-            assert os.path.isfile(path_to_config), path_to_config
-            path_to_config = os.path.abspath(path_to_config)
-
         project_title = ProjectConfigDefault.DEFAULT_PROJECT_TITLE
         dir_for_sdoc_assets = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_ASSETS
         dir_for_sdoc_cache = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE
@@ -743,22 +829,6 @@ class ProjectConfigLoader:
             )
 
             project_features = project_content.get("features", project_features)
-            if not isinstance(project_features, list):
-                print(  # noqa: T201
-                    f"error: strictdoc.toml: 'feature' parameter must be an "
-                    f"array: '{project_features}'."
-                )
-                sys.exit(1)
-
-            for feature in project_features:
-                if feature not in ProjectFeature.all():
-                    print(  # noqa: T201
-                        f"error: strictdoc.toml: unknown feature declared: "
-                        f"'{feature}'."
-                    )
-                    sys.exit(1)
-            if ProjectFeature.ALL_FEATURES in project_features:
-                project_features = ProjectFeature.all()
 
             statistics_generator = project_content.get(
                 "statistics_generator", statistics_generator
@@ -787,28 +857,10 @@ class ProjectConfigLoader:
             html2pdf_strict = project_content.get(
                 "html2pdf_strict", html2pdf_strict
             )
-            if html2pdf_strict is not None:
-                if not isinstance(html2pdf_strict, bool):
-                    raise ValueError(
-                        "strictdoc.toml: 'html2pdf_strict': "
-                        f"must be a true/false value: {html2pdf_strict}."
-                    )
 
             html2pdf_template = project_content.get(
                 "html2pdf_template", html2pdf_template
             )
-            if html2pdf_template is not None:
-                assert not os.path.isabs(html2pdf_template)
-                if path_to_config is not None:
-                    path_to_config_dir = os.path.dirname(path_to_config)
-                    html2pdf_template = os.path.join(
-                        path_to_config_dir, html2pdf_template
-                    )
-                if not os.path.isfile(html2pdf_template):
-                    raise ValueError(
-                        "strictdoc.toml: 'html2pdf_template': "
-                        f"invalid path to a template file: {html2pdf_template}."
-                    )
 
             bundle_document_version = project_content.get(
                 "bundle_document_version", bundle_document_version
@@ -838,11 +890,7 @@ class ProjectConfigLoader:
                     traceability_matrix_relation_columns.append(relation_tuple)
 
             chromedriver = project_content.get("chromedriver", chromedriver)
-            if chromedriver is not None and not os.path.isfile(chromedriver):
-                raise ValueError(
-                    f"strictdoc.toml: 'chromedriver': "
-                    f"not found at path: {chromedriver}."
-                )
+
             if (
                 test_report_root_dict_ := project_content.get(
                     "test_report_root_dict", None
@@ -862,14 +910,6 @@ class ProjectConfigLoader:
 
             if "source_nodes" in project_content:
                 source_nodes_config = project_content["source_nodes"]
-                if len(source_nodes_config) > 0 and not {
-                    ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY,
-                    ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS,
-                }.issubset(project_features):
-                    print(  # noqa: T201
-                        "warning: defining source_nodes without enabling REQUIREMENT_TO_SOURCE_TRACEABILITY and "
-                        "SOURCE_FILE_LANGUAGE_PARSERS has no effect"
-                    )
                 assert isinstance(source_nodes_config, list)
                 for item_ in source_nodes_config:
                     source_node_path = next(iter(item_))
@@ -888,37 +928,15 @@ class ProjectConfigLoader:
         if "server" in config_dict:
             server_content = config_dict["server"]
             server_host = server_content.get("host", server_host)
-            if not is_valid_host(server_host):
-                raise ValueError(
-                    f"strictdoc.toml: 'host': invalid host: {server_host}'."
-                )
-
             server_port = server_content.get("port", server_port)
-            if not (
-                isinstance(server_port, int) and 1024 < server_port < 65000
-            ):
-                raise ValueError(
-                    f"strictdoc.toml: 'port': invalid port: {server_port}'."
-                )
 
         if "reqif" in config_dict:
-            # FIXME: Introduce at least a basic validation.
             reqif_content = config_dict["reqif"]
             reqif_multiline_is_xhtml = reqif_content.get(
                 "multiline_is_xhtml", False
             )
-            assert isinstance(reqif_multiline_is_xhtml, bool), reqif_content
-
-            # FIXME
             reqif_enable_mid = reqif_content.get("enable_mid", False)
-            assert isinstance(reqif_enable_mid, bool), reqif_content
-
-            # FIXME
             reqif_import_markup = reqif_content.get("import_markup", None)
-            if reqif_import_markup is not None:
-                assert reqif_import_markup in SDocMarkup.ALL, (
-                    reqif_import_markup
-                )
 
         return ProjectConfig(
             project_title=project_title,

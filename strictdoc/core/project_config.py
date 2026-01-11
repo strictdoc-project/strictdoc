@@ -203,9 +203,22 @@ class ProjectConfig:
 
         self.project_features: List[str] = project_features
 
+        #
+        # server_host and server_port
+        #
+        assert is_valid_host(server_host), (
+            f"config: server_host: invalid host: {server_host}'."
+        )
         self.server_host: str = server_host
+
+        assert isinstance(server_port, int) and 1024 < server_port < 65000, (
+            f"strictdoc.toml: 'port': invalid port: {server_port}'."
+        )
         self.server_port: int = server_port
 
+        #
+        # input_paths
+        #
         self.input_paths: Optional[List[str]] = input_paths
 
         #
@@ -898,18 +911,8 @@ class ProjectConfigLoader:
         if "server" in config_dict:
             server_content = config_dict["server"]
             server_host = server_content.get("host", server_host)
-            if not is_valid_host(server_host):
-                raise ValueError(
-                    f"strictdoc.toml: 'host': invalid host: {server_host}'."
-                )
 
             server_port = server_content.get("port", server_port)
-            if not (
-                isinstance(server_port, int) and 1024 < server_port < 65000
-            ):
-                raise ValueError(
-                    f"strictdoc.toml: 'port': invalid port: {server_port}'."
-                )
 
         if "reqif" in config_dict:
             # FIXME: Introduce at least a basic validation.

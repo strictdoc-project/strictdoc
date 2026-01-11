@@ -42,3 +42,22 @@ def test_32_include_source_paths_bad_mask():
 def test_33_exclude_source_paths_bad_mask():
     with pytest.raises(ValueError):
         _ = ProjectConfig(exclude_source_paths=[" "])
+
+
+def test_60_valid_host_and_port():
+    project_config = ProjectConfig(
+        server_host="localhost123",
+        server_port=5555,
+    )
+    assert project_config.server_host == "localhost123"
+    assert project_config.server_port == 5555
+
+
+def test_61_validate_invalid_host():
+    with pytest.raises(AssertionError):
+        _ = ProjectConfig(server_host="bad$host")
+
+
+def test_62_validate_invalid_port():
+    with pytest.raises(AssertionError):
+        _ = ProjectConfig(server_port=1000000)

@@ -453,7 +453,7 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
     strictdoc server --help
 
-StrictDoc uses ``127.0.0.1`` as a default host and ``5111`` as a default port. When running within Docker, the host argument ``--host`` can be specified, for example, ``--host 0.0.0.0`` or a more specific host or IP address. The host and port can be also configured in a TOML config file, see [LINK: SECTION-UG-Host-and-port].
+StrictDoc uses ``127.0.0.1`` as a default host and ``5111`` as a default port. When running within Docker, the host argument ``--host`` can be specified, for example, ``--host 0.0.0.0`` or a more specific host or IP address. The host and port can be also configured in the Python config file, see [LINK: SECTION-UG-Host-and-port].
 
 .. note::
 
@@ -2451,16 +2451,21 @@ TITLE: Mathjax support
 [TEXT]
 MID: abdf406fe10847929dd7cb12a030456f
 STATEMENT: >>>
-StrictDoc can include the `MathJax <https://www.mathjax.org/>`_ Javascript library to all of the document templates. To activate MathJax, edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
+StrictDoc can include the `MathJax <https://www.mathjax.org/>`_ Javascript library to all of the document templates. To activate MathJax, edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = "My project"
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "MATHJAX"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="My project",
+            project_features=[
+                "MATHJAX"
+            ],
+        )
+        return config
 
 Examples of using MathJax:
 
@@ -2566,15 +2571,20 @@ TITLE: Standalone HTML pages
 MID: 5674bfd50f31420baf56625d79d1ebff
 STATEMENT: >>>
 The following command creates a normal HTML export with all pages having their
-assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc.toml`` file, specify:
+assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc_config.py`` file, specify:
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "STANDALONE_DOCUMENT_SCREEN"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "STANDALONE_DOCUMENT_SCREEN"
+            ],
+        )
+        return config
 
 The generated document are self-contained HTML pages that can be shared via
 email as single files. This option might be especially useful if you work with
@@ -2734,13 +2744,18 @@ Both options can be used independently or in combination, depending on the proje
 
 To activate the traceability to source files, configure the project config with a dedicated feature:
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "REQUIREMENT_TO_SOURCE_TRACEABILITY"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+            ],
+        )
+        return config
 
 By default, StrictDoc looks for source files in a directory from which the ``strictdoc`` command is run. This can be changed by using the ``source_root_path`` project-level option.
 
@@ -2766,14 +2781,19 @@ As an experimental option, StrictDoc supports parsing source files of selected p
 
 To activate language-aware traceability, configure the project with the following features:
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-      "SOURCE_FILE_LANGUAGE_PARSERS"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+                "SOURCE_FILE_LANGUAGE_PARSERS"
+            ],
+        )
+        return config
 
 Currently, Python, C/C++ and Robot Framework parsers are implemented. Upcoming implementations include parsers for Rust, Bash, and more.
 <<<
@@ -3041,21 +3061,30 @@ In addition to recognizing the ``@relation(...)`` markers described above, Stric
         print("hello world\n");
     }
 
-To enable SDoc node parsing, the corresponding source file must be registered in the ``strictdoc.toml`` configuration as follows:
+To enable SDoc node parsing, the corresponding source file must be registered in the ``strictdoc_config.py`` configuration as follows:
 
-.. code:: toml
+.. code:: python
 
-    features = [
-      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-      "SOURCE_FILE_LANGUAGE_PARSERS",
-    ]
+    from strictdoc.core.project_config import ProjectConfig, SourceNodesEntry
 
-    # if custom include_source_paths are set, it must include the corresponding source file
-    include_source_paths = ["tests/**"]
 
-    source_nodes = [
-        { "tests/" = { uid = "TEST_DOC", node_type = "TEST_SPEC" } }
-    ]
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+                "SOURCE_FILE_LANGUAGE_PARSERS",
+            ],
+            # If custom include_source_paths are set, it must include the corresponding source file.
+            include_source_paths=["tests/**"],
+            source_nodes=[
+                SourceNodesEntry(
+                    path="tests/",
+                    uid="TEST_DOC",
+                    node_type="TEST_SPEC"
+                )
+            ],
+        )
+        return config
 
 With the above declaration, StrictDoc will locate the document with the specified UID and automatically populate it with parsed descriptions. This allows the user to start with a basic template of their choice, knowing that it will be filled with content extracted from the source files.
 
@@ -3166,16 +3195,20 @@ The following options are available for ReqIF export/import commands.
 
 ``--reqif-enable-mid`` This option requires the machine identifiers option to be enabled (see [LINK: SECTION-UG-Machine-identifiers-MID]) and allows all nodes machine identifiers (MID) exported as ReqIF IDENTIFIERs. This option can be useful when the MID/IDENTIFIER stability of document, section, and requirement nodes is critical when doing iterative export/import roundtrips.
 
-All options can be also specified in a project's TOML file as follows:
+All options can be also specified in a project's Python config file as follows:
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    [reqif]
-    multiline_is_xhtml = true
-    import_markup = "HTML"
-    enable_mid = true
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            reqif_multiline_is_xhtml=True,
+            reqif_import_markup="HTML",
+            reqif_enable_mid=True,
+        )
+        return config
 <<<
 
 [[/SECTION]]
@@ -3315,7 +3348,7 @@ TITLE: Project-level configuration
 [TEXT]
 MID: 6449098df878484fbe8aed8a8b0e9a97
 STATEMENT: >>>
-StrictDoc supports reading configuration from a TOML file. The file must be called ``strictdoc.toml`` and shall be stored in the same folder which is provided as a path to the SDoc documents.
+StrictDoc supports reading configuration from a Python config file. The file must be called ``strictdoc_config.py`` and shall be stored in the same folder which is provided as a path to the SDoc documents.
 
 For example, ``strictdoc export .`` will make StrictDoc recognize the config file, if it is stored under the current directory.
 <<<
@@ -3329,10 +3362,16 @@ MID: 12501275599f4d7a954892e1a56778b9
 STATEMENT: >>>
 This option specifies a project title.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = "StrictDoc Documentation"
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="StrictDoc Documentation",
+        )
+        return config
 <<<
 
 [[/SECTION]]
@@ -3350,10 +3389,16 @@ Sometimes, it is desirable to change the folder name. For example, the GitHub Pa
 
 The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    html_assets_strictdoc_dir = "assets"
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            dir_for_sdoc_assets="assets",
+        )
+        return config
 <<<
 
 [[/SECTION]]
@@ -3370,10 +3415,16 @@ StrictDoc uses caching when reading and writing artifacts. By default, all cache
 
 It is possible to override the default cache location using the ``cache_dir`` option in the configuration file. For example, setting it to ``./output/build`` will store cache files there.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    cache_dir = "./strictdoc_cache"
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            dir_for_sdoc_cache="./strictdoc_cache",
+        )
+        return config
 
 One reserved value for this parameter is ``$TMPDIR`` which makes StrictDoc generate temporary files in the OS temporary directory under ``strictdoc_cache`` folder.
 
@@ -3391,15 +3442,19 @@ MID: be42ecf5c8a84fc3bca0b73ea50647de
 STATEMENT: >>>
 When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc looks for source files in the directory from which the ``strictdoc`` program is run. This can be changed with the ``source_root_path`` option.
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-    ]
 
-    source_root_path = "source_root/"
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+            ],
+            source_root_path="source_root/",
+        )
+        return config
 
 The ``source_root_path`` option supports relative paths, e.g. ``../source_root/``.
 <<<
@@ -3418,14 +3473,19 @@ StrictDoc uses an internal default template when exporting documents in PDF form
 
 If the front page, header, or footer needs to be customised, it is possible to provide a custom template with the ``html2pdf_template`` option.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    html2pdf_template = "assets/template/index.jinja"
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-       "HTML2PDF",
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            html2pdf_template="assets/template/index.jinja",
+            project_features=[
+                "HTML2PDF",
+            ],
+        )
+        return config
 
 When specified, the provided template will override the internal default template. The path can be absolute or relative to the project root.
 
@@ -3447,17 +3507,21 @@ Use ``include_doc_paths`` and ``exclude_doc_paths`` paths to whitelist/blacklist
 
 In the following example, StrictDoc will look for all files in the input project directory, except all documents in the ``tests/`` folder.
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    include_doc_paths = [
-      "/docs/*.sdoc"
-    ]
 
-    exclude_doc_paths = [
-      "/tests/**"
-    ]
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            include_doc_paths=[
+                "/docs/*.sdoc"
+            ],
+            exclude_doc_paths=[
+                "/tests/**"
+            ],
+        )
+        return config
 
 The behavior of wildcard symbols ``*`` and ``**`` is as follows:
 
@@ -3496,21 +3560,24 @@ MID: 3908f98fab5c47668ba752d0e93033ab
 STATEMENT: >>>
 Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist paths to source files when the traceability between requirements and source files feature is enabled.
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "REQUIREMENT_TO_SOURCE_TRACEABILITY"
-    ]
 
-    include_source_paths = [
-      "/src/**"
-    ]
-
-    exclude_source_paths = [
-      "/src/tests/**"
-    ]
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+            ],
+            include_source_paths=[
+                "/src/**"
+            ],
+            exclude_source_paths=[
+                "/src/tests/**"
+            ],
+        )
+        return config
 
 The behavior of the wildcards is the same as for the ``include_doc_paths/exclude_doc_paths`` options.
 
@@ -3535,28 +3602,33 @@ The feature of exporting the SDoc documents to HTML document view is a core feat
 
 The following is an example of the default configuration. The same features are active/inactive when the option ``features`` is not specified.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = "StrictDoc Documentation"
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      # Stable features that are enabled by default.
-      "TABLE_SCREEN",
-      "TRACEABILITY_SCREEN",
-      "DEEP_TRACEABILITY_SCREEN",
 
-      # Stable features that are disabled by default.
-      # "MATHJAX",
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="StrictDoc Documentation",
+            project_features=[
+                # Stable features that are enabled by default.
+                "TABLE_SCREEN",
+                "TRACEABILITY_SCREEN",
+                "DEEP_TRACEABILITY_SCREEN",
 
-      # Experimental features are disabled by default.
-      # "REQIF",
-      # "HTML2PDF",
-      # "PROJECT_STATISTICS_SCREEN",
-      # "STANDALONE_DOCUMENT_SCREEN",
-      # "TRACEABILITY_MATRIX_SCREEN",
-      # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
-    ]
+                # Stable features that are disabled by default.
+                # "MATHJAX",
+
+                # Experimental features are disabled by default.
+                # "REQIF",
+                # "HTML2PDF",
+                # "PROJECT_STATISTICS_SCREEN",
+                # "STANDALONE_DOCUMENT_SCREEN",
+                # "TRACEABILITY_MATRIX_SCREEN",
+                # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+            ],
+        )
+        return config
 
 See [LINK: SDOC_UG_EXPERIMENTAL_FEATURES] where the experimental features are outlined.
 <<<
@@ -3570,13 +3642,18 @@ MID: d33880e1740d4d0892852cc8c425f66f
 STATEMENT: >>>
 To select all available features, stable and experimental, specify ``ALL_FEATURES``.
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "ALL_FEATURES"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "ALL_FEATURES"
+            ],
+        )
+        return config
 
 The advantage of this option is that all feature toggles become activated, and all extra screens and buttons are generated and visible.
 
@@ -3596,13 +3673,18 @@ MID: 9cf2ac683b7a4e939286146ef00631c1
 STATEMENT: >>>
 To disable all features, specify the ``features`` option but leave it empty:
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      # Nothing specified.
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                # Nothing specified.
+            ],
+        )
+        return config
 <<<
 
 [[/SECTION]]
@@ -3625,14 +3707,18 @@ By default, StrictDoc runs the server on ``127.0.0.1:5111``.
 
 Use the ``[server]`` section to configure the host and port as follows.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = 'Test project with a host "localhost" and a port 5000'
+    from strictdoc.core.project_config import ProjectConfig
 
-    [server]
-    host = "localhost"
-    port = 5000
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title='Test project with a host "localhost" and a port 5000',
+            server_host="localhost",
+            server_port=5000,
+        )
+        return config
 <<<
 
 [[/SECTION]]
@@ -3874,15 +3960,20 @@ TITLE: Search and filtering
 [TEXT]
 MID: de584af947a445e5bcc782bab6a93baf
 STATEMENT: >>>
-StrictDoc supports search and filtering of document content. However, this feature has not been extensively tested and is hidden behind a feature flag. To activate it, enable the corresponding setting in the ``strictdoc.toml`` configuration file:
+StrictDoc supports search and filtering of document content. However, this feature has not been extensively tested and is hidden behind a feature flag. To activate it, enable the corresponding setting in the ``strictdoc_config.py`` configuration file:
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "SEARCH"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "SEARCH"
+            ],
+        )
+        return config
 
 The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` commands.
 <<<
@@ -3962,16 +4053,21 @@ MID: 2fefc893de83432fa852886cc3a05fea
 STATEMENT: >>>
 The project statistics screen displays useful information about a documentation project as well as some requirements-based statistics.
 
-To activate the project statistics screen, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
+To activate the project statistics screen, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = "My project"
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "PROJECT_STATISTICS_SCREEN"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="My project",
+            project_features=[
+                "PROJECT_STATISTICS_SCREEN"
+            ],
+        )
+        return config
 
 This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.
 <<<
@@ -3985,14 +4081,19 @@ MID: 7cf15de69efc46a5abe6b6fc786e4b71
 STATEMENT: >>>
 StrictDoc allows users to write their own custom statistics generators.
 
-To connect a custom generator, add it to the ``strictdoc.toml`` configuration file as follows:
+To connect a custom generator, add it to the ``strictdoc_config.py`` configuration file as follows:
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = "StrictDoc Documentation"
+    from strictdoc.core.project_config import ProjectConfig
 
-    statistics_generator = "custom_statistics.CustomStatisticsGenerator"
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="StrictDoc Documentation",
+            statistics_generator="custom_statistics.CustomStatisticsGenerator",
+        )
+        return config
 
 The path specified by the config variable must be a valid path to a Python file, and the last component must reference an existing statistics generator class. StrictDoc automatically adds the document input path to its Python search paths, so the specified path must be discoverable relative to the location where the SDoc documents are read.
 
@@ -4018,14 +4119,19 @@ The Document Tree Map screen, or simply Tree Map, provides a visualization of th
 
 The feature can be activated as follows:
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = "My project"
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "TREE_MAP_SCREEN"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="My project",
+            project_features=[
+                "TREE_MAP_SCREEN"
+            ],
+        )
+        return config
 
 The feature has experimental status because it has only been tested against StrictDoc's own documentation. Several questions still remain to be answered:
 
@@ -4046,16 +4152,21 @@ MID: 131a7392a33f4225a62539dd173a920b
 STATEMENT: >>>
 The "Git Diff/Changelog" experimental feature in StrictDoc allows users to track changes between different versions of requirement documents. This feature provides a visual diff by highlighting what content has been added, removed, or modified within the SDoc files, using a style similar to Git diffs. It helps in maintaining version history, ensuring that changes are traceable, and supports auditing by showing how requirements evolve over time.
 
-To activate the Diff/Changelog screen, add/edit the strictdoc.toml config file in the root of your repository with documentation content.
+To activate the Diff/Changelog screen, add/edit the strictdoc_config.py config file in the root of your repository with documentation content.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = "My project"
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "DIFF"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="My project",
+            project_features=[
+                "DIFF"
+            ],
+        )
+        return config
 
 With the feature enabled, the editable web server interface displays the corresponding Diff/Changelog screen, where users can select Git revisions to compare for change tracking.
 
@@ -4098,9 +4209,9 @@ There are three methods of PDF printing available:
 
 The first two methods require the Chrome browser and chromedriver to be installed on the user's computer.
 StrictDoc downloads chromedriver on demand by default, or uses a pre installed executable if
-``strictdoc export --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc.toml`` option is given.
+``strictdoc export --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc_config.py`` option is given.
 
-When printing from the command line (the first method), you can use the ``--generate-bundle-document`` option to have StrictDoc generate a single PDF document that bundles together all individual PDFs. The bundle document gets the document version/date information from Git by default which can be controlled in the ``strictdoc.toml`` config (the default values are shown):
+When printing from the command line (the first method), you can use the ``--generate-bundle-document`` option to have StrictDoc generate a single PDF document that bundles together all individual PDFs. The bundle document gets the document version/date information from Git by default which can be controlled in the ``strictdoc_config.py`` config (the default values are shown):
 
 .. code:: text
 
@@ -4111,16 +4222,21 @@ To disable bundle document version/date automatic generation, set ``bundle_docum
 
 The third method, the PDF screen, presents a version of the document that is optimized for browser printing. This approach allows for the creation of neatly formatted PDF documents or directly printed documents. Although this method is compatible with any browser, Chrome is recommended for the best printing results. Unlike Firefox and Safari, Chrome maintains the document's internal hyperlinks in the printed PDF.
 
-To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
+To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = "My project"
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "HTML2PDF"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="My project",
+            project_features=[
+                "HTML2PDF"
+            ],
+        )
+        return config
 
 This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to how the SDoc HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked out.
 <<<
@@ -4184,16 +4300,21 @@ The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as fol
         </pre>
     <<<
 
-To activate Mermaid, add/edit the ``strictdoc.toml`` config file in the root of your repository with documentation content.
+To activate Mermaid, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    title = "My project"
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "MERMAID"
-    ]
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="My project",
+            project_features=[
+                "MERMAID"
+            ],
+        )
+        return config
 
 This feature is not enabled by default because it has not received enough testing.
 <<<
@@ -4211,20 +4332,24 @@ StrictDoc can read test report files from several testing tools as SDoc content 
 
 The project must have the following features activated for StrictDoc to provide language-aware parsing of C/C++, Python or Robot Framework. It is recommended to provide a dedicated folder for test report XML files to not mix human-written SDoc content and auto-generated test reports.
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-      "SOURCE_FILE_LANGUAGE_PARSERS",
-    ]
 
-    include_doc_paths = [
-      "/docs/**",
-      # A dedicated folder where StrictDoc could find JUnit XML.
-      "/reports/**",
-    ]
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+                "SOURCE_FILE_LANGUAGE_PARSERS",
+            ],
+            include_doc_paths=[
+                "/docs/**",
+                # A dedicated folder where StrictDoc could find JUnit XML.
+                "/reports/**",
+            ],
+        )
+        return config
 <<<
 
 [[SECTION]]
@@ -4272,18 +4397,22 @@ MID: fab24f53f02f46e7a4cb49e333dfdc54
 STATEMENT: >>>
 Specifically for LLVM Integrated Tester-produced JUnit XML, an extra config option must be provided because its output XML does not contain precise information about the test root folder.
 
-.. code:: toml
+.. code:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-      "SOURCE_FILE_LANGUAGE_PARSERS",
-    ]
 
-    test_report_root_dict = [
-      { "reports/tests_integration.lit.junit.xml" = "tests/integration" },
-    ]
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+                "SOURCE_FILE_LANGUAGE_PARSERS",
+            ],
+            test_report_root_dict={
+                "reports/tests_integration.lit.junit.xml": "tests/integration",
+            },
+        )
+        return config
 
 In this example, the expectation is that a user has generated a JUnit XML with LLVM LIT and the output XML is at ``reports/tests_integration.lit.junit.xml``. The config line tells StrictDoc that this JUnit XML was produced by LIT from the ``tests/integration`` root folder.
 <<<
@@ -4588,10 +4717,16 @@ Examples of a sed command for Linux and macOS:
 
 StrictDoc can automatically migrate SDoc files if the project configuration option ``section_behavior`` is set as follows:
 
-.. code:: toml
+.. code:: python
 
-    [project]
-    section_behavior = "[[SECTION]]"
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            section_behavior="[[SECTION]]",
+        )
+        return config
 
 With this option enabled, StrictDoc's ``export`` command will convert all ``[SECTION]`` nodes to ``[[SECTION]]`` when writing SDoc files.
 

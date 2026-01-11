@@ -46,6 +46,20 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 6456cd05251c465ca4fa48ed378b29a7
+TITLE: 0.16.2 (2026-01-11)
+
+[TEXT]
+MID: e3772c3016f448b0a191948b1aa6aed8
+STATEMENT: >>>
+This small release introduces a deprecation of the ``strictdoc.toml``, TOML-based config file, in favor of the new ``strictdoc_config.py`` Python-based config. From now on, a deprecation message will be printed if a user project still uses the TOML file, with a suggestion to migrate to the Python config. The user guide has been updated accordingly to contain the Python config examples.
+
+This release also contains fixes for several issues related to the new .gitignore-based exclude filters, grammar aliases, and relative path resolution.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 91ec1cc14745499c9723930b9739c7d6
 TITLE: 0.16.1 (2026-01-05)
 

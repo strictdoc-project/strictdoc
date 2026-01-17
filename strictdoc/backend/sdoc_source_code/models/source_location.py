@@ -14,3 +14,12 @@ class ByteRange:
             start=node.start_byte,
             end=node.end_byte,
         )
+
+    @classmethod
+    def create_from_ts_nodes(
+        cls, first_node: Node, last_node: Node
+    ) -> "ByteRange":
+        return cls(
+            start=first_node.start_byte,
+            end=last_node.end_byte,
+        )

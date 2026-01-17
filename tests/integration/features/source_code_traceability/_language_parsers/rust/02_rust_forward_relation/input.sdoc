@@ -1,0 +1,38 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-FWD-RELATIONS
+TITLE: Forward relations
+STATEMENT: Test forward relations
+RELATIONS:
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: forward_relations::foo_module
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: forward_relations::foo_module::foo
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: forward_relations::foo_module::foo::bar
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: forward_relations::foo_module::foo::bar::BAR_CONST
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: forward_relations::FooTuple
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: forward_relations::FooUnion
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: forward_relations::FooTrait
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: <forward_relations::FooTuple as forward_relations::foo_module::FooTrait>::foo
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: forward_relations::FOO_CONST
+- TYPE: File
+  VALUE: forward_relations.rs
+  FUNCTION: forward_relations::FooEnum

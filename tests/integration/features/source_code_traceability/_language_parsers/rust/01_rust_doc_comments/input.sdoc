@@ -1,0 +1,32 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-INNER-LINE-DOC
+TITLE: Inner line doc comments
+STATEMENT: Test inner line doc comments
+
+[REQUIREMENT]
+UID: REQ-INNER-BLOCK-DOC
+TITLE: Inner block doc comments
+STATEMENT: Test inner block doc comments
+
+[REQUIREMENT]
+UID: REQ-INNER-DOC-ATTR
+TITLE: Inner doc attributes
+STATEMENT: Test inner doc attributes
+
+[REQUIREMENT]
+UID: REQ-OUTER-LINE-DOC
+TITLE: Outer line doc comments
+STATEMENT: Test outer line doc comments
+
+[REQUIREMENT]
+UID: REQ-OUTER-BLOCK-DOC
+TITLE: Outer block doc comments
+STATEMENT: Test outer block doc comments
+
+[REQUIREMENT]
+UID: REQ-OUTER-DOC-ATTR
+TITLE: Outer doc attributes
+STATEMENT: Test outer doc attributes

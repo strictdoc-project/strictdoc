@@ -39,14 +39,6 @@ def run_strictdoc_server(
     print_warning_message()
 
     with ExitStack() as stack:
-        if server_config.output_path is None:
-            server_config.output_path = stack.enter_context(
-                tempfile.TemporaryDirectory()
-            )
-
-        project_config.integrate_server_config(server_config)
-        project_config.validate_and_finalize()
-
         reload_config = UvicornReloadConfig.create(
             project_config, server_config
         )

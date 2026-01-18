@@ -29,11 +29,8 @@ def project_config():
         port=8001,
     )
     project_config: ProjectConfig = (
-        ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=PATH_TO_CONFIG,
-        )
+        ProjectConfigLoader.load_using_server_config(server_config)
     )
-    project_config.integrate_server_config(server_config)
     return project_config
 
 

@@ -15,6 +15,7 @@ import signal
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 from contextlib import ExitStack, closing
 from queue import Empty, Queue
@@ -159,17 +160,19 @@ class SDocTestServer:
             raise reason_exception from None
 
     def run(self):
-        strictdoc_args, strictdoc_env = self._get_strictdoc_command()
-        self.log_file_out = open(  # pylint: disable=consider-using-with
-            self.path_to_out_log, "wb"
-        )
-        self.log_file_err = open(  # pylint: disable=consider-using-with
-            self.path_to_err_log, "wb"
-        )
+        if self.output_path is None:
+            self.output_path = self.exit_stack.enter_context(
+                tempfile.TemporaryDirectory()
+            )
+
+        self.log_file_out = open(self.path_to_out_log, "wb")
+        self.log_file_err = open(self.path_to_err_log, "wb")
         self.exit_stack.enter_context(self.log_file_out)
         self.exit_stack.enter_context(self.log_file_err)
 
-        process = subprocess.Popen(  # pylint: disable=consider-using-with
+        strictdoc_args, strictdoc_env = self._get_strictdoc_command()
+
+        process = subprocess.Popen(
             strictdoc_args,
             stdout=self.log_file_out.fileno(),
             stderr=subprocess.PIPE,

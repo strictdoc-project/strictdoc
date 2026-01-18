@@ -18,6 +18,9 @@ from strictdoc import __version__, environment
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.commands.export_config import ExportCommandConfig
+from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
+from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
+from strictdoc.commands.manage_autouid_config import ManageAutoUIDCommandConfig
 from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.plugin import StrictDocPlugin
@@ -408,17 +411,21 @@ class ProjectConfig:
             source_root_path = source_root_path.rstrip("/")
             self.source_root_path = source_root_path
 
-        if (output_dir_ := server_config.output_path) is not None:
-            self.output_dir = output_dir_
-            self.export_output_html_root = os.path.join(output_dir_, "html")
-            # If a custom cache folder is not specified in the config, adjust the
-            # cache folder to be located in the output folder.
-            if self.dir_for_sdoc_cache.startswith(
-                ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE
-            ):
-                self.dir_for_sdoc_cache = os.path.join(
-                    output_dir_, "_cache", __version__
-                )
+        output_dir = (
+            server_config.output_path or self.output_dir or "./output/server"
+        )
+
+        self.output_dir = output_dir
+        self.export_output_html_root = os.path.join(output_dir, "html")
+
+        # If a custom cache folder is not specified in the config, adjust the
+        # cache folder to be located in the output folder.
+        if self.dir_for_sdoc_cache.startswith(
+            ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE
+        ):
+            self.dir_for_sdoc_cache = os.path.join(
+                output_dir, "_cache", __version__
+            )
 
         self.export_formats = ["html"]
         self.generate_bundle_document = False
@@ -717,6 +724,101 @@ class ProjectConfig:
 
 
 class ProjectConfigLoader:
+    @classmethod
+    def load(
+        cls, input_path: str, output_dir: Optional[str] = None
+    ) -> ProjectConfig:
+        assert os.path.exists(input_path), input_path
+        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+            path_to_config=input_path
+        )
+        project_config.input_paths = [input_path]
+        if output_dir is not None:
+            project_config.output_dir = output_dir
+        project_config.validate_and_finalize()
+        return project_config
+
+    @classmethod
+    def load_using_export_config(
+        cls,
+        export_config: ExportCommandConfig,
+    ) -> ProjectConfig:
+        path_to_config = export_config.get_path_to_config()
+        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+            path_to_config=path_to_config
+        )
+        project_config.integrate_export_config(export_config)
+        project_config.validate_and_finalize()
+        return project_config
+
+    @classmethod
+    def load_using_server_config(
+        cls,
+        server_config: ServerCommandConfig,
+    ) -> ProjectConfig:
+        path_to_config = server_config.get_path_to_config()
+        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+            path_to_config=path_to_config
+        )
+        project_config.integrate_server_config(server_config)
+        project_config.validate_and_finalize()
+        return project_config
+
+    @classmethod
+    def load_using_import_excel_config(
+        cls,
+        _: ImportExcelCommandConfig,
+    ) -> ProjectConfig:
+        path_to_config = os.getcwd()
+        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+            path_to_config=path_to_config
+        )
+        project_config.input_paths = [path_to_config]
+        project_config.validate_and_finalize()
+        return project_config
+
+    @classmethod
+    def load_using_import_reqif_config(
+        cls,
+        _: ImportReqIFCommandConfig,
+    ) -> ProjectConfig:
+        path_to_config = os.getcwd()
+        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+            path_to_config=path_to_config
+        )
+        project_config.input_paths = [path_to_config]
+        project_config.validate_and_finalize()
+        return project_config
+
+    @classmethod
+    def load_using_manage_autouid_config(
+        cls,
+        manage_autouid_config: ManageAutoUIDCommandConfig,
+    ) -> ProjectConfig:
+        path_to_config = manage_autouid_config.get_path_to_config()
+
+        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+            path_to_config=path_to_config
+        )
+
+        # FIXME: Encapsulate all this in project_config.integrate_manage_autouid_config(),
+        #        following the example of integrate_export_config().
+        project_config.input_paths = [manage_autouid_config.input_path]
+        project_config.source_root_path = str(
+            Path(manage_autouid_config.input_path).resolve()
+        )
+        project_config.auto_uid_mode = True
+        project_config.autouuid_include_sections = (
+            manage_autouid_config.include_sections
+        )
+
+        # FIXME: Traceability Index is coupled with HTML output.
+        project_config.export_output_html_root = "NOT_RELEVANT"
+
+        project_config.validate_and_finalize()
+
+        return project_config
+
     @staticmethod
     def load_from_path_or_get_default(
         *,

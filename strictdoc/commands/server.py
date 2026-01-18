@@ -52,8 +52,8 @@ class ServerCommand(BaseCommand):
             server_config.validate()
         except CLIValidationError as exception_:
             raise exception_
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=server_config.get_path_to_config(),
+        project_config = ProjectConfigLoader.load_using_server_config(
+            server_config
         )
         run_strictdoc_server(
             server_config=server_config, project_config=project_config

@@ -1,5 +1,4 @@
 import argparse
-import os
 
 from strictdoc.cli.base_command import BaseCommand
 from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
@@ -50,9 +49,8 @@ class ImportExcelCommand(BaseCommand):
         )
 
     def run(self, parallelizer: Parallelizer) -> None:  # noqa: ARG002
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=os.getcwd(),
+        project_config = ProjectConfigLoader.load_using_import_excel_config(
+            self.config
         )
-
         import_action = ImportAction()
         import_action.do_import(self.config, project_config)

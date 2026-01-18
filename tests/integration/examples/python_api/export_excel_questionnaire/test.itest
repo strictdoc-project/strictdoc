@@ -1,6 +1,6 @@
 RUN: cd %S
 
-RUN: python %S/export_questionnaires.py export . --output-dir=%T/
+RUN: python %S/export_questionnaires.py . --output-dir=%T/
 
 RUN: %check_exists --file "%T/tsrm_questionnaires.xlsx"
 

@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 from typing import Optional
@@ -8,11 +9,6 @@ from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.cli.cli_arg_parser import (
-    SDocArgsParser,
-)
-from strictdoc.cli.main import COMMAND_REGISTRY
-from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
@@ -120,14 +116,32 @@ class ExportQuestionnaires:
 
 
 if __name__ == "__main__":
-    parser = SDocArgsParser.create_sdoc_args_parser(COMMAND_REGISTRY)
-    project_config: ProjectConfig
-
-    export_config: ExportCommandConfig = ExportCommandConfig(**vars(parser.args))
-    project_config = ProjectConfigLoader.load_from_path_or_get_default(
-        path_to_config=export_config.get_path_to_config()
+    parser = argparse.ArgumentParser(
+        description="Export questionnaires from SDoc documents."
     )
-    project_config.integrate_export_config(export_config)
+
+    parser.add_argument(
+        "input_path",
+        type=str,
+        help="Path to the input path."
+    )
+
+    # Optional argument
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=None,
+        help="Optional directory to save output."
+    )
+
+    args = parser.parse_args()
+
+    input_path = args.input_path
+    output_dir = args.output_dir
+
+    project_config: ProjectConfig = ProjectConfigLoader.load(
+        input_path=input_path, output_dir=output_dir
+    )
 
     parallelizer = Parallelizer.create(False)
 

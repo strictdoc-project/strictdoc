@@ -193,12 +193,9 @@ class ExportCommand(BaseCommand):
             export_config.validate()
         except CLIValidationError as exception_:
             raise exception_
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=export_config.get_path_to_config(),
+        project_config = ProjectConfigLoader.load_using_export_config(
+            export_config
         )
-        project_config.integrate_export_config(export_config)
-        project_config.validate_and_finalize()
-
         parallelization_value = (
             "Disabled" if export_config.no_parallelization else "Enabled"
         )

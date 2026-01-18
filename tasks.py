@@ -114,7 +114,6 @@ def server(context, input_path=".", config=None):
                 --debug
                 server {input_path} {config_argument}
                     --host 127.0.0.1
-                    --output-path ./output/server
                     --reload
         """,
     )

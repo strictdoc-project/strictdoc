@@ -1,6 +1,5 @@
 import argparse
 import sys
-from pathlib import Path
 from typing import Dict, Optional
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
@@ -95,24 +94,9 @@ the document's PREFIX (if provided or "REQ-" by default).
         except CLIValidationError as exception_:
             raise exception_
 
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
-            path_to_config=manage_config.get_path_to_config(),
+        project_config = ProjectConfigLoader.load_using_manage_autouid_config(
+            manage_config
         )
-
-        # FIXME: Encapsulate all this in project_config.integrate_manage_autouid_config(),
-        #        following the example of integrate_export_config().
-        project_config.input_paths = [manage_config.input_path]
-        project_config.source_root_path = str(
-            Path(manage_config.input_path).resolve()
-        )
-        project_config.auto_uid_mode = True
-        project_config.autouuid_include_sections = (
-            manage_config.include_sections
-        )
-        project_config.validate_and_finalize()
-
-        # FIXME: Traceability Index is coupled with HTML output.
-        project_config.export_output_html_root = "NOT_RELEVANT"
 
         try:
             traceability_index: TraceabilityIndex = (

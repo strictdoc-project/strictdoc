@@ -46,6 +46,20 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 4e92cf2f85144c008bd0d5075c97fe9a
+TITLE: 0.16.3 (2026-01-18)
+
+[TEXT]
+MID: 122e1ee72197400f9d0e6ce34377a55b
+STATEMENT: >>>
+This small release improves the Python API used to write custom scripts based on StrictDoc classes. It fixes an issue reported by a user where calling the Python configuration API without `validate_and_finalize()` caused undefined behavior.
+
+The change reduces the creation of ProjectConfig to a single function call, which lowers the risk of incorrect usage and confusion.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 6456cd05251c465ca4fa48ed378b29a7
 TITLE: 0.16.2 (2026-01-11)
 

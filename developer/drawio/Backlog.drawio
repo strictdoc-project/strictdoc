@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="2">
   <diagram id="P9gQJe-g11wjnl4rl_ec" name="Backlog — 2026">
-    <mxGraphModel dx="3486" dy="-537" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="3267" dy="-537" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -211,7 +211,7 @@
         <mxCell id="A6TBCRVBIh-bMebSgLXN-1" value="Parse Ada" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-60" vertex="1">
           <mxGeometry x="20" y="160" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="WPKMsA5IL_EO0J-wpA1P-9" value="Parse Gherkin" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" vertex="1" parent="xBUwhWlFWRuDQ3vYKA49-60">
+        <mxCell id="WPKMsA5IL_EO0J-wpA1P-9" value="Parse Gherkin" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-60" vertex="1">
           <mxGeometry x="20" y="220" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-62" value="StrictDoc quality work" style="swimlane;" parent="my6LpwKuQYxvOHTBM5B0-1" vertex="1">
@@ -223,19 +223,19 @@
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-68" value="&lt;font color=&quot;#000000&quot;&gt;Approach for testing design items&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-62" vertex="1">
           <mxGeometry x="20" y="42.5" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="cHnssvc3abWM5IgfJ5em-2" value="&lt;font color=&quot;#000000&quot;&gt;Automate release workflow&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" vertex="1" parent="xBUwhWlFWRuDQ3vYKA49-62">
+        <mxCell id="cHnssvc3abWM5IgfJ5em-2" value="&lt;font color=&quot;#000000&quot;&gt;Automate release workflow&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-62" vertex="1">
           <mxGeometry x="20" y="162.5" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="cHnssvc3abWM5IgfJ5em-3" value="&lt;font color=&quot;#000000&quot;&gt;Custom user commands/generators&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" vertex="1" parent="xBUwhWlFWRuDQ3vYKA49-62">
+        <mxCell id="cHnssvc3abWM5IgfJ5em-3" value="&lt;font color=&quot;#000000&quot;&gt;Custom user commands/generators&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-62" vertex="1">
           <mxGeometry x="-320" y="42.5" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="WPKMsA5IL_EO0J-wpA1P-1" value="&lt;font color=&quot;#000000&quot;&gt;Migrate to uv, keep or remove Tox&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" vertex="1" parent="xBUwhWlFWRuDQ3vYKA49-62">
+        <mxCell id="WPKMsA5IL_EO0J-wpA1P-1" value="&lt;font color=&quot;#000000&quot;&gt;Migrate to uv, keep or remove Tox&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-62" vertex="1">
           <mxGeometry x="20" y="222.5" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="WPKMsA5IL_EO0J-wpA1P-10" value="&lt;font&gt;&lt;font color=&quot;#000000&quot;&gt;Inheritance for grammar elements &lt;/font&gt;&lt;a style=&quot;&quot; href=&quot;https://github.com/strictdoc-project/strictdoc/issues/2300&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;#2300&lt;/font&gt;&lt;/a&gt;&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" vertex="1" parent="xBUwhWlFWRuDQ3vYKA49-62">
+        <mxCell id="WPKMsA5IL_EO0J-wpA1P-10" value="&lt;font&gt;&lt;font color=&quot;#000000&quot;&gt;Inheritance for grammar elements &lt;/font&gt;&lt;a style=&quot;&quot; href=&quot;https://github.com/strictdoc-project/strictdoc/issues/2300&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;#2300&lt;/font&gt;&lt;/a&gt;&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-62" vertex="1">
           <mxGeometry x="-320" y="102.5" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="WPKMsA5IL_EO0J-wpA1P-11" value="&lt;font&gt;&lt;font color=&quot;#000000&quot;&gt;Feature toggle, product line elements, variation management &lt;/font&gt;&lt;a style=&quot;&quot; href=&quot;https://github.com/strictdoc-project/strictdoc/issues/2354&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;#2354&lt;/font&gt;&lt;/a&gt;&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" vertex="1" parent="xBUwhWlFWRuDQ3vYKA49-62">
+        <mxCell id="WPKMsA5IL_EO0J-wpA1P-11" value="&lt;font&gt;&lt;font color=&quot;#000000&quot;&gt;Feature toggle, product line elements, variation management &lt;/font&gt;&lt;a style=&quot;&quot; href=&quot;https://github.com/strictdoc-project/strictdoc/issues/2354&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;#2354&lt;/font&gt;&lt;/a&gt;&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-62" vertex="1">
           <mxGeometry x="-320" y="162.5" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="WxPphbh9xw_WkCNFaVKk-1" value="Other" style="swimlane;" parent="my6LpwKuQYxvOHTBM5B0-1" vertex="1">

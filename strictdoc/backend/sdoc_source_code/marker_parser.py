@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 from lark import ParseTree, Token, Tree
 
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.comment_parser.marker_lexer import (
     MarkerLexer,
 )
@@ -33,9 +34,11 @@ class MarkerParser:
         line_end: int,
         comment_line_start: int,
         comment_byte_range: Optional[ByteRange],
+        filename: Optional[str] = None,
         entity_name: Optional[str] = None,
         col_offset: int = 0,
         custom_tags: Optional[set[str]] = None,
+        default_scope: Optional[str] = None,
     ) -> SourceNode:
         """
         Parse relation markers from source file comments.
@@ -49,6 +52,16 @@ class MarkerParser:
         also be different if the comment is part of a Python or C function in
         which case the comment_line_start will be several lines below the actual
         start of the range.
+
+        filename should be given if input_string comes from a static source file.
+        It will be used to create more helpful parsing error messages.
+
+        default_scope should be provided if the caller's language-aware parser
+        can infer the scope from the semantic comment position. Think of Rust doc
+        comments for example. If given, users are allowed to omit the scope argument
+        in a relation marker. A user provided scope argument always takes preference.
+        If neither default nor a user provided value is available,
+        StrictDocSemanticError will be raised.
         """
 
         node_fields: Dict[str, str] = {}
@@ -73,8 +86,10 @@ class MarkerParser:
                     line_start,
                     line_end,
                     comment_line_start,
+                    filename,
                     entity_name,
                     col_offset,
+                    default_scope,
                 )
                 source_node.markers.extend(relation_markers)
 
@@ -102,8 +117,10 @@ class MarkerParser:
         line_start: int,
         line_end: int,
         comment_line_start: int,
+        filename: Optional[str] = None,
         entity_name: Optional[str] = None,
         col_offset: int = 0,
+        default_scope: Optional[str] = None,
     ) -> List[Union[LanguageItemMarker, RangeMarker, LineMarker]]:
         markers: List[Union[LanguageItemMarker, RangeMarker, LineMarker]] = []
 
@@ -122,10 +139,12 @@ class MarkerParser:
                 raise NotImplementedError
 
         assert len(relation_uid_elements) > 0
-        assert relation_scope_element is not None
 
-        assert isinstance(relation_scope_element.children[0], Token)
-        relation_scope = relation_scope_element.children[0].value
+        if relation_scope_element is not None:
+            assert isinstance(relation_scope_element.children[0], Token)
+            relation_scope = relation_scope_element.children[0].value
+        else:
+            relation_scope = default_scope
 
         relation_role = None
         if relation_role_element is not None:
@@ -210,6 +229,18 @@ class MarkerParser:
                 comment_line_start + element_.meta.end_line
             )
             markers.append(line_marker)
+        elif relation_scope is None:
+            reqs = ",".join(sorted(used_uids))
+            raise StrictDocSemanticError(
+                f"@relation marker for requirements {reqs} misses scope argument.",
+                hint="Scope can only be omitted if supported by language, as e.g. with Rust doc comments.",
+                example=(
+                    "Add a scope argument. Example:\n"
+                    f"@relation({reqs}, scope=function)"
+                ),
+                line=comment_line_start + element_.meta.line - 1,
+                filename=filename,
+            )
         else:
             raise NotImplementedError
 

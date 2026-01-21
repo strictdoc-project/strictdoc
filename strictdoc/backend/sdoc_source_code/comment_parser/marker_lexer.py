@@ -32,7 +32,7 @@ _NORMAL_STRING_NO_MARKER_NO_NODE: /(?!\\s*##RELATION_MARKER_START)((?!\\s*(##CUS
 GRAMMAR = GrammarTemplate("""
 start: ##START
 
-relation_marker: _RELATION_MARKER_START _WS? (relation_node_uid _SEP _WS)+ "scope=" relation_scope ("," _WS "role=" relation_role)? _WS? _BRACE_RIGHT
+relation_marker: _RELATION_MARKER_START _WS? relation_node_uid (_SEP _WS relation_node_uid)* (_SEP _WS "scope=" relation_scope)? (_SEP _WS "role=" relation_role)? _WS? _BRACE_RIGHT
 
 _RELATION_MARKER_START: /##RELATION_MARKER_START/
 relation_node_uid: /##REGEX_REQ/

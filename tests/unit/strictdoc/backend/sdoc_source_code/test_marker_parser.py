@@ -2,6 +2,9 @@
 @relation(SDOC-SRS-34, SDOC-SRS-141, scope=file)
 """
 
+import pytest
+
+from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
 from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
     LanguageItemMarker,
@@ -303,6 +306,74 @@ def test_30_parser_dedents_field_lines():
         "( foo ) <---> ( bar )\n"
         "  ‾‾‾           ‾‾‾"
     )
+
+
+@pytest.mark.parametrize(
+    "input_string,default_scope,expected_type",
+    [
+        ("@relation(REQ-1)\n", "function", LanguageItemMarker),
+        ("@relation(REQ-1, scope=line)\n", None, LineMarker),
+        ("@relation(REQ-1, scope=line)\n", "function", LineMarker),
+    ],
+    ids=[
+        "default, no user value",
+        "no default, user value",
+        "override default with user value",
+    ],
+)
+def test_40_default_scope(input_string, default_scope, expected_type):
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=1,
+        comment_line_start=1,
+        comment_byte_range=None,
+        default_scope=default_scope,
+    )
+    assert isinstance(source_node.markers[0], expected_type)
+
+
+def test_41_omitted_scope_with_role():
+    input_string = "@relation(REQ-1, role=implementation)\n"
+    source_node = MarkerParser.parse(
+        input_string=input_string,
+        line_start=1,
+        line_end=1,
+        comment_line_start=1,
+        comment_byte_range=None,
+        default_scope="function",
+    )
+    assert isinstance(source_node.markers[0], LanguageItemMarker)
+    assert source_node.markers[0].role == "implementation"
+
+
+def test_42_error_on_missing_scope():
+    input_string = "some comment\n@relation(REQ-1)\n"
+
+    excinfo: pytest.ExceptionInfo
+    with pytest.raises(StrictDocSemanticError) as excinfo:
+        MarkerParser.parse(
+            input_string=input_string,
+            line_start=1,
+            line_end=1,
+            comment_line_start=10,
+            comment_byte_range=None,
+            filename="main.py",
+        )
+    assert (
+        excinfo.value.title
+        == "@relation marker for requirements REQ-1 misses scope argument."
+    )
+    assert (
+        excinfo.value.hint
+        == "Scope can only be omitted if supported by language, as e.g. with Rust doc comments."
+    )
+    assert (
+        excinfo.value.example
+        == "Add a scope argument. Example:\n@relation(REQ-1, scope=function)"
+    )
+    assert excinfo.value.file_path == "main.py"
+    assert excinfo.value.line == 11
 
 
 def test_80_linux_spdx_example():

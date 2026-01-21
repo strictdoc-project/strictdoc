@@ -113,6 +113,7 @@ class SourceFileTraceabilityReader_Python:
                             comment_byte_range=ByteRange.create_from_ts_node(
                                 string_content
                             ),
+                            filename=parse_context.filename,
                         )
                         for marker_ in source_node.markers:
                             if isinstance(marker_, LanguageItemMarker) and (
@@ -175,6 +176,7 @@ class SourceFileTraceabilityReader_Python:
                                 comment_byte_range=ByteRange.create_from_ts_node(
                                     string_content
                                 ),
+                                filename=parse_context.filename,
                                 entity_name=function_name,
                             )
                             for marker_ in source_node.markers:
@@ -256,6 +258,7 @@ class SourceFileTraceabilityReader_Python:
                     comment_byte_range=ByteRange(
                         node_.start_byte, last_comment.end_byte
                     ),
+                    filename=parse_context.filename,
                     entity_name=None,
                 )
                 for marker_ in source_node.markers:

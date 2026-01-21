@@ -89,6 +89,7 @@ class SourceFileTraceabilityReader_C:
                             comment_byte_range=ByteRange.create_from_ts_node(
                                 comment_node
                             ),
+                            filename=parse_context.filename,
                             custom_tags=self.custom_tags,
                         )
                         for marker_ in source_node.markers:
@@ -191,6 +192,7 @@ class SourceFileTraceabilityReader_C:
                         comment_byte_range=ByteRange.create_from_ts_node(
                             function_comment_node
                         ),
+                        filename=parse_context.filename,
                         entity_name=function_display_name,
                         custom_tags=self.custom_tags,
                     )
@@ -304,6 +306,7 @@ class SourceFileTraceabilityReader_C:
                         comment_byte_range=ByteRange.create_from_ts_node(
                             function_comment_node
                         ),
+                        filename=parse_context.filename,
                         entity_name=function_display_name,
                         custom_tags=self.custom_tags,
                     )
@@ -364,6 +367,7 @@ class SourceFileTraceabilityReader_C:
                     line_end=node_.end_point[0] + 1,
                     comment_line_start=node_.start_point[0] + 1,
                     comment_byte_range=ByteRange.create_from_ts_node(node_),
+                    filename=parse_context.filename,
                     custom_tags=None,
                 )
 

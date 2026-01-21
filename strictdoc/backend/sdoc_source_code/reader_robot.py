@@ -100,6 +100,7 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
                         line_end=token.lineno,
                         # FIXME: Byte range is currently not used for Robot framework.
                         comment_byte_range=None,
+                        filename=self.parse_context.filename,
                         comment_line_start=token.lineno,
                         entity_name=node.name,
                         col_offset=token.col_offset,
@@ -145,6 +146,7 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
                 line_end=node.lineno,
                 # FIXME: Byte range is currently not used for Robot framework.
                 comment_byte_range=None,
+                filename=self.parse_context.filename,
                 comment_line_start=node.lineno,
                 entity_name=None,
                 col_offset=token.col_offset,

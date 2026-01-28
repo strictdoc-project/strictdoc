@@ -97,6 +97,14 @@
     <script type="module">
       mermaid.initialize({ startOnLoad: true });
     </script>
+  {%- if view_object.is_running_on_server -%}
+    <script>
+      // Re-run mermaid after node updates (i.e. after saving)...
+      document.addEventListener("turbo:before-stream-render", () => {
+        requestAnimationFrame(() => mermaid.run());
+      });
+    </script>
+  {%- endif -%}
   {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}

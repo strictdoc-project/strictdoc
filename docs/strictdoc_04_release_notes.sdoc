@@ -46,6 +46,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 1111cf2f85144c008bd0d5075c972222
+TITLE: 0.16.4 (2026-01-28)
+
+[TEXT]
+MID: 55555ee72197400f9d0e6ce34377a55b
+STATEMENT: >>>
+This small release contains a single improvement that makes the StrictDoc web server re-render the Mermaid diagrams after they are edited and saved. Thanks to @scootermon for contributing the patch.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 4e92cf2f85144c008bd0d5075c97fe9a
 TITLE: 0.16.3 (2026-01-18)
 

@@ -1,11 +1,9 @@
 name: StrictDoc Python Package Release
 
-on: workflow_dispatch
-  # FIXME: Uncomment this when the right workflow is figured out.
-  # release:
-  #   types: [created]
-  # pull_request:
-  #   branches: [ "**" ]
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
 
 jobs:
   deploy:
@@ -26,10 +24,13 @@ jobs:
       run: |
         pip install -r requirements.bootstrap.txt
 
-    - name: Build and test locally
-      run: |
-        invoke release-local
+#    - name: Build and test locally
+#      run: |
+#        invoke release-local
 
     - name: Build and publish
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
-        invoke release --username ${{ secrets.PYPI_USERNAME }} --password ${{ secrets.PYPI_PASSWORD }}
+        invoke release

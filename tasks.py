@@ -907,19 +907,35 @@ def release(context, test_pypi=False, username=None, password=None):
     https://test.pypi.org/project/strictdoc/
     """
 
-    # When a username is provided, we also need password, and then we don't use
-    # tokens set up on a local machine.
-    assert username is None or password is not None
+    env_user = os.environ.get("TWINE_USERNAME")
+    env_pass = os.environ.get("TWINE_PASSWORD")
 
-    repository_argument_or_none = (
-        ""
-        if username
-        else (
-            "--repository strictdoc_test"
-            if test_pypi
-            else "--repository strictdoc_release"
-        )
+    assert not ((username or password) and (env_user or env_pass)), (
+        username,
+        password,
+        env_user,
+        env_pass,
     )
+    assert (username and password) or (env_user and env_pass), (
+        username,
+        password,
+        env_user,
+        env_pass,
+    )
+    if env_user:
+        assert env_user == "__token__"
+
+    repository_argument_or_none = ""
+    if username is not None and password is not None:
+        repository_argument_or_none = (
+            ""
+            if username
+            else (
+                "--repository strictdoc_test"
+                if test_pypi
+                else "--repository strictdoc_release"
+            )
+        )
     user_password = f"-u{username} -p{password}" if username is not None else ""
 
     run_invoke(

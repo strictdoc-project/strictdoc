@@ -1353,6 +1353,371 @@ Robot framework's markup has to be handled with a dedicated parser because of th
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: e18dcfcb9b99459d9c7f560f35d01ff8
+TITLE: Language-aware parsing of Rust source code
+
+[REQUIREMENT]
+MID: d83cab2dcd014d328b348acc37c6f4a6
+UID: SDOC-SRS-164
+TITLE: Auto-scoped relation markers in Rust docs
+STATEMENT: >>>
+If a StrictDoc relation marker is inside a `Rust doc comment`_, the marker scope shall be set to exact the item the Rust
+language defines as target of the containing doc comment. The :code:`@relation(scope=...)` parameter shall therefore
+be optional and shall be ignored if provided.
+
+.. code-block:: rust
+   :number-lines:
+
+   /// @relation(REQ-1)
+   impl Foo {
+
+       /// @relation(REQ-2)
+       fn foo() {
+       }
+   }
+
+In the given example, the first marker shall link REQ-1 to the :code:`impl Foo` implementation,
+highlighting lines 1 to 7. The second marker shall link REQ-2 to the :code:`fn foo()` function,
+highlighting lines 4 to 6.
+
+.. _Rust doc comment: https://doc.rust-lang.org/rust-by-example/meta/doc.html#doc-comments
+<<<
+COMMENT: >>>
+Note that doc comments are syntactic sugar for `doc attribute`_ s, which shall also be supported.
+To figure detailed doc comment rules from the rust-lang specification it's sometimes useful
+to check for general attribute rules, if explicit doc comment rules are missing.
+
+.. _doc attribute: https://doc.rust-lang.org/rustdoc/write-documentation/the-doc-attribute.html
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-34
+- TYPE: Parent
+  VALUE: SDOC-SRS-137
+
+[REQUIREMENT]
+MID: 91c7b9fd9c514327bb012639cdf1515b
+UID: SDOC-SRS-165
+TITLE: Inner doc attributes
+STATEMENT: >>>
+StrictDoc shall support relation markers in inner_ `doc attribute`_ s.
+
+.. _inner: https://doc.rust-lang.org/reference/attributes.html#r-attributes.inner
+.. _doc attribute: https://doc.rust-lang.org/rustdoc/write-documentation/the-doc-attribute.html#the-doc-attribute
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-164
+
+[REQUIREMENT]
+MID: 002bfab5383e4cb785049c4738651f43
+UID: SDOC-SRS-166
+TITLE: Inner line docs
+STATEMENT: >>>
+StrictDoc shall support auto-scoped relation relation markers in `inner line docs`_.
+
+.. _inner line docs: https://doc.rust-lang.org/reference/comments.html#grammar-INNER_LINE_DOC
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-164
+
+[REQUIREMENT]
+MID: d04b97d76cc848f982610035bf7d3dc2
+UID: SDOC-SRS-167
+TITLE: Inner block docs
+STATEMENT: >>>
+StrictDoc shall support auto-scoped relation relation markers in `inner block docs`_.
+
+.. _inner block docs: https://doc.rust-lang.org/reference/comments.html#grammar-INNER_BLOCK_DOC
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-164
+
+[REQUIREMENT]
+MID: 84b351267cfc4e16b3ff2c5db654e9f0
+UID: SDOC-SRS-168
+TITLE: Outer doc attributes
+STATEMENT: >>>
+StrictDoc shall support auto-scoped relation markers in outer_ `doc attribute`_ s.
+
+.. _outer: https://doc.rust-lang.org/reference/attributes.html#r-attributes.outer
+.. _doc attribute: https://doc.rust-lang.org/rustdoc/write-documentation/the-doc-attribute.html#the-doc-attribute
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-164
+
+[REQUIREMENT]
+MID: 171978da9f8f4f40b52fb7599caa67e6
+UID: SDOC-SRS-169
+TITLE: Outer line docs
+STATEMENT: >>>
+StrictDoc shall support auto-scoped relation markers in `outer line docs`_.
+
+.. _outer line docs: https://doc.rust-lang.org/reference/comments.html#grammar-OUTER_LINE_DOC
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-164
+
+[REQUIREMENT]
+MID: 1a8d558fbe244621818b6242be365638
+UID: SDOC-SRS-170
+TITLE: Outer block docs
+STATEMENT: >>>
+StrictDoc shall support auto-scoped relation markers in `outer block docs`_.
+
+.. _outer block docs: https://doc.rust-lang.org/reference/comments.html#railroad-OUTER_BLOCK_DOC
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-164
+
+[REQUIREMENT]
+MID: e1be1f38dd374f82abd9691d081f293b
+UID: SDOC-SRS-171
+TITLE: File, line and range markers
+STATEMENT: >>>
+StrictDoc shall point to lines and line ranges of Rust code by using file, line and range markers.
+These marker types shall be parsed from `regular line and block comments`_.
+
+Note: File markers may also result from the inner doc comments of the top-level module.
+
+.. _regular line and block comments: https://doc.rust-lang.org/rust-by-example/hello/comment.html#comments
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-139
+- TYPE: Parent
+  VALUE: SDOC-SRS-124
+- TYPE: Parent
+  VALUE: SDOC-SRS-138
+
+[REQUIREMENT]
+MID: b9b2e4d377db42f5b3fb7aeabaf3f72a
+UID: SDOC-SRS-172
+TITLE: Source nodes from doc comments
+STATEMENT: >>>
+If a Rust doc comments contains custom tags, and the containing Rust source file matches an entry in the
+source node configuration, StrictDoc shall create document nodes from the custom tags and automatically
+link the created node with the Rust item targeted by the doc comment.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-141
+
+[REQUIREMENT]
+MID: 9d7e371ad7a146e1968cd9bbb7a6790f
+UID: SDOC-SRS-173
+TITLE: Forward relations to Rust items
+STATEMENT: >>>
+StrictDoc shall support linking from a requirement in SDoc to a language item in Rust code by using a :code:`FILE`
+relation of type :code:`FUNCTION`. For example
+
+.. code-block:: strictdoc
+
+   [REQUIREMENT]
+   UID: REQ-1
+   RELATIONS:
+   - TYPE: File
+     VALUE: file.rs
+     FUNCTION: file::foo
+
+This shall work for all kinds of Rust items that have a `canonical path`_, including const, enum, fn, mod, static,
+struct, trait, type, union.
+
+.. _canonical path: https://doc.rust-lang.org/reference/paths.html#canonical-paths
+<<<
+
+[REQUIREMENT]
+MID: d01b2204fcb44882b991ca11ce567f52
+UID: SDOC-SRS-174
+TITLE: Forward relation by canonical path
+STATEMENT: >>>
+The identifier for forward relations shall be the `canonical path`_ as the rustc compiler would set it when invoked for
+a single file like
+
+.. code-block:: shell
+
+   rustc --crate-type rlib --emit=obj src/lib.rs
+
+Note: :code:`cargo build` usually result in a different canonical path, since it considers the file position relative to
+the crate root. Using a single file as root is a simplification, needed because StrictDoc is unaware of the Rust
+file and directory-based module hierarchy.
+
+.. _canonical path: https://doc.rust-lang.org/reference/paths.html#canonical-paths
+<<<
+COMMENT: >>>
+The canonical path of an item can be observed with :code:`objdump -t lib.o --demangle=rust`. For example, given this
+source file
+
+.. code-block:: rust
+   :number-lines:
+
+   pub mod foo {
+
+       pub trait Foo {
+           fn foo(&self) {}
+       }
+
+       pub struct Bar(i32);
+
+       impl Foo for Bar {
+           fn foo(&self) {}
+       }
+   }
+
+:code:`objdump` will show
+
+.. code-block:: shell
+
+   <lib::foo::Bar as lib::foo::Foo>::foo
+
+Alas, a forward relation would be
+
+.. code-block:: strictdoc
+
+   [REQUIREMENT]
+   UID: REQ-1
+   RELATIONS:
+   - TYPE: File
+     VALUE: file.rs
+     FUNCTION: <lib::foo::Bar as lib::foo::Foo>::foo
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-173
+
+[REQUIREMENT]
+MID: 04b5927294c34710995d3671040dd8ae
+UID: SDOC-SRS-175
+TITLE: Collapse doc comments
+STATEMENT: >>>
+Multiple scattered doc comments shall be collapsed as done by the rustdoc_ tool when using the collapse-docs option
+to determine the highlight range(s).
+
+For example, rustdoc would collapse alle these comments into the description of :code:`fn foo()`
+
+.. code-block:: rust
+   :number-lines:
+
+   /// Some
+   /// line
+
+   /// doc,
+
+   /**
+     * and some
+     * block dock,
+     */
+
+   #[doc = "and some"]
+
+   #[doc = "doc attr."]
+
+   fn foo() {
+   }
+
+In the given example, the StrictDoc highlight range for the relation marker shall be from line 1 to line 16.
+
+.. _rustdoc: https://github.com/rust-lang/rust/tree/main/src/tools/rustdoc
+<<<
+
+[REQUIREMENT]
+MID: e67e8258177847138112589e606c0413
+UID: SDOC-SRS-176
+TITLE: Rust marker descriptions
+STATEMENT: >>>
+StrictDoc should use the marker labels as rustdoc_ would set them in the description of a documented node.
+
+.. _rustdoc: https://doc.rust-lang.org/stable/rustdoc/
+<<<
+
+[REQUIREMENT]
+MID: 7bf3f26c335741398a50e9679a0d4c84
+UID: SDOC-SRS-177
+TITLE: Valid positions of doc comments
+STATEMENT: >>>
+StrictDoc shall find doc comments where the language allows_ them and ignore those in other positions.
+
+.. _allows: https://doc.rust-lang.org/reference/attributes.html#r-attributes.allowed-position
+<<<
+COMMENT: >>>
+Since doc comments are syntactic sugar for doc attributes, allowed position rules for attributes apply.
+<<<
+
+[REQUIREMENT]
+MID: 5e9645177af14db7b5fcaba0298a328b
+UID: SDOC-SRS-178
+TITLE: Inner doc comments for functions
+STATEMENT: >>>
+StrictDoc shall find inner doc comments in function blocks.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-177
+
+[REQUIREMENT]
+MID: b70a27cc49f54b0bb7e7956b055957a4
+UID: SDOC-SRS-179
+TITLE: Inner doc comments for modules
+STATEMENT: >>>
+StrictDoc shall find inner doc comments in module blocks.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-177
+
+[REQUIREMENT]
+MID: 012e605921954430ab6c11e245fb7378
+UID: SDOC-SRS-180
+TITLE: Inner doc comments for external blocks
+STATEMENT: >>>
+StrictDoc shall find inner doc comments in external blocks.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-177
+
+[REQUIREMENT]
+MID: 2d955dd847954556aa5a32018a7c41fd
+UID: SDOC-SRS-181
+TITLE: Inner doc comments for implementation blocks
+STATEMENT: >>>
+StrictDoc shall find inner doc comments in implementation blocks.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-177
+
+[REQUIREMENT]
+MID: ef8849024b78477496620eb1bf081900
+UID: SDOC-SRS-182
+TITLE: Allowed position for outer docs
+STATEMENT: >>>
+StrictDoc shall find outer doc comments in `allowed positions`_ as specified by the Rust language:
+
+- All item_ declarations
+- Most statements
+- Block expressions, but only when they are the outer expression of an
+  expression statement or the final expression of another block expression.
+- Enum variants, struct and union fields
+- Generic lifetime or type parameter
+- Expressions in limited situations
+- Function, closure and function pointer parameters
+
+.. _allowed positions: https://doc.rust-lang.org/reference/attributes.html#r-attributes.allowed-position
+.. _item: https://doc.rust-lang.org/reference/items.html#r-items.syntax
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-177
+
+[[/SECTION]]
+
 [REQUIREMENT]
 MID: bdeda4b89d82446281e2c7c2eae46708
 UID: SDOC-SRS-143

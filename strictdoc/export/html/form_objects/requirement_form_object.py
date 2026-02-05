@@ -200,6 +200,7 @@ class RequirementFormObject(ErrorObject):
         *,
         is_new: bool,
         element_type: str,
+        revision: int,
         requirement_mid: str,
         document_mid: str,
         context_document_mid: str,
@@ -212,8 +213,11 @@ class RequirementFormObject(ErrorObject):
     ) -> None:
         super().__init__()
         assert isinstance(element_type, str), element_type
+        assert isinstance(revision, int), revision
+
         self.is_new: bool = is_new
         self.element_type: str = element_type
+        self.revision: int = revision
         self.requirement_mid: str = requirement_mid
         self.document_mid: str = document_mid
         self.context_document_mid: str = context_document_mid
@@ -251,6 +255,7 @@ class RequirementFormObject(ErrorObject):
         context_document_mid = assert_cast(
             request_form_dict["context_document_mid"], str
         )
+        revision = assert_cast(request_form_dict["revision"], str)
         requirement_dict = assert_cast(request_form_dict["requirement"], dict)
 
         element_type = assert_cast(request_form_dict["element_type"], str)
@@ -322,6 +327,7 @@ class RequirementFormObject(ErrorObject):
         form_object = RequirementFormObject(
             is_new=is_new,
             element_type=element_type,
+            revision=int(revision),
             requirement_mid=requirement_mid,
             document_mid=document.reserved_mid,
             context_document_mid=context_document_mid,
@@ -376,6 +382,7 @@ class RequirementFormObject(ErrorObject):
         return RequirementFormObject(
             is_new=True,
             element_type=element_type,
+            revision=0,
             requirement_mid=new_requirement_mid,
             document_mid=document.reserved_mid,
             context_document_mid=context_document_mid,
@@ -390,6 +397,7 @@ class RequirementFormObject(ErrorObject):
     def create_from_requirement(
         *,
         requirement: SDocNode,
+        revision: int,
         context_document_mid: str,
     ) -> "RequirementFormObject":
         assert isinstance(requirement, SDocNode)
@@ -464,6 +472,7 @@ class RequirementFormObject(ErrorObject):
         return RequirementFormObject(
             is_new=False,
             element_type=requirement.node_type,
+            revision=revision,
             requirement_mid=requirement.reserved_mid,
             document_mid=document.reserved_mid,
             context_document_mid=context_document_mid,
@@ -481,6 +490,7 @@ class RequirementFormObject(ErrorObject):
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_requirement(
                 requirement=requirement,
+                revision=0,
                 context_document_mid=context_document_mid,
             )
         )
@@ -587,9 +597,20 @@ class RequirementFormObject(ErrorObject):
         traceability_index: TraceabilityIndex,
         context_document: SDocDocument,
         config: ProjectConfig,
+        existing_revision: int,
     ) -> None:
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(context_document, SDocDocument)
+
+        if self.revision != existing_revision:
+            self.add_error(
+                "_GENERAL_",
+                (
+                    "Cannot update the node because it has already been "
+                    "modified by another update action."
+                ),
+            )
+            return
 
         #
         # Ensure that at least one field must be non-empty.

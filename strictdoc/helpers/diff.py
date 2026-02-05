@@ -13,11 +13,11 @@ def similar(a: str, b: str) -> float:
     return SequenceMatcher(None, a, b).ratio()
 
 
-red: Callable[[str], str] = (
-    lambda text: f'<span class="lambda_red">{escape(text)}</span>'
+red: Callable[[str], str] = lambda text: (
+    f'<span class="lambda_red">{escape(text)}</span>'
 )
-green: Callable[[str], str] = (
-    lambda text: f'<span class="lambda_green">{escape(text)}</span>'
+green: Callable[[str], str] = lambda text: (
+    f'<span class="lambda_green">{escape(text)}</span>'
 )
 white: Callable[[str], str] = lambda text: f"<span>{escape(text)}</span>"
 

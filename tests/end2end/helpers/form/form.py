@@ -179,8 +179,9 @@ class Form:  # pylint: disable=invalid-name
         # Now wait for the length of the field to increase, this means
         # the autocomplete did happen.
         WebDriverWait(self.test_case.driver, timeout=3).until(
-            lambda _: len(element.text.lower().strip())
-            > len_before_autocomplete
+            lambda _: (
+                len(element.text.lower().strip()) > len_before_autocomplete
+            )
         )
 
     def do_append_command_and_use_autocomplete_result_again(
@@ -218,8 +219,9 @@ class Form:  # pylint: disable=invalid-name
         # Now wait for the length of the field to increase, this means
         # the autocomplete did happen.
         WebDriverWait(self.test_case.driver, timeout=3).until(
-            lambda _: len(element.text.lower().strip())
-            > len_before_autocomplete
+            lambda _: (
+                len(element.text.lower().strip()) > len_before_autocomplete
+            )
         )
 
     def do_use_first_autocomplete_result_mid(

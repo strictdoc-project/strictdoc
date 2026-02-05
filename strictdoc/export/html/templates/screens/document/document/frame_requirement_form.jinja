@@ -17,6 +17,7 @@
     <input type="hidden" id="reference_mid" name="reference_mid" value="{{ reference_mid }}" />
     <input type="hidden" id="whereto" name="whereto" value="{{ whereto }}" />
   {%- endif -%}
+  <input type="hidden" id="revision" name="revision" value="{{ form_object.revision }}" />
   <input type="hidden" id="requirement_mid" name="requirement_mid" value="{{ form_object.requirement_mid }}" />
   <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}" />
   <input type="hidden" id="context_document_mid" name="context_document_mid" value="{{ form_object.context_document_mid }}" />
@@ -92,7 +93,7 @@
   <sdoc-form-row>
     <a
       class="action_button"
-      href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}"
+      href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"
@@ -126,7 +127,7 @@
   <sdoc-form-row>
     <a
       class="action_button"
-      href="/actions/document/new_comment?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}"
+      href="/actions/document/new_comment?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"

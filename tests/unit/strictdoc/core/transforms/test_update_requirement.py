@@ -56,6 +56,7 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
     form_object: RequirementFormObject = (
         RequirementFormObject.create_from_requirement(
             requirement=requirement2,
+            revision=0,
             context_document_mid=document_1.reserved_mid,
         )
     )
@@ -132,6 +133,7 @@ def test_02_single_document_add_second_parent_relation_with_role():
     form_object: RequirementFormObject = (
         RequirementFormObject.create_from_requirement(
             requirement=requirement2,
+            revision=0,
             context_document_mid=document_1.reserved_mid,
         )
     )
@@ -216,6 +218,7 @@ def test_20_single_document_add_second_child_relation_with_role():
     form_object: RequirementFormObject = (
         RequirementFormObject.create_from_requirement(
             requirement=requirement2,
+            revision=0,
             context_document_mid=document_1.reserved_mid,
         )
     )
@@ -305,6 +308,7 @@ def test_25_single_document_remove_child_relation():
     form_object: RequirementFormObject = (
         RequirementFormObject.create_from_requirement(
             requirement=requirement2,
+            revision=0,
             context_document_mid=document_1.reserved_mid,
         )
     )
@@ -386,6 +390,7 @@ def test_26_two_documents_remove_child_relation():
     form_object: RequirementFormObject = (
         RequirementFormObject.create_from_requirement(
             requirement=requirement2,
+            revision=0,
             context_document_mid=document_2.reserved_mid,
         )
     )

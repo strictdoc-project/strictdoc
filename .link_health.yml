@@ -5,6 +5,18 @@ exceptions:
     code: HTTP_403
   - url: https://groups.io/g/strictdoc
     code: HTTP_403
+  - url: https://docutils.sourceforge.io/
+    code: HTTP_403
+  - url: https://docutils.sourceforge.io/COPYING.html
+    code: HTTP_403
+  - url: https://docutils.sourceforge.io/docs/user/rst/quickref.html
+    code: HTTP_403
+  - url: https://docutils.sourceforge.io/rst.html
+    code: HTTP_403
+  - url: https://www.doxygen.nl/manual/config.html
+    code: HTTP_403
+  - url: https://www.doxygen.nl/manual/external.html
+    code: HTTP_403
   - url: http://example.com/strictdoc
   # FIXME
   - url: https://strictdoc.readthedocs.io/en/latest/sphinx

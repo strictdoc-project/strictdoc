@@ -1045,7 +1045,9 @@ class TraceabilityIndex:
         if incoming_links is not None and len(incoming_links) > 0:
             link_list_message = ", ".join(
                 map(
-                    lambda l_: f"'{l_.parent_node().get_display_title()}' -> '{l_.link}'",
+                    lambda l_: (
+                        f"'{l_.parent_node().get_display_title()}' -> '{l_.link}'"
+                    ),
                     incoming_links,
                 )
             )

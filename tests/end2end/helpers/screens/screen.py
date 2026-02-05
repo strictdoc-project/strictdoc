@@ -140,6 +140,8 @@ class Screen:  # pylint: disable=invalid-name, too-many-public-methods
         self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
 
         WebDriverWait(self.test_case.driver, timeout=3).until(
-            lambda _: self.test_case.get_value(field_xpath, by=By.XPATH)
-            == field_value
+            lambda _: (
+                self.test_case.get_value(field_xpath, by=By.XPATH)
+                == field_value
+            )
         )

@@ -254,7 +254,7 @@ TITLE: Requirements
 [TEXT]
 MID: e7e4c2982d8e49deaa9b7413a09a4efa
 STATEMENT: >>>
-- Python 3.9+
+- Python 3.10+
 - macOS, Linux or Windows
 - Command-line terminal program
 

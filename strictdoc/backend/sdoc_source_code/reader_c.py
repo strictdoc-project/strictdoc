@@ -54,12 +54,9 @@ class SourceFileTraceabilityReader_C:
         file_stats = SourceFileStats.create(input_buffer)
         parse_context = ParseContext(file_path, file_stats)
 
-        # Works since Python 3.9 but we also lint this with mypy from Python 3.8.
         language_arg = tree_sitter_cpp.language()
-        py_language = Language(  # type: ignore[call-arg, unused-ignore]
-            language_arg
-        )
-        parser = Parser(py_language)  # type: ignore[call-arg, unused-ignore]
+        py_language = Language(language_arg)
+        parser = Parser(py_language)
 
         tree = parser.parse(input_buffer)
 

@@ -17,10 +17,6 @@ from strictdoc.backend.sdoc_source_code.reader_c import (
     SourceFileTraceabilityReader_C,
 )
 
-pytestmark = pytest.mark.skipif(
-    sys.version_info < (3, 9), reason="Requires Python 3.9 or higher"
-)
-
 
 def test_01_class_function_declaration():
     input_string = b"""\

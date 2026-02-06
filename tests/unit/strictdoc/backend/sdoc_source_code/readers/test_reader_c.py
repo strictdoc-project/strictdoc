@@ -13,10 +13,6 @@ from strictdoc.backend.sdoc_source_code.reader_c import (
     SourceFileTraceabilityReader_C,
 )
 
-pytestmark = pytest.mark.skipif(
-    sys.version_info < (3, 9), reason="Requires Python 3.9 or higher"
-)
-
 
 def test_00_empty_file():
     input_string = b""""""

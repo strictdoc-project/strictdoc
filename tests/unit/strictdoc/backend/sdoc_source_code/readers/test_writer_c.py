@@ -14,10 +14,6 @@ from strictdoc.backend.sdoc_source_code.reader_c import (
 )
 from strictdoc.backend.sdoc_source_code.source_writer import SourceWriter
 
-pytestmark = pytest.mark.skipif(
-    sys.version_info < (3, 9), reason="Requires Python 3.9 or higher"
-)
-
 
 def test_02_c_functions():
     input_string = b"""\

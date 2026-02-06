@@ -44,8 +44,10 @@ def assert_node_field(
 
     values = list(
         node_value.scan_values(
-            lambda t: t.type
-            in ("NODE_FIRST_STRING_VALUE", "NODE_STRING_VALUE", "NEWLINE")
+            lambda t: (
+                t.type
+                in ("NODE_FIRST_STRING_VALUE", "NODE_STRING_VALUE", "NEWLINE")
+            )
         )
     )
     for idx in range(len(expected_field_value)):

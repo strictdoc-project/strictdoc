@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[[SECTION]]
+TITLE: Section title
+
+[TEXT]
+UID: TEXT-NODE-1
+STATEMENT: >>>
+Text statement.
+<<<
+
+[[/SECTION]]

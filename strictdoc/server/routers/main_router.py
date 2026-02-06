@@ -2,6 +2,7 @@ import copy
 import datetime
 import os
 import re
+from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
 from typing import Dict, List, Optional, Union
@@ -145,6 +146,13 @@ AUTOCOMPLETE_LIMIT = 50
 
 def create_main_router(project_config: ProjectConfig) -> APIRouter:
     parallelizer = NullParallelizer()
+
+    # This dictionary is used to track conflicts between concurrently edited
+    # versions of the same nodes. If a saved node has a version that is older
+    # than one tracked in this dictionary, StrictDoc raises a validation to a
+    # user.
+    # Type signature: [MID, version number]
+    revisions: Dict[str, int] = defaultdict(int)
 
     project_config.is_running_on_server = True
 
@@ -431,6 +439,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             traceability_index=export_action.traceability_index,
             context_document=document,
             config=project_config,
+            existing_revision=0,
         )
 
         if not form_object.any_errors():
@@ -545,9 +554,12 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         requirement: SDocNode = (
             export_action.traceability_index.get_node_by_mid(MID(node_id))
         )
+        revision = revisions[requirement.reserved_mid.get_string_value()]
+
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_requirement(
                 requirement=requirement,
+                revision=revision,
                 context_document_mid=context_document_mid,
             )
         )
@@ -667,6 +679,8 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 existing_requirement_uid=requirement.reserved_uid,
             )
         )
+        existing_revision = revisions[form_object.requirement_mid]
+
         context_document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(
                 MID(form_object.context_document_mid)
@@ -677,6 +691,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             traceability_index=export_action.traceability_index,
             context_document=document,
             config=project_config,
+            existing_revision=existing_revision,
         )
 
         update_requirement_command_result_or_none: Optional[
@@ -738,6 +753,8 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
         # Saving new content to .SDoc files.
         SDWriter(project_config).write_to_file(document)
+
+        revisions[requirement_mid] += 1
 
         # Exporting the updated document to HTML. Note that this happens after
         # the traceability index last update marker has been updated. This way
@@ -1238,6 +1255,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document_mid: str,
         context_document_mid: str,
         element_type: str,
+        revision: str,
     ) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
@@ -1255,6 +1273,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             form_object=RequirementFormObject(
                 is_new=False,
                 element_type=element_type,
+                revision=int(revision),
                 requirement_mid=requirement_mid,
                 document_mid=document.reserved_mid,
                 context_document_mid=context_document_mid,
@@ -1285,6 +1304,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         document_mid: str,
         context_document_mid: str,
         element_type: str,
+        revision: str,
     ) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
@@ -1306,6 +1326,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             form_object=RequirementFormObject(
                 is_new=False,
                 element_type=element_type,
+                revision=int(revision),
                 requirement_mid=requirement_mid,
                 document_mid=document_mid,
                 context_document_mid=context_document_mid,

@@ -654,7 +654,7 @@ def lint_mypy(context):
                 --warn-unreachable
                 --warn-unused-ignores
 
-                --python-version=3.9
+                --python-version=3.10
         """,
     )
 

@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         python-version: [
-          "3.9", "3.13"
+          "3.10", "3.13"
         ]
         itest_group: [ "main_group", "html2pdf_group" ]
 

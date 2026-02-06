@@ -12,10 +12,6 @@ from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 
-pytestmark = pytest.mark.skipif(
-    sys.version_info < (3, 9), reason="Requires Python 3.9 or higher"
-)
-
 
 def test_01_basic_nominal():
     input_strings = [

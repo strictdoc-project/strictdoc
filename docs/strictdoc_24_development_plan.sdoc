@@ -334,7 +334,7 @@ TITLE: Python baseline
 [TEXT]
 MID: 081ee6266bab4a3a80f290c95e055a25
 STATEMENT: >>>
-The supported version of Python is kept to be as low as possible. As of 2025-Q4, the currently supported version is Python 3.9.
+The supported version of Python is kept to be as low as possible. As of 2025-Q4, the currently supported version is Python 3.10.
 
 Ideally, the lowest Python version should only be raised when it is consistently deprecated by the major software platforms like Ubuntu or GitHub Actions.
 

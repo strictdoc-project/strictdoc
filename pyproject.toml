@@ -29,7 +29,7 @@ dynamic = ["version"]
 description = "StrictDoc is open-source software for technical documentation and requirements management."
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 authors = [
     { name = "Stanislav Pankevich", email = "s.pankevich@gmail.com" },
     { name = "Maryna Balioura", email = "mettta@gmail.com" },
@@ -38,7 +38,6 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",

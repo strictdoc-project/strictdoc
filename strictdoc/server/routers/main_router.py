@@ -5,10 +5,11 @@ import re
 from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import AsyncIterator, Dict, List, Optional, Union
 from urllib.parse import quote
 
-from fastapi import APIRouter, Form, HTTPException, UploadFile
+import anyio
+from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile
 from fastapi.responses import RedirectResponse
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
@@ -136,6 +137,7 @@ from strictdoc.helpers.string import (
 from strictdoc.helpers.timing import measure_performance
 from strictdoc.server.error_object import ErrorObject
 from strictdoc.server.helpers.http import request_is_for_non_modified_file
+from strictdoc.server.helpers.rw_lock import AsyncRWLock
 
 HTTP_STATUS_BAD_REQUEST = 400
 HTTP_STATUS_PRECONDITION_FAILED = 412
@@ -179,13 +181,25 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
 
+    rw_lock = AsyncRWLock()
+
+    async def read_lock() -> AsyncIterator[None]:
+        async with rw_lock.read():
+            yield
+
+    async def write_lock() -> AsyncIterator[None]:
+        async with rw_lock.write():
+            yield
+
     router = APIRouter()
+    read_router = APIRouter(dependencies=[Depends(read_lock)])
+    write_router = APIRouter(dependencies=[Depends(write_lock)])
 
     @router.get("/")
-    def get_root(request: Request) -> Response:
-        return get_incoming_request(request, "index.html")
+    async def get_root(request: Request) -> Response:
+        return await get_incoming_request(request, "index.html")
 
-    @router.get("/actions/show_full_node", response_class=Response)
+    @read_router.get("/actions/show_full_node", response_class=Response)
     def node__show_full(reference_mid: str) -> Response:
         node: Union[SDocNode] = (
             export_action.traceability_index.get_node_by_mid(MID(reference_mid))
@@ -230,7 +244,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/new_requirement", response_class=Response)
+    @read_router.get(
+        "/actions/document/new_requirement", response_class=Response
+    )
     def get_new_requirement(
         reference_mid: str,
         whereto: str,
@@ -332,7 +348,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/clone_requirement", response_class=Response)
+    @read_router.get(
+        "/actions/document/clone_requirement", response_class=Response
+    )
     def get_clone_requirement(
         reference_mid: str, context_document_mid: str
     ) -> Response:
@@ -406,7 +424,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.post(
+    @write_router.post(
         "/actions/document/create_requirement", response_class=Response
     )
     async def create_requirement(request: Request) -> Response:
@@ -543,7 +561,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/edit_requirement", response_class=Response)
+    @read_router.get(
+        "/actions/document/edit_requirement", response_class=Response
+    )
     def get_edit_requirement(
         node_id: str, context_document_mid: str
     ) -> Response:
@@ -597,7 +617,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get(
+    @read_router.get(
         "/reset_uid",
         response_class=Response,
     )
@@ -650,7 +670,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.post("/actions/document/update_requirement")
+    @write_router.post("/actions/document/update_requirement")
     async def document__update_requirement(request: Request) -> Response:
         """
         @relation(SDOC-SRS-55, scope=function)
@@ -799,7 +819,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get(
+    @read_router.get(
         "/actions/document/cancel_new_requirement", response_class=Response
     )
     def cancel_new_requirement(requirement_mid: str) -> Response:
@@ -818,7 +838,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get(
+    @read_router.get(
         "/actions/document/cancel_edit_requirement", response_class=Response
     )
     def cancel_edit_requirement(requirement_mid: str) -> Response:
@@ -868,7 +888,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.delete(
+    @write_router.delete(
         "/actions/document/delete_requirement",
         response_class=Response,
     )
@@ -975,7 +995,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.post("/actions/document/move_node", response_class=Response)
+    @write_router.post("/actions/document/move_node", response_class=Response)
     async def move_node(request: Request) -> Response:
         """
         @relation(SDOC-SRS-92, scope=function)
@@ -1082,7 +1102,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/project_index/new_document", response_class=Response)
+    @read_router.get(
+        "/actions/project_index/new_document", response_class=Response
+    )
     def get_new_document() -> Response:
         """
         @relation(SDOC-SRS-107, scope=function)
@@ -1101,7 +1123,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.post(
+    @write_router.post(
         "/actions/project_index/create_document", response_class=Response
     )
     def document_tree__create_document(
@@ -1249,7 +1271,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/new_comment", response_class=Response)
+    @read_router.get("/actions/document/new_comment", response_class=Response)
     def document__add_comment(
         requirement_mid: str,
         document_mid: str,
@@ -1298,7 +1320,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/new_relation", response_class=Response)
+    @read_router.get("/actions/document/new_relation", response_class=Response)
     def document__add_relation(
         requirement_mid: str,
         document_mid: str,
@@ -1352,7 +1374,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/edit_config", response_class=Response)
+    @read_router.get("/actions/document/edit_config", response_class=Response)
     def document__edit_config(document_mid: str) -> Response:
         """
         @relation(SDOC-SRS-57, scope=function)
@@ -1381,7 +1403,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/new_metadata", response_class=Response)
+    @read_router.get("/actions/document/new_metadata", response_class=Response)
     def document__add_metadata(
         document_mid: str,
     ) -> Response:
@@ -1414,7 +1436,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get(
+    @read_router.get(
         "/actions/document/edit_included_document", response_class=Response
     )
     def document__edit_included_document(
@@ -1436,7 +1458,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.post("/actions/document/save_config", response_class=Response)
+    @write_router.post("/actions/document/save_config", response_class=Response)
     async def document__save_edit_config(request: Request) -> Response:
         """
         @relation(SDOC-SRS-57, scope=function)
@@ -1528,7 +1550,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.post(
+    @write_router.post(
         "/actions/document/save_included_document", response_class=Response
     )
     async def document__save_included_document(request: Request) -> Response:
@@ -1608,7 +1630,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/cancel_edit_config", response_class=Response)
+    @read_router.get(
+        "/actions/document/cancel_edit_config", response_class=Response
+    )
     def document__cancel_edit_config(document_mid: str) -> Response:
         """
         @relation(SDOC-SRS-57, scope=function)
@@ -1657,7 +1681,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get(
+    @read_router.get(
         "/actions/document/cancel_edit_included_document",
         response_class=Response,
     )
@@ -1703,7 +1727,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/edit_grammar", response_class=Response)
+    @read_router.get("/actions/document/edit_grammar", response_class=Response)
     def document__edit_grammar(document_mid: str) -> Response:
         """
         @relation(SDOC-SRS-56, scope=function)
@@ -1725,7 +1749,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.post("/actions/document/save_grammar", response_class=Response)
+    @write_router.post(
+        "/actions/document/save_grammar", response_class=Response
+    )
     async def document__save_grammar(request: Request) -> Response:
         """
         @relation(SDOC-SRS-56, scope=function)
@@ -1812,7 +1838,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get(
+    @read_router.get(
         "/actions/document/add_grammar_element", response_class=Response
     )
     def document__add_grammar_element(document_mid: str) -> Response:
@@ -1835,7 +1861,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get(
+    @read_router.get(
         "/actions/document/edit_grammar_element", response_class=Response
     )
     def document__edit_grammar_element(
@@ -1865,7 +1891,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.post(
+    @write_router.post(
         "/actions/document/save_grammar_element", response_class=Response
     )
     async def document__save_grammar_element(request: Request) -> Response:
@@ -1957,7 +1983,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/actions/document/add_grammar_field", response_class=Response)
+    @read_router.get(
+        "/actions/document/add_grammar_field", response_class=Response
+    )
     def document__add_grammar_field(document_mid: str) -> Response:
         """
         @relation(SDOC-SRS-56, scope=function)
@@ -1983,7 +2011,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get(
+    @read_router.get(
         "/actions/document/add_grammar_relation", response_class=Response
     )
     def document__add_grammar_relation(document_mid: str) -> Response:
@@ -2011,7 +2039,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get(
+    @read_router.get(
         "/actions/project_index/import_reqif_document_form",
         response_class=Response,
     )
@@ -2029,7 +2057,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.post(
+    @write_router.post(
         "/actions/project_index/import_document_reqif", response_class=Response
     )
     async def import_document_reqif(reqif_file: UploadFile) -> Response:
@@ -2125,7 +2153,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/export_html2pdf/{document_mid}", response_class=Response)
+    @write_router.get(
+        "/export_html2pdf/{document_mid}", response_class=Response
+    )
     def get_export_html2pdf(document_mid: str) -> Response:  # noqa: ARG001
         if not project_config.is_activated_html2pdf():
             return Response(
@@ -2217,14 +2247,14 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 media_type="application/octet-stream",
             )
 
-    @router.get(
+    @read_router.get(
         "/reqif/export_document/{document_mid}", response_class=Response
     )
     def get_reqif_export_document(document_mid: str) -> Response:  # noqa: ARG001
         # TODO: Export single document, not the whole tree.
         return get_reqif_export_tree()
 
-    @router.get("/reqif/export_tree", response_class=Response)
+    @read_router.get("/reqif/export_tree", response_class=Response)
     def get_reqif_export_tree() -> Response:
         reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
             document_tree=export_action.traceability_index.document_tree,
@@ -2241,7 +2271,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @router.get("/search", response_class=Response)
+    @read_router.get("/search", response_class=Response)
     def get_search(q: Optional[str] = None) -> Response:
         if not project_config.is_activated_search():
             return Response(
@@ -2315,7 +2345,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             status_code=200,
         )
 
-    @router.get("/autocomplete/uid", response_class=Response)
+    @read_router.get("/autocomplete/uid", response_class=Response)
     def get_autocomplete_uid_results(
         q: Optional[str] = None, exclude_requirement_mid: Optional[str] = None
     ) -> Response:
@@ -2383,7 +2413,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             status_code=200,
         )
 
-    @router.get("/autocomplete/field", response_class=Response)
+    @read_router.get("/autocomplete/field", response_class=Response)
     def get_autocomplete_field_results(
         q: Optional[str] = None,
         document_mid: Optional[str] = None,
@@ -2475,7 +2505,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             status_code=200,
         )
 
-    @router.get("/UID/{uid_or_mid}", response_class=RedirectResponse)
+    @read_router.get("/UID/{uid_or_mid}", response_class=RedirectResponse)
     def redirect_to_uid(uid_or_mid: str) -> Response:
         # Resolve UID or MID.
         mid_pattern = r"^[a-fA-F0-9]{32}$"
@@ -2506,7 +2536,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     # Nestor is a highly experimental feature that is unlikely to make it to the
     # stable feature set. Excluding it from code coverage.
-    @router.get("/__nestor", response_class=Response)  # pragma: no cover
+    @write_router.get("/__nestor", response_class=Response)  # pragma: no cover
     def get_nestor() -> Response:  # pragma: no cover
         output_json_root = os.path.join(project_config.output_dir, "html")
         Path(output_json_root).mkdir(parents=True, exist_ok=True)
@@ -2527,16 +2557,21 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             status_code=200,
         )
 
+    router.include_router(read_router)
+    router.include_router(write_router)
+
     @router.get("/{full_path:path}", response_class=Response)
-    def get_incoming_request(request: Request, full_path: str) -> Response:
+    async def get_incoming_request(
+        request: Request, full_path: str
+    ) -> Response:
         # FIXME: This seems to be quite un-sanitized.
         _, file_extension = os.path.splitext(full_path)
         if file_extension == ".html":
-            return get_document(request, full_path)
+            return await get_document(request, full_path)
         else:
-            return get_asset(request, full_path)
+            return await get_asset(request, full_path)
 
-    def get_document(request: Request, url_to_document: str) -> Response:
+    async def get_document(request: Request, url_to_document: str) -> Response:
         """
         @relation(SDOC-SRS-4, scope=function)
         """
@@ -2548,200 +2583,237 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             project_config.export_output_html_root,
             document_relative_path.relative_path,
         )
-        must_generate_document = False
 
-        path_to_file_exists = os.path.isfile(full_path_to_document)
-        if not path_to_file_exists:
-            must_generate_document = True
-        else:
+        def must_generate() -> bool:
+            if not os.path.isfile(full_path_to_document):
+                return True
             output_file_mtime = get_file_modification_time(
                 full_path_to_document
             )
-            if (
+            return (
                 export_action.traceability_index.index_last_updated
                 > output_file_mtime
-            ):
-                must_generate_document = True
+            )
 
-        if not must_generate_document and request_is_for_non_modified_file(
-            request, full_path_to_document
-        ):
-            return Response(status_code=304)
-        else:
-            if document_relative_path.relative_path.startswith("_source_files"):
-                if document_relative_path.relative_path.endswith(
-                    "source_coverage.html"
+        async with rw_lock.read():
+            if not must_generate():
+                if request_is_for_non_modified_file(
+                    request, full_path_to_document
                 ):
+                    return Response(status_code=304)
+                return FileResponse(
+                    full_path_to_document,
+                    media_type="text/html",
+                    headers={
+                        # We don't want the documents to be cached on the server without
+                        # revalidation.
+                        # The no-cache request directive asks caches to validate the
+                        # response with the origin server before reuse.
+                        # no-cache allows clients to request the most up-to-date
+                        # response even if the cache has a fresh response.
+                        # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+                        "Cache-Control": "no-cache"
+                    },
+                )
+
+        async with rw_lock.write():
+            if not must_generate():
+                if request_is_for_non_modified_file(
+                    request, full_path_to_document
+                ):
+                    return Response(status_code=304)
+                return FileResponse(
+                    full_path_to_document,
+                    media_type="text/html",
+                    headers={"Cache-Control": "no-cache"},
+                )
+
+            def generate_document() -> Optional[Response]:
+                if document_relative_path.relative_path.startswith(
+                    "_source_files"
+                ):
+                    if document_relative_path.relative_path.endswith(
+                        "source_coverage.html"
+                    ):
+                        html_generator.export_source_coverage_screen(
+                            traceability_index=export_action.traceability_index,
+                        )
+                    else:
+                        try:
+                            html_generator.export_single_source_file_screen(
+                                traceability_index=export_action.traceability_index,
+                                path_to_source_file=document_relative_path.relative_path,
+                            )
+                        except FileNotFoundError:
+                            return HTMLResponse(
+                                content=f"Not Found: {url_to_document}",
+                                status_code=404,
+                            )
+                elif document_relative_path.relative_path == "index.html":
+                    html_generator.export_project_tree_screen(
+                        traceability_index=export_action.traceability_index,
+                    )
+                elif (
+                    document_relative_path.relative_path
+                    == "traceability_matrix.html"
+                ):
+                    if not project_config.is_activated_requirements_coverage():
+                        return Response(
+                            content="The Requirements Coverage feature is not activated in the project config.",
+                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                        )
+                    html_generator.export_requirements_coverage_screen(
+                        traceability_index=export_action.traceability_index,
+                    )
+                elif document_relative_path.relative_path == "tree_map.html":
+                    if not project_config.is_activated_tree_map():
+                        return Response(
+                            content="The Tree Map feature is not activated in the project config.",
+                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                        )
+                    html_generator.export_tree_map_screen(
+                        traceability_index=export_action.traceability_index,
+                    )
+                elif (
+                    document_relative_path.relative_path
+                    == "source_coverage.html"
+                ):
+                    if not project_config.is_activated_requirements_to_source_traceability():
+                        return Response(
+                            content="The Requirements to Source Files feature is not activated in the project config.",
+                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                        )
                     html_generator.export_source_coverage_screen(
                         traceability_index=export_action.traceability_index,
                     )
-                else:
-                    try:
-                        html_generator.export_single_source_file_screen(
-                            traceability_index=export_action.traceability_index,
-                            path_to_source_file=document_relative_path.relative_path,
+                elif (
+                    document_relative_path.relative_path
+                    == "project_statistics.html"
+                ):
+                    if not project_config.is_activated_project_statistics():
+                        return Response(
+                            content="The Project Statistics feature is not activated in the project config.",
+                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
                         )
-                    except FileNotFoundError:
+                    html_generator.export_project_statistics(
+                        traceability_index=export_action.traceability_index,
+                    )
+                else:
+                    document_type_to_generate: DocumentType
+                    if document_relative_path.relative_path.endswith(
+                        "-TABLE.html"
+                    ):
+                        base_document_url = (
+                            document_relative_path.relative_path.replace(
+                                "-TABLE", ""
+                            )
+                        )
+                        document_type_to_generate = DocumentType.TABLE
+                    elif document_relative_path.relative_path.endswith(
+                        "-DEEP-TRACE.html"
+                    ):
+                        base_document_url = (
+                            document_relative_path.relative_path.replace(
+                                "-DEEP-TRACE", ""
+                            )
+                        )
+                        document_type_to_generate = DocumentType.DEEPTRACE
+                    elif document_relative_path.relative_path.endswith(
+                        "-TRACE.html"
+                    ):
+                        base_document_url = (
+                            document_relative_path.relative_path.replace(
+                                "-TRACE", ""
+                            )
+                        )
+                        document_type_to_generate = DocumentType.TRACE
+                    elif document_relative_path.relative_path.endswith(
+                        "-PDF.html"
+                    ):
+                        if not project_config.is_activated_html2pdf():
+                            return Response(
+                                content="The HTML2PDF feature is not activated in the project config.",
+                                status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                            )
+                        base_document_url = (
+                            document_relative_path.relative_path.replace(
+                                "-PDF", ""
+                            )
+                        )
+                        document_type_to_generate = DocumentType.PDF
+                    elif document_relative_path.relative_path.endswith(
+                        ".standalone.html"
+                    ):
+                        if not project_config.is_activated_standalone_document():
+                            return Response(
+                                content="The Standalone Document feature is not activated in the project config.",
+                                status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                            )
+                        base_document_url = (
+                            document_relative_path.relative_path.replace(
+                                ".standalone", ""
+                            )
+                        )
+                        document_type_to_generate = DocumentType.DOCUMENT
+                    else:
+                        # Either this is a normal document, or the path is broken.
+                        base_document_url = document_relative_path.relative_path
+                        document_type_to_generate = DocumentType.DOCUMENT
+
+                    document_tree = assert_cast(
+                        export_action.traceability_index.document_tree,
+                        DocumentTree,
+                    )
+                    document = document_tree.map_docs_by_rel_paths.get(
+                        base_document_url
+                    )
+                    if document is None:
                         return HTMLResponse(
                             content=f"Not Found: {url_to_document}",
                             status_code=404,
                         )
-            elif document_relative_path.relative_path == "index.html":
-                html_generator.export_project_tree_screen(
-                    traceability_index=export_action.traceability_index,
-                )
-            elif (
-                document_relative_path.relative_path
-                == "traceability_matrix.html"
-            ):
-                if not project_config.is_activated_requirements_coverage():
-                    return Response(
-                        content="The Requirements Coverage feature is not activated in the project config.",
-                        status_code=HTTP_STATUS_PRECONDITION_FAILED,
-                    )
-                html_generator.export_requirements_coverage_screen(
-                    traceability_index=export_action.traceability_index,
-                )
-            elif document_relative_path.relative_path == "tree_map.html":
-                if not project_config.is_activated_tree_map():
-                    return Response(
-                        content="The Tree Map feature is not activated in the project config.",
-                        status_code=HTTP_STATUS_PRECONDITION_FAILED,
-                    )
-                html_generator.export_tree_map_screen(
-                    traceability_index=export_action.traceability_index,
-                )
-            elif document_relative_path.relative_path == "source_coverage.html":
-                if not project_config.is_activated_requirements_to_source_traceability():
-                    return Response(
-                        content="The Requirements to Source Files feature is not activated in the project config.",
-                        status_code=HTTP_STATUS_PRECONDITION_FAILED,
-                    )
-                html_generator.export_source_coverage_screen(
-                    traceability_index=export_action.traceability_index,
-                )
-            elif (
-                document_relative_path.relative_path
-                == "project_statistics.html"
-            ):
-                if not project_config.is_activated_project_statistics():
-                    return Response(
-                        content="The Project Statistics feature is not activated in the project config.",
-                        status_code=HTTP_STATUS_PRECONDITION_FAILED,
-                    )
-                html_generator.export_project_statistics(
-                    traceability_index=export_action.traceability_index,
-                )
-            else:
-                document_type_to_generate: DocumentType
-                if document_relative_path.relative_path.endswith("-TABLE.html"):
-                    base_document_url = (
-                        document_relative_path.relative_path.replace(
-                            "-TABLE", ""
-                        )
-                    )
-                    document_type_to_generate = DocumentType.TABLE
-                elif document_relative_path.relative_path.endswith(
-                    "-DEEP-TRACE.html"
-                ):
-                    base_document_url = (
-                        document_relative_path.relative_path.replace(
-                            "-DEEP-TRACE", ""
-                        )
-                    )
-                    document_type_to_generate = DocumentType.DEEPTRACE
-                elif document_relative_path.relative_path.endswith(
-                    "-TRACE.html"
-                ):
-                    base_document_url = (
-                        document_relative_path.relative_path.replace(
-                            "-TRACE", ""
-                        )
-                    )
-                    document_type_to_generate = DocumentType.TRACE
-                elif document_relative_path.relative_path.endswith("-PDF.html"):
-                    if not project_config.is_activated_html2pdf():
-                        return Response(
-                            content="The HTML2PDF feature is not activated in the project config.",
-                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
-                        )
-                    base_document_url = (
-                        document_relative_path.relative_path.replace("-PDF", "")
-                    )
-                    document_type_to_generate = DocumentType.PDF
-                elif document_relative_path.relative_path.endswith(
-                    ".standalone.html"
-                ):
-                    if not project_config.is_activated_standalone_document():
-                        return Response(
-                            content="The Standalone Document feature is not activated in the project config.",
-                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
-                        )
-                    base_document_url = (
-                        document_relative_path.relative_path.replace(
-                            ".standalone", ""
-                        )
-                    )
-                    document_type_to_generate = DocumentType.DOCUMENT
-                else:
-                    # Either this is a normal document, or the path is broken.
-                    base_document_url = document_relative_path.relative_path
-                    document_type_to_generate = DocumentType.DOCUMENT
 
-                document_tree = assert_cast(
-                    export_action.traceability_index.document_tree, DocumentTree
-                )
-                document = document_tree.map_docs_by_rel_paths.get(
-                    base_document_url
-                )
-                if document is None:
-                    return HTMLResponse(
-                        content=f"Not Found: {url_to_document}", status_code=404
+                    assert document.meta is not None
+                    set_file_modification_time(
+                        document.meta.input_doc_full_path,
+                        datetime.datetime.today(),
                     )
 
-                assert document.meta is not None
-                set_file_modification_time(
-                    document.meta.input_doc_full_path, datetime.datetime.today()
-                )
+                    html_generator.export_single_document_with_performance(
+                        document=document,
+                        traceability_index=export_action.traceability_index,
+                        specific_documents=(document_type_to_generate,),
+                    )
+                return None
 
-                html_generator.export_single_document_with_performance(
-                    document=document,
-                    traceability_index=export_action.traceability_index,
-                    specific_documents=(document_type_to_generate,),
-                )
-        return FileResponse(
-            full_path_to_document,
-            media_type="text/html",
-            headers={
-                # We don't want the documents to be cached on the server without
-                # revalidation.
-                # The no-cache request directive asks caches to validate the
-                # response with the origin server before reuse.
-                # no-cache allows clients to request the most up-to-date
-                # response even if the cache has a fresh response.
-                # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
-                "Cache-Control": "no-cache"
-            },
-        )
+            response_or_none = await anyio.to_thread.run_sync(generate_document)
+            if response_or_none is not None:
+                return response_or_none
+            return FileResponse(
+                full_path_to_document,
+                media_type="text/html",
+                headers={"Cache-Control": "no-cache"},
+            )
 
-    def get_asset(request: Request, url_to_asset: str) -> Response:
+    async def get_asset(request: Request, url_to_asset: str) -> Response:
         project_output_path = project_config.export_output_html_root
 
         static_file = os.path.join(project_output_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 
-        if not os.path.isfile(static_file):
-            return Response(
-                content=f"File not found: {url_to_asset}",
-                status_code=404,
-                media_type=content_type,
-            )
+        async with rw_lock.read():
+            if not os.path.isfile(static_file):
+                return Response(
+                    content=f"File not found: {url_to_asset}",
+                    status_code=404,
+                    media_type=content_type,
+                )
 
-        if request_is_for_non_modified_file(request, static_file):
-            return Response(status_code=304)
+            if request_is_for_non_modified_file(request, static_file):
+                return Response(status_code=304)
 
-        response = FileResponse(static_file, media_type=content_type)
-        return response
+            response = FileResponse(static_file, media_type=content_type)
+            return response
 
     # Websockets solution based on:
     # https://fastapi.tiangolo.com/advanced/websockets/

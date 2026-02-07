@@ -2795,7 +2795,7 @@ To activate language-aware traceability, configure the project with the followin
         )
         return config
 
-Currently, Python, C/C++ and Robot Framework parsers are implemented. Upcoming implementations include parsers for Rust, Bash, and more.
+Currently, Python, C/C++, Rust, and Robot Framework parsers are implemented. Upcoming implementations include parsers for Bash, and more.
 <<<
 
 [[/SECTION]]
@@ -2838,7 +2838,11 @@ The marker must be added to the top comment of a file.
         @relation(REQ-1, scope=class)
         """
 
-**3\) Linking a function to a requirement (Python, C, and C++ only)**
+**3\) Linking language items to a requirement (Python, C, C++, Rust)**
+
+For Python, ``@relation`` markers can be placed inside `doc strings`_ to link functions and classes.
+
+.. _doc strings: https://peps.python.org/pep-0257/#what-is-a-docstring
 
 .. code:: python
 
@@ -2850,7 +2854,8 @@ The marker must be added to the top comment of a file.
             @relation(REQ-1, scope=function)
             """
 
-or
+For the C and C++ languages, if a ``@relation`` marker is included in a function declaration prototype (which is the most
+common practice), StrictDoc also creates a link between the requirement and the corresponding C function definition.
 
 .. code:: c
 
@@ -2863,9 +2868,53 @@ or
         print("Hello, World\n");
     }
 
-.. note::
+For Rust, ``@relation`` marker can be placed inside `doc comments`_ to automatically infer the linked item. This
+works for almost all Rust language elements like modules, functions, traits, enums or structs.
 
-    For the C and C++ languages, if a ``@relation`` marker is included in a function declaration prototype (which is the most common practice), StrictDoc also creates a link between the requirement and the corresponding C function definition.
+.. _doc comments: https://doc.rust-lang.org/rust-by-example/meta/doc.html#doc-comments
+
+.. code:: rust
+
+    /*!
+     * This module does...
+     * @relation(REQ-1)
+     */
+
+    use std::fmt;
+
+    /**
+     * With this enum, ...
+     * @relation(REQ-2)
+     */
+    pub enum Niceness {
+        /// This variant means ...
+        /// @relation(REQ-3)
+        Nice,
+
+        /// And this variant means ...
+        /// @relation(REQ-4)
+        Awesome,
+    }
+
+    /**
+     * Implement Debug trait for Niceness.
+     * @relation(REQ-5)
+     */
+    impl fmt::Debug for Niceness {
+        /// @relation(REQ-6)
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            match *self {
+                /// @relation(REQ-7)
+                Niceness::Nice => {
+                    write!(f, ":-)")
+                }
+                /// @relation(REQ-8)
+                Niceness::Awesome => {
+                    write!(f, ":-D")
+                }
+            }
+        }
+    }
 
 **4\) Linking a range to a requirement**
 
@@ -2883,6 +2932,10 @@ or
     def foo():
         # @relation(REQ-1, scope=line)
         print("Hello, World!")
+
+.. note::
+
+    For Rust, line and range marker are supported in normal comments, but not doc comments.
 <<<
 
 [[/SECTION]]
@@ -2925,7 +2978,7 @@ The linking of requirements to source files is arranged with a special RELATION 
       VALUE: file.py
       LINE_RANGE: 2, 4
 
-**3\) Linking a requirement to a function in a source file**
+**3\) Linking a requirement to language items in a source file**
 
 .. code:: strictdoc
 
@@ -2940,10 +2993,17 @@ The linking of requirements to source files is arranged with a special RELATION 
     - TYPE: File
       VALUE: file.c
       FUNCTION: Foo.hello_world_2
+    - TYPE: File
+      VALUE: file.rs
+      FUNCTION: <file::FooTuple as file::FooTrait>::bar
 
 .. note::
 
-    For linking to functions in classes, a class name has to be added in a format: ``<class name>.<function name>``. This is currently only supported for Python source files.
+    Rules for building the full qualified path of an identifier depend on the language of the source file.
+    For linking to Python functions in classes, a class name has to be added in a format: ``<class name>.<function name>``.
+    For linking to any Rust identifier, `canonical paths`_ for a single file are used.
+
+.. _canonical paths: https://doc.rust-lang.org/reference/paths.html#canonical-paths>
 
 **4\) Linking a requirement to a class in a source file (Python only)**
 
@@ -3029,7 +3089,7 @@ In this example, the ``skip``-relation causes StrictDoc to ignore the ``REQ-001`
 [[SECTION]]
 MID: c9da7df725564208971e7ee058ad8d73
 UID: SECTION-UG-Parsing-SDoc-source-nodes
-TITLE: Parsing SDoc nodes from source code comments (experimental, for C/C++ only)
+TITLE: Parsing SDoc nodes from source code comments (experimental, for C/C++ and Rust only)
 
 [TEXT]
 MID: 72fe8c3f618042578850cfdf01868b6c

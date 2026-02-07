@@ -2,10 +2,6 @@
 @relation(SDOC-SRS-34, SDOC-SRS-141, scope=file)
 """
 
-import sys
-
-import pytest
-
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
 from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
     FunctionRangeMarker,

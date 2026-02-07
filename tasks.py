@@ -603,7 +603,7 @@ def lint_ruff(context):
         context,
         ToxEnvironment.CHECK,
         """
-            ruff check . --fix --cache-dir build/ruff
+            ruff check . --fix --exit-non-zero-on-fix --cache-dir build/ruff
         """,
     )
 

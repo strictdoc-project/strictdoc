@@ -85,7 +85,10 @@ class LanguageItem:
 
         assert parent is not None
         self.parent = parent
+
+        # Full qualified name.
         self.name = name
+
         self.display_name = display_name
 
         # Child functions are supported in programming languages that can nest

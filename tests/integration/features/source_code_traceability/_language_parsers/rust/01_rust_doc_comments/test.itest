@@ -1,0 +1,440 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Published: Hello world doc
+
+# Check that all source files are generated
+RUN: %check_exists --file "%T/html/_source_files/outer_line_docs.rs.html"
+RUN: %check_exists --file "%T/html/_source_files/outer_block_docs.rs.html"
+RUN: %check_exists --file "%T/html/_source_files/outer_doc_attrs.rs.html"
+RUN: %check_exists --file "%T/html/_source_files/inner_line_docs.rs.html"
+RUN: %check_exists --file "%T/html/_source_files/inner_block_docs.rs.html"
+RUN: %check_exists --file "%T/html/_source_files/inner_doc_attrs.rs.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-INPUT-HTML
+
+# @relation(SDOC-SRS-166 , scope=line)
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#1#128"
+CHECK-INPUT-HTML: entire file
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#12#18"
+CHECK-INPUT-HTML: fn validate()
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#32#38"
+CHECK-INPUT-HTML: fn process()
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#41#61"
+CHECK-INPUT-HTML: impl Container
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#46#52"
+CHECK-INPUT-HTML: fn new()
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#54#60"
+CHECK-INPUT-HTML: fn get_value()
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#63#69"
+CHECK-INPUT-HTML: fn process_data()
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#71#77"
+CHECK-INPUT-HTML: fn async_process()
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#79#85"
+CHECK-INPUT-HTML: fn compute_magic()
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#87#95"
+CHECK-INPUT-HTML: fn dangerous_operation()
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#97#105"
+CHECK-INPUT-HTML: module submodule
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#107#117"
+CHECK-INPUT-HTML: foreign module extern &#34;C&#34;
+CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#121#127"
+CHECK-INPUT-HTML: fn test_basic()
+# @relation(SDOC-SRS-166 , scope=end)
+
+# @relation(SDOC-SRS-167 , scope=range_start)
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#1#154"
+CHECK-INPUT-HTML: entire file
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#14#22"
+CHECK-INPUT-HTML: fn validate()
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#36#44"
+CHECK-INPUT-HTML: fn process()
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#47#73"
+CHECK-INPUT-HTML: impl Container
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#54#62"
+CHECK-INPUT-HTML: fn new()
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#64#72"
+CHECK-INPUT-HTML: fn get_value()
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#75#83"
+CHECK-INPUT-HTML: fn process_data()
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#85#93"
+CHECK-INPUT-HTML: fn async_process()
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#95#103"
+CHECK-INPUT-HTML: fn compute_magic()
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#105#115"
+CHECK-INPUT-HTML: fn dangerous_operation()
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#117#127"
+CHECK-INPUT-HTML: module submodule
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#129#141"
+CHECK-INPUT-HTML: foreign module extern &#34;C&#34;
+CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#145#153"
+CHECK-INPUT-HTML: fn test_basic()
+# @relation(SDOC-SRS-167 , scope=range_end)
+
+# @relation(SDOC-SRS-165, scope=range_start)
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#12#18"
+CHECK-INPUT-HTML: fn validate()
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#32#38"
+CHECK-INPUT-HTML: fn process()
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#41#61"
+CHECK-INPUT-HTML: impl Container
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#46#52"
+CHECK-INPUT-HTML: fn new()
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#54#60"
+CHECK-INPUT-HTML: fn get_value()
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#63#69"
+CHECK-INPUT-HTML: fn process_data()
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#71#77"
+CHECK-INPUT-HTML: fn async_process()
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#79#85"
+CHECK-INPUT-HTML: fn compute_magic()
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#87#95"
+CHECK-INPUT-HTML: fn dangerous_operation()
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#97#105"
+CHECK-INPUT-HTML: module submodule
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#107#117"
+CHECK-INPUT-HTML: foreign module extern &#34;C&#34;
+CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#121#127"
+CHECK-INPUT-HTML: fn test_basic()
+# @relation(SDOC-SRS-165, scope=range_end)
+
+# @relation(SDOC-SRS-169 , scope=range_start)
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-LINE-DOC#257#275"
+CHECK-INPUT-HTML: module submodule
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-LINE-DOC#189#203"
+CHECK-INPUT-HTML: module submodule
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#3#6"
+CHECK-INPUT-HTML: const MAGIC_NUMBER
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#8#11"
+CHECK-INPUT-HTML: static GLOBAL_STATE
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#13#16"
+CHECK-INPUT-HTML: type CustomResult
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#18#31"
+CHECK-INPUT-HTML: struct Container
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#22#25"
+CHECK-INPUT-HTML: field name
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#27#30"
+CHECK-INPUT-HTML: field value
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#33#61"
+CHECK-INPUT-HTML: enum Status
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#37#40"
+CHECK-INPUT-HTML: enum variant Active
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#42#50"
+CHECK-INPUT-HTML: enum variant Idle
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#46#49"
+CHECK-INPUT-HTML: field duration
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#52#60"
+CHECK-INPUT-HTML: enum variant Error
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#56#59"
+CHECK-INPUT-HTML: type i32
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#63#76"
+CHECK-INPUT-HTML: union FloatOrInt
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#67#70"
+CHECK-INPUT-HTML: field f
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#72#75"
+CHECK-INPUT-HTML: field i
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#78#103"
+CHECK-INPUT-HTML: trait Processor
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#82#85"
+CHECK-INPUT-HTML: associated type Output
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#87#90"
+CHECK-INPUT-HTML: const MAX_SIZE
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#92#95"
+CHECK-INPUT-HTML: function process()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#97#102"
+CHECK-INPUT-HTML: fn validate()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#114#117"
+CHECK-INPUT-HTML: type Output
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#119#122"
+CHECK-INPUT-HTML: const MAX_SIZE
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#124#129"
+CHECK-INPUT-HTML: fn process()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#132#149"
+CHECK-INPUT-HTML: impl Container
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#136#141"
+CHECK-INPUT-HTML: fn new()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#143#148"
+CHECK-INPUT-HTML: fn get_value()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#151#156"
+CHECK-INPUT-HTML: fn process_data()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#158#163"
+CHECK-INPUT-HTML: fn async_process()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#165#170"
+CHECK-INPUT-HTML: fn compute_magic()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#172#179"
+CHECK-INPUT-HTML: fn dangerous_operation()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#181#184"
+CHECK-INPUT-HTML: crate std
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#186#203"
+CHECK-INPUT-HTML: module submodule
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#189#203"
+CHECK-INPUT-HTML: module submodule
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#194#202"
+CHECK-INPUT-HTML: struct Inner
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#198#201"
+CHECK-INPUT-HTML: field data
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#205#223"
+CHECK-INPUT-HTML: foreign module extern &#34;C&#34;
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#209#212"
+CHECK-INPUT-HTML: function external_func()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#214#217"
+CHECK-INPUT-HTML: static EXTERNAL_VAR
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#219#222"
+CHECK-INPUT-HTML: associated type OpaqueType
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#225#232"
+CHECK-INPUT-HTML: macro test_macro
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#234#249"
+CHECK-INPUT-HTML: fn match_example()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#239#242"
+CHECK-INPUT-HTML: match arm Some(val)
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#244#247"
+CHECK-INPUT-HTML: match arm None
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#251#268"
+CHECK-INPUT-HTML: fn generic_fn()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#255#258"
+CHECK-INPUT-HTML: type parameter T
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#260#263"
+CHECK-INPUT-HTML: const parameter N
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#270#290"
+CHECK-INPUT-HTML: struct GenericContainer
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#274#277"
+CHECK-INPUT-HTML: lifetime &#39;a
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#279#282"
+CHECK-INPUT-HTML: type parameter T
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#286#289"
+CHECK-INPUT-HTML: field data
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#294#303"
+CHECK-INPUT-HTML: fn struct_expression_test()
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#298#300"
+CHECK-INPUT-HTML: field initializer name
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#307#309"
+CHECK-INPUT-HTML: statement 8675309;
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#310#314"
+CHECK-INPUT-HTML: expression x + 2
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#318#320"
+CHECK-INPUT-HTML: expression (x + 2)
+CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#325#331"
+CHECK-INPUT-HTML: fn test_basic()
+# @relation(SDOC-SRS-169 , scope=range_end)
+
+# @relation(SDOC-SRS-170 , scope=range_start)
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#3#8"
+CHECK-INPUT-HTML: const MAGIC_NUMBER
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#10#15"
+CHECK-INPUT-HTML: static GLOBAL_STATE
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#17#22"
+CHECK-INPUT-HTML: type CustomResult
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#24#43"
+CHECK-INPUT-HTML: struct Container
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#30#35"
+CHECK-INPUT-HTML: field name
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#37#42"
+CHECK-INPUT-HTML: field value
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#45#85"
+CHECK-INPUT-HTML: enum Status
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#51#56"
+CHECK-INPUT-HTML: enum variant Active
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#58#70"
+CHECK-INPUT-HTML: enum variant Idle
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#64#69"
+CHECK-INPUT-HTML: field duration
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#72#84"
+CHECK-INPUT-HTML: enum variant Error
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#78#83"
+CHECK-INPUT-HTML: type i32
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#87#106"
+CHECK-INPUT-HTML: union FloatOrInt
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#93#98"
+CHECK-INPUT-HTML: field f
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#100#105"
+CHECK-INPUT-HTML: field i
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#108#143"
+CHECK-INPUT-HTML: trait Processor
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#114#119"
+CHECK-INPUT-HTML: associated type Output
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#121#126"
+CHECK-INPUT-HTML: const MAX_SIZE
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#128#133"
+CHECK-INPUT-HTML: function process()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#135#142"
+CHECK-INPUT-HTML: fn validate()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#152#180"
+CHECK-INPUT-HTML: impl Container
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#158#163"
+CHECK-INPUT-HTML: type Output
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#165#170"
+CHECK-INPUT-HTML: const MAX_SIZE
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#172#179"
+CHECK-INPUT-HTML: fn process()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#182#205"
+CHECK-INPUT-HTML: impl Container
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#188#195"
+CHECK-INPUT-HTML: fn new()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#197#204"
+CHECK-INPUT-HTML: fn get_value()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#207#214"
+CHECK-INPUT-HTML: fn process_data()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#216#223"
+CHECK-INPUT-HTML: fn async_process()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#225#232"
+CHECK-INPUT-HTML: fn compute_magic()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#234#243"
+CHECK-INPUT-HTML: fn dangerous_operation()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#245#250"
+CHECK-INPUT-HTML: crate std
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#252#275"
+CHECK-INPUT-HTML: module submodule
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#262#274"
+CHECK-INPUT-HTML: struct Inner
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#268#273"
+CHECK-INPUT-HTML: field data
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#277#303"
+CHECK-INPUT-HTML: foreign module extern &#34;C&#34;
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#283#288"
+CHECK-INPUT-HTML: function external_func()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#290#295"
+CHECK-INPUT-HTML: static EXTERNAL_VAR
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#297#302"
+CHECK-INPUT-HTML: associated type OpaqueType
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#305#314"
+CHECK-INPUT-HTML: macro test_macro
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#316#337"
+CHECK-INPUT-HTML: fn match_example()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#323#328"
+CHECK-INPUT-HTML: match arm Some(val)
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#330#335"
+CHECK-INPUT-HTML: match arm None
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#339#362"
+CHECK-INPUT-HTML: fn generic_fn()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#345#350"
+CHECK-INPUT-HTML: type parameter T
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#352#357"
+CHECK-INPUT-HTML: const parameter N
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#364#392"
+CHECK-INPUT-HTML: struct GenericContainer
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#370#375"
+CHECK-INPUT-HTML: lifetime &#39;a
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#377#382"
+CHECK-INPUT-HTML: type parameter T
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#386#391"
+CHECK-INPUT-HTML: field data
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#398#411"
+CHECK-INPUT-HTML: fn struct_expression_test()
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#404#408"
+CHECK-INPUT-HTML: field initializer name
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#417#421"
+CHECK-INPUT-HTML: statement 8675309;
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#422#428"
+CHECK-INPUT-HTML: expression x + 2
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#432#436"
+CHECK-INPUT-HTML: expression (x + 2)
+CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#441#449"
+CHECK-INPUT-HTML: fn test_basic()
+# @relation(SDOC-SRS-170 , scope=range_end)
+
+# @relation(SDOC-SRS-168 , scope=range_start)
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#3#6"
+CHECK-INPUT-HTML: const MAGIC_NUMBER
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#8#11"
+CHECK-INPUT-HTML: static GLOBAL_STATE
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#13#16"
+CHECK-INPUT-HTML: type CustomResult
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#18#31"
+CHECK-INPUT-HTML: struct Container
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#22#25"
+CHECK-INPUT-HTML: field name
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#27#30"
+CHECK-INPUT-HTML: field value
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#33#61"
+CHECK-INPUT-HTML: enum Status
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#37#40"
+CHECK-INPUT-HTML: enum variant Active
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#42#50"
+CHECK-INPUT-HTML: enum variant Idle
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#46#49"
+CHECK-INPUT-HTML: field duration
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#52#60"
+CHECK-INPUT-HTML: enum variant Error
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#56#59"
+CHECK-INPUT-HTML: type i32
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#63#76"
+CHECK-INPUT-HTML: union FloatOrInt
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#67#70"
+CHECK-INPUT-HTML: field f
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#72#75"
+CHECK-INPUT-HTML: field i
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#78#103"
+CHECK-INPUT-HTML: trait Processor
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#82#85"
+CHECK-INPUT-HTML: associated type Output
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#87#90"
+CHECK-INPUT-HTML: const MAX_SIZE
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#92#95"
+CHECK-INPUT-HTML: function process()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#97#102"
+CHECK-INPUT-HTML: fn validate()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#110#130"
+CHECK-INPUT-HTML: impl Container
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#114#117"
+CHECK-INPUT-HTML: type Output
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#119#122"
+CHECK-INPUT-HTML: const MAX_SIZE
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#124#129"
+CHECK-INPUT-HTML: fn process()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#132#149"
+CHECK-INPUT-HTML: impl Container
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#136#141"
+CHECK-INPUT-HTML: fn new()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#143#148"
+CHECK-INPUT-HTML: fn get_value()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#151#156"
+CHECK-INPUT-HTML: fn process_data()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#158#163"
+CHECK-INPUT-HTML: fn async_process()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#165#170"
+CHECK-INPUT-HTML: fn compute_magic()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#172#179"
+CHECK-INPUT-HTML: fn dangerous_operation()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#181#184"
+CHECK-INPUT-HTML: crate std
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#186#203"
+CHECK-INPUT-HTML: module submodule
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#194#202"
+CHECK-INPUT-HTML: struct Inner
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#198#201"
+CHECK-INPUT-HTML: field data
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#205#223"
+CHECK-INPUT-HTML: foreign module extern &#34;C&#34;
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#209#212"
+CHECK-INPUT-HTML: function external_func()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#214#217"
+CHECK-INPUT-HTML: static EXTERNAL_VAR
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#219#222"
+CHECK-INPUT-HTML: associated type OpaqueType
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#225#232"
+CHECK-INPUT-HTML: macro test_macro
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#234#249"
+CHECK-INPUT-HTML: fn match_example()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#251#268"
+CHECK-INPUT-HTML: fn generic_fn()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#255#258"
+CHECK-INPUT-HTML: type parameter T
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#260#263"
+CHECK-INPUT-HTML: const parameter N
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#270#290"
+CHECK-INPUT-HTML: struct GenericContainer
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#274#277"
+CHECK-INPUT-HTML: lifetime &#39;a
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#279#282"
+CHECK-INPUT-HTML: type parameter T
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#286#289"
+CHECK-INPUT-HTML: field data
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#294#303"
+CHECK-INPUT-HTML: fn struct_expression_test()
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#307#309"
+CHECK-INPUT-HTML: statement 8675309;
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#310#314"
+CHECK-INPUT-HTML: expression x + 2
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#318#320"
+CHECK-INPUT-HTML: expression (x + 2)
+CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#325#331"
+CHECK-INPUT-HTML: fn test_basic()
+# @relation(SDOC-SRS-168 , scope=range_end)

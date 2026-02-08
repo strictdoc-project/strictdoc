@@ -41,20 +41,32 @@ class MarkerParser:
         default_scope: Optional[str] = None,
     ) -> SourceNode:
         """
-        Parse relation markers from source file comments.
+        Parse source nodes and relation markers from source file comments.
 
         Before the actual parsing, the function removes all code comment symbols
         such as /** ... */ or /// Doxygen comments or Python
 
-        The line start/end indicate a range where the comment is located in the
-        source file.
-        The comment_line_start parameter maybe the same as line start but can
-        also be different if the comment is part of a Python or C function in
-        which case the comment_line_start will be several lines below the actual
-        start of the range.
+        The 1-based line start/end provide hints to the parser for the case markers
+        of scope file, class or function are found, in which case the user values are
+        set as highlight range. If the parser finds line or range markers, the user
+        provided line start/end values are ignored. Should be set to the item definition
+        block, *with* leading comment lines if any.
+
+        The 1-based comment_line_start parameter is the first actual comment line.
+        It is required as a base offset for some parser tokens to determine their
+        absolute position in file, as lexing gives only a position relative
+        to comment start.
+
+        custom_tags is a set of valid tags if a comment is expected to contain
+        key-value pairs for source node generation. The caller is responsible to determine
+        valid custom tags from the grammar element associated with the source code file.
 
         filename should be given if input_string comes from a static source file.
         It will be used to create more helpful parsing error messages.
+
+        entity_name is required for language item markers. It's the user-visible
+        description of the marked range in the rendered document. Should be equal
+        to the related LanguageItem.description for consistency with forward markers.
 
         default_scope should be provided if the caller's language-aware parser
         can infer the scope from the semantic comment position. Think of Rust doc
@@ -62,6 +74,10 @@ class MarkerParser:
         in a relation marker. A user provided scope argument always takes preference.
         If neither default nor a user provided value is available,
         StrictDocSemanticError will be raised.
+
+        The function returns a SourceNode. Note: This is also the case if no custom tags were
+        found at all (in which case fields is empty) because SourceNode also acts as a container
+        for markers.
         """
 
         node_fields: Dict[str, str] = {}

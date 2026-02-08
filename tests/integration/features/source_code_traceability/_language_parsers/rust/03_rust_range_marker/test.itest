@@ -1,0 +1,15 @@
+# @relation(SDOC-SRS-171, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Published: Hello world doc
+
+# Check that all source files are generated
+RUN: %check_exists --file "%T/html/_source_files/line_range.rs.html"
+
+# Check links and names from document to source file
+CHECK-INPUT-HTML: href="../_source_files/line_range.rs.html#REQ-LINE-RANGE#1#26"
+CHECK-INPUT-HTML: entire file
+CHECK-INPUT-HTML: href="../_source_files/line_range.rs.html#REQ-LINE-RANGE#3#4"
+CHECK-INPUT-HTML: line
+CHECK-INPUT-HTML: href="../_source_files/line_range.rs.html#REQ-LINE-RANGE#8#20"
+CHECK-INPUT-HTML: range

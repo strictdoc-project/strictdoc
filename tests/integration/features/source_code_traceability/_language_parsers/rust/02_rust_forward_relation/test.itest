@@ -1,0 +1,29 @@
+# @relation(SDOC-SRS-173, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Published: Hello world doc
+
+# Check that all source files are generated
+RUN: %check_exists --file "%T/html/_source_files/forward_relations.rs.html"
+
+# Check links and names from document to source file
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#1#14"
+CHECK-INPUT-HTML: function forward_relations::foo_module()
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#6#13"
+CHECK-INPUT-HTML: function forward_relations::foo_module::foo()
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#7#10"
+CHECK-INPUT-HTML: function forward_relations::foo_module::foo::bar()
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#8#9"
+CHECK-INPUT-HTML: function forward_relations::foo_module::foo::bar::BAR_CONST()
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#16#17"
+CHECK-INPUT-HTML: function forward_relations::FooTuple()
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#19#20"
+CHECK-INPUT-HTML: function &lt;forward_relations::FooTuple as forward_relations::foo_module::FooTrait&gt;::foo()
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#22#23"
+CHECK-INPUT-HTML: function forward_relations::FooUnion()
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#24#25"
+CHECK-INPUT-HTML: function forward_relations::FOO_CONST()
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#26#28"
+CHECK-INPUT-HTML: function forward_relations::FooTrait()
+CHECK-INPUT-HTML: href="../_source_files/forward_relations.rs.html#REQ-FWD-RELATIONS#30#35"
+CHECK-INPUT-HTML: function forward_relations::FooEnum()

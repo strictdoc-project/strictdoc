@@ -1,3 +1,4 @@
+import asyncio
 import copy
 import datetime
 import os
@@ -2820,16 +2821,22 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     class ConnectionManager:
         def __init__(self) -> None:
             self.active_connections: List[WebSocket] = []
+            self._lock = asyncio.Lock()
 
         async def connect(self, websocket: WebSocket) -> None:
             await websocket.accept()
-            self.active_connections.append(websocket)
+            async with self._lock:
+                self.active_connections.append(websocket)
 
-        def disconnect(self, websocket: WebSocket) -> None:
-            self.active_connections.remove(websocket)
+        async def disconnect(self, websocket: WebSocket) -> None:
+            async with self._lock:
+                if websocket in self.active_connections:
+                    self.active_connections.remove(websocket)
 
         async def broadcast(self, message: str) -> None:
-            for connection in self.active_connections:
+            async with self._lock:
+                connections = list(self.active_connections)
+            for connection in connections:
                 await connection.send_text(message)
 
     manager = ConnectionManager()
@@ -2842,7 +2849,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 _ = await websocket.receive_text()
                 # Do nothing for now.
         except WebSocketDisconnect:
-            manager.disconnect(websocket)
+            await manager.disconnect(websocket)
             await manager.broadcast(
                 f"Websocket: Client #{client_id} disconnected"
             )

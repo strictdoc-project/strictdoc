@@ -8,8 +8,8 @@ from typing import Optional, TypedDict
 from textx import get_location, metamodel_from_str
 
 from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
@@ -120,24 +120,24 @@ def range_marker_processor(
         raise NotImplementedError
 
 
-def function_range_marker_processor(
-    function_range_marker: FunctionRangeMarker, parse_context: ParseContext
+def language_item_marker_processor(
+    language_item_marker: LanguageItemMarker, parse_context: ParseContext
 ) -> None:
-    validate_marker_uids(function_range_marker, parse_context)
+    validate_marker_uids(language_item_marker, parse_context)
 
-    location = get_location(function_range_marker)
+    location = get_location(language_item_marker)
     line = location["line"]
     column = location["col"]
 
-    function_range_marker.ng_source_line_begin = line
-    function_range_marker.ng_source_column_begin = column
-    function_range_marker.ng_range_line_begin = 1
-    function_range_marker.ng_range_line_end = (
+    language_item_marker.ng_source_line_begin = line
+    language_item_marker.ng_source_column_begin = column
+    language_item_marker.ng_range_line_begin = 1
+    language_item_marker.ng_range_line_end = (
         parse_context.file_stats.lines_total
     )
 
-    if function_range_marker.ng_is_nodoc:
-        _handle_skip_marker(function_range_marker, parse_context)
+    if language_item_marker.ng_is_nodoc:
+        _handle_skip_marker(language_item_marker, parse_context)
         return
 
     if (
@@ -147,21 +147,21 @@ def function_range_marker_processor(
         # This marker is within a "@relation(skip...)" block, so we ignore it.
         return
 
-    parse_context.markers.append(function_range_marker)
+    parse_context.markers.append(language_item_marker)
 
-    # Function range markers supported by this general reader can only
+    # Language item markers supported by this general reader can only
     # be of scope=file. Only the language-aware parsing results in
     # markers also having scope=function or scope=class.
-    function_range_marker.set_description("entire file")
+    language_item_marker.set_description("entire file")
 
-    for req in function_range_marker.reqs:
+    for req in language_item_marker.reqs:
         markers = parse_context.map_reqs_to_markers.setdefault(req, [])
-        markers.append(function_range_marker)
+        markers.append(language_item_marker)
 
 
 class SourceFileTraceabilityReader:
     SOURCE_FILE_MODELS = [
-        FunctionRangeMarker,
+        LanguageItemMarker,
         LineMarker,
         Req,
         SourceFileTraceabilityInfo,
@@ -197,12 +197,12 @@ class SourceFileTraceabilityReader:
         parse_line_marker_processor = partial(
             line_marker_processor, parse_context=parse_context
         )
-        parse_function_range_marker_processor = partial(
-            function_range_marker_processor, parse_context=parse_context
+        parse_language_item_marker_processor = partial(
+            language_item_marker_processor, parse_context=parse_context
         )
 
         obj_processors = {
-            "FunctionRangeMarker": parse_function_range_marker_processor,
+            "LanguageItemMarker": parse_language_item_marker_processor,
             "LineMarker": parse_line_marker_processor,
             "RangeMarker": parse_range_marker_processor,
             "Req": parse_req_processor,

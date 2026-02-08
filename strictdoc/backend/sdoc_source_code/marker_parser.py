@@ -12,8 +12,8 @@ from strictdoc.backend.sdoc_source_code.comment_parser.marker_lexer import (
 from strictdoc.backend.sdoc_source_code.helpers.comment_preprocessor import (
     preprocess_source_code_comment,
 )
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
@@ -104,8 +104,8 @@ class MarkerParser:
         comment_line_start: int,
         entity_name: Optional[str] = None,
         col_offset: int = 0,
-    ) -> List[Union[FunctionRangeMarker, RangeMarker, LineMarker]]:
-        markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]] = []
+    ) -> List[Union[LanguageItemMarker, RangeMarker, LineMarker]]:
+        markers: List[Union[LanguageItemMarker, RangeMarker, LineMarker]] = []
 
         relation_uid_elements = []
         relation_scope_element: Optional[Tree[Token]] = None
@@ -155,24 +155,26 @@ class MarkerParser:
             requirements.append(requirement)
 
         if relation_scope in ("file", "class", "function"):
-            function_marker = FunctionRangeMarker(
+            language_item_marker = LanguageItemMarker(
                 None, requirements, scope=relation_scope, role=relation_role
             )
-            function_marker.ng_source_line_begin = (
+            language_item_marker.ng_source_line_begin = (
                 comment_line_start + element_.meta.line - 1
             )
-            function_marker.ng_source_column_begin = (
+            language_item_marker.ng_source_column_begin = (
                 element_.meta.column + col_offset
             )
-            function_marker.ng_range_line_begin = line_start
-            function_marker.ng_range_line_end = line_end
+            language_item_marker.ng_range_line_begin = line_start
+            language_item_marker.ng_range_line_end = line_end
             if relation_scope == "file":
-                function_marker.set_description("entire file")
+                language_item_marker.set_description("entire file")
             elif relation_scope == "function":
-                function_marker.set_description(f"function {entity_name}()")
+                language_item_marker.set_description(
+                    f"function {entity_name}()"
+                )
             elif relation_scope == "class":
-                function_marker.set_description(f"class {entity_name}")
-            markers.append(function_marker)
+                language_item_marker.set_description(f"class {entity_name}")
+            markers.append(language_item_marker)
         elif relation_scope in ("range_start", "range_end"):
             range_marker = RangeMarker(
                 None,

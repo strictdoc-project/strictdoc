@@ -2,9 +2,9 @@
 @relation(SDOC-SRS-146, scope=file)
 """
 
-from strictdoc.backend.sdoc_source_code.models.function import Function
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language import LanguageItem
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
@@ -34,13 +34,13 @@ class Foo
     assert len(info.functions) == 1
     assert len(info.markers) == 1
 
-    function: Function = info.functions[0]
+    function: LanguageItem = info.functions[0]
     assert function.name == "Foo::CanSend(const CanFrame &frame)"
     assert function.display_name == "Foo::CanSend"
     assert function.line_begin == 4
     assert function.line_end == 7
 
-    marker: FunctionRangeMarker = info.markers[0]
+    marker: LanguageItemMarker = info.markers[0]
     assert marker.ng_range_line_begin == 4
     assert marker.ng_range_line_end == 7
 
@@ -66,13 +66,13 @@ class Bar {
     assert len(info.functions) == 1
     assert len(info.markers) == 1
 
-    function: Function = info.functions[0]
+    function: LanguageItem = info.functions[0]
     assert function.name == "Foo::Bar::CanSend(const CanFrame &frame)"
     assert function.display_name == "Foo::Bar::CanSend"
     assert function.line_begin == 4
     assert function.line_end == 7
 
-    marker: FunctionRangeMarker = info.markers[0]
+    marker: LanguageItemMarker = info.markers[0]
     assert marker.ng_range_line_begin == 4
     assert marker.ng_range_line_end == 7
 
@@ -95,13 +95,13 @@ bool Foo::Bar::CanSend(const CanFrame &frame) {
     assert len(info.functions) == 1
     assert len(info.markers) == 1
 
-    function: Function = info.functions[0]
+    function: LanguageItem = info.functions[0]
     assert function.name == "Foo::Bar::CanSend(const CanFrame &frame)"
     assert function.display_name == "Foo::Bar::CanSend"
     assert function.line_begin == 1
     assert function.line_end == 6
 
-    marker: FunctionRangeMarker = info.markers[0]
+    marker: LanguageItemMarker = info.markers[0]
     assert marker.ng_range_line_begin == 1
     assert marker.ng_range_line_end == 6
 
@@ -129,13 +129,13 @@ class TrkVertex
     assert len(info.functions) == 1
     assert len(info.markers) == 1
 
-    function: Function = info.functions[0]
+    function: LanguageItem = info.functions[0]
     assert function.name == "TrkVertex::operator-=(const TrkVertex& c)"
     assert function.display_name == "TrkVertex::operator-="
     assert function.line_begin == 7
     assert function.line_end == 10
 
-    marker: FunctionRangeMarker = info.markers[0]
+    marker: LanguageItemMarker = info.markers[0]
     assert marker.ng_range_line_begin == 7
     assert marker.ng_range_line_end == 10
 
@@ -170,33 +170,33 @@ class TrkVertex
     assert len(info.functions) == 3
     assert len(info.markers) == 3
 
-    function_1: Function = info.functions[0]
+    function_1: LanguageItem = info.functions[0]
     assert function_1.name == "TrkVertex::TrkVertex()"
     assert function_1.display_name == "TrkVertex::TrkVertex"
     assert function_1.line_begin == 4
     assert function_1.line_end == 7
 
-    function_2: Function = info.functions[1]
+    function_2: LanguageItem = info.functions[1]
     assert function_2.name == "TrkVertex::TrkVertex(double x, double y)"
     assert function_2.display_name == "TrkVertex::TrkVertex"
     assert function_2.line_begin == 9
     assert function_2.line_end == 12
 
-    function_3: Function = info.functions[2]
+    function_3: LanguageItem = info.functions[2]
     assert function_3.name == "TrkVertex::~TrkVertex()"
     assert function_3.display_name == "TrkVertex::~TrkVertex"
     assert function_3.line_begin == 14
     assert function_3.line_end == 17
 
-    marker_1: FunctionRangeMarker = info.markers[0]
+    marker_1: LanguageItemMarker = info.markers[0]
     assert marker_1.ng_range_line_begin == 4
     assert marker_1.ng_range_line_end == 7
 
-    marker_2: FunctionRangeMarker = info.markers[1]
+    marker_2: LanguageItemMarker = info.markers[1]
     assert marker_2.ng_range_line_begin == 9
     assert marker_2.ng_range_line_end == 12
 
-    marker_3: FunctionRangeMarker = info.markers[2]
+    marker_3: LanguageItemMarker = info.markers[2]
     assert marker_3.ng_range_line_begin == 14
     assert marker_3.ng_range_line_end == 17
 
@@ -231,33 +231,33 @@ class TrkVertex
     assert len(info.functions) == 3
     assert len(info.markers) == 3
 
-    function_1: Function = info.functions[0]
+    function_1: LanguageItem = info.functions[0]
     assert function_1.name == "TrkVertex::TrkVertex()"
     assert function_1.display_name == "TrkVertex::TrkVertex"
     assert function_1.line_begin == 4
     assert function_1.line_end == 7
 
-    function_2: Function = info.functions[1]
+    function_2: LanguageItem = info.functions[1]
     assert function_2.name == "TrkVertex::TrkVertex(double x, double y)"
     assert function_2.display_name == "TrkVertex::TrkVertex"
     assert function_2.line_begin == 9
     assert function_2.line_end == 12
 
-    function_3: Function = info.functions[2]
+    function_3: LanguageItem = info.functions[2]
     assert function_3.name == "TrkVertex::~TrkVertex()"
     assert function_3.display_name == "TrkVertex::~TrkVertex"
     assert function_3.line_begin == 14
     assert function_3.line_end == 17
 
-    marker_1: FunctionRangeMarker = info.markers[0]
+    marker_1: LanguageItemMarker = info.markers[0]
     assert marker_1.ng_range_line_begin == 4
     assert marker_1.ng_range_line_end == 7
 
-    marker_2: FunctionRangeMarker = info.markers[1]
+    marker_2: LanguageItemMarker = info.markers[1]
     assert marker_2.ng_range_line_begin == 9
     assert marker_2.ng_range_line_end == 12
 
-    marker_3: FunctionRangeMarker = info.markers[2]
+    marker_3: LanguageItemMarker = info.markers[2]
     assert marker_3.ng_range_line_begin == 14
     assert marker_3.ng_range_line_end == 17
 
@@ -294,24 +294,24 @@ Foo& Foo::operator+(const Foo& c) { return *this; }
     assert len(info.functions) == 4
     assert len(info.markers) == 1
 
-    function_1: Function = info.functions[0]
+    function_1: LanguageItem = info.functions[0]
     assert function_1.name == "Foo::Foo()"
     assert function_1.display_name == "Foo::Foo"
     assert function_1.line_begin == 6
     assert function_1.line_end == 6
 
-    function_2: Function = info.functions[1]
+    function_2: LanguageItem = info.functions[1]
     assert function_2.name == "Foo::Foo(int a, int b)"
     assert function_2.display_name == "Foo::Foo"
     assert function_2.line_begin == 7
     assert function_2.line_end == 7
 
-    function_3: Function = info.functions[2]
+    function_3: LanguageItem = info.functions[2]
     assert function_3.name == "Foo::operator+(const Foo& c)"
     assert function_3.display_name == "Foo::operator+"
     assert function_3.line_begin == 9
     assert function_3.line_end == 12
 
-    marker_1: FunctionRangeMarker = info.markers[0]
+    marker_1: LanguageItemMarker = info.markers[0]
     assert marker_1.ng_range_line_begin == 9
     assert marker_1.ng_range_line_end == 12

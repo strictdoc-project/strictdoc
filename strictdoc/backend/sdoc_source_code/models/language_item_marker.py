@@ -17,7 +17,7 @@ class RangeMarkerType(Enum):
 
 
 @auto_described
-class FunctionRangeMarker:
+class LanguageItemMarker:
     def __init__(
         self, parent: Any, reqs_objs: List[Req], scope: str, role: Optional[str]
     ):
@@ -78,7 +78,7 @@ class FunctionRangeMarker:
         assert isinstance(description, str)
         self._description = description
 
-    def create_end_marker(self) -> "FunctionRangeMarker":
+    def create_end_marker(self) -> "LanguageItemMarker":
         marker_copy = copy(self)
         marker_copy.begin_or_end = False
         marker_copy.ng_range_line_begin = self.ng_range_line_begin
@@ -87,7 +87,7 @@ class FunctionRangeMarker:
 
 
 @auto_described
-class ForwardFunctionRangeMarker(FunctionRangeMarker):
+class ForwardLanguageItemMarker(LanguageItemMarker):
     def __init__(
         self,
         parent: Any,

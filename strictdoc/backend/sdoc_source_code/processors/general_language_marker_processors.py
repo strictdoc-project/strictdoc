@@ -7,8 +7,8 @@ from typing import List, Optional, Tuple, Union
 from textx import get_location
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
@@ -23,7 +23,7 @@ from strictdoc.helpers.list import find_duplicates
 
 
 def validate_marker_uids(
-    marker: Union[FunctionRangeMarker, LineMarker, RangeMarker],
+    marker: Union[LanguageItemMarker, LineMarker, RangeMarker],
     parse_context: ParseContext,
 ) -> None:
     possible_duplicates = find_duplicates(marker.reqs)
@@ -37,7 +37,7 @@ def validate_marker_uids(
 
 
 def _handle_skip_marker(
-    marker: Union[RangeMarker, FunctionRangeMarker, LineMarker],
+    marker: Union[RangeMarker, LanguageItemMarker, LineMarker],
     parse_context: ParseContext,
 ) -> None:
     assert marker.ng_is_nodoc, marker
@@ -139,7 +139,7 @@ Content...
 
 
 def create_unmatch_range_error(
-    unmatched_ranges: List[Union[RangeMarker, FunctionRangeMarker, LineMarker]],
+    unmatched_ranges: List[Union[RangeMarker, LanguageItemMarker, LineMarker]],
     filename: Optional[str],
 ) -> StrictDocSemanticError:
     assert isinstance(unmatched_ranges, list)
@@ -178,8 +178,8 @@ def create_unmatch_range_error(
     )
 
 
-def function_range_marker_processor(
-    marker: FunctionRangeMarker, parse_context: ParseContext
+def language_item_marker_processor(
+    marker: LanguageItemMarker, parse_context: ParseContext
 ) -> None:
     if marker.ng_is_nodoc:
         _handle_skip_marker(marker, parse_context)

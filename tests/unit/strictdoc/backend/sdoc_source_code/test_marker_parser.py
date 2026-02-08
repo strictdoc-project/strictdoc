@@ -3,8 +3,8 @@
 """
 
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 
@@ -26,7 +26,7 @@ def test_01_basic_nominal():
             comment_byte_range=None,
         )
         function_range = source_node.markers[0]
-        assert isinstance(function_range, FunctionRangeMarker)
+        assert isinstance(function_range, LanguageItemMarker)
         assert function_range.ng_source_line_begin == 1
         assert function_range.ng_range_line_begin == 1
         assert function_range.ng_range_line_end == 1
@@ -50,7 +50,7 @@ def test_10_parses_with_leading_newlines():
     )
     function_range = source_node.markers[0]
 
-    assert isinstance(function_range, FunctionRangeMarker)
+    assert isinstance(function_range, LanguageItemMarker)
     assert function_range.ng_source_line_begin == 3
     assert function_range.ng_range_line_begin == 1
     assert function_range.ng_range_line_end == 5
@@ -74,7 +74,7 @@ def test_11_parses_with_leading_whitespace():
     )
     function_range = source_node.markers[0]
 
-    assert isinstance(function_range, FunctionRangeMarker)
+    assert isinstance(function_range, LanguageItemMarker)
     assert function_range.ng_source_line_begin == 3
     assert function_range.ng_range_line_begin == 1
     assert function_range.ng_range_line_end == 3
@@ -100,7 +100,7 @@ def test_20_parses_within_doxygen_comment():
     )
     function_range = source_node.markers[0]
 
-    assert isinstance(function_range, FunctionRangeMarker)
+    assert isinstance(function_range, LanguageItemMarker)
     assert function_range.ng_source_line_begin == 4
     assert function_range.ng_range_line_begin == 1
     assert function_range.ng_range_line_end == 5
@@ -127,7 +127,7 @@ def test_21_parses_within_doxygen_comment_two_markers():
     )
     function_range = source_node.markers[0]
 
-    assert isinstance(function_range, FunctionRangeMarker)
+    assert isinstance(function_range, LanguageItemMarker)
     assert function_range.ng_source_line_begin == 4
     assert function_range.ng_range_line_begin == 1
     assert function_range.ng_range_line_end == 6
@@ -153,7 +153,7 @@ def test_22_parses_within_doxygen_comment_curly_braces():
     )
     function_range = source_node.markers[0]
 
-    assert isinstance(function_range, FunctionRangeMarker)
+    assert isinstance(function_range, LanguageItemMarker)
     assert function_range.ng_source_line_begin == 4
     assert function_range.ng_range_line_begin == 1
     assert function_range.ng_range_line_end == 5
@@ -190,7 +190,7 @@ def test_23_parses_within_doxygen_comment():
     )
 
     function_range = source_node.markers[0]
-    assert isinstance(function_range, FunctionRangeMarker)
+    assert isinstance(function_range, LanguageItemMarker)
     assert function_range.ng_source_line_begin == 4
     assert function_range.ng_range_line_begin == 1
     assert function_range.ng_range_line_end == 16
@@ -205,7 +205,7 @@ def test_23_parses_within_doxygen_comment():
     assert function_range.reqs_objs[2].ng_source_column == 8
 
     function_range = source_node.markers[1]
-    assert isinstance(function_range, FunctionRangeMarker)
+    assert isinstance(function_range, LanguageItemMarker)
     assert function_range.ng_source_line_begin == 10
     assert function_range.ng_range_line_begin == 1
     assert function_range.ng_range_line_end == 16

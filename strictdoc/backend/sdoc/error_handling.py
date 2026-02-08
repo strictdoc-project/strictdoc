@@ -20,9 +20,9 @@ from strictdoc.backend.sdoc.models.node import (
     SDocNodeField,
 )
 from strictdoc.backend.sdoc.models.reference import Reference
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    ForwardFunctionRangeMarker,
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    ForwardLanguageItemMarker,
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
@@ -323,8 +323,8 @@ ELEMENTS:
     def invalid_marker_role(
         node: SDocNode,
         marker: Union[
-            ForwardFunctionRangeMarker,
-            FunctionRangeMarker,
+            ForwardLanguageItemMarker,
+            LanguageItemMarker,
             LineMarker,
             RangeMarker,
             ForwardRangeMarker,

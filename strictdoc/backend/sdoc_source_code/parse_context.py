@@ -4,8 +4,8 @@
 
 from typing import Any, Dict, List, Optional, Union
 
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import RangeMarker
@@ -20,6 +20,6 @@ class ParseContext:
         self.file_stats: SourceFileStats = file_stats
         self.markers: List[Any] = []
         self.marker_stack: List[
-            Union[RangeMarker, FunctionRangeMarker, LineMarker]
+            Union[RangeMarker, LanguageItemMarker, LineMarker]
         ] = []
         self.map_reqs_to_markers: Dict[str, Any] = {}

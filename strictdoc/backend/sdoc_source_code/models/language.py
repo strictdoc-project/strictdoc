@@ -5,15 +5,15 @@
 from typing import Any, List, Optional, Set
 
 from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.source_location import ByteRange
 from strictdoc.helpers.auto_described import auto_described
 
 
 @auto_described
-class Function:
+class LanguageItem:
     def __init__(
         self,
         *,
@@ -24,7 +24,7 @@ class Function:
         line_end: int,
         code_byte_range: Optional[ByteRange],
         child_functions: List[Any],
-        markers: List[FunctionRangeMarker],
+        markers: List[LanguageItemMarker],
         attributes: Set[FunctionAttribute],
     ):
         assert parent is not None
@@ -34,8 +34,8 @@ class Function:
 
         # Child functions are supported in programming languages that can nest
         # functions, for example, Python.
-        self.child_functions: List[Function] = child_functions
-        self.markers: List[FunctionRangeMarker] = markers
+        self.child_functions: List[LanguageItem] = child_functions
+        self.markers: List[LanguageItemMarker] = markers
         self.line_begin = line_begin
         self.line_end = line_end
 

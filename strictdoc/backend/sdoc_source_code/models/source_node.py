@@ -5,9 +5,9 @@
 from dataclasses import dataclass, field
 from typing import Any, List, Optional, Union
 
-from strictdoc.backend.sdoc_source_code.models.function import Function
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language import LanguageItem
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
@@ -29,12 +29,12 @@ class SourceNode:
 
     entity_name: Optional[str]
     comment_byte_range: Optional[ByteRange]
-    markers: List[Union[FunctionRangeMarker, RangeMarker, LineMarker]] = field(
+    markers: List[Union[LanguageItemMarker, RangeMarker, LineMarker]] = field(
         default_factory=list
     )
     fields: dict[str, str] = field(default_factory=dict)
     fields_locations: dict[str, tuple[int, int]] = field(default_factory=dict)
-    function: Optional[Function] = None
+    function: Optional[LanguageItem] = None
     # FIXME: Adding SDocNode here causes circular import problem.
     sdoc_node: Optional[Any] = None
 

@@ -9,7 +9,7 @@ from typing import List
 import pytest
 
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
-from strictdoc.backend.sdoc_source_code.models.function import Function
+from strictdoc.backend.sdoc_source_code.models.language import LanguageItem
 from strictdoc.backend.sdoc_source_code.models.range_marker import RangeMarker
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
@@ -83,47 +83,47 @@ def hello_3():
     assert len(info.functions) == 9
 
     function_1 = info.functions[0]
-    assert isinstance(function_1, Function)
+    assert isinstance(function_1, LanguageItem)
     assert function_1.name == "hello_1"
     assert len(function_1.child_functions) == 1
 
     function_1_1 = function_1.child_functions[0]
-    assert isinstance(function_1_1, Function)
+    assert isinstance(function_1_1, LanguageItem)
     assert function_1_1.name == "hello_1.hello_1_1"
     assert len(function_1_1.child_functions) == 1
 
     function_1_1_1 = function_1_1.child_functions[0]
-    assert isinstance(function_1_1_1, Function)
+    assert isinstance(function_1_1_1, LanguageItem)
     assert function_1_1_1.name == "hello_1.hello_1_1.hello_1_1_1"
     assert len(function_1_1_1.child_functions) == 0
 
     function_2 = info.functions[3]
-    assert isinstance(function_2, Function)
+    assert isinstance(function_2, LanguageItem)
     assert function_2.name == "hello_2"
     assert len(function_2.child_functions) == 1
 
     function_2_1 = function_2.child_functions[0]
-    assert isinstance(function_2_1, Function)
+    assert isinstance(function_2_1, LanguageItem)
     assert function_2_1.name == "hello_2.hello_2_1"
     assert len(function_2_1.child_functions) == 1
 
     function_2_1_1 = function_2_1.child_functions[0]
-    assert isinstance(function_2_1_1, Function)
+    assert isinstance(function_2_1_1, LanguageItem)
     assert function_2_1_1.name == "hello_2.hello_2_1.hello_2_1_1"
     assert len(function_2_1_1.child_functions) == 0
 
     function_3 = info.functions[6]
-    assert isinstance(function_3, Function)
+    assert isinstance(function_3, LanguageItem)
     assert function_3.name == "hello_3"
     assert len(function_3.child_functions) == 1
 
     function_3_1 = function_3.child_functions[0]
-    assert isinstance(function_3_1, Function)
+    assert isinstance(function_3_1, LanguageItem)
     assert function_3_1.name == "hello_3.hello_3_1"
     assert len(function_3_1.child_functions) == 1
 
     function_3_1_1 = function_3_1.child_functions[0]
-    assert isinstance(function_3_1_1, Function)
+    assert isinstance(function_3_1_1, LanguageItem)
     assert function_3_1_1.name == "hello_3.hello_3_1.hello_3_1_1"
     assert len(function_3_1_1.child_functions) == 0
 

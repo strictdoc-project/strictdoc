@@ -2,9 +2,9 @@ from typing import Any, Dict, List, Optional, Union
 
 from typing_extensions import TypeAlias
 
-from strictdoc.backend.sdoc_source_code.models.function import Function
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language import LanguageItem
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
@@ -17,7 +17,7 @@ from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.file_stats import SourceFileStats
 
 RelationMarkerType: TypeAlias = Union[
-    FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
+    LanguageItemMarker, LineMarker, RangeMarker, ForwardRangeMarker
 ]
 
 
@@ -41,7 +41,7 @@ class SourceFileTraceabilityInfo:
     def __init__(self, g_parts: List[Any]):  # noqa: ARG002
         self.source_file: Optional[SourceFile] = None
         self.source_nodes: List[SourceNode] = []
-        self.functions: List[Function] = []
+        self.functions: List[LanguageItem] = []
 
         #
         # {                                              # noqa: ERA001
@@ -51,7 +51,7 @@ class SourceFileTraceabilityInfo:
         self.ng_map_reqs_to_markers: Dict[str, List[RelationMarkerType]] = {}
 
         self.ng_map_names_to_markers: Dict[str, List[RelationMarkerType]] = {}
-        self.ng_map_names_to_definition_functions: Dict[str, Function] = {}
+        self.ng_map_names_to_definition_functions: Dict[str, LanguageItem] = {}
 
         #
         # Merged ranges contain ranges that are fully covered by one or more

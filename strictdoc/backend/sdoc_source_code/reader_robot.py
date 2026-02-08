@@ -17,9 +17,9 @@ from robot.api.parsing import (
 
 from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
-from strictdoc.backend.sdoc_source_code.models.function import Function
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language import LanguageItem
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
     RangeMarkerType,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
@@ -31,7 +31,7 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 )
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
 from strictdoc.backend.sdoc_source_code.processors.general_language_marker_processors import (
-    function_range_marker_processor,
+    language_item_marker_processor,
     line_marker_processor,
     range_marker_processor,
     source_file_traceability_info_processor,
@@ -106,22 +106,22 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
                     )
                     tc_markers.extend(source_node.markers)
 
-        function_markers = []
+        language_item_markers = []
         for marker_ in tc_markers:
-            if isinstance(marker_, FunctionRangeMarker):
+            if isinstance(marker_, LanguageItemMarker):
                 marker_.ng_range_line_begin = node.lineno
                 marker_.ng_range_line_end = (
                     node.end_lineno - trailing_empty_lines
                 )
-                function_markers.append(marker_)
-                function_range_marker_processor(marker_, self.parse_context)
+                language_item_markers.append(marker_)
+                language_item_marker_processor(marker_, self.parse_context)
             elif isinstance(marker_, RangeMarker):
                 range_marker_processor(marker_, self.parse_context)
             elif isinstance(marker_, LineMarker):
                 line_marker_processor(marker_, self.parse_context)
 
-        self.traceability_info.markers.extend(function_markers)
-        test_case = Function(
+        self.traceability_info.markers.extend(language_item_markers)
+        test_case = LanguageItem(
             parent=self.traceability_info,
             name=node.name,
             display_name=node.name,
@@ -130,7 +130,7 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
             # FIXME: Byte range is currently not used for Robot framework.
             code_byte_range=None,
             child_functions=[],
-            markers=function_markers,
+            markers=language_item_markers,
             attributes={FunctionAttribute.DEFINITION},
         )
         self.traceability_info.functions.append(test_case)
@@ -151,7 +151,7 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
             )
             for marker_ in source_node.markers:
                 if (
-                    isinstance(marker_, FunctionRangeMarker)
+                    isinstance(marker_, LanguageItemMarker)
                     and marker_.scope is RangeMarkerType.FILE
                 ):
                     # Outside Test Cases only accept scope=file function markers
@@ -159,7 +159,7 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
                     marker_.ng_range_line_end = (
                         self.parse_context.file_stats.lines_total
                     )
-                    function_range_marker_processor(marker_, self.parse_context)
+                    language_item_marker_processor(marker_, self.parse_context)
                     self.traceability_info.markers.append(marker_)
                 elif isinstance(marker_, RangeMarker):
                     range_marker_processor(marker_, self.parse_context)

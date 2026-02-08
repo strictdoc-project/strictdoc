@@ -22,10 +22,10 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.model import SDocDocumentIF
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import FileEntry, FileReference
-from strictdoc.backend.sdoc_source_code.models.function import Function
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    ForwardFunctionRangeMarker,
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language import LanguageItem
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    ForwardLanguageItemMarker,
+    LanguageItemMarker,
     RangeMarkerType,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
@@ -79,7 +79,7 @@ class FileTraceabilityIndex:
 
         # This is only public non-static functions from languages like C.
         self.map_all_function_names_to_definition_functions: Dict[
-            str, List[Function]
+            str, List[LanguageItem]
         ] = {}
 
         # "file.py" -> [SDocNode]  # noqa: ERA001
@@ -260,7 +260,7 @@ class FileTraceabilityIndex:
                     )
                     assert test_function is not None
 
-                    functions: List[Function]
+                    functions: List[LanguageItem]
                     if test_function.startswith("#GTEST#"):
                         test_function = test_function.removeprefix("#GTEST#")
                         possible_gtest_functions = (
@@ -292,7 +292,7 @@ class FileTraceabilityIndex:
                     )
                     assert len(functions) == 1
 
-                    function: Function = functions[0]
+                    function: LanguageItem = functions[0]
                     resolved_path_to_function_file = function.parent.source_file.in_doctree_source_file_rel_path_posix
                     file_posix_path = resolved_path_to_function_file
 
@@ -315,8 +315,8 @@ class FileTraceabilityIndex:
                     # This transitively connects requirements and test results
                     # through the test source files.
                     #
-                    for function_marker_ in function.markers:
-                        for req_ in function_marker_.reqs:
+                    for language_item_marker_ in function.markers:
+                        for req_ in language_item_marker_.reqs:
                             node = traceability_index.get_node_by_uid_weak2(
                                 req_
                             )
@@ -458,7 +458,7 @@ class FileTraceabilityIndex:
                     )
 
             marker_: Union[
-                FunctionRangeMarker, LineMarker, RangeMarker, ForwardRangeMarker
+                LanguageItemMarker, LineMarker, RangeMarker, ForwardRangeMarker
             ]
             for marker_ in copy(trace_info_.markers):
                 # FIXME: Is this 'continue' needed here?
@@ -483,7 +483,7 @@ class FileTraceabilityIndex:
                         OrderedSet(),
                     ).add(node)
 
-                if isinstance(marker_, FunctionRangeMarker):
+                if isinstance(marker_, LanguageItemMarker):
                     marker_copy = marker_.create_end_marker()
                     trace_info_.markers.append(marker_copy)
 
@@ -505,7 +505,7 @@ class FileTraceabilityIndex:
                     and function_.name
                     in self.map_all_function_names_to_definition_functions
                 ):
-                    definition_functions: List[Function] = []
+                    definition_functions: List[LanguageItem] = []
                     if not function_.is_public():
                         definition_function = traceability_info_.ng_map_names_to_definition_functions.get(
                             function_.name, None
@@ -526,7 +526,7 @@ class FileTraceabilityIndex:
                         definition_function_trace_info: SourceFileTraceabilityInfo = definition_function_.parent
 
                         for marker_ in function_.markers:
-                            function_marker = self.forward_function_marker_from_function(
+                            language_item_marker = self.forward_marker_from_language_item(
                                 function=definition_function_,
                                 marker_type=RangeMarkerType.FUNCTION,
                                 reqs=marker_.reqs_objs,
@@ -537,7 +537,7 @@ class FileTraceabilityIndex:
                             for req_uid_ in marker_.reqs:
                                 definition_function_trace_info.ng_map_reqs_to_markers.setdefault(
                                     req_uid_, []
-                                ).append(function_marker)
+                                ).append(language_item_marker)
 
                                 path_to_info = reversed_trace_info[
                                     definition_function_trace_info
@@ -554,7 +554,7 @@ class FileTraceabilityIndex:
                                 ).add(node)
 
                             definition_function_trace_info.markers.append(
-                                function_marker
+                                language_item_marker
                             )
 
         #
@@ -724,7 +724,7 @@ class FileTraceabilityIndex:
     @staticmethod
     def create_traceability_info_shared_markers_for_function(
         traceability_info: SourceFileTraceabilityInfo,
-        function: Function,
+        function: LanguageItem,
         marker_type: RangeMarkerType,
         reqs_uids: List[Tuple[str, Optional[str]]],
     ) -> None:
@@ -733,7 +733,7 @@ class FileTraceabilityIndex:
             req = Req(None, req_uid_)
             if role not in markers_by_role:
                 markers_by_role[role] = (
-                    FileTraceabilityIndex.forward_function_marker_from_function(
+                    FileTraceabilityIndex.forward_marker_from_language_item(
                         function, marker_type, [req], role
                     )
                 )
@@ -749,29 +749,29 @@ class FileTraceabilityIndex:
         traceability_info.markers.extend(markers_by_role.values())
 
     @staticmethod
-    def forward_function_marker_from_function(
-        function: Function,
+    def forward_marker_from_language_item(
+        function: LanguageItem,
         marker_type: RangeMarkerType,
         reqs: List[Req],
         role: Optional[str],
         description: Optional[str] = None,
-    ) -> ForwardFunctionRangeMarker:
-        function_marker = ForwardFunctionRangeMarker(
+    ) -> ForwardLanguageItemMarker:
+        language_item_marker = ForwardLanguageItemMarker(
             parent=None, reqs_objs=reqs, scope=marker_type.value
         )
-        function_marker.ng_source_line_begin = function.line_begin
-        function_marker.ng_range_line_begin = function.line_begin
-        function_marker.ng_range_line_end = function.line_end
-        function_marker.role = role
+        language_item_marker.ng_source_line_begin = function.line_begin
+        language_item_marker.ng_range_line_begin = function.line_begin
+        language_item_marker.ng_range_line_end = function.line_end
+        language_item_marker.role = role
         if description is not None:
-            function_marker.set_description(description)
+            language_item_marker.set_description(description)
         elif marker_type == RangeMarkerType.FUNCTION:
-            function_marker.set_description(
+            language_item_marker.set_description(
                 f"function {function.display_name}()"
             )
         elif marker_type == RangeMarkerType.CLASS:
-            function_marker.set_description(f"class {function.name}")
-        return function_marker
+            language_item_marker.set_description(f"class {function.name}")
+        return language_item_marker
 
     @staticmethod
     def forward_range_markers_from_range(
@@ -846,7 +846,7 @@ class FileTraceabilityIndex:
                 assert isinstance(
                     marker_,
                     (
-                        FunctionRangeMarker,
+                        LanguageItemMarker,
                         ForwardRangeMarker,
                         RangeMarker,
                         LineMarker,
@@ -906,7 +906,7 @@ class FileTraceabilityIndex:
                 for marker in markers_:
                     # Backwards markers do not require referenced node grammar
                     # to have the relation/role registered in the grammar.
-                    if isinstance(marker, (FunctionRangeMarker, RangeMarker)):
+                    if isinstance(marker, (LanguageItemMarker, RangeMarker)):
                         continue
 
                     if not grammar_element.has_relation_type_role(
@@ -940,7 +940,7 @@ class FileTraceabilityIndex:
         source_node_function = source_node.function
         assert source_node_function is not None
 
-        function_marker = self.forward_function_marker_from_function(
+        language_item_marker = self.forward_marker_from_language_item(
             function=source_node_function,
             marker_type=RangeMarkerType.FUNCTION,
             reqs=[Req(None, source_sdoc_node_uid)],
@@ -950,10 +950,10 @@ class FileTraceabilityIndex:
 
         traceability_info.ng_map_reqs_to_markers.setdefault(
             source_sdoc_node_uid, []
-        ).append(function_marker)
-        function_marker_copy = function_marker.create_end_marker()
-        traceability_info.markers.append(function_marker)
-        traceability_info.markers.append(function_marker_copy)
+        ).append(language_item_marker)
+        language_item_marker_copy = language_item_marker.create_end_marker()
+        traceability_info.markers.append(language_item_marker)
+        traceability_info.markers.append(language_item_marker_copy)
 
     @staticmethod
     def create_sdoc_node_from_source_node(
@@ -1166,7 +1166,7 @@ class FileTraceabilityIndex:
             )
 
         for marker_ in source_node.markers:
-            if not isinstance(marker_, FunctionRangeMarker):
+            if not isinstance(marker_, LanguageItemMarker):
                 continue
             for req_ in marker_.reqs:
                 node = traceability_index.get_node_by_uid_weak2(req_)

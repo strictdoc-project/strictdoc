@@ -9,9 +9,9 @@ from tree_sitter import Language, Node, Parser
 
 from strictdoc.backend.sdoc_source_code.constants import FunctionAttribute
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
-from strictdoc.backend.sdoc_source_code.models.function import Function
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language import LanguageItem
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
     RangeMarkerType,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
@@ -25,7 +25,7 @@ from strictdoc.backend.sdoc_source_code.models.source_location import ByteRange
 from strictdoc.backend.sdoc_source_code.models.source_node import SourceNode
 from strictdoc.backend.sdoc_source_code.parse_context import ParseContext
 from strictdoc.backend.sdoc_source_code.processors.general_language_marker_processors import (
-    function_range_marker_processor,
+    language_item_marker_processor,
     line_marker_processor,
     range_marker_processor,
     source_file_traceability_info_processor,
@@ -67,7 +67,7 @@ class SourceFileTraceabilityReader_C:
         source_node: Optional[SourceNode]
         for node_ in nodes:
             function_name: str
-            function_markers: List[FunctionRangeMarker]
+            language_item_markers: List[LanguageItemMarker]
             function_comment_node: Optional[Node]
             if node_.type == "translation_unit":
                 if (
@@ -92,20 +92,20 @@ class SourceFileTraceabilityReader_C:
                             custom_tags=self.custom_tags,
                         )
                         for marker_ in source_node.markers:
-                            if not isinstance(marker_, FunctionRangeMarker):
+                            if not isinstance(marker_, LanguageItemMarker):
                                 continue
                             # At the top level, only accept the scope=file markers.
                             # Everything else will be handled by functions and classes.
                             if marker_.scope != RangeMarkerType.FILE:
                                 continue
-                            if isinstance(marker_, FunctionRangeMarker) and (
-                                function_range_marker_ := marker_
+                            if isinstance(marker_, LanguageItemMarker) and (
+                                language_item_marker_ := marker_
                             ):
-                                function_range_marker_processor(
-                                    function_range_marker_, parse_context
+                                language_item_marker_processor(
+                                    language_item_marker_, parse_context
                                 )
                                 traceability_info.markers.append(
-                                    function_range_marker_
+                                    language_item_marker_
                                 )
 
             elif node_.type in ("declaration", "field_declaration"):
@@ -168,7 +168,7 @@ class SourceFileTraceabilityReader_C:
                         function_attributes.add(FunctionAttribute.STATIC)
 
                 source_node = None
-                function_markers = []
+                language_item_markers = []
                 function_comment_node = None
                 if (
                     node_.prev_sibling is not None
@@ -195,19 +195,19 @@ class SourceFileTraceabilityReader_C:
                         custom_tags=self.custom_tags,
                     )
                     for marker_ in source_node.markers:
-                        if isinstance(marker_, FunctionRangeMarker) and (
-                            function_range_marker_ := marker_
+                        if isinstance(marker_, LanguageItemMarker) and (
+                            language_item_marker_ := marker_
                         ):
-                            function_range_marker_processor(
-                                function_range_marker_, parse_context
+                            language_item_marker_processor(
+                                language_item_marker_, parse_context
                             )
                             traceability_info.markers.append(
-                                function_range_marker_
+                                language_item_marker_
                             )
-                            function_markers.append(marker_)
+                            language_item_markers.append(marker_)
 
                 # The function range includes the top comment if it exists.
-                new_function = Function(
+                new_function = LanguageItem(
                     parent=traceability_info,
                     name=function_name,
                     display_name=function_display_name,
@@ -217,7 +217,7 @@ class SourceFileTraceabilityReader_C:
                     line_end=node_.range.end_point[0] + 1,
                     code_byte_range=ByteRange.create_from_ts_node(node_),
                     child_functions=[],
-                    markers=function_markers,
+                    markers=language_item_markers,
                     attributes=function_attributes,
                 )
                 if source_node is not None:
@@ -274,7 +274,7 @@ class SourceFileTraceabilityReader_C:
                     function_display_name = function_name
 
                 source_node = None
-                function_markers = []
+                language_item_markers = []
                 function_comment_node = None
                 function_comment_text = None
 
@@ -310,15 +310,15 @@ class SourceFileTraceabilityReader_C:
 
                     traceability_info.source_nodes.append(source_node)
                     for marker_ in source_node.markers:
-                        if isinstance(marker_, FunctionRangeMarker):
-                            function_range_marker_processor(
+                        if isinstance(marker_, LanguageItemMarker):
+                            language_item_marker_processor(
                                 marker_, parse_context
                             )
                             traceability_info.markers.append(marker_)
-                            function_markers.append(marker_)
+                            language_item_markers.append(marker_)
 
                 # The function range includes the top comment if it exists.
-                new_function = Function(
+                new_function = LanguageItem(
                     parent=traceability_info,
                     name=function_name,
                     display_name=function_display_name,
@@ -328,14 +328,14 @@ class SourceFileTraceabilityReader_C:
                     line_end=node_.range.end_point[0] + 1,
                     code_byte_range=ByteRange.create_from_ts_node(node_),
                     child_functions=[],
-                    markers=function_markers,
+                    markers=language_item_markers,
                     attributes={FunctionAttribute.DEFINITION},
                 )
                 traceability_info.functions.append(new_function)
-                if len(function_markers) > 0:
+                if len(language_item_markers) > 0:
                     traceability_info.ng_map_names_to_markers[function_name] = (
                         # FIXME: Cannot win the fight with mypy without assert_cast.
-                        assert_cast(function_markers, list)
+                        assert_cast(language_item_markers, list)
                     )
                     traceability_info.ng_map_names_to_definition_functions[
                         function_name

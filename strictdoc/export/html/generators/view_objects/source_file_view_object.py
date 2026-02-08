@@ -14,8 +14,8 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import NullViewElement
 from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocNodeIF
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
-from strictdoc.backend.sdoc_source_code.models.function_range_marker import (
-    FunctionRangeMarker,
+from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
+    LanguageItemMarker,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 from strictdoc.backend.sdoc_source_code.models.range_marker import (
@@ -43,7 +43,7 @@ class SourceMarkerTuple:
     ng_range_line_end: int
     source_line: Markup
     markers: List[
-        Union[FunctionRangeMarker, ForwardRangeMarker, LineMarker, RangeMarker]
+        Union[LanguageItemMarker, ForwardRangeMarker, LineMarker, RangeMarker]
     ]
 
     def is_end(self) -> bool:

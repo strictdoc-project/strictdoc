@@ -46,6 +46,26 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 2881011284ce4a32a99b6172566f3eb9
+TITLE: 0.17.0 (2026-02-09)
+
+[TEXT]
+MID: 6862b81a3a8e4c1e9a9848e79ba96f10
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Rust support was added to the tracing to source files feature in StrictDoc. The parser recognizes all major language constructs, which makes it possible to use the @relation marker on all these constructs, not only on functions as in C. Thanks to @haxtibal for the contribution and the solid work.
+
+2\) Additional thread-safety measures were added to the FastAPI router to support use of the server by multiple users working on StrictDoc content concurrently.
+
+3\) Initial node revision tracking was added. If two users edit the same SDoc node at the same time and one user saves first, the other user will receive a validation message indicating that the content was changed by someone else. This helps protect content integrity and raises awareness of concurrent user actions.
+
+4\) Python 3.9 was removed to align with libraries that dropped it some time ago and to enable use of the newer tree-sitter API.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 1111cf2f85144c008bd0d5075c972222
 TITLE: 0.16.4 (2026-01-28)
 

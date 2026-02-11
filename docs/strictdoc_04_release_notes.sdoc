@@ -46,6 +46,20 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 39dd2c627bd340e8b7be00730c72e341
+TITLE: 0.17.1 (2026-02-11)
+
+[TEXT]
+MID: 0a4fbb22a5514e0b8f29328db5469987
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The bundled Mermaid was updated from 10.3.1 to 11.12.2. This includes fixes for CVE-2025-57347 and CVE-2025-26791 and adds useful features like "Note over" and ``@{ "type" : stereotype }`` syntax.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 2881011284ce4a32a99b6172566f3eb9
 TITLE: 0.17.0 (2026-02-09)
 

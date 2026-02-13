@@ -145,18 +145,19 @@ class ExcelToSDocConverter:
             .elements_by_type["REQUIREMENT"]
             .fields
         )
-
+        field_titles = [f.title for f in fields]
         for _, name in extra_header_pairs:
-            fields.extend(
-                [
-                    GrammarElementFieldString(
-                        parent=None,
-                        title=name,
-                        human_title=None,
-                        required="False",
-                    ),
-                ]
-            )
+            if name not in field_titles:  # Prevent duplicating "LEVEL" field
+                fields.extend(
+                    [
+                        GrammarElementFieldString(
+                            parent=None,
+                            title=name,
+                            human_title=None,
+                            required="False",
+                        ),
+                    ]
+                )
 
         requirements_element = GrammarElement(
             parent=None,
@@ -213,14 +214,27 @@ class ExcelToSDocConverter:
             comments=comments,
         )
         for i, name in columns.extra_header_pairs:
-            value = row_values[i].strip()
+            # for a field that looks like a decimal (e.g. LEVEL: 3.1), it gets
+            # treated as a float and then this fails without string casting.
+            # Should be no reason not to treat everything as a string
+            value = str(row_values[i]).strip()
             if value != "":
+                # Only treat field as a multiline if necessary.
+                # This fixed a weird bug where the LEVEL field included
+                # a carriage return, which then got oddly scooped into
+                # the headings in the HTML view.
+                if "\n" in value:
+                    mutliline = True
+                    field_value = ensure_newline(value)
+                else:
+                    mutliline = False
+                    field_value = value
                 template_requirement.ordered_fields_lookup[name] = [
                     SDocNodeField.create_from_string(
                         parent=None,
                         field_name=name,
-                        field_value=ensure_newline(value),
-                        multiline=True,
+                        field_value=field_value,
+                        multiline=mutliline,
                     )
                 ]
         if parent_uid is not None:

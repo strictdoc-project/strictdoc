@@ -192,6 +192,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         async with rw_lock.write():
             yield
 
+    async def parse_form_data(request: Request) -> FormData:
+        return await request.form()
+
     router = APIRouter()
     read_router = APIRouter(dependencies=[Depends(read_lock)])
     write_router = APIRouter(dependencies=[Depends(write_lock)])
@@ -428,8 +431,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @write_router.post(
         "/actions/document/create_requirement", response_class=Response
     )
-    async def create_requirement(request: Request) -> Response:
-        request_form_data: FormData = await request.form()
+    def create_requirement(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
         request_dict: Dict[str, str] = dict(request_form_data)
         requirement_mid: str = request_dict["requirement_mid"]
         document_mid: str = request_dict["document_mid"]
@@ -672,12 +676,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @write_router.post("/actions/document/update_requirement")
-    async def document__update_requirement(request: Request) -> Response:
+    def document__update_requirement(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
         """
         @relation(SDOC-SRS-55, scope=function)
         """
 
-        request_form_data: FormData = await request.form()
         request_dict = dict(request_form_data)
         requirement_mid = request_dict["requirement_mid"]
         requirement: SDocNode = (
@@ -997,12 +1002,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @write_router.post("/actions/document/move_node", response_class=Response)
-    async def move_node(request: Request) -> Response:
+    def move_node(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
         """
         @relation(SDOC-SRS-92, scope=function)
         """
 
-        request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         moved_node_mid: str = request_dict["moved_node_mid"]
         target_mid: str = request_dict["target_mid"]
@@ -1460,12 +1466,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         )
 
     @write_router.post("/actions/document/save_config", response_class=Response)
-    async def document__save_edit_config(request: Request) -> Response:
+    def document__save_edit_config(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
         """
         @relation(SDOC-SRS-57, scope=function)
         """
 
-        request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
         document: SDocDocument = (
@@ -1554,8 +1561,9 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @write_router.post(
         "/actions/document/save_included_document", response_class=Response
     )
-    async def document__save_included_document(request: Request) -> Response:
-        request_form_data: FormData = await request.form()
+    def document__save_included_document(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
         context_document_mid: str = request_dict["context_document_mid"]
@@ -1753,12 +1761,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @write_router.post(
         "/actions/document/save_grammar", response_class=Response
     )
-    async def document__save_grammar(request: Request) -> Response:
+    def document__save_grammar(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
         """
         @relation(SDOC-SRS-56, scope=function)
         """
 
-        request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
         document: SDocDocument = (
@@ -1895,12 +1904,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @write_router.post(
         "/actions/document/save_grammar_element", response_class=Response
     )
-    async def document__save_grammar_element(request: Request) -> Response:
+    def document__save_grammar_element(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
         """
         @relation(SDOC-SRS-56, scope=function)
         """
 
-        request_form_data: FormData = await request.form()
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
         document: SDocDocument = (

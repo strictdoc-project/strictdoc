@@ -6,10 +6,9 @@ import re
 from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
-from typing import AsyncIterator, Dict, List, Optional, Union
+from typing import Dict, Iterator, List, Optional, Union
 from urllib.parse import quote
 
-import anyio
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile
 from fastapi.responses import RedirectResponse
 from reqif.models.error_handling import ReqIFXMLParsingError
@@ -138,7 +137,7 @@ from strictdoc.helpers.string import (
 from strictdoc.helpers.timing import measure_performance
 from strictdoc.server.error_object import ErrorObject
 from strictdoc.server.helpers.http import request_is_for_non_modified_file
-from strictdoc.server.helpers.rw_lock import AsyncRWLock
+from strictdoc.server.helpers.rw_lock import RWLock
 
 HTTP_STATUS_BAD_REQUEST = 400
 HTTP_STATUS_PRECONDITION_FAILED = 412
@@ -182,14 +181,14 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
 
-    rw_lock = AsyncRWLock()
+    rw_lock = RWLock()
 
-    async def read_lock() -> AsyncIterator[None]:
-        async with rw_lock.read():
+    def read_lock() -> Iterator[None]:
+        with rw_lock.read():
             yield
 
-    async def write_lock() -> AsyncIterator[None]:
-        async with rw_lock.write():
+    def write_lock() -> Iterator[None]:
+        with rw_lock.write():
             yield
 
     async def parse_form_data(request: Request) -> FormData:
@@ -200,8 +199,8 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     write_router = APIRouter(dependencies=[Depends(write_lock)])
 
     @router.get("/")
-    async def get_root(request: Request) -> Response:
-        return await get_incoming_request(request, "index.html")
+    def get_root(request: Request) -> Response:
+        return get_incoming_request(request, "index.html")
 
     @read_router.get("/actions/show_full_node", response_class=Response)
     def node__show_full(reference_mid: str) -> Response:
@@ -2071,7 +2070,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     @write_router.post(
         "/actions/project_index/import_document_reqif", response_class=Response
     )
-    async def import_document_reqif(reqif_file: UploadFile) -> Response:
+    def import_document_reqif(reqif_file: UploadFile) -> Response:
         contents = reqif_file.file.read().decode()
 
         error_object = ErrorObject()
@@ -2572,17 +2571,15 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     router.include_router(write_router)
 
     @router.get("/{full_path:path}", response_class=Response)
-    async def get_incoming_request(
-        request: Request, full_path: str
-    ) -> Response:
+    def get_incoming_request(request: Request, full_path: str) -> Response:
         # FIXME: This seems to be quite un-sanitized.
         _, file_extension = os.path.splitext(full_path)
         if file_extension == ".html":
-            return await get_document(request, full_path)
+            return get_document(request, full_path)
         else:
-            return await get_asset(request, full_path)
+            return get_asset(request, full_path)
 
-    async def get_document(request: Request, url_to_document: str) -> Response:
+    def get_document(request: Request, url_to_document: str) -> Response:
         """
         @relation(SDOC-SRS-4, scope=function)
         """
@@ -2606,7 +2603,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 > output_file_mtime
             )
 
-        async with rw_lock.read():
+        with rw_lock.read():
             if not must_generate():
                 if request_is_for_non_modified_file(
                     request, full_path_to_document
@@ -2627,7 +2624,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     },
                 )
 
-        async with rw_lock.write():
+        with rw_lock.write():
             if not must_generate():
                 if request_is_for_non_modified_file(
                     request, full_path_to_document
@@ -2797,7 +2794,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     )
                 return None
 
-            response_or_none = await anyio.to_thread.run_sync(generate_document)
+            response_or_none = generate_document()
             if response_or_none is not None:
                 return response_or_none
             return FileResponse(
@@ -2806,13 +2803,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 headers={"Cache-Control": "no-cache"},
             )
 
-    async def get_asset(request: Request, url_to_asset: str) -> Response:
+    def get_asset(request: Request, url_to_asset: str) -> Response:
         project_output_path = project_config.export_output_html_root
 
         static_file = os.path.join(project_output_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 
-        async with rw_lock.read():
+        with rw_lock.read():
             if not os.path.isfile(static_file):
                 return Response(
                     content=f"File not found: {url_to_asset}",

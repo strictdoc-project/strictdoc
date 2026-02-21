@@ -4,11 +4,11 @@ from typing import List
 from docutils import nodes
 from docutils.parsers.rst.directives.images import Image
 
+STRICTDOC_REFERENCE_PATH_SETTING = "strictdoc_reference_path"
+
 
 class WildcardEnhancedImage(Image):  # type: ignore[misc]
     WILDCARD_EXTENSIONS = ["svg", "png", "gif", "jpg", "jpeg"]
-
-    current_reference_path = os.getcwd()
 
     def run(self) -> List[nodes.Node]:
         # A user has suggested that StrictDoc could be capable of rendering
@@ -39,6 +39,11 @@ class WildcardEnhancedImage(Image):  # type: ignore[misc]
         messages: List[nodes.Node] = []
 
         assert len(self.arguments) > 0
+        current_reference_path = getattr(
+            self.state.document.settings,
+            STRICTDOC_REFERENCE_PATH_SETTING,
+            os.getcwd(),
+        )
         rel_path_to_image = self.arguments[0]
         if rel_path_to_image.endswith(".*"):
             rel_path_to_image_no_wc = rel_path_to_image[:-2]
@@ -47,7 +52,7 @@ class WildcardEnhancedImage(Image):  # type: ignore[misc]
                     rel_path_to_image_no_wc + "." + extension
                 )
                 full_path_to_image_with_extension = os.path.join(
-                    WildcardEnhancedImage.current_reference_path,
+                    current_reference_path,
                     rel_path_to_image_with_extension,
                 )
                 if os.path.exists(full_path_to_image_with_extension):

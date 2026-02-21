@@ -6,6 +6,7 @@ import hashlib
 import io
 import os
 import re
+import uuid
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -131,8 +132,21 @@ class RstToHtmlFragmentWriter:
         rendered_html_bytes = rendered_html.encode("UTF-8")
 
         if use_cache:
-            with open(path_to_cached_fragment, "wb") as cached_fragment_file_:
+            # Thread-safe cache update strategy:
+            # 1) write bytes to a unique temp file, then
+            # 2) atomically replace the target cache file with os.replace().
+            # This ensures that concurrent readers either see the old complete
+            # file or the new complete file, but never a partially written file.
+            # (os.replace is atomic when source and destination are on the same
+            # filesystem, which is true because both paths are in one cache dir.)
+            tmp_path_to_cached_fragment = (
+                f"{path_to_cached_fragment}.{uuid.uuid4().hex}.tmp"
+            )
+            with open(
+                tmp_path_to_cached_fragment, "wb"
+            ) as cached_fragment_file_:
                 cached_fragment_file_.write(rendered_html_bytes)
+            os.replace(tmp_path_to_cached_fragment, path_to_cached_fragment)
 
         return Markup(rendered_html)
 

@@ -150,7 +150,11 @@ HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
 AUTOCOMPLETE_LIMIT = 50
 
 
-def create_main_router(project_config: ProjectConfig) -> APIRouter:
+def create_main_router(
+    project_config: ProjectConfig,
+    *,
+    lock_manager: HierarchicalRWLockManager,
+) -> APIRouter:
     parallelizer = NullParallelizer()
 
     # This dictionary is used to track conflicts between concurrently edited
@@ -184,8 +188,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
-
-    lock_manager = HierarchicalRWLockManager()
 
     def read_lock() -> Iterator[None]:
         with lock_manager.acquire_global_read():

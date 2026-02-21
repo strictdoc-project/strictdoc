@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5">
   <diagram name="Roadmap" id="QL4QDE5GQBR7DcBM7GMb">
-    <mxGraphModel dx="3125" dy="3932" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="4282" dy="4504" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <object label="Background" id="e4xbaoC47YMUbLc9hft--7">
@@ -373,7 +373,7 @@
           <mxGeometry x="340" y="900" width="110" height="70" as="geometry" />
         </mxCell>
         <mxCell id="jwnssjy23zgWTyzq0ZdY-5" value="&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Links to external URLs and other content&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="990" y="1170" width="150" height="70" as="geometry" />
+          <mxGeometry x="1150" y="1170" width="150" height="70" as="geometry" />
         </mxCell>
         <mxCell id="jwnssjy23zgWTyzq0ZdY-6" value="JUnit XML -&amp;gt; SDoc test report generator" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="-850" y="1260" width="120" height="70" as="geometry" />
@@ -394,7 +394,7 @@
           <mxGeometry x="-640" y="1350" width="390" height="70" as="geometry" />
         </mxCell>
         <mxCell id="mmp19IjbKsf9JtkNIgzo-5" value="&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Embed text files into SDoc&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#333333;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="990" y="1080" width="150" height="70" as="geometry" />
+          <mxGeometry x="1150" y="1080" width="150" height="70" as="geometry" />
         </mxCell>
         <mxCell id="9eajPwNtl0Yfan4dj0gk-2" value="&lt;div&gt;Parse C/C++ test descriptions to SDoc&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="-450" y="900" width="200" height="70" as="geometry" />
@@ -457,7 +457,7 @@
           <mxGeometry x="250" y="1440" width="460" height="70" as="geometry" />
         </mxCell>
         <mxCell id="FQoGO6Vod0G9-xvB3XtP-1" value="&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Support parsing Ada source code&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;(StrictDoc parser)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="980" y="990" width="130" height="70" as="geometry" />
+          <mxGeometry x="1140" y="990" width="130" height="70" as="geometry" />
         </mxCell>
         <mxCell id="eRPcp-Zo6v9222eVP6_e-1" value="&lt;div&gt;StrictDoc configuration with a Python file (strictdoc_config.py&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="180" y="1080" width="140" height="70" as="geometry" />
@@ -471,7 +471,7 @@
         <mxCell id="OCJ0sT8p7vvNHOtbERSk-1" value="Linking nodes via MID instead of UID" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="470" y="900" width="90" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="N9cUJzr8JpDOqpJWMLWi-1" value="&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Support parsing Rust source code&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;(StrictDoc parser)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+        <mxCell id="N9cUJzr8JpDOqpJWMLWi-1" value="&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Support parsing Rust source code&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;(StrictDoc parser)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="500" y="990" width="470" height="70" as="geometry" />
         </mxCell>
         <mxCell id="N9cUJzr8JpDOqpJWMLWi-2" value="&lt;div&gt;HTML2PDF linear&amp;nbsp;&lt;/div&gt;&lt;div&gt;mutation test&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
@@ -489,7 +489,7 @@
         <mxCell id="UIBK7DAsS_p9NtYpbiHR-3" value="Take into account .gitignore" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="700" y="1080" width="60" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="UIBK7DAsS_p9NtYpbiHR-4" value="&lt;div&gt;Stabilization 2026 Q1: Python 3.14 changes, testing out various html2pdf4doc corner cases&lt;/div&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+        <mxCell id="UIBK7DAsS_p9NtYpbiHR-4" value="&lt;div&gt;Stabilization 2026 Q1: Python 3.14 changes, drop Python 3.9, testing out various html2pdf4doc corner cases&lt;/div&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="730" y="1440" width="460" height="70" as="geometry" />
         </mxCell>
         <mxCell id="UIBK7DAsS_p9NtYpbiHR-5" value="&lt;div&gt;Python API example&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
@@ -498,7 +498,7 @@
         <mxCell id="QXMQ5QSOgz17hu6IqZ7S-1" value="&lt;div&gt;Project Config&lt;/div&gt;&lt;div&gt;re-design&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="790" y="1260" width="60" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="RSrML0RW6xnv4YvW7EgN-1" value="&lt;div&gt;Make FastAPI routes ready for concurrent use by multiple users&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+        <mxCell id="RSrML0RW6xnv4YvW7EgN-1" value="&lt;div&gt;Make FastAPI routes ready for concurrent use by multiple users&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="830" y="900" width="200" height="70" as="geometry" />
         </mxCell>
       </root>

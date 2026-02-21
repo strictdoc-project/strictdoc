@@ -1175,7 +1175,14 @@ def qualification(context):
 
 @task()
 def drawio(context):
-    path_to_drawio = "/Applications/draw.io.app/Contents/MacOS/draw.io"
+    if sys.platform == "darwin":
+        path_to_drawio = "/Applications/draw.io.app/Contents/MacOS/draw.io"
+    elif sys.platform.startswith("linux"):
+        path_to_drawio = "drawio"
+    else:
+        raise NotImplementedError(
+            "drawio task is supported only on macOS and Linux."
+        )
 
     artifacts = [
         (

@@ -3,6 +3,7 @@ import copy
 import datetime
 import os
 import re
+import uuid
 from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
@@ -14,6 +15,7 @@ from fastapi.responses import RedirectResponse
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
 from reqif.unparser import ReqIFUnparser
+from starlette.background import BackgroundTask
 from starlette.datastructures import FormData
 from starlette.requests import Request
 from starlette.responses import FileResponse, HTMLResponse, Response
@@ -2163,9 +2165,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @write_router.get(
-        "/export_html2pdf/{document_mid}", response_class=Response
-    )
+    @read_router.get("/export_html2pdf/{document_mid}", response_class=Response)
     def get_export_html2pdf(document_mid: str) -> Response:  # noqa: ARG001
         if not project_config.is_activated_html2pdf():
             return Response(
@@ -2207,12 +2207,25 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 html_templates=html_templates,
             )
 
+        temp_uid = uuid.uuid4().hex
         path_to_output_html = os.path.join(
-            project_config.export_output_html_root, relative_path, "_temp.html"
+            project_config.export_output_html_root,
+            relative_path,
+            f"_temp_{temp_uid}.html",
         )
         path_to_output_pdf = os.path.join(
-            project_config.export_output_html_root, "html", "_temp.pdf"
+            project_config.export_output_html_root,
+            "html",
+            f"_temp_{temp_uid}.pdf",
         )
+
+        def cleanup_html2pdf_artifacts() -> None:
+            for path in (path_to_output_html, path_to_output_pdf):
+                if os.path.isfile(path):
+                    os.remove(path)
+
+        Path(path_to_output_html).parent.mkdir(parents=True, exist_ok=True)
+        Path(path_to_output_pdf).parent.mkdir(parents=True, exist_ok=True)
 
         # FIXME: Add this print driver to a service bus object to make it
         #        unit-testable.
@@ -2220,42 +2233,45 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         with open(path_to_output_html, mode="w", encoding="utf8") as temp_file_:
             temp_file_.write(document_content)
 
-            assert os.path.isfile(path_to_output_html), path_to_output_html
-            try:
-                pdf_print_driver.get_pdf_from_html(
-                    project_config,
-                    [(path_to_output_html, path_to_output_pdf)],
-                )
-            except PDFPrintDriverException as e_:  # pragma: no cover
-                return Response(
-                    content=e_.get_server_user_message(),
-                    status_code=HTTP_STATUS_INTERNAL_SERVER_ERROR,
-                )
-
-            # We derive a name for the exported PDF.
-            proposed_basename = "document"
-            if document.title is not None:
-                proposed_basename = document.title
-            if document.uid is not None:
-                proposed_basename = document.uid + " " + proposed_basename
-
-            # We sanitize the basename, Windows is the most restrictive:
-            # - many forbidden chars.
-            # - not more than 120 chars in total, including the PDF extension
-            forbidden = '<>:"/\\|?*\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f'
-            table = str.maketrans(forbidden, "_" * len(forbidden))
-            sanitized_basename = proposed_basename.translate(table)
-            sanitized_basename = sanitized_basename.strip(" ")[:115]
-            encoded_filename = quote(sanitized_basename + ".pdf")
-
-            return FileResponse(
-                path=path_to_output_pdf,
-                status_code=200,
-                headers={
-                    "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}",
-                },
-                media_type="application/octet-stream",
+        assert os.path.isfile(path_to_output_html), path_to_output_html
+        try:
+            pdf_print_driver.get_pdf_from_html(
+                project_config,
+                [(path_to_output_html, path_to_output_pdf)],
             )
+        except PDFPrintDriverException as e_:  # pragma: no cover
+            cleanup_html2pdf_artifacts()
+            return Response(
+                content=e_.get_server_user_message(),
+                status_code=HTTP_STATUS_INTERNAL_SERVER_ERROR,
+            )
+        assert os.path.isfile(path_to_output_pdf), path_to_output_pdf
+
+        # We derive a name for the exported PDF.
+        proposed_basename = "document"
+        if document.title is not None:
+            proposed_basename = document.title
+        if document.uid is not None:
+            proposed_basename = document.uid + " " + proposed_basename
+
+        # We sanitize the basename, Windows is the most restrictive:
+        # - many forbidden chars.
+        # - not more than 120 chars in total, including the PDF extension
+        forbidden = '<>:"/\\|?*\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f'
+        table = str.maketrans(forbidden, "_" * len(forbidden))
+        sanitized_basename = proposed_basename.translate(table)
+        sanitized_basename = sanitized_basename.strip(" ")[:115]
+        encoded_filename = quote(sanitized_basename + ".pdf")
+
+        return FileResponse(
+            path=path_to_output_pdf,
+            status_code=200,
+            headers={
+                "Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}",
+            },
+            media_type="application/octet-stream",
+            background=BackgroundTask(cleanup_html2pdf_artifacts),
+        )
 
     @read_router.get(
         "/reqif/export_document/{document_mid}", response_class=Response

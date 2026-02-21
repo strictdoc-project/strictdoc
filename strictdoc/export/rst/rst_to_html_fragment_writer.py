@@ -27,6 +27,7 @@ from strictdoc.export.rst.directives.sphinx_style_math import (
     math_role_for_server,
 )
 from strictdoc.export.rst.directives.wildcard_enhanced_image import (
+    STRICTDOC_REFERENCE_PATH_SETTING,
     WildcardEnhancedImage,
 )
 from strictdoc.helpers.file_system import file_open_read_bytes
@@ -65,10 +66,11 @@ class RstToHtmlFragmentWriter:
         self.path_to_rst_cache_dir = os.path.join(
             path_to_tmp_dir, "rst", path_to_output_dir_md5
         )
+        self.reference_path = os.getcwd()
 
         if context_document is not None:
             assert context_document.meta is not None
-            WildcardEnhancedImage.current_reference_path = (
+            self.reference_path = (
                 context_document.meta.output_document_dir_full_path
             )
 
@@ -143,7 +145,11 @@ class RstToHtmlFragmentWriter:
         # being printed to sys.stderr.
         # https://www.programcreek.com/python/example/88126/docutils.core.publish_parts
         warning_stream = io.StringIO()
-        settings = {**self.BASE_SETTINGS, "warning_stream": warning_stream}
+        settings = {
+            **self.BASE_SETTINGS,
+            "warning_stream": warning_stream,
+            STRICTDOC_REFERENCE_PATH_SETTING: self.reference_path,
+        }
 
         output = publish_parts(
             rst_fragment,
@@ -190,7 +196,11 @@ class RstToHtmlFragmentWriter:
         # being printed to sys.stderr.
         # https://www.programcreek.com/python/example/88126/docutils.core.publish_parts
         warning_stream = io.StringIO()
-        settings = {**self.BASE_SETTINGS, "warning_stream": warning_stream}
+        settings = {
+            **self.BASE_SETTINGS,
+            "warning_stream": warning_stream,
+            STRICTDOC_REFERENCE_PATH_SETTING: self.reference_path,
+        }
 
         try:
             output = publish_parts(

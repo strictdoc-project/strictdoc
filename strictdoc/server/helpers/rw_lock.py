@@ -11,11 +11,15 @@ class RWLock:
     def __init__(self) -> None:
         self._readers = 0
         self._writer = False
+        # Number of writers waiting to acquire the lock.
+        self._waiting_writers = 0
         self._condition = threading.Condition()
 
     def acquire_read(self) -> None:
         with self._condition:
-            while self._writer:
+            # Writer preference:
+            # block new readers while a writer is active or queued.
+            while self._writer or self._waiting_writers > 0:
                 self._condition.wait()
             self._readers += 1
 
@@ -27,9 +31,15 @@ class RWLock:
 
     def acquire_write(self) -> None:
         with self._condition:
-            while self._writer or self._readers > 0:
-                self._condition.wait()
-            self._writer = True
+            # Announce this writer before waiting so subsequent readers pause.
+            self._waiting_writers += 1
+            try:
+                while self._writer or self._readers > 0:
+                    self._condition.wait()
+                self._writer = True
+            finally:
+                # Writer leaves the queue either after acquiring or on error.
+                self._waiting_writers -= 1
 
     def release_write(self) -> None:
         with self._condition:

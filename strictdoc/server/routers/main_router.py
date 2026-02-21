@@ -138,8 +138,10 @@ from strictdoc.helpers.string import (
 )
 from strictdoc.helpers.timing import measure_performance
 from strictdoc.server.error_object import ErrorObject
+from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
+    HierarchicalRWLockManager,
+)
 from strictdoc.server.helpers.http import request_is_for_non_modified_file
-from strictdoc.server.helpers.rw_lock import RWLock
 
 HTTP_STATUS_BAD_REQUEST = 400
 HTTP_STATUS_PRECONDITION_FAILED = 412
@@ -183,14 +185,14 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
 
-    rw_lock = RWLock()
+    lock_manager = HierarchicalRWLockManager()
 
     def read_lock() -> Iterator[None]:
-        with rw_lock.read():
+        with lock_manager.acquire_global_read():
             yield
 
     def write_lock() -> Iterator[None]:
-        with rw_lock.write():
+        with lock_manager.acquire_global_write():
             yield
 
     async def parse_form_data(request: Request) -> FormData:
@@ -2165,7 +2167,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
             },
         )
 
-    @read_router.get("/export_html2pdf/{document_mid}", response_class=Response)
+    @router.get("/export_html2pdf/{document_mid}", response_class=Response)
     def get_export_html2pdf(document_mid: str) -> Response:  # noqa: ARG001
         if not project_config.is_activated_html2pdf():
             return Response(
@@ -2173,39 +2175,53 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 status_code=HTTP_STATUS_PRECONDITION_FAILED,
             )
 
-        document = export_action.traceability_index.get_node_by_mid(
-            MID(document_mid)
-        )
-
-        root_path = document.meta.get_root_path_prefix()
-        relative_path = document.meta.output_document_dir_rel_path.relative_path
-
-        link_renderer = LinkRenderer(
-            root_path=root_path, static_path=project_config.dir_for_sdoc_assets
-        )
-        markup_renderer = MarkupRenderer.create(
-            document.config.get_markup(),
-            export_action.traceability_index,
-            link_renderer,
-            html_templates,
-            project_config,
-            document,
-        )
-
-        pdf_project_config = copy.deepcopy(project_config)
-        pdf_project_config.is_running_on_server = False
-
-        with measure_performance("Generating printable HTML document"):
-            document_content = DocumentHTML2PDFGenerator.export(
-                pdf_project_config,
-                document,
-                export_action.traceability_index,
-                markup_renderer,
-                link_renderer,
-                git_client=html_generator.git_client,
-                standalone=False,
-                html_templates=html_templates,
+        with lock_manager.acquire_subset(
+            read_ids={_compute_document_mid_lock_key(document_mid)}
+        ):
+            document = export_action.traceability_index.get_node_by_mid(
+                MID(document_mid)
             )
+
+            root_path = document.meta.get_root_path_prefix()
+            relative_path = (
+                document.meta.output_document_dir_rel_path.relative_path
+            )
+
+            link_renderer = LinkRenderer(
+                root_path=root_path,
+                static_path=project_config.dir_for_sdoc_assets,
+            )
+            markup_renderer = MarkupRenderer.create(
+                document.config.get_markup(),
+                export_action.traceability_index,
+                link_renderer,
+                html_templates,
+                project_config,
+                document,
+            )
+
+            pdf_project_config = copy.deepcopy(project_config)
+            pdf_project_config.is_running_on_server = False
+
+            with measure_performance("Generating printable HTML document"):
+                document_content = DocumentHTML2PDFGenerator.export(
+                    pdf_project_config,
+                    document,
+                    export_action.traceability_index,
+                    markup_renderer,
+                    link_renderer,
+                    git_client=html_generator.git_client,
+                    standalone=False,
+                    html_templates=html_templates,
+                )
+
+            # Copy values needed below so the expensive filesystem and subprocess
+            # phase can run without holding the router's read lock.
+            proposed_basename = "document"
+            if document.title is not None:
+                proposed_basename = document.title
+            if document.uid is not None:
+                proposed_basename = document.uid + " " + proposed_basename
 
         temp_uid = uuid.uuid4().hex
         path_to_output_html = os.path.join(
@@ -2246,13 +2262,6 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 status_code=HTTP_STATUS_INTERNAL_SERVER_ERROR,
             )
         assert os.path.isfile(path_to_output_pdf), path_to_output_pdf
-
-        # We derive a name for the exported PDF.
-        proposed_basename = "document"
-        if document.title is not None:
-            proposed_basename = document.title
-        if document.uid is not None:
-            proposed_basename = document.uid + " " + proposed_basename
 
         # We sanitize the basename, Windows is the most restrictive:
         # - many forbidden chars.
@@ -2619,7 +2628,7 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                 > output_file_mtime
             )
 
-        with rw_lock.read():
+        with lock_manager.acquire_global_read():
             if not must_generate():
                 if request_is_for_non_modified_file(
                     request, full_path_to_document
@@ -2640,7 +2649,11 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
                     },
                 )
 
-        with rw_lock.write():
+        lock_key = _compute_document_generation_lock_key(
+            document_relative_path.relative_path
+        )
+
+        with lock_manager.acquire_subset(write_ids={lock_key}):
             if not must_generate():
                 if request_is_for_non_modified_file(
                     request, full_path_to_document
@@ -2825,7 +2838,13 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
         static_file = os.path.join(project_output_path, url_to_asset)
         content_type, _ = guess_type(static_file)
 
-        with rw_lock.read():
+        with lock_manager.acquire_global_read():
+            # We keep a global read lock here because this endpoint serves not
+            # only bundled immutable static files, but also generated assets
+            # under export_output_html_root that may be rewritten at runtime.
+            # FIXME: Revisit when asset writes are fully atomic and immutable
+            # from the reader's perspective, so this lock can potentially be
+            # narrowed or removed.
             if not os.path.isfile(static_file):
                 return Response(
                     content=f"File not found: {url_to_asset}",
@@ -2838,6 +2857,22 @@ def create_main_router(project_config: ProjectConfig) -> APIRouter:
 
             response = FileResponse(static_file, media_type=content_type)
             return response
+
+    def _compute_document_mid_lock_key(document_mid: str) -> str:
+        return f"document:{document_mid}"
+
+    def _compute_document_relative_path_lock_key(relative_path: str) -> str:
+        return f"document:{relative_path}"
+
+    def _compute_document_generation_lock_key(relative_path: str) -> str:
+        # Keep most document variants independent (TABLE/TRACE/DEEP-TRACE/PDF),
+        # but couple standalone with its base document because generating the
+        # base document may also generate standalone as a side effect.
+        if relative_path.endswith(".standalone.html"):
+            return _compute_document_relative_path_lock_key(
+                relative_path.replace(".standalone", "")
+            )
+        return _compute_document_relative_path_lock_key(relative_path)
 
     # Websockets solution based on:
     # https://fastapi.tiangolo.com/advanced/websockets/

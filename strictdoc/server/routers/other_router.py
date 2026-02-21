@@ -4,6 +4,7 @@
 
 import os
 import urllib
+from contextlib import ExitStack
 from copy import deepcopy
 from datetime import datetime
 from typing import Optional
@@ -25,13 +26,20 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.git.change_container import ChangeContainer
 from strictdoc.git.change_generator import ChangeGenerator
 from strictdoc.git.git_client import GitClient
+from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
+    HierarchicalRWLockManager,
+)
 from strictdoc.server.routers.main_router import (
     HTTP_STATUS_BAD_REQUEST,
     HTTP_STATUS_PRECONDITION_FAILED,
 )
 
 
-def create_other_router(project_config: ProjectConfig) -> APIRouter:
+def create_other_router(
+    project_config: ProjectConfig,
+    *,
+    lock_manager: HierarchicalRWLockManager,
+) -> APIRouter:
     router = APIRouter()
 
     html_templates = HTMLTemplates.create(
@@ -210,59 +218,80 @@ def create_other_router(project_config: ProjectConfig) -> APIRouter:
         assert left_revision_resolved is not None
         assert right_revision_resolved is not None
 
-        git_client_lhs = GitClient.create_repo_from_local_copy(
-            left_revision_resolved, project_config
-        )
+        def open_git_client_for_revision(revision: str) -> GitClient:
+            if revision == "HEAD+":
+                # Serialize HEAD+ snapshot creation with main router writes.
+                with lock_manager.acquire_global_write():
+                    return exit_stack.enter_context(
+                        GitClient.create_cached_repo_from_local_copy(
+                            revision, project_config
+                        )
+                    )
+            return exit_stack.enter_context(
+                GitClient.create_cached_repo_from_local_copy(
+                    revision, project_config
+                )
+            )
 
-        project_config_copy_lhs: ProjectConfig = deepcopy(project_config)
-        assert project_config_copy_lhs.input_paths is not None
-        project_config_copy_rhs: ProjectConfig = deepcopy(project_config)
-        assert project_config_copy_rhs.input_paths is not None
+        with ExitStack() as exit_stack:
+            git_client_lhs = open_git_client_for_revision(
+                left_revision_resolved
+            )
+            git_client_rhs = open_git_client_for_revision(
+                right_revision_resolved
+            )
 
-        export_input_rel_path = os.path.relpath(
-            project_config_copy_lhs.input_paths[0], os.getcwd()
-        )
-        export_input_abs_path = os.path.join(
-            git_client_lhs.path_to_git_root, export_input_rel_path
-        )
-        project_config_copy_lhs.input_paths = [export_input_abs_path]
+            project_config_copy_lhs: ProjectConfig = deepcopy(project_config)
+            assert project_config_copy_lhs.input_paths is not None
+            project_config_copy_rhs: ProjectConfig = deepcopy(project_config)
+            assert project_config_copy_rhs.input_paths is not None
 
-        git_client_rhs = GitClient.create_repo_from_local_copy(
-            right_revision_resolved, project_config
-        )
+            export_input_rel_path = os.path.relpath(
+                project_config_copy_lhs.input_paths[0], os.getcwd()
+            )
+            export_input_abs_path = os.path.join(
+                git_client_lhs.path_to_git_root, export_input_rel_path
+            )
+            project_config_copy_lhs.input_paths = [export_input_abs_path]
 
-        export_input_rel_path = os.path.relpath(
-            project_config_copy_rhs.input_paths[0], os.getcwd()
-        )
-        export_input_abs_path = os.path.join(
-            git_client_rhs.path_to_git_root, export_input_rel_path
-        )
-        project_config_copy_rhs.input_paths = [export_input_abs_path]
+            export_input_rel_path = os.path.relpath(
+                project_config_copy_rhs.input_paths[0], os.getcwd()
+            )
+            export_input_abs_path = os.path.join(
+                git_client_rhs.path_to_git_root, export_input_rel_path
+            )
+            project_config_copy_rhs.input_paths = [export_input_abs_path]
 
-        change_container: ChangeContainer = ChangeGenerator.generate(
-            lhs_project_config=project_config_copy_lhs,
-            rhs_project_config=project_config_copy_rhs,
-        )
+            change_container: ChangeContainer = ChangeGenerator.generate(
+                lhs_project_config=project_config_copy_lhs,
+                rhs_project_config=project_config_copy_rhs,
+            )
 
-        assert change_container.traceability_index_lhs.document_tree is not None
-        assert change_container.traceability_index_rhs.document_tree is not None
-        view_object = DiffScreenResultsViewObject(
-            project_config=project_config,
-            change_container=change_container,
-            document_tree_lhs=change_container.traceability_index_lhs.document_tree,
-            document_tree_rhs=change_container.traceability_index_rhs.document_tree,
-            documents_iterator_lhs=change_container.documents_iterator_lhs,
-            documents_iterator_rhs=change_container.documents_iterator_rhs,
-            left_revision=left_revision,
-            right_revision=right_revision,
-            lhs_stats=change_container.lhs_stats,
-            rhs_stats=change_container.rhs_stats,
-            change_stats=change_container.change_stats,
-            traceability_index_lhs=change_container.traceability_index_lhs,
-            traceability_index_rhs=change_container.traceability_index_rhs,
-            tab=tab,
-        )
-        output = template.render(view_object=view_object)
+            assert (
+                change_container.traceability_index_lhs.document_tree
+                is not None
+            )
+            assert (
+                change_container.traceability_index_rhs.document_tree
+                is not None
+            )
+            view_object = DiffScreenResultsViewObject(
+                project_config=project_config,
+                change_container=change_container,
+                document_tree_lhs=change_container.traceability_index_lhs.document_tree,
+                document_tree_rhs=change_container.traceability_index_rhs.document_tree,
+                documents_iterator_lhs=change_container.documents_iterator_lhs,
+                documents_iterator_rhs=change_container.documents_iterator_rhs,
+                left_revision=left_revision,
+                right_revision=right_revision,
+                lhs_stats=change_container.lhs_stats,
+                rhs_stats=change_container.rhs_stats,
+                change_stats=change_container.change_stats,
+                traceability_index_lhs=change_container.traceability_index_lhs,
+                traceability_index_rhs=change_container.traceability_index_rhs,
+                tab=tab,
+            )
+            output = template.render(view_object=view_object)
 
         return HTMLResponse(
             content=output,

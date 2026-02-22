@@ -1,0 +1,48 @@
+[DOCUMENT]
+TITLE: input.xls sheet Sheet1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: FLOAT_FIELD
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: A-1
+STATEMENT: >>>
+a statement
+<<<
+FLOAT_FIELD: 1.2
+
+[REQUIREMENT]
+UID: A-2
+STATEMENT: >>>
+a statement
+<<<
+FLOAT_FIELD: 4.5

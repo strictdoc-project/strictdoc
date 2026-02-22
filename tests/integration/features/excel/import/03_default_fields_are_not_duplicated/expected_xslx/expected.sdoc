@@ -1,0 +1,75 @@
+[DOCUMENT]
+TITLE: input.xlsx sheet Sheet1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: LEVEL
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATUS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: SOURCE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: VERIFICATION
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: REQ-EXAMPLE-0001
+LEVEL: 3.1
+TITLE: Import Floats
+STATEMENT: >>>
+The importer shall import floats without failing
+<<<
+SOURCE: >>>
+example-document.pdf
+<<<
+VERIFICATION: Demonstration
+
+[REQUIREMENT]
+UID: REQ-EXAMPLE-0002
+LEVEL: 3.1.1
+TITLE: Duplicate LEVEL Fields
+STATEMENT: >>>
+The importer shall not duplicate the LEVEL field if it already exists in the source document
+<<<
+SOURCE: >>>
+example-document.pdf
+<<<
+VERIFICATION: Demonstration
+
+[REQUIREMENT]
+UID: REQ-EXAMPLE-0003
+LEVEL: 3.1.2
+TITLE: Selective Multiline Imports
+STATEMENT: >>>
+The importer shall import multiline fields
+only when the field contains a newline
+<<<
+SOURCE: >>>
+example-document.pdf
+new-document.pdf
+<<<
+VERIFICATION: Demonstration

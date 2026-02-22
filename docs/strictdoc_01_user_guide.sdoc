@@ -3387,6 +3387,117 @@ If the ``output-dir`` option is not provided, the ``output/`` folder is the defa
 [[/SECTION]]
 
 [[SECTION]]
+MID: 241afbf6b7af40189eec8054d0d0201c
+UID: SECTION-UG-Project-statistics-screen
+TITLE: Project statistics screen
+
+[TEXT]
+MID: 2fefc893de83432fa852886cc3a05fea
+STATEMENT: >>>
+The project statistics screen displays useful information about a documentation project as well as some requirements-based statistics.
+
+To activate the project statistics screen, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="My project",
+            project_features=[
+                "PROJECT_STATISTICS_SCREEN"
+            ],
+        )
+        return config
+
+This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.
+<<<
+
+[[SECTION]]
+MID: aa84a8c59a904c9dbb1052b1bff169bf
+TITLE: User-provided custom statistics generator (experimental)
+
+[TEXT]
+MID: 7cf15de69efc46a5abe6b6fc786e4b71
+STATEMENT: >>>
+StrictDoc allows users to write their own custom statistics generators.
+
+To connect a custom generator, add it to the ``strictdoc_config.py`` configuration file as follows:
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="StrictDoc Documentation",
+            statistics_generator="custom_statistics.CustomStatisticsGenerator",
+        )
+        return config
+
+The path specified by the config variable must be a valid path to a Python file, and the last component must reference an existing statistics generator class. StrictDoc automatically adds the document input path to its Python search paths, so the specified path must be discoverable relative to the location where the SDoc documents are read.
+
+A statistics generator is a class that iterates over the traceability index, collects and calculates relevant statistics about the traceability graph, and stores the results as a list of ``Metric`` and ``MetricSection`` objects.
+
+.. note::
+
+    StrictDoc’s built-in statistics generator is a good example of how to implement a custom one. See `SDocStatisticsGenerator <https://github.com/strictdoc-project/strictdoc/blob/6f57747e6a1b5b3cb29c0047f9df5959da64ebb1/docs/sdoc_project_statistics.py>`_.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 61b3fa2fc31140ae95ae1a651cb18355
+TITLE: Mermaid diagramming and charting tool
+
+[TEXT]
+MID: 6a4e4467a5c0451ea8291fd94309d525
+STATEMENT: >>>
+The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as follows:
+
+.. code:: strictdoc
+
+    [TEXT]
+    STATEMENT: >>>
+    .. raw:: html
+
+        <pre class="mermaid">
+        graph TD
+        A[Enter Chart Definition] --> B(Preview)
+        B --> C{decide}
+        C --> D[Keep]
+        C --> E[Edit Definition]
+        E --> B
+        D --> F[Save Image and Code]
+        F --> B
+        </pre>
+    <<<
+
+To activate Mermaid, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="My project",
+            project_features=[
+                "MERMAID"
+            ],
+        )
+        return config
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 17a8adb92c8d4e7992e869355e73912d
 TITLE: Configuration
 
@@ -4104,71 +4215,6 @@ Example:
 [[/SECTION]]
 
 [[SECTION]]
-MID: 241afbf6b7af40189eec8054d0d0201c
-UID: SECTION-UG-Project-statistics-screen
-TITLE: Project statistics screen
-
-[TEXT]
-MID: 2fefc893de83432fa852886cc3a05fea
-STATEMENT: >>>
-The project statistics screen displays useful information about a documentation project as well as some requirements-based statistics.
-
-To activate the project statistics screen, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
-
-.. code:: python
-
-    from strictdoc.core.project_config import ProjectConfig
-
-
-    def create_config() -> ProjectConfig:
-        config = ProjectConfig(
-            project_title="My project",
-            project_features=[
-                "PROJECT_STATISTICS_SCREEN"
-            ],
-        )
-        return config
-
-This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.
-<<<
-
-[[SECTION]]
-MID: aa84a8c59a904c9dbb1052b1bff169bf
-TITLE: User-provided custom statistics generator (experimental)
-
-[TEXT]
-MID: 7cf15de69efc46a5abe6b6fc786e4b71
-STATEMENT: >>>
-StrictDoc allows users to write their own custom statistics generators.
-
-To connect a custom generator, add it to the ``strictdoc_config.py`` configuration file as follows:
-
-.. code:: python
-
-    from strictdoc.core.project_config import ProjectConfig
-
-
-    def create_config() -> ProjectConfig:
-        config = ProjectConfig(
-            project_title="StrictDoc Documentation",
-            statistics_generator="custom_statistics.CustomStatisticsGenerator",
-        )
-        return config
-
-The path specified by the config variable must be a valid path to a Python file, and the last component must reference an existing statistics generator class. StrictDoc automatically adds the document input path to its Python search paths, so the specified path must be discoverable relative to the location where the SDoc documents are read.
-
-A statistics generator is a class that iterates over the traceability index, collects and calculates relevant statistics about the traceability graph, and stores the results as a list of ``Metric`` and ``MetricSection`` objects.
-
-.. note::
-
-    StrictDoc’s built-in statistics generator is a good example of how to implement a custom one. See `SDocStatisticsGenerator <https://github.com/strictdoc-project/strictdoc/blob/6f57747e6a1b5b3cb29c0047f9df5959da64ebb1/docs/sdoc_project_statistics.py>`_.
-<<<
-
-[[/SECTION]]
-
-[[/SECTION]]
-
-[[SECTION]]
 MID: 875c097b4da348938ed71de4b8e8e73b
 TITLE: Document tree map screen
 
@@ -4334,54 +4380,6 @@ Example of ``strictdoc_config.py``:
 [[/SECTION]]
 
 [[SECTION]]
-MID: 61b3fa2fc31140ae95ae1a651cb18355
-TITLE: Mermaid diagramming and charting tool
-
-[TEXT]
-MID: 6a4e4467a5c0451ea8291fd94309d525
-STATEMENT: >>>
-The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as follows:
-
-.. code:: strictdoc
-
-    [TEXT]
-    STATEMENT: >>>
-    .. raw:: html
-
-        <pre class="mermaid">
-        graph TD
-        A[Enter Chart Definition] --> B(Preview)
-        B --> C{decide}
-        C --> D[Keep]
-        C --> E[Edit Definition]
-        E --> B
-        D --> F[Save Image and Code]
-        F --> B
-        </pre>
-    <<<
-
-To activate Mermaid, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
-
-.. code:: python
-
-    from strictdoc.core.project_config import ProjectConfig
-
-
-    def create_config() -> ProjectConfig:
-        config = ProjectConfig(
-            project_title="My project",
-            project_features=[
-                "MERMAID"
-            ],
-        )
-        return config
-
-This feature is not enabled by default because it has not received enough testing.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
 MID: 74291dc6cfae47d2bae33066024f3807
 TITLE: Test report integration
 
@@ -4543,17 +4541,20 @@ TITLE: Limitations of web user interface
 [TEXT]
 MID: 911c454331634018b8de24186ae8e742
 STATEMENT: >>>
-The existing implementation of the web user interface is alpha-quality and incomplete. The user interface and the underlying backend implementation are not yet autonomous from the command-line workflow. A user still has to access the command line to run the server and commit the documents to Git manually.
+The existing implementation of the web user interface has the following limitations.
+
+The user interface and the underlying backend implementation are not yet autonomous from the command-line workflow. A user still has to access the command line to run the server and commit the documents to Git manually.
 
 The currently supported workflow for the ``server`` command must be hybrid:
 
-- In one terminal window: run server.
+- In one terminal window: run the server.
 - In another window: check the changes made by the server in the .sdoc files. Commit the .sdoc files to Git.
 
-Note that currently, StrictDoc server maintains an in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
+Currently StrictDoc server maintains an in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
 
 The following essential features are still missing and will be worked on in the future:
 
+- A dedicated screen where a user can commit and push changes to GitHub/GitLab or other Git servers.
 - Adding images via drag-and-drop or an upload button to the multiline fields like such requirements and text nodes ``STATEMENT``.
 - Adding/editing sections with ``LEVEL: None``.
 - Deleting a document.
@@ -4563,20 +4564,6 @@ The following essential features are still missing and will be worked on in the 
 - Moving the TOC nodes of a document when it has one or more included documents.
 - Editing ``.sgra`` grammar files.
 <<<
-
-[[SECTION]]
-MID: 2a49392c11d246ea8c69375764fc5362
-TITLE: Concurrent use of web user interface
-
-[TEXT]
-MID: bdee3bde500a40878b70be44f113cf2c
-STATEMENT: >>>
-StrictDoc's web user interface does not handle concurrency. If the same requirement/section is edited by two users at the same time, the last write wins.
-
-The measures for handling concurrent use are planned but have been not implemented yet.
-<<<
-
-[[/SECTION]]
 
 [[/SECTION]]
 

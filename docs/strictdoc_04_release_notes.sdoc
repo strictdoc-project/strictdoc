@@ -46,6 +46,23 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 407d74b1ef3245e7986481076dc3355b
+TITLE: 0.18.0 (2026-02-22)
+
+[TEXT]
+MID: e6947272bf5c4cf896bdc92a6b6a2e1c
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The web server receives several updates to allow a single service instance to be used concurrently by multiple users. The simple concurrency model assumes a single FastAPI worker with a single process serving multiple threads. The lack of conflicts during editing is ensured through a set of recursive read-write locks. All critical routes, such as "get document", "print PDF", or "calculate Diff/Changelog", have been updated to take read or write locks, which should prevent races and enable reasonably fast concurrent usage.
+
+2\)
+The Excel import function was extended to strip trailing newlines from all cell values, convert float values like 1.2 to strings, and avoid duplicating default grammar fields if they are present in the input Excel file.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 39dd2c627bd340e8b7be00730c72e341
 TITLE: 0.17.1 (2026-02-11)
 

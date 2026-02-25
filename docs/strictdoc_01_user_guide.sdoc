@@ -3981,6 +3981,115 @@ For any custom Python API request, for example, a need to do a more advanced dat
 [[/SECTION]]
 
 [[SECTION]]
+MID: 014eacb7e5fc4f82966a32ebedc5e69a
+TITLE: User plugins
+
+[TEXT]
+MID: 1b399003cf974018ab5e35773b88922e
+STATEMENT: >>>
+StrictDoc allows a user to register a Python plugin class which will have its methods/hooks called while StrictDoc runs a given command.
+
+The only hook supported at the moment is ``traceability_index_build_finished``, which is called right after StrictDoc has finished reading all input documents and source files, and after it has finished calculating the entire traceability index.
+
+The plugin must be registered in the StrictDoc Python config file:
+
+.. code-block:: python
+
+    import os
+    import sys
+
+    from strictdoc.core.project_config import ProjectConfig
+
+    sys.path.append(os.path.dirname(__file__))
+
+    from user_plugin import UserPlugin
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="StrictDoc Documentation",
+            user_plugin=UserPlugin()
+        )
+        return config
+
+The plugin class can be implemented as follows:
+
+.. code-block:: python
+
+    from strictdoc.core.plugin import StrictDocPlugin
+
+
+    class UserPlugin(StrictDocPlugin):
+        def traceability_index_build_finished(
+            self, traceability: TraceabilityIndex
+        ):
+            pass
+<<<
+
+[[SECTION]]
+MID: a1738fcf350746388f6b2d51fbce7806
+TITLE: Custom validations
+
+[TEXT]
+MID: c2eb6745410d414eb883c565c603f0c7
+STATEMENT: >>>
+The StrictDoc plugin feature can be used to implement custom validations specific to a user project.
+
+Example:
+
+.. code-block:: python
+
+    from strictdoc.backend.sdoc.models.node import SDocNode
+    from strictdoc.core.document_iterator import SDocDocumentIterator
+    from strictdoc.core.plugin import StrictDocPlugin
+    from strictdoc.core.traceability_index import TraceabilityIndex
+
+
+    class UserPlugin(StrictDocPlugin):
+        def traceability_index_build_finished(
+            self,
+            traceability: TraceabilityIndex
+        ):
+            for document in traceability.document_tree.document_list:
+                assert document.meta is not None
+
+                document_iterator = SDocDocumentIterator(document)
+
+                for node, _ in document_iterator.all_content(
+                    print_fragments=False,
+                ):
+                    # Attach a validation issue to the entire node.
+                    traceability.validation_index.add_issue(
+                        node,
+                        issue="The whole node is really bad.",
+                        field=None,
+                        subject=f"Node: {node.reserved_title}",
+                    )
+                    # Attach a validation issue to a specific field of the node.
+                    traceability.validation_index.add_issue(
+                        node,
+                        issue="UID field is really bad.",
+                        field="UID",
+                        subject=f"Node: {node.reserved_title}",
+                    )
+
+The nodes with validation issues attached will be displayed as follows:
+
+.. image:: _assets/StrictDoc_UserGuide_ValidationExample.png
+   :alt: Validation example
+   :class: image
+   :width: 100%
+
+.. warning::
+
+    This custom validations feature is not yet fully supported in the editable web interface. If a user modifies a given node, its validations may not be updated or re-evaluated correctly. See https://github.com/strictdoc-project/strictdoc/issues/1229 for more details.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 31d6e96f4688447d9c0934caa37956fb
 UID: SECTION-UG-Performance-considerations
 TITLE: Performance considerations

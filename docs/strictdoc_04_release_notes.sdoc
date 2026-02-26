@@ -46,6 +46,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 148139b430d041619eccd8759d5c3fe6
+TITLE: 0.18.1 (2026-02-26)
+
+[TEXT]
+MID: 9684f37a5b134a82ad453ffa90ff7565
+STATEMENT: >>>
+This minor bugfix release ensures that the default server output path is correctly set to ``output/server/``, while the default static export path remains ``output/``. This fixes an issue introduced several weeks ago where the server output path was set to ``output/``, which caused undefined behavior when a user used both static and server workflows at the same time.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 407d74b1ef3245e7986481076dc3355b
 TITLE: 0.18.0 (2026-02-22)
 

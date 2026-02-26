@@ -86,6 +86,7 @@ class ProjectFeature(str, Enum):
 class ProjectConfigDefault:
     DEFAULT_PROJECT_TITLE = "Untitled Project"
     DEFAULT_DIR_FOR_SDOC_ASSETS = "_static"
+    DEFAULT_DIR_FOR_OUTPUT = "output"
     DEFAULT_DIR_FOR_SDOC_CACHE = "output/_cache"
 
     DEFAULT_FEATURES: List[str] = [
@@ -300,7 +301,7 @@ class ProjectConfig:
         # Settings derived from the command-line parameters.
 
         # Common settings.
-        self.output_dir: str = "output"
+        self.output_dir: str = ProjectConfigDefault.DEFAULT_DIR_FOR_OUTPUT
 
         # Export action.
         self.export_output_html_root: str = os.path.join(
@@ -411,11 +412,14 @@ class ProjectConfig:
             source_root_path = source_root_path.rstrip("/")
             self.source_root_path = source_root_path
 
-        output_dir = (
-            server_config.output_path or self.output_dir or "./output/server"
-        )
-
+        # When setting the output dir, the CLI argument takes precedence.
+        output_dir = self.output_dir
+        if server_config.output_path is not None:
+            output_dir = server_config.output_path
+        elif output_dir == ProjectConfigDefault.DEFAULT_DIR_FOR_OUTPUT:
+            output_dir = "./output/server"
         self.output_dir = output_dir
+
         self.export_output_html_root = os.path.join(output_dir, "html")
 
         # If a custom cache folder is not specified in the config, adjust the

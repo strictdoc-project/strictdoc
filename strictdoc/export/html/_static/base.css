@@ -95,6 +95,11 @@ body {
   background-color: var(--color-bg-main);
 }
 
+/* Change cursor to 'not-allowed' during a drag */
+body:has(.is-dragging) {
+  cursor: no-drop;
+}
+
 @font-face {
   font-family: 'Noto Sans';
   font-style: normal;

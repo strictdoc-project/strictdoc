@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from selenium.common import StaleElementReferenceException
@@ -108,3 +109,73 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         self.test_case.click_xpath(
             f'(//*[@data-testid="tree-document-link"])[{doc_order}]'
         )
+
+    def do_drop_image_to_requirement(
+        self, field_name: str, image_path: str, field_order: int = 1
+    ) -> None:
+        # Verify the file exists locally
+        absolute_image_path = os.path.abspath(image_path)
+        assert os.path.exists(absolute_image_path), (
+            f"Test image not found at {absolute_image_path}"
+        )
+
+        # Find the target editable field for the specific requirement
+        field_order_str = "last()" if field_order == -1 else str(field_order)
+        xpath_field = (
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
+        )
+        target_element = self.test_case.find_element(By.XPATH, xpath_field)
+
+        # Use a JS script to simulate the drop event.
+        # Selenium cannot drag from the OS, so we need to simulate the DataTransfer object.
+        js_drop_files = """
+            var target = arguments[0];
+            var offsetX = 0;
+            var offsetY = 0;
+            var document = target.ownerDocument || document;
+            var window = document.defaultView || window;
+
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.style.display = 'none';
+            input.onchange = function () {
+            var rect = target.getBoundingClientRect();
+            var x = rect.left + (offsetX || (rect.width >> 1));
+            var y = rect.top + (offsetY || (rect.height >> 1));
+
+            var dataTransfer = { files: this.files, types: ['Files'], dropEffect: 'copy' };
+
+            ['dragenter', 'dragover', 'drop'].forEach(function (name) {
+                var evt = document.createEvent('MouseEvent');
+                evt.initMouseEvent(name, true, true, window, 0, 0, 0, x, y, false, false, false, false, 0, null);
+                evt.dataTransfer = dataTransfer;
+                target.dispatchEvent(evt);
+            });
+
+            setTimeout(function () { document.body.removeChild(input); }, 20);
+            };
+            document.body.appendChild(input);
+            return input;
+        """
+
+        # Execute the script to create the input, then "upload" the file to it
+        file_input = self.test_case.driver.execute_script(
+            js_drop_files, target_element
+        )
+        file_input.send_keys(absolute_image_path)
+
+        # Wait for the UI to update
+        # We wait until the placeholder "Uploading..." disappears
+        # and is replaced by the actual RST directive path.
+        start_time = datetime.now()
+        while True:
+            current_content = target_element.text
+            if ".. image:: @assets/" in current_content:
+                break
+
+            if (datetime.now() - start_time).total_seconds() > 10:
+                raise TimeoutError(
+                    "Image upload failed or RST path never appeared."
+                )
+
+            self.test_case.sleep(0.5)

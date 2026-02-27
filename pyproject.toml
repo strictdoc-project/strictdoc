@@ -58,6 +58,9 @@ dependencies = [
     # Parsing and rendering RST.
     "docutils >= 0.22.2, == 0.*",
 
+    # Parsing Markdown in CommonMark mode. Converting Markdown to HTML.
+    "markdown-it-py >= 4.0.0, == 4.*",
+
     # Tree Sitter is used for language/AST-aware parsing of Python, C and other files.
     "tree-sitter >= 0.25",
     "tree_sitter_cpp",

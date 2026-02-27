@@ -52,13 +52,15 @@ StrictDoc is software for technical documentation and requirements management.
 Summary of StrictDoc features:
 
 - The documentation files are stored as human-readable text files.
-- A simple domain-specific language DSL is used for writing the documents. The
-  text format for encoding this language is called SDoc (strict-doc).
-- StrictDoc reads \*.sdoc files and builds an in-memory representation of a
+- StrictDoc supports two input document formats: SDoc (\*.sdoc) and
+  Markdown (\*.md, experimental support).
+- StrictDoc reads these files and builds an in-memory representation of a
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
   into a number of formats including HTML, RST, ReqIF, PDF, JSON, Excel.
-- StrictDoc has a web-based user interface which allows viewing and editing the documents and requirements. The changes are written back to .sdoc files.
+- StrictDoc has a web-based user interface which allows viewing and editing
+  the documents and requirements. The changes are written back to .sdoc files
+  and Markdown files.
 - The focus of the tool is modeling requirements and specifications documents.
   Such documents consist of multiple statements like "system X shall do Y"
   called requirements.
@@ -836,7 +838,7 @@ The additional metadata is also included on the front page of the exported PDF. 
 .. note ::
 
     The front page can be further customised using the ``html2pdf_template``
-    directive in strictoc.toml. See [LINK: SECTION-UG-Path-to-custom-HTML2PDF-template].
+    directive in ``strictdoc_config.py``. See [LINK: SECTION-UG-Path-to-custom-HTML2PDF-template].
 <<<
 
 [[/SECTION]]

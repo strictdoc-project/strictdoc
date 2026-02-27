@@ -17,10 +17,20 @@ from strictdoc.export.html.renderers.html_fragment_writer import (
 )
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
+from strictdoc.export.markdown.markdown_to_html_fragment_writer import (
+    MarkdownToHtmlFragmentWriter,
+)
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
 from strictdoc.helpers.rst import escape_str_after_inline_markup
+
+FragmentWriterType = Union[
+    RstToHtmlFragmentWriter,
+    MarkdownToHtmlFragmentWriter,
+    HTMLFragmentWriter,
+    TextToHtmlWriter,
+]
 
 
 class MarkupRenderer:
@@ -34,17 +44,15 @@ class MarkupRenderer:
         context_document: Optional[SDocDocument],
     ) -> "MarkupRenderer":
         assert isinstance(html_templates, HTMLTemplates)
-        html_fragment_writer: Union[
-            RstToHtmlFragmentWriter,
-            HTMLFragmentWriter,
-            TextToHtmlWriter,
-        ]
+        html_fragment_writer: FragmentWriterType
         if not markup or markup == SDocMarkup.RST:
             html_fragment_writer = RstToHtmlFragmentWriter(
                 project_config=config,
                 context_document=context_document,
             )
-        elif markup == "HTML":
+        elif markup == SDocMarkup.MARKDOWN:
+            html_fragment_writer = MarkdownToHtmlFragmentWriter()
+        elif markup == SDocMarkup.HTML:
             html_fragment_writer = HTMLFragmentWriter()
         else:
             html_fragment_writer = TextToHtmlWriter()
@@ -58,11 +66,7 @@ class MarkupRenderer:
 
     def __init__(
         self,
-        fragment_writer: Union[
-            RstToHtmlFragmentWriter,
-            HTMLFragmentWriter,
-            TextToHtmlWriter,
-        ],
+        fragment_writer: FragmentWriterType,
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
@@ -75,11 +79,7 @@ class MarkupRenderer:
         ), context_document
         assert isinstance(html_templates, HTMLTemplates)
 
-        self.fragment_writer: Union[
-            RstToHtmlFragmentWriter,
-            HTMLFragmentWriter,
-            TextToHtmlWriter,
-        ] = fragment_writer
+        self.fragment_writer: FragmentWriterType = fragment_writer
         self.traceability_index: TraceabilityIndex = traceability_index
         self.link_renderer: LinkRenderer = link_renderer
         self.context_document: Optional[SDocDocument] = context_document
@@ -128,7 +128,9 @@ class MarkupRenderer:
         parts_output = ""
         for part in node_field.parts:
             if isinstance(part, str):
-                if isinstance(prev_part, InlineLink):
+                if isinstance(prev_part, InlineLink) and isinstance(
+                    self.fragment_writer, RstToHtmlFragmentWriter
+                ):
                     parts_output += escape_str_after_inline_markup(part)
                 else:
                     parts_output += part

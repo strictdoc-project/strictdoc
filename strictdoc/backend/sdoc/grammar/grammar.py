@@ -125,7 +125,7 @@ ViewElementHiddenTag[noskipws]:
 ;
 
 MarkupChoice[noskipws]:
-  'RST' | 'Text' | 'HTML'
+  'RST' | 'Text' | 'HTML' | 'Markdown'
 ;
 
 RequirementStyleChoice[noskipws]:

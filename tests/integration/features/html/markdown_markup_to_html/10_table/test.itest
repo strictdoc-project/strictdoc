@@ -1,0 +1,11 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Markdown table document
+
+RUN: %cat %T/html/10_table/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+CHECK-HTML-FILE: <table>
+CHECK-HTML-FILE: <th>Column A</th>
+CHECK-HTML-FILE: <th>Column B</th>
+CHECK-HTML-FILE: <th>Column C</th>
+CHECK-HTML-FILE: <td>A</td>
+CHECK-HTML-FILE: <td>B</td>
+CHECK-HTML-FILE: <td>C</td>

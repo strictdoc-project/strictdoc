@@ -22,7 +22,10 @@
     {% include "components/header/header_pagetype.jinja" %}
   {%- endif -%}
 
-  {# 3: last block, pushed to the right #}
+  {# 3: placeholder block #}
+  <div class="header__placeholder" data-testid="header-placeholder" id="header-placeholder"></div>
+
+  {# 4: last block, pushed to the right #}
   {%- if header__last is defined -%}
     {% include header__last %}
   {%- endif -%}

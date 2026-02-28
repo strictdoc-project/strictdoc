@@ -883,6 +883,25 @@ svg:hover .svg_icon_not_hover_visible {
   min-width: 0;
 }
 
+.header__placeholder {
+  flex-grow: 1;
+  height: 1rem;
+
+  /* debug */
+  /* position: relative;
+  background-color: blue; */
+}
+/* debug */
+/* .header__placeholder::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  background-color: red;
+} */
+
 .header__document_title {
   overflow: hidden;
   white-space: nowrap;
@@ -1657,74 +1676,98 @@ sdoc-node-content .field_issue-ribbon::before {
 }
 
 /*
- ** SEARCH bar and result area
+ ** header-actions: reusable wrapper for header buttons + kebab dropdown
  */
-
-.search-box {
-  /* DEV: to push to the right in the header flex box */
-  margin-left: auto;
-}
-
-.actions_group + .search-box,
-.header-actions + .search-box {
-  /* DEV: if on the server to the right of the action buttons */
-  margin-left: unset;
-}
 
 /* header-actions: reusable wrapper for header buttons + kebab dropdown */
 .header-actions {
+  /* DEV: to push it to the right in the header flex box we use .header__placeholder instead of margin-left: auto) */
   display: flex;
   align-items: center;
   column-gap: calc(var(--base-rhythm) / 2);
-  margin-left: auto;
   position: relative;
 }
 
 .header-actions__kebab {
+  /* has [aria-expanded="true / false"] */
+  /* DEV: hide kebab */
   display: none;
 }
 
 .header-actions__menu {
+  /* DEV: show menu as row, while hiding kebab */
   display: flex;
   flex-direction: row;
   position: static;
 }
 
-/* Wide: always show menu as row, hide kebab */
-@media (min-width: 1025px) {
-  .header-actions__menu {
-    display: flex !important;
-  }
+.header-actions[data-dropdown-measure-state="pending"] .header-actions__kebab {
+  /* DEV: before first measurement, show kebab only */
+  display: inline-flex;
 }
 
-/* Narrow: show kebab, menu becomes dropdown */
-@media (max-width: 1024px) {
-  .header-actions__kebab {
-    display: inline-flex;
-  }
+.header-actions[data-dropdown-measure-state="pending"] .pending {
+  display: inline-flex;
+}
+.header-actions[data-dropdown-measure-state="pending"] .done {
+  display: none;
+}
+.header-actions[data-dropdown-measure-state="done"] .pending {
+  display: none;
+}
+.header-actions[data-dropdown-measure-state="done"] .done {
+  display: inline-flex;
+}
 
-  .header-actions__menu {
-    position: absolute;
-    right: 0;
-    top: calc(var(--base-rhythm) * 3);
-    z-index: 99;
-    flex-direction: column;
-    /* min-width: 12rem; */
-    margin: 0;
-    padding: var(--base-rhythm);
-    background: var(--color-bg-contrast);
-    box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
-    border-radius: var(--base-rhythm);
-    row-gap: calc(var(--base-rhythm) / 2);
-  }
+.header-actions[data-dropdown-measure-state="pending"] .header-actions__menu {
+  /*
+   * DEV: keep actions measurable but not visible.
+   * We position the row off-layout and hide it visually until JS resolves mode.
+   */
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  right: 0;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
 
-  .header-actions__menu[aria-hidden="true"] {
-    display: none;
-  }
+.header-actions[data-has-dropdown="true"] .header-actions__kebab {
+  /* DEV: show kebab */
+  display: inline-flex;
+}
 
-  .header-actions__menu[aria-hidden="false"] {
-    display: flex;
-  }
+.header-actions[data-has-dropdown="true"] .header-actions__menu {
+  /* DEV: menu becomes dropdown */
+  position: absolute;
+  right: 0;
+  top: calc(var(--base-rhythm) * 3);
+  z-index: 99;
+  flex-direction: column;
+  /* min-width: 12rem; */
+  margin: 0;
+  padding: var(--base-rhythm);
+  background: var(--color-bg-contrast);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  border-radius: var(--base-rhythm);
+  row-gap: calc(var(--base-rhythm) / 2);
+}
+
+.header-actions[data-has-dropdown="true"] .header-actions__menu[aria-hidden="true"] {
+  display: none;
+}
+
+.header-actions[data-has-dropdown="true"] .header-actions__menu[aria-hidden="false"] {
+  display: flex;
+}
+
+/*
+ ** SEARCH bar and result area
+ */
+
+.search-box {
+  /* DEV: to push it to the right in the header flex box we use .header__placeholder instead of margin-left: auto) */
 }
 
 .search-input {

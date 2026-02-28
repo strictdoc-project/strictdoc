@@ -1,6 +1,11 @@
 {# Requires header__actions_template (path to screen-specific actions buttons). #}
 {# Uses dropdown_menu.js (data-dropdown-handler + aria-controls). #}
-<div class="header-actions">
+{#
+  `#header-actions` must have data-dropdown-measure-state="pending":
+  this keeps header actions in pre-measure mode
+  until dropdown_menu.js measures widths and sets the final display mode.
+  #}
+<div id="header-actions" class="header-actions" data-dropdown-measure-state="pending">
   <div
     class="header-actions__kebab action_icon"
     role="button"
@@ -10,7 +15,10 @@
     aria-haspopup="true"
     title="Actions"
     data-testid="header-actions-kebab"
-  >{% include "_res/svg_ico16_kebab.jinja.html" %}</div>
+  >
+    <span class="pending">{%- include "_res/svg_ico16_wait.jinja" -%}</span>
+    <span class="done">{%- include "_res/svg_ico16_kebab.jinja.html" -%}</span>
+  </div>
   <div
     id="header-actions-menu"
     class="header-actions__menu actions_group"

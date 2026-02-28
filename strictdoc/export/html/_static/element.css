@@ -1665,9 +1665,66 @@ sdoc-node-content .field_issue-ribbon::before {
   margin-left: auto;
 }
 
-.actions_group + .search-box {
+.actions_group + .search-box,
+.header-actions + .search-box {
   /* DEV: if on the server to the right of the action buttons */
   margin-left: unset;
+}
+
+/* header-actions: reusable wrapper for header buttons + kebab dropdown */
+.header-actions {
+  display: flex;
+  align-items: center;
+  column-gap: calc(var(--base-rhythm) / 2);
+  margin-left: auto;
+  position: relative;
+}
+
+.header-actions__kebab {
+  display: none;
+}
+
+.header-actions__menu {
+  display: flex;
+  flex-direction: row;
+  position: static;
+}
+
+/* Wide: always show menu as row, hide kebab */
+@media (min-width: 1025px) {
+  .header-actions__menu {
+    display: flex !important;
+  }
+}
+
+/* Narrow: show kebab, menu becomes dropdown */
+@media (max-width: 1024px) {
+  .header-actions__kebab {
+    display: inline-flex;
+  }
+
+  .header-actions__menu {
+    position: absolute;
+    right: 0;
+    top: calc(var(--base-rhythm) * 3);
+    z-index: 99;
+    flex-direction: column;
+    /* min-width: 12rem; */
+    margin: 0;
+    padding: var(--base-rhythm);
+    background: var(--color-bg-contrast);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+    border-radius: var(--base-rhythm);
+    row-gap: calc(var(--base-rhythm) / 2);
+  }
+
+  .header-actions__menu[aria-hidden="true"] {
+    display: none;
+  }
+
+  .header-actions__menu[aria-hidden="false"] {
+    display: flex;
+  }
 }
 
 .search-input {

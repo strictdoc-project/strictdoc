@@ -4,34 +4,10 @@
   the child turbo links below.
 #}
 <turbo-frame>
-  <div class="actions_group">
-    {%- if not view_object.standalone -%}
-    <a
-      href="/actions/document/edit_grammar?document_mid={{ view_object.document.reserved_mid }}"
-      class="action_button"
-      data-turbo="true"
-      data-turbo-action="replace"
-      title="Edit document grammar"
-      data-testid="document-edit-grammar-action"
-    >{% include "_res/svg_ico16_gear.jinja.html" %} Edit grammar</a>
-
-    {%- if view_object.project_config.is_activated_html2pdf() -%}
-    <a
-      class="action_button"
-      href="/export_html2pdf/{{ view_object.document.reserved_mid }}"
-      data-testid="document-export-html2pdf-action"
-    >Export to PDF</a>
-    {%- endif -%}
-
-    {%- if view_object.project_config.is_activated_reqif() -%}
-    <a
-      class="action_button"
-      href="/reqif/export_document/{{ view_object.document.reserved_mid }}"
-      data-testid="document-export-reqif-action"
-    >Export to ReqIF</a>
-    {%- endif -%}
-    {%- endif -%}
-  </div>
+  {% include "components/static_search/index.jinja" %}
+  {%- with header__actions_template="screens/document/document/actions_buttons.jinja" -%}
+    {% include "components/header/actions_wrapper.jinja" %}
+  {%- endwith -%}
 </turbo-frame>
 {%- else -%}
   {% include "components/static_search/index.jinja" %}

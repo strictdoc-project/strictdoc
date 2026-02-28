@@ -1,0 +1,23 @@
+{# Requires header__actions_template (path to screen-specific actions buttons). #}
+{# Uses dropdown_menu.js (data-dropdown-handler + aria-controls). #}
+<div class="header-actions">
+  <div
+    class="header-actions__kebab action_icon"
+    role="button"
+    data-dropdown-handler
+    aria-expanded="false"
+    aria-controls="header-actions-menu"
+    aria-haspopup="true"
+    title="Actions"
+    data-testid="header-actions-kebab"
+  >{% include "_res/svg_ico16_kebab.jinja.html" %}</div>
+  <div
+    id="header-actions-menu"
+    class="header-actions__menu actions_group"
+    aria-hidden="true"
+    role="menu"
+    aria-label="Header actions"
+  >
+    {% include header__actions_template %}
+  </div>
+</div>

@@ -12,6 +12,7 @@ from strictdoc.helpers.parallelizer import Parallelizer
 EXPORT_FORMATS = [
     "html",
     "html2pdf",
+    "markdown",
     "rst",
     "json",
     "excel",

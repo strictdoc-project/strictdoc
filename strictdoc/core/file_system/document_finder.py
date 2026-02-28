@@ -9,6 +9,7 @@ from typing import Dict, List, Tuple, Union
 
 from strictdoc.backend.reqif.reqif_reader import ReqIFReader
 from strictdoc.backend.sdoc.grammar_reader import SDocGrammarReader
+from strictdoc.backend.sdoc.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.reader import SDReader
@@ -84,6 +85,15 @@ class DocumentFinder:
                 sdoc_reader: SDReader = SDReader()
                 document_or_grammar = sdoc_reader.read_from_file(
                     doc_full_path, project_config
+                )
+                assert isinstance(document_or_grammar, SDocDocument)
+            elif doc_full_path.endswith(".md") or doc_full_path.endswith(
+                ".markdown"
+            ):
+                markdown_reader = SDMarkdownReader()
+                document_or_grammar = markdown_reader.read_from_file(
+                    doc_full_path,
+                    project_config,
                 )
                 assert isinstance(document_or_grammar, SDocDocument)
             # @relation(SDOC-SRS-104, scope=range_end)
@@ -299,6 +309,8 @@ class DocumentFinder:
                     ignored_dirs=[project_config.output_dir],
                     extensions=[
                         ".sdoc",
+                        ".md",
+                        ".markdown",
                         ".sgra",
                         ".reqif",
                         ".junit.xml",

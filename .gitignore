@@ -1,6 +1,7 @@
 /.idea/
 /.ruff_cache/
 /.venv/
+/.virtualenv
 /.vscode/
 /build/
 /dist/

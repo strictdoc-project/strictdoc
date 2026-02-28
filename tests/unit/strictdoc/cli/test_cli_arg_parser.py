@@ -81,6 +81,19 @@ def test_export_05_export_format_multiple():
     assert args.output_dir is None
 
 
+def test_export_06_export_format_markdown():
+    parser = cli_args_parser()
+
+    args = parser.parse_args(["export", "--formats=markdown", "docs"])
+
+    assert args.command == "export"
+    assert args.fields == ["uid", "statement", "parent"]
+    assert args.formats == ["markdown"]
+    assert args.input_paths == ["docs"]
+    assert args.no_parallelization is False
+    assert args.output_dir is None
+
+
 def test_export_07_enable_mathjax():
     parser = cli_args_parser()
     args = parser.parse_args(["export", "--enable-mathjax", "docs"])

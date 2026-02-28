@@ -67,6 +67,9 @@ def screen_should_display_file(
     ):
         return True
 
+    if file.has_extension(".md") or file.has_extension(".markdown"):
+        return True
+
     if file.has_extension(".sdoc"):
         document = traceability_index.document_tree.get_document_by_path(
             file.full_path

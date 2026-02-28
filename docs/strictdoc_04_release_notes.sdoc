@@ -46,6 +46,20 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 214e954aafa146dda04de0630c1a142e
+TITLE: Unreleased
+
+[TEXT]
+MID: 6a185e24981f4ed0abae7cb1d32fa7a5
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) **Markdown support in StrictDoc:** StrictDoc can now discover and parse ``.md`` and ``.markdown`` files and export project documents to Markdown. It is already possible to edit Markdown files in the web interface but several features are not properly activated yet: automatic generation of MID/UID, parsing reserved document config fields, creating Markdowns in the web interface, etc.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 148139b430d041619eccd8759d5c3fe6
 TITLE: 0.18.1 (2026-02-26)
 

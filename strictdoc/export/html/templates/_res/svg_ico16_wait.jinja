@@ -1,0 +1,18 @@
+<svg class="svg_icon" width="16px" height="16px" viewBox="0 0 16 16">
+  <style>
+    @keyframes sdoc_wait_spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .sdoc_wait_hand {
+      transform-box: view-box;
+      transform-origin: 50% 50%;
+      animation: sdoc_wait_spin 0.5s linear infinite;
+    }
+  </style>
+  <circle cx="8" cy="8" r="5"></circle>
+  <circle cx="8" cy="8" r="0.5" fill="currentColor" stroke="none"></circle>
+  <g class="sdoc_wait_hand">
+    <line x1="8" y1="8" x2="8" y2="4"></line>
+  </g>
+</svg>

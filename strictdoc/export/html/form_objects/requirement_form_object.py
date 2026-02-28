@@ -487,6 +487,10 @@ class RequirementFormObject(ErrorObject):
     def clone_from_requirement(
         *, requirement: SDocNode, context_document_mid: str, clone_uid: str
     ) -> "RequirementFormObject":
+        assert isinstance(requirement, SDocNode), requirement
+
+        document = assert_cast(requirement.get_document(), SDocDocument)
+
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_requirement(
                 requirement=requirement,
@@ -494,11 +498,17 @@ class RequirementFormObject(ErrorObject):
                 context_document_mid=context_document_mid,
             )
         )
-        for field_name, fields_ in form_object.fields.items():
-            if field_name == "UID":
-                field: RequirementFormField = fields_[0]
-                field.field_value = clone_uid
         form_object.requirement_mid = MID.create()
+        for field_name, fields_ in form_object.fields.items():
+            field: RequirementFormField
+            if field_name == "UID":
+                field = fields_[0]
+                field.field_value = clone_uid
+            elif field_name == "MID" and document.config.enable_mid:
+                field = fields_[0]
+                field.field_value = (
+                    form_object.requirement_mid.get_string_value()
+                )
 
         return form_object
 

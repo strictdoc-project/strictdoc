@@ -153,3 +153,28 @@ def test_006_markdown_writer_supports_requirements_nested_in_three_sections():
     output_markdown = writer.write(document)
 
     assert output_markdown == input_markdown
+
+
+def test_007_markdown_writer_serializes_parent_relations_field():
+    input_sdoc = """\
+[DOCUMENT]
+TITLE: Document title
+
+[REQUIREMENT]
+UID: REQ-3
+TITLE: Child requirement
+STATEMENT: Child requirement shall do B.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1
+- TYPE: Parent
+  VALUE: REQ-2
+"""
+
+    document = SDReader.read(input_sdoc, file_path=None)
+
+    writer = SDMarkdownWriter()
+    output_markdown = writer.write(document)
+
+    assert "**UID**: REQ-3 \\" in output_markdown
+    assert "**Relations**: REQ-1, REQ-2" in output_markdown

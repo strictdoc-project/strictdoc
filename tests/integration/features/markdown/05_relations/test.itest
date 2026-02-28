@@ -1,0 +1,14 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Markdown relations document
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+
+CHECK-HTML-FILE: RELATIONS (Child):
+CHECK-HTML-FILE: class="requirement__link-child" href="{{.*}}#REQ-3"
+
+CHECK-HTML-FILE: RELATIONS (Child):
+CHECK-HTML-FILE: class="requirement__link-child" href="{{.*}}#REQ-3"
+
+CHECK-HTML-FILE: RELATIONS (Parent):
+CHECK-HTML-FILE: class="requirement__link-parent" href="{{.*}}#REQ-1"
+CHECK-HTML-FILE: class="requirement__link-parent" href="{{.*}}#REQ-2"

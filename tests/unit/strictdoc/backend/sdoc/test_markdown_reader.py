@@ -5,6 +5,7 @@ from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.reference import ParentReqReference
 
 
 def test_001_markdown_reader_parses_root_metadata_text_and_requirement():
@@ -433,3 +434,34 @@ System shall do X.
     assert requirement.node_type == "REQUIREMENT"
     assert requirement.reserved_statement is not None
     assert "**BAD.NAME**: value" in requirement.reserved_statement
+
+
+def test_021_markdown_reader_parses_parent_relations_field():
+    markdown_content = """\
+# Document title
+
+## Child requirement
+
+**UID**: REQ-3
+**Relations**: REQ-1, REQ-2, , REQ-4
+
+Child requirement shall do B.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    assert requirement.node_type == "REQUIREMENT"
+    assert requirement.reserved_uid == "REQ-3"
+    assert len(requirement.relations) == 3
+    assert all(
+        isinstance(relation, ParentReqReference)
+        for relation in requirement.relations
+    )
+    assert [relation.ref_uid for relation in requirement.relations] == [
+        "REQ-1",
+        "REQ-2",
+        "REQ-4",
+    ]

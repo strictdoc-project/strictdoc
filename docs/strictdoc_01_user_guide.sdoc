@@ -53,7 +53,7 @@ Summary of StrictDoc features:
 
 - The documentation files are stored as human-readable text files.
 - StrictDoc supports two input document formats: SDoc (\*.sdoc) and
-  Markdown (\*.md, see [LINK: SECTION-UG-Markdown-support-experimental]).
+  Markdown (\*.md, see [LINK: SECTION-UG-Markdown-support]).
 - StrictDoc reads these files and builds an in-memory representation of a
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
@@ -4236,7 +4236,7 @@ See also [LINK: SDOC_UG_CONFIG_FEATURES] for general instructions.
 
 [[SECTION]]
 MID: f32e122437ba4f6193d9eac3b8eb8abd
-UID: SECTION-UG-Markdown-support-experimental
+UID: SECTION-UG-Markdown-support
 TITLE: Markdown support (experimental)
 
 [TEXT]

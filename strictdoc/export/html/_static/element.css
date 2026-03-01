@@ -1777,11 +1777,32 @@ sdoc-node-content .field_issue-ribbon::before {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  position: relative;
 }
 
-.search-input input {
+.search-input::after {
+  content: '↵';
+  font-size: 12px;
+  position: absolute;
+  right: calc(var(--base-rhythm) * 0.5);
+  color: var(--color-fg-secondary);
+}
+
+.search-input input[type="text"] {
+  padding-block: calc(var(--base-rhythm) * 0.5);
+  padding-inline-start: var(--base-rhythm);
+  padding-inline-end: calc(var(--base-rhythm) * 2.5); /* for search icon */
+  height: calc(var(--base-rhythm) * 4);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  outline: transparent;
   width: 145px;
   transition: all .3s ease-out;
+}
+
+.search-input input[type="text"]:focus {
+  border-color: var(--color-action);
+  color: var(--color-action);
 }
 
 .search-box[active] .search-input {

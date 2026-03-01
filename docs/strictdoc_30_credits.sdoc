@@ -61,21 +61,7 @@ MID: e6de83e242bc4aea96622a2e7585f135
 STATEMENT: >>>
 The core team: @stanislaw and @mettta.
 
-The following people and organizations have contributed to StrictDoc. The contributions are listed in the alphabetic order.
-
-- @BenGardiner – Import Excel feature, improvements of HTML and RST export, Document Fragments feature.
-- @GGBeer – Generating bibliography with BibTeX (ongoing), improvements of Excel export.
-- @haxtibal – Significant improvements and bug fixes to several StrictDoc features.
-- @lochsh – MathJax support.
-- @Relasym – Important fixes of how the documents are re-generated (or not).
-- @stumpyfr – Improvements of Excel export.
-
-Companies:
-
-- `BUGSENG <https://www.bugseng.com>`_ and @RobertoBagnara have contributed bug reports and feature suggestions.
-- `Kontrol <https://www.kontrol.tech>`_ have sponsored the work related to the early implementation of the ReqIF import/export feature (@alex.d, @cbernt, @Relasym).
-
-Single/smaller contributions can be also seen on the `StrictDoc's Insights/Contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_ page.
+All contributors to the project can also be seen on the StrictDoc `Insights/Contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_ page.
 <<<
 
 [[/SECTION]]

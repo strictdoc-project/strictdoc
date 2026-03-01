@@ -312,20 +312,6 @@ MID: 478c38d2cca94107b18fe3dc5b8bfefd
 TITLE: Multi-user workflow
 
 [REQUIREMENT]
-MID: f97dc050ddab4a08bf1689200118faaa
-UID: SDOC-SRS-123
-STATUS: Backlog
-TITLE: Multi-user editing of documents
-STATEMENT: >>>
-StrictDoc shall support concurrent use and editing of a single StrictDoc web server instance by multiple users.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: DO178-17
-- TYPE: Parent
-  VALUE: SDOC-SSS-81
-
-[REQUIREMENT]
 MID: e5b2aff0c1db4b11a8c75c278813300b
 UID: SDOC-SRS-130
 STATUS: Backlog

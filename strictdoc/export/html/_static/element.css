@@ -1681,7 +1681,6 @@ sdoc-node-content .field_issue-ribbon::before {
 
 /* header-actions: reusable wrapper for header buttons + kebab dropdown */
 .header-actions {
-  /* DEV: to push it to the right in the header flex box we use .header__placeholder instead of margin-left: auto) */
   display: flex;
   align-items: center;
   column-gap: calc(var(--base-rhythm) / 2);
@@ -1689,61 +1688,23 @@ sdoc-node-content .field_issue-ribbon::before {
 }
 
 .header-actions__kebab {
-  /* has [aria-expanded="true / false"] */
-  /* DEV: hide kebab */
-  display: none;
+  display: inline-flex;
+}
+
+.header-actions__kebab[aria-expanded="true"] {
+  border-color: var(--color-fg-accent);
+}
+
+.header-actions__kebab[aria-expanded="true"] svg {
+  color: var(--color-fg-accent);
 }
 
 .header-actions__menu {
-  /* DEV: show menu as row, while hiding kebab */
-  display: flex;
-  flex-direction: row;
-  position: static;
+  position: absolute;
   z-index: 102;
-}
-
-.header-actions[data-dropdown-measure-state="pending"] .header-actions__kebab {
-  /* DEV: before first measurement, show kebab only */
-  display: inline-flex;
-}
-
-.header-actions[data-dropdown-measure-state="pending"] .pending {
-  display: inline-flex;
-}
-.header-actions[data-dropdown-measure-state="pending"] .done {
-  display: none;
-}
-.header-actions[data-dropdown-measure-state="done"] .pending {
-  display: none;
-}
-.header-actions[data-dropdown-measure-state="done"] .done {
-  display: inline-flex;
-}
-
-.header-actions[data-dropdown-measure-state="pending"] .header-actions__menu {
-  /*
-   * DEV: keep actions measurable but not visible.
-   * We position the row off-layout and hide it visually until JS resolves mode.
-   */
+  right: 0;
+  top: calc(var(--base-rhythm) * 4.5);
   display: flex;
-  flex-direction: row;
-  position: absolute;
-  right: 0;
-  top: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.header-actions[data-has-dropdown="true"] .header-actions__kebab {
-  /* DEV: show kebab */
-  display: inline-flex;
-}
-
-.header-actions[data-has-dropdown="true"] .header-actions__menu {
-  /* DEV: menu becomes dropdown */
-  position: absolute;
-  right: 0;
-  top: calc(var(--base-rhythm) * 3);
   flex-direction: column;
   margin: 0;
   padding: var(--base-rhythm);
@@ -1753,11 +1714,11 @@ sdoc-node-content .field_issue-ribbon::before {
   row-gap: calc(var(--base-rhythm) / 2);
 }
 
-.header-actions[data-has-dropdown="true"] .header-actions__menu[aria-hidden="true"] {
+.header-actions__menu[aria-hidden="true"] {
   display: none;
 }
 
-.header-actions[data-has-dropdown="true"] .header-actions__menu[aria-hidden="false"] {
+.header-actions__menu[aria-hidden="false"] {
   display: flex;
 }
 
@@ -1769,6 +1730,10 @@ sdoc-node-content .field_issue-ribbon::before {
   /* DEV: to push it to the right in the header flex box we use .header__placeholder instead of margin-left: auto) */
 }
 
+/* .search-box[active] {
+  padding-inline: var(--base-rhythm);
+} */
+
 .search-input {
   z-index: 101;
   position: relative;
@@ -1776,12 +1741,12 @@ sdoc-node-content .field_issue-ribbon::before {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  position: relative;
 }
 
 .search-input::after {
   content: '↵';
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1;
   position: absolute;
   right: calc(var(--base-rhythm) * 0.5);
   color: var(--color-fg-secondary);
@@ -1795,7 +1760,7 @@ sdoc-node-content .field_issue-ribbon::before {
   border: 1px solid var(--color-border);
   border-radius: 6px;
   outline: transparent;
-  width: 145px;
+  width: 160px;
   transition: all .3s ease-out;
 }
 
@@ -1805,9 +1770,9 @@ sdoc-node-content .field_issue-ribbon::before {
 }
 
 .search-box[active] .search-input {
-  width: 100%;
+  margin-inline: var(--base-rhythm);
+  width: calc(100% - var(--base-rhythm) * 2); /* compensate margin-inline */
   border-bottom: var(--base-border);
-  padding-inline: var(--base-rhythm);
 }
 
 .search-box[active] .search-input input {

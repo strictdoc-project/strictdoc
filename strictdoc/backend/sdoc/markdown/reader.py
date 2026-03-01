@@ -20,6 +20,7 @@ from strictdoc.backend.sdoc.models.document_config import (
 )
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast
@@ -64,6 +65,7 @@ class SDMarkdownReader:
         "LEVEL",
         "STATUS",
         "TAGS",
+        "RELATIONS",
         "TITLE",
         "STATEMENT",
         "RATIONALE",
@@ -797,7 +799,13 @@ class SDMarkdownReader:
     ) -> SDocNode:
         parsed_meta_fields: List[ParsedField] = []
         parsed_content_fields: List[ParsedField] = []
+        parent_relation_uids: List[str] = []
         for field in fields:
+            if field.name == "RELATIONS":
+                parent_relation_uids.extend(
+                    SDMarkdownReader._parse_relations_field(field.value)
+                )
+                continue
             if field.name in SDMarkdownReader.requirement_meta_fields:
                 parsed_meta_fields.append(field)
             else:
@@ -837,6 +845,15 @@ class SDMarkdownReader:
             fields=requirement_fields,
             relations=[],
         )
+        if len(parent_relation_uids) > 0:
+            requirement.relations = [
+                ParentReqReference(
+                    parent=requirement,
+                    ref_uid=relation_uid,
+                    role=None,
+                )
+                for relation_uid in parent_relation_uids
+            ]
         requirement.ng_document_reference = document_reference
         requirement.ng_including_document_reference = (
             including_document_reference
@@ -880,3 +897,11 @@ class SDMarkdownReader:
         if len(value) > 0 and value[0] == " ":
             return value[1:]
         return value
+
+    @staticmethod
+    def _parse_relations_field(field_value: str) -> List[str]:
+        return [
+            relation_uid.strip()
+            for relation_uid in field_value.split(",")
+            if len(relation_uid.strip()) > 0
+        ]

@@ -805,6 +805,30 @@ As of Markdown MVP, the default and preferred syntax shall be:
 <<<
 
 [REQUIREMENT]
+MID: 121eb00caee34e3fa6eaa683f211a472
+UID: SDOC-SRS-202
+STATUS: Active
+TITLE: Support node parent relations
+STATEMENT: >>>
+StrictDoc shall support node relations in Markdown using the meta field:
+
+.. code-block:: markdown
+
+    **Relations**: <UID-1>, <UID-2>, ...
+
+When reading Markdown:
+- Each UID from the Relations field shall be converted to a relation with TYPE: Parent and VALUE: <UID>.
+- All extra spaces shall be normalized before parsing to canonical ``<UID-1>, <UID-2>, ...``.
+- The Markdown reader shall not check whether any UID actually exists. This task is deferred to the traceability index builder.
+
+When writing Markdown, SDoc node relations with TYPE: Parent and no ROLE shall be serialized back to the same Relations field as a comma-separated UID list.
+
+NOTE: For MVP, relation roles and Child relation types are out of scope.
+
+NOTE: If the Relations field is not placed as the meta field but as the content field, StrictDoc shall raise a ``StrictDocSemanticError``.
+<<<
+
+[REQUIREMENT]
 MID: 84df59ede0f2477181bfc7667684df59
 UID: SDOC-SRS-193
 STATUS: Active

@@ -7,6 +7,7 @@ from strictdoc.backend.sdoc.models.document_config import (
 )
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.reference import ParentReqReference
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.cast import assert_cast
 
@@ -180,6 +181,12 @@ class SDMarkdownWriter:
             else:
                 meta_fields.append((field_human_name, field_value))
 
+        parent_relations_field = SDMarkdownWriter._serialize_parent_relations(
+            node
+        )
+        if parent_relations_field is not None:
+            meta_fields.append(parent_relations_field)
+
         field_blocks: List[str] = []
         if len(meta_fields) > 0:
             field_blocks.append(
@@ -193,6 +200,28 @@ class SDMarkdownWriter:
         if len(field_blocks) == 0:
             return None
         return "\n\n".join(field_blocks)
+
+    @staticmethod
+    def _serialize_parent_relations(
+        node: SDocNode,
+    ) -> Optional[Tuple[str, str]]:
+        if len(node.relations) == 0:
+            return None
+
+        relation_uids: List[str] = []
+        for relation in node.relations:
+            if not isinstance(relation, ParentReqReference):
+                continue
+            if relation.role is not None:
+                continue
+            relation_uid = relation.ref_uid.strip()
+            if len(relation_uid) == 0:
+                continue
+            relation_uids.append(relation_uid)
+
+        if len(relation_uids) == 0:
+            return None
+        return "Relations", ", ".join(relation_uids)
 
     @staticmethod
     def _resolve_human_field_name(node: SDocNode, field_name: str) -> str:

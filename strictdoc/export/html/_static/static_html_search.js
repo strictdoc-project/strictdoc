@@ -378,7 +378,10 @@
   }
 
   function handleInputEvent_keyDown(event) {
-    // FIXME: Nothing for now.
+    if (event && event.key === "Enter") {
+      event.preventDefault && event.preventDefault();
+      window.location.assign("/search");
+    }
   }
 
   function handleInputEvent_focus(event) {

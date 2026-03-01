@@ -1699,6 +1699,7 @@ sdoc-node-content .field_issue-ribbon::before {
   display: flex;
   flex-direction: row;
   position: static;
+  z-index: 102;
 }
 
 .header-actions[data-dropdown-measure-state="pending"] .header-actions__kebab {
@@ -1743,9 +1744,7 @@ sdoc-node-content .field_issue-ribbon::before {
   position: absolute;
   right: 0;
   top: calc(var(--base-rhythm) * 3);
-  z-index: 99;
   flex-direction: column;
-  /* min-width: 12rem; */
   margin: 0;
   padding: var(--base-rhythm);
   background: var(--color-bg-contrast);

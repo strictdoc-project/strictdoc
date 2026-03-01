@@ -433,6 +433,8 @@ class CreateOrUpdateNodeCommand:
             requirement, existing_node_fields
         )
 
+        document.build_search_index()
+
         traceability_index.update_last_updated()
 
         return CreateOrUpdateNodeResult(

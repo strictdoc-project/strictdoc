@@ -136,6 +136,7 @@ class DocumentScreenViewObject:
     def render_updated_nodes_and_toc(
         self,
         nodes: Sequence[Union[SDocDocument, SDocNode]],
+        node_updated: bool = False,
     ) -> str:
         output: str = ""
 
@@ -161,14 +162,15 @@ class DocumentScreenViewObject:
                 target=f"article-{node_.reserved_mid}",
             )
 
-        toc_content = self.jinja_environment.render_template_as_markup(
-            "screens/document/_shared/toc.jinja", view_object=self
-        )
-        output += render_turbo_stream(
-            content=toc_content,
-            action="update",
-            target="frame-toc",
-        )
+        if node_updated:
+            toc_content = self.jinja_environment.render_template_as_markup(
+                "screens/document/_shared/toc.jinja", view_object=self
+            )
+            output += render_turbo_stream(
+                content=toc_content,
+                action="update",
+                target="frame-toc",
+            )
 
         return output
 

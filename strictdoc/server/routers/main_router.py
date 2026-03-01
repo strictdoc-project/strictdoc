@@ -845,6 +845,7 @@ def create_main_router(
         return HTMLResponse(
             content=view_object.render_updated_nodes_and_toc(
                 update_requirement_command_result.this_document_requirements_to_update,
+                node_updated=True,
             ),
             status_code=200,
             headers={
@@ -915,7 +916,9 @@ def create_main_router(
             standalone=False,
         )
         return HTMLResponse(
-            content=view_object.render_updated_nodes_and_toc([requirement]),
+            content=view_object.render_updated_nodes_and_toc(
+                [requirement], node_updated=False
+            ),
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
             },
@@ -1659,7 +1662,9 @@ def create_main_router(
             standalone=False,
         )
         return HTMLResponse(
-            content=view_object.render_updated_nodes_and_toc(nodes=[document]),
+            content=view_object.render_updated_nodes_and_toc(
+                nodes=[document], node_updated=True
+            ),
             status_code=200,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
@@ -2618,6 +2623,49 @@ def create_main_router(
 
     router.include_router(read_router)
     router.include_router(write_router)
+
+    @router.get("/assets/static_html_search_index.js", response_class=Response)
+    def get_static_search_index(request: Request) -> Response:
+        static_file = os.path.join(
+            project_config.export_output_html_root,
+            project_config.dir_for_sdoc_assets,
+            "static_html_search_index.js",
+        )
+
+        def must_generate() -> bool:
+            if not os.path.isfile(static_file):
+                return True
+            output_file_mtime = get_file_modification_time(static_file)
+            return (
+                export_action.traceability_index.index_last_updated
+                > output_file_mtime
+            )
+
+        with lock_manager.acquire_global_read():
+            if not must_generate() and request_is_for_non_modified_file(
+                request, static_file
+            ):
+                return Response(status_code=304)
+
+        with lock_manager.acquire_global_write():
+            html_generator.export_static_html_search_index(
+                traceability_index=export_action.traceability_index
+            )
+
+        return FileResponse(
+            static_file,
+            media_type="application/javascript",
+            headers={
+                # We don't want the search index to be cached on the server without
+                # revalidation.
+                # The no-cache request directive asks caches to validate the
+                # response with the origin server before reuse.
+                # no-cache allows clients to request the most up-to-date
+                # response even if the cache has a fresh response.
+                # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+                "Cache-Control": "no-cache"
+            },
+        )
 
     @router.get("/{full_path:path}", response_class=Response)
     def get_incoming_request(request: Request, full_path: str) -> Response:

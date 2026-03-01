@@ -465,11 +465,98 @@
       new Promise((resolve, reject) => {
         const script = document.createElement("script");
         script.src = url;
-        script.onload = () => resolve();
+        script.onload = () => {
+          script.remove();
+          resolve();
+        };
         script.onerror = () => reject(new Error(
           `Failed to load script ${url}`));
         document.head.appendChild(script);
       });
+
+    const loadIndexFromScript = async (cacheBusting) => {
+      const searchIndexURL = new URL(pathToSearchIndex, window.location.href);
+      if (cacheBusting) {
+        searchIndexURL.searchParams.set("_refresh", Date.now().toString());
+      }
+      console.time("Search: LOAD_JS_INDEX");
+      await loadScript(searchIndexURL.href);
+      console.timeEnd("Search: LOAD_JS_INDEX");
+      console.log("Search: JS search index loaded successfully.");
+    };
+
+    const saveCurrentIndexToDB = async () => {
+      console.time("Search: SAVE_DB_INDEX");
+      const db = await openDB(dbName, DB_VERSION);
+      await saveToStore(db, "indexes", [{
+        name: "SDOC_SEARCH_INDEX",
+        value: window.SDOC_SEARCH_INDEX
+      }, {
+        name: "SDOC_MAP_MID_TO_NODES",
+        value: window.SDOC_MAP_MID_TO_NODES
+      }, {
+        name: "TIMESTAMP",
+        value: timestampMeta
+      }, ]);
+      db.close();
+      console.timeEnd("Search: SAVE_DB_INDEX");
+    };
+
+    let refreshScheduled = false;
+    let refreshInProgress = false;
+    let refreshQueued = false;
+
+    const refreshSearchIndexFromServer = async () => {
+      if (refreshInProgress) {
+        refreshQueued = true;
+        return;
+      }
+
+      refreshInProgress = true;
+      try {
+        await loadIndexFromScript(true);
+        await saveCurrentIndexToDB();
+      } catch (refreshError) {
+        console.error(
+          "Search: Failed to refresh search index after Turbo stream update:",
+          refreshError
+        );
+      } finally {
+        refreshInProgress = false;
+        if (refreshQueued) {
+          refreshQueued = false;
+          void refreshSearchIndexFromServer();
+        }
+      }
+    };
+
+    const scheduleRefreshSearchIndexFromServer = () => {
+      if (refreshScheduled) {
+        return;
+      }
+      refreshScheduled = true;
+      window.setTimeout(() => {
+        refreshScheduled = false;
+        void refreshSearchIndexFromServer();
+      }, 0);
+    };
+
+    document.addEventListener("turbo:before-stream-render", (event) => {
+      const streamElement = event.target;
+      if (!(streamElement instanceof HTMLElement)) {
+        return;
+      }
+      if (streamElement.tagName !== "TURBO-STREAM") {
+        return;
+      }
+      const target = streamElement.getAttribute("target");
+      // FIXME: HACK: For now we refresh the entire index on any update to the TOC.
+      // Ideally we should get a dedicated stream update for the search index
+      // and only refresh on that. But this will do for now.
+      if (target === "frame-toc") {
+        scheduleRefreshSearchIndexFromServer();
+      }
+    }, true);
 
     try {
       console.log("Search: LOAD_DB_INDEX: Start");
@@ -496,37 +583,20 @@
       await deleteDB(dbName);
 
       try {
-        console.time("Search: LOAD_JS_INDEX");
-        await loadScript(new URL(pathToSearchIndex, window.location
-          .href).href);
-        console.timeEnd("Search: LOAD_JS_INDEX");
-        console.log("Search: JS search index loaded successfully.");
+        await loadIndexFromScript(false);
       } catch (e) {
         console.error("Search: Failed to load JS search index script:",
           e);
         return;
       }
 
-      console.time("Search: SAVE_DB_INDEX");
-      const newDB = await openDB(dbName, DB_VERSION);
-      await saveToStore(newDB, "indexes", [{
-        name: "SDOC_SEARCH_INDEX",
-        value: window.SDOC_SEARCH_INDEX
-      }, {
-        name: "SDOC_MAP_MID_TO_NODES",
-        value: window.SDOC_MAP_MID_TO_NODES
-      }, {
-        name: "TIMESTAMP",
-        value: timestampMeta
-      }, ]);
-      console.timeEnd("Search: SAVE_DB_INDEX");
+      await saveCurrentIndexToDB();
 
     } catch (err) {
       console.error("Search: Error loading search index:", err);
 
       try {
-        await loadScript(new URL(pathToSearchIndex, window.location
-          .href).href);
+        await loadIndexFromScript(false);
         console.log("Search: Script loaded without IndexedDB fallback");
       } catch (e) {
         console.error("Search: Failed to load search index script:", e);

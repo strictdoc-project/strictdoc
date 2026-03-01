@@ -732,6 +732,8 @@ class HTMLGenerator:
     def export_static_html_search_index(
         self,
         traceability_index: TraceabilityIndex,
+        *,
+        force_regeneration: bool = False,
     ) -> None:
         """
         Export a static search index as dictionaries in .js files.
@@ -740,38 +742,39 @@ class HTMLGenerator:
         @relation(SDOC-SRS-156, scope=function)
         """
 
-        # First check if there is nothing to do because no documents have been
-        # changed or regenerated.
-        for document_ in traceability_index.document_tree.document_list:
-            assert document_.meta is not None
-            if traceability_index.file_dependency_manager.must_generate(
-                document_.meta.output_document_full_path
-            ):
-                break
-        else:
-            print(  # noqa: T201
-                "All documents are up-to-date. "
-                "Skipping the generation of a search index."
-            )
-            # If no documents need to be regenerated, set the search_index_timestamp
-            # to the timestamp of the first document. The assumption here is
-            # that StrictDoc does not randomize the document list, and the first
-            # document will always be the same.
-            # The HTML/JS code can rely on this timestamp to decide whether it
-            # has to re-read the search index from the JS file or it can simply
-            # fetch it from the DB which is 2x faster when it comes to very
-            # large indexes.
-            if len(traceability_index.document_tree.document_list) > 0:
-                first_document = traceability_index.document_tree.document_list[
-                    0
-                ]
-                assert first_document.meta is not None
-                traceability_index.search_index_timestamp = (
-                    get_file_modification_time(
-                        first_document.meta.input_doc_full_path
-                    )
+        if not force_regeneration:
+            # First check if there is nothing to do because no documents have
+            # been changed or regenerated.
+            for document_ in traceability_index.document_tree.document_list:
+                assert document_.meta is not None
+                if traceability_index.file_dependency_manager.must_generate(
+                    document_.meta.output_document_full_path
+                ):
+                    break
+            else:
+                print(  # noqa: T201
+                    "All documents are up-to-date. "
+                    "Skipping the generation of a search index."
                 )
-            return
+                # If no documents need to be regenerated, set the
+                # search_index_timestamp to the timestamp of the first document.
+                # The HTML/JS code can rely on this timestamp to decide whether
+                # it has to re-read the search index from the JS file or it can
+                # fetch it from the DB.
+                if len(traceability_index.document_tree.document_list) > 0:
+                    first_document = (
+                        traceability_index.document_tree.document_list[0]
+                    )
+                    assert first_document.meta is not None
+                    traceability_index.search_index_timestamp = (
+                        get_file_modification_time(
+                            first_document.meta.input_doc_full_path
+                        )
+                    )
+                return
+
+        for document_ in traceability_index.document_tree.document_list:
+            document_.build_search_index()
 
         global_index: Dict[str, Set[int]] = defaultdict(set)
         global_map_nodes_by_mid: Dict[int, Dict[str, str]] = {}
@@ -855,6 +858,10 @@ class HTMLGenerator:
         )
         with open(output_html_source_coverage, "wb") as file:
             file.write(document_content)
+
+        traceability_index.search_index_timestamp = get_file_modification_time(
+            output_html_source_coverage
+        )
 
     def export_tree_map_screen(
         self,

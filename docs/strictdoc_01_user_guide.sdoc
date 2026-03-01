@@ -53,7 +53,7 @@ Summary of StrictDoc features:
 
 - The documentation files are stored as human-readable text files.
 - StrictDoc supports two input document formats: SDoc (\*.sdoc) and
-  Markdown (\*.md, experimental support).
+  Markdown (\*.md, see [LINK: SECTION-UG-Markdown-support-experimental]).
 - StrictDoc reads these files and builds an in-memory representation of a
   document tree.
 - From this in-memory representation, StrictDoc can generate the documentation
@@ -4233,6 +4233,76 @@ A feature is considered stable when all its known edge cases have been covered a
 
 See also [LINK: SDOC_UG_CONFIG_FEATURES] for general instructions.
 <<<
+
+[[SECTION]]
+MID: f32e122437ba4f6193d9eac3b8eb8abd
+UID: SECTION-UG-Markdown-support-experimental
+TITLE: Markdown support (experimental)
+
+[TEXT]
+MID: 5ca22eb4638e4b13867a88176b217ce0
+STATEMENT: >>>
+Since 2026 Q1, StrictDoc supports reading Markdown documents and can recognize requirements and other traceable nodes according to the following syntax.
+
+**1. Minimal example:**
+
+.. code-block:: markdown
+
+    # Document example
+
+    ## Section example
+
+    ### Requirement example
+
+    **UID**: REQ-1
+
+    System A shall do B.
+
+In the example above, the line ``System A shall do B.`` is implicitly converted to a requirement statement.
+
+**2. Example with relations and all explicit content fields:**
+
+.. code-block:: markdown
+
+    # Requirements specification
+
+    ## Section A
+
+    This is a section with two requirements.
+
+    ### Requirement
+
+    **UID**: REQ-1 \
+    **Status**: Active
+
+    **Statement**: The system shall show a message.
+
+    **Rationale**: Users need feedback.
+
+    ### Requirement
+
+    **UID**: REQ-2 \
+    **Status**: Active \
+    **Relations**: REQ-1
+
+    **Statement**: The system shall show "Hello".
+
+    **Rationale**: This is a simple example.
+
+.. note::
+
+    The backward slashes are needed to ensure that, when browsing in non-StrictDoc Markdown browsers, the meta fields are rendered close to each other, forming a meta information block.
+
+Open points for a further implementation:
+
+- How to relate Markdown files with grammars. Use JSON schema, Pydantic or similar?
+- How to support node types? The way forward seems to be via a dedicated meta field ``Type: Requirement``.
+- The syntax for Parent vs Child relations as well as relation roles.
+
+The Markdown epic is tracked here: https://github.com/strictdoc-project/strictdoc/issues/1321.
+<<<
+
+[[/SECTION]]
 
 [[SECTION]]
 MID: 72fdb23051184714ab32e22859504a77

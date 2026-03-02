@@ -5,6 +5,7 @@
   class="header-actions"
 >
   <div
+    id="header-actions-handler"
     class="header-actions__kebab action_button"
     role="button"
     data-dropdown-handler
@@ -14,13 +15,14 @@
     title="Actions"
     data-testid="header-actions-kebab"
   >{%- include "_res/svg_ico16_3dots.jinja" -%}</div>
-  <div
+  <menu
     id="header-actions-menu"
-    class="header-actions__menu actions_group"
+    class="dropdown_menu"
     aria-hidden="true"
-    role="menu"
     aria-label="Header actions"
+    aria-labelledby="header-actions-handler"
+    role="menu"
   >
     {% include header__actions_template %}
-  </div>
+  </menu>
 </div>

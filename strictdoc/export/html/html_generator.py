@@ -745,13 +745,21 @@ class HTMLGenerator:
         if not force_regeneration:
             # First check if there is nothing to do because no documents have
             # been changed or regenerated.
+
+            # FIXME: This is wrong. FIX!
+            must_regenerate = (
+                len(traceability_index.document_tree.document_list) == 0
+            )
+
             for document_ in traceability_index.document_tree.document_list:
                 assert document_.meta is not None
                 if traceability_index.file_dependency_manager.must_generate(
                     document_.meta.output_document_full_path
                 ):
+                    must_regenerate = True
                     break
-            else:
+
+            if not must_regenerate:
                 print(  # noqa: T201
                     "All documents are up-to-date. "
                     "Skipping the generation of a search index."

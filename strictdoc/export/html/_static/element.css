@@ -1737,7 +1737,7 @@ sdoc-node-content .field_issue-ribbon::before {
   justify-content: flex-end;
 }
 
-.search-input::after {
+.search-input:focus-within::after {
   content: '↵';
   font-size: 14px;
   line-height: 1;

@@ -2345,6 +2345,7 @@ def create_main_router(
         search_results = []
         error = None
         node_query = None
+        plain_text_query = None
 
         if q is not None and len(q) > 0:
             try:
@@ -2353,9 +2354,29 @@ def create_main_router(
                     query, export_action.traceability_index
                 )
             except Exception as e:
-                error = f"error: {e}"
+                plain_text_query = q.strip().lower()
+                if len(plain_text_query) == 0:
+                    error = f"error: {e}"
 
-        if node_query is not None:
+        def node_matches_plain_text_query(
+            node: SDocExtendedElementIF, query_string: str
+        ) -> bool:
+            if isinstance(node, SDocNode):
+                for requirement_field_ in node.enumerate_fields():
+                    field_text = requirement_field_.get_text_value()
+                    if query_string in field_text.lower():
+                        return True
+                return False
+            if isinstance(node, SourceFileTraceabilityInfo):
+                if node.source_file is None:
+                    return False
+                return (
+                    query_string
+                    in node.source_file.in_doctree_source_file_rel_path.lower()
+                )
+            return False
+
+        if node_query is not None or plain_text_query is not None:
             result: List[SDocExtendedElementIF] = []
             try:
                 document_tree = assert_cast(
@@ -2370,7 +2391,14 @@ def create_main_router(
                     for node, _ in document_iterator.all_content(
                         print_fragments=False
                     ):
-                        if node_query.evaluate(node):
+                        if (
+                            node_query is not None and node_query.evaluate(node)
+                        ) or (
+                            plain_text_query is not None
+                            and node_matches_plain_text_query(
+                                node, plain_text_query
+                            )
+                        ):
                             result.append(node)
 
                 if (
@@ -2381,7 +2409,15 @@ def create_main_router(
                         source_file_info_: SourceFileTraceabilityInfo = export_action.traceability_index.get_file_traceability_index().get_coverage_info(
                             source_file_.in_doctree_source_file_rel_path_posix
                         )
-                        if node_query.evaluate(source_file_info_):
+                        if (
+                            node_query is not None
+                            and node_query.evaluate(source_file_info_)
+                        ) or (
+                            plain_text_query is not None
+                            and node_matches_plain_text_query(
+                                source_file_info_, plain_text_query
+                            )
+                        ):
                             result.append(source_file_info_)
 
                 search_results = result

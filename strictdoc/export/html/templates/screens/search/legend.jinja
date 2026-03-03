@@ -1,8 +1,16 @@
 <sdoc-main-legend
   data-testid="search-main-legend"
 >
-    <p>The search query syntax is inspired by Python and is based on a fixed grammar.</p>
-    <p>Important rules:</p>
+    <p>StrictDoc supports two search modes:</p>
+    <ol>
+      <li><b>Text search</b>: enter words or phrases to search across requirement/section fields and source file paths.</li>
+      <li>
+        <b>Query syntax</b>: use the grammar-based query language for precise filtering.
+        <br>If an expression is invalid, the query is treated as plain text search.
+      </li>
+    </ol>
+
+    <p>Query syntax rules:</p>
     <ul>
       <li>
         Every query component shall start with <code>node.</code>.

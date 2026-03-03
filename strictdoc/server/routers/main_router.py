@@ -2663,7 +2663,10 @@ def create_main_router(
     @router.get(
         "/{full_path:path}/static_html_search_index.js", response_class=Response
     )
-    def get_static_search_index(request: Request, full_path: str) -> Response:
+    def get_static_search_index(
+        request: Request,
+        full_path: str,  # noqa: ARG001
+    ) -> Response:
         static_file = os.path.join(
             project_config.export_output_html_root,
             project_config.dir_for_sdoc_assets,

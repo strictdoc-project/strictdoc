@@ -380,7 +380,9 @@
   function handleInputEvent_keyDown(event) {
     if (event && event.key === "Enter") {
       event.preventDefault && event.preventDefault();
-      window.location.assign("/search");
+      const searchQuery = userinput.value || "";
+      const encodedQuery = encodeURIComponent(searchQuery);
+      window.location.assign(`/search?q=${encodedQuery}`);
     }
   }
 

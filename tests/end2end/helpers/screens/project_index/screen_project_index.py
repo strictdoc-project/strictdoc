@@ -1,6 +1,9 @@
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.components.actions_menu import (
+    ActionsMenu,
+)
 from tests.end2end.helpers.screens.diff.diff import Screen_Diff
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
@@ -28,6 +31,7 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
+        self.actions_menu = ActionsMenu(test_case)
 
     def assert_on_screen(self) -> None:
         self.test_case.assert_element(
@@ -209,9 +213,7 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
 
     def do_open_modal_form_add_document(self) -> Form_AddDocument:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
-        self.test_case.click_xpath(
-            '(//*[@data-testid="tree-add-document-action"])'
-        )
+        self.actions_menu.do_click_action("tree-add-document-action")
         self.test_case.assert_element("//sdoc-modal", by=By.XPATH)
         return Form_AddDocument(self.test_case)
 
@@ -219,16 +221,12 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
 
     def do_open_modal_import_reqif(self) -> Form_ImportReqIF:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
-        self.test_case.click_xpath(
-            '//*[@data-testid="tree-import-reqif-action"]'
-        )
+        self.actions_menu.do_click_action("tree-import-reqif-action")
         self.test_case.assert_element("//sdoc-modal", by=By.XPATH)
         return Form_ImportReqIF(self.test_case)
 
     def do_export_reqif(self) -> None:
-        self.test_case.click_xpath(
-            '//*[@data-testid="tree-export-reqif-action"]'
-        )
+        self.actions_menu.do_click_action("tree-export-reqif-action")
 
     # project_tree_controls
     # Show/Hide fragments

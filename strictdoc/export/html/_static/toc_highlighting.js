@@ -227,7 +227,7 @@ function handleIntersect(entries, observer) {
     const bottomBound = entry.rootBounds ? entry.rootBounds.bottom : window.innerHeight;
 
     // * IO may fire between resets; mapping may be missing — skip safely.
-    const link = tocHighlightingState.data[anchor].link;
+    const link = tocHighlightingState.data[anchor]?.link;
 
     // * if there is no menu item for the section in the TOC
     if(!link) {

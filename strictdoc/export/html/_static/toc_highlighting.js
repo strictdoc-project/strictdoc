@@ -9,6 +9,13 @@ const TOC_ELEMENT_SELECTOR = 'a';
 const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content'; // action="replace" => parentNode is needed
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
 
+// Virtual viewport for TOC section highlighting.
+// We do not use the raw screen edges (0..innerHeight): we shrink the effective
+// area to [top+offset, bottom-offset]. This keeps the active range aligned with
+// what users perceive as "currently visible content" (header space, early closing of the previous node).
+const VIEWPORT_TOP_OFFSET_PX = 64;
+const VIEWPORT_BOTTOM_OFFSET_PX = 32;
+
 // * Runtime state;
 // * anchorsCount/anchorsSig skip unnecessary re-observe on TOC mutations.
 let tocHighlightingState = {
@@ -18,6 +25,7 @@ let tocHighlightingState = {
   anchorsCount: -1,
   anchorsSig: 0,
   contentFrameTop: undefined,
+  contentFrameEl: null,
   closerForFolder: {},
   folderSet: new Set(),
 };
@@ -27,6 +35,7 @@ function resetState() {
   tocHighlightingState.data = {};
   tocHighlightingState.links = null;
   tocHighlightingState.anchors = null;
+  tocHighlightingState.contentFrameEl = null;
   tocHighlightingState.closerForFolder = {};
   tocHighlightingState.folderSet = new Set();
 }
@@ -164,6 +173,7 @@ function processAnchorList(contentFrame, anchorObserver) {
 
   // * Collects all anchors in the document
   const newAnchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
+  tocHighlightingState.contentFrameEl = contentFrame;
 
   // * Build order-sensitive signature to detect renames/reorders without full re-subscribe.
   let sig = 0;
@@ -218,13 +228,18 @@ function processAnchorList(contentFrame, anchorObserver) {
 }
 
 function handleIntersect(entries, observer) {
+  // IntersectionObserver drives events, but the actual "which sections are
+  // visible" decision is done by range geometry in updateVisibleSectionItems().
+  let topBound = VIEWPORT_TOP_OFFSET_PX;
+  let bottomBound = window.innerHeight - VIEWPORT_BOTTOM_OFFSET_PX;
+  if (entries.length > 0 && entries[0].rootBounds) {
+    topBound = entries[0].rootBounds.top + VIEWPORT_TOP_OFFSET_PX;
+    bottomBound = entries[0].rootBounds.bottom - VIEWPORT_BOTTOM_OFFSET_PX;
+  }
 
   entries.forEach((entry) => {
 
     const anchor = entry.target.id;
-    // * Fallback: rootBounds can be null right after IO init; use viewport bounds in that case.
-    const topBound = entry.rootBounds ? entry.rootBounds.top : 0;
-    const bottomBound = entry.rootBounds ? entry.rootBounds.bottom : window.innerHeight;
 
     // * IO may fire between resets; mapping may be missing — skip safely.
     const link = tocHighlightingState.data[anchor]?.link;
@@ -238,8 +253,6 @@ function handleIntersect(entries, observer) {
     if (entry.isIntersecting) { //! entry.intersectionRatio > 0 -- it happens to be equal to zero at the intersection!
 
       TOC_HIGHLIGHT_DEBUG && console.group('🔶', entry.isIntersecting, entry.intersectionRatio, anchor, entry.intersectionRect.height);
-      // * and highlights them in the TOC,
-      fireItem(link)
 
       // * semi-highlights folder in the TOC,
       if (tocHighlightingState.folderSet.has(anchor)) {
@@ -262,10 +275,7 @@ function handleIntersect(entries, observer) {
 
     // ** Not visible. Remove item highlight and conditionally de-highlight folders.
     } else {
-
       TOC_HIGHLIGHT_DEBUG && console.group('🔹', entry.isIntersecting, entry.intersectionRatio, anchor);
-      // * or cancels highlighting for the rest of the links.
-      fireItem(link, false);
 
       if(
         // * If the node goes down ⬇️ off the screen
@@ -306,6 +316,55 @@ function handleIntersect(entries, observer) {
     }
   });
 
+  updateVisibleSectionItems(topBound, bottomBound);
+}
+
+function updateVisibleSectionItems(topBound, bottomBound) {
+  // Section visibility is computed by intervals between anchors:
+  // section_i := [anchor_i.top, anchor_{i+1}.top), and for the last section:
+  // [anchor_last.top, contentFrame.bottom).
+  // If this interval overlaps the virtual viewport [topBound, bottomBound],
+  // the corresponding TOC item is marked as intersected.
+  if (!tocHighlightingState.anchors || tocHighlightingState.anchors.length === 0) {
+    return;
+  }
+
+  const linkedAnchors = [];
+  tocHighlightingState.anchors.forEach(anchor => {
+    const id = anchor.id;
+    const pair = tocHighlightingState.data[id];
+    if (!pair || !pair.anchor || !pair.link) {
+      return;
+    }
+    linkedAnchors.push({ id, anchor: pair.anchor, link: pair.link });
+  });
+
+  if (linkedAnchors.length === 0) {
+    return;
+  }
+
+  const visibleIds = new Set();
+  for (let i = 0; i < linkedAnchors.length; i++) {
+    const current = linkedAnchors[i];
+    const next = linkedAnchors[i + 1];
+
+    // Section i is the interval [anchor_i, anchor_{i+1}).
+    const sectionTop = current.anchor.getBoundingClientRect().top;
+    const sectionBottom = next
+      ? next.anchor.getBoundingClientRect().top
+      : (tocHighlightingState.contentFrameEl?.getBoundingClientRect().bottom ?? bottomBound);
+
+    const sectionOverlapsViewport =
+      sectionBottom > topBound && sectionTop < bottomBound;
+
+    if (sectionOverlapsViewport) {
+      visibleIds.add(current.id);
+    }
+  }
+
+  linkedAnchors.forEach(item => {
+    fireItem(item.link, visibleIds.has(item.id));
+  });
 }
 
 function findDeepestLastChild(element) {

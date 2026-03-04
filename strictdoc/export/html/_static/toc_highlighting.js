@@ -310,21 +310,27 @@ function handleIntersect(entries, observer) {
 
 function findDeepestLastChild(element) {
   // * Walk down the last-child chain to find the last <a> inside a nested list
-  // * (depends on TOC markup):
 
   // ! depends on TOC markup
   // ul > li > div + a + ul > ...
   // ul > li > a
   //    > li > a <---------------***
+
+  // Return the last <a> in the subtree or null if none exists.
+  // This avoids returning container elements (UL/LI/DIV) that lack the 'anchor' attribute.
+  if (!element) return null;
   if (element.nodeName === 'A') {
     return element;
   }
   const children = element.children;
   if (children && children.length > 0) {
-    return findDeepestLastChild([...children].at(-1))
-  } else {
-    return element;
+    // Walk from the end toward the start; return the first <a> found in the deepest/rightmost branch.
+    for (let i = children.length - 1; i >= 0; i--) {
+      const found = findDeepestLastChild(children[i]);
+      if (found) return found;
+    }
   }
+  return null;
 }
 
 function targetItem(element, on = true) {

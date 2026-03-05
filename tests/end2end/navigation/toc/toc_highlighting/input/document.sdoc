@@ -1,0 +1,290 @@
+[DOCUMENT]
+MID: c2d4542d5f1741c88dfcb4f68ad7dcbd
+TITLE: User Guide
+UID: SDOC_UG
+VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
+DATE: @GIT_COMMIT_DATETIME
+OPTIONS:
+  ENABLE_MID: True
+  VIEW_STYLE: Inline
+  NODE_IN_TOC: True
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+    PREFIX: None
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+- TAG: TEXT
+  PROPERTIES:
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: File
+
+[[SECTION]]
+MID: bcd0cf7c13cf4cf2ab176455aedc0c90
+UID: SECTION_1
+TITLE: Section 1
+
+[TEXT]
+MID: 3ae6491057674be1abf057b7e0d9bf21
+STATEMENT: >>>
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+<<<
+
+[[SECTION]]
+MID: 8e4ede8cdc70402b91a59026d31a7020
+UID: SECTION_2
+TITLE: Section 2
+
+[TEXT]
+MID: c46def916b6f4df692c95f47414feebb
+STATEMENT: >>>
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: e0a00ca3085f444187050ce9576aa31b
+UID: SECTION_BEFORE_LONG_NODE
+TITLE: Examples
+
+[TEXT]
+MID: e000000000000000007050ce9576aa31b
+STATEMENT: >>>
+[LINK: ANCHOR-EXAMPLE]
+<<<
+
+[[SECTION]]
+MID: 2122186075e8455181178b01331101fa
+UID: THE_LONG_NODE_ID
+TITLE: Hello World
+
+[TEXT]
+MID: ffbdb80fb21d48adbaeffb782d7994a2
+STATEMENT: >>>
+"Hello World" example of the SDoc text language:
+
+.. code:: strictdoc
+
+    [DOCUMENT]
+    TITLE: StrictDoc
+
+    [REQUIREMENT]
+    UID: SDOC-HIGH-REQS-MANAGEMENT
+    TITLE: Requirements management
+    STATEMENT: StrictDoc shall enable requirements management.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+[ANCHOR: ANCHOR-EXAMPLE, Anchor ABC]
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+Test line.
+
+.. code:: text
+
+    cd <your user home directory>/workspace/hello_world
+
+Run StrictDoc as follows:
+
+.. code:: text
+
+    strictdoc export .
+
+The expected output:
+
+.. code:: text
+
+    $ strictdoc export hello.sdoc
+    Parallelization: Enabled
+    Step 'Collect traceability information' start
+    Step 'Find and read SDoc files' start
+    Reading SDOC: hello.sdoc .................................... 0.08s
+    Step 'Find and read SDoc files' took: 0.09 sec
+    Step 'Collect traceability information' start
+    Step 'Collect traceability information' took: 0.01 sec
+    Step 'Collect traceability information' took: 0.11 sec
+    Published: StrictDoc ........................................ 0.24s
+    ...
+    Export completed. Documentation tree can be found at:
+    .../output/html
+
+The HTML output produced so far has been generated statically. Now, start a StrictDoc server from the same directory:
+
+.. code:: text
+
+    strictdoc server .
+
+The expected output should contain the following line:
+
+.. code:: text
+
+    INFO:     Uvicorn running on http://127.0.0.1:5111 (Press CTRL+C to quit)
+
+Open the URL in the browser and explore the contents of the example.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 83369fc77d584407b530b179a449479b
+UID: SECTION_AFTER_LONG_NODE
+TITLE: StrictDoc Examples repository
+
+[TEXT]
+MID: d6bde8e4055b42138d216b48692c8f26
+STATEMENT: >>>
+Test line.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 0a736f05ab154b2599988b63201d4f10
+TITLE: Other examples
+
+[TEXT]
+MID: 47c2088447d7452ba28962ee220ba63a
+STATEMENT: >>>
+Test line.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 2b2e39c48cc740e5b8452d76881f667d
+TITLE: Other examples
+
+[TEXT]
+MID: 2eaa8bfe5a354fcbb704ea7fd94f3a0a
+STATEMENT: >>>
+Test line.
+Test line.
+Test line.
+Test line.
+Test line.
+Test line.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]

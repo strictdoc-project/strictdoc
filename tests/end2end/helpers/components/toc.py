@@ -78,3 +78,17 @@ class TOC:  # pylint: disable=invalid-name
         self.test_case.click_xpath(
             f"//*[@data-testid='toc-list']//a[@href='#{anchor}']"
         )
+
+    def assert_toc_link_has_attribute(self, anchor, attribute) -> None:
+        # toc link has attribute
+        self.test_case.assert_element(
+            f"//*[@data-testid='toc-list']//a[@href='#{anchor}'][@{attribute}]",
+            by=By.XPATH,
+        )
+
+    def assert_toc_link_has_not_attribute(self, anchor, attribute) -> None:
+        # toc link has not attribute
+        self.test_case.assert_element(
+            f"//*[@data-testid='toc-list']//a[@href='#{anchor}'][not(@{attribute})]",
+            by=By.XPATH,
+        )

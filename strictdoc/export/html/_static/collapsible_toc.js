@@ -36,6 +36,12 @@ const ROOT_SELECTOR = 'js-collapsible_list'; // js-collapsible_list with any val
 const BRANCH_DATA_ATTR = `branch`; // li with a branch inside
 const HANDLER_DATA_ATTR = `handler`; // handler
 const NODE_ID_DATA_ATTR = `nodeid`; // from sdoc markup
+const BULK_DATA_ATTR = `bulk`; // bulk operations button
+
+// panel with global controls (expand all, collapse all, etc):
+const CONTROLS_PANEL_ATTR = `${ROOT_SELECTOR}-bulk_controls`;
+const CONTROLS_PANEL_CLASS = `toc-control-panel`; // for styling purposes only, not used in JS logic
+const CONTROLS_PANEL_HEIGHT = `32px`;
 
 const _TRUE = 'collapsed';
 const _FALSE = 'expanded';
@@ -45,6 +51,7 @@ const SYMBOL_TRUE = '＋';
 const SYMBOL_SIZE = 16;
 
 const STYLE = `
+[data-${BULK_DATA_ATTR}],
 [data-${HANDLER_DATA_ATTR}] {
   display: flex;
   align-items: center;
@@ -66,6 +73,34 @@ const STYLE = `
   position: absolute;
   top: ${SYMBOL_SIZE * 0.5}px;
   left: -${SYMBOL_SIZE * 0.75}px;
+}
+
+[data-${BULK_DATA_ATTR}] {
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 20%;
+  box-shadow: rgb(0 0 0 / 25%) 1px 1px 0px 0px;
+  background-color: var(--toc-background, #F2F5F9);
+  position: relative;
+  inset: 0;
+}
+
+[data-${BULK_DATA_ATTR}]:hover {
+  background-color: rgb(255 255 255 / 50%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: rgba(0,0,0,1);
+}
+
+[data-${BULK_DATA_ATTR}]::before {
+  content: attr(data-${BULK_DATA_ATTR});
+}
+
+[data-${BULK_DATA_ATTR}]::after {
+  content: '';
+  position: absolute;
+  border-radius: 22%;
+  inset: 2px -3px -3px 2px;
+  box-shadow: rgb(0 0 0 / 20%) 1px 1px 0px 0px;
+  pointer-events: none;
 }
 
 [data-${HANDLER_DATA_ATTR}]:hover {
@@ -90,6 +125,30 @@ const STYLE = `
   display: unset;
 }
 
+/* control panel */
+
+[${CONTROLS_PANEL_ATTR}] {
+  list-style: none;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: ${CONTROLS_PANEL_HEIGHT};
+}
+
+[${CONTROLS_PANEL_ATTR}] > div {
+  position: fixed;
+  z-index: 2;
+  display: flex;
+  column-gap: ${SYMBOL_SIZE * 0.5}px;
+  align-items: center;
+  padding: ${SYMBOL_SIZE * 0.5}px;
+
+  background: color-mix(in srgb, var(--toc-background, #F2F5F9) 20%, transparent);
+  backdrop-filter: blur(${SYMBOL_SIZE * 0.5}px);
+  -webkit-backdrop-filter: blur(${SYMBOL_SIZE * 0.5}px);
+}
 `;
 
 // Main entrypoint for TOC collapsing behavior.
@@ -159,6 +218,8 @@ function processToc(toc) {
   // in the list that could in principle be collapsible):
   if (branchList.length > 0) {
     addStyleElement(toc, STYLE);
+
+    createControlsPanel(toc);
 
     branchList.forEach(
       ul => {
@@ -253,6 +314,41 @@ function createHandler(state) {
   const div = document.createElement('div');
   state && setBranchState(item, state);
   return div
+}
+
+// Create a handler element for bulk operations.
+function createBulkHandler(icon) {
+  const handler = document.createElement('div');
+  handler.dataset[BULK_DATA_ATTR] = icon;
+  return handler
+}
+
+// Create and insert a panel with buttons for bulk operations (expand/collapse all).
+function createControlsPanel(root) {
+  const li = document.createElement('li');
+  li.setAttribute(CONTROLS_PANEL_ATTR, '');
+  li.classList.add(CONTROLS_PANEL_CLASS);
+  const container = document.createElement('div');
+  li.append(container);
+  root.prepend(li);
+  root.setAttribute('has-top-panel', '');
+  // return li
+
+  const collapseAllHandler = createBulkHandler(SYMBOL_TRUE);
+  const expandAllHandler = createBulkHandler(SYMBOL_FALSE);
+  container.append(collapseAllHandler, expandAllHandler);
+
+  collapseAllHandler.addEventListener('click', () => {
+    const handlers = root.querySelectorAll(`[data-${HANDLER_DATA_ATTR}]`);
+    handlers.forEach(handler => setBranchState(handler, _TRUE));
+    updateSessionStorage();
+  });
+
+  expandAllHandler.addEventListener('click', () => {
+    const handlers = root.querySelectorAll(`[data-${HANDLER_DATA_ATTR}]`);
+    handlers.forEach(handler => setBranchState(handler, _FALSE));
+    updateSessionStorage();
+  });
 }
 
 // Bootstrapping: run main after page load.

@@ -41,17 +41,6 @@ class Test(E2ECase):
             )
             requirement_with_title.assert_requirement_uid_contains("REQ_02")
 
-            # # FIXME after:
-            # # TODO: https://github.com/strictdoc-project/strictdoc/issues/1382
-
-            # Anchor generation formats
-            # * in section:
-            # f"{unique_prefix}-{self._string_to_link(node.title)}" # noqa: ERA001
-            # * in requirement:
-            # f"{unique_prefix}-{self._string_to_link(node.reserved_uid)}" # noqa: ERA001
-            # f"{unique_prefix}-{self._string_to_link(node.reserved_title)}" # noqa: ERA001
-            # *** where unique_prefix = context.get_title_number_string()
-
             toc_section_without_uid_anchor = "1-Section-without-UID"
             toc_section_with_uid_anchor = "SECTION_01"
             toc_requirement_with_title_anchor = "REQ_02"

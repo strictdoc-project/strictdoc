@@ -35,6 +35,7 @@ __pycache__
 /*.local.toml
 /__*.sdoc
 /__*.sgra
+/docs/test/
 
 ### webdriver_manager: cache with downloaded Chrome Driver binaries ###
 /strictdoc/export/html2pdf/.wdm

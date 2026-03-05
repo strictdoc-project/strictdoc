@@ -1,24 +1,41 @@
+// TOC highlighting: map content <sdoc-anchor id> to TOC <a anchor>
+// and toggle TOC states using IntersectionObserver.
+
 const TOC_HIGHLIGHT_DEBUG = false;
 
 const TOC_FRAME_SELECTOR = 'turbo-frame#frame-toc'; // updating
 const TOC_LIST_SELECTOR = 'ul#toc';
 const TOC_ELEMENT_SELECTOR = 'a';
-const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content'; // replacing => parentNode is needed
+const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content'; // action="replace" => parentNode is needed
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
 
+// Virtual viewport for TOC section highlighting.
+// We do not use the raw screen edges (0..innerHeight): we shrink the effective
+// area to [top+offset, bottom-offset]. This keeps the active range aligned with
+// what users perceive as "currently visible content" (header space, early closing of the previous node).
+const VIEWPORT_TOP_OFFSET_PX = 64;
+const VIEWPORT_BOTTOM_OFFSET_PX = 32;
+
+// * Runtime state;
+// * anchorsCount/anchorsSig skip unnecessary re-observe on TOC mutations.
 let tocHighlightingState = {
   data: {},
   links: null,
   anchors: null,
+  anchorsCount: -1,
+  anchorsSig: 0,
   contentFrameTop: undefined,
+  contentFrameEl: null,
   closerForFolder: {},
   folderSet: new Set(),
 };
 
 function resetState() {
+  // * Keep anchorsCount/anchorsSig to detect changes across TOC mutations.
   tocHighlightingState.data = {};
   tocHighlightingState.links = null;
   tocHighlightingState.anchors = null;
+  tocHighlightingState.contentFrameEl = null;
   tocHighlightingState.closerForFolder = {};
   tocHighlightingState.folderSet = new Set();
 }
@@ -31,12 +48,7 @@ window.addEventListener("load",function(){
   const tocList = tocFrame ? tocFrame.querySelector(TOC_LIST_SELECTOR) : null;
   const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR)?.parentNode;
 
-  if(!tocFrame || !tocList || !contentFrame) { return }
-
-  // ! depends on TOC markup
-  tocHighlightingState.contentFrameTop = contentFrame.offsetParent
-                        ? contentFrame.offsetTop
-                        : contentFrame.parentNode.offsetTop;
+  if (!tocFrame || !contentFrame) { return }
 
   const anchorObserver = new IntersectionObserver(
     handleIntersect,
@@ -45,8 +57,8 @@ window.addEventListener("load",function(){
       rootMargin: "0px",
     });
 
-  // * Then we will refresh when the TOC tree is updated&
-  // * The content in the tocFrame frame will mutate:
+  // * On TOC updates, rebuild mappings;
+  // * processAnchorList decides whether to re‑observe anchors.
   const mutatingFrame = tocFrame;
   new MutationObserver(function (mutationsList, observer) {
     // * Use requestAnimationFrame to put highlightTOC
@@ -67,7 +79,7 @@ window.addEventListener("load",function(){
     }
   );
 
-  // * Call for the first time only if the TOC actually contains items.
+  // * First init only if TOC already has items; otherwise MO will trigger later.
   if (tocList && tocList.querySelector(TOC_ELEMENT_SELECTOR)) {
     highlightTOC(tocFrame, contentFrame, anchorObserver);
   }
@@ -75,7 +87,7 @@ window.addEventListener("load",function(){
 },false);
 
 function highlightTOC(tocFrame, contentFrame, anchorObserver) {
-
+  // * Rebuild in order: links → anchors → hash highlight.
   resetState();
   processLinkList(tocFrame);
   processAnchorList(contentFrame, anchorObserver);
@@ -85,45 +97,58 @@ function highlightTOC(tocFrame, contentFrame, anchorObserver) {
 }
 
 function handleHashChange() {
+  // * May fire before links are collected; guard against early hashchange.
   const hash = window.location.hash;
-  const match = hash.match(/#(.*)/);
-  const fragment = match ? match[1] : null;
+  const fragment = hash ? decodeURIComponent(hash.slice(1)) : null;
 
-  // Guard: no links collected yet (e.g., empty TOC or init race)
-  if (!tocHighlightingState.links || typeof tocHighlightingState.links.forEach !== 'function') {
+  if (!tocHighlightingState.links || tocHighlightingState.links.length === 0) {
     return;
   }
 
   tocHighlightingState.links.forEach(link => {
     targetItem(link, false)
   });
-  // * When updating the hash
-  // * and there's a fragment,
-  fragment
-    // * and the corresponding link-anchor pair is registered,
-    && tocHighlightingState.data[fragment]
-    // * highlight the corresponding link.
-    && targetItem(tocHighlightingState.data[fragment].link)
+  // * If there's a fragment and a mapped pair, highlight its link.
+  if (fragment) {
+    let pair = tocHighlightingState.data[fragment];
+    if (!pair || !pair.link) {
+      // Try to resolve moved/renumbered ids by suffix
+      const resolved = resolveMovedFragment(fragment);
+      if (resolved) {
+        TOC_HIGHLIGHT_DEBUG && console.log('handleHashChange(): remapped fragment', fragment, '→', resolved);
+        history.replaceState(null, '', '#' + encodeURIComponent(resolved));
+        pair = tocHighlightingState.data[resolved];
+      }
+    }
+    if (pair && pair.link) {
+      targetItem(pair.link);
+    } else {
+      // No mapping found — keep URL as-is and move on silently
+      // TOC_HIGHLIGHT_DEBUG &&
+      console.warn('handleHashChange(): no mapping for fragment', fragment);
+      return;
+    }
+  }
 }
 
 function processLinkList(tocFrame) {
-  // * Collects all links in the TOC
+  // * Collect TOC links; NodeList is never null. Skip if empty.
   tocHighlightingState.links = tocFrame.querySelectorAll(TOC_ELEMENT_SELECTOR);
-  if (!tocHighlightingState.links || tocHighlightingState.links.length === 0) {
+  if (tocHighlightingState.links.length === 0) {
     return;
   }
   tocHighlightingState.links.length
     && tocHighlightingState.links.forEach(link => {
+    // * Map only links that have an "anchor" attribute.
     const id = link.getAttribute('anchor');
+    if (!id) return; // Skip links without an anchor attribute
     tocHighlightingState.data[id] = {
       'link': link,
       ...tocHighlightingState.data[id]
     }
 
-    // ! depends on TOC markup
-    // is link in collapsible node and precedes the UL
-    // ! expected UL or null
-    const ul = link.nextSibling;
+    // * If a link precedes a nested <ul>, register the folder and its "closer" anchors.
+    const ul = link.nextElementSibling;
 
     if (ul && ul.nodeName === 'UL') {
       // register folder
@@ -131,8 +156,8 @@ function processLinkList(tocFrame) {
 
       // register closer
       const lastLink = findDeepestLastChild(ul);
-      const lastAnchor = lastLink.getAttribute('anchor');
-
+      const lastAnchor = lastLink?.getAttribute('anchor');
+      if (!lastAnchor) return;
 
       if (!tocHighlightingState.closerForFolder[lastAnchor]) {
         tocHighlightingState.closerForFolder[lastAnchor] = [];
@@ -143,13 +168,55 @@ function processLinkList(tocFrame) {
 }
 
 function processAnchorList(contentFrame, anchorObserver) {
-  anchorObserver.disconnect(); // FIXME don`t work: have to hack at #rootBounds_null
+  // * Re-scan content anchors;
+  // * detect cheap changes via count + order-sensitive signature.
 
   // * Collects all anchors in the document
-  tocHighlightingState.anchors = null;
-  tocHighlightingState.anchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
-  tocHighlightingState.anchors.length
-    && tocHighlightingState.anchors.forEach(anchor => {
+  const newAnchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
+  tocHighlightingState.contentFrameEl = contentFrame;
+
+  // * Build order-sensitive signature to detect renames/reorders without full re-subscribe.
+  let sig = 0;
+  for (let i = 0; i < newAnchors.length; i++) {
+    const id = newAnchors[i].id || "";
+    // djb2-like rolling hash with index mix; kept in 32-bit int space
+    let h = 5381;
+    for (let j = 0; j < id.length; j++) {
+      h = ((h << 5) + h) ^ id.charCodeAt(j);
+    }
+    // mix position to make reorders detectable
+    sig = (sig ^ ((h + i * 2654435761) | 0)) | 0;
+  }
+
+  // * Set unchanged → keep IO subscriptions; rebuild data[id].anchor after resetState().
+  const unchanged = (
+    tocHighlightingState.anchorsCount === newAnchors.length &&
+    tocHighlightingState.anchorsSig === sig
+  );
+
+  if (unchanged) {
+    // * After resetState(), mapping in data[] is empty.
+    // We must rebuild anchor→data mapping even if the set is unchanged,
+    // otherwise IntersectionObserver events may hit undefined.
+    tocHighlightingState.anchors = newAnchors;
+    newAnchors.forEach(anchor => {
+      const id = anchor.id;
+      tocHighlightingState.data[id] = {
+        'anchor': anchor,
+        ...tocHighlightingState.data[id]
+      };
+    });
+    return;
+  }
+
+  // * Set changed → drop old IO targets and re‑subscribe.
+  anchorObserver.disconnect(); // ** Re-subscribe anchors only when content changed
+
+  tocHighlightingState.anchors = newAnchors;
+  tocHighlightingState.anchorsCount = newAnchors.length;
+  tocHighlightingState.anchorsSig = sig;
+
+  newAnchors.forEach(anchor => {
     const id = anchor.id;
     tocHighlightingState.data[id] = {
       'anchor': anchor,
@@ -161,31 +228,31 @@ function processAnchorList(contentFrame, anchorObserver) {
 }
 
 function handleIntersect(entries, observer) {
+  // IntersectionObserver drives events, but the actual "which sections are
+  // visible" decision is done by range geometry in updateVisibleSectionItems().
+  let topBound = VIEWPORT_TOP_OFFSET_PX;
+  let bottomBound = window.innerHeight - VIEWPORT_BOTTOM_OFFSET_PX;
+  if (entries.length > 0 && entries[0].rootBounds) {
+    topBound = entries[0].rootBounds.top + VIEWPORT_TOP_OFFSET_PX;
+    bottomBound = entries[0].rootBounds.bottom - VIEWPORT_BOTTOM_OFFSET_PX;
+  }
 
   entries.forEach((entry) => {
 
-    // #rootBounds_null
-    // rootBounds: null
-    // after frame reload and before init
-    if(!entry.rootBounds) {
-      return
-    }
-
     const anchor = entry.target.id;
-    // * For anchors that go into the viewport,
-    // * finds the corresponding links
-    const link = tocHighlightingState.data[anchor].link;
+
+    // * IO may fire between resets; mapping may be missing — skip safely.
+    const link = tocHighlightingState.data[anchor]?.link;
 
     // * if there is no menu item for the section in the TOC
     if(!link) {
       return
     }
 
+    // ** Visible (any positive intersection). Highlight item and related folders.
     if (entry.isIntersecting) { //! entry.intersectionRatio > 0 -- it happens to be equal to zero at the intersection!
 
       TOC_HIGHLIGHT_DEBUG && console.group('🔶', entry.isIntersecting, entry.intersectionRatio, anchor, entry.intersectionRect.height);
-      // * and highlights them in the TOC,
-      fireItem(link)
 
       // * semi-highlights folder in the TOC,
       if (tocHighlightingState.folderSet.has(anchor)) {
@@ -197,20 +264,22 @@ function handleIntersect(entries, observer) {
       if (tocHighlightingState.closerForFolder[anchor]) {
         tocHighlightingState.closerForFolder[anchor].forEach(id => {
           TOC_HIGHLIGHT_DEBUG && console.log(`🔴`, id, `(from ${anchor})`);
-          fireFolder(tocHighlightingState.data[id].link)
+          const pair2 = tocHighlightingState.data[id];
+          console.assert(pair2 && pair2.link, 'handleIntersect(): missing folder link for', id);
+          if (pair2 && pair2.link) {
+            fireFolder(pair2.link);
+          }
         })
       }
       TOC_HIGHLIGHT_DEBUG && console.groupEnd();
 
+    // ** Not visible. Remove item highlight and conditionally de-highlight folders.
     } else {
-
       TOC_HIGHLIGHT_DEBUG && console.group('🔹', entry.isIntersecting, entry.intersectionRatio, anchor);
-      // * or cancels highlighting for the rest of the links.
-      fireItem(link, false);
 
       if(
         // * If the node goes down ⬇️ off the screen
-        entry.boundingClientRect.bottom >= entry.rootBounds.bottom
+        entry.boundingClientRect.bottom >= bottomBound
         // *  and it's a folder
         && tocHighlightingState.folderSet.has(anchor)
       ) {
@@ -221,21 +290,25 @@ function handleIntersect(entries, observer) {
 
       if(
         // * If the node goes up ⬆️ off the screen
-        entry.boundingClientRect.y < tocHighlightingState.contentFrameTop
+        entry.boundingClientRect.top <= topBound
         // * and this is the last child of the section
         && tocHighlightingState.closerForFolder[anchor]
       ) {
         // * When the LAST CHILD of the section disappears
-        // * over the upper boundary ( < tocHighlightingState.contentFrameTop),
+        // * over the upper boundary (<= topBound),
         // * strictly speaking, this occurs when the lower bound disappears:
         // * entry.boundingClientRect.bottom.
-        // * But we will use the upper bound, entry.boundingClientRect.y
+        // * But we will use the upper bound, entry.boundingClientRect.top
         // * which will be less than or equal to the lower bound.
 
         // ** remove highlights from closer`s parent folder in the TOC
         tocHighlightingState.closerForFolder[anchor].forEach(id => {
           TOC_HIGHLIGHT_DEBUG && console.log(`⚫ ⬆️`, id,);
-          fireFolder(tocHighlightingState.data[id].link, false)
+          const pair3 = tocHighlightingState.data[id];
+          console.assert(pair3 && pair3.link, 'handleIntersect(): missing folder link for', id);
+          if (pair3 && pair3.link) {
+            fireFolder(pair3.link, false);
+          }
         });
       }
 
@@ -243,28 +316,85 @@ function handleIntersect(entries, observer) {
     }
   });
 
+  updateVisibleSectionItems(topBound, bottomBound);
+}
+
+function updateVisibleSectionItems(topBound, bottomBound) {
+  // Section visibility is computed by intervals between anchors:
+  // section_i := [anchor_i.top, anchor_{i+1}.top), and for the last section:
+  // [anchor_last.top, contentFrame.bottom).
+  // If this interval overlaps the virtual viewport [topBound, bottomBound],
+  // the corresponding TOC item is marked as intersected.
+  if (!tocHighlightingState.anchors || tocHighlightingState.anchors.length === 0) {
+    return;
+  }
+
+  const linkedAnchors = [];
+  tocHighlightingState.anchors.forEach(anchor => {
+    const id = anchor.id;
+    const pair = tocHighlightingState.data[id];
+    if (!pair || !pair.anchor || !pair.link) {
+      return;
+    }
+    linkedAnchors.push({ id, anchor: pair.anchor, link: pair.link });
+  });
+
+  if (linkedAnchors.length === 0) {
+    return;
+  }
+
+  const visibleIds = new Set();
+  for (let i = 0; i < linkedAnchors.length; i++) {
+    const current = linkedAnchors[i];
+    const next = linkedAnchors[i + 1];
+
+    // Section i is the interval [anchor_i, anchor_{i+1}).
+    const sectionTop = current.anchor.getBoundingClientRect().top;
+    const sectionBottom = next
+      ? next.anchor.getBoundingClientRect().top
+      : (tocHighlightingState.contentFrameEl?.getBoundingClientRect().bottom ?? bottomBound);
+
+    const sectionOverlapsViewport =
+      sectionBottom > topBound && sectionTop < bottomBound;
+
+    if (sectionOverlapsViewport) {
+      visibleIds.add(current.id);
+    }
+  }
+
+  linkedAnchors.forEach(item => {
+    fireItem(item.link, visibleIds.has(item.id));
+  });
 }
 
 function findDeepestLastChild(element) {
+  // * Walk down the last-child chain to find the last <a> inside a nested list
+
   // ! depends on TOC markup
   // ul > li > div + a + ul > ...
   // ul > li > a
   //    > li > a <---------------***
+
+  // Return the last <a> in the subtree or null if none exists.
+  // This avoids returning container elements (UL/LI/DIV) that lack the 'anchor' attribute.
+  if (!element) return null;
   if (element.nodeName === 'A') {
     return element;
   }
   const children = element.children;
   if (children && children.length > 0) {
-    return findDeepestLastChild([...children].at(-1))
-  } else {
-    return element;
+    // Walk from the end toward the start; return the first <a> found in the deepest/rightmost branch.
+    for (let i = children.length - 1; i >= 0; i--) {
+      const found = findDeepestLastChild(children[i]);
+      if (found) return found;
+    }
   }
+  return null;
 }
 
 function targetItem(element, on = true) {
-  if (!element) { return } // Guard against race conditions:
-  // hashchange or intersection events may fire
-  // before the TOC is fully built, resulting in undefined link elements.
+  // * Toggle "targeted" attribute for direct hash navigation.
+  console.assert(element, 'targetItem(): expected a valid element');
   if(on) {
     element.setAttribute('targeted', '');
   } else {
@@ -273,7 +403,8 @@ function targetItem(element, on = true) {
 }
 
 function fireItem(element, on = true) {
-  if (!element) { return } // Guard against race conditions
+  // * Toggle "intersected" attribute for visible anchors.
+  console.assert(element, 'fireItem(): expected a valid element');
   if(on) {
     element.setAttribute('intersected', '');
   } else {
@@ -282,10 +413,28 @@ function fireItem(element, on = true) {
 }
 
 function fireFolder(element, on = true) {
-  if (!element) { return } // Guard against race conditions
+  // * Toggle "parented" attribute for section folders.
+  console.assert(element, 'fireFolder(): expected a valid element');
   if(on) {
     element.setAttribute('parented', '');
   } else {
     element.removeAttribute('parented');
   }
+}
+
+function resolveMovedFragment(oldId) {
+  // Heuristic: many ids look like "<numbering>-<slug>", where numbering changes on reorder.
+  // Try to map by the slug suffix after the first '-' if the exact id is missing.
+  const dash = oldId.indexOf('-');
+  if (dash === -1) return null; // no recognizable pattern
+  const suffix = oldId.slice(dash + 1);
+  if (!suffix) return null;
+
+  const keys = Object.keys(tocHighlightingState.data);
+  const candidates = keys.filter(k => k.endsWith(suffix));
+  if (candidates.length === 1) {
+    return candidates[0];
+  }
+  // If multiple candidates, don't guess.
+  return null;
 }

@@ -109,6 +109,7 @@ function isCollapsibleList(node) {
 // - Adds expand/collapse controls next to branch items.
 // - Restores saved state from sessionStorage.
 // - Click toggles one branch.
+// - Shift+Click toggles all descendant branches.
 // - Double-click toggles all descendant branches.
 function processToc(toc) {
   const storage = sessionStorageGet();
@@ -136,7 +137,11 @@ function processToc(toc) {
         // * run after the items have been added to the DOM
         setBranchState(handler, currentState);
 
-        handler.addEventListener('click', () => {
+        handler.addEventListener('click', event => {
+          if (event.shiftKey) {
+            bulkToggleChildBrunches(handler);
+            return;
+          }
           toggle(handler);
         });
         handler.addEventListener('dblclick', () => {

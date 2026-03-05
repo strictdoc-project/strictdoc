@@ -200,6 +200,8 @@ const STYLE = `
 }
 `;
 
+// ===== Bootstrap =====
+
 // Main entrypoint for TOC collapsing behavior.
 // - Observe element `MOUNT_SELECTOR` for dynamic TOC injection and initialize when found.
 // - Initialize immediately for the first render.
@@ -252,6 +254,8 @@ function isCollapsibleList(node) {
   );
 }
 
+// ===== TOC Processing =====
+
 // Initialize all collapsible controls inside the TOC.
 // - Adds expand/collapse controls next to branch items.
 // - Restores saved state from sessionStorage.
@@ -303,6 +307,8 @@ function processToc(toc) {
   }
 }
 
+// ===== Tree Actions =====
+
 // Toggle one branch between expanded and collapsed.
 function toggle(controls, handler) {
   clearBulkUndoMode(controls);
@@ -322,11 +328,6 @@ function bulkToggleChildBrunches(controls, handler) {
   updateSessionStorage();
 }
 
-// Read persisted branch states for this browser session.
-function sessionStorageGet() {
-  const item = sessionStorage.getItem(SS_ITEM);
-  const res = item ? JSON.parse(item) : {};
-  return res
 // ===== Bulk Controls =====
 
 // Create and insert a panel with buttons for bulk operations (expand/collapse all).
@@ -363,12 +364,7 @@ function createControlsPanel(root) {
 
   return controls;
 }
-}
 
-// Persist current branch states for this browser session.
-function sessionStorageSet(obj) {
-  const string = JSON.stringify(obj);
-  sessionStorage.setItem(SS_ITEM, string)
 // Create a handler element for bulk operations.
 function createBulkHandler(symbol) {
   const handler = document.createElement('div');
@@ -440,6 +436,13 @@ function restoreBulkSnapshot(root, snapshot) {
     }
   });
 }
+
+// ===== Generic Helpers =====
+
+// Keep handler and branch state in sync (expanded/collapsed).
+function setBranchState(handler, state) {
+  handler.dataset[HANDLER_DATA_ATTR] = state;
+  handler.parentNode.dataset[BRANCH_DATA_ATTR] = state;
 }
 
 // Save every branch state currently rendered in the TOC.
@@ -453,18 +456,25 @@ function updateSessionStorage() {
   sessionStorageSet(obj);
 }
 
+// Read persisted branch states for this browser session.
+function sessionStorageGet() {
+  const item = sessionStorage.getItem(SS_ITEM);
+  const res = item ? JSON.parse(item) : {};
+  return res
+}
+
+// Persist current branch states for this browser session.
+function sessionStorageSet(obj) {
+  const string = JSON.stringify(obj);
+  sessionStorage.setItem(SS_ITEM, string)
+}
+
 // Inject the CSS that draws toggle controls and shows/hides child lists.
 function addStyleElement(target, styleTextContent, attr = 'style') {
   const style = document.createElement('style');
   style.setAttribute(`collapsible-toc-${attr}`, '');
   style.textContent = styleTextContent;
   target.before(style);
-}
-
-// Keep handler and branch state in sync (expanded/collapsed).
-function setBranchState(handler, state) {
-  handler.dataset[HANDLER_DATA_ATTR] = state;
-  handler.parentNode.dataset[BRANCH_DATA_ATTR] = state;
 }
 
 // Create a clickable handler element for one TOC branch.
@@ -474,6 +484,7 @@ function createHandler(state) {
   return div
 }
 
+// ===== Startup =====
 
 // Bootstrapping: run main after page load.
 window.addEventListener("load", function() {

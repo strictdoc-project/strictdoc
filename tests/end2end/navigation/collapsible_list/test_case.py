@@ -67,7 +67,7 @@ class Test(E2ECase):
 
             # test bulk operation
 
-            collapsible_list.do_bulk_collapse("Section 1 title")
+            collapsible_list.do_bulk_collapse_branch("Section 1 title")
             collapsible_list.assert_visible_not("Nested section 1 title")
             collapsible_list.assert_visible_not("Nested section 11 title")
             collapsible_list.do_toggle_collapsible("Section 1 title")
@@ -75,7 +75,7 @@ class Test(E2ECase):
 
             collapsible_list.do_toggle_collapsible("Section 1 title")
             collapsible_list.assert_visible_not("Nested section 1 title")
-            collapsible_list.do_bulk_expand("Section 1 title")
+            collapsible_list.do_bulk_expand_branch("Section 1 title")
             collapsible_list.assert_visible("Nested section 11 title")
 
             collapsible_list.assert_all_is_expanded()
@@ -88,8 +88,8 @@ class Test(E2ECase):
             self.refresh()
             collapsible_list.assert_all_is_expanded()
 
-            collapsible_list.do_bulk_collapse("Section 1 title")
-            collapsible_list.do_bulk_collapse("Section 2 title")
+            collapsible_list.do_bulk_collapse_branch("Section 1 title")
+            collapsible_list.do_bulk_collapse_branch("Section 2 title")
             collapsible_list.assert_all_is_collapsed()
             self.refresh()
             collapsible_list.assert_all_is_collapsed()

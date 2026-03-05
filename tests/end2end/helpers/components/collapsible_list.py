@@ -76,13 +76,13 @@ class CollapsibleList:
             f'//a[contains(., "{string}")]/../*[@data-handler]',
         )
 
-    def do_bulk_collapse(self, string: str) -> None:
+    def do_bulk_collapse_branch(self, string: str) -> None:
         self.test_case.double_click(
             f'//a[contains(., "{string}")]/../*[@data-handler="expanded"]',
             by=By.XPATH,
         )
 
-    def do_bulk_expand(self, string: str) -> None:
+    def do_bulk_expand_branch(self, string: str) -> None:
         self.test_case.double_click(
             f'//a[contains(., "{string}")]/../*[@data-handler="collapsed"]',
             by=By.XPATH,

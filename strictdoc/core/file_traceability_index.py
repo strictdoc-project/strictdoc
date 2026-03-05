@@ -649,13 +649,19 @@ class FileTraceabilityIndex:
                     )
                     sdoc_node_uid = assert_cast(sdoc_node.reserved_uid, str)
                     if current_top_node is None:
-                        current_top_node = (
+                        current_top_node, created_sections = (
                             FileTraceabilityIndex.create_source_node_section(
                                 document,
                                 path_to_source_file_,
                                 section_cache,
                             )
                         )
+                        for created_section in created_sections:
+                            traceability_index.graph_database.create_link(
+                                link_type=GraphLinkType.MID_TO_NODE,
+                                lhs_node=created_section.reserved_mid,
+                                rhs_node=created_section,
+                            )
                     current_top_node.section_contents.append(sdoc_node)
 
                 self.connect_source_node_function(
@@ -1061,11 +1067,12 @@ class FileTraceabilityIndex:
         document: SDocDocumentIF,
         path_to_source_file: str,
         section_cache: Dict[str, Union[SDocDocumentIF, SDocNode]],
-    ) -> Union[SDocDocumentIF, SDocNode]:
+    ) -> Tuple[Union[SDocDocumentIF, SDocNode], List[SDocNode]]:
         """
         Add a subsection for each path components in a given file path.
         """
         current_top_node: Union[SDocDocumentIF, SDocNode] = document
+        created_sections: List[SDocNode] = []
         path_components = path_to_source_file.split("/")
         for path_component_idx_, path_component_ in enumerate(path_components):
             if path_component_ not in section_cache:
@@ -1097,8 +1104,9 @@ class FileTraceabilityIndex:
 
                 current_top_node.section_contents.append(current_section)
                 section_cache[path_component_] = current_section
+                created_sections.append(current_section)
             current_top_node = section_cache[path_component_]
-        return current_top_node
+        return current_top_node, created_sections
 
     def connect_sdoc_node_with_file_path(
         self, sdoc_node: SDocNode, path_to_source_file_: str

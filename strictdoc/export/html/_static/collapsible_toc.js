@@ -69,6 +69,7 @@ const BRANCH_DATA_ATTR = `branch`; // li with a branch inside
 const HANDLER_DATA_ATTR = `handler`; // handler
 const NODE_ID_DATA_ATTR = `nodeid`; // from sdoc markup
 const BULK_DATA_ATTR = `bulk`; // bulk operations button
+const BULK_ICON_DATA_ATTR = `icon`; // icon for bulk operations button
 
 // panel with global controls (expand all, collapse all, etc):
 const CONTROLS_PANEL_ATTR = `${ROOT_SELECTOR}-bulk_controls`;
@@ -81,6 +82,10 @@ let lastBulkSnapshot = null;
 
 const _TRUE = 'collapsed';
 const _FALSE = 'expanded';
+const DO_TRUE = 'collapse';
+const DO_FALSE = 'expand';
+const DO_TRUE_HINT = 'Collapse all';
+const DO_FALSE_HINT = 'Expand all';
 
 const SYMBOL_FALSE = '－';
 const SYMBOL_TRUE = '＋';
@@ -126,8 +131,8 @@ const STYLE = `
   color: rgba(0,0,0,1);
 }
 
-[data-${BULK_DATA_ATTR}]::before {
-  content: attr(data-${BULK_DATA_ATTR});
+[data-${BULK_ICON_DATA_ATTR}]::before {
+  content: attr(data-${BULK_ICON_DATA_ATTR});
 }
 
 [data-${BULK_DATA_ATTR}]::after {
@@ -341,8 +346,8 @@ function createControlsPanel(root) {
   root.setAttribute('has-top-panel', '');
   // return li
 
-  const collapseAllHandler = createBulkHandler(SYMBOL_TRUE);
-  const expandAllHandler = createBulkHandler(SYMBOL_FALSE);
+  const collapseAllHandler = createBulkHandler(SYMBOL_FALSE, DO_TRUE, DO_TRUE_HINT);
+  const expandAllHandler = createBulkHandler(SYMBOL_TRUE, DO_FALSE, DO_FALSE_HINT);
   container.append(collapseAllHandler, expandAllHandler);
   const controls = { collapseAllHandler, expandAllHandler };
 
@@ -366,10 +371,12 @@ function createControlsPanel(root) {
 }
 
 // Create a handler element for bulk operations.
-function createBulkHandler(symbol) {
+function createBulkHandler(icon, type, hint, mode = BULK_MODE) {
   const handler = document.createElement('div');
-  setBulkHandlerMode(handler, BULK_MODE);
-  handler.dataset[BULK_DATA_ATTR] = symbol;
+  handler.title = hint || `${type === DO_TRUE ? 'Collapse' : 'Expand'} all`;
+  setBulkHandlerMode(handler, mode);
+  handler.dataset[BULK_DATA_ATTR] = type;
+  handler.dataset[BULK_ICON_DATA_ATTR] = icon;
   return handler
 }
 

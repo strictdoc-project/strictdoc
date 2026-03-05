@@ -1,14 +1,15 @@
 // Adds interactive collapsing/expanding behavior to the TOC.
 
-const ROOT_ID = 'toc';
 const SS_ITEM = 'collapsibleTOC'; // sessionStorageItem
+
+const MOUNT_SELECTOR = '#frame-toc';
+const ROOT_SELECTOR = 'js-collapsible_list'; // js-collapsible_list with any value
 const BRANCH_DATA_ATTR = `branch`; // li with a branch inside
 const HANDLER_DATA_ATTR = `handler`; // handler
 const NODE_ID_DATA_ATTR = `nodeid`; // from sdoc markup
+
 const _TRUE = 'collapsed';
 const _FALSE = 'expanded';
-
-const ROOT_SELECTOR = 'js-collapsible_list'; // is used in tests
 
 const SYMBOL_FALSE = '－';
 const SYMBOL_TRUE = '＋';
@@ -63,13 +64,13 @@ const STYLE = `
 `;
 
 // Main entrypoint for TOC collapsing behavior.
-// - Observe #frame-toc for dynamic TOC injection and initialize when found.
+// - Observe element `MOUNT_SELECTOR` for dynamic TOC injection and initialize when found.
 // - Initialize immediately for the first render.
 function main() {
 
-  let mutatingFrame = document.querySelector('#frame-toc');
+  let mutatingFrame = document.querySelector(MOUNT_SELECTOR);
   if (!mutatingFrame) {
-    console.error("#frame-toc not found");
+    console.error(MOUNT_SELECTOR + " not found");
     return;
   }
 
@@ -102,7 +103,11 @@ function run() {
 
 // Detect the TOC root node when it is injected into the frame.
 function isCollapsibleList(node) {
-  return node.nodeType === 1 && node.id === ROOT_ID
+  return (
+    node.nodeType === 1 &&
+    node.hasAttribute('js-collapsible_list')
+    // node.getAttribute('js-collapsible_list') === 'root'
+  );
 }
 
 // Initialize all collapsible controls inside the TOC.

@@ -2,6 +2,11 @@
 collapsible_toc.js
 Adds interactive collapsing/expanding behavior to the TOC.
 
+The script assumes TOC updates are performed as root-level replacement inside the mount container.
+On dynamic updates, a new TOC root node ([js-collapsible_list]) is expected to be added
+as a direct child of #frame-toc.
+Partial in-place updates of nested TOC nodes are not the primary update model for this script.
+
 Required markup:
 
 1) Mount container
@@ -27,6 +32,12 @@ Required markup:
    - MutationObserver watches childList changes on the mount container (subtree: false).
    - For auto-reinit on dynamic updates, a newly added direct child node of mount
      must be the TOC root (or include the [js-collapsible_list] node matched by current check).
+
+6) State re-application on TOC updates
+   - Persisted state is keyed by data-nodeid.
+   - On re-init, each branch restores state from sessionStorage when nodeid matches.
+   - Branches with unknown nodeid use default state (expanded).
+   - After processing, sessionStorage is rewritten from the current DOM tree.
 */
 
 const SS_ITEM = 'collapsibleTOC'; // sessionStorageItem

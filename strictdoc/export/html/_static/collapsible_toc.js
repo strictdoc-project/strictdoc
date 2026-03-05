@@ -393,12 +393,18 @@ function clearBulkUndoMode(controls) {
 // Apply bulk state to all branches and manage undo mode on bulk buttons.
 function runBulkAction(root, handler, oppositeHandler, state) {
   if (!lastBulkSnapshot) {
-    lastBulkSnapshot = captureBulkSnapshot(root);
+    const snapshot = captureBulkSnapshot(root);
+    // Skip storing trivial snapshots (all branches have the same state).
+    if (!isTrivialSnapshot(snapshot)) {
+      lastBulkSnapshot = snapshot;
+    }
   }
   const handlerList = root.querySelectorAll(`[data-${HANDLER_DATA_ATTR}]`);
   handlerList.forEach(currentHandler => setBranchState(currentHandler, state));
   updateSessionStorage();
-  setBulkHandlerMode(handler, UNDO_MODE);
+  if (lastBulkSnapshot) {
+    setBulkHandlerMode(handler, UNDO_MODE);
+  }
   setBulkHandlerMode(oppositeHandler, BULK_MODE);
 }
 
@@ -435,6 +441,12 @@ function restoreBulkSnapshot(root, snapshot) {
       setBranchState(handler, state);
     }
   });
+}
+
+// A snapshot is trivial when all stored branches have the same state.
+function isTrivialSnapshot(snapshot) {
+  const states = Object.values(snapshot);
+  return states.length === 0 || states.every(state => state === states[0]);
 }
 
 // ===== Generic Helpers =====

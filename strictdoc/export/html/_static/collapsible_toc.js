@@ -80,7 +80,7 @@ function main() {
       if (mutation.type === 'childList') {
         let addedToc = Array.from(mutation.addedNodes).find(node => isCollapsibleList(node));
         if (addedToc) {
-          run()
+          run(mutatingFrame)
         }
       }
     }
@@ -93,12 +93,17 @@ function main() {
     }
   );
 
-  run()
+  run(mutatingFrame)
 }
 
-// Run TOC processing for the collapsible-list root.
-function run() {
-  processToc(document.querySelector(`[${ROOT_SELECTOR}]`));
+// Run TOC processing for the collapsible-list root
+// (inside mount container).
+function run(mount) {
+  const toc = mount.querySelector(`[${ROOT_SELECTOR}]`);
+  if (!toc) {
+    return;
+  }
+  processToc(toc);
 }
 
 // Detect the TOC root node when it is injected into the frame.

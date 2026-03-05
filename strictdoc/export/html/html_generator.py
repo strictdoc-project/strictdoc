@@ -781,8 +781,9 @@ class HTMLGenerator:
                     )
                 return
 
-        for document_ in traceability_index.document_tree.document_list:
-            document_.build_search_index()
+        if force_regeneration:
+            for document_ in traceability_index.document_tree.document_list:
+                document_.build_search_index()
 
         global_index: Dict[str, Set[int]] = defaultdict(set)
         global_map_nodes_by_mid: Dict[int, Dict[str, str]] = {}

@@ -194,7 +194,7 @@ class SourceFileTraceabilityReader_Python:
                         break
                     if cursor_.type == "function_definition":
                         functions_stack.pop()
-                        assert len(functions_stack) > 0
+                        assert len(functions_stack) > 0, file_path
                 else:
                     # This is counterintuitive:
                     # The top-level functions don't have the top-level module set

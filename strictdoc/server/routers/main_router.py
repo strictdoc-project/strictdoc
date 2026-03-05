@@ -151,6 +151,75 @@ HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
 AUTOCOMPLETE_LIMIT = 50
 
 
+def search_query_contains_markers(query: str) -> bool:
+    # Query mode markers are intentionally broad to keep behavior deterministic
+    # for expression-like input.
+    if "node." in query:
+        return True
+    if ("(" in query and ")" in query) or "==" in query or "!=" in query:
+        return True
+    if re.search(r'\[\s*"[^"]+"\s*\]', query):
+        return True
+    return False
+
+
+def parse_plain_text_search_query(
+    query: str,
+) -> tuple[Optional[str], Optional[re.Pattern[str]]]:
+    plain_text_query = query.lower()
+    if (
+        len(plain_text_query) >= 2
+        and plain_text_query.startswith('"')
+        and plain_text_query.endswith('"')
+    ):
+        return plain_text_query[1:-1], None
+
+    query_parts = [part for part in plain_text_query.split() if part]
+    if len(query_parts) == 0:
+        return None, None
+    wildcard_pattern = ".*".join(map(re.escape, query_parts))
+    return None, re.compile(wildcard_pattern)
+
+
+def search_text_matches_plain_text_query(
+    text: str,
+    *,
+    phrase: Optional[str],
+    pattern: Optional[re.Pattern[str]],
+) -> bool:
+    lowered_text = text.lower()
+    if phrase is not None:
+        return phrase in lowered_text
+    if pattern is not None:
+        return pattern.search(lowered_text) is not None
+    return False
+
+
+def search_node_matches_plain_text_query(
+    node: SDocExtendedElementIF,
+    *,
+    phrase: Optional[str],
+    pattern: Optional[re.Pattern[str]],
+) -> bool:
+    if isinstance(node, SDocNode):
+        for requirement_field_ in node.enumerate_fields():
+            field_text = requirement_field_.get_text_value()
+            if search_text_matches_plain_text_query(
+                field_text, phrase=phrase, pattern=pattern
+            ):
+                return True
+        return False
+    if isinstance(node, SourceFileTraceabilityInfo):
+        if node.source_file is None:
+            return False
+        return search_text_matches_plain_text_query(
+            node.source_file.in_doctree_source_file_rel_path,
+            phrase=phrase,
+            pattern=pattern,
+        )
+    return False
+
+
 def create_main_router(
     project_config: ProjectConfig,
     *,
@@ -2345,38 +2414,31 @@ def create_main_router(
         search_results = []
         error = None
         node_query = None
-        plain_text_query = None
+        plain_text_query_phrase = None
+        plain_text_query_pattern = None
 
         if q is not None and len(q) > 0:
-            try:
-                query: Query = QueryReader.read(q)
-                node_query = QueryObject(
-                    query, export_action.traceability_index
-                )
-            except Exception as e:
-                plain_text_query = q.strip().lower()
-                if len(plain_text_query) == 0:
-                    error = f"error: {e}"
+            normalized_query = q.strip()
+            if len(normalized_query) > 0:
+                if search_query_contains_markers(normalized_query):
+                    try:
+                        query: Query = QueryReader.read(normalized_query)
+                        node_query = QueryObject(
+                            query, export_action.traceability_index
+                        )
+                    except Exception as e:
+                        error = f"error: {e}"
+                else:
+                    (
+                        plain_text_query_phrase,
+                        plain_text_query_pattern,
+                    ) = parse_plain_text_search_query(normalized_query)
 
-        def node_matches_plain_text_query(
-            node: SDocExtendedElementIF, query_string: str
-        ) -> bool:
-            if isinstance(node, SDocNode):
-                for requirement_field_ in node.enumerate_fields():
-                    field_text = requirement_field_.get_text_value()
-                    if query_string in field_text.lower():
-                        return True
-                return False
-            if isinstance(node, SourceFileTraceabilityInfo):
-                if node.source_file is None:
-                    return False
-                return (
-                    query_string
-                    in node.source_file.in_doctree_source_file_rel_path.lower()
-                )
-            return False
-
-        if node_query is not None or plain_text_query is not None:
+        if (
+            node_query is not None
+            or plain_text_query_phrase is not None
+            or plain_text_query_pattern is not None
+        ):
             result: List[SDocExtendedElementIF] = []
             try:
                 document_tree = assert_cast(
@@ -2394,9 +2456,10 @@ def create_main_router(
                         if (
                             node_query is not None and node_query.evaluate(node)
                         ) or (
-                            plain_text_query is not None
-                            and node_matches_plain_text_query(
-                                node, plain_text_query
+                            search_node_matches_plain_text_query(
+                                node,
+                                phrase=plain_text_query_phrase,
+                                pattern=plain_text_query_pattern,
                             )
                         ):
                             result.append(node)
@@ -2413,9 +2476,10 @@ def create_main_router(
                             node_query is not None
                             and node_query.evaluate(source_file_info_)
                         ) or (
-                            plain_text_query is not None
-                            and node_matches_plain_text_query(
-                                source_file_info_, plain_text_query
+                            search_node_matches_plain_text_query(
+                                source_file_info_,
+                                phrase=plain_text_query_phrase,
+                                pattern=plain_text_query_pattern,
                             )
                         ):
                             result.append(source_file_info_)

@@ -6,9 +6,14 @@
       <li><b>Text search</b>: enter words or phrases to search across requirement/section fields and source file paths.</li>
       <li>
         <b>Query syntax</b>: use the grammar-based query language for precise filtering.
-        <br>If an expression is invalid, the query is treated as plain text search.
+        <br>If the input contains query markers, StrictDoc parses it as a query and reports an error if parsing fails.
       </li>
     </ol>
+    <p>Text search syntax:</p>
+    <ul>
+      <li><code>foo bar</code> matches like <code>.*foo.*bar.*</code> (ordered words with wildcard gaps).</li>
+      <li><code>"foo bar"</code> matches the exact phrase <code>foo bar</code>.</li>
+    </ul>
 
     <p>Query syntax rules:</p>
     <ul>

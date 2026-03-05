@@ -1,4 +1,33 @@
-// Adds interactive collapsing/expanding behavior to the TOC.
+/*
+collapsible_toc.js
+Adds interactive collapsing/expanding behavior to the TOC.
+
+Required markup:
+
+1) Mount container
+   - A container matching MOUNT_SELECTOR must exist (currently: #frame-toc).
+   - If it is missing, initialization stops.
+
+2) TOC root inside mount
+   - Inside the mount container, there must be an element with [js-collapsible_list].
+   - This is the root TOC node processed by the script.
+   - If missing at runtime, run() exits safely.
+
+3) TOC tree structure
+   - Collapsible branches are detected by nested <ul> elements.
+   - Expected branch pattern: <li ...><a ...></a><ul>...</ul></li>.
+   - No nested <ul> => no collapse handlers are added.
+
+4) Stable node ids for persisted state
+   - Each branch parent (<li> that owns a child <ul>) should have data-nodeid.
+   - data-nodeid values should be unique within the TOC.
+   - These IDs are used as keys for per-branch collapsed/expanded state.
+
+5) Dynamic TOC replacement behavior
+   - MutationObserver watches childList changes on the mount container (subtree: false).
+   - For auto-reinit on dynamic updates, a newly added direct child node of mount
+     must be the TOC root (or include the [js-collapsible_list] node matched by current check).
+*/
 
 const SS_ITEM = 'collapsibleTOC'; // sessionStorageItem
 

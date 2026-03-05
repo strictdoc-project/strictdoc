@@ -1232,6 +1232,7 @@ a.tree_item,
 .toc {
   --toc-padding-left: calc(var(--base-rhythm) * 2);
   --toc-background: var(--color-bg-main);
+  --toc-accent: var(--color-fg-accent);
 
   margin-top: var(--base-rhythm);
   padding-left: var(--toc-padding-left);

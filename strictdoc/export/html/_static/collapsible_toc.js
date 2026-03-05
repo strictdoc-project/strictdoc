@@ -40,6 +40,27 @@ Required markup:
    - After processing, sessionStorage is rewritten from the current DOM tree.
 */
 
+/*
+Bulk/Undo scenario:
+1) If snapshot is empty and user clicks a bulk button:
+   - create snapshot,
+   - apply bulk action,
+   - put undo mode on the clicked bulk button.
+2) If snapshot already exists and user clicks a bulk button:
+   - keep snapshot unchanged,
+   - apply bulk action,
+   - move undo mode to the clicked bulk button.
+3) If user performs any non-bulk tree action:
+   - clear snapshot,
+   - return both bulk buttons to normal mode.
+4) If user clicks undo:
+   - restore snapshot,
+   - clear snapshot,
+   - return both bulk buttons to normal mode.
+*/
+
+// ===== Constants =====
+
 const SS_ITEM = 'collapsibleTOC'; // sessionStorageItem
 
 const MOUNT_SELECTOR = '#frame-toc';
@@ -53,6 +74,10 @@ const BULK_DATA_ATTR = `bulk`; // bulk operations button
 const CONTROLS_PANEL_ATTR = `${ROOT_SELECTOR}-bulk_controls`;
 const CONTROLS_PANEL_CLASS = `toc-control-panel`; // for styling purposes only, not used in JS logic
 const CONTROLS_PANEL_HEIGHT = `32px`;
+
+const BULK_MODE = 'bulk';
+const UNDO_MODE = 'undo';
+let lastBulkSnapshot = null;
 
 const _TRUE = 'collapsed';
 const _FALSE = 'expanded';
@@ -112,6 +137,19 @@ const STYLE = `
   inset: 2px -3px -3px 2px;
   box-shadow: rgb(0 0 0 / 20%) 1px 1px 0px 0px;
   pointer-events: none;
+}
+
+[data-${BULK_DATA_ATTR}][data-mode="${UNDO_MODE}"] {
+  background-color: rgb(255 255 255 / 50%);
+  border: 1px solid var(--toc-accent, #ffcc00);
+}
+
+[data-${BULK_DATA_ATTR}][data-mode="${UNDO_MODE}"]::before {
+  content: '↶';
+  font-family: monospace;
+  font-size: ${SYMBOL_SIZE}px;
+  font-weight: normal;
+  color: var(--toc-accent, #ffcc00);
 }
 
 [data-${HANDLER_DATA_ATTR}]:hover {
@@ -230,7 +268,7 @@ function processToc(toc) {
   if (branchList.length > 0) {
     addStyleElement(toc, STYLE);
 
-    createControlsPanel(toc);
+    const controls = createControlsPanel(toc);
 
     branchList.forEach(
       ul => {
@@ -250,13 +288,13 @@ function processToc(toc) {
 
         handler.addEventListener('click', event => {
           if (event.shiftKey) {
-            bulkToggleChildBrunches(handler);
+            bulkToggleChildBrunches(controls, handler);
             return;
           }
-          toggle(handler);
+          toggle(controls, handler);
         });
         handler.addEventListener('dblclick', () => {
-          bulkToggleChildBrunches(handler);
+          bulkToggleChildBrunches(controls, handler);
         });
       }
     );
@@ -266,14 +304,16 @@ function processToc(toc) {
 }
 
 // Toggle one branch between expanded and collapsed.
-function toggle(handler) {
+function toggle(controls, handler) {
+  clearBulkUndoMode(controls);
   const newState = (handler.dataset[HANDLER_DATA_ATTR] === _FALSE) ? _TRUE : _FALSE;
   setBranchState(handler, newState);
   updateSessionStorage();
 }
 
 // Toggle all nested branches below a node in one action.
-function bulkToggleChildBrunches(handler) {
+function bulkToggleChildBrunches(controls, handler) {
+  clearBulkUndoMode(controls);
   const newState = (handler.dataset[HANDLER_DATA_ATTR] === _FALSE) ? _TRUE : _FALSE;
   const list = handler.parentNode.querySelectorAll(`[data-${HANDLER_DATA_ATTR}]`);
   list.forEach(handler => {
@@ -287,12 +327,119 @@ function sessionStorageGet() {
   const item = sessionStorage.getItem(SS_ITEM);
   const res = item ? JSON.parse(item) : {};
   return res
+// ===== Bulk Controls =====
+
+// Create and insert a panel with buttons for bulk operations (expand/collapse all).
+function createControlsPanel(root) {
+  const li = document.createElement('li');
+  li.setAttribute(CONTROLS_PANEL_ATTR, '');
+  li.classList.add(CONTROLS_PANEL_CLASS);
+  const container = document.createElement('div');
+  li.append(container);
+  root.prepend(li);
+  root.setAttribute('has-top-panel', '');
+  // return li
+
+  const collapseAllHandler = createBulkHandler(SYMBOL_TRUE);
+  const expandAllHandler = createBulkHandler(SYMBOL_FALSE);
+  container.append(collapseAllHandler, expandAllHandler);
+  const controls = { collapseAllHandler, expandAllHandler };
+
+  collapseAllHandler.addEventListener('click', () => {
+    if (collapseAllHandler.dataset.mode === UNDO_MODE) {
+      runUndoAction(root, controls);
+      return;
+    }
+    runBulkAction(root, collapseAllHandler, expandAllHandler, _TRUE);
+  });
+
+  expandAllHandler.addEventListener('click', () => {
+    if (expandAllHandler.dataset.mode === UNDO_MODE) {
+      runUndoAction(root, controls);
+      return;
+    }
+    runBulkAction(root, expandAllHandler, collapseAllHandler, _FALSE);
+  });
+
+  return controls;
+}
 }
 
 // Persist current branch states for this browser session.
 function sessionStorageSet(obj) {
   const string = JSON.stringify(obj);
   sessionStorage.setItem(SS_ITEM, string)
+// Create a handler element for bulk operations.
+function createBulkHandler(symbol) {
+  const handler = document.createElement('div');
+  setBulkHandlerMode(handler, BULK_MODE);
+  handler.dataset[BULK_DATA_ATTR] = symbol;
+  return handler
+}
+
+// Set bulk button mode (`bulk` or `undo`).
+function setBulkHandlerMode(handler, mode) {
+  if (mode !== BULK_MODE && mode !== UNDO_MODE) {
+    throw new Error(`Invalid bulk handler mode: ${mode}`);
+  }
+  handler.dataset.mode = mode;
+}
+
+// Exit undo mode and clear stored bulk snapshot.
+function clearBulkUndoMode(controls) {
+  if (controls) {
+    setBulkHandlerMode(controls.collapseAllHandler, BULK_MODE);
+    setBulkHandlerMode(controls.expandAllHandler, BULK_MODE);
+  }
+  lastBulkSnapshot = null;
+}
+
+// Apply bulk state to all branches and manage undo mode on bulk buttons.
+function runBulkAction(root, handler, oppositeHandler, state) {
+  if (!lastBulkSnapshot) {
+    lastBulkSnapshot = captureBulkSnapshot(root);
+  }
+  const handlerList = root.querySelectorAll(`[data-${HANDLER_DATA_ATTR}]`);
+  handlerList.forEach(currentHandler => setBranchState(currentHandler, state));
+  updateSessionStorage();
+  setBulkHandlerMode(handler, UNDO_MODE);
+  setBulkHandlerMode(oppositeHandler, BULK_MODE);
+}
+
+// Restore the last captured bulk snapshot and reset undo mode.
+function runUndoAction(root, controls) {
+  restoreBulkSnapshot(root, lastBulkSnapshot);
+  updateSessionStorage();
+  clearBulkUndoMode(controls);
+}
+
+// ===== `Undo` Snapshot =====
+
+// Capture current branch states for one-step bulk undo.
+function captureBulkSnapshot(root) {
+  const snapshot = {};
+  root.querySelectorAll(`[data-${HANDLER_DATA_ATTR}]`).forEach(handler => {
+    const nodeID = handler.parentNode.dataset[NODE_ID_DATA_ATTR];
+    if (nodeID) {
+      snapshot[nodeID] = handler.dataset[HANDLER_DATA_ATTR];
+    }
+  });
+  return snapshot;
+}
+
+// Restore branch states from a previously captured snapshot.
+function restoreBulkSnapshot(root, snapshot) {
+  if (!snapshot) {
+    return;
+  }
+  root.querySelectorAll(`[data-${HANDLER_DATA_ATTR}]`).forEach(handler => {
+    const nodeID = handler.parentNode.dataset[NODE_ID_DATA_ATTR];
+    const state = snapshot[nodeID];
+    if (state) {
+      setBranchState(handler, state);
+    }
+  });
+}
 }
 
 // Save every branch state currently rendered in the TOC.
@@ -327,40 +474,6 @@ function createHandler(state) {
   return div
 }
 
-// Create a handler element for bulk operations.
-function createBulkHandler(icon) {
-  const handler = document.createElement('div');
-  handler.dataset[BULK_DATA_ATTR] = icon;
-  return handler
-}
-
-// Create and insert a panel with buttons for bulk operations (expand/collapse all).
-function createControlsPanel(root) {
-  const li = document.createElement('li');
-  li.setAttribute(CONTROLS_PANEL_ATTR, '');
-  li.classList.add(CONTROLS_PANEL_CLASS);
-  const container = document.createElement('div');
-  li.append(container);
-  root.prepend(li);
-  root.setAttribute('has-top-panel', '');
-  // return li
-
-  const collapseAllHandler = createBulkHandler(SYMBOL_TRUE);
-  const expandAllHandler = createBulkHandler(SYMBOL_FALSE);
-  container.append(collapseAllHandler, expandAllHandler);
-
-  collapseAllHandler.addEventListener('click', () => {
-    const handlers = root.querySelectorAll(`[data-${HANDLER_DATA_ATTR}]`);
-    handlers.forEach(handler => setBranchState(handler, _TRUE));
-    updateSessionStorage();
-  });
-
-  expandAllHandler.addEventListener('click', () => {
-    const handlers = root.querySelectorAll(`[data-${HANDLER_DATA_ATTR}]`);
-    handlers.forEach(handler => setBranchState(handler, _FALSE));
-    updateSessionStorage();
-  });
-}
 
 // Bootstrapping: run main after page load.
 window.addEventListener("load", function() {

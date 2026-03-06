@@ -4,6 +4,9 @@ from selenium.common import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.components.actions_menu import (
+    ActionsMenu,
+)
 from tests.end2end.helpers.screens.document.form_edit_grammar_elements import (
     Form_EditGrammarElements,
 )
@@ -14,6 +17,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         super().__init__(test_case)
+        self.actions_menu = ActionsMenu(test_case)
 
     #
     # Overridden for Screen_Document.
@@ -39,14 +43,10 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
     #
 
     def do_export_reqif(self) -> None:
-        self.test_case.click_xpath(
-            '(//*[@data-testid="document-export-reqif-action"])'
-        )
+        self.actions_menu.do_click_action("document-export-reqif-action")
 
     def do_export_pdf(self) -> None:
-        self.test_case.click_xpath(
-            '(//*[@data-testid="document-export-html2pdf-action"])'
-        )
+        self.actions_menu.do_click_action("document-export-html2pdf-action")
 
     #
     # Open forms.
@@ -54,9 +54,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
 
     def do_open_modal_form_edit_grammar(self) -> Form_EditGrammarElements:
         self.test_case.assert_element_not_present("//sdoc-modal", by=By.XPATH)
-        self.test_case.click_xpath(
-            '(//*[@data-testid="document-edit-grammar-action"])'
-        )
+        self.actions_menu.do_click_action("document-edit-grammar-action")
         self.test_case.assert_element(
             "//sdoc-modal",
             by=By.XPATH,

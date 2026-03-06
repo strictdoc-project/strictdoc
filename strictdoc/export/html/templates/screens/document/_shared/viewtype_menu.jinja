@@ -3,6 +3,7 @@
   <div
     id="viewtype_handler"
     class="viewtype__handler"
+    data-dropdown-handler
     aria-expanded="false"
     aria-controls="viewtype_menu"
   >
@@ -11,15 +12,15 @@
   </div>
   <menu
     id="viewtype_menu"
-    class="viewtype__menu"
+    class="dropdown_menu"
     aria-hidden="true"
     aria-labelledby="viewtype_handler"
   >
-    <li class="viewtype__menu_header">VIEWS</li>
+    <li class="dropdown_menu_header">VIEWS</li>
     <li>
       <a
         data-viewtype_link="document"
-        class="viewtype__menu_item"
+        class="dropdown_menu_item"
         title="Go to Document view"
         href="{{ view_object.render_document_link(view_object.document, none, "DOCUMENT") }}">
       Document</a>
@@ -28,7 +29,7 @@
     <li>
       <a
         data-viewtype_link="table"
-        class="viewtype__menu_item"
+        class="dropdown_menu_item"
         title="Go to Table view"
         href="{{ view_object.render_document_link(view_object.document, none, "TABLE") }}">
       Table</a>
@@ -38,7 +39,7 @@
     <li>
       <a
         data-viewtype_link="traceability"
-        class="viewtype__menu_item"
+        class="dropdown_menu_item"
         title="Go to Traceability view"
         href="{{ view_object.render_document_link(view_object.document, none, "TRACE") }}">
       Traceability</a>
@@ -48,7 +49,7 @@
     <li>
       <a
         data-viewtype_link="deep_traceability"
-        class="viewtype__menu_item"
+        class="dropdown_menu_item"
         title="Go to Deep Traceability view"
         href="{{ view_object.render_document_link(view_object.document, none, "DEEPTRACE") }}">
       Deep Traceability</a>
@@ -58,7 +59,7 @@
     <li>
       <a
         data-viewtype_link="standalone_document"
-        class="viewtype__menu_item"
+        class="dropdown_menu_item"
         title="Go to Standalone Document view"
         href="{{ view_object.render_standalone_document_link(view_object.document) }}">
       Standalone</a>
@@ -68,7 +69,7 @@
     <li>
       <a
         data-viewtype_link="html2pdf"
-        class="viewtype__menu_item"
+        class="dropdown_menu_item"
         title="Go to PDF view"
         href="{{ view_object.render_document_link(view_object.document, none, "PDF") }}">
       PDF</a>

@@ -65,9 +65,9 @@ class Test(E2ECase):
 
             collapsible_list.assert_all_is_expanded()
 
-            # test bulk operation
+            # test branch bulk operation
 
-            collapsible_list.do_bulk_collapse("Section 1 title")
+            collapsible_list.do_bulk_collapse_branch("Section 1 title")
             collapsible_list.assert_visible_not("Nested section 1 title")
             collapsible_list.assert_visible_not("Nested section 11 title")
             collapsible_list.do_toggle_collapsible("Section 1 title")
@@ -75,23 +75,62 @@ class Test(E2ECase):
 
             collapsible_list.do_toggle_collapsible("Section 1 title")
             collapsible_list.assert_visible_not("Nested section 1 title")
-            collapsible_list.do_bulk_expand("Section 1 title")
+            collapsible_list.do_bulk_expand_branch("Section 1 title")
             collapsible_list.assert_visible("Nested section 11 title")
 
             collapsible_list.assert_all_is_expanded()
             collapsible_list.assert_visible("Nested section 1 title")
             collapsible_list.assert_visible("Nested section 2 title")
 
+            # test branch bulk operation with key
+            collapsible_list.assert_all_is_expanded()
+            collapsible_list.do_bulk_collapse_branch_with_key("Section 1 title")
+            collapsible_list.do_bulk_expand_branch_with_key("Section 1 title")
+
+            # test general bulk operation
+
+            collapsible_list.assert_bulk_panel()
+            collapsible_list.assert_bulk_button_collapse_all()
+            collapsible_list.assert_bulk_button_expand_all()
+
+            # has trivial state:
+            collapsible_list.assert_all_is_expanded()
+            collapsible_list.assert_visible("Nested section 1 title")
+            # make trivial state:
+            collapsible_list.do_bulk_collapse_all()
+            collapsible_list.assert_visible_not("Nested section 1 title")
+            # trivial state do not snapshot/undo:
+            collapsible_list.assert_handler_has_not_undo("collapse")
+            collapsible_list.assert_handler_has_not_undo("expand")
+
+            # make non-trivial state:
+            collapsible_list.assert_all_is_collapsed()
+            collapsible_list.assert_visible_not("Nested section 1 title")
+            collapsible_list.do_bulk_expand_branch("Section 1 title")
+            # has non-trivial state
+            collapsible_list.assert_visible("Nested section 1 title")
+            collapsible_list.assert_visible_not("Nested section 2 title")
+            # click bulk and check undo option:
+            collapsible_list.do_bulk_expand_all()
+            collapsible_list.assert_handler_has_undo("expand")
+            collapsible_list.do_bulk_collapse_all()
+            collapsible_list.assert_handler_has_undo("collapse")
+            collapsible_list.do_undo_from("collapse")
+            # has non-trivial state back:
+            collapsible_list.assert_visible("Nested section 1 title")
+            collapsible_list.assert_visible_not("Nested section 2 title")
+
             # test session storage
 
-            collapsible_list.assert_all_is_expanded()
             self.refresh()
-            collapsible_list.assert_all_is_expanded()
+            # has non-trivial state not lost after refresh:
+            collapsible_list.assert_visible("Nested section 1 title")
+            collapsible_list.assert_visible_not("Nested section 2 title")
 
-            collapsible_list.do_bulk_collapse("Section 1 title")
-            collapsible_list.do_bulk_collapse("Section 2 title")
+            collapsible_list.do_bulk_collapse_branch("Section 1 title")
             collapsible_list.assert_all_is_collapsed()
             self.refresh()
+            # has state not lost after refresh:
             collapsible_list.assert_all_is_collapsed()
 
         assert test_setup.compare_sandbox_and_expected_output()

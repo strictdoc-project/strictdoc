@@ -1290,8 +1290,12 @@ a.tree_item,
 }
 
 .toc {
-  margin-top: calc(var(--base-rhythm) * 2);
-  padding-left: calc(var(--base-rhythm) * 2);
+  --toc-padding-left: calc(var(--base-rhythm) * 2);
+  --toc-background: var(--color-bg-main);
+  --toc-accent: var(--color-fg-accent);
+
+  margin-top: var(--base-rhythm);
+  padding-left: var(--toc-padding-left);
   font-size: var(--font-size-sm);
   line-height: 1.2;
   padding-bottom: var(--base-gap);
@@ -1374,6 +1378,21 @@ a.tree_item,
 /* behavior depends on collapsible_list.js */
 .toc [data-collapsible_list__branch="closed"] ~ a[parented]::after {
   background-color: var(--color-highlight);
+}
+
+.toc[has-top-panel] {
+  /*
+  The attribute is added by a script when adding the .toc-control-panel
+  that should take the place of the top margin.
+  */
+  margin-top: 0;
+}
+
+.toc-control-panel > div {
+  margin-left: calc(var(--toc-padding-left) * (-1) + 1px);
+  background-color: var(--color-bg-main);
+  border-bottom: var(--base-border);
+  width: 100%;
 }
 
 /* pdf-toc */

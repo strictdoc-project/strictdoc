@@ -32,6 +32,7 @@ __pycache__
 /downloaded_files/
 
 ### StrictDoc developer
+/.local/
 /*.local.toml
 /__*.sdoc
 /__*.sgra

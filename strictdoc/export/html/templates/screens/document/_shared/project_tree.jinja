@@ -1,6 +1,10 @@
 
 {%- if not view_object.is_empty_tree() -%}
-  <div class="tree">
+  <div
+    class="tree"
+    js-project_tree_preserve_scroll="tree"
+    data-project-title="{{ view_object.project_config.project_title|e }}"
+  >
     {% for folder_or_file in view_object.iterator_files_first() -%}
       {% if folder_or_file.is_folder() %}
         {% if view_object.should_display_folder(folder_or_file) %}
@@ -43,4 +47,3 @@
 {%- else -%}
   <span data-testid="document-tree-empty-text">🐛 The project has no documents yet.</span>
 {%- endif -%}
-

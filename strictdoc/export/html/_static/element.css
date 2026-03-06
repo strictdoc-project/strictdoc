@@ -1374,12 +1374,6 @@ a.tree_item,
   background-color: var(--color-highlight);
 }
 
-/* TOC parented */
-/* behavior depends on collapsible_list.js */
-.toc [data-collapsible_list__branch="closed"] ~ a[parented]::after {
-  background-color: var(--color-highlight);
-}
-
 .toc[has-top-panel] {
   /*
   The attribute is added by a script when adding the .toc-control-panel

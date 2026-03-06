@@ -78,6 +78,7 @@ const CONTROLS_PANEL_HEIGHT = `32px`;
 
 const BULK_MODE = 'bulk';
 const UNDO_MODE = 'undo';
+const TOC_STATE_CHANGED_EVENT = 'toc:state-changed';
 let lastBulkSnapshot = null;
 
 const _TRUE = 'collapsed';
@@ -320,6 +321,7 @@ function toggle(controls, handler) {
   const newState = (handler.dataset[HANDLER_DATA_ATTR] === _FALSE) ? _TRUE : _FALSE;
   setBranchState(handler, newState);
   updateSessionStorage();
+  notifyTocStateChanged();
 }
 
 // Toggle all nested branches below a node in one action.
@@ -331,6 +333,7 @@ function bulkToggleChildBrunches(controls, handler) {
     setBranchState(handler, newState);
   });
   updateSessionStorage();
+  notifyTocStateChanged();
 }
 
 // ===== Bulk Controls =====
@@ -413,6 +416,7 @@ function runBulkAction(root, handler, oppositeHandler, state) {
     setBulkHandlerMode(handler, UNDO_MODE);
   }
   setBulkHandlerMode(oppositeHandler, BULK_MODE);
+  notifyTocStateChanged();
 }
 
 // Restore the last captured bulk snapshot and reset undo mode.
@@ -420,6 +424,7 @@ function runUndoAction(root, controls) {
   restoreBulkSnapshot(root, lastBulkSnapshot);
   updateSessionStorage();
   clearBulkUndoMode(controls);
+  notifyTocStateChanged();
 }
 
 // ===== `Undo` Snapshot =====
@@ -494,6 +499,11 @@ function addStyleElement(target, styleTextContent, attr = 'style') {
   style.setAttribute(`collapsible-toc-${attr}`, '');
   style.textContent = styleTextContent;
   target.before(style);
+}
+
+// Notify other scripts (e.g., TOC highlighting) that TOC expand/collapse state changed.
+function notifyTocStateChanged() {
+  document.dispatchEvent(new CustomEvent(TOC_STATE_CHANGED_EVENT));
 }
 
 // Create a clickable handler element for one TOC branch.

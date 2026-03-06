@@ -29,6 +29,7 @@ let tocHighlightingState = {
   closerForFolder: {},
   folderSet: new Set(),
 };
+let tocRefreshRaf = null;
 
 function resetState() {
   // * Keep anchorsCount/anchorsSig to detect changes across TOC mutations.
@@ -84,6 +85,11 @@ window.addEventListener("load",function(){
     highlightTOC(tocFrame, contentFrame, anchorObserver);
   }
 
+  // * Refresh TOC highlights when collapsible_toc.js changes branch visibility.
+  document.addEventListener('toc:state-changed', () => {
+    scheduleHighlightRefresh();
+  });
+
 },false);
 
 function highlightTOC(tocFrame, contentFrame, anchorObserver) {
@@ -121,7 +127,7 @@ function handleHashChange() {
       }
     }
     if (pair && pair.link) {
-      targetItem(pair.link);
+      targetItem(resolveVisibleTocLink(pair.link));
     } else {
       // No mapping found — keep URL as-is and move on silently
       // TOC_HIGHLIGHT_DEBUG &&
@@ -319,6 +325,30 @@ function handleIntersect(entries, observer) {
   updateVisibleSectionItems(topBound, bottomBound);
 }
 
+// Coalesce multiple TOC state changes into a single frame refresh.
+function scheduleHighlightRefresh() {
+  if (tocRefreshRaf !== null) {
+    return;
+  }
+  tocRefreshRaf = requestAnimationFrame(() => {
+    tocRefreshRaf = null;
+    refreshHighlightFromCurrentState();
+  });
+}
+
+// Recalculate highlights from current DOM state without waiting for new IO entries.
+function refreshHighlightFromCurrentState() {
+  if (!tocHighlightingState.contentFrameEl) {
+    return;
+  }
+
+  const topBound = VIEWPORT_TOP_OFFSET_PX;
+  const bottomBound = window.innerHeight - VIEWPORT_BOTTOM_OFFSET_PX;
+
+  updateVisibleSectionItems(topBound, bottomBound);
+  handleHashChange();
+}
+
 function updateVisibleSectionItems(topBound, bottomBound) {
   // Section visibility is computed by intervals between anchors:
   // section_i := [anchor_i.top, anchor_{i+1}.top), and for the last section:
@@ -362,9 +392,48 @@ function updateVisibleSectionItems(topBound, bottomBound) {
     }
   }
 
+  // Reset previous "intersected" states.
   linkedAnchors.forEach(item => {
-    fireItem(item.link, visibleIds.has(item.id));
+    fireItem(item.link, false);
   });
+
+  // Highlight visible links. If a link is hidden under collapsed parents,
+  // move highlight up to the first visible ancestor link.
+  const visibleLinks = new Set();
+  linkedAnchors.forEach(item => {
+    if (visibleIds.has(item.id)) {
+      const link = resolveVisibleTocLink(item.link);
+      if (link) {
+        visibleLinks.add(link);
+      }
+    }
+  });
+
+  visibleLinks.forEach(link => {
+    fireItem(link, true);
+  });
+}
+
+function isElementVisible(element) {
+  return !!(element && element.getClientRects().length);
+}
+
+function getParentTocLink(link) {
+  const li = link?.closest('li');
+  const parentUl = li?.parentElement;
+  const parentLi = parentUl?.parentElement;
+  if (!parentLi || parentLi.nodeName !== 'LI') {
+    return null;
+  }
+  return parentLi.querySelector(':scope > a');
+}
+
+function resolveVisibleTocLink(link) {
+  let candidate = link;
+  while (candidate && !isElementVisible(candidate)) {
+    candidate = getParentTocLink(candidate);
+  }
+  return candidate || link;
 }
 
 function findDeepestLastChild(element) {

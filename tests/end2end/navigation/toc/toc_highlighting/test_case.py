@@ -4,6 +4,7 @@ from tests.end2end.helpers.components.toc import TOC
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
+from tests.end2end.navigation.collapsible_list.test_case import CollapsibleList
 from tests.end2end.server import SDocTestServer
 
 
@@ -51,4 +52,71 @@ class Test(E2ECase):
             )
             screen_toc.assert_toc_link_has_not_attribute(
                 "SECTION_AFTER_LONG_NODE", "intersected"
+            )
+
+            # TOC - collapsing and highlighting
+
+            # Step 1. initial child highlight when expanded
+
+            # Start with expanded "Examples". A child inside this branch is in-view,
+            # so the child TOC item ("THE_LONG_NODE_ID") is highlighted.
+            # Parent ("SECTION_BEFORE_LONG_NODE") must not be highlighted.
+            collapsible_list: CollapsibleList = (
+                screen_document.get_collapsible_list()
+            )
+            collapsible_list.assert_is_expanded("Examples")
+            collapsible_list.assert_visible("Hello World")
+            screen_toc.assert_toc_link_has_attribute(
+                "THE_LONG_NODE_ID", "intersected"
+            )
+            screen_toc.assert_toc_link_has_not_attribute(
+                "SECTION_BEFORE_LONG_NODE", "intersected"
+            )
+
+            # Step 2. highlight transfer to collapsed parent
+
+            # Collapse "Examples". The highlighted child becomes hidden.
+            # Expected behavior: highlight moves up to the collapsed parent item
+            # ("SECTION_BEFORE_LONG_NODE"), which remains visible in TOC.
+            collapsible_list.do_toggle_collapsible("Examples")  # collapse
+            collapsible_list.assert_is_collapsed("Examples")
+            collapsible_list.assert_visible_not("Hello World")
+            screen_toc.assert_toc_link_has_attribute(
+                "SECTION_BEFORE_LONG_NODE", "intersected"
+            )
+
+            # Step 3. highlight return to child after re-expanding
+
+            # Expand "Examples" again and navigate to a child item.
+            # Expected behavior: highlight is recalculated back to the visible child
+            # ("THE_LAST_SECTION"), and parent highlight is removed.
+            collapsible_list.do_toggle_collapsible("Examples")  # expand
+            collapsible_list.assert_is_expanded("Examples")
+            screen_toc.assert_toc_link_has_attribute(
+                "THE_LONG_NODE_ID", "intersected"
+            )
+            screen_toc.assert_toc_link_has_not_attribute(
+                "SECTION_BEFORE_LONG_NODE", "intersected"
+            )
+
+            # Step 4. navigate to another child and verify child highlight
+            collapsible_list.assert_visible("Last section")
+            screen_toc.do_toc_go_to_anchor("THE_LAST_SECTION")
+            screen_toc.assert_toc_link_has_attribute(
+                "THE_LAST_SECTION", "intersected"
+            )
+            screen_toc.assert_toc_link_has_not_attribute(
+                "SECTION_BEFORE_LONG_NODE", "intersected"
+            )
+
+            # Step 5. transfer back to parent after collapsing again
+
+            # Collapse the branch once more while the child is highlighted.
+            # Expected behavior: highlight moves from the hidden child back to
+            # the visible collapsed parent.
+            collapsible_list.do_toggle_collapsible("Examples")  # collapse
+            collapsible_list.assert_is_collapsed("Examples")
+            collapsible_list.assert_visible_not("Last section")
+            screen_toc.assert_toc_link_has_attribute(
+                "SECTION_BEFORE_LONG_NODE", "intersected"
             )

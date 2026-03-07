@@ -21,13 +21,13 @@ from starlette.requests import Request
 from starlette.responses import FileResponse, HTMLResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
+from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
     P01_ReqIFToSDocConverter,
 )
 from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
     P01_SDocToReqIFObjectConverter,
 )
-from strictdoc.backend.sdoc.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,

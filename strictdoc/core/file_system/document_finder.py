@@ -7,9 +7,9 @@ import sys
 from functools import partial
 from typing import Dict, List, Tuple, Union
 
+from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.reqif.reqif_reader import ReqIFReader
 from strictdoc.backend.sdoc.grammar_reader import SDocGrammarReader
-from strictdoc.backend.sdoc.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.reader import SDReader

@@ -1,5 +1,5 @@
-from strictdoc.backend.sdoc.markdown.reader import SDMarkdownReader
-from strictdoc.backend.sdoc.markdown.writer import SDMarkdownWriter
+from strictdoc.backend.markdown.reader import SDMarkdownReader
+from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.reader import SDReader
 
 

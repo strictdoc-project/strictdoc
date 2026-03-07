@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import Optional
 
 from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
+from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.reqif.reqif_export import ReqIFExport
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
-from strictdoc.backend.sdoc.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.project_config import ProjectConfig

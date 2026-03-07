@@ -1,8 +1,8 @@
 import pytest
 
+from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
-from strictdoc.backend.sdoc.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import ParentReqReference

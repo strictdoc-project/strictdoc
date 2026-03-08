@@ -73,7 +73,7 @@ class GCovJSONReader:
         document.grammar = grammar
         document.config.requirement_style = "Table"
 
-        stats = GCovStatsObject()
+        document_stats = GCovStatsObject()
 
         """
         Parse individual <testcase> elements.
@@ -81,6 +81,8 @@ class GCovJSONReader:
 
         json_files = json_content["files"]
         for json_file_ in json_files:
+            stats = GCovStatsObject()
+
             json_file_name = json_file_["file"]
 
             file_section = SDocNode.create_section(
@@ -225,12 +227,10 @@ class GCovJSONReader:
                     )
 
             summary_table = f"""\
-.. list-table:: Coverage summary
+.. list-table:: Coverage summary for {json_file_name}
     :widths: 25 10
     :header-rows: 0
 
-    * - **Number of files:**
-      - {len(json_content["files"])}
     * - **Total covered functions:**
       - {stats.total_number_of_covered_functions}
     * - **Total non-covered functions:**
@@ -250,12 +250,57 @@ class GCovJSONReader:
                 field_name="STATEMENT",
                 form_field_index=0,
                 value=SDocNodeField(
-                    parent=testcase_node,
+                    parent=file_section,
                     field_name="STATEMENT",
                     parts=[summary_table],
                     multiline__="True",
                 ),
             )
-            document.section_contents.insert(0, testcase_node)
+            file_section.section_contents.insert(0, testcase_node)
+            document_stats.total_number_of_covered_functions += (
+                stats.total_number_of_covered_functions
+            )
+            document_stats.total_number_of_non_covered_functions += (
+                stats.total_number_of_non_covered_functions
+            )
 
+        summary_table = f"""\
+.. list-table:: Coverage summary
+    :widths: 25 10
+    :header-rows: 0
+
+    * - **Total number of files :**
+      - {len(json_files)}
+    * - **Total covered functions:**
+      - {document_stats.total_number_of_covered_functions}
+    * - **Total non-covered functions:**
+      - {document_stats.total_number_of_non_covered_functions}
+        """
+
+        testcase_node = SDocNode(
+            parent=document,
+            node_type="TEXT",
+            fields=[],
+            relations=[],
+        )
+        testcase_node.ng_document_reference = DocumentReference()
+        testcase_node.ng_document_reference.set_document(document)
+        testcase_node.ng_including_document_reference = DocumentReference()
+        testcase_node.set_field_value(
+            field_name="STATEMENT",
+            form_field_index=0,
+            value=SDocNodeField(
+                parent=testcase_node,
+                field_name="STATEMENT",
+                parts=[summary_table],
+                multiline__="True",
+            ),
+        )
+        document.section_contents.insert(0, testcase_node)
+        document_stats.total_number_of_covered_functions += (
+            stats.total_number_of_covered_functions
+        )
+        document_stats.total_number_of_non_covered_functions += (
+            stats.total_number_of_non_covered_functions
+        )
         return document

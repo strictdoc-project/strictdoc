@@ -2200,7 +2200,7 @@ MID: eba1c3f3a9364f1c8785c30c6fa5f3cc
 STATEMENT: >>>
 To support sharing a grammar across multiple documents, possibly located in different directories, a grammar alias can be used as follows:
 
-.. code-block: strictdoc
+.. code-block:: strictdoc
 
     [DOCUMENT]
     TITLE: Hello world

@@ -1188,6 +1188,14 @@ sdoc-menu-handler[aria-expanded="true"] svg {
 
 /* tree */
 
+#ethical-ad-placement {
+  /* ID by https://docs.readthedocs.com/platform/stable/advertising/ad-customization.html */
+  position: absolute;
+  bottom: 0;
+  background-color: var(--color-bg-main);
+  border-top: var(--base-border);
+}
+
 .tree {
   display: flex;
   flex-direction: column;
@@ -1195,7 +1203,7 @@ sdoc-menu-handler[aria-expanded="true"] svg {
   align-items: flex-start;
   gap: var(--base-rhythm);
   margin-top: calc(var(--base-rhythm) * 2);
-  margin-bottom: calc(var(--base-rhythm) * 8);
+  margin-bottom: calc(var(--base-rhythm) * 22);  /* more space for #ethical-ad-placement  */
   padding-left: calc(var(--base-rhythm) * 2);
   padding-right: calc(var(--base-rhythm) * 2);
 }

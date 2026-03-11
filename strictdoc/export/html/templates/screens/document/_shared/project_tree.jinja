@@ -1,10 +1,9 @@
-
-<div class="layout_tree-wrapper_with_ea">
 {%- if not view_object.is_empty_tree() -%}
   <div
     class="tree"
     js-project_tree_preserve_scroll="tree"
     data-project-title="{{ view_object.project_config.project_title|e }}"
+    data-testid="aside-project-tree"
   >
     {% for folder_or_file in view_object.iterator_files_first() -%}
       {% if folder_or_file.is_folder() %}
@@ -46,11 +45,6 @@
     {%- endfor -%}
   </div>
 {%- else -%}
-  <span>{# to push next span to the middle of .layout_tree-wrapper_with_ea #}</span>
+  <span>{# to push next span to the middle of .project_tree_with_ad #}</span>
   <span data-testid="document-tree-empty-text">{# We're not supposed to be here. #}🐛 The project has no documents yet.</span>
 {%- endif -%}
-  {#
-    by https://docs.readthedocs.com/platform/stable/advertising/ad-customization.html
-  #}
-  <div id="ethical-ad-placement"></div>
-</div>

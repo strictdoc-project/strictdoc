@@ -1188,7 +1188,7 @@ sdoc-menu-handler[aria-expanded="true"] svg {
 
 /* tree */
 
-.layout_tree-wrapper_with_ea {
+.project_tree_with_ad {
   /* contains .tree and #ethical-ad-placement */
   height: 100%;
   display: flex;

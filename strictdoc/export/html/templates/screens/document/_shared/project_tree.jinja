@@ -1,4 +1,5 @@
 
+<div class="layout_tree-wrapper_with_ea">
 {%- if not view_object.is_empty_tree() -%}
   <div
     class="tree"
@@ -44,14 +45,12 @@
       {% endif %}
     {%- endfor -%}
   </div>
-
+{%- else -%}
+  <span>{# to push next span to the middle of .layout_tree-wrapper_with_ea #}</span>
+  <span data-testid="document-tree-empty-text">{# We're not supposed to be here. #}🐛 The project has no documents yet.</span>
+{%- endif -%}
   {#
     by https://docs.readthedocs.com/platform/stable/advertising/ad-customization.html
-
-    We consider that without documents it will not be published,
-    so we do not insert it together with [data-testid="document-tree-empty-text"] 🐛.
   #}
   <div id="ethical-ad-placement"></div>
-{%- else -%}
-  <span data-testid="document-tree-empty-text">🐛 The project has no documents yet.</span>
-{%- endif -%}
+</div>

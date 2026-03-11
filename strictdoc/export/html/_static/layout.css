@@ -63,6 +63,14 @@
   min-width: 0;
 }
 
+.layout_main > [data-ea-publisher].loaded {
+  /*
+    DEV: We provide space in the sidebar.
+    Inserting it into the central container breaks the layout, so we suppress it here.
+  */
+  display: none !important;
+}
+
 /*  */
 
 .section-number {

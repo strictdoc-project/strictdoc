@@ -118,7 +118,7 @@
 
           {% for element_ in view_object.get_grammar_elements() %}
             {# 0 • There should be a line for the node type: #}
-            <li class="viewtype__menu_header">{{ element_.tag }}:</li>
+            <li class="sdoc-menu-actions-group">{{ element_.tag }}:</li>
 
             {# There should be 3 places for the buttons: #}
             <li>{# 1 • Document -> add Requirement #}</li>
@@ -141,7 +141,7 @@
         {%- if sdoc_entity.get_type_string() == 'section' -%}
           {# 0 • There should be a line for the node type: #}
           {% for element_ in view_object.get_grammar_elements() %}
-            <li class="viewtype__menu_header">{{ element_.tag }}:</li>
+            <li class="sdoc-menu-actions-group">{{ element_.tag }}:</li>
 
             {# There should be 3 places for the buttons: #}
             <li>{# 1 • Section -> add Requirement #}
@@ -180,7 +180,7 @@
         {%- if sdoc_entity.get_type_string() == 'requirement' -%}
           {# 0 • There should be a line for the node type: #}
           {% for element_ in view_object.get_grammar_elements() %}
-            <li class="viewtype__menu_header">{{ element_.tag }}:</li>
+            <li class="sdoc-menu-actions-group">{{ element_.tag }}:</li>
 
             {# There should be 3 places for the buttons: #}
             {% if not sdoc_entity.is_composite %}

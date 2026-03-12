@@ -168,9 +168,15 @@
 /* dashboard */
 
 .dashboard {
-  display: flex;
-  align-items: flex-start;
   gap: var(--base-rhythm);
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
 }
 
 .dashboard-main {
@@ -178,7 +184,7 @@
 }
 
 .dashboard-aside {
-  width: 30%;
+  /* width: 30%; */
   /* max-width: 300px; */
   font-size: 0.75rem;
   display: flex;

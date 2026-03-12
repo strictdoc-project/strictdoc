@@ -2,6 +2,11 @@
 // and toggle TOC states using IntersectionObserver.
 
 (function () {
+const strictDoc = window.StrictDoc;
+if (!strictDoc || !strictDoc.events || !strictDoc.bus) {
+  throw new Error('toc_highlighting.js requires app_core.js to be loaded first.');
+}
+
 const TOC_HIGHLIGHT_DEBUG = false;
 
 const TOC_FRAME_SELECTOR = 'turbo-frame#frame-toc'; // updating
@@ -9,6 +14,7 @@ const TOC_LIST_SELECTOR = 'ul#toc';
 const TOC_ELEMENT_SELECTOR = 'a';
 const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content'; // action="replace" => parentNode is needed
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
+const TOC_STATE_CHANGED_EVENT = strictDoc.events.TOC_STATE_CHANGED;
 
 // Virtual viewport for TOC section highlighting.
 // We do not use the raw screen edges (0..innerHeight): we shrink the effective
@@ -87,7 +93,7 @@ window.addEventListener("load",function(){
   }
 
   // * Refresh TOC highlights when collapsible_toc.js changes branch visibility.
-  document.addEventListener('toc:state-changed', () => {
+  strictDoc.bus.on(TOC_STATE_CHANGED_EVENT, () => {
     scheduleHighlightRefresh();
   });
 

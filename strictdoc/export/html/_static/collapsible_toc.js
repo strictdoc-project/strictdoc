@@ -60,6 +60,11 @@ Bulk/Undo scenario:
 */
 
 (function () {
+const strictDoc = window.StrictDoc;
+if (!strictDoc || !strictDoc.events || !strictDoc.bus) {
+  throw new Error('collapsible_toc.js requires app_core.js to be loaded first.');
+}
+
 // ===== Constants =====
 
 const SS_ITEM = 'collapsibleTOC'; // sessionStorageItem
@@ -79,7 +84,7 @@ const CONTROLS_PANEL_HEIGHT = `32px`;
 
 const BULK_MODE = 'bulk';
 const UNDO_MODE = 'undo';
-const TOC_STATE_CHANGED_EVENT = 'toc:state-changed';
+const TOC_STATE_CHANGED_EVENT = strictDoc.events.TOC_STATE_CHANGED;
 let lastBulkSnapshot = null;
 
 const _TRUE = 'collapsed';
@@ -505,7 +510,7 @@ function addStyleElement(target, styleTextContent, attr = 'style') {
 
 // Notify other scripts (e.g., TOC highlighting) that TOC expand/collapse state changed.
 function notifyTocStateChanged() {
-  document.dispatchEvent(new CustomEvent(TOC_STATE_CHANGED_EVENT));
+  strictDoc.bus.emit(TOC_STATE_CHANGED_EVENT);
 }
 
 // ===== Startup =====

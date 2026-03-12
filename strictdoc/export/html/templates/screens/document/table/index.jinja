@@ -6,6 +6,8 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
+  {# Load StrictDoc core before local feature scripts. #}
+  <script src="{{ view_object.render_static_url('app_core.js') }}"></script>
   <script src="{{ view_object.render_static_url('dropdown_menu.js') }}"></script>
   <script src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
   <script src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>

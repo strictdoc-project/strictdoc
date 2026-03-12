@@ -276,6 +276,15 @@ class DocumentScreenViewObject:
             document, context_document, DocumentType(document_type_string)
         )
 
+    def render_current_view_document_link(self, document: SDocDocument) -> str:
+        assert isinstance(document, SDocDocument), document
+        assert document.meta is not None
+        assert self.document.meta is not None
+        return document.meta.get_html_link(
+            self.document_type,
+            self.document.meta.level,
+        )
+
     @staticmethod
     def render_standalone_document_link(document: SDocDocument) -> str:
         assert document.meta is not None

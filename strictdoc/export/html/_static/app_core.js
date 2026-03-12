@@ -9,6 +9,8 @@ Shared runtime contract for plain-script modules (no bundler required).
   // Shared event names used across feature scripts.
   strictDoc.events = strictDoc.events || {};
   strictDoc.config = strictDoc.config || {};
+  strictDoc.search = strictDoc.search || {};
+  strictDoc.project = strictDoc.project || {};
   if (!strictDoc.events.TOC_STATE_CHANGED) {
     strictDoc.events.TOC_STATE_CHANGED = 'toc:state-changed';
   }

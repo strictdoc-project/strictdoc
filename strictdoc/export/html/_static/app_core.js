@@ -1,6 +1,16 @@
 /*
 app_core.js
-Shared runtime contract for plain-script modules (no bundler required).
+
+window.StrictDoc is the shared runtime root for plain frontend scripts.
+Supported shared namespaces:
+- StrictDoc.events
+- StrictDoc.bus
+- StrictDoc.config
+- StrictDoc.search
+- StrictDoc.project
+
+Feature scripts should keep their own logic in local scope and only use
+StrictDoc.* for intentional cross-script contracts and shared runtime data.
 */
 
 (function (global) {

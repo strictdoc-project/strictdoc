@@ -282,7 +282,8 @@ function processToc(toc) {
 
     branchList.forEach(
       ul => {
-        const handler = createHandler();
+        // * Create a clickable handler element for one TOC branch.
+        const handler = document.createElement('div');
 
         const parentNode = ul.parentNode;
         const nodeID = parentNode.dataset[NODE_ID_DATA_ATTR];
@@ -504,13 +505,6 @@ function addStyleElement(target, styleTextContent, attr = 'style') {
 // Notify other scripts (e.g., TOC highlighting) that TOC expand/collapse state changed.
 function notifyTocStateChanged() {
   document.dispatchEvent(new CustomEvent(TOC_STATE_CHANGED_EVENT));
-}
-
-// Create a clickable handler element for one TOC branch.
-function createHandler(state) {
-  const div = document.createElement('div');
-  state && setBranchState(item, state);
-  return div
 }
 
 // ===== Startup =====

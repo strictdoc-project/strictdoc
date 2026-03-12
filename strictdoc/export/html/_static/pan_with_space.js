@@ -1,6 +1,7 @@
 // This code in this file is a simplified version of the StackOverflow answer
 // taken from: https://stackoverflow.com/a/33948409/598057.
 
+(function () {
 const MOUSEMOVE_SPEED_FACTOR = 1;
 const KEYDOWN_SPEED_FACTOR = 20;
 const PWS_SELECTOR = "[js-pan_with_space]";
@@ -149,3 +150,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
     firstNode && firstNode.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }
 });
+})();

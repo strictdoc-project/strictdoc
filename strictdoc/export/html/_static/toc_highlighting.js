@@ -1,6 +1,7 @@
 // TOC highlighting: map content <sdoc-anchor id> to TOC <a anchor>
 // and toggle TOC states using IntersectionObserver.
 
+(function () {
 const TOC_HIGHLIGHT_DEBUG = false;
 
 const TOC_FRAME_SELECTOR = 'turbo-frame#frame-toc'; // updating
@@ -507,3 +508,4 @@ function resolveMovedFragment(oldId) {
   // If multiple candidates, don't guess.
   return null;
 }
+})();

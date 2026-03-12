@@ -3,6 +3,7 @@
 // data-state="open|closed"
 // data-position="left|right"
 
+(function () {
 class ResizableBar {
   constructor({
     barAttribute,
@@ -600,3 +601,4 @@ resizableBar.init();
 window.addEventListener("load", function () {
   resizableBar.render();
 });
+})();

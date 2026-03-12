@@ -13,6 +13,7 @@
 // The external links remain stable, even if the node/requirement/section is moved
 // within the project.
 
+(function () {
 
 // Resolve the MID / UID to the correct page / anchor using the projectMap.
 function resolveStableUriRedirectUsingProjectMap(anchor) {
@@ -97,3 +98,4 @@ window.addEventListener("hashchange", () => {
     processStableUriRedirect(anchor)
   }
 });
+})();

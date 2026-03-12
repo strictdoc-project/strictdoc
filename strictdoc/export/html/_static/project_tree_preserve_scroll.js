@@ -28,6 +28,7 @@ Optional DOM:
    on the same origin do not overwrite each other's tree scroll.
 */
 
+(function () {
 const TREE_ROOT_SELECTOR = "[js-project_tree_preserve_scroll]";
 const SCROLL_CONTAINER_SELECTOR = "[js-resizable_bar-scroll]";
 const TREE_ITEM_SELECTOR = ".tree_item[href]";
@@ -186,3 +187,4 @@ window.addEventListener("load", function () {
   // Wait a few frames in case resizable_bar.js wraps content asynchronously.
   initWithRetries(20);
 });
+})();

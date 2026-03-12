@@ -2,6 +2,7 @@
 // Toggle: [data-dropdown-handler] + aria-controls="id_of_content".
 // Content: element with that id + aria-hidden.
 
+(function () {
 window.addEventListener("load", () => {
   const toggles = document.querySelectorAll("[data-dropdown-handler]");
   const pairs = [];
@@ -47,3 +48,4 @@ window.addEventListener("load", () => {
   });
 
 }, false);
+})();

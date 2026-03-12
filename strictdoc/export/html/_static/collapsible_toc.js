@@ -59,6 +59,7 @@ Bulk/Undo scenario:
    - return both bulk buttons to normal mode.
 */
 
+(function () {
 // ===== Constants =====
 
 const SS_ITEM = 'collapsibleTOC'; // sessionStorageItem
@@ -513,3 +514,4 @@ function notifyTocStateChanged() {
 window.addEventListener("load", function() {
   main();
 }, false);
+})();

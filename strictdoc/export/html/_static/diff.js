@@ -2,6 +2,7 @@
 // @relation(SDOC-SRS-111, scope=file)
 //
 
+(function () {
 window.addEventListener("load",function(){
 
     const mutatingFrame = document.querySelector('#diff_result');
@@ -155,3 +156,4 @@ function _openAll(details) {
     detail.setAttribute("open", "")
   });
 };
+})();

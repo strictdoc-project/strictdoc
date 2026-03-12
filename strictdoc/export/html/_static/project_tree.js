@@ -2,6 +2,7 @@
 // @relation(SDOC-SRS-53, scope=file)
 //
 
+(function () {
 const FRAME_SELECTOR = '#frame_project_tree';
 const SWITCH_SELECTOR = '#project_tree_controls';
 const FRAGMENT_ATTR = 'included-document';
@@ -375,3 +376,4 @@ window.addEventListener("DOMContentLoaded", function(){
   projectTree.init();
 
 },false);
+})();

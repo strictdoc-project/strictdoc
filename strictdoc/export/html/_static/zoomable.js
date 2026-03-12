@@ -1,5 +1,6 @@
 // from GRAPH-NESTOR; disable fit on start
 
+(function () {
 class Styles {
   constructor(text) {
     this.text = text;
@@ -385,3 +386,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initScale: 1
   });
 });
+})();

@@ -96,7 +96,10 @@ class Test(E2ECase):
 
             # Part 2:
             # Click regular content link (NOT tree link): DOC-75.
-            self.click_xpath('(//a[contains(@href, "temp75.html#DOC-75")])[1]')
+            self.click_xpath(
+                '//sdoc-node[@data-testid="node-requirement"]'
+                '//a[contains(@href, "temp75.html#DOC-75")]'
+            )
 
             # Fallback centering should bring active tree item (DOC-75) into
             # a deep/centered area of the scroll container.

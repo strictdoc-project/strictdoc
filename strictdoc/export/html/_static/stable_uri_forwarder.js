@@ -14,10 +14,16 @@
 // within the project.
 
 (function () {
+const strictDocProject = window.StrictDoc?.project;
+if (!strictDocProject) {
+  throw new Error(
+    "stable_uri_forwarder.js requires app_core.js to initialize StrictDoc.project."
+  );
+}
 
-// Resolve the MID / UID to the correct page / anchor using the projectMap.
+// Resolve the MID / UID to the correct page / anchor using the project map.
 function resolveStableUriRedirectUsingProjectMap(anchor) {
-  for (const [page, nodes] of Object.entries(projectMap)) {
+  for (const [page, nodes] of Object.entries(strictDocProject.map || {})) {
     for (const node of nodes) {
       if (node['_LINK'].toLowerCase() === anchor.toLowerCase()) {
         window.location.replace(page + "#" + node['_LINK']);
@@ -39,11 +45,11 @@ function resolveStableUriRedirectUsingProjectMap(anchor) {
   }
 }
 
-// Dynamically load the projectMap an resolve MID / UID.
+// Dynamically load the project map and resolve MID / UID.
 function loadProjectMapAndResolveStableUriRedirect(anchor) {
 
-  // ProjectMap is loaded, no need to load it again.
-  if (typeof projectMap !== 'undefined') {
+  // Project map is loaded, no need to load it again.
+  if (strictDocProject.map) {
     resolveStableUriRedirectUsingProjectMap(anchor);
     return;
   }

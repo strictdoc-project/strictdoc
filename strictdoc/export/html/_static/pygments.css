@@ -17,9 +17,17 @@ The actual lines produced do not have any "linenos" but:
 ...
 
 NOTE: These styles are coupled to the RST Writer settings, see RstToHtmlFragmentWriter.
-
-FIXME: A ticket to improve the styles: https://github.com/strictdoc-project/strictdoc/issues/2611.
 **/
+
+.code .ln { /* Line number */
+   position: relative;
+   left: -12px;
+   padding: 4px;
+   margin-right: 4px;
+   color: #cacdd1;
+   border-right: 1px solid var(--color-border);
+   user-select: none;
+}
 
 .code .hll { background-color: #ffffcc }
 .code { background: #f8f8f8; }

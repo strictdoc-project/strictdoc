@@ -4,6 +4,13 @@
  */
 
 (function() {
+  const strictDocSearch = window.StrictDoc?.search;
+  if (!strictDocSearch) {
+    throw new Error(
+      "static_html_search.js requires app_core.js to initialize StrictDoc.search."
+    );
+  }
+
   function highlightWord(text, word) {
     let newStr = text.replace(new RegExp(word, "gi"), (match) => "<mark>" +
       match + "</mark>");
@@ -134,7 +141,7 @@
           suggestions.appendChild(entry);
         }
 
-        const node = window.SDOC_MAP_MID_TO_NODES[parseInt(flatResult, 10)];
+        const node = strictDocSearch.nodesByMid[parseInt(flatResult, 10)];
         console.assert(!!node, "node must be defined for result: " +
           flatResult);
 
@@ -243,7 +250,7 @@
   const searchResultsView = new SearchResultsView();
 
   function handleInputEvent_input() {
-    if (!window.SDOC_SEARCH_INDEX || !window.SDOC_MAP_MID_TO_NODES) {
+    if (!strictDocSearch.index || !strictDocSearch.nodesByMid) {
       console.log(
         "Search: Cannot perform search: Search index is not available yet.")
       return;
@@ -308,7 +315,7 @@
       if (!searchQuery.includes('"')) {
         let uniqueResults = new Set();
         for (const token of queryDict["terms"]) {
-          const tokenResults = window.SDOC_SEARCH_INDEX[token];
+          const tokenResults = strictDocSearch.index[token];
           if (tokenResults) {
             uniqueResults = new Set([...uniqueResults, ...tokenResults]);
           }
@@ -317,13 +324,13 @@
       }
     } else {
       const firstTerm = queryDict["terms"][0];
-      const firstTermResults = window.SDOC_SEARCH_INDEX[firstTerm];
+      const firstTermResults = strictDocSearch.index[firstTerm];
       if (firstTermResults && firstTermResults.length > 0) {
         let uniqueResults = new Set(firstTermResults);
 
         if (queryDict["terms"].length > 1) {
           for (let i = 1; i < queryDict["terms"].length; i++) {
-            const termResults = window.SDOC_SEARCH_INDEX[queryDict["terms"][
+            const termResults = strictDocSearch.index[queryDict["terms"][
               i
             ]];
             const termUniqueResults = new Set(termResults);
@@ -350,7 +357,7 @@
         highlightElements = [andQuery];
 
         for (const result of results) {
-          const node = window.SDOC_MAP_MID_TO_NODES[parseInt(result, 10)];
+          const node = strictDocSearch.nodesByMid[parseInt(result, 10)];
           console.assert(!!node, "node must be defined for result: " +
             result);
 
@@ -491,11 +498,11 @@
       console.time("Search: SAVE_DB_INDEX");
       const db = await openDB(dbName, DB_VERSION);
       await saveToStore(db, "indexes", [{
-        name: "SDOC_SEARCH_INDEX",
-        value: window.SDOC_SEARCH_INDEX
+        name: "STRICTDOC_SEARCH_INDEX",
+        value: strictDocSearch.index
       }, {
-        name: "SDOC_MAP_MID_TO_NODES",
-        value: window.SDOC_MAP_MID_TO_NODES
+        name: "STRICTDOC_SEARCH_NODES_BY_MID",
+        value: strictDocSearch.nodesByMid
       }, {
         name: "TIMESTAMP",
         value: timestampMeta
@@ -569,14 +576,14 @@
 
         console.time("Search: LOAD_DB_INDEX");
         const lunrEntry = await getFromStore(db, "indexes",
-          "SDOC_SEARCH_INDEX");
+          "STRICTDOC_SEARCH_INDEX");
         const nodesEntry = await getFromStore(db, "indexes",
-          "SDOC_MAP_MID_TO_NODES");
+          "STRICTDOC_SEARCH_NODES_BY_MID");
         console.timeEnd("Search: LOAD_DB_INDEX");
 
         if (lunrEntry && nodesEntry) {
-          window.SDOC_SEARCH_INDEX = lunrEntry.value;
-          window.SDOC_MAP_MID_TO_NODES = nodesEntry.value;
+          strictDocSearch.index = lunrEntry.value;
+          strictDocSearch.nodesByMid = nodesEntry.value;
           return;
         }
       }

@@ -838,7 +838,9 @@ class HTMLGenerator:
 
         with measure_performance("Serialize search index to JS"):
             document_content = (
-                b"window.SDOC_SEARCH_INDEX = "
+                b"window.StrictDoc = window.StrictDoc || {};\n"
+                b"window.StrictDoc.search = window.StrictDoc.search || {};\n"
+                b"window.StrictDoc.search.index = "
                 + orjson.dumps(
                     global_index,
                     option=orjson.OPT_NON_STR_KEYS,
@@ -849,7 +851,7 @@ class HTMLGenerator:
 
         with measure_performance("Serialize lookup map {MID => node} to JS"):
             document_content += (
-                b"window.SDOC_MAP_MID_TO_NODES = "
+                b"window.StrictDoc.search.nodesByMid = "
                 + orjson.dumps(
                     global_map_nodes_by_mid, option=orjson.OPT_NON_STR_KEYS
                 )

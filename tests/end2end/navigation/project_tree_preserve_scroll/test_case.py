@@ -1,5 +1,8 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.aside_project_tree import (
+    AsideProjectTree,
+)
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -21,10 +24,14 @@ class Test(E2ECase):
             screen_document = screen_project_index.do_click_on_first_document()
             screen_document.assert_on_screen_document()
 
+            aside_project_tree = AsideProjectTree(self)
+            aside_project_tree.assert_is_aside_tree()
+
             tree_scroll_selector = (
                 '[js-resizable_bar-scroll][data-content="tree"]'
             )
             baseline_scroll_top = 100
+            document_25_title = "Test document 25"
 
             def get_tree_scroll_top():
                 return self.execute_script(
@@ -47,15 +54,12 @@ class Test(E2ECase):
             )
 
             # Click target document 25 in tree.
-            self.click_xpath(
-                '(//a[@data-testid="tree-document-link"]'
-                '[contains(@href, "temp25.html")])[1]'
-            )
+            aside_project_tree.do_tree_go_to_document(document_25_title)
 
             # Measure scroll at click-time position.
             clicked_scroll_top_doc25 = get_tree_scroll_top()
             assert clicked_scroll_top_doc25 is not None, (
-                "Tree scroll container not found after click on temp25."
+                "Tree scroll container not found after click on document 25."
             )
             print(  # noqa: T201
                 f"[telemetry] doc25 clicked_scroll_top: {clicked_scroll_top_doc25}"
@@ -80,7 +84,7 @@ class Test(E2ECase):
             self.refresh_page()
             restored_scroll_top_doc25 = get_tree_scroll_top()
             assert restored_scroll_top_doc25 is not None, (
-                "Tree scroll container not found after refresh on temp25."
+                "Tree scroll container not found after refresh on document 25."
             )
             print(  # noqa: T201
                 f"[telemetry] doc25 restored_scroll_top: {restored_scroll_top_doc25}"
@@ -89,7 +93,7 @@ class Test(E2ECase):
                 abs(restored_scroll_top_doc25 - clicked_scroll_top_doc25) <= 3
             ), (
                 "Expected tree scroll to be restored close to click-time value "
-                "for temp25. "
+                "for document 25. "
                 f"clicked={clicked_scroll_top_doc25}, "
                 f"restored={restored_scroll_top_doc25}."
             )

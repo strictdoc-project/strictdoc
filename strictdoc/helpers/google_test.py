@@ -34,6 +34,7 @@ def convert_function_name_to_gtest_macro(input_str: str) -> List[str]:
     if is_pattern_function:
         return [
             f"TEST_P({parts[0]}, {parts[1]})",
+            f"TYPED_TEST({input_str_parts[0]}, {parts[1]})",
         ]
 
     return [f"TEST({parts[0]}, {parts[1]})", f"TEST_F({parts[0]}, {parts[1]})"]

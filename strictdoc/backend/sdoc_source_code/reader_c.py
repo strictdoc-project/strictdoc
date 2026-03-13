@@ -151,6 +151,8 @@ class SourceFileTraceabilityReader_C:
                 assert function_declarator_node.text is not None, node_.text
                 function_name = function_declarator_node.text.decode("utf8")
                 assert function_name is not None, node_.text
+                # Remove extra trailing spaces, newlines etc added by code-formatting or linters
+                function_name = " ".join(function_name.split())
 
                 parent_names = self.get_node_ns(node_)
                 if len(parent_names) > 0:
@@ -262,18 +264,21 @@ class SourceFileTraceabilityReader_C:
                 function_display_name = identifier_node.text.decode("utf8")
 
                 assert function_name is not None, node_.text
+                # Remove extra trailing spaces, newlines etc added by code-formatting or linters
+                function_name = " ".join(function_name.split())
                 parent_names = self.get_node_ns(node_)
-                if len(parent_names) > 0:
+                # FIXME: Special hack for Google Test macros TEST, TEST_F, TEST_P.
+                if function_name.startswith("TEST") or function_name.startswith(
+                    "TYPED_TEST"
+                ):
+                    function_display_name = function_name
+                elif len(parent_names) > 0:
                     function_name = (
                         f"{'::'.join(parent_names)}::{function_name}"
                     )
                     function_display_name = (
                         f"{'::'.join(parent_names)}::{function_display_name}"
                     )
-
-                # FIXME: Special hack for Google Test macros TEST, TEST_F, TEST_P.
-                if function_name.startswith("TEST"):
-                    function_display_name = function_name
 
                 source_node = None
                 language_item_markers = []
@@ -434,6 +439,12 @@ class SourceFileTraceabilityReader_C:
                 ):
                     parent_class_name = second_node_or_none.text.decode("utf8")
                     parent_scopes.append(parent_class_name)
+            elif cursor.type == "namespace_definition":
+                for c in cursor.children:
+                    if c.type == "namespace_identifier" and c.text is not None:
+                        parent_class_name = c.text.decode("utf8")
+                        parent_scopes.append(parent_class_name)
+                        break
 
             cursor = cursor.parent
 

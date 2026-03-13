@@ -79,8 +79,7 @@
         // Otherwise the field remains focused and a subsequent click won't fire a 'focus' event,
         // so the search won't restart. Blurring ensures the next refocus re‑triggers search with
         // the existing text.
-        if (typeof userinput !== "undefined" && document.activeElement ===
-          userinput) {
+        if (document.activeElement === userinput) {
           userinput.blur();
         }
       }

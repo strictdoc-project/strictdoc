@@ -1,5 +1,6 @@
 // @relation(SDOC-SRS-35, scope=file)
 
+(function () {
 document.addEventListener("DOMContentLoaded", () => {
   const table = document.querySelector(".project_coverage");
   const tbody = table.querySelector("tbody");
@@ -71,3 +72,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+})();

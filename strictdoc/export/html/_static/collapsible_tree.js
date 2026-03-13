@@ -1,5 +1,6 @@
 const ROOT_SELECTOR = 'js-collapsible_tree';
 
+(function () {
 window.addEventListener("DOMContentLoaded", function(){
 
   const tree = document.querySelector(`[${ROOT_SELECTOR}]`);
@@ -30,3 +31,4 @@ window.addEventListener("DOMContentLoaded", function(){
   })
 
 },false);
+})();

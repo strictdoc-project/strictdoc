@@ -28,11 +28,13 @@ Optional DOM:
    on the same origin do not overwrite each other's tree scroll.
 */
 
+(function () {
 const TREE_ROOT_SELECTOR = "[js-project_tree_preserve_scroll]";
 const SCROLL_CONTAINER_SELECTOR = "[js-resizable_bar-scroll]";
 const TREE_ITEM_SELECTOR = ".tree_item[href]";
 const ACTIVE_ITEM_SELECTOR = ".tree_item[active='true']";
 const STORAGE_KEY_PREFIX = "strictdoc.project_tree.scroll_top";
+const BOUND_ATTR = "js-project_tree_preserve_scroll-bound";
 
 // Returns project tree root element, or null when the script should be inactive.
 function findTreeRoot() {
@@ -142,6 +144,10 @@ function bindPersistence() {
     return false;
   }
 
+  if (treeRoot.hasAttribute(BOUND_ATTR)) {
+    return true;
+  }
+
   treeRoot.addEventListener("click", function (event) {
     const treeItem = event.target.closest(TREE_ITEM_SELECTOR);
     if (!treeItem || !treeRoot.contains(treeItem)) {
@@ -149,6 +155,7 @@ function bindPersistence() {
     }
     saveScrollTop(treeRoot, container);
   });
+  treeRoot.setAttribute(BOUND_ATTR, "");
 
   return true;
 }
@@ -180,3 +187,4 @@ window.addEventListener("load", function () {
   // Wait a few frames in case resizable_bar.js wraps content asynchronously.
   initWithRetries(20);
 });
+})();

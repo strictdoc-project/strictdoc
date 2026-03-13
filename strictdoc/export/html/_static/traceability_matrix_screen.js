@@ -1,5 +1,6 @@
 // @relation(SDOC-SRS-112, scope=file)
 
+(function () {
 const SELECTOR = '[js-requirements-coverage]';
 
 const __log = (topic, ...payload) => {
@@ -26,12 +27,11 @@ window.addEventListener("load", function () {
     currentUid: null
   }
 
-  // https://stackoverflow.com/questions/32249997/how-to-check-if-data-attribute-exist-with-plain-javascript/32250073
   const reqs = [...document.querySelectorAll(SELECTOR)]
     .reduce((acc, req) => {
       if (req.hasAttribute('data-uid')) {
-        req.addEventListener('click', () => markSame(uid, state, reqs));
         const uid = req.dataset.uid;
+        req.addEventListener('click', () => markSame(uid, state, reqs));
         acc[uid] = acc[uid] ? [...acc[uid], req] : [req];
       } else {
         req.classList.add('nouid')
@@ -46,3 +46,4 @@ window.addEventListener("load", function () {
   // )
 
 });
+})();

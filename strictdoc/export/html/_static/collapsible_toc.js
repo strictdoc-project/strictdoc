@@ -59,6 +59,12 @@ Bulk/Undo scenario:
    - return both bulk buttons to normal mode.
 */
 
+(function () {
+const strictDoc = window.StrictDoc;
+if (!strictDoc || !strictDoc.events || !strictDoc.bus) {
+  throw new Error('collapsible_toc.js requires app_core.js to be loaded first.');
+}
+
 // ===== Constants =====
 
 const SS_ITEM = 'collapsibleTOC'; // sessionStorageItem
@@ -78,7 +84,7 @@ const CONTROLS_PANEL_HEIGHT = `32px`;
 
 const BULK_MODE = 'bulk';
 const UNDO_MODE = 'undo';
-const TOC_STATE_CHANGED_EVENT = 'toc:state-changed';
+const TOC_STATE_CHANGED_EVENT = strictDoc.events.TOC_STATE_CHANGED;
 let lastBulkSnapshot = null;
 
 const _TRUE = 'collapsed';
@@ -282,7 +288,8 @@ function processToc(toc) {
 
     branchList.forEach(
       ul => {
-        const handler = createHandler();
+        // * Create a clickable handler element for one TOC branch.
+        const handler = document.createElement('div');
 
         const parentNode = ul.parentNode;
         const nodeID = parentNode.dataset[NODE_ID_DATA_ATTR];
@@ -503,14 +510,7 @@ function addStyleElement(target, styleTextContent, attr = 'style') {
 
 // Notify other scripts (e.g., TOC highlighting) that TOC expand/collapse state changed.
 function notifyTocStateChanged() {
-  document.dispatchEvent(new CustomEvent(TOC_STATE_CHANGED_EVENT));
-}
-
-// Create a clickable handler element for one TOC branch.
-function createHandler(state) {
-  const div = document.createElement('div');
-  state && setBranchState(item, state);
-  return div
+  strictDoc.bus.emit(TOC_STATE_CHANGED_EVENT);
 }
 
 // ===== Startup =====
@@ -519,3 +519,4 @@ function createHandler(state) {
 window.addEventListener("load", function() {
   main();
 }, false);
+})();

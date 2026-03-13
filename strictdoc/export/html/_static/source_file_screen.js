@@ -1,5 +1,6 @@
 // @relation(SDOC-SRS-36, scope=file)
 
+(function () {
 const __log = (topic, ...payload) => {
   console.log(`%c ${topic} `, 'background:yellow;color:black',
     ...payload
@@ -640,3 +641,4 @@ window.addEventListener("load", function () {
 });
 
 window.addEventListener("hashchange", () => dom.useLocationHash());
+})();

@@ -381,3 +381,85 @@ void foobar(void) {}
     assert isinstance(info, SourceFileTraceabilityInfo)
     assert len(info.markers) == 0
     assert len(info.source_nodes) == 1
+
+
+def test_95_namespace_with_function():
+    r"""
+    Ensure that namespace is parsed correctly for free functions.
+    """
+    input_string = b"""\
+namespace math {
+
+int add(int a, int b) {
+    return a + b;
+}
+}
+"""
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.cpp"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert len(info.functions) == 1
+    assert len(info.source_nodes) == 0
+
+    assert info.functions[0].name == "math::add(int a, int b)"
+
+
+def test_96_namespace_with_class_function():
+    r"""
+    Ensure that namespace is parsed correctly for class member functions.
+    """
+    input_string = b"""\
+namespace math {
+
+class Adder {
+public:
+int add(int a, int b) {
+    return a + b;
+}
+};
+}
+"""
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.cpp"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert len(info.functions) == 1
+    assert len(info.source_nodes) == 0
+
+    assert info.functions[0].name == "math::Adder::add(int a, int b)"
+
+
+def test_97_multiline_function():
+    r"""
+    Ensure functions defined on multiple lines due to linting
+    tools are parsed correctly. The saved name should not have any
+    extra spaces, or newline characters.
+
+    """
+    input_string = b"""\
+int add(int a,
+    int b) {
+    return a + b;
+}
+"""
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.cpp"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert len(info.functions) == 1
+    assert len(info.source_nodes) == 0
+
+    assert info.functions[0].name == "add(int a, int b)"

@@ -13,7 +13,10 @@ def test_convert_function_name_to_gtest_macro():
 
     assert convert_function_name_to_gtest_macro(
         "MyTestPattern/MyTestHelperPattern.TestName3/1"
-    ) == ["TEST_P(MyTestHelperPattern, TestName3)"]
+    ) == [
+        "TEST_P(MyTestHelperPattern, TestName3)",
+        "TYPED_TEST(MyTestPattern, TestName3)",
+    ]
 
     with pytest.raises(ValueError, match="Input string must contain a dot."):
         convert_function_name_to_gtest_macro("InvalidString")

@@ -67,7 +67,7 @@
       this.results = null;
       this.highlightElements = null;
       this.currentPage = 1;
-      suggestions.addEventListener("click", this.acceptSuggestion, true);
+      this.suggestions.addEventListener("click", this.acceptSuggestion, true);
       document.addEventListener("keydown", (event) => this.handleEscape(
         event), true);
     }
@@ -131,7 +131,7 @@
 
         if (!entry) {
           entry = document.createElement("div");
-          suggestions.appendChild(entry);
+          this.suggestions.appendChild(entry);
         }
 
         const node = window.SDOC_MAP_MID_TO_NODES[parseInt(flatResult, 10)];

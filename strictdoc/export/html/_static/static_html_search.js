@@ -1,6 +1,18 @@
 /**
  * @relation(SDOC-SRS-155, scope=file)
  * @relation(SDOC-SRS-156, scope=file)
+ *
+ * Required DOM contract:
+ * - #search
+ * - #userinput
+ * - #search_results
+ * - #results_count
+ * - #suggestions
+ * - #results_navigation with #start, #previous, #next, #end
+ * - meta[name="strictdoc-document-level"]
+ * - meta[name="strictdoc-project-hash"]
+ * - meta[name="strictdoc-search-index-timestamp"]
+ * - meta[name="strictdoc-search-index-path"]
  */
 
 (function() {
@@ -9,6 +21,38 @@
     throw new Error(
       "static_html_search.js requires app_core.js to initialize StrictDoc.search."
     );
+  }
+
+  function collectRequiredDom() {
+    const selectorByRefKey = {
+      searchBox: "#search",
+      userinput: "#userinput",
+      searchResults: "#search_results",
+      resultsCount: "#results_count",
+      suggestions: "#suggestions",
+      navigationStart: "#results_navigation #start",
+      navigationPrevious: "#results_navigation #previous",
+      navigationNext: "#results_navigation #next",
+      navigationEnd: "#results_navigation #end",
+    };
+
+    const dom = Object.fromEntries(
+      Object.entries(selectorByRefKey).map(([key, selector]) => {
+        if (selector.startsWith("#") && !selector.includes(" ")) {
+          return [key, document.getElementById(selector.slice(1))];
+        }
+        return [key, document.querySelector(selector)];
+      })
+    );
+
+    const missingSelectors = Object.entries(dom)
+      .filter(([, element]) => !element)
+      .map(([key]) => selectorByRefKey[key]);
+
+    return {
+      dom,
+      missingSelectors
+    };
   }
 
   function highlightWord(text, word) {
@@ -32,7 +76,7 @@
   class SearchResultsView {
     static PAGE_SIZE = 5;
 
-    constructor() {
+    constructor(dom) {
       const metaDocumentLevel = document.querySelector(
         'meta[name="strictdoc-document-level"]')?.content;
       console.assert(
@@ -46,19 +90,15 @@
         "SearchResultsView: strictdoc-document-level meta tag is not a valid number."
       );
 
-      this.searchBox = document.getElementById("search");
-      this.searchResults = document.getElementById("search_results");
-      this.resultsCount = document.getElementById("results_count");
-      this.suggestions = document.getElementById("suggestions");
+      this.searchBox = dom.searchBox;
+      this.searchResults = dom.searchResults;
+      this.resultsCount = dom.resultsCount;
+      this.suggestions = dom.suggestions;
 
-      this.navigationStart = document.querySelector(
-        "#results_navigation #start");
-      this.navigationPrevious = document.querySelector(
-        "#results_navigation #previous");
-      this.navigationNext = document.querySelector(
-        "#results_navigation #next");
-      this.navigationEnd = document.querySelector(
-        "#results_navigation #end");
+      this.navigationStart = dom.navigationStart;
+      this.navigationPrevious = dom.navigationPrevious;
+      this.navigationNext = dom.navigationNext;
+      this.navigationEnd = dom.navigationEnd;
 
       this.navigationStart.addEventListener("click", () => this.displayPage(
         1), true);
@@ -238,7 +278,17 @@
     }
   }
 
-  const userinput = document.getElementById("userinput");
+  const { dom, missingSelectors } = collectRequiredDom();
+
+  if (missingSelectors.length > 0) {
+    console.assert(
+      false,
+      `Search: initialization skipped because required DOM elements are missing: ${missingSelectors.join(", ")}`
+    );
+    return;
+  }
+
+  const { userinput } = dom;
   userinput.dataset.prevValue = "";
 
   userinput.addEventListener("input", handleInputEvent_input, true);
@@ -246,7 +296,7 @@
   userinput.addEventListener("keydown", handleInputEvent_keyDown, true);
   userinput.addEventListener("focus", handleInputEvent_focus, true);
 
-  const searchResultsView = new SearchResultsView();
+  const searchResultsView = new SearchResultsView(dom);
 
   function handleInputEvent_input() {
     if (!strictDocSearch.index || !strictDocSearch.nodesByMid) {

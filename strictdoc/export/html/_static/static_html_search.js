@@ -163,6 +163,33 @@
     };
   }
 
+  function buildSearchViewModel(queryDict, searchQuery, searchIndex, nodesByMid) {
+    let results = [];
+    if (queryDict.mode === "OR") {
+      if (!searchQuery.includes('"')) {
+        results = executeSearchQuery(queryDict, searchIndex);
+      }
+    } else {
+      results = executeSearchQuery(queryDict, searchIndex);
+    }
+
+    if (!results) {
+      return {
+        results: [],
+        highlightElements: null,
+      };
+    }
+
+    if (queryDict.mode === "OR") {
+      return {
+        results,
+        highlightElements: queryDict.terms,
+      };
+    }
+
+    return refineAndQueryResults(results, queryDict, nodesByMid);
+  }
+
   class SearchResultsView {
     static PAGE_SIZE = 5;
 
@@ -418,32 +445,16 @@
 
     const queryDict = parseSearchQuery(searchQuery);
 
-    let results = [];
-    if (queryDict.mode === "OR") {
-      if (!searchQuery.includes('"')) {
-        results = executeSearchQuery(queryDict, strictDocSearch.index);
-      }
-    } else {
-      results = executeSearchQuery(queryDict, strictDocSearch.index);
-    }
-
-    if (results) {
-      let highlightElements = null;
-      if (queryDict.mode === "OR") {
-        highlightElements = queryDict.terms;
-      } else {
-        const refinedResults = refineAndQueryResults(
-          results,
-          queryDict,
-          strictDocSearch.nodesByMid
-        );
-        results = refinedResults.results;
-        highlightElements = refinedResults.highlightElements;
-      }
-      searchResultsView.populateResults(results, highlightElements);
-    } else {
-      searchResultsView.populateResults([], null);
-    }
+    const searchViewModel = buildSearchViewModel(
+      queryDict,
+      searchQuery,
+      strictDocSearch.index,
+      strictDocSearch.nodesByMid
+    );
+    searchResultsView.populateResults(
+      searchViewModel.results,
+      searchViewModel.highlightElements
+    );
   }
 
   function handleInputEvent_keyDown(event) {

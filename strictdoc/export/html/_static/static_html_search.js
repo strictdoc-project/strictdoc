@@ -1,6 +1,18 @@
 /**
  * @relation(SDOC-SRS-155, scope=file)
  * @relation(SDOC-SRS-156, scope=file)
+ *
+ * Required DOM contract:
+ * - #search
+ * - #userinput
+ * - #search_results
+ * - #results_count
+ * - #suggestions
+ * - #results_navigation with #start, #previous, #next, #end
+ * - meta[name="strictdoc-document-level"]
+ * - meta[name="strictdoc-project-hash"]
+ * - meta[name="strictdoc-search-index-timestamp"]
+ * - meta[name="strictdoc-search-index-path"]
  */
 
 (function() {
@@ -9,6 +21,38 @@
     throw new Error(
       "static_html_search.js requires app_core.js to initialize StrictDoc.search."
     );
+  }
+
+  function collectRequiredDom() {
+    const selectorByRefKey = {
+      searchBox: "#search",
+      userinput: "#userinput",
+      searchResults: "#search_results",
+      resultsCount: "#results_count",
+      suggestions: "#suggestions",
+      navigationStart: "#results_navigation #start",
+      navigationPrevious: "#results_navigation #previous",
+      navigationNext: "#results_navigation #next",
+      navigationEnd: "#results_navigation #end",
+    };
+
+    const dom = Object.fromEntries(
+      Object.entries(selectorByRefKey).map(([key, selector]) => {
+        if (selector.startsWith("#") && !selector.includes(" ")) {
+          return [key, document.getElementById(selector.slice(1))];
+        }
+        return [key, document.querySelector(selector)];
+      })
+    );
+
+    const missingSelectors = Object.entries(dom)
+      .filter(([, element]) => !element)
+      .map(([key]) => selectorByRefKey[key]);
+
+    return {
+      dom,
+      missingSelectors
+    };
   }
 
   function highlightWord(text, word) {
@@ -29,10 +73,127 @@
     return intersection;
   }
 
+  function parseSearchQuery(searchQuery) {
+    const regex = /"([^"]+)"|(\S+)/g;
+    const tokens = [];
+    let hasQuoted = false;
+
+    const matches = [...searchQuery.matchAll(regex)];
+
+    for (const match of matches) {
+      if (match[1]) {
+        // Quoted phrase → split into words
+        hasQuoted = true;
+        tokens.push(match[1].trim().split(/\s+/));
+      } else if (match[2]) {
+        // Single word
+        tokens.push([match[2]]);
+      }
+    }
+
+    if (hasQuoted) {
+      return {
+        mode: "AND",
+        terms: tokens.flat(),
+      };
+    }
+
+    return {
+      mode: "OR",
+      terms: tokens.flat(),
+    };
+  }
+
+  function executeSearchQuery(queryDict, searchIndex) {
+    if (queryDict.mode === "OR") {
+      let uniqueResults = new Set();
+      for (const token of queryDict.terms) {
+        const tokenResults = searchIndex[token];
+        if (tokenResults) {
+          uniqueResults = new Set([...uniqueResults, ...tokenResults]);
+        }
+      }
+      return Array.from(uniqueResults);
+    }
+
+    const firstTerm = queryDict.terms[0];
+    const firstTermResults = searchIndex[firstTerm];
+    if (!firstTermResults || firstTermResults.length === 0) {
+      return [];
+    }
+
+    let uniqueResults = new Set(firstTermResults);
+    for (let i = 1; i < queryDict.terms.length; i++) {
+      const termResults = searchIndex[queryDict.terms[i]];
+      const termUniqueResults = new Set(termResults);
+
+      uniqueResults = intersectSets([uniqueResults, termUniqueResults]);
+      if (uniqueResults.size === 0) {
+        break;
+      }
+    }
+
+    return Array.from(uniqueResults);
+  }
+
+  function refineAndQueryResults(results, queryDict, nodesByMid) {
+    const finalAndResults = [];
+    const finalUniqueResults = new Set();
+    const andQuery = queryDict.terms.join(" ");
+
+    for (const result of results) {
+      const node = nodesByMid[parseInt(result, 10)];
+      console.assert(!!node, "node must be defined for result: " + result);
+
+      Object.entries(node).forEach(([_, value]) => {
+        if (value === "") {
+          return;
+        }
+
+        if (!finalUniqueResults.has(result) && value.toLowerCase().includes(andQuery)) {
+          finalUniqueResults.add(result);
+          finalAndResults.push(result);
+        }
+      });
+    }
+
+    return {
+      results: finalAndResults,
+      highlightElements: [andQuery],
+    };
+  }
+
+  function buildSearchViewModel(queryDict, searchQuery, searchIndex, nodesByMid) {
+    let results = [];
+    if (queryDict.mode === "OR") {
+      if (!searchQuery.includes('"')) {
+        results = executeSearchQuery(queryDict, searchIndex);
+      }
+    } else {
+      results = executeSearchQuery(queryDict, searchIndex);
+    }
+
+    if (!results) {
+      return {
+        results: [],
+        highlightElements: null,
+      };
+    }
+
+    if (queryDict.mode === "OR") {
+      return {
+        results,
+        highlightElements: queryDict.terms,
+      };
+    }
+
+    return refineAndQueryResults(results, queryDict, nodesByMid);
+  }
+
   class SearchResultsView {
     static PAGE_SIZE = 5;
 
-    constructor() {
+    constructor(dom) {
       const metaDocumentLevel = document.querySelector(
         'meta[name="strictdoc-document-level"]')?.content;
       console.assert(
@@ -46,19 +207,15 @@
         "SearchResultsView: strictdoc-document-level meta tag is not a valid number."
       );
 
-      this.searchBox = document.getElementById("search");
-      this.searchResults = document.getElementById("search_results");
-      this.resultsCount = document.getElementById("results_count");
-      this.suggestions = document.getElementById("suggestions");
+      this.searchBox = dom.searchBox;
+      this.searchResults = dom.searchResults;
+      this.resultsCount = dom.resultsCount;
+      this.suggestions = dom.suggestions;
 
-      this.navigationStart = document.querySelector(
-        "#results_navigation #start");
-      this.navigationPrevious = document.querySelector(
-        "#results_navigation #previous");
-      this.navigationNext = document.querySelector(
-        "#results_navigation #next");
-      this.navigationEnd = document.querySelector(
-        "#results_navigation #end");
+      this.navigationStart = dom.navigationStart;
+      this.navigationPrevious = dom.navigationPrevious;
+      this.navigationNext = dom.navigationNext;
+      this.navigationEnd = dom.navigationEnd;
 
       this.navigationStart.addEventListener("click", () => this.displayPage(
         1), true);
@@ -238,7 +395,17 @@
     }
   }
 
-  const userinput = document.getElementById("userinput");
+  const { dom, missingSelectors } = collectRequiredDom();
+
+  if (missingSelectors.length > 0) {
+    console.assert(
+      false,
+      `Search: initialization skipped because required DOM elements are missing: ${missingSelectors.join(", ")}`
+    );
+    return;
+  }
+
+  const { userinput } = dom;
   userinput.dataset.prevValue = "";
 
   userinput.addEventListener("input", handleInputEvent_input, true);
@@ -246,7 +413,7 @@
   userinput.addEventListener("keydown", handleInputEvent_keyDown, true);
   userinput.addEventListener("focus", handleInputEvent_focus, true);
 
-  const searchResultsView = new SearchResultsView();
+  const searchResultsView = new SearchResultsView(dom);
 
   function handleInputEvent_input() {
     if (!strictDocSearch.index || !strictDocSearch.nodesByMid) {
@@ -276,111 +443,18 @@
 
     const searchQuery = userinput.value.toLowerCase();
 
-    const regex = /"([^"]+)"|(\S+)/g;
-    let tokens = [];
-    let hasQuoted = false;
-    let queryDict = {};
+    const queryDict = parseSearchQuery(searchQuery);
 
-    const matches = [...searchQuery.matchAll(regex)];
-
-    for (const match of matches) {
-      if (match[1]) {
-        // Quoted phrase → split into words
-        hasQuoted = true;
-        tokens.push(match[1].trim().split(/\s+/));
-      } else if (match[2]) {
-        // Single word
-        tokens.push([match[2]]);
-      }
-    }
-
-    if (hasQuoted) {
-      // At least one quoted phrase: treat each group as AND
-      queryDict = {
-        mode: "AND",
-        terms: tokens.flat()
-      };
-    } else {
-      // No quoted phrases: just OR everything
-      queryDict = {
-        mode: "OR",
-        terms: tokens.flat()
-      };
-    }
-
-    let results = [];
-
-    if (queryDict["mode"] === "OR") {
-      if (!searchQuery.includes('"')) {
-        let uniqueResults = new Set();
-        for (const token of queryDict["terms"]) {
-          const tokenResults = strictDocSearch.index[token];
-          if (tokenResults) {
-            uniqueResults = new Set([...uniqueResults, ...tokenResults]);
-          }
-        }
-        results.push(...uniqueResults);
-      }
-    } else {
-      const firstTerm = queryDict["terms"][0];
-      const firstTermResults = strictDocSearch.index[firstTerm];
-      if (firstTermResults && firstTermResults.length > 0) {
-        let uniqueResults = new Set(firstTermResults);
-
-        if (queryDict["terms"].length > 1) {
-          for (let i = 1; i < queryDict["terms"].length; i++) {
-            const termResults = strictDocSearch.index[queryDict["terms"][
-              i
-            ]];
-            const termUniqueResults = new Set(termResults);
-
-            uniqueResults = intersectSets([uniqueResults, termUniqueResults]);
-            if (uniqueResults.size === 0) {
-              break;
-            }
-          }
-        }
-
-        results = Array.from(uniqueResults);
-      }
-    }
-
-    if (results) {
-      let highlightElements = null;
-      if (queryDict["mode"] === "OR") {
-        highlightElements = queryDict["terms"];
-      } else {
-        let finalAndResults = [];
-        let finalUniqueResults = new Set();
-        const andQuery = queryDict["terms"].join(" ");
-        highlightElements = [andQuery];
-
-        for (const result of results) {
-          const node = strictDocSearch.nodesByMid[parseInt(result, 10)];
-          console.assert(!!node, "node must be defined for result: " +
-            result);
-
-
-          let node_key_values = "";
-          Object.entries(node).forEach(([key, value]) => {
-            if (value === "") {
-              return;
-            }
-
-            if (!finalUniqueResults.has(result) && value.toLowerCase()
-              .includes(andQuery)) {
-              finalUniqueResults.add(result);
-              finalAndResults.push(result);
-            }
-          });
-        }
-
-        results = finalAndResults;
-      }
-      searchResultsView.populateResults(results, highlightElements);
-    } else {
-      searchResultsView.populateResults([], null);
-    }
+    const searchViewModel = buildSearchViewModel(
+      queryDict,
+      searchQuery,
+      strictDocSearch.index,
+      strictDocSearch.nodesByMid
+    );
+    searchResultsView.populateResults(
+      searchViewModel.results,
+      searchViewModel.highlightElements
+    );
   }
 
   function handleInputEvent_keyDown(event) {

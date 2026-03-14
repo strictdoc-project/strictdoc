@@ -437,19 +437,22 @@
   const documentLevel = parseInt(meta.documentLevel, 10);
   userinput.dataset.prevValue = "";
 
-  userinput.addEventListener("input", handleInputEvent_input, true);
-  userinput.addEventListener("keyup", handleInputEvent_keyUp, true);
-  userinput.addEventListener("keydown", handleInputEvent_keyDown, true);
-  userinput.addEventListener("focus", handleInputEvent_focus, true);
-
   const searchResultsView = new SearchResultsView(dom, {
     userinput,
     searchData: strictDocSearch,
     documentLevel,
   });
 
-  function handleInputEvent_input() {
-    if (!strictDocSearch.index || !strictDocSearch.nodesByMid) {
+  const searchContext = {
+    userinput,
+    searchData: strictDocSearch,
+    searchResultsView,
+  };
+
+  function handleInputEvent_input(context) {
+    const { userinput, searchData, searchResultsView } = context;
+
+    if (!searchData.index || !searchData.nodesByMid) {
       console.log(
         "Search: Cannot perform search: Search index is not available yet.")
       return;
@@ -481,8 +484,8 @@
     const searchViewModel = buildSearchViewModel(
       queryDict,
       searchQuery,
-      strictDocSearch.index,
-      strictDocSearch.nodesByMid
+      searchData.index,
+      searchData.nodesByMid
     );
     searchResultsView.populateResults(
       searchViewModel.results,
@@ -490,7 +493,9 @@
     );
   }
 
-  function handleInputEvent_keyDown(event) {
+  function handleInputEvent_keyDown(context, event) {
+    const { userinput } = context;
+
     if (event && event.key === "Enter") {
       event.preventDefault && event.preventDefault();
       const searchQuery = userinput.value || "";
@@ -503,7 +508,9 @@
     // FIXME: Nothing for now.
   }
 
-  function handleInputEvent_keyUp(event) {
+  function handleInputEvent_keyUp(context, event) {
+    const { searchResultsView } = context;
+
     if (event) {
       const key = event.key;
       if (key === "ArrowUp") {
@@ -518,6 +525,14 @@
       }
     }
   }
+
+  userinput.addEventListener("input", () => handleInputEvent_input(
+    searchContext), true);
+  userinput.addEventListener("keyup", (event) => handleInputEvent_keyUp(
+    searchContext, event), true);
+  userinput.addEventListener("keydown", (event) => handleInputEvent_keyDown(
+    searchContext, event), true);
+  userinput.addEventListener("focus", handleInputEvent_focus, true);
 
   window.addEventListener("load", async () => {
     const DB_VERSION = 1;

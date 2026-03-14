@@ -55,6 +55,30 @@
     };
   }
 
+  function collectRequiredMeta() {
+    const selectorByMetaKey = {
+      documentLevel: 'meta[name="strictdoc-document-level"]',
+      projectHash: 'meta[name="strictdoc-project-hash"]',
+      searchIndexTimestamp: 'meta[name="strictdoc-search-index-timestamp"]',
+      searchIndexPath: 'meta[name="strictdoc-search-index-path"]',
+    };
+
+    const meta = Object.fromEntries(
+      Object.entries(selectorByMetaKey).map(([key, selector]) => {
+        return [key, document.querySelector(selector)?.content];
+      })
+    );
+
+    const missingSelectors = Object.entries(meta)
+      .filter(([, content]) => !content)
+      .map(([key]) => selectorByMetaKey[key]);
+
+    return {
+      meta,
+      missingSelectors,
+    };
+  }
+
   function highlightWord(text, word) {
     let newStr = text.replace(new RegExp(word, "gi"), (match) => "<mark>" +
       match + "</mark>");
@@ -391,6 +415,7 @@
   }
 
   const { dom, missingSelectors } = collectRequiredDom();
+  const { meta, missingSelectors: missingMetaSelectors } = collectRequiredMeta();
 
   if (missingSelectors.length > 0) {
     console.assert(
@@ -400,14 +425,16 @@
     return;
   }
 
+  if (missingMetaSelectors.length > 0) {
+    console.assert(
+      false,
+      `Search: initialization skipped because required meta tags are missing: ${missingMetaSelectors.join(", ")}`
+    );
+    return;
+  }
+
   const { userinput } = dom;
-  const metaDocumentLevel = document.querySelector(
-    'meta[name="strictdoc-document-level"]')?.content;
-  console.assert(
-    metaDocumentLevel,
-    "Search: strictdoc-document-level meta tag is missing."
-  );
-  const documentLevel = parseInt(metaDocumentLevel, 10);
+  const documentLevel = parseInt(meta.documentLevel, 10);
   userinput.dataset.prevValue = "";
 
   userinput.addEventListener("input", handleInputEvent_input, true);
@@ -494,15 +521,9 @@
 
   window.addEventListener("load", async () => {
     const DB_VERSION = 1;
-    const timestampMeta = document.querySelector(
-      'meta[name="strictdoc-search-index-timestamp"]'
-    )?.content;
-    const projectHash = document.querySelector(
-      'meta[name="strictdoc-project-hash"]'
-    )?.content;
-    const pathToSearchIndex = document.querySelector(
-      'meta[name="strictdoc-search-index-path"]'
-    )?.content;
+    const timestampMeta = meta.searchIndexTimestamp;
+    const projectHash = meta.projectHash;
+    const pathToSearchIndex = meta.searchIndexPath;
 
     if (!projectHash || !pathToSearchIndex || !timestampMeta) {
       console.error("Search: Missing required meta tags!");

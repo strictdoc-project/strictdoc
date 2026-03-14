@@ -193,18 +193,13 @@
   class SearchResultsView {
     static PAGE_SIZE = 5;
 
-    constructor(dom) {
-      const metaDocumentLevel = document.querySelector(
-        'meta[name="strictdoc-document-level"]')?.content;
-      console.assert(
-        metaDocumentLevel,
-        "SearchResultsView: strictdoc-document-level meta tag is missing."
-      );
-
-      this.documentLevel = parseInt(metaDocumentLevel, 10);
+    constructor(dom, { userinput, searchData, documentLevel }) {
+      this.userinput = userinput;
+      this.searchData = searchData;
+      this.documentLevel = documentLevel;
       console.assert(
         !isNaN(this.documentLevel),
-        "SearchResultsView: strictdoc-document-level meta tag is not a valid number."
+        "SearchResultsView: documentLevel must be a valid number."
       );
 
       this.searchBox = dom.searchBox;
@@ -243,8 +238,8 @@
         // Otherwise the field remains focused and a subsequent click won't fire a 'focus' event,
         // so the search won't restart. Blurring ensures the next refocus re‑triggers search with
         // the existing text.
-        if (document.activeElement === userinput) {
-          userinput.blur();
+        if (document.activeElement === this.userinput) {
+          this.userinput.blur();
         }
       }
     }
@@ -297,7 +292,7 @@
           this.suggestions.appendChild(entry);
         }
 
-        const node = strictDocSearch.nodesByMid[parseInt(flatResult, 10)];
+        const node = this.searchData.nodesByMid[parseInt(flatResult, 10)];
         console.assert(!!node, "node must be defined for result: " +
           flatResult);
 
@@ -406,6 +401,13 @@
   }
 
   const { userinput } = dom;
+  const metaDocumentLevel = document.querySelector(
+    'meta[name="strictdoc-document-level"]')?.content;
+  console.assert(
+    metaDocumentLevel,
+    "Search: strictdoc-document-level meta tag is missing."
+  );
+  const documentLevel = parseInt(metaDocumentLevel, 10);
   userinput.dataset.prevValue = "";
 
   userinput.addEventListener("input", handleInputEvent_input, true);
@@ -413,7 +415,11 @@
   userinput.addEventListener("keydown", handleInputEvent_keyDown, true);
   userinput.addEventListener("focus", handleInputEvent_focus, true);
 
-  const searchResultsView = new SearchResultsView(dom);
+  const searchResultsView = new SearchResultsView(dom, {
+    userinput,
+    searchData: strictDocSearch,
+    documentLevel,
+  });
 
   function handleInputEvent_input() {
     if (!strictDocSearch.index || !strictDocSearch.nodesByMid) {

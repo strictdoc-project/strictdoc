@@ -73,6 +73,37 @@
     return intersection;
   }
 
+  function parseSearchQuery(searchQuery) {
+    const regex = /"([^"]+)"|(\S+)/g;
+    const tokens = [];
+    let hasQuoted = false;
+
+    const matches = [...searchQuery.matchAll(regex)];
+
+    for (const match of matches) {
+      if (match[1]) {
+        // Quoted phrase → split into words
+        hasQuoted = true;
+        tokens.push(match[1].trim().split(/\s+/));
+      } else if (match[2]) {
+        // Single word
+        tokens.push([match[2]]);
+      }
+    }
+
+    if (hasQuoted) {
+      return {
+        mode: "AND",
+        terms: tokens.flat(),
+      };
+    }
+
+    return {
+      mode: "OR",
+      terms: tokens.flat(),
+    };
+  }
+
   class SearchResultsView {
     static PAGE_SIZE = 5;
 
@@ -326,37 +357,7 @@
 
     const searchQuery = userinput.value.toLowerCase();
 
-    const regex = /"([^"]+)"|(\S+)/g;
-    let tokens = [];
-    let hasQuoted = false;
-    let queryDict = {};
-
-    const matches = [...searchQuery.matchAll(regex)];
-
-    for (const match of matches) {
-      if (match[1]) {
-        // Quoted phrase → split into words
-        hasQuoted = true;
-        tokens.push(match[1].trim().split(/\s+/));
-      } else if (match[2]) {
-        // Single word
-        tokens.push([match[2]]);
-      }
-    }
-
-    if (hasQuoted) {
-      // At least one quoted phrase: treat each group as AND
-      queryDict = {
-        mode: "AND",
-        terms: tokens.flat()
-      };
-    } else {
-      // No quoted phrases: just OR everything
-      queryDict = {
-        mode: "OR",
-        terms: tokens.flat()
-      };
-    }
+    const queryDict = parseSearchQuery(searchQuery);
 
     let results = [];
 

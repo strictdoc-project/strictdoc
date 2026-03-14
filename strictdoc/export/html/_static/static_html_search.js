@@ -414,6 +414,95 @@
     }
   }
 
+  class SearchInputController {
+    constructor({ userinput, searchData, searchResultsView }) {
+      this.userinput = userinput;
+      this.searchData = searchData;
+      this.searchResultsView = searchResultsView;
+    }
+
+    attachEventListeners() {
+      this.userinput.addEventListener("input", () => this.handleInput(), true);
+      this.userinput.addEventListener("keyup", (event) => this.handleKeyUp(
+        event), true);
+      this.userinput.addEventListener("keydown", (event) => this.handleKeyDown(
+        event), true);
+      this.userinput.addEventListener("focus", (event) => this.handleFocus(
+        event), true);
+    }
+
+    handleInput() {
+      if (!this.searchData.index || !this.searchData.nodesByMid) {
+        console.log(
+          "Search: Cannot perform search: Search index is not available yet.")
+        return;
+      }
+
+      if (this.userinput.value === "") {
+        this.userinput.dataset.prevValue = "";
+        this.searchResultsView.hideResults();
+        return;
+      }
+
+      // FIXME
+      if (this.userinput.dataset.prevValue === '""' && this.userinput.value === '"') {
+        this.userinput.value = ""
+      } else if (this.userinput.value === '"') {
+        const quote = this.userinput.value;
+        this.userinput.value = quote + quote;
+
+        // Place cursor between the two quotes.
+        this.userinput.setSelectionRange(1, 1);
+      }
+
+      this.userinput.dataset.prevValue = this.userinput.value;
+
+      const searchQuery = this.userinput.value.toLowerCase();
+
+      const queryDict = parseSearchQuery(searchQuery);
+
+      const searchViewModel = buildSearchViewModel(
+        queryDict,
+        searchQuery,
+        this.searchData.index,
+        this.searchData.nodesByMid
+      );
+      this.searchResultsView.populateResults(
+        searchViewModel.results,
+        searchViewModel.highlightElements
+      );
+    }
+
+    handleKeyDown(event) {
+      if (event && event.key === "Enter") {
+        event.preventDefault && event.preventDefault();
+        const searchQuery = this.userinput.value || "";
+        const encodedQuery = encodeURIComponent(searchQuery);
+        window.location.assign(`/search?q=${encodedQuery}`);
+      }
+    }
+
+    handleFocus(event) {
+      // FIXME: Nothing for now.
+    }
+
+    handleKeyUp(event) {
+      if (event) {
+        const key = event.key;
+        if (key === "ArrowUp") {
+          this.searchResultsView.selectPreviousResult();
+          event.preventDefault && event.preventDefault();
+          return;
+        }
+        if (key === "ArrowDown") {
+          this.searchResultsView.selectNextResult();
+          event.preventDefault && event.preventDefault();
+          return;
+        }
+      }
+    }
+  }
+
   const { dom, missingSelectors } = collectRequiredDom();
   const { meta, missingSelectors: missingMetaSelectors } = collectRequiredMeta();
 
@@ -442,97 +531,12 @@
     searchData: strictDocSearch,
     documentLevel,
   });
-
-  const searchContext = {
+  const searchInputController = new SearchInputController({
     userinput,
     searchData: strictDocSearch,
     searchResultsView,
-  };
-
-  function handleInputEvent_input(context) {
-    const { userinput, searchData, searchResultsView } = context;
-
-    if (!searchData.index || !searchData.nodesByMid) {
-      console.log(
-        "Search: Cannot perform search: Search index is not available yet.")
-      return;
-    }
-
-    if (userinput.value === "") {
-      userinput.dataset.prevValue = "";
-      searchResultsView.hideResults();
-      return;
-    }
-
-    // FIXME
-    if (userinput.dataset.prevValue === '""' && userinput.value === '"') {
-      userinput.value = ""
-    } else if (userinput.value === '"') {
-      const quote = userinput.value;
-      userinput.value = quote + quote;
-
-      // Place cursor between the two quotes.
-      userinput.setSelectionRange(1, 1);
-    }
-
-    userinput.dataset.prevValue = userinput.value;
-
-    const searchQuery = userinput.value.toLowerCase();
-
-    const queryDict = parseSearchQuery(searchQuery);
-
-    const searchViewModel = buildSearchViewModel(
-      queryDict,
-      searchQuery,
-      searchData.index,
-      searchData.nodesByMid
-    );
-    searchResultsView.populateResults(
-      searchViewModel.results,
-      searchViewModel.highlightElements
-    );
-  }
-
-  function handleInputEvent_keyDown(context, event) {
-    const { userinput } = context;
-
-    if (event && event.key === "Enter") {
-      event.preventDefault && event.preventDefault();
-      const searchQuery = userinput.value || "";
-      const encodedQuery = encodeURIComponent(searchQuery);
-      window.location.assign(`/search?q=${encodedQuery}`);
-    }
-  }
-
-  function handleInputEvent_focus(event) {
-    // FIXME: Nothing for now.
-  }
-
-  function handleInputEvent_keyUp(context, event) {
-    const { searchResultsView } = context;
-
-    if (event) {
-      const key = event.key;
-      if (key === "ArrowUp") {
-        searchResultsView.selectPreviousResult();
-        event.preventDefault && event.preventDefault();
-        return;
-      }
-      if (key === "ArrowDown") {
-        searchResultsView.selectNextResult();
-        event.preventDefault && event.preventDefault();
-        return;
-      }
-    }
-  }
-
-  userinput.addEventListener("input", () => handleInputEvent_input(
-    searchContext), true);
-  userinput.addEventListener("keyup", (event) => handleInputEvent_keyUp(
-    searchContext, event), true);
-  userinput.addEventListener("keydown", (event) => handleInputEvent_keyDown(
-    searchContext, event), true);
-  userinput.addEventListener("focus", handleInputEvent_focus, true);
+  });
+  searchInputController.attachEventListeners();
 
   window.addEventListener("load", async () => {
     const DB_VERSION = 1;

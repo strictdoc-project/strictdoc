@@ -1,5 +1,7 @@
 // map of the project for the stable_uri forwarder
-const projectMap = {
+window.StrictDoc = window.StrictDoc || {};
+window.StrictDoc.project = window.StrictDoc.project || {};
+window.StrictDoc.project.map = {
 {%- for root_tree_ in view_object.document_tree_iterator.document_tree.file_tree %}
   {%- if root_tree_.root_folder_or_file.is_folder() %}
     {%- if root_tree_.root_folder_or_file.has_sdoc_content %}
@@ -14,4 +16,3 @@ const projectMap = {
   {%- endif %}
 {%- endfor %}
 };
-

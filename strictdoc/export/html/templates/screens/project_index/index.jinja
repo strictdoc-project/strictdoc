@@ -12,6 +12,8 @@
   <script>
     Stimulus.application = Stimulus.Application.start();
   </script>
+  {# Load StrictDoc core before local feature scripts. #}
+  <script src="{{ view_object.render_static_url('app_core.js') }}"></script>
 
   <script src="{{ view_object.render_static_url('collapsible_tree.js') }}"></script>
   <script src="{{ view_object.render_static_url('stable_uri_forwarder.js') }}" id="stable_uri_forwarder"></script>

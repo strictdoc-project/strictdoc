@@ -1,6 +1,16 @@
 /*
 app_core.js
-Shared runtime contract for plain-script modules (no bundler required).
+
+window.StrictDoc is the shared runtime root for plain frontend scripts.
+Supported shared namespaces:
+- StrictDoc.events
+- StrictDoc.bus
+- StrictDoc.config
+- StrictDoc.search
+- StrictDoc.project
+
+Feature scripts should keep their own logic in local scope and only use
+StrictDoc.* for intentional cross-script contracts and shared runtime data.
 */
 
 (function (global) {
@@ -9,6 +19,8 @@ Shared runtime contract for plain-script modules (no bundler required).
   // Shared event names used across feature scripts.
   strictDoc.events = strictDoc.events || {};
   strictDoc.config = strictDoc.config || {};
+  strictDoc.search = strictDoc.search || {};
+  strictDoc.project = strictDoc.project || {};
   if (!strictDoc.events.TOC_STATE_CHANGED) {
     strictDoc.events.TOC_STATE_CHANGED = 'toc:state-changed';
   }

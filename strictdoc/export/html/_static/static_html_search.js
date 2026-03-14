@@ -104,6 +104,65 @@
     };
   }
 
+  function executeSearchQuery(queryDict, searchIndex) {
+    if (queryDict.mode === "OR") {
+      let uniqueResults = new Set();
+      for (const token of queryDict.terms) {
+        const tokenResults = searchIndex[token];
+        if (tokenResults) {
+          uniqueResults = new Set([...uniqueResults, ...tokenResults]);
+        }
+      }
+      return Array.from(uniqueResults);
+    }
+
+    const firstTerm = queryDict.terms[0];
+    const firstTermResults = searchIndex[firstTerm];
+    if (!firstTermResults || firstTermResults.length === 0) {
+      return [];
+    }
+
+    let uniqueResults = new Set(firstTermResults);
+    for (let i = 1; i < queryDict.terms.length; i++) {
+      const termResults = searchIndex[queryDict.terms[i]];
+      const termUniqueResults = new Set(termResults);
+
+      uniqueResults = intersectSets([uniqueResults, termUniqueResults]);
+      if (uniqueResults.size === 0) {
+        break;
+      }
+    }
+
+    return Array.from(uniqueResults);
+  }
+
+  function refineAndQueryResults(results, queryDict, nodesByMid) {
+    const finalAndResults = [];
+    const finalUniqueResults = new Set();
+    const andQuery = queryDict.terms.join(" ");
+
+    for (const result of results) {
+      const node = nodesByMid[parseInt(result, 10)];
+      console.assert(!!node, "node must be defined for result: " + result);
+
+      Object.entries(node).forEach(([_, value]) => {
+        if (value === "") {
+          return;
+        }
+
+        if (!finalUniqueResults.has(result) && value.toLowerCase().includes(andQuery)) {
+          finalUniqueResults.add(result);
+          finalAndResults.push(result);
+        }
+      });
+    }
+
+    return {
+      results: finalAndResults,
+      highlightElements: [andQuery],
+    };
+  }
+
   class SearchResultsView {
     static PAGE_SIZE = 5;
 
@@ -360,73 +419,26 @@
     const queryDict = parseSearchQuery(searchQuery);
 
     let results = [];
-
-    if (queryDict["mode"] === "OR") {
+    if (queryDict.mode === "OR") {
       if (!searchQuery.includes('"')) {
-        let uniqueResults = new Set();
-        for (const token of queryDict["terms"]) {
-          const tokenResults = strictDocSearch.index[token];
-          if (tokenResults) {
-            uniqueResults = new Set([...uniqueResults, ...tokenResults]);
-          }
-        }
-        results.push(...uniqueResults);
+        results = executeSearchQuery(queryDict, strictDocSearch.index);
       }
     } else {
-      const firstTerm = queryDict["terms"][0];
-      const firstTermResults = strictDocSearch.index[firstTerm];
-      if (firstTermResults && firstTermResults.length > 0) {
-        let uniqueResults = new Set(firstTermResults);
-
-        if (queryDict["terms"].length > 1) {
-          for (let i = 1; i < queryDict["terms"].length; i++) {
-            const termResults = strictDocSearch.index[queryDict["terms"][
-              i
-            ]];
-            const termUniqueResults = new Set(termResults);
-
-            uniqueResults = intersectSets([uniqueResults, termUniqueResults]);
-            if (uniqueResults.size === 0) {
-              break;
-            }
-          }
-        }
-
-        results = Array.from(uniqueResults);
-      }
+      results = executeSearchQuery(queryDict, strictDocSearch.index);
     }
 
     if (results) {
       let highlightElements = null;
-      if (queryDict["mode"] === "OR") {
-        highlightElements = queryDict["terms"];
+      if (queryDict.mode === "OR") {
+        highlightElements = queryDict.terms;
       } else {
-        let finalAndResults = [];
-        let finalUniqueResults = new Set();
-        const andQuery = queryDict["terms"].join(" ");
-        highlightElements = [andQuery];
-
-        for (const result of results) {
-          const node = strictDocSearch.nodesByMid[parseInt(result, 10)];
-          console.assert(!!node, "node must be defined for result: " +
-            result);
-
-
-          let node_key_values = "";
-          Object.entries(node).forEach(([key, value]) => {
-            if (value === "") {
-              return;
-            }
-
-            if (!finalUniqueResults.has(result) && value.toLowerCase()
-              .includes(andQuery)) {
-              finalUniqueResults.add(result);
-              finalAndResults.push(result);
-            }
-          });
-        }
-
-        results = finalAndResults;
+        const refinedResults = refineAndQueryResults(
+          results,
+          queryDict,
+          strictDocSearch.nodesByMid
+        );
+        results = refinedResults.results;
+        highlightElements = refinedResults.highlightElements;
       }
       searchResultsView.populateResults(results, highlightElements);
     } else {

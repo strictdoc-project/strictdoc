@@ -74,7 +74,7 @@
       this.results = null;
       this.highlightElements = null;
       this.currentPage = 1;
-      suggestions.addEventListener("click", this.acceptSuggestion, true);
+      this.suggestions.addEventListener("click", this.acceptSuggestion, true);
       document.addEventListener("keydown", (event) => this.handleEscape(
         event), true);
     }
@@ -86,8 +86,7 @@
         // Otherwise the field remains focused and a subsequent click won't fire a 'focus' event,
         // so the search won't restart. Blurring ensures the next refocus re‑triggers search with
         // the existing text.
-        if (typeof userinput !== "undefined" && document.activeElement ===
-          userinput) {
+        if (document.activeElement === userinput) {
           userinput.blur();
         }
       }
@@ -138,7 +137,7 @@
 
         if (!entry) {
           entry = document.createElement("div");
-          suggestions.appendChild(entry);
+          this.suggestions.appendChild(entry);
         }
 
         const node = strictDocSearch.nodesByMid[parseInt(flatResult, 10)];

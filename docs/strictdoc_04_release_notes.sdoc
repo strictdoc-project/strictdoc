@@ -54,7 +54,33 @@ MID: 6a185e24981f4ed0abae7cb1d32fa7a5
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) **Markdown support in StrictDoc:** StrictDoc can now discover and parse ``.md`` and ``.markdown`` files and export project documents to Markdown. It is already possible to edit Markdown files in the web interface but several features are not properly activated yet: automatic generation of MID/UID, parsing reserved document config fields, creating Markdowns in the web interface, etc.
+1\) StrictDoc now includes the first stage of Markdown support. Markdown
+documents can be discovered, parsed, exported, rendered to HTML, and edited
+in the web interface. In addition, Markdown requirements now support the
+basic ``Relations:`` field, which makes it possible to start using
+traceability links in Markdown-based projects.
+
+2\) The search workflow has been improved for both the server and static HTML
+exports. The header search field can now forward queries directly to the
+Search screen, the Search screen accepts plain text queries, and the static
+search index serving was fixed to make the static-search workflow behave more
+consistently.
+
+3\) The document navigation and frontend interaction received a number of
+usability improvements. The Table of Contents now provides expand-all and
+collapse-all actions with a one-step undo, the highlighting behavior is more
+stable when sections move or are collapsed, and the project tree preserves
+the current view type and scroll position better. In addition, document tree
+entries now update immediately after a document title is renamed, and the
+header action menus were reworked into a more consistent dropdown-based UI.
+
+4\) Several user-facing fixes and improvements were added to editing and
+traceability workflows. Cloning a node in projects with enabled MID fields
+now generates a unique MID automatically, the source traceability support was
+improved for C++ and GoogleTest code including namespace-aware parsing and
+type-parameterized tests, and several HTML screens received layout fixes for
+dashboard sizing, node controls, search field placement, TOC overlap, and
+code blocks with line numbers.
 <<<
 
 [[/SECTION]]

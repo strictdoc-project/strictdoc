@@ -387,18 +387,11 @@
         this.suggestions.removeChild(this.suggestions.lastChild);
       }
 
-      // Compute the human-readable result range shown above the list.
-      const rangeStart = (page - 1) * SearchResultsView.PAGE_SIZE + 1;
-      const rangeEnd = Math.min(page * SearchResultsView.PAGE_SIZE, this
-        .results.length);
-
       // Update pagination controls based on the current page position.
       this.updatePaginationState(page);
 
       // Refresh the result counter text for the currently visible range.
-      this.resultsCount.innerHTML = `\
-  Results: <b>${rangeStart}–${rangeEnd}</b> from ${this.results.length}
-  `;
+      this.updateResultsCount(page);
 
       // Reset keyboard selection to the first visible result on each page change.
       this._selectResult(0);
@@ -427,6 +420,17 @@
         this.navigationNext.setAttribute("disabled", "");
         this.navigationEnd.setAttribute("disabled", "");
       }
+    }
+
+    updateResultsCount(page) {
+      // Compute the human-readable result range shown above the list.
+      const rangeStart = (page - 1) * SearchResultsView.PAGE_SIZE + 1;
+      const rangeEnd = Math.min(page * SearchResultsView.PAGE_SIZE, this
+        .results.length);
+
+      this.resultsCount.innerHTML = `\
+  Results: <b>${rangeStart}–${rangeEnd}</b> from ${this.results.length}
+  `;
     }
 
     selectNextResult() {

@@ -393,6 +393,18 @@
         .results.length);
 
       // Update pagination controls based on the current page position.
+      this.updatePaginationState(page);
+
+      // Refresh the result counter text for the currently visible range.
+      this.resultsCount.innerHTML = `\
+  Results: <b>${rangeStart}–${rangeEnd}</b> from ${this.results.length}
+  `;
+
+      // Reset keyboard selection to the first visible result on each page change.
+      this._selectResult(0);
+    }
+
+    updatePaginationState(page) {
       if (this.results.length > SearchResultsView.PAGE_SIZE) {
         if (page < 2) {
           this.navigationStart.setAttribute("disabled", "");
@@ -415,14 +427,6 @@
         this.navigationNext.setAttribute("disabled", "");
         this.navigationEnd.setAttribute("disabled", "");
       }
-
-      // Refresh the result counter text for the currently visible range.
-      this.resultsCount.innerHTML = `\
-  Results: <b>${rangeStart}–${rangeEnd}</b> from ${this.results.length}
-  `;
-
-      // Reset keyboard selection to the first visible result on each page change.
-      this._selectResult(0);
     }
 
     selectNextResult() {
@@ -430,6 +434,7 @@
         this._selectResult(this.selectedIndex + 1);
       }
     }
+
     selectPreviousResult() {
       if (this.selectedIndex > 0) {
         this._selectResult(this.selectedIndex - 1);

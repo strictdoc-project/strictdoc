@@ -474,6 +474,7 @@
       this.userinput = userinput;
       this.searchData = searchData;
       this.searchResultsView = searchResultsView;
+      this.previousInputValue = "";
     }
 
     attachEventListeners() {
@@ -498,14 +499,14 @@
 
       // Reset the live search UI when the input becomes empty.
       if (this.userinput.value === "") {
-        this.userinput.dataset.prevValue = "";
+        this.previousInputValue = "";
         this.searchResultsView.hideResults();
         return;
       }
 
       // Apply the current quote-editing behavior for live input.
       // FIXME
-      if (this.userinput.dataset.prevValue === '""' && this.userinput.value === '"') {
+      if (this.previousInputValue === '""' && this.userinput.value === '"') {
         this.userinput.value = ""
       } else if (this.userinput.value === '"') {
         const quote = this.userinput.value;
@@ -516,7 +517,7 @@
       }
 
       // Persist the latest input value for the next edit step.
-      this.userinput.dataset.prevValue = this.userinput.value;
+      this.previousInputValue = this.userinput.value;
 
       // Build the normalized search query from the current input.
       const searchQuery = this.userinput.value.toLowerCase();
@@ -837,7 +838,6 @@
 
   const { userinput } = dom;
   const documentLevel = parseInt(meta.documentLevel, 10);
-  userinput.dataset.prevValue = "";
 
   const searchResultsView = new SearchResultsView(dom, {
     userinput,

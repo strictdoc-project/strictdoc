@@ -142,10 +142,10 @@
   }
 
   // Execute the parsed query directly against the prebuilt token index.
-  function executeSearchQuery(queryDict, searchIndex) {
-    if (queryDict.mode === "OR") {
+  function executeSearchQuery(parsedQuery, searchIndex) {
+    if (parsedQuery.mode === "OR") {
       let uniqueResults = new Set();
-      for (const token of queryDict.terms) {
+      for (const token of parsedQuery.terms) {
         const tokenResults = searchIndex[token];
         if (tokenResults) {
           uniqueResults = new Set([...uniqueResults, ...tokenResults]);
@@ -154,15 +154,15 @@
       return Array.from(uniqueResults);
     }
 
-    const firstTerm = queryDict.terms[0];
+    const firstTerm = parsedQuery.terms[0];
     const firstTermResults = searchIndex[firstTerm];
     if (!firstTermResults || firstTermResults.length === 0) {
       return [];
     }
 
     let uniqueResults = new Set(firstTermResults);
-    for (let i = 1; i < queryDict.terms.length; i++) {
-      const termResults = searchIndex[queryDict.terms[i]];
+    for (let i = 1; i < parsedQuery.terms.length; i++) {
+      const termResults = searchIndex[parsedQuery.terms[i]];
       const termUniqueResults = new Set(termResults);
 
       uniqueResults = intersectSets([uniqueResults, termUniqueResults]);
@@ -175,10 +175,10 @@
   }
 
   // Refine AND-style results by verifying the combined phrase against node fields.
-  function refineAndQueryResults(results, queryDict, nodesByMid) {
+  function refineAndQueryResults(results, parsedQuery, nodesByMid) {
     const finalAndResults = [];
     const finalUniqueResults = new Set();
-    const andQuery = queryDict.terms.join(" ");
+    const andQuery = parsedQuery.terms.join(" ");
 
     for (const result of results) {
       const node = nodesByMid[parseInt(result, 10)];
@@ -203,14 +203,14 @@
   }
 
   // Build the data needed by the results view: result ids plus highlight terms.
-  function buildSearchViewModel(queryDict, searchQuery, searchIndex, nodesByMid) {
+  function buildSearchViewModel(parsedQuery, searchQuery, searchIndex, nodesByMid) {
     let results = [];
-    if (queryDict.mode === "OR") {
+    if (parsedQuery.mode === "OR") {
       if (!searchQuery.includes('"')) {
-        results = executeSearchQuery(queryDict, searchIndex);
+        results = executeSearchQuery(parsedQuery, searchIndex);
       }
     } else {
-      results = executeSearchQuery(queryDict, searchIndex);
+      results = executeSearchQuery(parsedQuery, searchIndex);
     }
 
     if (!results) {
@@ -220,14 +220,14 @@
       };
     }
 
-    if (queryDict.mode === "OR") {
+    if (parsedQuery.mode === "OR") {
       return {
         results,
-        highlightElements: queryDict.terms,
+        highlightElements: parsedQuery.terms,
       };
     }
 
-    return refineAndQueryResults(results, queryDict, nodesByMid);
+    return refineAndQueryResults(results, parsedQuery, nodesByMid);
   }
 
   // =========================================================================
@@ -314,71 +314,55 @@
     }
 
     displayPage(page) {
+      // Ignore requests that point outside the available pagination range.
       if (page < 1 || page > Math.ceil(this.results.length /
           SearchResultsView.PAGE_SIZE)) {
         return;
       }
 
+      // Slice the full result list down to the subset rendered on this page.
       const pageResults = this.results.slice(
         (page - 1) * SearchResultsView.PAGE_SIZE,
         page * SearchResultsView.PAGE_SIZE
       );
 
+      // Persist the current page so the navigation buttons can move relative to it.
       this.currentPage = page;
 
+      // Reuse already rendered result containers where possible.
       const children = this.suggestions.childNodes;
 
+      // Render each result entry for the requested page.
       for (let i = 0; i < pageResults.length; i++) {
-        let flatResult = pageResults[i];
-        let entry = children[i];
+        let nodeId = pageResults[i];
+        let resultElement = children[i];
 
-        if (!entry) {
-          entry = document.createElement("div");
-          this.suggestions.appendChild(entry);
+        // Create a result container only when the current page needs more rows
+        // than were already rendered for the previous page.
+        if (!resultElement) {
+          resultElement = document.createElement("div");
+          this.suggestions.appendChild(resultElement);
         }
 
-        const node = this.searchData.nodesByMid[parseInt(flatResult, 10)];
-        console.assert(!!node, "node must be defined for result: " +
-          flatResult);
-
-        let node_key_values = "";
-        Object.entries(node).forEach(([key, value]) => {
-          if (value === "" || key === "_LINK") {
-            return;
-          }
-
-          for (let i = 0; i < this.highlightElements.length; i++) {
-            const highlightElement = this.highlightElements[i];
-            value = highlightWord(value, highlightElement);
-          }
-
-          node_key_values = node_key_values +
-            `<div class="static_search-result-node-field"><span class="static_search-result-node-field-key">${key}:</span> ${value}</div>`;
-        });
-
-        const pathPrefix = (this.documentLevel === 0) ? "" : "../".repeat(
-          this.documentLevel);
-
-        const nodeLink = node["_LINK"];
-
-        entry.innerHTML = `<div class="static_search-result-node">
-      ${node_key_values}
-      <div class="static_search-result-node-link">
-          <a href="${pathPrefix}index.html?a=${nodeLink}">Go to node →</a>
-      </div>
-      </div>
-      `;
-
+        this.renderResultElement(resultElement, nodeId);
       }
 
+      // Remove leftover DOM rows when the new page has fewer results than the previous one.
       while (children.length > pageResults.length) {
         this.suggestions.removeChild(this.suggestions.lastChild);
       }
 
-      const rangeStart = (page - 1) * SearchResultsView.PAGE_SIZE + 1;
-      const rangeEnd = Math.min(page * SearchResultsView.PAGE_SIZE, this
-        .results.length);
+      // Update pagination controls based on the current page position.
+      this.updatePaginationState(page);
 
+      // Refresh the result counter text for the currently visible range.
+      this.updateResultsCount(page);
+
+      // Reset keyboard selection to the first visible result on each page change.
+      this._selectResult(0);
+    }
+
+    updatePaginationState(page) {
       if (this.results.length > SearchResultsView.PAGE_SIZE) {
         if (page < 2) {
           this.navigationStart.setAttribute("disabled", "");
@@ -401,12 +385,55 @@
         this.navigationNext.setAttribute("disabled", "");
         this.navigationEnd.setAttribute("disabled", "");
       }
+    }
+
+    updateResultsCount(page) {
+      // Compute the human-readable result range shown above the list.
+      const rangeStart = (page - 1) * SearchResultsView.PAGE_SIZE + 1;
+      const rangeEnd = Math.min(page * SearchResultsView.PAGE_SIZE, this
+        .results.length);
 
       this.resultsCount.innerHTML = `\
   Results: <b>${rangeStart}–${rangeEnd}</b> from ${this.results.length}
   `;
+    }
 
-      this._selectResult(0);
+    renderResultElement(resultElement, nodeId) {
+      // Resolve the indexed node data behind the current search result id.
+      const node = this.searchData.nodesByMid[parseInt(nodeId, 10)];
+      console.assert(!!node, "node must be defined for result: " +
+        nodeId);
+
+      // Build the HTML fragment with node fields, applying term highlighting
+      // to every visible field except the navigation link field.
+      let nodeFieldsHtml = "";
+      Object.entries(node).forEach(([key, value]) => {
+        if (value === "" || key === "_LINK") {
+          return;
+        }
+
+        for (let i = 0; i < this.highlightElements.length; i++) {
+          const highlightElement = this.highlightElements[i];
+          value = highlightWord(value, highlightElement);
+        }
+
+        nodeFieldsHtml = nodeFieldsHtml +
+          `<div class="static_search-result-node-field"><span class="static_search-result-node-field-key">${key}:</span> ${value}</div>`;
+      });
+
+      const pathPrefix = (this.documentLevel === 0) ? "" : "../".repeat(
+        this.documentLevel);
+
+      // Render the visible result entry together with the deep link to the node.
+      const nodeLink = node["_LINK"];
+
+      resultElement.innerHTML = `<div class="static_search-result-node">
+      ${nodeFieldsHtml}
+      <div class="static_search-result-node-link">
+          <a href="${pathPrefix}index.html?a=${nodeLink}">Go to node →</a>
+      </div>
+      </div>
+      `;
     }
 
     selectNextResult() {
@@ -414,6 +441,7 @@
         this._selectResult(this.selectedIndex + 1);
       }
     }
+
     selectPreviousResult() {
       if (this.selectedIndex > 0) {
         this._selectResult(this.selectedIndex - 1);
@@ -481,10 +509,10 @@
 
       const searchQuery = this.userinput.value.toLowerCase();
 
-      const queryDict = parseSearchQuery(searchQuery);
+      const parsedQuery = parseSearchQuery(searchQuery);
 
       const searchViewModel = buildSearchViewModel(
-        queryDict,
+        parsedQuery,
         searchQuery,
         this.searchData.index,
         this.searchData.nodesByMid

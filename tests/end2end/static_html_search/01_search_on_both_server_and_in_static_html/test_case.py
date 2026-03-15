@@ -12,27 +12,36 @@ from tests.end2end.helpers.screens.document.screen_document import (
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
+from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 
 class Test(E2ECase):
-    def test_uid(self):
+    def test_search_in_static_html(self):
         with SDocTestHTMLExporter(
             input_path=path_to_this_test_file_folder
         ) as exporter:
             self.open(exporter.get_output_path_as_uri() + "index.html")
+            self._test_common_sequence()
 
-            screen_project_index = Screen_ProjectIndex(self)
-            screen_project_index.assert_on_screen()
+    def test_search_on_server(self):
+        with SDocTestServer(
+            input_path=path_to_this_test_file_folder
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+            self._test_common_sequence()
 
-            self._test_unique_query(screen_project_index)
-            self._test_common_query(screen_project_index)
-            self._test_quoted_query(screen_project_index)
-            self._test_quoted_query_with_space(screen_project_index)
+    def _test_common_sequence(self):
+        screen_project_index = Screen_ProjectIndex(self)
+        screen_project_index.assert_on_screen()
 
-            self._test_node_without_uid(screen_project_index)
-            self.open(exporter.get_output_path_as_uri() + "index.html")
+        self._test_unique_query(screen_project_index)
+        self._test_common_query(screen_project_index)
+        self._test_quoted_query(screen_project_index)
+        self._test_quoted_query_with_space(screen_project_index)
+
+        self._test_node_without_uid(screen_project_index)
 
     def _test_unique_query(self, screen_project_index: Screen_ProjectIndex):
         screen_project_index.do_enter_search_query("UNIQUE_STATEMENT_LINE_1")

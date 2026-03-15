@@ -504,15 +504,21 @@
         return;
       }
 
-      // Apply the current quote-editing behavior for live input.
+      // Preserve the current live-input behavior for quote editing.
       // FIXME
+      // If the previous input step already auto-inserted "" and the user has
+      // edited the field back down to a single quote, treat that as deleting
+      // the auto-completed quote pair and clear the field completely.
       if (this.previousInputValue === '""' && this.userinput.value === '"') {
         this.userinput.value = ""
+      // If the user has typed a single quote into an otherwise empty field,
+      // auto-insert the matching closing quote.
       } else if (this.userinput.value === '"') {
         const quote = this.userinput.value;
         this.userinput.value = quote + quote;
 
-        // Place cursor between the two quotes.
+        // Place the cursor between the two quotes
+        // so the next typed characters become the quoted phrase.
         this.userinput.setSelectionRange(1, 1);
       }
 

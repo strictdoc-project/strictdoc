@@ -381,3 +381,26 @@ STATEMENT: >>>
 <<<
 
 [[/SECTION]]
+
+[[SECTION]]
+MID: 57300bfdfcaf47c2ab7b29c3e6ffb75d
+TITLE: Playbooks
+
+[[SECTION]]
+MID: e30a730c91d94de28b62f471f0a67e04
+TITLE: How to update release notes
+
+[TEXT]
+MID: e06a9159c4be4555acd67d77f445c968
+STATEMENT: >>>
+- Add to the release notes (``docs/strictdoc_04_release_notes.sdoc``) a high-level, human-readable summary of all work since the latest Git tag.
+- Summarize all changes under the top section called "Unreleased". If that section does not exist yet, create it. It is this section that will later be turned into the actual release notes.
+- Do not try to create a new version yourself. This is handled with another playbook (TBD).
+- Follow the example of the existing Release Notes.
+- Do not summarize each and every commit. Only include the most important user-facing changes that are implemented with ``feat:`` and ``fix:`` commits. Don't consider commits with any other prefix.
+- Ignore the changelog file ``CHANGELOG.md`` completely. It is an outdated auto-generated file that is going to be removed in the future.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]

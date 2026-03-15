@@ -23,6 +23,10 @@
     );
   }
 
+  // =========================================================================
+  // DOM and meta discovery
+  // =========================================================================
+
   // Collect the DOM nodes that the static search UI depends on.
   function collectRequiredDom() {
     const selectorByRefKey = {
@@ -81,12 +85,18 @@
     };
   }
 
+  // =========================================================================
+  // Query parsing and result shaping
+  // =========================================================================
+
+  // Highlight matched terms in result text before rendering the suggestion entry.
   function highlightWord(text, word) {
     let newStr = text.replace(new RegExp(word, "gi"), (match) => "<mark>" +
       match + "</mark>");
     return newStr;
   }
 
+  // Intersect per-token result sets for AND-style queries.
   function intersectSets(sets) {
     if (sets.length === 0) return new Set();
 
@@ -99,6 +109,7 @@
     return intersection;
   }
 
+  // Parse the raw search text into a minimal query model used by the live search UI.
   function parseSearchQuery(searchQuery) {
     const regex = /"([^"]+)"|(\S+)/g;
     const tokens = [];
@@ -130,6 +141,7 @@
     };
   }
 
+  // Execute the parsed query directly against the prebuilt token index.
   function executeSearchQuery(queryDict, searchIndex) {
     if (queryDict.mode === "OR") {
       let uniqueResults = new Set();
@@ -162,6 +174,7 @@
     return Array.from(uniqueResults);
   }
 
+  // Refine AND-style results by verifying the combined phrase against node fields.
   function refineAndQueryResults(results, queryDict, nodesByMid) {
     const finalAndResults = [];
     const finalUniqueResults = new Set();
@@ -189,6 +202,7 @@
     };
   }
 
+  // Build the data needed by the results view: result ids plus highlight terms.
   function buildSearchViewModel(queryDict, searchQuery, searchIndex, nodesByMid) {
     let results = [];
     if (queryDict.mode === "OR") {
@@ -215,6 +229,10 @@
 
     return refineAndQueryResults(results, queryDict, nodesByMid);
   }
+
+  // =========================================================================
+  // Live search UI
+  // =========================================================================
 
   // Render and paginate the live search result list.
   class SearchResultsView {
@@ -507,6 +525,11 @@
     }
   }
 
+  // =========================================================================
+  // Search index initialization
+  // =========================================================================
+
+  // Open the IndexedDB database that caches the generated search index.
   function openSearchIndexDB(name, version = 1) {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(name, version);
@@ -521,6 +544,7 @@
     });
   }
 
+  // Drop the cached search index when it becomes stale.
   function deleteSearchIndexDB(name) {
     return new Promise((resolve, reject) => {
       const delReq = indexedDB.deleteDatabase(name);
@@ -529,6 +553,7 @@
     });
   }
 
+  // Read a cached value from the search index store.
   function getFromSearchIndexStore(db, storeName, key) {
     return new Promise((resolve, reject) => {
       const tx = db.transaction(storeName, "readonly");
@@ -539,6 +564,7 @@
     });
   }
 
+  // Persist the current search index payload to the cache store.
   function saveToSearchIndexStore(db, storeName, items) {
     return new Promise((resolve, reject) => {
       const tx = db.transaction(storeName, "readwrite");
@@ -549,6 +575,7 @@
     });
   }
 
+  // Load the generated search index JavaScript file into the page.
   function loadScript(url) {
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
@@ -563,6 +590,7 @@
     });
   }
 
+  // Load the generated search index, optionally bypassing the browser cache.
   async function loadSearchIndexFromScript(pathToSearchIndex, cacheBusting) {
     const searchIndexURL = new URL(pathToSearchIndex, window.location.href);
     if (cacheBusting) {
@@ -574,6 +602,7 @@
     console.log("Search: JS search index loaded successfully.");
   }
 
+  // Save the in-memory search index into IndexedDB for faster reloads.
   async function saveCurrentSearchIndexToDB({
     dbName,
     dbVersion,
@@ -596,6 +625,7 @@
     console.timeEnd("Search: SAVE_DB_INDEX");
   }
 
+  // Refresh the cached search index after relevant Turbo stream updates.
   function installSearchIndexRefreshHandler({
     pathToSearchIndex,
     dbName,
@@ -739,6 +769,10 @@
       }
     }
   }
+
+  // =========================================================================
+  // App initialization
+  // =========================================================================
 
   // Initialize the UI controllers after all required DOM and meta are present.
   const { dom, missingSelectors } = collectRequiredDom();

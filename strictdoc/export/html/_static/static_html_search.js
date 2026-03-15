@@ -141,14 +141,6 @@
     };
   }
 
-  // Execute the parsed query directly against the prebuilt token index.
-  function executeSearchQuery(parsedQuery, searchIndex) {
-    if (parsedQuery.mode === "OR") {
-      return executeOrQuery(parsedQuery, searchIndex);
-    }
-    return executeAndQuery(parsedQuery, searchIndex);
-  }
-
   // Execute a token query by unioning all indexed token matches.
   function executeOrQuery(parsedQuery, searchIndex) {
     let uniqueResults = new Set();
@@ -213,30 +205,30 @@
 
   // Build the data needed by the results view: result ids plus highlight terms.
   function buildSearchViewModel(parsedQuery, searchQuery, searchIndex, nodesByMid) {
-    let results = [];
-    if (parsedQuery.mode === "OR") {
-      if (!searchQuery.includes('"')) {
-        results = executeSearchQuery(parsedQuery, searchIndex);
-      }
-    } else {
-      results = executeSearchQuery(parsedQuery, searchIndex);
-    }
-
-    if (!results) {
+    // Keep the existing live-input behavior for search text that still contains
+    // a quote character but has not been parsed as a quoted phrase query.
+    if (parsedQuery.mode === "OR" && searchQuery.includes('"')) {
       return {
         results: [],
-        highlightElements: null,
-      };
-    }
-
-    if (parsedQuery.mode === "OR") {
-      return {
-        results,
         highlightElements: parsedQuery.terms,
       };
     }
 
-    return refineAndQueryResults(results, parsedQuery, nodesByMid);
+    // ** "AND"
+    // Quoted phrase queries first intersect token matches, then verify
+    // that the full phrase exists in the matched node fields.
+    if (parsedQuery.mode === "AND") {
+      const results = executeAndQuery(parsedQuery, searchIndex);
+      return refineAndQueryResults(results, parsedQuery, nodesByMid);
+    }
+
+    // ** "OR"
+    // Unquoted queries use the default token-based OR search path.
+    const results = executeOrQuery(parsedQuery, searchIndex);
+    return {
+      results,
+      highlightElements: parsedQuery.terms,
+    };
   }
 
   // =========================================================================

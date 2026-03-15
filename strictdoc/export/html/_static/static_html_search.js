@@ -487,18 +487,23 @@
     }
 
     handleInput() {
+      // Wait until the search index and node lookup map are loaded.
+      // TODO: Replace this per-input guard with an explicit "search index ready"
+      // state and a visible UI signal for the user when live search is not ready yet.
       if (!this.searchData.index || !this.searchData.nodesByMid) {
         console.log(
           "Search: Cannot perform search: Search index is not available yet.")
         return;
       }
 
+      // Reset the live search UI when the input becomes empty.
       if (this.userinput.value === "") {
         this.userinput.dataset.prevValue = "";
         this.searchResultsView.hideResults();
         return;
       }
 
+      // Apply the current quote-editing behavior for live input.
       // FIXME
       if (this.userinput.dataset.prevValue === '""' && this.userinput.value === '"') {
         this.userinput.value = ""
@@ -510,10 +515,13 @@
         this.userinput.setSelectionRange(1, 1);
       }
 
+      // Persist the latest input value for the next edit step.
       this.userinput.dataset.prevValue = this.userinput.value;
 
+      // Build the normalized search query from the current input.
       const searchQuery = this.userinput.value.toLowerCase();
 
+      // Parse the query and build the view model shown in the live results list.
       const parsedQuery = parseSearchQuery(searchQuery);
 
       const searchViewModel = buildSearchViewModel(

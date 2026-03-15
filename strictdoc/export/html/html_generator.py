@@ -828,8 +828,20 @@ class HTMLGenerator:
             static_path=self.project_config.dir_for_sdoc_assets,
         )
         for _, node_ in global_map_nodes_by_mid.items():
-            node = traceability_index.get_node_by_mid(MID(node_["MID"]))
-            node_["_LINK"] = link_renderer.render_local_anchor(node)
+            # When running on server, the MID is used as a link to the node.
+            # The MID is then resolved to the correct URL by the server when
+            # requested at /UID/{uid_or_mid}.
+            # This ensures that all nodes can be reached with MID, including
+            # the nodes that don't have a UID.
+            if self.project_config.is_running_on_server:
+                node_["_LINK"] = node_["MID"]
+
+            # When running static HTML, the resolution of _LINKs happens through
+            # the auto-generated static JS project_map.js that has a format of:
+            # {<local anchor>: MID}
+            else:
+                node = traceability_index.get_node_by_mid(MID(node_["MID"]))
+                node_["_LINK"] = link_renderer.render_local_anchor(node)
 
         def default(obj: Any) -> Any:
             if isinstance(obj, set):

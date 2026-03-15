@@ -7,7 +7,7 @@ import uuid
 from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Dict, Iterator, List, Optional, Union
+from typing import Any, Dict, Iterator, List, Optional, Union
 from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile
@@ -2672,14 +2672,13 @@ def create_main_router(
     @read_router.get("/UID/{uid_or_mid}", response_class=RedirectResponse)
     def redirect_to_uid(uid_or_mid: str) -> Response:
         # Resolve UID or MID.
-        mid_pattern = r"^[a-fA-F0-9]{32}$"
-        if re.search(mid_pattern, uid_or_mid):
-            linkable_node = (
-                export_action.traceability_index.get_node_by_mid_weak(
-                    MID(uid_or_mid)
-                )
+
+        linkable_node: Optional[Any] = (
+            export_action.traceability_index.get_node_by_mid_weak(
+                MID(uid_or_mid)
             )
-        else:
+        )
+        if linkable_node is None:
             linkable_node = (
                 export_action.traceability_index.get_linkable_node_by_uid_weak(
                     uid_or_mid
@@ -2688,7 +2687,7 @@ def create_main_router(
 
         # If found, send a 302 redirect response to guide the user to the
         # correct URL (page + #anchor)
-        if linkable_node:
+        if linkable_node is not None:
             link_renderer = LinkRenderer(
                 root_path="", static_path=project_config.dir_for_sdoc_assets
             )

@@ -344,42 +344,7 @@
           this.suggestions.appendChild(resultElement);
         }
 
-        // Resolve the indexed node data behind the current search result id.
-        const node = this.searchData.nodesByMid[parseInt(nodeId, 10)];
-        console.assert(!!node, "node must be defined for result: " +
-          nodeId);
-
-        // Build the HTML fragment with node fields, applying term highlighting
-        // to every visible field except the navigation link field.
-        let nodeFieldsHtml = "";
-        Object.entries(node).forEach(([key, value]) => {
-          if (value === "" || key === "_LINK") {
-            return;
-          }
-
-          for (let i = 0; i < this.highlightElements.length; i++) {
-            const highlightElement = this.highlightElements[i];
-            value = highlightWord(value, highlightElement);
-          }
-
-          nodeFieldsHtml = nodeFieldsHtml +
-            `<div class="static_search-result-node-field"><span class="static_search-result-node-field-key">${key}:</span> ${value}</div>`;
-        });
-
-        const pathPrefix = (this.documentLevel === 0) ? "" : "../".repeat(
-          this.documentLevel);
-
-        // Render the visible result entry together with the deep link to the node.
-        const nodeLink = node["_LINK"];
-
-        resultElement.innerHTML = `<div class="static_search-result-node">
-      ${nodeFieldsHtml}
-      <div class="static_search-result-node-link">
-          <a href="${pathPrefix}index.html?a=${nodeLink}">Go to node →</a>
-      </div>
-      </div>
-      `;
-
+        this.renderResultElement(resultElement, nodeId);
       }
 
       // Remove leftover DOM rows when the new page has fewer results than the previous one.
@@ -431,6 +396,44 @@
       this.resultsCount.innerHTML = `\
   Results: <b>${rangeStart}–${rangeEnd}</b> from ${this.results.length}
   `;
+    }
+
+    renderResultElement(resultElement, nodeId) {
+      // Resolve the indexed node data behind the current search result id.
+      const node = this.searchData.nodesByMid[parseInt(nodeId, 10)];
+      console.assert(!!node, "node must be defined for result: " +
+        nodeId);
+
+      // Build the HTML fragment with node fields, applying term highlighting
+      // to every visible field except the navigation link field.
+      let nodeFieldsHtml = "";
+      Object.entries(node).forEach(([key, value]) => {
+        if (value === "" || key === "_LINK") {
+          return;
+        }
+
+        for (let i = 0; i < this.highlightElements.length; i++) {
+          const highlightElement = this.highlightElements[i];
+          value = highlightWord(value, highlightElement);
+        }
+
+        nodeFieldsHtml = nodeFieldsHtml +
+          `<div class="static_search-result-node-field"><span class="static_search-result-node-field-key">${key}:</span> ${value}</div>`;
+      });
+
+      const pathPrefix = (this.documentLevel === 0) ? "" : "../".repeat(
+        this.documentLevel);
+
+      // Render the visible result entry together with the deep link to the node.
+      const nodeLink = node["_LINK"];
+
+      resultElement.innerHTML = `<div class="static_search-result-node">
+      ${nodeFieldsHtml}
+      <div class="static_search-result-node-link">
+          <a href="${pathPrefix}index.html?a=${nodeLink}">Go to node →</a>
+      </div>
+      </div>
+      `;
     }
 
     selectNextResult() {

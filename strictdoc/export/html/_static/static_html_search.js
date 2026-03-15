@@ -23,6 +23,11 @@
     );
   }
 
+  // =========================================================================
+  // DOM and meta discovery
+  // =========================================================================
+
+  // Collect the DOM nodes that the static search UI depends on.
   function collectRequiredDom() {
     const selectorByRefKey = {
       searchBox: "#search",
@@ -55,12 +60,43 @@
     };
   }
 
+  // Collect the meta tags that configure search rendering and index loading.
+  function collectRequiredMeta() {
+    const selectorByMetaKey = {
+      documentLevel: 'meta[name="strictdoc-document-level"]',
+      projectHash: 'meta[name="strictdoc-project-hash"]',
+      searchIndexTimestamp: 'meta[name="strictdoc-search-index-timestamp"]',
+      searchIndexPath: 'meta[name="strictdoc-search-index-path"]',
+    };
+
+    const meta = Object.fromEntries(
+      Object.entries(selectorByMetaKey).map(([key, selector]) => {
+        return [key, document.querySelector(selector)?.content];
+      })
+    );
+
+    const missingSelectors = Object.entries(meta)
+      .filter(([, content]) => !content)
+      .map(([key]) => selectorByMetaKey[key]);
+
+    return {
+      meta,
+      missingSelectors,
+    };
+  }
+
+  // =========================================================================
+  // Query parsing and result shaping
+  // =========================================================================
+
+  // Highlight matched terms in result text before rendering the suggestion entry.
   function highlightWord(text, word) {
     let newStr = text.replace(new RegExp(word, "gi"), (match) => "<mark>" +
       match + "</mark>");
     return newStr;
   }
 
+  // Intersect per-token result sets for AND-style queries.
   function intersectSets(sets) {
     if (sets.length === 0) return new Set();
 
@@ -73,6 +109,7 @@
     return intersection;
   }
 
+  // Parse the raw search text into a minimal query model used by the live search UI.
   function parseSearchQuery(searchQuery) {
     const regex = /"([^"]+)"|(\S+)/g;
     const tokens = [];
@@ -104,6 +141,7 @@
     };
   }
 
+  // Execute the parsed query directly against the prebuilt token index.
   function executeSearchQuery(queryDict, searchIndex) {
     if (queryDict.mode === "OR") {
       let uniqueResults = new Set();
@@ -136,6 +174,7 @@
     return Array.from(uniqueResults);
   }
 
+  // Refine AND-style results by verifying the combined phrase against node fields.
   function refineAndQueryResults(results, queryDict, nodesByMid) {
     const finalAndResults = [];
     const finalUniqueResults = new Set();
@@ -163,6 +202,7 @@
     };
   }
 
+  // Build the data needed by the results view: result ids plus highlight terms.
   function buildSearchViewModel(queryDict, searchQuery, searchIndex, nodesByMid) {
     let results = [];
     if (queryDict.mode === "OR") {
@@ -190,21 +230,21 @@
     return refineAndQueryResults(results, queryDict, nodesByMid);
   }
 
+  // =========================================================================
+  // Live search UI
+  // =========================================================================
+
+  // Render and paginate the live search result list.
   class SearchResultsView {
     static PAGE_SIZE = 5;
 
-    constructor(dom) {
-      const metaDocumentLevel = document.querySelector(
-        'meta[name="strictdoc-document-level"]')?.content;
-      console.assert(
-        metaDocumentLevel,
-        "SearchResultsView: strictdoc-document-level meta tag is missing."
-      );
-
-      this.documentLevel = parseInt(metaDocumentLevel, 10);
+    constructor(dom, { userinput, searchData, documentLevel }) {
+      this.userinput = userinput;
+      this.searchData = searchData;
+      this.documentLevel = documentLevel;
       console.assert(
         !isNaN(this.documentLevel),
-        "SearchResultsView: strictdoc-document-level meta tag is not a valid number."
+        "SearchResultsView: documentLevel must be a valid number."
       );
 
       this.searchBox = dom.searchBox;
@@ -243,8 +283,8 @@
         // Otherwise the field remains focused and a subsequent click won't fire a 'focus' event,
         // so the search won't restart. Blurring ensures the next refocus re‑triggers search with
         // the existing text.
-        if (document.activeElement === userinput) {
-          userinput.blur();
+        if (document.activeElement === this.userinput) {
+          this.userinput.blur();
         }
       }
     }
@@ -297,7 +337,7 @@
           this.suggestions.appendChild(entry);
         }
 
-        const node = strictDocSearch.nodesByMid[parseInt(flatResult, 10)];
+        const node = this.searchData.nodesByMid[parseInt(flatResult, 10)];
         console.assert(!!node, "node must be defined for result: " +
           flatResult);
 
@@ -395,195 +435,204 @@
     }
   }
 
-  const { dom, missingSelectors } = collectRequiredDom();
-
-  if (missingSelectors.length > 0) {
-    console.assert(
-      false,
-      `Search: initialization skipped because required DOM elements are missing: ${missingSelectors.join(", ")}`
-    );
-    return;
-  }
-
-  const { userinput } = dom;
-  userinput.dataset.prevValue = "";
-
-  userinput.addEventListener("input", handleInputEvent_input, true);
-  userinput.addEventListener("keyup", handleInputEvent_keyUp, true);
-  userinput.addEventListener("keydown", handleInputEvent_keyDown, true);
-  userinput.addEventListener("focus", handleInputEvent_focus, true);
-
-  const searchResultsView = new SearchResultsView(dom);
-
-  function handleInputEvent_input() {
-    if (!strictDocSearch.index || !strictDocSearch.nodesByMid) {
-      console.log(
-        "Search: Cannot perform search: Search index is not available yet.")
-      return;
+  // Orchestrate user input events and translate them into search updates.
+  class SearchInputController {
+    constructor({ userinput, searchData, searchResultsView }) {
+      this.userinput = userinput;
+      this.searchData = searchData;
+      this.searchResultsView = searchResultsView;
     }
 
-    if (userinput.value === "") {
-      userinput.dataset.prevValue = "";
-      searchResultsView.hideResults();
-      return;
+    attachEventListeners() {
+      this.userinput.addEventListener("input", () => this.handleInput(), true);
+      this.userinput.addEventListener("keyup", (event) => this.handleKeyUp(
+        event), true);
+      this.userinput.addEventListener("keydown", (event) => this.handleKeyDown(
+        event), true);
+      this.userinput.addEventListener("focus", (event) => this.handleFocus(
+        event), true);
     }
 
-    // FIXME
-    if (userinput.dataset.prevValue === '""' && userinput.value === '"') {
-      userinput.value = ""
-    } else if (userinput.value === '"') {
-      const quote = userinput.value;
-      userinput.value = quote + quote;
-
-      // Place cursor between the two quotes.
-      userinput.setSelectionRange(1, 1);
-    }
-
-    userinput.dataset.prevValue = userinput.value;
-
-    const searchQuery = userinput.value.toLowerCase();
-
-    const queryDict = parseSearchQuery(searchQuery);
-
-    const searchViewModel = buildSearchViewModel(
-      queryDict,
-      searchQuery,
-      strictDocSearch.index,
-      strictDocSearch.nodesByMid
-    );
-    searchResultsView.populateResults(
-      searchViewModel.results,
-      searchViewModel.highlightElements
-    );
-  }
-
-  function handleInputEvent_keyDown(event) {
-    if (event && event.key === "Enter") {
-      event.preventDefault && event.preventDefault();
-      const searchQuery = userinput.value || "";
-      const encodedQuery = encodeURIComponent(searchQuery);
-      window.location.assign(`/search?q=${encodedQuery}`);
-    }
-  }
-
-  function handleInputEvent_focus(event) {
-    // FIXME: Nothing for now.
-  }
-
-  function handleInputEvent_keyUp(event) {
-    if (event) {
-      const key = event.key;
-      if (key === "ArrowUp") {
-        searchResultsView.selectPreviousResult();
-        event.preventDefault && event.preventDefault();
+    handleInput() {
+      if (!this.searchData.index || !this.searchData.nodesByMid) {
+        console.log(
+          "Search: Cannot perform search: Search index is not available yet.")
         return;
       }
-      if (key === "ArrowDown") {
-        searchResultsView.selectNextResult();
-        event.preventDefault && event.preventDefault();
+
+      if (this.userinput.value === "") {
+        this.userinput.dataset.prevValue = "";
+        this.searchResultsView.hideResults();
         return;
+      }
+
+      // FIXME
+      if (this.userinput.dataset.prevValue === '""' && this.userinput.value === '"') {
+        this.userinput.value = ""
+      } else if (this.userinput.value === '"') {
+        const quote = this.userinput.value;
+        this.userinput.value = quote + quote;
+
+        // Place cursor between the two quotes.
+        this.userinput.setSelectionRange(1, 1);
+      }
+
+      this.userinput.dataset.prevValue = this.userinput.value;
+
+      const searchQuery = this.userinput.value.toLowerCase();
+
+      const queryDict = parseSearchQuery(searchQuery);
+
+      const searchViewModel = buildSearchViewModel(
+        queryDict,
+        searchQuery,
+        this.searchData.index,
+        this.searchData.nodesByMid
+      );
+      this.searchResultsView.populateResults(
+        searchViewModel.results,
+        searchViewModel.highlightElements
+      );
+    }
+
+    handleKeyDown(event) {
+      if (event && event.key === "Enter") {
+        event.preventDefault && event.preventDefault();
+        const searchQuery = this.userinput.value || "";
+        const encodedQuery = encodeURIComponent(searchQuery);
+        window.location.assign(`/search?q=${encodedQuery}`);
+      }
+    }
+
+    handleFocus(event) {
+      // FIXME: Nothing for now.
+    }
+
+    handleKeyUp(event) {
+      if (event) {
+        const key = event.key;
+        if (key === "ArrowUp") {
+          this.searchResultsView.selectPreviousResult();
+          event.preventDefault && event.preventDefault();
+          return;
+        }
+        if (key === "ArrowDown") {
+          this.searchResultsView.selectNextResult();
+          event.preventDefault && event.preventDefault();
+          return;
+        }
       }
     }
   }
 
-  window.addEventListener("load", async () => {
-    const DB_VERSION = 1;
-    const timestampMeta = document.querySelector(
-      'meta[name="strictdoc-search-index-timestamp"]'
-    )?.content;
-    const projectHash = document.querySelector(
-      'meta[name="strictdoc-project-hash"]'
-    )?.content;
-    const pathToSearchIndex = document.querySelector(
-      'meta[name="strictdoc-search-index-path"]'
-    )?.content;
+  // =========================================================================
+  // Search index initialization
+  // =========================================================================
 
-    if (!projectHash || !pathToSearchIndex || !timestampMeta) {
-      console.error("Search: Missing required meta tags!");
-      return;
+  // Open the IndexedDB database that caches the generated search index.
+  function openSearchIndexDB(name, version = 1) {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(name, version);
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        db.createObjectStore("indexes", {
+          keyPath: "name"
+        });
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Drop the cached search index when it becomes stale.
+  function deleteSearchIndexDB(name) {
+    return new Promise((resolve, reject) => {
+      const delReq = indexedDB.deleteDatabase(name);
+      delReq.onsuccess = () => resolve();
+      delReq.onerror = () => reject(delReq.error);
+    });
+  }
+
+  // Read a cached value from the search index store.
+  function getFromSearchIndexStore(db, storeName, key) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, "readonly");
+      const store = tx.objectStore(storeName);
+      const req = store.get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  // Persist the current search index payload to the cache store.
+  function saveToSearchIndexStore(db, storeName, items) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, "readwrite");
+      const store = tx.objectStore(storeName);
+      items.forEach((item) => store.put(item));
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  // Load the generated search index JavaScript file into the page.
+  function loadScript(url) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = url;
+      script.onload = () => {
+        script.remove();
+        resolve();
+      };
+      script.onerror = () => reject(new Error(
+        `Failed to load script ${url}`));
+      document.head.appendChild(script);
+    });
+  }
+
+  // Load the generated search index, optionally bypassing the browser cache.
+  async function loadSearchIndexFromScript(pathToSearchIndex, cacheBusting) {
+    const searchIndexURL = new URL(pathToSearchIndex, window.location.href);
+    if (cacheBusting) {
+      searchIndexURL.searchParams.set("_refresh", Date.now().toString());
     }
+    console.time("Search: LOAD_JS_INDEX");
+    await loadScript(searchIndexURL.href);
+    console.timeEnd("Search: LOAD_JS_INDEX");
+    console.log("Search: JS search index loaded successfully.");
+  }
 
-    const dbName = "strictdoc_search_index_" + projectHash;
+  // Save the in-memory search index into IndexedDB for faster reloads.
+  async function saveCurrentSearchIndexToDB({
+    dbName,
+    dbVersion,
+    timestampMeta,
+    searchData,
+  }) {
+    console.time("Search: SAVE_DB_INDEX");
+    const db = await openSearchIndexDB(dbName, dbVersion);
+    await saveToSearchIndexStore(db, "indexes", [{
+      name: "STRICTDOC_SEARCH_INDEX",
+      value: searchData.index
+    }, {
+      name: "STRICTDOC_SEARCH_NODES_BY_MID",
+      value: searchData.nodesByMid
+    }, {
+      name: "TIMESTAMP",
+      value: timestampMeta
+    }, ]);
+    db.close();
+    console.timeEnd("Search: SAVE_DB_INDEX");
+  }
 
-    const openDB = (name, version = 1) =>
-      new Promise((resolve, reject) => {
-        const request = indexedDB.open(name, version);
-        request.onupgradeneeded = (e) => {
-          const db = e.target.result;
-          db.createObjectStore("indexes", {
-            keyPath: "name"
-          });
-        };
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-
-    const deleteDB = (name) =>
-      new Promise((resolve, reject) => {
-        const delReq = indexedDB.deleteDatabase(name);
-        delReq.onsuccess = () => resolve();
-        delReq.onerror = () => reject(delReq.error);
-      });
-
-    const getFromStore = (db, storeName, key) =>
-      new Promise((resolve, reject) => {
-        const tx = db.transaction(storeName, "readonly");
-        const store = tx.objectStore(storeName);
-        const req = store.get(key);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
-
-    const saveToStore = (db, storeName, items) =>
-      new Promise((resolve, reject) => {
-        const tx = db.transaction(storeName, "readwrite");
-        const store = tx.objectStore(storeName);
-        items.forEach((item) => store.put(item));
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error);
-      });
-
-    const loadScript = (url) =>
-      new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = url;
-        script.onload = () => {
-          script.remove();
-          resolve();
-        };
-        script.onerror = () => reject(new Error(
-          `Failed to load script ${url}`));
-        document.head.appendChild(script);
-      });
-
-    const loadIndexFromScript = async (cacheBusting) => {
-      const searchIndexURL = new URL(pathToSearchIndex, window.location.href);
-      if (cacheBusting) {
-        searchIndexURL.searchParams.set("_refresh", Date.now().toString());
-      }
-      console.time("Search: LOAD_JS_INDEX");
-      await loadScript(searchIndexURL.href);
-      console.timeEnd("Search: LOAD_JS_INDEX");
-      console.log("Search: JS search index loaded successfully.");
-    };
-
-    const saveCurrentIndexToDB = async () => {
-      console.time("Search: SAVE_DB_INDEX");
-      const db = await openDB(dbName, DB_VERSION);
-      await saveToStore(db, "indexes", [{
-        name: "STRICTDOC_SEARCH_INDEX",
-        value: strictDocSearch.index
-      }, {
-        name: "STRICTDOC_SEARCH_NODES_BY_MID",
-        value: strictDocSearch.nodesByMid
-      }, {
-        name: "TIMESTAMP",
-        value: timestampMeta
-      }, ]);
-      db.close();
-      console.timeEnd("Search: SAVE_DB_INDEX");
-    };
-
+  // Refresh the cached search index after relevant Turbo stream updates.
+  function installSearchIndexRefreshHandler({
+    pathToSearchIndex,
+    dbName,
+    dbVersion,
+    timestampMeta,
+    searchData,
+  }) {
     let refreshScheduled = false;
     let refreshInProgress = false;
     let refreshQueued = false;
@@ -596,8 +645,13 @@
 
       refreshInProgress = true;
       try {
-        await loadIndexFromScript(true);
-        await saveCurrentIndexToDB();
+        await loadSearchIndexFromScript(pathToSearchIndex, true);
+        await saveCurrentSearchIndexToDB({
+          dbName,
+          dbVersion,
+          timestampMeta,
+          searchData,
+        });
       } catch (refreshError) {
         console.error(
           "Search: Failed to refresh search index after Turbo stream update:",
@@ -639,50 +693,138 @@
         scheduleRefreshSearchIndexFromServer();
       }
     }, true);
+  }
+
+  // Initialize the search index from cache or from the generated script.
+  async function initializeSearchIndex({
+    projectHash,
+    pathToSearchIndex,
+    timestampMeta,
+    searchData,
+  }) {
+    const DB_VERSION = 1;
+    const dbName = "strictdoc_search_index_" + projectHash;
+
+    installSearchIndexRefreshHandler({
+      pathToSearchIndex,
+      dbName,
+      dbVersion: DB_VERSION,
+      timestampMeta,
+      searchData,
+    });
 
     try {
       console.log("Search: LOAD_DB_INDEX: Start");
-      const db = await openDB(dbName, DB_VERSION);
-      const tsEntry = await getFromStore(db, "indexes", "TIMESTAMP");
+      const db = await openSearchIndexDB(dbName, DB_VERSION);
+      const tsEntry = await getFromSearchIndexStore(db, "indexes", "TIMESTAMP");
 
       if (tsEntry && tsEntry.value === timestampMeta) {
-
         console.time("Search: LOAD_DB_INDEX");
-        const lunrEntry = await getFromStore(db, "indexes",
-          "STRICTDOC_SEARCH_INDEX");
-        const nodesEntry = await getFromStore(db, "indexes",
-          "STRICTDOC_SEARCH_NODES_BY_MID");
+        const lunrEntry = await getFromSearchIndexStore(
+          db,
+          "indexes",
+          "STRICTDOC_SEARCH_INDEX"
+        );
+        const nodesEntry = await getFromSearchIndexStore(
+          db,
+          "indexes",
+          "STRICTDOC_SEARCH_NODES_BY_MID"
+        );
         console.timeEnd("Search: LOAD_DB_INDEX");
 
         if (lunrEntry && nodesEntry) {
-          strictDocSearch.index = lunrEntry.value;
-          strictDocSearch.nodesByMid = nodesEntry.value;
+          searchData.index = lunrEntry.value;
+          searchData.nodesByMid = nodesEntry.value;
+          db.close();
           return;
         }
       }
 
       db.close();
-      await deleteDB(dbName);
+      await deleteSearchIndexDB(dbName);
 
       try {
-        await loadIndexFromScript(false);
+        await loadSearchIndexFromScript(pathToSearchIndex, false);
       } catch (e) {
         console.error("Search: Failed to load JS search index script:",
           e);
         return;
       }
 
-      await saveCurrentIndexToDB();
+      await saveCurrentSearchIndexToDB({
+        dbName,
+        dbVersion: DB_VERSION,
+        timestampMeta,
+        searchData,
+      });
 
     } catch (err) {
       console.error("Search: Error loading search index:", err);
 
       try {
-        await loadIndexFromScript(false);
+        await loadSearchIndexFromScript(pathToSearchIndex, false);
         console.log("Search: Script loaded without IndexedDB fallback");
       } catch (e) {
         console.error("Search: Failed to load search index script:", e);
       }
     }
+  }
+
+  // =========================================================================
+  // App initialization
+  // =========================================================================
+
+  // Initialize the UI controllers after all required DOM and meta are present.
+  const { dom, missingSelectors } = collectRequiredDom();
+  const { meta, missingSelectors: missingMetaSelectors } = collectRequiredMeta();
+
+  if (missingSelectors.length > 0) {
+    console.assert(
+      false,
+      `Search: initialization skipped because required DOM elements are missing: ${missingSelectors.join(", ")}`
+    );
+    return;
+  }
+
+  if (missingMetaSelectors.length > 0) {
+    console.assert(
+      false,
+      `Search: initialization skipped because required meta tags are missing: ${missingMetaSelectors.join(", ")}`
+    );
+    return;
+  }
+
+  const { userinput } = dom;
+  const documentLevel = parseInt(meta.documentLevel, 10);
+  userinput.dataset.prevValue = "";
+
+  const searchResultsView = new SearchResultsView(dom, {
+    userinput,
+    searchData: strictDocSearch,
+    documentLevel,
+  });
+  const searchInputController = new SearchInputController({
+    userinput,
+    searchData: strictDocSearch,
+    searchResultsView,
+  });
+  searchInputController.attachEventListeners();
+
+  // Defer search index initialization until the page and generated assets are ready.
+  window.addEventListener("load", async () => {
+    const timestampMeta = meta.searchIndexTimestamp;
+    const projectHash = meta.projectHash;
+    const pathToSearchIndex = meta.searchIndexPath;
+
+    if (!projectHash || !pathToSearchIndex || !timestampMeta) {
+      console.error("Search: Missing required meta tags!");
+      return;
+    }
+    await initializeSearchIndex({
+      projectHash,
+      pathToSearchIndex,
+      timestampMeta,
+      searchData: strictDocSearch,
+    });
   });
 })();

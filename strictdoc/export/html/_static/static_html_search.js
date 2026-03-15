@@ -144,16 +144,25 @@
   // Execute the parsed query directly against the prebuilt token index.
   function executeSearchQuery(parsedQuery, searchIndex) {
     if (parsedQuery.mode === "OR") {
-      let uniqueResults = new Set();
-      for (const token of parsedQuery.terms) {
-        const tokenResults = searchIndex[token];
-        if (tokenResults) {
-          uniqueResults = new Set([...uniqueResults, ...tokenResults]);
-        }
-      }
-      return Array.from(uniqueResults);
+      return executeOrQuery(parsedQuery, searchIndex);
     }
+    return executeAndQuery(parsedQuery, searchIndex);
+  }
 
+  // Execute a token query by unioning all indexed token matches.
+  function executeOrQuery(parsedQuery, searchIndex) {
+    let uniqueResults = new Set();
+    for (const token of parsedQuery.terms) {
+      const tokenResults = searchIndex[token];
+      if (tokenResults) {
+        uniqueResults = new Set([...uniqueResults, ...tokenResults]);
+      }
+    }
+    return Array.from(uniqueResults);
+  }
+
+  // Execute a phrase query by intersecting the per-token index matches first.
+  function executeAndQuery(parsedQuery, searchIndex) {
     const firstTerm = parsedQuery.terms[0];
     const firstTermResults = searchIndex[firstTerm];
     if (!firstTermResults || firstTermResults.length === 0) {

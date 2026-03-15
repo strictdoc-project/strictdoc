@@ -314,33 +314,43 @@
     }
 
     displayPage(page) {
+      // Ignore requests that point outside the available pagination range.
       if (page < 1 || page > Math.ceil(this.results.length /
           SearchResultsView.PAGE_SIZE)) {
         return;
       }
 
+      // Slice the full result list down to the subset rendered on this page.
       const pageResults = this.results.slice(
         (page - 1) * SearchResultsView.PAGE_SIZE,
         page * SearchResultsView.PAGE_SIZE
       );
 
+      // Persist the current page so the navigation buttons can move relative to it.
       this.currentPage = page;
 
+      // Reuse already rendered result containers where possible.
       const children = this.suggestions.childNodes;
 
+      // Render each result entry for the requested page.
       for (let i = 0; i < pageResults.length; i++) {
         let flatResult = pageResults[i];
         let entry = children[i];
 
+        // Create a result container only when the current page needs more rows
+        // than were already rendered for the previous page.
         if (!entry) {
           entry = document.createElement("div");
           this.suggestions.appendChild(entry);
         }
 
+        // Resolve the indexed node data behind the current search result id.
         const node = this.searchData.nodesByMid[parseInt(flatResult, 10)];
         console.assert(!!node, "node must be defined for result: " +
           flatResult);
 
+        // Build the HTML fragment with node fields, applying term highlighting
+        // to every visible field except the navigation link field.
         let node_key_values = "";
         Object.entries(node).forEach(([key, value]) => {
           if (value === "" || key === "_LINK") {
@@ -359,6 +369,7 @@
         const pathPrefix = (this.documentLevel === 0) ? "" : "../".repeat(
           this.documentLevel);
 
+        // Render the visible result entry together with the deep link to the node.
         const nodeLink = node["_LINK"];
 
         entry.innerHTML = `<div class="static_search-result-node">
@@ -371,14 +382,17 @@
 
       }
 
+      // Remove leftover DOM rows when the new page has fewer results than the previous one.
       while (children.length > pageResults.length) {
         this.suggestions.removeChild(this.suggestions.lastChild);
       }
 
+      // Compute the human-readable result range shown above the list.
       const rangeStart = (page - 1) * SearchResultsView.PAGE_SIZE + 1;
       const rangeEnd = Math.min(page * SearchResultsView.PAGE_SIZE, this
         .results.length);
 
+      // Update pagination controls based on the current page position.
       if (this.results.length > SearchResultsView.PAGE_SIZE) {
         if (page < 2) {
           this.navigationStart.setAttribute("disabled", "");
@@ -402,10 +416,12 @@
         this.navigationEnd.setAttribute("disabled", "");
       }
 
+      // Refresh the result counter text for the currently visible range.
       this.resultsCount.innerHTML = `\
   Results: <b>${rangeStart}–${rangeEnd}</b> from ${this.results.length}
   `;
 
+      // Reset keyboard selection to the first visible result on each page change.
       this._selectResult(0);
     }
 

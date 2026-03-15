@@ -227,6 +227,7 @@ def test_end2end(
     parallelize=False,
     long_timeouts=False,
     headless=False,
+    headed=False,
     shard=None,
     test_path=None,
     coverage: bool = False,
@@ -276,7 +277,7 @@ def test_end2end(
 
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
-    headless_argument = "--headless2" if headless else ""
+    headless_argument = "--headless2" if headless and not headed else "--gui"
     test_command = f"""
             {coverage_command_or_none}
             pytest

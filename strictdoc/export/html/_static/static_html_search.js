@@ -89,9 +89,13 @@
   // Query parsing and result shaping
   // =========================================================================
 
+  function escapeRegExp(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
   // Highlight matched terms in result text before rendering the suggestion entry.
   function highlightWord(text, word) {
-    let newStr = text.replace(new RegExp(word, "gi"), (match) => "<mark>" +
+    let newStr = text.replace(new RegExp(escapeRegExp(word), "gi"), (match) => "<mark>" +
       match + "</mark>");
     return newStr;
   }

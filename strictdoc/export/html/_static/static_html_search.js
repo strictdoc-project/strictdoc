@@ -474,6 +474,7 @@
       this.userinput = userinput;
       this.searchData = searchData;
       this.searchResultsView = searchResultsView;
+      this.previousInputValue = "";
     }
 
     attachEventListeners() {
@@ -487,33 +488,47 @@
     }
 
     handleInput() {
+      // Wait until the search index and node lookup map are loaded.
+      // TODO: Replace this per-input guard with an explicit "search index ready"
+      // state and a visible UI signal for the user when live search is not ready yet.
       if (!this.searchData.index || !this.searchData.nodesByMid) {
         console.log(
           "Search: Cannot perform search: Search index is not available yet.")
         return;
       }
 
+      // Reset the live search UI when the input becomes empty.
       if (this.userinput.value === "") {
-        this.userinput.dataset.prevValue = "";
+        this.previousInputValue = "";
         this.searchResultsView.hideResults();
         return;
       }
 
+      // Preserve the current live-input behavior for quote editing.
       // FIXME
-      if (this.userinput.dataset.prevValue === '""' && this.userinput.value === '"') {
+      // If the previous input step already auto-inserted "" and the user has
+      // edited the field back down to a single quote, treat that as deleting
+      // the auto-completed quote pair and clear the field completely.
+      if (this.previousInputValue === '""' && this.userinput.value === '"') {
         this.userinput.value = ""
+      // If the user has typed a single quote into an otherwise empty field,
+      // auto-insert the matching closing quote.
       } else if (this.userinput.value === '"') {
         const quote = this.userinput.value;
         this.userinput.value = quote + quote;
 
-        // Place cursor between the two quotes.
+        // Place the cursor between the two quotes
+        // so the next typed characters become the quoted phrase.
         this.userinput.setSelectionRange(1, 1);
       }
 
-      this.userinput.dataset.prevValue = this.userinput.value;
+      // Persist the latest input value for the next edit step.
+      this.previousInputValue = this.userinput.value;
 
+      // Build the normalized search query from the current input.
       const searchQuery = this.userinput.value.toLowerCase();
 
+      // Parse the query and build the view model shown in the live results list.
       const parsedQuery = parseSearchQuery(searchQuery);
 
       const searchViewModel = buildSearchViewModel(
@@ -829,7 +844,6 @@
 
   const { userinput } = dom;
   const documentLevel = parseInt(meta.documentLevel, 10);
-  userinput.dataset.prevValue = "";
 
   const searchResultsView = new SearchResultsView(dom, {
     userinput,

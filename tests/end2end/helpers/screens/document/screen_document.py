@@ -172,10 +172,91 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             current_content = target_element.text
             if ".. image:: @assets/" in current_content:
                 break
+            if "Image upload failed" in current_content:
+                break
 
             if (datetime.now() - start_time).total_seconds() > 10:
                 raise TimeoutError(
                     "Image upload failed or RST path never appeared."
+                )
+
+            self.test_case.sleep(0.5)
+
+    def do_paste_image_to_requirement(
+        self, field_name: str, image_path: str, field_order: int = 1
+    ) -> None:
+        # Verify the file exists locally
+        absolute_image_path = os.path.abspath(image_path)
+        assert os.path.exists(absolute_image_path), (
+            f"Test image not found at {absolute_image_path}"
+        )
+
+        # Find the target editable field for the specific requirement
+        field_order_str = "last()" if field_order == -1 else str(field_order)
+        xpath_field = (
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
+        )
+        target_element = self.test_case.find_element(By.XPATH, xpath_field)
+
+        # Use a JS script to simulate the image paste event with a mocked ClipboardEvent.
+        js_paste_files = """
+            var target = arguments[0];
+            var document = target.ownerDocument || document;
+
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.style.display = 'none';
+            input.onchange = function () {
+                var files = this.files;
+
+                // Mock the DataTransfer/Clipboard items structure
+                var mockClipboardItems = [];
+                for (var i = 0; i < files.length; i++) {
+                    let file = files[i];
+                    mockClipboardItems.push({
+                        type: file.type || 'image/png', // Fallback type just in case
+                        getAsFile: function() { return file; }
+                    });
+                }
+
+                var mockClipboardData = {
+                    items: mockClipboardItems,
+                    getData: function(format) { return ''; } // Mock getData to prevent errors
+                };
+
+                // Create the paste event and define the clipboardData property
+                var pasteEvent = new Event('paste', { bubbles: true, cancelable: true });
+                Object.defineProperty(pasteEvent, 'clipboardData', { value: mockClipboardData });
+
+                target.dispatchEvent(pasteEvent);
+
+                setTimeout(function () { document.body.removeChild(input); }, 20);
+            };
+            document.body.appendChild(input);
+            return input;
+        """
+
+        # Execute the script to create the input, then "upload" the file to it
+        file_input = self.test_case.driver.execute_script(
+            js_paste_files, target_element
+        )
+        file_input.send_keys(absolute_image_path)
+
+        # Wait for the UI to update
+        # We wait until the placeholder "Uploading..." disappears
+        # and is replaced by the actual RST directive path.
+        start_time = datetime.now()
+        while True:
+            current_content = target_element.text
+            # Checking for both asset path variations just to be safe
+            if ".. image:: @assets/" in current_content:
+                break
+            if "Image upload failed" in current_content:
+                break
+
+            if (datetime.now() - start_time).total_seconds() > 10:
+                raise TimeoutError(
+                    "Image paste failed or RST path never appeared."
                 )
 
             self.test_case.sleep(0.5)

@@ -12,6 +12,7 @@ from strictdoc.commands.about_command import AboutCommand
 from strictdoc.commands.export import ExportCommand
 from strictdoc.commands.import_excel import ImportExcelCommand
 from strictdoc.commands.import_reqif import ImportReqIFCommand
+from strictdoc.commands.manage_assets_command import ManageAssetsCommand
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.server import ServerCommand
 from strictdoc.commands.version_command import VersionCommand
@@ -27,7 +28,7 @@ COMMAND_REGISTRY: Dict[str, Any] = {
     "about": AboutCommand,
     "export": ExportCommand,
     "import": {"excel": ImportExcelCommand, "reqif": ImportReqIFCommand},
-    "manage": {"auto-uid": ManageAutoUIDCommand},
+    "manage": {"auto-uid": ManageAutoUIDCommand, "assets": ManageAssetsCommand},
     "server": ServerCommand,
     "version": VersionCommand,
 }

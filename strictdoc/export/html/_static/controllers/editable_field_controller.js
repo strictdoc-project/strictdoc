@@ -24,8 +24,7 @@ window.addEventListener("drop", (e) => {
       editable.addEventListener('paste', async (event) => {
         event.preventDefault();
 
-        if (!isSingle)
-        {
+        if (!isSingle) {
           // For multiline, we also handle copy paste of images here.
           const isImagePasted = await handleImagePaste(editable, event);
           if (isImagePasted) return;
@@ -43,7 +42,7 @@ window.addEventListener("drop", (e) => {
 
         hidden.value = editable.innerText;
       });
- 
+
       editable.addEventListener('input', (event) => {
         const editedText = editable.innerText;
         const text = isSingle ? filterSingleLine(editedText) : editedText;
@@ -75,17 +74,9 @@ window.addEventListener("drop", (e) => {
     return filename.replace(/\.[^/.]+$/, "").replace(/ /g, "_");
   }
 
-  async function handleImagePaste(editable, event)
-  {
+  async function handleImagePaste(editable, event) {
     const pasted_items = (event.clipboardData || event.originalEvent.clipboardData).items;
     const imageFiles = [];
-
-    for (const pasted_item of pasted_items) {
-      if (pasted_item.type.indexOf("image") !== -1) {
-        const file = pasted_item.getAsFile();
-        if (file) imageFiles.push(file);
-      }
-    }
 
     for (const pasted_item of pasted_items) {
       if (pasted_item.type.indexOf("image") !== -1) {
@@ -93,12 +84,12 @@ window.addEventListener("drop", (e) => {
         if (file) {
           // rename the generic pasted filenames to something unique
           if (file.name === "image.png" || file.name === "image.jpg") {
-            const ext = file.type === "image/jpeg" ? ".jpg" : ".png";            
-            const random_uuid = typeof crypto !== 'undefined' && crypto.randomUUID 
-              ? crypto.randomUUID().substring(0, 8) 
-              : Date.now().toString(36); 
-              
-            const newName = `pasted_${random_uuid}${ext}`;            
+            const ext = file.type === "image/jpeg" ? ".jpg" : ".png";
+            const random_uuid = typeof crypto !== 'undefined' && crypto.randomUUID
+              ? crypto.randomUUID().substring(0, 8)
+              : Date.now().toString(36);
+
+            const newName = `pasted_${random_uuid}${ext}`;
             file = new File([file], newName, { type: file.type });
           }
           imageFiles.push(file);
@@ -144,12 +135,9 @@ window.addEventListener("drop", (e) => {
     });
   }
 
-  async function handleAssetUpload(editable, files)
-  {
+  async function handleAssetUpload(editable, files) {
     const uniqueStems = [...new Set(Array.from(files).map(file => getImageStem(file.name)))];
-    if (uniqueStems.length === 0) {
-      return;
-    }
+    if (uniqueStems.length === 0) return;
 
     const document_mid = document.getElementById('document_mid').value;
     const requirement_mid = document.getElementById('requirement_mid').value;
@@ -158,30 +146,32 @@ window.addEventListener("drop", (e) => {
         return;
     }
 
+    // Immediate feedback to inform the user that the upload has started.
+    // Create TextNodes instead of plain strings for placeholders.
+    const placeholders = uniqueStems.map(stem => {
+      const node = document.createTextNode(`\n.. image:: Uploading ${stem}...\n`);
+      return { stem, node };
+    });
+
+    //  Insert the placeholder nodes into the DOM
     const selection = window.getSelection();
     let insertedIntoSelection = false;
 
-    // Immediate feedback to inform the user that the upload has started.
-    const placeholders = uniqueStems.map(
-      stem => {
-        return {
-          stem,
-          text: `\n.. image:: Uploading ${stem}...\n`
-        };
-      }
-    );
-    const combinedPlaceholderText = placeholders.map(p => p.text).join("");
     if (selection?.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       if (editable.contains(range.commonAncestorContainer)) {
-        range.deleteContents(); // Better than deleteFromDocument()
-        range.insertNode(document.createTextNode(combinedPlaceholderText));
+        range.deleteContents();
+        // Insert nodes (working backwards so they appear in correct order)
+        for (let i = placeholders.length - 1; i >= 0; i--) {
+            range.insertNode(placeholders[i].node);
+        }
         insertedIntoSelection = true;
       }
     }
     if (!insertedIntoSelection) {
       const separator = editable.innerText.length > 0 ? "\n" : "";
-      editable.innerText += separator + combinedPlaceholderText;
+      if (separator) editable.appendChild(document.createTextNode(separator));
+      placeholders.forEach(p => editable.appendChild(p.node));
     }
 
     // Build multipart request.
@@ -200,45 +190,29 @@ window.addEventListener("drop", (e) => {
         method: 'POST',
         body: formData
       });
-      
+
       if (!response.ok) throw new Error('Network response was not ok');
-      
+
       const data = await response.json();
-      console.log("response", data)
       const imagesByStem = data.images;
-      if (typeof imagesByStem !== 'object') {
-        throw new Error('Invalid response format');
+
+      // Replace the placeholders for the real ReST paths.
+      for (const { stem, node } of placeholders) {
+        const uri = imagesByStem[stem];
+        if (uri) {
+          node.nodeValue = `\n.. image:: ${uri}\n`;
+        }
       }
 
-      // Replace the placeholders for the real RST paths.
-      let content = editable.innerText;
-      for (const { stem, text } of placeholders) {
-        const uri = imagesByStem[stem];
-        if (!uri) {
-          // No image returned for this stem — probably non-image or error, fail silently.
-          console.log("fail siliently", stem, text)
-          continue;
-        }
-        const rst = `\n.. image:: ${uri}\n`;
-        content = content.replace(text, rst);
-      }
-      editable.innerText = content;
-      
     } catch (error) {
       console.error("Upload failed", error);
-
-      let content = editable.innerText;
-      placeholders.forEach(placeholder => {
-        content = content.replace(
-          placeholder,
-          "\n**[Image upload failed]**\n"
-        );
+      // Update node to show failure
+      placeholders.forEach(p => {
+        p.node.nodeValue = `\n**[Image upload failed: ${p.stem}]**\n`;
       });
-      editable.innerText = content;
     } finally {
       // Fire a syntetic 'input' event to sync content.
       editable.dispatchEvent(new Event('input'));
     }
   }
-
 })();

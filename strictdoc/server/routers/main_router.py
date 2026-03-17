@@ -1119,20 +1119,11 @@ def create_main_router(
     ) -> JSONResponse:
         assert project_config.input_paths is not None
         assert export_action.traceability_index.asset_manager is not None
+        requirement_mid = os.path.normpath(os.path.basename(requirement_mid))
         if not re.match(r"^[a-fA-F0-9]{32}$", requirement_mid):
             raise HTTPException(
                 status_code=400, detail="Invalid requirement MID format"
             )
-        requirement: SDocNode = (
-            export_action.traceability_index.get_node_by_mid(
-                MID(requirement_mid)
-            )
-        )
-        if requirement is None:
-            raise HTTPException(
-                status_code=400, detail="Requirement MID not found"
-            )
-        requirement_mid = requirement.reserved_mid.get_string_value()
         full_input_path = os.path.abspath(project_config.input_paths[0])
         assets_folder_name = "_assets"
         assets_folder_full_path = os.path.join(
@@ -1146,6 +1137,10 @@ def create_main_router(
         assets_node_specific_subfolder = os.path.join(
             assets_folder_full_path, requirement_mid
         )
+        if not assets_node_specific_subfolder.startswith(
+            assets_folder_full_path
+        ):
+            raise HTTPException(status_code=400, detail="not allowed")
         os.makedirs(assets_node_specific_subfolder, exist_ok=True)
 
         # And make sure that the asset manager tracks it...
@@ -1179,6 +1174,10 @@ def create_main_router(
                 raise HTTPException(status_code=400, detail="Invalid filename")
 
             file_contents = await uploaded_file.read()
+            if len(file_contents) == 0:
+                raise HTTPException(
+                    status_code=400, detail="image has not content"
+                )
             with open(full_file_save_path, "wb") as buffer:
                 buffer.write(file_contents)
 

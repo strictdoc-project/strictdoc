@@ -19,10 +19,10 @@ from strictdoc.helpers.parallelizer import Parallelizer
 
 
 class ManageAssetsCommand(BaseCommand):
-    HELP = "Manages project assets (images, attachments)."
+    HELP = "Manages project assets (images)."
     DETAILED_HELP = """\
 This command helps manage assets in a StrictDoc project.
-It can scan for orphaned assets that are no longer referenced by any document
+It can scan for orphaned images that are no longer referenced by any document
 and optionally delete them to keep the repository clean.
 """
 
@@ -36,9 +36,9 @@ and optionally delete them to keep the repository clean.
             help="Path to the project tree.",
         )
         command_parser.add_argument(
-            "--clean-unused",
+            "--clean-unused-images",
             action="store_true",
-            help="If provided, unused assets will be permanently deleted.",
+            help="If provided, unused images will be permanently deleted.",
         )
         command_parser.add_argument(
             "--config",
@@ -106,15 +106,15 @@ and optionally delete them to keep the repository clean.
                 unused_assets.append(physical_path)
 
         if not unused_assets:
-            print("No unused assets found. Your project is clean!")  # noqa: T201
+            print("No unused images found. Your project is clean!")  # noqa: T201
             return
 
-        print(f"Found {len(unused_assets)} unused asset(s):")  # noqa: T201
+        print(f"Found {len(unused_assets)} unused image(s):")  # noqa: T201
         for asset_str in unused_assets:
             print(f" - {asset_str}")  # noqa: T201
 
-        if self.config.clean_unused:
-            print("Deleting unused assets...")  # noqa: T201
+        if self.config.clean_unused_images:
+            print("Deleting unused images...")  # noqa: T201
             for asset_str in unused_assets:
                 asset: Path = Path(asset_str)
                 try:
@@ -128,14 +128,14 @@ and optionally delete them to keep the repository clean.
             print("Cleanup complete.")  # noqa: T201
         else:
             print("")  # noqa: T201
-            print("Run with --clean-unused to delete these files.")  # noqa: T201
+            print("Run with --clean-unused-images to delete these files.")  # noqa: T201
 
     def _find_referenced_assets(
         self,
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
     ) -> Set[str]:
-        """Scans the raw document text to extract referenced asset paths."""
+        """Scans the raw document text to extract paths of referenced images."""
         referenced_assets: set[str] = set()
 
         # Regex to catch ReST image directive

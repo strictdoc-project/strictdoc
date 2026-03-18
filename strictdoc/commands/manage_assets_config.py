@@ -13,14 +13,14 @@ class ManageAssetsCommandConfig:
         subcommand: str,
         input_path: str,
         config: Optional[str],
-        clean_unused: bool,
+        clean_unused_images: bool,
     ):
         self.debug: bool = debug
         self.command: str = command
         self.subcommand: str = subcommand
         self.input_path: str = input_path
         self._config_path: Optional[str] = config
-        self.clean_unused: bool = clean_unused
+        self.clean_unused_images: bool = clean_unused_images
 
     def validate(self) -> None:
         if not os.path.exists(self.input_path):

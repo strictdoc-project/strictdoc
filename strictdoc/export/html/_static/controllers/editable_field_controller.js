@@ -1,4 +1,9 @@
 // Prevent the browser from opening files dropped outside our editable field.
+window.addEventListener("dragenter", (e) => {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "none";
+}, false);
+
 window.addEventListener("dragover", (e) => {
   e.preventDefault();
   e.dataTransfer.dropEffect = "none";
@@ -120,6 +125,7 @@ window.addEventListener("drop", (e) => {
     editable.addEventListener('dragover', (event) => {
       event.preventDefault();
       event.stopPropagation();
+      event.dataTransfer.dropEffect = "copy";
     });
     editable.addEventListener('drop', async (event) => {
       event.preventDefault();

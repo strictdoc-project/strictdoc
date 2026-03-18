@@ -23,7 +23,7 @@ window.addEventListener("drop", (e) => {
       const editable = this.element;
 
       const fieldType = editable.getAttribute('data-field-type');
-      const isSingle = !!(fieldType === 'singleline');
+      const isSingle = fieldType === 'singleline';
       const hidden = editable.nextElementSibling;
 
       editable.addEventListener('paste', async (event) => {
@@ -84,7 +84,7 @@ window.addEventListener("drop", (e) => {
     const imageFiles = [];
 
     for (const pasted_item of pasted_items) {
-      if (pasted_item.type.indexOf("image") !== -1) {
+      if (pasted_item.type.startsWith("image/")) {
         let file = pasted_item.getAsFile();
         if (file) {
           // rename the generic pasted filenames to something unique
@@ -112,13 +112,11 @@ window.addEventListener("drop", (e) => {
 
   async function handleImageDragAndDrop(editable) {
     editable.addEventListener('dragenter', (event) => {
-      if (editable.dataset.editable === 'single' || event.currentTarget !== editable) return;
       event.preventDefault();
       event.dataTransfer.dropEffect = "copy";
       editable.classList.add('is-dragging');
     });
     editable.addEventListener('dragleave', (event) => {
-      if (event.currentTarget !== editable) return;
       event.preventDefault();
         editable.classList.remove('is-dragging');
     });
@@ -130,14 +128,14 @@ window.addEventListener("drop", (e) => {
     editable.addEventListener('drop', async (event) => {
       event.preventDefault();
       editable.classList.remove('is-dragging');
-      if (event.currentTarget !== editable) {
-        return;
-      }
+  
       // Only accept images here for now.
       const files = Array.from(event.dataTransfer.files)
         .filter(file => file.type.startsWith('image/'));
       
-      await handleAssetUpload(editable, files);
+      if (files.length > 0) {
+        await handleAssetUpload(editable, files);
+      }
     });
   }
 
@@ -145,8 +143,9 @@ window.addEventListener("drop", (e) => {
     const uniqueStems = [...new Set(Array.from(files).map(file => getImageStem(file.name)))];
     if (uniqueStems.length === 0) return;
 
-    const document_mid = document.getElementById('document_mid').value;
-    const requirement_mid = document.getElementById('requirement_mid').value;
+    const form = editable.closest('form');
+    const document_mid = form.querySelector('[name="document_mid"]')?.value;
+    const requirement_mid = form.querySelector('[name="requirement_mid"]')?.value;
     if (!document_mid || !requirement_mid) {
         console.error("Missing document_mid or requirement_mid for file upload.")
         return;

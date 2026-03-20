@@ -4,6 +4,7 @@
 
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.collapsible_list import CollapsibleList
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
 )
@@ -35,6 +36,11 @@ class Test(E2ECase):
             screen_document.assert_header_document_title("Document 1")
 
             screen_document.assert_text("Hello world!")
+
+            collapsible_list: CollapsibleList = (
+                screen_document.get_collapsible_list()
+            )
+            collapsible_list.do_bulk_expand_all()
 
             screen_document.do_drag_first_toc_node_to_the_second()
 

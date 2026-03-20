@@ -36,7 +36,7 @@ Required markup:
 6) State re-application on TOC updates
    - Persisted state is keyed by data-nodeid.
    - On re-init, each branch restores state from sessionStorage when nodeid matches.
-   - Branches with unknown nodeid use default state (expanded).
+   - Branches with unknown nodeid use default state (collapsed).
    - After processing, sessionStorage is rewritten from the current DOM tree.
 */
 
@@ -293,7 +293,7 @@ function processToc(toc) {
 
         const parentNode = ul.parentNode;
         const nodeID = parentNode.dataset[NODE_ID_DATA_ATTR];
-        const currentState = storage[nodeID] || _FALSE;
+        const currentState = storage[nodeID] || _TRUE;
 
         // * I need the button to come before the link as well
         parentNode.prepend(handler);

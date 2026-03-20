@@ -1,10 +1,10 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.collapsible_list import CollapsibleList
 from tests.end2end.helpers.components.toc import TOC
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
-from tests.end2end.navigation.collapsible_list.test_case import CollapsibleList
 from tests.end2end.server import SDocTestServer
 
 
@@ -25,6 +25,11 @@ class Test(E2ECase):
             # go to document
             screen_document = screen_project_index.do_click_on_first_document()
             screen_toc: TOC = screen_document.get_toc()
+
+            collapsible_list: CollapsibleList = (
+                screen_document.get_collapsible_list()
+            )
+            collapsible_list.do_bulk_expand_all()
 
             # Click on the link in the TOC.
             # It is highlighted and gets the expected attributes.
@@ -61,9 +66,6 @@ class Test(E2ECase):
             # Start with expanded "Examples". A child inside this branch is in-view,
             # so the child TOC item ("THE_LONG_NODE_ID") is highlighted.
             # Parent ("SECTION_BEFORE_LONG_NODE") must not be highlighted.
-            collapsible_list: CollapsibleList = (
-                screen_document.get_collapsible_list()
-            )
             collapsible_list.assert_is_expanded("Examples")
             collapsible_list.assert_visible("Hello World")
             screen_toc.assert_toc_link_has_attribute(

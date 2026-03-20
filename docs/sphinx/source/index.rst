@@ -11,8 +11,8 @@ Welcome to StrictDoc's documentation!
    strictdoc_05_troubleshooting
    strictdoc_10_contributing
    strictdoc_11_developer_guide
-   strictdoc_20_L1_Open_Requirements_Tool
-   strictdoc_21_L2_StrictDoc_Requirements
+   strictdoc_20_l1_system_requirements
+   strictdoc_21_l2_high_level_requirements
    strictdoc_24_development_plan
    strictdoc_25_design
    strictdoc_28_Backlog

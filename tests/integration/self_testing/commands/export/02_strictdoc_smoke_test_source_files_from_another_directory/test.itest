@@ -12,10 +12,10 @@ RUN: %check_exists --file "%T/html/strictdoc/docs/strictdoc_01_user_guide-DEEP-T
 RUN: %check_exists --file "%T/html/_source_files/strictdoc/core/tree_cycle_detector.py.html"
 RUN: %check_exists --file "%T/html/_source_files/strictdoc/core/traceability_index_builder.py.html"
 
-RUN: %cat %T/html/strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html | filecheck %s --check-prefix CHECK-3-REQUIREMENTS
+RUN: %cat %T/html/strictdoc/docs/strictdoc_21_l2_high_level_requirements.html | filecheck %s --check-prefix CHECK-3-REQUIREMENTS
 CHECK-3-REQUIREMENTS: href="../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-SRS-30#{{.*}}#{{.*}}"
 CHECK-3-REQUIREMENTS: href="../../_source_files/strictdoc/core/tree_cycle_detector.py.html#SDOC-SRS-30#{{.*}}#{{.*}}"
 
 RUN: %cat "%T/html/_source_files/strictdoc/core/tree_cycle_detector.py.html" | filecheck %s --check-prefix CHECK-TREE-CYCLE-DETECTOR
-CHECK-TREE-CYCLE-DETECTOR: href="../../../strictdoc/docs/strictdoc_21_L2_StrictDoc_Requirements.html#SDOC-SRS-30"
+CHECK-TREE-CYCLE-DETECTOR: href="../../../strictdoc/docs/strictdoc_21_l2_high_level_requirements.html#SDOC-SRS-30"
 CHECK-TREE-CYCLE-DETECTOR: href="../../../_source_files/strictdoc/core/traceability_index_builder.py.html#SDOC-SRS-30

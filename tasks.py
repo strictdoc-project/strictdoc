@@ -820,14 +820,14 @@ def check_dead_links(context):
         context,
         ToxEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_20_L1_Open_Requirements_Tool.sdoc
+            python3 tools/link_health.py docs/strictdoc_20_l1_system_requirements.sdoc
         """,
     )
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_21_L2_StrictDoc_Requirements.sdoc
+            python3 tools/link_health.py docs/strictdoc_21_l2_high_level_requirements.sdoc
         """,
     )
     run_invoke_with_tox(

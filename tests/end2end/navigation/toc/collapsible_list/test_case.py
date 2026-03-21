@@ -31,6 +31,8 @@ class Test(E2ECase):
                 screen_document.get_collapsible_list()
             )
 
+            collapsible_list.do_bulk_expand_all()
+
             collapsible_list.assert_is_expanded("Section 1 title")
             collapsible_list.assert_is_expanded("Section 2 title")
             collapsible_list.assert_visible("Section 1 title")

@@ -99,6 +99,7 @@ dependencies = [
 
     # HTML2PDF dependencies
     "html2pdf4doc == 0.0.31",
+    "pypdf >= 6.5.0, == 6.*",
 
     # Robot Framework dependencies
     "robotframework >= 4.0.0",

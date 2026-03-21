@@ -46,6 +46,24 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 6e6ac78ae4c44856a37ac492b23f8f7d
+TITLE: Unreleased
+
+[TEXT]
+MID: 58efd4f91ca54465be2238ba624af6cb
+STATEMENT: >>>
+This unreleased section contains the following enhancements:
+
+1\) The HTML2PDF export now supports cross-document PDF links and anchors for StrictDoc LINK references. Generated PDF documents can link to each other using relative paths, which improves navigation in supporting PDF viewers and avoids leaking absolute local file system paths into the exported files.
+
+2\) The right-panel Table of Contents in HTML output now starts collapsed by default. This makes large document outlines easier to scan and lets users expand only the sections they want to inspect.
+
+3\) The static HTML search result highlighting now escapes regex-special characters in user queries before building the highlight pattern. Searches that contain symbols such as ``(``, ``)``, ``+``, or ``*`` now behave as literal text searches instead of breaking the result rendering.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 214e954aafa146dda04de0630c1a142e
 TITLE: 0.19.0 (2026-03-15)
 

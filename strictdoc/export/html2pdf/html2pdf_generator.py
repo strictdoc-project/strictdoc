@@ -117,6 +117,7 @@ class HTML2PDFGenerator:
             pdf_print_driver.get_pdf_from_html(
                 project_config,
                 paths_to_print,
+                path_to_output_pdf_html_dir,
             )
         except TimeoutError:
             print("error: HTML2PDF: timeout error.")  # noqa: T201

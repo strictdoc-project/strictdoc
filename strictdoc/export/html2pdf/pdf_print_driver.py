@@ -9,6 +9,7 @@ from typing import List, Tuple
 from html2pdf4doc.main import HPDExitCode
 
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.export.html2pdf.pdf_postprocessor import PDFPostprocessor
 from strictdoc.helpers.timing import measure_performance
 
 
@@ -55,6 +56,7 @@ class PDFPrintDriver:
     def get_pdf_from_html(
         project_config: ProjectConfig,
         paths_to_print: List[Tuple[str, str]],
+        path_to_input_root: str,
     ) -> None:
         assert isinstance(paths_to_print, list), paths_to_print
         path_to_html2pdf4doc_cache = os.path.join(
@@ -93,6 +95,10 @@ class PDFPrintDriver:
                     cmd,
                     capture_output=False,
                     check=True,
+                )
+                PDFPostprocessor.rewrite_cross_document_links(
+                    path_to_input_root=path_to_input_root,
+                    paths_to_print=paths_to_print,
                 )
             except Exception as e_:
                 raise PDFPrintDriverException(e_) from e_

@@ -500,3 +500,61 @@ StrictDoc shall employ a well-maintained Markdown library with Python support.
 <<<
 
 [[/SECTION]]
+
+[[SECTION]]
+MID: 65cfed23d9bb404cad88dadc95feb0d1
+TITLE: HTML2PDF export
+
+[REQUIREMENT]
+MID: 95f0e0198d8446a38eb1c7fc0f409522
+UID: SDOC-LLR-203
+TITLE: Use of html2pdf4doc
+STATEMENT: >>>
+StrictDoc shall export HTML documents using html2pdf4doc library with the following document types supported already:
+
+- StrictDoc's main DOC document type/screen.
+<<<
+RATIONALE: >>>
+html2pdf4doc is part of the StrictDoc project that is developed by the core team. It allows printing PDF pages directly from StrictDoc HTML and gives the developers a full control over the printing mechanics.
+<<<
+
+[REQUIREMENT]
+MID: 335b11da872245c0bf09c82d5909db0e
+UID: SDOC-LLR-204
+STATUS: Active
+TITLE: Use of PyPDF for PDF postprocessing
+STATEMENT: >>>
+StrictDoc shall employ the PyPDF library for the following tasks:
+
+- Rewriting all StrictDoc's LINK/ANCHOR to documents of the same project tree into the PDF anchors.
+<<<
+RATIONALE: >>>
+The extra processing with PyPDF is needed because there are limitations of what developers can do when printing HTML to PDF with html2pdf4doc based on Google Chrome Driver.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-203
+
+[REQUIREMENT]
+MID: 272338e1e8f244eca573348660464b09
+UID: SDOC-LLR-205
+STATUS: Active
+TITLE: Cross-linking PDF documents from one project tree
+STATEMENT: >>>
+When exporting HTML documents to PDF, StrictDoc shall rewrite all LINK/ANCHOR to documents of the same project tree into the PDF document links/anchors according to the following rule:
+
+- The Chrome Driver resolves the relative links to other documents with full paths, e.g., ``file:///<full-path-to-another-SDoc-document>-PDF.html#<anchor>``.
+- The PDF postprocessing step shall convert these absolute ``file:///...` links to just relative paths: ``<relative-path-to-another-SDoc-document>.pdf`` without the leading slash character.
+- If one PDF is in a nested folder compared to another PDF, the link to this PDF anchor shall have relative ``../`` path components.
+<<<
+RATIONALE: >>>
+Allows a reader to navigate between PDF documents of the same project as requested by the parent requirement.
+<<<
+COMMENT: >>>
+The PDF cross-document linking is supported by the PDF format natively but is known to not work in all PDF viewers. For example, it is known to work well in Linux PDF viewers, but not macOS Preview viewer.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-203
+
+[[/SECTION]]

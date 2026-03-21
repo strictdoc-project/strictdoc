@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Parent document
+UID: INDEX-DOC
+
+[REQUIREMENT]
+UID: REQ-INDEX
+TITLE: Index requirement
+STATEMENT: >>>
+Link to the nested document: [LINK: TARGET-333]
+<<<

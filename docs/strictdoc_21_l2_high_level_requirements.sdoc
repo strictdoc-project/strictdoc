@@ -1114,6 +1114,18 @@ RELATIONS:
   VALUE: SDOC-SSS-96
 
 [REQUIREMENT]
+MID: 50eabada50be47a1938e55fc10814972
+UID: SDOC-SRS-203
+STATUS: Active
+TITLE: Cross-linking PDF documents from same project tree
+STATEMENT: >>>
+When exporting multiple HTML documents from a same project tree into PDF, StrictDoc shall preserve all cross-document linking in the output PDF documents.
+<<<
+RATIONALE: >>>
+This enables navigation between PDF documents within the same project tree, which can be useful for simplifying the review and tracing work performed by readers.
+<<<
+
+[REQUIREMENT]
 MID: 6cfcb21b3f1949f49d13af6b00d3d37a
 UID: SDOC-SRS-160
 STATUS: Active

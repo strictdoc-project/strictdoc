@@ -1,0 +1,19 @@
+# @relation(SDOC-SRS-51, scope=file)
+
+REQUIRES: TEST_HTML2PDF
+
+RUN: %strictdoc export %S --formats=html2pdf --output-dir %T | filecheck %s --dump-input=fail
+CHECK: html2pdf4doc: JS logs from the print session
+
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/index-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/other-PDF.html
+RUN: %check_exists --file %T/html2pdf/pdf/index.pdf
+RUN: %check_exists --file %T/html2pdf/pdf/nested/other.pdf
+
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/index-PDF.html | filecheck %s --check-prefix CHECK-INDEX-HTML
+CHECK-INDEX-HTML: <p>Link to the nested document: <a href="../09_cross_document_links_relative_paths/nested/other-PDF.html#TARGET-333">🔗&nbsp;67. FINAL LAST TARGET</a></p>
+
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/nested/other-PDF.html | filecheck %s --check-prefix CHECK-OTHER-HTML
+CHECK-OTHER-HTML: <p>Link to the parent document: <a href="../../09_cross_document_links_relative_paths/index-PDF.html#INDEX-DOC">🔗&nbsp;Parent document</a></p>
+
+RUN: python %S/test_pdf.py

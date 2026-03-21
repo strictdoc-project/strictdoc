@@ -2352,6 +2352,7 @@ def create_main_router(
             pdf_print_driver.get_pdf_from_html(
                 project_config,
                 [(path_to_output_html, path_to_output_pdf)],
+                project_config.export_output_html_root,
             )
         except PDFPrintDriverException as e_:  # pragma: no cover
             cleanup_html2pdf_artifacts()

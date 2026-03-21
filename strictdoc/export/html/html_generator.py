@@ -82,9 +82,12 @@ class HTMLGenerator:
         )
 
         # Export assets.
-        HTMLGenerator.export_assets(
-            traceability_index=traceability_index,
+        HTMLGenerator.export_strictdoc_assets(
             project_config=self.project_config,
+            export_output_html_root=self.project_config.export_output_html_root,
+        )
+        HTMLGenerator.export_project_assets(
+            traceability_index=traceability_index,
             export_output_html_root=self.project_config.export_output_html_root,
         )
 
@@ -184,22 +187,13 @@ class HTMLGenerator:
         )
 
     @staticmethod
-    def export_assets(
+    def export_strictdoc_assets(
         *,
-        traceability_index: Optional[TraceabilityIndex],
         project_config: ProjectConfig,
         export_output_html_root: str,
-        flat_assets: bool = False,
     ) -> None:
         """
-        Copy all assets to output dir during HTML/PDF generation.
-
-        :param bool flat_assets: This parameter is always set to False except when
-                                 exporting a "bundle document" with HTML2PDF.
-                                 The bundle document contains all documents of
-                                 the documentation tree. In this case, all assets
-                                 are simply copied to the top level _assets folder,
-                                 independently on how nested the contained documents are.
+        Copy all strictdoc related assets to output dir during HTML/PDF generation.
         """
 
         # Export StrictDoc's own assets.
@@ -304,7 +298,23 @@ class HTMLGenerator:
                 message="Copying Custom HTML2PDF template assets",
             )
 
-        # Export project's assets.
+    @staticmethod
+    def export_project_assets(
+        *,
+        traceability_index: Optional[TraceabilityIndex],
+        export_output_html_root: str,
+        flat_assets: bool = False,
+    ) -> None:
+        """
+        Copy the project's assets to output dir during HTML/PDF generation.
+
+        :param bool flat_assets: This parameter is always set to False except when
+                                 exporting a "bundle document" with HTML2PDF.
+                                 The bundle document contains all documents of
+                                 the documentation tree. In this case, all assets
+                                 are simply copied to the top level _assets folder,
+                                 independently on how nested the contained documents are.
+        """
 
         if traceability_index is not None:
             redundant_assets: Dict[str, List[SDocRelativePath]] = {}

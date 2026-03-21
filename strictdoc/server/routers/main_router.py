@@ -18,7 +18,12 @@ from reqif.unparser import ReqIFUnparser
 from starlette.background import BackgroundTask
 from starlette.datastructures import FormData
 from starlette.requests import Request
-from starlette.responses import FileResponse, HTMLResponse, Response
+from starlette.responses import (
+    FileResponse,
+    HTMLResponse,
+    JSONResponse,
+    Response,
+)
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc.backend.markdown.writer import SDMarkdownWriter
@@ -124,6 +129,9 @@ from strictdoc.export.html2pdf.pdf_print_driver import (
     PDFPrintDriverException,
 )
 from strictdoc.export.json.json_generator import JSONGenerator
+from strictdoc.export.rst.directives.wildcard_enhanced_image import (
+    WildcardEnhancedImage,
+)
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import (
     get_file_modification_time,
@@ -250,9 +258,12 @@ def create_main_router(
     )
 
     html_generator = HTMLGenerator(project_config, html_templates)
-    html_generator.export_assets(
-        traceability_index=export_action.traceability_index,
+    html_generator.export_strictdoc_assets(
         project_config=project_config,
+        export_output_html_root=project_config.export_output_html_root,
+    )
+    html_generator.export_project_assets(
+        traceability_index=export_action.traceability_index,
         export_output_html_root=project_config.export_output_html_root,
     )
 
@@ -1098,6 +1109,120 @@ def create_main_router(
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
             },
+        )
+
+    @write_router.post(
+        "/actions/document/upload_asset", response_class=JSONResponse
+    )
+    async def upload_asset(
+        requirement_mid: str, uploaded_files: List[UploadFile]
+    ) -> JSONResponse:
+        assert project_config.input_paths is not None
+        assert export_action.traceability_index.asset_manager is not None
+        requirement_mid = os.path.normpath(os.path.basename(requirement_mid))
+        if not re.match(r"^[a-fA-F0-9]{32}$", requirement_mid):
+            raise HTTPException(
+                status_code=400, detail="Invalid requirement MID format"
+            )
+        full_input_path = os.path.abspath(project_config.input_paths[0])
+        assets_folder_name = "_assets"
+        assets_folder_full_path = os.path.join(
+            full_input_path, assets_folder_name
+        )
+        asset_manager = export_action.traceability_index.asset_manager
+
+        # Create a node-specific subfolder based on the requirement_mid for assets of this node, in the top-level _assets folder.
+        # - Subfolder => to avoid asset filename collisions with other nodes/documents.
+        # - Top-Level => to avoid git move-ing assets around in case a node is moved to a subfolder.
+        assets_node_specific_subfolder = os.path.join(
+            assets_folder_full_path, requirement_mid
+        )
+        if not assets_node_specific_subfolder.startswith(
+            assets_folder_full_path
+        ):
+            raise HTTPException(status_code=400, detail="not allowed")
+        os.makedirs(assets_node_specific_subfolder, exist_ok=True)
+
+        # And make sure that the asset manager tracks it...
+        rel_assets_path = os.path.relpath(
+            assets_folder_full_path, os.path.dirname(full_input_path)
+        )
+        has_assets_root = any(
+            directory.relative_path.relative_path == rel_assets_path
+            for directory in asset_manager.iterate()
+        )
+        if not has_assets_root:
+            asset_manager.add_asset_dir(
+                full_path=assets_folder_full_path,
+                relative_path=SDocRelativePath(rel_assets_path),
+            )
+
+        # Process each uploaded file
+        uploaded_image_uris: dict[str, str | None] = {}
+
+        for uploaded_file in uploaded_files:
+            assert uploaded_file.filename is not None
+
+            original_filename = Path(uploaded_file.filename).name
+            rst_safe_filename = original_filename.replace(" ", "_")
+            full_file_save_path = os.path.join(
+                assets_node_specific_subfolder, rst_safe_filename
+            )
+            if not full_file_save_path.startswith(
+                os.path.abspath(assets_node_specific_subfolder)
+            ):
+                raise HTTPException(status_code=400, detail="Invalid filename")
+
+            file_contents = await uploaded_file.read()
+            if len(file_contents) == 0:
+                raise HTTPException(
+                    status_code=400, detail="image has not content"
+                )
+            with open(full_file_save_path, "wb") as buffer:
+                buffer.write(file_contents)
+
+            # If this is an image, we need to resolve the Sphinx wildcard (.*)
+            stem, extension = os.path.splitext(rst_safe_filename)
+            if (
+                extension.lstrip(".").lower()
+                in WildcardEnhancedImage.WILDCARD_EXTENSIONS
+            ):
+                uploaded_image_uris[stem] = None
+
+        # Resolve Sphinx wildcard (.*) paths for the uploaded files.
+        existing_image_stems_to_ext_set: dict[str, set[str]] = defaultdict(set)
+        for sibling in os.listdir(assets_node_specific_subfolder):
+            full_path = os.path.join(assets_node_specific_subfolder, sibling)
+            if not os.path.isfile(full_path):
+                continue
+            stem, ext = os.path.splitext(sibling)
+            if (
+                ext.lstrip(".").lower()
+                in WildcardEnhancedImage.WILDCARD_EXTENSIONS
+            ):
+                existing_image_stems_to_ext_set[stem].add(ext.lower())
+        for stem in uploaded_image_uris.keys():
+            found_extensions = existing_image_stems_to_ext_set.get(stem, set())
+            # Here we create an absolue URI, which targets the top-level _assets folder
+            if len(found_extensions) > 1 and ".svg" in found_extensions:
+                uploaded_image_uris[stem] = (
+                    f"@assets/{requirement_mid}/{stem}.*"
+                )
+            else:
+                ext = next(iter(found_extensions))
+                uploaded_image_uris[stem] = (
+                    f"@assets/{requirement_mid}/{stem}{ext}"
+                )
+
+        # We need to re-export the assets to copy the new files to the output folder
+        html_generator.export_project_assets(
+            traceability_index=export_action.traceability_index,
+            export_output_html_root=project_config.export_output_html_root,
+        )
+
+        return JSONResponse(
+            content={"images": uploaded_image_uris},
+            status_code=200,
         )
 
     @write_router.post("/actions/document/move_node", response_class=Response)

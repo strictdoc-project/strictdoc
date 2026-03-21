@@ -2440,8 +2440,8 @@ This is the example of how images are included using the reST syntax:
 
 .. note::
 
-    Currently, it is not possible to upload images via the web user interface.
-    Therefore, you must manually place the image into the ``_assets`` folder using either the command-line or a file browser.
+    When editing a requirement or a text block in the Web UI, you can also **drag and drop** image files directly into the statement field, or **paste** an image from the clipboard.
+    This will automatically upload the image to the "_assets" folder and insert the required reST image directive.
 <<<
 
 [[/SECTION]]
@@ -4736,7 +4736,6 @@ Currently StrictDoc server maintains an in-memory state of a documentation tree,
 The following essential features are still missing and will be worked on in the future:
 
 - A dedicated screen where a user can commit and push changes to GitHub/GitLab or other Git servers.
-- Adding images via drag-and-drop or an upload button to the multiline fields like such requirements and text nodes ``STATEMENT``.
 - Adding/editing sections with ``LEVEL: None``.
 - Deleting a document.
 - Deleting a section recursively with a correct cleanup of all traceability information.

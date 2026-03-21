@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: First title
+STATEMENT: >>>
+.. image:: @assets/00112233445566778899AABBCCDDEEFF/picture.svg
+<<<

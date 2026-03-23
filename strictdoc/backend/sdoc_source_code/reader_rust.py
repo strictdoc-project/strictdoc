@@ -36,7 +36,7 @@ from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_stats import SourceFileStats
 from strictdoc.helpers.file_system import file_open_read_bytes
 
-# @relation(SDOC-SRS-177, SDOC-SRS-171, SDOC-SRS-173, scope=line)
+# @relation(SDOC-LLR-177, SDOC-LLR-171, SDOC-LLR-173, scope=line)
 TS_QUERY = """
 ; Query 0: Outer doc attribute, line doc, or block doc in allowed positions
 (
@@ -202,7 +202,7 @@ class RustTsQuery(IntEnum):
 def comments_text_from_comment_nodes(comments: list[Node]) -> str:
     """
     Join multiple comment nodes into one multi-line string.
-    @relation(SDOC-SRS-175, scope=function)
+    @relation(SDOC-LLR-175, scope=function)
     """
     comment_text = assert_cast(comments[0].text, bytes).decode("utf-8")
     last_row = comments[0].start_point.row
@@ -388,7 +388,7 @@ class ParserRun:
     ) -> None:
         """
         Create marker, item and source nodes for file-level module from tree-sitter doc comment nodes.
-        @relation(SDOC-SRS-164, SDOC-SRS-172, scope=function)
+        @relation(SDOC-LLR-164, SDOC-LLR-172, scope=function)
         """
         comment_text = comments_text_from_comment_nodes(comments)
         source_node = MarkerParser.parse(
@@ -423,7 +423,7 @@ class ParserRun:
     ) -> None:
         """
         Create markers, items and source nodes from tree-sitter doc comment nodes.
-        @relation(SDOC-SRS-164, SDOC-SRS-172, scope=function)
+        @relation(SDOC-LLR-164, SDOC-LLR-172, scope=function)
         """
         assert len(comments) >= 1
         comment_text = comments_text_from_comment_nodes(comments)
@@ -490,7 +490,7 @@ class ParserRun:
     def _process_normal_comment(self, comments: list[Node]) -> None:
         """
         Create markers and items from tree-sitter normal comment nodes.
-        @relation(SDOC-SRS-171, scope=function)
+        @relation(SDOC-LLR-171, scope=function)
         """
         comment_text = comments_text_from_comment_nodes(comments)
         line_start_0_based = comments[0].start_point.row
@@ -536,7 +536,7 @@ class ParserRun:
         Corresponding markers will be created and resolved later by FileTraceabilityIndex,
         see validate_and_resolve.
 
-        @relation(SDOC-SRS-173, scope=function)
+        @relation(SDOC-LLR-173, scope=function)
         """
         name = self.canonical_path(item.parent, identifier)
         function = LanguageItem(
@@ -557,7 +557,7 @@ class ParserRun:
     ) -> str:
         """
         Construct a canonical path in best-effort.
-        @relation(SDOC-SRS-174, scope=function)
+        @relation(SDOC-LLR-174, scope=function)
         """
         cursor: Optional[Node] = parent_scope
 

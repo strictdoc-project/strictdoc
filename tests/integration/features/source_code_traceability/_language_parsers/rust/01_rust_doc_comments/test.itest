@@ -11,7 +11,7 @@ RUN: %check_exists --file "%T/html/_source_files/inner_doc_attrs.rs.html"
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-INPUT-HTML
 
-# @relation(SDOC-SRS-166 , scope=line)
+# @relation(SDOC-LLR-166 , scope=line)
 CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#1#128"
 CHECK-INPUT-HTML: entire file
 CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#12#18"
@@ -38,9 +38,9 @@ CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-
 CHECK-INPUT-HTML: foreign module extern &#34;C&#34;
 CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#121#127"
 CHECK-INPUT-HTML: fn test_basic()
-# @relation(SDOC-SRS-166 , scope=end)
+# @relation(SDOC-LLR-166 , scope=end)
 
-# @relation(SDOC-SRS-167 , scope=range_start)
+# @relation(SDOC-LLR-167 , scope=range_start)
 CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#1#154"
 CHECK-INPUT-HTML: entire file
 CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#14#22"
@@ -67,9 +67,9 @@ CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOC
 CHECK-INPUT-HTML: foreign module extern &#34;C&#34;
 CHECK-INPUT-HTML: href="../_source_files/inner_block_docs.rs.html#REQ-INNER-BLOCK-DOC#145#153"
 CHECK-INPUT-HTML: fn test_basic()
-# @relation(SDOC-SRS-167 , scope=range_end)
+# @relation(SDOC-LLR-167 , scope=range_end)
 
-# @relation(SDOC-SRS-165, scope=range_start)
+# @relation(SDOC-LLR-165, scope=range_start)
 CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#12#18"
 CHECK-INPUT-HTML: fn validate()
 CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#32#38"
@@ -94,9 +94,9 @@ CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-A
 CHECK-INPUT-HTML: foreign module extern &#34;C&#34;
 CHECK-INPUT-HTML: href="../_source_files/inner_doc_attrs.rs.html#REQ-INNER-DOC-ATTR#121#127"
 CHECK-INPUT-HTML: fn test_basic()
-# @relation(SDOC-SRS-165, scope=range_end)
+# @relation(SDOC-LLR-165, scope=range_end)
 
-# @relation(SDOC-SRS-169 , scope=range_start)
+# @relation(SDOC-LLR-169 , scope=range_start)
 CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-LINE-DOC#257#275"
 CHECK-INPUT-HTML: module submodule
 CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-LINE-DOC#189#203"
@@ -213,9 +213,9 @@ CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-
 CHECK-INPUT-HTML: expression (x + 2)
 CHECK-INPUT-HTML: href="../_source_files/outer_line_docs.rs.html#REQ-OUTER-LINE-DOC#325#331"
 CHECK-INPUT-HTML: fn test_basic()
-# @relation(SDOC-SRS-169 , scope=range_end)
+# @relation(SDOC-LLR-169 , scope=range_end)
 
-# @relation(SDOC-SRS-170 , scope=range_start)
+# @relation(SDOC-LLR-170 , scope=range_start)
 CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#3#8"
 CHECK-INPUT-HTML: const MAGIC_NUMBER
 CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#10#15"
@@ -328,9 +328,9 @@ CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOC
 CHECK-INPUT-HTML: expression (x + 2)
 CHECK-INPUT-HTML: href="../_source_files/outer_block_docs.rs.html#REQ-OUTER-BLOCK-DOC#441#449"
 CHECK-INPUT-HTML: fn test_basic()
-# @relation(SDOC-SRS-170 , scope=range_end)
+# @relation(SDOC-LLR-170 , scope=range_end)
 
-# @relation(SDOC-SRS-168 , scope=range_start)
+# @relation(SDOC-LLR-168 , scope=range_start)
 CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#3#6"
 CHECK-INPUT-HTML: const MAGIC_NUMBER
 CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#8#11"
@@ -437,4 +437,4 @@ CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-A
 CHECK-INPUT-HTML: expression (x + 2)
 CHECK-INPUT-HTML: href="../_source_files/outer_doc_attrs.rs.html#REQ-OUTER-DOC-ATTR#325#331"
 CHECK-INPUT-HTML: fn test_basic()
-# @relation(SDOC-SRS-168 , scope=range_end)
+# @relation(SDOC-LLR-168 , scope=range_end)

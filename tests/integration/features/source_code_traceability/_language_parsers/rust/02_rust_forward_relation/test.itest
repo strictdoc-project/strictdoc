@@ -1,4 +1,4 @@
-# @relation(SDOC-SRS-173, scope=file)
+# @relation(SDOC-LLR-173, scope=file)
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Published: Hello world doc

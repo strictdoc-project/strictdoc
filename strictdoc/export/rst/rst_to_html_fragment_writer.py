@@ -76,14 +76,9 @@ class RstToHtmlFragmentWriter:
             self.reference_path = (
                 context_document.meta.output_document_dir_full_path
             )
-            full_prefix = context_document.meta.get_root_path_prefix()
-            if full_prefix.startswith("../"):
-                self.project_path_prefix = full_prefix[3:]
-                # Ensure if we stripped everything, we use "."
-                if not self.project_path_prefix:
-                    self.project_path_prefix = "."
-            else:
-                self.project_path_prefix = "."
+            self.project_path_prefix = (
+                context_document.meta.get_project_path_prefix()
+            )
 
             # This is a delicate move. Based on a user report and our findings,
             # the csv-table RST directive relies on the 'source path' to

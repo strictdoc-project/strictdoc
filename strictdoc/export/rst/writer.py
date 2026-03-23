@@ -22,6 +22,8 @@ class RSTWriter:
         self.index = index
 
     def write(self, document: SDocDocument, single_document: bool) -> str:
+        self.current_document = document
+
         document_iterator = SDocDocumentIterator(document)
         output = ""
 
@@ -120,12 +122,19 @@ class RSTWriter:
     def _print_node_field(self, object_with_parts: SDocNodeField) -> str:
         output = ""
         prev_part = None
+        is_multiline = getattr(object_with_parts, "multiline", False)
+
         for part in object_with_parts.parts:
             if isinstance(part, str):
+                # expand @assets macro in multiline fields
+                expanded_part = part
+                if is_multiline:
+                    expanded_part = self._expand_assets(part)
+
                 if isinstance(prev_part, InlineLink):
-                    output += escape_str_after_inline_markup(part)
+                    output += escape_str_after_inline_markup(expanded_part)
                 else:
-                    output += part
+                    output += expanded_part
             elif isinstance(part, InlineLink):
                 node_or_none = self.index.get_linkable_node_by_uid(part.link)
                 # Labels that aren't placed before a section title can still be
@@ -143,3 +152,18 @@ class RSTWriter:
             prev_part = part
 
         return output
+
+    def _expand_assets(self, text: str) -> str:
+        """Expands the @assets macro to the _assets folder in the project root as relative path."""
+
+        if "@assets" not in text:
+            return text
+
+        assert self.current_document.meta is not None
+
+        project_path_prefix = (
+            self.current_document.meta.get_project_path_prefix()
+        )
+        relative_assets_path = f"{project_path_prefix}/_assets"
+
+        return text.replace("@assets", relative_assets_path)

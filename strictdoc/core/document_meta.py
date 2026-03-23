@@ -206,3 +206,15 @@ class DocumentMeta:
         if level == 0:
             return ""
         return ("../" * level)[:-1]
+
+    def get_project_path_prefix(self) -> str:
+        """Return a relative path to the project path (which lives one level below the root path)."""
+        full_prefix = self.get_root_path_prefix()
+        if full_prefix.startswith("../"):
+            project_path_prefix = full_prefix[3:]
+            # Ensure if we stripped everything, we use a "."
+            if not project_path_prefix:
+                project_path_prefix = "."
+        else:
+            project_path_prefix = "."
+        return project_path_prefix

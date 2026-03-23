@@ -265,7 +265,14 @@ class JSONGenerator:
                 continue
             fields = node.ordered_fields_lookup[field_name]
             for field in fields:
-                node_dict[field_name] = field.get_text_value()
+                raw_text = field.get_text_value()
+
+                if getattr(field, "multiline", False):
+                    node_dict[field_name] = cls._expand_assets(
+                        raw_text, document
+                    )
+                else:
+                    node_dict[field_name] = raw_text
 
         if len(node.relations) > 0:
             node_dict["RELATIONS"] = cls._write_requirement_relations(node)
@@ -356,3 +363,16 @@ class JSONGenerator:
                 else ".".join(map(str, level_stack))
             )
         )
+
+    @classmethod
+    def _expand_assets(cls, text: str, document: SDocDocument) -> str:
+        """Expands the @assets macro to the _assets folder in the project root."""
+        if "@assets" not in text:
+            return text
+
+        assert document.meta is not None
+
+        project_path_prefix = document.meta.get_project_path_prefix()
+        relative_assets_path = f"{project_path_prefix}/_assets"
+
+        return text.replace("@assets", relative_assets_path)

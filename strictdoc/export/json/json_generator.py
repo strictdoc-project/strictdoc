@@ -366,13 +366,16 @@ class JSONGenerator:
 
     @classmethod
     def _expand_assets(cls, text: str, document: SDocDocument) -> str:
-        """Expands the @assets macro to the _assets folder in the project root."""
-        if "@assets" not in text:
+        """
+        Expands the @assets macro to the _assets folder in the project root.
+
+        @relation(SDOC-LLR-206, scope=function)
+        """
+        if "@assets/" not in text:
             return text
 
         assert document.meta is not None
 
         project_path_prefix = document.meta.get_project_path_prefix()
-        relative_assets_path = f"{project_path_prefix}/_assets"
 
-        return text.replace("@assets", relative_assets_path)
+        return text.replace("@assets/", f"{project_path_prefix}/_assets/")

@@ -1577,7 +1577,9 @@ In the default and most common use case, single-line fields are used for meta-in
 
 Single-line fields are parsed as plain text, not as RST. To render RST or to have ``[LINK: ...]`` recognized as HTML, the field must be multiline.
 
-By convention, each node contains one primary multiline ``STATEMENT`` field (or an equivalent). All fields before this main statement field should be single-line fields storing meta-information, and all fields after the statement field should typically be multiline content.
+By convention, each node contains one primary multiline field: ``STATEMENT``, ``CONTENT`` or ``DESCRIPTION``. All fields before the primary multiline field should be single-line fields that store meta-information, and all fields after the primary multiline field should typically be multiline content.
+
+A fallback to this rule applies when a node does not have a content field, in which case the ``TITLE`` field serves as a boundary between single-line and multiline fields. If a node has neither a content field nor a ``TITLE`` field, all fields are treated as multiline.
 
 There is an ongoing discussion on GitHub about formalizing the single-line and multiline convention in the SDoc format: https://github.com/strictdoc-project/strictdoc/discussions/2221. User feedback is welcome.
 <<<

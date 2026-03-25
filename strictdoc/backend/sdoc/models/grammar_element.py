@@ -284,13 +284,25 @@ class GrammarElement:
             statement_field or description_field or content_field or ("", -1)
         )
 
-        # Use TITLE as a boundary between the single-line and multiline, if
-        # TITLE exists. For nodes without a TITLE, use the content field, e.g.,
-        # STATEMENT or DESCRIPTION.
-        try:
-            multiline_field_index = self.get_field_titles().index("TITLE") + 1
-        except ValueError:
+        # The following rule governs which fields are treated as single-line and
+        # which are treated as multiline:
+        # 1) If a node has a content field, e.g., STATEMENT, CONTENT or
+        # DESCRIPTION, then the fields before it are treated as single-line, and
+        # the fields starting from it and after it are treated as multiline.
+        # 2) If there is no content field, use TITLE as a boundary between the
+        # single-line and multiline.
+        # 3) If there is no content field and no TITLE, treat all fields as
+        # multiline by setting the multiline_field_index to -1, which is less
+        # than any valid field index.
+        if self.content_field[1] != -1:
             multiline_field_index = self.content_field[1]
+        else:
+            try:
+                multiline_field_index = (
+                    self.get_field_titles().index("TITLE") + 1
+                )
+            except ValueError:
+                multiline_field_index = -1
         self._multiline_field_index: int = multiline_field_index
 
         self.mid: MID = MID.create()

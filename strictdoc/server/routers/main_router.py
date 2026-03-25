@@ -1118,6 +1118,11 @@ def create_main_router(
     async def upload_asset(
         requirement_mid: str, uploaded_files: List[UploadFile]
     ) -> JSONResponse:
+        """
+        Handle upload of assets (images for now).
+
+        @relation(SDOC-LLR-208, scope=function)
+        """
         assert project_config.input_paths is not None
         assert export_action.traceability_index.asset_manager is not None
         requirement_mid = os.path.normpath(os.path.basename(requirement_mid))
@@ -1191,6 +1196,7 @@ def create_main_router(
                 uploaded_image_uris[stem] = None
 
         # Resolve Sphinx wildcard (.*) paths for the uploaded files.
+        # @relation(SDOC-LLR-209, scope=range_start)
         existing_image_stems_to_ext_set: dict[str, set[str]] = defaultdict(set)
         for sibling in os.listdir(assets_node_specific_subfolder):
             full_path = os.path.join(assets_node_specific_subfolder, sibling)
@@ -1214,6 +1220,7 @@ def create_main_router(
                 uploaded_image_uris[stem] = (
                     f"@assets/{requirement_mid}/{stem}{ext}"
                 )
+        # @relation(SDOC-LLR-209, scope=range_end)
 
         # We need to re-export the assets to copy the new files to the output folder
         html_generator.export_project_assets(

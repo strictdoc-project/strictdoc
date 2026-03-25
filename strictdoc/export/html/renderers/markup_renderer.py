@@ -158,13 +158,15 @@ class MarkupRenderer:
 
         # @relation(SDOC-LLR-206, scope=range_start)
         if node_field.is_multiline() and "@assets/" in parts_output:
-            assert self.context_document is not None
-            assert self.context_document.meta is not None
-            project_path_prefix = (
-                self.context_document.meta.get_project_path_prefix()
-            )
-            assets_path = f"{project_path_prefix}/_assets/"
-            parts_output = expand_assets_macro(parts_output, assets_path)
+            if (
+                self.context_document is not None
+                and self.context_document.meta is not None
+            ):
+                project_path_prefix = (
+                    self.context_document.meta.get_project_path_prefix()
+                )
+                assets_path = f"{project_path_prefix}/_assets/"
+                parts_output = expand_assets_macro(parts_output, assets_path)
         # @relation(SDOC-LLR-206, scope=range_end)
 
         output = self.fragment_writer.write(parts_output)

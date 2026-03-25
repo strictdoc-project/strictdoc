@@ -19,6 +19,12 @@ from strictdoc.helpers.parallelizer import Parallelizer
 
 
 class ManageAssetsCommand(BaseCommand):
+    """
+    Identify and remove orphaned assets, and asset folders.
+
+    @relation(SDOC-LLR-210, scope=class)
+    """
+
     HELP = "Manages project assets (images)."
     DETAILED_HELP = """\
 This command helps manage assets in a StrictDoc project.
@@ -138,9 +144,11 @@ and optionally delete them to keep the repository clean.
         """Scans the raw document text to extract paths of referenced images."""
         referenced_assets: set[str] = set()
 
-        # Regex to catch ReST image directive
+        # Regex to catch image directive
         # e.g., .. image:: ./_assets/0011223344556677889900aabbccddeeff/picture.svg
-        asset_regex = re.compile(r"(?:image)\s*::\s*[^\s]*?([@_]assets/[^\s]+)")
+        #       <img src="./_assets/0011223344556677889900aabbccddeeff/picture.svg" />
+        #       ![](./_assets/0011223344556677889900aabbccddeeff/picture.svg)
+        asset_regex = re.compile(r"([@_]assets/[^\s'\"\)\]>]+)")
 
         for document in traceability_index.document_tree.document_list:
             # Convert the entire document AST back into its raw string representation

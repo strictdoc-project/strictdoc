@@ -977,9 +977,9 @@ TITLE: Top-Level Assets Path Macro (@assets)
 STATEMENT: >>>
 StrictDoc shall provide a text macro ``@assets/`` that resolves to the relative path of the top-level ``_assets/`` directory.
 
-StricDoc shall expand the macro in all multi-line fields of requirements.
+StricDoc shall expand the macro in all multi-line fields of requirements or text nodes.
 
-StrictDoc shall expand the macro in the exports for HTML , RST, JSON.
+StrictDoc shall expand the macro in the exports for HTML, RST, JSON.
 <<<
 RATIONALE: >>>
 Hardcoded relative paths are fragile and break when requirements are moved within the project hierarchy. Resolving paths at export time makes requirements portable and eliminates manual path or file-system updates during restructuring.
@@ -997,7 +997,7 @@ The Web Editor shall support image upload in multi-line text fields via paste an
 2. Accept only image MIME types.
 3. Upload images asynchronously to the backend ``/actions/document/upload_asset`` endpoint, passing the current requirement MID along.
 4. Indicate upload progress via a temporary placeholder text.
-5. On success, insert an image reference at the original cursor position:
+5. On success, insert an image reference at the original cursor position, following the documents markup:
 
    - RST: ``.. image:: \@assets/[MID]/[filename]``
    - HTML: ``<img src="\@assets/[MID]/[filename]" />``
@@ -1006,7 +1006,7 @@ The Web Editor shall support image upload in multi-line text fields via paste an
 6. On failure, notify the user.
 <<<
 RATIONALE: >>>
-Supports standard editor interactions and removes manual file handling, improving usability and reducing user errors.
+Supports standard editor interactions and removes manual file handling, improving usability and reducing potential for user errors.
 <<<
 
 [REQUIREMENT]
@@ -1051,6 +1051,26 @@ If no such pair is detected, the system shall treat each file independently.
 <<<
 RATIONALE: >>>
 Supports the wildcard-enhanced-image feature of StrictDoc/ReST also when uploading images through the server
+<<<
+
+[REQUIREMENT]
+MID: 82dd31e22ccf44bd8b6b924ae9591b0c
+UID: SDOC-LLR-210
+TITLE: Orphaned Asset Cleanup
+STATEMENT: >>>
+StrictDoc shall provide a CLI commmand ``strictdoc manage assets`` to identify and remove orphaned assets.
+
+An asset file shall be considered orphaned if it is an image file, and not referenced by any requirement.
+
+The command shall:
+
+- Detect image references in nodes (for RST, HTML or Markdown).
+- List image files that are not referenced by any requirement.
+- Remove such orphaned files upon user request.
+- When removing files, also remove empty asset folders.
+<<<
+RATIONALE: >>>
+Prevents accumulation of orphaned assets. This would for instance happen if requirement creation is aborted after already having uploaded images.
 <<<
 
 [[/SECTION]]

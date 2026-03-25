@@ -146,6 +146,7 @@ window.addEventListener("drop", (e) => {
     const form = editable.closest('form');
     const document_mid = form.querySelector('[name="document_mid"]')?.value;
     const requirement_mid = form.querySelector('[name="requirement_mid"]')?.value;
+    const document_markup = form.querySelector('[name="document_markup"]')?.value || "rst";
     if (!document_mid || !requirement_mid) {
         console.error("Missing document_mid or requirement_mid for file upload.")
         return;
@@ -200,12 +201,30 @@ window.addEventListener("drop", (e) => {
 
       const data = await response.json();
       const imagesByStem = data.images;
+      const currentText = editable.value || editable.innerText;
 
-      // Replace the placeholders for the real ReST paths.
+      // Replace the placeholders for the real directive with path.
       for (const { stem, node } of placeholders) {
         const uri = imagesByStem[stem];
         if (uri) {
-          node.nodeValue = `\n.. image:: ${uri}\n`;
+          if (currentText.includes(uri)) {
+             // The image is already referenced in the document.
+             // The user has re-uploaded, and the backed has overwritten the file, so we just clean up the placeholder.
+             node.nodeValue = ""; 
+          } else {
+            // Otherwise, this is a newly uploaded image, we add an image directive suitable to the document_markup mode.  
+            switch (document_markup) {
+              case "RST":
+                node.nodeValue = `\n.. image:: ${uri}\n`;
+                break;
+              case "HTML":
+                node.nodeValue = `\n<img src="${uri}" />\n`;
+                break;
+              case "Markdown":
+                node.nodeValue = `\n![](${uri})\n`;
+                break;
+            }
+          }
         }
       }
 

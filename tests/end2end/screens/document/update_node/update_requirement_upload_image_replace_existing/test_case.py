@@ -1,6 +1,3 @@
-"""
-@relation(SDOC-SRS-55, scope=file)
-"""
 
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
@@ -42,7 +39,7 @@ class Test(E2ECase):
 
             screen_document.do_drop_image_to_requirement(
                 "STATEMENT",
-                "./tests/end2end/screens/document/update_node/update_requirement_upload_image/picture.svg",
+                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_replace_existing/picture.svg",
             )
 
             form_edit_requirement.do_form_submit()

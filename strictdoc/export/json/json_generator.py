@@ -22,6 +22,7 @@ from strictdoc.backend.sdoc.models.reference import (
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.tools.assets_macro import expand_assets_macro
 from strictdoc.helpers.cast import assert_cast
 
 
@@ -377,5 +378,6 @@ class JSONGenerator:
         assert document.meta is not None
 
         project_path_prefix = document.meta.get_project_path_prefix()
+        assets_path = f"{project_path_prefix}/_assets/"
 
-        return text.replace("@assets/", f"{project_path_prefix}/_assets/")
+        return expand_assets_macro(text, assets_path)

@@ -1,4 +1,5 @@
 // Prevent the browser from opening files dropped outside our editable field.
+// @relation(SDOC-LLR-207, scope=file)
 window.addEventListener("dragenter", (e) => {
   e.preventDefault();
   e.dataTransfer.dropEffect = "none";

@@ -156,6 +156,7 @@ class MarkupRenderer:
                 raise NotImplementedError
             prev_part = part
 
+        # @relation(SDOC-LLR-206, scope=range_start)
         if node_field.is_multiline() and "@assets/" in parts_output:
             assert self.context_document is not None
             assert self.context_document.meta is not None
@@ -164,6 +165,7 @@ class MarkupRenderer:
             )
             assets_path = f"{project_path_prefix}/_assets/"
             parts_output = expand_assets_macro(parts_output, assets_path)
+        # @relation(SDOC-LLR-206, scope=range_end)
 
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, node_field)] = output

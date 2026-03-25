@@ -1,5 +1,5 @@
 """
-test image upload on newly created node
+@relation(SDOC-LLR-208, scope=file)
 """
 
 import re
@@ -17,6 +17,10 @@ from tests.end2end.server import SDocTestServer
 
 
 class Test(E2ECase):
+    """
+    test image upload on newly created node
+    """
+
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 

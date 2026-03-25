@@ -1,3 +1,7 @@
+#
+# @relation(SDOC-LLR-206, scope=file)
+#
+
 RUN: %strictdoc export %S --formats=json --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Step 'Export SDoc' took:
 

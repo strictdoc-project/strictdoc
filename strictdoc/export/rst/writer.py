@@ -154,9 +154,13 @@ class RSTWriter:
         return output
 
     def _expand_assets(self, text: str) -> str:
-        """Expands the @assets macro to the _assets folder in the project root as relative path."""
+        """
+        Expands the @assets macro to the _assets folder in the project root as relative path.
 
-        if "@assets" not in text:
+        @relation(SDOC-LLR-206, scope=function)
+        """
+
+        if "@assets/" not in text:
             return text
 
         assert self.current_document.meta is not None
@@ -164,6 +168,5 @@ class RSTWriter:
         project_path_prefix = (
             self.current_document.meta.get_project_path_prefix()
         )
-        relative_assets_path = f"{project_path_prefix}/_assets"
 
-        return text.replace("@assets", relative_assets_path)
+        return text.replace("@assets/", f"{project_path_prefix}/_assets/")

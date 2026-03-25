@@ -29,7 +29,6 @@ from strictdoc.export.rst.directives.sphinx_style_math import (
     math_role_for_server,
 )
 from strictdoc.export.rst.directives.wildcard_enhanced_image import (
-    STRICTDOC_PROJECT_PATH_PREFIX,
     STRICTDOC_REFERENCE_PATH_SETTING,
     WildcardEnhancedImage,
 )
@@ -72,15 +71,11 @@ class RstToHtmlFragmentWriter:
             path_to_tmp_dir, "rst", path_to_output_dir_md5
         )
         self.reference_path = os.getcwd()
-        self.project_path_prefix = ""
 
         if context_document is not None:
             assert context_document.meta is not None
             self.reference_path = (
                 context_document.meta.output_document_dir_full_path
-            )
-            self.project_path_prefix = (
-                context_document.meta.get_project_path_prefix()
             )
 
             # This is a delicate move. Based on a user report and our findings,
@@ -184,7 +179,6 @@ class RstToHtmlFragmentWriter:
         settings = {
             **self.BASE_SETTINGS,
             "warning_stream": warning_stream,
-            STRICTDOC_PROJECT_PATH_PREFIX: self.project_path_prefix,
             STRICTDOC_REFERENCE_PATH_SETTING: self.reference_path,
         }
 
@@ -236,7 +230,6 @@ class RstToHtmlFragmentWriter:
         settings = {
             **self.BASE_SETTINGS,
             "warning_stream": warning_stream,
-            STRICTDOC_PROJECT_PATH_PREFIX: self.project_path_prefix,
             STRICTDOC_REFERENCE_PATH_SETTING: self.reference_path,
         }
 

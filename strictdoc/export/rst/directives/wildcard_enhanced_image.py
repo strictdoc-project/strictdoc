@@ -1,12 +1,10 @@
 import os
-import re
 from typing import List
 
 from docutils import nodes
 from docutils.parsers.rst.directives.images import Image
 
 STRICTDOC_REFERENCE_PATH_SETTING = "strictdoc_reference_path"
-STRICTDOC_PROJECT_PATH_PREFIX = "strictdoc_root_path_prefix"
 
 
 class WildcardEnhancedImage(Image):  # type: ignore[misc]
@@ -46,17 +44,7 @@ class WildcardEnhancedImage(Image):  # type: ignore[misc]
             STRICTDOC_REFERENCE_PATH_SETTING,
             os.getcwd(),
         )
-        current_project_path_prefix = getattr(
-            self.state.document.settings,
-            STRICTDOC_PROJECT_PATH_PREFIX,
-            os.getcwd(),
-        )
         rel_path_to_image = self.arguments[0]
-
-        if rel_path_to_image.startswith("@assets"):
-            rel_path_to_image = f"{current_project_path_prefix}/_assets/{re.sub(r'@assets/', '', rel_path_to_image)}"
-            self.arguments[0] = rel_path_to_image
-
         if rel_path_to_image.endswith(".*"):
             rel_path_to_image_no_wc = rel_path_to_image[:-2]
             for extension in WildcardEnhancedImage.WILDCARD_EXTENSIONS:

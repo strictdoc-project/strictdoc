@@ -1,5 +1,3 @@
-"""
-"""
 
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
@@ -13,10 +11,6 @@ from tests.end2end.server import SDocTestServer
 
 
 class Test(E2ECase):
-    """
-    test uploading an image pasted from the clipboard
-    """
-
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
@@ -43,13 +37,13 @@ class Test(E2ECase):
 
             form_edit_requirement.assert_on_form()
 
-            screen_document.do_paste_image_to_requirement(
+            screen_document.do_drop_image_to_requirement(
                 "STATEMENT",
-                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_paste_from_clipboard/picture.svg",
+                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_with_spaces/picture with spaces.svg",
             )
 
             form_edit_requirement.do_form_submit()
 
-            screen_document.assert_text("picture.svg")
+            screen_document.assert_text("picture_with_spaces.svg")
 
         assert test_setup.compare_sandbox_and_expected_output()

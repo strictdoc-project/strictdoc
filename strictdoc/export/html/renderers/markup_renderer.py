@@ -23,6 +23,7 @@ from strictdoc.export.markdown.markdown_to_html_fragment_writer import (
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.export.tools.assets_macro import expand_assets_macro
 from strictdoc.helpers.rst import escape_str_after_inline_markup
 
 FragmentWriterType = Union[
@@ -156,11 +157,13 @@ class MarkupRenderer:
             prev_part = part
 
         if node_field.is_multiline() and "@assets/" in parts_output:
-            # Replace the `@assets~macro with the relative path
             assert self.context_document is not None
             assert self.context_document.meta is not None
-            project_path_prefix = self.context_document.meta.get_project_path_prefix()
-            parts_output = parts_output.replace("@assets/", f"{project_path_prefix}/_assets/")
+            project_path_prefix = (
+                self.context_document.meta.get_project_path_prefix()
+            )
+            assets_path = f"{project_path_prefix}/_assets/"
+            parts_output = expand_assets_macro(parts_output, assets_path)
 
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, node_field)] = output

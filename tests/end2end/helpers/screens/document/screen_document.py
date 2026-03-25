@@ -172,6 +172,10 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             current_content = target_element.text
             if ".. image:: @assets/" in current_content:
                 break
+            if '<img src="@assets/' in current_content:
+                break
+            if "![](@assets/" in current_content:
+                break
             if "Image upload failed" in current_content:
                 break
 
@@ -250,6 +254,10 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             current_content = target_element.text
             # Checking for both asset path variations just to be safe
             if ".. image:: @assets/" in current_content:
+                break
+            if '<img src="@assets/' in current_content:
+                break
+            if "![](@assets/" in current_content:
                 break
             if "Image upload failed" in current_content:
                 break

@@ -8,6 +8,7 @@ from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.rst.rst_templates import RSTTemplates
+from strictdoc.export.tools.assets_macro import expand_assets_macro
 from strictdoc.helpers.rst import escape_str_after_inline_markup
 
 
@@ -168,5 +169,6 @@ class RSTWriter:
         project_path_prefix = (
             self.current_document.meta.get_project_path_prefix()
         )
+        assets_path = f"{project_path_prefix}/_assets/"
 
-        return text.replace("@assets/", f"{project_path_prefix}/_assets/")
+        return expand_assets_macro(text, assets_path)

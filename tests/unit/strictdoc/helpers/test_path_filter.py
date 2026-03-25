@@ -232,6 +232,19 @@ def test_case_21_file_with_double_wildcard():
     assert path_filter.match("docs/foo/.DS_Store")
 
 
+def test_case_22_mask_with_underscore():
+    """
+    Verify that the underscores in the masks are supported.
+
+    https://github.com/strictdoc-project/strictdoc/issues/2211
+    """
+    mask = "_foobar.sdoc"
+    path_filter = PathFilter([mask], positive_or_negative=True)
+
+    # POSITIVE
+    assert path_filter.match("_foobar.sdoc")
+
+
 def test_case_40_root_slash():
     mask = "/build"
     path_filter = PathFilter([mask], positive_or_negative=False)

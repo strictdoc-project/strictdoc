@@ -290,7 +290,8 @@ class GrammarElement:
         # DESCRIPTION, then the fields before it are treated as single-line, and
         # the fields starting from it and after it are treated as multiline.
         # 2) If there is no content field, use TITLE as a boundary between the
-        # single-line and multiline.
+        # single-line and multiline. Note that this also covers the case when
+        # the TITLE is the last field in which case there are no multiline fields.
         # 3) If there is no content field and no TITLE, treat all fields as
         # multiline by setting the multiline_field_index to -1, which is less
         # than any valid field index.

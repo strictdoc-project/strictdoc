@@ -968,12 +968,12 @@ RELATIONS:
 
 [[SECTION]]
 MID: b0138705e9b24886bd2792faff067410
-TITLE: Image Upload
+TITLE: Image upload
 
 [REQUIREMENT]
 MID: 124a881412434f768ed4a78b73d05986
 UID: SDOC-LLR-206
-TITLE: Top-Level Assets Path Macro (@assets)
+TITLE: Top-level assets path macro (@assets)
 STATEMENT: >>>
 StrictDoc shall provide a text macro ``@assets/`` that resolves to the relative path of the top-level ``_assets/`` directory.
 
@@ -989,7 +989,7 @@ Hardcoded relative paths are fragile and break when requirements are moved withi
 MID: 7768b2575117435e80c3b26515382b23
 UID: SDOC-LLR-207
 STATUS: Active
-TITLE: Image Upload
+TITLE: Image upload
 STATEMENT: >>>
 The Web Editor shall support image upload in multi-line text fields via paste and drag-and-drop:
 
@@ -1012,16 +1012,16 @@ Supports standard editor interactions and removes manual file handling, improvin
 [REQUIREMENT]
 MID: 7cdd7a0838fc4212a43b336eba5ccde8
 UID: SDOC-LLR-208
-TITLE: Asset Upload Endpoint
+TITLE: Asset upload endpoint
 STATEMENT: >>>
-The StrictDoc web server shall provide an ``/actions/document/upload_asset`` endpoint that accepts image uploads and stores them in a requirement-specific subfolder.
+The StrictDoc web server shall provide an ``/actions/document/upload_asset`` endpoint that accepts image uploads and stores them in a node-specific subfolder.
 
 The endpoint shall:
 
 1. Validate that the payload is an image.
 2. Sanitize the filename by replacing spaces with underscores.
 3. Validate the requirement MIDs formally, but also accept uploads for not yet existing requirements (the MID only exists in the Web Editor at this point).
-4. Store the file in a requirement-specific subfolder ``[MID]`` within the top-level ``_assets`` directory.
+4. Store the file in a requirement-specific subfolder ``/<MID>/`` within the top-level ``_assets`` directory.
 5. Overwrite any existing image file with the same name in the target folder.
 6. Sync the assets to the web server so it can be served immediately.
 7. Return HTTP 200 with the stored filename on success.
@@ -1038,7 +1038,7 @@ Defines a consistent and predictable storage model for image assets:
 [REQUIREMENT]
 MID: 3157ce3de267437c8e083455fc2b1b87
 UID: SDOC-LLR-209
-TITLE: Support for Wildcard Image Directive Generation
+TITLE: Support for wildcard image directive generation
 STATEMENT: >>>
 When multiple image files are uploaded in a single operation, the ``/actions/document/upload_asset`` endpoint shall detect pairs of files that share the same filename stem and differ only by file extension.
 
@@ -1056,7 +1056,7 @@ Supports the wildcard-enhanced-image feature of StrictDoc/ReST also when uploadi
 [REQUIREMENT]
 MID: 82dd31e22ccf44bd8b6b924ae9591b0c
 UID: SDOC-LLR-210
-TITLE: Orphaned Asset Cleanup
+TITLE: Orphaned asset cleanup
 STATEMENT: >>>
 StrictDoc shall provide a CLI commmand ``strictdoc manage assets`` to identify and remove orphaned assets.
 

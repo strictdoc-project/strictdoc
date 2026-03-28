@@ -139,3 +139,19 @@ class Test(E2ECase):
                 initial_scroll_left,
                 updated_scroll_left,
             )
+
+    def test_work_package_view_epics_do_not_overlap(self):
+        with SDocTestServer(
+            input_path=path_to_this_test_file_folder
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+
+            screen_project_index = Screen_ProjectIndex(self)
+            screen_project_index.assert_on_screen()
+
+            work_planner_screen: Screen_WorkPlanner = (
+                screen_project_index.do_click_on_work_planner_link()
+            )
+            work_planner_screen.assert_on_screen()
+            work_planner_screen.do_switch_mode("work-package")
+            work_planner_screen.assert_lane_epics_do_not_overlap("Beta package")

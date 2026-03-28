@@ -51,6 +51,60 @@ class Screen_WorkPlanner:  # pylint: disable=invalid-name
         form.assert_on_form()
         return form
 
+    def do_switch_mode(self, mode: str) -> None:
+        self.test_case.click(
+            f'[data-work-planner-mode-button="{mode}"]',
+            by=By.CSS_SELECTOR,
+        )
+
+    def assert_lane_epics_do_not_overlap(self, lane_title: str) -> None:
+        result = self.test_case.execute_script(
+            """
+            const visibleView = Array.from(
+              document.querySelectorAll('[data-work-planner-view]')
+            ).find((view) => !view.hidden);
+            if (!visibleView) {
+              return { found: false, overlaps: ['No visible work planner view.'] };
+            }
+            const lane = Array.from(
+              visibleView.querySelectorAll('[data-work-planner-lane]')
+            ).find((candidate) => candidate.dataset.workPlannerLane === arguments[0]);
+            if (!lane) {
+              return { found: false, overlaps: [`Lane not found: ${arguments[0]}`] };
+            }
+            const cards = Array.from(lane.querySelectorAll('.work_planner__epic'));
+            const rects = cards.map((card) => {
+              const rect = card.getBoundingClientRect();
+              return {
+                title: card.querySelector('.work_planner__epic_title')?.innerText.trim(),
+                left: rect.left,
+                right: rect.right,
+                top: rect.top,
+                bottom: rect.bottom,
+              };
+            });
+            const overlaps = [];
+            for (let i = 0; i < rects.length; i += 1) {
+              for (let j = i + 1; j < rects.length; j += 1) {
+                const a = rects[i];
+                const b = rects[j];
+                const separated =
+                  a.right <= b.left ||
+                  b.right <= a.left ||
+                  a.bottom <= b.top ||
+                  b.bottom <= a.top;
+                if (!separated) {
+                  overlaps.push(`${a.title} overlaps ${b.title}`);
+                }
+              }
+            }
+            return { found: true, overlaps };
+            """,
+            lane_title,
+        )
+        assert result["found"] is True, result
+        assert result["overlaps"] == [], result["overlaps"]
+
     def get_canvas_scroll_left(self) -> int:
         return int(
             self.test_case.execute_script(

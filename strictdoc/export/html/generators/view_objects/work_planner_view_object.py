@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from math import ceil, floor
 from typing import List, Optional
 
 from markupsafe import Markup
@@ -41,11 +42,29 @@ class WorkPlannerEpicCard:
     work_package_title: Optional[str]
     start_month_index: int
     end_month_index: int
+    start_offset: float = 0.0
+    end_offset: float = 1.0
     stack_level: int = 0
 
     @property
     def month_span(self) -> int:
         return self.end_month_index - self.start_month_index + 1
+
+    @property
+    def grid_column_start(self) -> int:
+        return int(floor(self.start_offset)) + 1
+
+    @property
+    def grid_column_end(self) -> int:
+        return int(ceil(self.end_offset)) + 1
+
+    @property
+    def start_inset(self) -> float:
+        return self.start_offset - floor(self.start_offset)
+
+    @property
+    def end_inset(self) -> float:
+        return ceil(self.end_offset) - self.end_offset
 
 
 @dataclass
@@ -75,11 +94,29 @@ class WorkPlannerWorkPackageLane:
     statement: str
     start_month_index: int
     end_month_index: int
+    start_offset: float
+    end_offset: float
     epics: List[WorkPlannerEpicCard]
 
     @property
     def month_span(self) -> int:
         return self.end_month_index - self.start_month_index + 1
+
+    @property
+    def grid_column_start(self) -> int:
+        return int(floor(self.start_offset)) + 1
+
+    @property
+    def grid_column_end(self) -> int:
+        return int(ceil(self.end_offset)) + 1
+
+    @property
+    def start_inset(self) -> float:
+        return self.start_offset - floor(self.start_offset)
+
+    @property
+    def end_inset(self) -> float:
+        return ceil(self.end_offset) - self.end_offset
 
     @property
     def row_count(self) -> int:

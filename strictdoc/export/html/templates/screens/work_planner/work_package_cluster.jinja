@@ -1,6 +1,11 @@
 <article
   class="work_planner__work_package"
-  style="grid-column: {{ lane.start_month_index + 1 }} / {{ lane.end_month_index + 2 }}; grid-row: 1 / {{ lane.row_count + 1 }};"
+  style="
+    grid-column: {{ lane.grid_column_start }} / {{ lane.grid_column_end }};
+    grid-row: 1 / {{ lane.row_count + 1 }};
+    margin-left: calc({{ '%.6f'|format(lane.start_inset) }} * var(--work-planner-month-width));
+    margin-right: calc({{ '%.6f'|format(lane.end_inset) }} * var(--work-planner-month-width));
+  "
   {% if view_object.project_config.is_running_on_server and lane.node is not none %}
   draggable="true"
   data-work-planner-draggable="work-package"

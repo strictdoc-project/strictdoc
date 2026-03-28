@@ -1,6 +1,7 @@
+import calendar
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import DefaultDict, Dict, List, Optional, Tuple
 
 from markupsafe import Markup
@@ -30,6 +31,9 @@ STATUS_TO_CSS_CLASS = {
     "Done": "done",
     "Draft": "draft",
 }
+
+_STACK_EPSILON = 1e-9
+_MIN_VISIBLE_SPAN = 1e-6
 
 
 @dataclass
@@ -88,24 +92,36 @@ def _month_label(value: Tuple[int, int]) -> str:
     return f"{value[0]:04d}-{value[1]:02d}"
 
 
+def _month_fraction(value: datetime) -> float:
+    days_in_month = calendar.monthrange(value.year, value.month)[1]
+    month_start = value.replace(
+        day=1, hour=0, minute=0, second=0, microsecond=0
+    )
+    elapsed_seconds = (value - month_start).total_seconds()
+    return elapsed_seconds / (days_in_month * 24 * 60 * 60)
+
+
 def _assign_stack_levels(epics: List[WorkPlannerEpicCard]) -> None:
-    row_ends: List[int] = []
+    # Greedy interval partitioning: place each epic onto the first level whose
+    # current right edge does not overlap the epic's left edge. This minimizes
+    # the number of levels for interval graphs and satisfies SDOC-LLR-211.
+    row_ends: List[float] = []
     for epic in sorted(
         epics,
         key=lambda current: (
-            current.start_month_index,
-            current.end_month_index,
+            current.start_offset,
+            current.end_offset,
             current.title.lower(),
         ),
     ):
         for row_index, row_end in enumerate(row_ends):
-            if epic.start_month_index > row_end:
+            if epic.start_offset >= row_end - _STACK_EPSILON:
                 epic.stack_level = row_index
-                row_ends[row_index] = epic.end_month_index
+                row_ends[row_index] = epic.end_offset
                 break
         else:
             epic.stack_level = len(row_ends)
-            row_ends.append(epic.end_month_index)
+            row_ends.append(epic.end_offset)
 
 
 class WorkPlannerHTMLGenerator:
@@ -199,6 +215,8 @@ class WorkPlannerHTMLGenerator:
                 )
 
                 if time_start is not None and time_end is not None:
+                    if time_end <= time_start:
+                        time_end = time_start + timedelta(minutes=1)
                     scheduled_epics.append(
                         _ScheduledEpic(
                             epic=epic_card,
@@ -242,6 +260,18 @@ class WorkPlannerHTMLGenerator:
             scheduled_epic.epic.end_month_index = month_indexes[
                 _month_key(scheduled_epic.end_dt)
             ]
+            scheduled_epic.epic.start_offset = (
+                scheduled_epic.epic.start_month_index
+                + _month_fraction(scheduled_epic.start_dt)
+            )
+            scheduled_epic.epic.end_offset = (
+                scheduled_epic.epic.end_month_index
+                + _month_fraction(scheduled_epic.end_dt)
+            )
+            if scheduled_epic.epic.end_offset <= scheduled_epic.epic.start_offset:
+                scheduled_epic.epic.end_offset = (
+                    scheduled_epic.epic.start_offset + _MIN_VISIBLE_SPAN
+                )
 
         person_groups: DefaultDict[str, List[WorkPlannerEpicCard]] = defaultdict(
             list
@@ -316,6 +346,8 @@ class WorkPlannerHTMLGenerator:
                         epic.start_month_index for epic in epics
                     ),
                     end_month_index=max(epic.end_month_index for epic in epics),
+                    start_offset=min(epic.start_offset for epic in epics),
+                    end_offset=max(epic.end_offset for epic in epics),
                     epics=epics,
                 )
             )
@@ -334,6 +366,14 @@ class WorkPlannerHTMLGenerator:
                     ),
                     end_month_index=max(
                         epic.end_month_index
+                        for epic in ungrouped_work_package_epics
+                    ),
+                    start_offset=min(
+                        epic.start_offset
+                        for epic in ungrouped_work_package_epics
+                    ),
+                    end_offset=max(
+                        epic.end_offset
                         for epic in ungrouped_work_package_epics
                     ),
                     epics=ungrouped_work_package_epics,

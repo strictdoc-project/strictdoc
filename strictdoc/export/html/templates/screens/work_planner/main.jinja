@@ -85,7 +85,7 @@
             <div class="work_planner__canvas_empty">No scheduled epics for this view.</div>
             {% endif %}
             {% for lane in view_object.person_lanes %}
-            <div class="work_planner__lane">
+            <div class="work_planner__lane" data-work-planner-lane="{{ lane.title }}">
               <div class="work_planner__lane_meta">
                 <div class="work_planner__lane_title">{{ lane.title }}</div>
                 {% if lane.subtitle %}
@@ -116,7 +116,7 @@
             <div class="work_planner__team_group">
               <div class="work_planner__team_group_title">{{ team_group.title }}</div>
               {% for lane in team_group.lanes %}
-              <div class="work_planner__lane">
+              <div class="work_planner__lane" data-work-planner-lane="{{ lane.title }}">
                 <div class="work_planner__lane_meta">
                   <div class="work_planner__lane_title">{{ lane.title }}</div>
                   {% if lane.subtitle %}
@@ -146,7 +146,7 @@
             <div class="work_planner__canvas_empty">No scheduled work packages for this view.</div>
             {% endif %}
             {% for lane in view_object.work_package_lanes %}
-            <div class="work_planner__lane">
+            <div class="work_planner__lane" data-work-planner-lane="{{ lane.title }}">
               <div class="work_planner__lane_meta">
                 <div class="work_planner__lane_title">{{ lane.title }}</div>
                 <div class="work_planner__lane_subtitle">{{ lane.document.title if lane.document is not none else "Project-wide" }}</div>

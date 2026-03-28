@@ -1,6 +1,15 @@
+{% set epic_tooltip -%}
+{{ epic.status or "Ready" }} · {{ epic.assigned_person }} · {{ epic.assigned_team }} · {{ epic.document.title }}{% if epic.time_start or epic.time_end %} · {{ epic.time_start or "?" }} → {{ epic.time_end or "?" }}{% endif %}
+{%- endset %}
 <article
   class="work_planner__epic work_planner__epic--{{ epic.status_css_class }}{% if nested %} work_planner__epic--nested{% endif %}"
-  style="grid-column: {{ epic.start_month_index + 1 }} / {{ epic.end_month_index + 2 }}; grid-row: {{ epic.stack_level + 1 }};"
+  style="
+    grid-column: {{ epic.grid_column_start }} / {{ epic.grid_column_end }};
+    grid-row: {{ epic.stack_level + 1 }};
+    margin-left: calc({{ '%.6f'|format(epic.start_inset) }} * var(--work-planner-month-width));
+    margin-right: calc({{ '%.6f'|format(epic.end_inset) }} * var(--work-planner-month-width));
+  "
+  title="{{ epic_tooltip|trim }}"
   {% if draggable %}
   draggable="true"
   data-work-planner-draggable="epic"

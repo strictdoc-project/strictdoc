@@ -138,3 +138,17 @@ TITLE: PlannerEpicFromWorkPlanner
 STATEMENT: >>>
 PlannerEpicCreatedViaPlanner.
 <<<
+
+[EPIC]
+UID: REQ-6
+TITLE: PlannerEpicFromWorkPlanner
+STATEMENT: >>>
+PlannerEpicCreatedViaPlanner.
+<<<
+
+[EPIC]
+UID: REQ-7
+TITLE: PlannerEpicFromWorkPlanner
+STATEMENT: >>>
+PlannerEpicCreatedViaPlanner.
+<<<

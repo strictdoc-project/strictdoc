@@ -1,8 +1,9 @@
 (function () {
   const ROOT_SELECTOR = "[data-work-planner-root]";
-  const MONTH_WIDTH_DEFAULT = 240;
+  const MONTH_WIDTH_DEFAULT = 160;
+  const MONTH_WIDTH_STEP = 20;
   const MODE_STORAGE_KEY = "strictdoc.work_planner.mode";
-  const ZOOM_STORAGE_KEY = "strictdoc.work_planner.month_width";
+  const ZOOM_STORAGE_KEY = "strictdoc.work_planner.month_width.v2";
 
   function getRoot() {
     return document.querySelector(ROOT_SELECTOR);
@@ -45,7 +46,7 @@
   }
 
   function applyMonthWidth(root, monthWidth) {
-    const clampedWidth = Math.max(160, Math.min(420, monthWidth));
+    const clampedWidth = Math.max(120, Math.min(320, monthWidth));
     root.style.setProperty("--work-planner-month-width", `${clampedWidth}px`);
     localStorage.setItem(ZOOM_STORAGE_KEY, `${clampedWidth}`);
   }
@@ -170,12 +171,12 @@
 
     zoomInButton &&
       zoomInButton.addEventListener("click", () => {
-        applyMonthWidth(root, getMonthWidth(root) + 40);
+        applyMonthWidth(root, getMonthWidth(root) + MONTH_WIDTH_STEP);
       });
 
     zoomOutButton &&
       zoomOutButton.addEventListener("click", () => {
-        applyMonthWidth(root, getMonthWidth(root) - 40);
+        applyMonthWidth(root, getMonthWidth(root) - MONTH_WIDTH_STEP);
       });
 
     zoomResetButton &&

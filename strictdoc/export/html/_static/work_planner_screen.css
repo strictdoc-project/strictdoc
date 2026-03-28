@@ -50,6 +50,12 @@
   padding: var(--work-planner-gap);
 }
 
+.work_planner__canvas_section {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+}
+
 .work_planner__section_header {
   display: flex;
   justify-content: space-between;
@@ -133,7 +139,9 @@
 
 .work_planner__canvas_scroll {
   overflow: auto;
+  height: clamp(24rem, 72vh, 56rem);
   padding-bottom: var(--base-rhythm);
+  overscroll-behavior: contain;
 }
 
 .work_planner__canvas_surface {

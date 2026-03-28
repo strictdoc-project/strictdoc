@@ -13,19 +13,96 @@ ASSIGNED_PERSON: Jane Doe
 ASSIGNED_TEAM: Flight software
 TIME_START: 2026-04-01T00:00:00Z
 TIME_END: 2026-10-01T00:00:00Z
-TITLE: Build rollout board
-STATEMENT: Build the rollout board for the beta release.
+TITLE: Buildrolloutboardupdated
+STATEMENT: >>>
+Build the rollout board for the beta release.
+<<<
 RELATIONS:
 - TYPE: Parent
   VALUE: WP-BETA
+
+[EPIC]
+UID: EPIC-BETA-2
+STATUS: WIP
+ASSIGNED_PERSON: Amy Pond
+ASSIGNED_TEAM: Flight software
+TIME_START: 2026-04-10T00:00:00Z
+TIME_END: 2026-09-10T00:00:00Z
+TITLE: Prepare telemetry checks
+STATEMENT: Prepare the telemetry checks for the beta release.
+RELATIONS:
+- TYPE: Parent
+  VALUE: WP-BETA
+
+[EPIC]
+UID: EPIC-BETA-3
+STATUS: Ready
+ASSIGNED_PERSON: Clara Oswald
+ASSIGNED_TEAM: Mission control
+TIME_START: 2026-05-01T00:00:00Z
+TIME_END: 2026-08-15T00:00:00Z
+TITLE: Coordinate launch rehearsal
+STATEMENT: Coordinate the launch rehearsal activities.
+
+[EPIC]
+UID: EPIC-BETA-4
+STATUS: Draft
+ASSIGNED_PERSON: Bill Potts
+ASSIGNED_TEAM: Mission control
+TIME_START: 2026-05-15T00:00:00Z
+TIME_END: 2026-07-20T00:00:00Z
+TITLE: Draft failure recovery flow
+STATEMENT: Draft the failure recovery flow for beta rollout.
+
+[EPIC]
+UID: EPIC-BETA-5
+STATUS: WIP
+ASSIGNED_PERSON: River Song
+ASSIGNED_TEAM: Verification
+TIME_START: 2026-06-01T00:00:00Z
+TIME_END: 2026-08-01T00:00:00Z
+TITLE: Review flight logs
+STATEMENT: Review the flight logs collected during rehearsals.
+
+[EPIC]
+UID: EPIC-BETA-6
+STATUS: Ready
+ASSIGNED_PERSON: Martha Jones
+ASSIGNED_TEAM: Verification
+TIME_START: 2026-06-10T00:00:00Z
+TIME_END: 2026-07-25T00:00:00Z
+TITLE: Validate manual fallback
+STATEMENT: Validate the manual fallback procedure.
+
+[EPIC]
+UID: EPIC-BETA-7
+STATUS: Ready
+ASSIGNED_PERSON: Donna Noble
+ASSIGNED_TEAM: Operations
+TIME_START: 2026-06-15T00:00:00Z
+TIME_END: 2026-09-01T00:00:00Z
+TITLE: Train ground operators
+STATEMENT: Train the ground operators for rollout week.
+
+[EPIC]
+UID: EPIC-BETA-8
+STATUS: Done
+ASSIGNED_PERSON: Rose Tyler
+ASSIGNED_TEAM: Operations
+TIME_START: 2026-04-20T00:00:00Z
+TIME_END: 2026-06-30T00:00:00Z
+TITLE: Finalize support rota
+STATEMENT: Finalize the support rota for launch support.
 
 [EPIC]
 UID: EPIC-BACKLOG-2
 STATUS: Draft
 ASSIGNED_PERSON: Rory Williams
 ASSIGNED_TEAM: Mission control
-TITLE: Draft fallback script
-STATEMENT: Draft the fallback script before scheduling it.
+TITLE: Buildrolloutboardupdated
+STATEMENT: >>>
+Draft the fallback script before scheduling it.
+<<<
 
 [EPIC]
 UID: REQ-1
@@ -36,6 +113,27 @@ PlannerEpicCreatedViaPlanner.
 
 [EPIC]
 UID: REQ-2
+TITLE: PlannerEpicPanAfterAjax
+STATEMENT: >>>
+PlannerEpicPanAfterAjax.
+<<<
+
+[EPIC]
+UID: REQ-3
+TITLE: PlannerEpicFromWorkPlanner
+STATEMENT: >>>
+PlannerEpicCreatedViaPlanner.
+<<<
+
+[EPIC]
+UID: REQ-4
+TITLE: PlannerEpicFromWorkPlanner
+STATEMENT: >>>
+PlannerEpicCreatedViaPlanner.
+<<<
+
+[EPIC]
+UID: REQ-5
 TITLE: PlannerEpicFromWorkPlanner
 STATEMENT: >>>
 PlannerEpicCreatedViaPlanner.

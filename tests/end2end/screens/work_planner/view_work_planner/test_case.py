@@ -4,8 +4,6 @@
 
 import os
 
-from selenium.webdriver.common.by import By
-
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -63,7 +61,7 @@ class Test(E2ECase):
                 "PlannerEpicFromWorkPlanner"
             )
 
-    def test_pan_work_planner_canvas(self):
+    def test_pan_work_planner_canvas_horizontally(self):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder
         ) as test_server:
@@ -76,6 +74,62 @@ class Test(E2ECase):
                 screen_project_index.do_click_on_work_planner_link()
             )
             work_planner_screen.assert_on_screen()
+
+            initial_scroll_left = work_planner_screen.get_canvas_scroll_left()
+            work_planner_screen.do_pan_canvas_to_the_right()
+            updated_scroll_left = work_planner_screen.get_canvas_scroll_left()
+
+            assert updated_scroll_left > initial_scroll_left, (
+                initial_scroll_left,
+                updated_scroll_left,
+            )
+
+    def test_pan_work_planner_canvas_vertically(self):
+        with SDocTestServer(
+            input_path=path_to_this_test_file_folder
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+
+            screen_project_index = Screen_ProjectIndex(self)
+            screen_project_index.assert_on_screen()
+
+            work_planner_screen: Screen_WorkPlanner = (
+                screen_project_index.do_click_on_work_planner_link()
+            )
+            work_planner_screen.assert_on_screen()
+
+            initial_scroll_top = work_planner_screen.get_canvas_scroll_top()
+            work_planner_screen.do_pan_canvas_down()
+            updated_scroll_top = work_planner_screen.get_canvas_scroll_top()
+
+            assert updated_scroll_top > initial_scroll_top, (
+                initial_scroll_top,
+                updated_scroll_top,
+            )
+
+    def test_pan_work_planner_canvas_after_edit(self):
+        with SDocTestServer(
+            input_path=path_to_this_test_file_folder
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+
+            screen_project_index = Screen_ProjectIndex(self)
+            screen_project_index.assert_on_screen()
+
+            work_planner_screen: Screen_WorkPlanner = (
+                screen_project_index.do_click_on_work_planner_link()
+            )
+            work_planner_screen.assert_on_screen()
+
+            form_edit_requirement = work_planner_screen.do_open_edit_epic_form()
+            form_edit_requirement.do_clear_field("TITLE")
+            form_edit_requirement.do_fill_in_field_title(
+                "Build rollout board updated"
+            )
+            form_edit_requirement.do_form_submit()
+
+            work_planner_screen.assert_on_screen()
+            work_planner_screen.assert_contains_text("Beta package")
 
             initial_scroll_left = work_planner_screen.get_canvas_scroll_left()
             work_planner_screen.do_pan_canvas_to_the_right()

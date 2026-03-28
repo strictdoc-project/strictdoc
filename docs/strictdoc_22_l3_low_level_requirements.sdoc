@@ -1041,4 +1041,18 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SRS-205
 
+[REQUIREMENT]
+MID: 727f8680aa85498e93c30a0c8d3580d1
+UID: SDOC-LLR-210
+STATUS: Active
+TITLE: Panning behavior
+STATEMENT: >>>
+When Space key is pressed, the Planning Canvas component shall support panning both horizontally and vertically.
+
+NOTE: The panning behavior shall still be active after any editing and AJAX updates take place.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
 [[/SECTION]]

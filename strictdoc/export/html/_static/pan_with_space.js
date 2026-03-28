@@ -11,6 +11,10 @@ function getPanElement() {
   return document.querySelector(PWS_SELECTOR);
 }
 
+function getPanElements() {
+  return document.querySelectorAll(PWS_SELECTOR);
+}
+
 const state = {
   spacePressed: false,
   isDown: false,
@@ -26,12 +30,43 @@ function getActivePanElement() {
   return getPanElement();
 }
 
+function normalizeTarget(target) {
+  if (target instanceof Element) {
+    return target;
+  }
+  if (target instanceof Node) {
+    return target.parentElement;
+  }
+  return null;
+}
+
+function getPanElementFromTarget(target) {
+  const element = normalizeTarget(target);
+  if (!element) {
+    return null;
+  }
+  return element.closest(PWS_SELECTOR);
+}
+
 function setPanCursor(element, active) {
   if (!element) {
     return;
   }
   element.style.cursor = active ? "move" : "";
   element.style.scrollBehavior = active ? "auto" : "";
+}
+
+function setPanCursorOnAll(active) {
+  getPanElements().forEach((element) => {
+    setPanCursor(element, active);
+  });
+}
+
+function clearPanState() {
+  setPanCursorOnAll(false);
+  state.spacePressed = false;
+  state.isDown = false;
+  state.activeElement = null;
 }
 
 function installGlobalListeners() {
@@ -50,7 +85,7 @@ function installGlobalListeners() {
       e.preventDefault();
       e.stopPropagation();
       state.spacePressed = true;
-      setPanCursor(element, true);
+      setPanCursorOnAll(true);
       return;
     }
 
@@ -88,54 +123,36 @@ function installGlobalListeners() {
     // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
     e.preventDefault();
     e.stopPropagation();
-    state.spacePressed = false;
-    state.isDown = false;
-    setPanCursor(getActivePanElement(), false);
-    state.activeElement = null;
+    clearPanState();
   });
 
   document.addEventListener("mouseup", function () {
     state.isDown = false;
   });
-}
 
-function bindPanElement(element) {
-  if (!element || element.dataset.panWithSpaceInitialized === "true") {
-    return;
-  }
-  element.dataset.panWithSpaceInitialized = "true";
-
-  element.addEventListener("mousedown", function (e) {
+  document.addEventListener("mousedown", function (e) {
     if (!state.spacePressed) {
       return;
     }
 
-    // Tell the browser we're handling this event.
+    const element = getPanElementFromTarget(e.target);
+    if (!element) {
+      return;
+    }
+
     e.preventDefault();
     e.stopPropagation();
 
     state.activeElement = element;
-
-    // Calc the starting mouse X,Y for the drag.
     state.startX = parseInt(e.clientX);
     state.startY = parseInt(e.clientY);
-
     state.isDown = true;
+    setPanCursor(element, true);
   });
 
-  element.addEventListener("mouseup", function (e) {
-    if (!state.spacePressed) {
-      return;
-    }
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    state.isDown = false;
-  });
-
-  element.addEventListener("mousemove", function (e) {
-    if (!state.isDown || !state.spacePressed) {
+  document.addEventListener("mousemove", function (e) {
+    const element = getActivePanElement();
+    if (!state.isDown || !state.spacePressed || !element) {
       return;
     }
 
@@ -157,46 +174,36 @@ function bindPanElement(element) {
     );
   });
 
-  element.addEventListener("mouseleave", function (e) {
-    // Tell the browser we're handling this event.
-    e.preventDefault();
-    e.stopPropagation();
-
-    state.isDown = false;
-  });
-
   // Work planner cards are draggable, which otherwise steals the gesture
   // before the scroll container receives mousemove events.
-  element.addEventListener("dragstart", function (e) {
+  document.addEventListener("dragstart", function (e) {
     if (!state.spacePressed) {
+      return;
+    }
+    const element = getPanElementFromTarget(e.target);
+    if (!element) {
       return;
     }
     e.preventDefault();
     e.stopPropagation();
     state.isDown = false;
   });
+
+  window.addEventListener("blur", clearPanState);
+
+  document.addEventListener("turbo:before-stream-render", function () {
+    clearPanState();
+  });
+
+  document.addEventListener("turbo:frame-render", function () {
+    if (state.spacePressed) {
+      setPanCursorOnAll(true);
+    }
+  });
 }
 
-function initializePanWithSpace() {
-  installGlobalListeners();
-  const element = getPanElement();
-  if (element) {
-    console.assert(!!element, "Expected a valid element.");
-    bindPanElement(element);
-  }
-}
-
-window.addEventListener('load', initializePanWithSpace);
-document.addEventListener("DOMContentLoaded", initializePanWithSpace);
-document.addEventListener("turbo:render", function () {
-  initializePanWithSpace();
-  const element = getPanElement();
-  if (element) {
-    setPanCursor(element, false);
-    state.activeElement = null;
-    state.isDown = false;
-  }
-});
+window.addEventListener('load', installGlobalListeners);
+document.addEventListener("DOMContentLoaded", installGlobalListeners);
 
 // When a window is loaded, scroll to the central column of the DTR tree.
 // The central column is the one where the current document's requirements are

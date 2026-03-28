@@ -139,6 +139,10 @@
     if (!root) {
       return;
     }
+    if (root.dataset.workPlannerInitialized === "true") {
+      return;
+    }
+    root.dataset.workPlannerInitialized = "true";
 
     const storedMode = localStorage.getItem(MODE_STORAGE_KEY) || "person";
     activateMode(root, storedMode);
@@ -182,6 +186,12 @@
     bindDragAndDrop(root);
   }
 
+  function scheduleInitialize() {
+    requestAnimationFrame(initialize);
+  }
+
   document.addEventListener("DOMContentLoaded", initialize);
   document.addEventListener("turbo:render", initialize);
+  document.addEventListener("turbo:frame-render", scheduleInitialize);
+  document.addEventListener("turbo:load", scheduleInitialize);
 })();

@@ -1,0 +1,29 @@
+{%- if view_object.project_config.is_running_on_server and view_object.documents|length > 0 -%}
+<div class="work_planner__header_actions">
+  <label class="work_planner__document_select">
+    <span>New item in</span>
+    <select data-work-planner-default-document>
+      {% for document in view_object.documents %}
+      <option
+        value="{{ document.mid }}"
+        {% if view_object.default_document_mid == document.mid %}selected{% endif %}
+      >{{ document.title }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <a
+    class="action_button"
+    data-turbo="true"
+    data-turbo-action="replace"
+    data-work-planner-add-template="/actions/work_planner/new_node?element_type=WORK_PACKAGE&document_mid=__DOCUMENT_MID__"
+    href="/actions/work_planner/new_node?element_type=WORK_PACKAGE&document_mid={{ view_object.default_document_mid }}"
+  >Add work package</a>
+  <a
+    class="action_button"
+    data-turbo="true"
+    data-turbo-action="replace"
+    data-work-planner-add-template="/actions/work_planner/new_node?element_type=EPIC&document_mid=__DOCUMENT_MID__"
+    href="/actions/work_planner/new_node?element_type=EPIC&document_mid={{ view_object.default_document_mid }}"
+  >Add epic</a>
+</div>
+{%- endif -%}

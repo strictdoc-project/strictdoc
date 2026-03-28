@@ -1,0 +1,24 @@
+<article class="work_planner__backlog_epic work_planner__epic--{{ epic.status_css_class }}">
+  <div class="work_planner__backlog_epic_title">
+    <a href="{{ view_object.render_node_link(epic.node) }}" data-turbo="false">
+      {{ epic.title }}
+    </a>
+  </div>
+  <div class="work_planner__backlog_epic_meta">
+    {{ epic.assigned_person }} · {{ epic.assigned_team }} · {{ epic.document.title }}
+  </div>
+  {% if epic.time_start or epic.time_end %}
+  <div class="work_planner__backlog_epic_meta">
+    {{ epic.time_start or "?" }} → {{ epic.time_end or "?" }}
+  </div>
+  {% endif %}
+  {% if view_object.project_config.is_running_on_server %}
+  <div class="work_planner__backlog_epic_actions">
+    <a
+      href="/actions/work_planner/edit_node?node_id={{ epic.node.reserved_mid }}"
+      data-turbo="true"
+      data-turbo-action="replace"
+    >Edit</a>
+  </div>
+  {% endif %}
+</article>

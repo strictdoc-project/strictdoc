@@ -1,0 +1,51 @@
+[DOCUMENT]
+TITLE: Work planner test document
+
+[WORK_PACKAGE]
+UID: WP-ALPHA
+TITLE: Alpha package
+STATEMENT: Coordinate the first delivery batch.
+
+[EPIC]
+UID: EPIC-ALPHA-1
+STATUS: Ready
+ASSIGNED_PERSON: Jane Doe
+ASSIGNED_TEAM: Flight software
+TIME_START: 2026-04-01T00:00:00Z
+TIME_END: 2026-05-15T00:00:00Z
+TITLE: Prepare command uplink
+STATEMENT: Prepare the first uplink workflow.
+RELATIONS:
+- TYPE: Parent
+  VALUE: WP-ALPHA
+
+[EPIC]
+UID: EPIC-ALPHA-2
+STATUS: WIP
+ASSIGNED_PERSON: Jane Doe
+ASSIGNED_TEAM: Flight software
+TIME_START: 2026-05-01T00:00:00Z
+TIME_END: 2026-06-20T00:00:00Z
+TITLE: Verify telemetry path
+STATEMENT: Verify the telemetry path during rollout.
+RELATIONS:
+- TYPE: Parent
+  VALUE: WP-ALPHA
+
+[EPIC]
+UID: EPIC-STANDALONE
+STATUS: Done
+ASSIGNED_PERSON: John Roe
+ASSIGNED_TEAM: Mission control
+TIME_START: 2026-04-10T00:00:00Z
+TIME_END: 2026-04-28T00:00:00Z
+TITLE: Rehearse on-console checklist
+STATEMENT: Run the end-to-end console rehearsal.
+
+[EPIC]
+UID: EPIC-BACKLOG
+STATUS: Draft
+ASSIGNED_PERSON: Amy Pond
+ASSIGNED_TEAM: Mission control
+TITLE: Define anomaly drill
+STATEMENT: Define the missing anomaly drill steps.

@@ -25,6 +25,9 @@ from tests.end2end.helpers.screens.traceability_matrix.screen_requirements_cover
     Screen_RequirementsCoverage,
 )
 from tests.end2end.helpers.screens.tree_map.tree_map import Screen_TreeMap
+from tests.end2end.helpers.screens.work_planner.work_planner import (
+    Screen_WorkPlanner,
+)
 
 
 class Screen_ProjectIndex:  # pylint: disable=invalid-name
@@ -79,6 +82,12 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_link_to_work_planner_present(self) -> None:
+        self.test_case.assert_element(
+            '//a[@data-testid="project-tree-link-work-planner"]',
+            by=By.XPATH,
+        )
+
     def assert_link_to_requirements_coverage_present(self) -> None:
         self.test_case.assert_element(
             '//a[@data-testid="project-tree-link-requirements-coverage"]',
@@ -114,6 +123,12 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
             '//a[@data-testid="project-tree-link-project-statistics"]',
         )
         return Screen_ProjectStatistics(self.test_case)
+
+    def do_click_on_work_planner_link(self) -> Screen_WorkPlanner:
+        self.test_case.click_xpath(
+            '//a[@data-testid="project-tree-link-work-planner"]',
+        )
+        return Screen_WorkPlanner(self.test_case)
 
     def do_click_on_requirements_coverage_link(
         self,

@@ -2,6 +2,7 @@
 @relation(SDOC-SRS-55, scope=file)
 """
 
+from datetime import datetime
 from collections import defaultdict
 from enum import Enum
 from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
@@ -22,6 +23,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileEntry,
@@ -756,6 +758,8 @@ class RequirementFormObject(ErrorObject):
             ):
                 self._validate_choice(grammar_element_field_)
 
+        self._validate_epic_time_fields()
+
         requirement_uid: Optional[str] = (
             self.fields["UID"][0].field_value if "UID" in self.fields else None
         )
@@ -848,6 +852,46 @@ class RequirementFormObject(ErrorObject):
                     self._validate_no_cycle_by_new_node(
                         traceability_index, reference_field, requirement_uid
                     )
+
+    def _validate_epic_time_fields(self) -> None:
+        if self.element_type != "EPIC":
+            return
+
+        parsed_times: Dict[str, datetime] = {}
+        for field_name in (
+            RequirementFieldName.TIME_START,
+            RequirementFieldName.TIME_END,
+        ):
+            if field_name not in self.fields:
+                continue
+            field_value = self.fields[field_name][0].field_value.strip()
+            if len(field_value) == 0:
+                continue
+            normalized_field_value = (
+                field_value[:-1] + "+00:00"
+                if field_value.endswith("Z")
+                else field_value
+            )
+            try:
+                parsed_times[field_name] = datetime.fromisoformat(
+                    normalized_field_value
+                )
+            except ValueError:
+                self.add_error(
+                    field_name,
+                    "Time field must use ISO 8601 format, for example 2026-03-28T16:28:02Z.",
+                )
+
+        if (
+            RequirementFieldName.TIME_START in parsed_times
+            and RequirementFieldName.TIME_END in parsed_times
+            and parsed_times[RequirementFieldName.TIME_END]
+            < parsed_times[RequirementFieldName.TIME_START]
+        ):
+            self.add_error(
+                RequirementFieldName.TIME_END,
+                "TIME_END must not be earlier than TIME_START.",
+            )
 
     @staticmethod
     def _validate_no_cycle_by_new_node(

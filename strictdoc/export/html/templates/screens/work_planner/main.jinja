@@ -1,0 +1,175 @@
+<div
+  class="work_planner"
+  data-work-planner-root
+  style="--work-planner-month-count: {{ view_object.months|length }};"
+>
+  <div class="work_planner__controls">
+    <div class="work_planner__mode_switch">
+      <button type="button" class="action_button" data-work-planner-mode-button="person">By person</button>
+      <button type="button" class="action_button" data-work-planner-mode-button="team">By team / person</button>
+      <button type="button" class="action_button" data-work-planner-mode-button="work-package">By work package</button>
+    </div>
+    {% if view_object.months|length > 0 %}
+    <div class="work_planner__zoom_controls">
+      <button type="button" class="action_button" data-work-planner-zoom-out>Zoom out</button>
+      <button type="button" class="action_button" data-work-planner-zoom-reset>Reset</button>
+      <button type="button" class="action_button" data-work-planner-zoom-in>Zoom in</button>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="work_planner__layout">
+    <section class="work_planner__backlog">
+      <div class="work_planner__section_header">
+        <h2>Backlog</h2>
+        {% if view_object.project_config.is_running_on_server and view_object.default_document_mid %}
+        <a
+          class="action_button"
+          href="/actions/work_planner/new_node?element_type=EPIC&document_mid={{ view_object.default_document_mid }}"
+          data-turbo="true"
+          data-turbo-action="replace"
+        >Add epic</a>
+        {% endif %}
+      </div>
+
+      {% if view_object.backlog_work_packages|length == 0 and view_object.backlog_epics|length == 0 %}
+      <div class="work_planner__backlog_empty">Backlog is empty.</div>
+      {% endif %}
+
+      {% for backlog_work_package in view_object.backlog_work_packages %}
+        {% include "screens/work_planner/backlog_work_package.jinja" %}
+      {% endfor %}
+
+      {% if view_object.backlog_epics|length > 0 %}
+      <div class="work_planner__backlog_standalone">
+        <h3>Standalone epics</h3>
+        <div class="work_planner__backlog_epic_list">
+          {% for epic in view_object.backlog_epics %}
+            {% include "screens/work_planner/backlog_epic_card.jinja" %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </section>
+
+    <section class="work_planner__canvas_section">
+      <div class="work_planner__section_header">
+        <h2>Planning Canvas</h2>
+        <div class="work_planner__canvas_hint">
+          Hold <code>Space</code> to pan.
+        </div>
+      </div>
+
+      {% if view_object.months|length == 0 %}
+      <div class="work_planner__canvas_empty">
+        No scheduled epics yet. Add <code>TIME_START</code> and <code>TIME_END</code> to place epics on the canvas.
+      </div>
+      {% else %}
+      <div
+        class="work_planner__canvas_scroll"
+        js-pan_with_space
+        data-work-planner-canvas-scroll
+      >
+        <div class="work_planner__canvas_surface">
+          <div class="work_planner__months">
+            <div class="work_planner__months_spacer"></div>
+            <div class="work_planner__months_grid">
+              {% for month in view_object.months %}
+              <div class="work_planner__month">{{ month.label }}</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <section class="work_planner__view" data-work-planner-view="person">
+            {% if view_object.person_lanes|length == 0 %}
+            <div class="work_planner__canvas_empty">No scheduled epics for this view.</div>
+            {% endif %}
+            {% for lane in view_object.person_lanes %}
+            <div class="work_planner__lane">
+              <div class="work_planner__lane_meta">
+                <div class="work_planner__lane_title">{{ lane.title }}</div>
+                {% if lane.subtitle %}
+                <div class="work_planner__lane_subtitle">{{ lane.subtitle }}</div>
+                {% endif %}
+              </div>
+              <div
+                class="work_planner__lane_body"
+                data-work-planner-dropzone
+              >
+                <div class="work_planner__lane_grid" style="--work-planner-lane-rows: {{ lane.row_count }};">
+                  {% for epic in lane.epics %}
+                    {% set draggable = view_object.project_config.is_running_on_server %}
+                    {% set nested = false %}
+                    {% include "screens/work_planner/epic_card.jinja" %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </section>
+
+          <section class="work_planner__view" data-work-planner-view="team" hidden>
+            {% if view_object.team_groups|length == 0 %}
+            <div class="work_planner__canvas_empty">No scheduled epics for this view.</div>
+            {% endif %}
+            {% for team_group in view_object.team_groups %}
+            <div class="work_planner__team_group">
+              <div class="work_planner__team_group_title">{{ team_group.title }}</div>
+              {% for lane in team_group.lanes %}
+              <div class="work_planner__lane">
+                <div class="work_planner__lane_meta">
+                  <div class="work_planner__lane_title">{{ lane.title }}</div>
+                  {% if lane.subtitle %}
+                  <div class="work_planner__lane_subtitle">{{ lane.subtitle }}</div>
+                  {% endif %}
+                </div>
+                <div
+                  class="work_planner__lane_body"
+                  data-work-planner-dropzone
+                >
+                  <div class="work_planner__lane_grid" style="--work-planner-lane-rows: {{ lane.row_count }};">
+                    {% for epic in lane.epics %}
+                      {% set draggable = view_object.project_config.is_running_on_server %}
+                      {% set nested = false %}
+                      {% include "screens/work_planner/epic_card.jinja" %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </section>
+
+          <section class="work_planner__view" data-work-planner-view="work-package" hidden>
+            {% if view_object.work_package_lanes|length == 0 %}
+            <div class="work_planner__canvas_empty">No scheduled work packages for this view.</div>
+            {% endif %}
+            {% for lane in view_object.work_package_lanes %}
+            <div class="work_planner__lane">
+              <div class="work_planner__lane_meta">
+                <div class="work_planner__lane_title">{{ lane.title }}</div>
+                <div class="work_planner__lane_subtitle">{{ lane.document.title if lane.document is not none else "Project-wide" }}</div>
+              </div>
+              <div
+                class="work_planner__lane_body"
+                data-work-planner-dropzone
+              >
+                <div class="work_planner__lane_grid" style="--work-planner-lane-rows: {{ lane.row_count }};">
+                  {% include "screens/work_planner/work_package_cluster.jinja" %}
+                  {% for epic in lane.epics %}
+                    {% set draggable = false %}
+                    {% set nested = true %}
+                    {% include "screens/work_planner/epic_card.jinja" %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </section>
+        </div>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+</div>

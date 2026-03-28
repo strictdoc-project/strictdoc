@@ -1,0 +1,21 @@
+#
+# This test verifies the following functionality:
+# StrictDoc generates the dedicated Work Planner HTML screen and renders
+# scheduled epics, work-package clustering, and backlog content.
+#
+# @relation(SDOC-SRS-205, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Published: Work planner test document
+
+RUN: %check_exists --file "%T/html/work_planner.html"
+
+RUN: %cat "%T/html/work_planner.html" | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: Work planner
+CHECK-HTML: data-viewtype="work-planner"
+CHECK-HTML: Define anomaly drill
+CHECK-HTML: 2026-04
+CHECK-HTML: Prepare command uplink
+CHECK-HTML: Rehearse on-console checklist
+CHECK-HTML: Alpha package

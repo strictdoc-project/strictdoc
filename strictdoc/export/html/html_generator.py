@@ -38,6 +38,9 @@ from strictdoc.export.html.generators.project_map import (
 from strictdoc.export.html.generators.project_statistics import (
     ProgressStatisticsGenerator,
 )
+from strictdoc.export.html.generators.work_planner import (
+    WorkPlannerHTMLGenerator,
+)
 from strictdoc.export.html.generators.source_file_coverage import (
     SourceFileCoverageHTMLGenerator,
 )
@@ -149,6 +152,8 @@ class HTMLGenerator:
 
         # Export JavaScript map of the document tree (project map)
         self.export_project_map(traceability_index=traceability_index)
+
+        self.export_work_planner(traceability_index=traceability_index)
 
         if self.project_config.is_activated_tree_map():
             self.export_tree_map_screen(traceability_index)
@@ -726,6 +731,22 @@ class HTMLGenerator:
             "project_statistics.html",
         )
         with open(output_html_source_coverage, "w", encoding="utf8") as file:
+            file.write(document_content)
+
+    def export_work_planner(
+        self,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        document_content = WorkPlannerHTMLGenerator.export(
+            project_config=self.project_config,
+            traceability_index=traceability_index,
+            html_templates=self.html_templates,
+        )
+        output_html_work_planner = os.path.join(
+            self.project_config.export_output_html_root,
+            "work_planner.html",
+        )
+        with open(output_html_work_planner, "w", encoding="utf8") as file:
             file.write(document_content)
 
     @timing_decorator("Export static HTML search index")

@@ -21,6 +21,10 @@ class RequirementFieldName:
     PREFIX = "PREFIX"
     LEVEL = "LEVEL"
     STATUS = "STATUS"
+    ASSIGNED_PERSON = "ASSIGNED_PERSON"
+    ASSIGNED_TEAM = "ASSIGNED_TEAM"
+    TIME_START = "TIME_START"
+    TIME_END = "TIME_END"
     TAGS = "TAGS"
     TITLE = "TITLE"
 

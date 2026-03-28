@@ -1,0 +1,30 @@
+<article
+  class="work_planner__epic work_planner__epic--{{ epic.status_css_class }}{% if nested %} work_planner__epic--nested{% endif %}"
+  style="grid-column: {{ epic.start_month_index + 1 }} / {{ epic.end_month_index + 2 }}; grid-row: {{ epic.stack_level + 1 }};"
+  {% if draggable %}
+  draggable="true"
+  data-work-planner-draggable="epic"
+  data-node-mid="{{ epic.node.reserved_mid }}"
+  data-start-month-index="{{ epic.start_month_index }}"
+  data-move-endpoint="/actions/work_planner/move_epic"
+  {% endif %}
+>
+  <div class="work_planner__epic_status">{{ epic.status or "Ready" }}</div>
+  <div class="work_planner__epic_title">
+    <a href="{{ view_object.render_node_link(epic.node) }}" data-turbo="false">
+      {{ epic.title }}
+    </a>
+  </div>
+  <div class="work_planner__epic_meta">
+    {{ epic.assigned_person }} · {{ epic.assigned_team }} · {{ epic.document.title }}
+  </div>
+  {% if view_object.project_config.is_running_on_server %}
+  <div class="work_planner__epic_actions">
+    <a
+      href="/actions/work_planner/edit_node?node_id={{ epic.node.reserved_mid }}"
+      data-turbo="true"
+      data-turbo-action="replace"
+    >Edit</a>
+  </div>
+  {% endif %}
+</article>

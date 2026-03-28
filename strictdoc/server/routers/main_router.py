@@ -1,3 +1,4 @@
+import calendar
 import asyncio
 import copy
 import datetime
@@ -38,6 +39,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     RequirementFieldType,
 )
 from strictdoc.backend.sdoc.models.model import (
+    RequirementFieldName,
     SDocExtendedElementIF,
     SDocNodeIF,
 )
@@ -103,6 +105,9 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 from strictdoc.export.html.generators.document_pdf import (
     DocumentHTML2PDFGenerator,
 )
+from strictdoc.export.html.generators.work_planner import (
+    WorkPlannerHTMLGenerator,
+)
 from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
     DocumentScreenViewObject,
 )
@@ -143,6 +148,7 @@ from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
     HierarchicalRWLockManager,
 )
 from strictdoc.server.helpers.http import request_is_for_non_modified_file
+from strictdoc.server.helpers.turbo import render_turbo_stream
 
 HTTP_STATUS_BAD_REQUEST = 400
 HTTP_STATUS_PRECONDITION_FAILED = 412
@@ -280,6 +286,104 @@ def create_main_router(
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
 
+    def render_work_planner_refresh_stream(
+        *, clear_modal: bool = False
+    ) -> str:
+        view_object = WorkPlannerHTMLGenerator.create_view_object(
+            project_config=project_config,
+            traceability_index=export_action.traceability_index,
+        )
+        output = render_turbo_stream(
+            content=view_object.render_frame_content(env()),
+            action="replace",
+            target="frame_work_planner_content",
+        )
+        if clear_modal:
+            output += render_turbo_stream(
+                content="",
+                action="update",
+                target="modal",
+            )
+        return output
+
+    def render_work_planner_form_modal(
+        *,
+        form_object: RequirementFormObject,
+        is_new_requirement: bool,
+        planner_submit_url: str,
+        reference_mid: Optional[str] = None,
+        whereto: Optional[str] = None,
+    ) -> str:
+        modal_content = env().render_template_as_markup(
+            "screens/work_planner/frame_requirement_form_modal.jinja",
+            form_object=form_object,
+            is_new_requirement=is_new_requirement,
+            planner_submit_url=planner_submit_url,
+            planner_cancel_url="/actions/work_planner/cancel_form",
+            reference_mid=reference_mid,
+            whereto=whereto,
+        )
+        return render_turbo_stream(
+            content=modal_content,
+            action="update",
+            target="modal",
+        )
+
+    def shift_iso_8601_by_months(iso_value: str, month_delta: int) -> str:
+        normalized_value = (
+            iso_value[:-1] + "+00:00"
+            if iso_value.endswith("Z")
+            else iso_value
+        )
+        parsed_value = datetime.datetime.fromisoformat(normalized_value)
+        total_months = (
+            parsed_value.year * 12 + (parsed_value.month - 1) + month_delta
+        )
+        shifted_year = total_months // 12
+        shifted_month = total_months % 12 + 1
+        shifted_day = min(
+            parsed_value.day,
+            calendar.monthrange(shifted_year, shifted_month)[1],
+        )
+        shifted_value = parsed_value.replace(
+            year=shifted_year,
+            month=shifted_month,
+            day=shifted_day,
+        )
+        if iso_value.endswith("Z"):
+            return shifted_value.astimezone(
+                datetime.timezone.utc
+            ).isoformat().replace("+00:00", "Z")
+        return shifted_value.isoformat()
+
+    def shift_epic_time_fields(epic: SDocNode, month_delta: int) -> bool:
+        time_start = epic._get_cached_field(  # noqa: SLF001
+            RequirementFieldName.TIME_START, singleline_only=True
+        )
+        time_end = epic._get_cached_field(  # noqa: SLF001
+            RequirementFieldName.TIME_END, singleline_only=True
+        )
+        if time_start is None or time_end is None:
+            return False
+        try:
+            shifted_time_start = shift_iso_8601_by_months(
+                time_start, month_delta
+            )
+            shifted_time_end = shift_iso_8601_by_months(time_end, month_delta)
+        except ValueError:
+            return False
+        epic.set_field_value(
+            field_name=RequirementFieldName.TIME_START,
+            form_field_index=0,
+            value=shifted_time_start,
+        )
+        epic.set_field_value(
+            field_name=RequirementFieldName.TIME_END,
+            form_field_index=0,
+            value=shifted_time_end,
+        )
+        return True
+
     def read_lock() -> Iterator[None]:
         with lock_manager.acquire_global_read():
             yield
@@ -338,6 +442,373 @@ def create_main_router(
         )
         return HTMLResponse(
             content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @read_router.get("/actions/work_planner/new_node", response_class=Response)
+    def work_planner__new_node(
+        element_type: str,
+        document_mid: str,
+        parent_uid: str = "",
+    ) -> Response:
+        if element_type not in ("EPIC", "WORK_PACKAGE"):
+            raise HTTPException(
+                status_code=HTTP_STATUS_BAD_REQUEST,
+                detail=f"Unsupported planner element type: {element_type}.",
+            )
+
+        document = assert_cast(
+            export_action.traceability_index.get_node_by_mid(MID(document_mid)),
+            SDocDocument,
+        )
+
+        next_uid: Optional[str] = None
+        document_tree_stats: DocumentTreeStats = (
+            DocumentUIDAnalyzer.analyze_document_tree(
+                export_action.traceability_index
+            )
+        )
+        if (
+            node_prefix := document.get_prefix_for_new_node(element_type)
+        ) is not None:
+            next_uid = document_tree_stats.get_next_requirement_uid(
+                node_prefix
+            )
+
+        form_object = RequirementFormObject.create_new(
+            document=document,
+            context_document_mid=document.reserved_mid.get_string_value(),
+            next_uid=next_uid,
+            element_type=element_type,
+        )
+        if len(parent_uid) > 0 and element_type == "EPIC":
+            form_object.reference_fields.append(
+                RequirementReferenceFormField(
+                    field_mid=MID.create(),
+                    field_type=RequirementReferenceFormField.FieldType.PARENT,
+                    field_value=parent_uid,
+                    field_role="",
+                )
+            )
+
+        return HTMLResponse(
+            content=render_work_planner_form_modal(
+                form_object=form_object,
+                is_new_requirement=True,
+                planner_submit_url="/actions/work_planner/create_node",
+                reference_mid=document.reserved_mid.get_string_value(),
+                whereto=NodeCreationOrder.CHILD,
+            ),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @read_router.get("/actions/work_planner/edit_node", response_class=Response)
+    def work_planner__edit_node(node_id: str) -> Response:
+        node = assert_cast(
+            export_action.traceability_index.get_node_by_mid(MID(node_id)),
+            SDocNode,
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+        revision = revisions[node.reserved_mid.get_string_value()]
+        form_object = RequirementFormObject.create_from_requirement(
+            requirement=node,
+            revision=revision,
+            context_document_mid=document.reserved_mid.get_string_value(),
+        )
+        return HTMLResponse(
+            content=render_work_planner_form_modal(
+                form_object=form_object,
+                is_new_requirement=False,
+                planner_submit_url="/actions/work_planner/update_node",
+            ),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @read_router.get(
+        "/actions/work_planner/cancel_form", response_class=Response
+    )
+    def work_planner__cancel_form() -> Response:
+        return HTMLResponse(
+            content=render_turbo_stream(
+                content="",
+                action="update",
+                target="modal",
+            ),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @write_router.post("/actions/work_planner/create_node")
+    def work_planner__create_node(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
+        request_dict: Dict[str, str] = dict(request_form_data)
+        requirement_mid: str = request_dict["requirement_mid"]
+        document_mid: str = request_dict["document_mid"]
+        context_document_mid: str = request_dict["context_document_mid"]
+        reference_mid: str = request_dict["reference_mid"]
+        whereto: str = request_dict["whereto"]
+
+        document = assert_cast(
+            export_action.traceability_index.get_node_by_mid(MID(document_mid)),
+            SDocDocument,
+        )
+        context_document = assert_cast(
+            export_action.traceability_index.get_node_by_mid(
+                MID(context_document_mid)
+            ),
+            SDocDocument,
+        )
+
+        form_object = RequirementFormObject.create_from_request(
+            is_new=True,
+            requirement_mid=requirement_mid,
+            request_form_data=request_form_data,
+            document=document,
+            existing_requirement_uid=None,
+        )
+        form_object.validate(
+            traceability_index=export_action.traceability_index,
+            context_document=document,
+            config=project_config,
+            existing_revision=0,
+        )
+
+        if not form_object.any_errors():
+            create_command = CreateOrUpdateNodeCommand(
+                form_object=form_object,
+                node_info=CreateNodeInfo(
+                    whereto=whereto,
+                    requirement_mid=requirement_mid,
+                    reference_mid=reference_mid,
+                ),
+                context_document=context_document,
+                traceability_index=export_action.traceability_index,
+                project_config=project_config,
+            )
+            create_command.perform()
+
+        if form_object.any_errors():
+            return HTMLResponse(
+                content=render_work_planner_form_modal(
+                    form_object=form_object,
+                    is_new_requirement=True,
+                    planner_submit_url="/actions/work_planner/create_node",
+                    reference_mid=reference_mid,
+                    whereto=whereto,
+                ),
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        write_document_to_file(document)
+        if document != context_document:
+            write_document_to_file(context_document)
+
+        html_generator.export_single_document_with_performance(
+            document=document,
+            traceability_index=export_action.traceability_index,
+            specific_documents=(DocumentType.DOCUMENT,),
+        )
+        html_generator.export_work_planner(
+            traceability_index=export_action.traceability_index
+        )
+
+        return HTMLResponse(
+            content=render_work_planner_refresh_stream(clear_modal=True),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @write_router.post("/actions/work_planner/update_node")
+    def work_planner__update_node(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
+        request_dict = dict(request_form_data)
+        requirement_mid = request_dict["requirement_mid"]
+        node = assert_cast(
+            export_action.traceability_index.get_node_by_mid(
+                MID(requirement_mid)
+            ),
+            SDocNode,
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+
+        form_object = RequirementFormObject.create_from_request(
+            is_new=False,
+            requirement_mid=requirement_mid,
+            request_form_data=request_form_data,
+            document=document,
+            existing_requirement_uid=node.reserved_uid,
+        )
+        existing_revision = revisions[form_object.requirement_mid]
+
+        form_object.validate(
+            traceability_index=export_action.traceability_index,
+            context_document=document,
+            config=project_config,
+            existing_revision=existing_revision,
+        )
+
+        update_result: Optional[CreateOrUpdateNodeResult] = None
+        if not form_object.any_errors():
+            update_command = CreateOrUpdateNodeCommand(
+                form_object=form_object,
+                node_info=UpdateNodeInfo(node_to_update=node),
+                context_document=document,
+                traceability_index=export_action.traceability_index,
+                project_config=project_config,
+            )
+            update_result = update_command.perform()
+
+        if form_object.any_errors():
+            return HTMLResponse(
+                content=render_work_planner_form_modal(
+                    form_object=form_object,
+                    is_new_requirement=False,
+                    planner_submit_url="/actions/work_planner/update_node",
+                ),
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        assert update_result is not None
+        write_document_to_file(document)
+        revisions[requirement_mid] += 1
+
+        html_generator.export_single_document_with_performance(
+            document=document,
+            traceability_index=export_action.traceability_index,
+            specific_documents=(DocumentType.DOCUMENT,),
+        )
+        html_generator.export_work_planner(
+            traceability_index=export_action.traceability_index
+        )
+
+        return HTMLResponse(
+            content=render_work_planner_refresh_stream(clear_modal=True),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @write_router.post("/actions/work_planner/move_epic")
+    def work_planner__move_epic(
+        node_mid: str = Form(...),
+        month_delta: int = Form(...),
+    ) -> Response:
+        epic = assert_cast(
+            export_action.traceability_index.get_node_by_mid(MID(node_mid)),
+            SDocNode,
+        )
+        if epic.node_type != "EPIC":
+            raise HTTPException(
+                status_code=HTTP_STATUS_BAD_REQUEST,
+                detail=f"Expected EPIC node, got: {epic.node_type}.",
+            )
+        if not shift_epic_time_fields(epic, month_delta):
+            return HTMLResponse(
+                content="",
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        document = assert_cast(epic.get_document(), SDocDocument)
+        document.build_search_index()
+        export_action.traceability_index.update_last_updated()
+
+        write_document_to_file(document)
+        html_generator.export_single_document_with_performance(
+            document=document,
+            traceability_index=export_action.traceability_index,
+            specific_documents=(DocumentType.DOCUMENT,),
+        )
+        html_generator.export_work_planner(
+            traceability_index=export_action.traceability_index
+        )
+
+        return HTMLResponse(
+            content=render_work_planner_refresh_stream(),
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @write_router.post("/actions/work_planner/move_work_package")
+    def work_planner__move_work_package(
+        node_mid: str = Form(...),
+        month_delta: int = Form(...),
+    ) -> Response:
+        work_package = assert_cast(
+            export_action.traceability_index.get_node_by_mid(MID(node_mid)),
+            SDocNode,
+        )
+        if work_package.node_type != "WORK_PACKAGE":
+            raise HTTPException(
+                status_code=HTTP_STATUS_BAD_REQUEST,
+                detail=(
+                    f"Expected WORK_PACKAGE node, got: "
+                    f"{work_package.node_type}."
+                ),
+            )
+
+        changed_documents: List[SDocDocument] = []
+        for child_epic in export_action.traceability_index.get_children_requirements(
+            work_package
+        ):
+            if child_epic.node_type != "EPIC":
+                continue
+            if shift_epic_time_fields(child_epic, month_delta):
+                epic_document = assert_cast(child_epic.get_document(), SDocDocument)
+                if epic_document not in changed_documents:
+                    changed_documents.append(epic_document)
+
+        if len(changed_documents) == 0:
+            return HTMLResponse(
+                content="",
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        for changed_document in changed_documents:
+            changed_document.build_search_index()
+            write_document_to_file(changed_document)
+            html_generator.export_single_document_with_performance(
+                document=changed_document,
+                traceability_index=export_action.traceability_index,
+                specific_documents=(DocumentType.DOCUMENT,),
+            )
+
+        export_action.traceability_index.update_last_updated()
+        html_generator.export_work_planner(
+            traceability_index=export_action.traceability_index
+        )
+
+        return HTMLResponse(
+            content=render_work_planner_refresh_stream(),
             status_code=200,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
@@ -2865,6 +3336,10 @@ def create_main_router(
                             )
                 elif document_relative_path.relative_path == "index.html":
                     html_generator.export_project_tree_screen(
+                        traceability_index=export_action.traceability_index,
+                    )
+                elif document_relative_path.relative_path == "work_planner.html":
+                    html_generator.export_work_planner(
                         traceability_index=export_action.traceability_index,
                     )
                 elif (

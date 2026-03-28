@@ -1,0 +1,42 @@
+<article class="work_planner__backlog_work_package">
+  <div class="work_planner__backlog_work_package_header">
+    <div class="work_planner__backlog_work_package_title">
+      <a href="{{ view_object.render_node_link(backlog_work_package.node) }}" data-turbo="false">
+        {{ backlog_work_package.title }}
+      </a>
+    </div>
+    {% if view_object.project_config.is_running_on_server %}
+    <div class="work_planner__backlog_work_package_actions">
+      <a
+        href="/actions/work_planner/new_node?element_type=EPIC&document_mid={{ backlog_work_package.document.reserved_mid }}&parent_uid={{ backlog_work_package.node.reserved_uid or '' }}"
+        data-turbo="true"
+        data-turbo-action="replace"
+      >Add epic</a>
+      <a
+        href="/actions/work_planner/edit_node?node_id={{ backlog_work_package.node.reserved_mid }}"
+        data-turbo="true"
+        data-turbo-action="replace"
+      >Edit</a>
+    </div>
+    {% endif %}
+  </div>
+  <div class="work_planner__backlog_work_package_meta">
+    {{ backlog_work_package.document.title }}
+  </div>
+  {% if backlog_work_package.statement %}
+  <div class="work_planner__backlog_work_package_statement">
+    {{ backlog_work_package.statement }}
+  </div>
+  {% endif %}
+  {% if backlog_work_package.epics|length > 0 %}
+  <div class="work_planner__backlog_epic_list">
+    {% for epic in backlog_work_package.epics %}
+      {% include "screens/work_planner/backlog_epic_card.jinja" %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="work_planner__backlog_empty">
+    No unscheduled epics in this work package.
+  </div>
+  {% endif %}
+</article>

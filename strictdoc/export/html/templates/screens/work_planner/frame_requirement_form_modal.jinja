@@ -1,0 +1,7 @@
+{% extends "components/modal/index.jinja" %}
+
+{% block modal_container %}
+  {% set submit_url_override = planner_submit_url %}
+  {% set cancel_url_override = planner_cancel_url %}
+  {% include "screens/document/document/frame_requirement_form.jinja" %}
+{% endblock modal_container %}

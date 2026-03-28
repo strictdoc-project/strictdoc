@@ -1,0 +1,42 @@
+[DOCUMENT]
+TITLE: Work planner E2E document
+
+[WORK_PACKAGE]
+UID: WP-BETA
+TITLE: Beta package
+STATEMENT: Coordinate the beta package rollout.
+
+[EPIC]
+UID: EPIC-BETA-1
+STATUS: Ready
+ASSIGNED_PERSON: Jane Doe
+ASSIGNED_TEAM: Flight software
+TIME_START: 2026-04-01T00:00:00Z
+TIME_END: 2026-10-01T00:00:00Z
+TITLE: Build rollout board
+STATEMENT: Build the rollout board for the beta release.
+RELATIONS:
+- TYPE: Parent
+  VALUE: WP-BETA
+
+[EPIC]
+UID: EPIC-BACKLOG-2
+STATUS: Draft
+ASSIGNED_PERSON: Rory Williams
+ASSIGNED_TEAM: Mission control
+TITLE: Draft fallback script
+STATEMENT: Draft the fallback script before scheduling it.
+
+[EPIC]
+UID: REQ-1
+TITLE: PlannerEpicFromWorkPlanner
+STATEMENT: >>>
+PlannerEpicCreatedViaPlanner.
+<<<
+
+[EPIC]
+UID: REQ-2
+TITLE: PlannerEpicFromWorkPlanner
+STATEMENT: >>>
+PlannerEpicCreatedViaPlanner.
+<<<

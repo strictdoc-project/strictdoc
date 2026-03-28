@@ -7,6 +7,8 @@ from typing import Dict, List, Optional, Set
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
     GrammarElementFieldString,
+    GrammarElementFieldSingleChoice,
+    GrammarElementRelationParent,
     GrammarElementFieldType,
 )
 from strictdoc.backend.sdoc.models.model import (
@@ -147,6 +149,16 @@ class DocumentGrammar(SDocGrammarIF):
 
         elements.append(text_element)
         elements.append(requirement_element)
+        elements.append(
+            DocumentGrammar.create_default_epic_element(
+                enable_mid=enable_mid
+            )
+        )
+        elements.append(
+            DocumentGrammar.create_default_work_package_element(
+                enable_mid=enable_mid
+            )
+        )
 
         grammar = DocumentGrammar(
             parent=parent, elements=elements, import_from_file=None
@@ -395,6 +407,139 @@ class DocumentGrammar(SDocGrammarIF):
             relations=[],
         )
         return section_element
+
+    @staticmethod
+    def create_default_epic_element(
+        parent: Optional["DocumentGrammar"] = None,
+        enable_mid: bool = False,
+    ) -> GrammarElement:
+        fields: List[GrammarElementFieldType] = []
+        if enable_mid:
+            fields.append(
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.MID,
+                    human_title=None,
+                    required="False",
+                )
+            )
+        fields.extend(
+            [
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.UID,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldSingleChoice(
+                    parent=None,
+                    title=RequirementFieldName.STATUS,
+                    human_title=None,
+                    options=["Ready", "WIP", "Done", "Draft"],
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.ASSIGNED_PERSON,
+                    human_title="Assigned person",
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.ASSIGNED_TEAM,
+                    human_title="Assigned team",
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.TIME_START,
+                    human_title="Start time",
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.TIME_END,
+                    human_title="End time",
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.TITLE,
+                    human_title=None,
+                    required="True",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.STATEMENT,
+                    human_title=None,
+                    required="False",
+                ),
+            ]
+        )
+        epic_element = GrammarElement(
+            parent=parent,
+            tag="EPIC",
+            property_is_composite="",
+            property_prefix="",
+            property_view_style="",
+            fields=fields,
+            relations=[
+                GrammarElementRelationParent(
+                    parent=None,
+                    relation_type="Parent",
+                    relation_role=None,
+                )
+            ],
+        )
+        epic_element.relations[0].parent = epic_element
+        return epic_element
+
+    @staticmethod
+    def create_default_work_package_element(
+        parent: Optional["DocumentGrammar"] = None,
+        enable_mid: bool = False,
+    ) -> GrammarElement:
+        fields: List[GrammarElementFieldType] = []
+        if enable_mid:
+            fields.append(
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.MID,
+                    human_title=None,
+                    required="False",
+                )
+            )
+        fields.extend(
+            [
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.UID,
+                    human_title=None,
+                    required="False",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.TITLE,
+                    human_title=None,
+                    required="True",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.STATEMENT,
+                    human_title=None,
+                    required="False",
+                ),
+            ]
+        )
+        return GrammarElement(
+            parent=parent,
+            tag="WORK_PACKAGE",
+            property_is_composite="",
+            property_prefix="",
+            property_view_style="",
+            fields=fields,
+            relations=[],
+        )
 
 
 class DocumentGrammarWrapper:

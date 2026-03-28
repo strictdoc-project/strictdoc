@@ -1,8 +1,14 @@
 {% extends "components/form/index.jinja" %}
 
 {%- set frame_id="article-"~form_object.requirement_mid %}
-{%- if is_new_requirement -%}
+{%- if submit_url_override is defined -%}
+  {%- set submit_url = submit_url_override -%}
+{%- elif is_new_requirement -%}
   {%- set submit_url="/actions/document/create_requirement" %}
+{%- endif -%}
+{%- if cancel_url_override is defined -%}
+  {%- set cancel_url = cancel_url_override -%}
+{%- elif is_new_requirement -%}
   {%- set cancel_url="/actions/document/cancel_new_requirement?requirement_mid="~form_object.requirement_mid -%}
 {%- else -%}
   {%- set submit_url="/actions/document/update_requirement" %}
@@ -78,6 +84,7 @@
 </sdoc-tab-content>
 
 {# Relations #}
+{%- if form_object.relation_types|length > 0 -%}
 <sdoc-tab-content id="Relations">
   {% set relation_row_context = namespace() %}
 
@@ -101,6 +108,7 @@
     >{% include "_res/svg_ico16_add.jinja.html" %} Add relation</a>
   </sdoc-form-row>
 </sdoc-tab-content>
+{%- endif -%}
 
 {# Comments #}
 <sdoc-tab-content id="Comments">

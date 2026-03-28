@@ -1055,4 +1055,24 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SRS-205
 
+[REQUIREMENT]
+MID: a4b0e87a096141838ba162cd862c4c77
+UID: SDOC-LLR-211
+STATUS: Active
+TITLE: Layout rules for EPIC nodes
+STATEMENT: >>>
+Work Planner shall allocate EPIC nodes on the Planning Canvas as follows:
+
+- The nodes must never overlap visually, neither vertically or horizontally.
+- If two nodes overlap in time, they shall be placed on two different vertical levels.
+- The algorithm shall optimize for a number of levels. See optimization examples below.
+
+Optimization examples:
+
+1) When a node A overlaps with node B and node B overlaps with node C but A and C don't overlap, then A and C shall be placed to the same level and the node B shall be placed to the level below.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
 [[/SECTION]]

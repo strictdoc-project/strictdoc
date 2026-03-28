@@ -1,6 +1,6 @@
 [DOCUMENT]
 MID: f1741c88dfcb4f68ad7dcbdc2d4542d5
-TITLE: PLAN
+TITLE: StrictDoc Roadmap
 UID: SDOC_PLAN
 VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
 DATE: @GIT_COMMIT_DATETIME
@@ -10,41 +10,1470 @@ OPTIONS:
   NODE_IN_TOC: True
 
 [EPIC]
-MID: d24e4019c89c483482f007852e5e2900
-UID: REQ-1
-STATUS: WIP
-ASSIGNED_PERSON: Adrien
-ASSIGNED_TEAM: FSW
-TIME_START: 2026-03-28T16:28:02Z
-TIME_END: 2026-12-28T16:28:02Z
-TITLE: TESTEPIC1
+MID: 97a632eea3b455bf04d89c84d270019d
+UID: EPIC-001
+STATUS: Done
+TIME_START: 2022-12-04T21:00:00Z
+TIME_END: 2023-04-29T03:00:00Z
+TITLE: Web interface: Document and Project Tree screens
 STATEMENT: >>>
-TEST
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: REQ-2
+Web interface: Document and Project Tree screens
 
-[WORK_PACKAGE]
-MID: 33e4ad34c3814282bbed7549aff82435
-UID: REQ-2
-TITLE: TEST WP
-STATEMENT: >>>
-TEST WP
+Imported from: developer/drawio/Roadmap.drawio
 <<<
 
 [EPIC]
-MID: effac635ce62408dbdba26eed71854dc
-UID: REQ-3
-STATUS: Draft
-ASSIGNED_PERSON: Adam
-ASSIGNED_TEAM: ESW
-TIME_START: 2026-04-28T16:28:02Z
-TIME_END: 2026-05-28T16:28:02Z
-TITLE: TESTEPIC2
+MID: 12ca48558d5ed6d6376cb8a2cde037e2
+UID: EPIC-002
+STATUS: Done
+TIME_START: 2023-05-04T21:00:00Z
+TIME_END: 2023-05-24T06:00:00Z
+TITLE: UI: Move TOC nodes
 STATEMENT: >>>
-TEST
+UI: Move TOC nodes
+
+Imported from: developer/drawio/Roadmap.drawio
 <<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: REQ-2
+
+[EPIC]
+MID: 79a81cff0d9c48928b7a740d3e03da9a
+UID: EPIC-003
+STATUS: Done
+TIME_START: 2023-05-26T04:30:00Z
+TIME_END: 2023-06-17T21:00:00Z
+TITLE: UI: On-demand rendering of web pages
+STATEMENT: >>>
+UI: On-demand rendering of web pages
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: cf1e384ff562dcccb13989a6b4f112fc
+UID: EPIC-004
+STATUS: Done
+TIME_START: 2023-07-30T01:30:00Z
+TIME_END: 2023-08-20T09:00:00Z
+TITLE: Child / reverse parent links
+STATEMENT: >>>
+Child / reverse parent links
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 0dc50140842dd47f93e144425c702769
+UID: EPIC-005
+STATUS: Done
+TIME_START: 2023-08-22T07:30:00Z
+TIME_END: 2023-09-04T18:00:00Z
+TITLE: Mermaid diagrams
+STATEMENT: >>>
+Mermaid diagrams
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: b03ac517b86c6ee926014f8d2ccf7031
+UID: EPIC-006
+STATUS: Done
+TIME_START: 2023-09-25T09:00:00Z
+TIME_END: 2023-10-28T03:00:00Z
+TITLE: Parent/child relations and roles (refines, implements, verifies)
+STATEMENT: >>>
+Parent/child relations and roles (refines, implements, verifies)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 7113170ab0574d4c3efc3f6a365dcab7
+UID: EPIC-007
+STATUS: Done
+TIME_START: 2023-11-02T21:00:00Z
+TIME_END: 2023-11-23T12:00:00Z
+TITLE: Search query engine, search screen, export filters
+STATEMENT: >>>
+Search query engine, search screen, export filters
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 93a0b1fd0c29b3281c480dc7f4fbcdbc
+UID: EPIC-008
+STATUS: Done
+TIME_START: 2023-11-25T09:00:00Z
+TIME_END: 2023-12-16T12:00:00Z
+TITLE: Basic Git operations
+STATEMENT: >>>
+Basic Git operations
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 3b341940f03f6e5719d71a0928550bc8
+UID: EPIC-009
+STATUS: Done
+TIME_START: 2023-12-26T04:30:00Z
+TIME_END: 2024-01-20T09:00:00Z
+TITLE: Basic SPDX export
+STATEMENT: >>>
+Basic SPDX export
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 1ccd4cfcf5ba10afc251748526b2bd3d
+UID: EPIC-010
+STATUS: Done
+TIME_START: 2024-01-24T06:00:00Z
+TIME_END: 2024-02-11T21:00:00Z
+TITLE: Multi-document Excel export
+STATEMENT: >>>
+Multi-document Excel export
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: b6ded528c21c867524f66844635d2a37
+UID: EPIC-011
+STATUS: Done
+TIME_START: 2024-02-15T12:00:00Z
+TIME_END: 2024-03-10T16:30:00Z
+TITLE: Human field titles (UID -> Unique identifier)
+STATEMENT: >>>
+Human field titles (UID -> Unique identifier)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: fb9212df011cb9f1caa5b26d0d6ba695
+UID: EPIC-012
+STATUS: Done
+TIME_START: 2024-03-14T13:30:00Z
+TIME_END: 2024-04-29T03:00:00Z
+TITLE: UI: Includable/composable documents (resolving asset paths, corner cases)
+STATEMENT: >>>
+UI: Includable/composable documents (resolving asset paths, corner cases)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 31e46b45357a4316e2604a39bb193a49
+UID: EPIC-013
+STATUS: Done
+TIME_START: 2024-05-06T19:30:00Z
+TIME_END: 2024-06-27T06:00:00Z
+TITLE: Allow arbitrary placed free texts
+STATEMENT: >>>
+Allow arbitrary placed free texts
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 24d8b09e9c308d83845c8c7917dda99f
+UID: EPIC-014
+STATUS: Done
+TIME_START: 2024-07-02T22:30:00Z
+TIME_END: 2024-07-20T09:00:00Z
+TITLE: HTML2PDF all-in-one bundle document
+STATEMENT: >>>
+HTML2PDF all-in-one bundle document
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 7dd08bff1a247c7b3c5637c424595453
+UID: EPIC-015
+STATUS: Done
+TIME_START: 2024-10-14T08:51:00Z
+TIME_END: 2024-11-19T18:00:00Z
+TITLE: Language-aware parsing of source files for traceability
+STATEMENT: >>>
+Language-aware parsing of source files for traceability
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 1e75f891ca733b9b452646694cdff8d5
+UID: EPIC-016
+STATUS: Done
+TIME_START: 2024-11-21T15:00:00Z
+TIME_END: 2024-12-10T16:30:00Z
+TITLE: Traceability to C++
+STATEMENT: >>>
+Traceability to C++
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: d018519c0b4bf9b037b9ee007f374622
+UID: EPIC-017
+STATUS: Done
+TIME_START: 2022-12-04T21:00:00Z
+TIME_END: 2023-05-26T04:30:00Z
+TITLE: End-2-end framework and tests
+STATEMENT: >>>
+End-2-end framework and tests
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: ec0ab3178c1be90bdf883faee99f6353
+UID: EPIC-018
+STATUS: Done
+TIME_START: 2023-06-10T09:00:00Z
+TIME_END: 2023-07-18T10:30:00Z
+TITLE: Section UID, anchors and links
+STATEMENT: >>>
+Section UID, anchors and links
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: ddac00c8055618455888e049948c936f
+UID: EPIC-019
+STATUS: Done
+TIME_START: 2023-07-26T04:30:00Z
+TIME_END: 2023-09-06T15:00:00Z
+TITLE: Project statistics screen
+STATEMENT: >>>
+Project statistics screen
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: a7415b93e4de9b998ab4fd6d30e34351
+UID: EPIC-020
+STATUS: Done
+TIME_START: 2023-09-10T09:00:00Z
+TIME_END: 2023-09-23T12:00:00Z
+TITLE: CLI: --config parameter
+STATEMENT: >>>
+CLI: --config parameter
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 7766339b4f8e56574a8df26aa0be703f
+UID: EPIC-021
+STATUS: Done
+TIME_START: 2023-10-02T22:30:00Z
+TIME_END: 2023-10-30T01:30:00Z
+TITLE: UI: Copy to buffer, Edit grammar/ requirement tabs
+STATEMENT: >>>
+UI: Copy to buffer, Edit grammar/ requirement tabs
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: ddc426a79beab77cf4465a49ac54c491
+UID: EPIC-022
+STATUS: Done
+TIME_START: 2023-11-02T21:00:00Z
+TIME_END: 2023-11-16T00:00:00Z
+TITLE: Single-line markers
+STATEMENT: >>>
+Single-line markers
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: e700b56f673f25b4c6a9f52e1c8c8a0c
+UID: EPIC-023
+STATUS: Done
+TIME_START: 2023-11-17T21:00:00Z
+TIME_END: 2023-12-30T01:30:00Z
+TITLE: Project tree diff/changelog
+STATEMENT: >>>
+Project tree diff/changelog
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: e0283756eec0eb94506df035e6dd16e8
+UID: EPIC-024
+STATUS: Done
+TIME_START: 2024-01-16T12:00:00Z
+TIME_END: 2024-02-06T10:30:00Z
+TITLE: Forward range-based links to source files
+STATEMENT: >>>
+Forward range-based links to source files
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: b48aed16ea9bb9e52d99a538b9091f96
+UID: EPIC-025
+STATUS: Done
+TIME_START: 2024-02-13T16:30:00Z
+TIME_END: 2024-03-08T18:00:00Z
+TITLE: UI: Editing non-requirement nodes
+STATEMENT: >>>
+UI: Editing non-requirement nodes
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 07427fda7168890ea2ad47e7795c22a3
+UID: EPIC-026
+STATUS: Done
+TIME_START: 2024-03-12T15:00:00Z
+TIME_END: 2024-03-30T01:30:00Z
+TITLE: Grammars in separate files
+STATEMENT: >>>
+Grammars in separate files
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: bdb364ffd116c0ba10889cf332576318
+UID: EPIC-027
+STATUS: Done
+TIME_START: 2024-04-12T06:00:00Z
+TIME_END: 2024-06-23T12:00:00Z
+TITLE: ReqIF multiline fields/XHTML, new default ReqIF format profile
+STATEMENT: >>>
+ReqIF multiline fields/XHTML, new default ReqIF format profile
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 57fa44f5e5852e2c4750f4840cd91cc7
+UID: EPIC-028
+STATUS: Done
+TIME_START: 2024-07-18T10:30:00Z
+TIME_END: 2024-07-30T01:30:00Z
+TITLE: ReqIF relations/roles
+STATEMENT: >>>
+ReqIF relations/roles
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 6ef93ee84e558506d77fe13de38abdb9
+UID: EPIC-029
+STATUS: Done
+TIME_START: 2024-10-14T08:51:00Z
+TIME_END: 2024-11-04T13:30:00Z
+TITLE: Traceability to C/Python/* functions
+STATEMENT: >>>
+Traceability to C/Python/* functions
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: c3ca3391231837e0b8a3c25453772560
+UID: EPIC-030
+STATUS: Done
+TIME_START: 2024-11-21T15:00:00Z
+TIME_END: 2024-12-02T22:30:00Z
+TITLE: Doxygen TAGFILE export
+STATEMENT: >>>
+Doxygen TAGFILE export
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 28d48b828a39de5dbdf6158b101c5b56
+UID: EPIC-031
+STATUS: Done
+TIME_START: 2023-01-04T21:00:00Z
+TIME_END: 2023-01-28T03:00:00Z
+TITLE: Project-level TOML config file
+STATEMENT: >>>
+Project-level TOML config file
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 1fc9499eb08dffa933106baa2ab3a214
+UID: EPIC-032
+STATUS: Done
+TIME_START: 2023-03-08T18:00:00Z
+TIME_END: 2023-03-30T01:30:00Z
+TITLE: TextMate bundle / syntax highlighting
+STATEMENT: >>>
+TextMate bundle / syntax highlighting
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 0de6f40c5b48527f1656ed2b8b863c43
+UID: EPIC-033
+STATUS: Done
+TIME_START: 2023-05-12T15:00:00Z
+TIME_END: 2023-05-30T01:30:00Z
+TITLE: Config: Feature toggles
+STATEMENT: >>>
+Config: Feature toggles
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 3587776c7f29c0ea7cb71e2ee89aeb5e
+UID: EPIC-034
+STATUS: Done
+TIME_START: 2023-06-16T00:00:00Z
+TIME_END: 2023-07-06T19:30:00Z
+TITLE: Config: include/exclude docs/files
+STATEMENT: >>>
+Config: include/exclude docs/files
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 841a6849a75adf266a06e0f1d56534ed
+UID: EPIC-035
+STATUS: Done
+TIME_START: 2023-08-02T22:30:00Z
+TIME_END: 2023-08-22T07:30:00Z
+TITLE: Basic user-scriptable ReqIF export/import
+STATEMENT: >>>
+Basic user-scriptable ReqIF export/import
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: f851804c031e94f14fdd28f245851058
+UID: EPIC-036
+STATUS: Done
+TIME_START: 2024-01-10T16:30:00Z
+TIME_END: 2024-01-30T01:30:00Z
+TITLE: Forward range-based links to source files
+STATEMENT: >>>
+Forward range-based links to source files
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: f2a47f224cb23e1451318175e8da1f3e
+UID: EPIC-037
+STATUS: Done
+TIME_START: 2024-02-10T01:30:00Z
+TIME_END: 2024-02-26T09:00:00Z
+TITLE: JSON export
+STATEMENT: >>>
+JSON export
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 856c230641ca1c6fa59604728241415f
+UID: EPIC-038
+STATUS: Done
+TIME_START: 2024-04-29T03:00:00Z
+TIME_END: 2024-05-18T10:30:00Z
+TITLE: Final removal of REFS in favour of RELATIONS
+STATEMENT: >>>
+Final removal of REFS in favour of RELATIONS
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 770f81d2ef9ac1f156e80f54fe64353b
+UID: EPIC-039
+STATUS: Done
+TIME_START: 2024-05-20T09:00:00Z
+TIME_END: 2024-06-16T00:00:00Z
+TITLE: UI Form validation: SingleChoice and REQUIRED fields
+STATEMENT: >>>
+UI Form validation: SingleChoice and REQUIRED fields
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: e611cef348ad4f15faeef4e907c3aa38
+UID: EPIC-040
+STATUS: Done
+TIME_START: 2024-08-10T16:30:00Z
+TIME_END: 2024-08-30T01:30:00Z
+TITLE: Passthrough -> export command migration
+STATEMENT: >>>
+Passthrough -> export command migration
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 007e29dc9afe0cc3ef2778761aea8276
+UID: EPIC-041
+STATUS: Done
+TIME_START: 2024-11-04T18:00:00Z
+TIME_END: 2024-11-17T21:00:00Z
+TITLE: LINK to document
+STATEMENT: >>>
+LINK to document
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 67cd2defc1ab4e0154d0273a32de5da4
+UID: EPIC-042
+STATUS: Done
+TIME_START: 2024-12-08T18:00:00Z
+TIME_END: 2024-12-28T03:00:00Z
+TITLE: Incremental generation of source files
+STATEMENT: >>>
+Incremental generation of source files
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 314fda87f42281e7173d2fc1628db27f
+UID: EPIC-043
+STATUS: Done
+TIME_START: 2023-05-22T07:30:00Z
+TIME_END: 2023-06-08T12:00:00Z
+TITLE: Auto-assign requirement UID
+STATEMENT: >>>
+Auto-assign requirement UID
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: e2208bce4fea6aa293844c53379e553d
+UID: EPIC-044
+STATUS: Done
+TIME_START: 2023-07-01T00:00:00Z
+TIME_END: 2023-07-18T10:30:00Z
+TITLE: Basic export to Graphviz (unsuccessful)
+STATEMENT: >>>
+Basic export to Graphviz (unsuccessful)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 34c75ade666b51ce232ca00069bc5536
+UID: EPIC-045
+STATUS: Done
+TIME_START: 2023-10-06T19:30:00Z
+TIME_END: 2023-11-04T18:00:00Z
+TITLE: Basic ReqIF to JSON export
+STATEMENT: >>>
+Basic ReqIF to JSON export
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: ff9d8f651cf77f1c0bdb67aee64459f7
+UID: EPIC-046
+STATUS: Done
+TIME_START: 2023-12-20T09:00:00Z
+TIME_END: 2024-01-08T18:00:00Z
+TITLE: Traceability Matrix Screen v0
+STATEMENT: >>>
+Traceability Matrix Screen v0
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: c53904dd9d9fc12f8751c8f5e7eeb531
+UID: EPIC-047
+STATUS: Done
+TIME_START: 2024-01-10T16:30:00Z
+TIME_END: 2024-03-30T01:30:00Z
+TITLE: Custom views , static HTML
+STATEMENT: >>>
+Custom views , static HTML
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 8bda5b2bbef9a57892870af84bcc0c23
+UID: EPIC-048
+STATUS: Done
+TIME_START: 2024-11-12T06:00:00Z
+TIME_END: 2024-12-28T03:00:00Z
+TITLE: Docs: StrictDoc feature map and screenshots
+STATEMENT: >>>
+Docs: StrictDoc feature map and screenshots
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 464491ac906696685ee308a4de43184c
+UID: EPIC-049
+STATUS: Done
+TIME_START: 2023-01-02T22:30:00Z
+TIME_END: 2023-03-30T01:30:00Z
+TITLE: Stabilization 2023 Q1: PyInstaller, SDoc grammar, JS fixes, DTR screen: smaller requirement cards, requirements-to-source edge cases, ReqIF
+STATEMENT: >>>
+Stabilization 2023 Q1: PyInstaller, SDoc grammar, JS fixes, DTR screen: smaller requirement cards, requirements-to-source edge cases, ReqIF
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 1ecc0f08d515917f374f81d1adbe179b
+UID: EPIC-050
+STATUS: Done
+TIME_START: 2023-04-02T21:00:00Z
+TIME_END: 2023-06-29T03:00:00Z
+TITLE: Stabilization 2023 Q2: Requirements-to-source edge cases, RST user requests and edge cases, relative paths-related edge cases, PyInstaller
+STATEMENT: >>>
+Stabilization 2023 Q2: Requirements-to-source edge cases, RST user requests and edge cases, relative paths-related edge cases, PyInstaller
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 3026432f3849e7c523a569a4bac827d1
+UID: EPIC-051
+STATUS: Done
+TIME_START: 2023-07-02T22:30:00Z
+TIME_END: 2023-09-29T03:00:00Z
+TITLE: Stabilization 2023 Q3: UI: Editing grammar fields, section UID edge cases, Jinja templates on macOS, performance optimizations, RST edge cases, Windows/Pip long file names issue
+STATEMENT: >>>
+Stabilization 2023 Q3: UI: Editing grammar fields, section UID edge cases, Jinja templates on macOS, performance optimizations, RST edge cases, Windows/Pip long file names issue
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 407caad24040f6b02e643e3488e6c4a6
+UID: EPIC-052
+STATUS: Done
+TIME_START: 2023-10-02T22:30:00Z
+TIME_END: 2023-12-30T01:30:00Z
+TITLE: Stabilization 2023 Q4: Linking to files (YAML files support), flaky tests issues and end2end test robustness work, PyInstaller issue, Traceability Index API internal refactoring
+STATEMENT: >>>
+Stabilization 2023 Q4: Linking to files (YAML files support), flaky tests issues and end2end test robustness work, PyInstaller issue, Traceability Index API internal refactoring
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 67b815c9ff8c3861f836340f86fe4577
+UID: EPIC-053
+STATUS: Done
+TIME_START: 2024-01-02T22:30:00Z
+TIME_END: 2024-03-30T01:30:00Z
+TITLE: Stabilization 2024 Q1: Improvements in handling of UI templates, removal of ng_level and the simplification of textX parsing step, pybtex* code removed, more requirements work in L1 and L2
+STATEMENT: >>>
+Stabilization 2024 Q1: Improvements in handling of UI templates, removal of ng_level and the simplification of textX parsing step, pybtex* code removed, more requirements work in L1 and L2
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 0111bf7b80cc61b2504161f2964dc2af
+UID: EPIC-054
+STATUS: Done
+TIME_START: 2024-04-02T21:00:00Z
+TIME_END: 2024-06-29T03:00:00Z
+TITLE: Stabilization 2024 Q2: Fix the outdated pickle cache issue, stronger typing in the codebase (mypy), HTML2PDF/Windows/UTF8
+STATEMENT: >>>
+Stabilization 2024 Q2: Fix the outdated pickle cache issue, stronger typing in the codebase (mypy), HTML2PDF/Windows/UTF8
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 2c6b6705d61a1f4e78c7a33141f3df41
+UID: EPIC-055
+STATUS: Done
+TIME_START: 2024-07-02T22:30:00Z
+TIME_END: 2024-09-29T03:00:00Z
+TITLE: Stabilization 2024 Q3: Auto-escaping of Jinja templates, improvements of UID handling, fixes for custom nodes editing/linking, new chromedriver headless mode, mypy fixes
+STATEMENT: >>>
+Stabilization 2024 Q3: Auto-escaping of Jinja templates, improvements of UID handling, fixes for custom nodes editing/linking, new chromedriver headless mode, mypy fixes
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: ae52f68c6942eaba790ba201d0499394
+UID: EPIC-056
+STATUS: Done
+TIME_START: 2024-10-02T22:30:00Z
+TIME_END: 2024-12-30T01:30:00Z
+TITLE: Stabilization 2024 Q4: Dropped Python 3.7 support, autoescaping-related fixes, configurable cache_dir option, fix fork() on macOS, deploy StrictDoc documentation to Read the Docs
+STATEMENT: >>>
+Stabilization 2024 Q4: Dropped Python 3.7 support, autoescaping-related fixes, configurable cache_dir option, fix fork() on macOS, deploy StrictDoc documentation to Read the Docs
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 7eab32804735ae09d6c8a0767c80fb31
+UID: EPIC-057
+STATUS: Done
+TIME_START: 2023-06-25T09:00:00Z
+TIME_END: 2023-12-30T01:30:00Z
+TITLE: StrictDoc requirements upgrade (2 levels of specification)
+STATEMENT: >>>
+StrictDoc requirements upgrade (2 levels of specification)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 9023f30d30a8423a0afb56dac8bf6fa1
+UID: EPIC-058
+STATUS: Done
+TIME_START: 2023-02-15T00:00:00Z
+TIME_END: 2023-12-28T03:00:00Z
+TITLE: HTML2PDF (standalone and independent JS library, PDF documents from SDoc's HTML, front page with meta information, running titles, UI: export to PDF)
+STATEMENT: >>>
+HTML2PDF (standalone and independent JS library, PDF documents from SDoc's HTML, front page with meta information, running titles, UI: export to PDF)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: dd9f2b130d2c97dcd1cfe6df0647487b
+UID: EPIC-059
+STATUS: Done
+TIME_START: 2024-01-04T21:00:00Z
+TIME_END: 2024-02-28T04:30:00Z
+TITLE: HTML2PDF integration to StrictDoc (Export to PDF in UI and CLI, handling table and paragraph breaks)
+STATEMENT: >>>
+HTML2PDF integration to StrictDoc (Export to PDF in UI and CLI, handling table and paragraph breaks)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 03daf9c6033cef74e3d2ca6e9e226237
+UID: EPIC-060
+STATUS: Done
+TIME_START: 2024-04-02T21:00:00Z
+TIME_END: 2024-04-29T03:00:00Z
+TITLE: Traceability navigator POC
+STATEMENT: >>>
+Traceability navigator POC
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: f1d7a99d7c7854a7808484e1737315aa
+UID: EPIC-061
+STATUS: Done
+TIME_START: 2025-01-04T21:00:00Z
+TIME_END: 2025-02-15T00:00:00Z
+TITLE: HTML2PDF - Pip package, stability improvements
+STATEMENT: >>>
+HTML2PDF - Pip package, stability improvements
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 31e69a5f34036142cdc094e71126c751
+UID: EPIC-062
+STATUS: Done
+TIME_START: 2025-02-20T06:00:00Z
+TIME_END: 2025-03-12T15:00:00Z
+TITLE: Docker container with Chrome and HTML2PDF
+STATEMENT: >>>
+Docker container with Chrome and HTML2PDF
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 10b65f30478d39a7e72b8858f98ca277
+UID: EPIC-063
+STATUS: Done
+TIME_START: 2025-04-10T09:00:00Z
+TIME_END: 2025-04-29T03:00:00Z
+TITLE: UI: Ground work for node validations
+STATEMENT: >>>
+UI: Ground work for node validations
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: d0c440a1e584a0e2720672148ef9ac75
+UID: EPIC-064
+STATUS: Done
+TIME_START: 2025-05-22T07:30:00Z
+TIME_END: 2025-06-29T03:00:00Z
+TITLE: Parse C/C++ test descriptions to SDoc
+STATEMENT: >>>
+Parse C/C++ test descriptions to SDoc
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 4a18ea66e8921762671be1a544ad7d7f
+UID: EPIC-065
+STATUS: Done
+TIME_START: 2025-07-10T16:30:00Z
+TIME_END: 2025-07-28T03:00:00Z
+TITLE: Make ReqIF export XSD-compliant
+STATEMENT: >>>
+Make ReqIF export XSD-compliant
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: ffb07deeb814daae517a81680188ee63
+UID: EPIC-066
+STATUS: Done
+TIME_START: 2025-08-10T16:30:00Z
+TIME_END: 2025-09-01T00:00:00Z
+TITLE: Static HTML search
+STATEMENT: >>>
+Static HTML search
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: ffdc977777bf7a4b188e0724aa53497b
+UID: EPIC-067
+STATUS: Done
+TIME_START: 2025-09-12T06:00:00Z
+TIME_END: 2025-10-01T00:00:00Z
+TITLE: Tree map visualization
+STATEMENT: >>>
+Tree map visualization
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 2ebed85f59c3d8c1454b6c5d9e7b95b9
+UID: EPIC-068
+STATUS: Done
+TIME_START: 2025-10-20T09:00:00Z
+TIME_END: 2025-11-10T09:00:00Z
+TITLE: Document/node validations (static HTML)
+STATEMENT: >>>
+Document/node validations (static HTML)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 4a461c5c380b2b3ba8ab14e80f443821
+UID: EPIC-069
+STATUS: Done
+TIME_START: 2025-11-14T03:00:00Z
+TIME_END: 2025-12-01T00:00:00Z
+TITLE: Linking nodes via MID instead of UID
+STATEMENT: >>>
+Linking nodes via MID instead of UID
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 3b2a05545949aa7f78057f43c0fa7c13
+UID: EPIC-070
+STATUS: Done
+TIME_START: 2025-12-10T16:30:00Z
+TIME_END: 2025-12-26T04:30:00Z
+TITLE: RST code block syntax highlighting
+STATEMENT: >>>
+RST code block syntax highlighting
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: c2f2636effb314faa48220e01ba02c9c
+UID: EPIC-071
+STATUS: WIP
+TIME_START: 2026-01-22T07:30:00Z
+TIME_END: 2026-03-30T01:30:00Z
+TITLE: Make FastAPI routes ready for concurrent use by multiple users
+STATEMENT: >>>
+Make FastAPI routes ready for concurrent use by multiple users
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 843368544f49d3e1f1b8f06c51c60321
+UID: EPIC-072
+STATUS: Done
+TIME_START: 2025-01-26T04:30:00Z
+TIME_END: 2025-02-08T00:00:00Z
+TITLE: Excel import - Support .xlsx
+STATEMENT: >>>
+Excel import - Support .xlsx
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 2de05587ae44d112f217e5dac0fe6415
+UID: EPIC-073
+STATUS: Done
+TIME_START: 2025-03-14T13:30:00Z
+TIME_END: 2025-04-21T15:00:00Z
+TITLE: Stable URL links to document nodes
+STATEMENT: >>>
+Stable URL links to document nodes
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: e9898cc26358c71791bad1f646742ee1
+UID: EPIC-074
+STATUS: Done
+TIME_START: 2025-04-25T09:00:00Z
+TIME_END: 2025-06-10T09:00:00Z
+TITLE: Migration: [SECTION] -> [[SECTION]]
+STATEMENT: >>>
+Migration: [SECTION] -> [[SECTION]]
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 2195fe9e23a988d5e9ecdcdaa2080f83
+UID: EPIC-075
+STATUS: Done
+TIME_START: 2025-07-20T09:00:00Z
+TIME_END: 2025-08-01T00:00:00Z
+TITLE: Custom project statistics
+STATEMENT: >>>
+Custom project statistics
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 1e5544a310e3b219358fef54485ea570
+UID: EPIC-076
+STATUS: Done
+TIME_START: 2025-08-04T21:00:00Z
+TIME_END: 2025-09-29T03:00:00Z
+TITLE: Testing StrictDoc with large trees (100+ docs)
+STATEMENT: >>>
+Testing StrictDoc with large trees (100+ docs)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 47d12ad4bc5ad9ac641f4819cd891a10
+UID: EPIC-077
+STATUS: Done
+TIME_START: 2025-10-14T13:30:00Z
+TIME_END: 2025-10-28T03:00:00Z
+TITLE: Diff: Included documents
+STATEMENT: >>>
+Diff: Included documents
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: addc88afd8c8a3a7ea9a2e5aea93f554
+UID: EPIC-078
+STATUS: Done
+TIME_START: 2025-11-19T18:00:00Z
+TIME_END: 2026-02-16T18:00:00Z
+TITLE: Support parsing Rust source code (StrictDoc parser)
+STATEMENT: >>>
+Support parsing Rust source code (StrictDoc parser)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 7d6839ca98a9231354cd36e76629180c
+UID: EPIC-079
+STATUS: Ready
+TIME_START: 2026-05-18T10:30:00Z
+TIME_END: 2026-06-12T06:00:00Z
+TITLE: Support parsing Ada source code (StrictDoc parser)
+STATEMENT: >>>
+Support parsing Ada source code (StrictDoc parser)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: c165785e8f0102d6460fb73718197e8a
+UID: EPIC-080
+STATUS: Done
+TIME_START: 2025-02-01T00:00:00Z
+TIME_END: 2025-02-23T18:00:00Z
+TITLE: Web UI: Relation UID autocompletion
+STATEMENT: >>>
+Web UI: Relation UID autocompletion
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: d48aa7ecf158f82e6d4ac1c1eb6bdac9
+UID: EPIC-081
+STATUS: Done
+TIME_START: 2025-04-06T15:00:00Z
+TIME_END: 2025-04-27T06:00:00Z
+TITLE: UI: SingleChoice autocompletion
+STATEMENT: >>>
+UI: SingleChoice autocompletion
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: a1e566aa2e9a5e9a953fd1b28bb4f203
+UID: EPIC-082
+STATUS: Done
+TIME_START: 2025-05-01T00:00:00Z
+TIME_END: 2025-05-26T04:30:00Z
+TITLE: UI: MultipleChoice and Tag autocompletion
+STATEMENT: >>>
+UI: MultipleChoice and Tag autocompletion
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: a1103d924fa222ab057e333033d46651
+UID: EPIC-083
+STATUS: Done
+TIME_START: 2025-07-08T18:00:00Z
+TIME_END: 2025-07-20T09:00:00Z
+TITLE: Initial OSLC interface
+STATEMENT: >>>
+Initial OSLC interface
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 657c6a6a7864b8f85ed02aa9a64bfbc7
+UID: EPIC-084
+STATUS: Done
+TIME_START: 2025-07-30T06:09:00Z
+TIME_END: 2025-08-18T10:30:00Z
+TITLE: Import ECSS EARM (space standards
+STATEMENT: >>>
+Import ECSS EARM (space standards
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 23cf420de8c9c0612ff90f787626222c
+UID: EPIC-085
+STATUS: Done
+TIME_START: 2025-09-19T18:00:00Z
+TIME_END: 2025-10-16T12:00:00Z
+TITLE: StrictDoc configuration with a Python file (strictdoc_config.py
+STATEMENT: >>>
+StrictDoc configuration with a Python file (strictdoc_config.py
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: a07e7c62577cf7cedf094b238184783b
+UID: EPIC-086
+STATUS: Done
+TIME_START: 2025-12-14T13:30:00Z
+TIME_END: 2025-12-26T04:30:00Z
+TITLE: Grammar aliases
+STATEMENT: >>>
+Grammar aliases
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 1781189a998b8bb0bf7494e8e2423ca3
+UID: EPIC-087
+STATUS: Done
+TIME_START: 2025-12-28T03:00:00Z
+TIME_END: 2026-01-08T18:00:00Z
+TITLE: Take into account .gitignore
+STATEMENT: >>>
+Take into account .gitignore
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 0c5bf6bae5108d6165f15fd6ed807f11
+UID: EPIC-088
+STATUS: Done
+TIME_START: 2026-02-23T18:00:00Z
+TIME_END: 2026-03-18T10:30:00Z
+TITLE: Initial Markdown support
+STATEMENT: >>>
+Initial Markdown support
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: a9d8786205c413ce908fc0eb41e80e5b
+UID: EPIC-089
+STATUS: Ready
+TIME_START: 2026-05-20T09:00:00Z
+TIME_END: 2026-06-17T21:00:00Z
+TITLE: Embed text files into SDoc
+STATEMENT: >>>
+Embed text files into SDoc
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 0ed57d749a99b422fab81ddfcf1f395b
+UID: EPIC-090
+STATUS: Done
+TIME_START: 2025-02-20T06:00:00Z
+TIME_END: 2025-04-04T18:00:00Z
+TITLE: Support roles for file relations and source code markers
+STATEMENT: >>>
+Support roles for file relations and source code markers
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: c200d77814b402df8ef6d316c9ebfca9
+UID: EPIC-091
+STATUS: Done
+TIME_START: 2025-04-08T12:00:00Z
+TIME_END: 2025-05-01T00:00:00Z
+TITLE: Gcov coverage justification report generator (MVP)
+STATEMENT: >>>
+Gcov coverage justification report generator (MVP)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 0bcfbe2389bb613bc62a9a96a89798ca
+UID: EPIC-092
+STATUS: Done
+TIME_START: 2025-07-06T19:30:00Z
+TIME_END: 2025-07-18T10:30:00Z
+TITLE: Sphinx-style math syntax
+STATEMENT: >>>
+Sphinx-style math syntax
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 32222768bdca22cfeb3da37361168f0d
+UID: EPIC-093
+STATUS: Done
+TIME_START: 2025-08-24T01:21:00Z
+TIME_END: 2025-09-08T07:30:00Z
+TITLE: HTML2PDF strict mode
+STATEMENT: >>>
+HTML2PDF strict mode
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 2d009d4f9c08d5288aba26f2d1558e2f
+UID: EPIC-094
+STATUS: Done
+TIME_START: 2025-09-10T04:30:00Z
+TIME_END: 2025-11-25T09:00:00Z
+TITLE: HTML2PDF more layout tests
+STATEMENT: >>>
+HTML2PDF more layout tests
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: d950e36088d8e8ea2534c95a036f0f85
+UID: EPIC-095
+STATUS: Done
+TIME_START: 2025-11-27T06:00:00Z
+TIME_END: 2025-12-24T06:00:00Z
+TITLE: HTML2PDF linear mutation test
+STATEMENT: >>>
+HTML2PDF linear mutation test
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 68be52229e93fe0c4e000a92b32696b0
+UID: EPIC-096
+STATUS: Done
+TIME_START: 2025-12-26T04:30:00Z
+TIME_END: 2026-01-08T18:00:00Z
+TITLE: Node forced page breaks
+STATEMENT: >>>
+Node forced page breaks
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 9c2986a9113fb2e41f4d99cdd3e12e33
+UID: EPIC-097
+STATUS: Done
+TIME_START: 2026-02-08T00:00:00Z
+TIME_END: 2026-03-18T10:30:00Z
+TITLE: Static HTML search on server
+STATEMENT: >>>
+Static HTML search on server
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: f4c518b941c7e9f866af07317a96ed0f
+UID: EPIC-098
+STATUS: Ready
+TIME_START: 2026-05-20T09:00:00Z
+TIME_END: 2026-06-17T21:00:00Z
+TITLE: Links to external URLs and other content
+STATEMENT: >>>
+Links to external URLs and other content
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 0bbc57cf94edc37bfb33a4205cfa8502
+UID: EPIC-099
+STATUS: Done
+TIME_START: 2025-03-06T19:30:00Z
+TIME_END: 2025-03-30T01:30:00Z
+TITLE: JUnit XML -> SDoc test report generator
+STATEMENT: >>>
+JUnit XML -> SDoc test report generator
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 0c9d4dbb4fedb66f8a6c1772d9630fbe
+UID: EPIC-100
+STATUS: Done
+TIME_START: 2025-04-23T12:00:00Z
+TIME_END: 2025-05-26T04:30:00Z
+TITLE: Robot XML -> SDoc test report generator
+STATEMENT: >>>
+Robot XML -> SDoc test report generator
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 48ed14d3cda1cd7f6c1da38eefd995e9
+UID: EPIC-101
+STATUS: Done
+TIME_START: 2025-07-12T15:00:00Z
+TIME_END: 2025-08-06T19:30:00Z
+TITLE: Support parsing Ada source code (tree-sitter-ada)
+STATEMENT: >>>
+Support parsing Ada source code (tree-sitter-ada)
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 48f3569c079e33cad10a2b6662481c19
+UID: EPIC-102
+STATUS: Done
+TIME_START: 2025-10-01T00:00:00Z
+TIME_END: 2025-11-27T06:00:00Z
+TITLE: Reading SDoc nodes from source files — Further work driven by Linux Kernel Requirements Template proposal
+STATEMENT: >>>
+Reading SDoc nodes from source files — Further work driven by Linux Kernel Requirements Template proposal
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 62d851bc7eb7b12f843c17db04a0a133
+UID: EPIC-103
+STATUS: Done
+TIME_START: 2026-01-02T22:30:00Z
+TIME_END: 2026-01-14T13:30:00Z
+TITLE: Python API example
+STATEMENT: >>>
+Python API example
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 77a81dd8dfac4e2c7035b21aa7c68465
+UID: EPIC-104
+STATUS: Done
+TIME_START: 2026-01-14T13:30:00Z
+TIME_END: 2026-01-26T04:30:00Z
+TITLE: Project Config re-design
+STATEMENT: >>>
+Project Config re-design
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 063a0547e1ad3c1e8abe4514b85da825
+UID: EPIC-105
+STATUS: Done
+TIME_START: 2025-03-04T21:00:00Z
+TIME_END: 2025-04-10T09:00:00Z
+TITLE: UI/UX rework of Source View screen
+STATEMENT: >>>
+UI/UX rework of Source View screen
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: e0553d9b4ffb1a54de0f9880676c3520
+UID: EPIC-106
+STATUS: Done
+TIME_START: 2025-04-16T00:00:00Z
+TIME_END: 2025-06-29T03:00:00Z
+TITLE: StrictDoc qualification: documentation and generator script. Increasing code coverage from 92% to 95%.
+STATEMENT: >>>
+StrictDoc qualification: documentation and generator script. Increasing code coverage from 92% to 95%.
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: d35d17d0f2b344d54e7072405ee6481b
+UID: EPIC-107
+STATUS: Done
+TIME_START: 2025-07-02T22:30:00Z
+TIME_END: 2025-09-29T03:00:00Z
+TITLE: StrictDoc qualification: Increasing branch code coverage from 95%, add traces between L2 and source code
+STATEMENT: >>>
+StrictDoc qualification: Increasing branch code coverage from 95%, add traces between L2 and source code
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 5d260a55bfcf6c81858afd81dd16a931
+UID: EPIC-108
+STATUS: Done
+TIME_START: 2025-10-02T22:30:00Z
+TIME_END: 2025-12-30T01:30:00Z
+TITLE: StrictDoc qualification: Increasing branch code coverage from 97%, add traces between L2 and source code
+STATEMENT: >>>
+StrictDoc qualification: Increasing branch code coverage from 97%, add traces between L2 and source code
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: fe21b8b852e9255eaef7d04a160699a3
+UID: EPIC-109
+STATUS: Done
+TIME_START: 2025-01-02T22:30:00Z
+TIME_END: 2025-03-30T01:30:00Z
+TITLE: Stabilization 2025 Q1: Better Search Screen query syntax reporting, running single e2e tests, --host CLI argument for 'server' command
+STATEMENT: >>>
+Stabilization 2025 Q1: Better Search Screen query syntax reporting, running single e2e tests, --host CLI argument for 'server' command
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: a1cc12b2624575811ba80cab0e7c3ea1
+UID: EPIC-110
+STATUS: Done
+TIME_START: 2025-04-02T21:00:00Z
+TIME_END: 2025-06-29T03:00:00Z
+TITLE: Stabilization 2025 Q2: Further clean-up of SDoc-classes, e2e tests for static HTML, enable some Stimulus JS in static HTML, mypy fixes, html2pdf4doc migration, Windows multiprocessing fixes
+STATEMENT: >>>
+Stabilization 2025 Q2: Further clean-up of SDoc-classes, e2e tests for static HTML, enable some Stimulus JS in static HTML, mypy fixes, html2pdf4doc migration, Windows multiprocessing fixes
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: f70be3b4c4cf50710b470dfdad2ce4a1
+UID: EPIC-111
+STATUS: Done
+TIME_START: 2025-07-02T22:30:00Z
+TIME_END: 2025-09-29T03:00:00Z
+TITLE: Stabilization 2025 Q3: improvements in parallelization, Mypy fixes, more robust testing of HTTP 200/304, improved exception handling (removing all sys.exit(1)), --debug option
+STATEMENT: >>>
+Stabilization 2025 Q3: improvements in parallelization, Mypy fixes, more robust testing of HTTP 200/304, improved exception handling (removing all sys.exit(1)), --debug option
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: b734b0e66725b539d2699c1766b4fe1d
+UID: EPIC-112
+STATUS: Done
+TIME_START: 2025-10-02T22:30:00Z
+TIME_END: 2025-12-30T01:30:00Z
+TITLE: Stabilization 2025 Q4: HTML2PDF fixes for bundle documents, download PDF with document file name, linting of Conventional Commits, major CLI refactoring into Command pattern, basic direnv
+STATEMENT: >>>
+Stabilization 2025 Q4: HTML2PDF fixes for bundle documents, download PDF with document file name, linting of Conventional Commits, major CLI refactoring into Command pattern, basic direnv
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<
+
+[EPIC]
+MID: 311e63ebae0a2c928cdb8931e5cb9d67
+UID: EPIC-113
+STATUS: WIP
+TIME_START: 2026-01-02T22:30:00Z
+TIME_END: 2026-03-30T01:30:00Z
+TITLE: Stabilization 2026 Q1: Python 3.14 changes, drop Python 3.9, testing out various html2pdf4doc corner cases
+STATEMENT: >>>
+Stabilization 2026 Q1: Python 3.14 changes, drop Python 3.9, testing out various html2pdf4doc corner cases
+
+Imported from: developer/drawio/Roadmap.drawio
+<<<

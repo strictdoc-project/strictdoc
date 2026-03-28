@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.14"]
         shard: ["1/2", "2/2"]
         itest_group: [ "main_group", "html2pdf_group" ]
 

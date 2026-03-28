@@ -4,9 +4,7 @@
       {{ epic.title }}
     </a>
   </div>
-  <div class="work_planner__backlog_epic_meta">
-    {{ epic.assigned_person }} · {{ epic.assigned_team }} · {{ epic.document.title }}
-  </div>
+  <div class="work_planner__backlog_epic_meta">{{ epic.document.title }}</div>
   {% if epic.time_start or epic.time_end %}
   <div class="work_planner__backlog_epic_meta">
     {{ epic.time_start or "?" }} → {{ epic.time_end or "?" }}

@@ -51,23 +51,37 @@ class Screen_WorkPlanner:  # pylint: disable=invalid-name
         form.assert_on_form()
         return form
 
-    def do_switch_mode(self, mode: str) -> None:
-        self.test_case.click(
-            f'[data-work-planner-mode-button="{mode}"]',
-            by=By.CSS_SELECTOR,
+    def assert_visible_text_not_present(self, text: str) -> None:
+        visible_text = str(
+            self.test_case.execute_script(
+                """
+                const view = document.querySelector('.work_planner__view');
+                return view ? view.innerText : '';
+                """
+            )
         )
+        assert text not in visible_text, (text, visible_text)
+
+    def assert_visible_text_present(self, text: str) -> None:
+        visible_text = str(
+            self.test_case.execute_script(
+                """
+                const view = document.querySelector('.work_planner__view');
+                return view ? view.innerText : '';
+                """
+            )
+        )
+        assert text in visible_text, (text, visible_text)
 
     def assert_lane_epics_do_not_overlap(self, lane_title: str) -> None:
         result = self.test_case.execute_script(
             """
-            const visibleView = Array.from(
-              document.querySelectorAll('[data-work-planner-view]')
-            ).find((view) => !view.hidden);
-            if (!visibleView) {
-              return { found: false, overlaps: ['No visible work planner view.'] };
+            const view = document.querySelector('.work_planner__view');
+            if (!view) {
+              return { found: false, overlaps: ['No work planner view.'] };
             }
             const lane = Array.from(
-              visibleView.querySelectorAll('[data-work-planner-lane]')
+              view.querySelectorAll('[data-work-planner-lane]')
             ).find((candidate) => candidate.dataset.workPlannerLane === arguments[0]);
             if (!lane) {
               return { found: false, overlaps: [`Lane not found: ${arguments[0]}`] };
@@ -117,6 +131,104 @@ class Screen_WorkPlanner:  # pylint: disable=invalid-name
             self.test_case.execute_script(
                 "return document.querySelector('[data-work-planner-canvas-scroll]').scrollTop;"
             )
+        )
+
+    def get_zoom_scale(self) -> float:
+        return float(
+            self.test_case.execute_script(
+                """
+                const root = document.querySelector('[data-work-planner-root]');
+                return Number.parseFloat(
+                  getComputedStyle(root)
+                    .getPropertyValue('--work-planner-scale')
+                );
+                """
+            )
+        )
+
+    def get_zoom_state(self) -> dict:
+        return self.test_case.execute_script(
+            """
+            const root = document.querySelector('[data-work-planner-root]');
+            const scrollContainer = document.querySelector(
+              '[data-work-planner-canvas-scroll]'
+            );
+            const surface = document.querySelector(
+              '[data-work-planner-canvas-surface]'
+            );
+            const scale = Number.parseFloat(
+              getComputedStyle(root)
+                .getPropertyValue('--work-planner-scale')
+            );
+            const monthWidth = Number.parseFloat(
+              getComputedStyle(root)
+                .getPropertyValue('--work-planner-month-width')
+                .replace('px', '')
+            );
+            const fixedWidth = 0;
+            const surfaceWidth = Math.max(surface.scrollWidth, surface.offsetWidth, 1);
+            const surfaceHeight = Math.max(surface.scrollHeight, surface.offsetHeight, 1);
+            const minScale = Math.min(
+              1,
+              scrollContainer.clientWidth / surfaceWidth,
+              scrollContainer.clientHeight / surfaceHeight
+            );
+            const maxScale = Math.max(
+              minScale,
+              scrollContainer.clientWidth / Math.max(1, fixedWidth + monthWidth)
+            );
+            return {
+              scale,
+              monthWidth,
+              fixedWidth,
+              minScale,
+              maxScale,
+              surfaceWidth,
+              surfaceHeight,
+              scrollWidth: scrollContainer.scrollWidth,
+              clientWidth: scrollContainer.clientWidth,
+              scrollHeight: scrollContainer.scrollHeight,
+              clientHeight: scrollContainer.clientHeight,
+            };
+            """
+        )
+
+    def do_click_zoom_in(self) -> None:
+        self.test_case.click(
+            "[data-work-planner-zoom-in]",
+            by=By.CSS_SELECTOR,
+        )
+
+    def do_click_zoom_out(self) -> None:
+        self.test_case.click(
+            "[data-work-planner-zoom-out]",
+            by=By.CSS_SELECTOR,
+        )
+
+    def do_click_zoom_reset(self) -> None:
+        self.test_case.click(
+            "[data-work-planner-zoom-reset]",
+            by=By.CSS_SELECTOR,
+        )
+
+    def do_zoom_canvas_with_ctrl_wheel(self, delta_y: int) -> None:
+        self.test_case.execute_script(
+            """
+            const scrollContainer = document.querySelector(
+              '[data-work-planner-canvas-scroll]'
+            );
+            const rect = scrollContainer.getBoundingClientRect();
+            const event = new WheelEvent('wheel', {
+              deltaY: arguments[0],
+              ctrlKey: true,
+              bubbles: true,
+              cancelable: true,
+              clientX: rect.left + rect.width / 2,
+              clientY: rect.top + rect.height / 2,
+            });
+            scrollContainer.dispatchEvent(event);
+            """,
+            delta_y,
         )
 
     def do_pan_canvas_to_the_right(self) -> None:

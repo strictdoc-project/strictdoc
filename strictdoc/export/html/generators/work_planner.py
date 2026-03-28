@@ -17,9 +17,7 @@ from strictdoc.export.html.generators.view_objects.work_planner_view_object impo
     WorkPlannerEpicCard,
     WorkPlannerLane,
     WorkPlannerMonth,
-    WorkPlannerTeamGroup,
     WorkPlannerViewObject,
-    WorkPlannerWorkPackageLane,
 )
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
@@ -39,7 +37,6 @@ _MIN_VISIBLE_SPAN = 1e-6
 @dataclass
 class _ScheduledEpic:
     epic: WorkPlannerEpicCard
-    work_package: Optional[SDocNode]
     start_dt: datetime
     end_dt: datetime
 
@@ -122,8 +119,6 @@ def _assign_stack_levels(epics: List[WorkPlannerEpicCard]) -> None:
         else:
             epic.stack_level = len(row_ends)
             row_ends.append(epic.end_offset)
-
-
 class WorkPlannerHTMLGenerator:
     @staticmethod
     def create_view_object(
@@ -190,23 +185,10 @@ class WorkPlannerHTMLGenerator:
                         or "",
                         "ready",
                     ),
-                    assigned_person=_get_field_text(
-                        epic_node, RequirementFieldName.ASSIGNED_PERSON
-                    )
-                    or "Unassigned person",
-                    assigned_team=_get_field_text(
-                        epic_node, RequirementFieldName.ASSIGNED_TEAM
-                    )
-                    or "Unassigned team",
                     time_start=time_start_text,
                     time_end=time_end_text,
                     work_package_uid=(
                         parent_work_package.reserved_uid
-                        if parent_work_package is not None
-                        else None
-                    ),
-                    work_package_title=(
-                        parent_work_package.reserved_title
                         if parent_work_package is not None
                         else None
                     ),
@@ -220,7 +202,6 @@ class WorkPlannerHTMLGenerator:
                     scheduled_epics.append(
                         _ScheduledEpic(
                             epic=epic_card,
-                            work_package=parent_work_package,
                             start_dt=time_start,
                             end_dt=time_end,
                         )
@@ -273,112 +254,16 @@ class WorkPlannerHTMLGenerator:
                     scheduled_epic.epic.start_offset + _MIN_VISIBLE_SPAN
                 )
 
-        person_groups: DefaultDict[str, List[WorkPlannerEpicCard]] = defaultdict(
-            list
+        all_epics: List[WorkPlannerEpicCard] = [
+            scheduled_epic.epic for scheduled_epic in scheduled_epics
+        ]
+
+        _assign_stack_levels(all_epics)
+        all_epics_lane = WorkPlannerLane(
+            title="",
+            subtitle=None,
+            epics=all_epics,
         )
-        team_groups: DefaultDict[
-            str, DefaultDict[str, List[WorkPlannerEpicCard]]
-        ] = defaultdict(lambda: defaultdict(list))
-        ungrouped_work_package_epics: List[WorkPlannerEpicCard] = []
-
-        for scheduled_epic in scheduled_epics:
-            epic_card = scheduled_epic.epic
-            person_groups[epic_card.assigned_person].append(epic_card)
-            team_groups[epic_card.assigned_team][epic_card.assigned_person].append(
-                epic_card
-            )
-            if scheduled_epic.work_package is None:
-                ungrouped_work_package_epics.append(epic_card)
-
-        person_lanes: List[WorkPlannerLane] = []
-        for person_title in sorted(person_groups.keys(), key=str.lower):
-            lane_epics = person_groups[person_title]
-            _assign_stack_levels(lane_epics)
-            person_lanes.append(
-                WorkPlannerLane(
-                    title=person_title,
-                    subtitle=f"{len(lane_epics)} epic(s)",
-                    epics=lane_epics,
-                )
-            )
-
-        team_group_objects: List[WorkPlannerTeamGroup] = []
-        for team_title in sorted(team_groups.keys(), key=str.lower):
-            lanes: List[WorkPlannerLane] = []
-            persons = team_groups[team_title]
-            for person_title in sorted(persons.keys(), key=str.lower):
-                lane_epics = persons[person_title]
-                _assign_stack_levels(lane_epics)
-                lanes.append(
-                    WorkPlannerLane(
-                        title=person_title,
-                        subtitle=f"{len(lane_epics)} epic(s)",
-                        epics=lane_epics,
-                    )
-                )
-            team_group_objects.append(
-                WorkPlannerTeamGroup(title=team_title, lanes=lanes)
-            )
-
-        work_package_lanes: List[WorkPlannerWorkPackageLane] = []
-        for work_package in sorted(
-            work_packages,
-            key=lambda current: (
-                current.reserved_title or "",
-                current.reserved_uid or "",
-            ),
-        ):
-            work_package_mid = work_package.reserved_mid.get_string_value()
-            epics = scheduled_epics_by_work_package_mid.get(work_package_mid, [])
-            if len(epics) == 0:
-                continue
-            _assign_stack_levels(epics)
-            work_package_lanes.append(
-                WorkPlannerWorkPackageLane(
-                    node=work_package,
-                    document=assert_cast(
-                        work_package.get_document(), SDocDocument
-                    ),
-                    title=work_package.reserved_title
-                    or work_package.get_display_title(),
-                    statement=work_package.reserved_statement or "",
-                    start_month_index=min(
-                        epic.start_month_index for epic in epics
-                    ),
-                    end_month_index=max(epic.end_month_index for epic in epics),
-                    start_offset=min(epic.start_offset for epic in epics),
-                    end_offset=max(epic.end_offset for epic in epics),
-                    epics=epics,
-                )
-            )
-
-        if len(ungrouped_work_package_epics) > 0:
-            _assign_stack_levels(ungrouped_work_package_epics)
-            work_package_lanes.append(
-                WorkPlannerWorkPackageLane(
-                    node=None,
-                    document=None,
-                    title="Ungrouped epics",
-                    statement="Scheduled epics without a work package.",
-                    start_month_index=min(
-                        epic.start_month_index
-                        for epic in ungrouped_work_package_epics
-                    ),
-                    end_month_index=max(
-                        epic.end_month_index
-                        for epic in ungrouped_work_package_epics
-                    ),
-                    start_offset=min(
-                        epic.start_offset
-                        for epic in ungrouped_work_package_epics
-                    ),
-                    end_offset=max(
-                        epic.end_offset
-                        for epic in ungrouped_work_package_epics
-                    ),
-                    epics=ungrouped_work_package_epics,
-                )
-            )
 
         backlog_work_packages: List[WorkPlannerBacklogWorkPackage] = []
         for work_package in sorted(
@@ -430,9 +315,7 @@ class WorkPlannerHTMLGenerator:
                 document_options[0].mid if len(document_options) > 0 else None
             ),
             months=months,
-            person_lanes=person_lanes,
-            team_groups=team_group_objects,
-            work_package_lanes=work_package_lanes,
+            all_epics_lane=all_epics_lane,
             backlog_work_packages=backlog_work_packages,
             backlog_epics=backlog_epics_without_work_package,
         )

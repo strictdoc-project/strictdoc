@@ -1,34 +1,214 @@
 (function () {
   const ROOT_SELECTOR = "[data-work-planner-root]";
-  const MONTH_WIDTH_DEFAULT = 160;
-  const MONTH_WIDTH_STEP = 20;
-  const MODE_STORAGE_KEY = "strictdoc.work_planner.mode";
-  const ZOOM_STORAGE_KEY = "strictdoc.work_planner.month_width.v2";
+  const SCALE_DEFAULT = 1;
+  const BASE_MONTH_WIDTH_DEFAULT = 160;
+  const ZOOM_SCALE_FACTOR = 1.25;
+  const ZOOM_STORAGE_KEY = "strictdoc.work_planner.zoom_scale.v1";
+  const GLOBAL_BIND_FLAG = "__strictdocWorkPlannerGlobalBound";
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
 
   function getRoot() {
     return document.querySelector(ROOT_SELECTOR);
   }
 
-  function getMonthWidth(root) {
-    const computed = getComputedStyle(root)
-      .getPropertyValue("--work-planner-month-width")
-      .replace("px", "")
-      .trim();
-    const parsed = Number.parseFloat(computed);
-    return Number.isFinite(parsed) ? parsed : MONTH_WIDTH_DEFAULT;
+  function normalizeTarget(target) {
+    if (target instanceof Element) {
+      return target;
+    }
+    if (target instanceof Node) {
+      return target.parentElement;
+    }
+    return null;
   }
 
-  function activateMode(root, mode) {
-    root.querySelectorAll("[data-work-planner-view]").forEach((view) => {
-      view.hidden = view.dataset.workPlannerView !== mode;
-    });
-    root.querySelectorAll("[data-work-planner-mode-button]").forEach((button) => {
-      button.toggleAttribute(
-        "active",
-        button.dataset.workPlannerModeButton === mode
-      );
-    });
-    localStorage.setItem(MODE_STORAGE_KEY, mode);
+  function getRootFromElement(element) {
+    const normalizedElement = normalizeTarget(element);
+    if (!normalizedElement) {
+      return getRoot();
+    }
+    return normalizedElement.closest(ROOT_SELECTOR);
+  }
+
+  function getScrollContainer(root) {
+    return root.querySelector("[data-work-planner-canvas-scroll]");
+  }
+
+  function getCamera(root) {
+    return root.querySelector("[data-work-planner-canvas-camera]");
+  }
+
+  function getSurface(root) {
+    return root.querySelector("[data-work-planner-canvas-surface]");
+  }
+
+  function getMonthCount(root) {
+    const parsed = Number.parseInt(
+      root.style.getPropertyValue("--work-planner-month-count"),
+      10
+    );
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+  }
+
+  function getBaseMonthWidth(root) {
+    const parsed = Number.parseFloat(
+      getComputedStyle(root)
+        .getPropertyValue("--work-planner-month-width")
+        .replace("px", "")
+        .trim()
+    );
+    return Number.isFinite(parsed) ? parsed : BASE_MONTH_WIDTH_DEFAULT;
+  }
+
+  function getCanvasScale(root) {
+    const parsed = Number.parseFloat(
+      getComputedStyle(root)
+        .getPropertyValue("--work-planner-scale")
+        .trim()
+    );
+    return Number.isFinite(parsed) ? parsed : SCALE_DEFAULT;
+  }
+
+  function getSurfaceSize(root) {
+    const surface = getSurface(root);
+    if (!surface) {
+      return {
+        width: 1,
+        height: 1,
+      };
+    }
+    return {
+      width: Math.max(surface.scrollWidth, surface.offsetWidth, 1),
+      height: Math.max(surface.scrollHeight, surface.offsetHeight, 1),
+    };
+  }
+
+  function getScaleBounds(root) {
+    const scrollContainer = getScrollContainer(root);
+    const { width, height } = getSurfaceSize(root);
+
+    if (!scrollContainer) {
+      return {
+        minScale: SCALE_DEFAULT,
+        maxScale: SCALE_DEFAULT,
+        surfaceWidth: width,
+        surfaceHeight: height,
+      };
+    }
+
+    const viewportWidth = Math.max(scrollContainer.clientWidth, 1);
+    const viewportHeight = Math.max(scrollContainer.clientHeight, 1);
+    const fitWidthScale = viewportWidth / width;
+    const fitHeightScale = viewportHeight / height;
+    const minScale = Math.min(SCALE_DEFAULT, fitWidthScale, fitHeightScale);
+    const maxScale = Math.max(
+      minScale,
+      viewportWidth / Math.max(1, getBaseMonthWidth(root))
+    );
+
+    return {
+      minScale,
+      maxScale,
+      surfaceWidth: width,
+      surfaceHeight: height,
+    };
+  }
+
+  function clampScale(root, scale) {
+    const { minScale, maxScale } = getScaleBounds(root);
+    return clamp(scale, minScale, maxScale);
+  }
+
+  function updateCanvasCamera(root) {
+    const scrollContainer = getScrollContainer(root);
+    const camera = getCamera(root);
+    if (!scrollContainer || !camera) {
+      return;
+    }
+
+    const { surfaceWidth, surfaceHeight } = getScaleBounds(root);
+    const scale = getCanvasScale(root);
+    camera.style.width = `${Math.max(
+      scrollContainer.clientWidth,
+      surfaceWidth * scale
+    )}px`;
+    camera.style.height = `${Math.max(
+      scrollContainer.clientHeight,
+      surfaceHeight * scale
+    )}px`;
+  }
+
+  function applyCanvasScale(root, scale) {
+    const clampedScale = clampScale(root, scale);
+    root.style.setProperty("--work-planner-scale", `${clampedScale}`);
+    localStorage.setItem(ZOOM_STORAGE_KEY, `${clampedScale}`);
+    updateCanvasCamera(root);
+    return clampedScale;
+  }
+
+  function zoomToScale(
+    root,
+    scale,
+    anchorClientX = null,
+    anchorClientY = null
+  ) {
+    const scrollContainer = getScrollContainer(root);
+    if (!scrollContainer) {
+      applyCanvasScale(root, scale);
+      return;
+    }
+
+    const oldScale = getCanvasScale(root);
+    const newScale = clampScale(root, scale);
+    if (Math.abs(newScale - oldScale) < 0.0001) {
+      applyCanvasScale(root, newScale);
+      return;
+    }
+
+    const rect = scrollContainer.getBoundingClientRect();
+    const anchorOffsetX =
+      anchorClientX === null
+        ? rect.width / 2
+        : clamp(anchorClientX - rect.left, 0, rect.width);
+    const anchorOffsetY =
+      anchorClientY === null
+        ? rect.height / 2
+        : clamp(anchorClientY - rect.top, 0, rect.height);
+
+    const logicalX = (scrollContainer.scrollLeft + anchorOffsetX) / oldScale;
+    const logicalY = (scrollContainer.scrollTop + anchorOffsetY) / oldScale;
+
+    applyCanvasScale(root, newScale);
+
+    const maxScrollLeft = Math.max(
+      0,
+      scrollContainer.scrollWidth - scrollContainer.clientWidth
+    );
+    const maxScrollTop = Math.max(
+      0,
+      scrollContainer.scrollHeight - scrollContainer.clientHeight
+    );
+
+    scrollContainer.scrollLeft = clamp(
+      logicalX * newScale - anchorOffsetX,
+      0,
+      maxScrollLeft
+    );
+    scrollContainer.scrollTop = clamp(
+      logicalY * newScale - anchorOffsetY,
+      0,
+      maxScrollTop
+    );
+  }
+
+  function getZoomedInScale(root) {
+    return getCanvasScale(root) * ZOOM_SCALE_FACTOR;
+  }
+
+  function getZoomedOutScale(root) {
+    return getCanvasScale(root) / ZOOM_SCALE_FACTOR;
   }
 
   function updateAddLinks(root) {
@@ -45,12 +225,6 @@
     });
   }
 
-  function applyMonthWidth(root, monthWidth) {
-    const clampedWidth = Math.max(120, Math.min(320, monthWidth));
-    root.style.setProperty("--work-planner-month-width", `${clampedWidth}px`);
-    localStorage.setItem(ZOOM_STORAGE_KEY, `${clampedWidth}`);
-  }
-
   function postMove(endpoint, nodeMid, monthDelta) {
     const formData = new FormData();
     formData.append("node_mid", nodeMid);
@@ -59,7 +233,7 @@
     fetch(endpoint, {
       method: "POST",
       headers: {
-        "Accept": "text/vnd.turbo-stream.html",
+        Accept: "text/vnd.turbo-stream.html",
       },
       body: formData,
     })
@@ -68,7 +242,7 @@
   }
 
   function bindDragAndDrop(root) {
-    const scrollContainer = root.querySelector("[data-work-planner-canvas-scroll]");
+    const scrollContainer = getScrollContainer(root);
     if (!scrollContainer) {
       return;
     }
@@ -112,20 +286,19 @@
         event.preventDefault();
         dropzone.removeAttribute("data-work-planner-drop-active");
 
-        const rootRect = dropzone.getBoundingClientRect();
-        const monthWidth = getMonthWidth(root);
-        const monthCount = Number.parseInt(
-          root.style.getPropertyValue("--work-planner-month-count"),
-          10
-        );
-
-        const relativeX =
-          event.clientX - rootRect.left + scrollContainer.scrollLeft;
-        const targetMonthIndex = Math.max(
+        const monthCount = getMonthCount(root);
+        const baseMonthWidth = getBaseMonthWidth(root);
+        const scale = getCanvasScale(root);
+        const dropzoneRect = dropzone.getBoundingClientRect();
+        const logicalX =
+          (scrollContainer.scrollLeft + event.clientX - dropzoneRect.left) / scale;
+        const targetMonthIndex = clamp(
+          Math.floor(logicalX / baseMonthWidth),
           0,
-          Math.min(monthCount - 1, Math.floor(relativeX / monthWidth))
+          monthCount - 1
         );
         const monthDelta = targetMonthIndex - dragPayload.startMonthIndex;
+
         if (monthDelta === 0) {
           return;
         }
@@ -135,31 +308,56 @@
     });
   }
 
+  function handleCanvasWheel(event) {
+    if (!(event.ctrlKey || event.metaKey)) {
+      return;
+    }
+
+    const targetElement = normalizeTarget(event.target);
+    if (!targetElement) {
+      return;
+    }
+
+    const scrollContainer = targetElement.closest(
+      "[data-work-planner-canvas-scroll]"
+    );
+    if (!scrollContainer || event.deltaY === 0) {
+      return;
+    }
+
+    const root = getRootFromElement(scrollContainer);
+    if (!root) {
+      return;
+    }
+
+    event.preventDefault();
+    zoomToScale(
+      root,
+      event.deltaY < 0 ? getZoomedInScale(root) : getZoomedOutScale(root),
+      event.clientX,
+      event.clientY
+    );
+  }
+
   function initialize() {
     const root = getRoot();
     if (!root) {
       return;
     }
     if (root.dataset.workPlannerInitialized === "true") {
+      applyCanvasScale(root, getCanvasScale(root));
       return;
     }
     root.dataset.workPlannerInitialized = "true";
 
-    const storedMode = localStorage.getItem(MODE_STORAGE_KEY) || "person";
-    activateMode(root, storedMode);
-
-    const storedMonthWidth = Number.parseFloat(
-      localStorage.getItem(ZOOM_STORAGE_KEY) || `${MONTH_WIDTH_DEFAULT}`
+    const storedScale = Number.parseFloat(
+      localStorage.getItem(ZOOM_STORAGE_KEY) || `${SCALE_DEFAULT}`
     );
-    applyMonthWidth(root, storedMonthWidth);
+    applyCanvasScale(root, storedScale);
 
-    root.querySelectorAll("[data-work-planner-mode-button]").forEach((button) => {
-      button.addEventListener("click", () => {
-        activateMode(root, button.dataset.workPlannerModeButton);
-      });
-    });
-
-    const documentSelector = root.querySelector("[data-work-planner-default-document]");
+    const documentSelector = root.querySelector(
+      "[data-work-planner-default-document]"
+    );
     if (documentSelector) {
       documentSelector.addEventListener("change", () => updateAddLinks(root));
       updateAddLinks(root);
@@ -171,28 +369,43 @@
 
     zoomInButton &&
       zoomInButton.addEventListener("click", () => {
-        applyMonthWidth(root, getMonthWidth(root) + MONTH_WIDTH_STEP);
+        zoomToScale(root, getZoomedInScale(root));
       });
 
     zoomOutButton &&
       zoomOutButton.addEventListener("click", () => {
-        applyMonthWidth(root, getMonthWidth(root) - MONTH_WIDTH_STEP);
+        zoomToScale(root, getZoomedOutScale(root));
       });
 
     zoomResetButton &&
       zoomResetButton.addEventListener("click", () => {
-        applyMonthWidth(root, MONTH_WIDTH_DEFAULT);
+        zoomToScale(root, SCALE_DEFAULT);
       });
 
     bindDragAndDrop(root);
   }
 
   function scheduleInitialize() {
-    requestAnimationFrame(initialize);
+    requestAnimationFrame(() => {
+      initialize();
+    });
   }
 
-  document.addEventListener("DOMContentLoaded", initialize);
-  document.addEventListener("turbo:render", initialize);
+  function installGlobalListeners() {
+    if (window[GLOBAL_BIND_FLAG] === true) {
+      return;
+    }
+    window[GLOBAL_BIND_FLAG] = true;
+
+    document.addEventListener("wheel", handleCanvasWheel, { passive: false });
+    window.addEventListener("resize", scheduleInitialize);
+  }
+
+  installGlobalListeners();
+
+  document.addEventListener("DOMContentLoaded", scheduleInitialize);
+  document.addEventListener("turbo:before-stream-render", scheduleInitialize);
+  document.addEventListener("turbo:render", scheduleInitialize);
   document.addEventListener("turbo:frame-render", scheduleInitialize);
   document.addEventListener("turbo:load", scheduleInitialize);
 })();

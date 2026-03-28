@@ -1,6 +1,6 @@
 .work_planner {
-  --work-planner-month-width: 160px;
-  --work-planner-lane-label-width: 144px;
+  --work-planner-scale: 1;
+  --work-planner-month-width: 300px;
   --work-planner-gap: calc(1.25 * var(--base-rhythm));
 }
 
@@ -28,7 +28,6 @@
   flex-wrap: wrap;
 }
 
-.work_planner__mode_switch,
 .work_planner__zoom_controls {
   display: flex;
   flex-wrap: wrap;
@@ -90,8 +89,7 @@
 }
 
 .work_planner__backlog_work_package_header,
-.work_planner__backlog_epic_actions,
-.work_planner__work_package_header {
+.work_planner__backlog_epic_actions {
   display: flex;
   justify-content: space-between;
   gap: calc(0.5 * var(--base-rhythm));
@@ -101,13 +99,11 @@
 .work_planner__backlog_work_package_title,
 .work_planner__backlog_epic_title,
 .work_planner__lane_title,
-.work_planner__work_package_title,
 .work_planner__epic_title {
   font-weight: 600;
 }
 
-.work_planner__lane_title,
-.work_planner__work_package_title {
+.work_planner__lane_title {
   font-size: 0.8rem;
   line-height: 1.25;
   word-break: break-word;
@@ -115,14 +111,12 @@
 
 .work_planner__backlog_work_package_meta,
 .work_planner__backlog_epic_meta,
-.work_planner__lane_subtitle,
-.work_planner__work_package_meta {
+.work_planner__lane_subtitle {
   color: rgba(0, 0, 0, 0.58);
   font-size: 0.9rem;
 }
 
-.work_planner__lane_subtitle,
-.work_planner__work_package_meta {
+.work_planner__lane_subtitle {
   font-size: 0.78rem;
   line-height: 1.25;
 }
@@ -152,17 +146,28 @@
 .work_planner__canvas_scroll {
   overflow: auto;
   height: clamp(28rem, 78vh, 68rem);
-  padding-bottom: var(--base-rhythm);
   overscroll-behavior: contain;
 }
 
+.work_planner__canvas_camera {
+  position: relative;
+  min-width: 100%;
+  min-height: 100%;
+}
+
 .work_planner__canvas_surface {
-  min-width: calc(var(--work-planner-month-count) * var(--work-planner-month-width) + var(--work-planner-lane-label-width));
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max-content;
+  min-width: calc(var(--work-planner-month-count) * var(--work-planner-month-width));
+  transform: scale(var(--work-planner-scale));
+  transform-origin: top left;
+  will-change: transform;
 }
 
 .work_planner__months {
-  display: grid;
-  grid-template-columns: var(--work-planner-lane-label-width) minmax(0, 1fr);
+  display: block;
   margin-bottom: calc(0.5 * var(--base-rhythm));
 }
 
@@ -172,9 +177,8 @@
 }
 
 .work_planner__month {
-  position: sticky;
-  top: 0;
-  z-index: 2;
+  position: relative;
+  z-index: 1;
   padding: 0.35rem 0.45rem;
   background: #fafafa;
   border-left: 1px solid rgba(0, 0, 0, 0.08);
@@ -188,25 +192,8 @@
   gap: var(--base-rhythm);
 }
 
-.work_planner__team_group {
-  display: grid;
-  gap: calc(0.75 * var(--base-rhythm));
-}
-
-.work_planner__team_group_title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-top: calc(0.5 * var(--base-rhythm));
-}
-
 .work_planner__lane {
-  display: grid;
-  grid-template-columns: var(--work-planner-lane-label-width) minmax(0, 1fr);
-  gap: calc(0.5 * var(--base-rhythm));
-}
-
-.work_planner__lane_meta {
-  padding-top: 0.25rem;
+  display: block;
 }
 
 .work_planner__lane_body {
@@ -237,23 +224,6 @@
   box-shadow: inset 0 0 0 2px rgba(33, 118, 255, 0.35);
 }
 
-.work_planner__work_package {
-  z-index: 1;
-  border-radius: 6px;
-  padding: 0.45rem 0.55rem;
-  background: rgba(111, 167, 170, 0.12);
-  border: 1px solid rgba(46, 90, 92, 0.18);
-  box-shadow: none;
-}
-
-.work_planner__work_package_actions {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.72rem;
-}
-
-.work_planner__work_package[draggable="true"],
 .work_planner__epic[draggable="true"] {
   cursor: grab;
 }
@@ -290,14 +260,12 @@
   word-break: break-word;
 }
 
-.work_planner__epic_title a,
-.work_planner__work_package_title a {
+.work_planner__epic_title a {
   color: inherit;
   text-decoration: none;
 }
 
-.work_planner__epic_title a:hover,
-.work_planner__work_package_title a:hover {
+.work_planner__epic_title a:hover {
   text-decoration: underline;
 }
 
@@ -356,20 +324,7 @@
 }
 
 @media (max-width: 800px) {
-  .work_planner__lane,
-  .work_planner__months {
-    grid-template-columns: 1fr;
-  }
-
   .work_planner__canvas_surface {
     min-width: calc(var(--work-planner-month-count) * var(--work-planner-month-width));
-  }
-
-  .work_planner__lane_meta {
-    padding-top: 0;
-  }
-
-  .work_planner__months_spacer {
-    display: none;
   }
 }

@@ -3,20 +3,15 @@
   data-work-planner-root
   style="--work-planner-month-count: {{ view_object.months|length }};"
 >
+  {% if view_object.months|length > 0 %}
   <div class="work_planner__controls">
-    <div class="work_planner__mode_switch">
-      <button type="button" class="action_button" data-work-planner-mode-button="person">By person</button>
-      <button type="button" class="action_button" data-work-planner-mode-button="team">By team / person</button>
-      <button type="button" class="action_button" data-work-planner-mode-button="work-package">By work package</button>
-    </div>
-    {% if view_object.months|length > 0 %}
     <div class="work_planner__zoom_controls">
       <button type="button" class="action_button" data-work-planner-zoom-out>Zoom out</button>
       <button type="button" class="action_button" data-work-planner-zoom-reset>Reset</button>
       <button type="button" class="action_button" data-work-planner-zoom-in>Zoom in</button>
     </div>
-    {% endif %}
   </div>
+  {% endif %}
 
   <div class="work_planner__layout">
     <section class="work_planner__backlog">
@@ -56,7 +51,7 @@
       <div class="work_planner__section_header">
         <h2>Planning Canvas</h2>
         <div class="work_planner__canvas_hint">
-          Hold <code>Space</code> to pan.
+          Hold <code>Space</code> to pan. Use <code>Ctrl</code> + wheel to zoom.
         </div>
       </div>
 
@@ -70,9 +65,15 @@
         js-pan_with_space
         data-work-planner-canvas-scroll
       >
-        <div class="work_planner__canvas_surface">
+        <div
+          class="work_planner__canvas_camera"
+          data-work-planner-canvas-camera
+        >
+        <div
+          class="work_planner__canvas_surface"
+          data-work-planner-canvas-surface
+        >
           <div class="work_planner__months">
-            <div class="work_planner__months_spacer"></div>
             <div class="work_planner__months_grid">
               {% for month in view_object.months %}
               <div class="work_planner__month">{{ month.label }}</div>
@@ -80,24 +81,17 @@
             </div>
           </div>
 
-          <section class="work_planner__view" data-work-planner-view="person">
-            {% if view_object.person_lanes|length == 0 %}
+          <section class="work_planner__view">
+            {% if view_object.all_epics_lane.epics|length == 0 %}
             <div class="work_planner__canvas_empty">No scheduled epics for this view.</div>
-            {% endif %}
-            {% for lane in view_object.person_lanes %}
-            <div class="work_planner__lane" data-work-planner-lane="{{ lane.title }}">
-              <div class="work_planner__lane_meta">
-                <div class="work_planner__lane_title">{{ lane.title }}</div>
-                {% if lane.subtitle %}
-                <div class="work_planner__lane_subtitle">{{ lane.subtitle }}</div>
-                {% endif %}
-              </div>
+            {% else %}
+            <div class="work_planner__lane" data-work-planner-lane="All epics">
               <div
                 class="work_planner__lane_body"
                 data-work-planner-dropzone
               >
-                <div class="work_planner__lane_grid" style="--work-planner-lane-rows: {{ lane.row_count }};">
-                  {% for epic in lane.epics %}
+                <div class="work_planner__lane_grid" style="--work-planner-lane-rows: {{ view_object.all_epics_lane.row_count }};">
+                  {% for epic in view_object.all_epics_lane.epics %}
                     {% set draggable = view_object.project_config.is_running_on_server %}
                     {% set nested = false %}
                     {% include "screens/work_planner/epic_card.jinja" %}
@@ -105,68 +99,10 @@
                 </div>
               </div>
             </div>
-            {% endfor %}
+            {% endif %}
           </section>
 
-          <section class="work_planner__view" data-work-planner-view="team" hidden>
-            {% if view_object.team_groups|length == 0 %}
-            <div class="work_planner__canvas_empty">No scheduled epics for this view.</div>
-            {% endif %}
-            {% for team_group in view_object.team_groups %}
-            <div class="work_planner__team_group">
-              <div class="work_planner__team_group_title">{{ team_group.title }}</div>
-              {% for lane in team_group.lanes %}
-              <div class="work_planner__lane" data-work-planner-lane="{{ lane.title }}">
-                <div class="work_planner__lane_meta">
-                  <div class="work_planner__lane_title">{{ lane.title }}</div>
-                  {% if lane.subtitle %}
-                  <div class="work_planner__lane_subtitle">{{ lane.subtitle }}</div>
-                  {% endif %}
-                </div>
-                <div
-                  class="work_planner__lane_body"
-                  data-work-planner-dropzone
-                >
-                  <div class="work_planner__lane_grid" style="--work-planner-lane-rows: {{ lane.row_count }};">
-                    {% for epic in lane.epics %}
-                      {% set draggable = view_object.project_config.is_running_on_server %}
-                      {% set nested = false %}
-                      {% include "screens/work_planner/epic_card.jinja" %}
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-              {% endfor %}
-            </div>
-            {% endfor %}
-          </section>
-
-          <section class="work_planner__view" data-work-planner-view="work-package" hidden>
-            {% if view_object.work_package_lanes|length == 0 %}
-            <div class="work_planner__canvas_empty">No scheduled work packages for this view.</div>
-            {% endif %}
-            {% for lane in view_object.work_package_lanes %}
-            <div class="work_planner__lane" data-work-planner-lane="{{ lane.title }}">
-              <div class="work_planner__lane_meta">
-                <div class="work_planner__lane_title">{{ lane.title }}</div>
-                <div class="work_planner__lane_subtitle">{{ lane.document.title if lane.document is not none else "Project-wide" }}</div>
-              </div>
-              <div
-                class="work_planner__lane_body"
-                data-work-planner-dropzone
-              >
-                <div class="work_planner__lane_grid" style="--work-planner-lane-rows: {{ lane.row_count }};">
-                  {% include "screens/work_planner/work_package_cluster.jinja" %}
-                  {% for epic in lane.epics %}
-                    {% set draggable = false %}
-                    {% set nested = true %}
-                    {% include "screens/work_planner/epic_card.jinja" %}
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          </section>
+        </div>
         </div>
       </div>
       {% endif %}

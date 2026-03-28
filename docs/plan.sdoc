@@ -4,6 +4,7 @@ TITLE: StrictDoc Roadmap
 UID: SDOC_PLAN
 VERSION: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH
 DATE: @GIT_COMMIT_DATETIME
+PREFIX: SDOC-EPIC-
 OPTIONS:
   ENABLE_MID: True
   VIEW_STYLE: Inline
@@ -1477,3 +1478,11 @@ Stabilization 2026 Q1: Python 3.14 changes, drop Python 3.9, testing out various
 
 Imported from: developer/drawio/Roadmap.drawio
 <<<
+
+[EPIC]
+MID: ea4f8761c2284ec9be14c17549f9b845
+UID: SDOC-EPIC-1
+STATUS: WIP
+TIME_START: 2026-03-29T00:00:00Z
+TIME_END: 2026-04-29T00:00:00Z
+TITLE: Workplanner

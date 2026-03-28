@@ -1011,6 +1011,36 @@ RELATIONS:
   VALUE: SDOC-SRS-205
 
 [REQUIREMENT]
+MID: f123400fe5be4ce8b71672e4a33c9f38
+UID: SDOC-LLR-213
+STATUS: Active
+TITLE: Updating EPIC
+STATEMENT: >>>
+The Work Planner screen shall update the EPIC nodes according to the following rules:
+
+- When a user updates an EPIC node, the Work Planner screen shall update that node only and do not modify any other nodes.
+- The resulting screen after the AJAX update must stay in the same position as it was when a user clicked the Save button.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
+[REQUIREMENT]
+MID: c4985a860b3d480e923d84d00f502f39
+UID: SDOC-LLR-214
+STATUS: Active
+TITLE: Initial layout of Work Planner
+STATEMENT: >>>
+The Work Planner screen shall be populated according to the following rules:
+
+- When a user opens the root page of the Work Planner screen, the Work Planner shall display the Planning Canvas with all EPIC nodes, grouped by WORK_PACKAGE clusters if exist. No Teams or Persons shall be displayed.
+- Grouping of epics into work packages shall be visually organized by epics clustered/nested inside rectangular boxes representing work packages. The goal is to not create extra swimlanes for each work package but instead have a single "all epics" swimlane which will have parent-less epics or work package clusters with epics inside them.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
+[REQUIREMENT]
 MID: f2df4d1d92d544638cc659ea74da0673
 UID: SDOC-LLR-207
 STATUS: Active
@@ -1050,6 +1080,31 @@ STATEMENT: >>>
 When Space key is pressed, the Planning Canvas component shall support panning both horizontally and vertically.
 
 NOTE: The panning behavior shall still be active after any editing and AJAX updates take place.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
+[REQUIREMENT]
+MID: c84ff78e99b14353ad60878f19c77479
+UID: SDOC-LLR-212
+STATUS: Active
+TITLE: Zooming behavior
+STATEMENT: >>>
+When:
+1) A user clicks on ``Zoom In/Out`` buttons
+or
+2) the user performs scrolling up/down with Ctrl key pressed and mouse over the Planning Canvas
+
+Then:
+The Planning Canvas component shall be Zoomed In/Out accordingly.
+
+Additional requirements:
+
+- The maximum Zoom In behavior shall be equivalent to showing the entire timeline of one month.
+- The maximum Zoom Out behavior shall be equivalent to showing the entire timeline of the Planning Canvas.
+
+NOTE: The zooming behavior shall still be active after any editing and AJAX updates take place.
 <<<
 RELATIONS:
 - TYPE: Parent

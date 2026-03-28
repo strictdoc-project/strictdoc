@@ -34,12 +34,9 @@ class WorkPlannerEpicCard:
     statement: str
     status: str
     status_css_class: str
-    assigned_person: str
-    assigned_team: str
     time_start: Optional[str]
     time_end: Optional[str]
     work_package_uid: Optional[str]
-    work_package_title: Optional[str]
     start_month_index: int
     end_month_index: int
     start_offset: float = 0.0
@@ -81,51 +78,6 @@ class WorkPlannerLane:
 
 
 @dataclass
-class WorkPlannerTeamGroup:
-    title: str
-    lanes: List[WorkPlannerLane]
-
-
-@dataclass
-class WorkPlannerWorkPackageLane:
-    node: Optional[SDocNode]
-    document: Optional[SDocDocument]
-    title: str
-    statement: str
-    start_month_index: int
-    end_month_index: int
-    start_offset: float
-    end_offset: float
-    epics: List[WorkPlannerEpicCard]
-
-    @property
-    def month_span(self) -> int:
-        return self.end_month_index - self.start_month_index + 1
-
-    @property
-    def grid_column_start(self) -> int:
-        return int(floor(self.start_offset)) + 1
-
-    @property
-    def grid_column_end(self) -> int:
-        return int(ceil(self.end_offset)) + 1
-
-    @property
-    def start_inset(self) -> float:
-        return self.start_offset - floor(self.start_offset)
-
-    @property
-    def end_inset(self) -> float:
-        return ceil(self.end_offset) - self.end_offset
-
-    @property
-    def row_count(self) -> int:
-        if len(self.epics) == 0:
-            return 1
-        return max(epic.stack_level for epic in self.epics) + 1
-
-
-@dataclass
 class WorkPlannerBacklogWorkPackage:
     node: SDocNode
     document: SDocDocument
@@ -144,9 +96,7 @@ class WorkPlannerViewObject:
         documents: List[WorkPlannerDocumentOption],
         default_document_mid: Optional[str],
         months: List[WorkPlannerMonth],
-        person_lanes: List[WorkPlannerLane],
-        team_groups: List[WorkPlannerTeamGroup],
-        work_package_lanes: List[WorkPlannerWorkPackageLane],
+        all_epics_lane: WorkPlannerLane,
         backlog_work_packages: List[WorkPlannerBacklogWorkPackage],
         backlog_epics: List[WorkPlannerEpicCard],
     ) -> None:
@@ -156,11 +106,7 @@ class WorkPlannerViewObject:
         self.documents: List[WorkPlannerDocumentOption] = documents
         self.default_document_mid: Optional[str] = default_document_mid
         self.months: List[WorkPlannerMonth] = months
-        self.person_lanes: List[WorkPlannerLane] = person_lanes
-        self.team_groups: List[WorkPlannerTeamGroup] = team_groups
-        self.work_package_lanes: List[WorkPlannerWorkPackageLane] = (
-            work_package_lanes
-        )
+        self.all_epics_lane: WorkPlannerLane = all_epics_lane
         self.backlog_work_packages: List[WorkPlannerBacklogWorkPackage] = (
             backlog_work_packages
         )

@@ -1,5 +1,5 @@
 {% set epic_tooltip -%}
-{{ epic.status or "Ready" }} · {{ epic.assigned_person }} · {{ epic.assigned_team }} · {{ epic.document.title }}{% if epic.time_start or epic.time_end %} · {{ epic.time_start or "?" }} → {{ epic.time_end or "?" }}{% endif %}
+{{ epic.status or "Ready" }} · {{ epic.document.title }}{% if epic.time_start or epic.time_end %} · {{ epic.time_start or "?" }} → {{ epic.time_end or "?" }}{% endif %}
 {%- endset %}
 <article
   class="work_planner__epic work_planner__epic--{{ epic.status_css_class }}{% if nested %} work_planner__epic--nested{% endif %}"
@@ -23,9 +23,6 @@
     <a href="{{ view_object.render_node_link(epic.node) }}" data-turbo="false">
       {{ epic.title }}
     </a>
-  </div>
-  <div class="work_planner__epic_meta">
-    {{ epic.assigned_person }} · {{ epic.assigned_team }} · {{ epic.document.title }}
   </div>
   {% if view_object.project_config.is_running_on_server %}
   <div class="work_planner__epic_actions">

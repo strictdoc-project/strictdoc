@@ -965,3 +965,80 @@ RELATIONS:
 [[/SECTION]]
 
 [[/SECTION]]
+
+[[SECTION]]
+MID: 2b92467cbac849779086bee79203eb9b
+TITLE: WP planning
+
+[REQUIREMENT]
+MID: 939110c1bf94440dbcac626cf18c63ef
+UID: SDOC-LLR-206
+STATUS: Active
+TITLE: EPIC node structure
+STATEMENT: >>>
+The ``[EPIC]`` node structure shall be as follows:
+
+- MID
+- UID
+- STATUS
+- ASSIGNED_PERSON
+- ASSIGNED_TEAM
+- TIME_START
+- TIME_END
+- TITLE
+- STATEMENT
+
+The format for status shall be Ready, WIP, Done, Draft. The corresponding colors shall be derived from this status field and used in the web interface.
+
+The format for time fields shall be ISO 8601, e.g., ``2026-03-28T16:28:02Z``.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
+[REQUIREMENT]
+MID: 543c257fc6404d52861f7e3230a7b2b7
+UID: SDOC-LLR-208
+STATUS: Active
+TITLE: EPIC node display rules
+STATEMENT: >>>
+The ``[EPIC]`` node shall be displayed on the Planning Canvas according to the following rules:
+
+- When an epic node has its time start and time end fields populated, it shall be displayed on the Planning Canvas. Otherwise, it shall stay in the Backlog section next/to the left of the Planning Canvas.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
+[REQUIREMENT]
+MID: f2df4d1d92d544638cc659ea74da0673
+UID: SDOC-LLR-207
+STATUS: Active
+TITLE: WORK_PACKAGE node structure
+STATEMENT: >>>
+The ``[WORK_PACKAGE]`` node structure shall be as follows:
+
+- MID
+- UID
+- TITLE
+- STATEMENT
+
+NOTE: The work package does not have its own duration, its duration is formed by the durations of the epic that it contains.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
+[REQUIREMENT]
+MID: 4433d685c487437fac6948d6e03f47c6
+UID: SDOC-LLR-209
+STATUS: Active
+TITLE: WORK_PACKAGE node moving rules (drag-and-drop)
+STATEMENT: >>>
+When a ``[WORK_PACKAGE]`` node is dragged on the Planning Canvas, the Planning Canvas shall move the entire work package node, updating all its contained epic time-start and time-end fields accordingly and preserving the overall duration of all epics.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
+[[/SECTION]]

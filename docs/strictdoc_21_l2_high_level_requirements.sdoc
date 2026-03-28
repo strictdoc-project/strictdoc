@@ -1311,6 +1311,40 @@ RELATIONS:
 [[/SECTION]]
 
 [[SECTION]]
+MID: c2c0008dc17445d09deafe861e5b1e9c
+TITLE: Screen: Work planner
+
+[REQUIREMENT]
+MID: 9ad4924ee83d4b3893ab9e91e9245157
+UID: SDOC-SRS-205
+TITLE: Work planner
+STATEMENT: >>>
+StrictDoc shall implement the Work Planner screen using a dedicated page on the editable web interface, featuring:
+
+- Gannt-like planning on a Planning Canvas with epics/work packages presented horizontally over year-months, e.g., ``2026-04`` presented vertically as wide-enough bars. Example: Each month is at least 200px wide. The length of each month bar shall be determined automatically based on the contained content.
+- Epic items as lowest-level entities that can also be grouped into Work packages as clusters.
+- An epic is an SDoc node ``[EPIC]`` that can be assigned the following fields:
+  - Title
+  - Start time
+  - End time
+  - Assigned person (first and last name)
+  - Team (e.g., low-level, flight software, mission control software teams)
+- An epic can be assigned to one ``[WORK_PACKAGE]`` entity via a parent relation. A work package can then be shown as a cluster of epics on the Planning Canvas.
+- Multiple layouts/views shall be selectable one at a time by switching a dedicated mode control:
+
+  - Grouping work by assigned persons, resulting in horizontal swimlanes for each person. If a person works on multiple tasks at the same time, these tasks shall be shown parallel to each other, one above the other.
+  - Grouping work by teams and then assigned persons.
+  - Grouping epics per work packages. If two epics within a work package happen at the same time, they shall be presented one above the other.
+
+- Color coding is as follows: gray - work can start, yellow - work started and is in progress, green - work is done, red - the work is unrefined and needs further breakdown or editing.
+- The Planning Canvas as well as the Backlog cluster shall allow creating, editing, dragging and dropping Epics and Work Packages.
+- The work can be unallocated with respect to start/end time in which case if shows separately from the gannt planning canvas in a dedicated section called Backlog.
+- It shall be possible to zoom in, zoom out, and pan the Planning Canvas.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 8380fb39beb04d1c9370733bcfafbc01
 TITLE: Content search
 

@@ -12,6 +12,7 @@ DocumentMeta(
     input_doc_rel_path = "child.sdoc",
     input_doc_dir_rel_path = "",
     input_doc_assets_dir_rel_path = "doc_project/_assets",
+    document_root_assets_dir_rel_path = "doc_project/_assets",
     output_document_dir_full_path = "/tmp/doc_project/output/html/doc_project",
     output_document_dir_rel_path = "doc_project"
 )
@@ -39,6 +40,7 @@ class DocumentMeta:
         input_doc_rel_path: SDocRelativePath,
         input_doc_dir_rel_path: SDocRelativePath,
         input_doc_assets_dir_rel_path: SDocRelativePath,
+        document_root_assets_dir_rel_path: SDocRelativePath,
         output_document_dir_full_path: str,
         output_document_dir_rel_path: SDocRelativePath,
     ) -> None:
@@ -64,6 +66,9 @@ class DocumentMeta:
         self.input_doc_dir_rel_path: SDocRelativePath = input_doc_dir_rel_path
         self.input_doc_assets_dir_rel_path: SDocRelativePath = (
             input_doc_assets_dir_rel_path
+        )
+        self.document_root_assets_dir_rel_path: SDocRelativePath = (
+            document_root_assets_dir_rel_path
         )
         self.output_document_dir_full_path: str = output_document_dir_full_path
         self.output_document_dir_rel_path: SDocRelativePath = (
@@ -218,3 +223,25 @@ class DocumentMeta:
         else:
             project_path_prefix = "."
         return project_path_prefix
+
+    def get_document_root_assets_path_prefix(self) -> str:
+        """
+        Calculates the relative path from the exported document to its
+        Document Root Asset Directory (used for the @assets/ macro).
+        """
+        start_dir = self.output_document_dir_rel_path.relative_path_posix
+        target_dir = self.document_root_assets_dir_rel_path.relative_path_posix
+
+        rel_path = os.path.relpath(
+            target_dir if target_dir else ".",
+            start=start_dir if start_dir else ".",
+        )
+
+        # Normalize to POSIX slashes (crucial for Windows)
+        rel_path = rel_path.replace("\\", "/")
+
+        # Match the standard Docutils expectation for explicit relative paths
+        if not rel_path.startswith(".") and not rel_path.startswith("/"):
+            rel_path = f"./{rel_path}"
+
+        return f"{rel_path}/"

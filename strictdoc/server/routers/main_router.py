@@ -141,7 +141,10 @@ from strictdoc.helpers.file_modification_time import (
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import NullParallelizer
 from strictdoc.helpers.path_filter import PathFilter
-from strictdoc.helpers.paths import SDocRelativePath
+from strictdoc.helpers.paths import (
+    SDocRelativePath,
+    calculate_document_root_assets_path,
+)
 from strictdoc.helpers.string import (
     create_safe_acronym,
     is_safe_alphanumeric_string,
@@ -1116,13 +1119,24 @@ def create_main_router(
         "/actions/document/upload_asset", response_class=JSONResponse
     )
     async def upload_asset(
-        requirement_mid: str, uploaded_files: List[UploadFile]
+        requirement_mid: str,
+        document_mid: str,
+        uploaded_files: List[UploadFile],
     ) -> JSONResponse:
         """
         Handle upload of assets (images for now).
 
         @relation(SDOC-LLR-208, scope=function)
         """
+        document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(MID(document_mid))
+        )
+        if not document or not hasattr(document, "meta"):
+            raise HTTPException(
+                status_code=404,
+                detail=f"Active Document with MID {document_mid} not found",
+            )
+        assert document.meta is not None
         assert project_config.input_paths is not None
         assert export_action.traceability_index.asset_manager is not None
         requirement_mid = os.path.normpath(os.path.basename(requirement_mid))
@@ -1131,9 +1145,13 @@ def create_main_router(
                 status_code=400, detail="Invalid requirement MID format"
             )
         full_input_path = os.path.abspath(project_config.input_paths[0])
-        assets_folder_name = "_assets"
-        assets_folder_full_path = os.path.join(
-            full_input_path, assets_folder_name
+        path_to_doc_root_base = os.path.dirname(full_input_path)
+        doc_root_assets_rel_path = (
+            document.meta.document_root_assets_dir_rel_path.relative_path
+        )
+
+        assets_folder_full_path = os.path.normpath(
+            os.path.join(path_to_doc_root_base, doc_root_assets_rel_path)
         )
         asset_manager = export_action.traceability_index.asset_manager
 
@@ -1463,7 +1481,11 @@ def create_main_router(
             if len(input_doc_dir_rel_path) > 0
             else "/".join((file_tree_mount_folder, "_assets"))
         )
-
+        document_root_assets_dir_rel_path = calculate_document_root_assets_path(
+            include_doc_paths=project_config.include_doc_paths,
+            doc_posix_path=document_path,
+            file_tree_mount_folder=file_tree_mount_folder,
+        )
         Path(doc_full_path_dir).mkdir(parents=True, exist_ok=True)
         document = SDocDocument(
             mid=None,
@@ -1485,6 +1507,7 @@ def create_main_router(
             input_doc_assets_dir_rel_path=SDocRelativePath(
                 input_doc_assets_dir_rel_path
             ),
+            document_root_assets_dir_rel_path=document_root_assets_dir_rel_path,
             output_document_dir_full_path="NOT_RELEVANT",
             output_document_dir_rel_path=SDocRelativePath("FIXME"),
         )
@@ -2362,6 +2385,14 @@ def create_main_router(
                 (file_tree_mount_folder, "_assets")
             )
 
+            document_root_assets_dir_rel_path = (
+                calculate_document_root_assets_path(
+                    include_doc_paths=project_config.include_doc_paths,
+                    doc_posix_path=document_path,
+                    file_tree_mount_folder=file_tree_mount_folder,
+                )
+            )
+
             # FIXME: Fill in the meta information correctly.
             document.meta = DocumentMeta(
                 level=0,
@@ -2374,6 +2405,7 @@ def create_main_router(
                 input_doc_assets_dir_rel_path=SDocRelativePath(
                     input_doc_assets_dir_rel_path
                 ),
+                document_root_assets_dir_rel_path=document_root_assets_dir_rel_path,
                 output_document_dir_full_path="NOT_RELEVANT",
                 output_document_dir_rel_path=SDocRelativePath("FIXME"),
             )

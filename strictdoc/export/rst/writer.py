@@ -165,10 +165,8 @@ class RSTWriter:
             return text
 
         assert self.current_document.meta is not None
+        document_meta = self.current_document.meta
 
-        project_path_prefix = (
-            self.current_document.meta.get_project_path_prefix()
-        )
-        assets_path = f"{project_path_prefix}/_assets/"
+        assets_path = document_meta.get_document_root_assets_path_prefix()
 
         return expand_assets_macro(text, assets_path)

@@ -376,8 +376,8 @@ class JSONGenerator:
             return text
 
         assert document.meta is not None
+        document_meta = document.meta
 
-        project_path_prefix = document.meta.get_project_path_prefix()
-        assets_path = f"{project_path_prefix}/_assets/"
+        assets_path = document_meta.get_document_root_assets_path_prefix()
 
         return expand_assets_macro(text, assets_path)

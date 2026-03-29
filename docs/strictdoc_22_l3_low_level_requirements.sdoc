@@ -965,3 +965,152 @@ RELATIONS:
 [[/SECTION]]
 
 [[/SECTION]]
+
+[[SECTION]]
+MID: b0138705e9b24886bd2792faff067410
+TITLE: Assets
+
+[REQUIREMENT]
+MID: 992a734673884c4a89ada5cb1fd640c4
+UID: SDOC-LLR-211
+TITLE: Asset directory resolution
+STATEMENT: >>>
+StrictDoc shall associate two distinct ``_assets`` directory locations with every document in the project tree to support both relative and global asset referencing:
+
+1. **Local Asset Directory**: An ``_assets/`` directory located in the same directory as the document file.
+
+2. **Document Root Asset Directory**: An ``_assets/`` directory located at the document root of the referencing document.
+
+The document root shall be determined as follows:
+
+- When ``include_doc_paths`` are not configured, the document root shall be the project root.
+
+- When ``include_doc_paths`` are configured, the document root shall be the longest matching include path. When the matching include path contains wildcards, the document root shall be the static directory prefix preceding the first wildcard.
+<<<
+RATIONALE: >>>
+- The local assets directory preserves compatibility with standard relative paths.
+- The document root assets directory supports image upload and allows asset paths that remain stable even when nodes are moved within the same document root.
+- Supporting multiple document root ``_assets`` directories aligns with StrictDoc's existing support for multiple independent document trees (via the include_doc_paths configuration).
+<<<
+
+[REQUIREMENT]
+MID: da0c32fb66434bcd80d959613a35a446
+UID: SDOC-LLR-212
+TITLE: Asset Exporting
+STATEMENT: >>>
+When exporting, StrictDoc shall copy the contents of the Local Asset Directories and the Document Root Asset Directories to the output folder.
+
+The directory structure of the assets within the output folder shall mirror their relative structure in the source project tree to preserve macro and relative path integrity.
+<<<
+
+[REQUIREMENT]
+MID: 124a881412434f768ed4a78b73d05986
+UID: SDOC-LLR-206
+TITLE: Document root assets macro (@assets)
+STATEMENT: >>>
+StrictDoc shall provide a text macro ``@assets/`` that resolves as a relative path to the document root's ``_assets/`` directory.
+
+StrictDoc shall expand the macro in all multi-line fields of requirements or text nodes.
+
+StrictDoc shall expand the macro in the exports for HTML, RST, JSON.
+<<<
+RATIONALE: >>>
+Hard-coded relative paths are fragile and break when requirements are moved within the project hierarchy. Resolving paths at export time makes requirements portable and eliminates manual path or file-system updates during restructuring.
+<<<
+
+[[SECTION]]
+MID: ce512ba0998d4ea1a85cfed432007922
+TITLE: Image Upload
+
+[REQUIREMENT]
+MID: 7768b2575117435e80c3b26515382b23
+UID: SDOC-LLR-207
+STATUS: Active
+TITLE: Image upload
+STATEMENT: >>>
+The Web Editor shall support image upload in multi-line text fields via paste and drag-and-drop:
+
+1. Intercept `drop` and `paste` events and prevent default browser behavior.
+2. Accept only image MIME types.
+3. Upload images asynchronously to the backend ``/actions/document/upload_asset`` endpoint, passing the current requirement MID and the active document MID along.
+4. Indicate upload progress via a temporary placeholder text.
+5. On success, insert an image reference at the original cursor position, following the documents markup:
+
+   - RST: ``.. image:: \@assets/[MID]/[filename]``
+   - HTML: ``<img src="\@assets/[MID]/[filename]" />``
+   - Markdown: ``![](\@assets/[MID]/[filename])``
+
+6. On failure, notify the user.
+<<<
+RATIONALE: >>>
+Supports standard editor interactions and removes manual file handling, improving usability and reducing potential for user errors.
+<<<
+
+[REQUIREMENT]
+MID: 7cdd7a0838fc4212a43b336eba5ccde8
+UID: SDOC-LLR-208
+TITLE: Asset upload endpoint
+STATEMENT: >>>
+The StrictDoc web server shall provide an ``/actions/document/upload_asset`` endpoint that accepts image uploads and stores them in a node-specific subfolder.
+
+The endpoint shall:
+
+1. Validate that the payload is an image.
+2. Sanitize the filename by replacing spaces with underscores.
+3. Validate the requirement MIDs formally, but also accept uploads for not yet existing requirements (the MID only exists in the Web Editor at this point).
+4. Use the provided Document MID to resolve the correct document root ``_assets`` directory.
+5. Store the file in a requirement-specific subfolder ``/<MID>/`` within the document root ``_assets`` directory.
+6. Overwrite any existing image file with the same name in the target folder.
+7. Sync the assets to the web server so it can be served immediately.
+8. When successful, return HTTP 200 with the stored filename expressed using the ``@assets/`` macro.
+9. When unsuccessful, return an error response.
+<<<
+RATIONALE: >>>
+Defines a consistent and predictable storage model for image assets:
+
+- preventing image filename collisions between requirements,
+- allowing the user to update an image through re-uploading,
+- allowing the user to upload images when creating a new requirement.
+<<<
+
+[REQUIREMENT]
+MID: 3157ce3de267437c8e083455fc2b1b87
+UID: SDOC-LLR-209
+TITLE: Support for wildcard image directive generation
+STATEMENT: >>>
+When multiple image files are uploaded in a single operation, the ``/actions/document/upload_asset`` endpoint shall detect pairs of files that share the same filename stem and differ only by file extension.
+
+If such a pair consists of one raster format image and one vector format image, the system shall:
+
+- Store both files in the requirement-specific assets location.
+- Return information that allows the client to generate a single image directive using the wildcard filename @assets/[MID]/[stem].*.
+
+If no such pair is detected, the system shall treat each file independently.
+<<<
+RATIONALE: >>>
+Supports the wildcard-enhanced-image feature of StrictDoc/ReST also when uploading images through the server
+<<<
+
+[REQUIREMENT]
+MID: 82dd31e22ccf44bd8b6b924ae9591b0c
+UID: SDOC-LLR-210
+TITLE: Orphaned asset cleanup
+STATEMENT: >>>
+StrictDoc shall provide a CLI command ``strictdoc manage assets`` to identify and remove orphaned assets.
+
+An asset file shall be considered orphaned if it is an image file, and not referenced by any requirement.
+
+The command shall:
+
+- Detect image references in nodes (for RST, HTML or Markdown).
+- List image files that are not referenced by any requirement.
+- Remove such orphaned files upon user request.
+- When removing files, also remove empty asset folders.
+<<<
+RATIONALE: >>>
+Prevents accumulation of orphaned assets. This would for instance happen if requirement creation is aborted after already having uploaded images.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]

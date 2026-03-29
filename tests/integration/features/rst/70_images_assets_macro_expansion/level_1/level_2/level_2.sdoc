@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[TEXT]
+STATEMENT: >>>
+.. image :: @assets/picture.svg
+
+.. image :: @assets/picture.svg
+
+.. image :: @assets/picture.svg
+<<<

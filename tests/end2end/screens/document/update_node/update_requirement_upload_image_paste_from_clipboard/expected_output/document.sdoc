@@ -1,0 +1,14 @@
+[DOCUMENT]
+MID: 398e37d756ea406f87ca83ec8e29c178
+TITLE: Document 1
+OPTIONS:
+  ENABLE_MID: True
+
+[REQUIREMENT]
+MID: a5c6b14d5ee443149687fb9be69a7ede
+STATEMENT: >>>
+Requirement statement.
+
+
+.. image:: @assets/a5c6b14d5ee443149687fb9be69a7ede/picture.svg
+<<<

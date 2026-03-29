@@ -23,6 +23,7 @@ from strictdoc.export.markdown.markdown_to_html_fragment_writer import (
 from strictdoc.export.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.export.tools.assets_macro import expand_assets_macro
 from strictdoc.helpers.rst import escape_str_after_inline_markup
 
 FragmentWriterType = Union[
@@ -154,6 +155,21 @@ class MarkupRenderer:
             else:
                 raise NotImplementedError
             prev_part = part
+
+        # @relation(SDOC-LLR-206, scope=range_start)
+        if node_field.is_multiline() and "@assets/" in parts_output:
+            if (
+                self.context_document is not None
+                and self.context_document.meta is not None
+            ):
+                document_meta = self.context_document.meta
+
+                assets_path = (
+                    document_meta.get_document_root_assets_path_prefix()
+                )
+
+                parts_output = expand_assets_macro(parts_output, assets_path)
+        # @relation(SDOC-LLR-206, scope=range_end)
 
         output = self.fragment_writer.write(parts_output)
         self.cache[(document_type, node_field)] = output

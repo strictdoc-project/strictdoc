@@ -1,0 +1,13 @@
+#
+# @relation(SDOC-LLR-210, scope=file)
+#
+
+RUN: cp %S/input_rst.sdoc %T/
+RUN: cp %S/input_html.sdoc %T/
+RUN: cp %S/input_markdown.md %T/
+RUN: cp -r %S/_assets %T/_assets
+
+RUN: %strictdoc manage assets %T/ | filecheck %s
+
+CHECK:Found 1 unused image(s):
+CHECK:Output/_assets/unused.svg

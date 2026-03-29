@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document 1
+OPTIONS:
+  MARKUP: HTML
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+<img src="@assets/149687fb9be69a7edea5c6b14d5ee443/picture.svg" />
+<<<

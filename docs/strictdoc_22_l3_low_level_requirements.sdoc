@@ -975,22 +975,24 @@ MID: 992a734673884c4a89ada5cb1fd640c4
 UID: SDOC-LLR-211
 TITLE: Asset directory resolution
 STATEMENT: >>>
-StrictDoc shall associate two distinct ``_assets`` directory locations with every document in the project tree to support both relative and global asset referencing:
+StrictDoc shall associate every document with two _assets directory locations:
 
-1. **Local Asset Directory**: An ``_assets/`` directory located in the same directory as the document file.
+1. **Local Asset Directory**: An ``_assets/`` folder located alongside the document file. It stores assets referenced via document-relative paths.
 
-2. **Document Root Asset Directory**: An ``_assets/`` directory located at the document root of the referencing document.
+2. **Document Root Asset Directory**: An ``_assets/`` folder located at the document root of the referencing document.
 
 The document root shall be determined as follows:
 
-- When ``include_doc_paths`` are not configured, the document root shall be the project root.
+- When ``include_doc_paths`` is not configured, the project root is used.
 
-- When ``include_doc_paths`` are configured, the document root shall be the longest matching include path. When the matching include path contains wildcards, the document root shall be the static directory prefix preceding the first wildcard.
+- When ``include_doc_paths`` is configured, the document root shall be the longest matching include path.
+
+  - When the match contains wildcards, the root is the static prefix before the wildcard.
 <<<
 RATIONALE: >>>
 - The local assets directory preserves compatibility with standard relative paths.
-- The document root assets directory supports image upload and allows asset paths that remain stable even when nodes are moved within the same document root.
-- Supporting multiple document root ``_assets`` directories aligns with StrictDoc's existing support for multiple independent document trees (via the include_doc_paths configuration).
+- The document root assets directory supports image uploads and maintains stable asset paths even when nodes are moved within the same document root.
+- Supporting multiple document root asset directories matches StrictDoc’s support for independent document trees via the include_doc_paths config option.
 <<<
 
 [REQUIREMENT]
@@ -1012,7 +1014,7 @@ StrictDoc shall provide a text macro ``@assets/`` that resolves as a relative pa
 
 StrictDoc shall expand the macro in all multi-line fields of requirements or text nodes.
 
-StrictDoc shall expand the macro in the exports for HTML, RST, JSON.
+StrictDoc shall expand the macro in the exports for HTML, RST, JSON, and the HTML generated for the web editor.
 <<<
 RATIONALE: >>>
 Hard-coded relative paths are fragile and break when requirements are moved within the project hierarchy. Resolving paths at export time makes requirements portable and eliminates manual path or file-system updates during restructuring.
@@ -1034,11 +1036,11 @@ The Web Editor shall support image upload in multi-line text fields via paste an
 2. Accept only image MIME types.
 3. Upload images asynchronously to the backend ``/actions/document/upload_asset`` endpoint, passing the current requirement MID and the active document MID along.
 4. Indicate upload progress via a temporary placeholder text.
-5. On success, insert an image reference at the original cursor position, following the documents markup:
+5. On success, insert an image reference at the original cursor position, following the document's markup:
 
-   - RST: ``.. image:: \@assets/[MID]/[filename]``
-   - HTML: ``<img src="\@assets/[MID]/[filename]" />``
-   - Markdown: ``![](\@assets/[MID]/[filename])``
+   - RST: ``.. image:: \@assets/<node_specific_subfolder>/<filename>``
+   - HTML: ``<img src="\@assets/<node_specific_subfolder>/<filename>" />``
+   - Markdown: ``![](\@assets/<node_specific_subfolder>/<filename>)``
 
 6. On failure, notify the user.
 <<<
@@ -1055,12 +1057,12 @@ The StrictDoc web server shall provide an ``/actions/document/upload_asset`` end
 
 The endpoint shall:
 
-1. Validate that the payload is an image.
+1. Validate that the payload is an image, and the node is not read-only (i.e. autogen)
 2. Sanitize the filename by replacing spaces with underscores.
-3. Validate the requirement MIDs formally, but also accept uploads for not yet existing requirements (the MID only exists in the Web Editor at this point).
+3. Validate the requirement MIDs formally
 4. Use the provided Document MID to resolve the correct document root ``_assets`` directory.
-5. Store the file in a requirement-specific subfolder ``/<MID>/`` within the document root ``_assets`` directory.
-6. Overwrite any existing image file with the same name in the target folder.
+5. Determine the exact target subfolder based on the Asset Path Resolution Strategy (see [LINK: SDOC-LLR-213]).
+6. Store the file in the target folder, and overwrite any existing image file with the same name.
 7. Sync the assets to the web server so it can be served immediately.
 8. When successful, return HTTP 200 with the stored filename expressed using the ``@assets/`` macro.
 9. When unsuccessful, return an error response.
@@ -1070,7 +1072,30 @@ Defines a consistent and predictable storage model for image assets:
 
 - preventing image filename collisions between requirements,
 - allowing the user to update an image through re-uploading,
-- allowing the user to upload images when creating a new requirement.
+- allowing the user to upload images when creating a new requirement
+<<<
+
+[REQUIREMENT]
+MID: 27981746203042b299b216295b6a7588
+UID: SDOC-LLR-213
+TITLE: Asset path resolution strategy
+STATEMENT: >>>
+When storing an uploaded asset, the system shall determine the correct node-specific subfolder within the document root ``_assets`` directory based on the following strategy:
+
+- If the node has a permanent MID, or if MIDs are explicitly enabled in the document options, the subfolder shall be ``_assets/<MID>/``. (This allows uploads for not-yet-existing requirements when MIDs are enabled).
+
+- Otherwise, if the node exists and has a UID, the subfolder shall be ``_assets/<UID>/``.
+
+- Otherwise, if the node exists but lacks both a permanent MID and UID, the asset shall be stored in the document root ``_assets/`` directory.
+
+- If the node does not yet exist and MIDs are disabled, the upload shall be rejected.
+<<<
+RATIONALE: >>>
+Defines a consistent storage model that prevents image filename collisions between requirements.
+
+- Prioritizing the MID over the UID ensures asset paths remain stable even if a requirement's human-readable UID is changed later.
+
+- When MIDs are disabled, the asset storage path depends entirely on the node's UID, which is only established after the node is created. Therefore, image upload attempts at node creation time must be rejected to prevent orphaned files.
 <<<
 
 [REQUIREMENT]
@@ -1083,7 +1108,7 @@ When multiple image files are uploaded in a single operation, the ``/actions/doc
 If such a pair consists of one raster format image and one vector format image, the system shall:
 
 - Store both files in the requirement-specific assets location.
-- Return information that allows the client to generate a single image directive using the wildcard filename @assets/[MID]/[stem].*.
+- Return information that allows the client to generate a single image directive using the wildcard filename @assets/<node_specific_subfolder>/<stem>.*.
 
 If no such pair is detected, the system shall treat each file independently.
 <<<

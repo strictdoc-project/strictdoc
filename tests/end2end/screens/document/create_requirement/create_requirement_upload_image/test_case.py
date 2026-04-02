@@ -62,18 +62,29 @@ class Test(E2ECase):
                 Path(test_setup.path_to_sandbox) / "document.sdoc"
             )
 
+            dynamic_mid = None
+            normalized_mid = "00112233445566778899AABBCCDDEEFF"
+
             # The requirement mid is dynamic and unpredictable, so we normalize it here
             # to the arbitraty requirement_mid 00112233445566778899AABBCCDDEEFF
             if sandbox_doc_path.exists():
                 content = sandbox_doc_path.read_text(encoding="utf-8")
-                # This regex looks for the dynamically generated requirement_mid (32 hex characters)
-                # and normalized it, so that the comparison works
-                sanitized_content = re.sub(
-                    r"@assets/[a-f0-9]{32}/",
-                    "@assets/00112233445566778899AABBCCDDEEFF/",
-                    content,
+
+                # We first look for the newly generated MID
+                match = re.search(
+                    r"\[REQUIREMENT\]\s*MID:\s*([a-fA-F0-9]{32})", content
                 )
-                sandbox_doc_path.write_text(sanitized_content, encoding="utf-8")
+
+                if match:
+                    dynamic_mid = match.group(1)
+
+                    # we normalize this MID so that it matches the expected_content
+                    sanitized_content = content.replace(
+                        dynamic_mid, normalized_mid
+                    )
+                    sandbox_doc_path.write_text(
+                        sanitized_content, encoding="utf-8"
+                    )
 
             assets_dir = Path(test_setup.path_to_sandbox) / "_assets"
             if assets_dir.exists() and assets_dir.is_dir():
@@ -82,9 +93,7 @@ class Test(E2ECase):
                     if item.is_dir() and re.fullmatch(
                         r"[a-f0-9]{32}", item.name
                     ):
-                        new_path = (
-                            assets_dir / "00112233445566778899AABBCCDDEEFF"
-                        )
+                        new_path = assets_dir / normalized_mid
                         item.rename(new_path)
 
         assert test_setup.compare_sandbox_and_expected_output()

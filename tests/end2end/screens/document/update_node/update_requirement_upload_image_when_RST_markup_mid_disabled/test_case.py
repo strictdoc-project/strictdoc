@@ -1,5 +1,5 @@
 """
-test the error reporting for image uploads
+@relation(SDOC-LLR-213, scope=file)
 """
 
 from tests.end2end.e2e_case import E2ECase
@@ -42,13 +42,11 @@ class Test(E2ECase):
 
             screen_document.do_drop_image_to_requirement(
                 "STATEMENT",
-                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_empty/empty_picture.svg",
+                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_when_RST_markup_mid_disabled/picture.svg",
             )
 
             form_edit_requirement.do_form_submit()
 
-            screen_document.assert_text(
-                "[Image upload failed: Image has no content]"
-            )
+            screen_document.assert_text("picture.svg")
 
         assert test_setup.compare_sandbox_and_expected_output()

@@ -198,7 +198,12 @@ window.addEventListener("drop", (e) => {
         body: formData
       });
 
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) {
+          // Try to extract the JSON detail message from FastAPI
+          const errorData = await response.json().catch(() => ({}));
+          const errorMsg = errorData.detail || 'Network response was not ok';
+          throw new Error(errorMsg); 
+      }
 
       const data = await response.json();
       const imagesByStem = data.images;
@@ -233,7 +238,7 @@ window.addEventListener("drop", (e) => {
       console.error("Upload failed", error);
       // Update node to show failure
       placeholders.forEach(p => {
-        p.node.nodeValue = `\n**[Image upload failed: ${p.stem}]**\n`;
+        p.node.nodeValue = `\n**[Image upload failed: ${error.message}]**\n`;
       });
     } finally {
       // Fire a syntetic 'input' event to sync content.

@@ -1,0 +1,9 @@
+#
+# @relation(SDOC-LLR-211, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/docs/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <object data="../_assets/sandbox1.svg" type="image/svg+xml">

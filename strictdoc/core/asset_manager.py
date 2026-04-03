@@ -16,6 +16,13 @@ class AssetDir:
 
 
 class AssetManager:
+    """
+    The centralized registry for all asset directories discovered within
+    the project tree.
+
+    @relation(SDOC-LLR-212, scope=class)
+    """
+
     def __init__(self) -> None:
         self.asset_dirs: List[AssetDir] = []
         self.asset_dirs_lookup: Dict[SDocRelativePath, AssetDir] = {}

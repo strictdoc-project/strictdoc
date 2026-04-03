@@ -35,7 +35,10 @@ from strictdoc.core.file_system.file_tree import (
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.parallelizer import Parallelizer
-from strictdoc.helpers.paths import SDocRelativePath
+from strictdoc.helpers.paths import (
+    SDocRelativePath,
+    calculate_document_root_assets_path,
+)
 from strictdoc.helpers.textx import drop_textx_meta
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
@@ -212,6 +215,14 @@ class DocumentFinder:
                 else "/".join((file_tree_mount_folder, "_assets"))
             )
 
+            document_root_assets_dir_rel_path = (
+                calculate_document_root_assets_path(
+                    include_doc_paths=project_config.include_doc_paths,
+                    doc_posix_path=doc_file.rel_path.relative_path_posix,
+                    file_tree_mount_folder=file_tree_mount_folder,
+                )
+            )
+
             document_meta = DocumentMeta(
                 doc_file.level,
                 file_tree_mount_folder,
@@ -221,6 +232,7 @@ class DocumentFinder:
                 doc_file.rel_path,
                 doc_relative_path_folder,
                 input_doc_assets_dir_rel_path,
+                document_root_assets_dir_rel_path,
                 output_document_dir_full_path,
                 output_document_dir_rel_path,
             )

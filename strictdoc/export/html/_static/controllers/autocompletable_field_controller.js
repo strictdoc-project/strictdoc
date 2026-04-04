@@ -28,11 +28,17 @@
       this.hidden = autocompletable.nextElementSibling
       this.results = this.hidden.nextElementSibling
       this.abortController = null;
+      this.readonly = autocompletable.getAttribute("contenteditable") === "false";
 
       this.close()
 
       if (!autocompletable.hasAttribute("autocompletable")) autocompletable.setAttribute("autocompletable", "off")
       autocompletable.setAttribute("spellcheck", "false")
+      if (this.readonly) {
+        autocompletable.setAttribute("aria-readonly", "true")
+        this.readyValue = true
+        return
+      }
 
       this.mouseDown = false
 
@@ -150,6 +156,8 @@
     }
 
     onEnterKeydown = (event) => {
+      if (this.readonly) return
+
       const selected = this.selectedOption
       if (selected && this.resultsShown) {
         this.commit(selected)
@@ -159,6 +167,7 @@
     }
 
     commit(selected) {
+      if (this.readonly) return
       if (selected.getAttribute("aria-disabled") === "true") return
 
       if (selected instanceof HTMLAnchorElement) {
@@ -212,6 +221,7 @@
     }
 
     onResultsClick = (event) => {
+      if (this.readonly) return
       if (!(event.target instanceof Element)) return
       const selected = event.target.closest(optionSelector)
       if (selected) this.commit(selected)
@@ -225,6 +235,8 @@
     }
 
     onInputChange = ()  => {
+      if (this.readonly) return
+
       const query = this.autocompletable.innerText.trim()
       if (query && query.length >= this.minLengthValue) {
         this.fetchResults(query)
@@ -369,4 +381,3 @@
   }
 
 })();
-

@@ -62,6 +62,7 @@ class RequirementFormField:
         field_type: RequirementFormFieldType,
         field_value: str,
         field_gef_type: str = RequirementFieldType.STRING,
+        is_editable: bool = True,
     ) -> None:
         assert isinstance(field_value, str)
         self.field_mid: str = field_mid
@@ -69,6 +70,7 @@ class RequirementFormField:
         self.field_value: str = field_value
         self.field_type = field_type
         self.field_gef_type: str = field_gef_type
+        self.is_editable = is_editable
 
     def is_multiline(self) -> bool:
         return self.field_type == RequirementFormFieldType.MULTILINE
@@ -146,6 +148,7 @@ class RequirementFormField:
                 ),
                 field_value=field_value,
                 field_gef_type=grammar_field.gef_type,
+                is_editable=requirement_field.is_document_origin(),
             )
         raise NotImplementedError(grammar_field)
 

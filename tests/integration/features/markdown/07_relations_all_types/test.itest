@@ -1,0 +1,71 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Relations all types
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+# REQ-PARENT has no explicit relations but gets derived child links to REQ-CHILD and REQ-MULTI
+CHECK-HTML: id="REQ-PARENT"
+CHECK-HTML: RELATIONS (Child):
+CHECK-HTML: class="requirement__link-child" href="{{.*}}#REQ-CHILD"
+CHECK-HTML: class="requirement__link-child" href="{{.*}}#REQ-MULTI"
+
+# REQ-CHILD has an explicit Parent relation to REQ-PARENT
+# REQ-PARENT-EXPLICIT-CHILD derives a parent link to REQ-CHILD via its Child relation
+CHECK-HTML: id="REQ-CHILD"
+CHECK-HTML: RELATIONS (Parent):
+CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT"
+CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT-EXPLICIT-CHILD"
+
+# REQ-PARENT-EXPLICIT-CHILD has an explicit Child relation to REQ-CHILD
+CHECK-HTML: id="REQ-PARENT-EXPLICIT-CHILD"
+CHECK-HTML: RELATIONS (Child):
+CHECK-HTML: class="requirement__link-child" href="{{.*}}#REQ-CHILD"
+
+# REQ-MULTI has two Parent relations
+CHECK-HTML: id="REQ-MULTI"
+CHECK-HTML: RELATIONS (Parent):
+CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT"
+CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT-EXPLICIT-CHILD"
+
+RUN: %strictdoc export %S --formats=markdown --output-dir %T
+
+RUN: %cat %T/markdown/input.md | filecheck %s --dump-input=fail --check-prefix CHECK-ROUNDTRIP
+
+# Parent relation
+CHECK-ROUNDTRIP: **UID**: REQ-CHILD
+CHECK-ROUNDTRIP: - **Type**: `Parent`
+CHECK-ROUNDTRIP:   **ID**: `REQ-PARENT`
+
+# Child relation
+CHECK-ROUNDTRIP: **UID**: REQ-PARENT-EXPLICIT-CHILD
+CHECK-ROUNDTRIP: - **Type**: `Child`
+CHECK-ROUNDTRIP:   **ID**: `REQ-CHILD`
+
+# File relation with Element=Function (C)
+CHECK-ROUNDTRIP: **UID**: REQ-FILE-C
+CHECK-ROUNDTRIP: - **Type**: `File`
+CHECK-ROUNDTRIP:   **Path**: `foo.c`
+CHECK-ROUNDTRIP:   **Element**: `Function`
+CHECK-ROUNDTRIP:   **ID**: `my_function`
+
+# File relation with Element=Class (Python)
+CHECK-ROUNDTRIP: **UID**: REQ-FILE-PY
+CHECK-ROUNDTRIP: - **Type**: `File`
+CHECK-ROUNDTRIP:   **Path**: `bar.py`
+CHECK-ROUNDTRIP:   **Element**: `Class`
+CHECK-ROUNDTRIP:   **ID**: `MyClass`
+
+# File relation without Element (Rust)
+CHECK-ROUNDTRIP: **UID**: REQ-FILE-RUST
+CHECK-ROUNDTRIP: - **Type**: `File`
+CHECK-ROUNDTRIP:   **Path**: `baz.rs`
+CHECK-ROUNDTRIP:   **ID**: `my_function`
+
+# Multiple relations of different types
+CHECK-ROUNDTRIP: **UID**: REQ-MULTI
+CHECK-ROUNDTRIP: - **Type**: `Parent`
+CHECK-ROUNDTRIP:   **ID**: `REQ-PARENT`
+CHECK-ROUNDTRIP: - **Type**: `Parent`
+CHECK-ROUNDTRIP:   **ID**: `REQ-PARENT-EXPLICIT-CHILD`
+CHECK-ROUNDTRIP: - **Type**: `File`
+CHECK-ROUNDTRIP:   **Path**: `multi.c`

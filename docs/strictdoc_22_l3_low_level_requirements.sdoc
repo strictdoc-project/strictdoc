@@ -327,27 +327,144 @@ As of Markdown MVP, the default and preferred syntax shall be:
 <<<
 
 [REQUIREMENT]
-MID: 121eb00caee34e3fa6eaa683f211a472
-UID: SDOC-LLR-202
-STATUS: Active
-TITLE: Support node parent relations
+MID: f9992bd323734ec1ae1d68a58225351f
+UID: SDOC-LLR-208
+TITLE: Lists for meta fields
 STATEMENT: >>>
-StrictDoc shall support node relations in Markdown using the meta field:
+For meta fields, StrictDoc shall support a custom markdown convention where bullet lists are interpreted as list-like
+data. This is an example of a list with two entries:
 
 .. code-block:: markdown
 
-    **Relations**: <UID-1>, <UID-2>, ...
+   SomeMetaField:
+   - Foo
+   - Bar
 
-When reading Markdown:
-- Each UID from the Relations field shall be converted to a relation with TYPE: Parent and VALUE: <UID>.
-- All extra spaces shall be normalized before parsing to canonical ``<UID-1>, <UID-2>, ...``.
-- The Markdown reader shall not check whether any UID actually exists. This task is deferred to the traceability index builder.
+The syntax shall be as follows:
 
-When writing Markdown, SDoc node relations with TYPE: Parent and no ROLE shall be serialized back to the same Relations field as a comma-separated UID list.
+- Only meta fields can start a conventional list structure. Bullet lists in
+  content fields are passed through as bullet lists.
+- A list reuses markdown native bullet list syntax.
+- Values can be strings or nested lists or nested dictionaries.
 
-NOTE: For MVP, relation roles and Child relation types are out of scope.
+The internal StrictDoc representation of a conventional list structure depends on the use-case (for example, a list of
+relations will be converted to a set of Relation objects). Lists in meta field where no such use-case is defined, StrictDoc
+shall raise a StrictDocSemanticError.
+<<<
+RATIONALE: >>>
+To not restrict their native use-case when writing content, special interpretation bullet lists is limited to meta fields.
+<<<
+
+[REQUIREMENT]
+MID: 46301b38befd408b99ab1923d3deb6e5
+UID: SDOC-LLR-207
+TITLE: Dictionary types
+STATEMENT: >>>
+StrictDoc shall support dictionary-like structures in markdown files. This is an example of a dictionary with two key-value pairs:
+
+.. code-block:: markdown
+
+   **Type**: `File` \
+   **Path**: `file.py`
+
+The syntax shall be as follows:
+
+- Keys are marked up as bold. Keys are always of type string.
+- Values are marked up as code. Values are always interpreted as strings. The code markup is stripped when values are transformed to StrictDoc nodes.
+- Keys and values are separated by colon, then one or more whitespace characters.
+- Multiple key-value pairs are separated with explicit newline (backslash line continuation ``\`` on all lines except the last).
+- When a dictionary appears as an item in a bullet list, all key-value pairs after the first must be indented by at least one space relative to the enclosing ``-`` marker. The indentation is what distinguishes a continuation line from the start of a new field or bullet item at the outer level.
+<<<
+RATIONALE: >>>
+The dictionary format is inspired by YAML mappings, which are well established and can be stacked onto markdown without major issues. Requiring indentation for continuation lines mirrors YAML's use of indentation to express nesting, and removes ambiguity for the parser: a bold-key line at column 0 always starts a new outer field, while a bold-key line with leading whitespace is always a continuation of the current dictionary item.
+<<<
+
+[REQUIREMENT]
+MID: 121eb00caee34e3fa6eaa683f211a472
+UID: SDOC-LLR-202
+STATUS: Active
+TITLE: Support for relations
+STATEMENT: >>>
+StrictDoc shall support multiple node relations in Markdown using a relation list:
+
+.. code-block:: markdown
+
+    **Relations**:
+    - <Parent relation dictionary for UID-1>
+    - <Child relation dictionary for UID-2>
+    - <File relation dictionary for file.c>
+    -...
 
 NOTE: If the Relations field is not placed as the meta field but as the content field, StrictDoc shall raise a ``StrictDocSemanticError``.
+
+NOTE: An empty Relations list (``**Relations**:`` header with no bullet items) shall raise a ``StrictDocSemanticError``.
+<<<
+
+[REQUIREMENT]
+MID: 5ccf9351489b4eee9c6dd29ab9d1ea50
+UID: SDOC-LLR-209
+TITLE: Support node parent and child relations
+STATEMENT: >>>
+StrictDoc shall support multiple parent relation and multiple child relation entries in the Relations list of a markdown file as follows:
+
+.. code-block:: markdown
+
+    **Relations**:
+    - **Type**: `Parent` \
+      **ID**: `REQ-1` \
+      **Role**: `Refines`
+    - **Type**: `Child` \
+      **ID**: `REQ-2` \
+      **Role**: `Refines`
+
+Each relation is described as a markdown dictionary (see LINK: SDOC-LLR-207) with following key-value pairs:
+
+- Type (mandatory) Either `Parent` or `Child`.
+- ID (mandatory) UID or MID of the parent or child relation.
+- Role (optional) Role of the relation.
+
+When reading Markdown:
+
+- Each relation of Type `Parent` in markdown shall be converted to a relation with TYPE: Parent, VALUE: <ID> in the internal StrictDoc model.
+- Each relation of Type `Child` in markdown shall be converted to a relation with TYPE: Child, VALUE: <ID> in the internal StrictDoc model.
+- The Markdown reader shall not check whether a target UID or MID actually exists. This task is deferred to the traceability index builder.
+
+When writing Markdown:
+
+SDoc node relations shall be written back to markdown as they appear in the internal StrictDoc model at the time of
+writing. Optional dictionary key-value pairs that have no value in the internal StrictDoc model shall be omitted on write.
+
+NOTE: If the Relations field is not placed as the meta field but as the content field, StrictDoc shall raise a ``StrictDocSemanticError``.
+<<<
+
+[REQUIREMENT]
+MID: 3c65a8115e2d43d08f4a645e82c67644
+UID: SDOC-LLR-206
+TITLE: Support for file relations
+STATEMENT: >>>
+StrictDoc shall support multiple file relation entries in the Relations list of a markdown file, where one entry typically looks like
+
+.. code-block:: markdown
+
+   **Relations**:
+   - **Type**: `File` \
+     **Path**: `file.py` \
+     **Element**: `Function` \
+     **ID**: `hello_world` \
+     **Hash**: `5c2e9a1b7d4f8c3a6e0b2d1f9a7c5e3b8d6f1a4c2e9b7d0f3a5c8e1b6d2f4a9`
+
+Each file relation shall support the following keys-value pairs:
+
+- **Type** (mandatory) :code:`File` marks a relation as file relation
+- **Path** (mandatory) tells the file name.
+- **Element** (optional) disambiguate the namespace where if a programming language has separate namespaces per item category. For example, :code:`Element: Function` selects :code:`void foo()` instead of :code:`struct foo` in C.
+- **ID** (optional) is the name of an item in language-specific notation. The used notation should stem from a given programming language's standard or specification.
+- **Hash** (optional) value covers the referenced source code part for drift detection.
+
+Back-ticks for values shall be optional. They can be used to protect special characters in the value that would otherwise
+be interpreted by a native markdown reader. If given, they shall not count to the parsed string.
+
+If mandatory keys are missing or unknown keys are provided, StrictDoc shall raise a ``StrictDocSemanticError``.
 <<<
 
 [REQUIREMENT]

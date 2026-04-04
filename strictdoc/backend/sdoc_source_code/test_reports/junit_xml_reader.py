@@ -388,8 +388,8 @@ class JUnitXMLReader:
                                     g_file_format=FileEntryFormat.SOURCECODE,
                                     g_file_path=test_case_node_test_path,
                                     g_line_range=None,
-                                    function=test_case_node_test_function,
-                                    clazz=None,
+                                    element="function",
+                                    id=test_case_node_test_function,
                                 ),
                             )
                         )
@@ -402,8 +402,8 @@ class JUnitXMLReader:
                                     g_file_format=FileEntryFormat.SOURCECODE,
                                     g_file_path="#FORWARD#",
                                     g_line_range=None,
-                                    function=test_case_node_test_function,
-                                    clazz=None,
+                                    element="function",
+                                    id=test_case_node_test_function,
                                 ),
                             )
                         )

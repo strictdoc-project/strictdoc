@@ -212,8 +212,8 @@ class GCovJSONReader:
                             g_file_format=FileEntryFormat.SOURCECODE,
                             g_file_path=json_file_name,
                             g_line_range=None,
-                            function=json_function_name,
-                            clazz=None,
+                            element="function",
+                            id=json_function_name,
                         ),
                     )
                 )

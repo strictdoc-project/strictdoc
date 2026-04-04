@@ -676,6 +676,25 @@ class SDocNode(SDocNodeIF):
 
         return self.get_prefix()
 
+    def is_managed_by_source_code(self) -> bool:
+        """
+        Helper method to check if a node is partially managed by source code.
+        """
+
+        # Is the node entirely generated from source code?
+        if self.autogen:
+            return True
+
+        # Check if fields were merged from source-files.
+        for field_list in self.ordered_fields_lookup.values():
+            for field in field_list:
+                # If any field did not originate from the document,
+                # the node's content is partially managed by source code...
+                if not field.is_document_origin():
+                    return True
+
+        return False
+
     def dump_fields_as_parsed(self) -> str:
         # FIXME:
         # - The name of the method can be improved (used in error messages).

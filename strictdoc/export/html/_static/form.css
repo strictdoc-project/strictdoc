@@ -438,7 +438,8 @@ sdoc-autocompletable[data-field-suffix]:not(:empty)::after {
 
 /* data-field-suffix */
 
-[contenteditable=true] {
+sdoc-contenteditable,
+sdoc-autocompletable {
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: anywhere;
@@ -459,7 +460,8 @@ sdoc-autocompletable[data-field-suffix]:not(:empty)::after {
   width: 100%;
 }
 
-[contenteditable=true][data-field-type="multiline"] {
+sdoc-contenteditable[data-field-type="multiline"],
+sdoc-autocompletable[data-field-type="multiline"] {
   font-family: var(--code-font-family);
 }
 

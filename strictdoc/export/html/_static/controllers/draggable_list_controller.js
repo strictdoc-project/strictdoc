@@ -58,6 +58,10 @@ ${DL_ITEM_SELECTOR}[draggable="true"] .dragIndicator::before {
   top: 0; left: 100%;
   content: "⋮⋮";
 }
+${DL_ITEM_SELECTOR}[data-can-move="false"]:active,
+${DL_ITEM_SELECTOR}[data-can-move="false"]:active * {
+  cursor: not-allowed;
+}
 [data-last_moved="true"] {
   position: relative;
 }
@@ -121,21 +125,27 @@ ${DL_ITEM_SELECTOR}[draggable="true"] .dragIndicator::before {
       // Add event listeners.
       const draggableList = [...this.element.querySelectorAll(DL_ITEM_SELECTOR)];
       draggableList.forEach((item) => {
-        item.addEventListener('dragstart', dragStart);
-        item.addEventListener('dragend', dragEnd);
-        item.addEventListener('dragover', dragOver);
-        item.addEventListener('dragenter', dragEnter);
-        item.addEventListener('dragleave', dragLeave);
-        item.addEventListener('drop', dragDrop);
-
-        item.addEventListener("mouseover", mouseOver);
-        item.addEventListener("mouseleave", mouseLeave);
 
         last_moved_node_id
           && (item.dataset.nodeid === last_moved_node_id)
           && (item.dataset.last_moved = 'true');
 
-        item.setAttribute('draggable', true);
+        if (item.dataset.canMove !== 'false') {  
+          item.setAttribute('draggable', true);
+
+          item.addEventListener('dragstart', dragStart);
+          item.addEventListener('dragend', dragEnd);
+          item.addEventListener("mouseover", mouseOver);
+          item.addEventListener("mouseleave", mouseLeave);
+        } else {
+          // This item cannot move: Explicitly disable dragging
+          item.setAttribute('draggable', false);
+        }
+
+        item.addEventListener('dragover', dragOver);
+        item.addEventListener('dragenter', dragEnter);
+        item.addEventListener('dragleave', dragLeave);
+        item.addEventListener('drop', dragDrop);
       });
 
       // Prevent drag for links inside the list.

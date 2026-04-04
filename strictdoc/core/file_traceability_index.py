@@ -1048,19 +1048,18 @@ class FileTraceabilityIndex:
         sdoc_node: SDocNode, sdoc_node_fields: dict[str, str]
     ) -> None:
         for field_name, field_value in sdoc_node_fields.items():
-            sdoc_node_has_field = field_name in sdoc_node.ordered_fields_lookup
-
             sdoc_node.set_field_value(
                 field_name=field_name,
                 form_field_index=0,
                 value=field_value,
             )
 
-            if not sdoc_node_has_field:
-                new_field: SDocNodeField = sdoc_node.ordered_fields_lookup[
-                    field_name
-                ][0]
-                new_field.mark_as_source_origin()
+            # As we overwrite the field's content from the source code,
+            # we mark the field as source_origin here.
+            new_field: SDocNodeField = sdoc_node.ordered_fields_lookup[
+                field_name
+            ][0]
+            new_field.mark_as_source_origin()
 
     @staticmethod
     def create_source_node_section(

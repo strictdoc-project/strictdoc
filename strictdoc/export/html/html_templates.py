@@ -17,6 +17,7 @@ from markupsafe import Markup
 
 from strictdoc import environment
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.export.html.action_policy import ActionPolicy
 from strictdoc.export.html.jinja.assert_extension import AssertExtension
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import measure_performance
@@ -27,6 +28,7 @@ class JinjaEnvironment:
 
     def __init__(self, environment: Environment):
         self.environment = environment
+        self.environment.globals["action_policy"] = ActionPolicy
 
     def get_template(self, *args: Any, **kwargs: Any) -> Template:
         return self.environment.get_template(*args, **kwargs)

@@ -417,7 +417,14 @@ class SDWriter:
             fields = section_content.ordered_fields_lookup[field_name]
 
             for field in fields:
-                if not field.is_document_origin():
+                # When writing the document back, we skip (normalize) any non-required
+                # fields that were merged-in from source code (single source of truth).
+                # But we need to keep UID or MID around for merging.
+                if (
+                    not field.is_document_origin()
+                    and not element_field.required
+                    and field_name not in ("UID", "MID")
+                ):
                     continue
 
                 field_value = field.get_text_value()

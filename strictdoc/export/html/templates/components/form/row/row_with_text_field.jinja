@@ -30,12 +30,17 @@
 
   {%- set placeholder_name = text_field_row_context.field.field_name %}
 
+  {%- set custom_label = text_field_row_context.field.field_name %}
+  {%- if not text_field_row_context.field_editable %}
+    {%- set custom_label = custom_label ~ " (READ-ONLY)" %}
+  {%- endif %}
+
   {%- with
     mid = text_field_row_context.field.field_mid,
     field_class_name = none,
     field_editable = text_field_row_context.field_editable,
     field_input_name = text_field_row_context.field.get_input_field_name(),
-    field_label = text_field_row_context.field.field_name,
+    field_label = custom_label,
     field_placeholder = "Enter "~placeholder_name~" here...",
     field_type = text_field_row_context.field_type,
     field_value = text_field_row_context.field.field_value,

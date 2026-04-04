@@ -258,3 +258,51 @@ class Requirement(Node):  # pylint: disable=invalid-name
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
+
+    def _assert_action_is_locked(self, testid: str):
+        """Verifies the action identified by testid is locked."""
+        self.test_case.assert_element_absent(
+            f"{self.node_xpath}//sdoc-node-controls//*[@data-testid='{testid}']",
+            by=By.XPATH,
+        )
+        action_btn_class = self.test_case.get_attribute(
+            f"{self.node_xpath}//sdoc-node-controls//*[@data-testid='{testid}-disabled']",
+            "class",
+            by=By.XPATH,
+        )
+        assert "action_button--disabled" in action_btn_class
+
+    def _assert_action_is_unlocked(self, testid: str):
+        """Verifies the action identified by testid is unlocked."""
+        self.test_case.assert_element_present(
+            f"{self.node_xpath}//sdoc-node-controls//*[@data-testid='{testid}']",
+            by=By.XPATH,
+        )
+        self.test_case.assert_element_absent(
+            f"{self.node_xpath}//sdoc-node-controls//*[@data-testid='{testid}-disabled']",
+            by=By.XPATH,
+        )
+
+    def assert_add_action_is_locked(self):
+        self._assert_action_is_locked("node-menu-handler")
+
+    def assert_add_action_is_unlocked(self):
+        self._assert_action_is_unlocked("node-menu-handler")
+
+    def assert_edit_node_action_is_locked(self):
+        self._assert_action_is_locked("node-edit-action")
+
+    def assert_edit_node_action_is_unlocked(self):
+        self._assert_action_is_unlocked("node-edit-action")
+
+    def assert_clone_node_action_is_locked(self):
+        self._assert_action_is_locked("node-clone-action")
+
+    def assert_clone_node_action_is_unlocked(self):
+        self._assert_action_is_unlocked("node-clone-action")
+
+    def assert_delete_node_action_is_locked(self):
+        self._assert_action_is_locked("node-delete-action")
+
+    def assert_delete_node_action_is_unlocked(self):
+        self._assert_action_is_unlocked("node-delete-action")

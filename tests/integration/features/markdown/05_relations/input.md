@@ -15,6 +15,11 @@ Parent requirement shall do B.
 ## Child requirement
 
 **UID**: REQ-3
-**Relations**: REQ-1, REQ-2
+
+**RELATIONS**:
+- **Type**: Parent
+  **ID**: REQ-1
+- **Type**: Parent
+  **ID**: REQ-2
 
 Child requirement shall do B.

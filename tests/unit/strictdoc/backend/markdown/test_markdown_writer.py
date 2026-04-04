@@ -176,5 +176,64 @@ RELATIONS:
     writer = SDMarkdownWriter()
     output_markdown = writer.write(document)
 
-    assert "**UID**: REQ-3 \\" in output_markdown
-    assert "**Relations**: REQ-1, REQ-2" in output_markdown
+    assert "**UID**: REQ-3" in output_markdown
+    assert (
+        "**Relations**:\n- **Type**: `Parent` \\\n  **ID**: `REQ-1`\n- **Type**: `Parent` \\\n  **ID**: `REQ-2`"
+        in output_markdown
+    )
+
+
+def test_008_markdown_writer_serializes_child_relation_with_role():
+    input_sdoc = """\
+[DOCUMENT]
+TITLE: Document title
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Parent requirement
+STATEMENT: Parent requirement shall do A.
+RELATIONS:
+- TYPE: Child
+  VALUE: REQ-2
+  ROLE: Refines
+"""
+
+    document = SDReader.read(input_sdoc, file_path=None)
+
+    writer = SDMarkdownWriter()
+    output_markdown = writer.write(document)
+
+    assert (
+        "**Relations**:\n- **Type**: `Child` \\\n  **ID**: `REQ-2` \\\n  **Role**: `Refines`"
+        in output_markdown
+    )
+
+
+def test_009_markdown_writer_roundtrip_relations_dict_format():
+    input_markdown = (
+        "# Document title\n"
+        "\n"
+        "## Requirement\n"
+        "\n"
+        "**UID**: REQ-3\n"
+        "\n"
+        "**Relations**:\n"
+        "- **Type**: `Parent` \\\n"
+        "  **ID**: `REQ-1`\n"
+        "- **Type**: `Child` \\\n"
+        "  **ID**: `REQ-4` \\\n"
+        "  **Role**: `Refines`\n"
+        "\n"
+        "Requirement shall do B.\n"
+    )
+
+    reader = SDMarkdownReader()
+    document = reader.read(input_markdown, file_path=None)
+
+    writer = SDMarkdownWriter()
+    output_markdown = writer.write(document)
+
+    assert (
+        "**Relations**:\n- **Type**: `Parent` \\\n  **ID**: `REQ-1`\n- **Type**: `Child` \\\n  **ID**: `REQ-4` \\\n  **Role**: `Refines`"
+        in output_markdown
+    )

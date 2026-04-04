@@ -5,7 +5,11 @@ from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.reference import ParentReqReference
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    FileReference,
+    ParentReqReference,
+)
 
 
 def test_001_markdown_reader_parses_root_metadata_text_and_requirement():
@@ -443,7 +447,14 @@ def test_021_markdown_reader_parses_parent_relations_field():
 ## Child requirement
 
 **UID**: REQ-3
-**Relations**: REQ-1, REQ-2, , REQ-4
+
+**Relations**:
+- **Type**: `Parent` \\
+  **ID**: `REQ-1`
+- **Type**: `Parent` \\
+  **ID**: `REQ-2`
+- **Type**: `Parent` \\
+  **ID**: `REQ-4`
 
 Child requirement shall do B.
 """
@@ -465,3 +476,225 @@ Child requirement shall do B.
         "REQ-2",
         "REQ-4",
     ]
+
+
+def test_022_markdown_reader_parses_child_relation():
+    markdown_content = """\
+# Document title
+
+## Parent requirement
+
+**UID**: REQ-1
+
+**Relations**:
+- **Type**: `Child` \\
+  **ID**: `REQ-2`
+
+Parent requirement shall do A.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    assert len(requirement.relations) == 1
+    relation = requirement.relations[0]
+    assert isinstance(relation, ChildReqReference)
+    assert relation.ref_uid == "REQ-2"
+    assert relation.role is None
+
+
+def test_023_markdown_reader_parses_relation_with_role():
+    markdown_content = """\
+# Document title
+
+## Child requirement
+
+**UID**: REQ-3
+
+**Relations**:
+- **Type**: `Parent` \\
+  **ID**: `REQ-1` \\
+  **Role**: `Refines`
+
+Child requirement shall do B.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    assert len(requirement.relations) == 1
+    relation = requirement.relations[0]
+    assert isinstance(relation, ParentReqReference)
+    assert relation.ref_uid == "REQ-1"
+    assert relation.role == "Refines"
+
+
+def test_024_markdown_reader_parses_mixed_parent_and_child_relations():
+    markdown_content = """\
+# Document title
+
+## Middle requirement
+
+**UID**: REQ-2
+
+**Relations**:
+- **Type**: `Parent` \\
+  **ID**: `REQ-1`
+- **Type**: `Child` \\
+  **ID**: `REQ-3`
+
+Middle requirement shall do B.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    assert len(requirement.relations) == 2
+    assert isinstance(requirement.relations[0], ParentReqReference)
+    assert requirement.relations[0].ref_uid == "REQ-1"
+    assert isinstance(requirement.relations[1], ChildReqReference)
+    assert requirement.relations[1].ref_uid == "REQ-3"
+
+
+def test_025_markdown_reader_parses_file_relation():
+    markdown_content = """\
+# Document title
+
+## Requirement
+
+**UID**: REQ-1
+
+**Relations**:
+- **Type**: `File` \\
+  **Path**: `src/hello.py` \\
+  **Element**: `function` \\
+  **ID**: `hello_world`
+
+Requirement shall do A.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    assert len(requirement.relations) == 1
+    relation = requirement.relations[0]
+    assert isinstance(relation, FileReference)
+    assert relation.g_file_entry.g_file_path == "src/hello.py"
+    assert relation.g_file_entry.element == "function"
+    assert relation.g_file_entry.id == "hello_world"
+    assert relation.g_file_entry.hash is None
+
+
+def test_026_markdown_reader_raises_error_on_relations_dict_missing_type_key():
+    # A dict bullet without a Type key shall raise a semantic error.
+    # (Plain text after **Relations**: is absorbed as prose, not detected as a
+    # structured list, so dict-bullet detection requires an actual "- **Key**:"
+    # line to trigger list parsing.)
+    markdown_content = """\
+# Document title
+
+## Requirement
+
+**UID**: REQ-1
+
+**Relations**:
+- **ID**: `REQ-0`
+
+Requirement shall do A.
+"""
+
+    reader = SDMarkdownReader()
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        reader.read(markdown_content, file_path=None)
+    assert "Type" in exc_info.value.title
+
+
+def test_027_markdown_reader_raises_error_on_missing_type_key():
+    markdown_content = """\
+# Document title
+
+## Requirement
+
+**UID**: REQ-1
+
+**Relations**:
+- **ID**: `REQ-0`
+
+Requirement shall do A.
+"""
+
+    reader = SDMarkdownReader()
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        reader.read(markdown_content, file_path=None)
+    assert "Type" in exc_info.value.title
+
+
+def test_028_markdown_reader_raises_error_on_unknown_relation_type():
+    markdown_content = """\
+# Document title
+
+## Requirement
+
+**UID**: REQ-1
+
+**Relations**:
+- **Type**: `Unknown` \\
+  **ID**: `REQ-0`
+
+Requirement shall do A.
+"""
+
+    reader = SDMarkdownReader()
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        reader.read(markdown_content, file_path=None)
+    assert "Unknown" in exc_info.value.title
+
+
+def test_029_markdown_reader_raises_error_on_missing_id_key():
+    markdown_content = """\
+# Document title
+
+## Requirement
+
+**UID**: REQ-1
+
+**Relations**:
+- **Type**: `Parent`
+
+Requirement shall do A.
+"""
+
+    reader = SDMarkdownReader()
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        reader.read(markdown_content, file_path=None)
+    assert "ID" in exc_info.value.title
+
+
+def test_030_markdown_reader_raises_error_on_unknown_key_in_relation():
+    markdown_content = """\
+# Document title
+
+## Requirement
+
+**UID**: REQ-1
+
+**Relations**:
+- **Type**: `Parent` \\
+  **ID**: `REQ-0` \\
+  **Bogus**: `value`
+
+Requirement shall do A.
+"""
+
+    reader = SDMarkdownReader()
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        reader.read(markdown_content, file_path=None)
+    assert "Bogus" in exc_info.value.title

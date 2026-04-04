@@ -372,10 +372,11 @@ The syntax shall be as follows:
 - Keys are marked up as bold. Keys are always of type string.
 - Values are marked up as code. Values are always interpreted as strings. The code markup is stripped when values are transformed to StrictDoc nodes.
 - Keys and values are separated by colon, then one or more whitespace characters.
-- Multiple key-value pairs are separated with explicit newline.
+- Multiple key-value pairs are separated with explicit newline (backslash line continuation ``\`` on all lines except the last).
+- When a dictionary appears as an item in a bullet list, all key-value pairs after the first must be indented by at least one space relative to the enclosing ``-`` marker. The indentation is what distinguishes a continuation line from the start of a new field or bullet item at the outer level.
 <<<
 RATIONALE: >>>
-The dictionary format is inspired by YAML mappings, which are well established and can be stacked onto markdown without major issues.
+The dictionary format is inspired by YAML mappings, which are well established and can be stacked onto markdown without major issues. Requiring indentation for continuation lines mirrors YAML's use of indentation to express nesting, and removes ambiguity for the parser: a bold-key line at column 0 always starts a new outer field, while a bold-key line with leading whitespace is always a continuation of the current dictionary item.
 <<<
 
 [REQUIREMENT]
@@ -395,6 +396,8 @@ StrictDoc shall support multiple node relations in Markdown using a relation lis
     -...
 
 NOTE: If the Relations field is not placed as the meta field but as the content field, StrictDoc shall raise a ``StrictDocSemanticError``.
+
+NOTE: An empty Relations list (``**Relations**:`` header with no bullet items) shall raise a ``StrictDocSemanticError``.
 <<<
 
 [REQUIREMENT]

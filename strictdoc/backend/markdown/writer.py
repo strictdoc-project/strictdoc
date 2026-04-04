@@ -7,7 +7,11 @@ from strictdoc.backend.sdoc.models.document_config import (
 )
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc.models.reference import ParentReqReference
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    FileReference,
+    ParentReqReference,
+)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.cast import assert_cast
 
@@ -181,17 +185,15 @@ class SDMarkdownWriter:
             else:
                 meta_fields.append((field_human_name, field_value))
 
-        parent_relations_field = SDMarkdownWriter._serialize_parent_relations(
-            node
-        )
-        if parent_relations_field is not None:
-            meta_fields.append(parent_relations_field)
+        relations_block = SDMarkdownWriter._serialize_relations(node)
 
         field_blocks: List[str] = []
         if len(meta_fields) > 0:
             field_blocks.append(
                 SDMarkdownWriter._serialize_meta_fields(meta_fields, meta_style)
             )
+        if relations_block is not None:
+            field_blocks.append(f"**Relations**:\n{relations_block}")
         if len(content_fields) > 0:
             field_blocks.append(
                 SDMarkdownWriter._serialize_content_fields(content_fields)
@@ -202,26 +204,83 @@ class SDMarkdownWriter:
         return "\n\n".join(field_blocks)
 
     @staticmethod
-    def _serialize_parent_relations(
-        node: SDocNode,
-    ) -> Optional[Tuple[str, str]]:
+    def _serialize_relations(node: SDocNode) -> Optional[str]:
+        """
+        Serialize all relations to a multiline dict-list block.
+
+        Returns the block *value* (the bullet list), or None when there are no
+        relations.  The caller appends ("Relations", <value>) to meta_fields so
+        that the existing meta-field serializer emits the **Relations**: header.
+        """
         if len(node.relations) == 0:
             return None
 
-        relation_uids: List[str] = []
+        item_lines: List[str] = []
         for relation in node.relations:
-            if not isinstance(relation, ParentReqReference):
+            if isinstance(relation, ParentReqReference):
+                item = SDMarkdownWriter._serialize_relation_dict(
+                    kv=[
+                        ("Type", "Parent"),
+                        ("ID", relation.ref_uid),
+                        ("Role", relation.role),
+                    ]
+                )
+            elif isinstance(relation, ChildReqReference):
+                item = SDMarkdownWriter._serialize_relation_dict(
+                    kv=[
+                        ("Type", "Child"),
+                        ("ID", relation.ref_uid),
+                        ("Role", relation.role),
+                    ]
+                )
+            elif isinstance(relation, FileReference):
+                entry = relation.g_file_entry
+                item = SDMarkdownWriter._serialize_relation_dict(
+                    kv=[
+                        ("Type", "File"),
+                        ("Path", entry.g_file_path),
+                        ("Lines", entry.g_line_range),
+                        ("Element", entry.element),
+                        ("ID", entry.id),
+                        ("Hash", entry.hash),
+                    ]
+                )
+            else:
                 continue
-            if relation.role is not None:
-                continue
-            relation_uid = relation.ref_uid.strip()
-            if len(relation_uid) == 0:
-                continue
-            relation_uids.append(relation_uid)
+            if item is not None:
+                item_lines.append(item)
 
-        if len(relation_uids) == 0:
+        if not item_lines:
             return None
-        return "Relations", ", ".join(relation_uids)
+        return "\n".join(item_lines)
+
+    @staticmethod
+    def _serialize_relation_dict(
+        kv: List[Tuple[str, Optional[str]]],
+    ) -> Optional[str]:
+        """
+        Serialize one relation as a bullet-list dict item.
+
+        Continuation lines are indented by 2 spaces (aligning with the first
+        key character after the ``- `` marker) per SDOC-LLR-207.
+        Optional key-value pairs with a None value are omitted.
+        """
+        pairs = [(k, v) for k, v in kv if v is not None]
+        if len(pairs) == 0:
+            return None
+
+        lines: List[str] = []
+        for i, (key, value) in enumerate(pairs):
+            entry = f"**{key}**: `{value}`"
+            if i == 0:
+                prefix = "- "
+            else:
+                prefix = "  "
+            if i < len(pairs) - 1:
+                lines.append(f"{prefix}{entry} \\")
+            else:
+                lines.append(f"{prefix}{entry}")
+        return "\n".join(lines)
 
     @staticmethod
     def _resolve_human_field_name(node: SDocNode, field_name: str) -> str:

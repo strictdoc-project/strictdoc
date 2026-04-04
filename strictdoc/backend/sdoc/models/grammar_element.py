@@ -344,19 +344,31 @@ class GrammarElement:
     @staticmethod
     def create_default_relations(
         parent: "GrammarElement",
+        include_child: bool = False,
     ) -> List[GrammarElementRelationType]:
-        return [
+        relations: List[GrammarElementRelationType] = [
             GrammarElementRelationParent(
                 parent=parent,
                 relation_type="Parent",
                 relation_role=None,
             ),
+        ]
+        if include_child:
+            relations.append(
+                GrammarElementRelationChild(
+                    parent=parent,
+                    relation_type="Child",
+                    relation_role=None,
+                )
+            )
+        relations.append(
             GrammarElementRelationFile(
                 parent=parent,
                 relation_type="File",
                 relation_role=None,
-            ),
-        ]
+            )
+        )
+        return relations
 
     def is_field_multiline(self, field_name: str) -> bool:
         field_index = self.field_titles.index(field_name)

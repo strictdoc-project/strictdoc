@@ -46,6 +46,7 @@ class DocumentGrammar(SDocGrammarIF):
     def create_default(
         parent: Optional[SDocDocumentIF],
         enable_mid: bool = False,
+        include_child_relation: bool = False,
     ) -> "DocumentGrammar":
         """
         @relation(SDOC-SRS-93, scope=function)
@@ -133,7 +134,8 @@ class DocumentGrammar(SDocGrammarIF):
         # @relation(SDOC-SRS-132, scope=range_end)
 
         requirement_element.relations = GrammarElement.create_default_relations(
-            requirement_element
+            requirement_element,
+            include_child=include_child_relation,
         )
 
         elements: List[GrammarElement] = []

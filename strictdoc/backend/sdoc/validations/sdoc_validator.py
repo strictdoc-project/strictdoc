@@ -305,7 +305,10 @@ class SDocValidator:
         requirement_field_text_value = requirement_field.get_text_value()
 
         if isinstance(grammar_field, GrammarElementFieldSingleChoice):
-            if requirement_field_text_value not in grammar_field.options:
+            if (
+                requirement_field_text_value.strip()
+                not in grammar_field.options
+            ):
                 raise StrictDocSemanticError.invalid_choice_field(
                     node=requirement,
                     document_grammar=document_grammar,
@@ -314,7 +317,9 @@ class SDocValidator:
                 )
 
         elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
-            if not multi_choice_regex_match(requirement_field_text_value):
+            if not multi_choice_regex_match(
+                requirement_field_text_value.strip()
+            ):
                 raise StrictDocSemanticError.not_comma_separated_choices(
                     node=requirement,
                     requirement_field=requirement_field,
@@ -322,10 +327,10 @@ class SDocValidator:
                 )
 
             requirement_field_value_components = (
-                requirement_field_text_value.split(", ")
+                requirement_field_text_value.strip().split(", ")
             )
             for component in requirement_field_value_components:
-                if component not in grammar_field.options:
+                if component.strip() not in grammar_field.options:
                     raise StrictDocSemanticError.invalid_multiple_choice_field(
                         node=requirement,
                         document_grammar=document_grammar,
@@ -334,7 +339,9 @@ class SDocValidator:
                     )
 
         elif isinstance(grammar_field, GrammarElementFieldTag):
-            if not multi_choice_regex_match(requirement_field_text_value):
+            if not multi_choice_regex_match(
+                requirement_field_text_value.strip()
+            ):
                 raise StrictDocSemanticError.not_comma_separated_tag_field(
                     node=requirement,
                     requirement_field=requirement_field,

@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: CHOICE_FIELD
+    TYPE: MultipleChoice(A, B, C, D)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+CHOICE_FIELD: >>>
+A, B
+<<<
+STATEMENT: This requirement has a valid multiline MultipleChoice field.

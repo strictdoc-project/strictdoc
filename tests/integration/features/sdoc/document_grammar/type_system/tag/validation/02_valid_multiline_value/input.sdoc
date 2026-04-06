@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: TAGS
+    TYPE: Tag
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+TAGS: >>>
+TAG1, TAG2
+<<<
+STATEMENT: This requirement has valid multiline Tag fields.

@@ -1,0 +1,6 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Test document
+
+RUN: %cat %T/html/02_valid_multiline_value/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML:CHOICE_FIELD
+CHECK-HTML:C

@@ -176,6 +176,10 @@ class SdocRelationVisitor(ModelVisitor):  # type: ignore[misc]
 
 
 class SourceFileTraceabilityReader_Robot:
+    @staticmethod
+    def supported_elements() -> list[str]:
+        return ["testcase"]
+
     def read(
         self, input_buffer: str, file_path: Optional[str] = None
     ) -> SourceFileTraceabilityInfo:

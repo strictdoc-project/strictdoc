@@ -324,7 +324,7 @@ class SDMarkdownReader:
 
                 SDMarkdownReader._memorize_requirement_human_titles(
                     document=document,
-                    fields=parsed_node.fields,
+                    markdown_fields=parsed_node.fields,
                 )
 
                 if (

@@ -41,6 +41,10 @@ from strictdoc.helpers.file_system import file_open_read_bytes
 
 
 class SourceFileTraceabilityReader_C:
+    @staticmethod
+    def supported_elements() -> list[str]:
+        return ["function", "class"]
+
     def __init__(self, custom_tags: Optional[set[str]] = None) -> None:
         self.custom_tags: Optional[set[str]] = custom_tags
 

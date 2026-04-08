@@ -49,7 +49,7 @@
     {%- for field_ in field_values_ -%}
       {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
       {% set text_field_row_context.field = field_ %}
-      {% set text_field_row_context.field_editable = true %}
+      {% set text_field_row_context.field_editable = field_.is_editable_in_ui() %}
       {% set text_field_row_context.field_type = "singleline" %}
       {% set text_field_row_context.reference_mid = form_object.requirement_mid %}
       {%- if form_object.element_type != "TEXT" and field_.field_name == "UID" and field_.field_value == "" -%}
@@ -69,7 +69,7 @@
       {% if field_.field_name != "COMMENT" -%}
         {% set text_field_row_context.errors=form_object.get_errors(field_.field_name) %}
         {% set text_field_row_context.field = field_ %}
-        {% set text_field_row_context.field_editable = true %}
+        {% set text_field_row_context.field_editable = field_.is_editable_in_ui() %}
         {% set text_field_row_context.field_type = "multiline" %}
         {% include "components/form/row/row_with_text_field.jinja" %}
       {%- endif -%}

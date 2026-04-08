@@ -108,3 +108,34 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         self.test_case.click_xpath(
             f'(//*[@data-testid="tree-document-link"])[{doc_order}]'
         )
+
+    def assert_document_config_edit_is_locked(self):
+        """Verifies the document-level edit button is disabled."""
+        element_class = self.test_case.get_attribute(
+            '[data-testid="document-edit-config-action-disabled"]', "class"
+        )
+        assert "action_button--disabled" in element_class
+
+    def assert_document_config_edit_is_unlocked(self):
+        """Verifies the document-level edit button is fully interactive."""
+        self.test_case.assert_element_present(
+            '[data-testid="document-edit-config-action"]'
+        )
+
+        element_class = self.test_case.get_attribute(
+            '[data-testid="document-edit-config-action"]', "class"
+        )
+        assert "action_button--disabled" not in element_class
+
+    def assert_first_toc_node_is_not_draggable(self):
+        # We look for the first li inside the toc-list and verify it has draggable="false"
+        xpath_first_toc_node = (
+            '(//ul[@data-testid="toc-list"]//li[@data-nodeid])[1]'
+        )
+
+        self.test_case.assert_attribute(
+            xpath_first_toc_node, "draggable", "false"
+        )
+        self.test_case.assert_attribute(
+            xpath_first_toc_node, "data-can-move", "false"
+        )

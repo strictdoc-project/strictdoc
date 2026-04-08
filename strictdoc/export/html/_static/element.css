@@ -263,6 +263,20 @@ sdoc-node-controls .action_button {
   vertical-align: top;
 }
 
+.action_button--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+  pointer-events: none;
+}
+
+/*  We re-enable pointer-events on hover, 
+ *  so the tooltip (title attribute) shows up.
+ */
+.action_button--disabled:hover {
+    pointer-events: auto; 
+}
+
 /* field_action */
 /* TODO: optimize code with .action_icon & .action_button */
 

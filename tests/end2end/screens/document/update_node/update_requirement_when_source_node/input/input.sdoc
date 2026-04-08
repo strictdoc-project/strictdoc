@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Hybrid Document
+UID: DOC
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: The title will be overridden by the source file, and normalized-out on save.
+STATEMENT: This statement will be overridden by the source file, and normalized-out on save.

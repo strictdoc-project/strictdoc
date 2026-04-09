@@ -7,7 +7,7 @@
     class="nav_button"
     href="{{ view_object.render_url('index.html') }}"
     title="Project index">
-    {% include "_res/svg_ico16_index.jinja.html" %}
+    {% include "icons/ico16_index.svg" %}
   </a>
 
 {%- if view_object.project_config.is_activated_project_statistics() -%}
@@ -18,7 +18,7 @@
     title="Project statistics"
     data-testid="project-tree-link-project-statistics"
   >
-    {% include "_res/svg_ico16_stat.jinja" %}
+    {% include "icons/ico16_stat.svg" %}
   </a>
 {%- endif -%}
 
@@ -30,7 +30,7 @@
     title="Traceability matrix"
     data-testid="project-tree-link-requirements-coverage"
   >
-    {% include "_res/svg_ico16_requirement.jinja.html" %}
+    {% include "icons/ico16_requirement.svg" %}
   </a>
 {%- endif -%}
 
@@ -42,7 +42,7 @@
     title="Source coverage"
     data-testid="project-tree-link-source-coverage"
   >
-    {% include "_res/svg_ico16_source.jinja.html" %}
+    {% include "icons/ico16_source.svg" %}
   </a>
 {%- endif -%}
 
@@ -54,7 +54,7 @@
     title="Search"
     data-testid="project-tree-link-search"
   >
-    {% include "_res/svg_ico16_search.jinja" %}
+    {% include "icons/ico16_search.svg" %}
   </a>
 {%- endif -%}
 
@@ -66,7 +66,7 @@
     title="Diff"
     data-testid="project-tree-link-diff"
   >
-    {% include "_res/svg_ico16_diff.jinja" %}
+    {% include "icons/ico16_diff.svg" %}
   </a>
 {%- endif -%}
 

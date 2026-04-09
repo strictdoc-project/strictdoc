@@ -24,7 +24,7 @@
     data-turbo="true"
     title="Edit title and meta"
     data-testid="document-edit-config-action"
-  >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
+  >{% include "icons/ico16_edit.svg" %}</a>
   {%- endif -%}
 
   {# EDIT & DELETE:
@@ -41,7 +41,7 @@
     data-turbo="true"
     title="Edit"
     data-testid="node-edit-action"
-  >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
+  >{% include "icons/ico16_edit.svg" %}</a>
   <a
     href="/actions/document/delete_{{ sdoc_entity.get_type_string() }}?node_id={{ sdoc_entity.reserved_mid }}&context_document_mid={{ view_object.document.reserved_mid }}"
     class="action_button"
@@ -49,7 +49,7 @@
     data-turbo="true"
     title="Delete"
     data-testid="node-delete-action"
-  >{% include "_res/svg_ico16_delete.jinja.html" %}</a>
+  >{% include "icons/ico16_delete.svg" %}</a>
   {% else %}
     <a
       href="/actions/document/edit_included_document?document_mid={{sdoc_entity.reserved_mid}}&context_document_mid={{ view_object.document.reserved_mid }}"
@@ -58,7 +58,7 @@
       data-turbo="true"
       title="Edit"
       data-testid="node-edit-action"
-    >{% include "_res/svg_ico16_edit.jinja.html" %}</a>
+    >{% include "icons/ico16_edit.svg" %}</a>
   {% endif %}
 {% endif %}
 
@@ -76,7 +76,7 @@
     data-turbo="true"
     title="Clone"
     data-testid="node-clone-action"
-  >{% include "_res/svg_ico16_copy.jinja" %}</a>
+  >{% include "icons/ico16_copy.svg" %}</a>
 {%- endif -%}
 
   {# ADD NODES menu:
@@ -102,7 +102,7 @@
         class="action_button"
         title="Add node"
         data-testid="node-menu-handler"
-      >{% include "_res/svg_ico16_add.jinja.html" %}</a>
+      >{% include "icons/ico16_add.svg" %}</a>
     </sdoc-menu-handler>
 
     <sdoc-menu-list>
@@ -130,7 +130,7 @@
                   data-turbo="true"
                   title="Add first child {{ element_.tag }}"
                   data-testid="node-add-{{ element_.get_tag_lower() }}-first-action"
-                >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+                >{% include "icons/ico16_add_child.svg" %}</a>
             </li>
           {%- endfor -%}
 
@@ -151,7 +151,7 @@
                 data-turbo="true"
                 title="Add {{ element_.tag }} above"
                 data-testid="node-add-{{ element_.get_tag_lower() }}-above-action"
-              >{% include "_res/svg_ico16_add_above.jinja" %}</a>
+              >{% include "icons/ico16_add_above.svg" %}</a>
             </li>
             <li>{# 2 • Section -> add Requirement #}
               <a
@@ -160,7 +160,7 @@
                   data-turbo="true"
                   title="Add child {{ element_.tag }}"
                   data-testid="node-add-{{ element_.get_tag_lower() }}-child-action"
-                >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+                >{% include "icons/ico16_add_child.svg" %}</a>
             </li>
             <li>{# 3 • Section -> add Requirement #}
               <a
@@ -169,7 +169,7 @@
                 data-turbo="true"
                 title="Add {{ element_.tag }} below"
                 data-testid="node-add-{{ element_.get_tag_lower() }}-below-action"
-              >{% include "_res/svg_ico16_add_below.jinja" %}</a>
+              >{% include "icons/ico16_add_below.svg" %}</a>
             </li>
           {% endfor %}
 
@@ -193,7 +193,7 @@
                 data-turbo="true"
                 title="Add {{ element_.tag }} above"
                 data-testid="node-add-{{ element_.get_tag_lower() }}-above-action"
-              >{% include "_res/svg_ico16_add_above.jinja" %}</a>
+              >{% include "icons/ico16_add_above.svg" %}</a>
             </li>
             {% if sdoc_entity.is_composite %}
             <li>{# 2 • Requirement -> add Requirement #}
@@ -203,7 +203,7 @@
                 data-turbo="true"
                 title="Add child {{ element_.tag }}"
                 data-testid="node-add-{{ element_.get_tag_lower() }}-child-action"
-              >{% include "_res/svg_ico16_add_child.jinja" %}</a>
+              >{% include "icons/ico16_add_child.svg" %}</a>
             </li>
             {% endif %}
             <li>{# 3 • Requirement -> add Requirement #}
@@ -213,7 +213,7 @@
                 data-turbo="true"
                 title="Add {{ element_.tag }} below"
                 data-testid="node-add-{{ element_.get_tag_lower() }}-below-action"
-              >{% include "_res/svg_ico16_add_below.jinja" %}</a>
+              >{% include "icons/ico16_add_below.svg" %}</a>
             </li>
           {%- endfor -%}
 

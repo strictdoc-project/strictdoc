@@ -1,0 +1,13 @@
+<svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <line x1="2" y1="12" x2="14" y2="12"></line>
+  <line x1="2" y1="8" x2="14" y2="8"></line>
+  <line x1="2" y1="4" x2="14" y2="4"></line>
+</svg>

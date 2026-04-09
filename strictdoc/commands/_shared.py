@@ -18,5 +18,8 @@ def add_config_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--config",
         type=str,
-        help="Path to the StrictDoc TOML config file.",
+        help=(
+            "Path to the StrictDoc config file ("
+            "strictdoc_config.py preferred, strictdoc.toml legacy)."
+        ),
     )

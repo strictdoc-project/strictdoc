@@ -1,0 +1,35 @@
+{% extends "components/modal/form.jinja" %}
+{% set form = "sdoc_modal_form" %}
+{% block modal__context %}{% endblock modal__context %}
+{% block modal_form__header %}
+Edit project title
+{% endblock modal_form__header %}
+{% block modal_form__content %}
+  <form
+    id="{{ form }}"
+    action="/actions/project_index/save_project_title"
+    method="POST"
+    enctype="application/x-www-form-urlencoded"
+    data-turbo="true"
+  >
+    <sdoc-form-grid>
+      {%- with
+        field_class_name="",
+        field_input_name="project_title",
+        field_name="project title",
+        field_label="Project title",
+        field_value=(new_title if new_title is defined else project_config.project_title),
+        field_type="singleline",
+        field_required=true,
+        errors=error_object.get_errors("project_title")
+      -%}
+        {% include "components/form/field/text/index.jinja" %}
+      {%- endwith -%}
+    </sdoc-form-grid>
+  </form>
+{% endblock modal_form__content %}
+{% block modal_form__footer_submit %}
+  {%- with name="Save" -%}
+    {% include "components/button/submit.jinja" %}
+  {%- endwith -%}
+{% endblock modal_form__footer_submit %}

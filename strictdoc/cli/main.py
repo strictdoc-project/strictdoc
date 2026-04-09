@@ -16,6 +16,7 @@ from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.new_command import NewCommand
 from strictdoc.commands.server import ServerCommand
 from strictdoc.commands.version_command import VersionCommand
+from strictdoc.commands.launcher_command import LauncherCommand
 from strictdoc.helpers.coverage import register_code_coverage_hook
 from strictdoc.helpers.exception import (
     ExceptionInfo,
@@ -31,6 +32,7 @@ COMMAND_REGISTRY: Dict[str, Any] = {
     "manage": {"auto-uid": ManageAutoUIDCommand},
     "new": NewCommand,
     "server": ServerCommand,
+    "launcher": LauncherCommand,
     "version": VersionCommand,
 }
 

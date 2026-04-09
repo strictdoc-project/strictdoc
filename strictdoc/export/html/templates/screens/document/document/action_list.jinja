@@ -24,4 +24,15 @@
   data-testid="document-export-reqif-action"
   role="menuitem"
 >{% include "icons/ico16_export.svg" %} Export to ReqIF</a>
+
+<a
+  class="dropdown_menu_item"
+  href="/actions/document/delete_document?document_mid={{ view_object.document.reserved_mid }}"
+  data-turbo="true"
+  data-turbo-method="delete"
+  title="Delete document"
+  data-testid="document-delete-action"
+  role="menuitem"
+  onclick="return confirm('Delete this document? This action cannot be undone.');"
+>{% include "icons/svg_ico16_delete.svg" %} Delete document</a>
 {%- endif -%}

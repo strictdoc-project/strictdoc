@@ -34,6 +34,7 @@ from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.transforms.validation_error import (
+    MultipleValidationErrorAsList,
     SingleValidationError,
 )
 from strictdoc.core.tree_cycle_detector import TreeCycleDetector
@@ -1072,6 +1073,67 @@ class TraceabilityIndex:
                     f"Cannot remove node '{node.get_display_title()}' "
                     f"with incoming relations from:\n{nodes_list_message}."
                 )
+
+    def validate_can_remove_document(self, document: SDocDocument) -> None:
+        errors: List[str] = []
+
+        if document.document_is_included():
+            including_document = document.get_including_document()
+            if including_document is not None:
+                errors.append(
+                    f"Cannot remove document '{document.get_display_title()}' because it is included in document '{including_document.get_display_title()}'."
+                )
+            else:
+                errors.append(
+                    f"Cannot remove document '{document.get_display_title()}' because it is included in another document."
+                )
+
+        incoming_links: Optional[List[InlineLink]] = self.get_incoming_links(
+            document
+        )
+        if incoming_links is not None and len(incoming_links) > 0:
+            link_list_message = ", ".join(
+                map(
+                    lambda l_: (
+                        f"'{l_.parent_node().get_display_title()}' -> '{l_.link}'"
+                    ),
+                    incoming_links,
+                )
+            )
+            errors.append(
+                f"Cannot remove document '{document.get_display_title()}' with incoming LINKs from: {link_list_message}."
+            )
+
+        document_iterator = SDocDocumentIterator(document=document)
+        for document_node_, _ in document_iterator.all_content(
+            print_fragments=True
+        ):
+            if not isinstance(document_node_, SDocNode):
+                continue
+
+            nodes_with_incoming_links = [document_node_] + document_node_.get_anchors()
+            for node_ in nodes_with_incoming_links:
+                try:
+                    self.validate_can_remove_node(node=node_)
+                except SingleValidationError as exception_:
+                    errors.append(exception_.args[0])
+
+            parent_nodes: List[SDocNode] = self.get_parent_requirements(
+                document_node_
+            )
+            if len(parent_nodes) > 0:
+                nodes_list_message = ", ".join(
+                    map(
+                        lambda n_: "'" + n_.get_display_title() + "'",
+                        parent_nodes,
+                    )
+                )
+                errors.append(
+                    f"Cannot remove node '{document_node_.get_display_title()}' with incoming relations from:\n{nodes_list_message}."
+                )
+
+        if len(errors) > 0:
+            raise MultipleValidationErrorAsList("NOT_RELEVANT", errors)
 
     def clone_to_bundle_document(
         self, project_config: ProjectConfig

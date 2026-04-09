@@ -1225,6 +1225,176 @@ def create_main_router(
             },
         )
 
+    @read_router.get(
+        "/actions/project_index/edit_project_title_form",
+        response_class=Response,
+    )
+    def get_edit_project_title_form() -> Response:
+        error_object = ErrorObject()
+        output = env().render_template_as_markup(
+            "actions/project_index/edit_project_title/"
+            "stream_form_edit_project_title.jinja.html",
+            error_object=error_object,
+            project_config=project_config,
+        )
+        return HTMLResponse(
+            content=output,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @write_router.post(
+        "/actions/project_index/save_project_title", response_class=Response
+    )
+    def save_project_title(project_title: str = Form("")) -> Response:
+        error_object = ErrorObject()
+
+        new_title = project_title.strip() if project_title is not None else ""
+        if len(new_title) == 0:
+            error_object.add_error(
+                "project_title", "Project title must not be empty."
+            )
+
+        if error_object.any_errors():
+            output = env().render_template_as_markup(
+                "actions/project_index/edit_project_title/"
+                "stream_form_edit_project_title.jinja.html",
+                error_object=error_object,
+                project_config=project_config,
+                new_title=new_title,
+            )
+            return HTMLResponse(
+                content=output,
+                status_code=200,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        # Try to persist the new title into the project configuration when available.
+        project_root = project_config.get_project_root_path()
+        config_toml_path: Optional[str] = None
+        config_py_path: Optional[str] = None
+
+        if os.path.isdir(project_root):
+            # Prefer Python config when both exist.
+            candidate_py = os.path.join(project_root, "strictdoc_config.py")
+            candidate_toml = os.path.join(project_root, "strictdoc.toml")
+            if os.path.isfile(candidate_py):
+                config_py_path = candidate_py
+            elif os.path.isfile(candidate_toml):
+                config_toml_path = candidate_toml
+        else:
+            # project_root may point directly to a config file or to an
+            # input path next to the config files.
+            if project_root.endswith("strictdoc.toml"):
+                config_toml_path = project_root
+            elif project_root.endswith("strictdoc_config.py"):
+                config_py_path = project_root
+            else:
+                config_dir = os.path.dirname(project_root)
+                candidate_py = os.path.join(config_dir, "strictdoc_config.py")
+                candidate_toml = os.path.join(config_dir, "strictdoc.toml")
+                if os.path.isfile(candidate_py):
+                    config_py_path = candidate_py
+                elif os.path.isfile(candidate_toml):
+                    config_toml_path = candidate_toml
+
+        # strictdoc.toml is not supported anymore.
+        if config_toml_path is not None:
+            error_object = ErrorObject()
+
+            error_object.add_error(
+                "project_title",
+                "Renaming project title is not supported with TOML config files. Switch from strictdoc_config.toml to strictdoc_config.py and try again.",
+            )
+
+            output = env().render_template_as_markup(
+                "actions/project_index/edit_project_title/"
+                "stream_form_edit_project_title.jinja.html",
+                error_object=error_object,
+                project_config=project_config,
+                new_title=new_title,
+            )
+            return HTMLResponse(
+                content=output,
+                status_code=400,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        # Update strictdoc_config.py by editing its title using regex.
+        # The implementation is pretty hacky but should work for now.
+        if config_py_path is not None:
+            with open(config_py_path, encoding="utf8") as config_file:
+                config_text = config_file.read()
+
+            pattern = re.compile(
+                r"(project_title\s*=\s*)([\"'])(.*?)([\"'])",
+                re.DOTALL,
+            )
+
+            def _replace_title(match: re.Match[str]) -> str:
+                prefix = match.group(1)
+                quote = match.group(2)
+                escaped_title = new_title.replace(quote, "\\" + quote)
+                return f"{prefix}{quote}{escaped_title}{quote}"
+
+            new_text, count = pattern.subn(_replace_title, config_text, count=1)
+
+            if count > 0:
+                with open(config_py_path, "w", encoding="utf8") as config_file:
+                    config_file.write(new_text)
+            else:
+                error_object = ErrorObject()
+
+                error_object.add_error(
+                    "project_title",
+                    (
+                        "Renaming project title is not supported when a title is "
+                        "not already configured to a previous value in"
+                        "strictdoc_config.py."
+                    ),
+                )
+
+                output = env().render_template_as_markup(
+                    "actions/project_index/edit_project_title/"
+                    "stream_form_edit_project_title.jinja.html",
+                    error_object=error_object,
+                    project_config=project_config,
+                    new_title=new_title,
+                )
+                return HTMLResponse(
+                    content=output,
+                    status_code=400,
+                    headers={
+                        "Content-Type": "text/vnd.turbo-stream.html",
+                    },
+                )
+
+        # Update in-memory project configuration after successful validation
+        # of where the title can be stored on disk.
+        project_config.project_title = new_title
+
+        # This ensures that the cached project index HTML page is invalidated.
+        export_action.traceability_index.update_last_updated()
+
+        # Return Turbo Streams to update the header title and close the modal.
+        output = env().render_template_as_markup(
+            "actions/project_index/edit_project_title/"
+            "stream_save_project_title.jinja.html",
+            project_config=project_config,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @write_router.post(
         "/actions/project_index/create_document", response_class=Response
     )

@@ -10,7 +10,7 @@ from tests.end2end.helpers.components.node.section import Section
 from tests.end2end.helpers.components.toc import TOC
 
 
-class Screen:  # pylint: disable=invalid-name, too-many-public-methods
+class Screen:
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case

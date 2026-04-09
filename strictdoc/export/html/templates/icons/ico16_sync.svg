@@ -1,0 +1,13 @@
+<svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <line x1="2" y1="14" x2="5" y2="11"></line>
+  <path d="M13.5,4.8 C12.3,2.3 9.3,1.3 6.8,2.5 C4.3,3.7 3.3,6.7 4.5,9.2 C5.7,11.7 8.7,12.7 11.2,11.5"/>
+  <rect x="8" y="7.5" width="7" height="1.5"></rect>
+</svg>

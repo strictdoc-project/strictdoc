@@ -72,6 +72,7 @@ class UvicornReloadConfig:
                 "*.py",
                 "*.html",
                 "*.jinja",
+                "*.svg",
                 "*.css",
                 "*.js",
                 "*.toml",

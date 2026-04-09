@@ -1,0 +1,14 @@
+<svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <polyline points="9.5 2.5 13.5 2.5 13.5 6.5"></polyline>
+  <line x1="9.5" y1="6.5" x2="13.5" y2="2.5"></line>
+  <line x1="6.5" y1="9.5" x2="2.5" y2="13.5"></line>
+  <polyline points="6.5 13.5 2.5 13.5 2.5 9.5"></polyline>
+</svg>

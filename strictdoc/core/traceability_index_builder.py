@@ -86,7 +86,10 @@ class TraceabilityIndexBuilder:
         strict_own_files: List[str] = [
             f
             for f in strict_own_files_unfiltered
-            if f.endswith(".html") or f.endswith(".py") or f.endswith(".jinja")
+            if f.endswith(".html")
+            or f.endswith(".py")
+            or f.endswith(".jinja")
+            or f.endswith(".svg")
         ]
         latest_strictdoc_own_file = (
             max(strict_own_files, key=os.path.getctime)

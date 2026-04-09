@@ -151,6 +151,8 @@ class ProjectConfig:
             str
         ] = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR,
         statistics_generator: Optional[str] = None,
+        # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
+        launcher_logo_path: Optional[str] = None,
         user_plugin: Optional[StrictDocPlugin] = None,
         # Reserved for StrictDoc's internal use.
         _config_last_update: Optional[datetime.datetime] = None,
@@ -382,6 +384,9 @@ class ProjectConfig:
 
         self.statistics_generator: Optional[str] = statistics_generator
         self.user_plugin: Optional[StrictDocPlugin] = user_plugin
+
+        # Optional launcher logo path (absolute or workspace-relative).
+        self.launcher_logo_path: Optional[str] = launcher_logo_path
 
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update

@@ -4,6 +4,7 @@ import datetime
 import os
 import re
 import uuid
+
 from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
@@ -18,7 +19,7 @@ from reqif.unparser import ReqIFUnparser
 from starlette.background import BackgroundTask
 from starlette.datastructures import FormData
 from starlette.requests import Request
-from starlette.responses import FileResponse, HTMLResponse, Response
+from starlette.responses import FileResponse, HTMLResponse, RedirectResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc.backend.markdown.writer import SDMarkdownWriter
@@ -1376,6 +1377,63 @@ def create_main_router(
                 "Content-Type": "text/vnd.turbo-stream.html",
             },
         )
+
+    @write_router.delete(
+        "/actions/document/delete_document",
+        response_class=Response,
+    )
+    def delete_document(document_mid: str) -> Response:
+        """Delete an entire SDOC document from the project.
+
+        This endpoint is intentionally simple: it removes the underlying
+        ``.sdoc`` file from disk, rebuilds the index and redirects back to the
+        project index screen. For now, it is up to the user to ensure that
+        no other documents depend on this one (for example via ``INCLUDE``).
+        """
+
+        document: SDocDocument = assert_cast(
+            export_action.traceability_index.get_node_by_mid(MID(document_mid)),
+            SDocDocument,
+        )
+        assert document.meta is not None
+
+        # Remove the underlying SDOC file.
+        path_to_document = document.meta.input_doc_full_path
+        try:
+            if os.path.exists(path_to_document):
+                os.remove(path_to_document)
+        except OSError:
+            # If the file cannot be removed, keep the project index intact and
+            # fall back to a normal redirect; the error can be inspected in
+            # server logs.
+            pass
+
+        # Best-effort cleanup of generated HTML artifacts for this document.
+        # Not all of these files are guaranteed to exist (e.g. PDF export).
+        html_paths = [
+            document.meta.get_html_doc_path(),
+            document.meta.get_html_doc_standalone_path(),
+            document.meta.get_html_table_path(),
+            document.meta.get_html_traceability_path(),
+            document.meta.get_html_deep_traceability_path(),
+            document.meta.get_html_pdf_path(),
+        ]
+        for html_path in html_paths:
+            try:
+                if os.path.exists(html_path):
+                    os.remove(html_path)
+            except OSError:
+                # Ignore individual file deletion errors; remaining files can
+                # be cleaned up manually if necessary.
+                continue
+
+        # Rebuild the project index so the removed document disappears from
+        # the project tree and related views.
+        export_action.build_index()
+        export_action.export()
+
+        # Redirect back to the project index page.
+        return RedirectResponse("/", status_code=303)
 
     @read_router.get("/actions/document/new_comment", response_class=Response)
     def document__add_comment(

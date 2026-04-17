@@ -18,7 +18,6 @@ def create_config() -> ProjectConfig:
             "PROJECT_STATISTICS_SCREEN",
             "TREE_MAP_SCREEN",
             # "REQIF",
-            # "STANDALONE_DOCUMENT_SCREEN",
             "TRACEABILITY_MATRIX_SCREEN",
             "REQUIREMENT_TO_SOURCE_TRACEABILITY",
             "SOURCE_FILE_LANGUAGE_PARSERS",

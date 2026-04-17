@@ -92,7 +92,6 @@ class SourceFileViewObject:
         self.jinja_environment: JinjaEnvironment = jinja_environment
 
         self.current_view = NullViewElement()
-        self.standalone: bool = False
         self.document_tree_iterator: DocumentTreeIterator = (
             DocumentTreeIterator(
                 assert_cast(traceability_index.document_tree, DocumentTree)

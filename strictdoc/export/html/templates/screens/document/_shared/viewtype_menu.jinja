@@ -1,4 +1,3 @@
-{%- assert not view_object.standalone -%}
 <div class="viewtype">
   <div
     id="viewtype_handler"
@@ -53,16 +52,6 @@
         title="Go to Deep Traceability view"
         href="{{ view_object.render_document_link(view_object.document, none, "DEEPTRACE") }}">
       Deep Traceability</a>
-    </li>
-    {%- endif -%}
-    {%- if view_object.project_config.is_activated_standalone_document() -%}
-    <li>
-      <a
-        data-viewtype_link="standalone_document"
-        class="dropdown_menu_item"
-        title="Go to Standalone Document view"
-        href="{{ view_object.render_standalone_document_link(view_object.document) }}">
-      Standalone</a>
     </li>
     {%- endif -%}
     {%- if view_object.project_config.is_activated_html2pdf() -%}

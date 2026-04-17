@@ -41,7 +41,6 @@ class ProjectStatisticsViewObject:
                 assert_cast(traceability_index.document_tree, DocumentTree)
             )
         )
-        self.standalone: bool = False
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
 

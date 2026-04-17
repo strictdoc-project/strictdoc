@@ -202,7 +202,6 @@ def create_other_router(
                 project_config=project_config,
                 document_type=DocumentType.DOCUMENT.value,
                 link_document_type=DocumentType.DOCUMENT.value,
-                standalone=False,
                 strictdoc_version=__version__,
                 link_renderer=link_renderer,
                 results=False,

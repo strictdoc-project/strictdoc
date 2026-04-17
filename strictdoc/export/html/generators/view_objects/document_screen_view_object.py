@@ -54,7 +54,6 @@ class DocumentScreenViewObject:
         markup_renderer: MarkupRenderer,
         jinja_environment: JinjaEnvironment,
         git_client: GitClient,
-        standalone: bool,
     ):
         self.document_type: DocumentType = document_type
         self.link_document_type: DocumentType = DocumentType.DOCUMENT
@@ -65,7 +64,6 @@ class DocumentScreenViewObject:
         self.markup_renderer: MarkupRenderer = markup_renderer
         self.jinja_environment: JinjaEnvironment = jinja_environment
         self.git_client: GitClient = git_client
-        self.standalone: bool = standalone
         self.document_iterator = self.traceability_index.get_document_iterator(
             self.document
         )
@@ -283,18 +281,6 @@ class DocumentScreenViewObject:
         return document.meta.get_html_link(
             self.document_type,
             self.document.meta.level,
-        )
-
-    @staticmethod
-    def render_standalone_document_link(document: SDocDocument) -> str:
-        assert document.meta is not None
-
-        root_prefix = document.meta.get_root_path_prefix()
-        document_link = document.meta.get_html_standalone_document_link()
-        return (
-            document_link
-            if len(root_prefix) == 0
-            else "/".join((root_prefix, document_link))
         )
 
     def render_static_url(self, url: str) -> Markup:

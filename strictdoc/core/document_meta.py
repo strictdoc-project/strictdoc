@@ -81,13 +81,6 @@ class DocumentMeta:
             f"{self.document_filename_base}.html"
         )
 
-    def get_html_doc_standalone_path(self) -> str:
-        return (
-            f"{self.output_document_dir_full_path}"
-            f"/"
-            f"{self.document_filename_base}.standalone.html"
-        )
-
     def get_html_table_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
@@ -165,13 +158,6 @@ class DocumentMeta:
             f"{self.output_document_dir_rel_path.relative_path_posix}"
             "/"
             f"{file_name_part}"
-        )
-
-    def get_html_standalone_document_link(self) -> str:
-        return (
-            f"{self.output_document_dir_rel_path.relative_path_posix}"
-            f"/"
-            f"{self.document_filename_base}.standalone.html"
         )
 
     def get_html_link(

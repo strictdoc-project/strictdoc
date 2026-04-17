@@ -50,7 +50,6 @@ from strictdoc.export.html.generators.traceability_matrix import (
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.export.html.tools.html_embedded import HTMLEmbedder
 from strictdoc.features.tree_map.generator import TreeMapGenerator
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
@@ -418,7 +417,6 @@ class HTMLGenerator:
                 markup_renderer,
                 link_renderer,
                 git_client=self.git_client,
-                standalone=False,
                 html_templates=self.html_templates,
             )
             document_out_file = document_meta.get_html_doc_path()
@@ -497,33 +495,11 @@ class HTMLGenerator:
                 markup_renderer,
                 link_renderer,
                 git_client=self.git_client,
-                standalone=False,
                 html_templates=self.html_templates,
             )
             document_out_file = document_meta.get_html_pdf_path()
             with open(document_out_file, "w", encoding="utf8") as file:
                 file.write(document_content)
-
-        if self.project_config.is_feature_activated(
-            ProjectFeature.STANDALONE_DOCUMENT_SCREEN
-        ):
-            # Single Document pages (standalone)
-            document_content = DocumentHTMLGenerator.export(
-                self.project_config,
-                document,
-                traceability_index,
-                markup_renderer,
-                link_renderer,
-                git_client=self.git_client,
-                standalone=True,
-                html_templates=self.html_templates,
-            )
-            document_out_file = document_meta.get_html_doc_standalone_path()
-            document_content_with_embedded_assets = HTMLEmbedder.embed_assets(
-                document_content, document_out_file
-            )
-            with open(document_out_file, "w", encoding="utf8") as file:
-                file.write(document_content_with_embedded_assets)
 
         return document
 

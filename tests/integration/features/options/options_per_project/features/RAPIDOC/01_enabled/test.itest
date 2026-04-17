@@ -4,7 +4,6 @@ CHECK: Published: Rapidoc Openapi test
 RUN: %check_exists --file "%T/html/_static/rapidoc/rapidoc-min.js"
 
 RUN: cat %T/html/01_enabled/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
-RUN: cat %T/html/01_enabled/input.standalone.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 RUN: cat %T/html/01_enabled/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 RUN: cat %T/html/01_enabled/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 RUN: cat %T/html/01_enabled/input-DEEP-TRACE.html

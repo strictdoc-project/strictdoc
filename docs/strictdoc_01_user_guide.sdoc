@@ -2567,36 +2567,6 @@ When such a link is opened, StrictDoc automatically resolves the UID (or MID) an
 
 [[/SECTION]]
 
-[[SECTION]]
-MID: 1b41e7c036cf4e3282fa3d4e687bf95d
-TITLE: Standalone HTML pages
-
-[TEXT]
-MID: 5674bfd50f31420baf56625d79d1ebff
-STATEMENT: >>>
-The following command creates a normal HTML export with all pages having their
-assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc_config.py`` file, specify:
-
-.. code:: python
-
-    from strictdoc.core.project_config import ProjectConfig
-
-
-    def create_config() -> ProjectConfig:
-        config = ProjectConfig(
-            project_features=[
-                "STANDALONE_DOCUMENT_SCREEN"
-            ],
-        )
-        return config
-
-The generated document are self-contained HTML pages that can be shared via
-email as single files. This option might be especially useful if you work with
-a single document instead of a documentation tree with multiple documents.
-<<<
-
-[[/SECTION]]
-
 [[/SECTION]]
 
 [[SECTION]]
@@ -3798,7 +3768,6 @@ The following is an example of the default configuration. The same features are 
                 # "REQIF",
                 # "HTML2PDF",
                 # "PROJECT_STATISTICS_SCREEN",
-                # "STANDALONE_DOCUMENT_SCREEN",
                 # "TRACEABILITY_MATRIX_SCREEN",
                 # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
             ],

@@ -35,7 +35,6 @@ class TraceabilityMatrixViewObject:
         self.known_relations_list: List[Tuple[str, Optional[str]]] = (
             known_relations_list
         )
-        self.standalone: bool = False
         self.document_tree_iterator: DocumentTreeIterator = (
             DocumentTreeIterator(traceability_index.document_tree)
         )

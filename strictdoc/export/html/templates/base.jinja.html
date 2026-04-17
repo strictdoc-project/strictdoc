@@ -49,15 +49,12 @@
     <nav class="layout_nav">
       {% block layout_nav %}
       {# 1. Include "_shared/nav.jinja.html" in the corresponding template, if the block is needed #}
-      {# 2. USE ---if not standalone--- if needed (in DOCs templates) #}
       {% endblock layout_nav %}
     </nav>
 
-    {%- if not view_object.standalone -%}
     <aside class="layout_tree">
       {% block tree_content %}{% endblock tree_content %}
     </aside>
-    {%- endif -%}
 
     {%- with toc_position = "right" -%}
       <aside

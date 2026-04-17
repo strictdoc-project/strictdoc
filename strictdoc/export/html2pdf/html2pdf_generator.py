@@ -78,7 +78,6 @@ class HTML2PDFGenerator:
                     markup_renderer,
                     link_renderer,
                     git_client=git_client,
-                    standalone=False,
                     html_templates=html_templates,
                 )
 

@@ -12,9 +12,7 @@
   {# Load StrictDoc core before local feature scripts. #}
   <script src="{{ view_object.render_static_url('app_core.js') }}"></script>
 
-  {%- if not view_object.standalone -%}
   <script src="{{ view_object.render_static_url('dropdown_menu.js') }}"></script>
-  {%- endif -%}
 
   <script src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
   <script src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
@@ -25,11 +23,9 @@
   <script src="{{ view_object.render_static_url('controllers/copy_stable_link_button_controller.js') }}"></script>
   <script src="{{ view_object.render_static_url('controllers/copy_to_clipboard_controller.js') }}"></script>
 
-  {% if not view_object.standalone %}
-    {% include "_shared/static_search_head.jinja" %}
-  {% endif %}
+  {% include "_shared/static_search_head.jinja" %}
 
-  {%- if view_object.is_running_on_server and not view_object.standalone -%}
+  {%- if view_object.is_running_on_server -%}
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js') }}";
   </script>
@@ -112,12 +108,10 @@
   {{ super() }}
 {% endblock head_scripts %}
 {% block title %}{{ view_object.document.title }} - {{ view_object.get_page_title() }}{% endblock title %}
-{% block viewtype %}{{ "document" if not view_object.standalone else "standalone_document" }}{% endblock viewtype %}
+{% block viewtype %}document{% endblock viewtype %}
 
 {% block layout_nav %}
-  {%- if not view_object.standalone -%}
   {% include "_shared/nav.jinja.html" %}
-  {%- endif -%}
 {% endblock layout_nav %}
 
 {% block tree_content %}
@@ -128,18 +122,11 @@
   {% include "screens/document/_shared/resizable_bar_with_toc.jinja" %}
 {% endblock toc_content %}
 
-{%- if not view_object.standalone -%}
-  {%- set header_items = [
-        "screens/document/_shared/frame_header_document_title.jinja",
-        "screens/document/_shared/viewtype_menu.jinja"
-      ]
-  -%}
-{%- else -%}
-  {%- set header_items = [
-        "screens/document/_shared/frame_header_document_title.jinja",
-      ]
-  -%}
-{%- endif -%}
+{%- set header_items = [
+      "screens/document/_shared/frame_header_document_title.jinja",
+      "screens/document/_shared/viewtype_menu.jinja"
+    ]
+-%}
 
 {% block header_content %}
   {%- with

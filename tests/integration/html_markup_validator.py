@@ -25,11 +25,21 @@ errors = []
 warnings = []
 
 # Validation #1: html5parser
-html5parser = html5lib.HTMLParser(strict=True)
-try:
-    html5parser.parse(html_content)
-except Exception as e:
-    errors.append(f"Error: {str(e)}")
+html5parser = html5lib.HTMLParser(strict=False)
+html5parser.parse(html_content)
+
+lines = html_content.splitlines()
+errors = []
+
+for (line, col), code, data in html5parser.errors:
+    if 1 <= line <= len(lines):
+        source_line = lines[line - 1]
+        caret_line = " " * (col - 1) + "^"
+        message = f"{line}:{col} {code}\n{source_line}\n{caret_line}"
+    else:
+        message = f"{line}:{col} {code} {data}"
+
+    errors.append(message)
 
 # Validation #2: tidylib
 _, tidylib_messages_string = tidy_document(

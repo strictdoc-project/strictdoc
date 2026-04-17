@@ -64,7 +64,6 @@ class DiffScreenResultsViewObject:
             root_path="", static_path=project_config.dir_for_sdoc_assets
         )
         self.link_renderer: LinkRenderer = link_renderer
-        self.standalone: bool = False
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
         self.error_message: Optional[str] = None

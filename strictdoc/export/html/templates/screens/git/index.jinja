@@ -14,7 +14,7 @@
     Stimulus.application = Stimulus.Application.start();
   </script>
 
-  {%- if view_object.project_config.is_running_on_server and not view_object.standalone -%}
+  {%- if view_object.project_config.is_running_on_server -%}
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url_with_prefix('turbo.min.js') }}";
   </script>

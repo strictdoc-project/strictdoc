@@ -329,7 +329,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         output = env().render_template_as_markup(
             "actions/node/show_full_node/stream_show_full_node.jinja",
@@ -602,7 +601,6 @@ def create_main_router(
                 document_type=DocumentType.DOCUMENT,
                 whereto=whereto,
                 replace_action="replace",
-                standalone=False,
             )
             return HTMLResponse(
                 content=output,
@@ -649,7 +647,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
 
         output = view_object.render_updated_screen()
@@ -855,7 +852,6 @@ def create_main_router(
                 renderer=markup_renderer,
                 requirement=requirement,
                 document_type=DocumentType.DOCUMENT,
-                standalone=False,
                 form_object=form_object,
             )
             return HTMLResponse(
@@ -908,7 +904,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
 
         return HTMLResponse(
@@ -982,7 +977,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         return HTMLResponse(
             content=view_object.render_updated_nodes_and_toc(
@@ -1080,7 +1074,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         output = env().render_template_as_markup(
             "actions/document/delete_requirement/"
@@ -1197,7 +1190,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         return HTMLResponse(
             content=view_object.render_update_document_content_with_moved_node(
@@ -1640,7 +1632,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         html_output = env().render_template_as_markup(
             "actions/"
@@ -1728,7 +1719,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         return HTMLResponse(
             content=view_object.render_updated_nodes_and_toc(
@@ -1773,7 +1763,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         output = env().render_template_as_markup(
             "actions/"
@@ -1821,7 +1810,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         output = env().render_template_as_markup(
             "actions/document/edit_section/stream_updated_section.jinja.html",
@@ -1932,7 +1920,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         output = (
             form_object.render_close_form()
@@ -2078,7 +2065,6 @@ def create_main_router(
             markup_renderer=markup_renderer,
             jinja_environment=env(),
             git_client=html_generator.git_client,
-            standalone=False,
         )
         output = (
             form_object.render_close_form()
@@ -2309,7 +2295,6 @@ def create_main_router(
                     markup_renderer,
                     link_renderer,
                     git_client=html_generator.git_client,
-                    standalone=False,
                     html_templates=html_templates,
                 )
 
@@ -2955,20 +2940,6 @@ def create_main_router(
                             )
                         )
                         document_type_to_generate = DocumentType.PDF
-                    elif document_relative_path.relative_path.endswith(
-                        ".standalone.html"
-                    ):
-                        if not project_config.is_activated_standalone_document():
-                            return Response(
-                                content="The Standalone Document feature is not activated in the project config.",
-                                status_code=HTTP_STATUS_PRECONDITION_FAILED,
-                            )
-                        base_document_url = (
-                            document_relative_path.relative_path.replace(
-                                ".standalone", ""
-                            )
-                        )
-                        document_type_to_generate = DocumentType.DOCUMENT
                     else:
                         # Either this is a normal document, or the path is broken.
                         base_document_url = document_relative_path.relative_path
@@ -3042,13 +3013,6 @@ def create_main_router(
         return f"document:{relative_path}"
 
     def _compute_document_generation_lock_key(relative_path: str) -> str:
-        # Keep most document variants independent (TABLE/TRACE/DEEP-TRACE/PDF),
-        # but couple standalone with its base document because generating the
-        # base document may also generate standalone as a side effect.
-        if relative_path.endswith(".standalone.html"):
-            return _compute_document_relative_path_lock_key(
-                relative_path.replace(".standalone", "")
-            )
         return _compute_document_relative_path_lock_key(relative_path)
 
     # Websockets solution based on:

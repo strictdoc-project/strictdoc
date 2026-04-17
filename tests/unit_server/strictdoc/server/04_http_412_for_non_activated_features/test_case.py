@@ -44,9 +44,6 @@ def test(project_config: ProjectConfig):
     response = client.get("/some_document-PDF.html")
     assert response.status_code == 412
 
-    response = client.get("/some_document.standalone.html")
-    assert response.status_code == 412
-
     response = client.get("/export_html2pdf/NOT_RELEVANT")
     assert response.status_code == 412
 

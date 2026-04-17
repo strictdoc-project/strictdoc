@@ -1975,31 +1975,6 @@ The options ``--formats=html`` and ``--output-dir output-html`` can be skipped b
 
 StrictDoc does not detect .sdoc files in the output folder. This is based on the assumption that StrictDoc should not read anything in the output folder, which is intended for transient output artifacts.
 
-Standalone HTML pages
-~~~~~~~~~~~~~~~~~~~~~
-
-.. list-table::
-    :align: left
-    :header-rows: 0
-
-    * - **MID:**
-      - 5674bfd50f31420baf56625d79d1ebff
-
-The following command creates a normal HTML export with all pages having their
-assets embedded into HTML using Data URI / Base64. In the project's ``strictdoc.toml`` file, specify:
-
-.. code-block:: yaml
-
-    [project]
-
-    features = [
-      "STANDALONE_DOCUMENT_SCREEN"
-    ]
-
-The generated document are self-contained HTML pages that can be shared via
-email as single files. This option might be especially useful if you work with
-a single document instead of a documentation tree with multiple documents.
-
 .. _SECTION-UG-HTML-export-via-Sphinx:
 
 HTML export via Sphinx
@@ -2797,7 +2772,6 @@ The following is an example of the default configuration. The same features are 
       # "REQIF",
       # "HTML2PDF",
       # "PROJECT_STATISTICS_SCREEN",
-      # "STANDALONE_DOCUMENT_SCREEN",
       # "TRACEABILITY_MATRIX_SCREEN",
       # "REQUIREMENT_TO_SOURCE_TRACEABILITY"
     ]

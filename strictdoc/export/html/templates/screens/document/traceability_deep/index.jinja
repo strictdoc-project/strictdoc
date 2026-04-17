@@ -19,7 +19,7 @@
   <script src="{{ view_object.render_static_url('project_tree_preserve_scroll.js') }}"></script>
   <script src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
 
-  {%- if view_object.project_config.is_running_on_server and not view_object.standalone -%}
+  {%- if view_object.project_config.is_running_on_server -%}
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js')}}";
   </script>
@@ -46,9 +46,7 @@
 {% block viewtype %}deep_traceability{% endblock viewtype %}
 
 {% block layout_nav %}
-  {%- if not view_object.standalone -%}
   {% include "_shared/nav.jinja.html" %}
-  {%- endif -%}
 {% endblock layout_nav %}
 
 {% block tree_content %}

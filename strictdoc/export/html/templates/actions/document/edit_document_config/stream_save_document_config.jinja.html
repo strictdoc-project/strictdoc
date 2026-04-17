@@ -5,9 +5,7 @@
 </turbo-stream>
 <turbo-stream action="replace" target="header_document_title">
   <template>
-    {%- with standalone=False -%}
-      {% include "screens/document/_shared/frame_header_document_title.jinja" %}
-    {%- endwith -%}
+    {% include "screens/document/_shared/frame_header_document_title.jinja" %}
   </template>
 </turbo-stream>
 <turbo-stream action="update" target="frame_aside_project_tree">

@@ -4,7 +4,6 @@ CHECK: Published: Hello world doc
 RUN: %check_exists --invert --file "%T/html/_static/mermaid/mermaid.min.js"
 
 RUN: cat %T/html/02_disabled/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
-RUN: cat %T/html/02_disabled/input.standalone.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 RUN: cat %T/html/02_disabled/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 RUN: cat %T/html/02_disabled/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 RUN: cat %T/html/02_disabled/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML

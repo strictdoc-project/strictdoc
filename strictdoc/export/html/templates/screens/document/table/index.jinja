@@ -32,9 +32,7 @@
 {% block viewtype %}table{% endblock viewtype %}
 
 {% block layout_nav %}
-  {%- if not view_object.standalone -%}
   {% include "_shared/nav.jinja.html" %}
-  {%- endif -%}
 {% endblock layout_nav %}
 
 {% block tree_content %}

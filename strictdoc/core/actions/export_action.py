@@ -62,7 +62,6 @@ class ExportAction:
 
         if (
             "html" in self.project_config.export_formats
-            or "html-standalone" in self.project_config.export_formats
             or "html2pdf" in self.project_config.export_formats
         ):
             is_small_project = self.traceability_index.is_small_project()
@@ -83,10 +82,7 @@ class ExportAction:
                     )
                 )
 
-            if (
-                "html" in self.project_config.export_formats
-                or "html-standalone" in self.project_config.export_formats
-            ):
+            if "html" in self.project_config.export_formats:
                 html_generator = HTMLGenerator(
                     self.project_config, html_templates
                 )

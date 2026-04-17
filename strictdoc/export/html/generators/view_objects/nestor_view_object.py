@@ -45,7 +45,6 @@ class NestorViewObject:
 
         self.link_renderer: LinkRenderer = link_renderer
         self.markup_renderer: MarkupRenderer = markup_renderer
-        self.standalone: bool = False
         self.document_tree_iterator: DocumentTreeIterator = (
             DocumentTreeIterator(
                 assert_cast(traceability_index.document_tree, DocumentTree)

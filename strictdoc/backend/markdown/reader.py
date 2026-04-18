@@ -134,6 +134,8 @@ class SDMarkdownReader:
         document_reference.set_document(document)
         including_document_reference = DocumentReference()
 
+        document.ng_including_document_reference = including_document_reference
+
         detected_meta_style = SDMarkdownReader._parse_document_root(
             root_heading=heading_nodes[0],
             document=document,

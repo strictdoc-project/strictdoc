@@ -16,7 +16,7 @@ REGEX_MASK_VALIDATION = rf"[^(\\|\/)]{REGEX_DOUBLE_WILDCARD}"
 DISALLOWED_CHARACTERS = ("..", "{", "}", "?", "+", "!")
 
 # "~"" comes from Windows.
-ALLOWED_FIRST_CHARACTERS = ("*", "/", ".", "_", "~")
+ALLOWED_FIRST_CHARACTERS = ("*", "/", ".", "_", "~", "\\")
 
 
 def validate_mask(mask: str) -> None:

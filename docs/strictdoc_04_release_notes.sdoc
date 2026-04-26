@@ -59,6 +59,8 @@ This unreleased section contains the following enhancements:
 2\) The right-panel Table of Contents in HTML output now starts collapsed by default. This makes large document outlines easier to scan and lets users expand only the sections they want to inspect.
 
 3\) The static HTML search result highlighting now escapes regex-special characters in user queries before building the highlight pattern. Searches that contain symbols such as ``(``, ``)``, ``+``, or ``*`` now behave as literal text searches instead of breaking the result rendering.
+
+4\) The standalone document export feature has been removed. This feature doesn't seem to be used by the StrictDoc users, but at the same time it creates maintenance overhead. We assume it is safe to be removed because the use case of exporting only one document as a single self-contained HTML with all assets embedded in it (the original motivation) is not really a common use case. We prefer to concentrate on the most used features and functionalities moving forward.
 <<<
 
 [[/SECTION]]

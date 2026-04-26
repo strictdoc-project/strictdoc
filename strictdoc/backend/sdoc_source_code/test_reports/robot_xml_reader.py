@@ -172,8 +172,8 @@ class SdocVisitor(ResultVisitor):  # type: ignore[misc]
                         g_file_format=FileEntryFormat.SOURCECODE,
                         g_file_path="#FORWARD#",
                         g_line_range=None,
-                        function=test.name,
-                        clazz=None,
+                        element="function",
+                        id=test.name,
                     ),
                 )
             )

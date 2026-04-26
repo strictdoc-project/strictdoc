@@ -511,9 +511,19 @@ class SDWriter:
                     output += ", "
                     output += str(ref.g_file_entry.line_range[1])
                     output += "\n"
-                elif ref.g_file_entry.function is not None:
+                elif (
+                    ref.g_file_entry.element == "function"
+                    and ref.g_file_entry.id is not None
+                ):
                     output += "  FUNCTION: "
-                    output += str(ref.g_file_entry.function)
+                    output += str(ref.g_file_entry.id)
+                    output += "\n"
+                elif (
+                    ref.g_file_entry.element == "class"
+                    and ref.g_file_entry.id is not None
+                ):
+                    output += "  CLASS: "
+                    output += str(ref.g_file_entry.id)
                     output += "\n"
 
             elif isinstance(reference, ParentReqReference):

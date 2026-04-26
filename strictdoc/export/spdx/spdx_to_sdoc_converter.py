@@ -284,8 +284,6 @@ class SPDXToSDocConverter:
                     g_file_format=None,
                     g_file_path=file.name,
                     g_line_range=None,
-                    function=None,
-                    clazz=None,
                 ),
             )
         ]
@@ -340,8 +338,6 @@ class SPDXToSDocConverter:
                     g_file_format=None,
                     g_file_path=spdx_file.name,
                     g_line_range=f"{snippet.line_range.begin}, {snippet.line_range.end - 1}",
-                    function=None,
-                    clazz=None,
                 ),
             )
         ]

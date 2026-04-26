@@ -1,0 +1,1 @@
+fn my_function() {}

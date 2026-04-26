@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-31, SDOC-SRS-101, scope=file)
 """
 
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
 from strictdoc.helpers.auto_described import auto_described
@@ -17,8 +17,11 @@ class FileEntry:
         g_file_format: Optional[str],
         g_file_path: str,
         g_line_range: Optional[str],
-        function: Optional[str],
-        clazz: Optional[str],
+        function: Optional[str] = None,
+        clazz: Optional[str] = None,
+        element: Optional[str] = None,
+        id: Optional[str] = None,  # noqa: A002
+        hash: Optional[str] = None,  # noqa: A002
     ):
         self.parent = parent
 
@@ -48,13 +51,50 @@ class FileEntry:
                 int(range_components_str[1]),
             )
 
-        # The textX parser parses an optional element as an empty string. We
-        # make it to None ourselves.
-        self.function: Optional[str] = (
+        # Ad-hoc conversion from legacy SDoc FUNCTION/CLASS fields to new element/id for backward compatibility.
+        _function = (
             function if function is not None and len(function) > 0 else None
         )
-        self.clazz: Optional[str] = (
-            clazz if clazz is not None and len(clazz) > 0 else None
+        _clazz = clazz if clazz is not None and len(clazz) > 0 else None
+
+        _id = id if id is not None and len(id) > 0 else None
+        if element is not None:
+            self.element: Optional[str] = element if len(element) > 0 else None
+            self.id: Optional[str] = _id
+        elif _function is not None:
+            self.element = "function"
+            self.id = _function
+        elif _clazz is not None:
+            self.element = "class"
+            self.id = _clazz
+        else:
+            self.element = None
+            self.id = _id
+
+        # Placeholder for drift-detection hash (no runtime functionality yet).
+        self.hash: Optional[str] = (
+            hash if hash is not None and len(hash) > 0 else None
+        )
+
+    def __setattr__(self, name: str, value: Union[str, Any]) -> None:
+        # Ignore legacy function and clazz from textX post-init. The attributes are already converted to
+        # during __init__.
+        if name in ("function", "clazz"):
+            return
+        object.__setattr__(self, name, value)
+
+    def __getattr__(self, name: str) -> Optional[str]:
+        # Handle ad-hoc conversion of element / id to legacy function / clazz.
+        if name == "function":
+            element = object.__getattribute__(self, "element")
+            id_ = object.__getattribute__(self, "id")
+            return id_ if element == "function" else None
+        if name == "clazz":
+            element = object.__getattribute__(self, "element")
+            id_ = object.__getattribute__(self, "id")
+            return id_ if element == "class" else None
+        raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
         )
 
 

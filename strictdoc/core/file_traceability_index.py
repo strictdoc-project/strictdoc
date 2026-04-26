@@ -301,8 +301,8 @@ class FileTraceabilityIndex:
                         g_file_format=relation_.g_file_entry.g_file_format,
                         g_file_path=resolved_path_to_function_file,
                         g_line_range=None,
-                        function=test_function,
-                        clazz=None,
+                        element="function",
+                        id=test_function,
                     )
 
                     forward_requirement_.set_field_value(
@@ -360,25 +360,31 @@ class FileTraceabilityIndex:
                     forward_requirement_.reserved_uid, OrderedSet()
                 ).add(file_posix_path)
 
-                if file_reference.g_file_entry.function is not None:
+                if (
+                    file_reference.g_file_entry.element == "function"
+                    and file_reference.g_file_entry.id is not None
+                ):
                     one_file_function_name_to_reqs_uids = (
                         self.map_file_function_names_to_reqs_uids.setdefault(
                             file_posix_path, {}
                         )
                     )
                     one_file_function_name_to_reqs_uids.setdefault(
-                        file_reference.g_file_entry.function, []
+                        file_reference.g_file_entry.id, []
                     ).append(
                         (forward_requirement_.reserved_uid, relation_.role)
                     )
-                elif file_reference.g_file_entry.clazz is not None:
+                elif (
+                    file_reference.g_file_entry.element == "class"
+                    and file_reference.g_file_entry.id is not None
+                ):
                     one_file_class_name_to_reqs_uids = (
                         self.map_file_class_names_to_reqs_uids.setdefault(
                             file_posix_path, {}
                         )
                     )
                     one_file_class_name_to_reqs_uids.setdefault(
-                        file_reference.g_file_entry.clazz, []
+                        file_reference.g_file_entry.id, []
                     ).append(
                         (forward_requirement_.reserved_uid, relation_.role)
                     )

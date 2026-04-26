@@ -35,6 +35,10 @@ from strictdoc.helpers.file_system import file_open_read_bytes
 
 
 class SourceFileTraceabilityReader_Python:
+    @staticmethod
+    def supported_elements() -> list[str]:
+        return ["function", "class"]
+
     def read(
         self, input_buffer: bytes, file_path: Optional[str] = None
     ) -> SourceFileTraceabilityInfo:

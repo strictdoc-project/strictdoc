@@ -52,7 +52,7 @@ TITLE: 0.20.0 (2026-04-27)
 [TEXT]
 MID: 58efd4f91ca54465be2238ba624af6cb
 STATEMENT: >>>
-This unreleased section contains the following enhancements:
+This release contains the following enhancements:
 
 1\) The HTML2PDF export now supports cross-document PDF links and anchors for StrictDoc LINK references. Generated PDF documents can link to each other using relative paths, which improves navigation in supporting PDF viewers and avoids leaking absolute local file system paths into the exported files.
 

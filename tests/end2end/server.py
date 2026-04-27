@@ -149,8 +149,17 @@ class SDocTestServer:
         self.test_stderr_log_thread: Optional[TestStderrLogThread] = None
 
     def __enter__(self):
-        self.run()
-        return self
+        try:
+            self.run()
+            return self
+        except Exception as e:
+            # If a ReadTimeout or any other error happens during startup,
+            # __exit__ will not be executed. We need to trigger the cleanup manually.
+            print(  # noqa: T201
+                "\n[SDocTestServer] Exception during startup, cleaning up!"
+            )
+            self.close(exit_due_exception=e)
+            raise e
 
     def __exit__(
         self, type__, reason_exception: Optional[Exception], traceback

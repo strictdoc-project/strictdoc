@@ -210,7 +210,7 @@ class SDocNode(SDocNodeIF):
             self.ng_resolved_custom_level = level
             self.custom_level = level
 
-        # This is always true, unless the node is filtered out with --filter-requirements.
+        # This is always true, unless the node is filtered out with --filter-nodes.
         self.ng_whitelisted: bool = True
 
         self.ng_has_requirements: bool = False

@@ -4,6 +4,8 @@ import datetime
 import os
 import re
 import uuid
+import toml
+
 from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
@@ -18,7 +20,7 @@ from reqif.unparser import ReqIFUnparser
 from starlette.background import BackgroundTask
 from starlette.datastructures import FormData
 from starlette.requests import Request
-from starlette.responses import FileResponse, HTMLResponse, Response
+from starlette.responses import FileResponse, HTMLResponse, RedirectResponse, Response
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc.backend.markdown.writer import SDMarkdownWriter
@@ -1221,6 +1223,25 @@ def create_main_router(
             },
         )
 
+    @read_router.get(
+        "/actions/project_index/edit_project_title_form",
+        response_class=Response,
+    )
+    def get_edit_project_title_form() -> Response:
+        error_object = ErrorObject()
+        output = env().render_template_as_markup(
+            "actions/project_index/edit_project_title/"
+            "stream_form_edit_project_title.jinja.html",
+            error_object=error_object,
+            project_config=project_config,
+        )
+        return HTMLResponse(
+            content=output,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
     @write_router.post(
         "/actions/project_index/create_document", response_class=Response
     )
@@ -1360,6 +1381,125 @@ def create_main_router(
         output = env().render_template_as_markup(
             "actions/project_index/stream_create_document.jinja.html",
             view_object=view_object,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @write_router.post(
+        "/actions/project_index/save_project_title", response_class=Response
+    )
+    def save_project_title(project_title: str = Form("")) -> Response:
+        error_object = ErrorObject()
+
+        new_title = project_title.strip() if project_title is not None else ""
+        if len(new_title) == 0:
+            error_object.add_error(
+                "project_title", "Project title must not be empty."
+            )
+
+        if error_object.any_errors():
+            output = env().render_template_as_markup(
+                "actions/project_index/edit_project_title/"
+                "stream_form_edit_project_title.jinja.html",
+                error_object=error_object,
+                project_config=project_config,
+                new_title=new_title,
+            )
+            return HTMLResponse(
+                content=output,
+                status_code=200,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        # Try to persist the new title into the project configuration when available.
+        project_root = project_config.get_project_root_path()
+        config_toml_path: Optional[str] = None
+        config_py_path: Optional[str] = None
+
+        if os.path.isdir(project_root):
+            # Prefer Python config when both exist.
+            candidate_py = os.path.join(project_root, "strictdoc_config.py")
+            candidate_toml = os.path.join(project_root, "strictdoc.toml")
+            if os.path.isfile(candidate_py):
+                config_py_path = candidate_py
+            elif os.path.isfile(candidate_toml):
+                config_toml_path = candidate_toml
+        else:
+            # project_root may point directly to a config file or to an
+            # input path next to the config files.
+            if project_root.endswith("strictdoc.toml"):
+                config_toml_path = project_root
+            elif project_root.endswith("strictdoc_config.py"):
+                config_py_path = project_root
+            else:
+                config_dir = os.path.dirname(project_root)
+                candidate_py = os.path.join(config_dir, "strictdoc_config.py")
+                candidate_toml = os.path.join(config_dir, "strictdoc.toml")
+                if os.path.isfile(candidate_py):
+                    config_py_path = candidate_py
+                elif os.path.isfile(candidate_toml):
+                    config_toml_path = candidate_toml
+
+        # 1) strictdoc_config.py: conservative in-place edit of project_title
+        #    argument, similar to the Tk launcher behavior. If the pattern
+        #    cannot be found, the change is skipped but no error is raised.
+        if config_py_path is not None:
+            try:
+                with open(config_py_path, "r", encoding="utf8") as config_file:
+                    config_text = config_file.read()
+
+                pattern = re.compile(
+                    r"(project_title\s*=\s*)([\"'])(.*?)([\"'])",
+                    re.DOTALL,
+                )
+
+                def _replace_title(match: re.Match[str]) -> str:  # type: ignore[name-defined]
+                    prefix = match.group(1)
+                    quote = match.group(2)
+                    escaped_title = new_title.replace(quote, "\\" + quote)
+                    return f"{prefix}{quote}{escaped_title}{quote}"
+
+                new_text, count = pattern.subn(_replace_title, config_text, count=1)
+
+                if count > 0:
+                    with open(config_py_path, "w", encoding="utf8") as config_file:
+                        config_file.write(new_text)
+                # If project_title is not present, we leave the file
+                # untouched and rely on the in-memory value only.
+            except Exception:
+                # Keep running; in-memory project_config is still updated below.
+                pass
+
+        # 2) strictdoc.toml (legacy): update [project].title when present.
+        if config_toml_path is not None:
+            try:
+                config_dict = toml.load(config_toml_path)
+                project_section = config_dict.get("project", {})
+                project_section["title"] = new_title
+                config_dict["project"] = project_section
+                with open(config_toml_path, "w", encoding="utf8") as config_file:
+                    toml.dump(config_dict, config_file)
+            except Exception:
+                # If persisting fails, keep the in-memory value and still
+                # update the header; errors can be inspected via logs.
+                pass
+
+        # Update in-memory project configuration after successful validation
+        # of where the title can be stored on disk.
+        project_config.project_title = new_title
+
+        # Return Turbo Streams to update the header title and close the modal.
+        output = env().render_template_as_markup(
+            "actions/project_index/edit_project_title/"
+            "stream_save_project_title.jinja.html",
+            project_config=project_config,
         )
         return HTMLResponse(
             content=output,

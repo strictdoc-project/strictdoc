@@ -183,7 +183,6 @@ class RequirementReferenceFormField:
     def get_type_field_name(self) -> str:
         return f"requirement[relations][{self.field_mid}][typerole]"
 
-
 @auto_described
 class RequirementFormObject(ErrorObject):
     """

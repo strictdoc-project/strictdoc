@@ -15,6 +15,7 @@ from strictdoc.commands.import_reqif import ImportReqIFCommand
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.server import ServerCommand
 from strictdoc.commands.version_command import VersionCommand
+from strictdoc.commands.launcher_command import LauncherCommand
 from strictdoc.helpers.coverage import register_code_coverage_hook
 from strictdoc.helpers.exception import (
     ExceptionInfo,
@@ -29,6 +30,7 @@ COMMAND_REGISTRY: Dict[str, Any] = {
     "import": {"excel": ImportExcelCommand, "reqif": ImportReqIFCommand},
     "manage": {"auto-uid": ManageAutoUIDCommand},
     "server": ServerCommand,
+    "launcher": LauncherCommand,
     "version": VersionCommand,
 }
 

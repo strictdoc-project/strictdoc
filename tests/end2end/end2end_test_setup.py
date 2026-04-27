@@ -103,7 +103,11 @@ class End2EndTestSetup:
     def find_files(path_to_dir):
         assert os.path.isdir(path_to_dir), path_to_dir
         matches = []
-        for root, _, filenames in os.walk(path_to_dir, topdown=True):
+        for root, dirs, filenames in os.walk(path_to_dir, topdown=True):
+            # Skip __pycache__
+            # Example: strictdoc_config.py causes an entry in __pycache__ to be created.
+            if "__pycache__" in dirs:
+                dirs.remove("__pycache__")
             for filename in filenames:
                 relative_path = os.path.relpath(
                     os.path.join(root, filename), start=path_to_dir

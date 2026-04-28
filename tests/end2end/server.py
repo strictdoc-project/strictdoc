@@ -245,7 +245,7 @@ class SDocTestServer:
             # process is being terminated.
             #
             self.process.send_signal(signal.SIGTERM)
-            self.process.wait(timeout=1)
+            self.process.wait(timeout=5)
             self.process.terminate()
 
             for process_ in child_processes:

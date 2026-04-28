@@ -1,0 +1,11 @@
+#
+# @relation(SDOC-LLR-206, scope=file)
+#
+
+RUN: %strictdoc export --formats=rst --output-dir %T "%S"
+
+RUN: %check_exists --file "%T/rst/input.rst"
+
+RUN: %diff "%T/rst/input.rst" "%S/expected/input.rst"
+RUN: %diff "%T/rst/level_1/level_1.rst" "%S/expected/level_1/level_1.rst"
+RUN: %diff "%T/rst/level_1/level_2/level_2.rst" "%S/expected/level_1/level_2/level_2.rst"

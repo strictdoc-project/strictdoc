@@ -57,9 +57,7 @@ class WildcardEnhancedImage(Image):  # type: ignore[misc]
                 )
                 if os.path.exists(full_path_to_image_with_extension):
                     # We have found a matching file, let's use it.
-                    self.arguments[0] = os.path.join(
-                        rel_path_to_image_with_extension
-                    )
+                    self.arguments[0] = rel_path_to_image_with_extension
                     break
             else:
                 # If the argument is not provided, raise an error.

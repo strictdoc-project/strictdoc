@@ -129,6 +129,7 @@ class DocumentBuilder:
             input_doc_rel_path=SDocRelativePath("input.sdoc"),
             input_doc_dir_rel_path=SDocRelativePath(""),
             input_doc_assets_dir_rel_path=SDocRelativePath("_assets"),
+            document_root_assets_dir_rel_path=SDocRelativePath("_assets"),
             output_document_dir_full_path="FOO",
             output_document_dir_rel_path=SDocRelativePath("BAR"),
         )

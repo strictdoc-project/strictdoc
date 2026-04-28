@@ -22,6 +22,7 @@ from strictdoc.backend.sdoc.models.reference import (
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.tools.assets_macro import expand_assets_macro
 from strictdoc.helpers.cast import assert_cast
 
 
@@ -265,7 +266,14 @@ class JSONGenerator:
                 continue
             fields = node.ordered_fields_lookup[field_name]
             for field in fields:
-                node_dict[field_name] = field.get_text_value()
+                raw_text = field.get_text_value()
+
+                if getattr(field, "multiline", False):
+                    node_dict[field_name] = cls._expand_assets(
+                        raw_text, document
+                    )
+                else:
+                    node_dict[field_name] = raw_text
 
         if len(node.relations) > 0:
             node_dict["RELATIONS"] = cls._write_requirement_relations(node)
@@ -356,3 +364,20 @@ class JSONGenerator:
                 else ".".join(map(str, level_stack))
             )
         )
+
+    @classmethod
+    def _expand_assets(cls, text: str, document: SDocDocument) -> str:
+        """
+        Expands the @assets macro to the _assets folder in the project root.
+
+        @relation(SDOC-LLR-206, scope=function)
+        """
+        if "@assets/" not in text:
+            return text
+
+        assert document.meta is not None
+        document_meta = document.meta
+
+        assets_path = document_meta.get_document_root_assets_path_prefix()
+
+        return expand_assets_macro(text, assets_path)

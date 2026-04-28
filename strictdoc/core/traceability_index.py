@@ -1125,6 +1125,7 @@ class TraceabilityIndex:
             input_doc_rel_path=SDocRelativePath("bundle.sdoc"),
             input_doc_dir_rel_path=SDocRelativePath(""),
             input_doc_assets_dir_rel_path=SDocRelativePath("NOT_RELEVANT"),
+            document_root_assets_dir_rel_path=SDocRelativePath("NOT_RELEVANT"),
             output_document_dir_full_path=project_config.export_output_html_root,
             output_document_dir_rel_path=SDocRelativePath(""),
         )

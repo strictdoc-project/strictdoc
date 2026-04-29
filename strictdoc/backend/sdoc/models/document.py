@@ -259,18 +259,24 @@ class SDocDocument(SDocDocumentIF):
     def enumerate_meta_field_titles(self) -> Generator[str, None, None]:
         assert self.grammar is not None
         assert self.grammar.elements is not None
-        # FIXME: currently only enumerating a single element ([0])
-        yield from self.grammar.elements[0].enumerate_meta_field_titles()
+        seen: Set[str] = set()
+        for element in self.grammar.elements:
+            for title in element.enumerate_meta_field_titles():
+                if title not in seen:
+                    seen.add(title)
+                    yield title
 
     def enumerate_custom_content_field_titles(
         self,
     ) -> Generator[str, None, None]:
         assert self.grammar is not None
         assert self.grammar.elements is not None
-        # FIXME: currently only enumerating a single element ([0])
-        yield from self.grammar.elements[
-            0
-        ].enumerate_custom_content_field_titles()
+        seen: Set[str] = set()
+        for element in self.grammar.elements:
+            for title in element.enumerate_custom_content_field_titles():
+                if title not in seen:
+                    seen.add(title)
+                    yield title
 
     def get_grammar_element_field_for(
         self, element_type: str, field_name: str

@@ -129,7 +129,7 @@ class TreeMapGenerator:
             if not node_.section_contents:
                 if (
                     not isinstance(node_, SDocNode)
-                    or node_.node_type in ("TEXT", "SECTION")
+                    or not node_.is_normative_node()
                     or node_.reserved_uid is None
                 ):
                     return NodeStats.create_child_node_without_stats()
@@ -200,7 +200,7 @@ class TreeMapGenerator:
                 if not isinstance(node_, SDocNode):
                     continue
 
-                if node_.node_type not in ("TEXT", "SECTION"):
+                if node_.is_normative_node():
                     documents_with_requirements.add(document_)
                 map_node_to_coverage[node_] = get_node_stats(node_)
 
@@ -248,14 +248,11 @@ class TreeMapGenerator:
                 if not isinstance(node, SDocNode):
                     continue
 
-                is_normative = node.node_type == "REQUIREMENT" or (
+                is_normative = node.is_normative_node() or (
                     node.node_type == "SECTION" and node.ng_has_requirements
                 )
 
                 parent_mid = node.parent.reserved_mid
-
-                if parent_mid == "c2d4542d5f1741c88dfcb4f68ad7dcbd":
-                    assert not is_normative, node
 
                 if node.reserved_title is not None:
                     title = node.reserved_title

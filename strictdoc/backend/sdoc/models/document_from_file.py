@@ -30,7 +30,6 @@ class DocumentFromFile(SDocDocumentFromFileIF):
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_included_document_reference: Optional[DocumentReference] = None
         self.ng_resolved_custom_level: Optional[str] = None
-        self.ng_whitelisted: bool = True
         self.resolved_full_path_to_document_file: Optional[str] = None
         self.resolved_document: Optional[SDocDocumentIF] = None
 

@@ -278,13 +278,15 @@ class P01_SDocToReqIFObjectConverter:
             node_stack: List[ReqIFSpecHierarchy] = [root_hierarchy]
 
             # FIXME: ReqIF must export complete documents including fragments.
-            for node_, _ in document_iterator.all_content(
+            for node_, node_context_ in document_iterator.all_content(
                 print_fragments=False
             ):
                 if not isinstance(node_, SDocNode):
                     continue
                 leaf_or_composite_node = assert_cast(node_, SDocNode)
-                while len(node_stack) > assert_cast(node_.ng_level, int):
+                while len(node_stack) > assert_cast(
+                    node_context_.get_level(), int
+                ):
                     node_stack.pop()
 
                 current_hierarchy = node_stack[-1]
@@ -305,7 +307,7 @@ class P01_SDocToReqIFObjectConverter:
                     spec_object=spec_object.identifier,
                     children=None,
                     ref_then_children_order=True,
-                    level=leaf_or_composite_node.ng_level,
+                    level=node_context_.get_level(),
                 )
                 current_hierarchy.add_child(hierarchy)
                 if leaf_or_composite_node.is_composite:

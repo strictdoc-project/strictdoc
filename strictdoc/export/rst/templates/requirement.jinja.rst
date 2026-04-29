@@ -4,7 +4,7 @@
 {% endif -%}
 
 {%- if requirement.reserved_title is not none -%}
-{{ _print_rst_header(requirement.reserved_title, requirement.ng_level) }}
+{{ _print_rst_header(requirement.reserved_title, requirement.context.ng_level) }}
 
 {% endif -%}
 

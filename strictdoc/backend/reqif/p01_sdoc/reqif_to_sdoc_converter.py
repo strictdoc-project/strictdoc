@@ -543,7 +543,7 @@ class P01_ReqIFToSDocConverter:
             if grammar_element.property_is_composite
             else None,
         )
-        requirement.ng_level = level
+        requirement.context.ng_level = level
         requirement.ng_document_reference = document_reference
         requirement.ng_including_document_reference = DocumentReference()
 

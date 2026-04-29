@@ -12,8 +12,8 @@
         and node_view not in ['table', 'zebra', 'simple', 'inline']
     -%}
 
-    {%- set h_level = sdoc_entity.ng_level + 1
-        if sdoc_entity.ng_level < 6
+    {%- set h_level = sdoc_entity.context.ng_level + 1
+        if sdoc_entity.context.ng_level < 6
         else 6 -%}
 
     {% if title_has_h_level %}<h{{ h_level }}>{% endif %}

@@ -33,16 +33,16 @@ class RSTWriter:
                 document.title, 0, reference_uid=document_uid
             )
 
-        for content_node, _ in document_iterator.all_content():
+        for content_node, node_context_ in document_iterator.all_content():
             if (
                 isinstance(content_node, SDocNode)
                 and content_node.node_type == "SECTION"
             ):
-                assert content_node.ng_level is not None
+                assert node_context_.get_level() is not None
                 assert content_node.reserved_title is not None
                 output += self._print_rst_header(
                     content_node.reserved_title,
-                    content_node.ng_level,
+                    node_context_.get_level(),
                     content_node.reserved_uid,
                 )
 

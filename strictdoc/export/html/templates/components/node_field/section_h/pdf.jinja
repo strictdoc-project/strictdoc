@@ -4,8 +4,8 @@
 <sdoc-section-title
   data-level="{{ sdoc_entity.context.title_number_string }}"
 >
-  {%  set h_level = sdoc_entity.ng_level + 1
-      if sdoc_entity.ng_level < 6
+  {%  set h_level = sdoc_entity.context.ng_level + 1
+      if sdoc_entity.context.ng_level < 6
       else 6  %}
   <h{{ h_level }}
     id="{{ view_object.render_local_anchor(section) }}"

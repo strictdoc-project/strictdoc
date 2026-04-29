@@ -21,7 +21,9 @@ from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.features.tree_map.helpers import (
     get_color,
     split_into_max_n_lines,
@@ -119,6 +121,18 @@ class TreeMapGenerator:
         map_node_to_coverage: Dict[
             Union[SDocNode, SDocDocument], NodeStats
         ] = {}
+
+        link_renderer = LinkRenderer(
+            root_path="", static_path=project_config.dir_for_sdoc_assets
+        )
+
+        def create_node_link(node__: Union[SDocDocument, SDocNode]) -> str:
+            href = link_renderer.render_node_link(
+                node__,
+                context_document=None,
+                document_type=DocumentType.DOCUMENT,
+            )
+            return f'<a href="{href}">Open in document</a>'
 
         def get_node_stats(
             node_: Union[SDocNode, SDocDocument],
@@ -233,6 +247,8 @@ class TreeMapGenerator:
                     else "",
                     "TITLE": title,
                     "STATEMENT": " (" + str(document_.get_total_size()) + ")",
+                    "_LINK": create_node_link(document_),
+                    PlotlyDataFrameColumn.LEVEL: 0,
                     PlotlyDataFrameColumn.PARENT_MID: root_node_title,
                     PlotlyDataFrameColumn.COLOR_SOURCE: color_code,
                     PlotlyDataFrameColumn.COLOR_TEST: color_test,
@@ -304,6 +320,9 @@ class TreeMapGenerator:
                         else "",
                         "TITLE": title,
                         "STATEMENT": statement,
+                        "_LINK": create_node_link(
+                            node,
+                        ),
                         PlotlyDataFrameColumn.PARENT_MID: parent_mid,
                         PlotlyDataFrameColumn.LEVEL: context_.get_level(),
                         PlotlyDataFrameColumn.COLOR_SOURCE: color_code,
@@ -321,6 +340,7 @@ class TreeMapGenerator:
             "_SHORT_LABEL": "",
             "_LONG_LABEL": "",
             "_IS_LEAF": False,
+            "_LINK": "",
             PlotlyDataFrameColumn.PARENT_MID: "",
             PlotlyDataFrameColumn.LEVEL: 0,
             PlotlyDataFrameColumn.COLOR_SOURCE: "white",
@@ -353,10 +373,12 @@ class TreeMapGenerator:
                 statement = statement.replace("\n", "<br>")
                 statement = wrap_text(statement, 80)
 
-                return f"<b>{row_['TITLE']}</b><br><br>{statement}"
+                return f"<b>{row_['TITLE']}</b><br><br>{statement}<br><br>{row_['_LINK']}"
             title = row_["TITLE"]
             if len(title) > 30:
-                title = "<br>".join(title.split(" "))
+                title = (
+                    "<br>".join(title.split(" ")) + f"<br><br>{row_['_LINK']}"
+                )
             return title
 
         df["_LONG_LABEL"] = df.apply(long_or_short_label, axis=1)

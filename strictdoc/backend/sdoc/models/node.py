@@ -3,6 +3,7 @@
 """
 
 from collections import OrderedDict
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Generator, List, Optional, Tuple, Union
 
@@ -36,10 +37,10 @@ from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import ensure_newline
 
 
-@auto_described
+@dataclass
 class SDocNodeContext:
-    def __init__(self) -> None:
-        self.title_number_string: Optional[str] = None
+    title_number_string: Optional[str] = None
+    ng_level: int = 0
 
 
 class SDocNodeFieldOrigin(str, Enum):
@@ -181,7 +182,6 @@ class SDocNode(SDocNodeIF):
         self.ordered_fields_lookup: OrderedDict[str, List[SDocNodeField]] = (
             ordered_fields_lookup
         )
-        self.ng_level: Optional[int] = None
         self.ng_document_reference: Optional[DocumentReference] = None
         self.ng_including_document_reference: Optional[DocumentReference] = None
         self.ng_line_start: Optional[int] = None

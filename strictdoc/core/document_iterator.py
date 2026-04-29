@@ -110,7 +110,7 @@ class SDocDocumentIterator:
             )
             if update_levels:
                 node.context.title_number_string = context.get_level_string()
-                node.ng_level = context.get_level()
+                node.context.ng_level = context.get_level()
 
             yield node, context
 
@@ -145,7 +145,7 @@ class SDocDocumentIterator:
                     node.context.title_number_string = (
                         context.get_level_string()
                     )
-                    node.ng_level = context.get_level()
+                    node.context.ng_level = context.get_level()
 
                 yield node, context
 

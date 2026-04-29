@@ -25,19 +25,17 @@ from strictdoc.backend.sdoc.models.model import (
     SDocElementIF,
     SDocNodeIF,
 )
-from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.node import (
+    SDocNode,
+    SDocNodeContext,
+    SDocNodeField,
+)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.string import tokenize
-
-
-@auto_described
-class SDocDocumentContext:
-    def __init__(self) -> None:
-        self.title_number_string: Optional[str] = None
 
 
 @dataclass
@@ -82,8 +80,6 @@ class SDocDocument(SDocDocumentIF):
 
         self.fragments_from_files: List[SDocDocumentFromFileIF] = []
 
-        # FIXME: Is this used?
-        self.ng_level: int = 0
         self.ng_has_requirements = False
 
         self.meta: Optional[DocumentMeta] = None
@@ -91,7 +87,7 @@ class SDocDocument(SDocDocumentIF):
         self.reserved_mid: MID = MID(mid) if mid is not None else MID.create()
         self.mid_permanent: bool = mid is not None
         self.included_documents: List[SDocDocumentIF] = []
-        self.context: SDocDocumentContext = SDocDocumentContext()
+        self.context: SDocNodeContext = SDocNodeContext()
 
         self.ng_including_document_reference: Optional[DocumentReference] = None
         self.ng_including_document_from_file: Optional[

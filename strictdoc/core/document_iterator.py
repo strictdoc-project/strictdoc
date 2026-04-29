@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Iterator, Tuple, Union
+from typing import Iterator, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
@@ -13,6 +13,7 @@ from strictdoc.backend.sdoc.models.model import (
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
+from strictdoc.backend.sdoc.node_filter import NodeFilter
 from strictdoc.helpers.cast import assert_cast
 
 
@@ -46,10 +47,13 @@ class DocumentIterationContext:
 
 
 class SDocDocumentIterator:
-    def __init__(self, document: SDocDocument) -> None:
+    def __init__(
+        self, document: SDocDocument, node_filter: Optional[NodeFilter] = None
+    ) -> None:
         assert isinstance(document, SDocDocument), document
 
         self.document: SDocDocument = document
+        self.node_filter: Optional[NodeFilter] = node_filter
 
     def table_of_contents(
         self,
@@ -97,7 +101,7 @@ class SDocDocumentIterator:
             # If node is not whitelisted, we ignore it. Also, note that due to
             # this early return, all child nodes of this node are ignored
             # as well because they are not added to the iteration queue.
-            if not node.ng_whitelisted:
+            if self.node_filter and not self.node_filter.is_whitelisted(node):
                 return
 
             # FIXME: This will be changed to yield only context.

@@ -17,6 +17,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
 )
+from strictdoc.backend.sdoc.node_filter import NodeFilter
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     RelationMarkerType,
     SourceFileTraceabilityInfo,
@@ -67,6 +68,8 @@ class TraceabilityIndex:
         self.file_dependency_manager: FileDependencyManager = (
             file_dependency_manager
         )
+        self.node_filter: Optional[NodeFilter] = None
+
         self.index_last_updated = datetime.datetime.today()
         self.contains_included_documents = False
         self.strictdoc_last_update: datetime.datetime = (
@@ -172,7 +175,9 @@ class TraceabilityIndex:
     def get_document_iterator(
         self, document: SDocDocument
     ) -> SDocDocumentIterator:
-        return self.document_iterators[document]
+        return SDocDocumentIterator(
+            document=document, node_filter=self.node_filter
+        )
 
     def get_parent_requirements(self, requirement: SDocNode) -> List[SDocNode]:
         assert isinstance(requirement, SDocNode)

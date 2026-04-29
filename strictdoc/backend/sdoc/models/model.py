@@ -57,7 +57,6 @@ class SDocNodeIF(ABC):
     section_contents: List["SDocElementIF"]
     ng_level: Optional[int]
     ng_resolved_custom_level: Optional[str]
-    ng_whitelisted: bool
     ng_has_requirements: bool
     autogen: bool
 
@@ -103,10 +102,6 @@ class SDocNodeIF(ABC):
     def get_prefix(self) -> Optional[str]:
         raise NotImplementedError
 
-    @abstractmethod
-    def blacklist_if_needed(self) -> None:
-        raise NotImplementedError
-
 
 class SDocGrammarIF:
     pass
@@ -122,7 +117,6 @@ class SDocDocumentIF(ABC):
     meta: Optional[DocumentMeta]
     is_bundle_document: bool
     ng_level: Optional[int]
-    ng_whitelisted: bool
     ng_has_requirements: bool
     autogen: bool
 
@@ -156,15 +150,10 @@ class SDocDocumentIF(ABC):
     def ng_resolved_custom_level(self) -> Optional[str]:
         raise NotImplementedError
 
-    @abstractmethod
-    def blacklist_if_needed(self) -> None:
-        raise NotImplementedError
-
 
 class SDocDocumentFromFileIF(ABC):
     parent: Union[SDocDocumentIF, SDocNodeIF]
     ng_resolved_custom_level: Optional[str]
-    ng_whitelisted: bool
     autogen: bool
 
     @abstractmethod

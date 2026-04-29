@@ -234,7 +234,9 @@ class ExportAction:
         else:
             assert traceability_index.document_tree
 
-        writer = SDWriter(self.project_config)
+        writer = SDWriter(
+            self.project_config, node_filter=traceability_index.node_filter
+        )
 
         output_base_dir = (
             self.project_config.output_dir

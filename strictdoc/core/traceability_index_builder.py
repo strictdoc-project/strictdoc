@@ -21,12 +21,17 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     ReferenceType,
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.model import SDocDocumentFromFileIF
+from strictdoc.backend.sdoc.models.model import (
+    SDocDocumentFromFileIF,
+    SDocElementIF,
+    SDocNodeIF,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
 )
+from strictdoc.backend.sdoc.node_filter import NodeFilter
 from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 from strictdoc.backend.sdoc_source_code.caching_reader import (
     SourceFileTraceabilityCachingReader,
@@ -70,8 +75,9 @@ from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
 class TraceabilityIndexBuilder:
-    @staticmethod
+    @classmethod
     def create(
+        cls,
         *,
         project_config: ProjectConfig,
         parallelizer: Parallelizer,
@@ -128,9 +134,11 @@ class TraceabilityIndexBuilder:
         traceability_index.asset_manager = asset_manager
         traceability_index.strictdoc_last_update = strictdoc_last_update
 
-        TraceabilityIndexBuilder._filter_nodes(
-            project_config=project_config, traceability_index=traceability_index
-        )
+        if node_filter_query := project_config.filter_nodes:
+            traceability_index.node_filter = cls._create_filter(
+                traceability_index=traceability_index,
+                filter_query=node_filter_query,
+            )
 
         #
         # File traceability-related calculations.
@@ -848,17 +856,14 @@ class TraceabilityIndexBuilder:
 
         return traceability_index
 
-    @staticmethod
-    def _filter_nodes(
-        project_config: ProjectConfig, traceability_index: TraceabilityIndex
-    ) -> None:
-        if project_config.filter_nodes is None:
-            return
-
+    @classmethod
+    def _create_filter(
+        cls, traceability_index: Any, filter_query: str
+    ) -> "NodeFilter":
         query_reader = QueryReader()
         requirements_query_object: Union[QueryObject, QueryNullObject]
         try:
-            requirements_query = query_reader.read(project_config.filter_nodes)
+            requirements_query = query_reader.read(filter_query)
             requirements_query_object = QueryObject(
                 requirements_query, traceability_index
             )
@@ -866,6 +871,8 @@ class TraceabilityIndexBuilder:
             raise StrictDocException(
                 "Cannot parse filter query."
             ) from textx_syntax_error_
+
+        blacklisted_nodes: set[SDocElementIF] = set()
 
         try:
             for document in traceability_index.document_tree.document_list:
@@ -878,7 +885,8 @@ class TraceabilityIndexBuilder:
                         and node.node_type == "SECTION"
                         and not requirements_query_object.evaluate(node)
                     ):
-                        node.ng_whitelisted = False
+                        blacklisted_nodes.add(node)
+
                         # If the node is the last one, we check if all other
                         # nodes are filtered out and if so, mark the parent
                         # section node as not whitelisted as well.
@@ -892,12 +900,14 @@ class TraceabilityIndexBuilder:
                                 isinstance(node.parent, SDocNode)
                                 and node.parent.node_type == "SECTION"
                             ):
-                                node.parent.blacklist_if_needed()
+                                cls._blacklist_if_needed(
+                                    blacklisted_nodes, node.parent
+                                )
 
                     elif isinstance(
                         node, SDocNode
                     ) and not requirements_query_object.evaluate(node):
-                        node.ng_whitelisted = False
+                        blacklisted_nodes.add(node)
                         # If the node is the last one, we check if all other
                         # nodes are filtered out and if so, mark the parent
                         # section node as not whitelisted as well.
@@ -907,12 +917,40 @@ class TraceabilityIndexBuilder:
                             ]
                             == node
                         ):
-                            node.parent.blacklist_if_needed()
+                            cls._blacklist_if_needed(
+                                blacklisted_nodes, node.parent
+                            )
 
         except (AttributeError, NameError, TypeError) as attribute_error_:
             raise StrictDocException(
                 f"Cannot apply a filter query to a node: {attribute_error_}"
             ) from attribute_error_
+
+        return NodeFilter(blacklisted_nodes)
+
+    @classmethod
+    def _blacklist_if_needed(
+        cls,
+        blacklisted_nodes: set[SDocElementIF],
+        node: SDocElementIF,
+    ) -> None:
+        if isinstance(node, SDocDocumentFromFileIF):
+            return
+
+        if node.section_contents is not None:
+            for node_ in node.section_contents:
+                if node_ not in blacklisted_nodes:
+                    return
+
+        blacklisted_nodes.add(node)
+
+        # If it turns out that all child nodes are blacklisted,
+        # go up and blacklist the parent node if needed.
+        if (
+            isinstance(node, SDocNodeIF)
+            and node.parent not in blacklisted_nodes
+        ):
+            cls._blacklist_if_needed(blacklisted_nodes, node.parent)
 
     @staticmethod
     def source_node_parser_tags(

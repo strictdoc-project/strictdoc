@@ -1,6 +1,6 @@
 import os.path
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -32,6 +32,7 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
     Reference,
 )
+from strictdoc.backend.sdoc.node_filter import NodeFilter
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.project_config import ProjectConfig
@@ -40,8 +41,13 @@ from strictdoc.helpers.string import ensure_newline
 
 
 class SDWriter:
-    def __init__(self, project_config: ProjectConfig) -> None:
+    def __init__(
+        self,
+        project_config: ProjectConfig,
+        node_filter: Optional[NodeFilter] = None,
+    ) -> None:
         self.project_config: ProjectConfig = project_config
+        self.node_filter: Optional[NodeFilter] = node_filter
 
     def write_to_file(self, document: SDocDocument) -> None:
         document_content, fragments_dict = self.write_with_fragments(document)
@@ -317,7 +323,10 @@ class SDWriter:
             output = ""
 
             for node_ in root_node.section_contents:
-                if not node_.ng_whitelisted:
+                if (
+                    self.node_filter is not None
+                    and not self.node_filter.is_whitelisted(node_)
+                ):
                     continue
                 output += self._print_node(
                     node_,
@@ -358,7 +367,10 @@ class SDWriter:
             ):
                 if root_node.section_contents is not None:
                     for node_ in root_node.section_contents:
-                        if not node_.ng_whitelisted:
+                        if (
+                            self.node_filter is not None
+                            and not self.node_filter.is_whitelisted(node_)
+                        ):
                             continue
                         output += self._print_node(
                             node_, document, document_iterator=document_iterator

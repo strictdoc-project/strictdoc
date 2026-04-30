@@ -233,20 +233,26 @@ class TreeMapGenerator:
                     color_code = get_color(node_stats.get_code_coverage_ratio())
                     color_test = get_color(node_stats.get_test_coverage_ratio())
 
+            document_total_size = document_.get_total_size()[0]
+            document_normative_total_size = document_.get_total_size()[1]
+
             title = document_.reserved_title
-            title += " (" + str(document_.get_total_size()) + ")"
+            title_normative = title
+            title += " (" + str(document_total_size) + ")"
+            title_normative += " (" + str(document_normative_total_size) + ")"
 
             data.append(
                 {
-                    PlotlyDataFrameColumn.WEIGHT: document_.get_total_size()
-                    if document_.get_total_size() > 10
+                    PlotlyDataFrameColumn.WEIGHT: document_total_size
+                    if document_total_size > 10
                     else 10,
                     "MID": document_.reserved_mid,
                     "UID": document_.reserved_uid
                     if document_.reserved_uid is not None
                     else "",
                     "TITLE": title,
-                    "STATEMENT": " (" + str(document_.get_total_size()) + ")",
+                    "TITLE_NORMATIVE": title_normative,
+                    "STATEMENT": " (" + str(document_total_size) + ")",
                     "_LINK": create_node_link(document_),
                     PlotlyDataFrameColumn.LEVEL: 0,
                     PlotlyDataFrameColumn.PARENT_MID: root_node_title,
@@ -268,18 +274,25 @@ class TreeMapGenerator:
                     node.node_type == "SECTION" and node.ng_has_requirements
                 )
 
+                node_total_size = node.get_total_size()[0]
+                node_normative_total_size = node.get_total_size()[1]
+
                 parent_mid = node.parent.reserved_mid
 
                 if node.reserved_title is not None:
                     title = node.reserved_title
                 else:
                     title = "[TEXT] node"
+                title_normative = title
 
                 if (
                     node.section_contents is not None
                     and len(node.section_contents) > 0
                 ):
-                    title += " (" + str(node.get_total_size()) + ")"
+                    title += " (" + str(node_total_size) + ")"
+                    title_normative += (
+                        " (" + str(node_normative_total_size) + ")"
+                    )
 
                 statement = (
                     node.reserved_statement
@@ -308,14 +321,15 @@ class TreeMapGenerator:
 
                 data.append(
                     {
-                        PlotlyDataFrameColumn.WEIGHT: node.get_total_size()
-                        if node.get_total_size() > 10
+                        PlotlyDataFrameColumn.WEIGHT: node_total_size
+                        if node_total_size > 10
                         else 10,
                         "MID": node.reserved_mid,
                         "UID": node.reserved_uid
                         if node.reserved_uid is not None
                         else "",
                         "TITLE": title,
+                        "TITLE_NORMATIVE": title_normative,
                         "STATEMENT": statement,
                         "_LINK": create_node_link(
                             node,
@@ -332,6 +346,7 @@ class TreeMapGenerator:
             "MID": root_node_title,
             "UID": "",
             "TITLE": root_node_title,
+            "TITLE_NORMATIVE": root_node_title,
             "STATEMENT": "",
             PlotlyDataFrameColumn.WEIGHT: 0,
             "_SHORT_LABEL": "",
@@ -357,7 +372,15 @@ class TreeMapGenerator:
                 title = split_into_max_n_lines(title, max_lines=2)
             return title
 
+        def short_label_normative(row_: Any) -> Any:
+            title = row_["TITLE_NORMATIVE"]
+            # FIXME: Move this reasoning to JS based on zoom depth.
+            if len(title) > 20:
+                title = split_into_max_n_lines(title, max_lines=2)
+            return title
+
         df["_SHORT_LABEL"] = df.apply(short_label, axis=1)
+        df["_SHORT_LABEL_NORMATIVE"] = df.apply(short_label_normative, axis=1)
 
         def wrap_text(text: Optional[str], width: int = 80) -> str:
             if not text:
@@ -448,7 +471,7 @@ indicate how many nodes each section or node contains.
         df = df[df[PlotlyDataFrameColumn.IS_NORMATIVE]]
         fig = px.treemap(
             df,
-            names="_SHORT_LABEL",
+            names="_SHORT_LABEL_NORMATIVE",
             ids="MID",
             parents=PlotlyDataFrameColumn.PARENT_MID,
             values=PlotlyDataFrameColumn.WEIGHT,

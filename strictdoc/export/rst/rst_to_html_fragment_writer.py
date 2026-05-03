@@ -6,6 +6,7 @@ import hashlib
 import io
 import os
 import re
+import time
 import uuid
 from pathlib import Path
 from typing import Optional, Tuple
@@ -32,6 +33,8 @@ from strictdoc.export.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
 )
 from strictdoc.helpers.file_system import file_open_read_bytes
+
+MAX_RETRIES_FOR_CACHE_FILESYSTEM_LOCKING = 3
 
 
 class RstToHtmlFragmentWriter:
@@ -146,7 +149,21 @@ class RstToHtmlFragmentWriter:
                 tmp_path_to_cached_fragment, "wb"
             ) as cached_fragment_file_:
                 cached_fragment_file_.write(rendered_html_bytes)
-            os.replace(tmp_path_to_cached_fragment, path_to_cached_fragment)
+            # On Windows in particular, we might get interference from Windows Defender
+            # for obtaining the file system locks. As a work-around, we try multiple times...
+            for attempt in range(MAX_RETRIES_FOR_CACHE_FILESYSTEM_LOCKING):
+                try:
+                    os.replace(
+                        tmp_path_to_cached_fragment, path_to_cached_fragment
+                    )
+                    break  # Success!
+                except PermissionError as e:
+                    if attempt < MAX_RETRIES_FOR_CACHE_FILESYSTEM_LOCKING - 1:
+                        # Wait 100ms, then 200ms, etc., to let Windows Defender release the lock
+                        time.sleep(0.1 * (attempt + 1))
+                    else:
+                        # Surface the original error
+                        raise e
 
         return Markup(rendered_html)
 

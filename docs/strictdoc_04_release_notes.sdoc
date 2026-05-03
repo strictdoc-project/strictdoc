@@ -46,6 +46,39 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: e3826dd8648f9da69b87d32a49cc3382
+TITLE: Unreleased
+
+[TEXT]
+MID: 2ed81eb30f5dcabea18e3d721929e789
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The Tree Map screen was improved for navigating and understanding coverage
+data. When a user zooms all the way into a node, Tree Map now provides an
+``Open in document`` link to jump to the containing document location. The
+source and test coverage maps now count and display normative nodes instead
+of all nodes, which avoids misleading counts when sections mix requirements
+with informational text. Tree Map also recognizes all normative leaf nodes
+from custom grammars, not only ``REQUIREMENT`` nodes.
+
+2\) Documents with custom grammars now enumerate meta fields and custom content
+fields across all grammar elements and remove duplicate field titles. This
+fixes workflows that previously saw only the first grammar element when
+collecting available field names.
+
+3\) RST-to-HTML fragment caching now retries cache file replacement when the
+file is temporarily locked. This improves export reliability on Windows,
+especially when Windows Defender briefly holds locks on generated cache
+files.
+
+4\) The bundled HTML2PDF tooling was updated to ``html2pdf4doc`` version
+``0.0.33``.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 6e6ac78ae4c44856a37ac492b23f8f7d
 TITLE: 0.20.0 (2026-04-27)
 

@@ -99,7 +99,7 @@ dependencies = [
     "WebSockets",
 
     # HTML2PDF dependencies
-    "html2pdf4doc == 0.0.31",
+    "html2pdf4doc == 0.0.33",
     "pypdf >= 6.5.0, == 6.*",
 
     # Robot Framework dependencies

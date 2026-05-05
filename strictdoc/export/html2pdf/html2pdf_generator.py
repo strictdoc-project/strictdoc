@@ -38,9 +38,12 @@ class HTML2PDFGenerator:
         path_to_output_pdf_html_dir = os.path.join(output_html2pdf_root, "html")
         path_to_output_pdf_pdf_dir = os.path.join(output_html2pdf_root, "pdf")
 
-        HTMLGenerator.export_assets(
-            traceability_index=traceability_index,
+        HTMLGenerator.export_strictdoc_assets(
             project_config=project_config,
+            export_output_html_root=path_to_output_pdf_html_dir,
+        )
+        HTMLGenerator.export_project_assets(
+            traceability_index=traceability_index,
             export_output_html_root=path_to_output_pdf_html_dir,
             flat_assets=flat_assets,
         )

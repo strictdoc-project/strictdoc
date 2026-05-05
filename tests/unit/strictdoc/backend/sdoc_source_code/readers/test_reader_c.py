@@ -463,3 +463,157 @@ int add(int a,
     assert len(info.source_nodes) == 0
 
     assert info.functions[0].name == "add(int a, int b)"
+
+
+def test_100_known_c_macro_zephyr_test():
+    """
+    Ensure that Zephyr's function-like test macro is recognized as a
+    function with its full macro invocation as the display name.
+    """
+
+    input_string = b"""\
+ZTEST_USER(semaphore, test_k_sem_correct_count_limit)
+{
+  // Some code here...
+}
+"""
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.cpp"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert len(info.functions) == 1
+    assert len(info.source_nodes) == 0
+
+    assert (
+        info.functions[0].name
+        == "ZTEST_USER(semaphore, test_k_sem_correct_count_limit)"
+    )
+    assert (
+        info.functions[0].display_name
+        == "ZTEST_USER(semaphore, test_k_sem_correct_count_limit)"
+    )
+
+
+def test_101_known_c_macro_zephyr_test_with_comment():
+    """
+    Ensure that Zephyr's function-like test macro is recognized as a
+    function with its full macro invocation as the display name.
+    """
+
+    input_string = b"""\
+/*
+ * Copyright (c) 2016, 2020 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+
+/**
+ * @brief Test the max value a semaphore can be given and taken
+ * @details
+ * - Reset an initialized semaphore's count to zero.
+ * - Give the semaphore by a thread and verify the semaphore's count is
+ *   as expected.
+ * - Verify the max count a semaphore can reach.
+ * - Take the semaphore by a thread and verify the semaphore's count is
+ *   as expected.
+ * - Verify the max times a semaphore can be taken.
+ * @ingroup kernel_semaphore_tests
+ * @see k_sem_count_get(), k_sem_give()
+ */
+ZTEST_USER(semaphore, test_k_sem_correct_count_limit)
+{
+
+	/* reset an initialized semaphore's count to zero */
+	k_sem_reset(&simple_sem);
+	expect_k_sem_count_get(&simple_sem, 0U, "k_sem_reset failed: %u != %u");
+
+	/* Give the semaphore by a thread and verify the semaphore's
+	 * count is as expected
+	 */
+	for (int i = 1; i <= SEM_MAX_VAL; i++) {
+		k_sem_give(&simple_sem);
+		expect_k_sem_count_get_nomsg(&simple_sem, i);
+	}
+
+	/* Verify the max count a semaphore can reach
+	 * continue to run k_sem_give,
+	 * the count of simple_sem will not increase anymore
+	 */
+	for (int i = 0; i < 5; i++) {
+		k_sem_give(&simple_sem);
+		expect_k_sem_count_get_nomsg(&simple_sem, SEM_MAX_VAL);
+	}
+
+	/* Take the semaphore by a thread and verify the semaphore's
+	 * count is as expected
+	 */
+	for (int i = SEM_MAX_VAL - 1; i >= 0; i--) {
+		expect_k_sem_take_nomsg(&simple_sem, K_NO_WAIT, 0);
+		expect_k_sem_count_get_nomsg(&simple_sem, i);
+	}
+
+	/* Verify the max times a semaphore can be taken
+	 * continue to run k_sem_take, simple_sem can not be taken and
+	 * it's count will be zero
+	 */
+	for (int i = 0; i < 5; i++) {
+		expect_k_sem_take_nomsg(&simple_sem, K_NO_WAIT, -EBUSY);
+
+		expect_k_sem_count_get_nomsg(&simple_sem, 0U);
+	}
+}
+"""
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.cpp"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert len(info.functions) == 1
+    assert len(info.source_nodes) == 1
+
+    assert (
+        info.functions[0].name
+        == "ZTEST_USER(semaphore, test_k_sem_correct_count_limit)"
+    )
+    assert (
+        info.functions[0].display_name
+        == "ZTEST_USER(semaphore, test_k_sem_correct_count_limit)"
+    )
+
+
+def test_102_known_c_macro_linux_syscall_define():
+    input_string = b"""\
+SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
+                struct __kernel_timespec __user *, tp)
+{
+    // ...
+    return error;
+}
+"""
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.cpp"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert len(info.functions) == 1
+    assert len(info.source_nodes) == 0
+
+    expected_function_name = (
+        "SYSCALL_DEFINE2(clock_gettime, "
+        "const clockid_t, which_clock, struct __kernel_timespec __user *, tp"
+        ")"
+    )
+
+    assert info.functions[0].name == expected_function_name
+    assert info.functions[0].display_name == expected_function_name

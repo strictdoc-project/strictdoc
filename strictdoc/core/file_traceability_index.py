@@ -1,7 +1,8 @@
 """
-@relation(SDOC-SRS-28, SDOC-SRS-33, scope=file)
+@relation(SDOC-SRS-28, SDOC-SRS-33, SDOC-LLR-207, scope=file)
 """
 
+import re
 from copy import copy
 from typing import (
     TYPE_CHECKING,
@@ -718,11 +719,37 @@ class FileTraceabilityIndex:
     def get_req_uids_by_function_name(
         self, rel_path_posix: str, name: str
     ) -> Optional[List[Tuple[str, Optional[str]]]]:
-        if rel_path_posix in self.map_file_function_names_to_reqs_uids:
-            return self.map_file_function_names_to_reqs_uids[
-                rel_path_posix
-            ].get(name, None)
-        return None
+        if rel_path_posix not in self.map_file_function_names_to_reqs_uids:
+            return None
+
+        function_names_to_reqs_uids = self.map_file_function_names_to_reqs_uids[
+            rel_path_posix
+        ]
+
+        matching_req_uids: List[Tuple[str, Optional[str]]] = []
+        exact_matching_req_uids = function_names_to_reqs_uids.get(name, None)
+        if exact_matching_req_uids is not None:
+            matching_req_uids.extend(exact_matching_req_uids)
+
+        for function_name_, req_uids_ in function_names_to_reqs_uids.items():
+            if not FileTraceabilityIndex.is_regex_function_name(function_name_):
+                continue
+
+            regex_pattern = function_name_[1:-1]
+            try:
+                if re.search(regex_pattern, name) is not None:
+                    matching_req_uids.extend(req_uids_)
+            except re.error as exception:
+                raise StrictDocException(
+                    "Invalid regular expression in FUNCTION relation "
+                    f"{function_name_}: {exception}."
+                ) from exception
+
+        return matching_req_uids if len(matching_req_uids) > 0 else None
+
+    @staticmethod
+    def is_regex_function_name(name: str) -> bool:
+        return len(name) >= 2 and name[0] == "/" and name[-1] == "/"
 
     def get_req_uids_by_class_name(
         self, rel_path_posix: str, name: str

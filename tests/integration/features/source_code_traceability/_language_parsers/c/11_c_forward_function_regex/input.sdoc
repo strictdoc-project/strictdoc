@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement Title
+STATEMENT: Requirement Statement
+RELATIONS:
+- TYPE: File
+  VALUE: file.c
+  FUNCTION: /ZTEST_USER.*semaphore.*test_k_sem_correct_count_limit/

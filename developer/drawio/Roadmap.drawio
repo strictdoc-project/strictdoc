@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5">
   <diagram name="Roadmap" id="QL4QDE5GQBR7DcBM7GMb">
-    <mxGraphModel dx="3125" dy="3879" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="3939" dy="4292" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <object label="Background" id="e4xbaoC47YMUbLc9hft--7">
@@ -502,13 +502,25 @@
           <mxGeometry x="1070" y="990" width="80" height="70" as="geometry" />
         </mxCell>
         <mxCell id="3zg7_a4Cr1-tkNY---Zh-2" value="&lt;div&gt;Markdown — Relations syntax improvements&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="1210" y="1080" width="200" height="70" as="geometry" />
+          <mxGeometry x="1210" y="1080" width="390" height="70" as="geometry" />
         </mxCell>
         <mxCell id="NG1bawOdFmVwRv8Im0xz-1" value="&lt;div&gt;Stabilization 2026 Q2&lt;/div&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="1210" y="1440" width="460" height="70" as="geometry" />
         </mxCell>
         <mxCell id="NG1bawOdFmVwRv8Im0xz-2" value="&lt;div&gt;Drag-and-drop image upload&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="1130" y="1260" width="200" height="70" as="geometry" />
+          <mxGeometry x="1130" y="1260" width="380" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RImopIBfapGW27McXgfb-1" value="&lt;div&gt;Single- vs multiline field issues&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="1360" y="990" width="80" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RImopIBfapGW27McXgfb-2" value="&lt;div&gt;Tree Map screen improvements&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="1280" y="900" width="80" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RImopIBfapGW27McXgfb-3" value="&lt;div&gt;WHAT-WHY-HOW tutorial&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="960" y="1350" width="400" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RImopIBfapGW27McXgfb-4" value="&lt;div&gt;C reader: recognize selected C macros&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="1360" y="1170" width="80" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -262,24 +262,26 @@ class SDocDocument(SDocDocumentIF):
 
         return self.get_prefix()
 
-    def enumerate_meta_field_titles(self) -> Generator[str, None, None]:
+    def enumerate_table_meta_field_titles(self) -> Generator[str, None, None]:
         assert self.grammar is not None
         assert self.grammar.elements is not None
         seen: Set[str] = set()
         for element in self.grammar.elements:
-            for title in element.enumerate_meta_field_titles():
+            for title in element.enumerate_table_meta_field_titles():
                 if title not in seen:
                     seen.add(title)
                     yield title
 
-    def enumerate_custom_content_field_titles(
+    def enumerate_table_non_reserved_content_field_titles(
         self,
     ) -> Generator[str, None, None]:
         assert self.grammar is not None
         assert self.grammar.elements is not None
         seen: Set[str] = set()
         for element in self.grammar.elements:
-            for title in element.enumerate_custom_content_field_titles():
+            for (
+                title
+            ) in element.enumerate_table_non_reserved_content_field_titles():
                 if title not in seen:
                     seen.add(title)
                     yield title

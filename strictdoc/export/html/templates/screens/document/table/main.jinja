@@ -12,7 +12,7 @@
             <tr>
               <th class="content-view-th">Type</th>
               <th class="content-view-th">Level</th>
-              {%- for meta_field_title in view_object.document.enumerate_meta_field_titles() -%}
+              {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
                 <th class="content-view-th">{{ meta_field_title }}</th>
               {%- endfor -%}
               <th class="content-view-th">REFS</th>
@@ -20,7 +20,7 @@
               <th class="content-view-th">Statement</th>
               <th class="content-view-th">Rationale</th>
               <th class="content-view-th">Comment</th>
-              {%- for meta_field_title in view_object.document.enumerate_custom_content_field_titles() -%}
+              {%- for meta_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
                 <th class="content-view-th">{{ meta_field_title }}</th>
               {%- endfor -%}
             </tr>
@@ -35,7 +35,7 @@
                 <td class="content-view-td content-view-td-meta">
                   {{ requirement.context.title_number_string }}
                 </td>
-                {%- for meta_field_title in view_object.document.enumerate_meta_field_titles() -%}
+                {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
                   <td class="content-view-td content-view-td-meta">
                     {%- if field_value -%}
@@ -118,7 +118,7 @@
                   <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
                   {%- endfor -%}
                 </td>
-                {%- for meta_field_title in view_object.document.enumerate_custom_content_field_titles() -%}
+                {%- for meta_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
                   <td class="content-view-td">
                     {%- if field_value %}
@@ -132,7 +132,7 @@
               <tr>
                 <td class="content-view-td content-view-td-type">Section</td>
                 <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
-                {%- for meta_field_title in view_object.document.enumerate_meta_field_titles() -%}
+                {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
                   <td class="content-view-td content-view-td-meta"></td>
                 {%- endfor -%}
                 <td class="content-view-td content-view-td-meta">{# Children & Parents #}</td>
@@ -144,7 +144,7 @@
                     <div class="requirement__title">
                       {{ section.title }}
                     </div>
-                    {%- for meta_field_title in view_object.document.enumerate_custom_content_field_titles() -%}
+                    {%- for meta_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
                       <td class="content-view-td">
                       </td>
                     {%- endfor -%}

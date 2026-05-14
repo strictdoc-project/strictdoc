@@ -41,7 +41,6 @@ class RequirementFieldName:
             CONTENT,
             COMMENT,
             RATIONALE,
-            LEVEL,
         )
     )
 

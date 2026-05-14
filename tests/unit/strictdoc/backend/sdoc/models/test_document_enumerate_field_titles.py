@@ -44,19 +44,19 @@ def _make_document_with_elements(elements):
     return document
 
 
-def test_enumerate_meta_field_titles_single_element():
+def test_enumerate_table_meta_field_titles_single_element():
     element = _make_element(
         "REQUIREMENT",
         ["UID", "SEVERITY", "TITLE", "STATEMENT"],
     )
     document = _make_document_with_elements([element])
 
-    result = list(document.enumerate_meta_field_titles())
+    result = list(document.enumerate_table_meta_field_titles())
 
     assert result == ["UID", "SEVERITY"]
 
 
-def test_enumerate_meta_field_titles_multiple_elements_no_duplicates():
+def test_enumerate_table_meta_field_titles_multiple_elements_no_duplicates():
     element_a = _make_element(
         "REQUIREMENT",
         ["UID", "SEVERITY", "TITLE", "STATEMENT"],
@@ -67,12 +67,12 @@ def test_enumerate_meta_field_titles_multiple_elements_no_duplicates():
     )
     document = _make_document_with_elements([element_a, element_b])
 
-    result = list(document.enumerate_meta_field_titles())
+    result = list(document.enumerate_table_meta_field_titles())
 
     assert result == ["UID", "SEVERITY", "PRIORITY"]
 
 
-def test_enumerate_meta_field_titles_multiple_elements_with_common_fields():
+def test_enumerate_table_meta_field_titles_multiple_elements_with_common_fields():
     element_a = _make_element(
         "REQUIREMENT",
         ["UID", "SEVERITY", "TITLE", "STATEMENT"],
@@ -83,24 +83,24 @@ def test_enumerate_meta_field_titles_multiple_elements_with_common_fields():
     )
     document = _make_document_with_elements([element_a, element_b])
 
-    result = list(document.enumerate_meta_field_titles())
+    result = list(document.enumerate_table_meta_field_titles())
 
     assert result == ["UID", "SEVERITY", "PRIORITY"]
 
 
-def test_enumerate_custom_content_field_titles_single_element():
+def test_enumerate_table_non_reserved_content_field_titles_single_element():
     element = _make_element(
         "REQUIREMENT",
         ["UID", "TITLE", "STATEMENT", "NOTE"],
     )
     document = _make_document_with_elements([element])
 
-    result = list(document.enumerate_custom_content_field_titles())
+    result = list(document.enumerate_table_non_reserved_content_field_titles())
 
     assert result == ["NOTE"]
 
 
-def test_enumerate_custom_content_field_titles_multiple_elements_no_duplicates():
+def test_enumerate_table_non_reserved_content_field_titles_multiple_elements_no_duplicates():
     element_a = _make_element(
         "REQUIREMENT",
         ["UID", "TITLE", "STATEMENT", "NOTE"],
@@ -111,12 +111,12 @@ def test_enumerate_custom_content_field_titles_multiple_elements_no_duplicates()
     )
     document = _make_document_with_elements([element_a, element_b])
 
-    result = list(document.enumerate_custom_content_field_titles())
+    result = list(document.enumerate_table_non_reserved_content_field_titles())
 
     assert result == ["NOTE", "IMPACT"]
 
 
-def test_enumerate_custom_content_field_titles_multiple_elements_with_common_fields():
+def test_enumerate_table_non_reserved_content_field_titles_multiple_elements_with_common_fields():
     element_a = _make_element(
         "REQUIREMENT",
         ["UID", "TITLE", "STATEMENT", "NOTE"],
@@ -127,6 +127,6 @@ def test_enumerate_custom_content_field_titles_multiple_elements_with_common_fie
     )
     document = _make_document_with_elements([element_a, element_b])
 
-    result = list(document.enumerate_custom_content_field_titles())
+    result = list(document.enumerate_table_non_reserved_content_field_titles())
 
     assert result == ["NOTE", "IMPACT"]

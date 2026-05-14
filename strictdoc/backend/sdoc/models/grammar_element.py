@@ -412,7 +412,7 @@ class GrammarElement:
                 return True
         return False
 
-    def enumerate_meta_field_titles(self) -> Generator[str, None, None]:
+    def enumerate_table_meta_field_titles(self) -> Generator[str, None, None]:
         for field in self.fields:
             if field.title in (
                 RequirementFieldName.TITLE,
@@ -421,9 +421,13 @@ class GrammarElement:
                 break
             if field.title in RequirementFieldName.RESERVED_NON_META_FIELDS:
                 continue
+            # LEVEL is excluded because the Table screen always displays it
+            # separately as a table's second column.
+            if field.title == RequirementFieldName.LEVEL:
+                continue
             yield field.title
 
-    def enumerate_custom_content_field_titles(
+    def enumerate_table_non_reserved_content_field_titles(
         self,
     ) -> Generator[str, None, None]:
         after_title_or_statement = False
@@ -436,5 +440,9 @@ class GrammarElement:
             if field.title in RequirementFieldName.RESERVED_NON_META_FIELDS:
                 continue
             if not after_title_or_statement:
+                continue
+            # LEVEL is excluded because the Table screen always displays it
+            # separately as a table's second column.
+            if field.title == RequirementFieldName.LEVEL:
                 continue
             yield field.title

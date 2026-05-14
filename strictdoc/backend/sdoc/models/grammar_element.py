@@ -6,7 +6,6 @@ from collections import OrderedDict
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.model import (
-    RESERVED_NON_META_FIELDS,
     RequirementFieldName,
 )
 from strictdoc.helpers.auto_described import auto_described
@@ -420,7 +419,7 @@ class GrammarElement:
                 RequirementFieldName.STATEMENT,
             ):
                 break
-            if field.title in RESERVED_NON_META_FIELDS:
+            if field.title in RequirementFieldName.RESERVED_NON_META_FIELDS:
                 continue
             yield field.title
 
@@ -434,7 +433,7 @@ class GrammarElement:
                 RequirementFieldName.STATEMENT,
             ):
                 after_title_or_statement = True
-            if field.title in RESERVED_NON_META_FIELDS:
+            if field.title in RequirementFieldName.RESERVED_NON_META_FIELDS:
                 continue
             if not after_title_or_statement:
                 continue

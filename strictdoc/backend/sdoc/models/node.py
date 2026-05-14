@@ -19,7 +19,6 @@ from strictdoc.backend.sdoc.models.grammar_element import (
 )
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import (
-    RESERVED_NON_META_FIELDS,
     RequirementFieldName,
     SDocDocumentIF,
     SDocElementIF,
@@ -161,7 +160,10 @@ class SDocNode(SDocNodeIF):
 
         has_meta: bool = False
         for field in fields:
-            if field.field_name not in RESERVED_NON_META_FIELDS:
+            if (
+                field.field_name
+                not in RequirementFieldName.RESERVED_NON_META_FIELDS
+            ):
                 has_meta = True
             ordered_fields_lookup.setdefault(field.field_name, []).append(field)
 
@@ -566,7 +568,10 @@ class SDocNode(SDocNodeIF):
         ]
 
         for field in self.enumerate_fields():
-            if field.field_name in RESERVED_NON_META_FIELDS:
+            if (
+                field.field_name
+                in RequirementFieldName.RESERVED_NON_META_FIELDS
+            ):
                 continue
 
             is_single_line_field = not element.is_field_multiline(
@@ -790,7 +795,10 @@ class SDocNode(SDocNodeIF):
     def _update_has_meta(self) -> None:
         has_meta: bool = False
         for field in self.enumerate_fields():
-            if field.field_name not in RESERVED_NON_META_FIELDS:
+            if (
+                field.field_name
+                not in RequirementFieldName.RESERVED_NON_META_FIELDS
+            ):
                 has_meta = True
         self.has_meta = has_meta
 

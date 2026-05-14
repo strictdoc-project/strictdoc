@@ -3,8 +3,12 @@ CHECK: Published: Test document
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
-CHECK-HTML: ABC-123
 CHECK-HTML: Title
-CHECK-HTML: Description.
+
+# Meta fields.
+CHECK-HTML: ABC-123
 CHECK-HTML: Low
+
+# Content fields.
+CHECK-HTML: Description.
 CHECK-HTML: Score.

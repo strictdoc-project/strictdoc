@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: Test document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: TAG_FIELD
+    TYPE: Tag
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+TAG_FIELD: >>>
+A
+<<<

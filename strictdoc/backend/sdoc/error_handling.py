@@ -161,6 +161,50 @@ ELEMENTS:
         )
 
     @staticmethod
+    def choice_field_cannot_be_multiline(
+        node: SDocNode,
+        grammar_field: GrammarElementField,
+        document_grammar: DocumentGrammar,
+        path_to_sdoc_file: str,
+    ) -> "StrictDocSemanticError":
+        grammar_fields = document_grammar.dump_fields(node.node_type)
+        return StrictDocSemanticError(
+            title=(
+                f"A Choice field must not be multiline: {grammar_field.title}."
+            ),
+            hint=(
+                f"Node fields: [{node.dump_fields_as_parsed()}], "
+                f"grammar fields: [{grammar_fields}]."
+            ),
+            example=None,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
+    def tag_field_cannot_be_multiline(
+        node: SDocNode,
+        grammar_field: GrammarElementField,
+        document_grammar: DocumentGrammar,
+        path_to_sdoc_file: str,
+    ) -> "StrictDocSemanticError":
+        grammar_fields = document_grammar.dump_fields(node.node_type)
+        return StrictDocSemanticError(
+            title=(
+                f"A tag field must not be multiline: {grammar_field.title}."
+            ),
+            hint=(
+                f"Node fields: [{node.dump_fields_as_parsed()}], "
+                f"grammar fields: [{grammar_fields}]."
+            ),
+            example=None,
+            line=node.ng_line_start,
+            col=node.ng_col_start,
+            filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
     def unexpected_field_outside_grammar(
         node: SDocNode,
         requirement_field: SDocNodeField,

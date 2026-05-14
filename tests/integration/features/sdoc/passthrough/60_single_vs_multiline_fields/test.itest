@@ -1,0 +1,2 @@
+RUN: %expect_exit 0 %strictdoc export %S/input.sdoc --formats=sdoc --output-dir=%T/
+RUN: %diff %S/input.sdoc %T/sdoc/input.sdoc

@@ -17,7 +17,6 @@ class RequirementFieldType:
     SINGLE_CHOICE = "SingleChoice"
     MULTIPLE_CHOICE = "MultipleChoice"
     TAG = "Tag"
-    REFERENCE = "Reference"
 
 
 class GrammarReferenceType:
@@ -374,9 +373,46 @@ class GrammarElement:
         return self.is_field_idx_multiline(field_index)
 
     def is_field_idx_multiline(self, field_idx: int) -> bool:
+        """
+        Determine whether a given field shall be treated as single-line or
+        multiline.
+
+        Currently this method is used for two StrictDoc decisions at the SDoc
+        markup and GUI levels:
+
+        1) Single-line vs multiline. When writing Python objects from memory to
+           an SDoc file, StrictDoc must know a field's type in order to serialize
+           it as either single-line or multiline (>>>...<<<).
+        2) Meta vs content. Usually, all meta fields are rendered in a separate
+           block above/before the multiline fields.
+
+        We may introduce a more formal SDoc model to distinguish between
+        single-line vs multilines and meta vs content fields in the future.
+        See this discussion for more details:
+
+        https://github.com/strictdoc-project/strictdoc/discussions/2221
+        """
+
+        field_name = self.field_titles[field_idx]
+
+        # Reserved single-line/meta fields can never be multiline.
+        if field_name in RequirementFieldName.RESERVED_SINGLELINE_FIELDS:
+            return False
+
         # If there is none of TITLE-STATEMENT-DESCRIPTION-CONTENT present, i.e.,
         # multiline_field_index is -1, every field will be treated as multiline.
-        return self._multiline_field_index <= field_idx
+        is_multiline = self._multiline_field_index <= field_idx
+        if not is_multiline:
+            return False
+
+        # If the field should be multiline according to its index, we additionally
+        # check if it is of a non-String type because all non-String types are
+        # currently treated as single-line.
+        field = self.fields_map[field_name]
+        if field.gef_type != RequirementFieldType.STRING:
+            return False
+
+        return True
 
     def get_view_style(self) -> Optional[str]:
         if self.property_view_style_lower is not None:

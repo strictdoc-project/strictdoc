@@ -5,7 +5,9 @@ RUN: %cat %T/html/01_basic_grammar_declaration_and_valid_fields/input.html | fil
 
 CHECK-HTML:UID
 CHECK-HTML:ABC-123
-CHECK-HTML:ASIL
-CHECK-HTML:A
+
 CHECK-HTML:STATUS
 CHECK-HTML:Draft
+
+CHECK-HTML:ASIL
+CHECK-HTML:A

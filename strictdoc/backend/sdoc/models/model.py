@@ -33,6 +33,18 @@ class RequirementFieldName:
     RATIONALE = "RATIONALE"
     COMMENT = "COMMENT"
 
+    RESERVED_SINGLELINE_FIELDS: Final[frozenset[str]] = frozenset(
+        (
+            MID,
+            UID,
+            PREFIX,
+            LEVEL,
+            STATUS,
+            TAGS,
+            TITLE,
+        )
+    )
+
     RESERVED_NON_META_FIELDS: Final[frozenset[str]] = frozenset(
         (
             TITLE,

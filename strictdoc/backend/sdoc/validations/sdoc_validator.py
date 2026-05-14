@@ -305,6 +305,13 @@ class SDocValidator:
         requirement_field_text_value = requirement_field.get_text_value()
 
         if isinstance(grammar_field, GrammarElementFieldSingleChoice):
+            if requirement_field.multiline:
+                raise StrictDocSemanticError.choice_field_cannot_be_multiline(
+                    node=requirement,
+                    grammar_field=grammar_field,
+                    document_grammar=document_grammar,
+                    path_to_sdoc_file=path_to_sdoc_file,
+                )
             if requirement_field_text_value not in grammar_field.options:
                 raise StrictDocSemanticError.invalid_choice_field(
                     node=requirement,
@@ -312,8 +319,14 @@ class SDocValidator:
                     requirement_field=requirement_field,
                     path_to_sdoc_file=path_to_sdoc_file,
                 )
-
         elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
+            if requirement_field.multiline:
+                raise StrictDocSemanticError.choice_field_cannot_be_multiline(
+                    node=requirement,
+                    grammar_field=grammar_field,
+                    document_grammar=document_grammar,
+                    path_to_sdoc_file=path_to_sdoc_file,
+                )
             if not multi_choice_regex_match(requirement_field_text_value):
                 raise StrictDocSemanticError.not_comma_separated_choices(
                     node=requirement,
@@ -334,6 +347,13 @@ class SDocValidator:
                     )
 
         elif isinstance(grammar_field, GrammarElementFieldTag):
+            if requirement_field.multiline:
+                raise StrictDocSemanticError.tag_field_cannot_be_multiline(
+                    node=requirement,
+                    grammar_field=grammar_field,
+                    document_grammar=document_grammar,
+                    path_to_sdoc_file=path_to_sdoc_file,
+                )
             if not multi_choice_regex_match(requirement_field_text_value):
                 raise StrictDocSemanticError.not_comma_separated_tag_field(
                     node=requirement,

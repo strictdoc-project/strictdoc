@@ -1190,3 +1190,26 @@ MY_FIELD: >>>
     writer = SDWriter(default_project_config)
     output = writer.write(document)
     assert expected_sdoc == output
+
+
+def test_edge_case_30_single_vs_multiline_disallow_multiline_reserved_single():
+    input_sdoc = """\
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+STATUS: >>>
+Multiline status is not allowed.
+<<<
+""".lstrip()  # noqa: W291
+
+    reader = SDReader()
+
+    with pytest.raises(Exception) as exc_info:
+        _ = reader.read(input_sdoc)
+
+    assert exc_info.type is StrictDocException
+    assert exc_info.value.args[0] == (
+        "The node field STATUS is a reserved field and can only be written as "
+        "a single-line, not multiline, field."
+    )

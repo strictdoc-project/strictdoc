@@ -66,6 +66,15 @@ class SDocNodeField:
         self.multiline: bool = multiline__ is not None and len(multiline__) > 0
         self.origin: SDocNodeFieldOrigin = SDocNodeFieldOrigin.DOCUMENT
 
+        if (
+            self.multiline
+            and field_name in RequirementFieldName.RESERVED_SINGLELINE_FIELDS
+        ):
+            raise StrictDocException(
+                f"The node field {field_name} is a reserved field "
+                "and can only be written as a single-line, not multiline, field."
+            )
+
     @staticmethod
     def create_from_string(
         parent: Optional["SDocNode"],

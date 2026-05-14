@@ -1,0 +1,46 @@
+#
+# @relation(SDOC-LLR-208, scope=file)
+#
+
+RUN: %strictdoc new %T/project | filecheck %s --dump-input=fail
+CHECK: StrictDoc project skeleton created
+CHECK: Next steps:
+CHECK: strictdoc export .
+CHECK: strictdoc server .
+
+RUN: %check_exists --dir "%T/project/docs"
+RUN: %check_exists --file "%T/project/docs/high_level_requirements.sdoc"
+RUN: %check_exists --file "%T/project/docs/low_level_requirements.sdoc"
+RUN: %check_exists --dir "%T/project/src"
+RUN: %check_exists --file "%T/project/src/main.c"
+RUN: %check_exists --file "%T/project/strictdoc_config.py"
+
+RUN: %cat %T/project/docs/high_level_requirements.sdoc | filecheck %s --dump-input=fail --check-prefix CHECK-HLR
+CHECK-HLR: MID: {{[a-f0-9]{32}}}
+CHECK-HLR: PREFIX: HLR-
+CHECK-HLR: OPTIONS:
+CHECK-HLR: ENABLE_MID: True
+CHECK-HLR: MID: {{[a-f0-9]{32}}}
+CHECK-HLR: UID: HLR-1
+
+RUN: %cat %T/project/docs/low_level_requirements.sdoc | filecheck %s --dump-input=fail --check-prefix CHECK-LLR
+CHECK-LLR: MID: {{[a-f0-9]{32}}}
+CHECK-LLR: PREFIX: LLR-
+CHECK-LLR: OPTIONS:
+CHECK-LLR: ENABLE_MID: True
+CHECK-LLR: MID: {{[a-f0-9]{32}}}
+CHECK-LLR: UID: LLR-1
+CHECK-LLR: - TYPE: Parent
+CHECK-LLR: VALUE: HLR-1
+
+RUN: %cat %T/project/src/main.c | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE
+CHECK-SOURCE: {{@}}relation(LLR-1, scope=file)
+
+RUN: %strictdoc export %T/project --output-dir %T/output --no-parallelization | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
+CHECK-EXPORT: Published: High-Level Requirements
+CHECK-EXPORT: Published: Low-Level Requirements
+
+RUN: %check_exists --file "%T/output/html/_source_files/src/main.c.html"
+RUN: %cat %T/output/html/project/docs/low_level_requirements.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: class="requirement__link-parent" href="{{.*}}#HLR-1"
+CHECK-HTML: href="{{.*}}_source_files/src/main.c.html#LLR-1#1#10"

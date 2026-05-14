@@ -25,7 +25,7 @@ See the
 [StrictDoc user guide](https://strictdoc.readthedocs.io/en/stable/stable/docs/strictdoc_01_user_guide.html)
 section of the Read the Docs site for more details.
 
-## Quick Start
+## Quick start
 
 Create a small `hello_world.sdoc` file:
 
@@ -53,7 +53,7 @@ strictdoc server .
 
 StrictDoc starts the server on `http://127.0.0.1:5111` by default.
 
-## Project Links
+## Project links
 
 - Documentation: <https://strictdoc.readthedocs.io/en/stable/>
 - Source code: <https://github.com/strictdoc-project/strictdoc>

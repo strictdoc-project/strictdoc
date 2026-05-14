@@ -117,3 +117,12 @@ def test_export_09_config():
         ["export", "docs", "--config", "/path/to/strictdoc.toml"]
     )
     assert args.command == "export"
+
+
+def test_new_01_minimal():
+    parser = cli_args_parser()
+
+    args = parser.parse_args(["new", FAKE_STRICTDOC_ROOT_PATH])
+
+    assert args.command == "new"
+    assert args.input_path == FAKE_STRICTDOC_ROOT_PATH

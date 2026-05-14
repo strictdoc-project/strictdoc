@@ -4,6 +4,12 @@
 
 RUN: %strictdoc about | filecheck %s --dump-input=fail
 
-CHECK:= StrictDoc =
-CHECK:Purpose: Software for writing technical requirements specifications.
-CHECK:License: Apache 2
+CHECK:╔════════════════════════════════════════════════════════════════════════╗
+
+CHECK:║                               StrictDoc                                ║
+
+CHECK:║                                                                        ║
+
+CHECK:║ GitHub:  https://github.com/strictdoc-project/strictdoc                ║
+
+CHECK:╚════════════════════════════════════════════════════════════════════════╝

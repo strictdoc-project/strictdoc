@@ -2,16 +2,18 @@
 @relation(SDOC-SRS-126, scope=file)
 """
 
+import logging
 import os
 import sys
 import time
-from typing import Awaitable, Callable
+from typing import Awaitable, Callable, Generator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
+from strictdoc import __version__
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.coverage import register_code_coverage_hook
 from strictdoc.helpers.pickle import pickle_load
@@ -29,8 +31,50 @@ else:
     O_TEMPORARY = 0
 
 
+LOGGER = logging.getLogger("uvicorn.error")
+
+
+def print_welcome_message(project_config: ProjectConfig) -> None:
+    strictdoc_version = f"StrictDoc Web Server v{__version__}"
+
+    host = (
+        project_config.server_host
+        if project_config.server_host.startswith("http")
+        else f"http://{project_config.server_host}"
+    )
+
+    url = f"{host}:{project_config.server_port}"
+
+    width = 72
+    border = "═" * width
+
+    lines = [
+        f" {strictdoc_version.center(width - 2)} ",
+        "",
+        f" Server URL: {url}",
+        "",
+        " Documentation: https://strictdoc.readthedocs.io/",
+        "",
+        " Share feedback or report issues:",
+        " https://github.com/strictdoc-project/strictdoc/issues",
+    ]
+
+    banner = (
+        "\n\n"
+        f"╔{border}╗\n"
+        + "\n".join(f"║{line.ljust(width)}║" for line in lines)
+        + f"\n╚{border}╝\n"
+    )
+
+    LOGGER.info(banner)
+
+
 def create_app(*, project_config: ProjectConfig) -> FastAPI:
-    app = FastAPI()
+    def lifespan(_: FastAPI) -> Generator[None, None, None]:
+        print_welcome_message(project_config)
+        yield
+
+    app = FastAPI(lifespan=lifespan)
 
     origins = [
         "http://localhost",

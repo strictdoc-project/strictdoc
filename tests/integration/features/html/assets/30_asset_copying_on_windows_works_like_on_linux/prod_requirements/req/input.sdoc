@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[[SECTION]]
+TITLE: Images
+
+[TEXT]
+STATEMENT: >>>
+.. image:: _assets/en62625-1_table2.png
+   :alt: EN62625-1 - Table 2
+   :class: image
+<<<
+
+[[/SECTION]]

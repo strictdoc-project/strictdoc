@@ -3,7 +3,7 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import Generator, List, Optional, Union
+from typing import Final, Generator, List, Optional, Union
 
 from strictdoc.backend.sdoc.models.document_config import (
     DocumentConfig,
@@ -33,16 +33,17 @@ class RequirementFieldName:
     RATIONALE = "RATIONALE"
     COMMENT = "COMMENT"
 
-
-RESERVED_NON_META_FIELDS = [
-    RequirementFieldName.TITLE,
-    RequirementFieldName.STATEMENT,
-    RequirementFieldName.DESCRIPTION,
-    RequirementFieldName.CONTENT,
-    RequirementFieldName.COMMENT,
-    RequirementFieldName.RATIONALE,
-    RequirementFieldName.LEVEL,
-]
+    RESERVED_NON_META_FIELDS: Final[frozenset[str]] = frozenset(
+        (
+            TITLE,
+            STATEMENT,
+            DESCRIPTION,
+            CONTENT,
+            COMMENT,
+            RATIONALE,
+            LEVEL,
+        )
+    )
 
 
 class SDocNodeFieldIF(ABC):

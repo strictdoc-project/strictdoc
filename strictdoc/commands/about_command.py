@@ -7,6 +7,7 @@ import argparse
 import strictdoc
 from strictdoc.cli.base_command import BaseCommand
 from strictdoc.helpers.parallelizer import Parallelizer
+from strictdoc.helpers.timing import SimpleNominalExit
 
 
 class AboutCommand(BaseCommand):
@@ -21,17 +22,26 @@ class AboutCommand(BaseCommand):
         self.args = args
 
     def run(self, parallelizer: Parallelizer) -> None:  # noqa: ARG002
-        print("=============")  # noqa: T201
-        print("= StrictDoc =")  # noqa: T201
-        print("=============")  # noqa: T201
-        print(  # noqa: T201
-            "Purpose: Software for writing technical requirements specifications."
+        width = 72
+        border = "═" * width
+
+        lines = [
+            f" {'StrictDoc'.center(width - 2)} ",
+            "",
+            " Purpose: Software for writing technical requirements specifications.",
+            "",
+            f" Version: {strictdoc.__version__}",
+            " Docs:    https://strictdoc.readthedocs.io/en/stable/",
+            " GitHub:  https://github.com/strictdoc-project/strictdoc",
+            " License: Apache 2",
+        ]
+
+        banner = (
+            f"╔{border}╗\n"
+            + "\n".join(f"║{line.ljust(width)}║" for line in lines)
+            + f"\n╚{border}╝"
         )
-        print(f"Version: {strictdoc.__version__}")  # noqa: T201
-        print(  # noqa: T201
-            "Docs:    https://strictdoc.readthedocs.io/en/stable/"
-        )
-        print(  # noqa: T201
-            "GitHub:  https://github.com/strictdoc-project/strictdoc"
-        )
-        print("License: Apache 2")  # noqa: T201
+
+        print(banner)  # noqa: T201
+
+        raise SimpleNominalExit

@@ -10,7 +10,6 @@ from typing import List, Tuple
 
 import uvicorn
 
-from strictdoc import __version__
 from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.pickle import pickle_dump
@@ -18,26 +17,9 @@ from strictdoc.server.config import SDocServerEnvVariable
 from strictdoc.server.reload_config import UvicornReloadConfig
 
 
-def print_warning_message() -> None:
-    strictdoc_version = "StrictDoc web server v" + __version__
-    print(  # noqa: T201
-        f"""
-*********************************************************
-* {strictdoc_version.center(53)} *
-*                                                       *
-* Share feedback and report issues on GitHub:           *
-* https://github.com/strictdoc-project/strictdoc/issues *
-*********************************************************
-""",
-        flush=True,
-    )
-
-
 def run_strictdoc_server(
     *, server_config: ServerCommandConfig, project_config: ProjectConfig
 ) -> None:
-    print_warning_message()
-
     with ExitStack() as stack:
         reload_config = UvicornReloadConfig.create(
             project_config, server_config

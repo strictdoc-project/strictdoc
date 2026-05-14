@@ -11,6 +11,18 @@ P = ParamSpec("P")
 R = TypeVar("R")
 
 
+class SimpleNominalExit(Exception):
+    """
+    A custom exception used for situations when we don't want to print the final
+    performance result at the end of function execution.
+
+    The use case for this: StrictDoc's "about" and "version" commands that do
+    not need the performance result (total execution time) to be printed.
+    """
+
+    pass
+
+
 def timing_decorator(name: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
     def timing_internal(func: Callable[P, R]) -> Callable[P, R]:
         @wraps(func)
@@ -33,7 +45,11 @@ def timing_decorator(name: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
 @contextlib.contextmanager
 def measure_performance(title: str) -> Iterator[None]:
     time_start = time.time()
-    yield
+    try:
+        yield
+    except SimpleNominalExit:
+        return
+
     time_end = time.time()
 
     time_diff = time_end - time_start

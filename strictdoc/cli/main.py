@@ -21,7 +21,7 @@ from strictdoc.helpers.exception import (
     StrictDocChildProcessException,
 )
 from strictdoc.helpers.parallelizer import Parallelizer
-from strictdoc.helpers.timing import measure_performance
+from strictdoc.helpers.timing import SimpleNominalExit, measure_performance
 
 COMMAND_REGISTRY: Dict[str, Any] = {
     "about": AboutCommand,
@@ -77,6 +77,8 @@ def _main() -> None:
     exception_info: Optional[ExceptionInfo] = None
     try:
         parser.run(parallelizer)
+    except SimpleNominalExit:
+        raise
     except StrictDocChildProcessException as exception_info_:
         exception_info = exception_info_.exception_info
     except Exception as exception_:

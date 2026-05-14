@@ -7,6 +7,7 @@ import argparse
 import strictdoc
 from strictdoc.cli.base_command import BaseCommand
 from strictdoc.helpers.parallelizer import Parallelizer
+from strictdoc.helpers.timing import SimpleNominalExit
 
 
 class VersionCommand(BaseCommand):
@@ -22,3 +23,5 @@ class VersionCommand(BaseCommand):
 
     def run(self, parallelizer: Parallelizer) -> None:  # noqa: ARG002
         print(strictdoc.__version__)  # noqa: T201
+
+        raise SimpleNominalExit

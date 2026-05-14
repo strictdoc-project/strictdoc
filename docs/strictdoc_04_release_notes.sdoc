@@ -54,7 +54,20 @@ MID: 2ed81eb30f5dcabea18e3d721929e789
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) The Tree Map screen was improved for navigating and understanding coverage
+1\) The SDoc grammar handling of single-line and multiline fields is now more
+consistent. Reserved single-line fields, including ``SingleChoice``,
+``MultipleChoice``, and ``Tag`` fields, are now treated as single-line fields
+regardless of where they are declared in the grammar. This removes the
+previous dependence on the position of ``STATEMENT``, ``CONTENT``, or
+``DESCRIPTION`` fields and fixes several confusing custom grammar validation
+edge cases.
+
+2\) Source code traceability for C now recognizes selected macro-based
+constructs as functions. This makes it possible to link requirements to C
+projects that use function-like macros heavily, including code bases such as
+Zephyr or the Linux kernel.
+
+3\) The Tree Map screen was improved for navigating and understanding coverage
 data. When a user zooms all the way into a node, Tree Map now provides an
 ``Open in document`` link to jump to the containing document location. The
 source and test coverage maps now count and display normative nodes instead
@@ -62,17 +75,17 @@ of all nodes, which avoids misleading counts when sections mix requirements
 with informational text. Tree Map also recognizes all normative leaf nodes
 from custom grammars, not only ``REQUIREMENT`` nodes.
 
-2\) Documents with custom grammars now enumerate meta fields and custom content
+4\) Documents with custom grammars now enumerate meta fields and custom content
 fields across all grammar elements and remove duplicate field titles. This
 fixes workflows that previously saw only the first grammar element when
 collecting available field names.
 
-3\) RST-to-HTML fragment caching now retries cache file replacement when the
+5\) RST-to-HTML fragment caching now retries cache file replacement when the
 file is temporarily locked. This improves export reliability on Windows,
 especially when Windows Defender briefly holds locks on generated cache
 files.
 
-4\) The bundled HTML2PDF tooling was updated to ``html2pdf4doc`` version
+6\) The bundled HTML2PDF tooling was updated to ``html2pdf4doc`` version
 ``0.0.33``.
 <<<
 

@@ -1,0 +1,15 @@
+# @relation(SDOC-LLR-207, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/file.c.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#1#4">
+CHECK-HTML: function ZTEST_USER(semaphore, test_k_sem_correct_count_limit)()
+
+RUN: %cat %T/html/_source_files/file.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: <b>[ 1-4 ]</b>
+CHECK-SOURCE-FILE: file.c, function ZTEST_USER(semaphore, test_k_sem_correct_count_limit)()
+CHECK-SOURCE-FILE: 1 - 4 | function ZTEST_USER(semaphore, test_k_sem_correct_count_limit)()

@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-142, SDOC-SRS-146, scope=file)
 """
 
-from typing import List, Optional, Sequence
+from typing import Final, List, Optional, Sequence
 
 import tree_sitter_cpp
 from tree_sitter import Language, Node, Parser
@@ -38,6 +38,20 @@ from strictdoc.backend.sdoc_source_code.tree_sitter_helpers import (
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_stats import SourceFileStats
 from strictdoc.helpers.file_system import file_open_read_bytes
+
+KNOWN_FUNCTION_DEFINITION_MACROS: Final[frozenset[str]] = frozenset(
+    (
+        # Linux
+        "SYSCALL_DEFINE2",
+        # Google Test
+        "TEST",
+        "TEST_F",
+        "TEST_P",
+        "TYPED_TEST",
+        # Zephyr
+        "ZTEST_USER",
+    )
+)
 
 
 class SourceFileTraceabilityReader_C:
@@ -267,10 +281,19 @@ class SourceFileTraceabilityReader_C:
                 # Remove extra trailing spaces, newlines etc added by code-formatting or linters
                 function_name = " ".join(function_name.split())
                 parent_names = self.get_node_ns(node_)
-                # FIXME: Special hack for Google Test macros TEST, TEST_F, TEST_P.
-                if function_name.startswith("TEST") or function_name.startswith(
-                    "TYPED_TEST"
-                ):
+
+                # The first if branch handles a special case where selected
+                # macros are actually function definitions. Typical examples of
+                # such functions:
+                # 1) Google Test TEST(...)
+                # 2) Zephyr RTOS ZTEST_USER(...)
+                # 3) Linux SYSCALL2_DEFINE etc.
+                if function_display_name in KNOWN_FUNCTION_DEFINITION_MACROS:
+                    # Make the display name to include the entire macro/function
+                    # signature.
+                    # Example of this case:
+                    # function_name: ZTEST_USER(semaphore, test_k_sem_correct_count_limit)  # noqa: ERA001
+                    # function_display_name (before assignment): ZTEST_USER
                     function_display_name = function_name
                 elif len(parent_names) > 0:
                     function_name = (

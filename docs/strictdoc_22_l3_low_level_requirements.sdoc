@@ -964,4 +964,72 @@ RELATIONS:
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: deab09f3aa374b46a639c504267c60f9
+TITLE: C
+
+[REQUIREMENT]
+MID: 5d49af5c74794e7ab0a77fe99576243c
+UID: SDOC-LLR-206
+TITLE: Macro definitions
+STATEMENT: >>>
+StrictDoc's C reader shall recognize the special macro definitions as function definitions:
+
+Special macro definitions:
+
+1) The following Zephyr test macro:
+
+.. code:: c
+
+    ZTEST_USER(semaphore, test_sem_take_multiple) {
+
+    }
+
+shall be recognized as a function with a title ``ZTEST_USER(semaphore, test_sem_take_multiple)``.
+
+2) The following Linux syscall macro:
+
+.. code:: c
+
+    SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
+                    struct __kernel_timespec __user *, tp)
+    {
+        // ...
+        return error;
+    }
+
+shall be recognized as a function with a title ``SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock, struct __kernel_timespec __user *, tp)`` with all newlines character replaced with a space character each but all content and punctuation preserved otherwise.
+<<<
+
+[REQUIREMENT]
+MID: a06d47fd0998421a867a9de4376fdfee
+UID: SDOC-LLR-207
+STATUS: Active
+TITLE: Forward links to macro definitions using regexes
+STATEMENT: >>>
+StrictDoc shall allow linking SDoc nodes to C macro definitions using regexes as follows:
+
+1) The forward link:
+
+.. code:: strictdoc
+
+    [REQUIREMENT]
+    UID: ...
+    STATEMENT: ...
+    RELATIONS:
+    - TYPE: File
+      VALUE: tests/kernel/semaphore/semaphore/src/main.c
+      FUNCTION: /ZTEST_USER.*semaphore.*test_k_sem_correct_count_limit/
+
+shall match the following C source code macro definition:
+
+.. code:: c
+
+    ZTEST_USER(semaphore, test_sem_take_multiple) {
+      // Some code
+    }
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]

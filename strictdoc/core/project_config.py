@@ -20,6 +20,7 @@ from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
 from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
+from strictdoc.commands.manage_assets_config import ManageAssetsCommandConfig
 from strictdoc.commands.manage_autouid_config import ManageAutoUIDCommandConfig
 from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.environment import SDocRuntimeEnvironment
@@ -808,6 +809,31 @@ class ProjectConfigLoader:
         project_config.auto_uid_mode = True
         project_config.autouuid_include_sections = (
             manage_autouid_config.include_sections
+        )
+
+        # FIXME: Traceability Index is coupled with HTML output.
+        project_config.export_output_html_root = "NOT_RELEVANT"
+
+        project_config.validate_and_finalize()
+
+        return project_config
+
+    @classmethod
+    def load_using_manage_assets_config(
+        cls,
+        manage_assets_config: ManageAssetsCommandConfig,
+    ) -> ProjectConfig:
+        path_to_config = manage_assets_config.get_path_to_config()
+
+        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+            path_to_config=path_to_config
+        )
+
+        # FIXME: Encapsulate all this in project_config.integrate_manage_assets_config(),
+        #        following the example of integrate_export_config().
+        project_config.input_paths = [manage_assets_config.input_path]
+        project_config.source_root_path = str(
+            Path(manage_assets_config.input_path).resolve()
         )
 
         # FIXME: Traceability Index is coupled with HTML output.

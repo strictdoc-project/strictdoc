@@ -8,6 +8,7 @@ from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from starlette.datastructures import FormData
 
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -210,6 +211,7 @@ class RequirementFormObject(ErrorObject):
         grammar: DocumentGrammar,
         # FIXME: Better name.
         relation_types: List[str],
+        document_markup: str,
     ) -> None:
         super().__init__()
         assert isinstance(element_type, str), element_type
@@ -232,6 +234,7 @@ class RequirementFormObject(ErrorObject):
         self.existing_requirement_uid: Optional[str] = existing_requirement_uid
         self.grammar: DocumentGrammar = grammar
         self.relation_types: List[str] = relation_types
+        self.document_markup: str = document_markup
 
     @staticmethod
     def create_from_request(
@@ -336,6 +339,7 @@ class RequirementFormObject(ErrorObject):
             existing_requirement_uid=existing_requirement_uid,
             grammar=grammar,
             relation_types=element.get_relation_types(),
+            document_markup=document.config.markup or SDocMarkup.RST,
         )
         return form_object
 
@@ -391,6 +395,7 @@ class RequirementFormObject(ErrorObject):
             existing_requirement_uid=None,
             grammar=grammar,
             relation_types=element.get_relation_types(),
+            document_markup=document.config.markup or SDocMarkup.RST,
         )
 
     @staticmethod
@@ -481,6 +486,7 @@ class RequirementFormObject(ErrorObject):
             existing_requirement_uid=requirement.reserved_uid,
             grammar=grammar,
             relation_types=grammar_element_relations,
+            document_markup=document.config.markup or SDocMarkup.RST,
         )
 
     @staticmethod

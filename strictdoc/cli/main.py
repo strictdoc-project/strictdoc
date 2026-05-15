@@ -13,6 +13,7 @@ from strictdoc.commands.export import ExportCommand
 from strictdoc.commands.import_excel import ImportExcelCommand
 from strictdoc.commands.import_reqif import ImportReqIFCommand
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
+from strictdoc.commands.new_command import NewCommand
 from strictdoc.commands.server import ServerCommand
 from strictdoc.commands.version_command import VersionCommand
 from strictdoc.helpers.coverage import register_code_coverage_hook
@@ -28,6 +29,7 @@ COMMAND_REGISTRY: Dict[str, Any] = {
     "export": ExportCommand,
     "import": {"excel": ImportExcelCommand, "reqif": ImportReqIFCommand},
     "manage": {"auto-uid": ManageAutoUIDCommand},
+    "new": NewCommand,
     "server": ServerCommand,
     "version": VersionCommand,
 }

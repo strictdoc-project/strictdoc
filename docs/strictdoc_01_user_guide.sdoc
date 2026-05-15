@@ -142,60 +142,57 @@ STATEMENT: >>>
 .. code:: strictdoc
 
     [DOCUMENT]
-    TITLE: StrictDoc
+    TITLE: High-Level Requirements
+    PREFIX: HLR-
 
     [REQUIREMENT]
-    UID: SDOC-HIGH-REQS-MANAGEMENT
-    TITLE: Requirements management
-    STATEMENT: StrictDoc shall enable requirements management.
+    UID: HLR-1
+    TITLE: Initial high-level requirement
+    STATEMENT: >>>
+    The system shall provide a hello world application.
+    <<<
 
-Create a file called ``hello_world.sdoc`` somewhere on your file system and copy the above "Hello World" example text to it. **The file must end with a newline character**.
+----
 
 Open a command-line terminal program supported on your system.
 
-Once you have ``strictdoc`` installed (see [LINK: SDOC_UG_GETTING_STARTED] below), switch to the directory with the ``hello_world.sdoc`` file. For example, assuming that the file is now in the ``workspace/hello_world`` directory in your user folder:
+Once you have ``strictdoc`` installed (see [LINK: SDOC_UG_GETTING_STARTED] below), use the ``strictdoc new`` command to generate a hello world project skeleton.
 
 .. code:: text
 
-    cd <your user home directory>/workspace/hello_world
+    cd <a parent folder of your choice>
 
 Run StrictDoc as follows:
 
 .. code:: text
 
-    strictdoc export .
+    strictdoc new hello_world
 
 The expected output:
 
 .. code:: text
 
-    $ strictdoc export hello.sdoc
-    Parallelization: Enabled
-    Step 'Collect traceability information' start
-    Step 'Find and read SDoc files' start
-    Reading SDOC: hello.sdoc .................................... 0.08s
-    Step 'Find and read SDoc files' took: 0.09 sec
-    Step 'Collect traceability information' start
-    Step 'Collect traceability information' took: 0.01 sec
-    Step 'Collect traceability information' took: 0.11 sec
-    Published: StrictDoc ........................................ 0.24s
-    ...
-    Export completed. Documentation tree can be found at:
-    .../output/html
+    ╔════════════════════════════════════════════════════════════╗
+    ║            StrictDoc project skeleton created              ║
+    ╚════════════════════════════════════════════════════════════╝
 
-The HTML output produced so far has been generated statically. Now, start a StrictDoc server from the same directory:
+    Location: hello_world
 
-.. code:: text
+    Next steps:
 
-    strictdoc server .
+    1. Change into the project directory
 
-The expected output should contain the following line:
+      cd hello_world
 
-.. code:: text
+    2. Export static HTML documentation
 
-    INFO:     Uvicorn running on http://127.0.0.1:5111 (Press CTRL+C to quit)
+      strictdoc export .
 
-Open the URL in the browser and explore the contents of the example.
+    3. Start the web server
+
+      strictdoc server .
+
+    Total execution time ........................................ 0.01s
 <<<
 
 [[/SECTION]]

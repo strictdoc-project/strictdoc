@@ -1033,3 +1033,43 @@ shall match the following C source code macro definition:
 [[/SECTION]]
 
 [[/SECTION]]
+
+[[SECTION]]
+MID: 6b53bbdf370f49bba360f176d607d50c
+TITLE: Command-line interface
+
+[[SECTION]]
+MID: 0a3dd77d161b443c88842a53d313eb0a
+TITLE: "new" command
+
+[REQUIREMENT]
+MID: 91644890fd304d86b2d756c5b1d8c9e8
+UID: SDOC-LLR-208
+STATUS: Active
+TITLE: Create initial StrictDoc project
+STATEMENT: >>>
+The "new" StrictDoc CLI command shall generate a documentation skeleton that consists of the following artifacts in the provided input directory:
+
+- ``docs/`` folder with the following content:
+
+  - ``high_level_requirements.sdoc`` that contains a dummy document with a requirement prefix ``HLR-`` and one high-level requirement with identifier ``HLR-1``.
+  - ``low_level_requirements.sdoc`` that contains a dummy document with a requirement prefix ``LLR-`` and one low-level requirement with identifier ``LLR-1`` that has a Parent relation to the requirement ``HLR-1``.
+
+- ``src/`` folder with the following content:
+
+  - A source file ``main.c`` that contains a C hello world program that is annotated with a C comment that has a ``@relation`` to the ``LLR-1`` requirement.
+
+- ``strictdoc_config.py`` that is configured to read SDoc documents from the ``docs/`` folder and source files from the ``src/`` folder.
+- All documents must be configured with ``ENABLE_MID: True``. All nodes must have valid unique MID identifiers.
+- At the end of the execution, the ``new`` command shall print the instructions for running: 1) StrictDoc's static HTML export and 2) web server.
+
+Example of the "new" command usage:
+
+.. code:: bash
+
+    strictdoc new .
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]

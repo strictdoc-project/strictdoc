@@ -57,6 +57,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10"]
+        shard: ["1/2", "2/2"]
 
     steps:
     - uses: actions/checkout@v6
@@ -82,7 +83,7 @@ jobs:
 
     - name: Run end-to-end tasks
       run: |
-        invoke test-end2end --long-timeouts --exit-first --headless
+        invoke test-end2end --long-timeouts --shard=${{ matrix.shard }} --exit-first --headless
 
   build:
     name: E2E - Windows

@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[TEXT]
+STATEMENT: >>>
+Document 1 free text.
+<<<
+
+[[SECTION]]
+TITLE: Document 1 section
+
+[TEXT]
+STATEMENT: >>>
+Document 1 statement.
+<<<
+
+[[/SECTION]]

@@ -17,6 +17,7 @@ from tests.end2end.helpers.screens.project_index.form_import_reqif import (
 from tests.end2end.helpers.screens.project_statistics.project_statistics import (
     Screen_ProjectStatistics,
 )
+from tests.end2end.helpers.screens.screen import Screen
 from tests.end2end.helpers.screens.search.search import Screen_Search
 from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import (
     Screen_SourceCoverage,
@@ -27,7 +28,7 @@ from tests.end2end.helpers.screens.traceability_matrix.screen_requirements_cover
 from tests.end2end.helpers.screens.tree_map.tree_map import Screen_TreeMap
 
 
-class Screen_ProjectIndex:  # pylint: disable=invalid-name
+class Screen_ProjectIndex(Screen):  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
@@ -227,6 +228,15 @@ class Screen_ProjectIndex:  # pylint: disable=invalid-name
 
     def do_export_reqif(self) -> None:
         self.actions_menu.do_click_action("tree-export-reqif-action")
+
+    def do_update_project_title(self, title: str) -> None:
+        self.actions_menu.do_click_action("project-edit-title-action")
+
+        input_xpath = "//*[@data-testid='form-field-project_title']"
+
+        self.test_case.type(input_xpath, title, by=By.XPATH)
+
+        self.test_case.click_xpath('//*[@data-testid="form-submit-action"]')
 
     # project_tree_controls
     # Show/Hide fragments

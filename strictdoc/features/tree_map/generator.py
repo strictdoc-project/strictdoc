@@ -180,7 +180,9 @@ class TreeMapGenerator:
                     node_
                 )
                 for source_file_tuple_ in source_files:
-                    if "tests/" in source_file_tuple_[0]:
+                    if project_config.tree_map_test_path_pattern.search(
+                        source_file_tuple_[0]
+                    ):
                         node_stats.child_nodes_with_links_to_test_files = 1
                     else:
                         node_stats.child_nodes_with_links_to_source_files = 1
@@ -547,11 +549,11 @@ themselves covered by source files.
         parts.append(
             GraphSection(
                 title="Requirements coverage with test",
-                description="""\
+                description=f"""\
 This graph shows which requirements are covered by at least one test.
 A requirement is also considered covered if it has child requirements that are
 themselves covered by tests. A source file is considered a test file if its path
-contains "tests/".
+matches "{project_config.tree_map_test_path_pattern.pattern}".
 
 <ul>
   <li>

@@ -10,7 +10,7 @@ import types
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Pattern
 
 import toml
 
@@ -123,6 +123,7 @@ class ProjectConfig:
         exclude_source_paths: Optional[List[str]] = None,
         grammars: Optional[Dict[str, str]] = None,
         test_report_root_dict: Optional[Dict[str, str]] = None,
+        tree_map_test_path_pattern: Optional[str] = None,
         source_nodes: Optional[List[SourceNodesEntry]] = None,
         html2pdf_strict: bool = False,
         html2pdf_template: Optional[str] = None,
@@ -293,6 +294,12 @@ class ProjectConfig:
         self.test_report_root_dict: Dict[str, str] = (
             test_report_root_dict if test_report_root_dict is not None else {}
         )
+        self.tree_map_test_path_pattern: Pattern[str] = re.compile(
+            tree_map_test_path_pattern
+            if tree_map_test_path_pattern is not None
+            else r"tests/"
+        )
+
         self.source_nodes: List[SourceNodesEntry] = (
             source_nodes if source_nodes is not None else []
         )
@@ -896,6 +903,7 @@ class ProjectConfigLoader:
         include_source_paths: List[str] = []
         exclude_source_paths: List[str] = []
         test_report_root_dict: Dict[str, str] = {}
+        tree_map_test_path_pattern: Optional[str] = None
         source_nodes: List[SourceNodesEntry] = []
         html2pdf_strict: bool = False
         html2pdf_template: Optional[str] = None
@@ -1003,6 +1011,10 @@ class ProjectConfigLoader:
                     assert isinstance(test_report_root_entry_, dict)
                     test_report_root_dict.update(test_report_root_entry_)
 
+            tree_map_test_path_pattern = project_content.get(
+                "tree_map_test_path_pattern", tree_map_test_path_pattern
+            )
+
             section_behavior = project_content.get(
                 "section_behavior", section_behavior
             )
@@ -1051,6 +1063,7 @@ class ProjectConfigLoader:
             include_source_paths=include_source_paths,
             exclude_source_paths=exclude_source_paths,
             test_report_root_dict=test_report_root_dict,
+            tree_map_test_path_pattern=tree_map_test_path_pattern,
             source_nodes=source_nodes,
             html2pdf_strict=html2pdf_strict,
             html2pdf_template=html2pdf_template,

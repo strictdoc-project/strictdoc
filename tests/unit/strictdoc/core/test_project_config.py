@@ -1,4 +1,5 @@
 import pytest
+import re
 
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 
@@ -61,3 +62,28 @@ def test_61_validate_invalid_host():
 def test_62_validate_invalid_port():
     with pytest.raises(AssertionError):
         _ = ProjectConfig(server_port=1000000)
+
+
+def test_100_tree_map_test_path_pattern_default():
+    default_config = ProjectConfig()
+    assert default_config.tree_map_test_path_pattern.pattern == "tests/"
+
+
+def test_101_tree_map_test_path_pattern_custom():
+    explicitly_provided = ProjectConfig(tree_map_test_path_pattern="custom/")
+    assert explicitly_provided.tree_map_test_path_pattern.pattern == "custom/"
+
+
+def test_102_tree_map_test_path_pattern_bad_regex():
+    with pytest.raises(re.error):
+        _ = ProjectConfig(tree_map_test_path_pattern="(unclosed parenthesis")
+
+
+def test_103_tree_map_test_path_pattern_enables_multiple_filename_styles():
+    explicitly_provided = ProjectConfig(
+        tree_map_test_path_pattern=r"(^test/)|_test\.go$"
+    )
+    pat = explicitly_provided.tree_map_test_path_pattern
+    assert pat.search("test/some_test.py")
+    assert pat.search("main_test.go")
+    assert not pat.search("main.go")

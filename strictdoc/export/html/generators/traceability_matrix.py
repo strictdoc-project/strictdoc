@@ -70,7 +70,10 @@ class TraceabilityMatrixHTMLGenerator:
             else []
         )
         for config_relation_tuple_ in config_relation_tuples:
-            assert config_relation_tuple_[0] in known_relations
+            assert config_relation_tuple_[0] in known_relations, (
+                config_relation_tuple_,
+                known_relations,
+            )
             bucket = known_relations[config_relation_tuple_[0]]
             assert config_relation_tuple_[1] in bucket
 

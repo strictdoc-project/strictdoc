@@ -9,5 +9,11 @@ def create_config() -> ProjectConfig:
         exclude_source_paths=[
             "**.itest",
         ],
+        traceability_matrix_relation_columns=[
+            ("Parent", None),
+            ("Parent", "Refines"),
+            ("Parent", "REQUIREMENT_FOR"),
+            ("File", None),
+        ],
     )
     return config

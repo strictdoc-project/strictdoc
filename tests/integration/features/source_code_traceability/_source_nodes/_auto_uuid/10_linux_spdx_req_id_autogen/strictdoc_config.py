@@ -7,7 +7,6 @@ def create_config() -> ProjectConfig:
         project_title="Linux",
         project_features=[
             "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-            "SOURCE_FILE_LANGUAGE_PARSERS",
         ],
         source_nodes=[
             SourceNodesEntry(

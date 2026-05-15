@@ -508,13 +508,21 @@ class ProjectConfig:
         #
         # Validate source nodes config.
         #
-        if len(self.source_nodes) > 0 and not {
-            ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY,
-            ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS,
-        }.issubset(self.project_features):
+        if (
+            len(self.source_nodes) > 0
+            and ProjectFeature.REQUIREMENT_TO_SOURCE_TRACEABILITY
+            not in self.project_features
+        ):
             print(  # noqa: T201
-                "warning: defining source_nodes without enabling REQUIREMENT_TO_SOURCE_TRACEABILITY and "
-                "SOURCE_FILE_LANGUAGE_PARSERS has no effect"
+                "warning: defining source_nodes without enabling REQUIREMENT_TO_SOURCE_TRACEABILITY "
+                "has no effect"
+            )
+
+        if ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS in self.project_features:
+            print(  # noqa: T201
+                "info: the SOURCE_FILE_LANGUAGE_PARSERS feature is no longer "
+                "experimental and is now enabled by default. "
+                "It can be safely removed from the project configuration."
             )
 
         #
@@ -655,11 +663,6 @@ class ProjectConfig:
 
     def is_activated_rapidoc(self) -> bool:
         return ProjectFeature.RAPIDOC in self.project_features
-
-    def is_activated_source_file_language_parsers(self) -> bool:
-        return (
-            ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS in self.project_features
-        )
 
     def get_project_root_path(self) -> str:
         if self.input_paths is not None and len(self.input_paths) > 0:

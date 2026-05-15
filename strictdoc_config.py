@@ -20,7 +20,6 @@ def create_config() -> ProjectConfig:
             # "REQIF",
             "TRACEABILITY_MATRIX_SCREEN",
             "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-            "SOURCE_FILE_LANGUAGE_PARSERS",
             "HTML2PDF",
             "DIFF",
             "NESTOR",

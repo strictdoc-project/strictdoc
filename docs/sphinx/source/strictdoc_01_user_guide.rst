@@ -2155,22 +2155,24 @@ Language-aware parsing of source code
     * - **MID:**
       - 07bfe045a4934dd29d97fdb8ac567b7c
 
-For parsing source code and calculating traceability to requirements, StrictDoc uses a general parser that is agnostic of specific programming languages and their constructs, such as classes or functions. However, for languages with these constructs, establishing traceability to them can simplify the tracing process.
+For parsing source code and calculating traceability to requirements, StrictDoc uses language-aware parsers for supported source file types. For other source file types, StrictDoc falls back to a general parser that is agnostic of specific programming languages and their constructs, such as classes or functions.
 
-As an experimental option, StrictDoc supports parsing source files of selected programming languages (currently Python and C) to recognize language syntax, primarily enabling traceability of functions (in Python, C, and others) and classes (in Python, C++, and others) to requirements.
+Language-aware parsing recognizes selected language syntax, primarily enabling traceability of functions (in Python, C/C++, Rust, and others), classes (in Python, C++, and others), and tests (Python, C++, Robot Framework) to requirements.
 
-To activate language-aware traceability, configure the project with the following features:
+Language-aware parsing is enabled automatically for supported source file types when requirement-to-source traceability is enabled:
 
-.. code:: toml
+.. code-block:: python
 
-    [project]
+    from strictdoc.core.project_config import ProjectConfig
 
-    features = [
-      "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-      "SOURCE_FILE_LANGUAGE_PARSERS"
-    ]
 
-Currently, only Python and C/C++ parsers are implemented. Upcoming implementations include parsers for Rust, Bash, and more.
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY"
+            ],
+        )
+        return config
 
 Linking source code to requirements
 -----------------------------------
@@ -2186,7 +2188,7 @@ To connect a source file to a requirement, a dedicated ``@relation`` marker must
 
 .. note::
 
-    For language-specific parsing of source code, e.g., Python and C, make sure to enable the corresponding option, see :ref:`Language-aware parsing of source code <SECTION-UG-Language-aware-parsing-of-source-code>`.
+    Language-specific scopes such as ``class`` and ``function`` are available for supported source file types. See :ref:`Language-aware parsing of source code <SECTION-UG-Language-aware-parsing-of-source-code>`.
 
 .. warning::
 
@@ -2277,7 +2279,7 @@ The linking of requirements to source files is arranged with a special RELATION 
 
 .. note::
 
-    For language-specific parsing of source code, e.g., Python and C, make sure to enable the corresponding option, see :ref:`Language-aware parsing of source code <SECTION-UG-Language-aware-parsing-of-source-code>`.
+    Language-specific links are available for supported source file types. See :ref:`Language-aware parsing of source code <SECTION-UG-Language-aware-parsing-of-source-code>`.
 
 **1\) Linking a requirement to a whole source file**
 

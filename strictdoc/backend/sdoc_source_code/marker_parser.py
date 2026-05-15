@@ -172,14 +172,16 @@ class MarkerParser:
 
         for relation_uid_token_ in relation_uid_elements:
             assert isinstance(relation_uid_token_.children[0], Token)
+            assert relation_uid_token_.children[0].line is not None
+
             relation_uid = relation_uid_token_.children[0].value
             if relation_uid in used_uids:
                 raise ValueError(
-                    f"@relation marker contains duplicate node UIDs: ['{relation_uid}']."
+                    f"@relation marker contains duplicate node UIDs: ['{relation_uid}']. "
+                    f"Location: {filename}:{relation_uid_token_.children[0].line}."
                 )
             used_uids.add(relation_uid)
 
-            assert relation_uid_token_.children[0].line is not None
             requirement = Req(None, relation_uid)
             requirement.ng_source_line = (
                 comment_line_start + relation_uid_token_.children[0].line - 1

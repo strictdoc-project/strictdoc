@@ -4,7 +4,6 @@ import datetime
 import os
 import re
 import uuid
-
 from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
@@ -12,14 +11,18 @@ from typing import Any, Dict, Iterator, List, Optional, Union
 from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile
-from fastapi.responses import RedirectResponse
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
 from reqif.unparser import ReqIFUnparser
 from starlette.background import BackgroundTask
 from starlette.datastructures import FormData
 from starlette.requests import Request
-from starlette.responses import FileResponse, HTMLResponse, RedirectResponse, Response
+from starlette.responses import (
+    FileResponse,
+    HTMLResponse,
+    RedirectResponse,
+    Response,
+)
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc.backend.markdown.writer import SDMarkdownWriter
@@ -1374,10 +1377,9 @@ def create_main_router(
         "/actions/document/delete_document",
         response_class=Response,
     )
-    def delete_document(
-        document_mid: str, confirmed: bool = False
-    ) -> Response:
-        """Delete an entire SDOC document from the project.
+    def delete_document(document_mid: str, confirmed: bool = False) -> Response:
+        """
+        Delete an entire SDOC document from the project.
 
         This endpoint is intentionally simple: it removes the underlying
         ``.sdoc`` file from disk, rebuilds the index and redirects back to the

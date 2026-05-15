@@ -1111,7 +1111,9 @@ class TraceabilityIndex:
             if not isinstance(document_node_, SDocNode):
                 continue
 
-            nodes_with_incoming_links = [document_node_] + document_node_.get_anchors()
+            nodes_with_incoming_links = [
+                document_node_
+            ] + document_node_.get_anchors()
             for node_ in nodes_with_incoming_links:
                 try:
                     self.validate_can_remove_node(node=node_)
@@ -1129,7 +1131,8 @@ class TraceabilityIndex:
                     )
                 )
                 errors.append(
-                    f"Cannot remove node '{document_node_.get_display_title()}' with incoming relations from:\n{nodes_list_message}."
+                    f"Cannot remove document '{document_node_.get_display_title()}' "
+                    f"with incoming relations from:\n{nodes_list_message}."
                 )
 
         if len(errors) > 0:

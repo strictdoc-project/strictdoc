@@ -7,6 +7,7 @@ from seleniumbase import BaseCase
 from tests.end2end.helpers.components.actions_menu import (
     ActionsMenu,
 )
+from tests.end2end.helpers.components.confirm import Confirm
 from tests.end2end.helpers.screens.document.form_edit_grammar_elements import (
     Form_EditGrammarElements,
 )
@@ -47,6 +48,14 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
 
     def do_export_pdf(self) -> None:
         self.actions_menu.do_click_action("document-export-html2pdf-action")
+
+    def do_delete_document(self, confirm: bool = True) -> None:
+        self.actions_menu.do_click_action("document-delete-action")
+
+        # Confirmation required
+        if confirm:
+            confirm_dialog = Confirm(self.test_case)
+            confirm_dialog.do_confirm_action()
 
     #
     # Open forms.

@@ -9,9 +9,7 @@
 
 {% block head_scripts %}
   <script src="{{ view_object.render_static_url('stimulus_umd.min.js') }}"></script>
-  <script>
-    Stimulus.application = Stimulus.Application.start();
-  </script>
+  <script src="{{ view_object.render_static_url('stimulus_application.js') }}"></script>
   {# Load StrictDoc core before local feature scripts. #}
   <script src="{{ view_object.render_static_url('app_core.js') }}"></script>
 

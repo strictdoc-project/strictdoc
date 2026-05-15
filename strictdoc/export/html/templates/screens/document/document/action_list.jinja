@@ -24,6 +24,7 @@
   data-testid="document-export-reqif-action"
   role="menuitem"
 >{% include "icons/ico16_export.svg" %} Export to ReqIF</a>
+{%- endif -%}
 
 <a
   class="dropdown_menu_item"
@@ -33,6 +34,4 @@
   title="Delete document"
   data-testid="document-delete-action"
   role="menuitem"
-  onclick="return confirm('Delete this document? This action cannot be undone.');"
->{% include "icons/svg_ico16_delete.svg" %} Delete document</a>
-{%- endif -%}
+>Delete document</a>

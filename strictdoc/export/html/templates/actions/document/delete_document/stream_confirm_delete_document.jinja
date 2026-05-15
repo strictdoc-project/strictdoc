@@ -1,0 +1,12 @@
+<turbo-stream action="update" target="confirm">
+  <template>
+  {% with
+    confirm_title = default,
+    confirm_message = "Deleting a document is an unrecoverable action.",
+    confirm_name = "Delete document",
+    confirm_href = "/actions/document/delete_document?document_mid="~document_mid~"&confirmed=1"
+  %}
+    {% include "components/confirm/index.jinja" %}
+  {% endwith %}
+  </template>
+</turbo-stream>

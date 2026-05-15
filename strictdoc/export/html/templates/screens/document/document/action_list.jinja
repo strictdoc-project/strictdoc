@@ -25,3 +25,13 @@
   role="menuitem"
 >{% include "icons/ico16_export.svg" %} Export to ReqIF</a>
 {%- endif -%}
+
+<a
+  class="dropdown_menu_item"
+  href="/actions/document/delete_document?document_mid={{ view_object.document.reserved_mid }}"
+  data-turbo="true"
+  data-turbo-method="delete"
+  title="Delete document"
+  data-testid="document-delete-action"
+  role="menuitem"
+>Delete document</a>

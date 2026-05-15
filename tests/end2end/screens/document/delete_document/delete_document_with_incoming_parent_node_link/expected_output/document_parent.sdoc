@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document Parent
+
+[REQUIREMENT]
+UID: REQ-PARENT
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<

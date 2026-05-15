@@ -66,7 +66,7 @@ class SourceFileTraceabilityCachingReader:
     @staticmethod
     def _get_reader(
         path_to_file: str,
-        project_config: ProjectConfig,
+        project_config: ProjectConfig,  # noqa: ARG004
         source_node_tags: Optional[set[str]] = None,
     ) -> Union[
         SourceFileTraceabilityReader,
@@ -75,24 +75,21 @@ class SourceFileTraceabilityCachingReader:
         SourceFileTraceabilityReader_Robot,
         SourceFileTraceabilityReader_Rust,
     ]:
-        if project_config.is_activated_source_file_language_parsers():
-            if path_to_file.endswith(".py"):
-                return SourceFileTraceabilityReader_Python()
-            if (
-                path_to_file.endswith(".c")
-                or path_to_file.endswith(".cc")
-                or path_to_file.endswith(".h")
-                or path_to_file.endswith(".hh")
-                or path_to_file.endswith(".hpp")
-                or path_to_file.endswith(".cpp")
-            ):
-                return SourceFileTraceabilityReader_C(
-                    custom_tags=source_node_tags
-                )
-            if path_to_file.endswith(".robot"):
-                return SourceFileTraceabilityReader_Robot()
-            if path_to_file.endswith(".rs"):
-                return SourceFileTraceabilityReader_Rust(
-                    custom_tags=source_node_tags
-                )
+        if path_to_file.endswith(".py"):
+            return SourceFileTraceabilityReader_Python()
+        if (
+            path_to_file.endswith(".c")
+            or path_to_file.endswith(".cc")
+            or path_to_file.endswith(".h")
+            or path_to_file.endswith(".hh")
+            or path_to_file.endswith(".hpp")
+            or path_to_file.endswith(".cpp")
+        ):
+            return SourceFileTraceabilityReader_C(custom_tags=source_node_tags)
+        if path_to_file.endswith(".robot"):
+            return SourceFileTraceabilityReader_Robot()
+        if path_to_file.endswith(".rs"):
+            return SourceFileTraceabilityReader_Rust(
+                custom_tags=source_node_tags
+            )
         return SourceFileTraceabilityReader()

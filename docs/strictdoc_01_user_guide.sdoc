@@ -2746,11 +2746,11 @@ TITLE: Language-aware parsing of source code
 [TEXT]
 MID: 07bfe045a4934dd29d97fdb8ac567b7c
 STATEMENT: >>>
-For parsing source code and calculating traceability to requirements, StrictDoc uses a general parser that is agnostic of specific programming languages and their constructs, such as classes or functions. However, for languages with these constructs, establishing traceability to them can simplify the tracing process.
+For parsing source code and calculating traceability to requirements, StrictDoc uses language-aware parsers for supported source file types. For other source file types, StrictDoc falls back to a general parser that is agnostic of specific programming languages and their constructs, such as classes or functions.
 
-As an experimental option, StrictDoc supports parsing source files of selected programming languages to recognize language syntax, primarily enabling traceability of functions (in Python, C, and others), classes (in Python, C++, and others) and tests (Python, C++, Robot Framework) to requirements.
+Language-aware parsing recognizes selected language syntax, primarily enabling traceability of functions (in Python, C/C++, Rust, and others), classes (in Python, C++, and others), and tests (Python, C++, Robot Framework) to requirements.
 
-To activate language-aware traceability, configure the project with the following features:
+Language-aware parsing is enabled automatically for supported source file types when requirement-to-source traceability is enabled:
 
 .. code:: python
 
@@ -2760,13 +2760,10 @@ To activate language-aware traceability, configure the project with the followin
     def create_config() -> ProjectConfig:
         config = ProjectConfig(
             project_features=[
-                "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-                "SOURCE_FILE_LANGUAGE_PARSERS"
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY"
             ],
         )
         return config
-
-Currently, Python, C/C++, Rust, and Robot Framework parsers are implemented. Upcoming implementations include parsers for Bash, and more.
 <<<
 
 [[/SECTION]]
@@ -2782,7 +2779,7 @@ To connect a source file to a requirement, a dedicated ``@relation`` marker must
 
 .. note::
 
-    For language-specific parsing of source code, e.g., Python and C, make sure to enable the corresponding option, see [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
+    Language-specific scopes such as ``class`` and ``function`` are available for supported source file types. See [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
 
 It is also possible to use @relation markers and be compatible with Doxygen. See [LINK: SECTION-UG-Doxygen].
 
@@ -2922,7 +2919,7 @@ The linking of requirements to source files is arranged with a special RELATION 
 
 .. note::
 
-    For language-specific parsing of source code, e.g., Python and C, make sure to enable the corresponding option, see [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
+    Language-specific links are available for supported source file types. See [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
 
 **1\) Linking a requirement to a whole source file**
 
@@ -3092,7 +3089,7 @@ In addition to recognizing the ``@relation(...)`` markers described above, Stric
         print("hello world\n");
     }
 
-To enable SDoc node parsing, the corresponding source file must be registered in the ``strictdoc_config.py`` configuration as follows:
+To enable SDoc node parsing, enable requirement-to-source traceability and register the corresponding source file in the ``strictdoc_config.py`` configuration as follows:
 
 .. code:: python
 
@@ -3103,7 +3100,6 @@ To enable SDoc node parsing, the corresponding source file must be registered in
         config = ProjectConfig(
             project_features=[
                 "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-                "SOURCE_FILE_LANGUAGE_PARSERS",
             ],
             # If custom include_source_paths are set, it must include the corresponding source file.
             include_source_paths=["tests/**"],
@@ -4535,9 +4531,9 @@ TITLE: Test report integration
 [TEXT]
 MID: 07e78a4847554fbd87c44d7b11133f68
 STATEMENT: >>>
-StrictDoc can read test report files from several testing tools as SDoc content which allows establishing traceability between requirements, test cases, and test results.
+StrictDoc can read test report files from several testing tools as SDoc content, which allows establishing traceability between requirements, test cases, and test results.
 
-The project must have the following features activated for StrictDoc to provide language-aware parsing of C/C++, Python or Robot Framework. It is recommended to provide a dedicated folder for test report XML files to not mix human-written SDoc content and auto-generated test reports.
+To enable traceability for imported test reports, enable requirement-to-source traceability. It is recommended to provide a dedicated folder for test report XML files to not mix human-written SDoc content and auto-generated test reports.
 
 .. code:: python
 
@@ -4548,7 +4544,6 @@ The project must have the following features activated for StrictDoc to provide 
         config = ProjectConfig(
             project_features=[
                 "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-                "SOURCE_FILE_LANGUAGE_PARSERS",
             ],
             include_doc_paths=[
                 "/docs/**",
@@ -4613,7 +4608,6 @@ Specifically for LLVM Integrated Tester-produced JUnit XML, an extra config opti
         config = ProjectConfig(
             project_features=[
                 "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-                "SOURCE_FILE_LANGUAGE_PARSERS",
             ],
             test_report_root_dict={
                 "reports/tests_integration.lit.junit.xml": "tests/integration",

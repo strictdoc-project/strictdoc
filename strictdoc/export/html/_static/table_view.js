@@ -103,11 +103,13 @@
     function buildToolbar(table, columns, onToggle) {
         const toolbar = document.createElement('div');
         toolbar.className = 'table-toolbar';
+        toolbar.setAttribute('data-testid', 'table-toolbar');
 
         const btn = document.createElement('button');
         btn.className = 'table-toolbar__btn action_button';
         btn.setAttribute('aria-haspopup', 'true');
         btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('data-testid', 'table-toolbar-columns-btn');
 
         const panel = document.createElement('div');
         panel.className = 'table-toolbar__panel dropdown_menu';
@@ -115,6 +117,7 @@
         panel.setAttribute('aria-hidden', 'true');
         panel.setAttribute('role', 'dialog');
         panel.setAttribute('aria-label', 'Column visibility');
+        panel.setAttribute('data-testid', 'table-toolbar-columns-panel');
 
         const panelHeader = document.createElement('div');
         panelHeader.className = 'table-toolbar__panel-header';
@@ -126,6 +129,7 @@
         const resetBtn = document.createElement('button');
         resetBtn.className = 'table-toolbar__reset compact action_button';
         resetBtn.textContent = 'Show all';
+        resetBtn.setAttribute('data-testid', 'table-toolbar-columns-reset');
         function syncResetBtn() {
             resetBtn.disabled = columns.every(c => c.visible);
         }
@@ -154,6 +158,7 @@
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.checked = col.visible;
+            checkbox.setAttribute('data-testid', 'col-checkbox-' + col.name);
             checkbox.addEventListener('change', () => {
                 onToggle(col, checkbox.checked);
                 updateBtnLabel(btn, columns);

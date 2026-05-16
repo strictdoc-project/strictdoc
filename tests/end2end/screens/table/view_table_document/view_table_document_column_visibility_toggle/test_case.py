@@ -34,7 +34,9 @@ class Test(E2ECase):
             screen_table.assert_on_screen_table()
             screen_table.assert_not_empty_view()
 
-            # --- Initial state ---
+            #
+            # Initial state
+            #
             screen_table.assert_toolbar_btn_label("Columns visibility")
             screen_table.assert_toolbar_panel_closed()
 
@@ -44,23 +46,31 @@ class Test(E2ECase):
             self.assert_element('[data-testid="col-checkbox-Type"]')
             self.assert_element('[data-testid="col-checkbox-Statement"]')
 
-            # --- Hide "Type" column ---
+            #
+            # Hide "Type" column
+            #
             screen_table.do_toggle_column("Type")
             screen_table.assert_column_header_hidden("Type")
             self.assert_url_contains("hidden=Type")
             screen_table.assert_toolbar_btn_label("Columns (1 hidden)")
             screen_table.assert_show_all_enabled()
 
-            # --- Hide "Statement" column ---
+            #
+            # Hide "Statement" column
+            #
             screen_table.do_toggle_column("Statement")
             screen_table.assert_column_header_hidden("Statement")
             self.assert_url_contains("Statement")
             screen_table.assert_toolbar_btn_label("Columns (2 hidden)")
 
-            # --- Close panel by clicking outside ---
+            #
+            # Close panel by clicking outside
+            #
             screen_table.do_close_panel_by_outside_click()
 
-            # --- Show all ---
+            #
+            # Show all
+            #
             screen_table.do_open_toolbar_panel()
             screen_table.do_click_show_all()
             screen_table.assert_column_header_visible("Type")

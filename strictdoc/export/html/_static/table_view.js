@@ -2,9 +2,9 @@
     const STORAGE_KEY_PREFIX = 'strictdoc.table.hidden_cols';
     const URL_PARAM = 'hidden';
 
-    // -------------------------------------------------------------------------
-    // State I/O
-    // -------------------------------------------------------------------------
+    /*
+     * State I/O
+     */
 
     function getStorageKey() {
         return STORAGE_KEY_PREFIX + ':' + location.pathname;
@@ -55,14 +55,14 @@
         writeToURL(hiddenNames);
     }
 
-    // -------------------------------------------------------------------------
-    // Priority strategy
-    //
-    // URL param present → explicit state (shared link): apply it, persist to storage.
-    // URL param absent  → personal preference: restore from storage, reflect in URL.
-    //
-    // To change the strategy, edit only this function.
-    // -------------------------------------------------------------------------
+    /*
+     * Priority strategy
+     *
+     * URL param present → explicit state (shared link): apply it, persist to storage.
+     * URL param absent  → personal preference: restore from storage, reflect in URL.
+     *
+     * To change the strategy, edit only this function.
+     */
 
     function resolveInitialHidden() {
         const fromURL = readFromURL();
@@ -75,9 +75,9 @@
         return fromStorage;
     }
 
-    // -------------------------------------------------------------------------
-    // Column visibility
-    // -------------------------------------------------------------------------
+    /*
+     * Column visibility
+     */
 
     function setColumnVisibility(table, index, visible) {
         const ths = table.querySelectorAll(':scope > thead > tr > th');
@@ -96,9 +96,9 @@
         });
     }
 
-    // -------------------------------------------------------------------------
-    // Toolbar
-    // -------------------------------------------------------------------------
+    /*
+     * Toolbar
+     */
 
     function buildToolbar(table, columns, onToggle) {
         const toolbar = document.createElement('div');
@@ -202,9 +202,9 @@
         btn.textContent = hidden > 0 ? 'Columns (' + hidden + ' hidden)' : 'Columns visibility';
     }
 
-    // -------------------------------------------------------------------------
-    // Init
-    // -------------------------------------------------------------------------
+    /*
+     * Init
+     */
 
     function init() {
         const table = document.querySelector('.content-view-table');

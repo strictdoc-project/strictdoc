@@ -18,7 +18,9 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def assert_on_screen_table(self) -> None:
         super().assert_on_screen("table")
 
+    #
     # Column visibility toolbar
+    #
 
     def assert_toolbar_btn_label(self, label: str) -> None:
         actual = self.test_case.execute_script(

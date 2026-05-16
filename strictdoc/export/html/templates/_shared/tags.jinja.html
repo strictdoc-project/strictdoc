@@ -1,9 +1,17 @@
 {% if view_object.traceability_index.has_tags(view_object.document) %}
+{#
+  FIXME: When this 'if' condition is false, an empty `.tags` is still rendered.
+
+  Temporary solution: CSS `:empty` rule to hide the empty `.tags` element.
+
+  The CSS `:empty` rule only works when the element has no whitespace,
+  so keep the loop output whitespace-free.
+#}
 <div class="tags">
 {%- for tag_name_, tag_count_ in view_object.traceability_index.get_counted_tags(view_object.document) %}
   <span class="tag">
     {{ tag_name_ }}<span class="tag_badge">{{ tag_count_ }}</span>
   </span>
-{%- endfor %}
+{% endfor -%}
 </div>
 {%- endif %}

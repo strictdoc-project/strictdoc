@@ -19,6 +19,17 @@ window.addEventListener('load', function () {
     startY: 0
   }
 
+  var grabbingStyle = document.createElement('style');
+  grabbingStyle.textContent = '* { cursor: grabbing !important; }';
+
+  function setGrabbing(on) {
+    if (on) {
+      document.head.appendChild(grabbingStyle);
+    } else if (grabbingStyle.parentNode) {
+      grabbingStyle.parentNode.removeChild(grabbingStyle);
+    }
+  }
+
   const element = getPanElement();
   if (element) {
     console.assert(!!element, "Expected a valid element.");
@@ -30,7 +41,7 @@ window.addEventListener('load', function () {
         e.preventDefault();
         e.stopPropagation();
         state.spacePressed = true;
-        element.style.cursor = 'move';
+        element.style.cursor = 'grab';
         element.style.scrollBehavior = 'auto';
         return;
       }
@@ -73,6 +84,13 @@ window.addEventListener('load', function () {
       }
     });
 
+    element.addEventListener("click", function (e) {
+      if (state.spacePressed) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
     element.addEventListener("mousedown", function (e) {
       if (!state.spacePressed) {
         return;
@@ -90,6 +108,7 @@ window.addEventListener('load', function () {
       var mouseY = parseInt(e.clientY);
 
       state.isDown = true;
+      setGrabbing(true);
     });
 
     element.addEventListener("mouseup", function (e) {
@@ -101,6 +120,7 @@ window.addEventListener('load', function () {
       e.stopPropagation();
 
       state.isDown = false;
+      setGrabbing(false);
     });
 
     element.addEventListener("mousemove", function (e) {
@@ -136,6 +156,7 @@ window.addEventListener('load', function () {
       e.stopPropagation();
 
       state.isDown = false;
+      setGrabbing(false);
     });
   }
 });

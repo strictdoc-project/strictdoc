@@ -733,7 +733,7 @@ sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover .anchor_back_li
 
 /* tags */
 
-.tags {
+.tags:not(:empty) {
   padding-bottom: var(--base-gap);
 }
 

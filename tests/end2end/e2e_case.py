@@ -3,6 +3,7 @@
 """
 
 from time import sleep
+from urllib.parse import urlparse, urlunparse
 
 from selenium.common import WebDriverException
 from selenium.webdriver.common.by import By
@@ -70,6 +71,20 @@ class E2ECase(BaseCase):
             "const text = await navigator.clipboard.readText(); return text;"
         )
         return pasted_text
+
+    def assert_url_not_contains(self, substring: str) -> None:
+        current_url = self.get_current_url()
+        assert substring not in current_url, (
+            f"Expected URL to not contain {substring!r}, but got: {current_url}"
+        )
+
+    def clear_local_storage(self) -> None:
+        self.execute_script("localStorage.clear()")
+
+    def reload_page_without_query(self) -> None:
+        parsed = urlparse(self.get_current_url())
+        clean_url = urlunparse(parsed._replace(query="", fragment=""))
+        self.open(clean_url)
 
     def sdoc_do_scroll_to_element_by_xpath(self, xpath: str) -> None:
         assert isinstance(xpath, str), xpath

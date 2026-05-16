@@ -27,7 +27,7 @@ class Test(E2ECase):
             # Tests run with --reuse-session (shared browser), so localStorage
             # persists across test cases. Clearing here ensures the table view
             # JS starts with no saved column state and reflects a clean initial state.
-            self.execute_script("localStorage.clear()")
+            self.clear_local_storage()
 
             viewtype_selector = ViewType_Selector(self)
             screen_table = viewtype_selector.do_go_to_table()
@@ -75,7 +75,7 @@ class Test(E2ECase):
             screen_table.do_click_show_all()
             screen_table.assert_column_header_visible("Type")
             screen_table.assert_column_header_visible("Statement")
-            assert "hidden=" not in self.get_current_url()
+            self.assert_url_not_contains("hidden=")
             screen_table.assert_toolbar_btn_label("Columns visibility")
             screen_table.assert_show_all_disabled()
 

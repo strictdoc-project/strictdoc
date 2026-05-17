@@ -46,6 +46,41 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 1f6323f4461a5fe3d95b3f3dbeb0fcaa
+TITLE: Unreleased
+
+[TEXT]
+MID: be1c3bd631f9b6c7b8f937e1a28912e7
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Users can now edit the project title from the Project Index screen and StrictDoc
+updates the configured project title in ``strictdoc_config.py``. Documents can also be deleted from the document screen, with validation that prevents removing documents that are still referenced by other project content.
+
+2\) StrictDoc now provides a ``strictdoc new`` command that generates an initial
+project skeleton. This gives new projects a ready-to-run starting point with
+example configuration and document files.
+
+3\) Project configuration loading now gives precedence to the Python
+``strictdoc_config.py`` file when both it and the deprecated ``strictdoc.toml``
+file are present. This makes migration from TOML to Python configuration more
+predictable.
+
+4\) The HTML table view now includes a column visibility menu and supports
+panning with a space key. Related fixes improve the panning cursor and click handling while dragging.
+
+5\) The output of the ``server`` and ``about`` commands was improved. The server
+banner is printed after project loading is complete, so the final startup
+information is visible even for large projects, and command output formatting
+is more consistent.
+
+6\) The traceability matrix HTML layout now works around a Safari-specific
+sticky header overflow issue.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: e3826dd8648f9da69b87d32a49cc3382
 TITLE: 0.21.0 (2026-05-14)
 

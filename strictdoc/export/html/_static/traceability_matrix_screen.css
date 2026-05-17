@@ -1,5 +1,6 @@
 .traceability_matrix {
   --traceability_matrix-thead-height: calc(4 * var(--base-rhythm));
+  --traceability_matrix-thead-amend: 2px; /* for the ::before element to cover the border space */
 
 
   display: table;
@@ -25,7 +26,13 @@
   top: calc(-1 * var(--base-gap));
   left: calc(-1 * var(--base-gap));
   right: calc(-1 * var(--base-gap));
-  bottom: 0;
+  /* bottom: 0; */
+  /* Safari does not establish a containing block for position:absolute children
+   of sticky table elements; use explicit height instead of bottom:0
+   */
+  height: calc(var(--traceability_matrix-thead-height)
+        + var(--base-gap)
+        + var(--traceability_matrix-thead-amend));
   z-index: 0;
   background-color: var(--color-bg-main);
 }
@@ -51,7 +58,7 @@ td.traceability_matrix__document {
   position: sticky;
   padding: 0;
   top: 0;
-  z-index: 1;
+  z-index: 3;
 }
 
 .traceability_matrix__placeholder {

@@ -1,16 +1,19 @@
+import json
 import os
 import re
-import json
-import toml
+import subprocess
 import sys
 import threading
-import webbrowser
-import subprocess
 import tkinter as tk
-import strictdoc.features.launcher.git_action as git_action
-from tkinter import filedialog, messagebox, ttk
+import webbrowser
 from importlib.resources import files
+from tkinter import filedialog, messagebox, ttk
 from typing import Any
+
+import toml
+
+from strictdoc import __version__
+from strictdoc.features.launcher import git_action
 
 STRICTDOC_RES = files("strictdoc")
 
@@ -46,7 +49,7 @@ class StrictDocLauncher(tk.Tk):
     max_recent_workspaces = 5
     log_text_width_chars = 160
 
-    def __init__(self, initial_workspace: str | None = None, initial_open_browser: str | None = None) -> None:
+    def __init__(self, initial_workspace: str | None = None) -> None:
         super().__init__()
         self.title("StrictDoc Launcher")
 
@@ -71,8 +74,6 @@ class StrictDocLauncher(tk.Tk):
             style = ttk.Style()
             style.configure("green.TButton", foreground="green")
             style.configure("red.TButton", foreground="red")
-            # if "clam" in style.theme_names():
-            #     style.theme_use("clam")
         except Exception:  # noqa: BLE001
             pass
 
@@ -91,6 +92,7 @@ class StrictDocLauncher(tk.Tk):
 
         # State
         self.workspace_dir: str | None = None
+        self._workspace_project_config = None
         self._recent_workspaces: list[str] = self._load_recent_workspaces()
         self.server_process: subprocess.Popen | None = None
         self._log_thread: threading.Thread | None = None
@@ -122,12 +124,7 @@ class StrictDocLauncher(tk.Tk):
         self._build_ui()
 
         # Restore persisted launcher preferences.
-        remembered_open_browser = self._load_auto_open_browser_state()
-        preferred_open_browser = (
-            initial_open_browser
-            if initial_open_browser is not None and str(initial_open_browser).strip()
-            else remembered_open_browser
-        )
+        self._load_auto_open_browser_state()
 
         # Resolve workspace preference: explicit CLI argument wins over
         # persisted launcher preference from the previous run.
@@ -169,7 +166,7 @@ class StrictDocLauncher(tk.Tk):
     def _build_ui(self) -> None:
         PADDING: dict[str, Any] = {"padx": 5, "pady": 5}
 
-        # Konfiguration des Haupt-Grids
+        # Configuration of the main grid
         self.columnconfigure(0, weight=0) # Label Spalte (fest)
         self.columnconfigure(1, weight=1) # Entry Spalte (flexibel)
         self.columnconfigure(2, weight=0) # Button Spalte (fest)
@@ -183,22 +180,17 @@ class StrictDocLauncher(tk.Tk):
         header_frame.columnconfigure(0, weight=1)
 
         header = ttk.Label(
-            header_frame, 
-            text="StrictDoc Launcher", 
+            header_frame,
+            text="StrictDoc Launcher",
             font=("Segoe UI", 11, "bold")
         )
         header.grid(row=0, column=0, sticky="w")
 
-        # Logo (rechts)
+        # Logo right
         self._logo_image = None
-        if os.path.isfile(LOGO_PATH):
-            try:
-                self._logo_image = tk.PhotoImage(file=LOGO_PATH)
-                self._logo_image = self._logo_image.subsample(3)
-                logo_label = ttk.Label(self, image=self._logo_image)
-                logo_label.grid(row=0, column=1, columnspan=2, sticky="e", **PADDING)
-            except Exception:
-                self._logo_image = None
+        self.logo_label = ttk.Label(self)
+        self.logo_label.grid(row=0, column=1, columnspan=2, sticky="e", **PADDING)
+        self._update_logo()
 
         # Workspace selection
         ttk.Label(self, text="Workspace:").grid(row=1, column=0, sticky="w", **PADDING)
@@ -417,6 +409,51 @@ class StrictDocLauncher(tk.Tk):
         self.status_var.set(text)
         self.update_idletasks()
 
+    def _update_logo(self) -> None:
+        """
+        Update the launcher logo image.
+
+        Priority:
+        1. `ProjectConfig.launcher_logo_path` from the workspace Python config
+           (absolute or workspace-relative).
+        2. Bundled package resource `LOGO_PATH`.
+        """
+        logo_path = None
+
+        # 1) If the workspace provides a launcher logo path, prefer it.
+        project_config = getattr(self, "_workspace_project_config", None)
+        if project_config is not None:
+            cfg_path = getattr(project_config, "launcher_logo_path", None)
+            if isinstance(cfg_path, str) and cfg_path.strip():
+                candidate = cfg_path
+                if not os.path.isabs(candidate) and self.workspace_dir:
+                    candidate = os.path.join(self.workspace_dir, candidate)
+                if os.path.isfile(candidate):
+                    logo_path = candidate
+
+        # 2) Fallback to bundled logo.
+        if logo_path is None and os.path.isfile(LOGO_PATH):
+            logo_path = LOGO_PATH
+
+        # Apply to UI.
+        try:
+            if logo_path is not None:
+                img = tk.PhotoImage(file=logo_path)
+                # Keep a reference to avoid GC.
+                self._logo_image = img.subsample(3) if hasattr(img, "subsample") else img
+                self.logo_label.configure(image=self._logo_image)
+            else:
+                # Remove image if none available.
+                self._logo_image = None
+                self.logo_label.configure(image="")
+        except Exception:
+            # Best-effort only; ignore failures to load the image.
+            self._logo_image = None
+            try:
+                self.logo_label.configure(image="")
+            except Exception:
+                pass
+
     def _open_help_link(self, selection: str | None = None) -> None:
         """Open the selected help/documentation link in the default browser."""
         sel = selection or getattr(self, "helper_docs_var", tk.StringVar()).get()
@@ -434,9 +471,7 @@ class StrictDocLauncher(tk.Tk):
 
     def _get_strictdoc_version(self) -> str:
         try:
-            import strictdoc  # type: ignore[import]
-
-            return strictdoc.__version__
+            return __version__
         except Exception:
             return "unknown"
 
@@ -470,7 +505,7 @@ class StrictDocLauncher(tk.Tk):
         if not os.path.isfile(settings_path):
             return {}
         try:
-            with open(settings_path, "r", encoding="utf8") as settings_file:
+            with open(settings_path, encoding="utf8") as settings_file:
                 loaded = json.load(settings_file)
             if isinstance(loaded, dict):
                 return loaded
@@ -717,7 +752,8 @@ class StrictDocLauncher(tk.Tk):
             )
 
     def _load_project_title_from_config(self) -> None:
-        """Best-effort: pre-fill project title from configuration.
+        """
+        Best-effort: pre-fill project title from configuration.
 
         Order:
         1. strictdoc_config.py (Python config) via create_config().project_title
@@ -742,6 +778,8 @@ class StrictDocLauncher(tk.Tk):
                     title_value = getattr(project_config, "project_title", None)
                     if isinstance(title_value, str) and title_value.strip():
                         self.project_title_var.set(title_value)
+                        self._workspace_project_config = project_config
+                        self._update_logo()
                         return
             except Exception:  # noqa: BLE001
                 pass
@@ -754,6 +792,8 @@ class StrictDocLauncher(tk.Tk):
                 title_value = project_section.get("title")
                 if isinstance(title_value, str) and title_value.strip():
                     self.project_title_var.set(title_value)
+                    self._workspace_project_config = None
+                    self._update_logo()
                     return
             except Exception:  # noqa: BLE001
                 # On any error, leave the field empty.
@@ -764,6 +804,8 @@ class StrictDocLauncher(tk.Tk):
             folder_name = os.path.basename(workspace_dir.rstrip("/\\"))
             if folder_name:
                 self.project_title_var.set(folder_name)
+        self._workspace_project_config = None
+        self._update_logo()
 
     def _run_export_thread(self, output_dir, export_format, on_success, on_error):
         cmd = [
@@ -784,6 +826,7 @@ class StrictDocLauncher(tk.Tk):
                     cwd=self.workspace_dir,
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
 
                 if completed.returncode == 0:
@@ -794,7 +837,7 @@ class StrictDocLauncher(tk.Tk):
                     self.after(0, lambda: on_error(msg))
 
             except Exception as exc:
-                self.after(0, lambda: on_error(str(exc)))
+                self.after(0, lambda exc=exc: on_error(str(exc)))
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -902,7 +945,7 @@ class StrictDocLauncher(tk.Tk):
         dialog_y = parent_y + max(0, (parent_height - dialog_height) // 2)
         dialog.geometry(f"{dialog_width}x{dialog_height}+{dialog_x}+{dialog_y}")
 
-        # Export-Logik im Dialog
+        # Export logic in the dialogue box
         def start_export():
             if self._export_in_progress:
                 return
@@ -969,7 +1012,8 @@ class StrictDocLauncher(tk.Tk):
         dialog.bind("<Escape>", lambda _e: dialog.destroy())
 
     def _open_config_dialog(self) -> None:
-        """Open a dialog window to edit basic project configuration.
+        """
+        Open a dialog window to edit basic project configuration.
 
         Currently this provides a simple field for the project title and
         an "Advanced" button that opens a raw editor for strictdoc config.
@@ -1030,7 +1074,8 @@ class StrictDocLauncher(tk.Tk):
         dialog.bind("<Escape>", lambda _event: on_cancel())
 
     def _sync_project_config_from_ui(self) -> None:
-        """Write the project title from the launcher into the project configuration.
+        """
+        Write the project title from the launcher into the project configuration.
 
         Strategy / precedence:
         - If strictdoc_config.py exists: update project_title there
@@ -1057,7 +1102,7 @@ class StrictDocLauncher(tk.Tk):
         # 1) strictdoc_config.py exists -> try to update project_title there.
         if os.path.isfile(config_py_path):
             try:
-                with open(config_py_path, "r", encoding="utf8") as config_file:
+                with open(config_py_path, encoding="utf8") as config_file:
                     config_text = config_file.read()
 
                 # Simple, conservative replacement of the project_title= argument.
@@ -1126,12 +1171,18 @@ class StrictDocLauncher(tk.Tk):
 
         # 3) No config file -> create new strictdoc_config.py with minimal content.
         try:
+            title_literal = json.dumps(title)
             config_py_template = (
                 "from strictdoc.core.project_config import ProjectConfig\n\n"
+                "# Optional: provide a workspace-specific configuration for StrictDoc.\n"
+                "# You can also specify a custom launcher logo path (absolute or\n"
+                "# relative to the workspace), e.g.\n"
+                '#     launcher_logo_path="assets/my_logo.png",\n'
                 "\n"
                 "def create_config() -> ProjectConfig:\n"
                 "    return ProjectConfig(\n"
-                f"        project_title=\"{title.replace('\\', '\\\\').replace('\"', r'\\\"')}\",\n"
+                f"        project_title={title_literal},\n"
+                '        # launcher_logo_path="assets/my_logo.png",\n'
                 "    )\n"
             )
             with open(config_py_path, "w", encoding="utf8") as config_file:
@@ -1148,7 +1199,8 @@ class StrictDocLauncher(tk.Tk):
             )
 
     def _open_advanced_config_editor(self) -> None:
-        """Open a raw text editor for strictdoc.toml (advanced mode).
+        """
+        Open a raw text editor for strictdoc.toml (advanced mode).
 
         strictdoc_config.py (Python config) is preferred; if only
         strictdoc.toml exists, that file is opened instead. New projects
@@ -1181,7 +1233,7 @@ class StrictDocLauncher(tk.Tk):
         initial_text = ""
         if os.path.isfile(target_path):
             try:
-                with open(target_path, "r", encoding="utf8") as config_file:
+                with open(target_path, encoding="utf8") as config_file:
                     initial_text = config_file.read()
             except Exception as exc:  # noqa: BLE001
                 messagebox.showerror(
@@ -1200,12 +1252,13 @@ class StrictDocLauncher(tk.Tk):
                 title = folder_name
 
             if mode == "py":
+                title_literal = json.dumps(title)
                 config_py_template = (
                     "from strictdoc.core.project_config import ProjectConfig\n\n"
                     "\n"
                     "def create_config() -> ProjectConfig:\n"
                     "    return ProjectConfig(\n"
-                    f"        project_title=\"{title.replace('\\', '\\\\').replace('\"', r'\\\"')}\",\n"
+                    f"        project_title={title_literal},\n"
                     "    )\n"
                 )
                 initial_text = config_py_template
@@ -1345,7 +1398,8 @@ class StrictDocLauncher(tk.Tk):
             self.start_server()
 
     def _toggle_log(self) -> None:
-        """Expand/collapse the server log area and adjust window height.
+        """
+        Expand/collapse the server log area and adjust window height.
 
         When the log is expanded, the window grows as needed to fit
         the additional content and the minimum size is updated so the
@@ -1398,7 +1452,8 @@ class StrictDocLauncher(tk.Tk):
             self.geometry(f"{self._collapsed_min_width}x{req_height}")
 
     def _repair_ids(self) -> None:
-        """Run StrictDoc's auto-UID management on the current workspace.
+        """
+        Run StrictDoc's auto-UID management on the current workspace.
 
         This wraps the CLI command
 
@@ -1436,13 +1491,15 @@ class StrictDocLauncher(tk.Tk):
                     cwd=workspace_dir,
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
             except Exception as exc:  # noqa: BLE001
+                error = exc
 
-                def _handle_exc() -> None:
+                def _handle_exc(error: Exception = error) -> None:
                     self.set_status("Repair failed.")
-                    self._append_log(f"[REPAIR ERROR] {exc}\n")
-                    messagebox.showerror("Repair IDs error", str(exc))
+                    self._append_log(f"[REPAIR ERROR] {error}\n")
+                    messagebox.showerror("Repair IDs error", str(error))
 
                 self.after(0, _handle_exc)
                 return
@@ -1484,7 +1541,8 @@ class StrictDocLauncher(tk.Tk):
 
     # Export -------------------------------------------------------------
     def choose_export_path(self) -> None:
-        """Let the user change the export target base directory.
+        """
+        Let the user change the export target base directory.
 
         The effective export directory is always "<selected>/export",
         same behavior as before but now visible and editable.
@@ -1547,7 +1605,7 @@ class StrictDocLauncher(tk.Tk):
                     self._start_log_reader()
                     self._schedule_server_poll()
                 except Exception as exc:  # noqa: BLE001
-                    self.after(0, lambda: self._server_failed(exc))
+                    self.after(0, lambda exc=exc: self._server_failed(exc))
 
             threading.Thread(target=run_server, daemon=True).start()
 
@@ -1763,6 +1821,5 @@ class StrictDocLauncher(tk.Tk):
 
 
 def main(workspace: str | None = None) -> None:
-    open_browser_state = None
-    app = StrictDocLauncher(initial_workspace=workspace, initial_open_browser=open_browser_state)
+    app = StrictDocLauncher(initial_workspace=workspace)
     app.mainloop()

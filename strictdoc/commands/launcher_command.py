@@ -3,8 +3,8 @@
 import argparse
 
 from strictdoc.cli.base_command import BaseCommand
-from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.features.launcher.launcher_frame import main as launcher_main
+from strictdoc.helpers.parallelizer import Parallelizer
 
 
 class LauncherCommand(BaseCommand):

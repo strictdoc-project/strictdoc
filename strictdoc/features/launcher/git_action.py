@@ -14,6 +14,7 @@ def _ensure_git_workspace(self) -> bool:
                 cwd=self.workspace_dir,
                 capture_output=True,
                 text=True,
+                check=False,
             )
         except Exception as exc:  # noqa: BLE001
             messagebox.showerror("Git error", str(exc))
@@ -47,13 +48,15 @@ def _run_git_action(self, action_name: str, git_args: list[str]) -> None:
                     cwd=workspace_dir,
                     capture_output=True,
                     text=True,
+                    check=False,
                 )
             except Exception as exc:  # noqa: BLE001
+                error = exc
 
-                def _handle_exc() -> None:
+                def _handle_exc(error: Exception = error) -> None:
                     self.set_status(f"{action_name} failed.")
-                    self._append_log(f"[{action_name.upper()} ERROR] {exc}\n")
-                    messagebox.showerror(f"{action_name} error", str(exc))
+                    self._append_log(f"[{action_name.upper()} ERROR] {error}\n")
+                    messagebox.showerror(f"{action_name} error", str(error))
 
                 self.after(0, _handle_exc)
                 return

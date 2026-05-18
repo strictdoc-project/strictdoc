@@ -6,6 +6,9 @@ from tests.end2end.helpers.screens.screen import Screen
 _COLUMNS_BTN = '[data-testid="table-toolbar-columns-btn"]'
 _COLUMNS_PANEL = '[data-testid="table-toolbar-columns-panel"]'
 _COLUMNS_RESET = '[data-testid="table-toolbar-columns-reset"]'
+_ROWS_BTN = '[data-testid="table-toolbar-rows-btn"]'
+_ROWS_PANEL = '[data-testid="table-toolbar-rows-panel"]'
+_ROWS_RESET = '[data-testid="table-toolbar-rows-reset"]'
 
 
 class Screen_Table(Screen):  # pylint: disable=invalid-name
@@ -73,3 +76,59 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def do_close_panel_by_outside_click(self) -> None:
         self.test_case.click(".content-view-table")
         self.assert_toolbar_panel_closed()
+
+    #
+    # Row visibility toolbar
+    #
+
+    def assert_rows_toolbar_btn_label(self, label: str) -> None:
+        actual = self.test_case.execute_script(
+            f"return document.querySelector('{_ROWS_BTN}').textContent"
+        )
+        assert actual == label, (
+            f"Rows button label: expected {label!r}, got {actual!r}"
+        )
+
+    def assert_rows_toolbar_panel_open(self) -> None:
+        self.test_case.assert_element_visible(_ROWS_PANEL)
+
+    def assert_rows_toolbar_panel_closed(self) -> None:
+        self.test_case.assert_element_not_visible(_ROWS_PANEL)
+
+    def assert_rows_show_all_disabled(self) -> None:
+        disabled = self.test_case.execute_script(
+            f"return document.querySelector('{_ROWS_RESET}').disabled"
+        )
+        assert disabled, "Expected rows Show all button to be disabled"
+
+    def assert_rows_show_all_enabled(self) -> None:
+        disabled = self.test_case.execute_script(
+            f"return document.querySelector('{_ROWS_RESET}').disabled"
+        )
+        assert not disabled, "Expected rows Show all button to be enabled"
+
+    def assert_rows_of_type_visible(self, row_type: str) -> None:
+        rows = self.test_case.execute_script(
+            f"return Array.from(document.querySelectorAll("
+            f"'tr[data-row-type=\"{row_type}\"]')"
+            f").every(r => r.style.display !== 'none')"
+        )
+        assert rows, f"Expected rows of type {row_type!r} to be visible"
+
+    def assert_rows_of_type_hidden(self, row_type: str) -> None:
+        rows = self.test_case.execute_script(
+            f"return Array.from(document.querySelectorAll("
+            f"'tr[data-row-type=\"{row_type}\"]')"
+            f").every(r => r.style.display === 'none')"
+        )
+        assert rows, f"Expected rows of type {row_type!r} to be hidden"
+
+    def do_open_rows_toolbar_panel(self) -> None:
+        self.test_case.click(_ROWS_BTN)
+        self.assert_rows_toolbar_panel_open()
+
+    def do_toggle_row_type(self, row_type: str) -> None:
+        self.test_case.click(f'[data-testid="row-checkbox-{row_type}"]')
+
+    def do_click_rows_show_all(self) -> None:
+        self.test_case.click(_ROWS_RESET)

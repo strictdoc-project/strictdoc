@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Document
+
+[[SECTION]]
+TITLE: First section
+
+[REQUIREMENT]
+TITLE: First requirement
+STATEMENT: Statement of the first requirement.
+
+[[/SECTION]]
+
+[REQUIREMENT]
+TITLE: Second requirement
+STATEMENT: Statement of the second requirement.

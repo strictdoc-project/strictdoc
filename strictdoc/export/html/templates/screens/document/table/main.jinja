@@ -64,7 +64,7 @@
           {%- for node, _ in view_object.document_content_iterator() %}
             {%- if node.is_requirement() %}
               {%- set requirement = node %}
-              <tr>
+              <tr data-row-type="{{ node.node_type }}">
                 <td class="content-view-td content-view-td-type">
                   {{ node.node_type }}
                 </td>
@@ -165,7 +165,7 @@
               </tr>
             {%- elif node.is_document() %}
               {%- set section = node %}
-              <tr>
+              <tr data-row-type="Section">
                 <td class="content-view-td content-view-td-type">Section</td>
                 <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
                 {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}

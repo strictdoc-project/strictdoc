@@ -97,56 +97,20 @@
     }
 
     /*
-     * Toolbar
+     * Columns panel
      */
 
-    function buildToolbar(table, columns, onToggle) {
-        const toolbar = document.createElement('div');
-        toolbar.className = 'table-toolbar';
-        toolbar.setAttribute('data-testid', 'table-toolbar');
+    function initColumnsPanel(table, columns, onToggle) {
+        const btn = document.querySelector('[data-testid="table-toolbar-columns-btn"]');
+        const panel = document.querySelector('[data-testid="table-toolbar-columns-panel"]');
+        const resetBtn = document.querySelector('[data-testid="table-toolbar-columns-reset"]');
+        const list = document.querySelector('[data-testid="table-toolbar-columns-list"]');
 
-        const btn = document.createElement('button');
-        btn.className = 'table-toolbar__btn action_button';
-        btn.setAttribute('aria-haspopup', 'true');
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('data-testid', 'table-toolbar-columns-btn');
+        _panels.push({ btn, panel });
 
-        const panel = document.createElement('div');
-        panel.className = 'table-toolbar__panel dropdown_menu';
-        panel.hidden = true;
-        panel.setAttribute('aria-hidden', 'true');
-        panel.setAttribute('role', 'dialog');
-        panel.setAttribute('aria-label', 'Column visibility');
-        panel.setAttribute('data-testid', 'table-toolbar-columns-panel');
-
-        const panelHeader = document.createElement('div');
-        panelHeader.className = 'table-toolbar__panel-header';
-
-        const panelTitle = document.createElement('span');
-        panelTitle.className = 'table-toolbar__panel-title';
-        panelTitle.textContent = 'Columns';
-
-        const resetBtn = document.createElement('button');
-        resetBtn.className = 'table-toolbar__reset compact action_button';
-        resetBtn.textContent = 'Show all';
-        resetBtn.setAttribute('data-testid', 'table-toolbar-columns-reset');
         function syncResetBtn() {
             resetBtn.disabled = columns.every(c => c.visible);
         }
-
-        resetBtn.addEventListener('click', () => {
-            columns.forEach(col => onToggle(col, true));
-            panel.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
-            updateBtnLabel(btn, columns);
-            syncResetBtn();
-        });
-
-        panelHeader.appendChild(panelTitle);
-        panelHeader.appendChild(resetBtn);
-        panel.appendChild(panelHeader);
-
-        const list = document.createElement('ul');
-        list.className = 'table-toolbar__list';
 
         columns.forEach(col => {
             const item = document.createElement('li');
@@ -161,7 +125,7 @@
             checkbox.setAttribute('data-testid', 'col-checkbox-' + col.name);
             checkbox.addEventListener('change', () => {
                 onToggle(col, checkbox.checked);
-                updateBtnLabel(btn, columns);
+                updateColumnsBtnLabel(btn, columns);
                 syncResetBtn();
             });
 
@@ -171,35 +135,50 @@
             list.appendChild(item);
         });
 
-        panel.appendChild(list);
+        resetBtn.addEventListener('click', () => {
+            columns.forEach(col => onToggle(col, true));
+            list.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
+            updateColumnsBtnLabel(btn, columns);
+            syncResetBtn();
+        });
 
         btn.addEventListener('click', e => {
             e.stopPropagation();
             const opening = panel.hidden;
-            panel.hidden = !opening;
-            btn.setAttribute('aria-expanded', String(opening));
-            panel.setAttribute('aria-hidden', String(!opening));
+            closeAllPanels();
+            if (opening) openPanel(btn, panel);
         });
 
-        document.addEventListener('click', e => {
-            if (!toolbar.contains(e.target)) {
-                panel.hidden = true;
-                btn.setAttribute('aria-expanded', 'false');
-                panel.setAttribute('aria-hidden', 'true');
-            }
-        });
-
-        toolbar.appendChild(btn);
-        toolbar.appendChild(panel);
-
-        updateBtnLabel(btn, columns);
+        updateColumnsBtnLabel(btn, columns);
         syncResetBtn();
-        return toolbar;
     }
 
-    function updateBtnLabel(btn, columns) {
+    function updateColumnsBtnLabel(btn, columns) {
         const hidden = columns.filter(c => !c.visible).length;
         btn.textContent = hidden > 0 ? 'Columns (' + hidden + ' hidden)' : 'Columns visibility';
+    }
+
+    /*
+     * Panel open/close helpers (shared between columns and rows panels)
+     */
+
+    function openPanel(btn, panel) {
+        panel.hidden = false;
+        btn.setAttribute('aria-expanded', 'true');
+        panel.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePanel(btn, panel) {
+        panel.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+        panel.setAttribute('aria-hidden', 'true');
+    }
+
+    // panels registry — populated by each initXxxPanel() call
+    const _panels = [];
+
+    function closeAllPanels() {
+        _panels.forEach(({ btn, panel }) => closePanel(btn, panel));
     }
 
     /*
@@ -228,8 +207,14 @@
             persistState(columns.filter(c => !c.visible).map(c => c.name));
         }
 
-        const toolbar = buildToolbar(table, columns, onToggle);
-        table.parentNode.insertBefore(toolbar, table);
+        initColumnsPanel(table, columns, onToggle);
+
+        document.addEventListener('click', e => {
+            const toolbar = document.querySelector('[data-testid="table-toolbar"]');
+            if (toolbar && !toolbar.contains(e.target)) {
+                closeAllPanels();
+            }
+        });
 
         headerCells.forEach((headerCell, index) => {
             headerCell.addEventListener('click', () => {

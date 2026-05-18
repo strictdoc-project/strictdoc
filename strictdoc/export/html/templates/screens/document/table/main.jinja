@@ -7,6 +7,42 @@
         {% include "components/node_field/document_meta/index.jinja" %}
 
         </sdoc-node>
+        <div class="table-toolbar" data-testid="table-toolbar">
+          <button class="table-toolbar__btn action_button"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  data-testid="table-toolbar-columns-btn">Columns visibility</button>
+          <div class="table-toolbar__panel dropdown_menu"
+               hidden
+               aria-hidden="true"
+               role="dialog"
+               aria-label="Column visibility"
+               data-testid="table-toolbar-columns-panel">
+            <div class="table-toolbar__panel-header">
+              <span class="table-toolbar__panel-title">Columns</span>
+              <button class="table-toolbar__reset compact action_button"
+                      data-testid="table-toolbar-columns-reset">Show all</button>
+            </div>
+            <ul class="table-toolbar__list" data-testid="table-toolbar-columns-list"></ul>
+          </div>
+          <button class="table-toolbar__btn action_button"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  data-testid="table-toolbar-rows-btn">Row visibility</button>
+          <div class="table-toolbar__panel dropdown_menu"
+               hidden
+               aria-hidden="true"
+               role="dialog"
+               aria-label="Row visibility"
+               data-testid="table-toolbar-rows-panel">
+            <div class="table-toolbar__panel-header">
+              <span class="table-toolbar__panel-title">Row types</span>
+              <button class="table-toolbar__reset compact action_button"
+                      data-testid="table-toolbar-rows-reset">Show all</button>
+            </div>
+            <ul class="table-toolbar__list" data-testid="table-toolbar-rows-list"></ul>
+          </div>
+        </div>
         <table class="content-view-table">
           <thead>
             <tr>

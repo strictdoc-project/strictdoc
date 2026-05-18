@@ -275,6 +275,10 @@ def special_description(item: Node, identifier_text: str) -> Optional[str]:
 
 
 class SourceFileTraceabilityReader_Rust:
+    @staticmethod
+    def supported_elements() -> list[str]:
+        return []
+
     def __init__(self, custom_tags: Optional[set[str]] = None) -> None:
         self.custom_tags: Optional[set[str]] = custom_tags
 

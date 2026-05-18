@@ -172,6 +172,9 @@ RELATIONS:
   ELEMENT: Function
   ID: test_function
   HASH: abc123
+- TYPE: File
+  PATH: tools/testing/selftests/devmem/other.c
+  ID: item_without_element
 """.lstrip()
 
     reader = SDReader()

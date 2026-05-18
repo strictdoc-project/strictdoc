@@ -1514,30 +1514,21 @@ RELATIONS:
 MID: 61c23c1b106e4583b2c6d64bf1d296ba
 UID: SDOC-SRS-137
 STATUS: Active
-TITLE: Function marker
+TITLE: Language element marker
 STATEMENT: >>>
-StrictDoc shall support relation markers that can be attached to individual source code functions.
-<<<
-RATIONALE: >>>
-A function is a basic building block of most programming language. It is straightforward to match a source code function to one or more related requirements.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-72
+StrictDoc shall support relation markers that can be attached to individual source code elements. StrictDoc shall
+support an optional scope attribute to disambiguate the target element where StrictDoc can't infer it solely from the
+marker position.
 
-[REQUIREMENT]
-MID: 86e23c1b106e4adeb2c6d64bf1d29aaa
-UID: SDOC-SRS-140
-STATUS: Active
-TITLE: Class marker
-STATEMENT: >>>
-StrictDoc shall support relation markers that can be attached to source code classes.
+Note: The most basic example of such traceable elements are functions and classes, but generally supported elements
+and available scope attributes depend on the programming language.
 <<<
 RATIONALE: >>>
-A class is a basic building block of most programming language. Some requirements can be naturally attached to the whole classes.
-<<<
-COMMENT: >>>
-Not all programming languages support classes, e.g., C. For these languages and non-code text files, the class markers will have no effect.
+Source code elements can often be considered as the next level to trace from a requirement. For example, a low level element
+is implemented by a function, or a test case is implemented by a test function.
+
+Sometimes it's also feasible to consider the source code elements as lean replacement for prose requirement or test-case
+definitions.
 <<<
 RELATIONS:
 - TYPE: Parent

@@ -534,6 +534,15 @@ class SDWriter:
                     output += "  ID: "
                     output += ref.g_file_entry.id
                     output += "\n"
+                elif (
+                    ref.g_file_entry.deprecated_function is None
+                    and ref.g_file_entry.deprecated_clazz is None
+                    and ref.g_file_entry.id is not None
+                    and ref.g_file_entry.line_range is None
+                ):
+                    output += "  ID: "
+                    output += ref.g_file_entry.id
+                    output += "\n"
                 elif ref.g_file_entry.line_range is not None:
                     output += "  LINE_RANGE: "
                     output += str(ref.g_file_entry.line_range[0])

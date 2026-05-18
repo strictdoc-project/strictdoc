@@ -168,6 +168,10 @@ class SourceFileTraceabilityReader:
         RangeMarker,
     ]
 
+    @staticmethod
+    def supported_elements() -> list[str]:
+        return []
+
     def __init__(self) -> None:
         self.meta_model = metamodel_from_str(
             SOURCE_FILE_GRAMMAR,

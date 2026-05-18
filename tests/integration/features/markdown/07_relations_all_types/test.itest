@@ -1,0 +1,55 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Relations all types
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+# REQ-PARENT has no explicit relations but gets derived child links to REQ-CHILD and REQ-MULTI
+CHECK-HTML: id="REQ-PARENT"
+CHECK-HTML: RELATIONS (Child):
+CHECK-HTML: class="requirement__link-child" href="{{.*}}#REQ-CHILD"
+CHECK-HTML: class="requirement__link-child" href="{{.*}}#REQ-MULTI"
+
+# REQ-CHILD has an explicit Parent relation to REQ-PARENT
+# REQ-PARENT-EXPLICIT-CHILD derives a parent link to REQ-CHILD via its Child relation
+CHECK-HTML: id="REQ-CHILD"
+CHECK-HTML: RELATIONS (Parent):
+CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT"
+CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT-EXPLICIT-CHILD"
+
+# REQ-PARENT-EXPLICIT-CHILD has an explicit Child relation to REQ-CHILD
+CHECK-HTML: id="REQ-PARENT-EXPLICIT-CHILD"
+CHECK-HTML: RELATIONS (Child):
+CHECK-HTML: class="requirement__link-child" href="{{.*}}#REQ-CHILD"
+
+# REQ-FILE-C has a file relation to a C function
+CHECK-HTML: id="REQ-FILE-C"
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.c.html#REQ-FILE-C#1#1"
+CHECK-HTML: file.c, <i>lines: 1-1</i>, function my_function()
+
+# REQ-FILE-PY has a file relation to a Python class
+CHECK-HTML: id="REQ-FILE-PY"
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.py.html#REQ-FILE-PY#1#2"
+CHECK-HTML: file.py, <i>lines: 1-2</i>, class MyClass
+
+# REQ-FILE-RUST has a file relation without Element
+CHECK-HTML: id="REQ-FILE-RUST"
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.rs.html#REQ-FILE-RUST#1#1"
+CHECK-HTML: file.rs, <i>lines: 1-1</i>, entire file
+
+# REQ-FILE-LINE-RANGE has a file relation to an explicit line range
+CHECK-HTML: id="REQ-FILE-LINE-RANGE"
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.c.html#REQ-FILE-LINE-RANGE#10#20"
+CHECK-HTML: file.c, <i>lines: 10-20</i>, range
+
+# REQ-MULTI has two Parent relations
+CHECK-HTML: id="REQ-MULTI"
+CHECK-HTML: RELATIONS (Parent):
+CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT"
+CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT-EXPLICIT-CHILD"
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.c.html#REQ-MULTI#1#23"
+CHECK-HTML: file.c, <i>lines: 1-23</i>, entire file

@@ -73,9 +73,9 @@ class FileEntry:
                 int(range_components_str[1]),
             )
 
+        self.id: Optional[str] = _id
         if element is not None:
             self.element: Optional[str] = element
-            self.id: Optional[str] = _id
         elif self.deprecated_function is not None:
             self.element = "function"
             self.id = self.deprecated_function
@@ -84,7 +84,6 @@ class FileEntry:
             self.id = self.deprecated_clazz
         else:
             self.element = None
-            self.id = None
 
         # Placeholder for drift-detection hash (no runtime functionality yet).
         self.hash: Optional[str] = _hash

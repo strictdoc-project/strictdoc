@@ -1,5 +1,5 @@
 """
-@relation(SDOC-SRS-28, SDOC-SRS-33, SDOC-LLR-207, scope=file)
+@relation(SDOC-SRS-28, SDOC-SRS-33, scope=file)
 """
 
 import re
@@ -719,6 +719,10 @@ class FileTraceabilityIndex:
     def get_req_uids_by_function_name(
         self, rel_path_posix: str, name: str
     ) -> Optional[List[Tuple[str, Optional[str]]]]:
+        """
+        @relation(SDOC-LLR-207, scope=function)
+        """
+
         if rel_path_posix not in self.map_file_function_names_to_reqs_uids:
             return None
 

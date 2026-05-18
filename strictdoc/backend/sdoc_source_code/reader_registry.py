@@ -41,9 +41,7 @@ class SourceCodeReaderRegistry:
             or path_to_file.endswith(".hpp")
             or path_to_file.endswith(".cpp")
         ):
-            return SourceFileTraceabilityReader_C(
-                custom_tags=source_node_tags
-            )
+            return SourceFileTraceabilityReader_C(custom_tags=source_node_tags)
         if path_to_file.endswith(".robot"):
             return SourceFileTraceabilityReader_Robot()
         if path_to_file.endswith(".rs"):

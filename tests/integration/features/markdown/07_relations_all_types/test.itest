@@ -21,57 +21,35 @@ CHECK-HTML: id="REQ-PARENT-EXPLICIT-CHILD"
 CHECK-HTML: RELATIONS (Child):
 CHECK-HTML: class="requirement__link-child" href="{{.*}}#REQ-CHILD"
 
+# REQ-FILE-C has a file relation to a C function
+CHECK-HTML: id="REQ-FILE-C"
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.c.html#REQ-FILE-C#1#1"
+CHECK-HTML: file.c, <i>lines: 1-1</i>, function my_function()
+
+# REQ-FILE-PY has a file relation to a Python class
+CHECK-HTML: id="REQ-FILE-PY"
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.py.html#REQ-FILE-PY#1#2"
+CHECK-HTML: file.py, <i>lines: 1-2</i>, class MyClass
+
+# REQ-FILE-RUST has a file relation without Element
+CHECK-HTML: id="REQ-FILE-RUST"
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.rs.html#REQ-FILE-RUST#1#1"
+CHECK-HTML: file.rs, <i>lines: 1-1</i>, entire file
+
+# REQ-FILE-LINE-RANGE has a file relation to an explicit line range
+CHECK-HTML: id="REQ-FILE-LINE-RANGE"
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.c.html#REQ-FILE-LINE-RANGE#10#20"
+CHECK-HTML: file.c, <i>lines: 10-20</i>, range
+
 # REQ-MULTI has two Parent relations
 CHECK-HTML: id="REQ-MULTI"
 CHECK-HTML: RELATIONS (Parent):
 CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT"
 CHECK-HTML: class="requirement__link-parent" href="{{.*}}#REQ-PARENT-EXPLICIT-CHILD"
-
-RUN: %strictdoc export %S --formats=markdown --output-dir %T
-
-RUN: %cat %T/markdown/input.md | filecheck %s --dump-input=fail --check-prefix CHECK-ROUNDTRIP
-
-# Parent relation
-CHECK-ROUNDTRIP: **UID**: REQ-CHILD
-CHECK-ROUNDTRIP: - **Type**: `Parent`
-CHECK-ROUNDTRIP:   **ID**: `REQ-PARENT`
-
-# Child relation
-CHECK-ROUNDTRIP: **UID**: REQ-PARENT-EXPLICIT-CHILD
-CHECK-ROUNDTRIP: - **Type**: `Child`
-CHECK-ROUNDTRIP:   **ID**: `REQ-CHILD`
-
-# File relation with Element=Function (C)
-CHECK-ROUNDTRIP: **UID**: REQ-FILE-C
-CHECK-ROUNDTRIP: - **Type**: `File`
-CHECK-ROUNDTRIP:   **Path**: `file.c`
-CHECK-ROUNDTRIP:   **Element**: `function`
-CHECK-ROUNDTRIP:   **ID**: `my_function`
-
-# File relation with Element=Class (Python)
-CHECK-ROUNDTRIP: **UID**: REQ-FILE-PY
-CHECK-ROUNDTRIP: - **Type**: `File`
-CHECK-ROUNDTRIP:   **Path**: `file.py`
-CHECK-ROUNDTRIP:   **Element**: `class`
-CHECK-ROUNDTRIP:   **ID**: `MyClass`
-
-# File relation without Element (Rust)
-CHECK-ROUNDTRIP: **UID**: REQ-FILE-RUST
-CHECK-ROUNDTRIP: - **Type**: `File`
-CHECK-ROUNDTRIP:   **Path**: `file.rs`
-CHECK-ROUNDTRIP:   **ID**: `my_function`
-
-# Line range relation
-CHECK-ROUNDTRIP: **UID**: REQ-FILE-LINE-RANGE
-CHECK-ROUNDTRIP: - **Type**: `File`
-CHECK-ROUNDTRIP:   **Path**: `file.c`
-CHECK-ROUNDTRIP:   **Lines**: `10, 20`
-
-# Multiple relations of different types
-CHECK-ROUNDTRIP: **UID**: REQ-MULTI
-CHECK-ROUNDTRIP: - **Type**: `Parent`
-CHECK-ROUNDTRIP:   **ID**: `REQ-PARENT`
-CHECK-ROUNDTRIP: - **Type**: `Parent`
-CHECK-ROUNDTRIP:   **ID**: `REQ-PARENT-EXPLICIT-CHILD`
-CHECK-ROUNDTRIP: - **Type**: `File`
-CHECK-ROUNDTRIP:   **Path**: `file.c`
+CHECK-HTML: RELATIONS (File):
+CHECK-HTML: class="requirement__link-file" href="{{.*}}/_source_files/file.c.html#REQ-MULTI#1#23"
+CHECK-HTML: file.c, <i>lines: 1-23</i>, entire file

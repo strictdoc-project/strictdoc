@@ -262,7 +262,7 @@ class SDMarkdownWriter:
         Serialize one relation as a bullet-list dict item.
 
         Continuation lines are indented by 2 spaces (aligning with the first
-        key character after the ``- `` marker) per SDOC-LLR-207.
+        key character after the ``- `` marker) per SDOC-LLR-211.
         Optional key-value pairs with a None value are omitted.
         """
         pairs = [(k, v) for k, v in kv if v is not None]

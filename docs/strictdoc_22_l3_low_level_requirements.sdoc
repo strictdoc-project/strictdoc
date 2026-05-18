@@ -328,7 +328,7 @@ As of Markdown MVP, the default and preferred syntax shall be:
 
 [REQUIREMENT]
 MID: f9992bd323734ec1ae1d68a58225351f
-UID: SDOC-LLR-208
+UID: SDOC-LLR-210
 TITLE: Lists for meta fields
 STATEMENT: >>>
 For meta fields, StrictDoc shall support a custom markdown convention where bullet lists are interpreted as list-like
@@ -357,7 +357,7 @@ To not restrict their native use-case when writing content, special interpretati
 
 [REQUIREMENT]
 MID: 46301b38befd408b99ab1923d3deb6e5
-UID: SDOC-LLR-207
+UID: SDOC-LLR-211
 TITLE: Dictionary types
 STATEMENT: >>>
 StrictDoc shall support dictionary-like structures in markdown files. This is an example of a dictionary with two key-value pairs:
@@ -417,7 +417,7 @@ StrictDoc shall support multiple parent relation and multiple child relation ent
       **ID**: `REQ-2` \
       **Role**: `Refines`
 
-Each relation is described as a markdown dictionary (see LINK: SDOC-LLR-207) with following key-value pairs:
+Each relation is described as a markdown dictionary (see LINK: SDOC-LLR-211) with following key-value pairs:
 
 - Type (mandatory) Either `Parent` or `Child`.
 - ID (mandatory) UID or MID of the parent or child relation.
@@ -439,7 +439,7 @@ NOTE: If the Relations field is not placed as the meta field but as the content 
 
 [REQUIREMENT]
 MID: 3c65a8115e2d43d08f4a645e82c67644
-UID: SDOC-LLR-206
+UID: SDOC-LLR-212
 TITLE: Support for file relations
 STATEMENT: >>>
 StrictDoc shall support multiple file relation entries in the Relations list of a markdown file.

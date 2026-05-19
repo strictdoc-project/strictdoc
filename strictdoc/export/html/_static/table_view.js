@@ -7,8 +7,22 @@
      * State I/O
      */
 
-    function getStorageKey() {
-        return STORAGE_KEY_PREFIX + ':' + location.pathname;
+    function storageKey(prefix) {
+        return prefix + ':' + location.pathname;
+    }
+
+    function readJson(key) {
+        try {
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        } catch (_) {
+            return [];
+        }
+    }
+
+    function writeJson(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (_) {}
     }
 
     // Returns array of hidden column names from URL, or null if param is absent.
@@ -18,20 +32,6 @@
         if (!params.has(URL_PARAM)) return null;
         const val = params.get(URL_PARAM);
         return val ? val.split('|').map(decodeURIComponent) : [];
-    }
-
-    function readFromStorage() {
-        try {
-            return JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
-        } catch (_) {
-            return [];
-        }
-    }
-
-    function writeToStorage(hiddenNames) {
-        try {
-            localStorage.setItem(getStorageKey(), JSON.stringify(hiddenNames));
-        } catch (_) {}
     }
 
     function writeToURL(hiddenNames) {
@@ -52,30 +52,8 @@
     }
 
     function persistState(hiddenNames) {
-        writeToStorage(hiddenNames);
+        writeJson(storageKey(STORAGE_KEY_PREFIX), hiddenNames);
         writeToURL(hiddenNames);
-    }
-
-    /*
-     * Row-type state I/O (localStorage only, no URL param)
-     */
-
-    function getRowsStorageKey() {
-        return ROWS_STORAGE_KEY_PREFIX + ':' + location.pathname;
-    }
-
-    function readRowsFromStorage() {
-        try {
-            return JSON.parse(localStorage.getItem(getRowsStorageKey()) || '[]');
-        } catch (_) {
-            return [];
-        }
-    }
-
-    function writeRowsToStorage(hiddenTypes) {
-        try {
-            localStorage.setItem(getRowsStorageKey(), JSON.stringify(hiddenTypes));
-        } catch (_) {}
     }
 
     /*
@@ -90,10 +68,10 @@
     function resolveInitialHidden() {
         const fromURL = readFromURL();
         if (fromURL !== null) {
-            writeToStorage(fromURL);
+            writeJson(storageKey(STORAGE_KEY_PREFIX), fromURL);
             return fromURL;
         }
-        const fromStorage = readFromStorage();
+        const fromStorage = readJson(storageKey(STORAGE_KEY_PREFIX));
         writeToURL(fromStorage);
         return fromStorage;
     }
@@ -120,7 +98,7 @@
     }
 
     /*
-     * Columns panel
+     * Shared panel helpers
      */
 
     function updateBtnLabel(btn, items) {
@@ -128,6 +106,42 @@
         const activeLabel = btn.dataset.label || btn.dataset.defaultLabel;
         btn.textContent = hidden > 0 ? activeLabel + ' (' + hidden + ' hidden)' : btn.dataset.defaultLabel;
     }
+
+    function syncResetBtn(resetBtn, items) {
+        resetBtn.disabled = items.every(i => i.visible);
+    }
+
+    function openPanel(btn, panel) {
+        panel.hidden = false;
+        btn.setAttribute('aria-expanded', 'true');
+        panel.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePanel(btn, panel) {
+        panel.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+        panel.setAttribute('aria-hidden', 'true');
+    }
+
+    // panels registry — populated by each initXxxPanel() call
+    const _panels = [];
+
+    function closeAllPanels() {
+        _panels.forEach(({ btn, panel }) => closePanel(btn, panel));
+    }
+
+    function initPanelToggle(btn, panel) {
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            const opening = panel.hidden;
+            closeAllPanels();
+            if (opening) openPanel(btn, panel);
+        });
+    }
+
+    /*
+     * Columns panel
+     */
 
     function initColumnsPanel(table, columns, onToggle) {
         const btn = document.querySelector('[data-testid="table-toolbar-columns-btn"]');
@@ -137,10 +151,6 @@
         btn.dataset.defaultLabel = btn.textContent.trim();
 
         _panels.push({ btn, panel });
-
-        function syncResetBtn() {
-            resetBtn.disabled = columns.every(c => c.visible);
-        }
 
         columns.forEach(col => {
             const item = document.createElement('li');
@@ -156,7 +166,7 @@
             checkbox.addEventListener('change', () => {
                 onToggle(col, checkbox.checked);
                 updateBtnLabel(btn, columns);
-                syncResetBtn();
+                syncResetBtn(resetBtn, columns);
             });
 
             label.appendChild(checkbox);
@@ -169,18 +179,13 @@
             columns.forEach(col => onToggle(col, true));
             list.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
             updateBtnLabel(btn, columns);
-            syncResetBtn();
+            syncResetBtn(resetBtn, columns);
         });
 
-        btn.addEventListener('click', e => {
-            e.stopPropagation();
-            const opening = panel.hidden;
-            closeAllPanels();
-            if (opening) openPanel(btn, panel);
-        });
+        initPanelToggle(btn, panel);
 
         updateBtnLabel(btn, columns);
-        syncResetBtn();
+        syncResetBtn(resetBtn, columns);
     }
 
     /*
@@ -210,16 +215,13 @@
         });
 
         // Restore state from storage.
-        const hiddenTypes = new Set(readRowsFromStorage());
+        const rowsKey = storageKey(ROWS_STORAGE_KEY_PREFIX);
+        const hiddenTypes = new Set(readJson(rowsKey));
         seenTypes.forEach(type => {
             if (hiddenTypes.has(type)) setRowTypeVisibility(tbody, type, false);
         });
 
         const rowTypes = seenTypes.map(type => ({ type, visible: !hiddenTypes.has(type) }));
-
-        function syncResetBtn() {
-            resetBtn.disabled = rowTypes.every(r => r.visible);
-        }
 
         rowTypes.forEach(rowType => {
             const item = document.createElement('li');
@@ -235,9 +237,9 @@
             checkbox.addEventListener('change', () => {
                 rowType.visible = checkbox.checked;
                 setRowTypeVisibility(tbody, rowType.type, rowType.visible);
-                writeRowsToStorage(rowTypes.filter(r => !r.visible).map(r => r.type));
+                writeJson(rowsKey, rowTypes.filter(r => !r.visible).map(r => r.type));
                 updateBtnLabel(btn, rowTypes);
-                syncResetBtn();
+                syncResetBtn(resetBtn, rowTypes);
             });
 
             label.appendChild(checkbox);
@@ -252,43 +254,15 @@
                 setRowTypeVisibility(tbody, rowType.type, true);
             });
             list.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
-            writeRowsToStorage([]);
+            writeJson(rowsKey, []);
             updateBtnLabel(btn, rowTypes);
-            syncResetBtn();
+            syncResetBtn(resetBtn, rowTypes);
         });
 
-        btn.addEventListener('click', e => {
-            e.stopPropagation();
-            const opening = panel.hidden;
-            closeAllPanels();
-            if (opening) openPanel(btn, panel);
-        });
+        initPanelToggle(btn, panel);
 
         updateBtnLabel(btn, rowTypes);
-        syncResetBtn();
-    }
-
-    /*
-     * Panel open/close helpers (shared between columns and rows panels)
-     */
-
-    function openPanel(btn, panel) {
-        panel.hidden = false;
-        btn.setAttribute('aria-expanded', 'true');
-        panel.setAttribute('aria-hidden', 'false');
-    }
-
-    function closePanel(btn, panel) {
-        panel.hidden = true;
-        btn.setAttribute('aria-expanded', 'false');
-        panel.setAttribute('aria-hidden', 'true');
-    }
-
-    // panels registry — populated by each initXxxPanel() call
-    const _panels = [];
-
-    function closeAllPanels() {
-        _panels.forEach(({ btn, panel }) => closePanel(btn, panel));
+        syncResetBtn(resetBtn, rowTypes);
     }
 
     /*
@@ -299,6 +273,7 @@
         const table = document.querySelector('.content-view-table');
         if (!table) return;
 
+        const toolbar = document.querySelector('[data-testid="table-toolbar"]');
         const headerCells = Array.from(table.querySelectorAll(':scope > thead > tr > .content-view-th'));
         const tbody = table.querySelector(':scope > tbody');
 
@@ -321,7 +296,6 @@
         initRowsPanel(tbody);
 
         document.addEventListener('click', e => {
-            const toolbar = document.querySelector('[data-testid="table-toolbar"]');
             if (toolbar && !toolbar.contains(e.target)) {
                 closeAllPanels();
             }

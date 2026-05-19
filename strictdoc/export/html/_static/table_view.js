@@ -123,11 +123,18 @@
      * Columns panel
      */
 
+    function updateBtnLabel(btn, items) {
+        const hidden = items.filter(i => !i.visible).length;
+        const activeLabel = btn.dataset.label || btn.dataset.defaultLabel;
+        btn.textContent = hidden > 0 ? activeLabel + ' (' + hidden + ' hidden)' : btn.dataset.defaultLabel;
+    }
+
     function initColumnsPanel(table, columns, onToggle) {
         const btn = document.querySelector('[data-testid="table-toolbar-columns-btn"]');
         const panel = document.querySelector('[data-testid="table-toolbar-columns-panel"]');
         const resetBtn = document.querySelector('[data-testid="table-toolbar-columns-reset"]');
         const list = document.querySelector('[data-testid="table-toolbar-columns-list"]');
+        btn.dataset.defaultLabel = btn.textContent.trim();
 
         _panels.push({ btn, panel });
 
@@ -148,7 +155,7 @@
             checkbox.setAttribute('data-testid', 'col-checkbox-' + col.name);
             checkbox.addEventListener('change', () => {
                 onToggle(col, checkbox.checked);
-                updateColumnsBtnLabel(btn, columns);
+                updateBtnLabel(btn, columns);
                 syncResetBtn();
             });
 
@@ -161,7 +168,7 @@
         resetBtn.addEventListener('click', () => {
             columns.forEach(col => onToggle(col, true));
             list.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
-            updateColumnsBtnLabel(btn, columns);
+            updateBtnLabel(btn, columns);
             syncResetBtn();
         });
 
@@ -172,13 +179,8 @@
             if (opening) openPanel(btn, panel);
         });
 
-        updateColumnsBtnLabel(btn, columns);
+        updateBtnLabel(btn, columns);
         syncResetBtn();
-    }
-
-    function updateColumnsBtnLabel(btn, columns) {
-        const hidden = columns.filter(c => !c.visible).length;
-        btn.textContent = hidden > 0 ? 'Columns (' + hidden + ' hidden)' : 'Columns visibility';
     }
 
     /*
@@ -196,6 +198,7 @@
         const panel = document.querySelector('[data-testid="table-toolbar-rows-panel"]');
         const resetBtn = document.querySelector('[data-testid="table-toolbar-rows-reset"]');
         const list = document.querySelector('[data-testid="table-toolbar-rows-list"]');
+        btn.dataset.defaultLabel = btn.textContent.trim();
 
         _panels.push({ btn, panel });
 
@@ -218,11 +221,6 @@
             resetBtn.disabled = rowTypes.every(r => r.visible);
         }
 
-        function updateBtnLabel() {
-            const hidden = rowTypes.filter(r => !r.visible).length;
-            btn.textContent = hidden > 0 ? 'Row visibility (' + hidden + ' hidden)' : 'Row visibility';
-        }
-
         rowTypes.forEach(rowType => {
             const item = document.createElement('li');
             item.className = 'table-toolbar__item';
@@ -238,7 +236,7 @@
                 rowType.visible = checkbox.checked;
                 setRowTypeVisibility(tbody, rowType.type, rowType.visible);
                 writeRowsToStorage(rowTypes.filter(r => !r.visible).map(r => r.type));
-                updateBtnLabel();
+                updateBtnLabel(btn, rowTypes);
                 syncResetBtn();
             });
 
@@ -255,7 +253,7 @@
             });
             list.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
             writeRowsToStorage([]);
-            updateBtnLabel();
+            updateBtnLabel(btn, rowTypes);
             syncResetBtn();
         });
 
@@ -266,7 +264,7 @@
             if (opening) openPanel(btn, panel);
         });
 
-        updateBtnLabel();
+        updateBtnLabel(btn, rowTypes);
         syncResetBtn();
     }
 

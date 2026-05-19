@@ -6,6 +6,7 @@ import sys
 import threading
 import tkinter as tk
 import webbrowser
+from collections.abc import Callable
 from importlib.resources import files
 from tkinter import filedialog, messagebox, ttk
 from typing import Any
@@ -28,7 +29,9 @@ from strictdoc.helpers.module import import_from_path
 
 if sys.platform == "win32":
     try:
-        import winreg
+        import winreg as _winreg
+
+        winreg: Any | None = _winreg
     except Exception:  # noqa: BLE001
         winreg = None
 else:
@@ -52,6 +55,8 @@ class StrictDocLauncher(tk.Tk):
     def __init__(self, initial_workspace: str | None = None) -> None:
         super().__init__()
         self.title("StrictDoc Launcher")
+        self._collapsed_min_width: int = self.min_width
+        self._collapsed_min_height: int = self.min_height
 
         # Try to set a window icon. On Windows, use the .ico file via
         # iconbitmap(); on other platforms fall back to PhotoImage if
@@ -94,7 +99,7 @@ class StrictDocLauncher(tk.Tk):
         self.workspace_dir: str | None = None
         self._workspace_project_config = None
         self._recent_workspaces: list[str] = self._load_recent_workspaces()
-        self.server_process: subprocess.Popen | None = None
+        self.server_process: subprocess.Popen[str] | None = None
         self._log_thread: threading.Thread | None = None
         self._server_ready = False
 
@@ -167,9 +172,9 @@ class StrictDocLauncher(tk.Tk):
         PADDING: dict[str, Any] = {"padx": 5, "pady": 5}
 
         # Configuration of the main grid
-        self.columnconfigure(0, weight=0) # Label Spalte (fest)
-        self.columnconfigure(1, weight=1) # Entry Spalte (flexibel)
-        self.columnconfigure(2, weight=0) # Button Spalte (fest)
+        self.columnconfigure(0, weight=0)  # Label Spalte (fest)
+        self.columnconfigure(1, weight=1)  # Entry Spalte (flexibel)
+        self.columnconfigure(2, weight=0)  # Button Spalte (fest)
 
         main = ttk.Frame(self)
         main.grid(row=0, column=0, sticky="nsew", **PADDING)
@@ -182,18 +187,22 @@ class StrictDocLauncher(tk.Tk):
         header = ttk.Label(
             header_frame,
             text="StrictDoc Launcher",
-            font=("Segoe UI", 11, "bold")
+            font=("Segoe UI", 11, "bold"),
         )
         header.grid(row=0, column=0, sticky="w")
 
         # Logo right
-        self._logo_image = None
+        self._logo_image: tk.PhotoImage | None = None
         self.logo_label = ttk.Label(self)
-        self.logo_label.grid(row=0, column=1, columnspan=2, sticky="e", **PADDING)
+        self.logo_label.grid(
+            row=0, column=1, columnspan=2, sticky="e", **PADDING
+        )
         self._update_logo()
 
         # Workspace selection
-        ttk.Label(self, text="Workspace:").grid(row=1, column=0, sticky="w", **PADDING)
+        ttk.Label(self, text="Workspace:").grid(
+            row=1, column=0, sticky="w", **PADDING
+        )
 
         self.workspace_var = tk.StringVar()
         self.workspace_entry = ttk.Combobox(
@@ -205,17 +214,23 @@ class StrictDocLauncher(tk.Tk):
 
         self.workspace_entry.grid(row=1, column=1, sticky="we", **PADDING)
         # Pressing Enter in the workspace field validates and applies the path.
-        self.workspace_entry.bind("<Return>", lambda _event: self._on_workspace_enter())
+        self.workspace_entry.bind(
+            "<Return>", lambda _event: self._on_workspace_enter()
+        )
         self.workspace_entry.bind(
             "<<ComboboxSelected>>", lambda _event: self._on_workspace_enter()
         )
 
-        self.workspace_select_btn = ttk.Button(self, text="Select ...", command=self.choose_workspace)
+        self.workspace_select_btn = ttk.Button(
+            self, text="Select ...", command=self.choose_workspace
+        )
         self.workspace_select_btn.grid(row=1, column=2, sticky="we", **PADDING)
 
         # Maintenance controls
         maintenance_frame = ttk.LabelFrame(self, text="Maintenance")
-        maintenance_frame.grid(row=2, column=0, columnspan=3, sticky="we", **PADDING)
+        maintenance_frame.grid(
+            row=2, column=0, columnspan=3, sticky="we", **PADDING
+        )
 
         self.change_config_btn = ttk.Button(
             maintenance_frame,
@@ -256,12 +271,14 @@ class StrictDocLauncher(tk.Tk):
         maintenance_frame.columnconfigure(4, weight=1)
 
         git_menu = tk.Menu(self.git_actions_dropdown, tearoff=0)
-        git_actions = [
+
+        def _git_commit_and_push() -> None:
+            git_action._git_commit(self)
+            git_action._git_push(self)
+
+        git_actions: list[tuple[str, Callable[[], None]]] = [
             ("Git Pull", lambda: git_action._git_pull(self)),
-            (
-                "Git Commit & Push",
-                lambda: (git_action._git_commit(self), git_action._git_push(self)),
-            ),
+            ("Git Commit & Push", _git_commit_and_push),
             ("Git Commit", lambda: git_action._git_commit(self)),
             ("Git Push", lambda: git_action._git_push(self)),
         ]
@@ -315,17 +332,26 @@ class StrictDocLauncher(tk.Tk):
         # Create a Menu and attach it to the Menubutton. Each menu item
         # invokes _open_help_link with the selected name.
         menu = tk.Menu(self.helper_docs_dropdown, tearoff=0)
+
+        def _build_open_help_callback(link_name: str) -> Callable[[], None]:
+            def _open_help() -> None:
+                self._open_help_link(link_name)
+
+            return _open_help
+
         for name in self.help_links.keys():
             menu.add_command(
                 label=name,
-                command=lambda n=name: self._open_help_link(n),
+                command=_build_open_help_callback(name),
             )
         self.helper_docs_dropdown["menu"] = menu
         self.helper_docs_dropdown.grid(row=0, column=3, sticky="e", **PADDING)
 
         # Log header row
         log_header_frame = ttk.Frame(self)
-        log_header_frame.grid(row=4, column=0, columnspan=3, sticky="we", **PADDING)
+        log_header_frame.grid(
+            row=4, column=0, columnspan=3, sticky="we", **PADDING
+        )
 
         self._log_expanded = False
         self.log_toggle_label = ttk.Label(
@@ -334,7 +360,9 @@ class StrictDocLauncher(tk.Tk):
             cursor="hand2",
         )
         self.log_toggle_label.grid(row=0, column=0, sticky="w", **PADDING)
-        self.log_toggle_label.bind("<Button-1>", lambda _event: self._toggle_log())
+        self.log_toggle_label.bind(
+            "<Button-1>", lambda _event: self._toggle_log()
+        )
 
         self.clear_log_btn = ttk.Button(
             log_header_frame,
@@ -390,12 +418,7 @@ class StrictDocLauncher(tk.Tk):
             borderwidth=1,
             anchor="w",
         )
-        status_label.grid(
-            row=7,
-            column=1,
-            sticky="we",
-            **PADDING
-        )
+        status_label.grid(row=7, column=1, sticky="we", **PADDING)
 
         version_text = f"StrictDoc {self._get_strictdoc_version()}"
         version_label = ttk.Label(self, text=version_text, anchor="e")
@@ -440,8 +463,11 @@ class StrictDocLauncher(tk.Tk):
             if logo_path is not None:
                 img = tk.PhotoImage(file=logo_path)
                 # Keep a reference to avoid GC.
-                self._logo_image = img.subsample(3) if hasattr(img, "subsample") else img
-                self.logo_label.configure(image=self._logo_image)
+                logo_image = (
+                    img.subsample(3) if hasattr(img, "subsample") else img
+                )
+                self._logo_image = logo_image
+                self.logo_label.configure(image=logo_image)
             else:
                 # Remove image if none available.
                 self._logo_image = None
@@ -456,12 +482,16 @@ class StrictDocLauncher(tk.Tk):
 
     def _open_help_link(self, selection: str | None = None) -> None:
         """Open the selected help/documentation link in the default browser."""
-        sel = selection or getattr(self, "helper_docs_var", tk.StringVar()).get()
+        sel = (
+            selection or getattr(self, "helper_docs_var", tk.StringVar()).get()
+        )
         if not sel:
             return
         url = self.help_links.get(sel)
         if not url:
-            messagebox.showinfo("Help", "No link available for the selected item.")
+            messagebox.showinfo(
+                "Help", "No link available for the selected item."
+            )
             return
         try:
             webbrowser.open(url)
@@ -627,7 +657,9 @@ class StrictDocLauncher(tk.Tk):
         if not isinstance(launcher_section, dict):
             launcher_section = {}
         launcher_section["auto_open_browser"] = bool(
-            self.auto_open_browser_var.get() if hasattr(self, "auto_open_browser_var") else False
+            self.auto_open_browser_var.get()
+            if hasattr(self, "auto_open_browser_var")
+            else False
         )
         settings["launcher"] = launcher_section
         self._save_launcher_settings(settings)
@@ -636,9 +668,7 @@ class StrictDocLauncher(tk.Tk):
         self._save_auto_open_browser_state()
 
     def _busy_cursor_name(self) -> str:
-        if sys.platform == "win32":
-            return "wait"
-        return "watch"
+        return {"win32": "wait"}.get(sys.platform, "watch")
 
     def _start_export_progress(self) -> None:
         """Show and start the indeterminate export progress bar."""
@@ -740,7 +770,7 @@ class StrictDocLauncher(tk.Tk):
         path = os.path.abspath(self.workspace_dir)
         try:
             if sys.platform == "win32":
-                os.startfile(path)  # type: ignore[attr-defined]
+                os.startfile(path)
             elif sys.platform == "darwin":
                 subprocess.run(["open", path], check=True)
             else:
@@ -800,30 +830,40 @@ class StrictDocLauncher(tk.Tk):
                 pass
 
         # 3) No config file: use folder name as initial value.
-        if not os.path.isfile(config_py_path) and not os.path.isfile(config_toml_path):
+        if not os.path.isfile(config_py_path) and not os.path.isfile(
+            config_toml_path
+        ):
             folder_name = os.path.basename(workspace_dir.rstrip("/\\"))
             if folder_name:
                 self.project_title_var.set(folder_name)
         self._workspace_project_config = None
         self._update_logo()
 
-    def _run_export_thread(self, output_dir, export_format, on_success, on_error):
+    def _run_export_thread(
+        self,
+        output_dir: str,
+        export_format: str,
+        on_success: Callable[[], None],
+        on_error: Callable[[str], None],
+    ) -> None:
+        assert self.workspace_dir is not None
+        workspace_dir = self.workspace_dir
         cmd = [
             self._python_executable(),
             "-m",
             "strictdoc.cli.main",
             "export",
-            self.workspace_dir,
+            workspace_dir,
             f"--formats={export_format}",
             "--output-dir",
             output_dir,
         ]
 
-        def worker():
+        def worker() -> None:
             try:
                 completed = subprocess.run(
                     cmd,
-                    cwd=self.workspace_dir,
+                    cwd=workspace_dir,
                     capture_output=True,
                     text=True,
                     check=False,
@@ -834,10 +874,20 @@ class StrictDocLauncher(tk.Tk):
                 else:
                     error_text = completed.stderr or completed.stdout or ""
                     msg = f"RC={completed.returncode}\n\n{error_text}"
-                    self.after(0, lambda: on_error(msg))
+
+                    def _call_on_error_with_msg(
+                        error_message: str = msg,
+                    ) -> None:
+                        on_error(error_message)
+
+                    self.after(0, _call_on_error_with_msg)
 
             except Exception as exc:
-                self.after(0, lambda exc=exc: on_error(str(exc)))
+
+                def _call_on_error_with_exc(error: Exception = exc) -> None:
+                    on_error(str(error))
+
+                self.after(0, _call_on_error_with_exc)
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -871,12 +921,16 @@ class StrictDocLauncher(tk.Tk):
         # Reserve vertical space for the progress bar so it can appear
         # later without resizing the dialog.
         progress_area = ttk.Frame(content, height=20)
-        progress_area.grid(row=2, column=0, columnspan=3, sticky="we", pady=(6, 0))
+        progress_area.grid(
+            row=2, column=0, columnspan=3, sticky="we", pady=(6, 0)
+        )
         progress_area.grid_propagate(False)
         progress_area.columnconfigure(0, weight=1)
 
         # Export format -------------------------------------------------
-        ttk.Label(content, text="Format:").grid(row=0, column=0, sticky="w", **padding)
+        ttk.Label(content, text="Format:").grid(
+            row=0, column=0, sticky="w", **padding
+        )
 
         # Make sure a valid format is selected.
         if self.export_format_var.get() not in self._export_formats:
@@ -893,12 +947,18 @@ class StrictDocLauncher(tk.Tk):
         format_combo.grid(row=0, column=1, sticky="we", **padding)
 
         # Export target path -------------------------------------------
-        ttk.Label(content, text="Path:").grid(row=1, column=0, sticky="w", **padding)
+        ttk.Label(content, text="Path:").grid(
+            row=1, column=0, sticky="w", **padding
+        )
 
-        path_entry = ttk.Entry(content, textvariable=self.export_path_var, width=40)
+        path_entry = ttk.Entry(
+            content, textvariable=self.export_path_var, width=40
+        )
         path_entry.grid(row=1, column=1, sticky="we", **padding)
 
-        browse_btn = ttk.Button(content, text="Browse ...", command=self.choose_export_path)
+        browse_btn = ttk.Button(
+            content, text="Browse ...", command=self.choose_export_path
+        )
         browse_btn.grid(row=1, column=2, **padding)
 
         # ProgressBar  -------------------------------------------------
@@ -908,7 +968,9 @@ class StrictDocLauncher(tk.Tk):
 
         # Action buttons -----------------------------------------------
         export_btn = ttk.Button(button_frame, text="Export")
-        cancel_btn = ttk.Button(button_frame, text="Cancel", command=dialog.destroy)
+        cancel_btn = ttk.Button(
+            button_frame, text="Cancel", command=dialog.destroy
+        )
 
         export_btn.grid(row=0, column=0, padx=(0, 8))
         cancel_btn.grid(row=0, column=1)
@@ -922,7 +984,9 @@ class StrictDocLauncher(tk.Tk):
         status_frame.grid(row=3, column=0, sticky="we", padx=8, pady=(6, 8))
         status_frame.columnconfigure(1, weight=1)
 
-        ttk.Label(status_frame, text="Status:").grid(row=0, column=0, sticky="w")
+        ttk.Label(status_frame, text="Status:").grid(
+            row=0, column=0, sticky="w"
+        )
         status_var = tk.StringVar(value="Ready.")
         status_label = ttk.Label(
             status_frame,
@@ -946,7 +1010,7 @@ class StrictDocLauncher(tk.Tk):
         dialog.geometry(f"{dialog_width}x{dialog_height}+{dialog_x}+{dialog_y}")
 
         # Export logic in the dialogue box
-        def start_export():
+        def start_export() -> None:
             if self._export_in_progress:
                 return
             self._export_in_progress = True
@@ -973,13 +1037,13 @@ class StrictDocLauncher(tk.Tk):
 
                 if not messagebox.askyesno(
                     "Export",
-                    f"Export completed in:\n{output_dir}\n\nOpen export folder?"
+                    f"Export completed in:\n{output_dir}\n\nOpen export folder?",
                 ):
                     return
 
                 try:
                     if sys.platform.startswith("win"):
-                        os.startfile(output_dir)  # type: ignore[attr-defined]
+                        os.startfile(output_dir)
                     elif sys.platform.startswith("darwin"):
                         subprocess.run(["open", output_dir], check=True)
                     else:
@@ -999,10 +1063,13 @@ class StrictDocLauncher(tk.Tk):
                 status_var.set("Export failed.")
                 messagebox.showerror("Export failed", msg)
 
+            def _on_export_success_callback() -> None:
+                on_export_success(output_dir)
+
             self._run_export_thread(
                 output_dir=output_dir,
                 export_format=self.export_format_var.get(),
-                on_success=lambda: on_export_success(output_dir),
+                on_success=_on_export_success_callback,
                 on_error=on_export_error,
             )
 
@@ -1111,14 +1178,16 @@ class StrictDocLauncher(tk.Tk):
                     re.DOTALL,
                 )
 
-                def _replace_title(match: re.Match[str]) -> str:  # type: ignore[name-defined]
+                def _replace_title(match: re.Match[str]) -> str:
                     prefix = match.group(1)
                     quote = match.group(2)
                     # Escape any existing quote characters in the title.
                     escaped_title = title.replace(quote, "\\" + quote)
                     return f"{prefix}{quote}{escaped_title}{quote}"
 
-                new_text, count = pattern.subn(_replace_title, config_text, count=1)
+                new_text, count = pattern.subn(
+                    _replace_title, config_text, count=1
+                )
 
                 if count == 0:
                     messagebox.showinfo(
@@ -1154,7 +1223,9 @@ class StrictDocLauncher(tk.Tk):
                 project_section["title"] = title
                 config_dict["project"] = project_section
 
-                with open(config_toml_path, "w", encoding="utf8") as config_file:
+                with open(
+                    config_toml_path, "w", encoding="utf8"
+                ) as config_file:
                     toml.dump(config_dict, config_file)
 
                 self.set_status(f"Config gespeichert: {config_toml_path}")
@@ -1279,7 +1350,9 @@ class StrictDocLauncher(tk.Tk):
         editor.geometry("800x500")
 
         text_widget = tk.Text(editor, wrap="none", font=("Consolas", 9))
-        vscrollbar = ttk.Scrollbar(editor, orient="vertical", command=text_widget.yview)
+        vscrollbar = ttk.Scrollbar(
+            editor, orient="vertical", command=text_widget.yview
+        )
         text_widget.configure(yscrollcommand=vscrollbar.set)
         text_widget.grid(row=0, column=0, sticky="nsew")
         vscrollbar.grid(row=0, column=1, sticky="ns")
@@ -1290,7 +1363,9 @@ class StrictDocLauncher(tk.Tk):
         text_widget.insert("1.0", initial_text)
 
         button_frame = ttk.Frame(editor)
-        button_frame.grid(row=1, column=0, columnspan=3, sticky="e", padx=12, pady=(6, 12))
+        button_frame.grid(
+            row=1, column=0, columnspan=3, sticky="e", padx=12, pady=(6, 12)
+        )
 
         def on_save_advanced() -> None:
             new_text = text_widget.get("1.0", "end-1c")
@@ -1312,7 +1387,7 @@ class StrictDocLauncher(tk.Tk):
                 try:
                     # Validate TOML syntax before writing to disk.
                     toml.loads(new_text)
-                except toml.TomlDecodeError as exc:  # type: ignore[attr-defined]
+                except Exception as exc:  # noqa: BLE001
                     messagebox.showerror(
                         "Configuration error",
                         (
@@ -1339,9 +1414,9 @@ class StrictDocLauncher(tk.Tk):
         def on_cancel_advanced() -> None:
             editor.destroy()
 
-        ttk.Button(button_frame, text="Cancel", command=on_cancel_advanced).grid(
-            row=0, column=0, padx=(0, 8)
-        )
+        ttk.Button(
+            button_frame, text="Cancel", command=on_cancel_advanced
+        ).grid(row=0, column=0, padx=(0, 8))
         ttk.Button(button_frame, text="Save", command=on_save_advanced).grid(
             row=0, column=1
         )
@@ -1518,8 +1593,7 @@ class StrictDocLauncher(tk.Tk):
                 else:
                     self.set_status("Repair failed.")
                     self._append_log(
-                        "[REPAIR FAILED] rc="
-                        f"{completed.returncode}\n"
+                        f"[REPAIR FAILED] rc={completed.returncode}\n"
                     )
                     if completed.stdout:
                         self._append_log(
@@ -1573,17 +1647,21 @@ class StrictDocLauncher(tk.Tk):
     def start_server(self) -> None:
         if not self._ensure_workspace():
             return
+        assert self.workspace_dir is not None
+        workspace_dir = self.workspace_dir
         if self.server_process and self.server_process.poll() is None:
-            messagebox.showinfo("Server running", "The server is already running.")
+            messagebox.showinfo(
+                "Server running", "The server is already running."
+            )
             return
 
-        cmd = [
+        cmd: list[str] = [
             self._python_executable(),
             "-m",
             "strictdoc.cli.main",
             "--debug",
             "server",
-            self.workspace_dir,
+            workspace_dir,
             "--host",
             self.server_host,
             "--port",
@@ -1596,7 +1674,7 @@ class StrictDocLauncher(tk.Tk):
                 try:
                     self.server_process = subprocess.Popen(
                         cmd,
-                        cwd=self.workspace_dir,
+                        cwd=workspace_dir,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT,
                         text=True,
@@ -1605,7 +1683,11 @@ class StrictDocLauncher(tk.Tk):
                     self._start_log_reader()
                     self._schedule_server_poll()
                 except Exception as exc:  # noqa: BLE001
-                    self.after(0, lambda exc=exc: self._server_failed(exc))
+
+                    def _report_server_failed(error: Exception = exc) -> None:
+                        self._server_failed(error)
+
+                    self.after(0, _report_server_failed)
 
             threading.Thread(target=run_server, daemon=True).start()
 
@@ -1660,9 +1742,11 @@ class StrictDocLauncher(tk.Tk):
             assert self.server_process is not None
             assert self.server_process.stdout is not None
             for line in self.server_process.stdout:
-                if line is None:
-                    break
-                self.after(0, lambda l=line: self._handle_server_log_line(l))
+
+                def _push_log_line(log_line: str = line) -> None:
+                    self._handle_server_log_line(log_line)
+
+                self.after(0, _push_log_line)
 
         self._log_thread = threading.Thread(target=reader, daemon=True)
         self._log_thread.start()
@@ -1692,7 +1776,11 @@ class StrictDocLauncher(tk.Tk):
                         try:
                             # Temporarily set topmost to ensure visibility on some platforms.
                             self.attributes("-topmost", True)
-                            self.after(200, lambda: self.attributes("-topmost", False))
+
+                            def _disable_topmost() -> None:
+                                self.attributes("-topmost", False)
+
+                            self.after(200, _disable_topmost)
                         except Exception:
                             pass
                     except Exception:
@@ -1715,10 +1803,15 @@ class StrictDocLauncher(tk.Tk):
         )
         if any(marker in normalized for marker in ready_markers):
             self._server_ready = True
-            self.open_browser_btn.configure(state="normal", style="green.TButton")
+            self.open_browser_btn.configure(
+                state="normal", style="green.TButton"
+            )
             self.set_status("Server is ready.")
             try:
-                if getattr(self, "auto_open_browser_var", None) and self.auto_open_browser_var.get():
+                if (
+                    getattr(self, "auto_open_browser_var", None)
+                    and self.auto_open_browser_var.get()
+                ):
                     # Ensure we call open_browser on the main thread.
                     self.after(100, self.open_browser)
             except Exception:
@@ -1731,11 +1824,20 @@ class StrictDocLauncher(tk.Tk):
 
             normalized = text.strip().lower()
             tag = None
-            if "traceback" in normalized or "exception" in normalized or re.search(r"\berror\b", normalized) or "failed" in normalized:
+            if (
+                "traceback" in normalized
+                or "exception" in normalized
+                or re.search(r"\berror\b", normalized)
+                or "failed" in normalized
+            ):
                 tag = "error"
             elif "warning" in normalized or "warn" in normalized:
                 tag = "warning"
-            elif "started" in normalized or "ok" in normalized or "completed" in normalized:
+            elif (
+                "started" in normalized
+                or "ok" in normalized
+                or "completed" in normalized
+            ):
                 tag = "success"
             else:
                 tag = "info"

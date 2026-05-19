@@ -104,7 +104,8 @@
     function updateBtnLabel(btn, items) {
         const hidden = items.filter(i => !i.visible).length;
         const activeLabel = btn.dataset.label || btn.dataset.defaultLabel;
-        btn.textContent = hidden > 0 ? activeLabel + ' (' + hidden + ' hidden)' : btn.dataset.defaultLabel;
+        const textEl = btn.querySelector('.table-toolbar__btn-text');
+        textEl.textContent = hidden > 0 ? activeLabel + ' (' + hidden + ' hidden)' : btn.dataset.defaultLabel;
     }
 
     function syncResetBtn(resetBtn, items) {
@@ -148,7 +149,7 @@
         const panel = document.querySelector('[data-testid="table-toolbar-columns-panel"]');
         const resetBtn = document.querySelector('[data-testid="table-toolbar-columns-reset"]');
         const list = document.querySelector('[data-testid="table-toolbar-columns-list"]');
-        btn.dataset.defaultLabel = btn.textContent.trim();
+        btn.dataset.defaultLabel = btn.querySelector('.table-toolbar__btn-text').textContent.trim();
 
         _panels.push({ btn, panel });
 
@@ -203,7 +204,7 @@
         const panel = document.querySelector('[data-testid="table-toolbar-rows-panel"]');
         const resetBtn = document.querySelector('[data-testid="table-toolbar-rows-reset"]');
         const list = document.querySelector('[data-testid="table-toolbar-rows-list"]');
-        btn.dataset.defaultLabel = btn.textContent.trim();
+        btn.dataset.defaultLabel = btn.querySelector('.table-toolbar__btn-text').textContent.trim();
 
         _panels.push({ btn, panel });
 

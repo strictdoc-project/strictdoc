@@ -105,6 +105,20 @@
   text-transform: uppercase;
 }
 
+/* .collapsed and .expanded are classes inside SVG .icon_collapse */
+[aria-expanded="false"] .icon_collapse_expand .collapsed {
+  display: initial;
+}
+[aria-expanded="false"] .icon_collapse_expand .expanded {
+  display: none;
+}
+[aria-expanded="true"] .icon_collapse_expand .expanded {
+  display: initial;
+}
+[aria-expanded="true"] .icon_collapse_expand .collapsed {
+  display: none;
+}
+
 .table-toolbar__panel {
   position: absolute;
   top: 100%;
@@ -115,13 +129,12 @@
 
 .table-toolbar__panel-header {
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
   padding-left: calc(var(--base-rhythm) * 0.5);
 }
 
 .table-toolbar__panel-title {
-  text-transform: uppercase;
   font-weight: bold;
 }
 

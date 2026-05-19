@@ -89,8 +89,16 @@
   z-index: 10;
   width: fit-content;
   height: 0;
+  display: flex;
+  column-gap: var(--base-rhythm);
   padding-inline: calc(4 * var(--base-rhythm));
   background-color: var(--color-bg-main);
+}
+
+.table-toolbar__columns,
+.table-toolbar__rows {
+  position: relative;
+  height: fit-content;
 }
 
 .table-toolbar__btn {
@@ -99,8 +107,8 @@
 
 .table-toolbar__panel {
   position: absolute;
-  top: -2px;
-  left: calc(4 * var(--base-rhythm) + 2px);
+  top: 100%;
+  left: 0;
   z-index: 100;
   min-width: 180px;
 }
@@ -108,7 +116,7 @@
 .table-toolbar__panel-header {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding-left: calc(var(--base-rhythm) * 0.5);
 }
 

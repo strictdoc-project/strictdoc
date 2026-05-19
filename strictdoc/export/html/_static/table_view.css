@@ -89,31 +89,52 @@
   z-index: 10;
   width: fit-content;
   height: 0;
+  display: flex;
+  column-gap: var(--base-rhythm);
   padding-inline: calc(4 * var(--base-rhythm));
   background-color: var(--color-bg-main);
+}
+
+.table-toolbar__columns,
+.table-toolbar__rows {
+  position: relative;
+  height: fit-content;
 }
 
 .table-toolbar__btn {
   text-transform: uppercase;
 }
 
+/* .collapsed and .expanded are classes inside SVG .icon_collapse */
+[aria-expanded="false"] .icon_collapse_expand .collapsed {
+  display: initial;
+}
+[aria-expanded="false"] .icon_collapse_expand .expanded {
+  display: none;
+}
+[aria-expanded="true"] .icon_collapse_expand .expanded {
+  display: initial;
+}
+[aria-expanded="true"] .icon_collapse_expand .collapsed {
+  display: none;
+}
+
 .table-toolbar__panel {
   position: absolute;
-  top: -2px;
-  left: calc(4 * var(--base-rhythm) + 2px);
+  top: 100%;
+  left: 0;
   z-index: 100;
   min-width: 180px;
 }
 
 .table-toolbar__panel-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   padding-left: calc(var(--base-rhythm) * 0.5);
 }
 
 .table-toolbar__panel-title {
-  text-transform: uppercase;
   font-weight: bold;
 }
 

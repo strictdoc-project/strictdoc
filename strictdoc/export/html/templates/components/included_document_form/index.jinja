@@ -10,15 +10,25 @@
     <input type="hidden" id="context_document_mid" name="context_document_mid" value="{{ form_object.context_document_mid }}"/>
 
     <sdoc-form-grid>
-      {%- with
-        field_type="singleline",
-        field_name="TITLE",
-        field_input_name="document[TITLE]",
-        field_value=form_object.document_title,
-        errors=form_object.get_errors("TITLE")
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name=none,
+            field_editable=true,
+            field_input_name="document[TITLE]",
+            field_label="TITLE",
+            field_placeholder="Enter TITLE here...",
+            field_type="singleline",
+            field_value=form_object.document_title,
+            testid_postfix="document[TITLE]",
+            errors=form_object.get_errors("TITLE")
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
     </sdoc-form-grid>
 
     <sdoc-form-footer>

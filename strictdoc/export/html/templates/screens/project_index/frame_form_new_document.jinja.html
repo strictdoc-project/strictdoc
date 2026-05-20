@@ -12,30 +12,46 @@ Add new document
     data-turbo="true"
   >
     <sdoc-form-grid>
-      {%- with
-        field_type="singleline",
-        field_class_name="",
-        field_name="title",
-        field_label="document title",
-        field_input_name="document_title",
-        field_value=document_title,
-        errors=error_object.get_errors("document_title")
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name=none,
+            field_editable=true,
+            field_input_name="document_title",
+            field_label="document title",
+            field_placeholder="Enter document title here...",
+            field_type="singleline",
+            field_value=document_title,
+            testid_postfix="document_title",
+            errors=error_object.get_errors("document_title")
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
 
-      {%- with
-        field_type="singleline",
-        singleline_suffix='.sdoc',
-        field_class_name="std-input-document_path",
-        field_name="path",
-        field_label="document path and filename",
-        field_input_name="document_path",
-        field_value=document_path,
-        errors=error_object.get_errors("document_path")
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name="std-input-document_path",
+            field_editable=true,
+            field_input_name="document_path",
+            field_label="document path and filename",
+            field_placeholder="Enter document path and filename here...",
+            field_type="singleline",
+            singleline_suffix='.sdoc',
+            field_value=document_path,
+            testid_postfix="document_path",
+            errors=error_object.get_errors("document_path")
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
     </sdoc-form-grid>
   </form>
 {% endblock modal_form__content %}

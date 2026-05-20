@@ -3,13 +3,19 @@
 {%- assert field_input_name is defined, "field_input_name is defined" -%}
 {%- assert field_label is defined, "field_label is defined" -%}
 {%- assert field_label is not none, "field_label is not none" -%}
-{# FIXME: Remove #}
-{%- assert field_name is not defined, "field_name is not defined" -%}
 {%- assert field_placeholder is defined, "field_placeholder is defined" -%}
 {%- assert field_placeholder is not none, "field_placeholder is not none" -%}
 {%- assert field_value is defined, "field_value is defined" -%}
-{%- assert mid is defined, "mid is defined" -%}
 {%- assert testid_postfix is defined, "testid_postfix is defined" -%}
+{#
+  mid is optional:
+  - Pass mid when the field belongs to a dynamic row with its own identity
+    (grammar elements, grammar relations, custom fields, metadata rows).
+    In those cases mid is used as a DOM selector in e2e tests to
+    identify a specific row among several similar ones.
+  - Omit mid for static single-instance fields (document TITLE, UID,
+    VERSION, project title, etc.) where data-testid alone is sufficient.
+#}
 
 {% if field_required is not defined -%}
 {% set field_required=false -%}
@@ -42,7 +48,9 @@
       contenteditable="true"
     {%- endif -%}
     id="{{ field_input_name }}"
-    mid="{{ mid }}"
+    {%- if mid is defined -%}
+      mid="{{ mid }}"
+    {% endif %}
     placeholder="{{ field_placeholder }}"
     data-field-label="{{ field_label }}{%- if field_required -%}&nbsp;*{%- endif -%}"
     {%- if field_class_name is not none -%}

@@ -13,55 +13,105 @@
     <sdoc-tab-content id="Document" active>
       <sdoc-form-grid>
 
-      {%- with
-        field_type="singleline",
-        field_name="TITLE",
-        field_input_name="document[TITLE]",
-        field_value=form_object.document_title,
-        errors=form_object.get_errors("TITLE")
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name=none,
+            field_editable=true,
+            field_input_name="document[TITLE]",
+            field_label="TITLE",
+            field_placeholder="Enter TITLE here...",
+            field_type="singleline",
+            field_value=form_object.document_title,
+            testid_postfix="document[TITLE]",
+            errors=form_object.get_errors("TITLE")
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
 
-      {%- with
-        field_type="singleline",
-        field_name="UID",
-        field_input_name="document[UID]",
-        field_value=form_object.document_uid,
-        errors=form_object.get_errors("UID")
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name=none,
+            field_editable=true,
+            field_input_name="document[UID]",
+            field_label="UID",
+            field_placeholder="Enter UID here...",
+            field_type="singleline",
+            field_value=form_object.document_uid,
+            testid_postfix="document[UID]",
+            errors=form_object.get_errors("UID")
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
 
-      {%- with
-        field_type="singleline",
-        field_name="VERSION",
-        field_input_name="document[VERSION]",
-        field_value=form_object.document_version,
-        errors=form_object.get_errors("VERSION")
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name=none,
+            field_editable=true,
+            field_input_name="document[VERSION]",
+            field_label="VERSION",
+            field_placeholder="Enter VERSION here...",
+            field_type="singleline",
+            field_value=form_object.document_version,
+            testid_postfix="document[VERSION]",
+            errors=form_object.get_errors("VERSION")
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
 
-      {%- with
-        field_type="singleline",
-        field_name="CLASSIFICATION",
-        field_input_name="document[CLASSIFICATION]",
-        field_value=form_object.document_classification,
-        errors=form_object.get_errors("CLASSIFICATION")
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name=none,
+            field_editable=true,
+            field_input_name="document[CLASSIFICATION]",
+            field_label="CLASSIFICATION",
+            field_placeholder="Enter CLASSIFICATION here...",
+            field_type="singleline",
+            field_value=form_object.document_classification,
+            testid_postfix="document[CLASSIFICATION]",
+            errors=form_object.get_errors("CLASSIFICATION")
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
 
-      {%- with
-        field_type="singleline",
-        field_name="PREFIX",
-        field_input_name="document[PREFIX]",
-        field_value=form_object.document_requirement_prefix,
-        errors=form_object.get_errors("PREFIX")
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name=none,
+            field_editable=true,
+            field_input_name="document[PREFIX]",
+            field_label="PREFIX",
+            field_placeholder="Enter PREFIX here...",
+            field_type="singleline",
+            field_value=form_object.document_requirement_prefix,
+            testid_postfix="document[PREFIX]",
+            errors=form_object.get_errors("PREFIX")
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
 
       </sdoc-form-grid>
 

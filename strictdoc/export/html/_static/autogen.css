@@ -25,7 +25,6 @@ sdoc-autogen a:visited {
 sdoc-autogen table {
   border-collapse: collapse;
   margin: var(--base-padding) 0;
-  font-size: 1rem;
 
   /*** add scroll for wide tables */
   /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */

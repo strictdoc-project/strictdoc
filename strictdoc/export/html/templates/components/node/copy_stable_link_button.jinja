@@ -1,17 +1,28 @@
 {#
-  Requires: copy_stable_link_button_controller.js in index.jinja
+  Stable link copy button — part of the copy_to_clipboard controller (copy_to_clipboard_controller.js).
+  The controller is mounted on the parent sdoc-node, not here.
+
+  Expected attributes on this element:
+    data-copy-clipboard-target="button"  — marks this as a copy button
+    data-path                            — relative path resolved to a full URL at click time
+
+  Expected targets inside this element (used by _feedback):
+    data-copy-clipboard-target="copyIcon"
+    data-copy-clipboard-target="doneIcon"
+
+  Requires: path
 #}
 {%- if path is defined -%}
   <div
-    data-controller="copy_stable_link_button"
+    data-copy-clipboard-target="button"
     data-path="{{ path }}"
     class="copy_stable_link-button"
     title="Click to copy a stable node link to the clipboard"
   >
-    <span style="display: contents;" class="copy_to_clipboard-copy_icon">
+    <span style="display: contents;" data-copy-clipboard-target="copyIcon">
       {% include "icons/ico16_link.svg" %}
     </span>
-    <span style="display: none;" class="copy_to_clipboard-done_icon">
+    <span style="display: none;" data-copy-clipboard-target="doneIcon">
       {% include "icons/ico16_done.svg" %}
     </span>
   </div>

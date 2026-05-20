@@ -1,13 +1,40 @@
 {#
-  anchor_button_text
- #}
-<div class="anchor_button" title="Click to copy" data-testid="section-anchor-button">
-  <span class="anchor_base_icon" style="line-height: 0.1;">
+  Anchor copy button — part of the copy_to_clipboard controller (copy_to_clipboard_controller.js).
+  The controller is mounted on the parent sdoc-node, not here.
+
+  Expected attributes on this element:
+    data-copy-clipboard-target="button"  — marks this as a copy button
+    data-anchor-id                       — the value to copy (anchor ID)
+
+  Expected targets inside this element (used by _feedback):
+    data-copy-clipboard-target="copyIcon"
+    data-copy-clipboard-target="doneIcon"
+    data-copy-clipboard-target="cover"
+
+  Requires: anchor_button_text
+#}
+<div
+  class="anchor_button"
+  title="Click to copy"
+  data-testid="section-anchor-button"
+  data-copy-clipboard-target="button"
+  data-anchor-id="{{ anchor_button_text }}"
+>
+  <span
+    class="anchor_base_icon"
+    style="display: contents; line-height: 0.1;"
+    data-copy-clipboard-target="copyIcon"
+  >
     <span class="svg_icon_not_hover_visible">{% include "icons/ico16_anchor.svg" %}</span>
     <span class="svg_icon_hover_visible">{% include "icons/ico16_copy.svg" %}</span>
   </span>
-  <span class="anchor_check_icon" style="line-height: 0.1; display: none;">
+  <span
+    class="anchor_check_icon"
+    style="display: none; line-height: 0.1;"
+    data-copy-clipboard-target="doneIcon"
+  >
     {% include "icons/ico16_done.svg" %}
   </span>
+  <div class="copy_to_clipboard-cover" data-copy-clipboard-target="cover"></div>
   <span class="anchor_button_text">{{ anchor_button_text }}</span>
 </div>

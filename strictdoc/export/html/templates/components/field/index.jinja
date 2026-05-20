@@ -1,31 +1,40 @@
-{# field_content #}
-
 {#
-  Before including a block with content,
-  it needs to be declared:
+  Field with optional copy button — part of the copy_to_clipboard controller (copy_to_clipboard_controller.js).
+  The controller is mounted on the parent sdoc-node, not here.
 
-  {% set copy_to_clipboard = True %}
+  To enable the copy button, declare before including this template:
+    {% set copy_to_clipboard = True %}
 
-  so that the fields have a complex layout that includes markup
-  for the option to copy the contents of the field to the clipboard.
+  When enabled, the controller reads the text content of sdoc-field-content at click time.
+
+  Expected structure (used by the controller):
+    sdoc-field                           — boundary for closest() lookup
+    sdoc-field-content                   — source of the text to copy
+    sdoc-field-service                   — feedback root for icons and cover animation
+    data-copy-clipboard-target="button"  — marks the copy button
+    data-copy-clipboard-target="cover"   — orange fade animation
+    data-copy-clipboard-target="copyIcon"
+    data-copy-clipboard-target="doneIcon"
 
   ! Enabling this option for PDF is highly not recommended.
- #}
+
+  Requires: field_content
+#}
 
 {%- if copy_to_clipboard is defined -%}
-<sdoc-field data-controller="copy_to_clipboard">
+<sdoc-field>
   <sdoc-field-content>
     <sdoc-autogen>{{ field_content }}</sdoc-autogen>
   </sdoc-field-content>
   <sdoc-field-service>
 
     <div class="copy_to_clipboard">
-      <div class="copy_to_clipboard-cover">
-        <div title="Click to copy" class="copy_to_clipboard-button action_button">
-          <span style="display: contents;" class="copy_to_clipboard-copy_icon">
+      <div class="copy_to_clipboard-cover" data-copy-clipboard-target="cover">
+        <div title="Click to copy" class="copy_to_clipboard-button action_button" data-copy-clipboard-target="button">
+          <span style="display: contents;" data-copy-clipboard-target="copyIcon">
             {% include "icons/ico16_copy.svg" %}
           </span>
-          <span style="display: none;" class="copy_to_clipboard-done_icon">
+          <span style="display: none;" data-copy-clipboard-target="doneIcon">
             {% include "icons/ico16_done.svg" %}
           </span>
         </div>

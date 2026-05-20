@@ -258,3 +258,43 @@ class Requirement(Node):  # pylint: disable=invalid-name
             hover_by=By.XPATH,
             click_by=By.XPATH,
         )
+
+    def do_copy_rst_anchor_to_buffer(self, anchor_uid: str) -> None:
+        self.test_case.hover_and_click(
+            hover_selector=f"{self.node_xpath}",
+            click_selector=(
+                f'//sdoc-anchor[@data-uid="{anchor_uid}"]'
+                '//*[@data-testid="section-anchor-button"]'
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+
+    def do_copy_field_content_to_buffer(
+        self, field_label: str = "statement"
+    ) -> None:
+        self.test_case.hover_and_click(
+            hover_selector=(
+                f"{self.node_xpath}"
+                f'//sdoc-node-field[@data-field-label="{field_label}"]'
+                "//sdoc-field"
+            ),
+            click_selector=(
+                f"{self.node_xpath}"
+                f'//sdoc-node-field[@data-field-label="{field_label}"]'
+                "//div[contains(@class,'copy_to_clipboard-button')]"
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+
+    def do_copy_stable_link_to_buffer(self) -> None:
+        self.test_case.hover_and_click(
+            hover_selector=f"{self.node_xpath}",
+            click_selector=(
+                f"{self.node_xpath}"
+                "//*[contains(@class,'copy_stable_link-button')]"
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )

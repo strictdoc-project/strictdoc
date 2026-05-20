@@ -37,7 +37,7 @@ class Test(E2ECase):
             #
             # Initial state
             #
-            screen_table.assert_toolbar_btn_label("Columns visibility")
+            screen_table.assert_toolbar_btn_label("Columns")
             screen_table.assert_toolbar_panel_closed()
 
             # Open panel — Show all disabled, checkboxes present
@@ -76,7 +76,7 @@ class Test(E2ECase):
             screen_table.assert_column_header_visible("Type")
             screen_table.assert_column_header_visible("Statement")
             self.assert_url_not_contains("hidden=")
-            screen_table.assert_toolbar_btn_label("Columns visibility")
+            screen_table.assert_toolbar_btn_label("Columns")
             screen_table.assert_show_all_disabled()
 
         assert test_setup.compare_sandbox_and_expected_output()

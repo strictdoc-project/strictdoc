@@ -1,0 +1,45 @@
+<div class="table-toolbar" data-testid="table-toolbar">
+  <div class="table-toolbar__columns">
+    <button class="table-toolbar__btn action_button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            data-label="Columns"
+            data-testid="table-toolbar-columns-btn">
+            {%- include "icons/ico16_dropdown_collapse.svg" -%}
+            <span class="table-toolbar__btn-text">Columns</span></button>
+    <div class="table-toolbar__panel dropdown_menu"
+          hidden
+          aria-hidden="true"
+          role="dialog"
+          aria-label="Column visibility"
+          data-testid="table-toolbar-columns-panel">
+      <div class="table-toolbar__panel-header">
+        <span class="table-toolbar__panel-title">Visible:</span>
+        <button class="table-toolbar__reset compact action_button"
+                data-testid="table-toolbar-columns-reset">Show all</button>
+      </div>
+      <ul class="table-toolbar__list" data-testid="table-toolbar-columns-list"></ul>
+    </div>
+  </div>
+  <div class="table-toolbar__rows">
+    <button class="table-toolbar__btn action_button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            data-testid="table-toolbar-rows-btn">
+            {%- include "icons/ico16_dropdown_collapse.svg" -%}
+            <span class="table-toolbar__btn-text">Nodes</span></button>
+    <div class="table-toolbar__panel dropdown_menu"
+          hidden
+          aria-hidden="true"
+          role="dialog"
+          aria-label="Row visibility"
+          data-testid="table-toolbar-rows-panel">
+      <div class="table-toolbar__panel-header">
+        <span class="table-toolbar__panel-title">Visible:</span>
+        <button class="table-toolbar__reset compact action_button"
+                data-testid="table-toolbar-rows-reset">Show all</button>
+      </div>
+      <ul class="table-toolbar__list" data-testid="table-toolbar-rows-list"></ul>
+    </div>
+    </div>
+</div>

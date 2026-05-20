@@ -1,13 +1,28 @@
 (function () {
     const STORAGE_KEY_PREFIX = 'strictdoc.table.hidden_cols';
+    const ROWS_STORAGE_KEY_PREFIX = 'strictdoc.table.hidden_rows';
     const URL_PARAM = 'hidden';
 
     /*
      * State I/O
      */
 
-    function getStorageKey() {
-        return STORAGE_KEY_PREFIX + ':' + location.pathname;
+    function storageKey(prefix) {
+        return prefix + ':' + location.pathname;
+    }
+
+    function readJson(key) {
+        try {
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        } catch (_) {
+            return [];
+        }
+    }
+
+    function writeJson(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (_) {}
     }
 
     // Returns array of hidden column names from URL, or null if param is absent.
@@ -17,20 +32,6 @@
         if (!params.has(URL_PARAM)) return null;
         const val = params.get(URL_PARAM);
         return val ? val.split('|').map(decodeURIComponent) : [];
-    }
-
-    function readFromStorage() {
-        try {
-            return JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
-        } catch (_) {
-            return [];
-        }
-    }
-
-    function writeToStorage(hiddenNames) {
-        try {
-            localStorage.setItem(getStorageKey(), JSON.stringify(hiddenNames));
-        } catch (_) {}
     }
 
     function writeToURL(hiddenNames) {
@@ -51,7 +52,7 @@
     }
 
     function persistState(hiddenNames) {
-        writeToStorage(hiddenNames);
+        writeJson(storageKey(STORAGE_KEY_PREFIX), hiddenNames);
         writeToURL(hiddenNames);
     }
 
@@ -67,10 +68,10 @@
     function resolveInitialHidden() {
         const fromURL = readFromURL();
         if (fromURL !== null) {
-            writeToStorage(fromURL);
+            writeJson(storageKey(STORAGE_KEY_PREFIX), fromURL);
             return fromURL;
         }
-        const fromStorage = readFromStorage();
+        const fromStorage = readJson(storageKey(STORAGE_KEY_PREFIX));
         writeToURL(fromStorage);
         return fromStorage;
     }
@@ -97,56 +98,60 @@
     }
 
     /*
-     * Toolbar
+     * Shared panel helpers
      */
 
-    function buildToolbar(table, columns, onToggle) {
-        const toolbar = document.createElement('div');
-        toolbar.className = 'table-toolbar';
-        toolbar.setAttribute('data-testid', 'table-toolbar');
+    function updateBtnLabel(btn, items) {
+        const hidden = items.filter(i => !i.visible).length;
+        const activeLabel = btn.dataset.label || btn.dataset.defaultLabel;
+        const textEl = btn.querySelector('.table-toolbar__btn-text');
+        textEl.textContent = hidden > 0 ? activeLabel + ' (' + hidden + ' hidden)' : btn.dataset.defaultLabel;
+    }
 
-        const btn = document.createElement('button');
-        btn.className = 'table-toolbar__btn action_button';
-        btn.setAttribute('aria-haspopup', 'true');
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('data-testid', 'table-toolbar-columns-btn');
+    function syncResetBtn(resetBtn, items) {
+        resetBtn.disabled = items.every(i => i.visible);
+    }
 
-        const panel = document.createElement('div');
-        panel.className = 'table-toolbar__panel dropdown_menu';
+    function openPanel(btn, panel) {
+        panel.hidden = false;
+        btn.setAttribute('aria-expanded', 'true');
+        panel.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePanel(btn, panel) {
         panel.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
         panel.setAttribute('aria-hidden', 'true');
-        panel.setAttribute('role', 'dialog');
-        panel.setAttribute('aria-label', 'Column visibility');
-        panel.setAttribute('data-testid', 'table-toolbar-columns-panel');
+    }
 
-        const panelHeader = document.createElement('div');
-        panelHeader.className = 'table-toolbar__panel-header';
+    // panels registry — populated by each initXxxPanel() call
+    const _panels = [];
 
-        const panelTitle = document.createElement('span');
-        panelTitle.className = 'table-toolbar__panel-title';
-        panelTitle.textContent = 'Columns';
+    function closeAllPanels() {
+        _panels.forEach(({ btn, panel }) => closePanel(btn, panel));
+    }
 
-        const resetBtn = document.createElement('button');
-        resetBtn.className = 'table-toolbar__reset compact action_button';
-        resetBtn.textContent = 'Show all';
-        resetBtn.setAttribute('data-testid', 'table-toolbar-columns-reset');
-        function syncResetBtn() {
-            resetBtn.disabled = columns.every(c => c.visible);
-        }
-
-        resetBtn.addEventListener('click', () => {
-            columns.forEach(col => onToggle(col, true));
-            panel.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
-            updateBtnLabel(btn, columns);
-            syncResetBtn();
+    function initPanelToggle(btn, panel) {
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            const opening = panel.hidden;
+            closeAllPanels();
+            if (opening) openPanel(btn, panel);
         });
+    }
 
-        panelHeader.appendChild(panelTitle);
-        panelHeader.appendChild(resetBtn);
-        panel.appendChild(panelHeader);
+    /*
+     * Columns panel
+     */
 
-        const list = document.createElement('ul');
-        list.className = 'table-toolbar__list';
+    function initColumnsPanel(table, columns, onToggle) {
+        const btn = document.querySelector('[data-testid="table-toolbar-columns-btn"]');
+        const panel = document.querySelector('[data-testid="table-toolbar-columns-panel"]');
+        const resetBtn = document.querySelector('[data-testid="table-toolbar-columns-reset"]');
+        const list = document.querySelector('[data-testid="table-toolbar-columns-list"]');
+        btn.dataset.defaultLabel = btn.querySelector('.table-toolbar__btn-text').textContent.trim();
+
+        _panels.push({ btn, panel });
 
         columns.forEach(col => {
             const item = document.createElement('li');
@@ -162,7 +167,7 @@
             checkbox.addEventListener('change', () => {
                 onToggle(col, checkbox.checked);
                 updateBtnLabel(btn, columns);
-                syncResetBtn();
+                syncResetBtn(resetBtn, columns);
             });
 
             label.appendChild(checkbox);
@@ -171,35 +176,94 @@
             list.appendChild(item);
         });
 
-        panel.appendChild(list);
-
-        btn.addEventListener('click', e => {
-            e.stopPropagation();
-            const opening = panel.hidden;
-            panel.hidden = !opening;
-            btn.setAttribute('aria-expanded', String(opening));
-            panel.setAttribute('aria-hidden', String(!opening));
+        resetBtn.addEventListener('click', () => {
+            columns.forEach(col => onToggle(col, true));
+            list.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
+            updateBtnLabel(btn, columns);
+            syncResetBtn(resetBtn, columns);
         });
 
-        document.addEventListener('click', e => {
-            if (!toolbar.contains(e.target)) {
-                panel.hidden = true;
-                btn.setAttribute('aria-expanded', 'false');
-                panel.setAttribute('aria-hidden', 'true');
-            }
-        });
-
-        toolbar.appendChild(btn);
-        toolbar.appendChild(panel);
+        initPanelToggle(btn, panel);
 
         updateBtnLabel(btn, columns);
-        syncResetBtn();
-        return toolbar;
+        syncResetBtn(resetBtn, columns);
     }
 
-    function updateBtnLabel(btn, columns) {
-        const hidden = columns.filter(c => !c.visible).length;
-        btn.textContent = hidden > 0 ? 'Columns (' + hidden + ' hidden)' : 'Columns visibility';
+    /*
+     * Row visibility
+     */
+
+    function setRowTypeVisibility(tbody, type, visible) {
+        tbody.querySelectorAll(':scope > tr[data-row-type="' + type + '"]').forEach(row => {
+            row.style.display = visible ? '' : 'none';
+        });
+    }
+
+    function initRowsPanel(tbody) {
+        const btn = document.querySelector('[data-testid="table-toolbar-rows-btn"]');
+        const panel = document.querySelector('[data-testid="table-toolbar-rows-panel"]');
+        const resetBtn = document.querySelector('[data-testid="table-toolbar-rows-reset"]');
+        const list = document.querySelector('[data-testid="table-toolbar-rows-list"]');
+        btn.dataset.defaultLabel = btn.querySelector('.table-toolbar__btn-text').textContent.trim();
+
+        _panels.push({ btn, panel });
+
+        // Collect unique row types from the tbody, preserving first-seen order.
+        const seenTypes = [];
+        tbody.querySelectorAll(':scope > tr[data-row-type]').forEach(row => {
+            const t = row.dataset.rowType;
+            if (!seenTypes.includes(t)) seenTypes.push(t);
+        });
+
+        // Restore state from storage.
+        const rowsKey = storageKey(ROWS_STORAGE_KEY_PREFIX);
+        const hiddenTypes = new Set(readJson(rowsKey));
+        seenTypes.forEach(type => {
+            if (hiddenTypes.has(type)) setRowTypeVisibility(tbody, type, false);
+        });
+
+        const rowTypes = seenTypes.map(type => ({ type, visible: !hiddenTypes.has(type) }));
+
+        rowTypes.forEach(rowType => {
+            const item = document.createElement('li');
+            item.className = 'table-toolbar__item';
+
+            const label = document.createElement('label');
+            label.className = 'table-toolbar__label';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = rowType.visible;
+            checkbox.setAttribute('data-testid', 'row-checkbox-' + rowType.type);
+            checkbox.addEventListener('change', () => {
+                rowType.visible = checkbox.checked;
+                setRowTypeVisibility(tbody, rowType.type, rowType.visible);
+                writeJson(rowsKey, rowTypes.filter(r => !r.visible).map(r => r.type));
+                updateBtnLabel(btn, rowTypes);
+                syncResetBtn(resetBtn, rowTypes);
+            });
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(' ' + rowType.type));
+            item.appendChild(label);
+            list.appendChild(item);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            rowTypes.forEach(rowType => {
+                rowType.visible = true;
+                setRowTypeVisibility(tbody, rowType.type, true);
+            });
+            list.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
+            writeJson(rowsKey, []);
+            updateBtnLabel(btn, rowTypes);
+            syncResetBtn(resetBtn, rowTypes);
+        });
+
+        initPanelToggle(btn, panel);
+
+        updateBtnLabel(btn, rowTypes);
+        syncResetBtn(resetBtn, rowTypes);
     }
 
     /*
@@ -210,6 +274,7 @@
         const table = document.querySelector('.content-view-table');
         if (!table) return;
 
+        const toolbar = document.querySelector('[data-testid="table-toolbar"]');
         const headerCells = Array.from(table.querySelectorAll(':scope > thead > tr > .content-view-th'));
         const tbody = table.querySelector(':scope > tbody');
 
@@ -228,8 +293,14 @@
             persistState(columns.filter(c => !c.visible).map(c => c.name));
         }
 
-        const toolbar = buildToolbar(table, columns, onToggle);
-        table.parentNode.insertBefore(toolbar, table);
+        initColumnsPanel(table, columns, onToggle);
+        initRowsPanel(tbody);
+
+        document.addEventListener('click', e => {
+            if (toolbar && !toolbar.contains(e.target)) {
+                closeAllPanels();
+            }
+        });
 
         headerCells.forEach((headerCell, index) => {
             headerCell.addEventListener('click', () => {

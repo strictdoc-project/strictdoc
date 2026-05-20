@@ -13,18 +13,26 @@ Edit project title
     data-turbo="true"
   >
     <sdoc-form-grid>
-      {%- with
-        field_class_name="",
-        field_input_name="project_title",
-        field_name="project title",
-        field_label="Project title",
-        field_value=(new_title if new_title is defined else project_config.project_title),
-        field_type="singleline",
-        field_required=true,
-        errors=error_object.get_errors("project_title")
-      -%}
-        {% include "components/form/field/text/index.jinja" %}
-      {%- endwith -%}
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name=none,
+            field_editable=true,
+            field_input_name="project_title",
+            field_label="Project title",
+            field_placeholder="Enter Project title here...",
+            field_type="singleline",
+            field_required=true,
+            field_value=(new_title if new_title is defined else project_config.project_title),
+            testid_postfix="project_title",
+            errors=error_object.get_errors("project_title")
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
     </sdoc-form-grid>
   </form>
 {% endblock modal_form__content %}

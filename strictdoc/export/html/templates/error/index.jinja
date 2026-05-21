@@ -1,0 +1,46 @@
+{% set template_type = view_object.error_code %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+{% endblock head_css %}
+
+{% block head_scripts %}
+
+{% endblock head_scripts %}
+
+{% block title %}
+  {{ view_object.project_config.project_title }} - {{ template_type }}
+{% endblock title %}
+
+{% block viewtype %}error-page{% endblock viewtype %}
+
+{% block layout_nav %}
+  {% include "_shared/nav.jinja.html" %}
+{% endblock layout_nav %}
+
+{% block toc_content %}
+{% endblock toc_content %}
+
+{% block header_content %}
+  {%- with
+      header__pagetype=template_type
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block main_content %}
+  <div class="main">
+    <sdoc-main-placeholder
+      style="height: 100%;"
+      data-testid="error-{{ view_object.error_code }}"
+    >
+      {% include "icons/ico100_broken_file.svg" %}
+      <h1>{{ view_object.get_error_title() }}</h1>
+      <p>{{ view_object.get_error_text() }}</p>
+      <a href="{{ view_object.render_url('index.html') }}">Go to home page</a>
+    </sdoc-main-placeholder>
+  </div>
+{% endblock main_content %}

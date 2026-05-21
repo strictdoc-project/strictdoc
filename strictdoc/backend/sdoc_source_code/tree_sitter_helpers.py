@@ -24,7 +24,9 @@ def traverse_tree(tree: Tree) -> Generator[Node, None, None]:
 
 
 def ts_find_child_node_by_type(
-    node: Node, node_type: Union[str, Tuple[str, ...], str]
+    node: Node,
+    node_type: Union[str, Tuple[str, ...], str],
+    raise_on_error: bool = False,
 ) -> Optional[Node]:
     node_types: Tuple[str, ...] = (
         node_type if isinstance(node_type, tuple) else (node_type,)
@@ -32,6 +34,8 @@ def ts_find_child_node_by_type(
     for child_ in node.children:
         if child_.type in node_types:
             return child_
+        elif raise_on_error and child_.type == "ERROR":
+            raise LookupError("stop search on error node")
     return None
 
 

@@ -249,9 +249,13 @@ class SourceFileTraceabilityReader_C:
             elif node_.type == "function_definition":
                 function_name = ""
 
-                function_declarator_node = ts_find_child_node_by_type(
-                    node_, "function_declarator"
-                )
+                try:
+                    function_declarator_node = ts_find_child_node_by_type(
+                        node_, "function_declarator", raise_on_error=True
+                    )
+                except LookupError:
+                    # probably confused by macro, skip node to avoid processing random subtrees
+                    continue
                 # C++ reference declaration wrap the function declaration one time.
                 if function_declarator_node is None:
                     # Example: Foo& Foo::operator+(const Foo& c) { return *this; }

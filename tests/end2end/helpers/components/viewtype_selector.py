@@ -83,6 +83,22 @@ class ViewType_Selector:  # pylint: disable=invalid-name
         )
         return Screen_Deep_Traceability(self.test_case)
 
+    # empty state assertions
+
+    def assert_menu_item_is_empty(self, viewtype_link: str) -> None:
+        self.test_case.assert_element(
+            f'//*[@data-viewtype_link="{viewtype_link}"]'
+            f'[contains(., "(empty)")]',
+            by=By.XPATH,
+        )
+
+    def assert_menu_item_is_not_empty(self, viewtype_link: str) -> None:
+        self.test_case.assert_element(
+            f'//*[@data-viewtype_link="{viewtype_link}"]'
+            f'[not(contains(., "(empty)"))]',
+            by=By.XPATH,
+        )
+
     def do_go_to_pdf_document(self) -> Screen_PDFDocument:
         self.do_click_viewtype_handler()
         self.assert_viewtype_menu_opened()

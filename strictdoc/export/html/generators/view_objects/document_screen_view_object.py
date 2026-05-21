@@ -129,6 +129,11 @@ class DocumentScreenViewObject:
             view_object=self,
         )
 
+        output += self.jinja_environment.render_template_as_markup(
+            "actions/document/_shared/stream_updated_viewtype_menu.jinja.html",
+            view_object=self,
+        )
+
         return output
 
     def render_updated_nodes_and_toc(
@@ -170,6 +175,18 @@ class DocumentScreenViewObject:
                 target="frame-toc",
             )
 
+            viewtype_menu_content = (
+                self.jinja_environment.render_template_as_markup(
+                    "screens/document/_shared/viewtype_menu.jinja",
+                    view_object=self,
+                )
+            )
+            output += render_turbo_stream(
+                content=viewtype_menu_content,
+                action="update",
+                target="frame-viewtype-menu",
+            )
+
         return output
 
     def render_update_document_content_with_moved_node(
@@ -194,6 +211,12 @@ class DocumentScreenViewObject:
             action="update",
             target="frame-toc",
         )
+
+        output += self.jinja_environment.render_template_as_markup(
+            "actions/document/_shared/stream_updated_viewtype_menu.jinja.html",
+            view_object=self,
+        )
+
         return output
 
     def render_document_version(self) -> Optional[str]:

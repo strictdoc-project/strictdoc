@@ -1,3 +1,14 @@
+{#
+  Empty-state flags: a view is "empty" if it would show the placeholder instead of content.
+  - Table and Traceability: no nodes at all in the document.
+  - Deep Traceability: uses has_any_requirements() which historically excluded sections,
+    but after a refactoring sections now appear in DTR as well.
+    TODO: revisit deeptrace_is_empty condition if the DTR output changes to exclude sections again.
+#}
+{%- set table_is_empty = not view_object.has_any_nodes() -%}
+{%- set trace_is_empty = not view_object.has_any_nodes() -%}
+{%- set deeptrace_is_empty = not view_object.document.has_any_requirements() -%}
+
 <div class="viewtype">
   <div
     id="viewtype_handler"
@@ -28,30 +39,30 @@
     <li>
       <a
         data-viewtype_link="table"
-        class="dropdown_menu_item"
-        title="Go to Table view"
+        class="dropdown_menu_item{% if table_is_empty %} empty{% endif %}"
+        title="{% if table_is_empty %}This page has no content{% else %}Go to Table view{% endif %}"
         href="{{ view_object.render_document_link(view_object.document, none, "TABLE") }}">
-      Table</a>
+      Table{% if table_is_empty %} (empty){% endif %}</a>
     </li>
     {%- endif -%}
     {%- if view_object.project_config.is_activated_trace_screen() -%}
     <li>
       <a
         data-viewtype_link="traceability"
-        class="dropdown_menu_item"
-        title="Go to Traceability view"
+        class="dropdown_menu_item{% if trace_is_empty %} empty{% endif %}"
+        title="{% if trace_is_empty %}This page has no content{% else %}Go to Traceability view{% endif %}"
         href="{{ view_object.render_document_link(view_object.document, none, "TRACE") }}">
-      Traceability</a>
+      Traceability{% if trace_is_empty %} (empty){% endif %}</a>
     </li>
     {%- endif -%}
     {%- if view_object.project_config.is_activated_deep_trace_screen() -%}
     <li>
       <a
         data-viewtype_link="deep_traceability"
-        class="dropdown_menu_item"
-        title="Go to Deep Traceability view"
+        class="dropdown_menu_item{% if deeptrace_is_empty %} empty{% endif %}"
+        title="{% if deeptrace_is_empty %}This page has no content{% else %}Go to Deep Traceability view{% endif %}"
         href="{{ view_object.render_document_link(view_object.document, none, "DEEPTRACE") }}">
-      Deep Traceability</a>
+      Deep Traceability{% if deeptrace_is_empty %} (empty){% endif %}</a>
     </li>
     {%- endif -%}
     {%- if view_object.project_config.is_activated_html2pdf() -%}

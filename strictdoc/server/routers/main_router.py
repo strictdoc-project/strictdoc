@@ -1089,6 +1089,12 @@ def create_main_router(
             "actions/document/_shared/stream_updated_toc.jinja.html",
             view_object=view_object,
         )
+
+        output += env().render_template_as_markup(
+            "actions/document/_shared/stream_updated_viewtype_menu.jinja.html",
+            view_object=view_object,
+        )
+
         return HTMLResponse(
             content=output,
             status_code=200,

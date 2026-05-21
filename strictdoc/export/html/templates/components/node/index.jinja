@@ -20,7 +20,8 @@
 
   <sdoc-node
     data-editable_node="on"
-    data-controller="anchor_controller"
+    show-anchors
+    data-controller="copy_to_clipboard"
     node-role="{{ node_type }}"
     {% if sdoc_entity.is_requirement() %}
       node-view="{{ sdoc_entity.get_requirement_style_mode() }}"

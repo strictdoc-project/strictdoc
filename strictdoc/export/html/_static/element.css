@@ -439,6 +439,11 @@ sdoc-anchor {
 }
 
 sdoc-node > sdoc-anchor {
+  /*
+    A direct descendant is an anchor to the node itself.
+    This is to distinguish it from anchors within the nodes' text fields.
+  */
+
   scroll-snap-margin-top: unset; /** top: 0; */
   scroll-margin-top:      unset; /** top: 0; */
 
@@ -446,7 +451,7 @@ sdoc-node > sdoc-anchor {
   position: absolute;
   top: 0;
   bottom: 0;
-  z-index: 0;
+  z-index: 2;
 }
 
 sdoc-anchor.anchor_in_rst {
@@ -471,10 +476,11 @@ sdoc-anchor .anchor_block {
 
 /*
   This styles should only be triggered if
-  export/html/_static/controllers/anchor_controller.js
-  processes the parent sdoc-node.
+  export/html/_static/controllers/copy_clipboard_controller.js
+  processes anchors in the parent sdoc-node.
 */
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor {
+
+sdoc-node[show-anchors] sdoc-anchor {
   position: absolute;
   z-index: 2;
   left: 0;
@@ -482,19 +488,19 @@ sdoc-node[data-controller="anchor_controller"] sdoc-anchor {
   opacity: 0;
 }
 
-sdoc-node[data-controller="anchor_controller"]:hover sdoc-anchor {
+sdoc-node[show-anchors]:hover sdoc-anchor {
   opacity: 1;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor.anchor_has_back_links {
+sdoc-node[show-anchors] sdoc-anchor.anchor_has_back_links {
   opacity: 1;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover {
+sdoc-node[show-anchors] sdoc-anchor:hover {
   z-index: 10;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_block {
+sdoc-node[show-anchors] sdoc-anchor .anchor_block {
   display: block;
   position: absolute;
   top: 0;
@@ -505,14 +511,14 @@ sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_block {
   opacity: .6;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover .anchor_block {
+sdoc-node[show-anchors] sdoc-anchor:hover .anchor_block {
   background-color: rgb(255, 255, 255);
   border-color: rgba(0, 0, 0, 0.05);
   box-shadow: rgb(0 0 0 / 10%) 0px 2px var(--base-rhythm) 0px;
   opacity: 1;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button {
+sdoc-node[show-anchors] sdoc-anchor .anchor_button {
   cursor: pointer;
   font-size:var(--font-size-sm);
   font-weight: 600;
@@ -540,43 +546,41 @@ sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button {
   overflow: hidden;
 
   transition: opacity 0.2s;
-  opacity: .6;
+  /* opacity: .6; */
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button:hover {
+sdoc-node[show-anchors] sdoc-anchor .anchor_button:hover {
   color: var(--color-hover);
   z-index: 6;
-
-  opacity: 1;
+  /* opacity: 1; */
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button svg {
-  color: var(--color-fg-secondary);
+sdoc-node[show-anchors] sdoc-anchor .anchor_button svg {
+  /* color: var(--color-fg-secondary); */
   margin-left: calc(var(--base-rhythm)*(-.5));
   margin-right: calc(var(--base-rhythm)*(-.5));
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor.anchor_has_back_links .anchor_button svg {
-  color: black;
+sdoc-node[show-anchors] sdoc-anchor.anchor_has_back_links .anchor_button svg {
   opacity: 1;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button:hover svg {
+sdoc-node[show-anchors] sdoc-anchor .anchor_button:hover svg {
   color: var(--color-action) !important;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_button_text {
+sdoc-node[show-anchors] sdoc-anchor .anchor_button_text {
   font-size: var(--font-size-sm);
   font-weight: bolder;
 
   display: none;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover .anchor_button_text {
+sdoc-node[show-anchors] sdoc-anchor:hover .anchor_button_text {
   display: block;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links {
+sdoc-node[show-anchors] sdoc-anchor .anchor_back_links {
   min-width: 300px;
   padding-left: calc(var(--base-rhythm)*4);
   padding-right: var(--base-rhythm);
@@ -586,19 +590,19 @@ sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links {
   display: none;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover .anchor_back_links {
+sdoc-node[show-anchors] sdoc-anchor:hover .anchor_back_links {
   display: block;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links a {
+sdoc-node[show-anchors] sdoc-anchor .anchor_back_links a {
   display: list-item;
 }
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links a::marker {
+sdoc-node[show-anchors] sdoc-anchor .anchor_back_links a::marker {
   content: '⇠  ';
   width: calc(var(--base-rhythm)*4);
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links_number {
+sdoc-node[show-anchors] sdoc-anchor .anchor_back_links_number {
   color: var(--color-fg-accent);
   position: absolute;
   width: calc(var(--base-rhythm)*4);
@@ -608,7 +612,7 @@ sdoc-node[data-controller="anchor_controller"] sdoc-anchor .anchor_back_links_nu
   font-weight: bold;
 }
 
-sdoc-node[data-controller="anchor_controller"] sdoc-anchor:hover .anchor_back_links_number {
+sdoc-node[show-anchors] sdoc-anchor:hover .anchor_back_links_number {
   top: calc(var(--base-rhythm)*5);
 }
 
@@ -849,7 +853,9 @@ svg.svg_icon {
   height: calc(var(--base-rhythm)*2);
   flex: 0 0 auto;
   background: transparent;
-  /* color: rgb(246, 153, 13); */
+  /* Reset the values specified for 'sdoc-autogen svg': */
+  max-width: unset;
+  padding: unset;
 }
 
 .svg_icon_hover_visible {

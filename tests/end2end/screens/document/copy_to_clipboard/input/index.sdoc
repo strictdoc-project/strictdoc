@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Copy to Clipboard Test
+
+[REQUIREMENT]
+UID: ROOT-1
+TITLE: Test Requirement
+STATEMENT: Field content to copy.
+
+[TEXT]
+STATEMENT: >>>
+Text with inline RST anchor.
+
+[ANCHOR: RST-ANCHOR, RST Anchor Title]
+<<<

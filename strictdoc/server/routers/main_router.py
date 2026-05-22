@@ -1223,6 +1223,7 @@ def create_main_router(
             error_object=ErrorObject(),
             document_title="",
             document_path="",
+            include_doc_paths=project_config.include_doc_paths,
         )
         return HTMLResponse(
             content=output,
@@ -1422,7 +1423,7 @@ def create_main_router(
                 "document_path", "Document path must not be empty."
             )
         else:
-            document_path = document_path.strip()
+            document_path = document_path.strip().lstrip("/")
             if not is_safe_alphanumeric_string(document_path):
                 error_object.add_error(
                     "document_path",
@@ -1470,6 +1471,7 @@ def create_main_router(
                 document_path=document_path
                 if document_path is not None
                 else "",
+                include_doc_paths=project_config.include_doc_paths,
             )
             return HTMLResponse(
                 content=output,

@@ -557,6 +557,12 @@ sdoc-form-error + sdoc-form-field-group {
   border-color: var(--color-danger);
 }
 
+sdoc-form-hint {
+  display: block;
+  color: var(--color-fg-secondary);
+  font-size: var(--font-size-sm);
+  margin-top: var(--base-padding);
+}
 
 sdoc-form-field-group[errors]::before, /* Grammar -> label for group of fields */
 sdoc-contenteditable[errors]::before, /* inside contenteditable errors block does not affected */

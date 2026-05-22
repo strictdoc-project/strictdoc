@@ -42,6 +42,14 @@ class Test(E2ECase):
             form_add_document.do_fill_in_path("docs/document2")
             form_add_document.do_form_submit()
 
-            screen_project_index.assert_contains_document("Document 2")
+            # Add file with a leading slash — slash must be stripped silently
+            form_add_document: Form_AddDocument = (
+                screen_project_index.do_open_modal_form_add_document()
+            )
+            form_add_document.do_fill_in_title("Document 3")
+            form_add_document.do_fill_in_path("/docs/document3")
+            form_add_document.do_form_submit()
+
+            screen_project_index.assert_contains_document("Document 3")
 
         assert test_setup.compare_sandbox_and_expected_output()

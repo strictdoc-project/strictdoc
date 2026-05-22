@@ -52,6 +52,9 @@
       mid="{{ mid }}"
     {% endif %}
     placeholder="{{ field_placeholder }}"
+    {%- if field_type == "singleline" and singleline_suffix is defined -%}
+      data-field-suffix="{{ singleline_suffix }}"
+    {%- endif -%}
     data-field-label="{{ field_label }}{%- if field_required -%}&nbsp;*{%- endif -%}"
     {%- if field_class_name is not none -%}
       class="{{ field_class_name }}"

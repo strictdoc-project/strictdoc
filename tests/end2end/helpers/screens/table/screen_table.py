@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from seleniumbase import BaseCase
 
 from tests.end2end.helpers.screens.screen import Screen
@@ -11,6 +12,7 @@ _ROWS_BTN = '[data-testid="table-toolbar-rows-btn"]'
 _ROWS_BTN_TEXT = _ROWS_BTN + " .table-toolbar__btn-text"
 _ROWS_PANEL = '[data-testid="table-toolbar-rows-panel"]'
 _ROWS_RESET = '[data-testid="table-toolbar-rows-reset"]'
+_EDIT_BTN = '[data-testid="table-toolbar-edit-btn"]'
 
 
 class Screen_Table(Screen):  # pylint: disable=invalid-name
@@ -134,3 +136,99 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
 
     def do_click_rows_show_all(self) -> None:
         self.test_case.click(_ROWS_RESET)
+
+    #
+    # Edit mode
+    #
+
+    def assert_edit_mode_off(self) -> None:
+        pressed = self.test_case.execute_script(
+            f"return document.querySelector('{_EDIT_BTN}')"
+            f".getAttribute('aria-pressed')"
+        )
+        assert pressed == "false", (
+            f"Expected edit mode OFF (aria-pressed=false), got {pressed!r}"
+        )
+
+    def assert_edit_mode_on(self) -> None:
+        pressed = self.test_case.execute_script(
+            f"return document.querySelector('{_EDIT_BTN}')"
+            f".getAttribute('aria-pressed')"
+        )
+        assert pressed == "true", (
+            f"Expected edit mode ON (aria-pressed=true), got {pressed!r}"
+        )
+
+    def do_toggle_edit_mode(self) -> None:
+        self.test_case.click(_EDIT_BTN)
+
+    def _cell_sel(self, node_mid: str, field_name: str) -> str:
+        return f'[data-node-mid="{node_mid}"][data-field-name="{field_name}"]'
+
+    def _input_sel(self, node_mid: str, field_name: str) -> str:
+        return self._cell_sel(node_mid, field_name) + " .cell-edit-input"
+
+    def assert_no_edit_input(self, node_mid: str, field_name: str) -> None:
+        self.test_case.assert_element_not_present(
+            self._input_sel(node_mid, field_name)
+        )
+
+    def assert_edit_input_visible(self, node_mid: str, field_name: str) -> None:
+        self.test_case.assert_element(self._input_sel(node_mid, field_name))
+
+    def assert_cell_value(
+        self, node_mid: str, field_name: str, value: str
+    ) -> None:
+        sel = self._cell_sel(node_mid, field_name).replace('"', '\\"')
+        actual = self.test_case.execute_script(
+            f'const c = document.querySelector("{sel}");'
+            f"return c ? c.dataset.currentValue : null;"
+        )
+        assert actual == value, (
+            f"Cell [{node_mid}][{field_name}]: expected {value!r}, got {actual!r}"
+        )
+
+    def assert_cell_text(
+        self, node_mid: str, field_name: str, text: str
+    ) -> None:
+        actual = self.test_case.execute_script(
+            f"const c = document.getElementById('cell-{node_mid}-{field_name}');"
+            f"return c ? c.textContent.trim() : null;"
+        )
+        assert actual == text, (
+            f"Cell text [{node_mid}][{field_name}]: expected {text!r}, got {actual!r}"
+        )
+
+    def do_click_cell(self, node_mid: str, field_name: str) -> None:
+        self.test_case.click(self._cell_sel(node_mid, field_name))
+
+    def do_edit_cell_and_submit(
+        self, node_mid: str, field_name: str, new_value: str
+    ) -> None:
+        self.do_click_cell(node_mid, field_name)
+        input_sel = self._input_sel(node_mid, field_name)
+        self.test_case.assert_element(input_sel)
+        self.test_case.type(input_sel, new_value)
+        self.test_case.send_keys(input_sel, Keys.RETURN)
+
+    def do_edit_cell_and_cancel(
+        self, node_mid: str, field_name: str, new_value: str
+    ) -> None:
+        self.do_click_cell(node_mid, field_name)
+        input_sel = self._input_sel(node_mid, field_name)
+        self.test_case.assert_element(input_sel)
+        self.test_case.type(input_sel, new_value)
+        self.test_case.send_keys(input_sel, Keys.ESCAPE)
+
+    def do_submit_cell_unchanged(self, node_mid: str, field_name: str) -> None:
+        self.test_case.send_keys(
+            self._input_sel(node_mid, field_name), Keys.RETURN
+        )
+
+    def get_node_mid_from_row(self, row_order: int = 1) -> str:
+        return self.test_case.execute_script(
+            f"const rows = document.querySelectorAll("
+            f"'tr[data-row-type] [data-node-mid]');"
+            f"const cell = rows[{row_order - 1}];"
+            f"return cell ? cell.dataset.nodeMid : null;"
+        )

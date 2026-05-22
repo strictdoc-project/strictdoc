@@ -1047,6 +1047,12 @@ a.strictdoc__version:hover {
   cursor: default;
 }
 
+.dropdown_menu_item.empty {
+  color: var(--color-fg-secondary);
+  background-color: var(--color-bg-contrast);
+  cursor: default;
+}
+
 /*
  ** header-actions: reusable wrapper for header buttons + kebab dropdown
  */

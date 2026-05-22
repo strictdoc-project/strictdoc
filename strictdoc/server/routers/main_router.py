@@ -1416,7 +1416,7 @@ def create_main_router(
                 "document_path", "Document path must not be empty."
             )
         else:
-            document_path = document_path.strip()
+            document_path = document_path.strip().lstrip("/")
             if not is_safe_alphanumeric_string(document_path):
                 error_object.add_error(
                     "document_path",

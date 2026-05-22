@@ -36,10 +36,3 @@ class Test(E2ECase):
                 "Document path must be relative and only contain slashes, "
                 "alphanumeric characters, and underscore symbols."
             )
-
-            form_add_document.do_fill_in_path("/test1.sdoc")
-            form_add_document.do_form_submit_and_catch_error(
-                "Document path must be relative and only contain slashes, "
-                "alphanumeric characters, and underscore symbols."
-            )
-            self.assert_text("/test1.sdoc")

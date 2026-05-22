@@ -17,6 +17,7 @@
     import hotwiredTurbo from "{{ view_object.render_static_url_with_prefix('turbo.min.js') }}";
   </script>
   <script src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('action_button_guard.js') }}"></script>
   {%- endif -%}
   <script src="{{ view_object.render_static_url('diff.js') }}"></script>
 {% endblock head_scripts %}

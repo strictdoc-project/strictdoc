@@ -49,6 +49,14 @@ Add new document
           -%}
             {%- include "components/form/field/contenteditable/index.jinja" %}
           {%- endwith -%}
+          {%- if include_doc_paths -%}
+          <sdoc-form-hint>
+            ☞ Path must start with one of:
+            {% for path in include_doc_paths -%}
+              <code>{{ path }}</code>{% if not loop.last %}, {% endif %}
+            {%- endfor -%}
+          </sdoc-form-hint>
+          {%- endif -%}
         </sdoc-form-row-main>
         <sdoc-form-row-aside></sdoc-form-row-aside>
       </sdoc-form-row>

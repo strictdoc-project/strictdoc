@@ -1,0 +1,9 @@
+<turbo-stream action="update" target="cell-{{ node.reserved_mid }}-{{ field_name }}">
+  <template>
+    {%- if field_name == 'TITLE' and field_value -%}
+    <div class="requirement__title">{{ field_value }}</div>
+    {%- elif field_value -%}
+    {{ field_value }}
+    {%- endif -%}
+  </template>
+</turbo-stream>

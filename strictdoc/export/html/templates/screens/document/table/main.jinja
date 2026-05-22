@@ -22,11 +22,12 @@
               <th class="content-view-th">Statement</th>
               <th class="content-view-th">Rationale</th>
               <th class="content-view-th">Comment</th>
-              {%- for meta_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
-                <th class="content-view-th">{{ meta_field_title }}</th>
+              {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
+                <th class="content-view-th">{{ content_field_title }}</th>
               {%- endfor -%}
             </tr>
           </thead>
+          <tbody>
           {%- for node, _ in view_object.document_content_iterator() %}
             {%- if node.is_requirement() %}
               {%- set requirement = node %}
@@ -39,11 +40,24 @@
                 </td>
                 {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
+                  {# Singleline fields are editable inline; multiline fields will get popup editing in a later stage. #}
+                  {%- if view_object.is_table_cell_singleline(node.node_type, meta_field_title) %}
+                  <td class="content-view-td content-view-td-meta"
+                      data-node-mid="{{ requirement.reserved_mid }}"
+                      data-field-name="{{ meta_field_title }}"
+                      data-field-type="singleline"
+                      data-current-value="{{ field_value if field_value else '' }}">
+                    <div id="cell-{{ requirement.reserved_mid }}-{{ meta_field_title }}">
+                      {%- if field_value -%}{{ field_value }}{%- endif -%}
+                    </div>
+                  </td>
+                  {%- else %} {# ... multiline fields will get popup editing in a later stage. #}
                   <td class="content-view-td content-view-td-meta">
                     {%- if field_value -%}
                       {{ field_value }}
                     {%- endif -%}
                   </td>
+                  {%- endif %}
                 {%- endfor -%}
                 <td class="content-view-td content-view-td-meta content-view-td-related">
                   {%- if view_object.traceability_index.has_parent_requirements(requirement) %}
@@ -97,13 +111,19 @@
                     {%- endif %}
                   {%- endif %}
                 </td>
-                <td class="content-view-td content-view-td-title">
-                  {%- if requirement.reserved_title %}
-                    {%- with sdoc_entity=requirement -%}
-                      {% include "components/anchor/index.jinja" %}
-                    {%- endwith %}
-                    <div class="requirement__title">{{ requirement.reserved_title }}</div>
-                  {%- endif -%}
+                <td class="content-view-td content-view-td-title"
+                    data-node-mid="{{ requirement.reserved_mid }}"
+                    data-field-name="TITLE"
+                    data-field-type="singleline"
+                    data-current-value="{{ requirement.reserved_title if requirement.reserved_title else '' }}">
+                  <div id="cell-{{ requirement.reserved_mid }}-TITLE">
+                    {%- if requirement.reserved_title %}
+                      {%- with sdoc_entity=requirement -%}
+                        {% include "components/anchor/index.jinja" %}
+                      {%- endwith %}
+                      <div class="requirement__title">{{ requirement.reserved_title }}</div>
+                    {%- endif -%}
+                  </div>
                 </td>
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.has_reserved_statement() -%}
@@ -120,13 +140,26 @@
                   <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
                   {%- endfor -%}
                 </td>
-                {%- for meta_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
-                  {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
+                {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
+                  {%- set field_value = requirement.get_meta_field_value_by_title(content_field_title) %}
+                  {# Singleline fields are editable inline; multiline fields will get popup editing in a later stage. #}
+                  {%- if view_object.is_table_cell_singleline(node.node_type, content_field_title) %}
+                  <td class="content-view-td"
+                      data-node-mid="{{ requirement.reserved_mid }}"
+                      data-field-name="{{ content_field_title }}"
+                      data-field-type="singleline"
+                      data-current-value="{{ field_value if field_value else '' }}">
+                    <div id="cell-{{ requirement.reserved_mid }}-{{ content_field_title }}">
+                      {%- if field_value %}{{ field_value }}{%- endif -%}
+                    </div>
+                  </td>
+                  {%- else %} {# ... multiline fields will get popup editing in a later stage. #}
                   <td class="content-view-td">
                     {%- if field_value %}
                       {{ field_value }}
                     {%- endif -%}
                   </td>
+                  {%- endif %}
                 {%- endfor -%}
               </tr>
             {%- elif node.is_document() %}
@@ -146,7 +179,7 @@
                     <div class="requirement__title">
                       {{ section.title }}
                     </div>
-                    {%- for meta_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
+                    {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
                       <td class="content-view-td">
                       </td>
                     {%- endfor -%}
@@ -155,6 +188,7 @@
               </tr>
             {%- endif %}
           {%- endfor %}
+          </tbody>
         </table>
       </div>
       {# /.content #}
@@ -167,4 +201,3 @@
   the document has no content.
   </sdoc-main-placeholder>
 {%- endif -%}
-

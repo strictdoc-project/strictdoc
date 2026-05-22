@@ -1,4 +1,13 @@
 <div class="table-toolbar" data-testid="table-toolbar">
+  {%- if view_object.is_running_on_server -%}
+  <div class="table-toolbar__edit">
+    <button class="table-toolbar__btn table-toolbar__btn--edit action_button"
+            aria-pressed="false"
+            data-testid="table-toolbar-edit-btn">
+            {%- include "icons/ico16_edit.svg" -%}
+            <span class="table-toolbar__btn-text">Edit</span></button>
+  </div>
+  {%- endif -%}
   <div class="table-toolbar__columns">
     <button class="table-toolbar__btn action_button"
             aria-haspopup="true"

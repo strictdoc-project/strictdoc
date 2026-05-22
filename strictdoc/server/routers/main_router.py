@@ -143,6 +143,7 @@ from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.string import (
     create_safe_acronym,
     is_safe_alphanumeric_string,
+    sanitize_html_form_field,
 )
 from strictdoc.helpers.timing import measure_performance
 from strictdoc.server.error_object import ErrorObject
@@ -965,6 +966,86 @@ def create_main_router(
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
             },
+        )
+
+    @write_router.post("/actions/table/update_node_field")
+    def table__update_node_field(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
+        request_dict = dict(request_form_data)
+        node_mid_str: str = request_dict["node_mid"]
+        field_name: str = request_dict["field_name"]
+        field_value: str = request_dict.get("field_value", "")
+
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid_str)
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+        assert document.grammar is not None
+        grammar: DocumentGrammar = document.grammar
+        element: GrammarElement = grammar.elements_by_type[node.node_type]
+
+        if field_name not in element.fields_map:
+            return HTMLResponse(
+                content=f"Unknown field: {field_name}",
+                status_code=400,
+            )
+        if element.is_field_multiline(field_name):
+            return HTMLResponse(
+                content=f"Field {field_name} is multiline; use the popup editor",
+                status_code=400,
+            )
+
+        sanitized_value: str = sanitize_html_form_field(
+            field_value, multiline=False
+        )
+
+        revision: int = revisions[node_mid_str]
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_requirement(
+                requirement=node,
+                revision=revision,
+                context_document_mid=document.reserved_mid.get_string_value(),
+            )
+        )
+
+        if field_name in form_object.fields:
+            form_object.fields[field_name][0].field_value = sanitized_value
+
+        form_object.validate(
+            traceability_index=export_action.traceability_index,
+            context_document=document,
+            config=project_config,
+            existing_revision=revision,
+        )
+        if form_object.any_errors():
+            first_error = next(iter(form_object.errors.values()))
+            return HTMLResponse(
+                content=first_error[0] if first_error else "Validation error",
+                status_code=422,
+            )
+
+        update_command = CreateOrUpdateNodeCommand(
+            form_object=form_object,
+            node_info=UpdateNodeInfo(node_to_update=node),
+            context_document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+        )
+        update_command.perform()
+        write_document_to_file(document)
+        revisions[node_mid_str] += 1
+
+        output = env().render_template_as_markup(
+            "actions/table/update_node_field/stream_update_node_field.jinja.html",
+            node=node,
+            field_name=field_name,
+            field_value=sanitized_value,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
         )
 
     @read_router.get(

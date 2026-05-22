@@ -515,3 +515,19 @@ class DocumentScreenViewObject:
 
     def can_move_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
         return self.traceability_index.can_move_node(node)
+
+    # Table editing
+    #
+
+    def is_table_cell_singleline(
+        self, element_type: str, field_name: str
+    ) -> bool:
+        grammar = self.document.grammar
+        if grammar is None:
+            return False
+        element = grammar.elements_by_type.get(element_type)
+        if element is None:
+            return False
+        if field_name not in element.fields_map:
+            return False
+        return not element.is_field_multiline(field_name)

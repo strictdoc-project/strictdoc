@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional, Union
 from urllib.parse import quote
 
-from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, UploadFile
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
 from reqif.unparser import ReqIFUnparser
@@ -118,6 +118,9 @@ from strictdoc.export.html.generators.view_objects.project_tree_view_object impo
 )
 from strictdoc.export.html.generators.view_objects.search_screen_view_object import (
     SearchScreenViewObject,
+)
+from strictdoc.export.html.generators.view_objects.server_error_view_object import (
+    ServerErrorViewObject,
 )
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
@@ -227,6 +230,7 @@ def search_node_matches_plain_text_query(
 def create_main_router(
     project_config: ProjectConfig,
     *,
+    app: FastAPI,
     lock_manager: HierarchicalRWLockManager,
 ) -> APIRouter:
     parallelizer = NullParallelizer()
@@ -283,6 +287,27 @@ def create_main_router(
 
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
+
+    @app.exception_handler(404)
+    async def not_found_handler(request: Request, exc: Exception) -> Response:  # noqa: ARG001
+        view_object = ServerErrorViewObject(
+            project_config=project_config,
+            error_code=404,
+        )
+        output = view_object.render_screen(env())
+        return Response(content=output, status_code=404, media_type="text/html")
+
+    @app.exception_handler(500)
+    async def internal_error_handler(
+        request: Request,  # noqa: ARG001
+        exc: Exception,  # noqa: ARG001
+    ) -> Response:
+        view_object = ServerErrorViewObject(
+            project_config=project_config,
+            error_code=500,
+        )
+        output = view_object.render_screen(env())
+        return Response(content=output, status_code=500, media_type="text/html")
 
     def read_lock() -> Iterator[None]:
         with lock_manager.acquire_global_read():
@@ -2958,6 +2983,8 @@ def create_main_router(
                 linkable_node, None, document_type=DocumentType.DOCUMENT
             )
             return RedirectResponse(url=href, status_code=302)
+        # The HTTPException will render our ServerErrorViewObject 404 page
+        # via @app.exception_handler(404).
         raise HTTPException(status_code=404, detail="UID or MID was not found")
 
     # Nestor is a highly experimental feature that is unlikely to make it to the
@@ -3040,6 +3067,19 @@ def create_main_router(
         _, file_extension = os.path.splitext(full_path)
         if file_extension == ".html":
             return get_document(request, full_path)
+        elif file_extension == "":
+            # No extension: StrictDoc documents always end in .html, so no
+            # extension can ever resolve to a valid document. Return 404
+            # directly without going through get_document().
+            view_object = ServerErrorViewObject(
+                project_config=project_config,
+                error_code=404,
+            )
+            return Response(
+                content=view_object.render_screen(env()),
+                status_code=404,
+                media_type="text/html",
+            )
         else:
             return get_asset(request, full_path)
 
@@ -3121,9 +3161,14 @@ def create_main_router(
                                 path_to_source_file=document_relative_path.relative_path,
                             )
                         except FileNotFoundError:
-                            return HTMLResponse(
-                                content=f"Not Found: {url_to_document}",
+                            view_object = ServerErrorViewObject(
+                                project_config=project_config,
+                                error_code=404,
+                            )
+                            return Response(
+                                content=view_object.render_screen(env()),
                                 status_code=404,
+                                media_type="text/html",
                             )
                 elif document_relative_path.relative_path == "index.html":
                     html_generator.export_project_tree_screen(
@@ -3230,9 +3275,14 @@ def create_main_router(
                         base_document_url
                     )
                     if document is None:
-                        return HTMLResponse(
-                            content=f"Not Found: {url_to_document}",
+                        view_object = ServerErrorViewObject(
+                            project_config=project_config,
+                            error_code=404,
+                        )
+                        return Response(
+                            content=view_object.render_screen(env()),
                             status_code=404,
+                            media_type="text/html",
                         )
 
                     assert document.meta is not None
@@ -3271,10 +3321,15 @@ def create_main_router(
             # from the reader's perspective, so this lock can potentially be
             # narrowed or removed.
             if not os.path.isfile(static_file):
+                view_object = ServerErrorViewObject(
+                    project_config=project_config,
+                    error_code=404,
+                    path_type="asset",
+                )
                 return Response(
-                    content=f"File not found: {url_to_asset}",
+                    content=view_object.render_screen(env()),
                     status_code=404,
-                    media_type=content_type,
+                    media_type="text/html",
                 )
 
             if request_is_for_non_modified_file(request, static_file):

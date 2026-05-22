@@ -139,6 +139,27 @@ a.action_button:hover {
   cursor: default;
 }
 
+.action_button.pending,
+.action_button.pending:hover {
+  pointer-events: none;
+  opacity: .6;
+  cursor: default;
+}
+
+.ico_submit_static { display: block; }
+.ico_submit_spinner { display: none; }
+
+.action_button.pending .ico_submit_static { display: none; }
+.action_button.pending .ico_submit_spinner {
+  display: block;
+  animation: ico-spin 0.7s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes ico-spin {
+  to { transform: rotate(360deg); }
+}
+
 .action_button svg {
   /*
     action_button 1.5 column-gap

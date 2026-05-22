@@ -22,6 +22,7 @@
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js') }}";
   </script>
   <script src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('action_button_guard.js') }}"></script>
   {%- endif -%}
 
   {%- if view_object.project_config.is_activated_mathjax() -%}

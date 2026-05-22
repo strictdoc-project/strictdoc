@@ -254,7 +254,7 @@ class SourceFileTraceabilityReader_C:
                         node_, "function_declarator", raise_on_error=True
                     )
                 except LookupError:
-                    # probably confused by macro, skip node to avoid processing random subtrees
+                    # Probably confused by macro, skip node to avoid processing random subtrees.
                     continue
                 # C++ reference declaration wrap the function declaration one time.
                 if function_declarator_node is None:

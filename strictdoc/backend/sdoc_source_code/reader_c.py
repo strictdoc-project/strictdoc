@@ -42,11 +42,27 @@ from strictdoc.helpers.file_system import file_open_read_bytes
 KNOWN_FUNCTION_DEFINITION_MACROS: Final[frozenset[str]] = frozenset(
     (
         # Linux
+        "COMPAT_SYSCALL_DEFINE0",
+        "COMPAT_SYSCALL_DEFINE1",
+        "COMPAT_SYSCALL_DEFINE2",
+        "COMPAT_SYSCALL_DEFINE3",
+        "COMPAT_SYSCALL_DEFINE4",
+        "COMPAT_SYSCALL_DEFINE5",
+        "COMPAT_SYSCALL_DEFINE6",
+        "FIXTURE_SETUP",
+        "FIXTURE_TEARDOWN",
+        "SYSCALL_DEFINE0",
+        "SYSCALL_DEFINE1",
         "SYSCALL_DEFINE2",
-        # Google Test
+        "SYSCALL_DEFINE3",
+        "SYSCALL_DEFINE4",
+        "SYSCALL_DEFINE5",
+        "SYSCALL_DEFINE6",
+        # Google Test and Linux
         "TEST",
         "TEST_F",
         "TEST_P",
+        "TEST_F_SIGNAL",
         "TYPED_TEST",
         # Zephyr
         "ZTEST_USER",

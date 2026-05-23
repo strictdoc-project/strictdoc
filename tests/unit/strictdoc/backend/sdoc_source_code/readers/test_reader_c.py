@@ -641,7 +641,17 @@ static void handle_softirqs()
 	if (pending) { }
 }
 """
+
     reader = SourceFileTraceabilityReader_C()
 
-    # must not raise NotImplementedError
-    assert reader.read(input_string, file_path="foo.cpp")
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.cpp"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert len(info.functions) == 1
+    assert len(info.source_nodes) == 0
+
+    assert info.functions[0].name == "handle_softirqs()"
+    assert info.functions[0].display_name == "handle_softirqs"

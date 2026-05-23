@@ -617,3 +617,31 @@ SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
 
     assert info.functions[0].name == expected_function_name
     assert info.functions[0].display_name == expected_function_name
+
+
+def test_103_error_recovery_linux_define_per_cpu_macro():
+    """
+    Ensure this snippet derived from Linux kernel/softirq.c doesn't drive the
+    C reader into NotImplementedError. DEFINE_PER_CPU expectedly confuses the
+    parser. The rest of the snippet is special context that triggered undefined
+    behavior manifesting as NotImplemented error in StrictDoc <= 0.22.0a1.
+    """
+    input_string = b"""\
+static DEFINE_PER_CPU(struct softirq_ctrl, softirq_ctrl) = {
+	.lock	= INIT_LOCAL_LOCK(softirq_ctrl.lock),
+};
+
+struct lockdep_map bh_lock_map = {
+	.name			= "local_bh",
+};
+
+static void handle_softirqs()
+{
+	foo("\\n", bar());
+	if (pending) { }
+}
+"""
+    reader = SourceFileTraceabilityReader_C()
+
+    # must not raise NotImplementedError
+    assert reader.read(input_string, file_path="foo.cpp")

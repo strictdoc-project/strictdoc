@@ -57,7 +57,8 @@ class ServerErrorViewObject:
         return self.link_renderer.render_static_url_with_prefix(url)
 
     def render_url(self, url: str) -> str:
-        return self.link_renderer.render_url(url)
+        # Error pages can appear at any URL depth, so use absolute paths.
+        return "/" + url
 
     def render_static_url_with_prefix(self, url: str) -> str:
         return self.link_renderer.render_static_url_with_prefix(url)

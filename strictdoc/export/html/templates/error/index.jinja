@@ -40,7 +40,7 @@
       {% include "icons/ico100_broken_file.svg" %}
       <h1>{{ view_object.get_error_title() }}</h1>
       <p>{{ view_object.get_error_text() }}</p>
-      <a href="{{ view_object.render_url('index.html') }}">Go to home page</a>
+      <a href="{{ view_object.render_url('index.html') }}" data-testid="error-home-page-link">Go to home page</a>
     </sdoc-main-placeholder>
   </div>
 {% endblock main_content %}

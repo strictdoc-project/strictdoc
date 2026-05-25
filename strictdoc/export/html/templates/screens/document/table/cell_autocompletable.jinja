@@ -1,0 +1,25 @@
+{%- assert field_title is defined, "field_title is defined" -%}
+{%- assert field_value is defined, "field_value is defined" -%}
+{%- assert td_class is defined, "td_class is defined" -%}
+<td class="{{ td_class }}"
+    data-node-mid="{{ requirement.reserved_mid }}"
+    data-field-name="{{ field_title }}"
+    data-field-type="autocomplete"
+    data-current-value="{{ field_value if field_value else '' }}">
+  <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}" class="cell-display">
+    {%- if field_value -%}{{ field_value }}{%- endif -%}
+  </div>
+  <sdoc-autocompletable
+    data-controller="autocompletable"
+    data-testid="table-cell-autocomplete-{{ field_title }}"
+    contenteditable="true"
+    class="cell-edit-ac"
+    data-autocompletable-url-value="/autocomplete/field?document_mid={{ view_object.document.reserved_mid }}&amp;element_type={{ node.node_type }}&amp;field_name={{ field_title }}"
+    data-autocompletable-min-length-value="0"
+    {%- if view_object.is_table_cell_multiple_choice(node.node_type, field_title) %}
+    data-autocompletable-multiple-choice-value="true"
+    {%- endif %}
+  >{{- field_value if field_value else '' -}}</sdoc-autocompletable>
+  <input type="hidden" value="{{ field_value if field_value else '' }}">
+  <ul class="autocomplete-items cell-autocomplete-dropdown"></ul>
+</td>

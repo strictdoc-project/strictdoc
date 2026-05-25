@@ -1074,12 +1074,10 @@ def create_main_router(
 
         if field_name == "COMMENT":
             revision: int = revisions[node_mid]
-            form_object: RequirementFormObject = (
-                RequirementFormObject.create_from_requirement(
-                    requirement=node,
-                    revision=revision,
-                    context_document_mid=document.reserved_mid.get_string_value(),
-                )
+            form_object: RequirementFormObject = RequirementFormObject.create_from_requirement(
+                requirement=node,
+                revision=revision,
+                context_document_mid=document.reserved_mid.get_string_value(),
             )
             output = env().render_template_as_markup(
                 "actions/table/get_node_field_form/stream_modal_form.jinja.html",

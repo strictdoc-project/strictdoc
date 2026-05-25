@@ -139,6 +139,49 @@
   outline: none;
 }
 
+/* Autocomplete cells (pre-rendered Stimulus structure) */
+
+.table--is-editable [data-field-type="autocomplete"] {
+  cursor: pointer;
+  position: relative;
+}
+
+.table--is-editable [data-field-type="autocomplete"]:hover {
+  outline: 2px solid var(--color-fg-accent);
+  outline-offset: -2px;
+}
+
+.cell-edit-ac {
+  display: none;
+  width: 100%;
+  min-height: 2rem;
+  padding: .5rem 1rem;
+  background: var(--color-bg-contrast, #fff);
+  font: inherit;
+  font-size: inherit;
+  color: inherit;
+  box-sizing: border-box;
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.table--is-editable [data-field-type="autocomplete"] .cell-display {
+  display: none;
+}
+
+.table--is-editable [data-field-type="autocomplete"] .cell-edit-ac {
+  display: block;
+}
+
+[data-field-type="autocomplete"] .autocomplete-items {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 100%;
+}
+
 /* Column visibility toolbar */
 
 .table-toolbar {

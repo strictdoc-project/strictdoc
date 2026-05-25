@@ -40,7 +40,11 @@
                 </td>
                 {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
-                  {%- if view_object.is_table_cell_singleline(node.node_type, meta_field_title) %}
+                  {%- if view_object.is_table_cell_autocompletable(node.node_type, meta_field_title) %}
+                  {%- set field_title = meta_field_title %}
+                  {%- set td_class = "content-view-td content-view-td-meta" %}
+                  {%- include "screens/document/table/cell_autocompletable.jinja" %}
+                  {%- elif view_object.is_table_cell_singleline(node.node_type, meta_field_title) %}
                   <td class="content-view-td content-view-td-meta"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ meta_field_title }}"
@@ -187,7 +191,11 @@
                 {%- endif %}
                 {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(content_field_title) %}
-                  {%- if view_object.is_table_cell_singleline(node.node_type, content_field_title) %}
+                  {%- if view_object.is_table_cell_autocompletable(node.node_type, content_field_title) %}
+                  {%- set field_title = content_field_title %}
+                  {%- set td_class = "content-view-td" %}
+                  {%- include "screens/document/table/cell_autocompletable.jinja" %}
+                  {%- elif view_object.is_table_cell_singleline(node.node_type, content_field_title) %}
                   <td class="content-view-td"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ content_field_title }}"

@@ -13,7 +13,12 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import ViewElement
-from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElement,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldTag,
+)
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
     SDocElementIF,
@@ -544,3 +549,41 @@ class DocumentScreenViewObject:
         if field_name not in element.fields_map:
             return False
         return element.is_field_multiline(field_name)
+
+    def is_table_cell_autocompletable(
+        self, element_type: str, field_name: str
+    ) -> bool:
+        grammar = self.document.grammar
+        if grammar is None:
+            return False
+        element = grammar.elements_by_type.get(element_type)
+        if element is None:
+            return False
+        field = element.fields_map.get(field_name)
+        if field is None:
+            return False
+        return isinstance(
+            field,
+            (
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldMultipleChoice,
+                GrammarElementFieldTag,
+            ),
+        )
+
+    def is_table_cell_multiple_choice(
+        self, element_type: str, field_name: str
+    ) -> bool:
+        grammar = self.document.grammar
+        if grammar is None:
+            return False
+        element = grammar.elements_by_type.get(element_type)
+        if element is None:
+            return False
+        field = element.fields_map.get(field_name)
+        if field is None:
+            return False
+        return isinstance(
+            field,
+            (GrammarElementFieldMultipleChoice, GrammarElementFieldTag),
+        )

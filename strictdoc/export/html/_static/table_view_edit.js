@@ -34,12 +34,12 @@
         cell.removeAttribute('data-validation-error');
         cell.classList.add('cell--editing');
 
+        const generation = ++editGeneration;
+
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'cell-edit-input';
         input.value = activeCell._originalValue;
-
-        const generation = ++editGeneration;
 
         input.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
@@ -71,6 +71,42 @@
         input.select();
     }
 
+    async function saveAutocompleteCell(cell, ac) {
+        const hiddenInput = ac.nextElementSibling;
+        const rawValue = hiddenInput ? hiddenInput.value : ac.innerText;
+        const newValue = rawValue.trim().replace(/,\s*$/, '').trim();
+        const originalValue = (cell.dataset.currentValue || '').trim();
+        if (newValue === originalValue) return;
+
+        cell.dataset.currentValue = newValue;
+
+        const formData = new FormData();
+        formData.append('node_mid', cell.dataset.nodeMid);
+        formData.append('field_name', cell.dataset.fieldName);
+        formData.append('field_value', newValue);
+
+        try {
+            const response = await fetch('/actions/table/update_node_field', {
+                method: 'POST',
+                headers: { 'Accept': 'text/vnd.turbo-stream.html' },
+                body: formData,
+            });
+            const html = await response.text();
+            if (response.ok) {
+                if (typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
+                    Turbo.renderStreamMessage(html);
+                }
+            } else {
+                console.error('Table autocomplete save failed:', html);
+                cell.dataset.currentValue = originalValue;
+                cell.setAttribute('data-validation-error', 'true');
+            }
+        } catch (err) {
+            console.error('Table autocomplete save error:', err);
+            cell.dataset.currentValue = originalValue;
+        }
+    }
+
     function cancelEdit() {
         if (!activeCell) return;
         const cell = activeCell;
@@ -81,11 +117,16 @@
         delete cell._originalValue;
     }
 
+    function getEditValue(cell) {
+        const input = cell.querySelector('.cell-edit-input');
+        if (!input) return '';
+        return input.value.trim();
+    }
+
     async function submitEdit() {
         if (!activeCell) return;
         const cell = activeCell;
-        const input = cell.querySelector('.cell-edit-input');
-        const newValue = input ? input.value.trim() : '';
+        const newValue = getEditValue(cell);
         const originalValue = cell._originalValue;
 
         activeCell = null;
@@ -167,6 +208,11 @@
 
         table.addEventListener('click', function (e) {
             if (!editMode) return;
+            const autocompleteCell = e.target.closest('[data-field-type="autocomplete"]');
+            if (autocompleteCell) {
+                e.stopPropagation();
+                return;
+            }
             const singlelineCell = e.target.closest('[data-field-type="singleline"]');
             if (singlelineCell) {
                 e.stopPropagation();
@@ -179,6 +225,21 @@
                 openMultilinePopup(multilineCell);
             }
         });
+
+        // Save autocomplete cell on blur (Stimulus handles the dropdown interaction).
+        // Uses capture phase to catch blur events from contenteditable sdoc-autocompletable.
+        table.addEventListener('blur', function (e) {
+            if (!editMode) return;
+            const ac = e.target.closest('[data-controller="autocompletable"]');
+            if (!ac) return;
+            const cell = ac.closest('[data-field-type="autocomplete"]');
+            if (!cell) return;
+            setTimeout(function () {
+                // If focus returned to this autocompletable (user clicked a dropdown option), skip.
+                if (ac === document.activeElement || ac.contains(document.activeElement)) return;
+                saveAutocompleteCell(cell, ac);
+            }, 200);
+        }, true);
 
         document.addEventListener('click', function (e) {
             if (!activeCell) return;

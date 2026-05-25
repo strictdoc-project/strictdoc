@@ -1,0 +1,58 @@
+from tests.end2end.e2e_case import E2ECase
+from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
+from tests.end2end.helpers.screens.project_index.screen_project_index import (
+    Screen_ProjectIndex,
+)
+from tests.end2end.server import SDocTestServer
+
+
+class Test(E2ECase):
+    def test(self):
+        test_setup = End2EndTestSetup(path_to_test_file=__file__)
+
+        with SDocTestServer(
+            input_path=test_setup.path_to_sandbox
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+
+            screen_project_index = Screen_ProjectIndex(self)
+            screen_project_index.assert_on_screen()
+            screen_project_index.assert_contains_document("Document")
+
+            screen_document = screen_project_index.do_click_on_first_document()
+            screen_document.assert_on_screen_document()
+
+            self.clear_local_storage()
+
+            viewtype_selector = ViewType_Selector(self)
+            screen_table = viewtype_selector.do_go_to_table()
+            screen_table.assert_on_screen_table()
+
+            node_mid = screen_table.get_node_mid_from_row(row_order=1)
+            assert node_mid is not None, "Could not find node MID in table row"
+
+            screen_table.do_toggle_edit_mode()
+            screen_table.assert_edit_mode_on()
+
+            #
+            # Clear the only field (TITLE) and submit — 422, cell gets error attribute.
+            #
+            screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
+            screen_table.do_edit_cell_and_submit(node_mid, "TITLE", "")
+            self.sleep(0.5)
+
+            screen_table.assert_cell_value(node_mid, "TITLE", "Old title")
+            screen_table.assert_cell_has_validation_error(node_mid, "TITLE")
+
+            #
+            # Click the cell again — error attribute is cleared on entering edit mode.
+            #
+            screen_table.do_click_cell(node_mid, "TITLE")
+            screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
+            screen_table.do_edit_cell_and_cancel(node_mid, "TITLE", "")
+
+            screen_table.do_toggle_edit_mode()
+            screen_table.assert_edit_mode_off()
+
+        assert test_setup.compare_sandbox_and_expected_output()

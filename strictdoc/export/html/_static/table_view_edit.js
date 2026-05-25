@@ -31,6 +31,7 @@
         activeCell._originalHTML = cell.innerHTML;
         activeCell._originalValue = (cell.dataset.currentValue || '').trim();
 
+        cell.removeAttribute('data-validation-error');
         cell.classList.add('cell--editing');
 
         const input = document.createElement('input');
@@ -130,6 +131,7 @@
 
         if (!ok) {
             cell.dataset.currentValue = originalValue;
+            cell.setAttribute('data-validation-error', 'true');
         }
     }
 

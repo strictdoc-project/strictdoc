@@ -168,6 +168,30 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def _input_sel(self, node_mid: str, field_name: str) -> str:
         return self._cell_sel(node_mid, field_name) + " .cell-edit-input"
 
+    def assert_cell_has_validation_error(
+        self, node_mid: str, field_name: str
+    ) -> None:
+        sel = self._cell_sel(node_mid, field_name).replace('"', '\\"')
+        has_error = self.test_case.execute_script(
+            f'const c = document.querySelector("{sel}");'
+            f"return c ? c.getAttribute('data-validation-error') === 'true' : false;"
+        )
+        assert has_error, (
+            f"Expected cell [{node_mid}][{field_name}] to have data-validation-error='true'"
+        )
+
+    def assert_cell_has_no_validation_error(
+        self, node_mid: str, field_name: str
+    ) -> None:
+        sel = self._cell_sel(node_mid, field_name).replace('"', '\\"')
+        has_error = self.test_case.execute_script(
+            f'const c = document.querySelector("{sel}");'
+            f"return c ? c.getAttribute('data-validation-error') === 'true' : false;"
+        )
+        assert not has_error, (
+            f"Expected cell [{node_mid}][{field_name}] to have no data-validation-error"
+        )
+
     def assert_no_edit_input(self, node_mid: str, field_name: str) -> None:
         self.test_case.assert_element_not_present(
             self._input_sel(node_mid, field_name)

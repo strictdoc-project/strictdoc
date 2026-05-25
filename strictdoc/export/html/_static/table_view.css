@@ -118,6 +118,12 @@
   outline-offset: -2px;
 }
 
+[data-validation-error="true"] {
+  outline: 2px solid var(--color-danger);
+  outline-offset: -2px;
+  color: var(--color-danger);
+}
+
 .cell-edit-input {
   display: block;
   width: 100%;

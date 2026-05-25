@@ -133,6 +133,24 @@
         }
     }
 
+    function openMultilinePopup(cell) {
+        const fieldName = cell.dataset.fieldName || '';
+        const confirmSlot = document.getElementById('confirm');
+        if (!confirmSlot) return;
+        confirmSlot.innerHTML = `
+<turbo-frame data-controller="modal_controller">
+  <sdoc-backdrop>
+    <sdoc-modal>
+      <sdoc-modal-container>
+        <p>Edit: <strong>${fieldName}</strong></p>
+        <p>(form coming soon)</p>
+      </sdoc-modal-container>
+      <button stimulus-modal-cancel-button type="button" class="action_button" data-action-type="cancel" data-testid="form-cancel-action">Close</button>
+    </sdoc-modal>
+  </sdoc-backdrop>
+</turbo-frame>`;
+    }
+
     function init() {
         const editBtn = document.querySelector('[data-testid="table-toolbar-edit-btn"]');
         if (!editBtn) return;
@@ -146,10 +164,17 @@
 
         table.addEventListener('click', function (e) {
             if (!editMode) return;
-            const cell = e.target.closest('[data-field-type="singleline"]');
-            if (!cell) return;
-            e.stopPropagation();
-            activateCell(cell);
+            const singlelineCell = e.target.closest('[data-field-type="singleline"]');
+            if (singlelineCell) {
+                e.stopPropagation();
+                activateCell(singlelineCell);
+                return;
+            }
+            const multilineCell = e.target.closest('[data-field-type="multiline"]');
+            if (multilineCell) {
+                e.stopPropagation();
+                openMultilinePopup(multilineCell);
+            }
         });
 
         document.addEventListener('click', function (e) {

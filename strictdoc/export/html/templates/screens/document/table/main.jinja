@@ -51,8 +51,11 @@
                       {%- if field_value -%}{{ field_value }}{%- endif -%}
                     </div>
                   </td>
-                  {%- else %} {# ... multiline fields will get popup editing in a later stage. #}
-                  <td class="content-view-td content-view-td-meta">
+                  {%- else %}
+                  <td class="content-view-td content-view-td-meta"
+                      data-node-mid="{{ requirement.reserved_mid }}"
+                      data-field-name="{{ meta_field_title }}"
+                      data-field-type="multiline">
                     {%- if field_value -%}
                       {{ field_value }}
                     {%- endif -%}
@@ -125,17 +128,26 @@
                     {%- endif -%}
                   </div>
                 </td>
-                <td class="content-view-td content-view-td-content">
+                <td class="content-view-td content-view-td-content"
+                    data-node-mid="{{ requirement.reserved_mid }}"
+                    data-field-name="STATEMENT"
+                    data-field-type="multiline">
                   {%- if requirement.has_reserved_statement() -%}
                     <sdoc-autogen>{{ view_object.render_node_statement(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
-                <td class="content-view-td content-view-td-content">
+                <td class="content-view-td content-view-td-content"
+                    data-node-mid="{{ requirement.reserved_mid }}"
+                    data-field-name="RATIONALE"
+                    data-field-type="multiline">
                   {%- if requirement.rationale -%}
                     <sdoc-autogen>{{ view_object.render_node_rationale(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
-                <td class="content-view-td content-view-td-content">
+                <td class="content-view-td content-view-td-content"
+                    data-node-mid="{{ requirement.reserved_mid }}"
+                    data-field-name="COMMENT"
+                    data-field-type="multiline">
                   {%- for comment_field_ in requirement.get_comment_fields() -%}
                   <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
                   {%- endfor -%}
@@ -153,8 +165,11 @@
                       {%- if field_value %}{{ field_value }}{%- endif -%}
                     </div>
                   </td>
-                  {%- else %} {# ... multiline fields will get popup editing in a later stage. #}
-                  <td class="content-view-td">
+                  {%- else %}
+                  <td class="content-view-td"
+                      data-node-mid="{{ requirement.reserved_mid }}"
+                      data-field-name="{{ content_field_title }}"
+                      data-field-type="multiline">
                     {%- if field_value %}
                       {{ field_value }}
                     {%- endif -%}

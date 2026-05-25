@@ -225,6 +225,32 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             self._input_sel(node_mid, field_name), Keys.RETURN
         )
 
+    #
+    # Multiline cell popup
+    #
+
+    _MULTILINE_POPUP = "#confirm sdoc-modal"
+    _MULTILINE_POPUP_CANCEL = '[data-testid="form-cancel-action"]'
+
+    def assert_no_multiline_popup(self) -> None:
+        self.test_case.assert_element_not_present(self._MULTILINE_POPUP)
+
+    def assert_multiline_popup_open(self) -> None:
+        self.test_case.assert_element_present(self._MULTILINE_POPUP)
+
+    def do_click_multiline_cell(
+        self, node_mid: str, field_name: str
+    ) -> None:
+        self.test_case.click(self._cell_sel(node_mid, field_name))
+
+    def do_close_multiline_popup_by_btn(self) -> None:
+        self.test_case.click(self._MULTILINE_POPUP_CANCEL)
+        self.assert_no_multiline_popup()
+
+    def do_close_multiline_popup_by_escape(self) -> None:
+        self.test_case.send_keys("body", Keys.ESCAPE)
+        self.assert_no_multiline_popup()
+
     def get_node_mid_from_row(self, row_order: int = 1) -> str:
         return self.test_case.execute_script(
             f"const rows = document.querySelectorAll("

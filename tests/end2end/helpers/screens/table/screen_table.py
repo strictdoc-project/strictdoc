@@ -273,6 +273,15 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         self.test_case.send_keys("body", Keys.ESCAPE)
         self.assert_no_multiline_popup()
 
+    def get_comment_row_mid(self, order: int = 1) -> str:
+        xpath = (
+            f"(//*[@data-testid='requirement-form-comment-row'])[{order}]"
+        )
+        element = self.test_case.find_element(xpath, by=By.XPATH)
+        mid = element.get_attribute("mid")
+        assert mid is not None and len(mid) > 0
+        return mid
+
     def do_submit_multiline_popup(self) -> None:
         self.test_case.click('[data-testid="form-submit-action"]')
 

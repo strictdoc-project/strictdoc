@@ -87,7 +87,7 @@
 }
 
 .table-toolbar__btn--edit.is-active {
-  background-color: var(--color-fg-accent, #0057b8);
+  background-color: var(--color-fg-accent);
   color: #fff;
   border-color: transparent;
 }
@@ -98,13 +98,23 @@
 }
 
 .table--is-editable [data-field-type="singleline"]:hover {
-  outline: 2px solid var(--color-fg-accent, #0057b8);
+  outline: 2px solid var(--color-fg-accent);
+  outline-offset: -2px;
+}
+
+.table--is-editable [data-field-type="multiline"] {
+  cursor: pointer;
+  position: relative;
+}
+
+.table--is-editable [data-field-type="multiline"]:hover {
+  outline: 2px solid #0057b8;
   outline-offset: -2px;
 }
 
 [data-field-type="singleline"].cell--editing {
   padding: 0;
-  outline: 2px solid var(--color-fg-accent, #0057b8);
+  outline: 2px solid #0057b8;
   outline-offset: -2px;
 }
 

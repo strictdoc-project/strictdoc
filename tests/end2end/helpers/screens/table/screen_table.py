@@ -229,7 +229,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     # Multiline cell popup
     #
 
-    _MULTILINE_POPUP = "#confirm sdoc-modal"
+    _MULTILINE_POPUP = "#modal sdoc-modal"
     _MULTILINE_POPUP_CANCEL = '[data-testid="form-cancel-action"]'
 
     def assert_no_multiline_popup(self) -> None:
@@ -238,9 +238,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def assert_multiline_popup_open(self) -> None:
         self.test_case.assert_element_present(self._MULTILINE_POPUP)
 
-    def do_click_multiline_cell(
-        self, node_mid: str, field_name: str
-    ) -> None:
+    def do_click_multiline_cell(self, node_mid: str, field_name: str) -> None:
         self.test_case.click(self._cell_sel(node_mid, field_name))
 
     def do_close_multiline_popup_by_btn(self) -> None:

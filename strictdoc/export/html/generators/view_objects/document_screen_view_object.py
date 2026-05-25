@@ -531,3 +531,16 @@ class DocumentScreenViewObject:
         if field_name not in element.fields_map:
             return False
         return not element.is_field_multiline(field_name)
+
+    def is_table_cell_multiline(
+        self, element_type: str, field_name: str
+    ) -> bool:
+        grammar = self.document.grammar
+        if grammar is None:
+            return False
+        element = grammar.elements_by_type.get(element_type)
+        if element is None:
+            return False
+        if field_name not in element.fields_map:
+            return False
+        return element.is_field_multiline(field_name)

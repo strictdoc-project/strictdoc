@@ -133,22 +133,23 @@
         }
     }
 
-    function openMultilinePopup(cell) {
+    async function openMultilinePopup(cell) {
+        const nodeMid = cell.dataset.nodeMid || '';
         const fieldName = cell.dataset.fieldName || '';
-        const confirmSlot = document.getElementById('confirm');
-        if (!confirmSlot) return;
-        confirmSlot.innerHTML = `
-<turbo-frame data-controller="modal_controller">
-  <sdoc-backdrop>
-    <sdoc-modal>
-      <sdoc-modal-container>
-        <p>Edit: <strong>${fieldName}</strong></p>
-        <p>(form coming soon)</p>
-      </sdoc-modal-container>
-      <button stimulus-modal-cancel-button type="button" class="action_button" data-action-type="cancel" data-testid="form-cancel-action">Close</button>
-    </sdoc-modal>
-  </sdoc-backdrop>
-</turbo-frame>`;
+        if (!nodeMid || !fieldName) return;
+
+        try {
+            const response = await fetch(
+                `/actions/table/get_node_field_form?node_mid=${encodeURIComponent(nodeMid)}&field_name=${encodeURIComponent(fieldName)}`,
+                { headers: { 'Accept': 'text/vnd.turbo-stream.html' } }
+            );
+            const html = await response.text();
+            if (response.ok && typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
+                Turbo.renderStreamMessage(html);
+            }
+        } catch (err) {
+            console.error('Table multiline popup error:', err);
+        }
     }
 
     function init() {

@@ -1,0 +1,42 @@
+{% extends "components/modal/form.jinja" %}
+{% set form = "sdoc_modal_form" %}
+{% block modal__context %}{% endblock modal__context %}
+{% block modal_form__header %}
+Edit {{ field_name }}
+{% endblock modal_form__header %}
+{% block modal_form__content %}
+  <form
+    id="{{ form }}"
+    action="/actions/table/update_node_field_multiline"
+    method="POST"
+    data-turbo="true"
+  >
+    <input type="hidden" name="node_mid" value="{{ node_mid }}"/>
+    <input type="hidden" name="field_name" value="{{ field_name }}"/>
+    <sdoc-form-grid>
+      <sdoc-form-row>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+        <sdoc-form-row-main>
+          {%- with
+            field_class_name=none,
+            field_editable=true,
+            field_input_name="field_value",
+            field_label=field_name,
+            field_placeholder="Enter "~field_name~" here...",
+            field_type="multiline",
+            field_value=current_value,
+            testid_postfix=field_name
+          -%}
+            {%- include "components/form/field/contenteditable/index.jinja" %}
+          {%- endwith -%}
+        </sdoc-form-row-main>
+        <sdoc-form-row-aside></sdoc-form-row-aside>
+      </sdoc-form-row>
+    </sdoc-form-grid>
+  </form>
+{% endblock modal_form__content %}
+{% block modal_form__footer_submit %}
+  {%- with name="Save" -%}
+    {% include "components/button/submit.jinja" %}
+  {%- endwith -%}
+{% endblock modal_form__footer_submit %}

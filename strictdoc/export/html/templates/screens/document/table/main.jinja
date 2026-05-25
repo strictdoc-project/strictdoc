@@ -56,9 +56,9 @@
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ meta_field_title }}"
                       data-field-type="multiline">
-                    {%- if field_value -%}
-                      {{ field_value }}
-                    {%- endif -%}
+                    <div id="cell-{{ requirement.reserved_mid }}-{{ meta_field_title }}">
+                      {%- if field_value -%}{{ field_value }}{%- endif -%}
+                    </div>
                   </td>
                   {%- endif %}
                 {%- endfor -%}
@@ -128,30 +128,60 @@
                     {%- endif -%}
                   </div>
                 </td>
+                {%- if view_object.is_table_cell_multiline(node.node_type, "STATEMENT") %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="STATEMENT"
                     data-field-type="multiline">
+                  <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
+                    {%- if requirement.has_reserved_statement() -%}
+                      <sdoc-autogen>{{ view_object.render_node_statement(requirement) }}</sdoc-autogen>
+                    {%- endif -%}
+                  </div>
+                </td>
+                {%- else %}
+                <td class="content-view-td content-view-td-content">
                   {%- if requirement.has_reserved_statement() -%}
                     <sdoc-autogen>{{ view_object.render_node_statement(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
+                {%- endif %}
+                {%- if view_object.is_table_cell_multiline(node.node_type, "RATIONALE") %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RATIONALE"
                     data-field-type="multiline">
+                  <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
+                    {%- if requirement.rationale -%}
+                      <sdoc-autogen>{{ view_object.render_node_rationale(requirement) }}</sdoc-autogen>
+                    {%- endif -%}
+                  </div>
+                </td>
+                {%- else %}
+                <td class="content-view-td content-view-td-content">
                   {%- if requirement.rationale -%}
                     <sdoc-autogen>{{ view_object.render_node_rationale(requirement) }}</sdoc-autogen>
                   {%- endif -%}
                 </td>
+                {%- endif %}
+                {%- if view_object.is_table_cell_multiline(node.node_type, "COMMENT") %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="COMMENT"
                     data-field-type="multiline">
+                  <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
+                    {%- for comment_field_ in requirement.get_comment_fields() -%}
+                    <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
+                    {%- endfor -%}
+                  </div>
+                </td>
+                {%- else %}
+                <td class="content-view-td content-view-td-content">
                   {%- for comment_field_ in requirement.get_comment_fields() -%}
                   <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
                   {%- endfor -%}
                 </td>
+                {%- endif %}
                 {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(content_field_title) %}
                   {# Singleline fields are editable inline; multiline fields will get popup editing in a later stage. #}
@@ -170,9 +200,9 @@
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ content_field_title }}"
                       data-field-type="multiline">
-                    {%- if field_value %}
-                      {{ field_value }}
-                    {%- endif -%}
+                    <div id="cell-{{ requirement.reserved_mid }}-{{ content_field_title }}">
+                      {%- if field_value %}{{ field_value }}{%- endif -%}
+                    </div>
                   </td>
                   {%- endif %}
                 {%- endfor -%}

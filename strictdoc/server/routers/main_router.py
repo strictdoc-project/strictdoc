@@ -1049,6 +1049,167 @@ def create_main_router(
         )
 
     @read_router.get(
+        "/actions/table/get_node_field_form", response_class=Response
+    )
+    def table__get_node_field_form(
+        node_mid: str,
+        field_name: str,
+    ) -> Response:
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid)
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+        assert document.grammar is not None
+        grammar: DocumentGrammar = document.grammar
+        element: GrammarElement = grammar.elements_by_type[node.node_type]
+
+        if field_name not in element.fields_map:
+            return HTMLResponse(
+                content=f"Unknown field: {field_name}", status_code=400
+            )
+        if not element.is_field_multiline(field_name):
+            return HTMLResponse(
+                content=f"Field {field_name} is not multiline", status_code=400
+            )
+
+        if field_name in node.ordered_fields_lookup:
+            current_value = node.ordered_fields_lookup[field_name][
+                0
+            ].get_text_value()
+        else:
+            current_value = ""
+
+        output = env().render_template_as_markup(
+            "actions/table/get_node_field_form/stream_modal_form.jinja.html",
+            node_mid=node_mid,
+            field_name=field_name,
+            current_value=current_value,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
+    @write_router.post(
+        "/actions/table/update_node_field_multiline", response_class=Response
+    )
+    def table__update_node_field_multiline(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
+        request_dict = dict(request_form_data)
+        node_mid_str: str = request_dict["node_mid"]
+        field_name: str = request_dict["field_name"]
+        field_value: str = request_dict.get("field_value", "")
+
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid_str)
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+        assert document.grammar is not None
+        grammar: DocumentGrammar = document.grammar
+        element: GrammarElement = grammar.elements_by_type[node.node_type]
+
+        if field_name not in element.fields_map:
+            return HTMLResponse(
+                content=f"Unknown field: {field_name}", status_code=400
+            )
+        if not element.is_field_multiline(field_name):
+            return HTMLResponse(
+                content=f"Field {field_name} is not multiline", status_code=400
+            )
+
+        sanitized_value: str = sanitize_html_form_field(
+            field_value, multiline=True
+        )
+
+        revision: int = revisions[node_mid_str]
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_requirement(
+                requirement=node,
+                revision=revision,
+                context_document_mid=document.reserved_mid.get_string_value(),
+            )
+        )
+
+        if field_name in form_object.fields:
+            form_object.fields[field_name][0].field_value = sanitized_value
+
+        form_object.validate(
+            traceability_index=export_action.traceability_index,
+            context_document=document,
+            config=project_config,
+            existing_revision=revision,
+        )
+        if form_object.any_errors():
+            first_error = next(iter(form_object.errors.values()))
+            return HTMLResponse(
+                content=first_error[0] if first_error else "Validation error",
+                status_code=422,
+            )
+
+        update_command = CreateOrUpdateNodeCommand(
+            form_object=form_object,
+            node_info=UpdateNodeInfo(node_to_update=node),
+            context_document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+        )
+        update_command.perform()
+        write_document_to_file(document)
+        revisions[node_mid_str] += 1
+
+        assert document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup=document.config.get_markup(),
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+
+        if field_name == element.content_field[0]:
+            rendered_content = (
+                markup_renderer.render_node_statement(
+                    DocumentType.DOCUMENT, node
+                )
+                if node.has_reserved_statement()
+                else ""
+            )
+        elif field_name == "RATIONALE":
+            rendered_content = (
+                markup_renderer.render_node_rationale(
+                    DocumentType.DOCUMENT, node
+                )
+                if node.rationale
+                else ""
+            )
+        elif field_name in node.ordered_fields_lookup:
+            node_field = node.ordered_fields_lookup[field_name][0]
+            rendered_content = markup_renderer.render_node_field(
+                DocumentType.DOCUMENT, node_field
+            )
+        else:
+            rendered_content = ""
+
+        output = env().render_template_as_markup(
+            "actions/table/update_node_field_multiline/stream_update.jinja.html",
+            node_mid=node_mid_str,
+            field_name=field_name,
+            rendered_content=rendered_content,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
+    @read_router.get(
         "/actions/document/cancel_new_requirement", response_class=Response
     )
     def cancel_new_requirement(requirement_mid: str) -> Response:

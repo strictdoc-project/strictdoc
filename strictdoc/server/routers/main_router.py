@@ -3,6 +3,7 @@ import copy
 import datetime
 import os
 import re
+import types
 import uuid
 from collections import defaultdict
 from mimetypes import guess_type
@@ -1104,6 +1105,32 @@ def create_main_router(
             headers={"Content-Type": "text/vnd.turbo-stream.html"},
         )
 
+    @read_router.get(
+        "/actions/table/get_node_relations_form", response_class=Response
+    )
+    def table__get_node_relations_form(node_mid: str) -> Response:
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid)
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+        revision: int = revisions[node_mid]
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_requirement(
+                requirement=node,
+                revision=revision,
+                context_document_mid=document.reserved_mid.get_string_value(),
+            )
+        )
+        output = env().render_template_as_markup(
+            "actions/table/get_node_relations_form/stream_modal_form.jinja.html",
+            form_object=form_object,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
     @write_router.post(
         "/actions/table/update_node_field_multiline", response_class=Response
     )
@@ -1318,6 +1345,91 @@ def create_main_router(
             "actions/table/update_node_comments/stream_update.jinja.html",
             node_mid=node_mid_str,
             rendered_comments=rendered_comments,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
+    @write_router.post(
+        "/actions/table/update_node_relations", response_class=Response
+    )
+    def table__update_node_relations(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
+        request_dict = dict(request_form_data)
+        node_mid_str: str = request_dict["requirement_mid"]
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid_str)
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_request(
+                is_new=False,
+                requirement_mid=node_mid_str,
+                request_form_data=request_form_data,
+                document=document,
+                existing_requirement_uid=node.reserved_uid,
+            )
+        )
+        existing_revision: int = revisions[node_mid_str]
+
+        context_document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(form_object.context_document_mid)
+            )
+        )
+
+        form_object.validate(
+            traceability_index=export_action.traceability_index,
+            context_document=document,
+            config=project_config,
+            existing_revision=existing_revision,
+        )
+        if form_object.any_errors():
+            output = env().render_template_as_markup(
+                "actions/table/get_node_relations_form/stream_modal_form.jinja.html",
+                form_object=form_object,
+            )
+            return HTMLResponse(
+                content=output,
+                status_code=422,
+                headers={"Content-Type": "text/vnd.turbo-stream.html"},
+            )
+
+        update_command = CreateOrUpdateNodeCommand(
+            form_object=form_object,
+            node_info=UpdateNodeInfo(node_to_update=node),
+            context_document=context_document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+        )
+        update_command.perform()
+        write_document_to_file(document)
+        revisions[node_mid_str] += 1
+
+        assert document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+
+        view_object_stub = types.SimpleNamespace(
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            render_node_link=lambda req: link_renderer.render_node_link(
+                req, context_document, DocumentType.DOCUMENT
+            ),
+        )
+
+        output = env().render_template_as_markup(
+            "actions/table/update_node_relations/stream_update.jinja.html",
+            node_mid=node_mid_str,
+            requirement=node,
+            view_object=view_object_stub,
         )
         return HTMLResponse(
             content=output,

@@ -1,0 +1,58 @@
+{% extends "components/modal/form.jinja" %}
+{% set form = "sdoc_modal_form" %}
+{% block modal__context %}{% endblock modal__context %}
+{% block modal_form__header %}
+Edit Relations
+{% endblock modal_form__header %}
+{% block modal_form__content %}
+  <form
+    id="{{ form }}"
+    action="/actions/table/update_node_relations"
+    method="POST"
+    data-turbo="true"
+  >
+    <input type="hidden" name="requirement_mid" value="{{ form_object.requirement_mid }}"/>
+    <input type="hidden" name="document_mid" value="{{ form_object.document_mid }}"/>
+    <input type="hidden" name="context_document_mid" value="{{ form_object.context_document_mid }}"/>
+    <input type="hidden" name="element_type" value="{{ form_object.element_type }}"/>
+    <input type="hidden" name="revision" value="{{ form_object.revision }}"/>
+
+    {#-
+      All non-relation fields are sent as hidden inputs so that
+      create_from_request() does not treat them as deleted on save.
+    -#}
+    {%- for field_name_, field_values_ in form_object.fields.items() -%}
+      {%- for field_ in field_values_ -%}
+        <input type="hidden" name="{{ field_.get_input_field_type_name() }}" value="{{ field_name_ }}"/>
+        <input type="hidden" name="{{ field_.get_input_field_name() }}" value="{{ field_.field_value }}"/>
+      {%- endfor -%}
+    {%- endfor -%}
+
+    {%- set relation_row_context = namespace() %}
+    {%- set requirement_mid = form_object.requirement_mid %}
+    {%- for field_ in form_object.enumerate_reference_fields() %}
+      {%- set relation_row_context.field = field_ %}
+      {%- set relation_row_context.errors = field_.validation_messages %}
+      {%- set relation_row_context.relation_types = form_object.relation_types %}
+      {%- set relation_row_context.form_object = form_object %}
+      {%- include "components/form/row/row_with_relation.jinja" %}
+    {%- endfor %}
+
+    <div id="requirement_{{ form_object.requirement_mid }}__new_relation"></div>
+    <sdoc-form-row>
+      <a
+        class="action_button"
+        href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
+        data-turbo-action="replace"
+        data-turbo="true"
+        data-action-type="add_field"
+        data-testid="form-action-add-relation"
+      >{% include "icons/ico16_add.svg" %} Add relation</a>
+    </sdoc-form-row>
+  </form>
+{% endblock modal_form__content %}
+{% block modal_form__footer_submit %}
+  {%- with name="Save" -%}
+    {% include "components/button/submit.jinja" %}
+  {%- endwith -%}
+{% endblock modal_form__footer_submit %}

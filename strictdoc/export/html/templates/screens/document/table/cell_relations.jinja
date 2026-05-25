@@ -1,0 +1,50 @@
+{%- if view_object.traceability_index.has_parent_requirements(requirement) %}
+  Parents:
+  <ul class="requirement__link">
+    {%- for requirement in view_object.traceability_index.get_parent_requirements(requirement) %}
+      <li>
+        <a class="requirement__link-parent"
+          href="{{ view_object.render_node_link(requirement) }}">
+          {%- if requirement.reserved_uid %}
+            <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
+          {%- endif %}
+          {{ requirement.reserved_title if requirement.reserved_title else "" }}
+        </a>
+      </li>
+    {%- endfor %}
+  </ul>
+{%- endif %}
+{%- if view_object.traceability_index.has_children_requirements(requirement) %}
+  Children:
+  <ul class="requirement__link">
+    {%- for requirement in view_object.traceability_index.get_children_requirements(requirement) %}
+      <li>
+        <a class="requirement__link-child"
+          href="{{ view_object.render_node_link(requirement) }}">
+          {%- if requirement.reserved_uid %}
+            <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
+          {%- endif %}
+          {{ requirement.reserved_title if requirement.reserved_title else "" }}
+        </a>
+      </li>
+    {%- endfor %}
+  </ul>
+{%- endif %}
+{%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
+  {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
+  {%- if requirement_file_links %}
+    Source files:
+    <ul class="requirement__link">
+      {%- for link, markers in requirement_file_links %}
+        {%- for marker in markers %}
+          <li>
+            <a class="requirement__link-file"
+                href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ marker.ng_range_line_begin }}#{{ marker.ng_range_line_end }}">
+              {{ link }}, <i>lines: {{ marker.ng_range_line_begin }}-{{ marker.ng_range_line_end }}</i>
+            </a>
+          </li>
+        {%- endfor -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif %}
+{%- endif %}

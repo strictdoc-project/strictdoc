@@ -195,6 +195,24 @@
         }
     }
 
+    async function openRelationsPopup(cell) {
+        const nodeMid = cell.dataset.nodeMid || '';
+        if (!nodeMid) return;
+
+        try {
+            const response = await fetch(
+                `/actions/table/get_node_relations_form?node_mid=${encodeURIComponent(nodeMid)}`,
+                { headers: { 'Accept': 'text/vnd.turbo-stream.html' } }
+            );
+            const html = await response.text();
+            if (response.ok && typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
+                Turbo.renderStreamMessage(html);
+            }
+        } catch (err) {
+            console.error('Table relations popup error:', err);
+        }
+    }
+
     function init() {
         const editBtn = document.querySelector('[data-testid="table-toolbar-edit-btn"]');
         if (!editBtn) return;
@@ -223,6 +241,12 @@
             if (multilineCell) {
                 e.stopPropagation();
                 openMultilinePopup(multilineCell);
+                return;
+            }
+            const relationsCell = e.target.closest('[data-field-type="relations"]');
+            if (relationsCell) {
+                e.stopPropagation();
+                openRelationsPopup(relationsCell);
             }
         });
 

@@ -39,31 +39,20 @@ class Test(E2ECase):
             screen_table.assert_edit_mode_on()
 
             #
-            # Case 1: Open popup, type text, cancel — value NOT saved.
+            # Open popup, clear STATEMENT, submit — 422, popup stays with error.
             #
             screen_table.do_click_multiline_cell(node_mid, "STATEMENT")
             screen_table.assert_multiline_popup_open()
-            form.do_fill_in("STATEMENT", "Cancelled statement.")
+            form.do_clear_field("STATEMENT")
+            screen_table.do_submit_multiline_popup()
+            self.sleep(0.5)
+
+            screen_table.assert_multiline_popup_open()
+            screen_table.assert_multiline_popup_has_error(
+                "At least one node field must be non-empty."
+            )
+
             screen_table.do_close_multiline_popup_by_btn()
             screen_table.assert_no_multiline_popup()
-            screen_table.assert_cell_text(
-                node_mid, "STATEMENT", "Old statement."
-            )
-
-            #
-            # Case 2: Open popup, type new value, save — cell updates via Turbo.
-            #
-            screen_table.do_click_multiline_cell(node_mid, "STATEMENT")
-            screen_table.assert_multiline_popup_open()
-            form.do_fill_in("STATEMENT", "New statement.")
-            form.do_form_submit()
-            self.sleep(0.5)
-            screen_table.assert_no_multiline_popup()
-            screen_table.assert_cell_text(
-                node_mid, "STATEMENT", "New statement."
-            )
-
-            screen_table.do_toggle_edit_mode()
-            screen_table.assert_edit_mode_off()
 
         assert test_setup.compare_sandbox_and_expected_output()

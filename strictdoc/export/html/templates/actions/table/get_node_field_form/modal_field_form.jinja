@@ -25,7 +25,8 @@ Edit {{ field_name }}
             field_placeholder="Enter "~field_name~" here...",
             field_type="multiline",
             field_value=current_value,
-            testid_postfix=field_name
+            testid_postfix=field_name,
+            errors=field_errors if field_errors is defined else []
           -%}
             {%- include "components/form/field/contenteditable/index.jinja" %}
           {%- endwith -%}

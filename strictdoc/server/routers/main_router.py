@@ -1142,10 +1142,20 @@ def create_main_router(
             existing_revision=revision,
         )
         if form_object.any_errors():
-            first_error = next(iter(form_object.errors.values()))
+            field_errors: List[str] = []
+            for error_list in form_object.errors.values():
+                field_errors.extend(error_list)
+            output = env().render_template_as_markup(
+                "actions/table/get_node_field_form/stream_modal_form.jinja.html",
+                node_mid=node_mid_str,
+                field_name=field_name,
+                current_value=sanitized_value,
+                field_errors=field_errors,
+            )
             return HTMLResponse(
-                content=first_error[0] if first_error else "Validation error",
+                content=output,
                 status_code=422,
+                headers={"Content-Type": "text/vnd.turbo-stream.html"},
             )
 
         update_command = CreateOrUpdateNodeCommand(

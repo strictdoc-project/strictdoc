@@ -249,6 +249,15 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         self.test_case.send_keys("body", Keys.ESCAPE)
         self.assert_no_multiline_popup()
 
+    def do_submit_multiline_popup(self) -> None:
+        self.test_case.click('[data-testid="form-submit-action"]')
+
+    def assert_multiline_popup_has_error(self, message: str) -> None:
+        self.test_case.assert_element(
+            f'//sdoc-modal//sdoc-form-error[contains(., "{message}")]',
+            by=By.XPATH,
+        )
+
     def get_node_mid_from_row(self, row_order: int = 1) -> str:
         return self.test_case.execute_script(
             f"const rows = document.querySelectorAll("

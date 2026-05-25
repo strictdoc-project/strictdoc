@@ -1,0 +1,10 @@
+<turbo-stream action="update" target="cell-{{ node_mid }}-COMMENT">
+  <template>
+    {%- for rendered_comment in rendered_comments -%}
+    <sdoc-autogen>{{ rendered_comment }}</sdoc-autogen>
+    {%- endfor -%}
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="modal">
+  <template></template>
+</turbo-stream>

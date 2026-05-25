@@ -1072,19 +1072,34 @@ def create_main_router(
                 content=f"Field {field_name} is not multiline", status_code=400
             )
 
-        if field_name in node.ordered_fields_lookup:
-            current_value = node.ordered_fields_lookup[field_name][
-                0
-            ].get_text_value()
+        if field_name == "COMMENT":
+            revision: int = revisions[node_mid]
+            form_object: RequirementFormObject = (
+                RequirementFormObject.create_from_requirement(
+                    requirement=node,
+                    revision=revision,
+                    context_document_mid=document.reserved_mid.get_string_value(),
+                )
+            )
+            output = env().render_template_as_markup(
+                "actions/table/get_node_field_form/stream_modal_form.jinja.html",
+                form_object=form_object,
+                is_comments=True,
+            )
         else:
-            current_value = ""
+            if field_name in node.ordered_fields_lookup:
+                current_value = node.ordered_fields_lookup[field_name][
+                    0
+                ].get_text_value()
+            else:
+                current_value = ""
 
-        output = env().render_template_as_markup(
-            "actions/table/get_node_field_form/stream_modal_form.jinja.html",
-            node_mid=node_mid,
-            field_name=field_name,
-            current_value=current_value,
-        )
+            output = env().render_template_as_markup(
+                "actions/table/get_node_field_form/stream_modal_form.jinja.html",
+                node_mid=node_mid,
+                field_name=field_name,
+                current_value=current_value,
+            )
         return HTMLResponse(
             content=output,
             status_code=200,
@@ -1212,6 +1227,99 @@ def create_main_router(
             node_mid=node_mid_str,
             field_name=field_name,
             rendered_content=rendered_content,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
+    @write_router.post(
+        "/actions/table/update_node_comments", response_class=Response
+    )
+    def table__update_node_comments(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
+        request_dict = dict(request_form_data)
+        node_mid_str: str = request_dict["requirement_mid"]
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid_str)
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_request(
+                is_new=False,
+                requirement_mid=node_mid_str,
+                request_form_data=request_form_data,
+                document=document,
+                existing_requirement_uid=node.reserved_uid,
+            )
+        )
+        existing_revision: int = revisions[node_mid_str]
+
+        context_document: SDocDocument = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(form_object.context_document_mid)
+            )
+        )
+
+        form_object.validate(
+            traceability_index=export_action.traceability_index,
+            context_document=document,
+            config=project_config,
+            existing_revision=existing_revision,
+        )
+        if form_object.any_errors():
+            output = env().render_template_as_markup(
+                "actions/table/get_node_field_form/stream_modal_form.jinja.html",
+                form_object=form_object,
+                is_comments=True,
+            )
+            return HTMLResponse(
+                content=output,
+                status_code=422,
+                headers={"Content-Type": "text/vnd.turbo-stream.html"},
+            )
+
+        update_command = CreateOrUpdateNodeCommand(
+            form_object=form_object,
+            node_info=UpdateNodeInfo(node_to_update=node),
+            context_document=context_document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+        )
+        update_command.perform()
+        write_document_to_file(document)
+        revisions[node_mid_str] += 1
+
+        assert document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup=document.config.get_markup(),
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+
+        rendered_comments: List[str] = []
+        if "COMMENT" in node.ordered_fields_lookup:
+            for comment_field_ in node.ordered_fields_lookup["COMMENT"]:
+                rendered_comments.append(
+                    markup_renderer.render_node_field(
+                        DocumentType.DOCUMENT, comment_field_
+                    )
+                )
+
+        output = env().render_template_as_markup(
+            "actions/table/update_node_comments/stream_update.jinja.html",
+            node_mid=node_mid_str,
+            rendered_comments=rendered_comments,
         )
         return HTMLResponse(
             content=output,

@@ -1,5 +1,9 @@
 <turbo-stream action="update" target="modal">
   <template>
-    {% include "actions/table/get_node_field_form/modal_field_form.jinja" %}
+    {%- if is_comments is defined and is_comments -%}
+      {%- include "actions/table/get_node_field_form/modal_comments_form.jinja" -%}
+    {%- else -%}
+      {%- include "actions/table/get_node_field_form/modal_field_form.jinja" -%}
+    {%- endif -%}
   </template>
 </turbo-stream>

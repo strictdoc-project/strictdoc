@@ -1,5 +1,7 @@
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.wait import WebDriverWait
 from seleniumbase import BaseCase
 
 from tests.end2end.helpers.screens.screen import Screen
@@ -274,9 +276,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         self.assert_no_multiline_popup()
 
     def get_comment_row_mid(self, order: int = 1) -> str:
-        xpath = (
-            f"(//*[@data-testid='requirement-form-comment-row'])[{order}]"
-        )
+        xpath = f"(//*[@data-testid='requirement-form-comment-row'])[{order}]"
         element = self.test_case.find_element(xpath, by=By.XPATH)
         mid = element.get_attribute("mid")
         assert mid is not None and len(mid) > 0
@@ -290,6 +290,56 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             f'//sdoc-modal//sdoc-form-error[contains(., "{message}")]',
             by=By.XPATH,
         )
+
+    def do_cell_autocomplete(self, field_name: str, field_value: str) -> None:
+        testid = f"table-cell-autocomplete-{field_name}"
+        field_xpath = f"(//*[@data-testid='{testid}'])"
+        element = self.test_case.find_element(field_xpath, by=By.XPATH)
+        hidden_input = element.find_element(
+            By.XPATH, "following-sibling::input[@type='hidden']"
+        )
+        results_ul = hidden_input.find_element(
+            By.XPATH, "following-sibling::ul[1]"
+        )
+        self.test_case.type(field_xpath, field_value, by=By.XPATH)
+        WebDriverWait(self.test_case.driver, 3).until(
+            lambda _: results_ul.is_displayed()
+        )
+        len_before = len(element.text.lower().strip())
+        ActionChains(self.test_case.driver).send_keys(Keys.ARROW_DOWN).pause(
+            0.1
+        ).send_keys(Keys.RETURN).perform()
+        WebDriverWait(self.test_case.driver, 3).until(
+            lambda _: len(element.text.lower().strip()) > len_before
+        )
+
+    def do_cell_autocomplete_again(
+        self, field_name: str, field_value: str
+    ) -> None:
+        testid = f"table-cell-autocomplete-{field_name}"
+        field_xpath = f"(//*[@data-testid='{testid}'])"
+        element = self.test_case.find_element(field_xpath, by=By.XPATH)
+        hidden_input = element.find_element(
+            By.XPATH, "following-sibling::input[@type='hidden']"
+        )
+        results_ul = hidden_input.find_element(
+            By.XPATH, "following-sibling::ul[1]"
+        )
+        element.send_keys(f",{field_value}")
+        WebDriverWait(self.test_case.driver, 3).until(
+            lambda _: results_ul.is_displayed()
+        )
+        len_before = len(element.text.lower().strip())
+        ActionChains(self.test_case.driver).send_keys(Keys.ARROW_DOWN).pause(
+            0.1
+        ).send_keys(Keys.RETURN).perform()
+        WebDriverWait(self.test_case.driver, 3).until(
+            lambda _: len(element.text.lower().strip()) > len_before
+        )
+
+    def do_submit_cell_autocomplete(self) -> None:
+        # Click the table header to move focus away from the cell and trigger blur → save
+        self.test_case.click(".content-view-table thead th")
 
     def get_node_mid_from_row(self, row_order: int = 1) -> str:
         return self.test_case.execute_script(

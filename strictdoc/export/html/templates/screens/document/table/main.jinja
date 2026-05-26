@@ -31,7 +31,7 @@
           {%- for node, _ in view_object.document_content_iterator() %}
             {%- if node.is_requirement() %}
               {%- set requirement = node %}
-              <tr data-row-type="{{ node.node_type }}">
+              <tr data-row-type="{{ node.node_type }}" data-node-mid="{{ requirement.reserved_mid }}">
                 <td class="content-view-td content-view-td-type">
                   {{ node.node_type }}
                 </td>
@@ -71,6 +71,7 @@
                 {%- endfor -%}
                 <td class="content-view-td content-view-td-meta content-view-td-related"
                     data-node-mid="{{ requirement.reserved_mid }}"
+                    data-field-name="RELATIONS"
                     data-field-type="relations">
                   <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
                     {%- include "screens/document/table/cell_relations.jinja" %}

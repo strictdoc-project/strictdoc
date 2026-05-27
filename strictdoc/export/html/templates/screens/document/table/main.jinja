@@ -9,7 +9,12 @@
 
         {% include "screens/document/table/filter.jinja" %}
 
+        {# ================================================================ #}
+        {# TABLE                                                             #}
+        {# ================================================================ #}
         <table class="content-view-table">
+
+          {# -- Header row ------------------------------------------------ #}
           <thead>
             <tr>
               <th class="content-view-th">Type</th>
@@ -27,20 +32,32 @@
               {%- endfor -%}
             </tr>
           </thead>
+
+          {# -- Body rows ------------------------------------------------- #}
           <tbody>
           {%- for node, _ in view_object.document_content_iterator() %}
+
+            {# ============================================================ #}
+            {# REQUIREMENT ROW                                               #}
+            {# ============================================================ #}
             {%- if node.is_requirement() %}
               {%- set requirement = node %}
+              {# Determine edit mode for fixed content fields up front. #}
               {%- set statement_is_editable = view_object.is_table_cell_editable(node.node_type, "STATEMENT") %}
               {%- set rationale_is_editable = view_object.is_table_cell_editable(node.node_type, "RATIONALE") %}
               {%- set comment_is_editable   = view_object.is_table_cell_editable(node.node_type, "COMMENT") %}
               <tr data-row-type="{{ node.node_type }}" data-node-mid="{{ requirement.reserved_mid }}">
+
+                {# -- Type & Level ---------------------------------------- #}
                 <td class="content-view-td content-view-td-type">
                   {{ node.node_type }}
                 </td>
                 <td class="content-view-td content-view-td-meta">
                   {{ requirement.context.title_number_string }}
                 </td>
+
+                {# -- Meta fields (grammar-defined, before REFS) ----------- #}
+                {# cell_type: "autocomplete" | "singleline" | "multiline" | "readonly" #}
                 {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
                   {%- set cell_type = view_object.get_table_cell_type(node.node_type, meta_field_title) %}
@@ -76,6 +93,8 @@
                   </td>
                   {%- endif %}
                 {%- endfor -%}
+
+                {# -- RELATIONS: inline form, editable -------------------- #}
                 <td class="content-view-td content-view-td-meta content-view-td-related"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RELATIONS"
@@ -85,6 +104,8 @@
                     {%- include "screens/document/table/cell_relations.jinja" %}
                   </div>
                 </td>
+
+                {# -- TITLE: singleline, always editable ------------------ #}
                 <td class="content-view-td content-view-td-title"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="TITLE"
@@ -99,6 +120,8 @@
                     {%- endif -%}
                   </div>
                 </td>
+
+                {# -- STATEMENT: multiline popup if editable -------------- #}
                 {%- if statement_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
@@ -120,6 +143,8 @@
                   {%- endif -%}
                 </td>
                 {%- endif %}
+
+                {# -- RATIONALE: multiline popup if editable -------------- #}
                 {%- if rationale_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
@@ -141,6 +166,8 @@
                   {%- endif -%}
                 </td>
                 {%- endif %}
+
+                {# -- COMMENT: inline form if editable -------------------- #}
                 {%- if comment_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
@@ -160,6 +187,9 @@
                   {%- endfor -%}
                 </td>
                 {%- endif %}
+
+                {# -- Non-reserved content fields (grammar-defined, after COMMENT) #}
+                {# cell_type: "autocomplete" | "singleline" | "multiline" | "readonly" #}
                 {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(content_field_title) %}
                   {%- set cell_type = view_object.get_table_cell_type(node.node_type, content_field_title) %}
@@ -195,16 +225,24 @@
                   </td>
                   {%- endif %}
                 {%- endfor -%}
+
               </tr>
+
+            {# ============================================================ #}
+            {# SECTION ROW (document node = section heading)                #}
+            {# ============================================================ #}
             {%- elif node.is_document() %}
               {%- set section = node %}
               <tr data-row-type="Section">
                 <td class="content-view-td content-view-td-type">Section</td>
                 <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
+                {# Empty cells for all meta columns #}
                 {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
                   <td class="content-view-td content-view-td-meta"></td>
                 {%- endfor -%}
-                <td class="content-view-td content-view-td-meta">{# Children & Parents #}</td>
+                {# Empty RELATIONS cell #}
+                <td class="content-view-td content-view-td-meta"></td>
+                {# Title spans Statement + Rationale + Comment + content fields (colspan=4) #}
                 <td class="content-view-td content-view-td-title" colspan="4">
                   {%- if section.title %}
                     {%- with sdoc_entity=section -%}
@@ -221,6 +259,7 @@
                 </td>
               </tr>
             {%- endif %}
+
           {%- endfor %}
           </tbody>
         </table>

@@ -33,7 +33,7 @@ class Test(E2ECase):
             #
             # Initial state
             #
-            screen_table.assert_rows_toolbar_btn_label("Nodes")
+            screen_table.assert_rows_toolbar_btn_label("NODES")
             screen_table.assert_rows_toolbar_panel_closed()
 
             # Open rows panel — Show all disabled, both types present
@@ -48,7 +48,7 @@ class Test(E2ECase):
             screen_table.do_toggle_row_type("SECTION")
             screen_table.assert_rows_of_type_hidden("SECTION")
             screen_table.assert_rows_of_type_visible("REQUIREMENT")
-            screen_table.assert_rows_toolbar_btn_label("Nodes (1 hidden)")
+            screen_table.assert_rows_toolbar_btn_label("NODES (1 HIDDEN)")
             screen_table.assert_rows_show_all_enabled()
 
             #
@@ -56,7 +56,7 @@ class Test(E2ECase):
             #
             screen_table.do_toggle_row_type("REQUIREMENT")
             screen_table.assert_rows_of_type_hidden("REQUIREMENT")
-            screen_table.assert_rows_toolbar_btn_label("Nodes (2 hidden)")
+            screen_table.assert_rows_toolbar_btn_label("NODES (2 HIDDEN)")
 
             #
             # Show all
@@ -64,7 +64,7 @@ class Test(E2ECase):
             screen_table.do_click_rows_show_all()
             screen_table.assert_rows_of_type_visible("SECTION")
             screen_table.assert_rows_of_type_visible("REQUIREMENT")
-            screen_table.assert_rows_toolbar_btn_label("Nodes")
+            screen_table.assert_rows_toolbar_btn_label("NODES")
             screen_table.assert_rows_show_all_disabled()
 
         assert test_setup.compare_sandbox_and_expected_output()

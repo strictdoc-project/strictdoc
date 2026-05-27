@@ -46,7 +46,7 @@ class Test(E2ECase):
             form.do_fill_in("STATEMENT", "Cancelled statement.")
             screen_table.do_close_multiline_popup_by_btn()
             screen_table.assert_no_multiline_popup()
-            screen_table.assert_cell_text(
+            screen_table.assert_cell_dom_text(
                 node_mid, "STATEMENT", "Old statement."
             )
 
@@ -59,7 +59,7 @@ class Test(E2ECase):
             form.do_form_submit()
             self.sleep(0.5)
             screen_table.assert_no_multiline_popup()
-            screen_table.assert_cell_text(
+            screen_table.assert_cell_dom_text(
                 node_mid, "STATEMENT", "New statement."
             )
 

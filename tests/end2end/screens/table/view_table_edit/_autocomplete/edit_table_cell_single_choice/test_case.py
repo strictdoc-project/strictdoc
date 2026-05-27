@@ -43,7 +43,7 @@ class Test(E2ECase):
             screen_table.do_submit_cell_autocomplete()
             self.sleep(0.5)
 
-            screen_table.assert_cell_text(node_mid, "STATUS", "Active")
+            screen_table.assert_cell_dom_text(node_mid, "STATUS", "Active")
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

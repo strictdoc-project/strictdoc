@@ -70,7 +70,7 @@ class Test(E2ECase):
             # data-current-value attribute updated.
             screen_table.assert_cell_value(node_mid, "TITLE", "New title")
             # Visible text in the cell updated via Turbo.
-            screen_table.assert_cell_text(node_mid, "TITLE", "New title")
+            screen_table.assert_cell_dom_text(node_mid, "TITLE", "New title")
 
             # Disable edit mode.
             screen_table.do_toggle_edit_mode()

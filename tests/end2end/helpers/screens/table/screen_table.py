@@ -32,9 +32,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     #
 
     def assert_toolbar_btn_label(self, label: str) -> None:
-        actual = self.test_case.execute_script(
-            f"return document.querySelector('{_COLUMNS_BTN_TEXT}').textContent"
-        )
+        actual = self.test_case.get_text(_COLUMNS_BTN_TEXT)
         assert actual == label, (
             f"Button label: expected {label!r}, got {actual!r}"
         )
@@ -46,16 +44,14 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         self.test_case.assert_element_not_visible(_COLUMNS_PANEL)
 
     def assert_show_all_disabled(self) -> None:
-        disabled = self.test_case.execute_script(
-            f"return document.querySelector('{_COLUMNS_RESET}').disabled"
+        element = self.test_case.find_element(_COLUMNS_RESET)
+        assert not element.is_enabled(), (
+            "Expected Show all button to be disabled"
         )
-        assert disabled, "Expected Show all button to be disabled"
 
     def assert_show_all_enabled(self) -> None:
-        disabled = self.test_case.execute_script(
-            f"return document.querySelector('{_COLUMNS_RESET}').disabled"
-        )
-        assert not disabled, "Expected Show all button to be enabled"
+        element = self.test_case.find_element(_COLUMNS_RESET)
+        assert element.is_enabled(), "Expected Show all button to be enabled"
 
     def assert_column_header_visible(self, name: str) -> None:
         self.test_case.assert_element_visible(
@@ -88,9 +84,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     #
 
     def assert_rows_toolbar_btn_label(self, label: str) -> None:
-        actual = self.test_case.execute_script(
-            f"return document.querySelector('{_ROWS_BTN_TEXT}').textContent"
-        )
+        actual = self.test_case.get_text(_ROWS_BTN_TEXT)
         assert actual == label, (
             f"Rows button label: expected {label!r}, got {actual!r}"
         )
@@ -102,32 +96,30 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         self.test_case.assert_element_not_visible(_ROWS_PANEL)
 
     def assert_rows_show_all_disabled(self) -> None:
-        disabled = self.test_case.execute_script(
-            f"return document.querySelector('{_ROWS_RESET}').disabled"
+        element = self.test_case.find_element(_ROWS_RESET)
+        assert not element.is_enabled(), (
+            "Expected rows Show all button to be disabled"
         )
-        assert disabled, "Expected rows Show all button to be disabled"
 
     def assert_rows_show_all_enabled(self) -> None:
-        disabled = self.test_case.execute_script(
-            f"return document.querySelector('{_ROWS_RESET}').disabled"
+        element = self.test_case.find_element(_ROWS_RESET)
+        assert element.is_enabled(), (
+            "Expected rows Show all button to be enabled"
         )
-        assert not disabled, "Expected rows Show all button to be enabled"
 
     def assert_rows_of_type_visible(self, row_type: str) -> None:
-        rows = self.test_case.execute_script(
-            f"return Array.from(document.querySelectorAll("
-            f"'tr[data-row-type=\"{row_type}\"]')"
-            f").every(r => r.style.display !== 'none')"
-        )
-        assert rows, f"Expected rows of type {row_type!r} to be visible"
+        rows = self.test_case.find_elements(f'tr[data-row-type="{row_type}"]')
+        for row in rows:
+            assert row.is_displayed(), (
+                f"Expected rows of type {row_type!r} to be visible"
+            )
 
     def assert_rows_of_type_hidden(self, row_type: str) -> None:
-        rows = self.test_case.execute_script(
-            f"return Array.from(document.querySelectorAll("
-            f"'tr[data-row-type=\"{row_type}\"]')"
-            f").every(r => r.style.display === 'none')"
-        )
-        assert rows, f"Expected rows of type {row_type!r} to be hidden"
+        rows = self.test_case.find_elements(f'tr[data-row-type="{row_type}"]')
+        for row in rows:
+            assert not row.is_displayed(), (
+                f"Expected rows of type {row_type!r} to be hidden"
+            )
 
     def do_open_rows_toolbar_panel(self) -> None:
         self.test_case.click(_ROWS_BTN)
@@ -144,19 +136,15 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     #
 
     def assert_edit_mode_off(self) -> None:
-        pressed = self.test_case.execute_script(
-            f"return document.querySelector('{_EDIT_BTN}')"
-            f".getAttribute('aria-pressed')"
-        )
+        element = self.test_case.find_element(_EDIT_BTN)
+        pressed = element.get_attribute("aria-pressed")
         assert pressed == "false", (
             f"Expected edit mode OFF (aria-pressed=false), got {pressed!r}"
         )
 
     def assert_edit_mode_on(self) -> None:
-        pressed = self.test_case.execute_script(
-            f"return document.querySelector('{_EDIT_BTN}')"
-            f".getAttribute('aria-pressed')"
-        )
+        element = self.test_case.find_element(_EDIT_BTN)
+        pressed = element.get_attribute("aria-pressed")
         assert pressed == "true", (
             f"Expected edit mode ON (aria-pressed=true), got {pressed!r}"
         )
@@ -173,11 +161,9 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def assert_cell_has_validation_error(
         self, node_mid: str, field_name: str
     ) -> None:
-        sel = self._cell_sel(node_mid, field_name).replace('"', '\\"')
-        has_error = self.test_case.execute_script(
-            f'const c = document.querySelector("{sel}");'
-            f"return c ? c.getAttribute('data-validation-error') === 'true' : false;"
-        )
+        sel = self._cell_sel(node_mid, field_name)
+        element = self.test_case.find_element(sel)
+        has_error = element.get_attribute("data-validation-error") == "true"
         assert has_error, (
             f"Expected cell [{node_mid}][{field_name}] to have data-validation-error='true'"
         )
@@ -185,11 +171,9 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def assert_cell_has_no_validation_error(
         self, node_mid: str, field_name: str
     ) -> None:
-        sel = self._cell_sel(node_mid, field_name).replace('"', '\\"')
-        has_error = self.test_case.execute_script(
-            f'const c = document.querySelector("{sel}");'
-            f"return c ? c.getAttribute('data-validation-error') === 'true' : false;"
-        )
+        sel = self._cell_sel(node_mid, field_name)
+        element = self.test_case.find_element(sel)
+        has_error = element.get_attribute("data-validation-error") == "true"
         assert not has_error, (
             f"Expected cell [{node_mid}][{field_name}] to have no data-validation-error"
         )
@@ -205,24 +189,25 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def assert_cell_value(
         self, node_mid: str, field_name: str, value: str
     ) -> None:
-        sel = self._cell_sel(node_mid, field_name).replace('"', '\\"')
-        actual = self.test_case.execute_script(
-            f'const c = document.querySelector("{sel}");'
-            f"return c ? c.dataset.currentValue : null;"
-        )
+        sel = self._cell_sel(node_mid, field_name)
+        element = self.test_case.find_element(sel)
+        actual = element.get_attribute("data-current-value")
         assert actual == value, (
             f"Cell [{node_mid}][{field_name}]: expected {value!r}, got {actual!r}"
         )
 
-    def assert_cell_text(
+    def assert_cell_dom_text(
         self, node_mid: str, field_name: str, text: str
     ) -> None:
+        # Verifies that the specific cell's DOM was updated (not just that the text
+        # exists somewhere on the page). Uses textContent instead of get_text()
+        # because the display div inside autocomplete cells is hidden.
         actual = self.test_case.execute_script(
             f"const c = document.getElementById('cell-{node_mid}-{field_name}');"
             f"return c ? c.textContent.trim() : null;"
         )
         assert actual == text, (
-            f"Cell text [{node_mid}][{field_name}]: expected {text!r}, got {actual!r}"
+            f"Cell DOM text [{node_mid}][{field_name}]: expected {text!r}, got {actual!r}"
         )
 
     def do_click_cell(self, node_mid: str, field_name: str) -> None:
@@ -342,9 +327,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         self.test_case.click(".content-view-table thead th")
 
     def get_node_mid_from_row(self, row_order: int = 1) -> str:
-        return self.test_case.execute_script(
-            f"const rows = document.querySelectorAll("
-            f"'tr[data-row-type] [data-node-mid]');"
-            f"const cell = rows[{row_order - 1}];"
-            f"return cell ? cell.dataset.nodeMid : null;"
+        row = self.test_case.find_element(
+            f"(//tr[@data-row-type])[{row_order}]", by=By.XPATH
         )
+        return row.get_attribute("data-node-mid")

@@ -125,7 +125,7 @@
                     data-field-type="relations-inline"
                     data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}">
                   <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
-                    {%- include "screens/document/table/cell_relations.jinja" %}
+                    {%- include "screens/document/table/field_display_mode/relations.jinja" %}
                   </div>
                 </td>
 
@@ -140,11 +140,9 @@
                       {%- with sdoc_entity=requirement -%}
                         {% include "components/anchor/index.jinja" %}
                       {%- endwith %}
-                      <sdoc-node-title>
-                        {%- with field_content = requirement.reserved_title %}
-                          {%- include "components/field/index.jinja" -%}
-                        {%- endwith -%}
-                      </sdoc-node-title>
+                      {%- with field_content = requirement.reserved_title %}
+                        {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+                      {%- endwith -%}
                     {%- endif -%}
                   </div>
                 </td>
@@ -159,9 +157,8 @@
                      href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
                     <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
                       {%- if requirement.has_reserved_statement() -%}
-                        {# <sdoc-autogen>{{ view_object.render_node_statement(requirement) }}</sdoc-autogen> #}
                         {%- with field_content = view_object.render_node_statement(requirement) %}
-                          {%- include "components/field/index.jinja" -%}
+                          {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
                         {%- endwith -%}
                       {%- endif -%}
                     </div>
@@ -170,10 +167,9 @@
                 {%- else %}
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.has_reserved_statement() -%}
-                    {# <sdoc-autogen>{{ view_object.render_node_statement(requirement) }}</sdoc-autogen> #}
-                      {%- with field_content = view_object.render_node_statement(requirement) %}
-                        {%- include "components/field/index.jinja" -%}
-                      {%- endwith -%}
+                    {%- with field_content = view_object.render_node_statement(requirement) %}
+                      {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
+                    {%- endwith -%}
                   {%- endif -%}
                 </td>
                 {%- endif %}
@@ -188,9 +184,8 @@
                      href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
                     <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
                       {%- if requirement.rationale -%}
-                        {# <sdoc-autogen>{{ view_object.render_node_rationale(requirement) }}</sdoc-autogen> #}
                         {%- with field_content = view_object.render_node_rationale(requirement) %}
-                          {%- include "components/field/index.jinja" -%}
+                          {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
                         {%- endwith -%}
                       {%- endif -%}
                     </div>
@@ -199,9 +194,8 @@
                 {%- else %}
                 <td class="content-view-td content-view-td-content">
                   {%- if requirement.rationale -%}
-                    {# <sdoc-autogen>{{ view_object.render_node_rationale(requirement) }}</sdoc-autogen> #}
                     {%- with field_content = view_object.render_node_rationale(requirement) %}
-                      {%- include "components/field/index.jinja" -%}
+                      {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
                     {%- endwith -%}
                   {%- endif -%}
                 </td>
@@ -216,9 +210,8 @@
                     data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}">
                   <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
                     {%- for comment_field_ in requirement.get_comment_fields() -%}
-                    {# <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen> #}
                     {%- with field_content = view_object.render_node_field(comment_field_) %}
-                      {%- include "components/field/index.jinja" -%}
+                      {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
                     {%- endwith -%}
                     {%- endfor -%}
                   </div>
@@ -226,9 +219,8 @@
                 {%- else %}
                 <td class="content-view-td content-view-td-content">
                   {%- for comment_field_ in requirement.get_comment_fields() -%}
-                  {# <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen> #}
                   {%- with field_content = view_object.render_node_field(comment_field_) %}
-                    {%- include "components/field/index.jinja" -%}
+                    {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
                   {%- endwith -%}
                   {%- endfor -%}
                 </td>

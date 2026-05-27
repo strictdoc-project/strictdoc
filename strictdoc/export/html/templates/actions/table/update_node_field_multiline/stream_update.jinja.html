@@ -1,7 +1,9 @@
 <turbo-stream action="update" target="cell-{{ node_mid }}-{{ field_name }}">
   <template>
     {%- if rendered_content -%}
-    <sdoc-autogen>{{ rendered_content }}</sdoc-autogen>
+    {%- with field_content = rendered_content %}
+      {%- include "screens/document/table/field_display_mode/content.jinja" -%}
+    {%- endwith -%}
     {%- endif -%}
   </template>
 </turbo-stream>

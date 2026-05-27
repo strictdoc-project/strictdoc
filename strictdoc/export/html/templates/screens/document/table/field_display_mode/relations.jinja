@@ -1,3 +1,4 @@
+{# RELATIONS field display. Expects: requirement, view_object #}
 {%- if view_object.traceability_index.has_parent_requirements(requirement) %}
   Parents:
   <ul class="requirement__link">

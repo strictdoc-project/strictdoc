@@ -500,8 +500,7 @@ sdoc-anchor.anchor_in_rst {
 }
 
 sdoc-anchor:target + sdoc-node-content sdoc-node-title,
-sdoc-anchor:target + sdoc-section sdoc-section-title,
-sdoc-anchor:target + .requirement__title {
+sdoc-anchor:target + sdoc-section sdoc-section-title {
   background-color: var(--color-highlight);
 }
 

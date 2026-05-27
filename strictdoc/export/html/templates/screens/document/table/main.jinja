@@ -143,15 +143,13 @@
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="COMMENT"
-                    data-field-type="multiline">
-                  <a class="cell-edit-link" data-turbo="false"
-                     href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name=COMMENT">
-                    <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
-                      {%- for comment_field_ in requirement.get_comment_fields() -%}
-                      <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
-                      {%- endfor -%}
-                    </div>
-                  </a>
+                    data-field-type="comments"
+                    data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}">
+                  <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
+                    {%- for comment_field_ in requirement.get_comment_fields() -%}
+                    <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
+                    {%- endfor -%}
+                  </div>
                 </td>
                 {%- else %}
                 <td class="content-view-td content-view-td-content">

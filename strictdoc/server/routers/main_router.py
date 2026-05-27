@@ -1106,6 +1106,32 @@ def create_main_router(
         )
 
     @read_router.get(
+        "/actions/table/get_node_comments_inline", response_class=Response
+    )
+    def table__get_node_comments_inline(node_mid: str) -> Response:
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid)
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+        revision: int = revisions[node_mid]
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_requirement(
+                requirement=node,
+                revision=revision,
+                context_document_mid=document.reserved_mid.get_string_value(),
+            )
+        )
+        output = env().render_template_as_markup(
+            "actions/table/get_node_comments_inline/stream_inline_form.jinja.html",
+            form_object=form_object,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
+    @read_router.get(
         "/actions/table/get_node_relations_form", response_class=Response
     )
     def table__get_node_relations_form(node_mid: str) -> Response:

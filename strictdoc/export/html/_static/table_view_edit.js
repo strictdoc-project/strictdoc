@@ -2,6 +2,7 @@
     let editMode = false;
     let activeCell = null;
     let editGeneration = 0;
+    let activeCommentsCell = null;
 
     function getTable() {
         return document.querySelector('.content-view-table');
@@ -18,8 +19,9 @@
             btn.classList.toggle('is-active', on);
             btn.setAttribute('aria-pressed', on ? 'true' : 'false');
         }
-        if (!on && activeCell) {
-            cancelEdit();
+        if (!on) {
+            if (activeCell) cancelEdit();
+            if (activeCommentsCell) cancelCommentsCell();
         }
     }
 
@@ -190,6 +192,75 @@
         }
     }
 
+    // --- Comments cell (inline form) ---
+
+    function openCommentsCell(cell) {
+        if (activeCommentsCell === cell) return;
+        if (activeCommentsCell) saveCommentsCell(activeCommentsCell);
+
+        activeCommentsCell = cell;
+        cell._originalHTML = cell.innerHTML;
+        cell.removeAttribute('data-validation-error');
+        cell.classList.add('cell--editing');
+
+        fetchTurboStream(cell.dataset.url);
+    }
+
+    function cancelCommentsCell() {
+        if (!activeCommentsCell) return;
+        const cell = activeCommentsCell;
+        activeCommentsCell = null;
+        cell.classList.remove('cell--editing');
+        if (cell._originalHTML !== undefined) {
+            cell.innerHTML = cell._originalHTML;
+            delete cell._originalHTML;
+        }
+    }
+
+    async function saveCommentsCell(cell) {
+        if (!cell) return;
+        activeCommentsCell = null;
+        cell.classList.remove('cell--editing');
+
+        const form = cell.querySelector('form');
+        if (!form) {
+            // Stream not yet loaded — just restore original content
+            if (cell._originalHTML !== undefined) {
+                cell.innerHTML = cell._originalHTML;
+                delete cell._originalHTML;
+            }
+            return;
+        }
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: { 'Accept': 'text/vnd.turbo-stream.html' },
+                body: formData,
+            });
+            const html = await response.text();
+            if (response.ok) {
+                if (typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
+                    Turbo.renderStreamMessage(html);
+                }
+            } else {
+                cell.setAttribute('data-validation-error', 'true');
+                if (cell._originalHTML !== undefined) {
+                    cell.innerHTML = cell._originalHTML;
+                }
+            }
+        } catch (err) {
+            console.error('Comments cell save error:', err);
+            if (cell._originalHTML !== undefined) {
+                cell.innerHTML = cell._originalHTML;
+            }
+        }
+
+        delete cell._originalHTML;
+    }
+
     function init() {
         const editBtn = document.querySelector('[data-testid="table-toolbar-edit-btn"]');
         if (!editBtn) return;
@@ -203,6 +274,15 @@
 
         table.addEventListener('click', function (e) {
             if (!editMode) return;
+
+            // "Add comment" link inside inline comments form — fetch stream, don't navigate
+            const addCommentLink = e.target.closest('[data-action-type="add_field"]');
+            if (addCommentLink) {
+                e.preventDefault();
+                fetchTurboStream(addCommentLink.href);
+                return;
+            }
+
             const autocompleteCell = e.target.closest('[data-field-type="autocomplete"]');
             if (autocompleteCell) {
                 e.stopPropagation();
@@ -212,6 +292,12 @@
             if (singlelineCell) {
                 e.stopPropagation();
                 activateCell(singlelineCell);
+                return;
+            }
+            const commentsCell = e.target.closest('[data-field-type="comments"]');
+            if (commentsCell) {
+                e.preventDefault();
+                openCommentsCell(commentsCell);
                 return;
             }
             const streamCell = e.target.closest('[data-field-type="multiline"], [data-field-type="relations"]');
@@ -238,11 +324,22 @@
             }, 200);
         }, true);
 
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && activeCommentsCell) {
+                e.preventDefault();
+                cancelCommentsCell();
+            }
+        });
+
         document.addEventListener('click', function (e) {
-            if (!activeCell) return;
-            const table_ = getTable();
-            if (table_ && !table_.contains(e.target)) {
-                submitEdit();
+            if (activeCell) {
+                const table_ = getTable();
+                if (table_ && !table_.contains(e.target)) {
+                    submitEdit();
+                }
+            }
+            if (activeCommentsCell && !e.composedPath().includes(activeCommentsCell)) {
+                saveCommentsCell(activeCommentsCell);
             }
         });
     }

@@ -103,15 +103,29 @@
 }
 
 .table--is-editable [data-field-type="multiline"],
-.table--is-editable [data-field-type="relations"] {
+.table--is-editable [data-field-type="relations"],
+.table--is-editable [data-field-type="comments"] {
   cursor: pointer;
   position: relative;
 }
 
 .table--is-editable [data-field-type="multiline"]:hover,
-.table--is-editable [data-field-type="relations"]:hover {
+.table--is-editable [data-field-type="relations"]:hover,
+.table--is-editable [data-field-type="comments"]:hover {
   outline: 2px solid #0057b8;
   outline-offset: -2px;
+}
+
+[data-field-type="comments"].cell--editing {
+  outline: 2px solid #0057b8;
+  outline-offset: -2px;
+  cursor: default;
+}
+
+[data-field-type="comments"] form {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
 }
 
 .cell-edit-link {

@@ -165,6 +165,7 @@
 }
 
 .cell-edit-ac {
+  /* sdoc-autocompletable in editing context, rendered from table/cell_autocompletable.jinja */
   display: none;
   width: 100%;
   min-height: 2rem;
@@ -179,12 +180,13 @@
   overflow: hidden;
 }
 
-.table--is-editable [data-field-type="autocomplete"] .cell-display {
-  display: none;
-}
-
 .table--is-editable [data-field-type="autocomplete"] .cell-edit-ac {
   display: block;
+}
+
+.table--is-editable [data-field-type="autocomplete"] .cell-display {
+  /* cell content, out of editing context, rendered from table/cell_autocompletable.jinja */
+  display: none;
 }
 
 [data-field-type="autocomplete"] .autocomplete-items {

@@ -104,28 +104,47 @@
 
 .table--is-editable [data-field-type="multiline"],
 .table--is-editable [data-field-type="relations"],
-.table--is-editable [data-field-type="comments"] {
+.table--is-editable [data-field-type="comments"],
+.table--is-editable [data-field-type="relations-inline"] {
   cursor: pointer;
   position: relative;
 }
 
 .table--is-editable [data-field-type="multiline"]:hover,
 .table--is-editable [data-field-type="relations"]:hover,
-.table--is-editable [data-field-type="comments"]:hover {
+.table--is-editable [data-field-type="comments"]:hover,
+.table--is-editable [data-field-type="relations-inline"]:hover {
   outline: 2px solid #0057b8;
   outline-offset: -2px;
 }
 
-[data-field-type="comments"].cell--editing {
+[data-field-type="comments"].cell--editing,
+[data-field-type="relations-inline"].cell--editing {
   outline: 2px solid #0057b8;
   outline-offset: -2px;
   cursor: default;
 }
 
-[data-field-type="comments"] form {
+[data-field-type="comments"] form,
+[data-field-type="relations-inline"] form {
   display: flex;
   flex-direction: column;
   gap: .25rem;
+}
+
+.relations-computed {
+  font-size: .85em;
+  opacity: .65;
+  padding: .25rem 0;
+  border-top: 1px solid currentColor;
+}
+
+.relations-computed__label {
+  font-weight: bold;
+}
+
+.relations-computed__group + .relations-computed__group {
+  margin-top: .25rem;
 }
 
 .cell-edit-link {

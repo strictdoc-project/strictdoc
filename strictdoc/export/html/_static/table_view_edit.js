@@ -294,13 +294,13 @@
                 activateCell(singlelineCell);
                 return;
             }
-            const commentsCell = e.target.closest('[data-field-type="comments"]');
+            const commentsCell = e.target.closest('[data-field-type="comments"], [data-field-type="relations-inline"]');
             if (commentsCell) {
                 e.preventDefault();
                 openCommentsCell(commentsCell);
                 return;
             }
-            const streamCell = e.target.closest('[data-field-type="multiline"], [data-field-type="relations"]');
+            const streamCell = e.target.closest('[data-field-type="multiline"]');
             if (streamCell) {
                 e.preventDefault();
                 const link = streamCell.querySelector('.cell-edit-link');

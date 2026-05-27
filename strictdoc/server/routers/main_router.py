@@ -1132,6 +1132,64 @@ def create_main_router(
         )
 
     @read_router.get(
+        "/actions/table/get_node_relations_inline", response_class=Response
+    )
+    def table__get_node_relations_inline(node_mid: str) -> Response:
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid)
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+        revision: int = revisions[node_mid]
+        form_object: RequirementFormObject = (
+            RequirementFormObject.create_from_requirement(
+                requirement=node,
+                revision=revision,
+                context_document_mid=document.reserved_mid.get_string_value(),
+            )
+        )
+        assert document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+
+        # UIDs of relations explicitly declared on this node in its .sdoc data.
+        own_relation_uids = {
+            r.ref_uid
+            for r in node.relations
+            if hasattr(r, "ref_uid") and r.ref_uid
+        }
+        # All nodes linked to this node in both directions by the traceability graph.
+        traceability_linked_nodes = (
+            export_action.traceability_index.get_parent_requirements(node)
+            + export_action.traceability_index.get_children_requirements(node)
+        )
+        # Nodes present in traceability but not declared on this node —
+        # derived connections (e.g. other nodes that reference this one as parent).
+        derived_nodes = [
+            req
+            for req in traceability_linked_nodes
+            if req.reserved_uid not in own_relation_uids
+        ]
+
+        view_object_stub = types.SimpleNamespace(
+            render_node_link=lambda req: link_renderer.render_node_link(
+                req, document, DocumentType.DOCUMENT
+            ),
+        )
+        output = env().render_template_as_markup(
+            "actions/table/get_node_relations_inline/stream_inline_form.jinja.html",
+            form_object=form_object,
+            derived_nodes=derived_nodes,
+            view_object=view_object_stub,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
+    @read_router.get(
         "/actions/table/get_node_relations_form", response_class=Response
     )
     def table__get_node_relations_form(node_mid: str) -> Response:

@@ -75,13 +75,11 @@
                 <td class="content-view-td content-view-td-meta content-view-td-related"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RELATIONS"
-                    data-field-type="relations">
-                  <a class="cell-edit-link" data-turbo="false"
-                     href="/actions/table/get_node_relations_form?node_mid={{ requirement.reserved_mid }}">
-                    <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
-                      {%- include "screens/document/table/cell_relations.jinja" %}
-                    </div>
-                  </a>
+                    data-field-type="relations-inline"
+                    data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}">
+                  <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
+                    {%- include "screens/document/table/cell_relations.jinja" %}
+                  </div>
                 </td>
                 <td class="content-view-td content-view-td-title"
                     data-node-mid="{{ requirement.reserved_mid }}"

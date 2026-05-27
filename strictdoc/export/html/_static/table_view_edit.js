@@ -176,40 +176,17 @@
         }
     }
 
-    async function openMultilinePopup(cell) {
-        const nodeMid = cell.dataset.nodeMid || '';
-        const fieldName = cell.dataset.fieldName || '';
-        if (!nodeMid || !fieldName) return;
-
+    async function fetchTurboStream(url) {
         try {
-            const response = await fetch(
-                `/actions/table/get_node_field_form?node_mid=${encodeURIComponent(nodeMid)}&field_name=${encodeURIComponent(fieldName)}`,
-                { headers: { 'Accept': 'text/vnd.turbo-stream.html' } }
-            );
+            const response = await fetch(url, {
+                headers: { 'Accept': 'text/vnd.turbo-stream.html' },
+            });
             const html = await response.text();
             if (response.ok && typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
                 Turbo.renderStreamMessage(html);
             }
         } catch (err) {
-            console.error('Table multiline popup error:', err);
-        }
-    }
-
-    async function openRelationsPopup(cell) {
-        const nodeMid = cell.dataset.nodeMid || '';
-        if (!nodeMid) return;
-
-        try {
-            const response = await fetch(
-                `/actions/table/get_node_relations_form?node_mid=${encodeURIComponent(nodeMid)}`,
-                { headers: { 'Accept': 'text/vnd.turbo-stream.html' } }
-            );
-            const html = await response.text();
-            if (response.ok && typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
-                Turbo.renderStreamMessage(html);
-            }
-        } catch (err) {
-            console.error('Table relations popup error:', err);
+            console.error('Table stream fetch error:', err);
         }
     }
 
@@ -237,16 +214,11 @@
                 activateCell(singlelineCell);
                 return;
             }
-            const multilineCell = e.target.closest('[data-field-type="multiline"]');
-            if (multilineCell) {
-                e.stopPropagation();
-                openMultilinePopup(multilineCell);
+            const streamCell = e.target.closest('[data-field-type="multiline"], [data-field-type="relations"]');
+            if (streamCell) {
+                const link = streamCell.querySelector('.cell-edit-link');
+                if (link) fetchTurboStream(link.href);
                 return;
-            }
-            const relationsCell = e.target.closest('[data-field-type="relations"]');
-            if (relationsCell) {
-                e.stopPropagation();
-                openRelationsPopup(relationsCell);
             }
         });
 

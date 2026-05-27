@@ -59,9 +59,12 @@
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ meta_field_title }}"
                       data-field-type="multiline">
-                    <div id="cell-{{ requirement.reserved_mid }}-{{ meta_field_title }}">
-                      {%- if field_value -%}{{ field_value }}{%- endif -%}
-                    </div>
+                    <a class="cell-edit-link" data-turbo="false"
+                       href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name={{ meta_field_title }}">
+                      <div id="cell-{{ requirement.reserved_mid }}-{{ meta_field_title }}">
+                        {%- if field_value -%}{{ field_value }}{%- endif -%}
+                      </div>
+                    </a>
                   </td>
                   {%- else %}
                   <td class="content-view-td content-view-td-meta">
@@ -73,9 +76,12 @@
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RELATIONS"
                     data-field-type="relations">
-                  <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
-                    {%- include "screens/document/table/cell_relations.jinja" %}
-                  </div>
+                  <a class="cell-edit-link" data-turbo="false"
+                     href="/actions/table/get_node_relations_form?node_mid={{ requirement.reserved_mid }}">
+                    <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
+                      {%- include "screens/document/table/cell_relations.jinja" %}
+                    </div>
+                  </a>
                 </td>
                 <td class="content-view-td content-view-td-title"
                     data-node-mid="{{ requirement.reserved_mid }}"
@@ -96,11 +102,14 @@
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="STATEMENT"
                     data-field-type="multiline">
-                  <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
-                    {%- if requirement.has_reserved_statement() -%}
-                      <sdoc-autogen>{{ view_object.render_node_statement(requirement) }}</sdoc-autogen>
-                    {%- endif -%}
-                  </div>
+                  <a class="cell-edit-link" data-turbo="false"
+                     href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
+                    <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
+                      {%- if requirement.has_reserved_statement() -%}
+                        <sdoc-autogen>{{ view_object.render_node_statement(requirement) }}</sdoc-autogen>
+                      {%- endif -%}
+                    </div>
+                  </a>
                 </td>
                 {%- else %}
                 <td class="content-view-td content-view-td-content">
@@ -114,11 +123,14 @@
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RATIONALE"
                     data-field-type="multiline">
-                  <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
-                    {%- if requirement.rationale -%}
-                      <sdoc-autogen>{{ view_object.render_node_rationale(requirement) }}</sdoc-autogen>
-                    {%- endif -%}
-                  </div>
+                  <a class="cell-edit-link" data-turbo="false"
+                     href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
+                    <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
+                      {%- if requirement.rationale -%}
+                        <sdoc-autogen>{{ view_object.render_node_rationale(requirement) }}</sdoc-autogen>
+                      {%- endif -%}
+                    </div>
+                  </a>
                 </td>
                 {%- else %}
                 <td class="content-view-td content-view-td-content">
@@ -132,11 +144,14 @@
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="COMMENT"
                     data-field-type="multiline">
-                  <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
-                    {%- for comment_field_ in requirement.get_comment_fields() -%}
-                    <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
-                    {%- endfor -%}
-                  </div>
+                  <a class="cell-edit-link" data-turbo="false"
+                     href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name=COMMENT">
+                    <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
+                      {%- for comment_field_ in requirement.get_comment_fields() -%}
+                      <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
+                      {%- endfor -%}
+                    </div>
+                  </a>
                 </td>
                 {%- else %}
                 <td class="content-view-td content-view-td-content">
@@ -166,9 +181,12 @@
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ content_field_title }}"
                       data-field-type="multiline">
-                    <div id="cell-{{ requirement.reserved_mid }}-{{ content_field_title }}">
-                      {%- if field_value %}{{ field_value }}{%- endif -%}
-                    </div>
+                    <a class="cell-edit-link" data-turbo="false"
+                       href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name={{ content_field_title }}">
+                      <div id="cell-{{ requirement.reserved_mid }}-{{ content_field_title }}">
+                        {%- if field_value %}{{ field_value }}{%- endif -%}
+                      </div>
+                    </a>
                   </td>
                   {%- else %}
                   <td class="content-view-td">

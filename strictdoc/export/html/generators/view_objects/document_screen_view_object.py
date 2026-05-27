@@ -524,7 +524,9 @@ class DocumentScreenViewObject:
     # Table editing
     #
 
-    def get_table_cell_type(self, element_type: str, field_name: str) -> str:
+    def get_table_cell_edit_mode(
+        self, element_type: str, field_name: str
+    ) -> str:
         """
         Returns the editing mode for a table cell:
           "autocomplete" — SingleChoice / MultipleChoice / Tag field
@@ -554,9 +556,14 @@ class DocumentScreenViewObject:
             return "multiline"
         return "singleline"
 
-    def is_table_cell_editable(self, element_type: str, field_name: str) -> bool:
+    def is_table_cell_editable(
+        self, element_type: str, field_name: str
+    ) -> bool:
         """Returns True if the field is declared in grammar and can be edited in the table view."""
-        return self.get_table_cell_type(element_type, field_name) != "readonly"
+        return (
+            self.get_table_cell_edit_mode(element_type, field_name)
+            != "readonly"
+        )
 
     def is_table_cell_multiple_choice(
         self, element_type: str, field_name: str

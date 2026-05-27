@@ -57,15 +57,15 @@
                 </td>
 
                 {# -- Meta fields (grammar-defined, before REFS) ----------- #}
-                {# cell_type: "autocomplete" | "singleline" | "multiline" | "readonly" #}
+                {# cell_edit_mode: "autocomplete" | "singleline" | "multiline" | "readonly" #}
                 {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
-                  {%- set cell_type = view_object.get_table_cell_type(node.node_type, meta_field_title) %}
-                  {%- if cell_type == "autocomplete" %}
+                  {%- set cell_edit_mode = view_object.get_table_cell_edit_mode(node.node_type, meta_field_title) %}
+                  {%- if cell_edit_mode == "autocomplete" %}
                   {%- set field_title = meta_field_title %}
                   {%- set td_class = "content-view-td content-view-td-meta" %}
                   {%- include "screens/document/table/cell_autocompletable.jinja" %}
-                  {%- elif cell_type == "singleline" %}
+                  {%- elif cell_edit_mode == "singleline" %}
                   <td class="content-view-td content-view-td-meta"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ meta_field_title }}"
@@ -75,7 +75,7 @@
                       {%- if field_value -%}{{ field_value }}{%- endif -%}
                     </div>
                   </td>
-                  {%- elif cell_type == "multiline" %}
+                  {%- elif cell_edit_mode == "multiline" %}
                   <td class="content-view-td content-view-td-meta"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ meta_field_title }}"
@@ -189,15 +189,15 @@
                 {%- endif %}
 
                 {# -- Non-reserved content fields (grammar-defined, after COMMENT) #}
-                {# cell_type: "autocomplete" | "singleline" | "multiline" | "readonly" #}
+                {# cell_edit_mode: "autocomplete" | "singleline" | "multiline" | "readonly" #}
                 {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(content_field_title) %}
-                  {%- set cell_type = view_object.get_table_cell_type(node.node_type, content_field_title) %}
-                  {%- if cell_type == "autocomplete" %}
+                  {%- set cell_edit_mode = view_object.get_table_cell_edit_mode(node.node_type, content_field_title) %}
+                  {%- if cell_edit_mode == "autocomplete" %}
                   {%- set field_title = content_field_title %}
                   {%- set td_class = "content-view-td" %}
                   {%- include "screens/document/table/cell_autocompletable.jinja" %}
-                  {%- elif cell_type == "singleline" %}
+                  {%- elif cell_edit_mode == "singleline" %}
                   <td class="content-view-td"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ content_field_title }}"
@@ -207,7 +207,7 @@
                       {%- if field_value %}{{ field_value }}{%- endif -%}
                     </div>
                   </td>
-                  {%- elif cell_type == "multiline" %}
+                  {%- elif cell_edit_mode == "multiline" %}
                   <td class="content-view-td"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ content_field_title }}"

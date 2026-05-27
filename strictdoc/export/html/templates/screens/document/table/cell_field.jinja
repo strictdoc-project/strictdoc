@@ -1,0 +1,31 @@
+{# Renders a single grammar-defined field cell.                              #}
+{# Expects: field_title, field_value, cell_edit_mode, td_class, requirement, node #}
+{%- if cell_edit_mode == "autocomplete" %}
+{%- include "screens/document/table/cell_autocompletable.jinja" %}
+{%- elif cell_edit_mode == "singleline" %}
+<td class="{{ td_class }}"
+    data-node-mid="{{ requirement.reserved_mid }}"
+    data-field-name="{{ field_title }}"
+    data-field-type="singleline"
+    data-current-value="{{ field_value if field_value else '' }}">
+  <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}">
+    {%- if field_value -%}{{ field_value }}{%- endif -%}
+  </div>
+</td>
+{%- elif cell_edit_mode == "multiline" %}
+<td class="{{ td_class }}"
+    data-node-mid="{{ requirement.reserved_mid }}"
+    data-field-name="{{ field_title }}"
+    data-field-type="multiline">
+  <a class="cell-edit-link" data-turbo="false"
+     href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name={{ field_title }}">
+    <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}">
+      {%- if field_value -%}{{ field_value }}{%- endif -%}
+    </div>
+  </a>
+</td>
+{%- else %}
+<td class="{{ td_class }}">
+  {%- if field_value -%}{{ field_value }}{%- endif -%}
+</td>
+{%- endif %}

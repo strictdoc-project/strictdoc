@@ -524,52 +524,39 @@ class DocumentScreenViewObject:
     # Table editing
     #
 
-    def is_table_cell_singleline(
-        self, element_type: str, field_name: str
-    ) -> bool:
+    def get_table_cell_type(self, element_type: str, field_name: str) -> str:
+        """
+        Returns the editing mode for a table cell:
+          "autocomplete" — SingleChoice / MultipleChoice / Tag field
+          "singleline"   — single-line STRING field (meta fields)
+          "multiline"    — multi-line STRING field (STATEMENT, RATIONALE, COMMENT, custom content)
+          "readonly"     — field not declared in grammar for this element type
+        """
         grammar = self.document.grammar
         if grammar is None:
-            return False
+            return "readonly"
         element = grammar.elements_by_type.get(element_type)
         if element is None:
-            return False
-        if field_name not in element.fields_map:
-            return False
-        return not element.is_field_multiline(field_name)
-
-    def is_table_cell_multiline(
-        self, element_type: str, field_name: str
-    ) -> bool:
-        grammar = self.document.grammar
-        if grammar is None:
-            return False
-        element = grammar.elements_by_type.get(element_type)
-        if element is None:
-            return False
-        if field_name not in element.fields_map:
-            return False
-        return element.is_field_multiline(field_name)
-
-    def is_table_cell_autocompletable(
-        self, element_type: str, field_name: str
-    ) -> bool:
-        grammar = self.document.grammar
-        if grammar is None:
-            return False
-        element = grammar.elements_by_type.get(element_type)
-        if element is None:
-            return False
+            return "readonly"
         field = element.fields_map.get(field_name)
         if field is None:
-            return False
-        return isinstance(
+            return "readonly"
+        if isinstance(
             field,
             (
                 GrammarElementFieldSingleChoice,
                 GrammarElementFieldMultipleChoice,
                 GrammarElementFieldTag,
             ),
-        )
+        ):
+            return "autocomplete"
+        if element.is_field_multiline(field_name):
+            return "multiline"
+        return "singleline"
+
+    def is_table_cell_editable(self, element_type: str, field_name: str) -> bool:
+        """Returns True if the field is declared in grammar and can be edited in the table view."""
+        return self.get_table_cell_type(element_type, field_name) != "readonly"
 
     def is_table_cell_multiple_choice(
         self, element_type: str, field_name: str

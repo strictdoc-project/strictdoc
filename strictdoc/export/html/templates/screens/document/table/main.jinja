@@ -31,6 +31,9 @@
           {%- for node, _ in view_object.document_content_iterator() %}
             {%- if node.is_requirement() %}
               {%- set requirement = node %}
+              {%- set statement_is_editable = view_object.is_table_cell_editable(node.node_type, "STATEMENT") %}
+              {%- set rationale_is_editable = view_object.is_table_cell_editable(node.node_type, "RATIONALE") %}
+              {%- set comment_is_editable   = view_object.is_table_cell_editable(node.node_type, "COMMENT") %}
               <tr data-row-type="{{ node.node_type }}" data-node-mid="{{ requirement.reserved_mid }}">
                 <td class="content-view-td content-view-td-type">
                   {{ node.node_type }}
@@ -40,11 +43,12 @@
                 </td>
                 {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
-                  {%- if view_object.is_table_cell_autocompletable(node.node_type, meta_field_title) %}
+                  {%- set cell_type = view_object.get_table_cell_type(node.node_type, meta_field_title) %}
+                  {%- if cell_type == "autocomplete" %}
                   {%- set field_title = meta_field_title %}
                   {%- set td_class = "content-view-td content-view-td-meta" %}
                   {%- include "screens/document/table/cell_autocompletable.jinja" %}
-                  {%- elif view_object.is_table_cell_singleline(node.node_type, meta_field_title) %}
+                  {%- elif cell_type == "singleline" %}
                   <td class="content-view-td content-view-td-meta"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ meta_field_title }}"
@@ -54,7 +58,7 @@
                       {%- if field_value -%}{{ field_value }}{%- endif -%}
                     </div>
                   </td>
-                  {%- elif view_object.is_table_cell_multiline(node.node_type, meta_field_title) %}
+                  {%- elif cell_type == "multiline" %}
                   <td class="content-view-td content-view-td-meta"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ meta_field_title }}"
@@ -95,7 +99,7 @@
                     {%- endif -%}
                   </div>
                 </td>
-                {%- if view_object.is_table_cell_multiline(node.node_type, "STATEMENT") %}
+                {%- if statement_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="STATEMENT"
@@ -116,7 +120,7 @@
                   {%- endif -%}
                 </td>
                 {%- endif %}
-                {%- if view_object.is_table_cell_multiline(node.node_type, "RATIONALE") %}
+                {%- if rationale_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RATIONALE"
@@ -137,7 +141,7 @@
                   {%- endif -%}
                 </td>
                 {%- endif %}
-                {%- if view_object.is_table_cell_multiline(node.node_type, "COMMENT") %}
+                {%- if comment_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="COMMENT"
@@ -158,11 +162,12 @@
                 {%- endif %}
                 {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
                   {%- set field_value = requirement.get_meta_field_value_by_title(content_field_title) %}
-                  {%- if view_object.is_table_cell_autocompletable(node.node_type, content_field_title) %}
+                  {%- set cell_type = view_object.get_table_cell_type(node.node_type, content_field_title) %}
+                  {%- if cell_type == "autocomplete" %}
                   {%- set field_title = content_field_title %}
                   {%- set td_class = "content-view-td" %}
                   {%- include "screens/document/table/cell_autocompletable.jinja" %}
-                  {%- elif view_object.is_table_cell_singleline(node.node_type, content_field_title) %}
+                  {%- elif cell_type == "singleline" %}
                   <td class="content-view-td"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ content_field_title }}"
@@ -172,7 +177,7 @@
                       {%- if field_value %}{{ field_value }}{%- endif -%}
                     </div>
                   </td>
-                  {%- elif view_object.is_table_cell_multiline(node.node_type, content_field_title) %}
+                  {%- elif cell_type == "multiline" %}
                   <td class="content-view-td"
                       data-node-mid="{{ requirement.reserved_mid }}"
                       data-field-name="{{ content_field_title }}"

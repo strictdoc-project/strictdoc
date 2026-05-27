@@ -216,6 +216,7 @@
             }
             const streamCell = e.target.closest('[data-field-type="multiline"], [data-field-type="relations"]');
             if (streamCell) {
+                e.preventDefault();
                 const link = streamCell.querySelector('.cell-edit-link');
                 if (link) fetchTurboStream(link.href);
                 return;

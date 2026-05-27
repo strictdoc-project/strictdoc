@@ -1,3 +1,56 @@
+{#
+  TABLE VIEW — INLINE EDITING OVERVIEW
+  =====================================
+
+  This template renders all nodes as a flat table (requirements and sections).
+  By default the table is in display (read-only) mode.
+
+  ACTIVATING EDIT MODE
+  ---------------------
+  The toolbar button [data-testid="table-toolbar-edit-btn"] toggles edit mode.
+  Clicking it adds the CSS class "table--is-editable" to <table>.
+  CSS rules in table_view.css make editable cells show cursor:pointer and a
+  hover outline — only when that class is present.
+
+  CELL EDITING MODES  (data-field-type attribute on <td>)
+  --------------------------------------------------------
+  "singleline"
+      JS (table_view_edit.js) replaces the <td> content with an <input>.
+      On Enter / blur: POSTs to /actions/table/update_node_field via fetch.
+      Server returns a turbo-stream that updates <div id="cell-{mid}-{field}">.
+
+  "multiline"
+      JS fetches the inline form from the URL stored in <a class="cell-edit-link">.
+      Server returns a turbo-stream with a full modal-style form.
+      Updates <div id="cell-{mid}-{field}">.
+
+  "comments"
+      JS fetches /actions/table/get_node_comments_inline?node_mid=...
+      Server returns an inline form with multiple comment fields.
+      On blur / outside click: JS POSTs the form, server updates
+      <div id="cell-{mid}-COMMENT"> via turbo-stream.
+
+  "relations-inline"
+      JS fetches /actions/table/get_node_relations_inline?node_mid=...
+      Server returns an inline form with relation rows (editable) and
+      computed/derived relations (read-only).
+      On blur / outside click: JS POSTs the form, server updates
+      <div id="cell-{mid}-RELATIONS"> via turbo-stream.
+
+  "autocomplete"
+      A Stimulus controller (autocompletable) is already present in the DOM.
+      Edit mode CSS hides .cell-display and shows .cell-edit-ac (contenteditable).
+      On blur: JS POSTs to /actions/table/update_node_field via fetch.
+
+  CELL EDITABILITY (is_table_cell_editable / get_table_cell_edit_mode)
+  ----------------------------------------------------------------------
+  Whether a field is editable depends on the document grammar for that node
+  type. view_object.is_table_cell_editable() returns True if the field is
+  declared in the grammar. get_table_cell_edit_mode() returns the specific
+  mode: "autocomplete" | "singleline" | "multiline" | "readonly".
+  Fixed fields (STATEMENT, RATIONALE, COMMENT) use is_table_cell_editable.
+  Dynamic field loops use get_table_cell_edit_mode via cell_field.jinja.
+#}
 {%- if view_object.has_any_nodes() -%}
   <div class="main" js-pan_with_space="true">
     {% include "_shared/tags.jinja.html" %}

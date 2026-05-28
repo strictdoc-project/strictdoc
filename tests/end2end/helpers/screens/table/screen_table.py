@@ -237,7 +237,11 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         )
 
     #
-    # Multiline cell popup
+    # ARCHIVE: Multiline cell modal popup
+    # These methods were written for the modal-popup approach (STATEMENT/RATIONALE
+    # opened a full sdoc-modal on click). Multiline cells now use inline turbo-stream
+    # forms (data-field-type="multiline-inline"), so this section is no longer used
+    # by any active test. Kept for reference until inline-form equivalents are written.
     #
 
     _MULTILINE_POPUP = "#modal sdoc-modal"
@@ -275,6 +279,10 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             f'//sdoc-modal//sdoc-form-error[contains(., "{message}")]',
             by=By.XPATH,
         )
+
+    #
+    # END ARCHIVE
+    #
 
     def do_cell_autocomplete(self, field_name: str, field_value: str) -> None:
         testid = f"table-cell-autocomplete-{field_name}"

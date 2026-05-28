@@ -1,0 +1,26 @@
+<turbo-stream action="update" target="cell-{{ node_mid }}-{{ field_name }}">
+  <template>
+    <form
+      action="/actions/table/update_node_field"
+      method="POST"
+      data-turbo="false"
+    >
+      <input type="hidden" name="node_mid" value="{{ node_mid }}"/>
+      <input type="hidden" name="field_name" value="{{ field_name }}"/>
+
+      {%- with
+        field_class_name=none,
+        field_editable=true,
+        field_input_name="field_value",
+        field_label=field_name,
+        field_placeholder="Enter "~field_name~" here...",
+        field_type="singleline",
+        field_value=current_value,
+        testid_postfix=field_name,
+        errors=[]
+      -%}
+        {%- include "components/form/field/contenteditable/index.jinja" %}
+      {%- endwith -%}
+    </form>
+  </template>
+</turbo-stream>

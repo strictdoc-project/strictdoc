@@ -1263,6 +1263,37 @@ def create_main_router(
         )
 
     @read_router.get(
+        "/actions/table/get_node_singleline_inline", response_class=Response
+    )
+    def table__get_node_singleline_inline(
+        node_mid: str,
+        field_name: str,
+    ) -> Response:
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid)
+        )
+        if field_name == "TITLE":
+            current_value = node.reserved_title or ""
+        elif field_name in node.ordered_fields_lookup:
+            current_value = node.ordered_fields_lookup[field_name][
+                0
+            ].get_text_value()
+        else:
+            current_value = ""
+
+        output = env().render_template_as_markup(
+            "actions/table/get_node_singleline_inline/stream_inline_form.jinja.html",
+            node_mid=node_mid,
+            field_name=field_name,
+            current_value=current_value,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
+    @read_router.get(
         "/actions/table/get_node_multiline_inline", response_class=Response
     )
     def table__get_node_multiline_inline(

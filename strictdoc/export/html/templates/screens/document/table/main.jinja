@@ -130,12 +130,12 @@
                   </div>
                 </td>
 
-                {# -- TITLE: singleline, always editable ------------------ #}
+                {# -- TITLE: singleline-inline, always editable ----------- #}
                 <td class="content-view-td content-view-td-title"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="TITLE"
-                    data-field-type="singleline"
-                    data-current-value="{{ requirement.reserved_title if requirement.reserved_title else '' }}">
+                    data-field-type="singleline-inline"
+                    data-url="/actions/table/get_node_singleline_inline?node_mid={{ requirement.reserved_mid }}&field_name=TITLE">
                   <div id="cell-{{ requirement.reserved_mid }}-TITLE">
                     {%- if requirement.reserved_title %}
                       {%- with sdoc_entity=requirement -%}

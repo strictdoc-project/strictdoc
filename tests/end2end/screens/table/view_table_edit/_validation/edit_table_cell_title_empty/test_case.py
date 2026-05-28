@@ -1,6 +1,7 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
+from tests.end2end.helpers.form.form import Form
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -32,25 +33,29 @@ class Test(E2ECase):
             node_mid = screen_table.get_node_mid_from_row(row_order=1)
             assert node_mid is not None, "Could not find node MID in table row"
 
+            form = Form(self)
+
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
             #
-            # Clear the only field (TITLE) and submit — 422, cell gets error attribute.
+            # Clear TITLE and save by click-outside — 422, cell gets validation error.
             #
             screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
-            screen_table.do_edit_cell_and_submit(node_mid, "TITLE", "")
+            screen_table.do_open_inline_cell(node_mid, "TITLE")
+            form.do_clear_field("TITLE")
+            screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
 
-            screen_table.assert_cell_value(node_mid, "TITLE", "Old title")
+            screen_table.assert_cell_dom_text(node_mid, "TITLE", "Old title")
             screen_table.assert_cell_has_validation_error(node_mid, "TITLE")
 
             #
-            # Click the cell again — error attribute is cleared on entering edit mode.
+            # Click the cell again — validation error is cleared on activating the cell.
             #
-            screen_table.do_click_cell(node_mid, "TITLE")
+            screen_table.do_open_inline_cell(node_mid, "TITLE")
             screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
-            screen_table.do_edit_cell_and_cancel(node_mid, "TITLE", "")
+            screen_table.do_cancel_inline_cell_by_escape()
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

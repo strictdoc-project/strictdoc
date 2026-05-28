@@ -1,7 +1,5 @@
 (function () {
     let editMode = false;
-    let activeCell = null;
-    let editGeneration = 0;
     let activeCommentsCell = null;
     let activeAutocompleteCell = null;
 
@@ -21,7 +19,6 @@
             btn.setAttribute('aria-pressed', on ? 'true' : 'false');
         }
         if (!on) {
-            if (activeCell) cancelEdit();
             if (activeCommentsCell) cancelCommentsCell();
             if (activeAutocompleteCell) cancelAutocompleteCell();
         }
@@ -50,56 +47,6 @@
         cell.removeAttribute('data-validation-error');
         cell.classList.add('cell--editing');
         fetchTurboStream(cell.dataset.url);
-    }
-
-    // --- Singleline cell ---
-
-    function activateCell(cell) {
-        if (activeCell === cell) return;
-        if (activeCell) cancelEdit();
-
-        activeCell = cell;
-        activeCell._originalHTML = cell.innerHTML;
-        activeCell._originalValue = (cell.dataset.currentValue || '').trim();
-
-        cell.removeAttribute('data-validation-error');
-        cell.classList.add('cell--editing');
-
-        const generation = ++editGeneration;
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'cell-edit-input';
-        input.value = activeCell._originalValue;
-
-        input.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                e.stopPropagation();
-                submitEdit();
-            } else if (e.key === 'Escape') {
-                e.preventDefault();
-                e.stopPropagation();
-                cancelEdit();
-            }
-        });
-
-        input.addEventListener('blur', function () {
-            setTimeout(function () {
-                if (activeCell === cell && editGeneration === generation) {
-                    submitEdit();
-                }
-            }, 150);
-        });
-
-        input.addEventListener('click', function (e) {
-            e.stopPropagation();
-        });
-
-        cell.innerHTML = '';
-        cell.appendChild(input);
-        input.focus();
-        input.select();
     }
 
     // --- Autocomplete cell ---
@@ -173,75 +120,6 @@
         delete cell._originalHTML;
     }
 
-    // --- Singleline submit/cancel ---
-
-    function cancelEdit() {
-        if (!activeCell) return;
-        const cell = activeCell;
-        activeCell = null;
-        cell.classList.remove('cell--editing');
-        cell.innerHTML = cell._originalHTML;
-        delete cell._originalHTML;
-        delete cell._originalValue;
-    }
-
-    function getEditValue(cell) {
-        const input = cell.querySelector('.cell-edit-input');
-        if (!input) return '';
-        return input.value.trim();
-    }
-
-    async function submitEdit() {
-        if (!activeCell) return;
-        const cell = activeCell;
-        const newValue = getEditValue(cell);
-        const originalValue = cell._originalValue;
-
-        activeCell = null;
-        cell.classList.remove('cell--editing');
-
-        if (newValue === originalValue) {
-            cell.innerHTML = cell._originalHTML;
-            delete cell._originalHTML;
-            delete cell._originalValue;
-            return;
-        }
-
-        cell.innerHTML = cell._originalHTML;
-        cell.dataset.currentValue = newValue;
-
-        const formData = new FormData();
-        formData.append('node_mid', cell.dataset.nodeMid);
-        formData.append('field_name', cell.dataset.fieldName);
-        formData.append('field_value', newValue);
-
-        delete cell._originalHTML;
-        delete cell._originalValue;
-
-        let ok = false;
-        try {
-            const response = await fetch('/actions/table/update_node_field', {
-                method: 'POST',
-                headers: { 'Accept': 'text/vnd.turbo-stream.html' },
-                body: formData,
-            });
-            const html = await response.text();
-            if (response.ok) {
-                ok = true;
-                renderTurboStream(html);
-            } else {
-                console.error('Table cell update failed:', html);
-            }
-        } catch (err) {
-            console.error('Table cell update error:', err);
-        }
-
-        if (!ok) {
-            cell.dataset.currentValue = originalValue;
-            cell.setAttribute('data-validation-error', 'true');
-        }
-    }
-
     // --- Stream fetch ---
 
     async function fetchTurboStream(url) {
@@ -258,7 +136,7 @@
         }
     }
 
-    // --- Comments / multiline-inline / relations cell ---
+    // --- Comments / multiline-inline / singleline-inline / relations cell ---
 
     function openCommentsCell(cell) {
         if (activeCommentsCell === cell) return;
@@ -345,13 +223,9 @@
                 openAutocompleteCell(autocompleteCell);
                 return;
             }
-            const singlelineCell = e.target.closest('[data-field-type="singleline"]');
-            if (singlelineCell) {
-                e.stopPropagation();
-                activateCell(singlelineCell);
-                return;
-            }
-            const commentsCell = e.target.closest('[data-field-type="comments"], [data-field-type="relations-inline"], [data-field-type="multiline-inline"]');
+            const commentsCell = e.target.closest(
+                '[data-field-type="comments"], [data-field-type="relations-inline"], [data-field-type="multiline-inline"], [data-field-type="singleline-inline"]'
+            );
             if (commentsCell) {
                 e.preventDefault();
                 openCommentsCell(commentsCell);
@@ -388,12 +262,6 @@
         });
 
         document.addEventListener('click', function (e) {
-            if (activeCell) {
-                const table_ = getTable();
-                if (table_ && !table_.contains(e.target)) {
-                    submitEdit();
-                }
-            }
             if (activeCommentsCell && !e.composedPath().includes(activeCommentsCell)) {
                 saveCommentsCell(activeCommentsCell);
             }

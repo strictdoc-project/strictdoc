@@ -162,9 +162,6 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def _cell_sel(self, node_mid: str, field_name: str) -> str:
         return f'[data-node-mid="{node_mid}"][data-field-name="{field_name}"]'
 
-    def _input_sel(self, node_mid: str, field_name: str) -> str:
-        return self._cell_sel(node_mid, field_name) + " .cell-edit-input"
-
     def assert_cell_has_validation_error(
         self, node_mid: str, field_name: str
     ) -> None:
@@ -185,24 +182,6 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             f"Expected cell [{node_mid}][{field_name}] to have no data-validation-error"
         )
 
-    def assert_no_edit_input(self, node_mid: str, field_name: str) -> None:
-        self.test_case.assert_element_not_present(
-            self._input_sel(node_mid, field_name)
-        )
-
-    def assert_edit_input_visible(self, node_mid: str, field_name: str) -> None:
-        self.test_case.assert_element(self._input_sel(node_mid, field_name))
-
-    def assert_cell_value(
-        self, node_mid: str, field_name: str, value: str
-    ) -> None:
-        sel = self._cell_sel(node_mid, field_name)
-        element = self.test_case.find_element(sel)
-        actual = element.get_attribute("data-current-value")
-        assert actual == value, (
-            f"Cell [{node_mid}][{field_name}]: expected {value!r}, got {actual!r}"
-        )
-
     def assert_cell_dom_text(
         self, node_mid: str, field_name: str, text: str
     ) -> None:
@@ -219,29 +198,6 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
 
     def do_click_cell(self, node_mid: str, field_name: str) -> None:
         self.test_case.click(self._cell_sel(node_mid, field_name))
-
-    def do_edit_cell_and_submit(
-        self, node_mid: str, field_name: str, new_value: str
-    ) -> None:
-        self.do_click_cell(node_mid, field_name)
-        input_sel = self._input_sel(node_mid, field_name)
-        self.test_case.assert_element(input_sel)
-        self.test_case.type(input_sel, new_value)
-        self.test_case.send_keys(input_sel, Keys.RETURN)
-
-    def do_edit_cell_and_cancel(
-        self, node_mid: str, field_name: str, new_value: str
-    ) -> None:
-        self.do_click_cell(node_mid, field_name)
-        input_sel = self._input_sel(node_mid, field_name)
-        self.test_case.assert_element(input_sel)
-        self.test_case.type(input_sel, new_value)
-        self.test_case.send_keys(input_sel, Keys.ESCAPE)
-
-    def do_submit_cell_unchanged(self, node_mid: str, field_name: str) -> None:
-        self.test_case.send_keys(
-            self._input_sel(node_mid, field_name), Keys.RETURN
-        )
 
     #
     # ARCHIVE: Multiline cell modal popup

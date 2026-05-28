@@ -31,15 +31,16 @@
 {%- elif cell_edit_mode == "singleline" %}
 {#
   Plain text value — no markup rendering.
-  JS replaces the <div> content with an <input> on click,
-  submits on Enter / blur via /actions/table/update_node_field.
-  data-current-value is read by JS to detect unchanged edits.
+  JS fetches the inline form from data-url on click (same mechanism as multiline-inline).
+  Server returns a turbo-stream that replaces the cell div with a singleline
+  contenteditable form. On blur / outside click JS POSTs the form to
+  /actions/table/update_node_field.
 #}
 <td class="{{ td_class }}"
     data-node-mid="{{ requirement.reserved_mid }}"
     data-field-name="{{ field_title }}"
-    data-field-type="singleline"
-    data-current-value="{{ field_value if field_value else '' }}">
+    data-field-type="singleline-inline"
+    data-url="/actions/table/get_node_singleline_inline?node_mid={{ requirement.reserved_mid }}&field_name={{ field_title }}">
   <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}">
     {%- if field_value %}
       {%- with field_content = field_value %}

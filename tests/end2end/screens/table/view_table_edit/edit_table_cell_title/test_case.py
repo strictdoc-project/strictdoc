@@ -1,6 +1,7 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
+from tests.end2end.helpers.form.form import Form
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -32,47 +33,31 @@ class Test(E2ECase):
             node_mid = screen_table.get_node_mid_from_row(row_order=1)
             assert node_mid is not None, "Could not find node MID in table row"
 
-            #
-            # Case 1: Edit mode is off by default — clicking a cell does NOT open input.
-            #
-            screen_table.assert_edit_mode_off()
-            screen_table.assert_no_edit_input(node_mid, "TITLE")
-            screen_table.do_click_cell(node_mid, "TITLE")
-            screen_table.assert_no_edit_input(node_mid, "TITLE")
+            form = Form(self)
 
-            #
-            # Case 2: Enable edit mode, then Cancel (Escape) — value and file unchanged.
-            #
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
-            screen_table.assert_cell_value(node_mid, "TITLE", "Old title")
-            screen_table.do_edit_cell_and_cancel(
-                node_mid, "TITLE", "Cancelled title"
-            )
-            # Value is restored to original.
-            screen_table.assert_cell_value(node_mid, "TITLE", "Old title")
+            #
+            # Case 1: Open TITLE inline, type new value, cancel by Escape — value NOT saved.
+            #
+            screen_table.do_open_inline_cell(node_mid, "TITLE")
+            form.do_fill_in("TITLE", "Cancelled title")
+            screen_table.do_cancel_inline_cell_by_escape()
+            self.sleep(0.3)
+
+            screen_table.assert_cell_dom_text(node_mid, "TITLE", "Old title")
 
             #
-            # Case 3: Open input, change nothing, submit — no server request, value unchanged.
+            # Case 2: Open TITLE inline, save by click-outside — cell updates.
             #
-            screen_table.do_click_cell(node_mid, "TITLE")
-            screen_table.assert_edit_input_visible(node_mid, "TITLE")
-            # Submit without changing value (input already has "Old title").
-            screen_table.do_submit_cell_unchanged(node_mid, "TITLE")
-            screen_table.assert_cell_value(node_mid, "TITLE", "Old title")
-
-            #
-            # Case 4: Edit and submit with Enter — value updates on page immediately.
-            #
-            screen_table.do_edit_cell_and_submit(node_mid, "TITLE", "New title")
+            screen_table.do_open_inline_cell(node_mid, "TITLE")
+            form.do_fill_in("TITLE", "New title")
+            screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
-            # data-current-value attribute updated.
-            screen_table.assert_cell_value(node_mid, "TITLE", "New title")
-            # Visible text in the cell updated via Turbo.
+
             screen_table.assert_cell_dom_text(node_mid, "TITLE", "New title")
 
-            # Disable edit mode.
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()
 

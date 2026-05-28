@@ -39,40 +39,29 @@ class Test(E2ECase):
             screen_table.assert_edit_mode_on()
 
             #
-            # Case 1: Open STATEMENT inline, type new value, cancel by Escape — value NOT saved.
+            # Open STATEMENT inline, clear the field, save by click-outside —
+            # server rejects (422), cell gets validation error, value NOT saved.
+            #
+            screen_table.assert_cell_has_no_validation_error(
+                node_mid, "STATEMENT"
+            )
+
+            screen_table.do_open_inline_cell(node_mid, "STATEMENT")
+            form.do_clear_field("STATEMENT")
+            screen_table.do_save_inline_cell_by_outside_click()
+            self.sleep(0.5)
+
+            screen_table.assert_cell_has_validation_error(node_mid, "STATEMENT")
+            screen_table.assert_text("Req.")
+
+            #
+            # Click the cell again — validation error is cleared on entering edit mode.
             #
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
-            form.do_fill_in("STATEMENT", "Cancelled statement.")
+            screen_table.assert_cell_has_no_validation_error(
+                node_mid, "STATEMENT"
+            )
             screen_table.do_cancel_inline_cell_by_escape()
-            self.sleep(0.5)
-
-            screen_table.assert_cell_dom_text(
-                node_mid, "STATEMENT", "Old statement."
-            )
-
-            #
-            # Case 2: Open STATEMENT inline, type new value, save — cell updates.
-            #
-            screen_table.do_open_inline_cell(node_mid, "STATEMENT")
-            form.do_fill_in("STATEMENT", "New statement.")
-            screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
-
-            screen_table.assert_cell_dom_text(
-                node_mid, "STATEMENT", "New statement."
-            )
-
-            #
-            # Case 3: Open RATIONALE inline, type new value, save — cell updates.
-            #
-            screen_table.do_open_inline_cell(node_mid, "RATIONALE")
-            form.do_fill_in("RATIONALE", "New rationale.")
-            screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
-
-            screen_table.assert_cell_dom_text(
-                node_mid, "RATIONALE", "New rationale."
-            )
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

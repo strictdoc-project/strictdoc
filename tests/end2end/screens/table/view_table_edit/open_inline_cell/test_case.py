@@ -1,7 +1,6 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
-from tests.end2end.helpers.form.form import Form
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -33,45 +32,34 @@ class Test(E2ECase):
             node_mid = screen_table.get_node_mid_from_row(row_order=1)
             assert node_mid is not None
 
-            form = Form(self)
+            #
+            # Case 1: Edit mode is OFF — clicking the STATEMENT cell does NOT open inline form.
+            #
+            screen_table.assert_edit_mode_off()
+            screen_table.do_click_cell(node_mid, "STATEMENT")
+            screen_table.assert_cell_is_not_inline_editing(
+                node_mid, "STATEMENT"
+            )
 
+            #
+            # Case 2: Enable edit mode — clicking STATEMENT opens the inline form.
+            #
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
-            #
-            # Case 1: Open STATEMENT inline, type new value, cancel by Escape — value NOT saved.
-            #
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
-            form.do_fill_in("STATEMENT", "Cancelled statement.")
+
+            #
+            # Case 3: Press Escape — inline form closes, value NOT changed.
+            #
             screen_table.do_cancel_inline_cell_by_escape()
-            self.sleep(0.5)
+            self.sleep(0.3)
 
-            screen_table.assert_cell_dom_text(
-                node_mid, "STATEMENT", "Old statement."
+            screen_table.assert_cell_is_not_inline_editing(
+                node_mid, "STATEMENT"
             )
-
-            #
-            # Case 2: Open STATEMENT inline, type new value, save — cell updates.
-            #
-            screen_table.do_open_inline_cell(node_mid, "STATEMENT")
-            form.do_fill_in("STATEMENT", "New statement.")
-            screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
-
             screen_table.assert_cell_dom_text(
-                node_mid, "STATEMENT", "New statement."
-            )
-
-            #
-            # Case 3: Open RATIONALE inline, type new value, save — cell updates.
-            #
-            screen_table.do_open_inline_cell(node_mid, "RATIONALE")
-            form.do_fill_in("RATIONALE", "New rationale.")
-            screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
-
-            screen_table.assert_cell_dom_text(
-                node_mid, "RATIONALE", "New rationale."
+                node_mid, "STATEMENT", "Requirement statement."
             )
 
             screen_table.do_toggle_edit_mode()

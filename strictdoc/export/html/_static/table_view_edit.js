@@ -27,6 +27,33 @@
         }
     }
 
+    // --- Shared inline-cell helpers ---
+
+    function renderTurboStream(html) {
+        if (typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
+            Turbo.renderStreamMessage(html);
+        }
+    }
+
+    // Restores cell DOM to its pre-edit state. Call after nulling the active variable.
+    function cancelInlineCell(cell) {
+        cell.classList.remove('cell--editing');
+        if (cell._originalHTML !== undefined) {
+            cell.innerHTML = cell._originalHTML;
+            delete cell._originalHTML;
+        }
+    }
+
+    // Saves original HTML, marks cell as editing, and fetches the inline form.
+    function initInlineCellState(cell) {
+        cell._originalHTML = cell.innerHTML;
+        cell.removeAttribute('data-validation-error');
+        cell.classList.add('cell--editing');
+        fetchTurboStream(cell.dataset.url);
+    }
+
+    // --- Singleline cell ---
+
     function activateCell(cell) {
         if (activeCell === cell) return;
         if (activeCell) cancelEdit();
@@ -75,28 +102,22 @@
         input.select();
     }
 
+    // --- Autocomplete cell ---
+
     function openAutocompleteCell(cell) {
         if (activeAutocompleteCell === cell) return;
         if (activeAutocompleteCell) cancelAutocompleteCell();
         if (activeCommentsCell) saveCommentsCell(activeCommentsCell);
 
         activeAutocompleteCell = cell;
-        cell._originalHTML = cell.innerHTML;
-        cell.removeAttribute('data-validation-error');
-        cell.classList.add('cell--editing');
-
-        fetchTurboStream(cell.dataset.url);
+        initInlineCellState(cell);
     }
 
     function cancelAutocompleteCell() {
         if (!activeAutocompleteCell) return;
         const cell = activeAutocompleteCell;
         activeAutocompleteCell = null;
-        cell.classList.remove('cell--editing');
-        if (cell._originalHTML !== undefined) {
-            cell.innerHTML = cell._originalHTML;
-            delete cell._originalHTML;
-        }
+        cancelInlineCell(cell);
     }
 
     async function saveAutocompleteCell(cell, ac) {
@@ -135,9 +156,7 @@
             const html = await response.text();
             if (response.ok) {
                 ok = true;
-                if (typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
-                    Turbo.renderStreamMessage(html);
-                }
+                renderTurboStream(html);
             } else {
                 console.error('Table autocomplete save failed:', html);
                 cell.dataset.currentValue = originalValue;
@@ -153,6 +172,8 @@
         }
         delete cell._originalHTML;
     }
+
+    // --- Singleline submit/cancel ---
 
     function cancelEdit() {
         if (!activeCell) return;
@@ -207,9 +228,7 @@
             const html = await response.text();
             if (response.ok) {
                 ok = true;
-                if (typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
-                    Turbo.renderStreamMessage(html);
-                }
+                renderTurboStream(html);
             } else {
                 console.error('Table cell update failed:', html);
             }
@@ -223,43 +242,37 @@
         }
     }
 
+    // --- Stream fetch ---
+
     async function fetchTurboStream(url) {
         try {
             const response = await fetch(url, {
                 headers: { 'Accept': 'text/vnd.turbo-stream.html' },
             });
             const html = await response.text();
-            if (response.ok && typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
-                Turbo.renderStreamMessage(html);
+            if (response.ok) {
+                renderTurboStream(html);
             }
         } catch (err) {
             console.error('Table stream fetch error:', err);
         }
     }
 
-    // --- Comments cell (inline form) ---
+    // --- Comments / multiline-inline / relations cell ---
 
     function openCommentsCell(cell) {
         if (activeCommentsCell === cell) return;
         if (activeCommentsCell) saveCommentsCell(activeCommentsCell);
 
         activeCommentsCell = cell;
-        cell._originalHTML = cell.innerHTML;
-        cell.removeAttribute('data-validation-error');
-        cell.classList.add('cell--editing');
-
-        fetchTurboStream(cell.dataset.url);
+        initInlineCellState(cell);
     }
 
     function cancelCommentsCell() {
         if (!activeCommentsCell) return;
         const cell = activeCommentsCell;
         activeCommentsCell = null;
-        cell.classList.remove('cell--editing');
-        if (cell._originalHTML !== undefined) {
-            cell.innerHTML = cell._originalHTML;
-            delete cell._originalHTML;
-        }
+        cancelInlineCell(cell);
     }
 
     async function saveCommentsCell(cell) {
@@ -287,9 +300,7 @@
             });
             const html = await response.text();
             if (response.ok) {
-                if (typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
-                    Turbo.renderStreamMessage(html);
-                }
+                renderTurboStream(html);
             } else {
                 cell.setAttribute('data-validation-error', 'true');
                 if (cell._originalHTML !== undefined) {
@@ -371,14 +382,9 @@
         }, true);
 
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && activeCommentsCell) {
-                e.preventDefault();
-                cancelCommentsCell();
-            }
-            if (e.key === 'Escape' && activeAutocompleteCell) {
-                e.preventDefault();
-                cancelAutocompleteCell();
-            }
+            if (e.key !== 'Escape') return;
+            if (activeCommentsCell) { e.preventDefault(); cancelCommentsCell(); }
+            if (activeAutocompleteCell) { e.preventDefault(); cancelAutocompleteCell(); }
         });
 
         document.addEventListener('click', function (e) {

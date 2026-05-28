@@ -6,7 +6,7 @@
       {%- endwith -%}
     {%- elif field_value -%}
       {%- with field_content = field_value %}
-        {%- include "screens/document/table/field_display_mode/content.jinja" -%}
+        {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
       {%- endwith -%}
     {%- endif -%}
   </template>

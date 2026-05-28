@@ -41,17 +41,15 @@ class Test(E2ECase):
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
-            screen_table.do_click_multiline_cell(node_mid, "RELATIONS")
-            screen_table.assert_multiline_popup_open()
+            screen_table.do_open_inline_cell(node_mid, "RELATIONS")
 
             new_relation_mid = form.do_form_add_field_relation()
             form.do_fill_in_field_relation_and_autocomplete(
                 new_relation_mid, "REQ-001"
             )
 
-            screen_table.do_submit_multiline_popup()
+            screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
-            screen_table.assert_no_multiline_popup()
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

@@ -9,6 +9,10 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 )
 from tests.end2end.server import SDocTestServer
 
+_HIDDEN_COLUMNS = (
+    "Type|Level|UID|PREFIX|STATUS|TAGS|REFS|Title|Statement|Rationale"
+)
+
 
 class Test(E2ECase):
     def test(self):
@@ -32,6 +36,9 @@ class Test(E2ECase):
             screen_table = viewtype_selector.do_go_to_table()
             screen_table.assert_on_screen_table()
 
+            # Hide all columns except COMMENT so the inline form buttons are on screen.
+            screen_table.do_reload_with_hidden_columns(_HIDDEN_COLUMNS)
+
             node_mid = screen_table.get_node_mid_from_row(row_order=1)
             assert node_mid is not None
 
@@ -40,14 +47,12 @@ class Test(E2ECase):
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
-            screen_table.do_click_multiline_cell(node_mid, "COMMENT")
-            screen_table.assert_multiline_popup_open()
+            screen_table.do_open_inline_cell(node_mid, "COMMENT")
 
             form.do_delete_comment(field_order=2)
 
-            screen_table.do_submit_multiline_popup()
+            screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
-            screen_table.assert_no_multiline_popup()
 
             screen_table.assert_text("Comment #1")
             screen_table.assert_no_text("Comment #2")

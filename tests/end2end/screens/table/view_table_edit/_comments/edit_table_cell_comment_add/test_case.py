@@ -40,15 +40,13 @@ class Test(E2ECase):
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
-            screen_table.do_click_multiline_cell(node_mid, "COMMENT")
-            screen_table.assert_multiline_popup_open()
+            screen_table.do_open_inline_cell(node_mid, "COMMENT")
 
             new_comment_mid = form.do_form_add_field_comment()
             form.do_fill_in_field_comment(new_comment_mid, "Second comment.")
 
-            screen_table.do_submit_multiline_popup()
+            screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
-            screen_table.assert_no_multiline_popup()
 
             self.assert_text("First comment.")
             self.assert_text("Second comment.")

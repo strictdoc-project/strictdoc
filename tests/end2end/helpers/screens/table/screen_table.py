@@ -27,6 +27,13 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def assert_on_screen_table(self) -> None:
         super().assert_on_screen("table")
 
+    def do_reload_with_hidden_columns(self, hidden: str) -> None:
+        current_url = self.test_case.get_current_url()
+        # Strip both query string and hash fragment before appending new params.
+        base_url = current_url.split("?")[0].split("#")[0]
+        self.test_case.open(f"{base_url}?hidden={hidden}")
+        self.assert_on_screen_table()
+
     #
     # Column visibility toolbar
     #
@@ -283,6 +290,43 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     #
     # END ARCHIVE
     #
+
+    #
+    # Inline cell forms (comments, relations, multiline-inline, autocomplete)
+    #
+
+    def assert_cell_is_inline_editing(
+        self, node_mid: str, field_name: str
+    ) -> None:
+        sel = self._cell_sel(node_mid, field_name)
+        element = self.test_case.find_element(sel)
+        classes = element.get_attribute("class") or ""
+        assert "cell--editing" in classes, (
+            f"Expected cell [{node_mid}][{field_name}] to have class 'cell--editing'"
+        )
+
+    def assert_cell_is_not_inline_editing(
+        self, node_mid: str, field_name: str
+    ) -> None:
+        sel = self._cell_sel(node_mid, field_name)
+        element = self.test_case.find_element(sel)
+        classes = element.get_attribute("class") or ""
+        assert "cell--editing" not in classes, (
+            f"Expected cell [{node_mid}][{field_name}] NOT to have class 'cell--editing'"
+        )
+
+    def do_open_inline_cell(self, node_mid: str, field_name: str) -> None:
+        self.test_case.click(self._cell_sel(node_mid, field_name))
+        self.assert_cell_is_inline_editing(node_mid, field_name)
+
+    def do_save_inline_cell_by_outside_click(self) -> None:
+        # Click the page header (always on screen) to trigger the document click-outside
+        # handler that calls saveCommentsCell / saveAutocompleteCell.
+        # The first table <th> can be scrolled out of view on wide tables.
+        self.test_case.click("#header-project-name")
+
+    def do_cancel_inline_cell_by_escape(self) -> None:
+        self.test_case.send_keys("body", Keys.ESCAPE)
 
     def do_cell_autocomplete(self, field_name: str, field_value: str) -> None:
         testid = f"table-cell-autocomplete-{field_name}"

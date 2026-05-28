@@ -1,9 +1,7 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
-from tests.end2end.helpers.screens.document.form_edit_requirement import (
-    Form_EditRequirement,
-)
+from tests.end2end.helpers.form.form import Form
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -35,20 +33,22 @@ class Test(E2ECase):
             node_mid = screen_table.get_node_mid_from_row(row_order=1)
             assert node_mid is not None
 
-            form = Form_EditRequirement(self)
+            form = Form(self)
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
-            screen_table.do_open_inline_cell(node_mid, "COMMENT")
-
-            form.do_delete_comment(field_order=1)
-
+            #
+            # Case 1: Open inline form, type new value, save — cell updates.
+            #
+            screen_table.do_open_inline_cell(node_mid, "STATEMENT")
+            form.do_fill_in("STATEMENT", "New statement.")
             screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
 
-            screen_table.assert_no_text("First comment.")
-            screen_table.assert_text("Second comment.")
+            screen_table.assert_cell_dom_text(
+                node_mid, "STATEMENT", "New statement."
+            )
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

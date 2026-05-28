@@ -38,7 +38,7 @@ class Test(E2ECase):
             #
             # Text 'act' in field STATUS should be autocompleted to 'Active'.
             #
-            screen_table.do_cell_autocomplete("STATUS", "act")
+            screen_table.do_cell_autocomplete(node_mid, "STATUS", "act")
 
             screen_table.do_submit_cell_autocomplete()
             self.sleep(0.5)

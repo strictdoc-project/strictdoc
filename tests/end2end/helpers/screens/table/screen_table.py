@@ -328,9 +328,14 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def do_cancel_inline_cell_by_escape(self) -> None:
         self.test_case.send_keys("body", Keys.ESCAPE)
 
-    def do_cell_autocomplete(self, field_name: str, field_value: str) -> None:
-        testid = f"table-cell-autocomplete-{field_name}"
-        field_xpath = f"(//*[@data-testid='{testid}'])"
+    def do_cell_autocomplete(
+        self, node_mid: str, field_name: str, field_value: str
+    ) -> None:
+        # Click the cell to trigger openAutocompleteCell — turbo-stream injects
+        # the sdoc-autocompletable form into the cell div.
+        self.test_case.click(self._cell_sel(node_mid, field_name))
+        field_xpath = f"(//*[@data-testid='form-field-{field_name}'])"
+        self.test_case.wait_for_element(field_xpath, by=By.XPATH, timeout=3)
         element = self.test_case.find_element(field_xpath, by=By.XPATH)
         hidden_input = element.find_element(
             By.XPATH, "following-sibling::input[@type='hidden']"
@@ -353,8 +358,8 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def do_cell_autocomplete_again(
         self, field_name: str, field_value: str
     ) -> None:
-        testid = f"table-cell-autocomplete-{field_name}"
-        field_xpath = f"(//*[@data-testid='{testid}'])"
+        # Cell is already open; find the injected sdoc-autocompletable by testid.
+        field_xpath = f"(//*[@data-testid='form-field-{field_name}'])"
         element = self.test_case.find_element(field_xpath, by=By.XPATH)
         hidden_input = element.find_element(
             By.XPATH, "following-sibling::input[@type='hidden']"

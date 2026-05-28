@@ -149,6 +149,8 @@
                 </td>
 
                 {# -- STATEMENT: multiline inline if editable ------------- #}
+                {# Hardcoded here (not in a loop) because STATEMENT occupies a fixed #}
+                {# column position in the table header between TITLE and RATIONALE.  #}
                 {%- if statement_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
@@ -174,6 +176,8 @@
                 {%- endif %}
 
                 {# -- RATIONALE: multiline inline if editable ------------- #}
+                {# Hardcoded here (not in a loop) because RATIONALE occupies a fixed #}
+                {# column position in the table header between STATEMENT and COMMENT. #}
                 {%- if rationale_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"

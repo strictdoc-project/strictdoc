@@ -2,7 +2,14 @@
   Dispatcher for grammar-defined field cells in the loop columns.
   Called from main.jinja for: meta field loops and non-reserved content field loops.
   NOT used for STATEMENT / RATIONALE / COMMENT / RELATIONS — those are hardcoded
-  individually in main.jinja.
+  individually in main.jinja because they occupy fixed columns at specific positions
+  in the table header (between TITLE and the dynamic content fields). Putting them
+  in a loop would break the column order.
+  Additional differences that keep STATEMENT / RATIONALE separate:
+  - Python accessors differ: requirement.reserved_statement / requirement.rationale
+    vs requirement.get_meta_field_value_by_title(field_title) used here.
+  - Renderers differ: view_object.render_node_statement() / render_node_rationale()
+    vs view_object.render_node_field() used here for generic multiline fields.
 
   Expects: field_title, field_value, cell_edit_mode, td_class, requirement, node
 

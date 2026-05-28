@@ -1216,6 +1216,53 @@ def create_main_router(
         )
 
     @read_router.get(
+        "/actions/table/get_node_autocomplete_inline", response_class=Response
+    )
+    def table__get_node_autocomplete_inline(
+        node_mid: str,
+        field_name: str,
+    ) -> Response:
+        node: SDocNode = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid)
+        )
+        document = assert_cast(node.get_document(), SDocDocument)
+        assert document.grammar is not None
+        grammar: DocumentGrammar = document.grammar
+        element: GrammarElement = grammar.elements_by_type[node.node_type]
+
+        if field_name not in element.fields_map:
+            return HTMLResponse(
+                content=f"Unknown field: {field_name}", status_code=400
+            )
+
+        field: GrammarElementField = element.fields_map[field_name]
+        is_multiple_choice: bool = field.gef_type in (
+            RequirementFieldType.MULTIPLE_CHOICE,
+            RequirementFieldType.TAG,
+        )
+
+        current_value: str = ""
+        if field_name in node.ordered_fields_lookup:
+            current_value = node.ordered_fields_lookup[field_name][
+                0
+            ].get_text_value()
+
+        output = env().render_template_as_markup(
+            "actions/table/get_node_autocomplete_inline/stream_inline_form.jinja.html",
+            node_mid=node_mid,
+            cell_field_name=field_name,
+            current_value=current_value,
+            document_mid=document.reserved_mid.get_string_value(),
+            element_type=node.node_type,
+            is_multiple_choice=is_multiple_choice,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
+    @read_router.get(
         "/actions/table/get_node_multiline_inline", response_class=Response
     )
     def table__get_node_multiline_inline(

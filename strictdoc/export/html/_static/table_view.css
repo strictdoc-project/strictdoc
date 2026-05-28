@@ -185,7 +185,7 @@
   outline: none;
 }
 
-/* Autocomplete cells (pre-rendered Stimulus structure) */
+/* Autocomplete cells */
 
 .table--is-editable [data-field-type="autocomplete"] {
   cursor: pointer;
@@ -197,9 +197,17 @@
   outline-offset: -2px;
 }
 
-.cell-edit-ac {
-  /* sdoc-autocompletable in editing context, rendered from table/cell_autocompletable.jinja */
-  display: none;
+[data-field-type="autocomplete"] sdoc-form-field {
+  /*
+    sdoc-form-field has display:block with padding/margin in form.css.
+    Reset to display:contents so it is transparent to table cell layout.
+  */
+  display: contents;
+}
+
+[data-field-type="autocomplete"] sdoc-autocompletable {
+  /* Inline edit component injected via turbo-stream on click. */
+  display: block;
   width: 100%;
   min-height: 2rem;
   padding: .5rem 1rem;
@@ -211,15 +219,6 @@
   outline: none;
   white-space: nowrap;
   overflow: hidden;
-}
-
-.table--is-editable [data-field-type="autocomplete"] .cell-edit-ac {
-  display: block;
-}
-
-.table--is-editable [data-field-type="autocomplete"] .cell-display {
-  /* cell content, out of editing context, rendered from table/cell_autocompletable.jinja */
-  display: none;
 }
 
 [data-field-type="autocomplete"] .autocomplete-items {

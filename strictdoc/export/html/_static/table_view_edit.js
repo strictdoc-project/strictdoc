@@ -3,6 +3,7 @@
     let activeCell = null;
     let editGeneration = 0;
     let activeCommentsCell = null;
+    let activeAutocompleteCell = null;
 
     function getTable() {
         return document.querySelector('.content-view-table');
@@ -22,6 +23,7 @@
         if (!on) {
             if (activeCell) cancelEdit();
             if (activeCommentsCell) cancelCommentsCell();
+            if (activeAutocompleteCell) cancelAutocompleteCell();
         }
     }
 
@@ -73,12 +75,48 @@
         input.select();
     }
 
+    function openAutocompleteCell(cell) {
+        if (activeAutocompleteCell === cell) return;
+        if (activeAutocompleteCell) cancelAutocompleteCell();
+        if (activeCommentsCell) saveCommentsCell(activeCommentsCell);
+
+        activeAutocompleteCell = cell;
+        cell._originalHTML = cell.innerHTML;
+        cell.removeAttribute('data-validation-error');
+        cell.classList.add('cell--editing');
+
+        fetchTurboStream(cell.dataset.url);
+    }
+
+    function cancelAutocompleteCell() {
+        if (!activeAutocompleteCell) return;
+        const cell = activeAutocompleteCell;
+        activeAutocompleteCell = null;
+        cell.classList.remove('cell--editing');
+        if (cell._originalHTML !== undefined) {
+            cell.innerHTML = cell._originalHTML;
+            delete cell._originalHTML;
+        }
+    }
+
     async function saveAutocompleteCell(cell, ac) {
         const hiddenInput = ac.nextElementSibling;
         const rawValue = hiddenInput ? hiddenInput.value : ac.innerText;
         const newValue = rawValue.trim().replace(/,\s*$/, '').trim();
         const originalValue = (cell.dataset.currentValue || '').trim();
-        if (newValue === originalValue) return;
+
+        if (activeAutocompleteCell === cell) {
+            activeAutocompleteCell = null;
+            cell.classList.remove('cell--editing');
+        }
+
+        if (newValue === originalValue) {
+            if (cell._originalHTML !== undefined) {
+                cell.innerHTML = cell._originalHTML;
+                delete cell._originalHTML;
+            }
+            return;
+        }
 
         cell.dataset.currentValue = newValue;
 
@@ -87,6 +125,7 @@
         formData.append('field_name', cell.dataset.fieldName);
         formData.append('field_value', newValue);
 
+        let ok = false;
         try {
             const response = await fetch('/actions/table/update_node_field', {
                 method: 'POST',
@@ -95,6 +134,7 @@
             });
             const html = await response.text();
             if (response.ok) {
+                ok = true;
                 if (typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
                     Turbo.renderStreamMessage(html);
                 }
@@ -107,6 +147,11 @@
             console.error('Table autocomplete save error:', err);
             cell.dataset.currentValue = originalValue;
         }
+
+        if (!ok && cell._originalHTML !== undefined) {
+            cell.innerHTML = cell._originalHTML;
+        }
+        delete cell._originalHTML;
     }
 
     function cancelEdit() {
@@ -285,7 +330,8 @@
 
             const autocompleteCell = e.target.closest('[data-field-type="autocomplete"]');
             if (autocompleteCell) {
-                e.stopPropagation();
+                e.preventDefault();
+                openAutocompleteCell(autocompleteCell);
                 return;
             }
             const singlelineCell = e.target.closest('[data-field-type="singleline"]');
@@ -329,6 +375,10 @@
                 e.preventDefault();
                 cancelCommentsCell();
             }
+            if (e.key === 'Escape' && activeAutocompleteCell) {
+                e.preventDefault();
+                cancelAutocompleteCell();
+            }
         });
 
         document.addEventListener('click', function (e) {
@@ -340,6 +390,9 @@
             }
             if (activeCommentsCell && !e.composedPath().includes(activeCommentsCell)) {
                 saveCommentsCell(activeCommentsCell);
+            }
+            if (activeAutocompleteCell && !e.composedPath().includes(activeAutocompleteCell)) {
+                saveAutocompleteCell(activeAutocompleteCell, activeAutocompleteCell.querySelector('[data-controller="autocompletable"]'));
             }
         });
     }

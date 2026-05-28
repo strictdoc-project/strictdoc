@@ -2,45 +2,23 @@
 {%- assert field_value is defined, "field_value is defined" -%}
 {%- assert td_class is defined, "td_class is defined" -%}
 {#
-  Renders a SingleChoice / MultipleChoice / Tag field cell.
-  Both display and edit elements are always present in the DOM;
-  CSS class "table--is-editable" on <table> hides .cell-display and
-  shows .cell-edit-ac (and vice versa), so no JS fetch is needed on click.
+  Renders a SingleChoice / MultipleChoice / Tag field cell — display only.
+  On click in edit mode JS fetches the inline form from data-url (turbo-stream),
+  which injects the autocompletable component into the cell div.
+  On blur JS saves via /actions/table/update_node_field and the turbo-stream
+  response restores the display content.
 #}
 <td class="{{ td_class }}"
     data-node-mid="{{ requirement.reserved_mid }}"
     data-field-name="{{ field_title }}"
     data-field-type="autocomplete"
-    data-current-value="{{ field_value if field_value else '' }}">
-
-  {# Display mode: shown when table is not in edit mode. #}
-  <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}" class="cell-display">
+    data-current-value="{{ field_value if field_value else '' }}"
+    data-url="/actions/table/get_node_autocomplete_inline?node_mid={{ requirement.reserved_mid }}&field_name={{ field_title }}">
+  <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}">
     {%- if field_value %}
       {%- with field_content = field_value %}
         {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
       {%- endwith -%}
     {%- endif %}
   </div>
-
-  {#
-    Edit mode: uses the shared autocompletable field component.
-    field_class_name="cell-edit-ac" preserves the CSS show/hide toggle.
-  #}
-  {%- with
-    field_class_name="cell-edit-ac",
-    field_editable=true,
-    field_input_name=field_title,
-    field_label=field_title,
-    field_placeholder="",
-    field_value=field_value if field_value else '',
-    mid=requirement.reserved_mid,
-    testid_postfix=field_title,
-    autocomplete_url="/autocomplete/field?document_mid=" ~ view_object.document.reserved_mid ~ "&element_type=" ~ node.node_type ~ "&field_name=" ~ field_title,
-    autocomplete_len=0,
-    autocomplete_multiplechoice=view_object.is_table_cell_multiple_choice(node.node_type, field_title),
-    result_class_name="cell-autocomplete-dropdown"
-  -%}
-    {%- include "components/form/field/autocompletable/index.jinja" %}
-  {%- endwith -%}
-
 </td>

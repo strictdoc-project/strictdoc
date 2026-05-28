@@ -43,8 +43,14 @@ class MarkerParser:
         """
         Parse source nodes and relation markers from source file comments.
 
-        Before the actual parsing, the function removes all code comment symbols
-        such as /** ... */ or /// Doxygen comments or Python
+        The input_string is parsed for @relation markers. If custom_tags are given,
+        input_string is additionally parsed for source nodes and SourceNode.fields_locations
+        offsets are calculated relative to input_string. This implies that input_string
+        lines must not be pre-stripped by the caller, otherwise offsets would mismatch with
+        actual file content and source node write-back would corrupt source files.
+        Comment symbols like /** ... */ or /// Doxygen comments or Python comments
+        are instead replaced internally with spaces (preserving string length), so that
+        all byte offsets remain valid for both parsing and file write-back.
 
         The 1-based line start/end provide hints to the parser for the case markers
         of scope file, class or function are found, in which case the user values are
@@ -56,6 +62,11 @@ class MarkerParser:
         It is required as a base offset for some parser tokens to determine their
         absolute position in file, as lexing gives only a position relative
         to comment start.
+
+        comment_byte_range, if given, enables write-back of modified source nodes.
+        Modification happens when a user edits the source node in the web server, or
+        when StrictDoc auto-assigns MID or HASH. Values are 0-based byte-offsets
+        specifying the exact input_string start-to-end position inside the source file.
 
         custom_tags is a set of valid tags if a comment is expected to contain
         key-value pairs for source node generation. The caller is responsible to determine

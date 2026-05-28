@@ -294,7 +294,7 @@
                 activateCell(singlelineCell);
                 return;
             }
-            const commentsCell = e.target.closest('[data-field-type="comments"], [data-field-type="relations-inline"]');
+            const commentsCell = e.target.closest('[data-field-type="comments"], [data-field-type="relations-inline"], [data-field-type="multiline-inline"]');
             if (commentsCell) {
                 e.preventDefault();
                 openCommentsCell(commentsCell);

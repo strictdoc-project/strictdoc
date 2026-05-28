@@ -19,10 +19,11 @@
       On Enter / blur: POSTs to /actions/table/update_node_field via fetch.
       Server returns a turbo-stream that updates <div id="cell-{mid}-{field}">.
 
-  "multiline"
-      JS fetches the inline form from the URL stored in <a class="cell-edit-link">.
-      Server returns a turbo-stream with a full modal-style form.
-      Updates <div id="cell-{mid}-{field}">.
+  "multiline-inline"
+      JS fetches the inline form from the URL stored in data-url attribute.
+      Server returns a turbo-stream that replaces the cell content with a
+      contenteditable form (no modal). On blur / outside click: JS POSTs the
+      form, server updates <div id="cell-{mid}-{field}"> via turbo-stream.
 
   "comments"
       JS fetches /actions/table/get_node_comments_inline?node_mid=...
@@ -147,22 +148,20 @@
                   </div>
                 </td>
 
-                {# -- STATEMENT: multiline popup if editable -------------- #}
+                {# -- STATEMENT: multiline inline if editable ------------- #}
                 {%- if statement_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="STATEMENT"
-                    data-field-type="multiline">
-                  <a class="cell-edit-link" data-turbo="false"
-                     href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
-                    <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
-                      {%- if requirement.has_reserved_statement() -%}
-                        {%- with field_content = view_object.render_node_statement(requirement) %}
-                          {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
-                        {%- endwith -%}
-                      {%- endif -%}
-                    </div>
-                  </a>
+                    data-field-type="multiline-inline"
+                    data-url="/actions/table/get_node_multiline_inline?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
+                  <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
+                    {%- if requirement.has_reserved_statement() -%}
+                      {%- with field_content = view_object.render_node_statement(requirement) %}
+                        {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
+                      {%- endwith -%}
+                    {%- endif -%}
+                  </div>
                 </td>
                 {%- else %}
                 <td class="content-view-td content-view-td-content">
@@ -174,22 +173,20 @@
                 </td>
                 {%- endif %}
 
-                {# -- RATIONALE: multiline popup if editable -------------- #}
+                {# -- RATIONALE: multiline inline if editable ------------- #}
                 {%- if rationale_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RATIONALE"
-                    data-field-type="multiline">
-                  <a class="cell-edit-link" data-turbo="false"
-                     href="/actions/table/get_node_field_form?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
-                    <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
-                      {%- if requirement.rationale -%}
-                        {%- with field_content = view_object.render_node_rationale(requirement) %}
-                          {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
-                        {%- endwith -%}
-                      {%- endif -%}
-                    </div>
-                  </a>
+                    data-field-type="multiline-inline"
+                    data-url="/actions/table/get_node_multiline_inline?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
+                  <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
+                    {%- if requirement.rationale -%}
+                      {%- with field_content = view_object.render_node_rationale(requirement) %}
+                        {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
+                      {%- endwith -%}
+                    {%- endif -%}
+                  </div>
                 </td>
                 {%- else %}
                 <td class="content-view-td content-view-td-content">

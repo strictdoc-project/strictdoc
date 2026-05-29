@@ -1,6 +1,6 @@
 (function () {
     let editMode = false;
-    let activeCommentsCell = null;
+    let activeInlineCell = null;
     let activeAutocompleteCell = null;
 
     function getTable() {
@@ -19,7 +19,7 @@
             btn.setAttribute('aria-pressed', on ? 'true' : 'false');
         }
         if (!on) {
-            if (activeCommentsCell) cancelCommentsCell();
+            if (activeInlineCell) cancelInlineCell();
             if (activeAutocompleteCell) cancelAutocompleteCell();
         }
     }
@@ -33,7 +33,7 @@
     }
 
     // Restores cell DOM to its pre-edit state. Call after nulling the active variable.
-    function cancelInlineCell(cell) {
+    function restoreInlineCellDOM(cell) {
         cell.classList.remove('cell--editing');
         if (cell._originalHTML !== undefined) {
             cell.innerHTML = cell._originalHTML;
@@ -54,7 +54,7 @@
     function openAutocompleteCell(cell) {
         if (activeAutocompleteCell === cell) return;
         if (activeAutocompleteCell) cancelAutocompleteCell();
-        if (activeCommentsCell) saveCommentsCell(activeCommentsCell);
+        if (activeInlineCell) saveInlineCell(activeInlineCell);
 
         activeAutocompleteCell = cell;
         initInlineCellState(cell);
@@ -64,7 +64,7 @@
         if (!activeAutocompleteCell) return;
         const cell = activeAutocompleteCell;
         activeAutocompleteCell = null;
-        cancelInlineCell(cell);
+        restoreInlineCellDOM(cell);
     }
 
     async function saveAutocompleteCell(cell, ac) {
@@ -136,26 +136,26 @@
         }
     }
 
-    // --- Comments / multiline-inline / singleline-inline / relations cell ---
+    // --- Inline-form cells (contenteditable / comments / relations) ---
 
-    function openCommentsCell(cell) {
-        if (activeCommentsCell === cell) return;
-        if (activeCommentsCell) saveCommentsCell(activeCommentsCell);
+    function openInlineCell(cell) {
+        if (activeInlineCell === cell) return;
+        if (activeInlineCell) saveInlineCell(activeInlineCell);
 
-        activeCommentsCell = cell;
+        activeInlineCell = cell;
         initInlineCellState(cell);
     }
 
-    function cancelCommentsCell() {
-        if (!activeCommentsCell) return;
-        const cell = activeCommentsCell;
-        activeCommentsCell = null;
-        cancelInlineCell(cell);
+    function cancelInlineCell() {
+        if (!activeInlineCell) return;
+        const cell = activeInlineCell;
+        activeInlineCell = null;
+        restoreInlineCellDOM(cell);
     }
 
-    async function saveCommentsCell(cell) {
+    async function saveInlineCell(cell) {
         if (!cell) return;
-        activeCommentsCell = null;
+        activeInlineCell = null;
         cell.classList.remove('cell--editing');
 
         const form = cell.querySelector('form');
@@ -186,7 +186,7 @@
                 }
             }
         } catch (err) {
-            console.error('Comments cell save error:', err);
+            console.error('Inline cell save error:', err);
             if (cell._originalHTML !== undefined) {
                 cell.innerHTML = cell._originalHTML;
             }
@@ -223,19 +223,12 @@
                 openAutocompleteCell(autocompleteCell);
                 return;
             }
-            const commentsCell = e.target.closest(
-                '[data-field-type="comments"], [data-field-type="relations-inline"], [data-field-type="multiline-inline"], [data-field-type="singleline-inline"]'
+            const inlineCell = e.target.closest(
+                '[data-field-type="comments"], [data-field-type="relations"], [data-field-type="multiline"], [data-field-type="singleline"]'
             );
-            if (commentsCell) {
+            if (inlineCell) {
                 e.preventDefault();
-                openCommentsCell(commentsCell);
-                return;
-            }
-            const streamCell = e.target.closest('[data-field-type="multiline"]');
-            if (streamCell) {
-                e.preventDefault();
-                const link = streamCell.querySelector('.cell-edit-link');
-                if (link) fetchTurboStream(link.href);
+                openInlineCell(inlineCell);
                 return;
             }
         });
@@ -257,13 +250,13 @@
 
         document.addEventListener('keydown', function (e) {
             if (e.key !== 'Escape') return;
-            if (activeCommentsCell) { e.preventDefault(); cancelCommentsCell(); }
+            if (activeInlineCell) { e.preventDefault(); cancelInlineCell(); }
             if (activeAutocompleteCell) { e.preventDefault(); cancelAutocompleteCell(); }
         });
 
         document.addEventListener('click', function (e) {
-            if (activeCommentsCell && !e.composedPath().includes(activeCommentsCell)) {
-                saveCommentsCell(activeCommentsCell);
+            if (activeInlineCell && !e.composedPath().includes(activeInlineCell)) {
+                saveInlineCell(activeInlineCell);
             }
             if (activeAutocompleteCell && !e.composedPath().includes(activeAutocompleteCell)) {
                 saveAutocompleteCell(activeAutocompleteCell, activeAutocompleteCell.querySelector('[data-controller="autocompletable"]'));

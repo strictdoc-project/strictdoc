@@ -203,7 +203,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     # ARCHIVE: Multiline cell modal popup
     # These methods were written for the modal-popup approach (STATEMENT/RATIONALE
     # opened a full sdoc-modal on click). Multiline cells now use inline turbo-stream
-    # forms (data-field-type="multiline-inline"), so this section is no longer used
+    # forms (data-field-type="multiline"), so this section is no longer used
     # by any active test. Kept for reference until inline-form equivalents are written.
     #
 

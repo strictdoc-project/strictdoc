@@ -15,15 +15,20 @@
   CELL EDITING MODES  (data-field-type attribute on <td>)
   --------------------------------------------------------
   "singleline"
-      JS (table_view_edit.js) replaces the <td> content with an <input>.
-      On Enter / blur: POSTs to /actions/table/update_node_field via fetch.
-      Server returns a turbo-stream that updates <div id="cell-{mid}-{field}">.
-
-  "multiline-inline"
-      JS fetches the inline form from the URL stored in data-url attribute.
+      JS fetches the inline form from the URL stored in data-url attribute
+      (GET /actions/table/get_node_singleline_inline).
       Server returns a turbo-stream that replaces the cell content with a
-      contenteditable form (no modal). On blur / outside click: JS POSTs the
-      form, server updates <div id="cell-{mid}-{field}"> via turbo-stream.
+      single-line contenteditable form. On blur / outside click: JS POSTs the
+      form to /actions/table/update_node_field, server updates
+      <div id="cell-{mid}-{field}"> via turbo-stream.
+
+  "multiline"
+      JS fetches the inline form from the URL stored in data-url attribute
+      (GET /actions/table/get_node_multiline_inline).
+      Server returns a turbo-stream that replaces the cell content with a
+      multi-line contenteditable form. On blur / outside click: JS POSTs the
+      form to /actions/table/update_node_field_multiline, server updates
+      <div id="cell-{mid}-{field}"> via turbo-stream.
 
   "comments"
       JS fetches /actions/table/get_node_comments_inline?node_mid=...
@@ -31,7 +36,7 @@
       On blur / outside click: JS POSTs the form, server updates
       <div id="cell-{mid}-COMMENT"> via turbo-stream.
 
-  "relations-inline"
+  "relations"
       JS fetches /actions/table/get_node_relations_inline?node_mid=...
       Server returns an inline form with relation rows (editable) and
       computed/derived relations (read-only).
@@ -43,14 +48,21 @@
       Edit mode CSS hides .cell-display and shows .cell-edit-ac (contenteditable).
       On blur: JS POSTs to /actions/table/update_node_field via fetch.
 
+  JS handles "singleline", "multiline", "comments", "relations" identically
+  (openInlineCell / saveInlineCell). The distinction is purely server-side:
+  different GET endpoints inject different form shapes; different POST endpoints
+  process them.
+
   CELL EDITABILITY (is_table_cell_editable / get_table_cell_edit_mode)
   ----------------------------------------------------------------------
   Whether a field is editable depends on the document grammar for that node
   type. view_object.is_table_cell_editable() returns True if the field is
-  declared in the grammar. get_table_cell_edit_mode() returns the specific
-  mode: "autocomplete" | "singleline" | "multiline" | "readonly".
-  Fixed fields (STATEMENT, RATIONALE, COMMENT) use is_table_cell_editable.
-  Dynamic field loops use get_table_cell_edit_mode via cell_field.jinja.
+  declared in the grammar. get_table_cell_edit_mode() returns the Python grammar
+  value: "autocomplete" | "singleline" | "multiline" | "readonly".
+  cell_field.jinja maps grammar values to data-field-type DOM attributes:
+  "singleline" → data-field-type="singleline", "multiline" → data-field-type="multiline".
+  Fixed fields (STATEMENT, RATIONALE, COMMENT) use is_table_cell_editable;
+  dynamic field loops use get_table_cell_edit_mode via cell_field.jinja.
 #}
 {%- if view_object.has_any_nodes() -%}
   <div class="main" js-pan_with_space="true">
@@ -123,7 +135,7 @@
                 <td class="content-view-td content-view-td-meta content-view-td-related"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RELATIONS"
-                    data-field-type="relations-inline"
+                    data-field-type="relations"
                     data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}">
                   <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
                     {%- include "screens/document/table/field_display_mode/relations.jinja" %}
@@ -134,7 +146,7 @@
                 <td class="content-view-td content-view-td-title"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="TITLE"
-                    data-field-type="singleline-inline"
+                    data-field-type="singleline"
                     data-url="/actions/table/get_node_singleline_inline?node_mid={{ requirement.reserved_mid }}&field_name=TITLE">
                   <div id="cell-{{ requirement.reserved_mid }}-TITLE">
                     {%- if requirement.reserved_title %}
@@ -155,7 +167,7 @@
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="STATEMENT"
-                    data-field-type="multiline-inline"
+                    data-field-type="multiline"
                     data-url="/actions/table/get_node_multiline_inline?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
                   <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
                     {%- if requirement.has_reserved_statement() -%}
@@ -182,7 +194,7 @@
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RATIONALE"
-                    data-field-type="multiline-inline"
+                    data-field-type="multiline"
                     data-url="/actions/table/get_node_multiline_inline?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
                   <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
                     {%- if requirement.rationale -%}

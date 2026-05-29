@@ -92,39 +92,35 @@
   border-color: transparent;
 }
 
-.table--is-editable [data-field-type="multiline"],
-.table--is-editable [data-field-type="relations"],
 .table--is-editable [data-field-type="comments"],
-.table--is-editable [data-field-type="relations-inline"],
-.table--is-editable [data-field-type="multiline-inline"],
-.table--is-editable [data-field-type="singleline-inline"] {
+.table--is-editable [data-field-type="relations"],
+.table--is-editable [data-field-type="multiline"],
+.table--is-editable [data-field-type="singleline"] {
   cursor: pointer;
   position: relative;
 }
 
-.table--is-editable [data-field-type="multiline"]:hover,
-.table--is-editable [data-field-type="relations"]:hover,
 .table--is-editable [data-field-type="comments"]:hover,
-.table--is-editable [data-field-type="relations-inline"]:hover,
-.table--is-editable [data-field-type="multiline-inline"]:hover,
-.table--is-editable [data-field-type="singleline-inline"]:hover {
+.table--is-editable [data-field-type="relations"]:hover,
+.table--is-editable [data-field-type="multiline"]:hover,
+.table--is-editable [data-field-type="singleline"]:hover {
   outline: 2px solid #0057b8;
   outline-offset: -2px;
 }
 
 [data-field-type="comments"].cell--editing,
-[data-field-type="relations-inline"].cell--editing,
-[data-field-type="multiline-inline"].cell--editing,
-[data-field-type="singleline-inline"].cell--editing {
+[data-field-type="relations"].cell--editing,
+[data-field-type="multiline"].cell--editing,
+[data-field-type="singleline"].cell--editing {
   outline: 2px solid #0057b8;
   outline-offset: -2px;
   cursor: default;
 }
 
 [data-field-type="comments"] form,
-[data-field-type="relations-inline"] form,
-[data-field-type="multiline-inline"] form,
-[data-field-type="singleline-inline"] form {
+[data-field-type="relations"] form,
+[data-field-type="multiline"] form,
+[data-field-type="singleline"] form {
   display: flex;
   flex-direction: column;
   gap: .25rem;
@@ -145,16 +141,6 @@
   margin-top: .25rem;
 }
 
-.cell-edit-link {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-  pointer-events: none;
-}
-
-.table--is-editable .cell-edit-link {
-  pointer-events: auto;
-}
 
 [data-validation-error="true"] {
   outline: 2px solid var(--color-danger);

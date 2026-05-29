@@ -24,7 +24,7 @@
 
   "multiline"
       JS fetches the inline form from the URL stored in data-url attribute
-      (GET /actions/table/get_node_multiline_inline).
+      (GET /actions/table/get_node_contenteditable_inline).
       Server returns a turbo-stream that replaces the cell content with a
       multi-line contenteditable form. On blur / outside click: JS POSTs the
       form to /actions/table/update_node_field_multiline, server updates
@@ -60,7 +60,7 @@
   declared in the grammar. get_table_cell_edit_mode() returns the Python grammar
   value: "autocomplete" | "singleline" | "multiline" | "readonly".
   cell_field.jinja maps grammar values to data-field-type DOM attributes:
-  "singleline" → data-field-type="singleline", "multiline" → data-field-type="multiline".
+  "singleline" and "multiline" → data-field-type="contenteditable" (same component, server decides form shape).
   Fixed fields (STATEMENT, RATIONALE, COMMENT) use is_table_cell_editable;
   dynamic field loops use get_table_cell_edit_mode via cell_field.jinja.
 #}
@@ -104,7 +104,7 @@
           {%- for node, _ in view_object.document_content_iterator() %}
 
             {# ============================================================ #}
-            {# REQUIREMENT ROW                                               #}
+            {# REQUIREMENT ROW                                              #}
             {# ============================================================ #}
             {%- if node.is_requirement() %}
               {%- set requirement = node %}
@@ -131,7 +131,7 @@
                   {%- include "screens/document/table/cell_field.jinja" %}
                 {%- endfor -%}
 
-                {# -- RELATIONS: inline form, editable -------------------- #}
+                {# -- RELATIONS: ------------------------------------------- #}
                 <td class="content-view-td content-view-td-meta content-view-td-related"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RELATIONS"
@@ -142,12 +142,12 @@
                   </div>
                 </td>
 
-                {# -- TITLE: singleline-inline, always editable ----------- #}
+                {# -- TITLE: ----------------------------------------------- #}
                 <td class="content-view-td content-view-td-title"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="TITLE"
-                    data-field-type="singleline"
-                    data-url="/actions/table/get_node_singleline_inline?node_mid={{ requirement.reserved_mid }}&field_name=TITLE">
+                    data-field-type="contenteditable"
+                    data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=TITLE">
                   <div id="cell-{{ requirement.reserved_mid }}-TITLE">
                     {%- if requirement.reserved_title %}
                       {%- with sdoc_entity=requirement -%}
@@ -161,14 +161,16 @@
                 </td>
 
                 {# -- STATEMENT: multiline inline if editable ------------- #}
-                {# Hardcoded here (not in a loop) because STATEMENT occupies a fixed #}
-                {# column position in the table header between TITLE and RATIONALE.  #}
+                {#
+                  Hardcoded here (not in a loop) because STATEMENT occupies a fixed
+                  column position in the table header between TITLE and RATIONALE.
+                #}
                 {%- if statement_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="STATEMENT"
-                    data-field-type="multiline"
-                    data-url="/actions/table/get_node_multiline_inline?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
+                    data-field-type="contenteditable"
+                    data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
                   <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
                     {%- if requirement.has_reserved_statement() -%}
                       {%- with field_content = view_object.render_node_statement(requirement) %}
@@ -188,14 +190,16 @@
                 {%- endif %}
 
                 {# -- RATIONALE: multiline inline if editable ------------- #}
-                {# Hardcoded here (not in a loop) because RATIONALE occupies a fixed #}
-                {# column position in the table header between STATEMENT and COMMENT. #}
+                {#
+                  Hardcoded here (not in a loop) because RATIONALE occupies a fixed
+                  column position in the table header between STATEMENT and COMMENT.
+                #}
                 {%- if rationale_is_editable %}
                 <td class="content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RATIONALE"
-                    data-field-type="multiline"
-                    data-url="/actions/table/get_node_multiline_inline?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
+                    data-field-type="contenteditable"
+                    data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
                   <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
                     {%- if requirement.rationale -%}
                       {%- with field_content = view_object.render_node_rationale(requirement) %}

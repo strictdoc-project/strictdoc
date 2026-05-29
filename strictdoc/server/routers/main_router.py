@@ -1263,40 +1263,10 @@ def create_main_router(
         )
 
     @read_router.get(
-        "/actions/table/get_node_singleline_inline", response_class=Response
+        "/actions/table/get_node_contenteditable_inline",
+        response_class=Response,
     )
-    def table__get_node_singleline_inline(
-        node_mid: str,
-        field_name: str,
-    ) -> Response:
-        node: SDocNode = export_action.traceability_index.get_node_by_mid(
-            MID(node_mid)
-        )
-        if field_name == "TITLE":
-            current_value = node.reserved_title or ""
-        elif field_name in node.ordered_fields_lookup:
-            current_value = node.ordered_fields_lookup[field_name][
-                0
-            ].get_text_value()
-        else:
-            current_value = ""
-
-        output = env().render_template_as_markup(
-            "actions/table/get_node_singleline_inline/stream_inline_form.jinja.html",
-            node_mid=node_mid,
-            field_name=field_name,
-            current_value=current_value,
-        )
-        return HTMLResponse(
-            content=output,
-            status_code=200,
-            headers={"Content-Type": "text/vnd.turbo-stream.html"},
-        )
-
-    @read_router.get(
-        "/actions/table/get_node_multiline_inline", response_class=Response
-    )
-    def table__get_node_multiline_inline(
+    def table__get_node_contenteditable_inline(
         node_mid: str,
         field_name: str,
     ) -> Response:
@@ -1308,27 +1278,31 @@ def create_main_router(
         grammar: DocumentGrammar = document.grammar
         element: GrammarElement = grammar.elements_by_type[node.node_type]
 
-        if field_name not in element.fields_map:
-            return HTMLResponse(
-                content=f"Unknown field: {field_name}", status_code=400
-            )
-        if not element.is_field_multiline(field_name):
-            return HTMLResponse(
-                content=f"Field {field_name} is not multiline", status_code=400
-            )
-
-        if field_name in node.ordered_fields_lookup:
+        if field_name == "TITLE":
+            current_value = node.reserved_title or ""
+        elif field_name in node.ordered_fields_lookup:
             current_value = node.ordered_fields_lookup[field_name][
                 0
             ].get_text_value()
         else:
             current_value = ""
 
+        if field_name in element.fields_map and element.is_field_multiline(
+            field_name
+        ):
+            field_type = "multiline"
+            form_action = "/actions/table/update_node_field_multiline"
+        else:
+            field_type = "singleline"
+            form_action = "/actions/table/update_node_field"
+
         output = env().render_template_as_markup(
-            "actions/table/get_node_multiline_inline/stream_inline_form.jinja.html",
+            "actions/table/get_node_contenteditable_inline/stream_inline_form.jinja.html",
             node_mid=node_mid,
             field_name=field_name,
             current_value=current_value,
+            field_type=field_type,
+            form_action=form_action,
         )
         return HTMLResponse(
             content=output,

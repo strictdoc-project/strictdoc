@@ -1,7 +1,7 @@
 <turbo-stream action="update" target="cell-{{ node_mid }}-{{ field_name }}">
   <template>
     <form
-      action="/actions/table/update_node_field"
+      action="{{ form_action }}"
       method="POST"
       data-turbo="false"
     >
@@ -14,7 +14,7 @@
         field_input_name="field_value",
         field_label=field_name,
         field_placeholder="Enter "~field_name~" here...",
-        field_type="singleline",
+        field_type=field_type,
         field_value=current_value,
         testid_postfix=field_name,
         errors=[]

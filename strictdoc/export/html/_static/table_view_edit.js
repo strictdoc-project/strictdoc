@@ -224,7 +224,7 @@
                 return;
             }
             const inlineCell = e.target.closest(
-                '[data-field-type="comments"], [data-field-type="relations"], [data-field-type="multiline"], [data-field-type="singleline"]'
+                '[data-field-type="comments"], [data-field-type="relations"], [data-field-type="contenteditable"]'
             );
             if (inlineCell) {
                 e.preventDefault();

@@ -14,11 +14,13 @@
   Expects: field_title, field_value, cell_edit_mode, td_class, requirement, node
 
   cell_edit_mode comes from view_object.get_table_cell_edit_mode() and
-  reflects the grammar field type. It maps directly to data-field-type:
-    "autocomplete" — SingleChoice / MultipleChoice / Tag  → data-field-type="autocomplete"
-    "singleline"   — single-line STRING (UID, VERSION, …) → data-field-type="singleline"
-    "multiline"    — multi-line STRING (content fields)   → data-field-type="multiline"
-    "readonly"     — field not in grammar for this type   → plain <td>, no data-field-type
+  reflects the grammar field type. Maps to data-field-type:
+    "autocomplete" → data-field-type="autocomplete"   (edit form fetched via turbo-stream)
+    "singleline"   → data-field-type="contenteditable" (edit form fetched via turbo-stream)
+    "multiline"    → data-field-type="contenteditable" (edit form fetched via turbo-stream)
+    "readonly"     → plain <td>, no data-field-type
+  singleline and multiline share data-field-type and data-url; the server determines
+  the form shape and POST action from the grammar.
 #}
 
 {%- if cell_edit_mode == "autocomplete" %}
@@ -44,46 +46,23 @@
   </div>
 </td>
 
-{%- elif cell_edit_mode == "singleline" %}
-{#
-  Plain text value — no markup rendering.
-  JS fetches the inline form from data-url on click (GET get_node_singleline_inline).
-  Server returns a turbo-stream with a single-line contenteditable form.
-  On blur / outside click JS POSTs the form to /actions/table/update_node_field.
-#}
+{%- elif cell_edit_mode in ("singleline", "multiline") %}
 <td class="{{ td_class }}"
     data-node-mid="{{ requirement.reserved_mid }}"
     data-field-name="{{ field_title }}"
-    data-field-type="singleline"
-    data-url="/actions/table/get_node_singleline_inline?node_mid={{ requirement.reserved_mid }}&field_name={{ field_title }}">
+    data-field-type="contenteditable"
+    data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name={{ field_title }}">
   <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}">
     {%- if field_value %}
-      {%- with field_content = field_value %}
-        {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
-      {%- endwith -%}
-    {%- endif %}
-  </div>
-</td>
-
-{%- elif cell_edit_mode == "multiline" %}
-{#
-  Rendered through the markup renderer (RST/Markdown → HTML) via
-  view_object.render_node_field(), same as STATEMENT and RATIONALE.
-  JS fetches an inline contenteditable form from data-url on click
-  (GET get_node_multiline_inline), injects it into the cell via turbo-stream.
-  On blur / outside click JS POSTs the form to
-  /actions/table/update_node_field_multiline.
-#}
-<td class="{{ td_class }}"
-    data-node-mid="{{ requirement.reserved_mid }}"
-    data-field-name="{{ field_title }}"
-    data-field-type="multiline"
-    data-url="/actions/table/get_node_multiline_inline?node_mid={{ requirement.reserved_mid }}&field_name={{ field_title }}">
-  <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}">
-    {%- if field_value %}
-      {%- with field_content = view_object.render_node_field(requirement.ordered_fields_lookup[field_title][0]) %}
-        {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
-      {%- endwith -%}
+      {%- if cell_edit_mode == "multiline" %}
+        {%- with field_content = view_object.render_node_field(requirement.ordered_fields_lookup[field_title][0]) %}
+          {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
+        {%- endwith -%}
+      {%- else %}
+        {%- with field_content = field_value %}
+          {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
+        {%- endwith -%}
+      {%- endif %}
     {%- endif %}
   </div>
 </td>

@@ -2,7 +2,7 @@
   <template>
     {%- if rendered_content -%}
     {%- with field_content = rendered_content %}
-      {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
+      {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
     {%- endwith -%}
     {%- endif -%}
   </template>

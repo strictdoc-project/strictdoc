@@ -40,7 +40,7 @@
   <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}">
     {%- if field_value %}
       {%- with field_content = field_value %}
-        {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
+        {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
       {%- endwith -%}
     {%- endif %}
   </div>
@@ -56,11 +56,11 @@
     {%- if field_value %}
       {%- if cell_edit_mode == "multiline" %}
         {%- with field_content = view_object.render_node_field(requirement.ordered_fields_lookup[field_title][0]) %}
-          {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
+          {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
         {%- endwith -%}
       {%- else %}
         {%- with field_content = field_value %}
-          {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
+          {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
         {%- endwith -%}
       {%- endif %}
     {%- endif %}
@@ -75,7 +75,7 @@
 <td class="{{ td_class }}">
   {%- if field_value %}
     {%- with field_content = field_value %}
-      {%- include "screens/document/table/field_display_mode/_field.jinja" -%}
+      {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
     {%- endwith -%}
   {%- endif %}
 </td>

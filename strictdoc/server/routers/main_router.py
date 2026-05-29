@@ -1050,62 +1050,6 @@ def create_main_router(
         )
 
     @read_router.get(
-        "/actions/table/get_node_field_form", response_class=Response
-    )
-    def table__get_node_field_form(
-        node_mid: str,
-        field_name: str,
-    ) -> Response:
-        node: SDocNode = export_action.traceability_index.get_node_by_mid(
-            MID(node_mid)
-        )
-        document = assert_cast(node.get_document(), SDocDocument)
-        assert document.grammar is not None
-        grammar: DocumentGrammar = document.grammar
-        element: GrammarElement = grammar.elements_by_type[node.node_type]
-
-        if field_name not in element.fields_map:
-            return HTMLResponse(
-                content=f"Unknown field: {field_name}", status_code=400
-            )
-        if not element.is_field_multiline(field_name):
-            return HTMLResponse(
-                content=f"Field {field_name} is not multiline", status_code=400
-            )
-
-        if field_name == "COMMENT":
-            revision: int = revisions[node_mid]
-            form_object: RequirementFormObject = RequirementFormObject.create_from_requirement(
-                requirement=node,
-                revision=revision,
-                context_document_mid=document.reserved_mid.get_string_value(),
-            )
-            output = env().render_template_as_markup(
-                "actions/table/get_node_field_form/stream_modal_form.jinja.html",
-                form_object=form_object,
-                is_comments=True,
-            )
-        else:
-            if field_name in node.ordered_fields_lookup:
-                current_value = node.ordered_fields_lookup[field_name][
-                    0
-                ].get_text_value()
-            else:
-                current_value = ""
-
-            output = env().render_template_as_markup(
-                "actions/table/get_node_field_form/stream_modal_form.jinja.html",
-                node_mid=node_mid,
-                field_name=field_name,
-                current_value=current_value,
-            )
-        return HTMLResponse(
-            content=output,
-            status_code=200,
-            headers={"Content-Type": "text/vnd.turbo-stream.html"},
-        )
-
-    @read_router.get(
         "/actions/table/get_node_comments_inline", response_class=Response
     )
     def table__get_node_comments_inline(node_mid: str) -> Response:
@@ -1182,32 +1126,6 @@ def create_main_router(
             form_object=form_object,
             derived_nodes=derived_nodes,
             view_object=view_object_stub,
-        )
-        return HTMLResponse(
-            content=output,
-            status_code=200,
-            headers={"Content-Type": "text/vnd.turbo-stream.html"},
-        )
-
-    @read_router.get(
-        "/actions/table/get_node_relations_form", response_class=Response
-    )
-    def table__get_node_relations_form(node_mid: str) -> Response:
-        node: SDocNode = export_action.traceability_index.get_node_by_mid(
-            MID(node_mid)
-        )
-        document = assert_cast(node.get_document(), SDocDocument)
-        revision: int = revisions[node_mid]
-        form_object: RequirementFormObject = (
-            RequirementFormObject.create_from_requirement(
-                requirement=node,
-                revision=revision,
-                context_document_mid=document.reserved_mid.get_string_value(),
-            )
-        )
-        output = env().render_template_as_markup(
-            "actions/table/get_node_relations_form/stream_modal_form.jinja.html",
-            form_object=form_object,
         )
         return HTMLResponse(
             content=output,
@@ -1361,20 +1279,13 @@ def create_main_router(
             existing_revision=revision,
         )
         if form_object.any_errors():
+            # WIP: error text is collected for future inline error display.
             field_errors: List[str] = []
             for error_list in form_object.errors.values():
                 field_errors.extend(error_list)
-            output = env().render_template_as_markup(
-                "actions/table/get_node_field_form/stream_modal_form.jinja.html",
-                node_mid=node_mid_str,
-                field_name=field_name,
-                current_value=sanitized_value,
-                field_errors=field_errors,
-            )
             return HTMLResponse(
-                content=output,
+                content="\n".join(field_errors),
                 status_code=422,
-                headers={"Content-Type": "text/vnd.turbo-stream.html"},
             )
 
         update_command = CreateOrUpdateNodeCommand(
@@ -1475,15 +1386,13 @@ def create_main_router(
             existing_revision=existing_revision,
         )
         if form_object.any_errors():
-            output = env().render_template_as_markup(
-                "actions/table/get_node_field_form/stream_modal_form.jinja.html",
-                form_object=form_object,
-                is_comments=True,
-            )
+            # WIP: error text is collected for future inline error display.
+            field_errors = [
+                e for errors in form_object.errors.values() for e in errors
+            ]
             return HTMLResponse(
-                content=output,
+                content="\n".join(field_errors),
                 status_code=422,
-                headers={"Content-Type": "text/vnd.turbo-stream.html"},
             )
 
         update_command = CreateOrUpdateNodeCommand(
@@ -1568,14 +1477,13 @@ def create_main_router(
             existing_revision=existing_revision,
         )
         if form_object.any_errors():
-            output = env().render_template_as_markup(
-                "actions/table/get_node_relations_form/stream_modal_form.jinja.html",
-                form_object=form_object,
-            )
+            # WIP: error text is collected for future inline error display.
+            field_errors = [
+                e for errors in form_object.errors.values() for e in errors
+            ]
             return HTMLResponse(
-                content=output,
+                content="\n".join(field_errors),
                 status_code=422,
-                headers={"Content-Type": "text/vnd.turbo-stream.html"},
             )
 
         update_command = CreateOrUpdateNodeCommand(

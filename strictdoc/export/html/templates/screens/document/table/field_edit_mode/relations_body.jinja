@@ -1,10 +1,8 @@
 {#
-  Shared body for the Relations form (modal and inline).
+  Inline Relations form body.
   Expects: form_object
-  Optional: form_data_turbo  — "true" (modal) or "false" (inline, default)
-  Optional: derived_nodes    — read-only computed relations (inline only)
+  Optional: derived_nodes — read-only computed relations
 #}
-{%- set _data_turbo = form_data_turbo if form_data_turbo is defined else "false" %}
 
 {%- for field_name_, field_values_ in form_object.fields.items() -%}
   {%- for field_ in field_values_ -%}
@@ -44,10 +42,6 @@
   <a
     class="action_button"
     href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
-    {%- if _data_turbo == "true" %}
-    data-turbo-action="replace"
-    data-turbo="true"
-    {%- endif %}
     data-action-type="add_field"
     data-testid="form-action-add-relation"
   >{% include "icons/ico16_add.svg" %} Add relation</a>

@@ -1,17 +1,5 @@
 <turbo-stream action="update" target="cell-{{ form_object.requirement_mid }}-RELATIONS">
   <template>
-    <form
-      action="/actions/table/update_node_relations"
-      method="POST"
-      data-turbo="false"
-    >
-      <input type="hidden" name="requirement_mid" value="{{ form_object.requirement_mid }}"/>
-      <input type="hidden" name="document_mid" value="{{ form_object.document_mid }}"/>
-      <input type="hidden" name="context_document_mid" value="{{ form_object.context_document_mid }}"/>
-      <input type="hidden" name="element_type" value="{{ form_object.element_type }}"/>
-      <input type="hidden" name="revision" value="{{ form_object.revision }}"/>
-
-      {%- include "screens/document/table/field_edit_mode/relations_body.jinja" %}
-    </form>
+    {%- include "screens/document/table/field_edit_mode/relations.jinja" %}
   </template>
 </turbo-stream>

@@ -1,20 +1,5 @@
 <turbo-stream action="update" target="cell-{{ node_mid }}-{{ cell_field_name }}">
   <template>
-    {%- with
-      field_class_name=none,
-      field_editable=true,
-      field_input_name=cell_field_name,
-      field_label=cell_field_name,
-      field_placeholder="",
-      field_value=current_value,
-      mid=node_mid,
-      testid_postfix=cell_field_name,
-      autocomplete_url="/autocomplete/field?document_mid=" ~ document_mid ~ "&element_type=" ~ element_type ~ "&field_name=" ~ cell_field_name,
-      autocomplete_len=0,
-      autocomplete_multiplechoice=is_multiple_choice,
-      result_class_name="cell-autocomplete-dropdown"
-    -%}
-      {%- include "components/form/field/autocompletable/index.jinja" %}
-    {%- endwith -%}
+    {%- include "screens/document/table/field_edit_mode/autocompletable.jinja" %}
   </template>
 </turbo-stream>

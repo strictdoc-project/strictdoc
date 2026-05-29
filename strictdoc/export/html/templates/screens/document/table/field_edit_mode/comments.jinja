@@ -1,0 +1,55 @@
+{#
+  Inline Comments form body.
+  Expects: form_object
+#}
+
+<form
+  action="/actions/table/update_node_comments"
+  method="POST"
+  data-turbo="false"
+>
+  <input type="hidden" name="requirement_mid" value="{{ form_object.requirement_mid }}"/>
+  <input type="hidden" name="document_mid" value="{{ form_object.document_mid }}"/>
+  <input type="hidden" name="context_document_mid" value="{{ form_object.context_document_mid }}"/>
+  <input type="hidden" name="element_type" value="{{ form_object.element_type }}"/>
+  <input type="hidden" name="revision" value="{{ form_object.revision }}"/>
+
+  {%- for field_name_, field_values_ in form_object.fields.items() -%}
+    {%- if field_name_ != "COMMENT" -%}
+      {%- for field_ in field_values_ -%}
+        <input type="hidden" name="{{ field_.get_input_field_type_name() }}" value="{{ field_name_ }}"/>
+        <input type="hidden" name="{{ field_.get_input_field_name() }}" value="{{ field_.field_value }}"/>
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- for ref_field in form_object.reference_fields -%}
+    <input type="hidden" name="{{ ref_field.get_type_field_name() }}" value="{{ ref_field.field_type.value }}{% if ref_field.field_role %},{{ ref_field.field_role }}{% endif %}"/>
+    <input type="hidden" name="{{ ref_field.get_value_field_name() }}" value="{{ ref_field.field_value }}"/>
+  {%- endfor -%}
+
+  {% set comment_field_row_context = namespace() %}
+  {%- for field_values in form_object.enumerate_fields(multiline=True) -%}
+    {%- for field_ in field_values -%}
+      {%- if field_.field_name == "COMMENT" -%}
+        {%- if field_.field_value|length > 0 -%}
+          {%- set comment_field_row_context.field = field_ -%}
+          {%- set comment_field_row_context.field_editable = true -%}
+          {%- set comment_field_row_context.errors = form_object.get_errors(field_.field_name) -%}
+          {%- include "components/form/row/row_with_comment.jinja" -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+
+  <div id="requirement_{{ form_object.requirement_mid }}__new_comment"></div>
+  <sdoc-form-row>
+    <a
+      class="action_button"
+      href="/actions/document/new_comment?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
+      data-action-type="add_field"
+      data-testid="form-action-add-comment"
+    >{% include "icons/ico16_add.svg" %} Add comment</a>
+  </sdoc-form-row>
+
+</form>

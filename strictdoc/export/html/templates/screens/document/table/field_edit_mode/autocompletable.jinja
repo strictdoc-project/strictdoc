@@ -1,0 +1,32 @@
+{#
+  No <form> tag here — autocomplete is managed by its own Stimulus controller
+  (data-controller="autocompletable"). The controller handles the full cycle:
+  user input → dropdown → value selection → POST via fetch.
+  The hidden <input data-autocompletable-target="hidden"> is updated and submitted
+  by the controller directly, without needing an external <form> wrapper.
+
+  Contrast: contenteditable / comments / relations cells do have a <form> —
+  because table_view_edit.js finds it on blur and submits it via fetch(FormData).
+
+  field_placeholder must be non-empty: the sdoc-autocompletable contenteditable
+  gets its height from the CSS rule [placeholder]:empty::after { content: attr(placeholder) }.
+  An empty placeholder string leaves the element with zero height when the field
+  value is also empty, making it invisible and unclickable.
+#}
+
+{%- with
+  field_class_name=none,
+  field_editable=true,
+  field_input_name=cell_field_name,
+  field_label=cell_field_name,
+  field_placeholder=cell_field_name,
+  field_value=current_value,
+  mid=node_mid,
+  testid_postfix=cell_field_name,
+  autocomplete_url="/autocomplete/field?document_mid=" ~ document_mid ~ "&element_type=" ~ element_type ~ "&field_name=" ~ cell_field_name,
+  autocomplete_len=0,
+  autocomplete_multiplechoice=is_multiple_choice,
+  result_class_name="cell-autocomplete-dropdown"
+-%}
+  {%- include "components/form/field/autocompletable/index.jinja" %}
+{%- endwith -%}

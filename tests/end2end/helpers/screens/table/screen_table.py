@@ -200,55 +200,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         self.test_case.click(self._cell_sel(node_mid, field_name))
 
     #
-    # ARCHIVE: Multiline cell modal popup
-    # These methods were written for the modal-popup approach (STATEMENT/RATIONALE
-    # opened a full sdoc-modal on click). Multiline cells now use inline turbo-stream
-    # forms (data-field-type="multiline"), so this section is no longer used
-    # by any active test. Kept for reference until inline-form equivalents are written.
-    #
-
-    _MULTILINE_POPUP = "#modal sdoc-modal"
-    _MULTILINE_POPUP_CANCEL = '[data-testid="form-cancel-action"]'
-
-    def assert_no_multiline_popup(self) -> None:
-        self.test_case.assert_element_not_present(self._MULTILINE_POPUP)
-
-    def assert_multiline_popup_open(self) -> None:
-        self.test_case.assert_element_present(self._MULTILINE_POPUP)
-
-    def do_click_multiline_cell(self, node_mid: str, field_name: str) -> None:
-        self.test_case.click(self._cell_sel(node_mid, field_name))
-
-    def do_close_multiline_popup_by_btn(self) -> None:
-        self.test_case.click(self._MULTILINE_POPUP_CANCEL)
-        self.assert_no_multiline_popup()
-
-    def do_close_multiline_popup_by_escape(self) -> None:
-        self.test_case.send_keys("body", Keys.ESCAPE)
-        self.assert_no_multiline_popup()
-
-    def get_comment_row_mid(self, order: int = 1) -> str:
-        xpath = f"(//*[@data-testid='requirement-form-comment-row'])[{order}]"
-        element = self.test_case.find_element(xpath, by=By.XPATH)
-        mid = element.get_attribute("mid")
-        assert mid is not None and len(mid) > 0
-        return mid
-
-    def do_submit_multiline_popup(self) -> None:
-        self.test_case.click('[data-testid="form-submit-action"]')
-
-    def assert_multiline_popup_has_error(self, message: str) -> None:
-        self.test_case.assert_element(
-            f'//sdoc-modal//sdoc-form-error[contains(., "{message}")]',
-            by=By.XPATH,
-        )
-
-    #
-    # END ARCHIVE
-    #
-
-    #
-    # Inline cell forms (comments, relations, multiline-inline, autocomplete)
+    # Inline cell forms (comments, relations, multiline, singleline, autocomplete)
     #
 
     def assert_cell_is_inline_editing(
@@ -276,13 +228,18 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         self.assert_cell_is_inline_editing(node_mid, field_name)
 
     def do_save_inline_cell_by_outside_click(self) -> None:
-        # Click the page header (always on screen) to trigger the document click-outside
-        # handler that calls saveCommentsCell / saveAutocompleteCell.
-        # The first table <th> can be scrolled out of view on wide tables.
+        # Click the page header: always visible regardless of horizontal scroll.
         self.test_case.click("#header-project-name")
 
     def do_cancel_inline_cell_by_escape(self) -> None:
         self.test_case.send_keys("body", Keys.ESCAPE)
+
+    def get_comment_row_mid(self, order: int = 1) -> str:
+        xpath = f"(//*[@data-testid='requirement-form-comment-row'])[{order}]"
+        element = self.test_case.find_element(xpath, by=By.XPATH)
+        mid = element.get_attribute("mid")
+        assert mid is not None and len(mid) > 0
+        return mid
 
     def do_cell_autocomplete(
         self, node_mid: str, field_name: str, field_value: str

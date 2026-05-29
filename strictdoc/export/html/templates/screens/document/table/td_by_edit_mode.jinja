@@ -1,6 +1,6 @@
 {#
-  Dispatcher for grammar-defined field cells in the loop columns.
-  Called from main.jinja for: meta field loops and non-reserved content field loops.
+  Renders a <td> for a grammar-defined field cell, selected by edit mode.
+  Called from main.jinja for meta field loops and non-reserved content field loops.
   NOT used for STATEMENT / RATIONALE / COMMENT / RELATIONS — those are hardcoded
   individually in main.jinja because they occupy fixed columns at specific positions
   in the table header (between TITLE and the dynamic content fields). Putting them

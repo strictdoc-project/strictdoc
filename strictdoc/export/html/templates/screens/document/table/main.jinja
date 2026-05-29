@@ -59,10 +59,10 @@
   type. view_object.is_table_cell_editable() returns True if the field is
   declared in the grammar. get_table_cell_edit_mode() returns the Python grammar
   value: "autocomplete" | "singleline" | "multiline" | "readonly".
-  cell_field.jinja maps grammar values to data-field-type DOM attributes:
+  td_by_edit_mode.jinja maps grammar values to data-field-type DOM attributes:
   "singleline" and "multiline" → data-field-type="contenteditable" (same component, server decides form shape).
   Fixed fields (STATEMENT, RATIONALE, COMMENT) use is_table_cell_editable;
-  dynamic field loops use get_table_cell_edit_mode via cell_field.jinja.
+  dynamic field loops use get_table_cell_edit_mode via td_by_edit_mode.jinja.
 #}
 {%- if view_object.has_any_nodes() -%}
   <div class="main" js-pan_with_space="true">
@@ -128,7 +128,7 @@
                   {%- set field_value = requirement.get_meta_field_value_by_title(field_title) %}
                   {%- set cell_edit_mode = view_object.get_table_cell_edit_mode(node.node_type, field_title) %}
                   {%- set td_class = "content-view-td content-view-td-meta" %}
-                  {%- include "screens/document/table/cell_field.jinja" %}
+                  {%- include "screens/document/table/td_by_edit_mode.jinja" %}
                 {%- endfor -%}
 
                 {# -- RELATIONS: ------------------------------------------- #}
@@ -249,7 +249,7 @@
                   {%- set field_value = requirement.get_meta_field_value_by_title(field_title) %}
                   {%- set cell_edit_mode = view_object.get_table_cell_edit_mode(node.node_type, field_title) %}
                   {%- set td_class = "content-view-td" %}
-                  {%- include "screens/document/table/cell_field.jinja" %}
+                  {%- include "screens/document/table/td_by_edit_mode.jinja" %}
                 {%- endfor -%}
 
               </tr>

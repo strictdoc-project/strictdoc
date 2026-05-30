@@ -5,7 +5,7 @@
   width: 100%;
   background-color: var(--color-bg-contrast);
   /* for sticky toolbar */
-  margin-top:  calc(var(--base-rhythm) * 5);
+  margin-top:  calc(var(--base-rhythm) * 6);
 }
 
 /* .content-view-table td,
@@ -197,12 +197,18 @@
   top: calc(-5 * var(--base-rhythm));
   left: calc(-9 * var(--base-rhythm));
   z-index: 10;
-  width: fit-content;
   height: 0;
+  width: fit-content;
+  padding-inline: calc(4 * var(--base-rhythm));
+}
+
+.table-toolbar__dock {
+  background-color: var(--color-fg-secondary-invert);
+  border-radius: 6px;
+  width: fit-content;
   display: flex;
   column-gap: var(--base-rhythm);
-  padding-inline: calc(4 * var(--base-rhythm));
-  background-color: var(--color-bg-main);
+  padding: var(--base-rhythm);
 }
 
 .table-toolbar__columns,
@@ -229,7 +235,7 @@
   display: none;
 }
 
-.table-toolbar__panel {
+.table-toolbar__dropdown {
   position: absolute;
   top: 100%;
   left: 0;
@@ -237,14 +243,14 @@
   min-width: 180px;
 }
 
-.table-toolbar__panel-header {
+.table-toolbar__dropdown-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-left: calc(var(--base-rhythm) * 0.5);
 }
 
-.table-toolbar__panel-title {
+.table-toolbar__dropdown-title {
   font-weight: bold;
 }
 
@@ -265,17 +271,8 @@
 
 .table-toolbar__item {
   margin: 0;
-}
-
-.table-toolbar__label {
+  /* to stretch the checkbox label to the full width of the dropdown */
   display: flex;
-  align-items: center;
-  gap: .5rem;
-  cursor: pointer;
-  user-select: none;
-}
-
-.table-toolbar__label:hover {
-  background-color: var(--color-bg-secondary);
-  color: var(--color-fg-accent);
+  align-items: stretch;
+  flex-direction: column;
 }

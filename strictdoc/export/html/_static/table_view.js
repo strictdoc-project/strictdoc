@@ -141,6 +141,29 @@
     }
 
     /*
+     * Checkbox list item
+     * Uses template-icon-checkbox from components/checkbox/index.jinja.
+     * Expected: <label class="icon-checkbox"> with <input type="checkbox"> and <span>
+     */
+
+    function createCheckboxItem(testid, checked, label, onChange) {
+        const tmpl = document.getElementById('template-icon-checkbox');
+        const item = document.createElement('li');
+        item.className = 'table-toolbar__item';
+        const labelEl = tmpl.content.cloneNode(true).querySelector('label');
+        const checkbox = labelEl.querySelector('input[type=checkbox]');
+        const text = labelEl.querySelector('span');
+
+        checkbox.checked = checked;
+        checkbox.setAttribute('data-testid', testid);
+        checkbox.addEventListener('change', () => onChange(checkbox.checked));
+
+        text.textContent = label;
+        item.appendChild(labelEl);
+        return item;
+    }
+
+    /*
      * Columns panel
      */
 
@@ -154,26 +177,16 @@
         _panels.push({ btn, panel });
 
         columns.forEach(col => {
-            const item = document.createElement('li');
-            item.className = 'table-toolbar__item';
-
-            const label = document.createElement('label');
-            label.className = 'table-toolbar__label';
-
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.checked = col.visible;
-            checkbox.setAttribute('data-testid', 'col-checkbox-' + col.name);
-            checkbox.addEventListener('change', () => {
-                onToggle(col, checkbox.checked);
-                updateBtnLabel(btn, columns);
-                syncResetBtn(resetBtn, columns);
-            });
-
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(' ' + col.name));
-            item.appendChild(label);
-            list.appendChild(item);
+            list.appendChild(createCheckboxItem(
+                'col-checkbox-' + col.name,
+                col.visible,
+                col.name,
+                (checked) => {
+                    onToggle(col, checked);
+                    updateBtnLabel(btn, columns);
+                    syncResetBtn(resetBtn, columns);
+                }
+            ));
         });
 
         resetBtn.addEventListener('click', () => {
@@ -225,28 +238,18 @@
         const rowTypes = seenTypes.map(type => ({ type, visible: !hiddenTypes.has(type) }));
 
         rowTypes.forEach(rowType => {
-            const item = document.createElement('li');
-            item.className = 'table-toolbar__item';
-
-            const label = document.createElement('label');
-            label.className = 'table-toolbar__label';
-
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.checked = rowType.visible;
-            checkbox.setAttribute('data-testid', 'row-checkbox-' + rowType.type);
-            checkbox.addEventListener('change', () => {
-                rowType.visible = checkbox.checked;
-                setRowTypeVisibility(tbody, rowType.type, rowType.visible);
-                writeJson(rowsKey, rowTypes.filter(r => !r.visible).map(r => r.type));
-                updateBtnLabel(btn, rowTypes);
-                syncResetBtn(resetBtn, rowTypes);
-            });
-
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(' ' + rowType.type));
-            item.appendChild(label);
-            list.appendChild(item);
+            list.appendChild(createCheckboxItem(
+                'row-checkbox-' + rowType.type,
+                rowType.visible,
+                rowType.type,
+                (checked) => {
+                    rowType.visible = checked;
+                    setRowTypeVisibility(tbody, rowType.type, checked);
+                    writeJson(rowsKey, rowTypes.filter(r => !r.visible).map(r => r.type));
+                    updateBtnLabel(btn, rowTypes);
+                    syncResetBtn(resetBtn, rowTypes);
+                }
+            ));
         });
 
         resetBtn.addEventListener('click', () => {

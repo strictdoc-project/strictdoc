@@ -10,4 +10,4 @@ def test_get_etag_file_does_not_exist():
 
     # Use a known StrictDoc location to trigger a "not a file" error.
     with pytest.raises(RuntimeError):
-        get_etag(environment.get_path_to_html_templates())
+        get_etag(environment.get_path_to_html_templates()[0])

@@ -14,10 +14,10 @@ from strictdoc import __version__
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.statistics.metric import Metric, MetricSection
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.features.project_statistics.metric import Metric, MetricSection
 from strictdoc.helpers.cast import assert_cast
 
 
@@ -49,7 +49,7 @@ class ProjectStatisticsViewObject:
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
-            "screens/project_statistics/index.jinja", view_object=self
+            "features/project_statistics/index.jinja", view_object=self
         )
 
     def render_static_url(self, url: str) -> Markup:

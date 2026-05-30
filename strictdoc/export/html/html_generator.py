@@ -35,9 +35,6 @@ from strictdoc.export.html.generators.document_tree import (
 from strictdoc.export.html.generators.project_map import (
     ProjectMapGenerator,
 )
-from strictdoc.export.html.generators.project_statistics import (
-    ProgressStatisticsGenerator,
-)
 from strictdoc.export.html.generators.source_file_coverage import (
     SourceFileCoverageHTMLGenerator,
 )
@@ -50,6 +47,9 @@ from strictdoc.export.html.generators.traceability_matrix import (
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.features.project_statistics.generator import (
+    ProgressStatisticsGenerator,
+)
 from strictdoc.features.tree_map.generator import TreeMapGenerator
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException

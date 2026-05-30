@@ -221,6 +221,11 @@
   text-transform: uppercase;
 }
 
+.table-toolbar__btn-info {
+  color: var(--color-fg-main);
+  text-transform: lowercase;
+}
+
 /* .collapsed and .expanded are classes inside SVG .icon_collapse */
 [aria-expanded="false"] .icon_collapse_expand .collapsed {
   display: initial;

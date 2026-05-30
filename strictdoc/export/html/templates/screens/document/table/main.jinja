@@ -109,6 +109,7 @@
             {%- if node.is_requirement() %}
               {%- set requirement = node %}
               {# Determine edit mode for fixed content fields up front. #}
+              {%- set title_is_editable     = view_object.is_table_cell_editable(node.node_type, "TITLE") %}
               {%- set statement_is_editable = view_object.is_table_cell_editable(node.node_type, "STATEMENT") %}
               {%- set rationale_is_editable = view_object.is_table_cell_editable(node.node_type, "RATIONALE") %}
               {%- set comment_is_editable   = view_object.is_table_cell_editable(node.node_type, "COMMENT") %}
@@ -144,6 +145,7 @@
 
                 {# -- TITLE: ----------------------------------------------- #}
                 <td class="content-view-td content-view-td-title"
+                {%- if title_is_editable %}
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="TITLE"
                     data-field-type="contenteditable"
@@ -159,6 +161,18 @@
                     {%- endif -%}
                   </div>
                 </td>
+                {%- else %}
+                <td class="content-view-td content-view-td-title">
+                  {%- if requirement.reserved_title %}
+                    {%- with sdoc_entity=requirement -%}
+                      {% include "components/anchor/index.jinja" %}
+                    {%- endwith %}
+                    {%- with field_content = requirement.reserved_title %}
+                      {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+                    {%- endwith -%}
+                  {%- endif -%}
+                </td>
+                {%- endif %}
 
                 {# -- STATEMENT: multiline inline if editable ------------- #}
                 {#

@@ -78,6 +78,12 @@ class Form:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_tab_not_present(self, tab_name: str = "") -> None:
+        assert isinstance(tab_name, str)
+        self.test_case.assert_element_not_present(
+            f"//*[@data-testid='form-tab-{tab_name}']"
+        )
+
     #
     # Work with fields containers.
     #

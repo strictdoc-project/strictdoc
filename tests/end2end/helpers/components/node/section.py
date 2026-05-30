@@ -8,6 +8,8 @@ class Section(Node):  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase, node_order: int = 1) -> None:
         assert isinstance(test_case, BaseCase)
         assert isinstance(node_order, int)
+        assert node_order > 0, node_order
+
         xpath = f"(//sdoc-node[@data-testid='node-section'])[{node_order}]"
         super().__init__(test_case, xpath)
         self.node_order: int = node_order

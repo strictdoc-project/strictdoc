@@ -33,6 +33,7 @@ from strictdoc.core.file_traceability_index import FileTraceabilityIndex
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.transforms.constants import NodeCreationOrder
 from strictdoc.core.transforms.validation_error import (
     MultipleValidationErrorAsList,
     SingleValidationError,
@@ -112,6 +113,109 @@ class TraceabilityIndex:
             )
             <= 10
         )
+
+    def can_edit_document(self, document: SDocDocument) -> bool:
+        assert isinstance(document, SDocDocument), document
+        return not document.autogen
+
+    def can_edit_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        assert isinstance(node, (SDocDocument, SDocNode)), node
+        if isinstance(node, SDocDocument):
+            return not node.autogen
+
+        if node.get_parent_or_including_document().autogen or node.autogen:
+            return False
+
+        return True
+
+    def can_delete_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        assert isinstance(node, (SDocDocument, SDocNode)), node
+        if isinstance(node, SDocDocument):
+            return not node.autogen
+
+        if node.get_parent_or_including_document().autogen:
+            return False
+
+        return not node.is_managed_by_source_code()
+
+    def can_clone_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        assert isinstance(node, (SDocDocument, SDocNode)), node
+        if isinstance(node, SDocDocument):
+            return False
+
+        return self.can_delete_node(node)
+
+    def can_add_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        assert isinstance(node, (SDocDocument, SDocNode)), node
+        if isinstance(node, SDocDocument):
+            return not node.autogen
+
+        if node.get_parent_or_including_document().autogen or node.autogen:
+            return False
+
+        return True
+
+    def can_insert_next_to_node(
+        self, node: Union[SDocDocument, SDocNode]
+    ) -> bool:
+        assert isinstance(node, (SDocDocument, SDocNode)), node
+        if isinstance(node, SDocDocument):
+            return True
+
+        if node.get_parent_or_including_document().autogen:
+            return False
+
+        parent = node.parent
+        if isinstance(parent, SDocNode) and parent.autogen:
+            return False
+
+        return True
+
+    def can_create_node_at(
+        self, reference_node: Union[SDocDocument, SDocNode], whereto: str
+    ) -> bool:
+        assert isinstance(reference_node, (SDocDocument, SDocNode)), (
+            reference_node
+        )
+        assert isinstance(whereto, str), whereto
+
+        if whereto == NodeCreationOrder.CHILD:
+            return self.can_add_node(reference_node)
+        if whereto in (NodeCreationOrder.BEFORE, NodeCreationOrder.AFTER):
+            return self.can_insert_next_to_node(reference_node)
+        return False
+
+    def can_move_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        assert isinstance(node, (SDocDocument, SDocNode)), node
+        if isinstance(node, SDocDocument):
+            return not node.autogen
+
+        if node.get_parent_or_including_document().autogen or node.autogen:
+            return False
+
+        return True
+
+    def can_move_node_to(
+        self,
+        moved_node: SDocNode,
+        target_node: Union[SDocDocument, SDocNode],
+        whereto: str,
+    ) -> bool:
+        assert isinstance(moved_node, SDocNode), moved_node
+        assert isinstance(target_node, (SDocDocument, SDocNode)), target_node
+        assert isinstance(whereto, str), whereto
+
+        if not self.can_move_node(moved_node):
+            return False
+
+        if (
+            whereto == NodeCreationOrder.CHILD
+            and isinstance(target_node, SDocNode)
+            and not target_node.is_composite
+        ):
+            return self.can_insert_next_to_node(target_node)
+
+        return self.can_create_node_at(target_node, whereto)
 
     def has_parent_requirements(self, requirement: SDocNode) -> bool:
         assert isinstance(requirement, SDocNode)

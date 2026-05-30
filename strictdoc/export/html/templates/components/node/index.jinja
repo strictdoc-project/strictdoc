@@ -15,6 +15,7 @@
 {% set node_type = sdoc_entity.get_type_string() %}
 {% set is_included = sdoc_entity.document_is_included() %}
 {% set node_type_string = sdoc_entity.get_node_type_string() %}
+{% set is_editable = view_object.can_edit_node(sdoc_entity) %}
 
 <turbo-frame id="article-{{ sdoc_entity.reserved_mid }}">
 
@@ -27,7 +28,7 @@
       node-view="{{ sdoc_entity.get_requirement_style_mode() }}"
     {%- endif -%}
     {%- if node_type_string is not none %}{# and node_type_string != 'TEXT' #}
-      show-node-type-name="{{ node_type_string }}"
+      show-node-type-name="{{ node_type_string }}{% if not is_editable %} (READ-ONLY){% endif %}"
     {%- endif %}
     data-included-document="{{ is_included }}"
     data-testid="node-{{ node_type }}"

@@ -468,3 +468,37 @@ class DocumentScreenViewObject:
                 html2pdf4doc_classes.append("html2pdf4doc-no-hanging")
 
         return " ".join(html2pdf4doc_classes)
+
+    #
+    # Document Level Actions
+    #
+
+    def can_edit_document(self, document: SDocDocument) -> bool:
+        """
+        Determines if the document's root configuration (title, metadata) can be edited.
+        """
+        return self.traceability_index.can_edit_document(document)
+
+    #
+    # Node Level Actions
+    #
+
+    def can_edit_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        return self.traceability_index.can_edit_node(node)
+
+    def can_delete_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        return self.traceability_index.can_delete_node(node)
+
+    def can_clone_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        return self.traceability_index.can_clone_node(node)
+
+    def can_add_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        return self.traceability_index.can_add_node(node)
+
+    def can_insert_next_to_node(
+        self, node: Union[SDocDocument, SDocNode]
+    ) -> bool:
+        return self.traceability_index.can_insert_next_to_node(node)
+
+    def can_move_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
+        return self.traceability_index.can_move_node(node)

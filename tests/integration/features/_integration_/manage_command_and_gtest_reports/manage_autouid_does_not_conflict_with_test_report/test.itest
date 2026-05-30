@@ -1,0 +1,20 @@
+# Verify that both `export` and `manage auto-uid` commands resolve the
+# `source_root_path` option correctly.
+#
+# Covers the resolution of this bug report:
+# https://github.com/strictdoc-project/strictdoc/issues/2844.
+# The issue was that `manage auto-uid` always overwrote the configured
+# `source_root_path` with the `input path`, while the `export` was respecting
+# the `source_root_path` correctly.
+
+RUN: cp -rv %S/* %T/
+RUN: %strictdoc export %T/docs --config %T/strictdoc_config.py --output-dir %T/output | filecheck %s
+RUN: %strictdoc manage auto-uid %T/docs --config %T/strictdoc_config.py | filecheck %s
+
+RUN: %cat %T/docs/hello.sdoc | filecheck %s --check-prefix CHECK-SDOC
+
+CHECK: Total execution time
+
+CHECK-SDOC: [REQUIREMENT]
+CHECK-SDOC-NEXT: UID: REQ-1
+CHECK-SDOC-NEXT: STATEMENT: Test

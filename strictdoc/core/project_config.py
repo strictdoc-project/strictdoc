@@ -810,9 +810,10 @@ class ProjectConfigLoader:
         # FIXME: Encapsulate all this in project_config.integrate_manage_autouid_config(),
         #        following the example of integrate_export_config().
         project_config.input_paths = [manage_autouid_config.input_path]
-        project_config.source_root_path = str(
-            Path(manage_autouid_config.input_path).resolve()
-        )
+        if project_config.source_root_path is None:
+            project_config.source_root_path = str(
+                Path(manage_autouid_config.input_path).resolve()
+            )
         project_config.auto_uid_mode = True
         project_config.autouuid_include_sections = (
             manage_autouid_config.include_sections

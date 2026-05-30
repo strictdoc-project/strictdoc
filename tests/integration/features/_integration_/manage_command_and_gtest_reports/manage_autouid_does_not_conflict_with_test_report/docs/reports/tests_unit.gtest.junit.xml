@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="5" failures="0" disabled="0" errors="0" time="0." timestamp="2025-03-18T16:42:17.879" name="AllTests">
+  <testsuite name="MyTestSuiteName" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2025-03-18T16:42:17.879">
+    <testcase name="TestName" file="/home/johan/Development/projects/line/git/line/CS/src_cs/controllers/vc/test/gtest_test.cc" line="13" status="run" result="completed" time="0." timestamp="2025-03-18T16:42:17.879" classname="MyTestSuiteName" />
+  </testsuite>
+  <testsuite name="MyTestHelper" tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2025-03-18T16:42:17.879">
+    <testcase name="TestName2" file="/home/johan/Development/projects/line/git/line/CS/src_cs/controllers/vc/test/gtest_test.cc" line="28" status="run" result="completed" time="0." timestamp="2025-03-18T16:42:17.879" classname="MyTestHelper" />
+  </testsuite>
+  <testsuite name="MyTestPattern/MyTestHelperPattern" tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2025-03-18T16:42:17.879">
+    <testcase name="TestName3/0" value_param="1" file="/home/johan/Development/projects/line/git/line/CS/src_cs/controllers/vc/test/gtest_test.cc" line="40" status="run" result="completed" time="0." timestamp="2025-03-18T16:42:17.879" classname="MyTestPattern/MyTestHelperPattern" />
+    <testcase name="TestName3/1" value_param="2" file="/home/johan/Development/projects/line/git/line/CS/src_cs/controllers/vc/test/gtest_test.cc" line="40" status="run" result="completed" time="0." timestamp="2025-03-18T16:42:17.879" classname="MyTestPattern/MyTestHelperPattern" />
+    <testcase name="TestName3/2" value_param="3" file="/home/johan/Development/projects/line/git/line/CS/src_cs/controllers/vc/test/gtest_test.cc" line="40" status="run" result="completed" time="0." timestamp="2025-03-18T16:42:17.879" classname="MyTestPattern/MyTestHelperPattern" />
+  </testsuite>
+</testsuites>

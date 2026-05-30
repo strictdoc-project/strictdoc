@@ -5,7 +5,6 @@ def create_config() -> ProjectConfig:
     config = ProjectConfig(
         project_features=[
             "REQUIREMENT_TO_SOURCE_TRACEABILITY",
-            "SOURCE_FILE_LANGUAGE_PARSERS",
         ],
     )
     return config

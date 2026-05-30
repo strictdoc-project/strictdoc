@@ -1987,3 +1987,49 @@ sdoc-node-content .field_issue-ribbon::before {
 .static_search-result-node-link a:hover {
   color: var(--color-hover);
 }
+
+/* checkbox with icon (template: #template-icon-checkbox) */
+
+.icon-checkbox { /* label element */
+  --gap: calc(var(--base-rhythm) * 0.5);
+  /* to stretch the label text to the full width, use the parent's properties */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap);
+  cursor: pointer;
+  user-select: none;
+  padding: var(--gap);
+  border-radius: var(--gap);
+}
+
+.icon-checkbox:hover {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-fg-accent);
+}
+
+.icon-checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.icon-checkbox .svg_icon__closed {
+  display: none;
+}
+
+.icon-checkbox input[type="checkbox"]:not(:checked) ~ svg .svg_icon__opened {
+  display: none;
+}
+
+.icon-checkbox input[type="checkbox"]:not(:checked) ~ svg .svg_icon__closed {
+  display: initial;
+}
+
+.icon-checkbox input[type="checkbox"]:not(:checked) ~ * {
+  color: var(--color-fg-secondary);
+}
+

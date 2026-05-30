@@ -6,6 +6,7 @@ from typing import List
 HTML_TEMPLATES_DIR = os.path.join("strictdoc", "export", "html", "templates")
 HTML_TEMPLATE_DIRS = [
     HTML_TEMPLATES_DIR,
+    os.path.join("strictdoc", "features", "diff_and_changelog", "templates"),
     os.path.join("strictdoc", "features", "html2pdf", "templates"),
     os.path.join("strictdoc", "features", "project_statistics", "templates"),
     os.path.join("strictdoc", "features", "tree_map", "templates"),

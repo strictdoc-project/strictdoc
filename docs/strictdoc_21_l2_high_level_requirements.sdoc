@@ -1301,10 +1301,6 @@ RELATIONS:
   VALUE: SDOC-SSS-74
 - TYPE: Parent
   VALUE: DO178-15
-- TYPE: File
-  VALUE: strictdoc/git/change_generator.py
-- TYPE: File
-  VALUE: strictdoc/git/project_diff_analyzer.py
 
 [[/SECTION]]
 

@@ -7,13 +7,15 @@ from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
-from strictdoc.export.html.generators.view_objects.diff_screen_results_view_object import (
+from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.features.diff_and_changelog.change_container import (
+    ChangeContainer,
+)
+from strictdoc.features.diff_and_changelog.diff_screen_results_view_object import (
     DiffScreenResultsViewObject,
 )
-from strictdoc.export.html.html_templates import HTMLTemplates
-from strictdoc.git.change_container import ChangeContainer
-from strictdoc.git.git_client import GitClient
-from strictdoc.git.project_diff_analyzer import (
+from strictdoc.features.diff_and_changelog.git_client import GitClient
+from strictdoc.features.diff_and_changelog.project_diff_analyzer import (
     ChangeStats,
     ProjectDiffAnalyzer,
     ProjectTreeDiffStats,

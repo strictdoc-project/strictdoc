@@ -1,6 +1,6 @@
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.git.project_diff_analyzer import (
+from strictdoc.features.diff_and_changelog.project_diff_analyzer import (
     ChangeStats,
     ProjectTreeDiffStats,
 )

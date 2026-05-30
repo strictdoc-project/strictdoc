@@ -18,12 +18,12 @@
       {%- if document_change is not none -%}
         {%- if document_change.document_token is not none -%}
           {%- with uid=document_change.document_token -%}
-            {%- include "screens/git/sync/button.jinja" -%}
+            {%- include "features/diff_and_changelog/sync/button.jinja" -%}
           {%- endwith -%}
         {%- endif -%}
       {%- endif -%}
     {%- endif -%}
   </summary>
 
-  {% include "screens/git/fields/document_fields.jinja" %}
+  {% include "features/diff_and_changelog/fields/document_fields.jinja" %}
 </details>

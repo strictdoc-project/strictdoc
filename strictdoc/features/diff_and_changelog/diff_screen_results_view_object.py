@@ -17,8 +17,10 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.git.change_container import ChangeContainer
-from strictdoc.git.project_diff_analyzer import (
+from strictdoc.features.diff_and_changelog.change_container import (
+    ChangeContainer,
+)
+from strictdoc.features.diff_and_changelog.project_diff_analyzer import (
     ChangeStats,
     ProjectTreeDiffStats,
 )
@@ -89,7 +91,7 @@ class DiffScreenResultsViewObject:
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
-            "screens/git/index.jinja", view_object=self
+            "features/diff_and_changelog/index.jinja", view_object=self
         )
 
     def render_url(self, url: str) -> Markup:

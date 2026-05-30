@@ -1,0 +1,42 @@
+# @relation(SDOC-SRS-141, SDOC-SRS-148, scope=file)
+#
+# Source nodes from Robot Framework [Documentation] sections.
+#
+# StrictDoc parses key-value pairs from [Documentation] and generates source
+# nodes of type TEST_SPEC into testcases.sdoc. @relation markers in the
+# robot file link test case to requirements. @relation markers in the
+# markdown test report link test results to test cases.
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Hello world doc
+
+RUN: %check_exists --file "%T/html/_source_files/tests/file.robot.html"
+
+# Check testcases.sdoc contains generated source nodes with field values and
+# links back to the robot source file and the markdown test session report.
+RUN: %cat %T/html/%THIS_TEST_FOLDER/testcases.html | filecheck %s --check-prefix CHECK-SPEC
+CHECK-SPEC: TC-AUTH-001
+CHECK-SPEC: <a{{.*}}href="../_source_files/test_sessions/2026_05_28.md.html#TC-AUTH-001#9#10">
+CHECK-SPEC: test_sessions/2026_05_28.md, <i>lines: 9-10</i>
+CHECK-SPEC: TestExecution
+CHECK-SPEC: INTENTION:
+CHECK-SPEC: Verify that valid credentials grant access.
+CHECK-SPEC: EXPECTED_RESULTS:
+CHECK-SPEC: TC-AUTH-002
+CHECK-SPEC: <a{{.*}}href="../_source_files/test_sessions/2026_05_28.md.html#TC-AUTH-002#9#10">
+CHECK-SPEC: test_sessions/2026_05_28.md, <i>lines: 9-10</i>
+CHECK-SPEC: TestExecution
+CHECK-SPEC: INTENTION:
+CHECK-SPEC: Verify that login fails with wrong password
+CHECK-SPEC: EXPECTED_RESULTS:
+
+# Check requirements contain links to TestCase in robot DSL.
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: REQ-AUTH-001
+CHECK-HTML: TC-AUTH-001
+CHECK-HTML: <a{{.*}}href="../_source_files/tests/file.robot.html#REQ-AUTH-001#2#10">
+CHECK-HTML: tests/file.robot, <i>lines: 2-10</i>
+CHECK-HTML: REQ-AUTH-002
+CHECK-HTML: TC-AUTH-002
+CHECK-HTML: <a{{.*}}href="../_source_files/tests/file.robot.html#REQ-AUTH-002#12#20">
+CHECK-HTML: tests/file.robot, <i>lines: 12-20</i>

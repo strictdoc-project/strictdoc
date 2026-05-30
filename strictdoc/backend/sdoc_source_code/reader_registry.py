@@ -43,7 +43,9 @@ class SourceCodeReaderRegistry:
         ):
             return SourceFileTraceabilityReader_C(custom_tags=source_node_tags)
         if path_to_file.endswith(".robot"):
-            return SourceFileTraceabilityReader_Robot()
+            return SourceFileTraceabilityReader_Robot(
+                custom_tags=source_node_tags
+            )
         if path_to_file.endswith(".rs"):
             return SourceFileTraceabilityReader_Rust(
                 custom_tags=source_node_tags

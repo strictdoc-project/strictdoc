@@ -3,13 +3,13 @@ from typing import List, Union
 from markupsafe import Markup
 
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.statistics.metric import Metric, MetricSection
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.generators.view_objects.project_statistics_view_object import (
-    ProjectStatisticsViewObject,
-)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.features.project_statistics.metric import Metric, MetricSection
+from strictdoc.features.project_statistics.view_object import (
+    ProjectStatisticsViewObject,
+)
 
 
 class CustomStatisticsGenerator:

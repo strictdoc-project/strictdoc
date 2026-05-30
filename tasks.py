@@ -1004,6 +1004,7 @@ def release_pyinstaller(context):
             --hidden-import strictdoc.export.rst.strictdoc_lexer
             --hidden-import strictdoc.server.app
             --add-data strictdoc/export/html/templates:templates/html
+            --add-data strictdoc/features/project_statistics/templates:templates/html
             --add-data strictdoc/export/rst/templates:templates/rst
             --add-data strictdoc/export/html/_static:_static
             --add-data strictdoc/export/html/_static_extra:_static_extra
@@ -1080,6 +1081,7 @@ def nuitka(context):
             --include-module=docutils.readers.standalone
             --include-module=docutils.parsers.rst
             --include-data-dir=strictdoc/export/html/templates=templates/html
+            --include-data-dir=strictdoc/features/project_statistics/templates=templates/html
             --include-data-dir=strictdoc/export/rst/templates=templates/rst
             --include-data-dir=strictdoc/export/html/_static=_static
             --include-data-dir=strictdoc/export/html/_static_extra/mathjax=_static_extra/mathjax

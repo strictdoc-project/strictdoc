@@ -1166,8 +1166,6 @@ RELATIONS:
   VALUE: DO178-12
 - TYPE: Parent
   VALUE: SDOC-SSS-29
-- TYPE: File
-  VALUE: strictdoc/export/html/generators/project_statistics.py
 
 [REQUIREMENT]
 MID: 7968fb7612f64504b5a430ccbffe80f1

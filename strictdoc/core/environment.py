@@ -1,6 +1,17 @@
 import os
 import platform
 import sys
+from typing import List
+
+HTML_TEMPLATES_DIR = os.path.join("strictdoc", "export", "html", "templates")
+PROJECT_STATISTICS_TEMPLATES_DIR = os.path.join(
+    "strictdoc", "features", "project_statistics", "templates"
+)
+HTML_TEMPLATE_DIRS = [
+    HTML_TEMPLATES_DIR,
+    PROJECT_STATISTICS_TEMPLATES_DIR,
+]
+BINARY_HTML_TEMPLATES_DIR = os.path.join("templates", "html")
 
 
 class SDocRuntimeEnvironment:
@@ -84,7 +95,7 @@ class SDocRuntimeEnvironment:
             self.path_to_strictdoc, "strictdoc", "export", "rst", "templates"
         )
 
-    def get_path_to_html_templates(self) -> str:
+    def get_path_to_html_templates(self) -> List[str]:
         if self.is_py_installer:  # pragma: no cover
             # If the application is run as a bundle, the PyInstaller bootloader
             # extends the sys module by a flag frozen=True and sets the app
@@ -92,13 +103,17 @@ class SDocRuntimeEnvironment:
             bundle_dir = (
                 sys._MEIPASS  # type: ignore[attr-defined]
             )
-            return os.path.join(bundle_dir, "templates/html")
+            return [os.path.join(bundle_dir, BINARY_HTML_TEMPLATES_DIR)]
         if self.is_nuitka:  # pragma: no cover
-            return os.path.join(self.path_to_strictdoc, "templates/html")
+            return [
+                os.path.join(self.path_to_strictdoc, BINARY_HTML_TEMPLATES_DIR)
+            ]
         # Normal Python.
-        path_to_html_templates = os.path.join(
-            self.path_to_strictdoc, "strictdoc", "export", "html", "templates"
-        )
-        assert os.path.isdir(path_to_html_templates), path_to_html_templates
-        assert os.path.isabs(path_to_html_templates), path_to_html_templates
+        path_to_html_templates = [
+            os.path.join(self.path_to_strictdoc, template_dir)
+            for template_dir in HTML_TEMPLATE_DIRS
+        ]
+        for path in path_to_html_templates:
+            assert os.path.isdir(path), path
+            assert os.path.isabs(path), path
         return path_to_html_templates

@@ -200,7 +200,10 @@ class CreateOrUpdateNodeCommand:
             requirement.ordered_fields_lookup.clear()
 
             self.populate_node_fields_from_form_object(
-                requirement, form_object, map_form_to_requirement_fields
+                requirement,
+                form_object,
+                map_form_to_requirement_fields,
+                existing_node_fields,
             )
 
             # Updating Traceability Index: UID.
@@ -298,7 +301,7 @@ class CreateOrUpdateNodeCommand:
             parent.section_contents.insert(insert_to_idx, requirement)
 
             self.populate_node_fields_from_form_object(
-                requirement, form_object, map_form_to_requirement_fields
+                requirement, form_object, map_form_to_requirement_fields, []
             )
             traceability_index.create_requirement(requirement=requirement)
 
@@ -480,7 +483,17 @@ class CreateOrUpdateNodeCommand:
         map_form_to_requirement_fields: Dict[
             RequirementFormField, Optional[FreeTextContainer]
         ],
+        existing_node_fields: Optional[List[SDocNodeField]] = None,
     ) -> None:
+        if existing_node_fields is None:
+            existing_node_fields = []
+
+        existing_fields_lookup: Dict[str, List[SDocNodeField]] = {}
+        for f in existing_node_fields:
+            if f.field_name not in existing_fields_lookup:
+                existing_fields_lookup[f.field_name] = []
+            existing_fields_lookup[f.field_name].append(f)
+
         # FIXME: Leave only one method based on set_field_value().
         for form_field_name, form_fields in form_object.fields.items():
             for form_field_index, form_field in enumerate(form_fields):
@@ -490,34 +503,51 @@ class CreateOrUpdateNodeCommand:
                         form_field_index=form_field_index,
                         value=form_field.field_value,
                     )
-                    continue
-
-                free_text_content: Optional[FreeTextContainer] = (
-                    map_form_to_requirement_fields[form_field]
-                )
-                requirement_field: Optional[SDocNodeField] = (
-                    SDocNodeField(
-                        node,
-                        field_name=form_field_name,
-                        parts=free_text_content.parts,
-                        multiline__="true"
-                        if form_field.field_type
-                        == RequirementFormFieldType.MULTILINE
-                        else None,
+                else:
+                    free_text_content: Optional[FreeTextContainer] = (
+                        map_form_to_requirement_fields[form_field]
                     )
-                    if free_text_content is not None
-                    else None
-                )
-                node.set_field_value(
-                    field_name=form_field_name,
-                    form_field_index=form_field_index,
-                    value=requirement_field,
-                )
-                if (
-                    requirement_field is not None
-                    and free_text_content is not None
-                ):
-                    for part_ in requirement_field.parts:
-                        if isinstance(part_, str):
-                            continue
-                        part_.parent = requirement_field
+                    requirement_field: Optional[SDocNodeField] = (
+                        SDocNodeField(
+                            node,
+                            field_name=form_field_name,
+                            parts=free_text_content.parts,
+                            multiline__="true"
+                            if form_field.field_type
+                            == RequirementFormFieldType.MULTILINE
+                            else None,
+                        )
+                        if free_text_content is not None
+                        else None
+                    )
+                    node.set_field_value(
+                        field_name=form_field_name,
+                        form_field_index=form_field_index,
+                        value=requirement_field,
+                    )
+                    if (
+                        requirement_field is not None
+                        and free_text_content is not None
+                    ):
+                        for part_ in requirement_field.parts:
+                            if isinstance(part_, str):
+                                continue
+                            part_.parent = requirement_field
+
+                # Preserve the existing origin metadata as is was not passed round-trip via the form.
+                new_field_list = node.ordered_fields_lookup.get(form_field_name)
+                if new_field_list and form_field_index < len(new_field_list):
+                    new_field = new_field_list[form_field_index]
+
+                    # Find the corresponding old field (if it existed)
+                    if (
+                        form_field_name in existing_fields_lookup
+                        and form_field_index
+                        < len(existing_fields_lookup[form_field_name])
+                    ):
+                        old_field = existing_fields_lookup[form_field_name][
+                            form_field_index
+                        ]
+
+                        if hasattr(old_field, "origin"):
+                            new_field.origin = old_field.origin

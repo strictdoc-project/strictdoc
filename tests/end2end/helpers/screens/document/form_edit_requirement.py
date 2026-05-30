@@ -172,3 +172,21 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
     def do_reset_uid_field(self, field_name: str = "") -> None:
         assert isinstance(field_name, str)
         self.test_case.click_xpath("//*[@data-testid='reset-uid-field-action']")
+
+    def assert_field_is_readonly(self, field_name: str) -> None:
+        """Verifies that a specific field has contenteditable set to false."""
+        selector = (
+            f"sdoc-contenteditable[data-testid='form-field-{field_name}']"
+        )
+        is_editable = self.test_case.get_attribute(selector, "contenteditable")
+
+        assert is_editable == "false"
+
+    def assert_field_is_editable(self, field_name: str) -> None:
+        """Verifies that a specific field has contenteditable set to true."""
+        selector = (
+            f"sdoc-contenteditable[data-testid='form-field-{field_name}']"
+        )
+        is_editable = self.test_case.get_attribute(selector, "contenteditable")
+
+        assert is_editable == "true"

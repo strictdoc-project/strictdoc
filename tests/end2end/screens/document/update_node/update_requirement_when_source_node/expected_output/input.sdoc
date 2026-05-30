@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Hybrid Document
+UID: DOC
+
+[REQUIREMENT]
+UID: REQ-1
+RATIONALE: >>>
+This is a rationale.
+<<<

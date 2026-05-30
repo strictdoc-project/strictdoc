@@ -104,9 +104,6 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
     RequirementReferenceFormField,
 )
-from strictdoc.export.html.generators.document_pdf import (
-    DocumentHTML2PDFGenerator,
-)
 from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
     DocumentScreenViewObject,
 )
@@ -126,11 +123,14 @@ from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.export.html2pdf.pdf_print_driver import (
+from strictdoc.export.json.json_generator import JSONGenerator
+from strictdoc.features.html2pdf.generator import (
+    DocumentHTML2PDFGenerator,
+)
+from strictdoc.features.html2pdf.pdf_print_driver import (
     PDFPrintDriver,
     PDFPrintDriverException,
 )
-from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import (
     get_file_modification_time,

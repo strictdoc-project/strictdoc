@@ -13,6 +13,10 @@ from invoke import task
 from developer.git.commit_validator import (
     validate_commits_locally_or_ci,
 )
+from strictdoc.core.environment import (
+    BINARY_HTML_TEMPLATES_DIR,
+    HTML_TEMPLATE_DIRS,
+)
 
 # Specifying encoding because Windows crashes otherwise when running Invoke
 # tasks below:
@@ -26,6 +30,20 @@ sys.stdout = open(1, "w", encoding="utf-8", closefd=False, buffering=1)
 
 STRICTDOC_TMP_DIR = os.path.join(tempfile.gettempdir(), "strictdoc_tmp_dir")
 TEST_REPORTS_DIR = "build/test_reports"
+
+
+def get_pyinstaller_html_template_data_options() -> str:
+    return "\n".join(
+        f'--add-data "{template_dir}{os.pathsep}{BINARY_HTML_TEMPLATES_DIR}"'
+        for template_dir in HTML_TEMPLATE_DIRS
+    )
+
+
+def get_nuitka_html_template_data_options() -> str:
+    return "\n".join(
+        f'--include-data-dir="{template_dir}={BINARY_HTML_TEMPLATES_DIR}"'
+        for template_dir in HTML_TEMPLATE_DIRS
+    )
 
 
 # To prevent all tasks from building to the same virtual environment.
@@ -986,6 +1004,7 @@ def release(context, test_pypi=False, username=None, password=None):
 @task
 def release_pyinstaller(context):
     path_to_pyi_dist = "/tmp/strictdoc"
+    html_template_data_options = get_pyinstaller_html_template_data_options()
 
     # The --hidden-import strictdoc.server.app flag is needed because without
     # it, the following is produced:
@@ -1003,8 +1022,7 @@ def release_pyinstaller(context):
             --distpath {path_to_pyi_dist}
             --hidden-import strictdoc.export.rst.strictdoc_lexer
             --hidden-import strictdoc.server.app
-            --add-data strictdoc/export/html/templates:templates/html
-            --add-data strictdoc/features/project_statistics/templates:templates/html
+            {html_template_data_options}
             --add-data strictdoc/export/rst/templates:templates/rst
             --add-data strictdoc/export/html/_static:_static
             --add-data strictdoc/export/html/_static_extra:_static_extra
@@ -1068,6 +1086,8 @@ def run(context, command):
 
 @task
 def nuitka(context):
+    html_template_data_options = get_nuitka_html_template_data_options()
+
     run_invoke(
         context,
         f"""
@@ -1080,8 +1100,7 @@ def nuitka(context):
             --include-module=docutils
             --include-module=docutils.readers.standalone
             --include-module=docutils.parsers.rst
-            --include-data-dir=strictdoc/export/html/templates=templates/html
-            --include-data-dir=strictdoc/features/project_statistics/templates=templates/html
+            {html_template_data_options}
             --include-data-dir=strictdoc/export/rst/templates=templates/rst
             --include-data-dir=strictdoc/export/html/_static=_static
             --include-data-dir=strictdoc/export/html/_static_extra/mathjax=_static_extra/mathjax

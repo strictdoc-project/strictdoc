@@ -16,10 +16,10 @@ from strictdoc.export.doxygen.doxygen_generator import DoxygenGenerator
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
-from strictdoc.export.html2pdf.html2pdf_generator import HTML2PDFGenerator
 from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.export.spdx.spdx_generator import SPDXGenerator
+from strictdoc.features.html2pdf.html2pdf_generator import HTML2PDFGenerator
 from strictdoc.git.change_generator import ChangeGenerator
 from strictdoc.helpers.parallelizer import NullParallelizer, Parallelizer
 from strictdoc.helpers.timing import timing_decorator

@@ -10,7 +10,7 @@ from pypdf.generic import (
     TextStringObject,
 )
 
-from strictdoc.export.html2pdf.pdf_postprocessor import PDFPostprocessor
+from strictdoc.features.html2pdf.pdf_postprocessor import PDFPostprocessor
 
 
 def test_pdf_postprocessor_rewrites_export_local_file_uris(

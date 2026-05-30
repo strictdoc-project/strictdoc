@@ -20,9 +20,6 @@ from strictdoc.export.html.generators.document import DocumentHTMLGenerator
 from strictdoc.export.html.generators.document_deep_trace import (
     DocumentDeepTraceHTMLGenerator,
 )
-from strictdoc.export.html.generators.document_pdf import (
-    DocumentHTML2PDFGenerator,
-)
 from strictdoc.export.html.generators.document_table import (
     DocumentTableHTMLGenerator,
 )
@@ -47,6 +44,9 @@ from strictdoc.export.html.generators.traceability_matrix import (
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.features.html2pdf.generator import (
+    DocumentHTML2PDFGenerator,
+)
 from strictdoc.features.project_statistics.generator import (
     ProgressStatisticsGenerator,
 )

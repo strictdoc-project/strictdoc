@@ -14,7 +14,7 @@
           {% include "components/node_field/document_meta/index.jinja" %}
         -#}
 
-        {% include "screens/document/pdf/toc.jinja" %}
+        {% include "features/html2pdf/toc.jinja" %}
 
         {#-
           To make the abstract and TOC appear on different pages,
@@ -47,9 +47,9 @@
 </div>
 
 {% if view_object.custom_html2pdf_template is none %}
-{%- include "screens/document/pdf/template/frontpage.jinja" -%}
-{%- include "screens/document/pdf/template/header.jinja" -%}
-{%- include "screens/document/pdf/template/footer.jinja" -%}
+{%- include "features/html2pdf/template/frontpage.jinja" -%}
+{%- include "features/html2pdf/template/header.jinja" -%}
+{%- include "features/html2pdf/template/footer.jinja" -%}
 {% else %}
   {{ view_object.custom_html2pdf_template.render(view_object=view_object) | safe }}
 {% endif %}

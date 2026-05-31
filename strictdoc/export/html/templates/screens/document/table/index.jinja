@@ -21,7 +21,7 @@
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js') }}";
   </script>
-<script src="{{ view_object.render_static_url('controllers/editable_field_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('controllers/editable_field_controller.js') }}"></script>
   <script src="{{ view_object.render_static_url('controllers/deletable_field_controller.js') }}"></script>
   <script src="{{ view_object.render_static_url('controllers/autocompletable_field_controller.js') }}"></script>
   <script src="{{ view_object.render_static_url('table_view_edit.js') }}"></script>
@@ -58,7 +58,8 @@
       header__items=[
         "screens/document/_shared/frame_header_document_title.jinja",
         "screens/document/_shared/frame_viewtype_menu.jinja"
-      ]
+      ],
+      header__last="screens/document/table/filter.jinja"
   -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}

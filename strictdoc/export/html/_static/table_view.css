@@ -6,15 +6,27 @@
   background-color: var(--color-bg-contrast);
   /* for sticky toolbar */
   margin-top:  calc(var(--base-rhythm) * 6);
+  /* create a stacking context to contain child z-index values */
+  position: relative;
+  z-index: 1;
 }
 
-/* .content-view-table td,
-.content-view-table th, */
+.content-view-table_sticky-header {
+  position: sticky;
+  top: calc(-6.6 * var(--base-rhythm)); /* = layout .header */
+  z-index: 2;
+  background: var(--color-bg-contrast);
+  box-shadow: 0 4px 4px #afafaf;
+}
+
 .content-view-th,
 .content-view-td {
-  padding: .5rem 1rem;
   border: 1px solid #666;
   vertical-align: top;
+}
+
+.content-view-td {
+  padding: .5rem 1rem;
 }
 
 .content-view-th {
@@ -23,6 +35,10 @@
   background-color: var(--color-border);
   font-size: .85em;
   font-weight: bold;
+  /* padding: 0 1rem;
+  background-color: var(--color-bg-ui);
+  color: var(--color-fg-secondary-invert); */
+  padding: .5rem 1rem;
 }
 
 .content-view-td-type,
@@ -193,22 +209,25 @@
 /* Column visibility toolbar */
 
 .table-toolbar {
-  position: sticky;
-  top: calc(-5 * var(--base-rhythm));
+  /* position: sticky;
+  top: calc(-6 * var(--base-rhythm));
   left: calc(-9 * var(--base-rhythm));
   z-index: 10;
-  height: 0;
-  width: fit-content;
-  padding-inline: calc(4 * var(--base-rhythm));
+  padding-inline: calc(3 * var(--base-rhythm));
+  width: 0;
+  height: 0; */
 }
 
 .table-toolbar__dock {
-  background-color: var(--color-fg-secondary-invert);
-  border-radius: 6px;
-  width: fit-content;
+  --gap: calc(var(--base-rhythm) * 0.5);
+  /* background-color: var(--color-bg-contrast);
+  background-color: var(--color-bg-main); */
   display: flex;
-  column-gap: var(--base-rhythm);
-  padding: var(--base-rhythm);
+  column-gap: var(--gap);
+  /* padding: var(--gap);
+  width: fit-content;
+  width: 100vw;
+  min-width: 100%; */
 }
 
 .table-toolbar__columns,
@@ -242,8 +261,8 @@
 
 .table-toolbar__dropdown {
   position: absolute;
-  top: 100%;
-  left: 0;
+  right: 0; /* table-toolbar is the last element in .header  */
+  left: auto;
   z-index: 100;
   min-width: 180px;
 }

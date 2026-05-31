@@ -73,15 +73,13 @@
         {% include "components/node_field/document_meta/index.jinja" %}
         </sdoc-node>
 
-        {% include "screens/document/table/filter.jinja" %}
-
         {# ================================================================ #}
         {# TABLE                                                             #}
         {# ================================================================ #}
         <table class="content-view-table">
 
           {# -- Header row ------------------------------------------------ #}
-          <thead>
+          <thead class="content-view-table_sticky-header">
             <tr>
               <th class="content-view-th">Type</th>
               <th class="content-view-th">Level</th>

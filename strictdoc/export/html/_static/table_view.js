@@ -104,7 +104,7 @@
     function updateBtnLabel(btn, items) {
         const hidden = items.filter(i => !i.visible).length;
         const infoEl = btn.querySelector('.table-toolbar__btn-info');
-        infoEl.textContent = hidden > 0 ? hidden + ' hidden' : '';
+        infoEl.textContent = hidden > 0 ? ' • ' + hidden + ' hidden' : '';
     }
 
     function syncResetBtn(resetBtn, items) {

@@ -9,6 +9,9 @@ from typing import Dict, List, Optional, Set, Tuple, Union
 
 from textx import TextXSyntaxError
 
+from strictdoc.backend.rst.rst_to_html_fragment_writer import (
+    RstToHtmlFragmentWriter,
+)
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import get_textx_syntax_error_message
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
@@ -38,9 +41,6 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormField,
     RequirementFormFieldType,
     RequirementFormObject,
-)
-from strictdoc.export.rst.rst_to_html_fragment_writer import (
-    RstToHtmlFragmentWriter,
 )
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import set_file_modification_time

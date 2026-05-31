@@ -2,6 +2,12 @@ from typing import Dict, Optional, Tuple, Union
 
 from markupsafe import Markup
 
+from strictdoc.backend.markdown.markdown_to_html_fragment_writer import (
+    MarkdownToHtmlFragmentWriter,
+)
+from strictdoc.backend.rst.rst_to_html_fragment_writer import (
+    RstToHtmlFragmentWriter,
+)
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -17,12 +23,6 @@ from strictdoc.export.html.renderers.html_fragment_writer import (
 )
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
-from strictdoc.export.markdown.markdown_to_html_fragment_writer import (
-    MarkdownToHtmlFragmentWriter,
-)
-from strictdoc.export.rst.rst_to_html_fragment_writer import (
-    RstToHtmlFragmentWriter,
-)
 from strictdoc.helpers.rst import escape_str_after_inline_markup
 
 FragmentWriterType = Union[

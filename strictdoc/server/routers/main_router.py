@@ -25,6 +25,7 @@ from starlette.responses import (
 )
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
+from strictdoc.backend.json.json_generator import JSONGenerator
 from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
     P01_ReqIFToSDocConverter,
@@ -114,7 +115,6 @@ from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.export.json.json_generator import JSONGenerator
 from strictdoc.features.html2pdf.generator import (
     DocumentHTML2PDFGenerator,
 )

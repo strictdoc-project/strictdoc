@@ -125,7 +125,7 @@ class SDocRuntimeEnvironment:
             return os.path.join(self.path_to_strictdoc, "templates/rst")
         # Normal Python
         return os.path.join(
-            self.path_to_strictdoc, "strictdoc", "export", "rst", "templates"
+            self.path_to_strictdoc, "strictdoc", "backend", "rst", "templates"
         )
 
     def get_path_to_html_templates(self) -> List[str]:

@@ -508,9 +508,6 @@ StrictDoc shall render supported markup formats (at least RST and Markdown) to H
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-63
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/rst/rst_to_html_fragment_writer.py
 
 [REQUIREMENT]
 MID: b1b4f03d4e404a14be481626803fcfc2
@@ -1602,18 +1599,6 @@ RELATIONS:
   VALUE: DO178-5
 - TYPE: Parent
   VALUE: DO178-16
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/rst/document_rst_generator.py
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/rst/writer.py
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/rst/rst_templates.py
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/rst/templates/requirement.jinja.rst
 
 [REQUIREMENT]
 MID: 6faffbd1d4cc47ea88c08ef38966e5ec
@@ -1634,8 +1619,6 @@ RELATIONS:
   VALUE: DO178-5
 - TYPE: Parent
   VALUE: DO178-16
-- TYPE: File
-  VALUE: strictdoc/export/rst/rst_to_html_fragment_writer.py
 
 [[/SECTION]]
 

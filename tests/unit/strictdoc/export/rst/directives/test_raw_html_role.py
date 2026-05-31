@@ -1,9 +1,9 @@
 import os
 
-from strictdoc.core.project_config import ProjectConfig
-from strictdoc.export.rst.rst_to_html_fragment_writer import (
+from strictdoc.backend.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.core.project_config import ProjectConfig
 
 FIXTURES_PATH = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "fixtures")

@@ -8,6 +8,9 @@ from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from starlette.datastructures import FormData
 
+from strictdoc.backend.rst.rst_to_html_fragment_writer import (
+    RstToHtmlFragmentWriter,
+)
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -37,9 +40,6 @@ from strictdoc.core.traceability_index import (
     TraceabilityIndex,
 )
 from strictdoc.core.tree_cycle_detector import SingleShotTreeCycleDetector
-from strictdoc.export.rst.rst_to_html_fragment_writer import (
-    RstToHtmlFragmentWriter,
-)
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.form_data import ParsedFormData, parse_form_data

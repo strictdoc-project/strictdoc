@@ -4,20 +4,20 @@ from pathlib import Path
 from typing import Optional
 
 from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
+from strictdoc.backend.json.json_generator import JSONGenerator
 from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.reqif.reqif_export import ReqIFExport
+from strictdoc.backend.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.writer import SDWriter
+from strictdoc.backend.spdx.spdx_generator import SPDXGenerator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
-from strictdoc.export.json.json_generator import JSONGenerator
-from strictdoc.export.rst.document_rst_generator import DocumentRSTGenerator
-from strictdoc.export.spdx.spdx_generator import SPDXGenerator
 from strictdoc.features.diff_and_changelog.change_generator import (
     ChangeGenerator,
 )

@@ -1041,15 +1041,15 @@ def release_pyinstaller(context):
             --noconfirm
             --additional-hooks-dir developer/pyinstaller_hooks
             --distpath {path_to_pyi_dist}
+            --hidden-import strictdoc.backend.rst.strictdoc_lexer
             --hidden-import strictdoc.core.statistics.metric
             --hidden-import strictdoc.export.html.generators.project_statistics
             --hidden-import strictdoc.export.html.generators.view_objects.project_statistics_view_object
             --hidden-import strictdoc.export.html.generators.view_objects.project_tree_stats
-            --hidden-import strictdoc.export.rst.strictdoc_lexer
             --hidden-import strictdoc.server.app
             {html_template_data_options}
             {html_static_data_options}
-            --add-data strictdoc/export/rst/templates:templates/rst
+            --add-data strictdoc/backend/rst/templates:templates/rst
             --add-data strictdoc/export/html/_static_extra:_static_extra
             strictdoc/cli/main.py
     """
@@ -1128,7 +1128,7 @@ def nuitka(context):
             --include-module=docutils.parsers.rst
             {html_template_data_options}
             {html_static_data_options}
-            --include-data-dir=strictdoc/export/rst/templates=templates/rst
+            --include-data-dir=strictdoc/backend/rst/templates=templates/rst
             --include-data-dir=strictdoc/export/html/_static_extra/mathjax=_static_extra/mathjax
             --include-package-data=docutils
             strictdoc/cli/main.py

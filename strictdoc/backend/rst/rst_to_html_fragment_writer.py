@@ -17,10 +17,8 @@ from docutils.utils import SystemMessage
 from markupsafe import Markup
 from pygments.lexers import _load_lexers
 
-from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.core.project_config import ProjectConfig, ProjectFeature
-from strictdoc.export.rst.directives.raw_html_role import raw_html_role
-from strictdoc.export.rst.directives.sphinx_style_math import (
+from strictdoc.backend.rst.directives.raw_html_role import raw_html_role
+from strictdoc.backend.rst.directives.sphinx_style_math import (
     MathDirective,
     MathDirectiveForServer,
     eq_role,
@@ -28,10 +26,12 @@ from strictdoc.export.rst.directives.sphinx_style_math import (
     math_role,
     math_role_for_server,
 )
-from strictdoc.export.rst.directives.wildcard_enhanced_image import (
+from strictdoc.backend.rst.directives.wildcard_enhanced_image import (
     STRICTDOC_REFERENCE_PATH_SETTING,
     WildcardEnhancedImage,
 )
+from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.helpers.file_system import file_open_read_bytes
 
 MAX_RETRIES_FOR_CACHE_FILESYSTEM_LOCKING = 3
@@ -43,7 +43,7 @@ class RstToHtmlFragmentWriter:
     roles.register_local_role("rawhtml", raw_html_role)
 
     # FIXME: It doesn't feel right to load lexers like this.
-    _load_lexers("strictdoc.export.rst.strictdoc_lexer")
+    _load_lexers("strictdoc.backend.rst.strictdoc_lexer")
 
     BASE_SETTINGS = {
         # This is important for code syntax highlighting. The setting of

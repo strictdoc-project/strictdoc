@@ -107,9 +107,6 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
     DocumentScreenViewObject,
 )
-from strictdoc.export.html.generators.view_objects.nestor_view_object import (
-    NestorViewObject,
-)
 from strictdoc.export.html.generators.view_objects.server_error_view_object import (
     ServerErrorViewObject,
 )
@@ -124,6 +121,9 @@ from strictdoc.features.html2pdf.generator import (
 from strictdoc.features.html2pdf.pdf_print_driver import (
     PDFPrintDriver,
     PDFPrintDriverException,
+)
+from strictdoc.features.nestor.view_object import (
+    NestorViewObject,
 )
 from strictdoc.features.project_index.view_object import (
     ProjectTreeViewObject,

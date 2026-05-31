@@ -59,8 +59,13 @@ class NestorViewObject:
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> str:
         return jinja_environment.render_template_as_markup(
-            "screens/nestor/index.jinja", view_object=self
+            "features/nestor/index.jinja", view_object=self
         )
 
     def render_static_url(self, url: str) -> str:
         return self.link_renderer.render_static_url(url)
+
+    def get_document_level(self) -> int:
+        if self.document is None:
+            return 0
+        return assert_cast(self.document.ng_level, int)

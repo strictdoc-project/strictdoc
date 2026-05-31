@@ -85,7 +85,7 @@ class SearchScreenViewObject:
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
-            "screens/search/index.jinja", view_object=self
+            "features/search/index.jinja", view_object=self
         )
 
     def is_empty_tree(self) -> bool:

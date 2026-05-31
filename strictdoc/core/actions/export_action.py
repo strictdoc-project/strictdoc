@@ -12,7 +12,6 @@ from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
-from strictdoc.export.doxygen.doxygen_generator import DoxygenGenerator
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
@@ -22,6 +21,7 @@ from strictdoc.export.spdx.spdx_generator import SPDXGenerator
 from strictdoc.features.diff_and_changelog.change_generator import (
     ChangeGenerator,
 )
+from strictdoc.features.doxygen.generator import DoxygenGenerator
 from strictdoc.features.html2pdf.html2pdf_generator import HTML2PDFGenerator
 from strictdoc.helpers.parallelizer import NullParallelizer, Parallelizer
 from strictdoc.helpers.timing import timing_decorator

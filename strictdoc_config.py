@@ -70,6 +70,7 @@ def create_config() -> ProjectConfig:
         },
         # Waiting for a fix to be released soon.
         html2pdf_strict=False,
+        launcher_logo_path=None,
         reqif_multiline_is_xhtml=True,
         reqif_enable_mid=True,
         section_behavior="[[SECTION]]",

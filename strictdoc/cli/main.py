@@ -12,6 +12,10 @@ from strictdoc.commands.about_command import AboutCommand
 from strictdoc.commands.export import ExportCommand
 from strictdoc.commands.import_excel import ImportExcelCommand
 from strictdoc.commands.import_reqif import ImportReqIFCommand
+from strictdoc.commands.launcher_command import (
+    LauncherCommand,
+    is_launcher_available,
+)
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.new_command import NewCommand
 from strictdoc.commands.server import ServerCommand
@@ -24,15 +28,25 @@ from strictdoc.helpers.exception import (
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.timing import SimpleNominalExit, measure_performance
 
-COMMAND_REGISTRY: Dict[str, Any] = {
-    "about": AboutCommand,
-    "export": ExportCommand,
-    "import": {"excel": ImportExcelCommand, "reqif": ImportReqIFCommand},
-    "manage": {"auto-uid": ManageAutoUIDCommand},
-    "new": NewCommand,
-    "server": ServerCommand,
-    "version": VersionCommand,
-}
+
+def create_command_registry() -> Dict[str, Any]:
+    command_registry: Dict[str, Any] = {
+        "about": AboutCommand,
+        "export": ExportCommand,
+        "import": {"excel": ImportExcelCommand, "reqif": ImportReqIFCommand},
+        "manage": {"auto-uid": ManageAutoUIDCommand},
+        "new": NewCommand,
+        "server": ServerCommand,
+        "version": VersionCommand,
+    }
+
+    if is_launcher_available():
+        command_registry["launcher"] = LauncherCommand
+
+    return command_registry
+
+
+COMMAND_REGISTRY: Dict[str, Any] = create_command_registry()
 
 
 def _main() -> None:

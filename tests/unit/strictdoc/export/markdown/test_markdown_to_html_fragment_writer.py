@@ -1,4 +1,4 @@
-from strictdoc.export.markdown.markdown_to_html_fragment_writer import (
+from strictdoc.backend.markdown.markdown_to_html_fragment_writer import (
     MarkdownToHtmlFragmentWriter,
 )
 

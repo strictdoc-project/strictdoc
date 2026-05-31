@@ -1,6 +1,6 @@
 from pygments.token import Token
 
-from strictdoc.export.rst.strictdoc_lexer import (
+from strictdoc.backend.rst.strictdoc_lexer import (
     SDocPygmentsToken,
     StrictDocLexer,
 )

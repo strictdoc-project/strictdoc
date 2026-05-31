@@ -1,10 +1,10 @@
 import os
 from pathlib import Path
 
+from strictdoc.backend.rst.writer import RSTWriter
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.rst.writer import RSTWriter
 from strictdoc.helpers.cast import assert_cast
 
 

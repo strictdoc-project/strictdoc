@@ -53,11 +53,11 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.writer import SDWriter
+from strictdoc.backend.spdx.spdx_sdoc_container import SPDXSDocContainer
+from strictdoc.backend.spdx.spdx_to_sdoc_converter import SPDXToSDocConverter
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
-from strictdoc.export.spdx.spdx_to_sdoc_converter import SPDXToSDocConverter
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_system import file_open_read_bytes
 from strictdoc.helpers.sha256 import get_sha256

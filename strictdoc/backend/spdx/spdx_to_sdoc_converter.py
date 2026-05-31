@@ -37,7 +37,7 @@ from strictdoc.backend.sdoc.models.reference import (
     FileReference,
     ParentReqReference,
 )
-from strictdoc.export.spdx.spdx_sdoc_container import SPDXSDocContainer
+from strictdoc.backend.spdx.spdx_sdoc_container import SPDXSDocContainer
 
 
 class SPDXToSDocConverter:

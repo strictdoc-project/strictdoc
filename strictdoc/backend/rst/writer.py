@@ -1,13 +1,13 @@
 from enum import Enum
 from typing import Optional
 
+from strictdoc.backend.rst.rst_templates import RSTTemplates
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.rst.rst_templates import RSTTemplates
 from strictdoc.helpers.rst import escape_str_after_inline_markup
 
 

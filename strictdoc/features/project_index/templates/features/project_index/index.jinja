@@ -56,12 +56,12 @@
 {% block header_content %}
   {%- with
       header__pagetype=template_type,
-      header__last="screens/project_index/actions.jinja"
+      header__last="features/project_index/actions.jinja"
   -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}
 {% endblock header_content %}
 
 {% block main_content %}
-  {% include "screens/project_index/main.jinja" %}
+  {% include "features/project_index/main.jinja" %}
 {% endblock main_content %}

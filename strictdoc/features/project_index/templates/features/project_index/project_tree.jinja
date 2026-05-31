@@ -5,13 +5,13 @@
       {% if root_tree_.root_folder_or_file.is_folder() %}
         {% if view_object.should_display_folder(root_tree_.root_folder_or_file) %}
           {% with folder = root_tree_.root_folder_or_file %}
-            {% include "screens/project_index/project_tree_folder.jinja" %}
+            {% include "features/project_index/project_tree_folder.jinja" %}
           {% endwith %}
         {% endif %}
       {% else %}
         {% if view_object.should_display_file(root_tree_.root_folder_or_file) %}
           {% with file = root_tree_.root_folder_or_file %}
-            {% include "screens/project_index/project_tree_file.jinja" %}
+            {% include "features/project_index/project_tree_file.jinja" %}
           {% endwith %}
         {% endif %}
       {% endif %}

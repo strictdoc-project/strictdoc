@@ -6,12 +6,12 @@ window.StrictDoc.project.map = {
   {%- if root_tree_.root_folder_or_file.is_folder() %}
     {%- if root_tree_.root_folder_or_file.has_sdoc_content %}
       {%- with folder = root_tree_.root_folder_or_file %}
-        {%- include "screens/project_index/project_map_folder.jinja" %}
+        {%- include "features/project_index/project_map_folder.jinja" %}
       {%- endwith %}
     {%- endif %}
   {%- else %}
     {%- with file = root_tree_.root_folder_or_file %}
-      {%- include "screens/project_index/project_map_file.jinja" %}
+      {%- include "features/project_index/project_map_file.jinja" %}
     {%- endwith %}
   {%- endif %}
 {%- endfor %}

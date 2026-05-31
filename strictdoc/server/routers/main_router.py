@@ -110,9 +110,6 @@ from strictdoc.export.html.generators.view_objects.document_screen_view_object i
 from strictdoc.export.html.generators.view_objects.nestor_view_object import (
     NestorViewObject,
 )
-from strictdoc.export.html.generators.view_objects.project_tree_view_object import (
-    ProjectTreeViewObject,
-)
 from strictdoc.export.html.generators.view_objects.search_screen_view_object import (
     SearchScreenViewObject,
 )
@@ -130,6 +127,9 @@ from strictdoc.features.html2pdf.generator import (
 from strictdoc.features.html2pdf.pdf_print_driver import (
     PDFPrintDriver,
     PDFPrintDriverException,
+)
+from strictdoc.features.project_index.view_object import (
+    ProjectTreeViewObject,
 )
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import (

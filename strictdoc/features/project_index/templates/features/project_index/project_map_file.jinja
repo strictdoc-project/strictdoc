@@ -2,6 +2,6 @@
 {%- if not document.document_is_included() %}
  "{{ document.meta.get_html_doc_link() }}": [
 {% with node = document -%}
-  {%- include "screens/project_index/project_map_node.jinja" %}
+  {%- include "features/project_index/project_map_node.jinja" %}
 {%- endwith %} ],
 {%- endif -%}

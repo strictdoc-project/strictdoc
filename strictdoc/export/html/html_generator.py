@@ -26,17 +26,17 @@ from strictdoc.export.html.generators.document_table import (
 from strictdoc.export.html.generators.document_trace import (
     DocumentTraceHTMLGenerator,
 )
-from strictdoc.export.html.generators.document_tree import (
-    DocumentTreeHTMLGenerator,
-)
-from strictdoc.export.html.generators.project_map import (
-    ProjectMapGenerator,
-)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.features.html2pdf.generator import (
     DocumentHTML2PDFGenerator,
+)
+from strictdoc.features.project_index.generator import (
+    DocumentTreeHTMLGenerator,
+)
+from strictdoc.features.project_index.project_map_generator import (
+    ProjectMapGenerator,
 )
 from strictdoc.features.project_statistics.generator import (
     ProgressStatisticsGenerator,

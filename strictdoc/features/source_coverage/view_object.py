@@ -1,7 +1,3 @@
-"""
-@relation(SDOC-SRS-35, scope=file)
-"""
-
 from typing import Optional
 
 from markupsafe import Markup
@@ -12,8 +8,10 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 )
 from strictdoc.core.file_system.source_tree import SourceFile
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
+from strictdoc.core.traceability_index import (
+    TraceabilityIndex,
+)
+from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 
 
@@ -37,7 +35,7 @@ class SourceCoverageViewObject:
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
-            "screens/source_file_coverage/index.jinja", view_object=self
+            "features/source_coverage/index.jinja", view_object=self
         )
 
     def render_static_url(self, url: str) -> str:
@@ -132,18 +130,3 @@ class SourceCoverageViewObject:
         total = len(trace_info.functions)
         percentage = (covered / total * 100) if total > 0 else 0
         return f"{percentage:.1f}"
-
-
-class SourceFileCoverageHTMLGenerator:
-    @staticmethod
-    def export(
-        *,
-        project_config: ProjectConfig,
-        traceability_index: TraceabilityIndex,
-        html_templates: HTMLTemplates,
-    ) -> Markup:
-        view_object = SourceCoverageViewObject(
-            traceability_index=traceability_index,
-            project_config=project_config,
-        )
-        return view_object.render_screen(html_templates.jinja_environment())

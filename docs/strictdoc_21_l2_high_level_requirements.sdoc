@@ -1228,9 +1228,6 @@ RELATIONS:
   VALUE: SDOC-SSS-72
 - TYPE: Parent
   VALUE: DO178-13
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/html/generators/source_file_coverage.py
 
 [[/SECTION]]
 

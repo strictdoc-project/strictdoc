@@ -32,9 +32,6 @@ from strictdoc.export.html.generators.document_tree import (
 from strictdoc.export.html.generators.project_map import (
     ProjectMapGenerator,
 )
-from strictdoc.export.html.generators.source_file_coverage import (
-    SourceFileCoverageHTMLGenerator,
-)
 from strictdoc.export.html.generators.source_file_view_generator import (
     SourceFileViewHTMLGenerator,
 )
@@ -46,6 +43,9 @@ from strictdoc.features.html2pdf.generator import (
 )
 from strictdoc.features.project_statistics.generator import (
     ProgressStatisticsGenerator,
+)
+from strictdoc.features.source_coverage.generator import (
+    SourceFileCoverageHTMLGenerator,
 )
 from strictdoc.features.traceability_matrix.generator import (
     TraceabilityMatrixHTMLGenerator,

@@ -7,7 +7,7 @@
       // this.element is the DOM element to which the controller is connected to.
       const editable = this.element;
 
-      const isSingle = (editable.dataset.editable == 'single') ? true : false;
+      const isSingle = editable.dataset.fieldType === 'singleline';
       const hidden = editable.nextElementSibling;
 
       editable.addEventListener('paste', (event) => {

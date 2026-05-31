@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Multi-line
+statement content.
+<<<

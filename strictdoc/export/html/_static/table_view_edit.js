@@ -168,7 +168,7 @@
             return;
         }
 
-        const formData = new FormData(form);
+        const formData = new URLSearchParams(new FormData(form));
 
         try {
             const response = await fetch(form.action, {

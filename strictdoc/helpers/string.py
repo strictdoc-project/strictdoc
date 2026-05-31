@@ -21,8 +21,11 @@ def sanitize_html_form_field(field: str, multiline: bool) -> str:
     assert isinstance(field, str)
     sanitized_field: str = field.strip()
     if multiline:
+        sanitized_field = sanitized_field.replace("\r\n", "\n").replace(
+            "\r", "\n"
+        )
         return REGEX_TRAILING_WHITESPACE_MULTILINE.sub("\n", sanitized_field)
-    sanitized_field = sanitized_field.replace("\r\n", "")
+    sanitized_field = sanitized_field.replace("\r", "").replace("\n", "")
     return REGEX_TRAILING_WHITESPACE_SINGLELINE.sub(" ", sanitized_field)
 
 

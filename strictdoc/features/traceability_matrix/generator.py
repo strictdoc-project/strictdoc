@@ -10,12 +10,12 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.generators.view_objects.traceability_matrix_view_object import (
-    TraceabilityMatrixViewObject,
-)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.features.traceability_matrix.view_object import (
+    TraceabilityMatrixViewObject,
+)
 
 
 class TraceabilityMatrixHTMLGenerator:

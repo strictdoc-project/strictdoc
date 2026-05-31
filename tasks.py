@@ -14,7 +14,9 @@ from developer.git.commit_validator import (
     validate_commits_locally_or_ci,
 )
 from strictdoc.core.environment import (
+    BINARY_HTML_STATIC_DIR,
     BINARY_HTML_TEMPLATES_DIR,
+    HTML_STATIC_DIRS,
     HTML_TEMPLATE_DIRS,
 )
 
@@ -39,10 +41,24 @@ def get_pyinstaller_html_template_data_options() -> str:
     )
 
 
+def get_pyinstaller_html_static_data_options() -> str:
+    return "\n".join(
+        f'--add-data "{static_dir}{os.pathsep}{BINARY_HTML_STATIC_DIR}"'
+        for static_dir in HTML_STATIC_DIRS
+    )
+
+
 def get_nuitka_html_template_data_options() -> str:
     return "\n".join(
         f'--include-data-dir="{template_dir}={BINARY_HTML_TEMPLATES_DIR}"'
         for template_dir in HTML_TEMPLATE_DIRS
+    )
+
+
+def get_nuitka_html_static_data_options() -> str:
+    return "\n".join(
+        f'--include-data-dir="{static_dir}={BINARY_HTML_STATIC_DIR}"'
+        for static_dir in HTML_STATIC_DIRS
     )
 
 
@@ -1005,6 +1021,7 @@ def release(context, test_pypi=False, username=None, password=None):
 def release_pyinstaller(context):
     path_to_pyi_dist = "/tmp/strictdoc"
     html_template_data_options = get_pyinstaller_html_template_data_options()
+    html_static_data_options = get_pyinstaller_html_static_data_options()
 
     # The --hidden-import strictdoc.server.app flag is needed because without
     # it, the following is produced:
@@ -1031,8 +1048,8 @@ def release_pyinstaller(context):
             --hidden-import strictdoc.export.rst.strictdoc_lexer
             --hidden-import strictdoc.server.app
             {html_template_data_options}
+            {html_static_data_options}
             --add-data strictdoc/export/rst/templates:templates/rst
-            --add-data strictdoc/export/html/_static:_static
             --add-data strictdoc/export/html/_static_extra:_static_extra
             strictdoc/cli/main.py
     """
@@ -1095,6 +1112,7 @@ def run(context, command):
 @task
 def nuitka(context):
     html_template_data_options = get_nuitka_html_template_data_options()
+    html_static_data_options = get_nuitka_html_static_data_options()
 
     run_invoke(
         context,
@@ -1109,8 +1127,8 @@ def nuitka(context):
             --include-module=docutils.readers.standalone
             --include-module=docutils.parsers.rst
             {html_template_data_options}
+            {html_static_data_options}
             --include-data-dir=strictdoc/export/rst/templates=templates/rst
-            --include-data-dir=strictdoc/export/html/_static=_static
             --include-data-dir=strictdoc/export/html/_static_extra/mathjax=_static_extra/mathjax
             --include-package-data=docutils
             strictdoc/cli/main.py

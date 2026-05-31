@@ -3,15 +3,30 @@ import platform
 import sys
 from typing import List
 
+#
+# HTML templates.
+#
 HTML_TEMPLATES_DIR = os.path.join("strictdoc", "export", "html", "templates")
 HTML_TEMPLATE_DIRS = [
     HTML_TEMPLATES_DIR,
     os.path.join("strictdoc", "features", "diff_and_changelog", "templates"),
     os.path.join("strictdoc", "features", "html2pdf", "templates"),
     os.path.join("strictdoc", "features", "project_statistics", "templates"),
+    os.path.join("strictdoc", "features", "traceability_matrix", "templates"),
     os.path.join("strictdoc", "features", "tree_map", "templates"),
 ]
 BINARY_HTML_TEMPLATES_DIR = os.path.join("templates", "html")
+
+#
+# HTML static files.
+#
+HTML_STATIC_DIR = os.path.join("strictdoc", "export", "html", "_static")
+HTML_STATIC_DIRS = [
+    HTML_STATIC_DIR,
+    os.path.join("strictdoc", "features", "traceability_matrix", "assets"),
+]
+
+BINARY_HTML_STATIC_DIR = "_static"
 
 
 class SDocRuntimeEnvironment:
@@ -65,12 +80,20 @@ class SDocRuntimeEnvironment:
     def is_github_ci_windows(self) -> bool:
         return self.is_windows() and os.environ.get("GITHUB_ACTIONS") == "true"
 
-    def get_static_files_path(self) -> str:
+    def get_static_files_paths(self) -> List[str]:
         if self.is_binary_dist:  # pragma: no cover
-            return os.path.join(self.path_to_strictdoc, "_static")
-        return os.path.join(
-            self.path_to_strictdoc, "strictdoc/export/html/_static"
-        )
+            return [
+                os.path.join(self.path_to_strictdoc, BINARY_HTML_STATIC_DIR)
+            ]
+        # Normal Python.
+        static_files_paths = [
+            os.path.join(self.path_to_strictdoc, static_dir)
+            for static_dir in HTML_STATIC_DIRS
+        ]
+        for path in static_files_paths:
+            assert os.path.isdir(path), path
+            assert os.path.isabs(path), path
+        return static_files_paths
 
     def get_extra_static_files_path(self) -> str:
         if self.is_binary_dist:  # pragma: no cover

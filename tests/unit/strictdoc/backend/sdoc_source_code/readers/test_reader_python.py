@@ -128,6 +128,38 @@ def hello_3():
     assert len(function_3_1_1.child_functions) == 0
 
 
+def test_02_nested_sibling_functions():
+    input_string = b"""\
+def outer():
+    def wrapper():
+        def first():
+            pass
+        def second():
+            pass
+        def third():
+            pass
+"""
+
+    reader = SourceFileTraceabilityReader_Python()
+
+    info: SourceFileTraceabilityInfo = reader.read(input_string)
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.functions) == 5
+
+    outer_function = info.functions[0]
+    assert outer_function.name == "outer"
+    assert len(outer_function.child_functions) == 1
+
+    wrapper_function = outer_function.child_functions[0]
+    assert wrapper_function.name == "outer.wrapper"
+    assert len(wrapper_function.child_functions) == 3
+
+    assert wrapper_function.child_functions[0].name == "outer.wrapper.first"
+    assert wrapper_function.child_functions[1].name == "outer.wrapper.second"
+    assert wrapper_function.child_functions[2].name == "outer.wrapper.third"
+
+
 def test_001_one_range_marker():
     source_input = b"""\
 # @relation(REQ-001, REQ-002, REQ-003, scope=range_start)

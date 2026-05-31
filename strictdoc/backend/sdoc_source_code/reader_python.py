@@ -60,10 +60,10 @@ class SourceFileTraceabilityReader_Python:
 
         tree = parser.parse(input_buffer)
 
-        functions_stack: List[LanguageItem] = []
+        module_function: Optional[LanguageItem] = None
 
         nodes = traverse_tree(tree)
-        map_function_to_node = {}
+        map_node_to_function: dict[Node, LanguageItem] = {}
 
         visited_comments = set()
         for node_ in nodes:
@@ -79,8 +79,8 @@ class SourceFileTraceabilityReader_Python:
                     markers=[],
                     attributes=set(),
                 )
-                functions_stack.append(function)
-                map_function_to_node[function] = node_
+                module_function = function
+                map_node_to_function[node_] = function
                 if len(node_.children) > 0:
                     # Look for the docstring within the first 30 children (arbitrary chosen limit)
                     # so that we dont miss it if the file starts with comments (#!, encoding marker, etc...).
@@ -191,21 +191,6 @@ class SourceFileTraceabilityReader_Python:
                                     traceability_info.markers.append(marker_)
                                     language_item_markers.append(marker_)
 
-                # FIXME: This look more complex than needed but can't make mypy happy.
-                cursor_: Optional[Node] = node_
-                while cursor_ is not None and (cursor_ := cursor_.parent):
-                    if cursor_ == map_function_to_node[functions_stack[-1]]:
-                        break
-                    if cursor_.type == "function_definition":
-                        functions_stack.pop()
-                        assert len(functions_stack) > 0, file_path
-                else:
-                    # This is counterintuitive:
-                    # The top-level functions don't have the top-level module set
-                    # as their parent, so in this branch, we simply clear the whole
-                    # function stack, leaving the top module only.
-                    functions_stack = functions_stack[:1]
-
                 new_function = LanguageItem(
                     parent=traceability_info,
                     name=function_name,
@@ -218,12 +203,13 @@ class SourceFileTraceabilityReader_Python:
                     markers=[],
                     attributes=set(),
                 )
-                map_function_to_node[new_function] = node_
+                map_node_to_function[node_] = new_function
 
-                parent_function = functions_stack[-1]
+                parent_function = self.get_parent_language_item(
+                    node_, map_node_to_function, module_function, file_path
+                )
 
                 parent_function.child_functions.append(new_function)
-                functions_stack.append(new_function)
                 traceability_info.functions.append(new_function)
 
                 traceability_info.ng_map_names_to_markers[function_name] = (
@@ -279,10 +265,8 @@ class SourceFileTraceabilityReader_Python:
             else:
                 pass
 
-        assert (
-            functions_stack[0].name == "module"
-            or functions_stack[0].name == "translation_unit"
-        )
+        assert module_function is not None
+        assert module_function.name in ("module", "translation_unit")
 
         source_file_traceability_info_processor(
             traceability_info, parse_context
@@ -295,6 +279,28 @@ class SourceFileTraceabilityReader_Python:
             sdoc_content = file.read()
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc
+
+    @staticmethod
+    def get_parent_language_item(
+        node: Node,
+        map_node_to_function: dict[Node, LanguageItem],
+        module_function: Optional[LanguageItem],
+        file_path: Optional[str],
+    ) -> LanguageItem:
+        cursor = node.parent
+        while cursor is not None:
+            if cursor.type in (
+                "class_definition",
+                "function_definition",
+                "module",
+            ):
+                parent_function = map_node_to_function.get(cursor)
+                if parent_function is not None:
+                    return parent_function
+            cursor = cursor.parent
+
+        assert module_function is not None, file_path
+        return module_function
 
     @staticmethod
     def get_node_ns(node: Node) -> Sequence[str]:

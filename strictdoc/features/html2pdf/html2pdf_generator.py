@@ -8,14 +8,14 @@ from typing import List, Tuple
 
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.generators.document_pdf import (
-    DocumentHTML2PDFGenerator,
-)
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.export.html2pdf.pdf_print_driver import PDFPrintDriver
+from strictdoc.features.html2pdf.generator import (
+    DocumentHTML2PDFGenerator,
+)
+from strictdoc.features.html2pdf.pdf_print_driver import PDFPrintDriver
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.timing import measure_performance

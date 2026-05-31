@@ -18,7 +18,7 @@ from strictdoc.backend.sdoc.models.reference import (
 )
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.git.change import (
+from strictdoc.features.diff_and_changelog.change import (
     ChangeType,
     ChangeUnionType,
     DocumentChange,

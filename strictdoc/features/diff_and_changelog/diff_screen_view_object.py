@@ -61,7 +61,7 @@ class DiffScreenViewObject:
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
-            "screens/git/index.jinja", view_object=self
+            "features/diff_and_changelog/index.jinja", view_object=self
         )
 
     def render_url(self, url: str) -> Markup:

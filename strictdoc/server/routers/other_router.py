@@ -15,17 +15,21 @@ from starlette.responses import HTMLResponse, Response
 from strictdoc import __version__
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.document_type import DocumentType
-from strictdoc.export.html.generators.view_objects.diff_screen_results_view_object import (
-    DiffScreenResultsViewObject,
-)
-from strictdoc.export.html.generators.view_objects.diff_screen_view_object import (
-    DiffScreenViewObject,
-)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.git.change_container import ChangeContainer
-from strictdoc.git.change_generator import ChangeGenerator
-from strictdoc.git.git_client import GitClient
+from strictdoc.features.diff_and_changelog.change_container import (
+    ChangeContainer,
+)
+from strictdoc.features.diff_and_changelog.change_generator import (
+    ChangeGenerator,
+)
+from strictdoc.features.diff_and_changelog.diff_screen_results_view_object import (
+    DiffScreenResultsViewObject,
+)
+from strictdoc.features.diff_and_changelog.diff_screen_view_object import (
+    DiffScreenViewObject,
+)
+from strictdoc.features.diff_and_changelog.git_client import GitClient
 from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
     HierarchicalRWLockManager,
 )
@@ -174,9 +178,9 @@ def create_other_router(
             pass
 
         path_to_template = (
-            "screens/git/frame_changelog_result.jinja"
+            "features/diff_and_changelog/frame_changelog_result.jinja"
             if tab == "changelog"
-            else "screens/git/frame_diff_result.jinja"
+            else "features/diff_and_changelog/frame_diff_result.jinja"
         )
         template = html_templates.jinja_environment().get_template(
             path_to_template

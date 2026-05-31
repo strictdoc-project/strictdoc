@@ -100,12 +100,12 @@
         {% elif change.change_type == "Node removed" or change.change_type == "Node modified" %}
           {% with requirement=change.lhs_requirement, side="left", self_stats=view_object.change_container.lhs_stats, other_stats=view_object.change_container.rhs_stats, traceability_index=view_object.change_container.traceability_index_lhs %}
             {% set requirement_change = view_object.change_stats.find_change(requirement) %}
-            {% include "screens/git/fields/requirement_fields.jinja" %}
+            {% include "features/diff_and_changelog/fields/requirement_fields.jinja" %}
           {% endwith %}
         {% elif change.change_type == "Document modified" %}
           {% if change.lhs_document is not none %}
             {% with document=change.lhs_document, side="left", self_stats=view_object.change_container.lhs_stats, other_stats=view_object.change_container.rhs_stats, traceability_index=view_object.change_container.traceability_index_lhs %}
-              {% include "screens/git/fields/document_fields.jinja" %}
+              {% include "features/diff_and_changelog/fields/document_fields.jinja" %}
             {% endwith %}
           {% else %}
             <div class="changelog_node_null"></div>
@@ -120,12 +120,12 @@
         {% elif change.change_type == "Node added" or change.change_type == "Node modified" %}
           {% with requirement=change.rhs_requirement, side="right", self_stats=view_object.change_container.rhs_stats, other_stats=view_object.change_container.lhs_stats, traceability_index=view_object.change_container.traceability_index_rhs %}
             {% set requirement_change = view_object.change_stats.find_change(requirement) %}
-            {% include "screens/git/fields/requirement_fields.jinja" %}
+            {% include "features/diff_and_changelog/fields/requirement_fields.jinja" %}
           {% endwith %}
         {% elif change.change_type == "Document modified" %}
           {% if change.rhs_document is not none %}
             {% with document=change.rhs_document, side="right", self_stats=view_object.change_container.rhs_stats, other_stats=view_object.change_container.lhs_stats, traceability_index=view_object.change_container.traceability_index_rhs %}
-              {% include "screens/git/fields/document_fields.jinja" %}
+              {% include "features/diff_and_changelog/fields/document_fields.jinja" %}
             {% endwith %}
           {% else %}
             <div class="changelog_node_null"></div>

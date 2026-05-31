@@ -9,7 +9,7 @@ from typing import List, Tuple
 from html2pdf4doc.main import HPDExitCode
 
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.export.html2pdf.pdf_postprocessor import PDFPostprocessor
+from strictdoc.features.html2pdf.pdf_postprocessor import PDFPostprocessor
 from strictdoc.helpers.timing import measure_performance
 
 

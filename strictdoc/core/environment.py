@@ -4,12 +4,12 @@ import sys
 from typing import List
 
 HTML_TEMPLATES_DIR = os.path.join("strictdoc", "export", "html", "templates")
-PROJECT_STATISTICS_TEMPLATES_DIR = os.path.join(
-    "strictdoc", "features", "project_statistics", "templates"
-)
 HTML_TEMPLATE_DIRS = [
     HTML_TEMPLATES_DIR,
-    PROJECT_STATISTICS_TEMPLATES_DIR,
+    os.path.join("strictdoc", "features", "diff_and_changelog", "templates"),
+    os.path.join("strictdoc", "features", "html2pdf", "templates"),
+    os.path.join("strictdoc", "features", "project_statistics", "templates"),
+    os.path.join("strictdoc", "features", "tree_map", "templates"),
 ]
 BINARY_HTML_TEMPLATES_DIR = os.path.join("templates", "html")
 

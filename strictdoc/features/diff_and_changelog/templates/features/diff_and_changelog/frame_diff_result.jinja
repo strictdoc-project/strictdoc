@@ -1,7 +1,7 @@
 <turbo-frame id="diff_result">
 {% if view_object.results %}
   <div class="diff preloaded">
-    {% include "screens/git/diff_controls.jinja" %}
+    {% include "features/diff_and_changelog/diff_controls.jinja" %}
 
     <div class="diff_column" left>
       <div class="diff_inner">
@@ -14,7 +14,7 @@
         tab="diff",
         side="left"
       -%}
-        {% include "screens/git/diff_content.jinja" %}
+        {% include "features/diff_and_changelog/diff_content.jinja" %}
       {%- endwith -%}
       </div>
     </div>
@@ -29,7 +29,7 @@
         tab="diff",
         side="right"
       -%}
-        {% include "screens/git/diff_content.jinja" %}
+        {% include "features/diff_and_changelog/diff_content.jinja" %}
       {%- endwith -%}
       </div>
     </div>

@@ -110,7 +110,7 @@ class DocumentScreenViewObject:
             )
         elif self.document_type.is_pdf():
             return self.jinja_environment.render_template_as_markup(
-                "screens/document/pdf/index.jinja", view_object=self
+                "features/html2pdf/index.jinja", view_object=self
             )
         else:
             raise NotImplementedError(self.document_type)  # pragma: no cover

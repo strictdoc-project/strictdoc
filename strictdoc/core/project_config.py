@@ -680,8 +680,8 @@ class ProjectConfig:
     def get_path_to_cache_dir(self) -> str:
         return self.dir_for_sdoc_cache
 
-    def get_static_files_path(self) -> str:
-        return self.environment.get_static_files_path()
+    def get_static_files_paths(self) -> List[str]:
+        return self.environment.get_static_files_paths()
 
     def get_extra_static_files_path(self) -> str:
         return self.environment.get_extra_static_files_path()

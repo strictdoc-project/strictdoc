@@ -38,9 +38,6 @@ from strictdoc.export.html.generators.source_file_coverage import (
 from strictdoc.export.html.generators.source_file_view_generator import (
     SourceFileViewHTMLGenerator,
 )
-from strictdoc.export.html.generators.traceability_matrix import (
-    TraceabilityMatrixHTMLGenerator,
-)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -49,6 +46,9 @@ from strictdoc.features.html2pdf.generator import (
 )
 from strictdoc.features.project_statistics.generator import (
     ProgressStatisticsGenerator,
+)
+from strictdoc.features.traceability_matrix.generator import (
+    TraceabilityMatrixHTMLGenerator,
 )
 from strictdoc.features.tree_map.generator import TreeMapGenerator
 from strictdoc.helpers.cast import assert_cast
@@ -206,11 +206,12 @@ class HTMLGenerator:
             export_output_html_root,
             project_config.dir_for_sdoc_assets,
         )
-        sync_dir(
-            project_config.get_static_files_path(),
-            output_html_static_files,
-            message="Copying StrictDoc's assets",
-        )
+        for static_files_path in project_config.get_static_files_paths():
+            sync_dir(
+                static_files_path,
+                output_html_static_files,
+                message="Copying StrictDoc's assets",
+            )
 
         # Export MathJax.
         if project_config.is_feature_activated(ProjectFeature.MATHJAX):

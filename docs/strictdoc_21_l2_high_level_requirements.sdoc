@@ -1277,8 +1277,6 @@ RELATIONS:
   VALUE: DO178-10
 - TYPE: Parent
   VALUE: DO178-12
-- TYPE: File
-  VALUE: strictdoc/export/html/generators/traceability_matrix.py
 
 [[/SECTION]]
 

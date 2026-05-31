@@ -1,6 +1,6 @@
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
-RUN: cd "%strictdoc_root/" && %strictdoc export "%strictdoc_root/" --output-dir="%T"
+RUN: cd "%strictdoc_root/" && %strictdoc --debug export "%strictdoc_root/" --output-dir="%T"
 
 RUN: %check_exists --file "%T/html/index.html"
 RUN: %check_exists --file %T/html/strictdoc/docs/strictdoc_01_user_guide.html

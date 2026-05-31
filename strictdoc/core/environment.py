@@ -23,9 +23,9 @@ BINARY_HTML_TEMPLATES_DIR = os.path.join("templates", "html")
 HTML_STATIC_DIR = os.path.join("strictdoc", "export", "html", "_static")
 HTML_STATIC_DIRS = [
     HTML_STATIC_DIR,
+    os.path.join("strictdoc", "features", "diff_and_changelog", "assets"),
     os.path.join("strictdoc", "features", "traceability_matrix", "assets"),
 ]
-
 BINARY_HTML_STATIC_DIR = "_static"
 
 

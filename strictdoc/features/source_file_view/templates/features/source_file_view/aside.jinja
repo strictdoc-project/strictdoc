@@ -31,7 +31,7 @@
                 href=view_object.render_marker_range_link(line.markers[0]),
                 scope=line.markers[0].get_description()
               -%}
-                {% include "screens/source_file_view/range_button.jinja" %}
+                {% include "features/source_file_view/range_button.jinja" %}
               {%- endwith -%}
             </div>
             {% for marker_ in line.markers %}

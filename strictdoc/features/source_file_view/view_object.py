@@ -105,7 +105,7 @@ class SourceFileViewObject:
 
     def render_screen(self) -> Markup:
         return self.jinja_environment.render_template_as_markup(
-            "screens/source_file_view/index.jinja", view_object=self
+            "features/source_file_view/index.jinja", view_object=self
         )
 
     def render_detailed_node_for_banner(self, node_uid: str) -> Markup:
@@ -122,7 +122,7 @@ class SourceFileViewObject:
     ) -> Markup:
         node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
         return self.jinja_environment.render_template_as_markup(
-            "screens/source_file_view/node_title_for_banner_header.jinja",
+            "features/source_file_view/node_title_for_banner_header.jinja",
             node=node,
             view_object=self,
             role=marker.role,
@@ -137,7 +137,7 @@ class SourceFileViewObject:
     ) -> Markup:
         node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
         return self.jinja_environment.render_template_as_markup(
-            "screens/source_file_view/requirement.jinja",
+            "features/source_file_view/requirement.jinja",
             requirement=node,
             view_object=self,
             requirement_style="table",

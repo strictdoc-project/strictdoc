@@ -36,14 +36,14 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 from strictdoc.core.file_system.source_tree import SourceFile
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.generators.view_objects.source_file_view_object import (
+from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.features.source_file_view.view_object import (
     SourceFileViewObject,
     SourceLineEntry,
     SourceMarkerTuple,
 )
-from strictdoc.export.html.html_templates import HTMLTemplates
-from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.timing import measure_performance

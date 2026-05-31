@@ -1249,9 +1249,6 @@ With this capability in place, it is possible to focus on a single implementatio
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-72
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/html/generators/source_file_view_generator.py
 
 [[/SECTION]]
 

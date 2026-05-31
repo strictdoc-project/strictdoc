@@ -108,34 +108,60 @@
   border-color: transparent;
 }
 
-.table--is-editable [data-field-type="comments"],
-.table--is-editable [data-field-type="relations"],
-.table--is-editable [data-field-type="contenteditable"] {
-  cursor: pointer;
+.editable-cell {
+  /* TD class: to position the cell indicator */
   position: relative;
 }
 
-.table--is-editable [data-field-type="comments"]:hover,
-.table--is-editable [data-field-type="relations"]:hover,
-.table--is-editable [data-field-type="contenteditable"]:hover {
-  outline: 2px solid #0057b8;
+.editable-cell-indicator {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.table--is-editable .editable-cell:hover {
+  cursor: pointer;
+}
+
+.table--is-editable .cell--editing.editable-cell:hover {
+  cursor: default;
+}
+
+.table--is-editable .editable-cell:hover .editable-cell-indicator {
+  background-color: var(--color-bg-accent);
+  outline: 2px dotted var(--color-fg-accent);
   outline-offset: -2px;
 }
 
-[data-field-type="comments"].cell--editing,
-[data-field-type="relations"].cell--editing,
-[data-field-type="contenteditable"].cell--editing {
-  outline: 2px solid #0057b8;
+.table--is-editable .editable-cell.cell--editing .editable-cell-indicator {
+  background-color: transparent;
+  outline: 2px solid var(--color-fg-accent);
   outline-offset: -2px;
   cursor: default;
 }
 
-[data-field-type="comments"] form,
-[data-field-type="relations"] form,
-[data-field-type="contenteditable"] form {
+.table--is-editable .editable-cell form {
   display: flex;
   flex-direction: column;
   gap: .25rem;
+}
+
+.table--is-editable sdoc-form-field {
+    display: block;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    /* padding-left: calc(var(--base-rhythm) * 4);
+    padding-right: calc(var(--base-rhythm) * 4);
+    margin-top: calc(var(--base-rhythm) * 4);
+    margin-bottom: calc(var(--base-rhythm) * 4); */
+    min-width: 200px;
+}
+
+.table--is-editable sdoc-contenteditable::before,
+.table--is-editable sdoc-autocompletable::before {
+  content: "";
 }
 
 .relations-computed {
@@ -153,7 +179,6 @@
   margin-top: .25rem;
 }
 
-
 [data-validation-error="true"] {
   outline: 2px solid var(--color-danger);
   outline-offset: -2px;
@@ -161,16 +186,6 @@
 }
 
 /* Autocomplete cells */
-
-.table--is-editable [data-field-type="autocomplete"] {
-  cursor: pointer;
-  position: relative;
-}
-
-.table--is-editable [data-field-type="autocomplete"]:hover {
-  outline: 2px solid var(--color-fg-accent);
-  outline-offset: -2px;
-}
 
 [data-field-type="autocomplete"] sdoc-form-field {
   /*

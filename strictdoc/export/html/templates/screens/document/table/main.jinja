@@ -131,23 +131,25 @@
                 {%- endfor -%}
 
                 {# -- RELATIONS: ------------------------------------------- #}
-                <td class="content-view-td content-view-td-meta content-view-td-related"
+                <td class="editable-cell content-view-td content-view-td-meta content-view-td-related"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RELATIONS"
                     data-field-type="relations"
                     data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}">
+                  <div class="editable-cell-indicator"></div>
                   <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
                     {%- include "screens/document/table/field_display_mode/relations.jinja" %}
                   </div>
                 </td>
 
                 {# -- TITLE: ----------------------------------------------- #}
-                <td class="content-view-td content-view-td-title"
                 {%- if title_is_editable %}
+                <td class="editable-cell content-view-td content-view-td-title"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="TITLE"
                     data-field-type="contenteditable"
                     data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=TITLE">
+                  <div class="editable-cell-indicator"></div>
                   <div id="cell-{{ requirement.reserved_mid }}-TITLE">
                     {%- if requirement.reserved_title %}
                       {%- with sdoc_entity=requirement -%}
@@ -178,11 +180,12 @@
                   column position in the table header between TITLE and RATIONALE.
                 #}
                 {%- if statement_is_editable %}
-                <td class="content-view-td content-view-td-content"
+                <td class="editable-cell content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="STATEMENT"
                     data-field-type="contenteditable"
                     data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
+                  <div class="editable-cell-indicator"></div>
                   <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
                     {%- if requirement.has_reserved_statement() -%}
                       {%- with field_content = view_object.render_node_statement(requirement) %}
@@ -207,11 +210,12 @@
                   column position in the table header between STATEMENT and COMMENT.
                 #}
                 {%- if rationale_is_editable %}
-                <td class="content-view-td content-view-td-content"
+                <td class="editable-cell content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="RATIONALE"
                     data-field-type="contenteditable"
                     data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
+                  <div class="editable-cell-indicator"></div>
                   <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
                     {%- if requirement.rationale -%}
                       {%- with field_content = view_object.render_node_rationale(requirement) %}
@@ -232,11 +236,12 @@
 
                 {# -- COMMENT: inline form if editable -------------------- #}
                 {%- if comment_is_editable %}
-                <td class="content-view-td content-view-td-content"
+                <td class="editable-cell content-view-td content-view-td-content"
                     data-node-mid="{{ requirement.reserved_mid }}"
                     data-field-name="COMMENT"
                     data-field-type="comments"
                     data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}">
+                  <div class="editable-cell-indicator"></div>
                   <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
                     {%- for comment_field_ in requirement.get_comment_fields() -%}
                     {%- with field_content = view_object.render_node_field(comment_field_) %}

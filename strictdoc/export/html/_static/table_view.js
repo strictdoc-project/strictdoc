@@ -154,7 +154,7 @@
         const text = labelEl.querySelector('span');
 
         checkbox.checked = checked;
-        checkbox.setAttribute('data-testid', testid);
+        labelEl.setAttribute('data-testid', testid);
         checkbox.addEventListener('change', () => onChange(checkbox.checked));
 
         text.textContent = label;

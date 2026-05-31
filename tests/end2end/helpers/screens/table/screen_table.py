@@ -8,10 +8,12 @@ from tests.end2end.helpers.screens.screen import Screen
 
 _COLUMNS_BTN = '[data-testid="table-toolbar-columns-btn"]'
 _COLUMNS_BTN_TEXT = _COLUMNS_BTN + " .table-toolbar__btn-text"
+_COLUMNS_BTN_INFO = _COLUMNS_BTN + " .table-toolbar__btn-info"
 _COLUMNS_PANEL = '[data-testid="table-toolbar-columns-panel"]'
 _COLUMNS_RESET = '[data-testid="table-toolbar-columns-reset"]'
 _ROWS_BTN = '[data-testid="table-toolbar-rows-btn"]'
 _ROWS_BTN_TEXT = _ROWS_BTN + " .table-toolbar__btn-text"
+_ROWS_BTN_INFO = _ROWS_BTN + " .table-toolbar__btn-info"
 _ROWS_PANEL = '[data-testid="table-toolbar-rows-panel"]'
 _ROWS_RESET = '[data-testid="table-toolbar-rows-reset"]'
 _EDIT_BTN = '[data-testid="table-toolbar-edit-btn"]'
@@ -41,7 +43,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def assert_toolbar_btn_label(self, label: str) -> None:
         actual = self.test_case.get_text(_COLUMNS_BTN_TEXT)
         assert actual == label, (
-            f"Button label: expected {label!r}, got {actual!r}"
+            f"Columns btn label: expected {label!r}, got {actual!r}"
         )
 
     def assert_toolbar_panel_open(self) -> None:
@@ -106,7 +108,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def assert_rows_toolbar_btn_label(self, label: str) -> None:
         actual = self.test_case.get_text(_ROWS_BTN_TEXT)
         assert actual == label, (
-            f"Rows button label: expected {label!r}, got {actual!r}"
+            f"Rows btn label: expected {label!r}, got {actual!r}"
         )
 
     def assert_rows_toolbar_panel_open(self) -> None:

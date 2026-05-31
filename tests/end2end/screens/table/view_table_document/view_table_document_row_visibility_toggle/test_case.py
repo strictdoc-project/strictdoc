@@ -48,7 +48,7 @@ class Test(E2ECase):
             screen_table.do_toggle_row_type("SECTION")
             screen_table.assert_rows_of_type_hidden("SECTION")
             screen_table.assert_rows_of_type_visible("REQUIREMENT")
-            screen_table.assert_rows_toolbar_btn_label("NODES (1 HIDDEN)")
+            screen_table.assert_rows_toolbar_btn_label("NODES • 1 hidden")
             screen_table.assert_rows_show_all_enabled()
 
             #
@@ -56,7 +56,7 @@ class Test(E2ECase):
             #
             screen_table.do_toggle_row_type("REQUIREMENT")
             screen_table.assert_rows_of_type_hidden("REQUIREMENT")
-            screen_table.assert_rows_toolbar_btn_label("NODES (2 HIDDEN)")
+            screen_table.assert_rows_toolbar_btn_label("NODES • 2 hidden")
 
             #
             # Show all

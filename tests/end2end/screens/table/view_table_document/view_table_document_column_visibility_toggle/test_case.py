@@ -52,7 +52,7 @@ class Test(E2ECase):
             screen_table.do_toggle_column("Type")
             screen_table.assert_column_header_hidden("Type")
             self.assert_url_contains("hidden=Type")
-            screen_table.assert_toolbar_btn_label("COLUMNS (1 HIDDEN)")
+            screen_table.assert_toolbar_btn_label("COLUMNS • 1 hidden")
             screen_table.assert_show_all_enabled()
 
             #
@@ -61,7 +61,7 @@ class Test(E2ECase):
             screen_table.do_toggle_column("Statement")
             screen_table.assert_column_header_hidden("Statement")
             self.assert_url_contains("Statement")
-            screen_table.assert_toolbar_btn_label("COLUMNS (2 HIDDEN)")
+            screen_table.assert_toolbar_btn_label("COLUMNS • 2 hidden")
 
             #
             # Close panel by clicking outside

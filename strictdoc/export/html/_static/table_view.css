@@ -16,7 +16,6 @@
   top: calc(-6.6 * var(--base-rhythm)); /* = layout .header */
   z-index: 2;
   background: var(--color-bg-contrast);
-  box-shadow: 0 4px 4px #afafaf;
 }
 
 .content-view-th,
@@ -26,32 +25,46 @@
 }
 
 .content-view-td {
-  padding: .5rem 1rem;
+  padding: .5rem .75rem;
 }
 
 .content-view-th {
   text-align: left;
   text-transform: uppercase;
   background-color: var(--color-border);
-  font-size: .85em;
+  font-size: 10px;
   font-weight: bold;
-  /* padding: 0 1rem;
   background-color: var(--color-bg-ui);
-  color: var(--color-fg-secondary-invert); */
-  padding: .5rem 1rem;
+  color: var(--color-bg-main);
+  padding: .5rem .75rem;
 }
 
 .content-view-td-type,
+.content-view-td-level {
+  background-color: var(--color-bg-ui);
+  color: var(--color-bg-main);
+  text-align: left;
+  font-weight: normal;
+  text-transform: uppercase;
+  font-size: .75em;
+  font-weight: bold;
+}
+
+.content-view-td-type {
+  position: sticky;
+  left: calc(-1 * var(--base-gap) - 1px); /* account for border */
+  z-index: 2;
+}
+
 .content-view-td-meta {
   background-color: var(--color-bg-main);
   font-size: .85em;
 }
 
-.content-view-td-type {
-  background-color: var(--color-bg-main);
-  text-align: left;
-  font-weight: normal;
-  text-transform: uppercase;
+.content-view-td [wrapper-field-type="comments"] {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--base-rhythm) * 0.5);
 }
 
 .content-view-table div.document {
@@ -73,8 +86,13 @@
 }
 
 .content-view-td--dimmed {
-  background-color: var(--color-bg-main);
-  opacity: 0.45;
+  background:repeating-linear-gradient(
+    -45deg,
+    rgba(242, 245, 249, .5),
+    rgba(242, 245, 249, .5) 10px,
+    rgba(242, 245, 249, 1) 10px,
+    rgba(242, 245, 249, 1) 20px
+  );
 }
 
 .content-view-td-content:not(:empty) {
@@ -149,25 +167,59 @@
 .table--is-editable .editable-cell form {
   display: flex;
   flex-direction: column;
-  gap: .25rem;
+  gap: calc(var(--base-rhythm) * 0.5);
 }
 
+.table--is-editable [data-field-type="autocomplete"] sdoc-form-field,
 .table--is-editable sdoc-form-field {
     display: block;
     position: relative;
     padding: 0;
     margin: 0;
-    /* padding-left: calc(var(--base-rhythm) * 4);
-    padding-right: calc(var(--base-rhythm) * 4);
-    margin-top: calc(var(--base-rhythm) * 4);
-    margin-bottom: calc(var(--base-rhythm) * 4); */
-    min-width: 200px;
+    min-width: unset;
 }
 
+.table--is-editable sdoc-form-field-group::before,
 .table--is-editable sdoc-contenteditable::before,
 .table--is-editable sdoc-autocompletable::before {
   content: "";
 }
+
+.table--is-editable sdoc-form-field-group {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding: var(--base-rhythm);
+}
+
+.table--is-editable sdoc-form-row {
+  display: flex;
+}
+
+.table--is-editable sdoc-form-row sdoc-form-row-main {
+  flex-grow: 1;
+}
+
+.table--is-editable sdoc-form-row sdoc-form-row-main + sdoc-form-row-aside {
+  margin-left: auto;
+}
+
+/* .content-view-table sdoc-autogen + sdoc-autogen,
+.table--is-editable sdoc-form-row + sdoc-form-row {
+  margin-top: calc(var(--base-rhythm) * .5);
+} */
+
+.table--is-editable .field_action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: unset;
+    left: 0;
+    right: 0;
+    height: 24px;
+    border-radius: 4px;
+}
+
+
 
 .relations-computed {
   font-size: .85em;
@@ -202,20 +254,9 @@
 
 [data-field-type="autocomplete"] sdoc-autocompletable {
   /* Inline edit component injected via turbo-stream on click. */
-  display: block;
-  width: 100%;
-  min-height: 2rem;
-  padding: .5rem 1rem;
-  background: var(--color-bg-contrast, #fff);
-  font: inherit;
-  font-size: inherit;
-  color: inherit;
-  box-sizing: border-box;
-  outline: none;
-  white-space: nowrap;
-  overflow: hidden;
-  word-break: normal;
+  white-space: normal;
   overflow-wrap: normal;
+  word-break: normal;
 }
 
 [data-field-type="autocomplete"] .autocomplete-items {
@@ -229,25 +270,12 @@
 /* Column visibility toolbar */
 
 .table-toolbar {
-  /* position: sticky;
-  top: calc(-6 * var(--base-rhythm));
-  left: calc(-9 * var(--base-rhythm));
-  z-index: 10;
-  padding-inline: calc(3 * var(--base-rhythm));
-  width: 0;
-  height: 0; */
 }
 
 .table-toolbar__dock {
   --gap: calc(var(--base-rhythm) * 0.5);
-  /* background-color: var(--color-bg-contrast);
-  background-color: var(--color-bg-main); */
   display: flex;
   column-gap: var(--gap);
-  /* padding: var(--gap);
-  width: fit-content;
-  width: 100vw;
-  min-width: 100%; */
 }
 
 .table-toolbar__columns,

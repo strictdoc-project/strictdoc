@@ -122,7 +122,7 @@
                 <td class="content-view-td content-view-td-type">
                   {{ node.node_type }}
                 </td>
-                <td class="content-view-td content-view-td-meta">
+                <td class="content-view-td content-view-td-level">
                   {{ requirement.context.title_number_string }}
                 </td>
 
@@ -253,7 +253,7 @@
                         data-field-type="comments"
                         data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}">
                       <div class="editable-cell-indicator"></div>
-                      <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
+                      <div id="cell-{{ requirement.reserved_mid }}-COMMENT" wrapper-field-type="comments">
                         {%- for comment_field_ in requirement.get_comment_fields() -%}
                         {%- with field_content = view_object.render_node_field(comment_field_) %}
                           {%- include "screens/document/table/field_display_mode/comment.jinja" -%}

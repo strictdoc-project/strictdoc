@@ -78,6 +78,7 @@
 </sdoc-tab-content>
 
 {# Relations #}
+{% if form_object.relation_types %}
 <sdoc-tab-content id="Relations">
   {% set relation_row_context = namespace() %}
 
@@ -101,8 +102,10 @@
     >{% include "icons/ico16_add.svg" %} Add relation</a>
   </sdoc-form-row>
 </sdoc-tab-content>
+{% endif %}
 
 {# Comments #}
+{% if "COMMENT" in form_object.fields %}
 <sdoc-tab-content id="Comments">
   {% set comment_field_row_context = namespace() %}
 
@@ -135,5 +138,6 @@
     >{% include "icons/ico16_add.svg" %} Add comment</a>
   </sdoc-form-row>
 </sdoc-tab-content>
+{% endif %}
 
 {% endblock form_content %}

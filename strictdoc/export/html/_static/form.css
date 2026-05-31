@@ -273,6 +273,8 @@ sdoc-form-field-group {
   flex-direction: row;
   flex-wrap: wrap;
 
+  justify-content: space-between;
+
   padding: var(--base-rhythm);
   border: var(--base-border);
   border-radius: var(--base-rhythm);

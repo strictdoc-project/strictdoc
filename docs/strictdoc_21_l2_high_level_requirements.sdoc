@@ -802,9 +802,6 @@ RATIONALE: >>>
 This screen is the main tool for visualizing the project tree structure.
 <<<
 RELATIONS:
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/export/html/generators/document_tree.py
 - TYPE: Parent
   VALUE: SDOC-SSS-91
 

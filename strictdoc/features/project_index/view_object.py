@@ -59,12 +59,12 @@ class ProjectTreeViewObject:
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
-            "screens/project_index/index.jinja", view_object=self
+            "features/project_index/index.jinja", view_object=self
         )
 
     def render_map(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
-            "screens/project_index/project_map.jinja.js", view_object=self
+            "features/project_index/project_map.jinja.js", view_object=self
         )
 
     def render_static_url(self, url: str) -> str:

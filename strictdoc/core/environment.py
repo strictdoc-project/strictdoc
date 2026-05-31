@@ -11,6 +11,7 @@ HTML_TEMPLATE_DIRS = [
     HTML_TEMPLATES_DIR,
     os.path.join("strictdoc", "features", "diff_and_changelog", "templates"),
     os.path.join("strictdoc", "features", "html2pdf", "templates"),
+    os.path.join("strictdoc", "features", "project_index", "templates"),
     os.path.join("strictdoc", "features", "project_statistics", "templates"),
     os.path.join("strictdoc", "features", "source_coverage", "templates"),
     os.path.join("strictdoc", "features", "source_file_view", "templates"),
@@ -26,6 +27,8 @@ HTML_STATIC_DIR = os.path.join("strictdoc", "export", "html", "_static")
 HTML_STATIC_DIRS = [
     HTML_STATIC_DIR,
     os.path.join("strictdoc", "features", "diff_and_changelog", "assets"),
+    os.path.join("strictdoc", "features", "html2pdf", "assets"),
+    os.path.join("strictdoc", "features", "project_index", "assets"),
     os.path.join("strictdoc", "features", "source_coverage", "assets"),
     os.path.join("strictdoc", "features", "source_file_view", "assets"),
     os.path.join("strictdoc", "features", "traceability_matrix", "assets"),

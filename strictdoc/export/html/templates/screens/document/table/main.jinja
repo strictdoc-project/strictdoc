@@ -61,8 +61,14 @@
   value: "autocomplete" | "singleline" | "multiline" | "readonly".
   td_by_edit_mode.jinja maps grammar values to data-field-type DOM attributes:
   "singleline" and "multiline" → data-field-type="contenteditable" (same component, server decides form shape).
-  Fixed fields (STATEMENT, RATIONALE, COMMENT) use is_table_cell_editable;
-  dynamic field loops use get_table_cell_edit_mode via td_by_edit_mode.jinja.
+
+  COLUMN VISIBILITY
+  -----------------
+  Columns are driven by view_object.document.enumerate_table_columns(),
+  which yields only columns present in at least one grammar element.
+  TYPE and LEVEL are always rendered as the two fixed first columns.
+  When a column exists in the document grammar but a specific node's grammar
+  does not declare that field, the cell gets the "content-view-td--dimmed" modifier.
 #}
 {%- if view_object.has_any_nodes() -%}
   <div class="main" js-pan_with_space="true">
@@ -76,23 +82,27 @@
         {# ================================================================ #}
         {# TABLE                                                             #}
         {# ================================================================ #}
+        {#
+          column_labels maps internal column IDs to display names.
+          Dynamic fields (meta / non-reserved content) use their title as-is.
+        #}
+        {%- set column_labels = {
+          "RELATIONS": "REFS",
+          "TITLE":     "Title",
+          "STATEMENT": "Statement",
+          "RATIONALE": "Rationale",
+          "COMMENT":   "Comment"
+        } -%}
         <table class="content-view-table">
 
           {# -- Header row ------------------------------------------------ #}
           <thead class="content-view-table_sticky-header">
             <tr>
-              <th class="content-view-th">Type</th>
-              <th class="content-view-th">Level</th>
-              {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
-                <th class="content-view-th">{{ meta_field_title }}</th>
-              {%- endfor -%}
-              <th class="content-view-th">REFS</th>
-              <th class="content-view-th">Title</th>
-              <th class="content-view-th">Statement</th>
-              <th class="content-view-th">Rationale</th>
-              <th class="content-view-th">Comment</th>
-              {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
-                <th class="content-view-th">{{ content_field_title }}</th>
+              <th class="content-view-th" data-testid="col-header-Type">Type</th>
+              <th class="content-view-th" data-testid="col-header-Level">Level</th>
+              {%- for column in view_object.document.enumerate_table_columns() -%}
+                {%- set col_label = column_labels.get(column, column) -%}
+                <th class="content-view-th" data-testid="col-header-{{ col_label }}">{{ col_label }}</th>
               {%- endfor -%}
             </tr>
           </thead>
@@ -106,11 +116,6 @@
             {# ============================================================ #}
             {%- if node.is_requirement() %}
               {%- set requirement = node %}
-              {# Determine edit mode for fixed content fields up front. #}
-              {%- set title_is_editable     = view_object.is_table_cell_editable(node.node_type, "TITLE") %}
-              {%- set statement_is_editable = view_object.is_table_cell_editable(node.node_type, "STATEMENT") %}
-              {%- set rationale_is_editable = view_object.is_table_cell_editable(node.node_type, "RATIONALE") %}
-              {%- set comment_is_editable   = view_object.is_table_cell_editable(node.node_type, "COMMENT") %}
               <tr data-row-type="{{ node.node_type }}" data-node-mid="{{ requirement.reserved_mid }}">
 
                 {# -- Type & Level ---------------------------------------- #}
@@ -121,153 +126,166 @@
                   {{ requirement.context.title_number_string }}
                 </td>
 
-                {# -- Meta fields (grammar-defined, before REFS) ----------- #}
-                {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
-                  {%- set field_title = meta_field_title %}
-                  {%- set field_value = requirement.get_meta_field_value_by_title(field_title) %}
-                  {%- set cell_edit_mode = view_object.get_table_cell_edit_mode(node.node_type, field_title) %}
-                  {%- set td_class = "content-view-td content-view-td-meta" %}
-                  {%- include "screens/document/table/td_by_edit_mode.jinja" %}
-                {%- endfor -%}
-
-                {# -- RELATIONS: ------------------------------------------- #}
-                <td class="editable-cell content-view-td content-view-td-meta content-view-td-related"
-                    data-node-mid="{{ requirement.reserved_mid }}"
-                    data-field-name="RELATIONS"
-                    data-field-type="relations"
-                    data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}">
-                  <div class="editable-cell-indicator"></div>
-                  <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
-                    {%- include "screens/document/table/field_display_mode/relations.jinja" %}
-                  </div>
-                </td>
-
-                {# -- TITLE: ----------------------------------------------- #}
-                {%- if title_is_editable %}
-                <td class="editable-cell content-view-td content-view-td-title"
-                    data-node-mid="{{ requirement.reserved_mid }}"
-                    data-field-name="TITLE"
-                    data-field-type="contenteditable"
-                    data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=TITLE">
-                  <div class="editable-cell-indicator"></div>
-                  <div id="cell-{{ requirement.reserved_mid }}-TITLE">
-                    {%- if requirement.reserved_title %}
-                      {%- with sdoc_entity=requirement -%}
-                        {% include "components/anchor/index.jinja" %}
-                      {%- endwith %}
-                      {%- with field_content = requirement.reserved_title %}
-                        {%- include "screens/document/table/field_display_mode/title.jinja" -%}
-                      {%- endwith -%}
-                    {%- endif -%}
-                  </div>
-                </td>
-                {%- else %}
-                <td class="content-view-td content-view-td-title">
-                  {%- if requirement.reserved_title %}
-                    {%- with sdoc_entity=requirement -%}
-                      {% include "components/anchor/index.jinja" %}
-                    {%- endwith %}
-                    {%- with field_content = requirement.reserved_title %}
-                      {%- include "screens/document/table/field_display_mode/title.jinja" -%}
-                    {%- endwith -%}
-                  {%- endif -%}
-                </td>
-                {%- endif %}
-
-                {# -- STATEMENT: multiline inline if editable ------------- #}
                 {#
-                  Hardcoded here (not in a loop) because STATEMENT occupies a fixed
-                  column position in the table header between TITLE and RATIONALE.
+                  Loop over all document columns.
+                  ns.past_reserved becomes true when we enter the reserved-column
+                  region (RELATIONS / TITLE / STATEMENT / RATIONALE / COMMENT), so
+                  that dynamic fields before that region get the "meta" cell class
+                  and dynamic fields after it get the plain content cell class.
                 #}
-                {%- if statement_is_editable %}
-                <td class="editable-cell content-view-td content-view-td-content"
-                    data-node-mid="{{ requirement.reserved_mid }}"
-                    data-field-name="STATEMENT"
-                    data-field-type="contenteditable"
-                    data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
-                  <div class="editable-cell-indicator"></div>
-                  <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
-                    {%- if requirement.has_reserved_statement() -%}
-                      {%- with field_content = view_object.render_node_statement(requirement) %}
-                        {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
+                {%- set ns = namespace(past_reserved=false) %}
+                {%- for column in view_object.document.enumerate_table_columns() %}
+
+                  {%- if column == "RELATIONS" %}
+                    {%- set ns.past_reserved = true %}
+                    {# -- RELATIONS --------------------------------------- #}
+                    <td class="editable-cell content-view-td content-view-td-meta content-view-td-related"
+                        data-node-mid="{{ requirement.reserved_mid }}"
+                        data-field-name="RELATIONS"
+                        data-field-type="relations"
+                        data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}">
+                      <div class="editable-cell-indicator"></div>
+                      <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
+                        {%- include "screens/document/table/field_display_mode/relations.jinja" %}
+                      </div>
+                    </td>
+
+                  {%- elif column == "TITLE" %}
+                    {%- set ns.past_reserved = true %}
+                    {# -- TITLE ------------------------------------------- #}
+                    {%- if view_object.is_table_cell_editable(node.node_type, "TITLE") %}
+                    <td class="editable-cell content-view-td content-view-td-title"
+                        data-node-mid="{{ requirement.reserved_mid }}"
+                        data-field-name="TITLE"
+                        data-field-type="contenteditable"
+                        data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=TITLE">
+                      <div class="editable-cell-indicator"></div>
+                      <div id="cell-{{ requirement.reserved_mid }}-TITLE">
+                        {%- if requirement.reserved_title %}
+                          {%- with sdoc_entity=requirement -%}
+                            {% include "components/anchor/index.jinja" %}
+                          {%- endwith %}
+                          {%- with field_content = requirement.reserved_title %}
+                            {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+                          {%- endwith -%}
+                        {%- endif -%}
+                      </div>
+                    </td>
+                    {%- else %}
+                    <td class="content-view-td content-view-td-title content-view-td--dimmed"
+                        data-field-name="TITLE">
+                      {%- if requirement.reserved_title %}
+                        {%- with sdoc_entity=requirement -%}
+                          {% include "components/anchor/index.jinja" %}
+                        {%- endwith %}
+                        {%- with field_content = requirement.reserved_title %}
+                          {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+                        {%- endwith -%}
+                      {%- endif -%}
+                    </td>
+                    {%- endif %}
+
+                  {%- elif column == "STATEMENT" %}
+                    {%- set ns.past_reserved = true %}
+                    {# -- STATEMENT --------------------------------------- #}
+                    {%- if view_object.is_table_cell_editable(node.node_type, "STATEMENT") %}
+                    <td class="editable-cell content-view-td content-view-td-content"
+                        data-node-mid="{{ requirement.reserved_mid }}"
+                        data-field-name="STATEMENT"
+                        data-field-type="contenteditable"
+                        data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
+                      <div class="editable-cell-indicator"></div>
+                      <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
+                        {%- if requirement.has_reserved_statement() -%}
+                          {%- with field_content = view_object.render_node_statement(requirement) %}
+                            {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
+                          {%- endwith -%}
+                        {%- endif -%}
+                      </div>
+                    </td>
+                    {%- else %}
+                    <td class="content-view-td content-view-td-content content-view-td--dimmed"
+                        data-field-name="STATEMENT">
+                      {%- if requirement.has_reserved_statement() -%}
+                        {%- with field_content = view_object.render_node_statement(requirement) %}
+                          {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
+                        {%- endwith -%}
+                      {%- endif -%}
+                    </td>
+                    {%- endif %}
+
+                  {%- elif column == "RATIONALE" %}
+                    {%- set ns.past_reserved = true %}
+                    {# -- RATIONALE --------------------------------------- #}
+                    {%- if view_object.is_table_cell_editable(node.node_type, "RATIONALE") %}
+                    <td class="editable-cell content-view-td content-view-td-content"
+                        data-node-mid="{{ requirement.reserved_mid }}"
+                        data-field-name="RATIONALE"
+                        data-field-type="contenteditable"
+                        data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
+                      <div class="editable-cell-indicator"></div>
+                      <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
+                        {%- if requirement.rationale -%}
+                          {%- with field_content = view_object.render_node_rationale(requirement) %}
+                            {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
+                          {%- endwith -%}
+                        {%- endif -%}
+                      </div>
+                    </td>
+                    {%- else %}
+                    <td class="content-view-td content-view-td-content content-view-td--dimmed"
+                        data-field-name="RATIONALE">
+                      {%- if requirement.rationale -%}
+                        {%- with field_content = view_object.render_node_rationale(requirement) %}
+                          {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
+                        {%- endwith -%}
+                      {%- endif -%}
+                    </td>
+                    {%- endif %}
+
+                  {%- elif column == "COMMENT" %}
+                    {%- set ns.past_reserved = true %}
+                    {# -- COMMENT ----------------------------------------- #}
+                    {%- if view_object.is_table_cell_editable(node.node_type, "COMMENT") %}
+                    <td class="editable-cell content-view-td content-view-td-content"
+                        data-node-mid="{{ requirement.reserved_mid }}"
+                        data-field-name="COMMENT"
+                        data-field-type="comments"
+                        data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}">
+                      <div class="editable-cell-indicator"></div>
+                      <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
+                        {%- for comment_field_ in requirement.get_comment_fields() -%}
+                        {%- with field_content = view_object.render_node_field(comment_field_) %}
+                          {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
+                        {%- endwith -%}
+                        {%- endfor -%}
+                      </div>
+                    </td>
+                    {%- else %}
+                    <td class="content-view-td content-view-td-content content-view-td--dimmed"
+                        data-field-name="COMMENT">
+                      {%- for comment_field_ in requirement.get_comment_fields() -%}
+                      {%- with field_content = view_object.render_node_field(comment_field_) %}
+                        {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
                       {%- endwith -%}
-                    {%- endif -%}
-                  </div>
-                </td>
-                {%- else %}
-                <td class="content-view-td content-view-td-content">
-                  {%- if requirement.has_reserved_statement() -%}
-                    {%- with field_content = view_object.render_node_statement(requirement) %}
-                      {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
-                    {%- endwith -%}
-                  {%- endif -%}
-                </td>
-                {%- endif %}
+                      {%- endfor -%}
+                    </td>
+                    {%- endif %}
 
-                {# -- RATIONALE: multiline inline if editable ------------- #}
-                {#
-                  Hardcoded here (not in a loop) because RATIONALE occupies a fixed
-                  column position in the table header between STATEMENT and COMMENT.
-                #}
-                {%- if rationale_is_editable %}
-                <td class="editable-cell content-view-td content-view-td-content"
-                    data-node-mid="{{ requirement.reserved_mid }}"
-                    data-field-name="RATIONALE"
-                    data-field-type="contenteditable"
-                    data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
-                  <div class="editable-cell-indicator"></div>
-                  <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
-                    {%- if requirement.rationale -%}
-                      {%- with field_content = view_object.render_node_rationale(requirement) %}
-                        {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
-                      {%- endwith -%}
-                    {%- endif -%}
-                  </div>
-                </td>
-                {%- else %}
-                <td class="content-view-td content-view-td-content">
-                  {%- if requirement.rationale -%}
-                    {%- with field_content = view_object.render_node_rationale(requirement) %}
-                      {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
-                    {%- endwith -%}
-                  {%- endif -%}
-                </td>
-                {%- endif %}
+                  {%- else %}
+                    {# -- Dynamic field (meta or non-reserved content) ----- #}
+                    {%- set field_title = column %}
+                    {%- set field_value = requirement.get_meta_field_value_by_title(field_title) %}
+                    {%- set cell_edit_mode = view_object.get_table_cell_edit_mode(node.node_type, field_title) %}
+                    {%- if ns.past_reserved %}
+                      {%- set td_class = "content-view-td" %}
+                    {%- else %}
+                      {%- set td_class = "content-view-td content-view-td-meta" %}
+                    {%- endif %}
+                    {%- include "screens/document/table/td_by_edit_mode.jinja" %}
+                  {%- endif %}
 
-                {# -- COMMENT: inline form if editable -------------------- #}
-                {%- if comment_is_editable %}
-                <td class="editable-cell content-view-td content-view-td-content"
-                    data-node-mid="{{ requirement.reserved_mid }}"
-                    data-field-name="COMMENT"
-                    data-field-type="comments"
-                    data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}">
-                  <div class="editable-cell-indicator"></div>
-                  <div id="cell-{{ requirement.reserved_mid }}-COMMENT">
-                    {%- for comment_field_ in requirement.get_comment_fields() -%}
-                    {%- with field_content = view_object.render_node_field(comment_field_) %}
-                      {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
-                    {%- endwith -%}
-                    {%- endfor -%}
-                  </div>
-                </td>
-                {%- else %}
-                <td class="content-view-td content-view-td-content">
-                  {%- for comment_field_ in requirement.get_comment_fields() -%}
-                  {%- with field_content = view_object.render_node_field(comment_field_) %}
-                    {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
-                  {%- endwith -%}
-                  {%- endfor -%}
-                </td>
-                {%- endif %}
-
-                {# -- Non-reserved content fields (grammar-defined, after COMMENT) #}
-                {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
-                  {%- set field_title = content_field_title %}
-                  {%- set field_value = requirement.get_meta_field_value_by_title(field_title) %}
-                  {%- set cell_edit_mode = view_object.get_table_cell_edit_mode(node.node_type, field_title) %}
-                  {%- set td_class = "content-view-td" %}
-                  {%- include "screens/document/table/td_by_edit_mode.jinja" %}
-                {%- endfor -%}
+                {%- endfor %}
 
               </tr>
 
@@ -276,32 +294,49 @@
             {# ============================================================ #}
             {%- elif node.is_document() %}
               {%- set section = node %}
+
+              {#
+                Compute colspan for the section title cell.
+                The title cell spans all columns from TITLE to the end of the row.
+              #}
+              {%- set ns_span = namespace(count=0, counting=false) %}
+              {%- for column in view_object.document.enumerate_table_columns() %}
+                {%- if column == "TITLE" %}
+                  {%- set ns_span.counting = true %}
+                {%- endif %}
+                {%- if ns_span.counting %}
+                  {%- set ns_span.count = ns_span.count + 1 %}
+                {%- endif %}
+              {%- endfor %}
+
               <tr data-row-type="Section">
                 <td class="content-view-td content-view-td-type">Section</td>
                 <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
-                {# Empty cells for all meta columns #}
-                {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
-                  <td class="content-view-td content-view-td-meta"></td>
-                {%- endfor -%}
-                {# Empty RELATIONS cell #}
-                <td class="content-view-td content-view-td-meta"></td>
-                {# Title spans Statement + Rationale + Comment + content fields (colspan=4) #}
-                <td class="content-view-td content-view-td-title" colspan="4">
-                  {%- if section.title %}
-                    {%- with sdoc_entity=section -%}
-                      {% include "components/anchor/index.jinja" %}
-                    {%- endwith %}
-                      <sdoc-node-title>
-                        {%- with field_content = section.title %}
-                          {%- include "components/field/index.jinja" -%}
-                        {%- endwith -%}
-                      </sdoc-node-title>
-                    {%- for content_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
-                      <td class="content-view-td">
-                      </td>
-                    {%- endfor -%}
-                  {%- endif -%}
-                </td>
+
+                {%- set ns_sec = namespace(past_title=false) %}
+                {%- for column in view_object.document.enumerate_table_columns() %}
+                  {%- if ns_sec.past_title %}
+                    {# skip — covered by the TITLE colspan cell #}
+                  {%- elif column == "TITLE" %}
+                    {%- set ns_sec.past_title = true %}
+                    <td class="content-view-td content-view-td-title" colspan="{{ ns_span.count if ns_span.count > 0 else 1 }}">
+                      {%- if section.title %}
+                        {%- with sdoc_entity=section -%}
+                          {% include "components/anchor/index.jinja" %}
+                        {%- endwith %}
+                        <sdoc-node-title>
+                          {%- with field_content = section.title %}
+                            {%- include "components/field/index.jinja" -%}
+                          {%- endwith -%}
+                        </sdoc-node-title>
+                      {%- endif -%}
+                    </td>
+                  {%- else %}
+                    {# RELATIONS or meta field — empty cell #}
+                    <td class="content-view-td content-view-td-meta"></td>
+                  {%- endif %}
+                {%- endfor %}
+
               </tr>
             {%- endif %}
 

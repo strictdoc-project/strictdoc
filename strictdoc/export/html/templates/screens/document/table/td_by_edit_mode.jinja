@@ -72,9 +72,11 @@
 {%- else %}
 {#
   "readonly": field not declared in grammar for this element type.
-  Static cell, no edit affordances.
+  Static cell, dimmed to indicate the column exists for other node types
+  but not for this one.
 #}
-<td class="{{ td_class }}">
+<td class="{{ td_class }} content-view-td--dimmed"
+    data-field-name="{{ field_title }}">
   {%- if field_value %}
     {%- with field_content = field_value %}
       {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}

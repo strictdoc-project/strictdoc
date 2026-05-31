@@ -72,6 +72,11 @@
   width: 1%;
 }
 
+.content-view-td--dimmed {
+  background-color: var(--color-bg-main);
+  opacity: 0.45;
+}
+
 .content-view-td-content:not(:empty) {
   min-width: 333px;
   width: 30%;

@@ -14,13 +14,13 @@
 {% for folder_ in folder.subfolder_trees %}
   {% if folder_.has_content() %}
   {% with folder = folder_ %}
-    {% include "screens/source_file_coverage/folder.jinja" %}
+    {% include "features/source_coverage/folder.jinja" %}
   {% endwith %}
   {% endif %}
 {% endfor %}
 
 {% for file_ in folder.files %}
   {% with file = file_ %}
-    {% include "screens/source_file_coverage/file.jinja" %}
+    {% include "features/source_coverage/file.jinja" %}
   {% endwith %}
 {% endfor %}

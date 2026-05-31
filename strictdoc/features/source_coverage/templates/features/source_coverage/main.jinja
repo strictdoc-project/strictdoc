@@ -19,17 +19,17 @@ todo: automate thead.jinja and file.jinja th/td generation
   {% if root_tree_.root_folder_or_file.has_content() %}
 
     <table class="project_coverage" js-project_coverage>
-      {% include "screens/source_file_coverage/thead.jinja" %}
+      {% include "features/source_coverage/thead.jinja" %}
       <tbody>
         {% if root_tree_.root_folder_or_file.is_folder() %}
           {% if root_tree_.root_folder_or_file.has_content() %}
             {% with folder = root_tree_.root_folder_or_file %}
-              {% include "screens/source_file_coverage/folder.jinja" %}
+              {% include "features/source_coverage/folder.jinja" %}
             {% endwith %}
           {% endif %}
         {% else %}
           {% with file = root_tree_.root_folder_or_file %}
-            {% include "screens/source_file_coverage/file.jinja" %}
+            {% include "features/source_coverage/file.jinja" %}
           {% endwith %}
         {% endif %}
       </tbody>

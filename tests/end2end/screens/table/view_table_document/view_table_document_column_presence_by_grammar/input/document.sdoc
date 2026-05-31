@@ -1,0 +1,36 @@
+[DOCUMENT]
+TITLE: Document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TESTNODE
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+- TAG: TEST
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: RATIONALE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STEPS
+    TYPE: String
+    REQUIRED: False
+
+[TESTNODE]
+TITLE: Test heading
+
+[TEST]
+TITLE: Test case 1
+STATEMENT: Test statement.
+RATIONALE: Test rationale.
+STEPS: >>>
+Step 1.
+Step 2.
+<<<

@@ -62,13 +62,26 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
 
     def assert_column_header_visible(self, name: str) -> None:
         self.test_case.assert_element_visible(
-            f'//th[contains(@class,"content-view-th")][normalize-space()="{name}"]',
-            by=By.XPATH,
+            f'[data-testid="col-header-{name}"]'
         )
 
     def assert_column_header_hidden(self, name: str) -> None:
         self.test_case.assert_element_not_visible(
-            f'//th[contains(@class,"content-view-th")][normalize-space()="{name}"]',
+            f'[data-testid="col-header-{name}"]'
+        )
+
+    def assert_column_header_not_present(self, name: str) -> None:
+        self.test_case.assert_element_not_present(
+            f'[data-testid="col-header-{name}"]'
+        )
+
+    def assert_table_cell_is_dimmed(
+        self, row_type: str, field_name: str
+    ) -> None:
+        self.test_case.assert_element(
+            f'//tr[@data-row-type="{row_type}"]'
+            f'//td[@data-field-name="{field_name}"]'
+            f'[contains(@class,"content-view-td--dimmed")]',
             by=By.XPATH,
         )
 

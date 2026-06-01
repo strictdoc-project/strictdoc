@@ -297,6 +297,9 @@ class RequirementFormObject(ErrorObject):
 
             relation_value = relation_dict["value"].strip()
 
+            if len(relation_value) == 0 and relation_type != "File":
+                continue
+
             form_ref_fields.append(
                 RequirementReferenceFormField(
                     field_mid=relation_mid,

@@ -302,25 +302,78 @@
             }
         });
 
-        headerCells.forEach((headerCell, index) => {
-            headerCell.addEventListener('click', () => {
-                const isAscending = headerCell.classList.contains('ascending');
-                sortTable(index, !isAscending);
-                headerCells.forEach(cell => cell.classList.remove('ascending', 'descending'));
-                headerCell.classList.add(isAscending ? 'descending' : 'ascending');
-            });
-        });
+        /*
+         * Column sorting
+         *
+         * The sort logic (save originalRows, sort by textContent, restore on reset)
+         * mirrors source_coverage_screen.js — a shared pattern, candidate for future
+         * extraction into a common helper.
+         *
+         * Three-state cycle per column: none → asc → desc → none.
+         * State is stored in data-sort attribute on <th>; CSS uses it to show
+         * the matching icon variant (.sort-none / .sort-asc / .sort-desc).
+         * Only the sort icon button triggers sorting, not the full <th>.
+         */
 
-        function sortTable(columnIndex, ascending) {
+        const originalRows = Array.from(tbody.querySelectorAll(':scope > tr'));
+        let sortState = null; // { index, dir: 'asc'|'desc' }
+
+        const sortResetWrapper = document.querySelector('.table-toolbar__sort-reset');
+        const sortResetBtn = document.querySelector('[data-testid="table-toolbar-sort-reset"]');
+
+        function setSortReset(active) {
+            if (sortResetWrapper) sortResetWrapper.hidden = !active;
+        }
+
+        function clearSortUI() {
+            headerCells.forEach(cell => cell.removeAttribute('data-sort'));
+        }
+
+        function applySort(index, dir) {
             const rows = Array.from(tbody.querySelectorAll(':scope > tr'));
+            // Same comparator as source_coverage_screen.js (textContent / localeCompare).
             rows.sort((a, b) => {
-                const cellA = (a.children[columnIndex] || {}).textContent || '';
-                const cellB = (b.children[columnIndex] || {}).textContent || '';
-                return ascending
+                const cellA = (a.children[index] || {}).textContent || '';
+                const cellB = (b.children[index] || {}).textContent || '';
+                return dir === 'asc'
                     ? cellA.trim().localeCompare(cellB.trim())
                     : cellB.trim().localeCompare(cellA.trim());
             });
             rows.forEach(row => tbody.appendChild(row));
+        }
+
+        headerCells.forEach((headerCell, index) => {
+            const sortBtn = headerCell.querySelector('.content-view-th__sort-btn');
+            if (!sortBtn) return;
+
+            sortBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                const current = headerCell.getAttribute('data-sort'); // null | 'asc' | 'desc'
+                const next = current === null ? 'asc' : current === 'asc' ? 'desc' : null;
+
+                clearSortUI();
+
+                if (next === null) {
+                    // Reset to server-provided order.
+                    originalRows.forEach(row => tbody.appendChild(row));
+                    sortState = null;
+                    setSortReset(false);
+                } else {
+                    headerCell.setAttribute('data-sort', next);
+                    applySort(index, next);
+                    sortState = { index, dir: next };
+                    setSortReset(true);
+                }
+            });
+        });
+
+        if (sortResetBtn) {
+            sortResetBtn.addEventListener('click', () => {
+                clearSortUI();
+                originalRows.forEach(row => tbody.appendChild(row));
+                sortState = null;
+                setSortReset(false);
+            });
         }
     }
 

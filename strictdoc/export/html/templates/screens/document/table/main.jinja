@@ -98,11 +98,26 @@
           {# -- Header row ------------------------------------------------ #}
           <thead class="content-view-table_sticky-header">
             <tr>
-              <th class="content-view-th" data-testid="col-header-Type">Type</th>
-              <th class="content-view-th" data-testid="col-header-Level">Level</th>
+              <th class="content-view-th" data-testid="col-header-Type">
+                <div class="content-view-th__content">
+                  <span class="content-view-th__label">Type</span>
+                  <button class="content-view-th__sort-btn" aria-label="Sort by Type">{%- include "icons/ico16_sort.svg" -%}</button>
+                </div>
+              </th>
+              <th class="content-view-th" data-testid="col-header-Level">
+                <div class="content-view-th__content">
+                  <span class="content-view-th__label">Level</span>
+                  <button class="content-view-th__sort-btn" aria-label="Sort by Level">{%- include "icons/ico16_sort.svg" -%}</button>
+                </div>
+              </th>
               {%- for column in view_object.document.enumerate_table_columns() -%}
                 {%- set col_label = column_labels.get(column, column) -%}
-                <th class="content-view-th" data-testid="col-header-{{ col_label }}">{{ col_label }}</th>
+                <th class="content-view-th" data-testid="col-header-{{ col_label }}">
+                  <div class="content-view-th__content">
+                    <span class="content-view-th__label">{{ col_label }}</span>
+                    <button class="content-view-th__sort-btn" aria-label="Sort by {{ col_label }}">{%- include "icons/ico16_sort.svg" -%}</button>
+                  </div>
+                </th>
               {%- endfor -%}
             </tr>
           </thead>

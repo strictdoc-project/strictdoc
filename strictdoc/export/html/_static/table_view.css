@@ -43,6 +43,71 @@
   padding: var(--base-rhythm) var(--table-gap);
 }
 
+.content-view-th__content {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--base-rhythm) * 0.5);
+  white-space: nowrap;
+}
+
+.content-view-th__label {
+  flex: 1;
+}
+
+/* Sort icon button inside <th> */
+.content-view-th__sort-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.4;
+  line-height: 0;
+}
+
+.content-view-th__sort-btn:hover {
+  opacity: 1;
+}
+
+.content-view-th[data-sort] {
+  background-color: var(--color-fg-accent);
+  /* color: var(--color-bg-ui); */
+}
+
+.content-view-th[data-sort] .content-view-th__sort-btn {
+  opacity: 1;
+}
+
+/* Three-state sort icon: controlled via CSS on parent <th> data-sort attribute */
+.icon_sort .sort-none  { display: initial; }
+.icon_sort .sort-asc   { display: none; }
+.icon_sort .sort-desc  { display: none; }
+
+.content-view-th[data-sort="asc"] .icon_sort .sort-none  { display: none; }
+.content-view-th[data-sort="asc"] .icon_sort .sort-asc   { display: initial; }
+.content-view-th[data-sort="asc"] .icon_sort .sort-desc  { display: none; }
+
+.content-view-th[data-sort="desc"] .icon_sort .sort-none  { display: none; }
+.content-view-th[data-sort="desc"] .icon_sort .sort-asc   { display: none; }
+.content-view-th[data-sort="desc"] .icon_sort .sort-desc  { display: initial; }
+
+.table-toolbar__sort-reset button {
+  background-color: var(--color-bg-ui);
+  color: var(--color-bg-main);
+}
+.table-toolbar__sort-reset button:hover {
+  background-color: var(--color-fg-accent);
+  color: var(--color-bg-main);
+}
+/* Reset sort button in toolbar shows neutral icon (both arrows = "sorted, click to reset") */
+.table-toolbar__sort-reset .icon_sort .sort-none  { display: initial; }
+.table-toolbar__sort-reset .icon_sort .sort-asc   { display: none; }
+.table-toolbar__sort-reset .icon_sort .sort-desc  { display: none; }
+
 .content-view-td-type,
 .content-view-td-level {
   background-color: var(--color-bg-ui);

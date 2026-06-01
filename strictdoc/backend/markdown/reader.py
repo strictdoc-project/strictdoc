@@ -259,7 +259,9 @@ class SDMarkdownReader:
             root_body_lines_without_meta,
             root_meta_valid,
             root_meta_style,
-        ) = SDMarkdownReader._parse_meta_fields(root_body_lines)
+        ) = SDMarkdownReader._parse_meta_fields(
+            root_body_lines, file_path=file_path
+        )
 
         if root_meta_valid and len(root_meta_fields) > 0:
             root_field_names = list(
@@ -363,6 +365,7 @@ class SDMarkdownReader:
             parsed_node = SDMarkdownReader._parse_markdown_node(
                 heading_node.title,
                 heading_node.body,
+                file_path=file_path,
             )
 
             if parsed_node.valid_for_requirement:
@@ -607,7 +610,9 @@ class SDMarkdownReader:
                 empty_line_count = 0
 
     @staticmethod
-    def _parse_markdown_node(title: str, body: str) -> ParsedMarkdownNode:
+    def _parse_markdown_node(
+        title: str, body: str, file_path: Optional[str]
+    ) -> ParsedMarkdownNode:
         """
         Parse a heading's body text into a ParsedMarkdownNode.
 
@@ -622,9 +627,11 @@ class SDMarkdownReader:
             body_lines_without_meta,
             meta_is_valid,
             meta_style,
-        ) = SDMarkdownReader._parse_meta_fields(body_lines)
+        ) = SDMarkdownReader._parse_meta_fields(body_lines, file_path=file_path)
         content_fields, content_is_valid = (
-            SDMarkdownReader._parse_content_fields(body_lines_without_meta)
+            SDMarkdownReader._parse_content_fields(
+                body_lines_without_meta, file_path=file_path
+            )
         )
 
         parsed_fields = meta_fields + content_fields
@@ -670,6 +677,7 @@ class SDMarkdownReader:
     @staticmethod
     def _parse_meta_fields(
         body_lines: List[str],
+        file_path: Optional[str],
     ) -> Tuple[List[ParsedField], List[str], bool, Optional[str]]:
         """
         Extract the leading meta-field block from raw markdown content of a requirement.
@@ -722,6 +730,37 @@ class SDMarkdownReader:
         if next_line_index < len(
             body_lines
         ) and SDMarkdownReader._is_empty_line(body_lines[next_line_index]):
+            next_nonempty_line_index = next_line_index + 1
+            while next_nonempty_line_index < len(body_lines):
+                if not SDMarkdownReader._is_empty_line(
+                    body_lines[next_nonempty_line_index]
+                ):
+                    break
+                next_nonempty_line_index += 1
+            if next_nonempty_line_index < len(body_lines):
+                next_nonempty_line_text = (
+                    SDMarkdownReader._line_without_line_ending(
+                        body_lines[next_nonempty_line_index]
+                    )
+                )
+                next_field_match = SDMarkdownReader.plain_field_pattern.match(
+                    next_nonempty_line_text
+                )
+                if (
+                    next_field_match is not None
+                    and next_field_match.group("name").upper() == "RELATIONS"
+                ):
+                    raise StrictDocSemanticError(
+                        title=(
+                            "Markdown parsing error: Relations must directly "
+                            "follow requirement metadata without an empty line."
+                        ),
+                        hint=None,
+                        example="**UID**: REQ-1\n**Relations**:",
+                        line=1,
+                        col=1,
+                        filename=file_path,
+                    )
             next_line_index += 1
 
         return parsed_fields, body_lines[next_line_index:], True, meta_style
@@ -811,9 +850,32 @@ class SDMarkdownReader:
                     else:
                         is_last_field = meta_line_index == meta_line_count
                         if not is_last_field:
+                            next_line_text = (
+                                SDMarkdownReader._line_without_line_ending(
+                                    meta_lines[meta_line_index]
+                                )
+                            )
+                            next_field_match = (
+                                SDMarkdownReader.plain_field_pattern.match(
+                                    next_line_text
+                                )
+                            )
+                            next_field_is_relations = (
+                                next_field_match is not None
+                                and next_field_match.group("name").upper()
+                                == "RELATIONS"
+                                and len(
+                                    SDMarkdownReader._trim_single_space_prefix(
+                                        next_field_match.group("value")
+                                    )
+                                )
+                                == 0
+                            )
                             if not value.endswith(" \\"):
-                                return [], False
-                            value = value[:-2]
+                                if not next_field_is_relations:
+                                    return [], False
+                            else:
+                                value = value[:-2]
                         elif value.endswith("\\"):
                             return [], False
                 elif meta_style == "two_spaces":
@@ -864,6 +926,7 @@ class SDMarkdownReader:
     @staticmethod
     def _parse_content_fields(
         body_lines: List[str],
+        file_path: Optional[str],
     ) -> Tuple[List[ParsedField], bool]:
         """
         Parse content fields and freeform STATEMENT prose from the post-meta body lines.
@@ -885,6 +948,44 @@ class SDMarkdownReader:
         while line_index < line_count:
             line = body_lines[line_index]
             if SDMarkdownReader._is_empty_line(line):
+                next_nonempty_line_index = line_index + 1
+                while next_nonempty_line_index < line_count:
+                    if not SDMarkdownReader._is_empty_line(
+                        body_lines[next_nonempty_line_index]
+                    ):
+                        break
+                    next_nonempty_line_index += 1
+                if (
+                    len(parsed_fields) > 0
+                    and parsed_fields[-1].name
+                    in SDMarkdownReader.requirement_meta_fields
+                    and next_nonempty_line_index < line_count
+                ):
+                    next_line_text = SDMarkdownReader._line_without_line_ending(
+                        body_lines[next_nonempty_line_index]
+                    )
+                    next_field_match = (
+                        SDMarkdownReader.plain_field_pattern.match(
+                            next_line_text
+                        )
+                    )
+                    if (
+                        next_field_match is not None
+                        and next_field_match.group("name").upper()
+                        == "RELATIONS"
+                    ):
+                        raise StrictDocSemanticError(
+                            title=(
+                                "Markdown parsing error: Relations must "
+                                "directly follow requirement metadata without "
+                                "an empty line."
+                            ),
+                            hint=None,
+                            example="**UID**: REQ-1\n**Relations**:",
+                            line=1,
+                            col=1,
+                            filename=file_path,
+                        )
                 line_index += 1
                 continue
 

@@ -116,7 +116,6 @@ def test_008_markdown_reader_raises_error_on_missing_relation_type_key():
 ## Requirement
 
 **UID**: REQ-1
-
 **Relations**:
 - **ID**: `REQ-0`
 
@@ -136,7 +135,6 @@ def test_009_markdown_reader_raises_error_on_unknown_relation_type():
 ## Requirement
 
 **UID**: REQ-1
-
 **Relations**:
 - **Type**: `Unknown` \\
   **ID**: `REQ-0`
@@ -157,7 +155,6 @@ def test_010_markdown_reader_raises_error_on_missing_id_key():
 ## Requirement
 
 **UID**: REQ-1
-
 **Relations**:
 - **Type**: `Parent`
 
@@ -177,7 +174,6 @@ def test_011_markdown_reader_raises_error_on_unknown_key_in_relation():
 ## Requirement
 
 **UID**: REQ-1
-
 **Relations**:
 - **Type**: `Parent` \\
   **ID**: `REQ-0` \\
@@ -235,3 +231,27 @@ System shall do X.
     assert requirement.node_type == "REQUIREMENT"
     assert requirement.reserved_statement is not None
     assert "**BAD.NAME**: value" in requirement.reserved_statement
+
+
+def test_014_rejects_blank_line_between_meta_and_relations():
+    input_markdown = """\
+# Document title
+
+## Requirement
+
+**UID**: REQ-3
+
+**Relations**:
+- **Type**: `Parent` \\
+  **ID**: `REQ-1`
+- **Type**: `Child` \\
+  **ID**: `REQ-4` \\
+  **Role**: `Refines`
+
+Requirement shall do B.
+"""
+
+    reader = SDMarkdownReader()
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        reader.read(input_markdown, file_path=None)
+    assert "Relations must directly follow" in exc_info.value.title

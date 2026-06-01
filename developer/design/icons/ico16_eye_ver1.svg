@@ -1,0 +1,24 @@
+<svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <g class="svg_icon__opened">
+    <path d="M 15,8 C 12,14 4,14 1,8"/>
+    <path d="M 1,8 C 5,2 11,2 15,8"/>
+    <circle cy="8" cx="8" r="2"/>
+    <path d="M 8,3 V 1"/>
+    <path d="M 12,4 13,3"/>
+    <path d="M 4,4 3,3"/>
+  </g>
+  <g class="svg_icon__closed">
+    <path d="M 15,8 C 12,14 4,14 1,8"/>
+    <path d="m 8,13 v 2"/>
+    <path d="m 12,12 1,1"/>
+    <path d="M 4,12 3,13"/>
+  </g>
+</svg>

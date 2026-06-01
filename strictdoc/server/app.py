@@ -55,6 +55,10 @@ def print_welcome_message(project_config: ProjectConfig) -> None:
         "",
         " Documentation: https://strictdoc.readthedocs.io/",
         "",
+        " Subscribe to the StrictDoc mailing list for news about features,",
+        " breaking changes, and other updates:",
+        " https://groups.io/g/strictdoc",
+        "",
         " Share feedback or report issues:",
         " https://github.com/strictdoc-project/strictdoc/issues",
     ]

@@ -30,10 +30,11 @@ class AboutCommand(BaseCommand):
             "",
             " Purpose: Software for writing technical requirements specifications.",
             "",
-            f" Version: {strictdoc.__version__}",
-            " Docs:    https://strictdoc.readthedocs.io/en/stable/",
-            " GitHub:  https://github.com/strictdoc-project/strictdoc",
-            " License: Apache 2",
+            f" Version:      {strictdoc.__version__}",
+            " Docs:         https://strictdoc.readthedocs.io/en/stable/",
+            " GitHub:       https://github.com/strictdoc-project/strictdoc",
+            " Mailing list: https://groups.io/g/strictdoc",
+            " License:      Apache 2",
         ]
 
         banner = (

@@ -6,6 +6,8 @@ from seleniumbase import BaseCase
 
 from tests.end2end.helpers.screens.screen import Screen
 
+_SORT_RESET_BTN = '[data-testid="table-toolbar-sort-reset"]'
+_SORT_RESET_WRAPPER = ".table-toolbar__sort-reset"
 _COLUMNS_BTN = '[data-testid="table-toolbar-columns-btn"]'
 _COLUMNS_BTN_TEXT = _COLUMNS_BTN + " .table-toolbar__btn-text"
 _COLUMNS_BTN_INFO = _COLUMNS_BTN + " .table-toolbar__btn-info"
@@ -28,6 +30,55 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
 
     def assert_on_screen_table(self) -> None:
         super().assert_on_screen("table")
+
+    #
+    # Column sorting
+    #
+
+    def do_click_col_sort_btn(self, col_name: str) -> None:
+        self.test_case.click(
+            f'[data-testid="col-header-{col_name}"] .content-view-th__sort-btn'
+        )
+
+    def assert_col_sort_state(self, col_name: str, state) -> None:
+        # state: 'asc', 'desc', or None (unsorted)
+        element = self.test_case.find_element(
+            f'[data-testid="col-header-{col_name}"]'
+        )
+        actual = element.get_attribute("data-sort")
+        assert actual == state, (
+            f"Column {col_name!r} sort state: expected {state!r}, got {actual!r}"
+        )
+
+    def assert_sort_reset_hidden(self) -> None:
+        # Use execute_script to read the hidden attribute without waiting for visibility.
+        is_hidden = self.test_case.execute_script(
+            "const el = document.querySelector('.table-toolbar__sort-reset');"
+            "return el ? el.hasAttribute('hidden') : true;"
+        )
+        assert is_hidden, "Expected sort reset button to be hidden"
+
+    def assert_sort_reset_visible(self) -> None:
+        is_hidden = self.test_case.execute_script(
+            "const el = document.querySelector('.table-toolbar__sort-reset');"
+            "return el ? el.hasAttribute('hidden') : true;"
+        )
+        assert not is_hidden, "Expected sort reset button to be visible"
+
+    def do_click_sort_reset(self) -> None:
+        self.test_case.click(_SORT_RESET_BTN)
+
+    def get_nth_row_field_text(self, row_index: int, field_name: str) -> str:
+        # row_index is 1-based; reads textContent of the matching field cell.
+        return self.test_case.execute_script(
+            "const rows = Array.from("
+            "  document.querySelectorAll('.content-view-table tbody tr[data-row-type]')"
+            ");"
+            f"const row = rows[{row_index - 1}];"
+            "if (!row) return null;"
+            f"const cell = row.querySelector('[data-field-name=\"{field_name}\"]');"
+            "return cell ? cell.textContent.trim() : null;"
+        )
 
     def do_reload_with_hidden_columns(self, hidden: str) -> None:
         current_url = self.test_case.get_current_url()

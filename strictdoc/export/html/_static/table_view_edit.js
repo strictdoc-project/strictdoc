@@ -249,9 +249,17 @@
         }, true);
 
         document.addEventListener('keydown', function (e) {
-            if (e.key !== 'Escape') return;
-            if (activeInlineCell) { e.preventDefault(); cancelInlineCell(); }
-            if (activeAutocompleteCell) { e.preventDefault(); cancelAutocompleteCell(); }
+            if (e.key === 'Escape') {
+                if (activeInlineCell) { e.preventDefault(); cancelInlineCell(); }
+                if (activeAutocompleteCell) { e.preventDefault(); cancelAutocompleteCell(); }
+                return;
+            }
+            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                if (activeInlineCell && activeInlineCell.dataset.fieldType === 'contenteditable') {
+                    e.preventDefault();
+                    saveInlineCell(activeInlineCell);
+                }
+            }
         });
 
         document.addEventListener('click', function (e) {

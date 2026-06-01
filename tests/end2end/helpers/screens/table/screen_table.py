@@ -249,6 +249,11 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def do_cancel_inline_cell_by_escape(self) -> None:
         self.test_case.send_keys("body", Keys.ESCAPE)
 
+    def do_save_inline_cell_by_cmd_enter(self) -> None:
+        ActionChains(self.test_case.driver).key_down(Keys.CONTROL).send_keys(
+            Keys.RETURN
+        ).key_up(Keys.CONTROL).perform()
+
     def get_comment_row_mid(self, order: int = 1) -> str:
         xpath = f"(//*[@data-testid='requirement-form-comment-row'])[{order}]"
         element = self.test_case.find_element(xpath, by=By.XPATH)

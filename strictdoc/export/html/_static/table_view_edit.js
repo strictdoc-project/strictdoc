@@ -155,18 +155,21 @@
 
     async function saveInlineCell(cell) {
         if (!cell) return;
-        activeInlineCell = null;
-        cell.classList.remove('cell--editing');
 
         const form = cell.querySelector('form');
         if (!form) {
             // Stream not yet loaded — just restore original content
+            activeInlineCell = null;
+            cell.classList.remove('cell--editing');
             if (cell._originalHTML !== undefined) {
                 cell.innerHTML = cell._originalHTML;
                 delete cell._originalHTML;
             }
             return;
         }
+
+        // Clear any previous inline errors before submitting.
+        form.querySelectorAll('sdoc-form-error').forEach(el => el.remove());
 
         const formData = new URLSearchParams(new FormData(form));
 
@@ -178,21 +181,42 @@
             });
             const html = await response.text();
             if (response.ok) {
+                activeInlineCell = null;
+                cell.classList.remove('cell--editing');
+                delete cell._originalHTML;
                 renderTurboStream(html);
             } else {
-                cell.setAttribute('data-validation-error', 'true');
-                if (cell._originalHTML !== undefined) {
-                    cell.innerHTML = cell._originalHTML;
+                const contentType = response.headers.get('Content-Type') || '';
+                if (contentType.includes('turbo-stream')) {
+                    // Server re-rendered the form with errors in the right places.
+                    // Keep activeInlineCell and cell--editing so the form stays interactive.
+                    // Do NOT set data-validation-error on the cell — errors are shown inline.
+                    renderTurboStream(html);
+                } else {
+                    // Plain text error (single-field contenteditable): mark cell and insert errors.
+                    cell.setAttribute('data-validation-error', 'true');
+                    const errorLines = html.trim().split('\n').filter(Boolean);
+                    const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
+                    errorLines.forEach(line => {
+                        const errorEl = document.createElement('sdoc-form-error');
+                        errorEl.textContent = line.trim();
+                        if (insertBeforeEl) {
+                            form.insertBefore(errorEl, insertBeforeEl);
+                        } else {
+                            form.appendChild(errorEl);
+                        }
+                    });
                 }
             }
         } catch (err) {
             console.error('Inline cell save error:', err);
+            activeInlineCell = null;
+            cell.classList.remove('cell--editing');
             if (cell._originalHTML !== undefined) {
                 cell.innerHTML = cell._originalHTML;
             }
+            delete cell._originalHTML;
         }
-
-        delete cell._originalHTML;
     }
 
     function init() {

@@ -22,6 +22,12 @@
     {%- endfor -%}
   {%- endfor -%}
 
+  {%- for error_list in form_object.errors.values() -%}
+    {%- for error_ in error_list -%}
+      <sdoc-form-error>{{ error_ }}</sdoc-form-error>
+    {%- endfor -%}
+  {%- endfor -%}
+
   {%- set relation_row_context = namespace() %}
   {%- set requirement_mid = form_object.requirement_mid %}
   {%- for field_ in form_object.enumerate_reference_fields() %}

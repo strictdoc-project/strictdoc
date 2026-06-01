@@ -260,6 +260,17 @@ sdoc-form-field[field-type="select"] label {
   color: var(--color-danger);
 }
 
+.table--is-editable sdoc-form-error + sdoc-form-field {
+  outline: 1px dotted var(--color-danger);
+  /* for form with `:focus-within::after` -4px */
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.table--is-editable sdoc-form-error {
+  margin-top: 4px; /* separate error from sdoc-form-field with outline-offset: 4px; */
+}
+
 /* Autocomplete cells */
 
 [data-field-type="autocomplete"] sdoc-form-field {

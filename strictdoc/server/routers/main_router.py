@@ -1386,13 +1386,14 @@ def create_main_router(
             existing_revision=existing_revision,
         )
         if form_object.any_errors():
-            # WIP: error text is collected for future inline error display.
-            field_errors = [
-                e for errors in form_object.errors.values() for e in errors
-            ]
+            error_output = env().render_template_as_markup(
+                "actions/table/get_node_comments_inline/stream_inline_form.jinja.html",
+                form_object=form_object,
+            )
             return HTMLResponse(
-                content="\n".join(field_errors),
+                content=error_output,
                 status_code=422,
+                headers={"Content-Type": "text/vnd.turbo-stream.html"},
             )
 
         update_command = CreateOrUpdateNodeCommand(
@@ -1477,13 +1478,44 @@ def create_main_router(
             existing_revision=existing_revision,
         )
         if form_object.any_errors():
-            # WIP: error text is collected for future inline error display.
-            field_errors = [
-                e for errors in form_object.errors.values() for e in errors
+            assert document.meta is not None
+            error_link_renderer = LinkRenderer(
+                root_path=document.meta.get_root_path_prefix(),
+                static_path=project_config.dir_for_sdoc_assets,
+            )
+            own_relation_uids = {
+                r.ref_uid
+                for r in node.relations
+                if hasattr(r, "ref_uid") and r.ref_uid
+            }
+            traceability_linked_nodes = (
+                export_action.traceability_index.get_parent_requirements(node)
+                + export_action.traceability_index.get_children_requirements(
+                    node
+                )
+            )
+            derived_nodes = [
+                req
+                for req in traceability_linked_nodes
+                if req.reserved_uid not in own_relation_uids
             ]
+            view_object_stub = types.SimpleNamespace(
+                render_node_link=lambda req: (
+                    error_link_renderer.render_node_link(
+                        req, document, DocumentType.DOCUMENT
+                    )
+                ),
+            )
+            error_output = env().render_template_as_markup(
+                "actions/table/get_node_relations_inline/stream_inline_form.jinja.html",
+                form_object=form_object,
+                derived_nodes=derived_nodes,
+                view_object=view_object_stub,
+            )
             return HTMLResponse(
-                content="\n".join(field_errors),
+                content=error_output,
                 status_code=422,
+                headers={"Content-Type": "text/vnd.turbo-stream.html"},
             )
 
         update_command = CreateOrUpdateNodeCommand(

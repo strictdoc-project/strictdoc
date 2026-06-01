@@ -193,7 +193,13 @@ class SDMarkdownWriter:
                 SDMarkdownWriter._serialize_meta_fields(meta_fields, meta_style)
             )
         if relations_block is not None:
-            field_blocks.append(f"**Relations**:\n{relations_block}")
+            relations_field_block = f"**Relations**:\n{relations_block}"
+            if len(meta_fields) > 0:
+                field_blocks[-1] = (
+                    f"{field_blocks[-1]}\n{relations_field_block}"
+                )
+            else:
+                field_blocks.append(relations_field_block)
         if len(content_fields) > 0:
             field_blocks.append(
                 SDMarkdownWriter._serialize_content_fields(content_fields)
@@ -209,8 +215,8 @@ class SDMarkdownWriter:
         Serialize all relations to a multiline dict-list block.
 
         Returns the block *value* (the bullet list), or None when there are no
-        relations.  The caller appends ("Relations", <value>) to meta_fields so
-        that the existing meta-field serializer emits the **Relations**: header.
+        relations. The caller emits the **Relations** header directly after the
+        metadata block, without an empty line.
         """
         if len(node.relations) == 0:
             return None

@@ -9,7 +9,6 @@ Parent requirement statement.
 ## Child requirement
 
 **UID**: REQ-CHILD
-
 **RELATIONS**:
 - **Type**: Parent
   **ID**: REQ-PARENT
@@ -19,7 +18,6 @@ Child requirement statement.
 ## Parent with child relation
 
 **UID**: REQ-PARENT-EXPLICIT-CHILD
-
 **RELATIONS**:
 - **Type**: Child
   **ID**: REQ-CHILD
@@ -29,7 +27,6 @@ Parent with explicit child relation.
 ## File relation C function
 
 **UID**: REQ-FILE-C
-
 **RELATIONS**:
 - **Type**: File
   **Path**: file.c
@@ -41,7 +38,6 @@ File relation to C function.
 ## File relation Python class
 
 **UID**: REQ-FILE-PY
-
 **RELATIONS**:
 - **Type**: File
   **Path**: file.py
@@ -53,7 +49,6 @@ File relation to Python class.
 ## File relation Rust no element
 
 **UID**: REQ-FILE-RUST
-
 **RELATIONS**:
 - **Type**: File
   **Path**: file.rs
@@ -64,7 +59,6 @@ File relation to Rust function without element annotation.
 ## File relation line range
 
 **UID**: REQ-FILE-LINE-RANGE
-
 **RELATIONS**:
 - **Type**: File
   **Path**: file.c
@@ -75,7 +69,6 @@ File relation to a line range.
 ## Requirement with multiple relations
 
 **UID**: REQ-MULTI
-
 **RELATIONS**:
 - **Type**: Parent
   **ID**: REQ-PARENT

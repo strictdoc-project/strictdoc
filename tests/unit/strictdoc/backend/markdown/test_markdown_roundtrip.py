@@ -451,14 +451,13 @@ System shall do X.
     )
 
 
-def test_015_roundtrip_relation_with_role():
+def test_015b_roundtrip_relation_with_role():
     input_markdown = """\
 # Document title
 
 ## Requirement
 
 **UID**: REQ-3
-
 **Relations**:
 - **Type**: `Parent` \\
   **ID**: `REQ-1`
@@ -474,7 +473,6 @@ Requirement shall do B.
 ## Requirement
 
 **UID**: REQ-3
-
 **Relations**:
 - **Type**: `Parent` \\
   **ID**: `REQ-1`
@@ -501,7 +499,6 @@ Parent requirement statement.
 ## Child requirement
 
 **UID**: REQ-CHILD
-
 **RELATIONS**:
 - **Type**: Parent
   **ID**: REQ-PARENT
@@ -511,7 +508,6 @@ Child requirement statement.
 ## Parent with child relation
 
 **UID**: REQ-PARENT-EXPLICIT-CHILD
-
 **RELATIONS**:
 - **Type**: Child
   **ID**: REQ-CHILD
@@ -521,7 +517,6 @@ Parent with explicit child relation.
 ## File relation C function
 
 **UID**: REQ-FILE-C
-
 **RELATIONS**:
 - **Type**: File
   **Path**: file.c
@@ -533,7 +528,6 @@ File relation to C function.
 ## File relation Python class
 
 **UID**: REQ-FILE-PY
-
 **RELATIONS**:
 - **Type**: File
   **Path**: file.py
@@ -545,7 +539,6 @@ File relation to Python class.
 ## File relation Rust no element
 
 **UID**: REQ-FILE-RUST
-
 **RELATIONS**:
 - **Type**: File
   **Path**: file.rs
@@ -556,7 +549,6 @@ File relation to Rust function without element annotation.
 ## File relation line range
 
 **UID**: REQ-FILE-LINE-RANGE
-
 **RELATIONS**:
 - **Type**: File
   **Path**: file.c
@@ -567,7 +559,6 @@ File relation to a line range.
 ## Requirement with multiple relations
 
 **UID**: REQ-MULTI
-
 **RELATIONS**:
 - **Type**: Parent
   **ID**: REQ-PARENT
@@ -591,7 +582,6 @@ Multiple relations of different types.
 ## Child requirement
 
 **UID**: REQ-CHILD
-
 **Relations**:
 - **Type**: `Parent` \\
   **ID**: `REQ-PARENT`
@@ -601,7 +591,6 @@ Multiple relations of different types.
 ## Parent with child relation
 
 **UID**: REQ-PARENT-EXPLICIT-CHILD
-
 **Relations**:
 - **Type**: `Child` \\
   **ID**: `REQ-CHILD`
@@ -611,7 +600,6 @@ Multiple relations of different types.
 ## File relation C function
 
 **UID**: REQ-FILE-C
-
 **Relations**:
 - **Type**: `File` \\
   **Path**: `file.c` \\
@@ -623,7 +611,6 @@ Multiple relations of different types.
 ## File relation Python class
 
 **UID**: REQ-FILE-PY
-
 **Relations**:
 - **Type**: `File` \\
   **Path**: `file.py` \\
@@ -635,7 +622,6 @@ Multiple relations of different types.
 ## File relation Rust no element
 
 **UID**: REQ-FILE-RUST
-
 **Relations**:
 - **Type**: `File` \\
   **Path**: `file.rs` \\
@@ -646,7 +632,6 @@ Multiple relations of different types.
 ## File relation line range
 
 **UID**: REQ-FILE-LINE-RANGE
-
 **Relations**:
 - **Type**: `File` \\
   **Path**: `file.c` \\
@@ -657,7 +642,6 @@ Multiple relations of different types.
 ## Requirement with multiple relations
 
 **UID**: REQ-MULTI
-
 **Relations**:
 - **Type**: `Parent` \\
   **ID**: `REQ-PARENT`
@@ -739,7 +723,6 @@ RELATIONS:
 ## Child requirement
 
 **UID**: REQ-3
-
 **Relations**:
 - **Type**: `Parent` \\
   **ID**: `REQ-1`
@@ -769,7 +752,6 @@ RELATIONS:
 ## Parent requirement
 
 **UID**: REQ-1
-
 **Relations**:
 - **Type**: `Child` \\
   **ID**: `REQ-2` \\

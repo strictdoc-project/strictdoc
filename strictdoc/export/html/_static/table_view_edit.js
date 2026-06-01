@@ -255,7 +255,10 @@
                 return;
             }
             if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-                if (activeInlineCell && activeInlineCell.dataset.fieldType === 'contenteditable') {
+                if (activeInlineCell && (
+                    activeInlineCell.dataset.fieldType === 'contenteditable' ||
+                    activeInlineCell.dataset.fieldType === 'comments'
+                )) {
                     e.preventDefault();
                     saveInlineCell(activeInlineCell);
                 }

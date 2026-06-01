@@ -1,7 +1,11 @@
+from strictdoc.helpers.mid import MID
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
 from tests.end2end.helpers.form.form import Form
+from tests.end2end.helpers.screens.document.form_edit_requirement import (
+    Form_EditRequirement,
+)
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -34,12 +38,13 @@ class Test(E2ECase):
             assert node_mid is not None
 
             form = Form(self)
+            form_requirement = Form_EditRequirement(self)
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
             #
-            # Open STATEMENT inline, type new value, save by Cmd/Ctrl+Enter — cell updates.
+            # Case 1: Open STATEMENT inline, type new value, save by Cmd/Ctrl+Enter — cell updates.
             #
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
             form.do_fill_in("STATEMENT", "New statement.")
@@ -49,6 +54,19 @@ class Test(E2ECase):
             screen_table.assert_cell_dom_text(
                 node_mid, "STATEMENT", "New statement."
             )
+
+            #
+            # Case 2: Open COMMENT inline, type new value, save by Cmd/Ctrl+Enter — cell updates.
+            #
+            screen_table.do_open_inline_cell(node_mid, "COMMENT")
+            comment_mid = MID(screen_table.get_comment_row_mid(order=1))
+            form_requirement.do_fill_in_field_comment(
+                comment_mid, "New comment."
+            )
+            screen_table.do_save_inline_cell_by_cmd_enter()
+            self.sleep(0.5)
+
+            self.assert_text("New comment.")
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

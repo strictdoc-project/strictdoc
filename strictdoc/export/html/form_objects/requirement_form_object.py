@@ -721,8 +721,17 @@ class RequirementFormObject(ErrorObject):
                 if grammar_element_field_.title not in self.fields:
                     continue
 
-                for form_field_ in self.fields[grammar_element_field_.title]:
+                field_instances = self.fields[grammar_element_field_.title]
+                is_multi_instance = len(field_instances) > 1
+                for form_field_ in field_instances:
                     field_value = form_field_.field_value
+                    # Multi-instance fields (e.g. COMMENT) key errors by field_mid
+                    # so each row only shows its own errors.
+                    error_key = (
+                        form_field_.field_mid
+                        if is_multi_instance
+                        else grammar_element_field_.title
+                    )
 
                     # If field not empty, validate its RST syntax.
                     if len(field_value) > 0:
@@ -735,14 +744,12 @@ class RequirementFormObject(ErrorObject):
                         ).write_with_validation(field_value)
                         if parsed_html is None:
                             assert rst_error is not None
-                            self.add_error(
-                                grammar_element_field_.title, rst_error
-                            )
+                            self.add_error(error_key, rst_error)
                     # If field is empty, check if required and validate for emptiness.
                     else:
                         if grammar_element_field_.required:
                             self.add_error(
-                                grammar_element_field_.title,
+                                error_key,
                                 (
                                     f"Node's {grammar_element_field_.title} must not be empty. "
                                     f"If there is no appropriate value for this field yet, "

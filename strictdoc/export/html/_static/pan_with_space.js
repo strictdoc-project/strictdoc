@@ -38,6 +38,12 @@ window.addEventListener('load', function () {
       if (e.key === ' ' || e.key === 'Spacebar') {
         // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
 
+        var tag = document.activeElement && document.activeElement.tagName;
+        var isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable;
+        if (isEditable) {
+          return;
+        }
+
         e.preventDefault();
         e.stopPropagation();
         state.spacePressed = true;
@@ -76,6 +82,11 @@ window.addEventListener('load', function () {
     document.addEventListener("keyup", function (e) {
       if (e.key === ' ' || e.key === 'Spacebar') {
         // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
+        var tag = document.activeElement && document.activeElement.tagName;
+        var isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable;
+        if (isEditable) {
+          return;
+        }
         e.preventDefault();
         e.stopPropagation();
         state.spacePressed = false;

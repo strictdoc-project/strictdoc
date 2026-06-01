@@ -35,7 +35,7 @@
         {%- if field_.field_value|length > 0 -%}
           {%- set comment_field_row_context.field = field_ -%}
           {%- set comment_field_row_context.field_editable = true -%}
-          {%- set comment_field_row_context.errors = form_object.get_errors(field_.field_name) -%}
+          {%- set comment_field_row_context.errors = form_object.get_errors(field_.field_mid) -%}
           {%- include "components/form/row/row_with_comment.jinja" -%}
         {%- endif -%}
       {%- endif -%}

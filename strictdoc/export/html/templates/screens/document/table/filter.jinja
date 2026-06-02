@@ -60,7 +60,24 @@
       <ul class="table-toolbar__list" data-testid="table-toolbar-rows-list"></ul>
     </div>
     </div>
+    <div class="table-toolbar__tips">
+      <button class="table-toolbar__btn action_button"
+              data-testid="table-toolbar-tips-btn">
+              <span class="table-toolbar__btn-text">?</span></button>
+    </div>
   </div>
 </div>
 {# Iconized Checkbox template, used by JS for column|row visibility toggles: #}
 {%- include "components/checkbox/index.jinja" -%}
+
+<template id="table-tips-modal-template">
+  {%- include "screens/document/table/tips.jinja" -%}
+</template>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelector('[data-testid="table-toolbar-tips-btn"]').addEventListener('click', function() {
+    var template = document.getElementById('table-tips-modal-template');
+    document.getElementById('modal').innerHTML = template.innerHTML;
+  });
+});
+</script>

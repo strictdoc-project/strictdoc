@@ -274,9 +274,9 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     ) -> None:
         sel = self._cell_sel(node_mid, field_name)
         element = self.test_case.find_element(sel)
-        classes = element.get_attribute("class") or ""
-        assert "cell--editing" in classes, (
-            f"Expected cell [{node_mid}][{field_name}] to have class 'cell--editing'"
+        mode = element.get_attribute("data-mode") or ""
+        assert mode == "editing", (
+            f"Expected cell [{node_mid}][{field_name}] to have data-mode='editing', got {mode!r}"
         )
 
     def assert_cell_is_not_inline_editing(
@@ -284,9 +284,9 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     ) -> None:
         sel = self._cell_sel(node_mid, field_name)
         element = self.test_case.find_element(sel)
-        classes = element.get_attribute("class") or ""
-        assert "cell--editing" not in classes, (
-            f"Expected cell [{node_mid}][{field_name}] NOT to have class 'cell--editing'"
+        mode = element.get_attribute("data-mode") or ""
+        assert mode != "editing", (
+            f"Expected cell [{node_mid}][{field_name}] NOT to have data-mode='editing'"
         )
 
     def do_open_inline_cell(self, node_mid: str, field_name: str) -> None:

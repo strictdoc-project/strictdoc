@@ -1,3 +1,9 @@
+/* highlight main layout in special mode */
+.main[data-mode="edit"]::after {
+  box-shadow: inset 0 0 16px var(--color-fg-accent),
+              inset 0 0 0 2px var(--color-fg-accent);
+}
+
 /* ultimate table view */
 
 .content-view-table {
@@ -134,22 +140,24 @@
   font-weight: bold;
 }
 
-.content-view-table div.document {
-  /* TODO */
-  display: block;
-  max-width: 900px;
-}
-
-.content-view-table p:first-child {
+.content-view-td p:first-child {
   margin-top: 0;
 }
 
-.content-view-table p:last-child {
+.content-view-td p:last-child {
   margin-bottom: 0;
 }
 
 .content-view-td:empty {
   width: 1%;
+}
+
+.content-view-td-meta {
+  max-width: 300px;
+}
+
+.content-view-td-content {
+  max-width: 400px;
 }
 
 .content-view-td [wrapper-field-type="comments"] {
@@ -184,13 +192,11 @@
   );
 }
 
-/* Table edit mode */
-
 .table-toolbar__btn--edit {
   text-transform: uppercase;
 }
 
-.table-toolbar__btn--edit.is-active {
+.table-toolbar__btn--edit[aria-pressed="true"] {
   background-color: var(--color-fg-accent);
   color: #fff;
   border-color: transparent;
@@ -208,35 +214,35 @@
   pointer-events: none;
 }
 
-.table--is-editable .editable-cell:hover {
+.content-view-table[data-mode="editable"] .editable-cell:hover {
   cursor: pointer;
 }
 
-.table--is-editable .cell--editing.editable-cell:hover {
+.content-view-table[data-mode="editable"] .editable-cell[data-mode="editing"]:hover {
   cursor: default;
 }
 
-.table--is-editable .editable-cell:hover .editable-cell-indicator {
+[data-mode="edit"] .editable-cell:hover .editable-cell-indicator {
   background-color: var(--color-bg-accent);
   outline: 2px dotted var(--color-fg-accent);
   outline-offset: -2px;
 }
 
-.table--is-editable .editable-cell.cell--editing .editable-cell-indicator {
+[data-mode="edit"] .editable-cell[data-mode="editing"] .editable-cell-indicator {
   background-color: transparent;
   outline: 2px solid var(--color-fg-accent);
   outline-offset: -2px;
   cursor: default;
 }
 
-.table--is-editable .editable-cell form {
+[data-mode="edit"] .editable-cell form {
   display: flex;
   flex-direction: column;
   gap: var(--base-rhythm);
 }
 
-.table--is-editable [data-field-type="autocomplete"] sdoc-form-field,
-.table--is-editable sdoc-form-field {
+[data-mode="edit"] [data-field-type="autocomplete"] sdoc-form-field,
+[data-mode="edit"] sdoc-form-field {
     display: block;
     position: relative;
     padding: 0;
@@ -244,17 +250,17 @@
     min-width: unset;
 }
 
-.table--is-editable sdoc-form-field-group::before,
-.table--is-editable sdoc-contenteditable::before,
-.table--is-editable sdoc-autocompletable::before {
+[data-mode="edit"] sdoc-form-field-group::before,
+[data-mode="edit"] sdoc-contenteditable::before,
+[data-mode="edit"] sdoc-autocompletable::before {
   content: "";
 }
 
-sdoc-form-field[field-type="select"] label {
+[data-mode="edit"] sdoc-form-field[field-type="select"] label {
   display: none;
 }
 
-.table--is-editable sdoc-form-field:focus-within::after {
+[data-mode="edit"] sdoc-form-field:focus-within::after {
   position: absolute;
   content: "";
   inset: -4px;
@@ -263,31 +269,26 @@ sdoc-form-field[field-type="select"] label {
   pointer-events: none;
 }
 
-.table--is-editable sdoc-form-field-group {
+[data-mode="edit"] sdoc-form-field-group {
   padding-top: 0;
   padding-bottom: 0;
   padding: var(--base-rhythm);
   gap: var(--base-rhythm);
 }
 
-.table--is-editable sdoc-form-row {
+[data-mode="edit"] sdoc-form-row {
   display: flex;
 }
 
-.table--is-editable sdoc-form-row sdoc-form-row-main {
+[data-mode="edit"] sdoc-form-row sdoc-form-row-main {
   flex-grow: 1;
 }
 
-.table--is-editable sdoc-form-row sdoc-form-row-main + sdoc-form-row-aside {
+[data-mode="edit"] sdoc-form-row sdoc-form-row-main + sdoc-form-row-aside {
   margin-left: auto;
 }
 
-/* .content-view-table sdoc-autogen + sdoc-autogen,
-.table--is-editable sdoc-form-row + sdoc-form-row {
-  margin-top: calc(var(--base-rhythm) * .5);
-} */
-
-.table--is-editable .field_action::before {
+[data-mode="edit"] .field_action::before {
     content: '';
     position: absolute;
     top: 0;
@@ -297,8 +298,6 @@ sdoc-form-field[field-type="select"] label {
     height: 24px;
     border-radius: 4px;
 }
-
-
 
 .relations-computed {
   font-size: .85em;
@@ -321,20 +320,21 @@ sdoc-form-field[field-type="select"] label {
   color: var(--color-danger);
 }
 
-.table--is-editable sdoc-form-error + sdoc-form-field {
+[data-mode="edit"] sdoc-form-error + sdoc-form-field {
   outline: 1px dotted var(--color-danger);
   /* for form with `:focus-within::after` -4px */
   outline-offset: 4px;
   border-radius: 4px;
 }
 
-.table--is-editable sdoc-form-error {
+[data-mode="edit"] sdoc-form-error {
+  min-width: 200px;
   margin-top: 4px; /* separate error from sdoc-form-field with outline-offset: 4px; */
 }
 
 /* Autocomplete cells */
 
-[data-field-type="autocomplete"] sdoc-form-field {
+[data-viewtype="table"] [data-field-type="autocomplete"] sdoc-form-field {
   /*
     sdoc-form-field has display:block with padding/margin in form.css.
     Reset to display:contents so it is transparent to table cell layout.
@@ -342,14 +342,14 @@ sdoc-form-field[field-type="select"] label {
   display: contents;
 }
 
-[data-field-type="autocomplete"] sdoc-autocompletable {
+[data-viewtype="table"] [data-field-type="autocomplete"] sdoc-autocompletable {
   /* Inline edit component injected via turbo-stream on click. */
   white-space: normal;
   overflow-wrap: normal;
   word-break: normal;
 }
 
-[data-field-type="autocomplete"] .autocomplete-items {
+[data-viewtype="table"] [data-field-type="autocomplete"] .autocomplete-items {
   position: absolute;
   top: 100%;
   left: 0;

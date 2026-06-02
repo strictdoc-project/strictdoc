@@ -1,28 +1,52 @@
 (function () {
+    const TURBO_ACCEPT = 'text/vnd.turbo-stream.html';
+
     let editMode = false;
     let activeInlineCell = null;
     let activeAutocompleteCell = null;
+
+    function getMainContainer() {
+        return document.querySelector('main.layout_main > .main');
+    }
 
     function getTable() {
         return document.querySelector('.content-view-table');
     }
 
+    function getHandler() {
+        return document.querySelector('[data-testid="table-toolbar-edit-btn"]');
+    }
+
+    function updateMode(item, mode) {
+        if (mode) {
+            item?.setAttribute('data-mode', mode);
+        } else { // mode == "" or not present
+            item?.removeAttribute('data-mode');
+        }
+    }
+
+    function updateButtonState(item, state) {
+        item?.setAttribute('aria-pressed', state ? 'true' : 'false');
+    }
+
     function setEditMode(on) {
         editMode = on;
+        const main = getMainContainer();
         const table = getTable();
-        if (table) {
-            table.classList.toggle('table--is-editable', on);
-        }
-        const btn = document.querySelector('[data-testid="table-toolbar-edit-btn"]');
-        if (btn) {
-            btn.classList.toggle('is-active', on);
-            btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-        }
-        if (!on) {
+        const btn = getHandler();
+        if (on) {
+            updateMode(main, 'edit');
+            updateMode(table, 'editable');
+            updateButtonState(btn, true);
+        } else {
+            updateMode(main);
+            updateMode(table);
+            updateButtonState(btn);
             if (activeInlineCell) cancelInlineCell();
             if (activeAutocompleteCell) cancelAutocompleteCell();
         }
     }
+
 
     // --- Shared inline-cell helpers ---
 
@@ -34,7 +58,7 @@
 
     // Restores cell DOM to its pre-edit state. Call after nulling the active variable.
     function restoreInlineCellDOM(cell) {
-        cell.classList.remove('cell--editing');
+        updateMode(cell);
         cell.removeAttribute('data-validation-error');
         if (cell._originalHTML !== undefined) {
             cell.innerHTML = cell._originalHTML;
@@ -46,7 +70,7 @@
     function initInlineCellState(cell) {
         cell._originalHTML = cell.innerHTML;
         cell.removeAttribute('data-validation-error');
-        cell.classList.add('cell--editing');
+        updateMode(cell, 'editing');
         fetchTurboStream(cell.dataset.url);
     }
 
@@ -76,7 +100,7 @@
 
         if (activeAutocompleteCell === cell) {
             activeAutocompleteCell = null;
-            cell.classList.remove('cell--editing');
+            cell.removeAttribute('data-mode');
         }
 
         if (newValue === originalValue) {
@@ -98,7 +122,7 @@
         try {
             const response = await fetch('/actions/table/update_node_field', {
                 method: 'POST',
-                headers: { 'Accept': 'text/vnd.turbo-stream.html' },
+                headers: { 'Accept': TURBO_ACCEPT },
                 body: formData,
             });
             const html = await response.text();
@@ -126,7 +150,7 @@
     async function fetchTurboStream(url) {
         try {
             const response = await fetch(url, {
-                headers: { 'Accept': 'text/vnd.turbo-stream.html' },
+                headers: { 'Accept': TURBO_ACCEPT },
             });
             const html = await response.text();
             if (response.ok) {
@@ -163,11 +187,7 @@
             // This path is synchronous (called before activeInlineCell is updated
             // to the next cell), so nulling activeInlineCell here is safe.
             activeInlineCell = null;
-            cell.classList.remove('cell--editing');
-            if (cell._originalHTML !== undefined) {
-                cell.innerHTML = cell._originalHTML;
-                delete cell._originalHTML;
-            }
+            restoreInlineCellDOM(cell);
             return;
         }
 
@@ -179,7 +199,7 @@
         try {
             const response = await fetch(form.action, {
                 method: 'POST',
-                headers: { 'Accept': 'text/vnd.turbo-stream.html' },
+                headers: { 'Accept': TURBO_ACCEPT },
                 body: formData,
             });
             const html = await response.text();
@@ -188,7 +208,7 @@
                 // When called from openInlineCell() for the previous cell, activeInlineCell
                 // has already been updated to the next cell — do not overwrite it.
                 if (activeInlineCell === cell) activeInlineCell = null;
-                cell.classList.remove('cell--editing');
+                cell.removeAttribute('data-mode');
                 delete cell._originalHTML;
                 renderTurboStream(html);
             } else {
@@ -203,7 +223,7 @@
                     const contentType = response.headers.get('Content-Type') || '';
                     if (contentType.includes('turbo-stream')) {
                         // Server re-rendered the form with errors in the right places.
-                        // Keep activeInlineCell and cell--editing so the form stays interactive.
+                        // Keep activeInlineCell and [data-mode='editing'] so the form stays interactive.
                         // Do NOT set data-validation-error on the cell — errors are shown inline.
                         renderTurboStream(html);
                     } else {
@@ -233,7 +253,7 @@
     }
 
     function init() {
-        const editBtn = document.querySelector('[data-testid="table-toolbar-edit-btn"]');
+        const editBtn = getHandler();
         if (!editBtn) return;
 
         editBtn.addEventListener('click', function () {

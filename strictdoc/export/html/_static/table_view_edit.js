@@ -35,6 +35,7 @@
     // Restores cell DOM to its pre-edit state. Call after nulling the active variable.
     function restoreInlineCellDOM(cell) {
         cell.classList.remove('cell--editing');
+        cell.removeAttribute('data-validation-error');
         if (cell._originalHTML !== undefined) {
             cell.innerHTML = cell._originalHTML;
             delete cell._originalHTML;

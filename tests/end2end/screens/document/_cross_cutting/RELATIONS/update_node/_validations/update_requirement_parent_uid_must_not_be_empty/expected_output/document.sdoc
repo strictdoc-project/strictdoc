@@ -10,3 +10,10 @@ Requirement statement.
 RATIONALE: >>>
 Requirement rationale.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-002
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Parent requirement

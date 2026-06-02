@@ -4578,6 +4578,8 @@ JUnit XML format is mostly identical between different tools that produce it but
      - ``.gtest.junit.xml``
    * - LLVM Integrated Tester (LIT)
      - ``.lit.junit.xml``
+   * - cargo-nextest
+     - ``.nextest.junit.xml``
 
 .. note::
 
@@ -4632,6 +4634,68 @@ Robot Framework has its own native XML test report schema, sometimes referred to
 .. warning::
 
     The Robot Framework test report feature's status is experimental.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: b2c3d4e5f60718293a4b5c6d7e8f9a0b
+TITLE: cargo-nextest JUnit XML specifics
+
+[TEXT]
+MID: c3d4e5f60718293a4b5c6d7e8f9a0b1c
+STATEMENT: >>>
+`cargo-nextest <https://nexte.st>`_ produces JUnit XML when its JUnit
+reporter is enabled. To opt in, add the following to ``.config/nextest.toml``
+and run nextest with that profile:
+
+.. code:: toml
+
+    [profile.ci.junit]
+    path = "junit.xml"
+
+The resulting file is written to ``target/nextest/ci/junit.xml`` and must be
+renamed (or copied) to end with ``.nextest.junit.xml`` for StrictDoc to
+recognize it.
+
+In a cargo-nextest JUnit XML, every ``<testsuite>`` corresponds to one Rust
+test binary (the crate's unit tests, or one integration-test target). Each
+``<testcase>`` carries:
+
+- ``classname`` — the binary identifier (the crate name, optionally followed
+  by ``::<integration_test_name>``);
+- ``name`` — the fully qualified Rust test path within that binary (for
+  example ``tests::add_works`` or ``tests::nested::nested_module_test``).
+
+cargo-nextest does not record the source file or line number of each test in
+the JUnit XML, so traceability between a test result and a function in the
+source code is resolved by a forward lookup. For each test result StrictDoc
+builds a small list of candidate Rust canonical paths from the test's
+``classname`` and ``name`` and resolves to the first candidate that matches a
+function registered by the Rust source-code reader:
+
+- If ``classname`` contains ``::`` (the test belongs to an integration-test
+  binary), the file stem is taken from the part after the last ``::``, and the
+  candidate path is ``<stem>::<name>``. Example: classname
+  ``my_crate::integration``, name ``integration_add`` →
+  ``integration::integration_add``.
+- Otherwise the test belongs to the crate's own unit tests in ``src/lib.rs``
+  or ``src/main.rs``, so two candidates are tried in order: ``lib::<name>``
+  and ``main::<name>``. Example: classname ``my_crate``, name
+  ``tests::add_works`` → ``lib::tests::add_works`` then
+  ``main::tests::add_works``.
+
+The same forward-lookup-with-candidates mechanism is used by the Google Test
+flavor.
+
+.. note::
+
+    Rust ``#[ignore]``-annotated tests are filtered out by cargo-nextest
+    before the test binary is run, so they do not appear in the JUnit XML at
+    all (they are neither counted in ``tests="N"`` nor emitted as
+    ``<skipped>``). Running with ``--run-ignored=all`` executes them as normal
+    tests instead. There is currently no cargo-nextest setting that emits
+    ignored tests as JUnit ``<skipped>`` entries.
 <<<
 
 [[/SECTION]]

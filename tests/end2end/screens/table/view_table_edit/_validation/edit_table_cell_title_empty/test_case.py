@@ -39,7 +39,8 @@ class Test(E2ECase):
             screen_table.assert_edit_mode_on()
 
             #
-            # Clear TITLE and save by click-outside — 422, cell gets validation error.
+            # Clear TITLE and save by click-outside — server rejects (422),
+            # form stays open in the cell, validation error is marked on the cell.
             #
             screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
             screen_table.do_open_inline_cell(node_mid, "TITLE")
@@ -47,15 +48,18 @@ class Test(E2ECase):
             screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
 
-            screen_table.assert_cell_dom_text(node_mid, "TITLE", "Old title")
             screen_table.assert_cell_has_validation_error(node_mid, "TITLE")
+            screen_table.assert_cell_is_inline_editing(node_mid, "TITLE")
 
             #
-            # Click the cell again — validation error is cleared on activating the cell.
+            # Click the cell (re-focus), then Escape — cancels editing, restores
+            # original value, clears validation error indicator.
             #
             screen_table.do_open_inline_cell(node_mid, "TITLE")
-            screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
             screen_table.do_cancel_inline_cell_by_escape()
+
+            screen_table.assert_cell_dom_text(node_mid, "TITLE", "Old title")
+            screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

@@ -1,0 +1,15 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+
+# Ensure that the test report document is generated.
+CHECK: Published: Test report: hello_world_crate
+RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.nextest.junit.html"
+
+# Ensure that the source file is generated.
+RUN: %check_exists --file "%T/html/_source_files/src/lib.rs.html"
+
+# Ensure that the test report document has the right content.
+RUN: %cat "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.nextest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+CHECK-TEST-REPORT: hello_world_crate::tests::add_works
+CHECK-TEST-REPORT: PASSED
+CHECK-TEST-REPORT: href="../../_source_files/src/lib.rs.html#hello_world_crate::tests::add_works#11#13"
+CHECK-TEST-REPORT: src/lib.rs, <i>lines: 11-13</i>, function lib::tests::add_works()

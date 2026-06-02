@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nextest-run" tests="4" failures="1" errors="0" uuid="00000000-0000-0000-0000-000000000000" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+    <testsuite name="my_crate::integration" tests="1" disabled="0" errors="0" failures="0">
+        <testcase name="integration_add" classname="my_crate::integration" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+    </testsuite>
+    <testsuite name="my_crate" tests="3" disabled="0" errors="0" failures="1">
+        <testcase name="tests::nested::nested_module_test" classname="my_crate" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+        <testcase name="tests::add_works" classname="my_crate" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+        <testcase name="tests::fails_on_purpose" classname="my_crate" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+            <failure message="thread &apos;tests::fails_on_purpose&apos; panicked at src/lib.rs:16:9" type="test failure with exit code 101">thread &apos;tests::fails_on_purpose&apos; panicked at src/lib.rs:16:9:
+assertion `left == right` failed
+  left: 2
+ right: 3
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</failure>
+            <system-out>
+running 1 test
+test tests::fails_on_purpose ... FAILED
+
+failures:
+
+failures:
+    tests::fails_on_purpose
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+</system-out>
+            <system-err>
+thread &apos;tests::fails_on_purpose&apos; panicked at src/lib.rs:16:9:
+assertion `left == right` failed
+  left: 2
+ right: 3
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</system-err>
+        </testcase>
+    </testsuite>
+</testsuites>

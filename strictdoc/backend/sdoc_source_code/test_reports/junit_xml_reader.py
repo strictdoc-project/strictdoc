@@ -30,6 +30,7 @@ class JUnitXMLFormat(IntEnum):
     CTEST = 2
     GOOGLE_TEST = 3
     PYTEST = 4
+    CARGO_NEXTEST = 5
 
     @staticmethod
     def create_from_path(file_path: str) -> "JUnitXMLFormat":
@@ -41,6 +42,8 @@ class JUnitXMLFormat(IntEnum):
             return JUnitXMLFormat.GOOGLE_TEST
         if file_path.endswith(".pytest.junit.xml"):
             return JUnitXMLFormat.PYTEST
+        if file_path.endswith(".nextest.junit.xml"):
+            return JUnitXMLFormat.CARGO_NEXTEST
         raise NotImplementedError(file_path)
 
 
@@ -118,7 +121,9 @@ class JUnitXMLReader:
             title = assert_cast(xml_testsuite_["name"], str)
             total_tests: int = int(str(xml_testsuite_["tests"]))
             total_failures: int = int(str(xml_testsuite_["failures"]))
-            total_skipped: int = int(str(xml_testsuite_["skipped"]))
+            # The "skipped" attribute is optional on <testsuite>. cargo-nextest
+            # for instance does not emit it.
+            total_skipped: int = int(str(xml_testsuite_.get("skipped", "0")))
             total_success: int = total_tests - total_failures - total_skipped
 
             test_suite_section = SDocNode.create_section(
@@ -272,6 +277,25 @@ class JUnitXMLReader:
                     test_case_node_title = google_test_name
                     test_case_node_duration = xml_testcase_time
                     test_case_node_test_function = "#GTEST#" + google_test_name
+                elif xml_format == JUnitXMLFormat.CARGO_NEXTEST:
+                    # cargo-nextest records no source location, so the
+                    # classname and name are forwarded as a "#NEXTEST#" marker
+                    # for FileTraceabilityIndex to resolve by forward lookup.
+                    # See the cargo-nextest section of the user guide and
+                    # convert_nextest_test_to_rust_canonical_paths() for the
+                    # JUnit-XML layout and resolution rules.
+                    nextest_full_name = (
+                        xml_testcase_classname + "::" + xml_testcase_name
+                    )
+                    test_case_node_uid = nextest_full_name
+                    test_case_node_title = nextest_full_name
+                    test_case_node_duration = xml_testcase_time
+                    test_case_node_test_function = (
+                        "#NEXTEST#"
+                        + xml_testcase_classname
+                        + "|"
+                        + xml_testcase_name
+                    )
                 elif xml_format == JUnitXMLFormat.PYTEST:
                     xml_testcase_path_parts = xml_testcase_classname
                     xml_testcase_class = ""

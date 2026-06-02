@@ -45,6 +45,9 @@ from strictdoc.core.constants import GraphLinkType
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.file_system.source_tree import SourceFile
 from strictdoc.core.project_config import ProjectConfig, SourceNodesEntry
+from strictdoc.helpers.cargo_nextest import (
+    convert_nextest_test_to_rust_canonical_paths,
+)
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.google_test import convert_function_name_to_gtest_macro
@@ -413,6 +416,40 @@ class FileTraceabilityIndex:
                             raise RuntimeError(
                                 "Could not find a matching Google Test function: "
                                 f"{possible_gtest_functions}"
+                            )  # pragma: no cover
+                        forward_requirement_.set_field_value(
+                            field_name="TEST_FUNCTION",
+                            form_field_index=0,
+                            value=test_function,
+                        )
+                    elif test_function.startswith("#NEXTEST#"):
+                        # The payload after #NEXTEST# is "<classname>|<name>"
+                        # as taken straight from the cargo-nextest JUnit XML.
+                        nextest_payload = test_function.removeprefix(
+                            "#NEXTEST#"
+                        )
+                        nextest_classname, _, nextest_name = (
+                            nextest_payload.partition("|")
+                        )
+                        possible_nextest_functions = (
+                            convert_nextest_test_to_rust_canonical_paths(
+                                nextest_classname, nextest_name
+                            )
+                        )
+                        for (
+                            possible_nextest_function_
+                        ) in possible_nextest_functions:
+                            if (
+                                possible_nextest_function_
+                                in self.map_all_function_names_to_definition_functions
+                            ):
+                                test_function = possible_nextest_function_
+                                break
+                        else:
+                            raise RuntimeError(
+                                "Could not find a matching Rust function for "
+                                "cargo-nextest test: "
+                                f"{possible_nextest_functions}"
                             )  # pragma: no cover
                         forward_requirement_.set_field_value(
                             field_name="TEST_FUNCTION",

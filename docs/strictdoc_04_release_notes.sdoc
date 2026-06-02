@@ -46,6 +46,24 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 0a1b2c3d4e5f60718293a4b5c6d7e8f9
+TITLE: Unreleased
+
+[TEXT]
+MID: f9e8d7c6b5a4039281706f5e4d3c2b1a
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The JUnit XML test report reader gained a new flavor, ``cargo-nextest``
+(file extension ``.nextest.junit.xml``). Rust projects that produce JUnit
+output with `cargo-nextest <https://nexte.st>`_ can now ingest test results
+into StrictDoc and link them to requirements via the existing
+requirement-to-source traceability machinery.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: a0d62ae8f15350e070b3f58976c2e714
 TITLE: 0.22.0 (2026-05-31)
 

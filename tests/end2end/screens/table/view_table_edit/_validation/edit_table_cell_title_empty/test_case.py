@@ -61,6 +61,29 @@ class Test(E2ECase):
             screen_table.assert_cell_dom_text(node_mid, "TITLE", "Old title")
             screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
 
+            #
+            # Case 2: After a 422 on TITLE, click a different cell of the same node
+            # (STATEMENT, empty). The TITLE cell must be restored to its original
+            # value and the validation error must be cleared — the invalid edit is
+            # discarded when focus moves away.
+            # STATEMENT has no value in the fixture, but its cell is always rendered
+            # with data-field-type="contenteditable" and is therefore clickable.
+            #
+            screen_table.do_open_inline_cell(node_mid, "TITLE")
+            form.do_clear_field("TITLE")
+            screen_table.do_save_inline_cell_by_outside_click()
+            self.sleep(0.5)
+
+            screen_table.assert_cell_has_validation_error(node_mid, "TITLE")
+
+            screen_table.do_open_inline_cell(node_mid, "STATEMENT")
+            self.sleep(0.5)
+
+            screen_table.assert_cell_dom_text(node_mid, "TITLE", "Old title")
+            screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
+
+            screen_table.do_cancel_inline_cell_by_escape()
+
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()
 

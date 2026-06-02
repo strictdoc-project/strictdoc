@@ -159,7 +159,9 @@
 
         const form = cell.querySelector('form');
         if (!form) {
-            // Stream not yet loaded — just restore original content
+            // Stream not yet loaded — just restore original content.
+            // This path is synchronous (called before activeInlineCell is updated
+            // to the next cell), so nulling activeInlineCell here is safe.
             activeInlineCell = null;
             cell.classList.remove('cell--editing');
             if (cell._originalHTML !== undefined) {
@@ -182,41 +184,51 @@
             });
             const html = await response.text();
             if (response.ok) {
-                activeInlineCell = null;
+                // Only clear activeInlineCell if this cell is still the active one.
+                // When called from openInlineCell() for the previous cell, activeInlineCell
+                // has already been updated to the next cell — do not overwrite it.
+                if (activeInlineCell === cell) activeInlineCell = null;
                 cell.classList.remove('cell--editing');
                 delete cell._originalHTML;
                 renderTurboStream(html);
             } else {
-                const contentType = response.headers.get('Content-Type') || '';
-                if (contentType.includes('turbo-stream')) {
-                    // Server re-rendered the form with errors in the right places.
-                    // Keep activeInlineCell and cell--editing so the form stays interactive.
-                    // Do NOT set data-validation-error on the cell — errors are shown inline.
-                    renderTurboStream(html);
+                if (activeInlineCell !== cell) {
+                    // Called for a cell that is no longer active (openInlineCell switched to
+                    // a new cell before this async response arrived). This includes the case
+                    // where the user clicks away from a cell that already shows a validation
+                    // error — the invalid edit is discarded and the cell is restored to its
+                    // original value.
+                    restoreInlineCellDOM(cell);
                 } else {
-                    // Plain text error (single-field contenteditable): mark cell and insert errors.
-                    cell.setAttribute('data-validation-error', 'true');
-                    const errorLines = html.trim().split('\n').filter(Boolean);
-                    const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
-                    errorLines.forEach(line => {
-                        const errorEl = document.createElement('sdoc-form-error');
-                        errorEl.textContent = line.trim();
-                        if (insertBeforeEl) {
-                            form.insertBefore(errorEl, insertBeforeEl);
-                        } else {
-                            form.appendChild(errorEl);
-                        }
-                    });
+                    const contentType = response.headers.get('Content-Type') || '';
+                    if (contentType.includes('turbo-stream')) {
+                        // Server re-rendered the form with errors in the right places.
+                        // Keep activeInlineCell and cell--editing so the form stays interactive.
+                        // Do NOT set data-validation-error on the cell — errors are shown inline.
+                        renderTurboStream(html);
+                    } else {
+                        // Plain text error (single-field contenteditable): mark cell and insert errors.
+                        cell.setAttribute('data-validation-error', 'true');
+                        const errorLines = html.trim().split('\n').filter(Boolean);
+                        const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
+                        errorLines.forEach(line => {
+                            const errorEl = document.createElement('sdoc-form-error');
+                            errorEl.textContent = line.trim();
+                            if (insertBeforeEl) {
+                                form.insertBefore(errorEl, insertBeforeEl);
+                            } else {
+                                form.appendChild(errorEl);
+                            }
+                        });
+                    }
                 }
             }
         } catch (err) {
             console.error('Inline cell save error:', err);
-            activeInlineCell = null;
-            cell.classList.remove('cell--editing');
-            if (cell._originalHTML !== undefined) {
-                cell.innerHTML = cell._originalHTML;
-            }
-            delete cell._originalHTML;
+            // Same guard as the success path: don't clear activeInlineCell if it has
+            // already moved on to another cell.
+            if (activeInlineCell === cell) activeInlineCell = null;
+            restoreInlineCellDOM(cell);
         }
     }
 

@@ -12,6 +12,9 @@ sdoc-autogen {
   /* hyphens: auto; */
 
   --autogen-v-rhythm: calc(var(--base-rhythm, 8px) * 2);
+
+  /* Prevent text fields from expanding due to long unbroken tokens */
+  overflow-wrap: anywhere;
 }
 
 sdoc-autogen a,

@@ -160,7 +160,7 @@
                         data-field-type="relations"
                         data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}">
                       <div class="editable-cell-indicator"></div>
-                      <div id="cell-{{ requirement.reserved_mid }}-RELATIONS">
+                      <div id="cell-{{ requirement.reserved_mid }}-RELATIONS" wrapper-field-type="contenteditable">
                         {%- include "screens/document/table/field_display_mode/relations.jinja" %}
                       </div>
                     </td>
@@ -175,7 +175,7 @@
                         data-field-type="contenteditable"
                         data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=TITLE">
                       <div class="editable-cell-indicator"></div>
-                      <div id="cell-{{ requirement.reserved_mid }}-TITLE">
+                      <div id="cell-{{ requirement.reserved_mid }}-TITLE" wrapper-field-type="contenteditable">
                         {%- if requirement.reserved_title %}
                           {%- with sdoc_entity=requirement -%}
                             {% include "components/anchor/index.jinja" %}
@@ -210,7 +210,7 @@
                         data-field-type="contenteditable"
                         data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
                       <div class="editable-cell-indicator"></div>
-                      <div id="cell-{{ requirement.reserved_mid }}-STATEMENT">
+                      <div id="cell-{{ requirement.reserved_mid }}-STATEMENT" wrapper-field-type="contenteditable">
                         {%- if requirement.has_reserved_statement() -%}
                           {%- with field_content = view_object.render_node_statement(requirement) %}
                             {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
@@ -239,7 +239,7 @@
                         data-field-type="contenteditable"
                         data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
                       <div class="editable-cell-indicator"></div>
-                      <div id="cell-{{ requirement.reserved_mid }}-RATIONALE">
+                      <div id="cell-{{ requirement.reserved_mid }}-RATIONALE" wrapper-field-type="contenteditable">
                         {%- if requirement.rationale -%}
                           {%- with field_content = view_object.render_node_rationale(requirement) %}
                             {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}

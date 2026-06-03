@@ -64,6 +64,7 @@
             cell.innerHTML = cell._originalHTML;
             delete cell._originalHTML;
         }
+        delete cell._originalFormData;
     }
 
     // Saves original HTML, marks cell as editing, and fetches the inline form.
@@ -71,7 +72,7 @@
         cell._originalHTML = cell.innerHTML;
         cell.removeAttribute('data-validation-error');
         updateMode(cell, 'editing');
-        fetchTurboStream(cell.dataset.url);
+        fetchTurboStream(cell.dataset.url, cell);
     }
 
     // --- Autocomplete cell ---
@@ -147,7 +148,7 @@
 
     // --- Stream fetch ---
 
-    async function fetchTurboStream(url) {
+    async function fetchTurboStream(url, cell = null) {
         try {
             const response = await fetch(url, {
                 headers: { 'Accept': TURBO_ACCEPT },
@@ -155,6 +156,16 @@
             const html = await response.text();
             if (response.ok) {
                 renderTurboStream(html);
+                // [FEATURE: skip-save-if-unchanged]
+                // Capture the serialized form state right after the server renders it —
+                // before any user input. Used in saveInlineCell to skip the POST when
+                // nothing has changed.
+                if (cell) {
+                    const form = cell.querySelector('form');
+                    if (form) {
+                        cell._originalFormData = new URLSearchParams(new FormData(form)).toString();
+                    }
+                }
             }
         } catch (err) {
             console.error('Table stream fetch error:', err);
@@ -191,6 +202,16 @@
             return;
         }
 
+        // [FEATURE: skip-save-if-unchanged]
+        // Compare current form state against the snapshot taken when the form loaded.
+        // If identical — close the cell without sending a request to the server.
+        const currentData = new URLSearchParams(new FormData(form)).toString();
+        if (cell._originalFormData !== undefined && currentData === cell._originalFormData) {
+            if (activeInlineCell === cell) activeInlineCell = null;
+            restoreInlineCellDOM(cell);
+            return;
+        }
+
         // Clear any previous inline errors before submitting.
         form.querySelectorAll('sdoc-form-error').forEach(el => el.remove());
 
@@ -210,6 +231,7 @@
                 if (activeInlineCell === cell) activeInlineCell = null;
                 cell.removeAttribute('data-mode');
                 delete cell._originalHTML;
+                delete cell._originalFormData;
                 renderTurboStream(html);
             } else {
                 if (activeInlineCell !== cell) {

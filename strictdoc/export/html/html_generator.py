@@ -17,9 +17,6 @@ from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.generators.document import DocumentHTMLGenerator
-from strictdoc.export.html.generators.document_deep_trace import (
-    DocumentDeepTraceHTMLGenerator,
-)
 from strictdoc.export.html.generators.document_table import (
     DocumentTableHTMLGenerator,
 )
@@ -29,6 +26,9 @@ from strictdoc.export.html.generators.document_trace import (
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.features.deep_trace.generator import (
+    DocumentDeepTraceHTMLGenerator,
+)
 from strictdoc.features.html2pdf.generator import (
     DocumentHTML2PDFGenerator,
 )

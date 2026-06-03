@@ -286,11 +286,16 @@ class PathFinder:
                 if current_root_relative_path != "."
                 else ""
             )
+            current_root_relative_path_posix = SDocRelativePath(
+                current_root_relative_path
+            ).relative_path_posix
 
             if len(current_root_relative_path) > 0:
                 if path_filter_excludes.match(
-                    current_root_relative_path
-                ) or not path_filter_includes.match(current_root_relative_path):
+                    current_root_relative_path_posix
+                ) or not path_filter_includes.match(
+                    current_root_relative_path_posix
+                ):
                     dirs[:] = []
                     continue
 

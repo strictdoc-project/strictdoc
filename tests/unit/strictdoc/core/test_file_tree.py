@@ -1,12 +1,14 @@
 import os
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 from strictdoc.core.file_system.file_tree import (
     File,
     FileFinder,
     FileTree,
     Folder,
+    PathFinder,
 )
 
 
@@ -183,3 +185,37 @@ def test_54_exclude_paths():
         assert subfolder.full_path == os.path.join(tmp_dir, "dev")
         assert len(subfolder.files) == 0
         assert len(subfolder.subfolder_trees) == 0
+
+
+def test_60_find_directories_with_include_paths_and_windows_separators():
+    """
+    Verify that the find_directories method correctly handles include paths with
+    Windows-style path separators.
+
+    This test ensures a proper fix for the issue reported in:
+    https://github.com/strictdoc-project/strictdoc/issues/2776
+    """
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        assets_dir = os.path.join(
+            tmp_dir, "prod_requirements", "req", "_assets"
+        )
+        Path(assets_dir).mkdir(parents=True)
+
+        original_relpath = os.path.relpath
+
+        def relpath_with_windows_separators(path, start=None):
+            return original_relpath(path, start=start).replace("/", "\\")
+
+        with patch(
+            "strictdoc.core.file_system.file_tree.os.path.relpath",
+            relpath_with_windows_separators,
+        ):
+            directories = PathFinder.find_directories(
+                tmp_dir,
+                "_assets",
+                include_paths=["prod_requirements/"],
+                exclude_paths=[],
+            )
+
+        assert directories == [assets_dir]

@@ -4,6 +4,8 @@
     let editMode = false;
     let activeInlineCell = null;
     let activeAutocompleteCell = null;
+    // [FEATURE: passive-open] Cell to open after the current save resolves.
+    let pendingNextCell = null;
 
     function getMainContainer() {
         return document.querySelector('main.layout_main > .main');
@@ -42,8 +44,12 @@
             updateMode(main);
             updateMode(table);
             updateButtonState(btn);
+            pendingNextCell = null;
             if (activeInlineCell) cancelInlineCell();
             if (activeAutocompleteCell) cancelAutocompleteCell();
+            // [FEATURE: passive-open] Close any cells that are open but no longer
+            // tracked (passive-open after a validation error).
+            document.querySelectorAll('[data-mode="editing"]').forEach(cell => restoreInlineCellDOM(cell));
         }
     }
 
@@ -176,14 +182,39 @@
 
     function openInlineCell(cell) {
         if (activeInlineCell === cell) return;
-        if (activeInlineCell) saveInlineCell(activeInlineCell);
-
+        if (activeInlineCell) {
+            // [FEATURE: passive-open] Null activeInlineCell immediately so the
+            // document.click handler (which fires after table.click) doesn't see
+            // it and trigger a second save. Remember the intended next cell — it
+            // will be opened only if the save succeeds.
+            const prev = activeInlineCell;
+            activeInlineCell = null;
+            pendingNextCell = cell;
+            saveInlineCell(prev);
+            return;
+        }
+        pendingNextCell = null;
         activeInlineCell = cell;
+        // [FEATURE: passive-open] If the cell is already open (passive-open after a
+        // validation error), don't re-fetch the form — just reactivate it in place.
+        if (cell.getAttribute('data-mode') === 'editing') return;
         initInlineCellState(cell);
+    }
+
+    // [FEATURE: passive-open] Open the cell that was clicked while a save was
+    // in flight. Called after a successful save (or skip-save) to complete the
+    // cell-switch that was deferred by openInlineCell.
+    function openPendingCell() {
+        if (pendingNextCell) {
+            const next = pendingNextCell;
+            pendingNextCell = null;
+            openInlineCell(next);
+        }
     }
 
     function cancelInlineCell() {
         if (!activeInlineCell) return;
+        pendingNextCell = null;
         const cell = activeInlineCell;
         activeInlineCell = null;
         restoreInlineCellDOM(cell);
@@ -194,11 +225,13 @@
 
         const form = cell.querySelector('form');
         if (!form) {
-            // Stream not yet loaded — just restore original content.
-            // This path is synchronous (called before activeInlineCell is updated
-            // to the next cell), so nulling activeInlineCell here is safe.
+            // Stream not yet loaded — restore original content without saving.
+            // activeInlineCell is already null when called from openInlineCell
+            // (nulled there to prevent document.click double-save), but may still
+            // be set when called from document.click directly.
             activeInlineCell = null;
             restoreInlineCellDOM(cell);
+            openPendingCell();
             return;
         }
 
@@ -209,6 +242,7 @@
         if (cell._originalFormData !== undefined && currentData === cell._originalFormData) {
             if (activeInlineCell === cell) activeInlineCell = null;
             restoreInlineCellDOM(cell);
+            openPendingCell();
             return;
         }
 
@@ -226,50 +260,48 @@
             const html = await response.text();
             if (response.ok) {
                 // Only clear activeInlineCell if this cell is still the active one.
-                // When called from openInlineCell() for the previous cell, activeInlineCell
-                // has already been updated to the next cell — do not overwrite it.
+                // When called via openInlineCell, activeInlineCell was already nulled
+                // there — don't overwrite it if it has moved on to another cell.
                 if (activeInlineCell === cell) activeInlineCell = null;
                 cell.removeAttribute('data-mode');
                 delete cell._originalHTML;
                 delete cell._originalFormData;
                 renderTurboStream(html);
+                // [FEATURE: passive-open] Open the cell the user clicked while this
+                // save was in flight (set by openInlineCell before starting the save).
+                openPendingCell();
             } else {
-                if (activeInlineCell !== cell) {
-                    // Called for a cell that is no longer active (openInlineCell switched to
-                    // a new cell before this async response arrived). This includes the case
-                    // where the user clicks away from a cell that already shows a validation
-                    // error — the invalid edit is discarded and the cell is restored to its
-                    // original value.
-                    restoreInlineCellDOM(cell);
+                // [FEATURE: passive-open] Validation error — go passive-open regardless
+                // of whether save was triggered by click-outside or by a cell switch.
+                // Discard pendingNextCell: the next cell must not open while this one has an error.
+                if (activeInlineCell === cell) activeInlineCell = null;
+                pendingNextCell = null;
+                const contentType = response.headers.get('Content-Type') || '';
+                if (contentType.includes('turbo-stream')) {
+                    // Server re-rendered the form with errors in the right places.
+                    // data-mode='editing' stays — form remains visible and interactive.
+                    renderTurboStream(html);
                 } else {
-                    const contentType = response.headers.get('Content-Type') || '';
-                    if (contentType.includes('turbo-stream')) {
-                        // Server re-rendered the form with errors in the right places.
-                        // Keep activeInlineCell and [data-mode='editing'] so the form stays interactive.
-                        // Do NOT set data-validation-error on the cell — errors are shown inline.
-                        renderTurboStream(html);
-                    } else {
-                        // Plain text error (single-field contenteditable): mark cell and insert errors.
-                        cell.setAttribute('data-validation-error', 'true');
-                        const errorLines = html.trim().split('\n').filter(Boolean);
-                        const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
-                        errorLines.forEach(line => {
-                            const errorEl = document.createElement('sdoc-form-error');
-                            errorEl.textContent = line.trim();
-                            if (insertBeforeEl) {
-                                form.insertBefore(errorEl, insertBeforeEl);
-                            } else {
-                                form.appendChild(errorEl);
-                            }
-                        });
-                    }
+                    // Plain text error (single-field contenteditable): mark cell and insert errors.
+                    cell.setAttribute('data-validation-error', 'true');
+                    const errorLines = html.trim().split('\n').filter(Boolean);
+                    const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
+                    errorLines.forEach(line => {
+                        const errorEl = document.createElement('sdoc-form-error');
+                        errorEl.textContent = line.trim();
+                        if (insertBeforeEl) {
+                            form.insertBefore(errorEl, insertBeforeEl);
+                        } else {
+                            form.appendChild(errorEl);
+                        }
+                    });
                 }
             }
         } catch (err) {
             console.error('Inline cell save error:', err);
-            // Same guard as the success path: don't clear activeInlineCell if it has
-            // already moved on to another cell.
+            // Network error — restore cell and discard any pending next cell.
             if (activeInlineCell === cell) activeInlineCell = null;
+            pendingNextCell = null;
             restoreInlineCellDOM(cell);
         }
     }

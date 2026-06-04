@@ -86,6 +86,11 @@ consistently with Linux paths.
 fails when a field contains valid Markdown such as a pipe table. The edit-time
 field validation now uses the writer that matches the document's markup,
 instead of always validating the content as RST.
+
+8\) Markdown documents can now render Mermaid diagrams from fenced code blocks.
+When the ``MERMAID`` project feature is enabled, Markdown fences marked with
+``mermaid`` are exported in the same Mermaid-compatible HTML form as SDoc/RST
+content.
 <<<
 
 [[/SECTION]]

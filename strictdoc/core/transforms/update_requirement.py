@@ -9,9 +9,13 @@ from typing import Dict, List, Optional, Set, Tuple, Union
 
 from textx import TextXSyntaxError
 
+from strictdoc.backend.markdown.markdown_to_html_fragment_writer import (
+    MarkdownToHtmlFragmentWriter,
+)
 from strictdoc.backend.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import get_textx_syntax_error_message
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
@@ -115,16 +119,32 @@ class CreateOrUpdateNodeCommand:
             for field_ in field_bucket_:
                 if field_.field_type != RequirementFormFieldType.MULTILINE:
                     continue
-                (
-                    parsed_html,
-                    rst_error,
-                ) = RstToHtmlFragmentWriter(
-                    project_config=self.project_config,
-                    context_document=self.context_document,
-                ).write_with_validation(field_.field_value)
+                # Validate the field content using the writer that matches the
+                # document's markup (RST by default, Markdown for Markdown
+                # documents).
+                markup = (
+                    self.context_document.config.markup
+                    if self.context_document is not None
+                    else None
+                )
+                if markup == SDocMarkup.MARKDOWN:
+                    (
+                        parsed_html,
+                        markup_error,
+                    ) = MarkdownToHtmlFragmentWriter.write_with_validation(
+                        field_.field_value
+                    )
+                else:
+                    (
+                        parsed_html,
+                        markup_error,
+                    ) = RstToHtmlFragmentWriter(
+                        project_config=self.project_config,
+                        context_document=self.context_document,
+                    ).write_with_validation(field_.field_value)
                 if parsed_html is None:
-                    assert rst_error is not None
-                    form_object.add_error(field_.field_name, rst_error)
+                    assert markup_error is not None
+                    form_object.add_error(field_.field_name, markup_error)
                 else:
                     try:
                         free_text_container: Optional[FreeTextContainer] = (

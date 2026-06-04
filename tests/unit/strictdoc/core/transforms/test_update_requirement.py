@@ -2,6 +2,7 @@
 @relation(SDOC-SRS-55, scope=file)
 """
 
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementRelationChild,
     GrammarElementRelationParent,
@@ -20,6 +21,13 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 )
 from strictdoc.helpers.mid import MID
 from tests.unit.helpers.document_builder import DocumentBuilder
+
+MARKDOWN_TABLE = (
+    "|   | Action | Verify |\n"
+    "|---|--------|--------|\n"
+    "| 1 | Do the thing | |\n"
+    "| 2 | Do another thing | |\n"
+)
 
 
 def test_01_single_document_add_first_parent_relation_with_no_role():
@@ -416,3 +424,48 @@ def test_26_two_documents_remove_child_relation():
         traceability_index.get_child_relations_with_roles(requirement2)
     )
     assert requirement2_children == []
+
+
+def test_30_markdown_document_updates_field_with_markdown_table():
+    document_builder = DocumentBuilder()
+    requirement = document_builder.add_requirement("REQ-001")
+
+    document_1 = document_builder.build()
+    document_1.config.markup = SDocMarkup.MARKDOWN
+
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document_1],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index: TraceabilityIndex = (
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
+    )
+    traceability_index.document_tree = document_tree
+
+    form_object: RequirementFormObject = (
+        RequirementFormObject.create_from_requirement(
+            requirement=requirement,
+            revision=0,
+            context_document_mid=document_1.reserved_mid,
+        )
+    )
+    for field in form_object.fields["STATEMENT"]:
+        field.field_value = MARKDOWN_TABLE
+
+    update_command = CreateOrUpdateNodeCommand(
+        form_object=form_object,
+        node_info=UpdateNodeInfo(requirement),
+        context_document=document_1,
+        traceability_index=traceability_index,
+        project_config=ProjectConfig.default_config(),
+    )
+    result = update_command.perform()
+
+    assert result is not None
+    assert not form_object.any_errors()
+    assert requirement.reserved_statement == MARKDOWN_TABLE

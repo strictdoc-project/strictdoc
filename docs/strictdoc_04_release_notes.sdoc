@@ -81,6 +81,11 @@ editable element.
 The ``manage auto-uid`` command now resolves source root paths correctly when
 test report paths are present, and asset copying now handles Windows paths
 consistently with Linux paths.
+
+7\) Editing a node in a Markdown document through the web interface no longer
+fails when a field contains valid Markdown such as a pipe table. The edit-time
+field validation now uses the writer that matches the document's markup,
+instead of always validating the content as RST.
 <<<
 
 [[/SECTION]]

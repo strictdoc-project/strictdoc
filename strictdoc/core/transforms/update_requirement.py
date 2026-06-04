@@ -9,9 +9,13 @@ from typing import Dict, List, Optional, Set, Tuple, Union
 
 from textx import TextXSyntaxError
 
+from strictdoc.backend.markdown.markdown_to_html_fragment_writer import (
+    MarkdownToHtmlFragmentWriter,
+)
 from strictdoc.backend.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import get_textx_syntax_error_message
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
@@ -86,13 +90,11 @@ class CreateOrUpdateNodeCommand:
         *,
         form_object: RequirementFormObject,
         node_info: Union[CreateNodeInfo, UpdateNodeInfo],
-        context_document: SDocDocument,
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
     ) -> None:
         self.form_object: RequirementFormObject = form_object
         self.node_info: Union[CreateNodeInfo, UpdateNodeInfo] = node_info
-        self.context_document: SDocDocument = context_document
         self.traceability_index: TraceabilityIndex = traceability_index
         self.project_config: ProjectConfig = project_config
 
@@ -106,6 +108,18 @@ class CreateOrUpdateNodeCommand:
 
         traceability_index: TraceabilityIndex = self.traceability_index
 
+        if node_to_update_or_none is not None:
+            node_document = assert_cast(
+                node_to_update_or_none.get_document(), SDocDocument
+            )
+        else:
+            node_document = assert_cast(
+                traceability_index.get_node_by_mid(
+                    MID(form_object.document_mid)
+                ),
+                SDocDocument,
+            )
+
         map_form_to_requirement_fields: Dict[
             RequirementFormField, Optional[FreeTextContainer]
         ] = {}
@@ -115,16 +129,32 @@ class CreateOrUpdateNodeCommand:
             for field_ in field_bucket_:
                 if field_.field_type != RequirementFormFieldType.MULTILINE:
                     continue
-                (
-                    parsed_html,
-                    rst_error,
-                ) = RstToHtmlFragmentWriter(
-                    project_config=self.project_config,
-                    context_document=self.context_document,
-                ).write_with_validation(field_.field_value)
+                # Validate the field content using the writer that matches the
+                # document's markup (RST by default, Markdown for Markdown
+                # documents).
+                markup = (
+                    node_document.config.markup
+                    if node_document is not None
+                    else None
+                )
+                if markup == SDocMarkup.MARKDOWN:
+                    (
+                        parsed_html,
+                        markup_error,
+                    ) = MarkdownToHtmlFragmentWriter.write_with_validation(
+                        field_.field_value
+                    )
+                else:
+                    (
+                        parsed_html,
+                        markup_error,
+                    ) = RstToHtmlFragmentWriter(
+                        project_config=self.project_config,
+                        context_document=node_document,
+                    ).write_with_validation(field_.field_value)
                 if parsed_html is None:
-                    assert rst_error is not None
-                    form_object.add_error(field_.field_name, rst_error)
+                    assert markup_error is not None
+                    form_object.add_error(field_.field_name, markup_error)
                 else:
                     try:
                         free_text_container: Optional[FreeTextContainer] = (

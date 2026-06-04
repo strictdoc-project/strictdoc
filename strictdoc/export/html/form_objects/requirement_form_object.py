@@ -8,9 +8,13 @@ from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from starlette.datastructures import FormData
 
+from strictdoc.backend.markdown.markdown_to_html_fragment_writer import (
+    MarkdownToHtmlFragmentWriter,
+)
 from strictdoc.backend.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -733,18 +737,33 @@ class RequirementFormObject(ErrorObject):
                         else grammar_element_field_.title
                     )
 
-                    # If field not empty, validate its RST syntax.
+                    # If field not empty, validate its markup syntax using the
+                    # writer that matches the document's markup (RST by
+                    # default, Markdown for Markdown documents).
                     if len(field_value) > 0:
-                        (
-                            parsed_html,
-                            rst_error,
-                        ) = RstToHtmlFragmentWriter(
-                            project_config=config,
-                            context_document=context_document,
-                        ).write_with_validation(field_value)
+                        markup = (
+                            context_document.config.markup
+                            if context_document is not None
+                            else None
+                        )
+                        if markup == SDocMarkup.MARKDOWN:
+                            (
+                                parsed_html,
+                                markup_error,
+                            ) = MarkdownToHtmlFragmentWriter.write_with_validation(
+                                field_value
+                            )
+                        else:
+                            (
+                                parsed_html,
+                                markup_error,
+                            ) = RstToHtmlFragmentWriter(
+                                project_config=config,
+                                context_document=context_document,
+                            ).write_with_validation(field_value)
                         if parsed_html is None:
-                            assert rst_error is not None
-                            self.add_error(error_key, rst_error)
+                            assert markup_error is not None
+                            self.add_error(error_key, markup_error)
                     # If field is empty, check if required and validate for emptiness.
                     else:
                         if grammar_element_field_.required:

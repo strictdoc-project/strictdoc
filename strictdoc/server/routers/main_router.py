@@ -1029,7 +1029,6 @@ def create_main_router(
         update_command = CreateOrUpdateNodeCommand(
             form_object=form_object,
             node_info=UpdateNodeInfo(node_to_update=node),
-            context_document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
         )
@@ -1291,7 +1290,6 @@ def create_main_router(
         update_command = CreateOrUpdateNodeCommand(
             form_object=form_object,
             node_info=UpdateNodeInfo(node_to_update=node),
-            context_document=document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
         )
@@ -1399,7 +1397,6 @@ def create_main_router(
         update_command = CreateOrUpdateNodeCommand(
             form_object=form_object,
             node_info=UpdateNodeInfo(node_to_update=node),
-            context_document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
         )
@@ -1521,7 +1518,6 @@ def create_main_router(
         update_command = CreateOrUpdateNodeCommand(
             form_object=form_object,
             node_info=UpdateNodeInfo(node_to_update=node),
-            context_document=context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
         )

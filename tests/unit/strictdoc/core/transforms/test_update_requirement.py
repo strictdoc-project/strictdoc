@@ -3,6 +3,7 @@
 """
 
 from strictdoc.backend.sdoc.constants import SDocMarkup
+from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementRelationChild,
     GrammarElementRelationParent,
@@ -79,7 +80,6 @@ def test_01_single_document_add_first_parent_relation_with_no_role():
     update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
         node_info=UpdateNodeInfo(requirement2),
-        context_document=document_1,
         traceability_index=traceability_index,
         project_config=ProjectConfig.default_config(),
     )
@@ -148,7 +148,6 @@ def test_02_single_document_add_second_parent_relation_with_role():
     update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
         node_info=UpdateNodeInfo(requirement2),
-        context_document=document_1,
         traceability_index=traceability_index,
         project_config=ProjectConfig.default_config(),
     )
@@ -241,7 +240,6 @@ def test_20_single_document_add_second_child_relation_with_role():
     update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
         node_info=UpdateNodeInfo(requirement2),
-        context_document=document_1,
         traceability_index=traceability_index,
         project_config=ProjectConfig.default_config(),
     )
@@ -327,7 +325,6 @@ def test_25_single_document_remove_child_relation():
     update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
         node_info=UpdateNodeInfo(requirement2),
-        context_document=document_1,
         traceability_index=traceability_index,
         project_config=ProjectConfig.default_config(),
     )
@@ -409,7 +406,6 @@ def test_26_two_documents_remove_child_relation():
     update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
         node_info=UpdateNodeInfo(requirement2),
-        context_document=document_1,
         traceability_index=traceability_index,
         project_config=ProjectConfig.default_config(),
     )
@@ -460,7 +456,60 @@ def test_30_markdown_document_updates_field_with_markdown_table():
     update_command = CreateOrUpdateNodeCommand(
         form_object=form_object,
         node_info=UpdateNodeInfo(requirement),
-        context_document=document_1,
+        traceability_index=traceability_index,
+        project_config=ProjectConfig.default_config(),
+    )
+    result = update_command.perform()
+
+    assert result is not None
+    assert not form_object.any_errors()
+    assert requirement.reserved_statement == MARKDOWN_TABLE
+
+
+def test_31_included_markdown_document_uses_own_markup_when_updated_from_parent():
+    parent_document_builder = DocumentBuilder(uid="PARENT")
+    parent_document = parent_document_builder.build()
+    parent_document.config.markup = SDocMarkup.RST
+
+    included_document_builder = DocumentBuilder(uid="INCLUDED")
+    requirement = included_document_builder.add_requirement("REQ-001")
+    included_document = included_document_builder.build()
+    included_document.config.markup = SDocMarkup.MARKDOWN
+
+    included_document.ng_including_document_reference = DocumentReference()
+    included_document.ng_including_document_reference.set_document(
+        parent_document
+    )
+    parent_document.included_documents.append(included_document)
+
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[parent_document, included_document],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index: TraceabilityIndex = (
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree,
+            project_config=included_document_builder.project_config,
+        )
+    )
+    traceability_index.document_tree = document_tree
+
+    form_object: RequirementFormObject = (
+        RequirementFormObject.create_from_requirement(
+            requirement=requirement,
+            revision=0,
+            context_document_mid=parent_document.reserved_mid,
+        )
+    )
+    for field in form_object.fields["STATEMENT"]:
+        field.field_value = MARKDOWN_TABLE
+
+    update_command = CreateOrUpdateNodeCommand(
+        form_object=form_object,
+        node_info=UpdateNodeInfo(requirement),
         traceability_index=traceability_index,
         project_config=ProjectConfig.default_config(),
     )

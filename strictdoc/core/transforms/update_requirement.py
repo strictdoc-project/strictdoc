@@ -90,13 +90,11 @@ class CreateOrUpdateNodeCommand:
         *,
         form_object: RequirementFormObject,
         node_info: Union[CreateNodeInfo, UpdateNodeInfo],
-        context_document: SDocDocument,
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,
     ) -> None:
         self.form_object: RequirementFormObject = form_object
         self.node_info: Union[CreateNodeInfo, UpdateNodeInfo] = node_info
-        self.context_document: SDocDocument = context_document
         self.traceability_index: TraceabilityIndex = traceability_index
         self.project_config: ProjectConfig = project_config
 
@@ -109,6 +107,18 @@ class CreateOrUpdateNodeCommand:
         )
 
         traceability_index: TraceabilityIndex = self.traceability_index
+
+        if node_to_update_or_none is not None:
+            node_document = assert_cast(
+                node_to_update_or_none.get_document(), SDocDocument
+            )
+        else:
+            node_document = assert_cast(
+                traceability_index.get_node_by_mid(
+                    MID(form_object.document_mid)
+                ),
+                SDocDocument,
+            )
 
         map_form_to_requirement_fields: Dict[
             RequirementFormField, Optional[FreeTextContainer]
@@ -123,8 +133,8 @@ class CreateOrUpdateNodeCommand:
                 # document's markup (RST by default, Markdown for Markdown
                 # documents).
                 markup = (
-                    self.context_document.config.markup
-                    if self.context_document is not None
+                    node_document.config.markup
+                    if node_document is not None
                     else None
                 )
                 if markup == SDocMarkup.MARKDOWN:
@@ -140,7 +150,7 @@ class CreateOrUpdateNodeCommand:
                         markup_error,
                     ) = RstToHtmlFragmentWriter(
                         project_config=self.project_config,
-                        context_document=self.context_document,
+                        context_document=node_document,
                     ).write_with_validation(field_.field_value)
                 if parsed_html is None:
                     assert markup_error is not None

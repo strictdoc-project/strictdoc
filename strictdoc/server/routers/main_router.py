@@ -573,7 +573,7 @@ def create_main_router(
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
-        context_document: SDocDocument = (
+        editing_context_document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(
                 MID(context_document_mid)
             )
@@ -613,7 +613,6 @@ def create_main_router(
                     requirement_mid=requirement_mid,
                     reference_mid=reference_mid,
                 ),
-                context_document=context_document,
                 traceability_index=export_action.traceability_index,
                 project_config=project_config,
             )
@@ -657,8 +656,8 @@ def create_main_router(
 
         # Saving new content to .SDoc files.
         write_document_to_file(document)
-        if document != context_document:
-            write_document_to_file(context_document)
+        if document != editing_context_document:
+            write_document_to_file(editing_context_document)
 
         # Exporting the updated document to HTML. Note that this happens after
         # the traceability index last update marker has been updated. This way
@@ -685,7 +684,7 @@ def create_main_router(
 
         view_object = DocumentScreenViewObject(
             document_type=DocumentType.DOCUMENT,
-            document=context_document,
+            document=editing_context_document,
             traceability_index=export_action.traceability_index,
             project_config=project_config,
             link_renderer=link_renderer,
@@ -857,12 +856,6 @@ def create_main_router(
         )
         existing_revision = revisions[form_object.requirement_mid]
 
-        context_document: SDocDocument = (
-            export_action.traceability_index.get_node_by_mid(
-                MID(form_object.context_document_mid)
-            )
-        )
-
         form_object.validate(
             traceability_index=export_action.traceability_index,
             context_document=document,
@@ -877,7 +870,6 @@ def create_main_router(
             update_command = CreateOrUpdateNodeCommand(
                 form_object=form_object,
                 node_info=UpdateNodeInfo(node_to_update=requirement),
-                context_document=context_document,
                 traceability_index=export_action.traceability_index,
                 project_config=project_config,
             )

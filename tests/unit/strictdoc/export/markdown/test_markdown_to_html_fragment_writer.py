@@ -43,3 +43,23 @@ def test_04_writes_markdown_table_to_html_table():
     assert "<th>Col B</th>" in html_output
     assert "<td>A1</td>" in html_output
     assert "<td>B1</td>" in html_output
+
+
+def test_05_writes_mermaid_fence_as_mermaid_pre_block():
+    markdown_input = "```mermaid\ngraph TD\n  A-->B\n```\n"
+
+    html_output = MarkdownToHtmlFragmentWriter.write(markdown_input)
+
+    assert html_output == (
+        '<pre class="mermaid">graph TD\n  A--&gt;B\n</pre>\n'
+    )
+
+
+def test_06_writes_regular_fence_as_code_block():
+    markdown_input = "```python\nprint(1)\n```\n"
+
+    html_output = MarkdownToHtmlFragmentWriter.write(markdown_input)
+
+    assert html_output == (
+        '<pre><code class="language-python">print(1)\n</code></pre>\n'
+    )

@@ -59,6 +59,28 @@ This release contains the following enhancements:
 output with `cargo-nextest <https://nexte.st>`_ can now ingest test results
 into StrictDoc and link them to requirements via the existing
 requirement-to-source traceability machinery.
+
+2\) The StrictDoc server startup banner now includes a mailing list link, making
+it easier for users to discover the community support channel from the command
+line.
+
+3\) The HTML export gained a reusable checkbox component with opened/closed eye
+icons. It will be used on the TABLE screen for filtering content by type and
+fields.
+
+4\) Markdown relation handling was tightened so that ``Relations`` metadata is
+kept together with the rest of a node's meta fields. This prevents malformed
+Markdown round-trips where relations were separated by an empty line.
+
+5\) Several HTML editing workflows were fixed. Comment validation errors are
+now keyed by field MID so duplicate field names do not hide the correct error,
+and Space-key panning no longer intercepts typing when focus is inside an
+editable element.
+
+6\) Project path handling was improved for two platform-specific workflows.
+The ``manage auto-uid`` command now resolves source root paths correctly when
+test report paths are present, and asset copying now handles Windows paths
+consistently with Linux paths.
 <<<
 
 [[/SECTION]]

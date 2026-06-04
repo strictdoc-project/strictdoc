@@ -156,6 +156,11 @@
   max-width: 300px;
 }
 
+.content-view-td-related {
+  /* unset .content-view-td-meta constraints */
+  max-width: 400px;
+}
+
 .content-view-td-content {
   max-width: 400px;
 }
@@ -167,8 +172,7 @@
 }
 
 .content-view-td [wrapper-field-type="comments"]:not(:empty),
-.content-view-td [wrapper-field-type="contenteditable"]:not(:empty),
-.content-view-td-related form {
+.content-view-td [wrapper-field-type="contenteditable"]:not(:empty) {
   min-width: 300px;
 }
 

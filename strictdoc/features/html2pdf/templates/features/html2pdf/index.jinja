@@ -16,9 +16,6 @@
   {%- if view_object.project_config.is_activated_mathjax() -%}
   <script id="MathJax-script" async src="{{ view_object.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- endif -%}
-  {%- if view_object.project_config.is_activated_rapidoc() -%}
-  <script src="{{ view_object.render_static_url('rapidoc/rapidoc-min.js') }}"></script>
-  {%- endif -%}
   {%- if view_object.project_config.is_activated_mermaid() -%}
     <script src="{{ view_object.render_static_url('mermaid/mermaid.min.js') }}"></script>
     <script type="module">

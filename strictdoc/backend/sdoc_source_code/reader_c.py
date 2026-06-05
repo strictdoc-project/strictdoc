@@ -4,6 +4,7 @@
 
 from typing import Final, List, Optional, Sequence
 
+import tree_sitter_c
 import tree_sitter_cpp
 from tree_sitter import Language, Node, Parser
 
@@ -95,7 +96,11 @@ class SourceFileTraceabilityReader_C:
         file_stats = SourceFileStats.create(input_buffer)
         parse_context = ParseContext(file_path, file_stats)
 
-        language_arg = tree_sitter_cpp.language()
+        language_arg: object
+        if file_path is not None and file_path.endswith(".c"):
+            language_arg = tree_sitter_c.language()
+        else:
+            language_arg = tree_sitter_cpp.language()
         py_language = Language(language_arg)
         parser = Parser(py_language)
 

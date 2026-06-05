@@ -7,5 +7,5 @@ TITLE: Requirement Title
 STATEMENT: Requirement Statement
 RELATIONS:
 - TYPE: File
-  VALUE: file.c
+  VALUE: file.cpp
   FUNCTION: /ZTEST_USER.*semaphore.*test_k_sem_correct_count_limit/

@@ -47,17 +47,16 @@ class Test(E2ECase):
             form_edit_requirement.do_form_submit()
 
             #
-            # Case 2: Clearing the UID of an existing relation (without deleting
-            # the field) — an error must be raised.
+            # Case 2: Clearing the UID of an existing saved relation (without
+            # deleting the row) must raise a validation error.
+            # This is distinct from Case 1: the row already exists in the document,
+            # so a blank UID is treated as a mistake, not an intent to remove.
             #
-            # TODO: Implement this case after implementing the form field clearing action.
-            #
-            # ruff: noqa: ERA001
-            # form_edit_requirement = requirement.do_open_form_edit_requirement()
-            # form_edit_requirement.do_open_tab("Relations")
-            # form_edit_requirement.do_clear_field("relation-uid", 1)
-            # form_edit_requirement.do_form_submit_and_catch_error(
-            #     "Requirement relation UID must not be empty."
-            # )
+            form_edit_requirement = requirement.do_open_form_edit_requirement()
+            form_edit_requirement.do_open_tab("Relations")
+            form_edit_requirement.do_clear_relation_uid(1)
+            form_edit_requirement.do_form_submit_and_catch_error(
+                "Requirement relation UID must not be empty."
+            )
 
         assert test_setup.compare_sandbox_and_expected_output()

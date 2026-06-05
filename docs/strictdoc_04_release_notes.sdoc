@@ -46,6 +46,29 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 71592b7fb5c44af4a8b308b75fab9491
+TITLE: 0.23.1 (2026-06-05)
+
+[TEXT]
+MID: 39d572931ce144479f3f3927234589c9
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Source code traceability for C/C++ now recognizes Google Benchmark
+fixture macros such as ``BENCHMARK_F`` and ``BENCHMARK_DEFINE_F``. StrictDoc
+can parse the nested function declarator shape produced by tree-sitter for
+these macros, and unsupported function declarators are now reported as
+warnings instead of aborting the whole export.
+
+2\) The web interface now handles empty relation form fields more gracefully.
+Saving a node discards empty relation rows instead of raising a validation
+error, while clearing an existing relation UID still produces a proper
+validation error.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 0a1b2c3d4e5f60718293a4b5c6d7e8f9
 TITLE: 0.23.0 (2026-06-04)
 

@@ -58,6 +58,13 @@ KNOWN_FUNCTION_DEFINITION_MACROS: Final[frozenset[str]] = frozenset(
         "SYSCALL_DEFINE4",
         "SYSCALL_DEFINE5",
         "SYSCALL_DEFINE6",
+        # Google Benchmark
+        "BENCHMARK",
+        "BENCHMARK_F",
+        "BENCHMARK_DEFINE_F",
+        "BENCHMARK_TEMPLATE",
+        "BENCHMARK_TEMPLATE_F",
+        "BENCHMARK_TEMPLATE_DEFINE_F",
         # Google Test and Linux
         "TEST",
         "TEST_F",
@@ -296,7 +303,14 @@ class SourceFileTraceabilityReader_C:
                     function_declarator_node
                 )
                 if identifier_node is None:
-                    raise NotImplementedError(function_declarator_node)
+                    print(  # noqa: T201
+                        "warning: C/C++ source reader: skipping unsupported "
+                        "function declarator at "
+                        f"{parse_context.filename}:"
+                        f"{function_declarator_node.start_point[0] + 1}: "
+                        f"{function_declarator_node}"
+                    )
+                    continue
 
                 assert identifier_node.text is not None, node_.text
                 function_display_name = identifier_node.text.decode("utf8")
@@ -468,7 +482,19 @@ class SourceFileTraceabilityReader_C:
                 "qualified_identifier",
             ),
         )
-        return function_identifier_node
+        if function_identifier_node is not None:
+            return function_identifier_node
+
+        nested_function_declarator_node = ts_find_child_node_by_type(
+            function_declarator_node,
+            "function_declarator",
+        )
+        if nested_function_declarator_node is not None:
+            return SourceFileTraceabilityReader_C._get_function_name_node(
+                nested_function_declarator_node
+            )
+
+        return None
 
     @staticmethod
     def get_node_ns(node: Node) -> Sequence[str]:

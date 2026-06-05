@@ -1371,12 +1371,6 @@ def create_main_router(
         )
         existing_revision: int = revisions[node_mid_str]
 
-        context_document: SDocDocument = (
-            export_action.traceability_index.get_node_by_mid(
-                MID(form_object.context_document_mid)
-            )
-        )
-
         form_object.validate(
             traceability_index=export_action.traceability_index,
             context_document=document,

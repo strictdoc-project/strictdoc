@@ -63,3 +63,14 @@ def test_06_writes_regular_fence_as_code_block():
     assert html_output == (
         '<pre><code class="language-python">print(1)\n</code></pre>\n'
     )
+
+
+def test_07_renders_anchor_link_as_raw_html_not_escaped():
+    markdown_input = MarkdownToHtmlFragmentWriter.write_anchor_link(
+        "Title",
+        "foo.bar",
+    )
+
+    html_output = MarkdownToHtmlFragmentWriter.write(markdown_input)
+
+    assert html_output == '<p><a href="foo.bar">🔗\u00a0Title</a></p>\n'

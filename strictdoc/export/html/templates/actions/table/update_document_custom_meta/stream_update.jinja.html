@@ -1,0 +1,7 @@
+<turbo-stream action="update" target="document-custom-meta-{{ document.reserved_mid }}">
+  <template>
+    {%- set doc_mid = document.reserved_mid -%}
+    {%- set document_config = document.config -%}
+    {%- include "screens/document/table/field_display_mode/document_custom_meta_value.jinja" -%}
+  </template>
+</turbo-stream>

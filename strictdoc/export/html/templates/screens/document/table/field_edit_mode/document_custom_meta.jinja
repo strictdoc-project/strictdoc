@@ -1,0 +1,38 @@
+<sdoc-meta-label data-testid="document-config-metadata-edit-label">CUSTOM META:</sdoc-meta-label>
+<sdoc-meta-field class="editable-cell" data-testid="document-config-metadata-edit-field">
+  <div class="editable-cell-indicator"></div>
+  <form
+    action="/actions/table/update_document_custom_meta"
+    method="POST"
+    data-turbo="false"
+  >
+    <input type="hidden" name="document_mid" value="{{ form_object.document_mid }}"/>
+    <input type="hidden" name="document[TITLE]" value="{{ form_object.document_title }}"/>
+    <input type="hidden" name="document[UID]" value="{{ form_object.document_uid }}"/>
+    <input type="hidden" name="document[VERSION]" value="{{ form_object.document_version }}"/>
+    <input type="hidden" name="document[CLASSIFICATION]" value="{{ form_object.document_classification }}"/>
+    <input type="hidden" name="document[PREFIX]" value="{{ form_object.document_requirement_prefix }}"/>
+
+    <sdoc-form-grid>
+      <div style="display: contents;" id="document_{{ form_object.document_mid }}__new_metadata">
+        {% set custom_metadata_row_context = namespace() %}
+        {% for metadata_field in form_object.custom_metadata_fields %}
+          {% set custom_metadata_row_context.field = metadata_field %}
+          {% set custom_metadata_row_context.form_object = form_object %}
+          {% set custom_metadata_row_context.errors = form_object.get_errors("METADATA["~ metadata_field.field_mid ~"]") %}
+          {% include "components/form/row/row_with_metadata.jinja" %}
+        {%- endfor -%}
+      </div>
+    </sdoc-form-grid>
+
+    <sdoc-form-footer>
+      <a
+        class="action_button"
+        href="/actions/document/new_metadata?document_mid={{ form_object.document_mid }}"
+        data-action-type="add_field"
+        js-table_view_edit-add-field
+        data-testid="form-action-add-metadata-field"
+      >{% include "icons/ico16_add.svg" %} Add new metadata value</a>
+    </sdoc-form-footer>
+  </form>
+</sdoc-meta-field>

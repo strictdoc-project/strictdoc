@@ -1,0 +1,17 @@
+{%- if document_config.has_custom_metadata() -%}
+{%- for key, value in document_config.get_custom_metadata() -%}
+  {%- set metadata_value = view_object.render_metadata_value(value) -%}
+  {%- with
+    field_content=metadata_value,
+    field_label=key,
+    field_testid="metadata"
+  -%}
+    {%- include "screens/document/table/field_display_mode/document_meta_readonly_plain_field.jinja" -%}
+  {%- endwith -%}
+{%- endfor -%}
+{%- endif -%}
+<sdoc-meta-label data-table-custom-meta-add data-testid="document-config-metadata-add-label">CUSTOM META:</sdoc-meta-label>
+<sdoc-meta-field data-table-custom-meta-add class="editable-cell" data-testid="document-config-metadata-add-field">
+  <div class="editable-cell-indicator"></div>
+  <span class="action_button">{% include "icons/ico16_add.svg" %} Add new metadata value</span>
+</sdoc-meta-field>

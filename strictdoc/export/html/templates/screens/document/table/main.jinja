@@ -145,19 +145,8 @@
               {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
             {%- endwith -%}
 
-            {# -- CUSTOM METADATA (read-only) ---------------------------- #}
-            {%- if document_config.has_custom_metadata() -%}
-            {%- for key, value in document_config.get_custom_metadata() -%}
-              {%- set metadata_value = view_object.render_metadata_value(value) -%}
-              {%- with
-                field_content=metadata_value,
-                field_label=key,
-                field_testid="metadata"
-              -%}
-                {%- include "screens/document/table/field_display_mode/document_meta_readonly_plain_field.jinja" -%}
-              {%- endwith -%}
-            {%- endfor -%}
-            {%- endif -%}
+            {# -- CUSTOM METADATA ---------------------------------------- #}
+            {%- include "screens/document/table/field_display_mode/document_custom_meta.jinja" -%}
 
           </sdoc-meta>
 

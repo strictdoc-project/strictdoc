@@ -86,6 +86,12 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         # TODO: update with mid
         super().do_delete_field("form-field-relation", field_order)
 
+    def do_clear_relation_uid(self, field_order: int = 1) -> None:
+        # Clears the UID input of a relation row that already exists in the document.
+        # Used to verify Case 2: clearing the UID of a saved relation raises a
+        # validation error instead of silently discarding the relation.
+        super().do_clear_field("relation-uid", field_order)
+
     def do_fill_in_field_relation(self, mid: MID, field_value: str) -> None:
         assert isinstance(mid, MID)
         assert isinstance(field_value, str)

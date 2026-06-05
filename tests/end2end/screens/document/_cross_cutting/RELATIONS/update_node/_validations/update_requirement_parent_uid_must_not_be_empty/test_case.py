@@ -32,14 +32,29 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
             screen_document.assert_header_document_title("Document 1")
 
-            # Open form and add 1 field:
             requirement = screen_document.get_node()
+
+            #
+            # Case 1: Adding a new empty relation field — form saves successfully,
+            # the empty relation is silently skipped (not saved).
+            # The existing PARENT: REQ-002 relation is preserved.
+            #
             form_edit_requirement: Form_EditRequirement = (
                 requirement.do_open_form_edit_requirement()
             )
             form_edit_requirement.do_open_tab("Relations")
             form_edit_requirement.do_form_add_field_relation()
+            form_edit_requirement.do_form_submit()
 
+            #
+            # Case 2: Clearing the UID of an existing saved relation (without
+            # deleting the row) must raise a validation error.
+            # This is distinct from Case 1: the row already exists in the document,
+            # so a blank UID is treated as a mistake, not an intent to remove.
+            #
+            form_edit_requirement = requirement.do_open_form_edit_requirement()
+            form_edit_requirement.do_open_tab("Relations")
+            form_edit_requirement.do_clear_relation_uid(1)
             form_edit_requirement.do_form_submit_and_catch_error(
                 "Requirement relation UID must not be empty."
             )

@@ -23,6 +23,15 @@
 
 {% block row_content scoped %}
 
+{# Hidden field: tells the server whether this relation row is newly added (true)
+   or was already saved in the document (false).
+   New rows with a blank UID are silently discarded on save; existing rows with a
+   blank UID trigger a "Relation UID must not be empty" validation error. #}
+<input type="hidden"
+  name="{{ relation_row_context.field.get_is_new_field_name() }}"
+  value="{{ 'true' if relation_row_context.field.is_new else 'false' }}"
+/>
+
 <sdoc-form-field-group
   data-field-label="Node relation"
   {% if form_object.errors|length -%}

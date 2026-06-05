@@ -170,6 +170,10 @@ class RequirementReferenceFormField:
         field_type: FieldType,
         field_value: str,
         field_role: Optional[str],
+        # True for relation rows added client-side (never saved to the document).
+        # False (default) for rows that were already saved and loaded into the form.
+        # Used to distinguish "silently discard if empty" vs. "raise error if empty".
+        is_new: bool = False,
     ) -> None:
         assert isinstance(field_mid, str), field_mid
         assert isinstance(field_value, str), field_value
@@ -179,6 +183,7 @@ class RequirementReferenceFormField:
         self.field_role: str = (
             field_role if field_role is not None and len(field_role) > 0 else ""
         )
+        self.is_new: bool = is_new
         self.validation_messages: List[str] = []
 
     def get_input_field_name(self) -> str:
@@ -189,6 +194,9 @@ class RequirementReferenceFormField:
 
     def get_type_field_name(self) -> str:
         return f"requirement[relations][{self.field_mid}][typerole]"
+
+    def get_is_new_field_name(self) -> str:
+        return f"requirement[relations][{self.field_mid}][is_new]"
 
 
 @auto_described
@@ -296,6 +304,15 @@ class RequirementFormObject(ErrorObject):
             }[relation_type]
 
             relation_value = relation_dict["value"].strip()
+
+            if len(relation_value) == 0 and relation_type != "File":
+                # is_new distinguishes two empty-UID cases:
+                # - True: user added a row but left it blank → silently discard.
+                # - False: user cleared the UID of an existing saved relation
+                #          → keep the field so validate() can raise the error.
+                is_new_relation = relation_dict.get("is_new", "false") == "true"
+                if is_new_relation:
+                    continue
 
             form_ref_fields.append(
                 RequirementReferenceFormField(

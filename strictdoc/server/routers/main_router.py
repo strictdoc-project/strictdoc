@@ -1804,6 +1804,8 @@ def create_main_router(
                 field_type=RequirementReferenceFormField.FieldType.PARENT,
                 field_value="",
                 field_role="",
+                # Mark as new so that an empty UID is silently discarded on save.
+                is_new=True,
             ),
             relation_types=grammar_element_relations,
         )

@@ -1,0 +1,17 @@
+# A Cargo workspace where alpha_crate and beta_crate each define
+# tests::shared_test. The crate name keeps them distinct, so each requirement is
+# IsSatisfiedBy its own crate's test.
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Workspace
+
+RUN: %cat "%T/html/%THIS_TEST_FOLDER/docs/input.html" | filecheck %s --check-prefix CHECK-REQS
+CHECK-REQS: REQ-ALPHA
+CHECK-REQS: alpha_crate::tests::shared_test
+CHECK-REQS: (IsSatisfiedBy)
+CHECK-REQS: REQ-ALPHA-DEEP
+CHECK-REQS: alpha_crate::util::helper::tests::deep_test
+CHECK-REQS: (IsSatisfiedBy)
+CHECK-REQS: REQ-BETA
+CHECK-REQS: beta_crate::tests::shared_test
+CHECK-REQS: (IsSatisfiedBy)

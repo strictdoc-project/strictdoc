@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nextest-run" tests="3" failures="0" errors="0" uuid="00000000-0000-0000-0000-000000000000" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+    <testsuite name="beta_crate" tests="1" disabled="0" errors="0" failures="0">
+        <testcase name="tests::shared_test" classname="beta_crate" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+    </testsuite>
+    <testsuite name="alpha_crate" tests="2" disabled="0" errors="0" failures="0">
+        <testcase name="util::helper::tests::deep_test" classname="alpha_crate" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+        <testcase name="tests::shared_test" classname="alpha_crate" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+    </testsuite>
+</testsuites>

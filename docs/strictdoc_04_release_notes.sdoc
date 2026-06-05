@@ -46,6 +46,25 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: b5181ae005fb1160e73e1fcd4cc972dd
+TITLE: Unreleased
+
+[TEXT]
+MID: 055660bc7cf09fbf5d00cf516111e80f
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) cargo-nextest test results now link to the requirements their tests verify.
+A passing or failing test marks its requirement *IsSatisfiedBy* the result, and
+the result's rendered source includes the test's attributes and doc comment.
+Resolution is crate-qualified (the crate's ``[package]`` name plus the in-crate
+module path), so tests resolve in any module hierarchy, including integration-test
+binaries and multi-crate Cargo workspaces.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 71592b7fb5c44af4a8b308b75fab9491
 TITLE: 0.23.1 (2026-06-05)
 

@@ -1,12 +1,14 @@
 # Regenerating the cargo-nextest JUnit XML fixtures
 
-Each `NN_*` directory here is a **self-contained Cargo crate** as well as a
-StrictDoc fixture: its `src/lib.rs` is the source under test, and
-`reports/tests_unit.nextest.junit.xml` is the JUnit report that cargo-nextest
-produces for that crate. Both the report (for fast test runs) and the setup
-that produces it (for reproducibility) are committed on purpose, so that the
-fixtures can be trusted *and* regenerated when a new cargo-nextest version
-changes the JUnit layout.
+Each `NN_*` directory here is a **self-contained Cargo project** (a single
+crate, or a workspace) as well as a StrictDoc fixture: its Rust sources are the
+source under test, and `reports/tests_unit.nextest.junit.xml` is the JUnit
+report that cargo-nextest produces for it. Both the report (for fast test runs)
+and the setup that produces it (for reproducibility) are committed on purpose,
+so that the fixtures can be trusted *and* regenerated when a new cargo-nextest
+version changes the JUnit layout. `04_module_layouts` and `05_workspace` cover
+the non-trivial test module layouts (nested modules, integration-test
+submodules, same-stem files, and same-named tests across workspace crates).
 
 ## How to regenerate
 

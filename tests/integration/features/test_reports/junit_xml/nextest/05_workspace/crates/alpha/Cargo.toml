@@ -1,0 +1,7 @@
+[package]
+name = "alpha_crate"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/lib.rs"

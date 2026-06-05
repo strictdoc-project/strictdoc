@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Workspace
+
+[REQUIREMENT]
+UID: REQ-ALPHA
+STATEMENT: alpha_crate's tests::shared_test satisfies this.
+
+[REQUIREMENT]
+UID: REQ-ALPHA-DEEP
+STATEMENT: alpha_crate's nested util::helper test satisfies this.
+
+[REQUIREMENT]
+UID: REQ-BETA
+STATEMENT: beta_crate's tests::shared_test (same test name as alpha) satisfies this.

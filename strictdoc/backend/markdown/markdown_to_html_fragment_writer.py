@@ -12,7 +12,7 @@ from markdown_it.token import Token
 from markdown_it.utils import EnvType, OptionsDict
 from markupsafe import Markup
 
-_MARKDOWN_PARSER = MarkdownIt("default")
+_MARKDOWN_PARSER = MarkdownIt("default", {"html": True})
 _MARKDOWN_RENDERER = cast(RendererHTML, _MARKDOWN_PARSER.renderer)
 _FenceRenderer = Callable[[Sequence[Token], int, OptionsDict, EnvType], str]
 _MARKDOWN_RENDERER_RULES = cast(

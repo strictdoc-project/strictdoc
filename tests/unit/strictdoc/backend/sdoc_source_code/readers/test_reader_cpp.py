@@ -315,3 +315,83 @@ Foo& Foo::operator+(const Foo& c) { return *this; }
     marker_1: LanguageItemMarker = info.markers[0]
     assert marker_1.ng_range_line_begin == 9
     assert marker_1.ng_range_line_end == 12
+
+
+def test_30_google_benchmark_f_macro_definition():
+    """
+    Ensure that Google Benchmark fixture macros parse without crashing.
+
+    https://github.com/strictdoc-project/strictdoc/issues/2882
+    """
+
+    input_string = b"""\
+#include <benchmark/benchmark.h>
+
+class TestBench : public benchmark::Fixture {};
+
+BENCHMARK_F(TestBench, initMatrix)(benchmark::State& st) {
+  for (auto _ : st) {
+    (void)_;
+  }
+}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.functions) == 1
+    assert len(info.markers) == 0
+
+    function: LanguageItem = info.functions[0]
+    assert (
+        function.name
+        == "BENCHMARK_F(TestBench, initMatrix)(benchmark::State& st)"
+    )
+    assert (
+        function.display_name
+        == "BENCHMARK_F(TestBench, initMatrix)(benchmark::State& st)"
+    )
+    assert function.line_begin == 5
+    assert function.line_end == 9
+
+
+def test_31_google_benchmark_define_f_macro_definition():
+    """
+    Ensure that Google Benchmark fixture definition macros parse without crashing.
+
+    https://github.com/strictdoc-project/strictdoc/issues/2882
+    """
+
+    input_string = b"""\
+#include <benchmark/benchmark.h>
+
+class TestBench : public benchmark::Fixture {};
+
+BENCHMARK_DEFINE_F(TestBench, initMatrix)(benchmark::State& st) {
+  for (auto _ : st) {
+    (void)_;
+  }
+}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info = reader.read(input_string, file_path="NOT_RELEVANT")
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.functions) == 1
+    assert len(info.markers) == 0
+
+    function: LanguageItem = info.functions[0]
+    assert (
+        function.name
+        == "BENCHMARK_DEFINE_F(TestBench, initMatrix)(benchmark::State& st)"
+    )
+    assert (
+        function.display_name
+        == "BENCHMARK_DEFINE_F(TestBench, initMatrix)(benchmark::State& st)"
+    )
+    assert function.line_begin == 5
+    assert function.line_end == 9

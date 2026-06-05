@@ -101,7 +101,7 @@ class DocumentScreenViewObject:
             )
         elif self.document_type.is_trace():
             return self.jinja_environment.render_template_as_markup(
-                "screens/document/traceability/index.jinja", view_object=self
+                "features/trace/index.jinja", view_object=self
             )
         elif self.document_type.is_deeptrace():
             return self.jinja_environment.render_template_as_markup(

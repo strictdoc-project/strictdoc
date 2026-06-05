@@ -1,0 +1,15 @@
+{%- if document_title_wrap is defined and document_title_wrap -%}
+<div class="editable-cell"
+     data-field-type="contenteditable"
+     js-table_view_edit-field="contenteditable"
+     data-node-mid="{{ doc_mid }}"
+     data-field-name="TITLE"
+     data-url="/actions/table/get_document_config_field_inline?document_mid={{ doc_mid }}&field_name=TITLE">
+  <div class="editable-cell-indicator"></div>
+  <div id="doc-field-{{ doc_mid }}-TITLE">
+    {%- include "components/node_field/document_title/index.jinja" -%}
+  </div>
+</div>
+{%- else -%}
+{%- include "components/node_field/document_title/index.jinja" -%}
+{%- endif -%}

@@ -72,16 +72,99 @@
   does not declare that field, the cell gets the "content-view-td--dimmed" modifier.
 #}
 {%- if view_object.has_any_nodes() -%}
-  <div class="main" js-pan_with_space="true">
+  <div class="main"
+       js-pan_with_space="true"
+       js-table_view_edit
+  >
     {% include "_shared/tags.jinja.html" %}
       <div class="content">
+
+        {# ================================================================ #}
+        {# ROOT NODE / TITLE + META                                         #}
+        {# similar: components/node_field/document_meta/index.jinja         #}
+        {# ================================================================ #}
+        {%- set doc_mid = view_object.document.reserved_mid -%}
+        {%- set document_config = view_object.document.config -%}
         <sdoc-node>
-        {% include "components/node_field/document_title/index.jinja" %}
-        {% include "components/node_field/document_meta/index.jinja" %}
+          {%- with document_title_wrap=true %}
+            {%- include "screens/document/table/field_display_mode/document_title.jinja" -%}
+          {%- endwith %}
+          {{ view_object.render_issues(view_object.document) }}
+
+          <sdoc-meta>
+            {# -- UID ---------------------------------------------------- #}
+            {%- with
+              field_content=document_config.uid,
+              field_label="UID",
+              field_name="UID",
+              field_testid="uid"
+            -%}
+              {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+            {%- endwith -%}
+
+            {# -- VERSION ------------------------------------------------ #}
+            {%- set document_version_ = view_object.render_document_version() -%}
+            {%- with
+              field_content=document_version_,
+              field_label="VERSION",
+              field_name="VERSION",
+              field_testid="version"
+            -%}
+              {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+            {%- endwith -%}
+
+            {# -- DATE (read-only) --------------------------------------- #}
+            {%- set document_date_ = view_object.render_document_date() -%}
+            {%- if document_date_ is not none -%}
+              {%- with
+                field_content=document_date_,
+                field_label="DATE",
+                field_testid="date"
+              -%}
+                {%- include "screens/document/table/field_display_mode/document_meta_readonly_field.jinja" -%}
+              {%- endwith -%}
+            {%- endif -%}
+
+            {# -- CLASSIFICATION ----------------------------------------- #}
+            {%- with
+              field_content=document_config.classification,
+              field_label="CLASSIFICATION",
+              field_name="CLASSIFICATION",
+              field_testid="classification"
+            -%}
+              {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+            {%- endwith -%}
+
+            {# -- PREFIX ------------------------------------------------- #}
+            {%- with
+              field_content=document_config.requirement_prefix,
+              field_label="PREFIX",
+              field_name="PREFIX",
+              field_testid="prefix"
+            -%}
+              {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+            {%- endwith -%}
+
+            {# -- CUSTOM METADATA (read-only) ---------------------------- #}
+            {%- if document_config.has_custom_metadata() -%}
+            {%- for key, value in document_config.get_custom_metadata() -%}
+              {%- set metadata_value = view_object.render_metadata_value(value) -%}
+              {%- with
+                field_content=metadata_value,
+                field_label=key,
+                field_testid="metadata"
+              -%}
+                {%- include "screens/document/table/field_display_mode/document_meta_readonly_plain_field.jinja" -%}
+              {%- endwith -%}
+            {%- endfor -%}
+            {%- endif -%}
+
+          </sdoc-meta>
+
         </sdoc-node>
 
         {# ================================================================ #}
-        {# TABLE                                                             #}
+        {# TABLE                                                            #}
         {# ================================================================ #}
         {#
           column_labels maps internal column IDs to display names.
@@ -94,7 +177,7 @@
           "RATIONALE": "Rationale",
           "COMMENT":   "Comment"
         } -%}
-        <table class="content-view-table">
+        <table class="content-view-table" js-table_view_edit-table>
 
           {# -- Header row ------------------------------------------------ #}
           <thead class="content-view-table_sticky-header">
@@ -159,6 +242,7 @@
                         data-node-mid="{{ requirement.reserved_mid }}"
                         data-field-name="RELATIONS"
                         data-field-type="relations"
+                        js-table_view_edit-field="relations"
                         data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}">
                       <div class="editable-cell-indicator"></div>
                       <div id="cell-{{ requirement.reserved_mid }}-RELATIONS" wrapper-field-type="contenteditable">
@@ -174,6 +258,7 @@
                         data-node-mid="{{ requirement.reserved_mid }}"
                         data-field-name="TITLE"
                         data-field-type="contenteditable"
+                        js-table_view_edit-field="contenteditable"
                         data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=TITLE">
                       <div class="editable-cell-indicator"></div>
                       <div id="cell-{{ requirement.reserved_mid }}-TITLE" wrapper-field-type="contenteditable">
@@ -209,6 +294,7 @@
                         data-node-mid="{{ requirement.reserved_mid }}"
                         data-field-name="STATEMENT"
                         data-field-type="contenteditable"
+                        js-table_view_edit-field="contenteditable"
                         data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=STATEMENT">
                       <div class="editable-cell-indicator"></div>
                       <div id="cell-{{ requirement.reserved_mid }}-STATEMENT" wrapper-field-type="contenteditable">
@@ -238,6 +324,7 @@
                         data-node-mid="{{ requirement.reserved_mid }}"
                         data-field-name="RATIONALE"
                         data-field-type="contenteditable"
+                        js-table_view_edit-field="contenteditable"
                         data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name=RATIONALE">
                       <div class="editable-cell-indicator"></div>
                       <div id="cell-{{ requirement.reserved_mid }}-RATIONALE" wrapper-field-type="contenteditable">
@@ -267,6 +354,7 @@
                         data-node-mid="{{ requirement.reserved_mid }}"
                         data-field-name="COMMENT"
                         data-field-type="comments"
+                        js-table_view_edit-field="comments"
                         data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}">
                       <div class="editable-cell-indicator"></div>
                       <div id="cell-{{ requirement.reserved_mid }}-COMMENT" wrapper-field-type="comments">
@@ -342,7 +430,7 @@
                         {%- endwith %}
                         <sdoc-node-title>
                           {%- with field_content = section.title %}
-                            {%- include "components/field/index.jinja" -%}
+                            {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
                           {%- endwith -%}
                         </sdoc-node-title>
                       {%- endif -%}

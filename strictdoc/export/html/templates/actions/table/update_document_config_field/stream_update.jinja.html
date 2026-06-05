@@ -1,0 +1,20 @@
+<turbo-stream action="update" target="doc-field-{{ document.reserved_mid }}-{{ field_name }}">
+  <template>
+    {%- if field_name == "TITLE" -%}
+      {%- include "screens/document/table/field_display_mode/document_title.jinja" -%}
+    {%- elif display_value -%}
+      {%- with field_content = display_value %}
+        {%- include "screens/document/table/field_display_mode/document_config_field_value.jinja" -%}
+      {%- endwith -%}
+    {%- endif -%}
+  </template>
+</turbo-stream>
+
+{# If TITLE changed, update the page header too. #}
+{%- if field_name == "TITLE" -%}
+<turbo-stream action="replace" target="header_document_title">
+  <template>
+    {% include "screens/document/_shared/frame_header_document_title.jinja" %}
+  </template>
+</turbo-stream>
+{%- endif -%}

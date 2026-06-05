@@ -35,6 +35,7 @@
     data-node-mid="{{ requirement.reserved_mid }}"
     data-field-name="{{ field_title }}"
     data-field-type="autocomplete"
+    js-table_view_edit-field="autocomplete"
     data-current-value="{{ field_value if field_value else '' }}"
     data-url="/actions/table/get_node_autocomplete_inline?node_mid={{ requirement.reserved_mid }}&field_name={{ field_title }}">
   <div class="editable-cell-indicator"></div>
@@ -52,6 +53,7 @@
     data-node-mid="{{ requirement.reserved_mid }}"
     data-field-name="{{ field_title }}"
     data-field-type="contenteditable"
+    js-table_view_edit-field="contenteditable"
     data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&field_name={{ field_title }}">
   <div class="editable-cell-indicator"></div>
   <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}">

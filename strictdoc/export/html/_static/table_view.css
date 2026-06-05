@@ -1,5 +1,5 @@
 /* highlight main layout in special mode */
-.main[data-mode="edit"]::after {
+[js-table_view_edit][data-mode="edit"]::after {
   box-shadow: inset 0 0 16px var(--color-fg-accent),
               inset 0 0 0 2px var(--color-fg-accent);
 }
@@ -226,27 +226,27 @@
   cursor: default;
 }
 
-[data-mode="edit"] .editable-cell:hover .editable-cell-indicator {
+[js-table_view_edit][data-mode="edit"] .editable-cell:hover .editable-cell-indicator {
   background-color: var(--color-bg-accent);
   outline: 2px dotted var(--color-fg-accent);
   outline-offset: -2px;
 }
 
-[data-mode="edit"] .editable-cell[data-mode="editing"] .editable-cell-indicator {
+[js-table_view_edit][data-mode="edit"] .editable-cell[data-mode="editing"] .editable-cell-indicator {
   background-color: transparent;
   outline: 2px solid var(--color-fg-accent);
   outline-offset: -2px;
   cursor: default;
 }
 
-[data-mode="edit"] .editable-cell form {
+[js-table_view_edit][data-mode="edit"] .editable-cell form {
   display: flex;
   flex-direction: column;
   gap: var(--base-rhythm);
 }
 
-[data-mode="edit"] [data-field-type="autocomplete"] sdoc-form-field,
-[data-mode="edit"] sdoc-form-field {
+[js-table_view_edit][data-mode="edit"] [data-field-type="autocomplete"] sdoc-form-field,
+[js-table_view_edit][data-mode="edit"] sdoc-form-field {
     display: block;
     position: relative;
     padding: 0;
@@ -254,17 +254,17 @@
     min-width: unset;
 }
 
-[data-mode="edit"] sdoc-form-field-group::before,
-[data-mode="edit"] sdoc-contenteditable::before,
-[data-mode="edit"] sdoc-autocompletable::before {
+[js-table_view_edit][data-mode="edit"] sdoc-form-field-group::before,
+[js-table_view_edit][data-mode="edit"] sdoc-contenteditable::before,
+[js-table_view_edit][data-mode="edit"] sdoc-autocompletable::before {
   content: "";
 }
 
-[data-mode="edit"] sdoc-form-field[field-type="select"] label {
+[js-table_view_edit][data-mode="edit"] sdoc-form-field[field-type="select"] label {
   display: none;
 }
 
-[data-mode="edit"] sdoc-form-field:focus-within::after {
+[js-table_view_edit][data-mode="edit"] sdoc-form-field:focus-within::after {
   position: absolute;
   content: "";
   inset: -4px;
@@ -273,26 +273,26 @@
   pointer-events: none;
 }
 
-[data-mode="edit"] sdoc-form-field-group {
+[js-table_view_edit][data-mode="edit"] sdoc-form-field-group {
   padding-top: 0;
   padding-bottom: 0;
   padding: var(--base-rhythm);
   gap: var(--base-rhythm);
 }
 
-[data-mode="edit"] sdoc-form-row {
+[js-table_view_edit][data-mode="edit"] sdoc-form-row {
   display: flex;
 }
 
-[data-mode="edit"] sdoc-form-row sdoc-form-row-main {
+[js-table_view_edit][data-mode="edit"] sdoc-form-row sdoc-form-row-main {
   flex-grow: 1;
 }
 
-[data-mode="edit"] sdoc-form-row sdoc-form-row-main + sdoc-form-row-aside {
+[js-table_view_edit][data-mode="edit"] sdoc-form-row sdoc-form-row-main + sdoc-form-row-aside {
   margin-left: auto;
 }
 
-[data-mode="edit"] .field_action::before {
+[js-table_view_edit][data-mode="edit"] .field_action::before {
     content: '';
     position: absolute;
     top: 0;
@@ -324,21 +324,21 @@
   color: var(--color-danger);
 }
 
-[data-mode="edit"] sdoc-form-error + sdoc-form-field {
+[js-table_view_edit][data-mode="edit"] sdoc-form-error + sdoc-form-field {
   outline: 1px dotted var(--color-danger);
   /* for form with `:focus-within::after` -4px */
   outline-offset: 4px;
   border-radius: 4px;
 }
 
-[data-mode="edit"] sdoc-form-error {
+[js-table_view_edit][data-mode="edit"] sdoc-form-error {
   min-width: 200px;
   margin-top: 4px; /* separate error from sdoc-form-field with outline-offset: 4px; */
 }
 
 /* Autocomplete cells */
 
-[data-viewtype="table"] [data-field-type="autocomplete"] sdoc-form-field {
+[js-table_view_edit] [data-field-type="autocomplete"] sdoc-form-field {
   /*
     sdoc-form-field has display:block with padding/margin in form.css.
     Reset to display:contents so it is transparent to table cell layout.
@@ -346,14 +346,14 @@
   display: contents;
 }
 
-[data-viewtype="table"] [data-field-type="autocomplete"] sdoc-autocompletable {
+[js-table_view_edit] [data-field-type="autocomplete"] sdoc-autocompletable {
   /* Inline edit component injected via turbo-stream on click. */
   white-space: normal;
   overflow-wrap: normal;
   word-break: normal;
 }
 
-[data-viewtype="table"] [data-field-type="autocomplete"] .autocomplete-items {
+[js-table_view_edit] [data-field-type="autocomplete"] .autocomplete-items {
   position: absolute;
   top: 100%;
   left: 0;
@@ -441,4 +441,50 @@
   display: flex;
   align-items: stretch;
   flex-direction: column;
+}
+
+/* =========================================================== */
+/* Doc-config fields (root node above the table)               */
+/* =========================================================== */
+
+/* TITLE wrapper: block-level so the h1 fills it naturally. */
+[js-table_view_edit] sdoc-node > sdoc-meta-field[data-field-name="TITLE"] {
+  display: block;
+}
+
+/* Empty editable document config fields are hidden until edit mode. */
+[js-table_view_edit] sdoc-meta-label:has(+ sdoc-meta-field > [id^="doc-field-"]:empty),
+[js-table_view_edit] sdoc-meta-field:has(> [id^="doc-field-"]:empty) {
+  display: none;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta {
+  display: grid;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta-label:has(+ sdoc-meta-field > [id^="doc-field-"]:empty),
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field:has(> [id^="doc-field-"]:empty) {
+  display: flex;
+}
+
+/* sdoc-meta-field used as editable cell in the root node. */
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field {
+  position: relative;
+  cursor: pointer;
+}
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"] {
+  cursor: default;
+}
+
+/* Give empty meta cells a minimum click target in edit mode */
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field > div:not(.editable-cell-indicator) {
+  min-height: 1.5rem;
+}
+
+/* Cursor for TITLE editable wrapper */
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field:hover {
+  cursor: pointer;
+}
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"]:hover {
+  cursor: default;
 }

@@ -1,6 +1,23 @@
 (function () {
     const TURBO_ACCEPT = 'text/vnd.turbo-stream.html';
 
+    // DOM contract for table-view inline editing.
+    // The script is attached to the container marked with js-table_view_edit.
+    // Inside it, js-table_view_edit-field marks editable fields and its value
+    // selects the handling path: "autocomplete", "contenteditable", "comments",
+    // or "relations". js-table_view_edit-add-field marks links that add comment
+    // or relation rows into an open inline form.
+    const ATTR_CONTAINER = 'js-table_view_edit';
+    const ATTR_TABLE = 'js-table_view_edit-table';
+    const ATTR_TOGGLE = 'js-table_view_edit-toggle';
+    const ATTR_FIELD = 'js-table_view_edit-field';
+    const ATTR_ADD_FIELD = 'js-table_view_edit-add-field';
+
+    const FIELD_AUTOCOMPLETE = 'autocomplete';
+    const FIELD_CONTENTEDITABLE = 'contenteditable';
+    const FIELD_COMMENTS = 'comments';
+    const FIELD_RELATIONS = 'relations';
+
     let editMode = false;
     let activeInlineCell = null;
     let activeAutocompleteCell = null;
@@ -8,15 +25,15 @@
     let pendingNextCell = null;
 
     function getMainContainer() {
-        return document.querySelector('main.layout_main > .main');
+        return document.querySelector(`[${ATTR_CONTAINER}]`);
     }
 
     function getTable() {
-        return document.querySelector('.content-view-table');
+        return document.querySelector(`[${ATTR_TABLE}]`);
     }
 
     function getHandler() {
-        return document.querySelector('[data-testid="table-toolbar-edit-btn"]');
+        return document.querySelector(`[${ATTR_TOGGLE}]`);
     }
 
     function updateMode(item, mode) {
@@ -49,7 +66,7 @@
             if (activeAutocompleteCell) cancelAutocompleteCell();
             // [FEATURE: passive-open] Close any cells that are open but no longer
             // tracked (passive-open after a validation error).
-            document.querySelectorAll('[data-mode="editing"]').forEach(cell => restoreInlineCellDOM(cell));
+            document.querySelectorAll(`[${ATTR_FIELD}][data-mode="editing"]`).forEach(cell => restoreInlineCellDOM(cell));
         }
     }
 
@@ -82,6 +99,14 @@
     }
 
     // --- Autocomplete cell ---
+
+    function getAutocompleteInput(cell) {
+        // Autocomplete follows the same external field contract as all other
+        // edit modes: js-table_view_edit-field is set on the cell/container.
+        // The save path still needs the inner sdoc-autocompletable control
+        // because its sibling hidden input contains the normalized value.
+        return cell.querySelector('sdoc-autocompletable');
+    }
 
     function openAutocompleteCell(cell) {
         if (activeAutocompleteCell === cell) return;
@@ -314,44 +339,50 @@
             setEditMode(!editMode);
         });
 
-        const table = getTable();
-        if (!table) return;
+        const main = getMainContainer();
+        if (!main) return;
 
-        table.addEventListener('click', function (e) {
+        // One delegated click handler for all editable fields in the main table view:
+        // both regular table cells and document-level fields above the table.
+        main.addEventListener('click', function (e) {
             if (!editMode) return;
 
-            // "Add comment" link inside inline comments form — fetch stream, don't navigate
-            const addCommentLink = e.target.closest('[data-action-type="add_field"]');
+            // "Add comment" / "Add relation" link inside inline form — fetch stream, don't navigate
+            const addCommentLink = e.target.closest(`[${ATTR_ADD_FIELD}]`);
             if (addCommentLink) {
                 e.preventDefault();
                 fetchTurboStream(addCommentLink.href);
                 return;
             }
 
-            const autocompleteCell = e.target.closest('[data-field-type="autocomplete"]');
-            if (autocompleteCell) {
+            const editableField = e.target.closest(`[${ATTR_FIELD}]`);
+            if (!editableField) return;
+
+            const fieldType = editableField.getAttribute(ATTR_FIELD);
+            if (fieldType === FIELD_AUTOCOMPLETE) {
                 e.preventDefault();
-                openAutocompleteCell(autocompleteCell);
+                openAutocompleteCell(editableField);
                 return;
             }
-            const inlineCell = e.target.closest(
-                '[data-field-type="comments"], [data-field-type="relations"], [data-field-type="contenteditable"]'
-            );
-            if (inlineCell) {
+            if (
+                fieldType === FIELD_CONTENTEDITABLE ||
+                fieldType === FIELD_COMMENTS ||
+                fieldType === FIELD_RELATIONS
+            ) {
                 e.preventDefault();
-                openInlineCell(inlineCell);
+                openInlineCell(editableField);
                 return;
             }
         });
 
         // Save autocomplete cell on blur (Stimulus handles the dropdown interaction).
         // Uses capture phase to catch blur events from contenteditable sdoc-autocompletable.
-        table.addEventListener('blur', function (e) {
+        main.addEventListener('blur', function (e) {
             if (!editMode) return;
-            const ac = e.target.closest('[data-controller="autocompletable"]');
-            if (!ac) return;
-            const cell = ac.closest('[data-field-type="autocomplete"]');
+            const cell = e.target.closest(`[${ATTR_FIELD}="${FIELD_AUTOCOMPLETE}"]`);
             if (!cell) return;
+            const ac = getAutocompleteInput(cell);
+            if (!ac || !ac.contains(e.target)) return;
             setTimeout(function () {
                 // If focus returned to this autocompletable (user clicked a dropdown option), skip.
                 if (ac === document.activeElement || ac.contains(document.activeElement)) return;
@@ -366,9 +397,10 @@
                 return;
             }
             if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                const fieldType = activeInlineCell?.getAttribute(ATTR_FIELD);
                 if (activeInlineCell && (
-                    activeInlineCell.dataset.fieldType === 'contenteditable' ||
-                    activeInlineCell.dataset.fieldType === 'comments'
+                    fieldType === FIELD_CONTENTEDITABLE ||
+                    fieldType === FIELD_COMMENTS
                 )) {
                     e.preventDefault();
                     saveInlineCell(activeInlineCell);
@@ -381,7 +413,7 @@
                 saveInlineCell(activeInlineCell);
             }
             if (activeAutocompleteCell && !e.composedPath().includes(activeAutocompleteCell)) {
-                saveAutocompleteCell(activeAutocompleteCell, activeAutocompleteCell.querySelector('[data-controller="autocompletable"]'));
+                saveAutocompleteCell(activeAutocompleteCell, getAutocompleteInput(activeAutocompleteCell));
             }
         });
     }

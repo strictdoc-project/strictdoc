@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Type
 
+from strictdoc.backend.gcov.helpers import normalize_gcovr_file_path
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -50,7 +51,7 @@ class GCovJSONReader:
         cls: Type["GCovJSONReader"],
         content: str,
         doc_file: File,  # noqa: ARG003
-        project_config: ProjectConfig,  # noqa: ARG003
+        project_config: ProjectConfig,
     ) -> SDocDocument:
         if len(content) == 0:
             raise RuntimeError("Document is empty")
@@ -79,11 +80,19 @@ class GCovJSONReader:
         Parse individual <testcase> elements.
         """
 
+        source_root_path = (
+            project_config.source_root_path
+            if project_config is not None
+            else None
+        )
+
         json_files = json_content["files"]
         for json_file_ in json_files:
             stats = GCovStatsObject()
 
-            json_file_name = json_file_["file"]
+            json_file_name = normalize_gcovr_file_path(
+                json_file_["file"], source_root_path=source_root_path
+            )
 
             file_section = SDocNode.create_section(
                 parent=document,
@@ -128,7 +137,10 @@ class GCovJSONReader:
             file_section.section_contents.append(non_covered_functions_section)
 
             for json_function_ in json_file_["functions"]:
-                json_function_name = json_function_["name"]
+                json_function_name = json_function_.get(
+                    "demangled_name", json_function_.get("name")
+                )
+                assert json_function_name is not None, json_function_
                 is_function_covered = json_function_["execution_count"] > 0
                 stats.add_function(is_function_covered)
 
@@ -169,9 +181,9 @@ class GCovJSONReader:
                     ),
                 )
 
-                path = "src/main.c"
-                gcov_path_hash = hashlib.md5(path.encode("utf-8")).hexdigest()
-                # FIXME: Resolve the relative path from a project config.
+                gcov_path_hash = hashlib.md5(
+                    json_file_name.encode("utf-8")
+                ).hexdigest()
                 link = (
                     "../../../../"  # noqa: ISC003
                     + "coverage."

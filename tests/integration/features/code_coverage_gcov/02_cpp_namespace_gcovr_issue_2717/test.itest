@@ -1,0 +1,30 @@
+#
+# @relation(SDOC-SRS-144, scope=file)
+#
+
+RUN: cd %T && g++ --coverage -g -O0 -o main %S/src/main.cpp %S/src/functions.cpp
+
+RUN: cd %T && ./main | filecheck %s --check-prefix CHECK-CPP
+CHECK-CPP: 5
+CHECK-CPP: 20
+
+RUN: cd %T && gcovr --object-directory ./ --root %S --html --html-details -o coverage.html
+RUN: cd %T && gcovr --object-directory ./ --root %S --json --json-pretty -o coverage.gcov.json
+RUN: cd %T && mkdir docs/ && cp coverage.gcov.json docs/
+RUN: cp %S/strictdoc.toml %T/docs/
+RUN: cp -r %S/src %T/docs/
+RUN: cd %T/docs && %strictdoc export . | filecheck %s --dump-input=fail
+
+CHECK: Published: Code coverage report
+
+RUN: %cat %T/docs/output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: src/functions.cpp
+
+RUN: %cat %T/docs/output/html/_source_files/src/functions.cpp.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: href="../../docs/coverage.gcov.html#GCOV-src-functions-cpp-test-Adder-add-int-const-int-const"
+CHECK-SOURCE-FILE: href="../../docs/coverage.gcov.html#GCOV-src-functions-cpp-test-Multiplier-multiply-int-int-const"
+CHECK-SOURCE-FILE: 5 - 7 | function test::Adder::add()
+CHECK-SOURCE-FILE: 9 - 11 | function test::Multiplier::multiply()
+
+RUN: %cat %T/docs/output/html/docs/coverage.gcov.html | filecheck %s --dump-input=fail --check-prefix CHECK-GCOV-REPORT
+CHECK-GCOV-REPORT: coverage.functions.cpp.c5e71015e270864c89a8b6e26afb227b.html

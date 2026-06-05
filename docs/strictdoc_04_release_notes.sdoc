@@ -60,6 +60,13 @@ the result's rendered source includes the test's attributes and doc comment.
 Resolution is crate-qualified (the crate's ``[package]`` name plus the in-crate
 module path), so tests resolve in any module hierarchy, including integration-test
 binaries and multi-crate Cargo workspaces.
+
+2\) GCOV/gcovr coverage reports now handle C++ namespaced member functions more
+reliably. StrictDoc accepts gcovr ``demangled_name`` entries and matches
+gcovr-style function names such as ``test::Adder::add(int const&, int const&)``
+to the names extracted by StrictDoc's C/C++ reader. GCOV report detail links now
+use normalized source paths, keeping coverage anchors and gcovr HTML links
+stable across Linux and Windows.
 <<<
 
 [[/SECTION]]

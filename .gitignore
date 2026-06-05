@@ -4,6 +4,7 @@
 /.virtualenv
 /.vscode/
 /build/
+/developer/tasks/**/Context.md
 /dist/
 /reports/
 /Output/

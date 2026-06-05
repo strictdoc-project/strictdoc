@@ -15,6 +15,7 @@ from typing import (
     Union,
 )
 
+from strictdoc.backend.gcov.helpers import convert_function_name_to_gcovr_style
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -607,12 +608,10 @@ class FileTraceabilityIndex:
             ] = trace_info_
 
             for function_ in trace_info_.functions:
-                # FIXME: Using display_name, not name. A separate exercise is
-                #        to disambiguate forward links to C++ overloaded functions.
                 if (
-                    reqs_uids := self.get_req_uids_by_function_name(
+                    reqs_uids := self.get_req_uids_by_function_names(
                         source_file.in_doctree_source_file_rel_path_posix,
-                        function_.display_name,
+                        self.get_function_matching_names(function_),
                     )
                 ) is not None:
                     self.create_traceability_info_shared_markers_for_function(
@@ -788,6 +787,34 @@ class FileTraceabilityIndex:
                 ) from exception
 
         return matching_req_uids if len(matching_req_uids) > 0 else None
+
+    def get_req_uids_by_function_names(
+        self, rel_path_posix: str, names: List[str]
+    ) -> Optional[List[Tuple[str, Optional[str]]]]:
+        matching_req_uids: List[Tuple[str, Optional[str]]] = []
+        seen_req_uids: Set[Tuple[str, Optional[str]]] = set()
+
+        for name_ in names:
+            reqs_uids = self.get_req_uids_by_function_name(
+                rel_path_posix, name_
+            )
+            if reqs_uids is None:
+                continue
+            for req_uid_ in reqs_uids:
+                if req_uid_ in seen_req_uids:
+                    continue
+                seen_req_uids.add(req_uid_)
+                matching_req_uids.append(req_uid_)
+
+        return matching_req_uids if len(matching_req_uids) > 0 else None
+
+    @staticmethod
+    def get_function_matching_names(function: LanguageItem) -> List[str]:
+        names = [function.display_name, function.name]
+        gcovr_name = convert_function_name_to_gcovr_style(function.name)
+        if gcovr_name not in names:
+            names.append(gcovr_name)
+        return names
 
     @staticmethod
     def is_regex_function_name(name: str) -> bool:

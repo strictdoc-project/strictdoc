@@ -199,50 +199,155 @@ The ``check`` command runs all StrictDoc lint and test tasks with the only excep
 [[/SECTION]]
 
 [[SECTION]]
+MID: 5d4a3e19e1c545e98cf759eaac5b9281
+TITLE: Linting
+
+[[SECTION]]
+MID: b164c82aab8148b587b24eed5684eedc
+TITLE: Black for Python code formatting
+
+[TEXT]
+MID: 0a8c138cb2f2415184007ab20080e9ca
+STATEMENT: >>>
+Formatting is governed by ``black`` which reformats the code automatically when the ``invoke lint`` command is run.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 07d9a3c17be8475089844f5eb2cd8299
 UID: DEVGUIDE_PYTHON_CODE
 TITLE: Python code
 
+[[SECTION]]
+MID: 79d5eb35cec141939bdce042a98acef7
+TITLE: Python version
+
 [TEXT]
-MID: 3012a69ef5d244d49fcb90c088d4523b
+MID: 1d9ec1c5b17240ec8fed8ea34646bd32
 STATEMENT: >>>
-- The version of Python is set to be as low as possible given some constraints
-  of StrictDoc's dependencies. Ideally, the lowest Python version should only be
-  raised when it is consistently deprecated by major software platforms like
-  Ubuntu or GitHub Actions.
+Set the Python version as low as possible given some constraints of StrictDoc's dependencies.
 
-- All developer tasks are collected in the ``tasks.py`` which is run by Invoke tool. Run the ``invoke --list`` command to see the list of available commands.
+Raise the Python version baseline only when it is consistently deprecated by major software platforms like Ubuntu or GitHub Actions.
+<<<
 
-- Formatting is governed by ``black`` which reformats the code automatically
-  when the ``invoke check`` command is run.
+[[/SECTION]]
 
-  - If a string literal gets too long, it should be split into a multiline
-    literal with each line being a meaningful word or a subsentence.
+[[SECTION]]
+MID: 9aed2e7119104783a5cf1813f6ded390
+TITLE: Line length
 
-- Avoid shortening variable names unnecessarily. For example, use 'buffer' instead of 'buf', 'document' instead of 'doc', 'function' instead of 'func', 'length' instead of 'len', etc. Note: While some older parts of StrictDoc may not adhere to this guideline, they are planned to be refactored in the future.
+[TEXT]
+MID: 32813f4a974d4f3cb9b5f810c1a60a05
+STATEMENT: >>>
+For Python code, use line length of 80.
 
-- For "element is non-None" checks, a full form shall be used, for example: ``if foo is not None`` instead of ``if foo``. This helps to avoid any confusion with all sorts of strings (empty or non-empty ``str``, ``Optional[str]``) that are used extensively in StrictDoc's codebase. The non-None and non-empty string check shall therefore be as follows: ``if foo is not None and len(foo) > 0``. The explicit check also applies to any other kinds of objects besides strings: ``if foo is not None`` instead of ``if foo``. Rationale: ``if foo`` makes it unclear whether the intention is to check ``is not None`` or also ``len(foo) > 0``.
+If a string literal gets too long, it should be converted into a multiline literal with each line being a meaningful word or a subsentence.
+<<<
 
-- For lambdas and short for loops, the recent convention is to add ``_`` to the variables of a for loop or a lambda to visually highlight their temporary use within the current scope which is done to counter the fact that these variables can leak and be used outside of the scope of the loop. Example:
+[[/SECTION]]
+
+[[SECTION]]
+MID: 534c96bdbf6d4835a21c15cf5f8726ea
+TITLE: Strong type system
+
+[TEXT]
+MID: 647dd970e02540309165d6fdf2da1b5d
+STATEMENT: >>>
+Use explicit types everywhere.
+
+**NOTE**: StrictDoc has been making a gradual shift towards a stronger type system. Although type annotations haven't been added everywhere in the codebase, it is preferred to include them for all new code that is written.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: f724206a1eb5471ab7959cc9c9c1e26f
+TITLE: Order and naming of functions
+
+[TEXT]
+MID: dbbd427ead5743bc9ab737ed006578ae
+STATEMENT: >>>
+The order of functions in a Python module or class shall follow the "newspaper style":
+
+- Place public functions above all private functions.
+- The private functions shall start with the ``_`` character.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 5ac20ad28f0e416689d6310ab7828c56
+TITLE: Full descriptive names
+
+[TEXT]
+MID: 32dc22fe23604c87b01dfdafbd80b730
+STATEMENT: >>>
+Avoid shortening variable names unnecessarily. For example, use 'buffer' instead of 'buf', 'document' instead of 'doc', 'function' instead of 'func', 'length' instead of 'len', etc.
+
+NOTE: While some older parts of StrictDoc may not adhere to this guideline, they are planned to be refactored in the future.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 0c5d9420267546798561c3a8ec648145
+TITLE: Short-lived/temporary variables
+
+[TEXT]
+MID: 3bc4e3b017374963a75f59458ed43a21
+STATEMENT: >>>
+For lambdas and short for loops, append a trailing underscore (``_``) to variable names to visually indicate that they are temporary and intended for use only within the local scope of the lambda or loop.
+
+This convention helps with local reasoning and mitigates the fact that Python loop variables are not block-scoped and remain accessible after the loop has finished.
+
+Example:
 
 .. code-block:: python
 
     for foo_, bar_ in baz:
-        # use foo_, bar_ within the loop.
-
-- The function arguments with the default values shall be avoided. This convention improves the visibility of the function interfaces at the coast of increased verbosity which is the price that StrictDoc development is willing to pay, maintaining the software long-term. The all-explicit function parameters indication is especially useful when the large code refactorings are made.
-
-- StrictDoc has been making a gradual shift towards a stronger type system. Although type annotations haven't been added everywhere in the codebase, it is preferred to include them for all new code that is written.
-
-- For opening files, use the helpers ``file_open_read_utf8`` and ``file_open_read_bytes``. These helpers perform normal file opening but also strip the UTF-8 BOM character, which is added by some Windows tools.
-
-- If a contribution includes changes in StrictDoc's code, at least the
-  integration-level tests should be added to the ``tests/integration``. If the
-  contributed code needs a fine-grained control over the added behavior, adding
-  both unit and integration tests is preferred. The only exception where a
-  contribution can contain no tests is "code climate" which is work which
-  introduces changes in code but no change to the functionality.
+        # Use foo_ and bar_ only within the loop.
 <<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 2c6b471674304324a5bb51fcaf5387a1
+TITLE: Explicit If-checks
+
+[TEXT]
+MID: bdb6039d3ab8439c9474c5b266e6fa0f
+STATEMENT: >>>
+For "element is non-None" checks, always use the full form.
+
+Example: ``if foo is not None`` instead of ``if foo``.
+
+The non-None and non-empty string check shall be as follows: ``if foo is not None and len(foo) > 0``. The explicit check also applies to any other kinds of objects besides strings: ``if foo is not None`` instead of ``if foo``.
+
+**Rationale**:
+
+The use of ``if foo`` makes it unclear whether the intention is to check ``is not None`` or also ``len(foo) > 0``.
+
+This helps to avoid any confusion with all sorts of strings (empty or non-empty ``str``, ``Optional[str]``) that are used extensively in StrictDoc's codebase.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 223daa23c5d645eaa5abe0a5a8b1c633
+TITLE: Opening files
+
+[TEXT]
+MID: 4e05d9b1a86b4b8bb0c4b6adb9933e86
+STATEMENT: >>>
+For opening files, use the helpers ``file_open_read_utf8`` and ``file_open_read_bytes``.
+
+These helpers perform normal file opening but also strip the UTF-8 BOM character, which is added by some Windows tools.
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 
@@ -311,18 +416,18 @@ The shortest path to run the server when the StrictDoc's source code is cloned:
 [[/SECTION]]
 
 [[SECTION]]
-MID: 73c717608cce4abca2c768f1dbfb705d
-TITLE: Running End-to-End Web tests
+MID: 99a11c81fdbd422ca597eabd1e9dc538
+TITLE: Testing
 
 [TEXT]
-MID: da3cbcd69b0545988daeb0f42098830d
+MID: e48e78597c404e4288cae4e39e854ecb
 STATEMENT: >>>
-.. code:: bash
+For every new feature, write at least one new integration or end-to-end test.
 
-    invoke test-end2end
+For modifications to existing code, add new or adapt the existing test to exercise the new behavior.
+
+If the contributed code needs a fine-grained control over the added behavior, adding both unit and integration tests is preferred. The only exception where a contribution can contain no tests is ``refactoring`` or ``chore`` (code climate) work which is work that introduces changes in code but no change to the functionality.
 <<<
-
-[[/SECTION]]
 
 [[SECTION]]
 MID: 240dc1426d994397ac1401834b4f0ef0
@@ -345,6 +450,22 @@ The ``--focus`` parameter can be used to run only selected tests that match a gi
 
 See `How to test command-line programs with Python tools: LIT and FileCheck <https://stanislaw.github.io/2020-11-20-how-to-test-command-line-programs-with-python.html>`_ to learn more about LIT and FileCheck, which enable the StrictDoc integration tests.
 <<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 73c717608cce4abca2c768f1dbfb705d
+TITLE: Running End-to-End Web tests
+
+[TEXT]
+MID: da3cbcd69b0545988daeb0f42098830d
+STATEMENT: >>>
+.. code:: bash
+
+    invoke test-end2end
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 
@@ -385,6 +506,21 @@ STATEMENT: >>>
 [[SECTION]]
 MID: 57300bfdfcaf47c2ab7b29c3e6ffb75d
 TITLE: Playbooks
+
+[[SECTION]]
+MID: fc6903ec4e7d4150bd080acb5ace7032
+TITLE: Software development
+
+[TEXT]
+MID: ee60e2514d664e3db2dc7a1a79e0e84f
+STATEMENT: >>>
+- Use this Dev Guide to perform any software development.
+- Use `invoke lint` for linting.
+- Use `invoke test-*` tasks with ``--focus`` argument when iterating on new or existing features.
+- For features and bugfixes, generate release notes.
+<<<
+
+[[/SECTION]]
 
 [[SECTION]]
 MID: e30a730c91d94de28b62f471f0a67e04

@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5" pages="2">
   <diagram id="P9gQJe-g11wjnl4rl_ec" name="Backlog — 2026">
-    <mxGraphModel dx="5881" dy="939" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="5503" dy="704" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -94,7 +94,7 @@
         <mxCell id="my6LpwKuQYxvOHTBM5B0-14" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1509&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;UI: Custom views&lt;/font&gt;&lt;/a&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-38" vertex="1">
           <mxGeometry x="20" y="400" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="my6LpwKuQYxvOHTBM5B0-6" value="UI: Non-string types (Single/multiple choice, tags)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="xBUwhWlFWRuDQ3vYKA49-38" vertex="1">
+        <mxCell id="my6LpwKuQYxvOHTBM5B0-6" value="UI: Non-string types (Single/multiple choice, tags)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="xBUwhWlFWRuDQ3vYKA49-38" vertex="1">
           <mxGeometry x="320" y="340" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="my6LpwKuQYxvOHTBM5B0-9" value="UI: Support multi-user work, handle conflicts" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-38" vertex="1">
@@ -127,7 +127,7 @@
         <mxCell id="my6LpwKuQYxvOHTBM5B0-18" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/2117&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;SDoc-Excel end-to-end roundtrip&lt;/font&gt;&lt;/a&gt;" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-41" vertex="1">
           <mxGeometry x="20" y="40" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="my6LpwKuQYxvOHTBM5B0-24" value="Markdown: Read/write natively &lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1321&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;#1321&lt;/font&gt;&lt;/a&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-41" vertex="1">
+        <mxCell id="my6LpwKuQYxvOHTBM5B0-24" value="Markdown: Read/write natively &lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1321&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;#1321&lt;/font&gt;&lt;/a&gt;" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-41" vertex="1">
           <mxGeometry x="20" y="100" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="TxJVGQlUKStorBnLPnty-3" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1541&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;SPDX v3: Read/write natively&lt;/font&gt;&lt;/a&gt;" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-41" vertex="1">
@@ -160,20 +160,20 @@
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-27" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/544&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;OSLC interface&lt;/font&gt;&lt;/a&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-58" vertex="1">
           <mxGeometry x="20" y="288" width="280" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="xBUwhWlFWRuDQ3vYKA49-3" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1371&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;OpenAPI/RapiDoc&lt;/font&gt;&lt;/a&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="xBUwhWlFWRuDQ3vYKA49-58" vertex="1">
-          <mxGeometry x="20" y="348" width="280" height="50" as="geometry" />
+        <mxCell id="xBUwhWlFWRuDQ3vYKA49-3" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1371&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;OpenAPI/RapiDoc&lt;/font&gt;&lt;/a&gt;&amp;nbsp;— Deleted" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f8cecc;strokeColor=#b85450;" parent="xBUwhWlFWRuDQ3vYKA49-58" vertex="1">
+          <mxGeometry x="20" y="468" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-29" value="&lt;font color=&quot;#000000&quot;&gt;Doxygen: bi-directional I/F&lt;/font&gt;" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-58" vertex="1">
           <mxGeometry x="20" y="108" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="my6LpwKuQYxvOHTBM5B0-11" value="Interface with Capella" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="xBUwhWlFWRuDQ3vYKA49-58" vertex="1">
-          <mxGeometry x="20" y="408" width="280" height="50" as="geometry" />
+          <mxGeometry x="20" y="348" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="WFdiaHqPQfzbL9HSsYnV-1" value="&lt;font color=&quot;#000000&quot;&gt;Sphinx plugin for Sphinx&lt;/font&gt;" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="xBUwhWlFWRuDQ3vYKA49-58" vertex="1">
           <mxGeometry x="20" y="47.5" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="4P01enRmq-FGxPM5B2Ma-1" value="Interface with Confluence" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" parent="xBUwhWlFWRuDQ3vYKA49-58" vertex="1">
-          <mxGeometry x="20" y="468" width="280" height="50" as="geometry" />
+          <mxGeometry x="20" y="408" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-59" value="Static HTML + editable web" style="swimlane;" parent="my6LpwKuQYxvOHTBM5B0-1" vertex="1">
           <mxGeometry x="360" y="50" width="320" height="740" as="geometry" />
@@ -213,6 +213,9 @@
         </mxCell>
         <mxCell id="WPKMsA5IL_EO0J-wpA1P-9" value="Parse Gherkin" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" parent="xBUwhWlFWRuDQ3vYKA49-60" vertex="1">
           <mxGeometry x="20" y="220" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="W1XN5FX0L9LN54tmd9lh-1" value="Parse Java, Go, TypeScript, Bash, ..." style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" vertex="1" parent="xBUwhWlFWRuDQ3vYKA49-60">
+          <mxGeometry x="20" y="340" width="280" height="50" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-62" value="StrictDoc quality work" style="swimlane;" parent="my6LpwKuQYxvOHTBM5B0-1" vertex="1">
           <mxGeometry x="1700" y="807.5" width="320" height="422.5" as="geometry" />

@@ -161,6 +161,10 @@ The work is loosely organized in quarters which are maintained as `GitHub milest
      - Static HTML search. Testing large documentation trees (100+ documents). Tree map visualization. Initial work for Ada support.
    * - 2025-Q4
      - Python file for StrictDoc configuration instead of TOML. Requirement validations and node constraints. Reading SDoc nodes from source files, e.g., ``SPDX-*`` identifiers.
+   * - 2026-Q1
+     - Parse Rust code. Preparing the server for concurrent use. WHAT-WHY-HOW tutorial. Markdown support. Static HTML search on server.
+   * - 2026-Q2
+     - Further Markdown work. Parse C macros. Table screen editing. Rust's cargo-nextest. Drag-and-drop image upload (WIP).
 <<<
 
 [[/SECTION]]

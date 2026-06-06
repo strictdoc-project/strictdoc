@@ -7,6 +7,8 @@
   Row validation errors are attached to the name because backend metadata rules
   validate the key.
 #}
+
+
 <input type="hidden" name="active_form_key" value="{{ form_key }}"/>
 
 <sdoc-meta-label>
@@ -20,7 +22,8 @@
     field_type="singleline",
     field_value=field_name,
     testid_postfix="metadata-name-" ~ form_key,
-    errors=errors
+    errors=errors,
+    field_render_errors=false
   -%}
     {%- include "components/form/field/contenteditable/index.jinja" -%}
   {%- endwith -%}
@@ -37,8 +40,18 @@
     field_type="singleline",
     field_value=field_value,
     testid_postfix="metadata-value-" ~ form_key,
-    errors=[]
+    errors=[],
+    field_render_errors=false
   -%}
     {%- include "components/form/field/contenteditable/index.jinja" -%}
   {%- endwith -%}
 </sdoc-meta-field>
+
+{#
+  The name field receives the row errors so the control is marked with
+  errors="true". field_render_errors=false prevents duplicate error text
+  because the complete row error list is rendered here once.
+#}
+{%- for error_ in errors -%}
+  <sdoc-form-error>{{ error_ }}</sdoc-form-error>
+{%- endfor -%}

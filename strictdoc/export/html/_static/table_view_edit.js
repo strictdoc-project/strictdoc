@@ -18,6 +18,7 @@
     const ATTR_ADD_FIELD = 'js-table_view_edit-add-field';
     const ATTR_FORM = 'js-table_view_edit-form';
     const ATTR_SUBMIT_UNCHANGED = 'js-table_view_edit-submit-unchanged';
+    const ATTR_CUSTOM_META_ROW = 'js-table_view_edit-custom_meta-row';
 
     const FIELD_AUTOCOMPLETE = 'autocomplete';
     const FIELD_CONTENTEDITABLE = 'contenteditable';
@@ -50,6 +51,17 @@
             field.querySelector(`[${ATTR_FORM}]`) ||
             field.closest(`[${ATTR_FORM}]`)
         );
+    }
+
+    function clearFieldErrors(field) {
+        // Most inline editors contain all of their errors inside the active
+        // field. Custom metadata fields share one form, so clearing the whole
+        // form would also remove errors from other still-open metadata rows.
+        const errorScope =
+            field.closest(`[${ATTR_CUSTOM_META_ROW}]`) || field;
+        errorScope
+            .querySelectorAll('sdoc-form-error')
+            .forEach(error => error.remove());
     }
 
     function updateMode(item, mode) {
@@ -99,6 +111,7 @@
     function restoreInlineCellDOM(cell) {
         updateMode(cell);
         cell.removeAttribute('data-validation-error');
+        clearFieldErrors(cell);
         if (cell._originalHTML !== undefined) {
             cell.innerHTML = cell._originalHTML;
             delete cell._originalHTML;
@@ -291,10 +304,19 @@
             return;
         }
 
-        // Clear any previous inline errors before submitting.
-        form.querySelectorAll('sdoc-form-error').forEach(el => el.remove());
+        // Clear only errors belonging to the field being submitted.
+        clearFieldErrors(cell);
 
         const formData = new URLSearchParams(new FormData(form));
+        const activeFormKey = cell.querySelector(
+            'input[name="active_form_key"]'
+        )?.value;
+        if (activeFormKey !== undefined) {
+            // A shared custom-metadata form may contain several passive-open
+            // rows, each with its own active_form_key input. The cell being
+            // saved must determine which row receives the validation stream.
+            formData.set('active_form_key', activeFormKey);
+        }
 
         try {
             const response = await fetch(form.action, {

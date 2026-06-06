@@ -16,9 +16,11 @@
   --color-accent: #274466;
   --color-highlight: rgb(255, 255, 200);
   --color-highlight-secondary: rgb(230, 236, 242);
+  --color-highlight-danger: rgba(200, 0, 0, .2);
 
   --color-fg-secondary: rgba(0, 0, 0, .5);
   --color-bg-secondary: rgba(0, 0, 0, .025);
+  
 
   --color-fg-secondary-invert: rgb(255 255 255 / 50%);
   --color-bg-secondary-invert: rgb(0 0 0 / 10%);

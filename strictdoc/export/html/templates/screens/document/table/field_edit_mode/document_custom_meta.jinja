@@ -4,8 +4,8 @@
   The editor is rendered inside the persistent shared metadata form. form_key is
   a local form/DOM transport key, not a StrictDoc MID or persistent identifier.
   active_form_key tells the block-save endpoint which value target to update.
-  Validation errors belong to the complete metadata row and are displayed in
-  this active editor because only its value target is replaced by Turbo.
+  Validation errors belong to the complete metadata row and are inserted after
+  its field by the surrounding Turbo Stream template.
 #}
 <input type="hidden" name="active_form_key" value="{{ form_key }}"/>
 
@@ -18,7 +18,8 @@
   field_type="singleline",
   field_value=field_value,
   testid_postfix="metadata-" ~ form_key,
-  errors=errors
+  errors=errors,
+  field_render_errors=false
 -%}
   {%- include "components/form/field/contenteditable/index.jinja" -%}
 {%- endwith -%}

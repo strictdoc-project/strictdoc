@@ -259,6 +259,7 @@
     padding: 0;
     margin: 0;
     min-width: unset;
+    flex-grow: 1;
 }
 
 [js-table_view_edit][data-mode="edit"] sdoc-form-field-group::before,
@@ -324,24 +325,6 @@
 
 .relations-computed__group + .relations-computed__group {
   margin-top: .25rem;
-}
-
-[data-validation-error="true"] {
-  outline: 2px solid var(--color-danger);
-  outline-offset: -2px;
-  color: var(--color-danger);
-}
-
-[js-table_view_edit][data-mode="edit"] sdoc-form-error + sdoc-form-field {
-  outline: 1px dotted var(--color-danger);
-  /* for form with `:focus-within::after` -4px */
-  outline-offset: 4px;
-  border-radius: 4px;
-}
-
-[js-table_view_edit][data-mode="edit"] sdoc-form-error {
-  min-width: 200px;
-  margin-top: 4px; /* separate error from sdoc-form-field with outline-offset: 4px; */
 }
 
 /* Autocomplete cells */
@@ -467,6 +450,10 @@
   display: none;
 }
 
+[js-table_view_edit] sdoc-meta {
+  overflow: visible;
+}
+
 [js-table_view_edit][data-mode="edit"] sdoc-meta {
   display: grid;
 }
@@ -475,6 +462,11 @@
 [js-table_view_edit][data-mode="edit"] sdoc-meta-field:has(> [id^="doc-field-"]:empty),
 [js-table_view_edit][data-mode="edit"] .table-view-custom-metadata-add-button {
   display: flex;
+}
+
+[js-table_view_edit] .table-view-custom-metadata-add-button {
+  /* container with a button */
+  grid-column: 1 / -1;
 }
 
 /*
@@ -489,7 +481,14 @@
 [js-table_view_edit][data-mode="edit"] sdoc-meta-field {
   position: relative;
   cursor: pointer;
+  justify-content: space-between;
 }
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta-label {
+  position: static; /* to position buttons within a label relative to its parent */
+  /* justify-content: space-between; */
+}
+
 [js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"] {
   cursor: default;
 }
@@ -505,4 +504,109 @@
 }
 [js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"]:hover {
   cursor: default;
+}
+
+/* error in table */
+
+[data-validation-error="true"] {
+  outline: 2px solid var(--color-danger);
+  outline-offset: -2px;
+  color: var(--color-danger);
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-error + sdoc-form-field {
+  outline: 1px dotted var(--color-danger);
+  /* for form with `:focus-within::after` -4px */
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-error {
+  min-width: 200px;
+  margin-top: 4px; /* separate error from sdoc-form-field with outline-offset: 4px; */
+}
+
+/* sdoc-meta errors */
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta sdoc-form-error {
+  padding: 0 var(--base-rhythm);
+  margin: 0; /* override form error margin for meta fields, which are outside the table cells */
+  grid-column: 1 / -1; /* span all columns in the meta grid */
+  order: 0;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta sdoc-form-error::before {
+  content: '⚠ ';
+}
+
+/*
+  The field containing the error is highlighted
+  when it is not in focus (i.e., not being edited)
+  to avoid visual clutter during editing:
+*/
+
+[js-table_view_edit] sdoc-meta-label:has([errors="true"]:not(:focus-within)),
+[js-table_view_edit] sdoc-meta-field:has([errors="true"]:not(:focus-within)) {
+  color: var(--color-danger);
+  outline: 1px solid var(--color-danger);
+  outline-offset: -1px;
+}
+
+[js-table_view_edit] sdoc-meta-field:has([errors="true"]:not(:focus-within)) .editable-cell-indicator {
+  outline: none !important;
+}
+
+[js-table_view_edit-custom_meta-row] [data-js-delete-field-action] {
+  /*  */
+}
+
+[js-table_view_edit] sdoc-meta .custom_meta-row-delete-container {
+  position: absolute;
+  left: calc(100% + 4px);
+}
+
+[js-table_view_edit] sdoc-meta .custom_meta-row-move-container {
+  position: relative;
+  left: -8px;
+}
+
+[js-table_view_edit] sdoc-meta .custom_meta-row-move-container,
+[js-table_view_edit] sdoc-meta .custom_meta-row-delete-container {
+  display: none;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta .custom_meta-row-move-container,
+[js-table_view_edit][data-mode="edit"] sdoc-meta .custom_meta-row-delete-container {
+  display: block;
+}
+
+[js-table_view_edit] sdoc-meta [data-js-move-field-action] {
+  color: var(--color-fg-main);
+  cursor: move;
+}
+
+[js-table_view_edit] sdoc-meta [data-js-move-field-action],
+[js-table_view_edit] sdoc-meta [data-js-delete-field-action] {
+  opacity: 0.5;
+}
+
+[js-table_view_edit] sdoc-meta [data-js-move-field-action]:hover,
+[js-table_view_edit] sdoc-meta [data-js-delete-field-action]:hover {
+  opacity: 1;
+}
+
+[js-table_view_edit] sdoc-meta .custom_meta-row-move-container .field_action:hover::before,
+[js-table_view_edit] sdoc-meta .custom_meta-row-delete-container .field_action:hover::before {
+  /* Reset the row highlighting that was designed for a different form layout */
+  background: transparent;
+}
+
+[js-table_view_edit] sdoc-meta sdoc-meta-label:has([data-js-delete-field-action]:hover),
+[js-table_view_edit] sdoc-meta sdoc-meta-label:has([data-js-delete-field-action]:hover) + sdoc-meta-field {
+  background-color: var(--color-highlight-danger);
+}
+
+[js-table_view_edit] sdoc-meta sdoc-meta-label:has([data-js-move-field-action]:hover),
+[js-table_view_edit] sdoc-meta sdoc-meta-label:has([data-js-move-field-action]:hover) + sdoc-meta-field {
+  background-color: var(--color-highlight-secondary);
 }

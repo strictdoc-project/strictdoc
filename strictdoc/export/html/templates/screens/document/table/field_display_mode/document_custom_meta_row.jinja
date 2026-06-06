@@ -12,21 +12,46 @@
 #}
 <div
   style="display: contents;"
-  data-document-custom-meta-row
+  js-table_view_edit-custom_meta-row
   data-form-key="{{ form_key }}"
 >
-  <sdoc-meta-label data-testid="document-config-metadata-label">
+  <sdoc-meta-label
+    js-table_view_edit-custom_meta-name
+    data-testid="document-config-metadata-label"
+  >
+
+    <div class="custom_meta-row-move-container" js-table_view_edit-custom_meta-drag_handle>
+      {%- set action_button_context = namespace() %}
+      {%- set action_button_context.field_actions = {"move": true} %}
+      {%- set action_button_context.field_name = "metadata" %}
+      {%- set action_button_context.mid = form_key %}
+      {%- set action_button_context.testid_postfix = "form-field-metadata" %}
+      {%- include "components/form/field_action_button/index.jinja" -%}
+    </div>
+
+    <div class="custom_meta-row-delete-container" js-table_view_edit-custom_meta-delete_action>
+      {%- set action_button_context = namespace() %}
+      {%- set action_button_context.field_actions = {"delete": true} %}
+      {%- set action_button_context.field_name = "metadata" %}
+      {%- set action_button_context.mid = form_key %}
+      {%- set action_button_context.testid_postfix = "form-field-metadata" %}
+      {%- include "components/form/field_action_button/index.jinja" -%}
+    </div>
+
     {{ field_label }}:
     <input
       type="hidden"
       name="metadata[{{ form_key }}][name]"
       value="{{ field_label }}"
     />
+
   </sdoc-meta-label>
   <sdoc-meta-field
+    id="document-custom-meta-field-{{ form_key }}"
     class="editable-cell"
     data-field-type="contenteditable"
     js-table_view_edit-field="contenteditable"
+    js-table_view_edit-custom_meta-value
     data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&form_key={{ form_key }}"
     data-testid="document-config-metadata-field"
   >

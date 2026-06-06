@@ -123,7 +123,7 @@ list. This preserves the list-based backend contract and its current order.
 
 ### Adding metadata
 
-The final metadata grid row contains the **Add new metadata** action. The Add
+The final metadata grid row contains the **Add metadata** action. The Add
 wrapper is one JS-managed inline field.
 
 When opened, Turbo replaces its content with:

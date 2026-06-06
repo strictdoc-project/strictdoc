@@ -1,9 +1,0 @@
-[project]
-
-features = [
-  "TABLE_SCREEN",
-  "TRACEABILITY_SCREEN",
-  "DEEP_TRACEABILITY_SCREEN",
-
-  "RAPIDOC",
-]

@@ -72,7 +72,6 @@ class ProjectFeature(str, Enum):
     SOURCE_FILE_LANGUAGE_PARSERS = "SOURCE_FILE_LANGUAGE_PARSERS"
 
     MERMAID = "MERMAID"
-    RAPIDOC = "RAPIDOC"
     NESTOR = "NESTOR"
 
     ALL_FEATURES = "ALL_FEATURES"
@@ -665,9 +664,6 @@ class ProjectConfig:
 
     def is_activated_mermaid(self) -> bool:
         return ProjectFeature.MERMAID in self.project_features
-
-    def is_activated_rapidoc(self) -> bool:
-        return ProjectFeature.RAPIDOC in self.project_features
 
     def get_project_root_path(self) -> str:
         if self.input_paths is not None and len(self.input_paths) > 0:

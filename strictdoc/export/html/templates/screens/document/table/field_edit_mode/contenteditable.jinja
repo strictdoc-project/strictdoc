@@ -1,7 +1,12 @@
+{#
+  js-table_view_edit-form identifies the form submitted by table_view_edit.js.
+  The hook keeps the script independent from the form's position in the field DOM.
+#}
 <form
   action="{{ form_action }}"
   method="POST"
   data-turbo="false"
+  js-table_view_edit-form
 >
   <input type="hidden" name="node_mid" value="{{ node_mid }}"/>
   <input type="hidden" name="field_name" value="{{ field_name }}"/>

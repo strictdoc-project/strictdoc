@@ -6,12 +6,15 @@
     // Inside it, js-table_view_edit-field marks editable fields and its value
     // selects the handling path: "autocomplete", "contenteditable", "comments",
     // or "relations". js-table_view_edit-add-field marks links that add comment
-    // or relation rows into an open inline form.
+    // or relation rows into an open inline form. js-table_view_edit-form marks
+    // the form submitted for a field; it may be nested inside that field or wrap
+    // several fields, as planned for the document custom-metadata editor.
     const ATTR_CONTAINER = 'js-table_view_edit';
     const ATTR_TABLE = 'js-table_view_edit-table';
     const ATTR_TOGGLE = 'js-table_view_edit-toggle';
     const ATTR_FIELD = 'js-table_view_edit-field';
     const ATTR_ADD_FIELD = 'js-table_view_edit-add-field';
+    const ATTR_FORM = 'js-table_view_edit-form';
 
     const FIELD_AUTOCOMPLETE = 'autocomplete';
     const FIELD_CONTENTEDITABLE = 'contenteditable';
@@ -34,6 +37,16 @@
 
     function getHandler() {
         return document.querySelector(`[${ATTR_TOGGLE}]`);
+    }
+
+    function getFieldForm(field) {
+        // Most inline forms are injected inside their editable field. A shared
+        // form may instead wrap several fields, so both supported placements
+        // are part of the explicit table-view editing DOM contract.
+        return (
+            field.querySelector(`[${ATTR_FORM}]`) ||
+            field.closest(`[${ATTR_FORM}]`)
+        );
     }
 
     function updateMode(item, mode) {
@@ -192,7 +205,7 @@
                 // before any user input. Used in saveInlineCell to skip the POST when
                 // nothing has changed.
                 if (cell) {
-                    const form = cell.querySelector('form');
+                    const form = getFieldForm(cell);
                     if (form) {
                         cell._originalFormData = new URLSearchParams(new FormData(form)).toString();
                     }
@@ -248,7 +261,7 @@
     async function saveInlineCell(cell) {
         if (!cell) return;
 
-        const form = cell.querySelector('form');
+        const form = getFieldForm(cell);
         if (!form) {
             // Stream not yet loaded — restore original content without saving.
             // activeInlineCell is already null when called from openInlineCell

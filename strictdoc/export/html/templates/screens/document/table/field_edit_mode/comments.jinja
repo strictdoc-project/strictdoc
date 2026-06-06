@@ -1,12 +1,15 @@
 {#
   Inline Comments form body.
   Expects: form_object
+
+  js-table_view_edit-form identifies the form submitted by table_view_edit.js.
 #}
 
 <form
   action="/actions/table/update_node_comments"
   method="POST"
   data-turbo="false"
+  js-table_view_edit-form
 >
   <input type="hidden" name="requirement_mid" value="{{ form_object.requirement_mid }}"/>
   <input type="hidden" name="document_mid" value="{{ form_object.document_mid }}"/>

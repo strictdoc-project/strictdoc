@@ -1,3 +1,8 @@
+{#
+  js-table_view_edit-form identifies this block form for table_view_edit.js.
+  In the row-based custom-metadata UI it will wrap several independently
+  editable fields while remaining the single serialized form.
+#}
 <sdoc-meta-label data-testid="document-config-metadata-edit-label">CUSTOM META2:</sdoc-meta-label>
 <sdoc-meta-field class="editable-cell" data-testid="document-config-metadata-edit-field">
   <div class="editable-cell-indicator"></div>
@@ -5,6 +10,7 @@
     action="/actions/table/update_document_custom_meta"
     method="POST"
     data-turbo="false"
+    js-table_view_edit-form
   >
     <input type="hidden" name="document_mid" value="{{ form_object.document_mid }}"/>
     <input type="hidden" name="document[TITLE]" value="{{ form_object.document_title }}"/>

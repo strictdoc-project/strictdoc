@@ -17,5 +17,5 @@ Welcome to StrictDoc's documentation!
    strictdoc_25_design
    strictdoc_28_Backlog
    strictdoc_30_credits
-   DO178_requirements
-   Zephyr_requirements
+   strictdoc_40_DO178_requirements.sdoc
+   strictdoc_41_Zephyr_requirements.sdoc

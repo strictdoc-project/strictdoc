@@ -1387,9 +1387,11 @@ def create_main_router(
         form_object = DocumentConfigFormObject.create_from_document(
             document=document
         )
-        # form_key is a table-form transport key, not a StrictDoc MID. Its
-        # numeric suffix identifies the current row position for this render.
-        form_key_match = re.fullmatch(r"custom-meta-(\d+)", form_key)
+        # form_key is a table-form transport key, not a StrictDoc MID. Nested
+        # form keys use underscores because parse_form_data only accepts
+        # letters, digits, and underscores in bracketed field-name segments.
+        # The numeric suffix identifies the current row position for this render.
+        form_key_match = re.fullmatch(r"custom_meta_(\d+)", form_key)
         if form_key_match is None:
             return HTMLResponse(
                 content=f"Invalid custom metadata form key: {form_key}",

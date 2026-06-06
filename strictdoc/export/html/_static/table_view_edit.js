@@ -320,9 +320,16 @@
                     // data-mode='editing' stays — form remains visible and interactive.
                     renderTurboStream(html);
                 } else {
-                    // Plain text error (single-field contenteditable): mark cell and insert errors.
+                    // Validation responses are currently HTMLResponse objects whose
+                    // body is plain text. A 5xx response, however, contains a full
+                    // error page and must never be split into field-error elements.
                     cell.setAttribute('data-validation-error', 'true');
-                    const errorLines = html.trim().split('\n').filter(Boolean);
+                    const errorLines = response.status >= 500
+                        ? ['Unable to save this field.']
+                        : html.trim().split('\n').filter(Boolean);
+                    if (response.status >= 500) {
+                        console.error('Inline cell server error:', html);
+                    }
                     const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
                     errorLines.forEach(line => {
                         const errorEl = document.createElement('sdoc-form-error');

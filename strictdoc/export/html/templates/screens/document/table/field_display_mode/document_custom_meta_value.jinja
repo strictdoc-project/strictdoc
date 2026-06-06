@@ -6,9 +6,11 @@
 {%- for key, value in document_config.get_custom_metadata() -%}
   {#
     form_key is a local form/DOM key, not a StrictDoc MID and not a persistent
-    metadata identifier. The backend uses it only to pair this row's name/value.
+    metadata identifier. Underscores are required because the shared form-data
+    parser accepts only letters, digits, and underscores in nested field keys.
+    The backend uses the key only to pair this row's name/value.
   #}
-  {%- set form_key = "custom-meta-" ~ loop.index0 -%}
+  {%- set form_key = "custom_meta_" ~ loop.index0 -%}
   {%- set metadata_value = view_object.render_metadata_value(value) -%}
   {%- with
     field_content=metadata_value,

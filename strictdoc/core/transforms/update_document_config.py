@@ -2,6 +2,7 @@
 @relation(SDOC-SRS-57, scope=file)
 """
 
+import re
 from collections import defaultdict
 from typing import Dict, List, Optional
 
@@ -20,6 +21,8 @@ from strictdoc.core.transforms.validation_error import (
 from strictdoc.export.html.form_objects.document_config_form_object import (
     DocumentConfigFormObject,
 )
+
+DOCUMENT_CUSTOM_METADATA_KEY_RE = re.compile(r"[a-zA-Z_][a-zA-Z0-9_-]*")
 
 
 class UpdateDocumentConfigTransform:
@@ -119,18 +122,24 @@ class UpdateDocumentConfigTransform:
                     )
 
         for metadata_field in form_object.custom_metadata_fields:
+            metadata_error_key = f"METADATA[{metadata_field.field_mid}]"
             if len(metadata_field.field_name) == 0:
-                errors[f"METADATA[{metadata_field.field_mid}]"].append(
-                    "Key must not be empty."
+                errors[metadata_error_key].append("Key must not be empty.")
+            elif (
+                DOCUMENT_CUSTOM_METADATA_KEY_RE.fullmatch(
+                    metadata_field.field_name
                 )
-            elif not metadata_field.field_name[0].isalpha():
-                errors[f"METADATA[{metadata_field.field_mid}]"].append(
-                    "Key must begin with a letter."
+                is None
+            ):
+                # Keep this validation aligned with DocumentCustomMetadataKey
+                # in the SDOC grammar so saved documents remain parseable.
+                errors[metadata_error_key].append(
+                    "Key must start with an ASCII letter or underscore and "
+                    "contain only ASCII letters, digits, underscores, or "
+                    "hyphens."
                 )
-            if " " in metadata_field.field_name:
-                errors[f"METADATA[{metadata_field.field_mid}]"].append(
-                    "Key must not contain spaces."
-                )
+            if len(metadata_field.field_value) == 0:
+                errors[metadata_error_key].append("Value must not be empty.")
 
         if len(errors):
             raise MultipleValidationError(

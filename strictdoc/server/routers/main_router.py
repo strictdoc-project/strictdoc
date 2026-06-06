@@ -1498,6 +1498,23 @@ def create_main_router(
             active_metadata_field
         )
         active_field_is_new = active_form_key.startswith("new_custom_meta_")
+        if (
+            active_field_is_new
+            and len(active_metadata_field.field_name) == 0
+            and len(active_metadata_field.field_value) == 0
+        ):
+            # A fully empty Add row is not metadata. Skip it without running the
+            # transform or writing the document; partially filled rows continue
+            # through normal validation.
+            output = env().render_template_as_markup(
+                "actions/table/update_document_custom_meta/stream_skip_empty_new.jinja.html",
+                doc_mid=document_mid,
+            )
+            return HTMLResponse(
+                content=output,
+                status_code=200,
+                headers={"Content-Type": "text/vnd.turbo-stream.html"},
+            )
         try:
             update_command = UpdateDocumentConfigTransform(
                 form_object=form_object,

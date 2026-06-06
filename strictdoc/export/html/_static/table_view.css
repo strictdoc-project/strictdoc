@@ -226,6 +226,7 @@
   cursor: default;
 }
 
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field:hover .editable-cell-indicator,
 [js-table_view_edit][data-mode="edit"] .editable-cell:hover .editable-cell-indicator {
   background-color: var(--color-bg-accent);
   outline: 2px dotted var(--color-fg-accent);
@@ -456,7 +457,7 @@
 /* Empty editable document config fields are hidden until edit mode. */
 [js-table_view_edit] sdoc-meta-label:has(+ sdoc-meta-field > [id^="doc-field-"]:empty),
 [js-table_view_edit] sdoc-meta-field:has(> [id^="doc-field-"]:empty),
-[js-table_view_edit] [data-table-custom-meta-add] {
+[js-table_view_edit] .table-view-custom-metadata-add-button {
   display: none;
 }
 
@@ -466,7 +467,7 @@
 
 [js-table_view_edit][data-mode="edit"] sdoc-meta-label:has(+ sdoc-meta-field > [id^="doc-field-"]:empty),
 [js-table_view_edit][data-mode="edit"] sdoc-meta-field:has(> [id^="doc-field-"]:empty),
-[js-table_view_edit][data-mode="edit"] [data-table-custom-meta-add] {
+[js-table_view_edit][data-mode="edit"] .table-view-custom-metadata-add-button {
   display: flex;
 }
 

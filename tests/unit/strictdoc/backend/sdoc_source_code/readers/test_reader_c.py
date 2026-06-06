@@ -61,7 +61,7 @@ void hello_world_2(void) {
     reader = SourceFileTraceabilityReader_C()
 
     info: SourceFileTraceabilityInfo = reader.read(
-        input_string, file_path="foo.c"
+        input_string, file_path="foo.cpp"
     )
 
     assert isinstance(info, SourceFileTraceabilityInfo)
@@ -108,7 +108,7 @@ void hello_world_2(void) {
     reader = SourceFileTraceabilityReader_C()
 
     info: SourceFileTraceabilityInfo = reader.read(
-        input_string, file_path="foo.c"
+        input_string, file_path="foo.cpp"
     )
 
     assert isinstance(info, SourceFileTraceabilityInfo)
@@ -454,7 +454,7 @@ int add(int a,
     reader = SourceFileTraceabilityReader_C()
 
     info: SourceFileTraceabilityInfo = reader.read(
-        input_string, file_path="foo.cpp"
+        input_string, file_path="foo.c"
     )
 
     assert isinstance(info, SourceFileTraceabilityInfo)
@@ -617,3 +617,41 @@ SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
 
     assert info.functions[0].name == expected_function_name
     assert info.functions[0].display_name == expected_function_name
+
+
+def test_103_error_recovery_linux_define_per_cpu_macro():
+    """
+    Ensure this snippet derived from Linux kernel/softirq.c doesn't drive the
+    C reader into NotImplementedError. DEFINE_PER_CPU expectedly confuses the
+    parser. The rest of the snippet is special context that triggered undefined
+    behavior manifesting as NotImplemented error in StrictDoc <= 0.22.0a1.
+    """
+    input_string = b"""\
+static DEFINE_PER_CPU(struct softirq_ctrl, softirq_ctrl) = {
+\t.lock\t= INIT_LOCAL_LOCK(softirq_ctrl.lock),
+};
+
+struct lockdep_map bh_lock_map = {
+\t.name\t\t\t= "local_bh",
+};
+
+static void handle_softirqs()
+{
+\tfoo("\\n", bar());
+\tif (pending) { }
+}
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert len(info.functions) == 1
+    assert len(info.source_nodes) == 0
+
+    assert info.functions[0].name == "handle_softirqs()"
+    assert info.functions[0].display_name == "handle_softirqs"

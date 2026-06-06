@@ -184,7 +184,6 @@ def docs(context):
         ToxEnvironment.DOCUMENTATION,
         """
             cp -r output/sphinx/rst/docs/* docs/sphinx/source/ &&
-            cp -r output/sphinx/rst/docs_extra/* docs/sphinx/source/ &&
             mkdir -p docs/sphinx/source/_assets/ &&
             cp -v docs/_assets/* docs/sphinx/source/_assets/
         """,

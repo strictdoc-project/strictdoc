@@ -2,8 +2,8 @@ import os
 import tempfile
 from pathlib import Path
 
-from strictdoc.core.actions.export_action import ExportAction
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.features.export.export_action import ExportAction
 from strictdoc.helpers.parallelizer import NullParallelizer
 
 

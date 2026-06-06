@@ -1410,6 +1410,7 @@ def create_main_router(
             form_key=form_key,
             field_label=metadata_field.field_name,
             field_value=metadata_field.field_value,
+            errors=[],
         )
         return HTMLResponse(
             content=output,
@@ -1469,11 +1470,18 @@ def create_main_router(
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
+            # The transform reports custom metadata errors by the local row key.
+            # Only the active value target is replaced, so its editor is also
+            # the stable location for errors belonging to that metadata row.
+            active_field_errors = form_object.get_errors(
+                f"METADATA[{active_form_key}]"
+            )
             output = env().render_template_as_markup(
                 "actions/table/get_document_custom_meta_inline/stream_inline_form.jinja.html",
                 form_key=active_form_key,
                 field_label=active_metadata_field.field_name,
                 field_value=active_metadata_field.field_value,
+                errors=active_field_errors,
             )
             return HTMLResponse(
                 content=output,

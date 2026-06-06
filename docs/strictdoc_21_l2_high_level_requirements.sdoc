@@ -339,9 +339,6 @@ A consistent import/export roundtrip implementation and testing reduces the risk
 RELATIONS:
 - TYPE: File
   FORMAT: Sourcecode
-  VALUE: strictdoc/core/actions/export_action.py
-- TYPE: File
-  FORMAT: Sourcecode
   VALUE: tests/unit/strictdoc/backend/sdoc/test_dsl_passthrough.py
 - TYPE: File
   FORMAT: Sourcecode
@@ -726,8 +723,6 @@ RELATIONS:
   VALUE: SDOC-SSS-30
 - TYPE: File
   VALUE: strictdoc/export/html/html_generator.py
-- TYPE: File
-  VALUE: strictdoc/core/actions/export_action.py
 
 [REQUIREMENT]
 MID: 37399be2a8ac46889e3437209f9dffa9

@@ -17,5 +17,5 @@ RUN: %check_exists --file "%T/html/_source_files/src/lib.rs.html"
 RUN: %cat "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.nextest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
 CHECK-TEST-REPORT: hello_world_crate::tests::add_works
 CHECK-TEST-REPORT: PASSED
-CHECK-TEST-REPORT: src/lib.rs, <i>lines: 11-13</i>, function lib::tests::add_works()
+CHECK-TEST-REPORT: src/lib.rs, <i>lines: 9-13</i>, function hello_world_crate::tests::add_works()
 CHECK-TEST-REPORT-NOT: always_ignored

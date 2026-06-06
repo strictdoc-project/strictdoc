@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nextest-run" tests="6" failures="0" errors="0" uuid="00000000-0000-0000-0000-000000000000" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+    <testsuite name="widget_lib" tests="4" disabled="0" errors="0" failures="0">
+        <testcase name="deep::inner::tests::deep_works" classname="widget_lib" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+        <testcase name="sub::dup::tests::dup_works" classname="widget_lib" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+        <testcase name="dup::tests::dup_works" classname="widget_lib" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+        <testcase name="model::tests::model_works" classname="widget_lib" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+    </testsuite>
+    <testsuite name="widget_lib::it" tests="2" disabled="0" errors="0" failures="0">
+        <testcase name="helper::helper_works" classname="widget_lib::it" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+        <testcase name="it_works" classname="widget_lib::it" timestamp="2025-03-10T10:30:39+00:00" time="0.000">
+        </testcase>
+    </testsuite>
+</testsuites>

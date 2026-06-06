@@ -1,0 +1,26 @@
+[DOCUMENT]
+TITLE: Module layouts
+
+[REQUIREMENT]
+UID: REQ-MODULE
+STATEMENT: A test in a module file (src/model.rs) satisfies this.
+
+[REQUIREMENT]
+UID: REQ-DEEP
+STATEMENT: A test in a deeply nested module (src/deep/inner.rs) satisfies this.
+
+[REQUIREMENT]
+UID: REQ-DUP-A
+STATEMENT: A test in src/dup.rs satisfies this.
+
+[REQUIREMENT]
+UID: REQ-DUP-B
+STATEMENT: A test in src/sub/dup.rs (same file stem and test name) satisfies this.
+
+[REQUIREMENT]
+UID: REQ-IT
+STATEMENT: An integration-test binary root (tests/it) satisfies this.
+
+[REQUIREMENT]
+UID: REQ-IT-SUB
+STATEMENT: An integration-test submodule (tests/it/helper.rs) satisfies this.

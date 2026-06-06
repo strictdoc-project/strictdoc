@@ -4668,25 +4668,16 @@ test binary (the crate's unit tests, or one integration-test target). Each
   example ``tests::add_works`` or ``tests::nested::nested_module_test``).
 
 cargo-nextest does not record the source file or line number of each test in
-the JUnit XML, so traceability between a test result and a function in the
-source code is resolved by a forward lookup. For each test result StrictDoc
-builds a small list of candidate Rust canonical paths from the test's
-``classname`` and ``name`` and resolves to the first candidate that matches a
-function registered by the Rust source-code reader:
+the JUnit XML, so a test result is matched to a function by its Rust canonical
+path. The path is ``<classname>::<name>``, where ``classname`` is the crate's
+``[package]`` name, optionally followed by ``::<integration_test_name>``:
 
-- If ``classname`` contains ``::`` (the test belongs to an integration-test
-  binary), the file stem is taken from the part after the last ``::``, and the
-  candidate path is ``<stem>::<name>``. Example: classname
-  ``my_crate::integration``, name ``integration_add`` →
-  ``integration::integration_add``.
-- Otherwise the test belongs to the crate's own unit tests in ``src/lib.rs``
-  or ``src/main.rs``, so two candidates are tried in order: ``lib::<name>``
-  and ``main::<name>``. Example: classname ``my_crate``, name
-  ``tests::add_works`` → ``lib::tests::add_works`` then
-  ``main::tests::add_works``.
+- ``my_crate``, ``tests::add_works`` → ``my_crate::tests::add_works``;
+- ``my_crate::integration``, ``integration_add`` →
+  ``my_crate::integration::integration_add``.
 
-The same forward-lookup-with-candidates mechanism is used by the Google Test
-flavor.
+The Rust source-code reader registers each function under the same
+crate-qualified path.
 
 .. note::
 

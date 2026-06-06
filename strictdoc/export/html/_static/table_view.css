@@ -264,7 +264,8 @@
   display: none;
 }
 
-[js-table_view_edit][data-mode="edit"] sdoc-form-field:focus-within::after {
+[js-table_view_edit][data-mode="edit"] [js-table_view_edit-table] sdoc-form-field:focus-within::after {
+  /* formatting a cell in a table; we don't use this in the document meta */
   position: absolute;
   content: "";
   inset: -4px;

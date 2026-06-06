@@ -9,7 +9,11 @@
   data-field-name="{{ field_name }}"
   data-url="/actions/table/get_document_config_field_inline?document_mid={{ doc_mid }}&field_name={{ field_name }}">
   <div class="editable-cell-indicator"></div>
-  <div id="doc-field-{{ doc_mid }}-{{ field_name }}">
+  <div
+    id="doc-field-{{ doc_mid }}-{{ field_name }}"
+    {# When this tag is empty, this placeholder is displayed: #}
+    placeholder="Enter {{ field_label }} here..."
+    wrapper-field-type="contenteditable">
     {%- include "screens/document/table/field_display_mode/document_config_field_value.jinja" -%}
   </div>
 </sdoc-meta-field>

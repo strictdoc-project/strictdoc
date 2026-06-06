@@ -1,0 +1,13 @@
+{#
+  Display content for one custom metadata value target.
+
+  The hidden input and rendered value are replaced together when entering or
+  leaving inline edit mode. This prevents duplicate inputs with the same form key.
+  Plain rendering intentionally has no copy-to-clipboard wrapper.
+#}
+<input
+  type="hidden"
+  name="metadata[{{ form_key }}][value]"
+  value="{{ field_value }}"
+/>
+<sdoc-autogen>{{ field_content }}</sdoc-autogen>

@@ -1,44 +1,22 @@
 {#
-  js-table_view_edit-form identifies this block form for table_view_edit.js.
-  In the row-based custom-metadata UI it will wrap several independently
-  editable fields while remaining the single serialized form.
+  Inline editor for one existing custom metadata value.
+
+  The editor is rendered inside the persistent shared metadata form. form_key is
+  a local form/DOM transport key, not a StrictDoc MID or persistent identifier.
+  active_form_key tells the block-save endpoint which value target to update.
 #}
-<sdoc-meta-label data-testid="document-config-metadata-edit-label">CUSTOM META2:</sdoc-meta-label>
-<sdoc-meta-field class="editable-cell" data-testid="document-config-metadata-edit-field">
-  <div class="editable-cell-indicator"></div>
-  <form
-    action="/actions/table/update_document_custom_meta"
-    method="POST"
-    data-turbo="false"
-    js-table_view_edit-form
-  >
-    <input type="hidden" name="document_mid" value="{{ form_object.document_mid }}"/>
-    <input type="hidden" name="document[TITLE]" value="{{ form_object.document_title }}"/>
-    <input type="hidden" name="document[UID]" value="{{ form_object.document_uid }}"/>
-    <input type="hidden" name="document[VERSION]" value="{{ form_object.document_version }}"/>
-    <input type="hidden" name="document[CLASSIFICATION]" value="{{ form_object.document_classification }}"/>
-    <input type="hidden" name="document[PREFIX]" value="{{ form_object.document_requirement_prefix }}"/>
+<input type="hidden" name="active_form_key" value="{{ form_key }}"/>
 
-    <sdoc-form-grid>
-      <div style="display: contents;" id="document_{{ form_object.document_mid }}__new_metadata">
-        {% set custom_metadata_row_context = namespace() %}
-        {% for metadata_field in form_object.custom_metadata_fields %}
-          {% set custom_metadata_row_context.field = metadata_field %}
-          {% set custom_metadata_row_context.form_object = form_object %}
-          {% set custom_metadata_row_context.errors = form_object.get_errors("METADATA["~ metadata_field.field_mid ~"]") %}
-          {% include "components/form/row/row_with_metadata.jinja" %}
-        {%- endfor -%}
-      </div>
-    </sdoc-form-grid>
-
-    <sdoc-form-footer>
-      <a
-        class="action_button"
-        href="/actions/document/new_metadata?document_mid={{ form_object.document_mid }}"
-        data-action-type="add_field"
-        js-table_view_edit-add-field
-        data-testid="form-action-add-metadata-field"
-      >{% include "icons/ico16_add.svg" %} Add new metadata value 2</a>
-    </sdoc-form-footer>
-  </form>
-</sdoc-meta-field>
+{%- with
+  field_class_name=none,
+  field_editable=true,
+  field_input_name="metadata[" ~ form_key ~ "][value]",
+  field_label=field_label,
+  field_placeholder="Enter " ~ field_label ~ " value here...",
+  field_type="singleline",
+  field_value=field_value,
+  testid_postfix="metadata-" ~ form_key,
+  errors=[]
+-%}
+  {%- include "components/form/field/contenteditable/index.jinja" -%}
+{%- endwith -%}

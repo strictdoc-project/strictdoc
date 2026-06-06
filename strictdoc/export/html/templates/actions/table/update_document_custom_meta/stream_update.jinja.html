@@ -1,7 +1,9 @@
-<turbo-stream action="update" target="document-custom-meta-{{ document.reserved_mid }}">
+{#
+  The complete custom metadata form was submitted, but only the active row's
+  value target needs a display update after a successful save.
+#}
+<turbo-stream action="update" target="document-custom-meta-value-{{ form_key }}">
   <template>
-    {%- set doc_mid = document.reserved_mid -%}
-    {%- set document_config = document.config -%}
-    {%- include "screens/document/table/field_display_mode/document_custom_meta_value.jinja" -%}
+    {%- include "screens/document/table/field_display_mode/document_custom_meta_field_value.jinja" -%}
   </template>
 </turbo-stream>

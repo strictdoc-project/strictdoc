@@ -26,17 +26,13 @@
   <sdoc-meta-field
     class="editable-cell"
     data-field-type="contenteditable"
+    js-table_view_edit-field="contenteditable"
+    data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&form_key={{ form_key }}"
     data-testid="document-config-metadata-field"
   >
     <div class="editable-cell-indicator"></div>
-    <input
-      type="hidden"
-      name="metadata[{{ form_key }}][value]"
-      value="{{ field_value }}"
-    />
     <div id="document-custom-meta-value-{{ form_key }}">
-      {# Plain rendering intentionally has no copy-to-clipboard wrapper. #}
-      <sdoc-autogen>{{ field_content }}</sdoc-autogen>
+      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_value.jinja" -%}
     </div>
   </sdoc-meta-field>
 </div>

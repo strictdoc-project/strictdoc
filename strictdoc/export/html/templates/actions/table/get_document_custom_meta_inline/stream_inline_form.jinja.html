@@ -1,4 +1,8 @@
-<turbo-stream action="update" target="document-custom-meta-{{ form_object.document_mid }}">
+{#
+  Only the selected metadata value target is replaced. The surrounding label,
+  row, and shared metadata form remain stable.
+#}
+<turbo-stream action="update" target="document-custom-meta-value-{{ form_key }}">
   <template>
     {%- include "screens/document/table/field_edit_mode/document_custom_meta.jinja" -%}
   </template>

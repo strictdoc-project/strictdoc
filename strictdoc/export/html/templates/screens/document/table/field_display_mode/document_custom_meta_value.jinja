@@ -23,10 +23,4 @@
 {%- endfor -%}
 {%- endif -%}
 
-{#
-  The add action is a separate final grid row. Its behavior will be implemented
-  after the per-row inline editing structure is in place.
-#}
-<div class="table-view-custom-metadata-add-button" style="grid-column: 1 / -1; margin-top: 8px;">
-  <span class="action_button">{% include "icons/ico16_add.svg" %} Add new metadata value 1</span>
-</div>
+{%- include "screens/document/table/field_display_mode/document_custom_meta_add.jinja" -%}

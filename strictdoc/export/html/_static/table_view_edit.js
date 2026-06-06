@@ -9,12 +9,15 @@
     // or relation rows into an open inline form. js-table_view_edit-form marks
     // the form submitted for a field; it may be nested inside that field or wrap
     // several fields, as planned for the document custom-metadata editor.
+    // js-table_view_edit-submit-unchanged marks creation fields whose initial
+    // empty form state must still be submitted so backend validation can run.
     const ATTR_CONTAINER = 'js-table_view_edit';
     const ATTR_TABLE = 'js-table_view_edit-table';
     const ATTR_TOGGLE = 'js-table_view_edit-toggle';
     const ATTR_FIELD = 'js-table_view_edit-field';
     const ATTR_ADD_FIELD = 'js-table_view_edit-add-field';
     const ATTR_FORM = 'js-table_view_edit-form';
+    const ATTR_SUBMIT_UNCHANGED = 'js-table_view_edit-submit-unchanged';
 
     const FIELD_AUTOCOMPLETE = 'autocomplete';
     const FIELD_CONTENTEDITABLE = 'contenteditable';
@@ -277,7 +280,11 @@
         // Compare current form state against the snapshot taken when the form loaded.
         // If identical — close the cell without sending a request to the server.
         const currentData = new URLSearchParams(new FormData(form)).toString();
-        if (cell._originalFormData !== undefined && currentData === cell._originalFormData) {
+        if (
+            !cell.hasAttribute(ATTR_SUBMIT_UNCHANGED) &&
+            cell._originalFormData !== undefined &&
+            currentData === cell._originalFormData
+        ) {
             if (activeInlineCell === cell) activeInlineCell = null;
             restoreInlineCellDOM(cell);
             openPendingCell();

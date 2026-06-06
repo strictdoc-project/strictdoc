@@ -1,0 +1,44 @@
+{#
+  Inline editor for one new custom metadata row.
+
+  form_key is a local transport key, not a StrictDoc MID. The name and value
+  controls are rendered in separate sdoc-meta grid areas, while the surrounding
+  Add wrapper remains the one active inline field handled by table_view_edit.js.
+  Row validation errors are attached to the name because backend metadata rules
+  validate the key.
+#}
+<input type="hidden" name="active_form_key" value="{{ form_key }}"/>
+
+<sdoc-meta-label>
+  {%- with
+    field_class_name="monospace",
+    field_editable=true,
+    field_required=true,
+    field_input_name="metadata[" ~ form_key ~ "][name]",
+    field_label="Name",
+    field_placeholder="Enter name...",
+    field_type="singleline",
+    field_value=field_name,
+    testid_postfix="metadata-name-" ~ form_key,
+    errors=errors
+  -%}
+    {%- include "components/form/field/contenteditable/index.jinja" -%}
+  {%- endwith -%}
+</sdoc-meta-label>
+
+<sdoc-meta-field>
+  {%- with
+    field_class_name=none,
+    field_editable=true,
+    field_required=false,
+    field_input_name="metadata[" ~ form_key ~ "][value]",
+    field_label="Value",
+    field_placeholder="Enter value...",
+    field_type="singleline",
+    field_value=field_value,
+    testid_postfix="metadata-value-" ~ form_key,
+    errors=[]
+  -%}
+    {%- include "components/form/field/contenteditable/index.jinja" -%}
+  {%- endwith -%}
+</sdoc-meta-field>

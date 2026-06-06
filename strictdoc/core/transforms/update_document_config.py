@@ -123,11 +123,11 @@ class UpdateDocumentConfigTransform:
                 errors[f"METADATA[{metadata_field.field_mid}]"].append(
                     "Key must not be empty."
                 )
-            if not metadata_field.field_name[0].isalpha():
+            elif not metadata_field.field_name[0].isalpha():
                 errors[f"METADATA[{metadata_field.field_mid}]"].append(
                     "Key must begin with a letter."
                 )
-            if " " in metadata_field.field_name[0]:
+            if " " in metadata_field.field_name:
                 errors[f"METADATA[{metadata_field.field_mid}]"].append(
                     "Key must not contain spaces."
                 )

@@ -477,6 +477,14 @@
   display: flex;
 }
 
+/*
+ * The Add wrapper is one JS-managed inline field. Once opened, display: contents
+ * lets its name and value controls occupy the normal sdoc-meta grid columns.
+ */
+[js-table_view_edit][data-mode="edit"] .table-view-custom-metadata-add-button[data-mode="editing"] {
+  display: contents;
+}
+
 /* sdoc-meta-field used as editable cell in the root node. */
 [js-table_view_edit][data-mode="edit"] sdoc-meta-field {
   position: relative;

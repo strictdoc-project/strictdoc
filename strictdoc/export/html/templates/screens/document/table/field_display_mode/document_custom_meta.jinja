@@ -1,8 +1,25 @@
-<div
+{#
+  The custom metadata entries share one persistent form. display: contents keeps
+  the form transparent to the sdoc-meta grid, so each row's label and field remain
+  direct visual grid items.
+
+  Unlike document/node MIDs, metadata form keys are local transport keys. They
+  exist only to group each row's name/value inputs during form serialization.
+#}
+<form
   id="document-custom-meta-{{ doc_mid }}"
+  action="/actions/table/update_document_custom_meta"
+  method="POST"
+  data-turbo="false"
   style="display: contents;"
-  data-field-type="contenteditable"
-  js-table_view_edit-field="contenteditable"
-  data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}">
+  js-table_view_edit-form
+>
+  <input type="hidden" name="document_mid" value="{{ doc_mid }}"/>
+  <input type="hidden" name="document[TITLE]" value="{{ view_object.document.title }}"/>
+  <input type="hidden" name="document[UID]" value="{{ document_config.uid or '' }}"/>
+  <input type="hidden" name="document[VERSION]" value="{{ document_config.version or '' }}"/>
+  <input type="hidden" name="document[CLASSIFICATION]" value="{{ document_config.classification or '' }}"/>
+  <input type="hidden" name="document[PREFIX]" value="{{ document_config.requirement_prefix or '' }}"/>
+
   {%- include "screens/document/table/field_display_mode/document_custom_meta_value.jinja" -%}
-</div>
+</form>

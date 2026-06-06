@@ -1,0 +1,42 @@
+{#
+  One custom metadata display row.
+
+  Expects:
+  - form_key: local form/DOM key; it is not a StrictDoc MID.
+  - field_label: raw metadata key.
+  - field_value: raw metadata value submitted by the shared form.
+  - field_content: rendered metadata value shown to the user.
+
+  display: contents preserves the sdoc-meta label/field grid while giving future
+  reorder and delete behavior one DOM node representing the complete row.
+#}
+<div
+  style="display: contents;"
+  data-document-custom-meta-row
+  data-form-key="{{ form_key }}"
+>
+  <sdoc-meta-label data-testid="document-config-metadata-label">
+    {{ field_label }}:
+    <input
+      type="hidden"
+      name="metadata[{{ form_key }}][name]"
+      value="{{ field_label }}"
+    />
+  </sdoc-meta-label>
+  <sdoc-meta-field
+    class="editable-cell"
+    data-field-type="contenteditable"
+    data-testid="document-config-metadata-field"
+  >
+    <div class="editable-cell-indicator"></div>
+    <input
+      type="hidden"
+      name="metadata[{{ form_key }}][value]"
+      value="{{ field_value }}"
+    />
+    <div id="document-custom-meta-value-{{ form_key }}">
+      {# Plain rendering intentionally has no copy-to-clipboard wrapper. #}
+      <sdoc-autogen>{{ field_content }}</sdoc-autogen>
+    </div>
+  </sdoc-meta-field>
+</div>

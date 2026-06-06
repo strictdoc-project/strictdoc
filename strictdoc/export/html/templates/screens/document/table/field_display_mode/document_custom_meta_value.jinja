@@ -1,21 +1,30 @@
+{#
+  Renders custom metadata rows inside the persistent document metadata form.
+  The DOM order of these rows defines the order serialized and saved by the form.
+#}
 {%- if document_config.has_custom_metadata() -%}
 {%- for key, value in document_config.get_custom_metadata() -%}
+  {#
+    form_key is a local form/DOM key, not a StrictDoc MID and not a persistent
+    metadata identifier. The backend uses it only to pair this row's name/value.
+  #}
+  {%- set form_key = "custom-meta-" ~ loop.index0 -%}
   {%- set metadata_value = view_object.render_metadata_value(value) -%}
   {%- with
     field_content=metadata_value,
     field_label=key,
-    field_testid="metadata"
+    field_value=value,
+    form_key=form_key
   -%}
-    {%- include "screens/document/table/field_display_mode/document_meta_readonly_plain_field.jinja" -%}
+    {%- include "screens/document/table/field_display_mode/document_custom_meta_row.jinja" -%}
   {%- endwith -%}
 {%- endfor -%}
 {%- endif -%}
-{# <sdoc-meta-label data-table-custom-meta-add data-testid="document-config-metadata-add-label">CUSTOM META:</sdoc-meta-label>
-<sdoc-meta-field data-table-custom-meta-add class="editable-cell" data-testid="document-config-metadata-add-field">
-  <div class="editable-cell-indicator"></div>
-  <span class="action_button">{% include "icons/ico16_add.svg" %} Add new metadata value</span>
-</sdoc-meta-field> #}
+
+{#
+  The add action is a separate final grid row. Its behavior will be implemented
+  after the per-row inline editing structure is in place.
+#}
 <div class="table-view-custom-metadata-add-button" style="grid-column: 1 / -1; margin-top: 8px;">
-    <span class="action_button">{% include "icons/ico16_add.svg" %} Add new metadata value 1</span>
+  <span class="action_button">{% include "icons/ico16_add.svg" %} Add new metadata value 1</span>
 </div>
-{# <div class="editable-cell-indicator"></div> #}

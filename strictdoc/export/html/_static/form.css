@@ -538,6 +538,7 @@ sdoc-form-error {
   color: var(--color-danger);
   font-size: 12px;
   font-weight: normal;
+  text-transform: none;
   /*
     set 'order' to be displayed after any other items,
     in the context of <sdoc-form-row-main> using flex:

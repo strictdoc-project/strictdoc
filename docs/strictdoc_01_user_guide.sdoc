@@ -655,7 +655,7 @@ The following ``DOCUMENT`` fields are allowed:
      - Security classification of the document, e.g. Public, Internal, Restricted, Confidential
 
    * - ``PREFIX (formerly REQ_PREFIX)``
-     - Requirement prefix that should be used for automatic generation of UIDs. See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID]. This field used to be called ``REQ_PREFIX`` but it was deprecated as of 2025-Q2. The ``REQ_PREFIX`` alias will be removed from the codebase in 2025-Q3.
+     - Requirement prefix that should be used for automatic generation of UIDs. See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID]. This field used to be called ``REQ_PREFIX`` but it was deprecated since 2025-Q2. The ``REQ_PREFIX`` alias will be removed from the codebase in 2025-Q3.
 
    * - ``ROOT``
      - Defines whether a document is a root object in a traceability graph. A root document is assumed to not have any parent requirements. The project statistics calculation will skip all root document's requirements when calculating the metric ``Non-root-level requirements not connected to any parent requirement``.
@@ -4946,7 +4946,7 @@ Update all instances of ``[SECTION]`` to ``[[SECTION]]`` manually, or use a comb
 
 .. note::
 
-    StrictDoc can automatically create the ``[[SECTION]]`` element even if it is not explicitly defined in the document grammar. However, as of 2025 Q2, it is recommended that users always define explicit grammars with the SECTION element included.
+    StrictDoc can automatically create the ``[[SECTION]]`` element even if it is not explicitly defined in the document grammar. However, since 2025 Q2, it is recommended that users always define explicit grammars with the SECTION element included.
 
 Examples of a sed command for Linux and macOS:
 

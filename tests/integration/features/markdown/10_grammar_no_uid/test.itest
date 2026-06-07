@@ -1,0 +1,8 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Markdown grammar document (no UID)
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+
+CHECK-HTML-FILE: show-node-type-name="REQUIREMENT"
+CHECK-HTML-FILE: ASIL
+CHECK-HTML-FILE: A

@@ -60,15 +60,11 @@ class ParsedMarkdownNode:
     fields: List[ParsedField]
     valid_for_requirement: bool
     has_duplicates: bool
-    meta_style: Optional[str]
 
 
 class SDMarkdownReader:
     markdown_parser = MarkdownIt("commonmark")
     default_meta_style = "backslash"
-    bullet_field_pattern = re.compile(
-        r"^\s*-\s+\*\*(?P<name>[A-Za-z0-9][A-Za-z0-9 _-]*)\*\*:(?P<value>.*)$"
-    )
     plain_field_pattern = re.compile(
         r"^\*\*(?P<name>[A-Za-z0-9][A-Za-z0-9 _-]*)\*\*:(?P<value>.*)$"
     )
@@ -147,7 +143,7 @@ class SDMarkdownReader:
 
         document.ng_including_document_reference = including_document_reference
 
-        detected_meta_style = SDMarkdownReader._parse_document_root(
+        SDMarkdownReader._parse_document_root(
             root_heading=heading_nodes[0],
             document=document,
             document_reference=document_reference,
@@ -155,18 +151,18 @@ class SDMarkdownReader:
             file_path=file_path,
         )
 
-        tree_meta_style = SDMarkdownReader._create_document_tree(
+        has_custom_grammar = (
+            document.grammar is not None
+            and document.grammar.import_from_file is not None
+        )
+        SDMarkdownReader._create_document_tree(
             heading_nodes=heading_nodes[1:],
             document=document,
             document_reference=document_reference,
             including_document_reference=including_document_reference,
             file_path=file_path,
             project_config=project_config,
-        )
-        if detected_meta_style is None:
-            detected_meta_style = tree_meta_style
-        document.ng_markdown_meta_style = (
-            detected_meta_style or SDMarkdownReader.default_meta_style
+            has_custom_grammar=has_custom_grammar,
         )
 
         return document
@@ -243,7 +239,7 @@ class SDMarkdownReader:
         document_reference: DocumentReference,
         including_document_reference: DocumentReference,
         file_path: Optional[str],
-    ) -> Optional[str]:
+    ) -> None:
         """
         Extend SDocDocument with data from first H1 heading.
 
@@ -258,7 +254,6 @@ class SDMarkdownReader:
             root_meta_fields,
             root_body_lines_without_meta,
             root_meta_valid,
-            root_meta_style,
         ) = SDMarkdownReader._parse_meta_fields(
             root_body_lines, file_path=file_path
         )
@@ -280,13 +275,21 @@ class SDMarkdownReader:
                     filename=file_path,
                 )
 
-            metadata_entries = [
-                DocumentCustomMetadataKeyValuePair(
-                    key=field_.human_name,
-                    value=field_.value,
+            metadata_entries = []
+            for field_ in root_meta_fields:
+                if field_.name == "GRAMMAR":
+                    document.grammar = DocumentGrammar(
+                        parent=document,
+                        elements=[],
+                        import_from_file=field_.value,
+                    )
+                    continue
+                metadata_entries.append(
+                    DocumentCustomMetadataKeyValuePair(
+                        key=field_.human_name,
+                        value=field_.value,
+                    )
                 )
-                for field_ in root_meta_fields
-            ]
             document.config.custom_metadata = DocumentCustomMetadata(
                 entries=metadata_entries
             )
@@ -304,10 +307,6 @@ class SDMarkdownReader:
             )
             document.section_contents.append(root_text_node)
 
-        if not root_meta_valid:
-            return None
-        return root_meta_style
-
     @staticmethod
     def _create_document_tree(
         heading_nodes: List[MarkdownHeadingNode],
@@ -316,18 +315,17 @@ class SDMarkdownReader:
         including_document_reference: DocumentReference,
         file_path: Optional[str],
         project_config: Optional[ProjectConfig] = None,
-    ) -> Optional[str]:
+        has_custom_grammar: bool = False,
+    ) -> None:
         """
         Populate document section contents from H2+ heading nodes.
 
         Each md heading becomes either a REQUIREMENT node (if it passes
         _parse_markdown_node validation) or a plain section node.
         Nesting follows heading levels via a depth stack.
-        Returns the first detected meta style, or None if no requirements found.
         """
         stack: List[Tuple[int, Union[SDocDocument, SDocNode]]] = [(1, document)]
         previous_level = 1
-        detected_meta_style: Optional[str] = None
 
         for heading_node in heading_nodes:
             if heading_node.level == 1:
@@ -366,6 +364,7 @@ class SDMarkdownReader:
                 heading_node.title,
                 heading_node.body,
                 file_path=file_path,
+                has_custom_grammar=has_custom_grammar,
             )
 
             if parsed_node.valid_for_requirement:
@@ -398,12 +397,6 @@ class SDMarkdownReader:
                     document=document,
                     markdown_fields=parsed_node.fields,
                 )
-
-                if (
-                    detected_meta_style is None
-                    and parsed_node.meta_style is not None
-                ):
-                    detected_meta_style = parsed_node.meta_style
 
                 document.ng_has_requirements = True
                 cursor_node: Optional[SDocNode]
@@ -442,8 +435,6 @@ class SDMarkdownReader:
 
             previous_level = heading_node.level
 
-        return detected_meta_style
-
     @staticmethod
     def _memorize_requirement_human_titles(
         document: SDocDocument, markdown_fields: List[ParsedField]
@@ -454,7 +445,11 @@ class SDMarkdownReader:
         The markdown writer will later use the names to reproduce original capitalisation.
         """
         assert document.grammar is not None
-        requirement_element = document.grammar.elements_by_type["REQUIREMENT"]
+        requirement_element = document.grammar.elements_by_type.get(
+            "REQUIREMENT"
+        )
+        if requirement_element is None:
+            return
         for markdown_field in markdown_fields:
             if markdown_field.name not in requirement_element.fields_map:
                 continue
@@ -611,7 +606,10 @@ class SDMarkdownReader:
 
     @staticmethod
     def _parse_markdown_node(
-        title: str, body: str, file_path: Optional[str]
+        title: str,
+        body: str,
+        file_path: Optional[str],
+        has_custom_grammar: bool = False,
     ) -> ParsedMarkdownNode:
         """
         Parse a heading's body text into a ParsedMarkdownNode.
@@ -626,7 +624,6 @@ class SDMarkdownReader:
             meta_fields,
             body_lines_without_meta,
             meta_is_valid,
-            meta_style,
         ) = SDMarkdownReader._parse_meta_fields(body_lines, file_path=file_path)
         content_fields, content_is_valid = (
             SDMarkdownReader._parse_content_fields(
@@ -645,40 +642,44 @@ class SDMarkdownReader:
             "MID" in parsed_field_names or "UID" in parsed_field_names
         )
         has_content_field = "STATEMENT" in parsed_field_names
-        has_only_known_fields = all(
-            map(
-                lambda field_name_: (
-                    field_name_ in SDMarkdownReader.valid_requirement_fields
-                ),
-                parsed_field_names,
-            )
-        )
+        has_only_known_fields = True
         has_empty_field_values = any(
             len(field_.value) == 0 for field_ in parsed_fields
         )
 
-        valid_for_requirement = (
-            meta_is_valid
-            and content_is_valid
-            and has_mid_or_uid
-            and has_content_field
-            and has_only_known_fields
-            and not has_empty_field_values
-            and len(title) > 0
-        )
+        if has_custom_grammar:
+            # When a custom grammar is attached, drop the hardcoded UID/STATEMENT
+            # assumptions and defer field validation to TraceabilityIndexBuilder.
+            valid_for_requirement = (
+                meta_is_valid
+                and content_is_valid
+                and has_only_known_fields
+                and not has_empty_field_values
+                and len(parsed_fields) > 0
+                and len(title) > 0
+            )
+        else:
+            valid_for_requirement = (
+                meta_is_valid
+                and content_is_valid
+                and has_mid_or_uid
+                and has_content_field
+                and has_only_known_fields
+                and not has_empty_field_values
+                and len(title) > 0
+            )
 
         return ParsedMarkdownNode(
             fields=parsed_fields,
             valid_for_requirement=valid_for_requirement,
             has_duplicates=has_duplicates,
-            meta_style=meta_style,
         )
 
     @staticmethod
     def _parse_meta_fields(
         body_lines: List[str],
         file_path: Optional[str],
-    ) -> Tuple[List[ParsedField], List[str], bool, Optional[str]]:
+    ) -> Tuple[List[ParsedField], List[str], bool]:
         """
         Extract the leading meta-field block from raw markdown content of a requirement.
 
@@ -690,24 +691,22 @@ class SDMarkdownReader:
         Returns:
         - parsed key/value pairs from the meta block (empty if none found)
         - remaining body lines after the meta block, passed on to _parse_content_fields
-        - False only when lines look like meta but fail to parse; callers treat this as "not a requirement"
-        - detected style ("backslash", "bullet", "two_spaces"), or None if no meta block
+        - True on success, False on parse error
         """
         if len(body_lines) == 0 or not SDMarkdownReader._is_empty_line(
             body_lines[0]
         ):
-            return [], body_lines, True, None
+            return [], body_lines, True
 
         next_line_index = 1
         if next_line_index >= len(body_lines):
-            return [], body_lines, True, None
+            return [], body_lines, True
 
         line_text = SDMarkdownReader._line_without_line_ending(
             body_lines[next_line_index]
         )
-        meta_style = SDMarkdownReader._detect_meta_style(line_text)
-        if meta_style is None:
-            return [], body_lines, True, None
+        if SDMarkdownReader._detect_meta_style(line_text) is None:
+            return [], body_lines, True
 
         meta_lines: List[str] = []
         while next_line_index < len(body_lines):
@@ -718,14 +717,13 @@ class SDMarkdownReader:
             next_line_index += 1
 
         if len(meta_lines) == 0:
-            return [], body_lines, True, meta_style
+            return [], body_lines, True
 
         parsed_fields, parse_success = SDMarkdownReader._parse_meta_lines(
             meta_lines,
-            meta_style,
         )
         if not parse_success:
-            return [], body_lines, False, None
+            return [], body_lines, True
 
         if next_line_index < len(
             body_lines
@@ -763,43 +761,29 @@ class SDMarkdownReader:
                     )
             next_line_index += 1
 
-        return parsed_fields, body_lines[next_line_index:], True, meta_style
+        return parsed_fields, body_lines[next_line_index:], True
 
     @staticmethod
     def _detect_meta_style(line_text: str) -> Optional[str]:
-        """Return "bullet", "backslash", or "two_spaces" from the first meta line, or None if not a meta line."""
-        if SDMarkdownReader.bullet_field_pattern.match(line_text) is not None:
-            return "bullet"
-
-        plain_field_match = SDMarkdownReader.plain_field_pattern.match(
-            line_text
-        )
-        if plain_field_match is None:
-            return None
-
-        field_value = SDMarkdownReader._trim_single_space_prefix(
-            plain_field_match.group("value")
-        )
-        if field_value.endswith(" \\"):
+        """Return "backslash" if the line is a plain `**Key**: value` field, else None."""
+        if SDMarkdownReader.plain_field_pattern.match(line_text) is not None:
             return "backslash"
-        if field_value.endswith("  "):
-            return "two_spaces"
         return None
 
     @staticmethod
     def _parse_meta_lines(
-        meta_lines: List[str], meta_style: str
+        meta_lines: List[str],
     ) -> Tuple[List[ParsedField], bool]:
         """
-        Parse meta fields according to the detected meta_style.
+        Parse meta fields in backslash style.
 
-        In backslash style, a field with an empty inline value (e.g.
-        "**Relations**:") is a list-valued field: the following lines up to
-        the next plain field header are consumed as its value.
+        A field with an empty inline value (e.g. "**Relations**:") is a
+        list-valued field: the following lines up to the next plain field
+        header are consumed as its value.
 
         Returns:
         - successfully parsed fields (empty on failure)
-        - False if any line fails to match the expected style; callers treat this as "not a requirement"
+        - False if any line fails to match; callers treat this as "not a requirement"
         """
         parsed_fields: List[ParsedField] = []
         meta_line_count = len(meta_lines)
@@ -811,107 +795,63 @@ class SDMarkdownReader:
             )
             meta_line_index += 1
 
-            if meta_style == "bullet":
-                match = SDMarkdownReader.bullet_field_pattern.match(line_text)
-                if match is None:
-                    return [], False
-                value = SDMarkdownReader._trim_single_space_prefix(
-                    match.group("value")
-                )
+            match = SDMarkdownReader.plain_field_pattern.match(line_text)
+            if match is None:
+                return [], False
+            value = SDMarkdownReader._trim_single_space_prefix(
+                match.group("value")
+            )
+
+            if len(value) == 0:
+                # List-valued field: collect following lines until the
+                # next plain field header as the field value.
+                list_lines: List[str] = []
+                while meta_line_index < meta_line_count:
+                    candidate_text = SDMarkdownReader._line_without_line_ending(
+                        meta_lines[meta_line_index]
+                    )
+                    if (
+                        SDMarkdownReader.plain_field_pattern.match(
+                            candidate_text
+                        )
+                        is not None
+                    ):
+                        break
+                    list_lines.append(meta_lines[meta_line_index])
+                    meta_line_index += 1
+                value = "".join(list_lines)
             else:
-                match = SDMarkdownReader.plain_field_pattern.match(line_text)
-                if match is None:
-                    return [], False
-                value = SDMarkdownReader._trim_single_space_prefix(
-                    match.group("value")
-                )
-
-                if meta_style == "backslash":
-                    if len(value) == 0:
-                        # List-valued field: collect following lines until the
-                        # next plain field header as the field value.
-                        list_lines: List[str] = []
-                        while meta_line_index < meta_line_count:
-                            candidate_text = (
-                                SDMarkdownReader._line_without_line_ending(
-                                    meta_lines[meta_line_index]
-                                )
+                is_last_field = meta_line_index == meta_line_count
+                if not is_last_field:
+                    next_line_text = SDMarkdownReader._line_without_line_ending(
+                        meta_lines[meta_line_index]
+                    )
+                    next_field_match = (
+                        SDMarkdownReader.plain_field_pattern.match(
+                            next_line_text
+                        )
+                    )
+                    next_field_is_relations = (
+                        next_field_match is not None
+                        and next_field_match.group("name").upper()
+                        == "RELATIONS"
+                        and len(
+                            SDMarkdownReader._trim_single_space_prefix(
+                                next_field_match.group("value")
                             )
-                            if (
-                                SDMarkdownReader.plain_field_pattern.match(
-                                    candidate_text
-                                )
-                                is not None
-                            ):
-                                break
-                            list_lines.append(meta_lines[meta_line_index])
-                            meta_line_index += 1
-                        value = "".join(list_lines)
-                    else:
-                        is_last_field = meta_line_index == meta_line_count
-                        if not is_last_field:
-                            next_line_text = (
-                                SDMarkdownReader._line_without_line_ending(
-                                    meta_lines[meta_line_index]
-                                )
-                            )
-                            next_field_match = (
-                                SDMarkdownReader.plain_field_pattern.match(
-                                    next_line_text
-                                )
-                            )
-                            next_field_is_relations = (
-                                next_field_match is not None
-                                and next_field_match.group("name").upper()
-                                == "RELATIONS"
-                                and len(
-                                    SDMarkdownReader._trim_single_space_prefix(
-                                        next_field_match.group("value")
-                                    )
-                                )
-                                == 0
-                            )
-                            if not value.endswith(" \\"):
-                                if not next_field_is_relations:
-                                    return [], False
-                            else:
-                                value = value[:-2]
-                        elif value.endswith("\\"):
+                        )
+                        == 0
+                    )
+                    if not value.endswith(" \\"):
+                        if not next_field_is_relations:
                             return [], False
-                elif meta_style == "two_spaces":
-                    if len(value) == 0:
-                        # List-valued field: collect following lines until the
-                        # next plain field header as the field value.
-                        list_lines = []
-                        while meta_line_index < meta_line_count:
-                            candidate_text = (
-                                SDMarkdownReader._line_without_line_ending(
-                                    meta_lines[meta_line_index]
-                                )
-                            )
-                            if (
-                                SDMarkdownReader.plain_field_pattern.match(
-                                    candidate_text
-                                )
-                                is not None
-                            ):
-                                break
-                            list_lines.append(meta_lines[meta_line_index])
-                            meta_line_index += 1
-                        value = "".join(list_lines)
                     else:
-                        if not value.endswith("  "):
-                            return [], False
                         value = value[:-2]
-                else:
+                elif value.endswith("\\"):
                     return [], False
 
-                if (
-                    value.startswith("`")
-                    and value.endswith("`")
-                    and len(value) > 1
-                ):
-                    value = value[1:-1]
+            if value.startswith("`") and value.endswith("`") and len(value) > 1:
+                value = value[1:-1]
 
             parsed_fields.append(
                 ParsedField(
@@ -939,7 +879,7 @@ class SDMarkdownReader:
 
         Returns:
         - parsed fields including any implicit STATEMENT (empty on failure)
-        - False only when a bullet-style field header is encountered, which signals the block is not a valid content section
+        - True on success, False on parse error
         """
         parsed_fields: List[ParsedField] = []
         line_index = 0
@@ -990,12 +930,6 @@ class SDMarkdownReader:
                 continue
 
             line_text = SDMarkdownReader._line_without_line_ending(line)
-            if (
-                SDMarkdownReader.bullet_field_pattern.match(line_text)
-                is not None
-            ):
-                return [], False
-
             plain_match = SDMarkdownReader.plain_field_pattern.match(line_text)
             if plain_match is not None:
                 field_name_upper = plain_match.group("name").upper()

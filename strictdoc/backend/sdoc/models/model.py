@@ -3,7 +3,10 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import Final, Generator, List, Optional, Union
+from typing import TYPE_CHECKING, Dict, Final, Generator, List, Optional, Union
+
+if TYPE_CHECKING:
+    from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 
 from strictdoc.backend.sdoc.models.document_config import (
     DocumentConfig,
@@ -116,7 +119,7 @@ class SDocNodeIF(ABC):
 
 
 class SDocGrammarIF:
-    pass
+    elements_by_type: Dict[str, "GrammarElement"]
 
 
 class SDocDocumentIF(ABC):

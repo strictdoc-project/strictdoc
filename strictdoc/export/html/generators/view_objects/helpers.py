@@ -67,6 +67,9 @@ def screen_should_display_file(
     ):
         return True
 
+    if file.has_extension(".gra.md"):
+        return False
+
     if file.has_extension(".md") or file.has_extension(".markdown"):
         return True
 

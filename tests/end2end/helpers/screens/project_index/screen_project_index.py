@@ -27,6 +27,14 @@ from tests.end2end.helpers.screens.traceability_matrix.screen_requirements_cover
 )
 from tests.end2end.helpers.screens.tree_map.tree_map import Screen_TreeMap
 
+# Windows CI can be very slow when initializing the browser and loading
+# generated static assets, so this must be longer than the usual 10s.
+STATIC_HTML_SEARCH_READY_TIMEOUT_SECONDS = 30
+STATIC_HTML_SEARCH_READY_TIMEOUT_MS = (
+    STATIC_HTML_SEARCH_READY_TIMEOUT_SECONDS * 1000
+)
+STATIC_HTML_SEARCH_READY_POLL_INTERVAL_MS = 100
+
 
 class Screen_ProjectIndex(Screen):  # pylint: disable=invalid-name
     def __init__(self, test_case: BaseCase) -> None:
@@ -175,6 +183,8 @@ class Screen_ProjectIndex(Screen):  # pylint: disable=invalid-name
     def do_enter_search_query(self, search_query: str) -> None:
         input_xpath = "//input[@data-testid='static-html-search-input']"
 
+        self._wait_until_static_html_search_ready()
+
         # We simulate a user typing the supplied field_value.
         self.test_case.type(input_xpath, search_query, by=By.XPATH)
 
@@ -207,6 +217,90 @@ class Screen_ProjectIndex(Screen):  # pylint: disable=invalid-name
         self.test_case.assert_text("Results:")
         self.test_case.assert_text(f"{range_start}–{range_end}")
         self.test_case.assert_text(f"from {total}")
+
+    def _wait_until_static_html_search_ready(self) -> None:
+        self.test_case.assert_element(
+            "//input[@data-testid='static-html-search-input']",
+            by=By.XPATH,
+        )
+        # These tests cover startup behavior: typing before the async static
+        # search index is ready can drop the first input event.
+        self.test_case.driver.set_script_timeout(
+            STATIC_HTML_SEARCH_READY_TIMEOUT_SECONDS
+        )
+        wait_result = self.test_case.driver.execute_async_script(
+            """
+            const searchReadyTimeoutMs = arguments[0];
+            const pollIntervalMs = arguments[1];
+            const done = arguments[arguments.length - 1];
+            const eventName =
+              window.StrictDoc?.events?.STATIC_HTML_SEARCH_READY ||
+              "static-html-search:ready";
+            let timeout = null;
+            let polling = null;
+
+            function collectSearchStatus() {
+              const searchData = window.StrictDoc && window.StrictDoc.search;
+              const hasIndex = !!(searchData && searchData.index);
+              const hasNodesByMid = !!(searchData && searchData.nodesByMid);
+              return {
+                isUsable: hasIndex && hasNodesByMid,
+                hasStrictDoc: !!window.StrictDoc,
+                hasSearchData: !!searchData,
+                isReadyFlag: !!(searchData && searchData.isReady),
+                hasIndex: hasIndex,
+                hasNodesByMid: hasNodesByMid,
+                documentReadyState: document.readyState,
+                location: window.location.href,
+              };
+            }
+
+            function resolveIfUsable() {
+              const status = collectSearchStatus();
+              if (status.isUsable) {
+                cleanup();
+                done(status);
+                return true;
+              }
+              return false;
+            }
+
+            function cleanup() {
+              if (timeout !== null) {
+                window.clearTimeout(timeout);
+              }
+              if (polling !== null) {
+                window.clearInterval(polling);
+              }
+              document.removeEventListener(eventName, onReady);
+            }
+
+            function onReady() {
+              resolveIfUsable();
+            }
+
+            if (resolveIfUsable()) {
+              return;
+            }
+
+            timeout = window.setTimeout(() => {
+              cleanup();
+              done(collectSearchStatus());
+            }, searchReadyTimeoutMs);
+
+            polling = window.setInterval(
+              resolveIfUsable,
+              pollIntervalMs
+            );
+            document.addEventListener(eventName, onReady, { once: true });
+            """,
+            STATIC_HTML_SEARCH_READY_TIMEOUT_MS,
+            STATIC_HTML_SEARCH_READY_POLL_INTERVAL_MS,
+        )
+        assert wait_result["isUsable"], (
+            "Static HTML search index was not ready before entering a query. "
+            f"Search status: {wait_result}."
+        )
 
     #
     # Add new document

@@ -577,6 +577,15 @@
   // Search index initialization
   // =========================================================================
 
+  function setSearchIndexReady(isReady) {
+    strictDocSearch.isReady = isReady;
+    if (isReady) {
+      window.StrictDoc.bus.emit(
+        window.StrictDoc.events.STATIC_HTML_SEARCH_READY
+      );
+    }
+  }
+
   // Open the IndexedDB database that caches the generated search index.
   function openSearchIndexDB(name, version = 1) {
     return new Promise((resolve, reject) => {
@@ -693,6 +702,7 @@
 
       refreshInProgress = true;
       try {
+        setSearchIndexReady(false);
         await loadSearchIndexFromScript(pathToSearchIndex, true);
         await saveCurrentSearchIndexToDB({
           dbName,
@@ -700,6 +710,7 @@
           timestampMeta,
           searchData,
         });
+        setSearchIndexReady(true);
       } catch (refreshError) {
         console.error(
           "Search: Failed to refresh search index after Turbo stream update:",
@@ -845,6 +856,11 @@
   const { userinput } = dom;
   const documentLevel = parseInt(meta.documentLevel, 10);
 
+  // E2E tests rely on this startup event to type only after the async
+  // generated search index has been loaded.
+  window.StrictDoc.events.STATIC_HTML_SEARCH_READY =
+    "static-html-search:ready";
+
   const searchResultsView = new SearchResultsView(dom, {
     userinput,
     searchData: strictDocSearch,
@@ -856,6 +872,7 @@
     searchResultsView,
   });
   searchInputController.attachEventListeners();
+  setSearchIndexReady(false);
 
   // Defer search index initialization until the page and generated assets are ready.
   window.addEventListener("load", async () => {
@@ -873,5 +890,8 @@
       timestampMeta,
       searchData: strictDocSearch,
     });
+    if (strictDocSearch.index && strictDocSearch.nodesByMid) {
+      setSearchIndexReady(true);
+    }
   });
 })();

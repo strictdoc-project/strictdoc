@@ -424,6 +424,7 @@
                 // there — don't overwrite it if it has moved on to another cell.
                 if (activeInlineCell === cell) activeInlineCell = null;
                 cell.removeAttribute('data-mode');
+                cell.removeAttribute('data-validation-error');
                 delete cell._originalHTML;
                 delete cell._originalFormData;
                 renderTurboStream(html);
@@ -455,6 +456,10 @@
                     const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
                     errorLines.forEach(line => {
                         const errorEl = document.createElement('sdoc-form-error');
+                        errorEl.setAttribute(
+                            'data-testid',
+                            'table-inline-field-error'
+                        );
                         errorEl.textContent = line.trim();
                         if (insertBeforeEl) {
                             form.insertBefore(errorEl, insertBeforeEl);

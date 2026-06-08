@@ -14,6 +14,7 @@
     {%- for error_ in errors -%}
       <sdoc-form-error
         js-table_view_edit-custom_meta-error="{{ form_key }}"
+        data-testid="document-config-metadata-error-{{ form_key }}"
       >{{ error_ }}</sdoc-form-error>
     {%- endfor -%}
   </template>

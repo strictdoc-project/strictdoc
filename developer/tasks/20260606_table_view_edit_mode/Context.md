@@ -2,37 +2,40 @@
 
 ## Current scope
 
-- Task: inline editing of document custom metadata in Table view.
+- Task: end-to-end coverage of all inline editing paths in Table view.
 - Source of truth:
   `developer/tasks/20260606_table_view_edit_mode/document_config_custom_meta.md`.
-- Current work: drag-and-drop reordering of existing custom metadata rows.
+- Test matrix:
+  `developer/tasks/20260606_table_view_edit_mode/_test_cases.md`.
 
-## State before reorder
+## Coverage decisions
 
-- Add, edit, validation, and delete are implemented.
-- Custom metadata rows share one persistent form.
-- Each row has stable table-specific hooks for its wrapper, name, value,
-  delete action, and drag handle.
-- Saving serializes the complete metadata list in DOM order.
+- The matrix is grouped into custom metadata, root node fields, and table
+  cells.
+- Shared contenteditable behavior is tested once per distinct implementation
+  path instead of repeating every save mechanism for every field.
+- E2E selectors use `data-testid`; row-specific validation and document title
+  test IDs were added where none existed.
 
-## Reorder decisions
+## Added coverage
 
-- Reorder remains scoped to Table custom metadata in `table_view_edit.js`; the
-  tree-specific `draggable_list_controller.js` is not reused.
-- Drag starts only from
-  `js-table_view_edit-custom_meta-drag_handle` in edit mode.
-- The row wrapper uses `display: contents`, so drop geometry comes from its
-  visual metadata label rather than the wrapper bounding box.
-- Dropping moves the complete row wrapper in the shared form and immediately
-  submits the full form with `action=reorder`.
-- The endpoint treats delete and reorder as block actions that do not require
-  an active field to remain in the submitted metadata list.
-- A successful reorder re-renders the complete shared form, normalizing
-  positional form keys for later edit, Add, delete, or reorder operations.
-- Any HTTP or network failure restores the moved row at its original sibling.
-- No persistent metadata identifier or data-model change was introduced.
-- E2E drag selectors use the move button test ID
-  `form-move-field-action-form-field-metadata` and row-specific test IDs.
+- Custom metadata:
+  existing value lifecycle and validation; Add success, cancellation, and
+  validation; deleting the only row; delete/reorder rollback; no-metadata Add;
+  raw submitted value versus rendered display.
+- Root node fields:
+  document TITLE lifecycle and validation; UID, VERSION, CLASSIFICATION, and
+  PREFIX values; direct field switching; optional empty value; read-only DATE.
+- Table cells:
+  generic optional custom String field through the dynamic-field path.
+- The existing delete test now scopes rows and actions through `data-testid`
+  instead of form keys or JavaScript hooks.
+
+## Regression fixed
+
+- Successful correction after inline validation did not remove
+  `data-validation-error` from the field.
+- `table_view_edit.js` now clears the marker after a successful save.
 
 ## Verification
 
@@ -40,11 +43,12 @@
 - Jinja template unit test:
   `pytest -q tests/unit/strictdoc/export/html/test_html_templates.py`:
   1 passed.
-- Focused custom metadata delete and reorder end-to-end tests:
+- Focused custom metadata end-to-end tests:
   `invoke test-end2end --focus edit_table_document_custom_meta --headless`:
-  2 passed.
+  8 passed.
 - Full focused Table view end-to-end suite:
-  `invoke test-end2end --focus edit_table --headless`: 20 passed.
+  `invoke test-end2end --focus edit_table --headless`:
+  29 passed, 314 deselected.
 - `invoke lint-ruff-format`: passed.
 - `invoke lint-ruff`: passed.
 - `invoke lint-mypy`: passed, 268 source files checked.

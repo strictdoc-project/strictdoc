@@ -22,29 +22,30 @@ class Test(E2ECase):
 
             self.clear_local_storage()
 
-            viewtype_selector = ViewType_Selector(self)
-            screen_table = viewtype_selector.do_go_to_table()
+            screen_table = ViewType_Selector(self).do_go_to_table()
             screen_table.assert_on_screen_table()
             screen_table.do_toggle_edit_mode()
 
-            second_row = (
-                '[data-testid="document-config-metadata-row-custom_meta_1"]'
+            self.assert_element('[data-testid="document-config-metadata-add"]')
+            self.assert_element_not_present(
+                '[data-testid^="document-config-metadata-row-"]'
             )
-            self.click(
-                f"{second_row} "
-                '[data-testid="form-delete-field-action-form-field-metadata"]'
+
+            self.click('[data-testid="document-config-metadata-add"]')
+            self.type(
+                '[data-testid="form-field-metadata-name-new_custom_meta_0"]',
+                "AUTHOR",
             )
+            self.type(
+                '[data-testid="form-field-metadata-value-new_custom_meta_0"]',
+                "Ada",
+            )
+            screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
 
-            row_labels = self.execute_script(
-                """
-                return Array.from(document.querySelectorAll(
-                    '[data-testid^="document-config-metadata-row-"]'
-                )).map(row => row.querySelector(
-                    '[data-testid="document-config-metadata-label"]'
-                ).textContent.trim());
-                """
-            )
-            assert row_labels == ["FIRST:", "THIRD:"]
+            row = '[data-testid="document-config-metadata-row-custom_meta_0"]'
+            self.assert_text("AUTHOR:", selector=row)
+            self.assert_text("Ada", selector=row)
+            self.assert_element('[data-testid="document-config-metadata-add"]')
 
         assert test_setup.compare_sandbox_and_expected_output()

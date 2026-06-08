@@ -53,5 +53,7 @@
   because the complete row error list is rendered here once.
 #}
 {%- for error_ in errors -%}
-  <sdoc-form-error>{{ error_ }}</sdoc-form-error>
+  <sdoc-form-error
+    data-testid="document-config-metadata-error-{{ form_key }}"
+  >{{ error_ }}</sdoc-form-error>
 {%- endfor -%}

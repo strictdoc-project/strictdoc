@@ -1,6 +1,7 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
+from tests.end2end.helpers.form.form import Form
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -22,29 +23,17 @@ class Test(E2ECase):
 
             self.clear_local_storage()
 
-            viewtype_selector = ViewType_Selector(self)
-            screen_table = viewtype_selector.do_go_to_table()
+            screen_table = ViewType_Selector(self).do_go_to_table()
             screen_table.assert_on_screen_table()
-            screen_table.do_toggle_edit_mode()
+            node_mid = screen_table.get_node_mid_from_row(row_order=1)
+            assert node_mid is not None
 
-            second_row = (
-                '[data-testid="document-config-metadata-row-custom_meta_1"]'
-            )
-            self.click(
-                f"{second_row} "
-                '[data-testid="form-delete-field-action-form-field-metadata"]'
-            )
+            screen_table.do_toggle_edit_mode()
+            screen_table.do_open_inline_cell(node_mid, "RISK")
+            Form(self).do_fill_in("RISK", "New risk")
+            screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
 
-            row_labels = self.execute_script(
-                """
-                return Array.from(document.querySelectorAll(
-                    '[data-testid^="document-config-metadata-row-"]'
-                )).map(row => row.querySelector(
-                    '[data-testid="document-config-metadata-label"]'
-                ).textContent.trim());
-                """
-            )
-            assert row_labels == ["FIRST:", "THIRD:"]
+            screen_table.assert_cell_dom_text(node_mid, "RISK", "New risk")
 
         assert test_setup.compare_sandbox_and_expected_output()

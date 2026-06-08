@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document
+METADATA:
+  FIRST: Saved by command
+  SECOND: Saved by blur
+  REVISION: @GIT_VERSION
+
+[REQUIREMENT]
+TITLE: Requirement
+STATEMENT: Requirement statement.

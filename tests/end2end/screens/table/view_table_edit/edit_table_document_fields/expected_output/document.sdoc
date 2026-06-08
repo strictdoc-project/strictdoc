@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: New document title
+UID: DOC-002
+DATE: 2026-06-08
+CLASSIFICATION: Restricted
+PREFIX: NEW-
+
+[REQUIREMENT]
+TITLE: Requirement
+STATEMENT: Requirement statement.

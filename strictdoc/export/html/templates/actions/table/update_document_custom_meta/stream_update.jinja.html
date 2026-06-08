@@ -1,6 +1,7 @@
 {#
   The complete custom metadata form was submitted. Remove the active row's
-  errors and update only its value target after a successful save.
+  errors and update only its active name or value target after a successful
+  save.
 #}
 <turbo-stream
   action="remove"
@@ -8,8 +9,15 @@
 >
   <template></template>
 </turbo-stream>
-<turbo-stream action="update" target="document-custom-meta-value-{{ form_key }}">
+<turbo-stream
+  action="update"
+  target="document-custom-meta-{{ active_field_name }}-{{ form_key }}"
+>
   <template>
-    {%- include "screens/document/table/field_display_mode/document_custom_meta_field_value.jinja" -%}
+    {%- if active_field_name == "name" -%}
+      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_name.jinja" -%}
+    {%- else -%}
+      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_value.jinja" -%}
+    {%- endif -%}
   </template>
 </turbo-stream>

@@ -37,6 +37,20 @@
   `data-validation-error` from the field.
 - `table_view_edit.js` now clears the marker after a successful save.
 
+## Existing metadata name editing
+
+- Existing custom metadata names are editable inline through a dedicated name
+  target inside the existing label.
+- Name and value editors submit the same complete ordered metadata form.
+- `active_field_name` selects the name or value Turbo target for validation and
+  successful updates.
+- Renaming preserves the row value and position and does not introduce a
+  persistent metadata identifier.
+- Add-row validation now splits row errors between `name_errors` and
+  `value_errors`, so `errors="true"` is set only on the affected control.
+- The task specification and test matrix document the new name-editing and
+  field-specific validation behavior.
+
 ## Verification
 
 - `git diff --check`: passed.
@@ -45,10 +59,10 @@
   1 passed.
 - Focused custom metadata end-to-end tests:
   `invoke test-end2end --focus edit_table_document_custom_meta --headless`:
-  8 passed.
+  9 passed.
 - Full focused Table view end-to-end suite:
   `invoke test-end2end --focus edit_table --headless`:
-  29 passed, 314 deselected.
+  30 passed, 314 deselected.
 - `invoke lint-ruff-format`: passed.
 - `invoke lint-ruff`: passed.
 - `invoke lint-mypy`: passed, 268 source files checked.

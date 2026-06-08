@@ -410,6 +410,12 @@
             // saved must determine which row receives the validation stream.
             formData.set('active_form_key', activeFormKey);
         }
+        const activeFieldName = cell.querySelector(
+            'input[name="active_field_name"]'
+        )?.value;
+        if (activeFieldName !== undefined) {
+            formData.set('active_field_name', activeFieldName);
+        }
 
         try {
             const response = await fetch(form.action, {

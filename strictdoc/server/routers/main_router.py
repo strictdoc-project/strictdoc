@@ -1374,6 +1374,7 @@ def create_main_router(
     def table__get_document_custom_meta_inline(
         document_mid: str,
         form_key: str,
+        field_name: str = "value",
     ) -> Response:
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
@@ -1404,13 +1405,21 @@ def create_main_router(
                 status_code=404,
             )
         metadata_field = form_object.custom_metadata_fields[metadata_index]
+        if field_name not in ("name", "value"):
+            return HTMLResponse(
+                content=f"Invalid custom metadata field name: {field_name}",
+                status_code=400,
+            )
 
         output = env().render_template_as_markup(
             "actions/table/get_document_custom_meta_inline/stream_inline_form.jinja.html",
             form_key=form_key,
+            field_name=field_name,
             field_label=metadata_field.field_name,
             field_value=metadata_field.field_value,
             errors=[],
+            name_errors=[],
+            value_errors=[],
         )
         return HTMLResponse(
             content=output,
@@ -1446,6 +1455,8 @@ def create_main_router(
             field_name="",
             field_value="",
             errors=[],
+            name_errors=[],
+            value_errors=[],
         )
         return HTMLResponse(
             content=output,
@@ -1463,6 +1474,7 @@ def create_main_router(
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
         active_form_key: str = request_dict["active_form_key"]
+        active_field_name: str = request_dict.get("active_field_name", "value")
         action: Optional[str] = request_dict.get("action")
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
@@ -1484,6 +1496,14 @@ def create_main_router(
         active_metadata_index = -1
         active_field_is_new = False
         if not is_block_action:
+            if active_field_name not in ("name", "value", "new"):
+                return HTMLResponse(
+                    content=(
+                        "Invalid active custom metadata field name: "
+                        f"{active_field_name}"
+                    ),
+                    status_code=400,
+                )
             active_metadata_field = next(
                 (
                     metadata_field
@@ -1545,6 +1565,16 @@ def create_main_router(
             active_field_errors = form_object.get_errors(
                 f"METADATA[{active_form_key}]"
             )
+            name_errors = [
+                error
+                for error in active_field_errors
+                if error.startswith("Key ")
+            ]
+            value_errors = [
+                error
+                for error in active_field_errors
+                if error.startswith("Value ")
+            ]
             if active_field_is_new:
                 output = env().render_template_as_markup(
                     "actions/table/get_document_custom_meta_new_inline/stream_inline_form.jinja.html",
@@ -1552,20 +1582,23 @@ def create_main_router(
                     field_name=active_metadata_field.field_name,
                     field_value=active_metadata_field.field_value,
                     errors=active_field_errors,
+                    name_errors=name_errors,
+                    value_errors=value_errors,
                 )
                 return HTMLResponse(
                     content=output,
                     status_code=422,
                     headers={"Content-Type": "text/vnd.turbo-stream.html"},
                 )
-            # Existing metadata rows edit only their value. Their editor is the
-            # stable location for any validation errors belonging to that row.
             output = env().render_template_as_markup(
                 "actions/table/get_document_custom_meta_inline/stream_inline_form.jinja.html",
                 form_key=active_form_key,
+                field_name=active_field_name,
                 field_label=active_metadata_field.field_name,
                 field_value=active_metadata_field.field_value,
                 errors=active_field_errors,
+                name_errors=name_errors,
+                value_errors=value_errors,
             )
             return HTMLResponse(
                 content=output,
@@ -1637,9 +1670,11 @@ def create_main_router(
             )
         output = env().render_template_as_markup(
             "actions/table/update_document_custom_meta/stream_update.jinja.html",
+            active_field_name=active_field_name,
             field_content=view_object.render_metadata_value(
                 active_metadata_field.field_value
             ),
+            field_label=active_metadata_field.field_name,
             field_value=active_metadata_field.field_value,
             form_key=active_form_key,
         )

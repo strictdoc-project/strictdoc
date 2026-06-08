@@ -48,6 +48,7 @@ class Test(E2ECase):
             self.sleep(0.5)
             self.assert_exact_text("Key must not be empty.", error)
             assert self.get_attribute(name, "errors") == "true"
+            assert self.get_attribute(value, "errors", hard_fail=False) is None
             assert self.get_text(value) == "Value without name"
 
             self.click(name)
@@ -59,6 +60,8 @@ class Test(E2ECase):
             screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
             self.assert_exact_text("Value must not be empty.", error)
+            assert self.get_attribute(name, "errors", hard_fail=False) is None
+            assert self.get_attribute(value, "errors") == "true"
 
             self.click(name)
             screen_table.do_cancel_inline_cell_by_escape()
@@ -69,6 +72,8 @@ class Test(E2ECase):
             screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
             self.assert_text("Key must start", selector=error)
+            assert self.get_attribute(name, "errors") == "true"
+            assert self.get_attribute(value, "errors", hard_fail=False) is None
             assert (
                 self.get_attribute(
                     'input[name="metadata[new_custom_meta_1][name]"]',

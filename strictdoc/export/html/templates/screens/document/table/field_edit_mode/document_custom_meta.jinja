@@ -8,6 +8,7 @@
   its field by the surrounding Turbo Stream template.
 #}
 <input type="hidden" name="active_form_key" value="{{ form_key }}"/>
+<input type="hidden" name="active_field_name" value="value"/>
 
 {%- with
   field_class_name=none,
@@ -18,7 +19,7 @@
   field_type="singleline",
   field_value=field_value,
   testid_postfix="metadata-" ~ form_key,
-  errors=errors,
+  errors=value_errors,
   field_render_errors=false
 -%}
   {%- include "components/form/field/contenteditable/index.jinja" -%}

@@ -1,0 +1,12 @@
+{#
+  Display content for one custom metadata name target.
+
+  The hidden input carries the raw name in the shared ordered form. The visible
+  suffix remains outside the editable value when the target enters edit mode.
+#}
+<input
+  type="hidden"
+  name="metadata[{{ form_key }}][name]"
+  value="{{ field_label }}"
+/>
+<span>{{ field_label }}:</span>

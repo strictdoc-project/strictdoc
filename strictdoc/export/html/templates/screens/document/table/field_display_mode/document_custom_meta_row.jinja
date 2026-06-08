@@ -17,7 +17,12 @@
   data-testid="document-config-metadata-row-{{ form_key }}"
 >
   <sdoc-meta-label
+    id="document-custom-meta-label-{{ form_key }}"
+    class="editable-cell"
+    data-field-type="contenteditable"
+    js-table_view_edit-field="contenteditable"
     js-table_view_edit-custom_meta-name
+    data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&form_key={{ form_key }}&field_name=name"
     data-testid="document-config-metadata-label"
   >
 
@@ -46,12 +51,10 @@
       {%- include "components/form/field_action_button/index.jinja" -%}
     </div>
 
-    {{ field_label }}:
-    <input
-      type="hidden"
-      name="metadata[{{ form_key }}][name]"
-      value="{{ field_label }}"
-    />
+    <div class="editable-cell-indicator"></div>
+    <div id="document-custom-meta-name-{{ form_key }}">
+      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_name.jinja" -%}
+    </div>
 
   </sdoc-meta-label>
   <sdoc-meta-field
@@ -60,7 +63,7 @@
     data-field-type="contenteditable"
     js-table_view_edit-field="contenteditable"
     js-table_view_edit-custom_meta-value
-    data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&form_key={{ form_key }}"
+    data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&form_key={{ form_key }}&field_name=value"
     data-testid="document-config-metadata-field"
   >
     <div class="editable-cell-indicator"></div>

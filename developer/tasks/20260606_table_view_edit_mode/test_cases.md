@@ -13,6 +13,14 @@ Status:
 
 ## 1. Custom metadata
 
+### Existing name
+
+- `[x]` Edit mode off does not open the name editor.
+- `[x]` Escape restores the original name.
+- `[x]` Empty name marks only the name control and preserves the row value.
+- `[x]` Correcting an invalid name saves it without changing row order or
+  value.
+
 ### Existing value
 
 - `[x]` Edit mode off does not open the value editor.
@@ -34,6 +42,8 @@ Status:
 - `[x]` Empty name with a value returns a row-scoped validation error.
 - `[x]` Valid name with an empty value returns a validation error.
 - `[x]` Invalid name syntax returns a validation error.
+- `[x]` Key errors mark only the name control.
+- `[x]` Value errors mark only the value control.
 - `[x]` Entered name/value survive validation.
 - `[x]` Correcting an invalid Add saves the row.
 - `[-]` Cmd/Ctrl+Enter uses the same contenteditable save path as an existing
@@ -105,13 +115,14 @@ Representative fields: document `TITLE`, `UID`, `VERSION`,
 
 ### Custom metadata: completed
 
-1. Existing value lifecycle and full-list/order preservation.
-2. Existing value validation, correction, and Escape recovery.
-3. Add success and empty cancellation.
-4. Add validation matrix and correction.
-5. Delete the only metadata row.
-6. Delete/reorder rollback on forced HTTP failure.
-7. No-metadata Add availability and rendered/raw value separation.
+1. Existing name lifecycle, validation, and correction.
+2. Existing value lifecycle and full-list/order preservation.
+3. Existing value validation, correction, and Escape recovery.
+4. Add success and empty cancellation.
+5. Add validation matrix, field-specific markers, and correction.
+6. Delete the only metadata row.
+7. Delete/reorder rollback on forced HTTP failure.
+8. No-metadata Add availability and rendered/raw value separation.
 
 ### Root node fields: completed
 

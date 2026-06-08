@@ -25,7 +25,7 @@ document-level metadata row:
 - the value is displayed in `sdoc-meta-field`;
 - existing entries expose the same editable-cell affordance as stable document
   configuration fields;
-- clicking an existing entry edits only its value;
+- clicking an existing key or value edits only that field;
 - adding metadata creates an inline row with editable key and value controls;
 - saving an entry submits the complete custom metadata list in its current DOM
   order;
@@ -37,8 +37,8 @@ document-level metadata row:
 - deletion and reordering do not require persistent metadata IDs or backend
   model changes.
 
-Existing metadata keys are immutable in this interaction. Renaming an existing
-key is represented by deleting the entry and adding a new one.
+Existing metadata keys can be renamed inline. Renaming keeps the row in its
+current position and submits the complete ordered metadata list.
 
 ## HOW
 
@@ -101,29 +101,31 @@ The row contains:
 - a hidden input with the raw metadata key;
 - a value target with a hidden input containing the raw value;
 - separately rendered display content produced by `render_metadata_value()`;
-- an editable `sdoc-meta-field` connected to `table_view_edit.js`;
+- editable key and value targets connected to `table_view_edit.js`;
 - table-specific DOM hooks for the row, name, value, delete action, drag
   handle, and current `form_key`.
 
 Raw values and rendered values must remain separate. Form submission uses the
 raw hidden input, while display mode uses the rendered HTML.
 
-### Editing an existing value
+### Editing an existing key or value
 
-Clicking an existing metadata value requests an inline edit partial using
-`document_mid` and `form_key`.
+Clicking an existing metadata key or value requests an inline edit partial
+using `document_mid`, `form_key`, and `field_name`.
 
-Turbo updates only the selected value target:
+Turbo updates only the selected target:
 
-- the key label remains unchanged;
+- the other field remains unchanged;
 - other custom metadata rows remain unchanged;
-- the value display is replaced by a single-line contenteditable control;
+- the selected display is replaced by a single-line contenteditable control;
 - blur or Ctrl/Cmd+Enter submits the shared form;
-- a successful response replaces only the active value target with its display
-  partial.
+- a successful response replaces only the active key or value target with its
+  display partial.
 
-Although the UI edits one value, the POST always contains the complete metadata
+Although the UI edits one field, the POST always contains the complete metadata
 list. This preserves the list-based backend contract and its current order.
+`active_field_name` identifies whether the response must update the `name` or
+`value` target.
 
 ### Adding metadata
 
@@ -170,7 +172,9 @@ The required behavior is:
 
 On validation failure, the server returns a Turbo Stream for the active row
 only. The inline editor remains open, entered values are preserved, and the
-errors are rendered as `sdoc-form-error` elements.
+errors are rendered as `sdoc-form-error` elements. `errors="true"` is applied
+only to the control described by the error: key errors mark the name control,
+and value errors mark the value control.
 
 ### Turbo and error responses
 
@@ -193,7 +197,8 @@ than CSS classes or incidental HTML structure:
 Custom metadata rows additionally use:
 
 - `js-table_view_edit-custom_meta-row` for the complete movable row;
-- `js-table_view_edit-custom_meta-name` for the label and drop geometry;
+- `js-table_view_edit-custom_meta-name` for the editable label and drop
+  geometry;
 - `js-table_view_edit-custom_meta-value` for the editable value;
 - `js-table_view_edit-custom_meta-delete_action` for deletion;
 - `js-table_view_edit-custom_meta-drag_handle` for drag initiation.
@@ -261,9 +266,11 @@ The completed feature must be checked with:
 - one custom metadata entry;
 - multiple entries;
 - editing an existing value;
+- renaming an existing key;
 - adding a valid entry;
 - all empty and partially empty Add cases;
 - invalid key syntax;
+- field-specific error markers for key and value validation;
 - clearing an existing value;
 - deleting an entry;
 - preserving and changing metadata order;

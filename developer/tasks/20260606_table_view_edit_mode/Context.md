@@ -51,6 +51,16 @@
 - The task specification and test matrix document the new name-editing and
   field-specific validation behavior.
 
+## Custom metadata row layout follow-up
+
+- Custom metadata display and Add UI now use persistent `sdoc-meta-row`
+  wrappers with the shared CSS subgrid.
+- Opening the Add editor no longer changes its wrapper from flex to
+  `display: contents`, avoiding a full metadata-grid layout reconstruction.
+- Dragging is armed from the move handle but uses the complete metadata row as
+  the native drag source and drop geometry target.
+- Drag/drop indicators are rendered on the row without changing its dimensions.
+
 ## Verification
 
 - `git diff --check`: passed.

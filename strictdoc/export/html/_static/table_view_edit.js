@@ -23,7 +23,6 @@
         'js-table_view_edit-custom_meta-delete_action';
     const ATTR_CUSTOM_META_DRAG_HANDLE =
         'js-table_view_edit-custom_meta-drag_handle';
-    const ATTR_CUSTOM_META_NAME = 'js-table_view_edit-custom_meta-name';
 
     const FIELD_AUTOCOMPLETE = 'autocomplete';
     const FIELD_CONTENTEDITABLE = 'contenteditable';
@@ -37,6 +36,7 @@
     let pendingNextCell = null;
     let customMetaReorderPending = false;
     const customMetaDragState = {
+        armedRow: null,
         row: null,
         originalNextSibling: null,
         targetRow: null,
@@ -289,6 +289,7 @@
     function clearCustomMetaDragState() {
         customMetaDragState.row?.removeAttribute('data-dragging');
         customMetaDragState.targetRow?.removeAttribute('data-drop-position');
+        customMetaDragState.armedRow = null;
         customMetaDragState.row = null;
         customMetaDragState.originalNextSibling = null;
         customMetaDragState.targetRow = null;
@@ -550,11 +551,11 @@
                 e.preventDefault();
                 return;
             }
-            const dragHandle = e.target.closest(
-                `[${ATTR_CUSTOM_META_DRAG_HANDLE}]`
-            );
-            const row = dragHandle?.closest(`[${ATTR_CUSTOM_META_ROW}]`);
-            if (!row) return;
+            const row = customMetaDragState.armedRow;
+            if (!row || !row.contains(e.target)) {
+                e.preventDefault();
+                return;
+            }
 
             if (activeInlineCell) cancelInlineCell();
             if (activeAutocompleteCell) cancelAutocompleteCell();
@@ -564,6 +565,22 @@
             row.setAttribute('data-dragging', 'true');
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', row.dataset.formKey);
+        });
+
+        main.addEventListener('pointerdown', function (e) {
+            if (!editMode || customMetaReorderPending) return;
+            const dragHandle = e.target.closest(
+                `[${ATTR_CUSTOM_META_DRAG_HANDLE}]`
+            );
+            const row = dragHandle?.closest(`[${ATTR_CUSTOM_META_ROW}]`);
+            if (!row) return;
+
+            customMetaDragState.armedRow = row;
+        });
+
+        main.addEventListener('pointerup', function () {
+            if (customMetaDragState.row) return;
+            customMetaDragState.armedRow = null;
         });
 
         main.addEventListener('dragover', function (e) {
@@ -576,11 +593,7 @@
 
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
-            const targetName = targetRow.querySelector(
-                `[${ATTR_CUSTOM_META_NAME}]`
-            );
-            if (!targetName) return;
-            const targetBounds = targetName.getBoundingClientRect();
+            const targetBounds = targetRow.getBoundingClientRect();
             const position =
                 e.clientY < targetBounds.top + targetBounds.height / 2
                     ? 'before'

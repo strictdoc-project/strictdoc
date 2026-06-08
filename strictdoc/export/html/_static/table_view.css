@@ -224,7 +224,7 @@
   pointer-events: none;
 }
 
-.content-view-table[data-mode="editable"] .editable-cell:hover {
+[js-table_view_edit][data-mode="edit"] .editable-cell:hover {
   cursor: pointer;
 }
 
@@ -454,56 +454,45 @@
   overflow: visible;
 }
 
-[js-table_view_edit][data-mode="edit"] sdoc-meta {
-  display: grid;
+[js-table_view_edit] sdoc-meta-row {
+  position: relative;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field {
+  min-width: 100px;
 }
 
 [js-table_view_edit][data-mode="edit"] sdoc-meta-label:has(+ sdoc-meta-field > [id^="doc-field-"]:empty),
-[js-table_view_edit][data-mode="edit"] sdoc-meta-field:has(> [id^="doc-field-"]:empty),
-[js-table_view_edit][data-mode="edit"] .table-view-custom-metadata-add-button {
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field:has(> [id^="doc-field-"]:empty) {
   display: flex;
 }
 
-[js-table_view_edit] .table-view-custom-metadata-add-button {
-  /* container with a button */
-  grid-column: 1 / -1;
+[js-table_view_edit][data-mode="edit"] .table-view-custom-metadata-add-button {
+  display: grid;
 }
 
-/*
- * The Add wrapper is one JS-managed inline field. Once opened, display: contents
- * lets its name and value controls occupy the normal sdoc-meta grid columns.
- */
-[js-table_view_edit][data-mode="edit"] .table-view-custom-metadata-add-button[data-mode="editing"] {
-  display: contents;
+[js-table_view_edit] .table-view-custom-metadata-add-button > .action_button {
+  grid-column: 2 / 4;
+  padding: calc(var(--base-rhythm)*0.25) var(--base-rhythm);
+  background-color: var(--color-bg-contrast);
 }
 
 /* sdoc-meta-field used as editable cell in the root node. */
-[js-table_view_edit][data-mode="edit"] sdoc-meta-field {
-  position: relative;
-  cursor: pointer;
-  justify-content: space-between;
-}
-
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field,
 [js-table_view_edit][data-mode="edit"] sdoc-meta-label {
-  position: static; /* to position buttons within a label relative to its parent */
-  /* justify-content: space-between; */
+  position: relative;
 }
 
-[js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"] {
+[js-table_view_edit][data-mode="edit"] sdoc-meta-label[data-mode="editing"],
+[js-table_view_edit][data-mode="edit"] sdoc-meta-label[data-mode="editing"]:hover,
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"],
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"]:hover {
   cursor: default;
 }
 
 /* Give empty meta cells a minimum click target in edit mode */
 [js-table_view_edit][data-mode="edit"] sdoc-meta-field > div:not(.editable-cell-indicator) {
   min-height: 1.5rem;
-}
-
-/* Cursor for TITLE editable wrapper */
-[js-table_view_edit][data-mode="edit"] sdoc-meta-field:hover {
-  cursor: pointer;
-}
-[js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"]:hover {
-  cursor: default;
 }
 
 /* error in table */
@@ -556,28 +545,24 @@
   outline: none !important;
 }
 
-[js-table_view_edit-custom_meta-row] [data-js-delete-field-action] {
-  /*  */
+[js-table_view_edit] .custom_meta-row-move-container {
+  grid-column: 1 / 2;
 }
 
-[js-table_view_edit] sdoc-meta .custom_meta-row-delete-container {
-  position: absolute;
-  left: calc(100% + 4px);
+[js-table_view_edit] .custom_meta-row-delete-container {
+  grid-column: 4 / 5;
 }
 
-[js-table_view_edit] sdoc-meta .custom_meta-row-move-container {
-  position: relative;
-  left: -8px;
-}
-
-[js-table_view_edit] sdoc-meta .custom_meta-row-move-container,
-[js-table_view_edit] sdoc-meta .custom_meta-row-delete-container {
+[js-table_view_edit] .custom_meta-row-move-container,
+[js-table_view_edit] .custom_meta-row-delete-container {
   display: none;
 }
 
-[js-table_view_edit][data-mode="edit"] sdoc-meta .custom_meta-row-move-container,
-[js-table_view_edit][data-mode="edit"] sdoc-meta .custom_meta-row-delete-container {
-  display: block;
+[js-table_view_edit][data-mode="edit"] .custom_meta-row-move-container,
+[js-table_view_edit][data-mode="edit"] .custom_meta-row-delete-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 [js-table_view_edit] sdoc-meta [data-js-move-field-action] {
@@ -601,27 +586,24 @@
   background: transparent;
 }
 
-[js-table_view_edit] sdoc-meta sdoc-meta-label:has([data-js-delete-field-action]:hover),
-[js-table_view_edit] sdoc-meta sdoc-meta-label:has([data-js-delete-field-action]:hover) + sdoc-meta-field {
+[js-table_view_edit] sdoc-meta-row:has([data-js-delete-field-action]:hover) sdoc-meta-label,
+[js-table_view_edit] sdoc-meta-row:has([data-js-delete-field-action]:hover) sdoc-meta-field {
   background-color: var(--color-highlight-danger);
 }
 
-[js-table_view_edit] sdoc-meta sdoc-meta-label:has([data-js-move-field-action]:hover),
-[js-table_view_edit] sdoc-meta sdoc-meta-label:has([data-js-move-field-action]:hover) + sdoc-meta-field {
+[js-table_view_edit] sdoc-meta-row:has([data-js-move-field-action]:hover) sdoc-meta-label,
+[js-table_view_edit] sdoc-meta-row:has([data-js-move-field-action]:hover) sdoc-meta-field {
   background-color: var(--color-highlight-secondary);
 }
 
-[js-table_view_edit-custom_meta-row][data-dragging="true"] > sdoc-meta-label,
-[js-table_view_edit-custom_meta-row][data-dragging="true"] > sdoc-meta-field {
+[js-table_view_edit-custom_meta-row][data-dragging="true"] {
   opacity: 0.5;
 }
 
-[js-table_view_edit-custom_meta-row][data-drop-position="before"] > sdoc-meta-label,
-[js-table_view_edit-custom_meta-row][data-drop-position="before"] > sdoc-meta-field {
-  border-top: 2px solid var(--color-accent);
+[js-table_view_edit-custom_meta-row][data-drop-position="before"] {
+  box-shadow: 0 -2px 0 var(--color-accent);
 }
 
-[js-table_view_edit-custom_meta-row][data-drop-position="after"] > sdoc-meta-label,
-[js-table_view_edit-custom_meta-row][data-drop-position="after"] > sdoc-meta-field {
-  border-bottom: 2px solid var(--color-accent);
+[js-table_view_edit-custom_meta-row][data-drop-position="after"] {
+  box-shadow: 0 2px 0 var(--color-accent);
 }

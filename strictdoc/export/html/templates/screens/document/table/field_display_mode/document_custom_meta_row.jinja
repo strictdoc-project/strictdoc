@@ -7,15 +7,28 @@
   - field_value: raw metadata value submitted by the shared form.
   - field_content: rendered metadata value shown to the user.
 
-  display: contents preserves the sdoc-meta label/field grid while giving future
-  reorder and delete behavior one DOM node representing the complete row.
+  The row uses the parent sdoc-meta column tracks through CSS subgrid.
 #}
-<div
-  style="display: contents;"
+<sdoc-meta-row
+  draggable="true"
   js-table_view_edit-custom_meta-row
   data-form-key="{{ form_key }}"
   data-testid="document-config-metadata-row-{{ form_key }}"
 >
+
+  {# moves the entire line #}
+  <div
+    class="custom_meta-row-move-container"
+    js-table_view_edit-custom_meta-drag_handle
+  >
+    {%- set action_button_context = namespace() %}
+    {%- set action_button_context.field_actions = {"move": true} %}
+    {%- set action_button_context.field_name = "metadata" %}
+    {%- set action_button_context.mid = form_key %}
+    {%- set action_button_context.testid_postfix = "form-field-metadata" %}
+    {%- include "components/form/field_action_button/index.jinja" -%}
+  </div>
+
   <sdoc-meta-label
     id="document-custom-meta-label-{{ form_key }}"
     class="editable-cell"
@@ -25,31 +38,6 @@
     data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&form_key={{ form_key }}&field_name=name"
     data-testid="document-config-metadata-label"
   >
-
-    <div
-      class="custom_meta-row-move-container"
-      draggable="true"
-      js-table_view_edit-custom_meta-drag_handle
-    >
-      {%- set action_button_context = namespace() %}
-      {%- set action_button_context.field_actions = {"move": true} %}
-      {%- set action_button_context.field_name = "metadata" %}
-      {%- set action_button_context.mid = form_key %}
-      {%- set action_button_context.testid_postfix = "form-field-metadata" %}
-      {%- include "components/form/field_action_button/index.jinja" -%}
-    </div>
-
-    <div
-      class="custom_meta-row-delete-container"
-      js-table_view_edit-custom_meta-delete_action
-    >
-      {%- set action_button_context = namespace() %}
-      {%- set action_button_context.field_actions = {"delete": true} %}
-      {%- set action_button_context.field_name = "metadata" %}
-      {%- set action_button_context.mid = form_key %}
-      {%- set action_button_context.testid_postfix = "form-field-metadata" %}
-      {%- include "components/form/field_action_button/index.jinja" -%}
-    </div>
 
     <div class="editable-cell-indicator"></div>
     <div id="document-custom-meta-name-{{ form_key }}">
@@ -70,5 +58,21 @@
     <div id="document-custom-meta-value-{{ form_key }}">
       {%- include "screens/document/table/field_display_mode/document_custom_meta_field_value.jinja" -%}
     </div>
+
+
   </sdoc-meta-field>
-</div>
+
+  {# deletes the entire line #}
+  <div
+    class="custom_meta-row-delete-container"
+    js-table_view_edit-custom_meta-delete_action
+  >
+    {%- set action_button_context = namespace() %}
+    {%- set action_button_context.field_actions = {"delete": true} %}
+    {%- set action_button_context.field_name = "metadata" %}
+    {%- set action_button_context.mid = form_key %}
+    {%- set action_button_context.testid_postfix = "form-field-metadata" %}
+    {%- include "components/form/field_action_button/index.jinja" -%}
+  </div>
+
+</sdoc-meta-row>

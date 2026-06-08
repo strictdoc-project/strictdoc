@@ -93,8 +93,16 @@ allows the endpoint to distinguish a new entry from an existing positional row.
 ### Row structure
 
 Each existing metadata entry has one table-specific row wrapper with
-`display: contents`. The wrapper groups the label and value into one movable or
-deletable unit without changing the grid layout.
+the custom element `sdoc-meta-row`. The row is a grid using
+`grid-template-columns: subgrid`, so it shares the four column tracks defined
+by the parent `sdoc-meta`:
+
+```text
+[move action] [key] [value] [delete action]
+```
+
+The wrapper gives the complete row its own visual box and groups its controls,
+label, and value into one movable or deletable unit.
 
 The row contains:
 
@@ -129,8 +137,9 @@ list. This preserves the list-based backend contract and its current order.
 
 ### Adding metadata
 
-The final metadata grid row contains the **Add metadata** action. The Add
-wrapper is one JS-managed inline field.
+The final metadata grid row is also an `sdoc-meta-row` and contains the
+**Add metadata** action. The Add wrapper is one JS-managed inline field and
+remains the same grid row in both display and editing states.
 
 When opened, Turbo replaces its content with:
 
@@ -197,8 +206,7 @@ than CSS classes or incidental HTML structure:
 Custom metadata rows additionally use:
 
 - `js-table_view_edit-custom_meta-row` for the complete movable row;
-- `js-table_view_edit-custom_meta-name` for the editable label and drop
-  geometry;
+- `js-table_view_edit-custom_meta-name` for the editable label;
 - `js-table_view_edit-custom_meta-value` for the editable value;
 - `js-table_view_edit-custom_meta-delete_action` for deletion;
 - `js-table_view_edit-custom_meta-drag_handle` for drag initiation.
@@ -228,10 +236,14 @@ Drag-and-drop reordering is available only in Table edit mode. A drag starts
 only from the row's drag handle. The Add row is not draggable and cannot be a
 drop target.
 
-Because the row wrapper uses `display: contents`, it has no reliable visual
-bounding box. Drop position must therefore be calculated from the row's
-`sdoc-meta-label`. Dropping in the upper or lower half inserts the dragged row
-before or after the target row.
+The complete `sdoc-meta-row` is the native draggable element, so the browser
+renders the drag preview from that row rather than from only the move-action
+container. Pointer interaction on the drag handle arms the row for dragging;
+drag attempts from the editable key or value are rejected.
+
+The row has a reliable visual bounding box. Drop position is calculated from
+the target `sdoc-meta-row`: dropping in its upper or lower half inserts the
+dragged row before or after it.
 
 Deletion and reordering immediately submit the complete shared form:
 

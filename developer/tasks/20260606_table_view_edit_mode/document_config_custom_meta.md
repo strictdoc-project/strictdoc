@@ -13,8 +13,8 @@ updated through the same single-field mechanism used for stable document
 configuration fields.
 
 The feature must therefore provide field-like inline editing in the UI while
-continuing to save custom metadata as one ordered list, without adding persistent
-metadata identifiers or changing the SDOC data model.
+continuing to save custom metadata as one ordered list, without adding
+persistent metadata identifiers or changing the SDOC data model.
 
 ## WHAT
 
@@ -31,8 +31,11 @@ document-level metadata row:
   order;
 - validation errors remain attached to the active row without replacing the
   other metadata rows;
-- the structure shall support later row deletion and drag-and-drop reordering
-  without requiring persistent metadata IDs or backend model changes.
+- deleting an entry immediately saves the remaining metadata list;
+- drag-and-drop reordering immediately saves the new metadata order;
+- failed deletion or reordering restores the previous UI state;
+- deletion and reordering do not require persistent metadata IDs or backend
+  model changes.
 
 Existing metadata keys are immutable in this interaction. Renaming an existing
 key is represented by deleting the entry and adding a new one.
@@ -54,9 +57,9 @@ All custom metadata rows are permanently enclosed by one form:
 mode retains the established document metadata layout.
 
 The form also contains the document configuration values required by
-`DocumentConfigFormObject`. Saving any custom metadata row serializes and submits
-the complete form. The backend continues to use `UpdateDocumentConfigTransform`
-to replace the complete ordered metadata list.
+`DocumentConfigFormObject`. Saving any custom metadata row serializes and
+submits the complete form. The backend continues to use
+`UpdateDocumentConfigTransform` to replace the complete ordered metadata list.
 
 ### Local form keys
 
@@ -99,7 +102,8 @@ The row contains:
 - a value target with a hidden input containing the raw value;
 - separately rendered display content produced by `render_metadata_value()`;
 - an editable `sdoc-meta-field` connected to `table_view_edit.js`;
-- table-specific DOM hooks for the row and its current `form_key`.
+- table-specific DOM hooks for the row, name, value, delete action, drag
+  handle, and current `form_key`.
 
 Raw values and rendered values must remain separate. Form submission uses the
 raw hidden input, while display mode uses the rendered HTML.
@@ -186,6 +190,14 @@ than CSS classes or incidental HTML structure:
 - `js-table_view_edit-submit-unchanged` identifies creation fields whose empty
   initial state must reach the backend for skip or validation handling.
 
+Custom metadata rows additionally use:
+
+- `js-table_view_edit-custom_meta-row` for the complete movable row;
+- `js-table_view_edit-custom_meta-name` for the label and drop geometry;
+- `js-table_view_edit-custom_meta-value` for the editable value;
+- `js-table_view_edit-custom_meta-delete_action` for deletion;
+- `js-table_view_edit-custom_meta-drag_handle` for drag initiation.
+
 The form lookup supports both established layouts:
 
 ```javascript
@@ -207,8 +219,39 @@ Deletion shall remove one row wrapper and then submit the remaining list. These
 interactions must use table-specific hooks and must not introduce persistent
 metadata identifiers.
 
-If deletion fails, the UI must restore the removed row or re-render the metadata
-block into a state consistent with the backend.
+Drag-and-drop reordering is available only in Table edit mode. A drag starts
+only from the row's drag handle. The Add row is not draggable and cannot be a
+drop target.
+
+Because the row wrapper uses `display: contents`, it has no reliable visual
+bounding box. Drop position must therefore be calculated from the row's
+`sdoc-meta-label`. Dropping in the upper or lower half inserts the dragged row
+before or after the target row.
+
+Deletion and reordering immediately submit the complete shared form:
+
+```text
+action=delete
+action=reorder
+```
+
+`active_form_key` identifies the affected row for the request, but block
+actions do not require that key to remain among the submitted metadata fields.
+This is required when a row has already been removed from the DOM.
+
+After a successful deletion or reorder, Turbo replaces the complete shared
+custom metadata form. The server-rendered form normalizes positional
+`form_key` values so later edit, Add, delete, and reorder operations cannot
+collide with stale keys.
+
+Before mutating the DOM, the client retains enough information to restore the
+affected row at its original position. On an HTTP or network error, deletion
+and reordering must restore the previous UI state.
+
+The Table implementation remains local to `table_view_edit.js`. The existing
+`draggable_list_controller.js` is not reused because it is designed for `li`
+document-tree nodes, hierarchical drop positions, and a dedicated node-move
+endpoint.
 
 ### Verification
 
@@ -224,6 +267,9 @@ The completed feature must be checked with:
 - clearing an existing value;
 - deleting an entry;
 - preserving and changing metadata order;
+- immediate persistence after deletion and drag-and-drop reordering;
+- normalized positional form keys after deletion and reordering;
+- restoration of the previous UI state after failed block actions;
 - display and edit modes;
 - blur and Ctrl/Cmd+Enter saves;
 - regression tests for the existing Table view inline editors;

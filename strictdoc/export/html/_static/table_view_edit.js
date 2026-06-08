@@ -19,6 +19,8 @@
     const ATTR_FORM = 'js-table_view_edit-form';
     const ATTR_SUBMIT_UNCHANGED = 'js-table_view_edit-submit-unchanged';
     const ATTR_CUSTOM_META_ROW = 'js-table_view_edit-custom_meta-row';
+    const ATTR_CUSTOM_META_DELETE_ACTION =
+        'js-table_view_edit-custom_meta-delete_action';
 
     const FIELD_AUTOCOMPLETE = 'autocomplete';
     const FIELD_CONTENTEDITABLE = 'contenteditable';
@@ -274,6 +276,41 @@
         restoreInlineCellDOM(cell);
     }
 
+    async function deleteCustomMetaRow(deleteAction) {
+        const row = deleteAction.closest(`[${ATTR_CUSTOM_META_ROW}]`);
+        const form = row?.closest(`[${ATTR_FORM}]`);
+        if (!row || !form) return;
+
+        if (activeInlineCell) cancelInlineCell();
+        if (activeAutocompleteCell) cancelAutocompleteCell();
+
+        const formKey = row.dataset.formKey;
+        const nextSibling = row.nextSibling;
+        row.remove();
+
+        const formData = new URLSearchParams(new FormData(form));
+        formData.set('action', 'delete');
+        formData.set('active_form_key', formKey);
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: { 'Accept': TURBO_ACCEPT },
+                body: formData,
+            });
+            const html = await response.text();
+            if (response.ok) {
+                renderTurboStream(html);
+                return;
+            }
+            console.error('Custom metadata delete failed:', html);
+        } catch (err) {
+            console.error('Custom metadata delete error:', err);
+        }
+
+        form.insertBefore(row, nextSibling);
+    }
+
     async function saveInlineCell(cell) {
         if (!cell) return;
 
@@ -395,6 +432,15 @@
         // both regular table cells and document-level fields above the table.
         main.addEventListener('click', function (e) {
             if (!editMode) return;
+
+            const customMetaDeleteAction = e.target.closest(
+                `[${ATTR_CUSTOM_META_DELETE_ACTION}]`
+            );
+            if (customMetaDeleteAction) {
+                e.preventDefault();
+                deleteCustomMetaRow(customMetaDeleteAction);
+                return;
+            }
 
             // "Add comment" / "Add relation" link inside inline form — fetch stream, don't navigate
             const addCommentLink = e.target.closest(`[${ATTR_ADD_FIELD}]`);

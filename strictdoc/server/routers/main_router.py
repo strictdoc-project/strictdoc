@@ -1463,6 +1463,7 @@ def create_main_router(
         request_dict: Dict[str, str] = dict(request_form_data)
         document_mid: str = request_dict["document_mid"]
         active_form_key: str = request_dict["active_form_key"]
+        action: Optional[str] = request_dict.get("action")
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
         )
@@ -1478,43 +1479,48 @@ def create_main_router(
                 request_form_data=request_form_data,
             )
         )
-        active_metadata_field = next(
-            (
-                metadata_field
-                for metadata_field in form_object.custom_metadata_fields
-                if metadata_field.field_mid == active_form_key
-            ),
-            None,
-        )
-        if active_metadata_field is None:
-            return HTMLResponse(
-                content=(
-                    "Unknown active custom metadata form key: "
-                    f"{active_form_key}"
+        is_delete_action = action == "delete"
+        active_metadata_field = None
+        active_metadata_index = -1
+        active_field_is_new = False
+        if not is_delete_action:
+            active_metadata_field = next(
+                (
+                    metadata_field
+                    for metadata_field in form_object.custom_metadata_fields
+                    if metadata_field.field_mid == active_form_key
                 ),
-                status_code=400,
+                None,
             )
-        active_metadata_index = form_object.custom_metadata_fields.index(
-            active_metadata_field
-        )
-        active_field_is_new = active_form_key.startswith("new_custom_meta_")
-        if (
-            active_field_is_new
-            and len(active_metadata_field.field_name) == 0
-            and len(active_metadata_field.field_value) == 0
-        ):
-            # A fully empty Add row is not metadata. Skip it without running the
-            # transform or writing the document; partially filled rows continue
-            # through normal validation.
-            output = env().render_template_as_markup(
-                "actions/table/update_document_custom_meta/stream_skip_empty_new.jinja.html",
-                doc_mid=document_mid,
+            if active_metadata_field is None:
+                return HTMLResponse(
+                    content=(
+                        "Unknown active custom metadata form key: "
+                        f"{active_form_key}"
+                    ),
+                    status_code=400,
+                )
+            active_metadata_index = form_object.custom_metadata_fields.index(
+                active_metadata_field
             )
-            return HTMLResponse(
-                content=output,
-                status_code=200,
-                headers={"Content-Type": "text/vnd.turbo-stream.html"},
-            )
+            active_field_is_new = active_form_key.startswith("new_custom_meta_")
+            if (
+                active_field_is_new
+                and len(active_metadata_field.field_name) == 0
+                and len(active_metadata_field.field_value) == 0
+            ):
+                # A fully empty Add row is not metadata. Skip it without running
+                # the transform or writing the document; partially filled rows
+                # continue through normal validation.
+                output = env().render_template_as_markup(
+                    "actions/table/update_document_custom_meta/stream_skip_empty_new.jinja.html",
+                    doc_mid=document_mid,
+                )
+                return HTMLResponse(
+                    content=output,
+                    status_code=200,
+                    headers={"Content-Type": "text/vnd.turbo-stream.html"},
+                )
         try:
             update_command = UpdateDocumentConfigTransform(
                 form_object=form_object,
@@ -1523,9 +1529,19 @@ def create_main_router(
             )
             update_command.perform()
         except MultipleValidationError as validation_error:
+            if is_delete_action:
+                return HTMLResponse(
+                    content="\n".join(
+                        error
+                        for errors in validation_error.errors.values()
+                        for error in errors
+                    ),
+                    status_code=422,
+                )
             for error_key, errors in validation_error.errors.items():
                 for error in errors:
                     form_object.add_error(error_key, error)
+            assert active_metadata_field is not None
             active_field_errors = form_object.get_errors(
                 f"METADATA[{active_form_key}]"
             )
@@ -1583,6 +1599,19 @@ def create_main_router(
             jinja_environment=env(),
             git_client=html_generator.git_client,
         )
+        if is_delete_action:
+            output = env().render_template_as_markup(
+                "actions/table/update_document_custom_meta/stream_delete.jinja.html",
+                doc_mid=document_mid,
+                document_config=document.config,
+                view_object=view_object,
+            )
+            return HTMLResponse(
+                content=output,
+                status_code=200,
+                headers={"Content-Type": "text/vnd.turbo-stream.html"},
+            )
+        assert active_metadata_field is not None
         if active_field_is_new:
             # New rows use a distinct transport key while unsaved. Once saved,
             # normalize it to the positional key used by existing display rows.

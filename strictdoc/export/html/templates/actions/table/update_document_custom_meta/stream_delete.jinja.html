@@ -1,0 +1,9 @@
+{#
+  A successful delete re-renders the shared form so positional form keys remain
+  contiguous and cannot collide with a later Add operation.
+#}
+<turbo-stream action="replace" target="document-custom-meta-{{ doc_mid }}">
+  <template>
+    {%- include "screens/document/table/field_display_mode/document_custom_meta.jinja" -%}
+  </template>
+</turbo-stream>

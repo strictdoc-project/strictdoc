@@ -29,7 +29,10 @@
       {%- include "components/form/field_action_button/index.jinja" -%}
     </div>
 
-    <div class="custom_meta-row-delete-container" js-table_view_edit-custom_meta-delete_action>
+    <div
+      class="custom_meta-row-delete-container"
+      js-table_view_edit-custom_meta-delete_action
+    >
       {%- set action_button_context = namespace() %}
       {%- set action_button_context.field_actions = {"delete": true} %}
       {%- set action_button_context.field_name = "metadata" %}

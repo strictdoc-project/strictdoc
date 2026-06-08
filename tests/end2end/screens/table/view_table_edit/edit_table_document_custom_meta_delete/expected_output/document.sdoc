@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document
+METADATA:
+  FIRST: First value
+  THIRD: Third value
+
+[REQUIREMENT]
+TITLE: Requirement
+STATEMENT: Requirement statement.

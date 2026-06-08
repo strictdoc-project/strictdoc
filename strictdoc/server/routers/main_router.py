@@ -1479,11 +1479,11 @@ def create_main_router(
                 request_form_data=request_form_data,
             )
         )
-        is_delete_action = action == "delete"
+        is_block_action = action in ("delete", "reorder")
         active_metadata_field = None
         active_metadata_index = -1
         active_field_is_new = False
-        if not is_delete_action:
+        if not is_block_action:
             active_metadata_field = next(
                 (
                     metadata_field
@@ -1529,7 +1529,7 @@ def create_main_router(
             )
             update_command.perform()
         except MultipleValidationError as validation_error:
-            if is_delete_action:
+            if is_block_action:
                 return HTMLResponse(
                     content="\n".join(
                         error
@@ -1599,9 +1599,13 @@ def create_main_router(
             jinja_environment=env(),
             git_client=html_generator.git_client,
         )
-        if is_delete_action:
+        if is_block_action:
+            stream_template = (
+                "actions/table/update_document_custom_meta/"
+                f"stream_{action}.jinja.html"
+            )
             output = env().render_template_as_markup(
-                "actions/table/update_document_custom_meta/stream_delete.jinja.html",
+                stream_template,
                 doc_mid=document_mid,
                 document_config=document.config,
                 view_object=view_object,

@@ -21,6 +21,9 @@
     const ATTR_CUSTOM_META_ROW = 'js-table_view_edit-custom_meta-row';
     const ATTR_CUSTOM_META_DELETE_ACTION =
         'js-table_view_edit-custom_meta-delete_action';
+    const ATTR_CUSTOM_META_DRAG_HANDLE =
+        'js-table_view_edit-custom_meta-drag_handle';
+    const ATTR_CUSTOM_META_NAME = 'js-table_view_edit-custom_meta-name';
 
     const FIELD_AUTOCOMPLETE = 'autocomplete';
     const FIELD_CONTENTEDITABLE = 'contenteditable';
@@ -32,6 +35,13 @@
     let activeAutocompleteCell = null;
     // [FEATURE: passive-open] Cell to open after the current save resolves.
     let pendingNextCell = null;
+    let customMetaReorderPending = false;
+    const customMetaDragState = {
+        row: null,
+        originalNextSibling: null,
+        targetRow: null,
+        position: null,
+    };
 
     function getMainContainer() {
         return document.querySelector(`[${ATTR_CONTAINER}]`);
@@ -276,6 +286,52 @@
         restoreInlineCellDOM(cell);
     }
 
+    function clearCustomMetaDragState() {
+        customMetaDragState.row?.removeAttribute('data-dragging');
+        customMetaDragState.targetRow?.removeAttribute('data-drop-position');
+        customMetaDragState.row = null;
+        customMetaDragState.originalNextSibling = null;
+        customMetaDragState.targetRow = null;
+        customMetaDragState.position = null;
+    }
+
+    function setCustomMetaDropTarget(row, position) {
+        customMetaDragState.targetRow?.removeAttribute('data-drop-position');
+        customMetaDragState.targetRow = row;
+        customMetaDragState.position = position;
+        row?.setAttribute('data-drop-position', position);
+    }
+
+    async function saveCustomMetaReorder(row, originalNextSibling) {
+        const form = row.closest(`[${ATTR_FORM}]`);
+        if (!form) return;
+
+        customMetaReorderPending = true;
+        const formData = new URLSearchParams(new FormData(form));
+        formData.set('action', 'reorder');
+        formData.set('active_form_key', row.dataset.formKey);
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: { 'Accept': TURBO_ACCEPT },
+                body: formData,
+            });
+            const html = await response.text();
+            if (response.ok) {
+                renderTurboStream(html);
+                return;
+            }
+            console.error('Custom metadata reorder failed:', html);
+        } catch (err) {
+            console.error('Custom metadata reorder error:', err);
+        } finally {
+            customMetaReorderPending = false;
+        }
+
+        form.insertBefore(row, originalNextSibling);
+    }
+
     async function deleteCustomMetaRow(deleteAction) {
         const row = deleteAction.closest(`[${ATTR_CUSTOM_META_ROW}]`);
         const form = row?.closest(`[${ATTR_FORM}]`);
@@ -442,6 +498,14 @@
                 return;
             }
 
+            const customMetaDragHandle = e.target.closest(
+                `[${ATTR_CUSTOM_META_DRAG_HANDLE}]`
+            );
+            if (customMetaDragHandle) {
+                e.preventDefault();
+                return;
+            }
+
             // "Add comment" / "Add relation" link inside inline form — fetch stream, don't navigate
             const addCommentLink = e.target.closest(`[${ATTR_ADD_FIELD}]`);
             if (addCommentLink) {
@@ -468,6 +532,90 @@
                 openInlineCell(editableField);
                 return;
             }
+        });
+
+        main.addEventListener('dragstart', function (e) {
+            if (!editMode || customMetaReorderPending) {
+                e.preventDefault();
+                return;
+            }
+            const dragHandle = e.target.closest(
+                `[${ATTR_CUSTOM_META_DRAG_HANDLE}]`
+            );
+            const row = dragHandle?.closest(`[${ATTR_CUSTOM_META_ROW}]`);
+            if (!row) return;
+
+            if (activeInlineCell) cancelInlineCell();
+            if (activeAutocompleteCell) cancelAutocompleteCell();
+
+            customMetaDragState.row = row;
+            customMetaDragState.originalNextSibling = row.nextSibling;
+            row.setAttribute('data-dragging', 'true');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', row.dataset.formKey);
+        });
+
+        main.addEventListener('dragover', function (e) {
+            const draggedRow = customMetaDragState.row;
+            const targetRow = e.target.closest(`[${ATTR_CUSTOM_META_ROW}]`);
+            if (!draggedRow || !targetRow || draggedRow === targetRow) {
+                setCustomMetaDropTarget(null, null);
+                return;
+            }
+
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            const targetName = targetRow.querySelector(
+                `[${ATTR_CUSTOM_META_NAME}]`
+            );
+            if (!targetName) return;
+            const targetBounds = targetName.getBoundingClientRect();
+            const position =
+                e.clientY < targetBounds.top + targetBounds.height / 2
+                    ? 'before'
+                    : 'after';
+            setCustomMetaDropTarget(targetRow, position);
+        });
+
+        main.addEventListener('drop', function (e) {
+            const row = customMetaDragState.row;
+            const targetRow = customMetaDragState.targetRow;
+            const position = customMetaDragState.position;
+            const originalNextSibling =
+                customMetaDragState.originalNextSibling;
+            if (!row || !targetRow || !position) {
+                clearCustomMetaDragState();
+                return;
+            }
+
+            e.preventDefault();
+            const form = row.closest(`[${ATTR_FORM}]`);
+            if (!form) {
+                clearCustomMetaDragState();
+                return;
+            }
+            const originalOrder = Array.from(
+                form.querySelectorAll(`[${ATTR_CUSTOM_META_ROW}]`)
+            );
+            if (position === 'before') {
+                form.insertBefore(row, targetRow);
+            } else {
+                form.insertBefore(row, targetRow.nextSibling);
+            }
+            const reorderedRows = Array.from(
+                form.querySelectorAll(`[${ATTR_CUSTOM_META_ROW}]`)
+            );
+            const orderChanged = originalOrder.some(
+                (originalRow, index) => originalRow !== reorderedRows[index]
+            );
+            clearCustomMetaDragState();
+            if (orderChanged) {
+                saveCustomMetaReorder(row, originalNextSibling);
+            }
+        });
+
+        main.addEventListener('dragend', function () {
+            clearCustomMetaDragState();
         });
 
         // Save autocomplete cell on blur (Stimulus handles the dropdown interaction).

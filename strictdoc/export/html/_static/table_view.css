@@ -610,3 +610,18 @@
 [js-table_view_edit] sdoc-meta sdoc-meta-label:has([data-js-move-field-action]:hover) + sdoc-meta-field {
   background-color: var(--color-highlight-secondary);
 }
+
+[js-table_view_edit-custom_meta-row][data-dragging="true"] > sdoc-meta-label,
+[js-table_view_edit-custom_meta-row][data-dragging="true"] > sdoc-meta-field {
+  opacity: 0.5;
+}
+
+[js-table_view_edit-custom_meta-row][data-drop-position="before"] > sdoc-meta-label,
+[js-table_view_edit-custom_meta-row][data-drop-position="before"] > sdoc-meta-field {
+  border-top: 2px solid var(--color-accent);
+}
+
+[js-table_view_edit-custom_meta-row][data-drop-position="after"] > sdoc-meta-label,
+[js-table_view_edit-custom_meta-row][data-drop-position="after"] > sdoc-meta-field {
+  border-bottom: 2px solid var(--color-accent);
+}

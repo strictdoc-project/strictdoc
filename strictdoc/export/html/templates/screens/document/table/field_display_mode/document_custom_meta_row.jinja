@@ -14,13 +14,18 @@
   style="display: contents;"
   js-table_view_edit-custom_meta-row
   data-form-key="{{ form_key }}"
+  data-testid="document-config-metadata-row-{{ form_key }}"
 >
   <sdoc-meta-label
     js-table_view_edit-custom_meta-name
     data-testid="document-config-metadata-label"
   >
 
-    <div class="custom_meta-row-move-container" js-table_view_edit-custom_meta-drag_handle>
+    <div
+      class="custom_meta-row-move-container"
+      draggable="true"
+      js-table_view_edit-custom_meta-drag_handle
+    >
       {%- set action_button_context = namespace() %}
       {%- set action_button_context.field_actions = {"move": true} %}
       {%- set action_button_context.field_name = "metadata" %}

@@ -5,30 +5,34 @@
 - Task: inline editing of document custom metadata in Table view.
 - Source of truth:
   `developer/tasks/20260606_table_view_edit_mode/document_config_custom_meta.md`.
-- Current plan step: 7, delete custom metadata rows and save the remaining
-  ordered list.
+- Current work: drag-and-drop reordering of existing custom metadata rows.
 
-## State before step 7
+## State before reorder
 
-- Steps 1-6 are implemented.
+- Add, edit, validation, and delete are implemented.
 - Custom metadata rows share one persistent form.
 - Each row has stable table-specific hooks for its wrapper, name, value,
-  delete action, and future drag handle.
+  delete action, and drag handle.
 - Saving serializes the complete metadata list in DOM order.
 
-## Step 7 decisions
+## Reorder decisions
 
-- The delegated Table view click handler owns the delete interaction.
-- Delete cancels any open inline editor, removes the complete row wrapper, and
-  submits the remaining shared form with `action=delete`.
-- The removed row and its next sibling are retained in memory until the
-  request completes. Any HTTP or network error restores the row at its
-  original position.
-- The update endpoint accepts a delete action whose active form key is no
-  longer present in the submitted metadata fields.
-- A successful delete re-renders the complete shared metadata form. This
-  normalizes positional form keys and prevents collisions with a later Add.
+- Reorder remains scoped to Table custom metadata in `table_view_edit.js`; the
+  tree-specific `draggable_list_controller.js` is not reused.
+- Drag starts only from
+  `js-table_view_edit-custom_meta-drag_handle` in edit mode.
+- The row wrapper uses `display: contents`, so drop geometry comes from its
+  visual metadata label rather than the wrapper bounding box.
+- Dropping moves the complete row wrapper in the shared form and immediately
+  submits the full form with `action=reorder`.
+- The endpoint treats delete and reorder as block actions that do not require
+  an active field to remain in the submitted metadata list.
+- A successful reorder re-renders the complete shared form, normalizing
+  positional form keys for later edit, Add, delete, or reorder operations.
+- Any HTTP or network failure restores the moved row at its original sibling.
 - No persistent metadata identifier or data-model change was introduced.
+- E2E drag selectors use the move button test ID
+  `form-move-field-action-form-field-metadata` and row-specific test IDs.
 
 ## Verification
 
@@ -36,12 +40,12 @@
 - Jinja template unit test:
   `pytest -q tests/unit/strictdoc/export/html/test_html_templates.py`:
   1 passed.
-- New focused delete end-to-end test:
-  `invoke test-end2end --focus edit_table_document_custom_meta_delete
-  --headless`: 1 passed.
+- Focused custom metadata delete and reorder end-to-end tests:
+  `invoke test-end2end --focus edit_table_document_custom_meta --headless`:
+  2 passed.
 - Full focused Table view end-to-end suite:
-  `invoke test-end2end --focus edit_table --headless`: 19 passed.
-- `invoke lint-ruff-format`: passed after formatting the changed Python code.
+  `invoke test-end2end --focus edit_table --headless`: 20 passed.
+- `invoke lint-ruff-format`: passed.
 - `invoke lint-ruff`: passed.
 - `invoke lint-mypy`: passed, 268 source files checked.
 - `invoke lint` could not start its code checks because the repository contains

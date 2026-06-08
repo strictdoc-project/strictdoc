@@ -86,9 +86,18 @@
         {%- set doc_mid = view_object.document.reserved_mid -%}
         {%- set document_config = view_object.document.config -%}
         <sdoc-node>
-          {%- with document_title_wrap=true %}
-            {%- include "screens/document/table/field_display_mode/document_title.jinja" -%}
-          {%- endwith %}
+          <h1 data-testid="document-title">
+            {%- with
+              field_content=view_object.document.title,
+              document_title_wrap=true
+            -%}
+              {%- include "screens/document/table/field_display_mode/document_title.jinja" -%}
+            {%- endwith %}
+            {%- with local_anchor = view_object.render_local_anchor(view_object.document) -%}
+              {% include "components/anchor_document/index.jinja" %}
+            {%- endwith %}
+          </h1>
+
           {{ view_object.render_issues(view_object.document) }}
 
           <sdoc-meta>

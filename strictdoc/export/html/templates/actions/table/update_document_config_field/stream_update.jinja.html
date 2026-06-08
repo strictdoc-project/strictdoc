@@ -1,7 +1,9 @@
 <turbo-stream action="update" target="doc-field-{{ document.reserved_mid }}-{{ field_name }}">
   <template>
     {%- if field_name == "TITLE" -%}
-      {%- include "screens/document/table/field_display_mode/document_title.jinja" -%}
+      {%- with field_content = display_value %}
+        {%- include "screens/document/table/field_display_mode/document_title.jinja" -%}
+      {%- endwith -%}
     {%- elif display_value -%}
       {%- with field_content = display_value %}
         {%- include "screens/document/table/field_display_mode/document_config_field_value.jinja" -%}
